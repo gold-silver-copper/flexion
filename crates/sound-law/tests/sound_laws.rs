@@ -512,3 +512,66 @@ fn metacharacters_can_be_escaped() {
     };
     assert_eq!(ESCAPED.apply("{x}$").unwrap(), "^");
 }
+
+#[test]
+fn iterative_rules_read_what_they_wrote_behind_them() {
+    // Turkish harmony as one law: a suffix's `A` and `I` take their value
+    // from the nearest vowel before them, as written.
+    const HARMONY: RuleSet<'static> = sound_laws! {
+        classes { V = ["a", "e", "ı", "i", "o", "ö", "u", "ü"]; }
+        agreements {
+            AGREE = [
+                ("A", "a") => "a", ("A", "ı") => "a", ("A", "o") => "a", ("A", "u") => "a",
+                ("A", "e") => "e", ("A", "i") => "e", ("A", "ö") => "e", ("A", "ü") => "e",
+                ("A", "") => "e",
+                ("I", "a") => "ı", ("I", "ı") => "ı", ("I", "o") => "u", ("I", "u") => "u",
+                ("I", "e") => "i", ("I", "i") => "i", ("I", "ö") => "ü", ("I", "ü") => "ü",
+                ("I", "") => "i",
+            ];
+        }
+        rules {
+            harmony[iterative]: "{x:[A|I]}" => "{x|AGREE[t]}" / "{t:V?}{gap:!V*}" _ "";
+        }
+    };
+    let program = HARMONY.compile().unwrap();
+    assert_eq!(program.apply("evlArImIzdA"), "evlerimizde");
+    assert_eq!(program.apply("kitaplArImIzdA"), "kitaplarımızda");
+    // The plural's `a` decides the genitive, not the stem's `u`.
+    assert_eq!(program.apply("buzlArIn"), "buzların");
+    assert_eq!(program.apply("gözlArI"), "gözleri");
+    // No vowel before it: the empty key's value.
+    assert_eq!(program.apply("tvdA"), "tvde");
+
+    // The same rule matching on its input reads the stem's vowel through
+    // the suffix it hasn't written yet.
+    let rules =
+        [Rule::new("harmony", "{x:[A|I]}", "{x|AGREE[t]}").in_context("{t:V?}{gap:!V*}", "")];
+    let simultaneous = RuleSet::new_with_maps(HARMONY.classes(), HARMONY.maps(), &rules);
+    assert_eq!(simultaneous.apply("buzlArIn").unwrap(), "buzlarun");
+}
+
+#[test]
+fn agreement_maps_must_cover_every_pair() {
+    const GAP: RuleSet<'static> = sound_laws! {
+        classes { V = ["a", "e"]; }
+        agreements { AGREE = [("A", "a") => "a", ("A", "e") => "e"]; }
+        rules { harmony[iterative]: "{x:[A]}" => "{x|AGREE[t]}" / "{t:V?}{gap:!V*}" _ ""; }
+    };
+    // `t` may match nothing: the map needs the empty key too.
+    let error = GAP.compile().unwrap_err();
+    assert!(error.message().contains("does not cover"), "{error}");
+}
+
+#[test]
+fn look_ahead_matches_where_nothing_of_a_class_follows() {
+    // Unstressed `о` after a hushing letter is written `е`: no stress mark
+    // follows it, at the word's end too.
+    const UNSTRESSED: RuleSet<'static> = sound_laws! {
+        classes { STRESS = ["\u{301}"]; }
+        rules { front: "о" => "е" / "{[ш|ж]}" _ "{?!STRESS}"; }
+    };
+    let program = UNSTRESSED.compile().unwrap();
+    assert_eq!(program.apply("ножом"), "ножем");
+    assert_eq!(program.apply("ножо\u{301}м"), "ножо\u{301}м");
+    assert_eq!(program.apply("шо"), "ше");
+}

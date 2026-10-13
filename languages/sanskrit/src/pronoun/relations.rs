@@ -40,7 +40,7 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
     // NOM_M_DU, from NOM_M_SG.
     relation!(NOM_M_DU, [NOM_M_SG], [("~ः", "~ौ")], rules {
         "" => [0 12],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // NOM_M_PL, from NOM_F_DU.
     relation!(NOM_M_PL, [NOM_F_DU], [("~", "~"), ("~े", "~ाः")], rules {
         "" => [0 12, 1 2],
@@ -65,9 +65,7 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "" => [0 13],
     } listed {}, true, None),
     // NOM_N_DU, from NOM_F_DU.
-    relation!(NOM_N_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(NOM_N_DU, [NOM_F_DU], [], none, true, None),
     // NOM_N_PL, from NOM_M_DU.
     relation!(NOM_N_PL, [NOM_M_DU], [("~ौ", "~ाणि"), ("~ौ", "~ानि")], rules {
         "" => [1 10, 0 4],
@@ -82,9 +80,7 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "" => [0 14],
     } listed {}, true, None),
     // ACC_M_DU, from NOM_M_DU.
-    relation!(ACC_M_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ACC_M_DU, [NOM_M_DU], [], none, true, None),
     // ACC_M_PL, from NOM_M_DU.
     relation!(ACC_M_PL, [NOM_M_DU], [("~ौ", "~ान्")], rules {
         "" => [0 14],
@@ -94,26 +90,18 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "" => [0 14],
     } listed {}, true, None),
     // ACC_F_DU, from NOM_F_DU.
-    relation!(ACC_F_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ACC_F_DU, [NOM_F_DU], [], none, true, None),
     // ACC_F_PL, from NOM_F_PL.
-    relation!(ACC_F_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ACC_F_PL, [NOM_F_PL], [], none, true, None),
     // ACC_N_SG, from NOM_M_SG.
     relation!(ACC_N_SG, [NOM_M_SG], [("~ः", "~त्"), ("~ः", "~म्")], rules {
         "" => [0 8, 1 3],
         "वः" => [1 3],
     } listed {}, true, None),
     // ACC_N_DU, from NOM_F_DU.
-    relation!(ACC_N_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ACC_N_DU, [NOM_F_DU], [], none, true, None),
     // ACC_N_PL, from NOM_N_PL.
-    relation!(ACC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ACC_N_PL, [NOM_N_PL], [], none, true, None),
     // INS_M_SG, from NOM_N_PL.
     relation!(INS_M_SG, [NOM_N_PL], [("~ाणि", "~ेण"), ("~ानि", "~ेन")], rules {
         "" => [1 9, 0 4],
@@ -135,36 +123,26 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "न" => [1 10],
     } listed {}, true, None),
     // INS_F_DU, from INS_M_DU.
-    relation!(INS_F_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(INS_F_DU, [INS_M_DU], [], none, true, None),
     // INS_F_PL, from INS_M_DU.
     relation!(INS_F_PL, [INS_M_DU], [("~्याम्", "~िः")], rules {
         "" => [0 14],
     } listed {}, true, None),
     // INS_N_SG, from INS_M_SG.
-    relation!(INS_N_SG, [INS_M_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(INS_N_SG, [INS_M_SG], [], none, true, None),
     // INS_N_DU, from INS_M_DU.
-    relation!(INS_N_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(INS_N_DU, [INS_M_DU], [], none, true, None),
     // INS_N_PL, from INS_M_PL.
-    relation!(INS_N_PL, [INS_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(INS_N_PL, [INS_M_PL], [], none, true, None),
     // DAT_M_SG, from NOM_M_DU.
     relation!(DAT_M_SG, [NOM_M_DU], [("~ौ", "~स्मै"), ("~ौ", "~ाय")], rules {
         "" => [0 11, 1 2],
     } listed {
         "तकौ" => 1,
         "त्वौ" => 1,
-    }, true, None),
+    }, false, None),
     // DAT_M_DU, from INS_M_DU.
-    relation!(DAT_M_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(DAT_M_DU, [INS_M_DU], [], none, true, None),
     // DAT_M_PL, from NOM_M_DU.
     relation!(DAT_M_PL, [NOM_M_DU], [("~ौ", "~ेभ्यः")], rules {
         "" => [0 13],
@@ -176,25 +154,17 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "ै" => [1 12],
     } listed {}, true, None),
     // DAT_F_DU, from INS_M_DU.
-    relation!(DAT_F_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(DAT_F_DU, [INS_M_DU], [], none, true, None),
     // DAT_F_PL, from INS_M_DU.
     relation!(DAT_F_PL, [INS_M_DU], [("~ाम्", "~ः")], rules {
         "" => [0 14],
     } listed {}, true, None),
     // DAT_N_SG, from DAT_M_SG.
-    relation!(DAT_N_SG, [DAT_M_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(DAT_N_SG, [DAT_M_SG], [], none, true, None),
     // DAT_N_DU, from INS_M_DU.
-    relation!(DAT_N_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(DAT_N_DU, [INS_M_DU], [], none, true, None),
     // DAT_N_PL, from DAT_M_PL.
-    relation!(DAT_N_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(DAT_N_PL, [DAT_M_PL], [], none, true, None),
     // ABL_M_SG, from DAT_M_SG.
     relation!(ABL_M_SG, [DAT_M_SG], [("~य", "~त्"), ("~ै", "~ात्")], rules {
         "" => [1 12, 0 2],
@@ -202,13 +172,9 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "ै" => [1 12],
     } listed {}, true, None),
     // ABL_M_DU, from INS_M_DU.
-    relation!(ABL_M_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ABL_M_DU, [INS_M_DU], [], none, true, None),
     // ABL_M_PL, from DAT_M_PL.
-    relation!(ABL_M_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ABL_M_PL, [DAT_M_PL], [], none, true, None),
     // ABL_F_SG, from DAT_M_SG.
     relation!(ABL_F_SG, [DAT_M_SG], [("~", "~ाः"), ("~मै", "~याः")], rules {
         "" => [1 12, 0 2],
@@ -216,25 +182,15 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "ै" => [1 12],
     } listed {}, true, None),
     // ABL_F_DU, from INS_M_DU.
-    relation!(ABL_F_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ABL_F_DU, [INS_M_DU], [], none, true, None),
     // ABL_F_PL, from DAT_F_PL.
-    relation!(ABL_F_PL, [DAT_F_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ABL_F_PL, [DAT_F_PL], [], none, true, None),
     // ABL_N_SG, from ABL_M_SG.
-    relation!(ABL_N_SG, [ABL_M_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ABL_N_SG, [ABL_M_SG], [], none, true, None),
     // ABL_N_DU, from INS_M_DU.
-    relation!(ABL_N_DU, [INS_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(ABL_N_DU, [INS_M_DU], [], none, true, None),
     // ABL_N_PL, from DAT_M_PL.
-    relation!(ABL_N_PL, [DAT_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(ABL_N_PL, [DAT_M_PL], [], none, true, None),
     // GEN_M_SG, from DAT_M_SG.
     relation!(GEN_M_SG, [DAT_M_SG], [("~मै", "~य"), ("~ाय", "~स्य")], rules {
         "" => [0 12, 1 2],
@@ -255,13 +211,9 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "त्वेभ्यः" => 1,
     }, true, None),
     // GEN_F_SG, from ABL_F_SG.
-    relation!(GEN_F_SG, [ABL_F_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(GEN_F_SG, [ABL_F_SG], [], none, true, None),
     // GEN_F_DU, from GEN_M_DU.
-    relation!(GEN_F_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(GEN_F_DU, [GEN_M_DU], [], none, true, None),
     // GEN_F_PL, from INS_M_DU.
     relation!(GEN_F_PL, [INS_M_DU], [("~भ्याम्", "~नाम्"), ("~भ्याम्", "~साम्")], rules {
         "" => [1 12, 0 2],
@@ -270,17 +222,11 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "त्वाभ्याम्" => 0,
     }, true, None),
     // GEN_N_SG, from GEN_M_SG.
-    relation!(GEN_N_SG, [GEN_M_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(GEN_N_SG, [GEN_M_SG], [], none, true, None),
     // GEN_N_DU, from GEN_M_DU.
-    relation!(GEN_N_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(GEN_N_DU, [GEN_M_DU], [], none, true, None),
     // GEN_N_PL, from GEN_M_PL.
-    relation!(GEN_N_PL, [GEN_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(GEN_N_PL, [GEN_M_PL], [], none, true, None),
     // LOC_M_SG, from DAT_M_SG.
     relation!(LOC_M_SG, [DAT_M_SG], [("~ाय", "~े"), ("~ै", "~िन्")], rules {
         "" => [1 12, 0 2],
@@ -288,9 +234,7 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "ै" => [1 12],
     } listed {}, true, None),
     // LOC_M_DU, from GEN_M_DU.
-    relation!(LOC_M_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(LOC_M_DU, [GEN_M_DU], [], none, true, None),
     // LOC_M_PL, from DAT_M_PL.
     relation!(LOC_M_PL, [DAT_M_PL], [("~भ्यः", "~षु")], rules {
         "" => [0 14],
@@ -302,59 +246,35 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
         "ै" => [1 12],
     } listed {}, true, None),
     // LOC_F_DU, from GEN_M_DU.
-    relation!(LOC_F_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(LOC_F_DU, [GEN_M_DU], [], none, true, None),
     // LOC_F_PL, from INS_M_DU.
     relation!(LOC_F_PL, [INS_M_DU], [("~भ्याम्", "~सु")], rules {
         "" => [0 14],
     } listed {}, true, None),
     // LOC_N_SG, from LOC_M_SG.
-    relation!(LOC_N_SG, [LOC_M_SG], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(LOC_N_SG, [LOC_M_SG], [], none, true, None),
     // LOC_N_DU, from GEN_M_DU.
-    relation!(LOC_N_DU, [GEN_M_DU], [("~", "~")], rules {
-        "" => [0 15],
-    } listed {}, true, None),
+    relation!(LOC_N_DU, [GEN_M_DU], [], none, true, None),
     // LOC_N_PL, from LOC_M_PL.
-    relation!(LOC_N_PL, [LOC_M_PL], [("~", "~")], rules {
-        "" => [0 14],
-    } listed {}, true, None),
+    relation!(LOC_N_PL, [LOC_M_PL], [], none, true, None),
     // VOC_M_SG, from NOM_M_SG.
     relation!(VOC_M_SG, [NOM_M_SG], [("~ः", "~")], rules {
         "" => [0 9],
     } listed {}, true, None),
     // VOC_M_DU, from NOM_M_DU.
-    relation!(VOC_M_DU, [NOM_M_DU], [("~", "~")], rules {
-        "" => [0 10],
-    } listed {}, true, None),
-    // VOC_M_PL, from NOM_F_DU.
-    relation!(VOC_M_PL, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 8],
-    } listed {}, true, None),
+    relation!(VOC_M_DU, [NOM_M_DU], [], none, true, None),
+    // VOC_M_PL, from NOM_M_PL.
+    relation!(VOC_M_PL, [NOM_M_PL], [], none, true, None),
     // VOC_F_SG, from NOM_F_DU.
-    relation!(VOC_F_SG, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 9],
-    } listed {}, true, None),
+    relation!(VOC_F_SG, [NOM_F_DU], [], none, true, None),
     // VOC_F_DU, from NOM_F_DU.
-    relation!(VOC_F_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 10],
-    } listed {}, true, None),
+    relation!(VOC_F_DU, [NOM_F_DU], [], none, true, None),
     // VOC_F_PL, from NOM_F_PL.
-    relation!(VOC_F_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 9],
-    } listed {}, true, None),
+    relation!(VOC_F_PL, [NOM_F_PL], [], none, true, None),
     // VOC_N_SG, from VOC_M_SG.
-    relation!(VOC_N_SG, [VOC_M_SG], [("~", "~")], rules {
-        "" => [0 9],
-    } listed {}, true, None),
+    relation!(VOC_N_SG, [VOC_M_SG], [], none, true, None),
     // VOC_N_DU, from NOM_F_DU.
-    relation!(VOC_N_DU, [NOM_F_DU], [("~", "~")], rules {
-        "" => [0 10],
-    } listed {}, true, None),
+    relation!(VOC_N_DU, [NOM_F_DU], [], none, true, None),
     // VOC_N_PL, from NOM_N_PL.
-    relation!(VOC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 9],
-    } listed {}, true, None),
+    relation!(VOC_N_PL, [NOM_N_PL], [], none, true, None),
 ];

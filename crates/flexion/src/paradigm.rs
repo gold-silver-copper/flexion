@@ -26,8 +26,28 @@ pub struct Paradigm<'a> {
     pub inherent: Cow<'a, [(u8, u8)]>,
     /// What it has in each cell, in the part of speech's cell order, a tab
     /// after each: a pattern (`~а`, alternatives after `|`), [`DERIVED`],
-    /// or nothing, for the parent's (derived, in a paradigm like no other).
+    /// or nothing, for its stem slot's (where [`Paradigm::stems`] states
+    /// it), else the parent's (derived, in a paradigm like no other).
     pub table: Cow<'a, str>,
+    /// Per stem slot of its part of speech (see [`crate::Slot`]), a tab
+    /// after each: nothing, or the slot's stem as a pattern over the word's
+    /// stem pieces and the ending table that builds the slot's cells on it
+    /// (`~σ- like λυω`: the aorist of `λύω`'s stem `λυ` is `λυσ`, built as
+    /// `λυω`'s table builds it). A cell its own table leaves empty is its
+    /// slot's, where it states one.
+    pub stems: Cow<'a, str>,
+    /// The cell of its parent each of its cells reads where that is another
+    /// (a deponent's active cells read as its parent's passive ones), by the
+    /// cells' order; `None`: each the same cell.
+    pub reads: Option<Cow<'a, [u16]>>,
+}
+
+/// A part of speech's stem slots and ending tables, which paradigms state
+/// slots with (see [`Paradigm::stems`]).
+#[derive(Debug, Clone, Copy, Default)]
+pub struct Space<'s, 'a> {
+    pub slots: &'s [crate::Slot<'a>],
+    pub tables: &'s [crate::EndingTable<'a>],
 }
 
 /// What a paradigm's table writes for a cell whose form comes from another
@@ -152,24 +172,76 @@ impl<'a> Paradigm<'a> {
         }
     }
 
-    /// What it has in `cell`, its own or its parent's (`family`: its part of
-    /// speech's paradigms); a cell no paradigm up the line writes is derived.
-    pub fn form<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Form<'s> {
-        let parent = |p: &&'s Paradigm<'a>| family.get(usize::from(p.parent?));
-        // Parents come before their children, so this ends.
-        std::iter::successors(Some(self), parent)
-            .take(family.len() + 1)
-            .find_map(|p| p.own(cell))
-            .unwrap_or(Form::Derived)
+    /// What it states of `cell` through the cell's stem slot (see
+    /// [`Paradigm::stems`]), if it states the slot.
+    pub fn stated(&self, space: Space<'_, '_>, cell: usize) -> Option<String> {
+        let (s, slot) = space
+            .slots
+            .iter()
+            .enumerate()
+            .find(|(_, slot)| slot.position(cell).is_some())?;
+        let position = slot.position(cell)?;
+        let entry = self.stems.split('\t').nth(s).filter(|e| !e.is_empty())?;
+        let (stem, name) = crate::stems::listed_stem(entry)?;
+        let table = space
+            .tables
+            .iter()
+            .find(|t| usize::from(t.slot) == s && t.name == name)?;
+        Some(crate::stems::compose(stem, table.pattern(position)?))
     }
 
-    /// The cell's pattern (all its alternatives); `None` for a derived
-    /// cell.
+    /// The cell's pattern (all its alternatives) as its own table and its
+    /// parents' write it (`family`: its part of speech's paradigms), without
+    /// what they state through stem slots (see [`Paradigm::pattern_in`]);
+    /// `None` for a derived cell (and one no paradigm up the line writes).
     pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
-        match self.form(family, cell) {
-            Form::Pattern(p) => Some(p),
-            Form::Derived => None,
+        let (mut p, mut cell) = (self, cell);
+        // Parents come before their children, so this ends.
+        for _ in 0..=family.len() {
+            match p.own(cell) {
+                Some(Form::Pattern(pattern)) => return Some(pattern),
+                Some(Form::Derived) => return None,
+                None => {}
+            }
+            cell = p.read(cell);
+            p = family.get(usize::from(p.parent?))?;
         }
+        None
+    }
+
+    /// The cell of its parent its `cell` reads (see [`Paradigm::reads`]).
+    pub fn read(&self, cell: usize) -> usize {
+        self.reads
+            .as_ref()
+            .and_then(|r| r.get(cell))
+            .map_or(cell, |&c| usize::from(c))
+    }
+
+    /// The cell's pattern (all its alternatives): its own table's, else its
+    /// stem slot's (in `space`), else its parent's (`family`: its part of
+    /// speech's paradigms), and so on up the line; `None` for a derived cell
+    /// (and one no paradigm up the line writes).
+    pub fn pattern_in<'s>(
+        &'s self,
+        family: &'s [Paradigm<'a>],
+        space: Space<'_, '_>,
+        cell: usize,
+    ) -> Option<Cow<'s, str>> {
+        let (mut p, mut cell) = (self, cell);
+        // Parents come before their children, so this ends.
+        for _ in 0..=family.len() {
+            match p.own(cell) {
+                Some(Form::Pattern(pattern)) => return Some(Cow::Borrowed(pattern)),
+                Some(Form::Derived) => return None,
+                None => {}
+            }
+            if let Some(pattern) = p.stated(space, cell) {
+                return Some(Cow::Owned(pattern));
+            }
+            cell = p.read(cell);
+            p = family.get(usize::from(p.parent?))?;
+        }
+        None
     }
 
     /// The forms of `cell` for these stems, the usual one first, each with
@@ -183,10 +255,23 @@ impl<'a> Paradigm<'a> {
         cell: usize,
         stems: &[&str],
     ) -> Vec<(String, usize)> {
-        let Some(p) = self.pattern(family, cell) else {
+        self.built_in(family, Space::default(), laws, cell, stems)
+    }
+
+    /// [`Paradigm::built`], with what paradigms state through the stem slots
+    /// of `space` (see [`Paradigm::pattern_in`]).
+    pub fn built_in(
+        &self,
+        family: &[Paradigm<'a>],
+        space: Space<'_, '_>,
+        laws: Option<&sound_law::Program<'_>>,
+        cell: usize,
+        stems: &[&str],
+    ) -> Vec<(String, usize)> {
+        let Some(p) = self.pattern_in(family, space, cell) else {
             return Vec::new();
         };
-        pattern::variants(p)
+        pattern::variants(&p)
             .map(|v| match laws {
                 None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
                 Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),

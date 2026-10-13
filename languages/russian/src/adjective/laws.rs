@@ -1,14 +1,15 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
-//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
-//! `%` copies (`°`): every form a declension builds goes through them, in order, so
-//! one declension serves words whose stems change its endings. Each with the
-//! words whose forms it gives, and how many of the dictionary's forms it
-//! gets wrong (those are listed in `irregular.rs`).
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
+//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written): every form a declension builds
+//! goes through them, in order, so one declension serves words whose stems change
+//! its endings. Each with the words whose forms it gives, and how many of
+//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // к+е → к+о: 92 words (близорукий, великий, далёкий, высокий), 0 forms wrong.
+    // к+е → к+о: 88 words (близорукий, великий, высокий, широкий), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {

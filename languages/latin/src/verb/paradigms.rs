@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one conjugation: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the conjugation it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the conjugation's it is like,
-/// or, in a conjugation like no other, derived):
+/// they share them), the conjugation it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the conjugation's it is like, or, in a conjugation like
+/// no other, derived):
 /// `ind_act_pres_1` (sg, pl)
 /// `ind_act_pres_2` (sg, pl)
 /// `ind_act_pres_3` (sg, pl)
@@ -104,7 +107,11 @@ use flexion::Paradigm;
 /// `gerund` (nom, gen_, dat, acc, abl, voc)
 /// `supine` (nom, gen_, dat, acc, abl, voc)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem verb_act_sg: $s0:tt;)?
+     $(stem verb_ind: $s1:tt;)?
+     $(stem verb_ind_act: $s2:tt;)?
+     $(stem participle_perf_pass: $s3:tt;)?
      $(ind_act_pres_1: $c0:tt, $c1:tt;)?
      $(ind_act_pres_2: $c2:tt, $c3:tt;)?
      $(ind_act_pres_3: $c4:tt, $c5:tt;)?
@@ -200,6 +207,7 @@ macro_rules! conjugation {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -393,6 +401,12 @@ macro_rules! conjugation {
                 $(flexion::cell!($c188),)? "\t",
                 $(flexion::cell!($c189),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+                $(flexion::cell!($s1),)? "\t",
+                $(flexion::cell!($s2),)? "\t",
+                $(flexion::cell!($s3),)? "\t",
+            )),
         }
     };
 }
@@ -407,29 +421,182 @@ macro_rules! like {
     };
 }
 
+/// The cells a conjugation reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`act_as_pass`: one value read as another).
+const ACT_AS_PASS: [u16; 190] = [
+    36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+    60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
+    48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71,
+    108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126,
+    127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 108, 109,
+    110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128,
+    129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 156, 157, 158, 159,
+    160, 161, 162, 163, 164, 165, 166, 167, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166,
+    167, 171, 172, 173, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185,
+    186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`abl_as_voc`: one value read as another).
+const ABL_AS_VOC: [u16; 190] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+    74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
+    98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
+    117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135,
+    136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154,
+    155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173,
+    174, 175, 176, 177, 178, 179, 180, 181, 183, 183, 184, 185, 186, 187, 189, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`pres_as_perf`: one value read as another).
+const PRES_AS_PERF: [u16; 190] = [
+    18, 19, 20, 21, 22, 23, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+    25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 54, 55, 56, 57, 58, 59, 42, 43, 44, 45, 46, 47, 48,
+    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 90,
+    91, 92, 93, 94, 95, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
+    97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 126, 127, 128, 129, 130, 131, 114, 115,
+    116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+    135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153,
+    154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172,
+    173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`perf_as_fut`: one value read as another).
+const PERF_AS_FUT: [u16; 190] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+    74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
+    98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
+    117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135,
+    136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154,
+    155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 170, 170, 171, 173, 173,
+    174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`ind_as_subj`: one value read as another).
+const IND_AS_SUBJ: [u16; 190] = [
+    72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+    96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115,
+    116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+    135, 136, 137, 138, 139, 140, 141, 142, 143, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
+    84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105,
+    106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124,
+    125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143,
+    144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162,
+    163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181,
+    182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`pres_as_fut`: one value read as another).
+const PRES_AS_FUT: [u16; 190] = [
+    12, 13, 14, 15, 16, 17, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+    25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 48, 49, 50, 51, 52, 53, 42, 43, 44, 45, 46, 47, 48,
+    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 84,
+    85, 86, 87, 88, 89, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
+    97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 120, 121, 122, 123, 124, 125, 114, 115,
+    116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134,
+    135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153,
+    154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172,
+    173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`impf_as_futp`: one value read as another).
+const IMPF_AS_FUTP: [u16; 190] = [
+    0, 1, 2, 3, 4, 5, 30, 31, 32, 33, 34, 35, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+    25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 66, 67, 68, 69, 70, 71, 48,
+    49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
+    73, 74, 75, 76, 77, 102, 103, 104, 105, 106, 107, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94,
+    95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 138,
+    139, 140, 141, 142, 143, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133,
+    134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152,
+    153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171,
+    172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`acc_as_voc`: one value read as another).
+const ACC_AS_VOC: [u16; 190] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+    50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+    74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
+    98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
+    117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135,
+    136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154,
+    155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173,
+    174, 175, 176, 177, 178, 179, 180, 183, 182, 183, 184, 185, 186, 189, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`pass_as_act`: one value read as another).
+const PASS_AS_ACT: [u16; 190] = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 72, 73, 74, 75,
+    76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
+    100, 101, 102, 103, 104, 105, 106, 107, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
+    86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107,
+    144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 144, 145, 146, 147, 148, 149, 150,
+    151, 152, 153, 154, 155, 168, 169, 170, 168, 169, 170, 174, 175, 176, 177, 178, 179, 180, 181,
+    182, 183, 184, 185, 186, 187, 188, 189,
+];
+
+/// A view: per cell (in the cells' order), the cell of the conjugation it is
+/// like that it reads (`3_as_1`: one value read as another).
+const C3_AS_1: [u16; 190] = [
+    0, 1, 2, 3, 0, 1, 6, 7, 8, 9, 6, 7, 12, 13, 14, 15, 12, 13, 18, 19, 20, 21, 18, 19, 24, 25, 26,
+    27, 24, 25, 30, 31, 32, 33, 30, 31, 36, 37, 38, 39, 36, 37, 42, 43, 44, 45, 42, 43, 48, 49, 50,
+    51, 48, 49, 54, 55, 56, 57, 54, 55, 60, 61, 62, 63, 60, 61, 66, 67, 68, 69, 66, 67, 72, 73, 74,
+    75, 72, 73, 78, 79, 80, 81, 78, 79, 84, 85, 86, 87, 84, 85, 90, 91, 92, 93, 90, 91, 96, 97, 98,
+    99, 96, 97, 102, 103, 104, 105, 102, 103, 108, 109, 110, 111, 108, 109, 114, 115, 116, 117,
+    114, 115, 120, 121, 122, 123, 120, 121, 126, 127, 128, 129, 126, 127, 132, 133, 134, 135, 132,
+    133, 138, 139, 140, 141, 138, 139, 144, 145, 146, 147, 144, 145, 150, 151, 152, 153, 150, 151,
+    156, 157, 158, 159, 156, 157, 162, 163, 164, 165, 162, 163, 168, 169, 170, 171, 172, 173, 174,
+    175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+];
+
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `agitō`: 2,614 words.
+    /// Like `agitō`: 2,609 words.
     Agitō,
     /// Like `modulor`: 357 words.
     Modulor,
-    /// Like `quiēscō`: 272 words.
-    Quiēscō,
-    /// Like `habeō`: 263 words.
+    /// Like `habeō`: 274 words.
     Habeō,
+    /// Like `agō`: 250 words.
+    Agō,
     /// Like `mūniō`: 218 words.
     Mūniō,
-    /// Like `agō`: 173 words.
-    Agō,
-    /// Like `minuō`: 82 words.
+    /// Like `quiēscō`: 149 words.
+    Quiēscō,
+    /// Like `compercō`: 116 words.
+    Compercō,
+    /// Like `minuō`: 79 words.
     Minuō,
-    /// Like `ēvādō`: 76 words.
+    /// Like `ēvādō`: 63 words.
     Ēvādō,
     /// Like `faciō`: 53 words.
     Faciō,
-    /// Like `clārēscō`: 50 words.
-    Clārēscō,
     /// Like `comprehendō`: 46 words.
     Comprehendō,
     /// Like `teneō`: 45 words.
@@ -440,10 +607,8 @@ pub enum Conjugation {
     Cubō,
     /// Like `excipiō`: 41 words.
     Excipiō,
-    /// Like `mergō`: 38 words.
-    Mergō,
-    /// Like `volō`: 36 words.
-    Volō,
+    /// Like `compescō`: 36 words.
+    Compescō,
     /// Like `impleō`: 29 words.
     Impleō,
     /// Like `repōnō`: 29 words.
@@ -452,30 +617,32 @@ pub enum Conjugation {
     Mittō,
     /// Like `labōrō`: 28 words.
     Labōrō,
-    /// Like `mōlior`: 27 words.
-    Mōlior,
     /// Like `obeō`: 27 words.
     Obeō,
     /// Like `perstringō`: 27 words.
     Perstringō,
     /// Like `coniungō`: 27 words.
     Coniungō,
-    /// Like `coniciō`: 27 words.
-    Coniciō,
     /// Like `prōdō`: 26 words.
     Prōdō,
     /// Like `dēdūcō`: 26 words.
     Dēdūcō,
     /// Like `cōnsequor`: 25 words.
     Cōnsequor,
-    /// Like `pellō`: 25 words.
-    Pellō,
+    /// Like `mergō`: 25 words.
+    Mergō,
+    /// Like `coniciō`: 25 words.
+    Coniciō,
     /// Like `gerō`: 25 words.
     Gerō,
-    /// Like `ārdeō`: 24 words.
+    /// Like `mōlior`: 25 words.
+    Mōlior,
+    /// Like `pellō`: 25 words.
+    Pellō,
+    /// Like `tueor`: 23 words.
+    Tueor,
+    /// Like `ārdeō`: 22 words.
     Ārdeō,
-    /// Like `profiteor`: 23 words.
-    Profiteor,
     /// Like `praecīdō`: 22 words.
     Praecīdō,
     /// Like `exsarciō`: 22 words.
@@ -484,38 +651,38 @@ pub enum Conjugation {
     Solvō,
     /// Like `nāscor`: 21 words.
     Nāscor,
-    /// Like `referō`: 21 words.
-    Referō,
     /// Like `abnuō`: 20 words.
     Abnuō,
-    /// Like `afflīgō`: 19 words.
-    Afflīgō,
     /// Like `cēdō`: 19 words.
     Cēdō,
-    /// Like `ēgredior`: 19 words.
-    Ēgredior,
     /// Like `possideō`: 19 words.
     Possideō,
-    /// Like `dēsinō`: 17 words.
-    Dēsinō,
+    /// Like `ēgredior`: 19 words.
+    Ēgredior,
+    /// Like `referō`: 18 words.
+    Referō,
     /// Like `dispiciō`: 17 words.
     Dispiciō,
     /// Like `trahō`: 17 words.
     Trahō,
     /// Like `compingō`: 17 words.
     Compingō,
+    /// Like `dēsinō`: 17 words.
+    Dēsinō,
+    /// Like `nectō`: 16 words.
+    Nectō,
     /// Like `corripiō`: 16 words.
     Corripiō,
     /// Like `effundō`: 16 words.
     Effundō,
-    /// Like `accumbō`: 16 words.
-    Accumbō,
     /// Like `exigō`: 16 words.
     Exigō,
-    /// Like `nectō`: 15 words.
-    Nectō,
+    /// Like `accumbō`: 16 words.
+    Accumbō,
     /// Like `nītor`: 15 words.
     Nītor,
+    /// Like `extruō`: 15 words.
+    Extruō,
     /// Like `dīcō`: 14 words.
     Dīcō,
     /// Like `regō`: 14 words.
@@ -528,6 +695,8 @@ pub enum Conjugation {
     Fodiō,
     /// Like `ēveniō`: 14 words.
     Ēveniō,
+    /// Like `nīvit`: 14 words.
+    Nīvit,
     /// Like `tingō`: 13 words.
     Tingō,
     /// Like `illābor`: 13 words.
@@ -536,18 +705,16 @@ pub enum Conjugation {
     Ēvehō,
     /// Like `madeō`: 13 words.
     Madeō,
-    /// Like `contendō`: 13 words.
-    Contendō,
-    /// Like `contorqueō`: 13 words.
-    Contorqueō,
+    /// Like `dēfīgō`: 13 words.
+    Dēfīgō,
     /// Like `intersaepiō`: 13 words.
     Intersaepiō,
+    /// Like `contendō`: 13 words.
+    Contendō,
     /// Like `cōnsulō`: 12 words.
     Cōnsulō,
     /// Like `feriō`: 12 words.
     Feriō,
-    /// Like `aperiō`: 12 words.
-    Aperiō,
     /// Like `fugiō`: 12 words.
     Fugiō,
     /// Like `scindō`: 12 words.
@@ -556,8 +723,6 @@ pub enum Conjugation {
     Fallō,
     /// Like `adsum`: 12 words.
     Adsum,
-    /// Like `cēnseō`: 11 words.
-    Cēnseō,
     /// Like `misceō`: 11 words.
     Misceō,
     /// Like `contineō`: 11 words.
@@ -570,24 +735,26 @@ pub enum Conjugation {
     Cernō,
     /// Like `decet`: 11 words.
     Decet,
-    /// Like `respondeō`: 11 words.
-    Respondeō,
     /// Like `percutiō`: 11 words.
     Percutiō,
-    /// Like `exorior`: 11 words.
-    Exorior,
+    /// Like `aperiō`: 11 words.
+    Aperiō,
+    /// Like `respondeō`: 11 words.
+    Respondeō,
     /// Like `tergeō`: 10 words.
     Tergeō,
-    /// Like `vertō`: 10 words.
-    Vertō,
     /// Like `legō`: 10 words.
     Legō,
     /// Like `terō`: 10 words.
     Terō,
+    /// Like `calvor`: 10 words.
+    Calvor,
+    /// Like `vertō`: 9 words.
+    Vertō,
+    /// Like `contorqueō`: 9 words.
+    Contorqueō,
     /// Like `micō`: 9 words.
     Micō,
-    /// Like `interstinguō`: 9 words.
-    Interstinguō,
     /// Like `inveniō`: 9 words.
     Inveniō,
     /// Like `sternō`: 9 words.
@@ -600,8 +767,8 @@ pub enum Conjugation {
     Mētior,
     /// Like `īnsiliō`: 9 words.
     Īnsiliō,
-    /// Like `calvor`: 9 words.
-    Calvor,
+    /// Like `interstinguō`: 9 words.
+    Interstinguō,
     /// Like `pervincō`: 8 words.
     Pervincō,
     /// Like `concoquō`: 8 words.
@@ -610,6 +777,8 @@ pub enum Conjugation {
     Nūbō,
     /// Like `prōfluō`: 8 words.
     Prōfluō,
+    /// Like `exorior`: 8 words.
+    Exorior,
     /// Like `cohaereō`: 8 words.
     Cohaereō,
     /// Like `recolō`: 7 words.
@@ -624,8 +793,6 @@ pub enum Conjugation {
     Maneō,
     /// Like `īnsistō`: 7 words.
     Īnsistō,
-    /// Like `serō`: 7 words.
-    Serō,
     /// Like `augeō`: 7 words.
     Augeō,
     /// Like `ferveō`: 7 words.
@@ -636,6 +803,12 @@ pub enum Conjugation {
     Dēpendeō,
     /// Like `peragō`: 7 words.
     Peragō,
+    /// Like `īnserō`: 7 words.
+    Īnserō,
+    /// Like `coorior`: 7 words.
+    Coorior,
+    /// Like `cēnseō`: 6 words.
+    Cēnseō,
     /// Like `pergō`: 6 words.
     Pergō,
     /// Like `vīvō`: 6 words.
@@ -648,8 +821,6 @@ pub enum Conjugation {
     Innectō,
     /// Like `eximō`: 6 words.
     Eximō,
-    /// Like `incurrō`: 6 words.
-    Incurrō,
     /// Like `vinciō`: 6 words.
     Vinciō,
     /// Like `scandō`: 6 words.
@@ -680,22 +851,18 @@ pub enum Conjugation {
     Astō,
     /// Like `occinō`: 5 words.
     Occinō,
-    /// Like `coorior`: 5 words.
-    Coorior,
     /// Like `mulceō`: 5 words.
     Mulceō,
     /// Like `sedeō`: 5 words.
     Sedeō,
     /// Like `clueō`: 5 words.
     Clueō,
-    /// Like `cadō`: 5 words.
-    Cadō,
     /// Like `ambigō`: 5 words.
     Ambigō,
-    /// Like `fruor`: 5 words.
-    Fruor,
     /// Like `contremīscō`: 5 words.
     Contremīscō,
+    /// Like `clangō`: 5 words.
+    Clangō,
     /// Like `dēpudet`: 5 words.
     Dēpudet,
     /// Like `caveō`: 4 words.
@@ -726,10 +893,16 @@ pub enum Conjugation {
     Circumvehor,
     /// Like `adnītor`: 4 words.
     Adnītor,
+    /// Like `fruor`: 4 words.
+    Fruor,
+    /// Like `sum`: 4 words.
+    Sum,
     /// Like `secō`: 3 words.
     Secō,
     /// Like `quaerō`: 3 words.
     Quaerō,
+    /// Like `tangō`: 3 words.
+    Tangō,
     /// Like `adliciō`: 3 words.
     Adliciō,
     /// Like `stō`: 3 words.
@@ -738,6 +911,8 @@ pub enum Conjugation {
     Dīluō,
     /// Like `iubeō`: 3 words.
     Iubeō,
+    /// Like `apiō`: 3 words.
+    Apiō,
     /// Like `fundō`: 3 words.
     Fundō,
     /// Like `scatō`: 3 words.
@@ -748,8 +923,12 @@ pub enum Conjugation {
     Dēfungor,
     /// Like `pāscō`: 3 words.
     Pāscō,
+    /// Like `ōdī`: 3 words.
+    Ōdī,
     /// Like `dētergeō`: 3 words.
     Dētergeō,
+    /// Like `differō`: 3 words.
+    Differō,
     /// Like `antecapiō`: 3 words.
     Antecapiō,
     /// Like `commeminī`: 3 words.
@@ -758,167 +937,144 @@ pub enum Conjugation {
     Contemnō,
     /// Like `dētorreō`: 3 words.
     Dētorreō,
+    /// Like `orior`: 3 words.
+    Orior,
     /// Like `superstō`: 3 words.
     Superstō,
+    /// Like `gignō`: 3 words.
+    Gignō,
     /// Like `assiliō`: 3 words.
     Assiliō,
     /// Like `convalēscō`: 3 words.
     Convalēscō,
     /// Like `adhērēscō`: 3 words.
     Adhērēscō,
+    /// Like `lavō`: 3 words.
+    Lavō,
     /// Like `abblandior`: 3 words.
     Abblandior,
     /// Like `effervēscō`: 3 words.
     Effervēscō,
-    /// Like `vesperāscit`: 2 words.
-    Vesperāscit,
-    /// Like `coepī`: 2 words.
-    Coepī,
     /// Like `dīlūculat`: 2 words.
     Dīlūculat,
-    /// Like `pluit`: 2 words.
-    Pluit,
-    /// Like `autumnāscit`: 2 words.
-    Autumnāscit,
-    /// Like `sum`: 1 words.
-    Sum,
-    /// Like `ōdī`: 1 words.
-    Ōdī,
+    /// Like `sepultō`: 1 words.
+    Sepultō,
     /// Like `alāre`: 1 words.
     Alāre,
-    /// Like `cōnfit`: 1 words.
-    Cōnfit,
-    /// Like `inquam`: 1 words.
-    Inquam,
     /// Like `coerceo`: 1 words.
     Coerceo,
     /// Like `rēfert`: 1 words.
     Rēfert,
     /// Like `coemo`: 1 words.
     Coemo,
-    /// Like `ningit`: 1 words.
-    Ningit,
-    /// Like `compluit`: 1 words.
-    Compluit,
-    /// Like `īnfit`: 1 words.
-    Īnfit,
-    /// Like `apage`: 1 words.
-    Apage,
-    /// Like `ninguit`: 1 words.
-    Ninguit,
-    /// Like `autumnēscit`: 1 words.
-    Autumnēscit,
-    /// Like `coest`: 1 words.
-    Coest,
-    /// Like `nīvit`: 1 words.
-    Nīvit,
-    /// Like `licēscit`: 1 words.
-    Licēscit,
+    /// Like `inclāmitō`: 1 words.
+    Inclāmitō,
 }
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 202] = [
+    pub const ALL: [Conjugation; 196] = [
         Conjugation::Agitō,
         Conjugation::Modulor,
-        Conjugation::Quiēscō,
         Conjugation::Habeō,
-        Conjugation::Mūniō,
         Conjugation::Agō,
+        Conjugation::Mūniō,
+        Conjugation::Quiēscō,
+        Conjugation::Compercō,
         Conjugation::Minuō,
         Conjugation::Ēvādō,
         Conjugation::Faciō,
-        Conjugation::Clārēscō,
         Conjugation::Comprehendō,
         Conjugation::Teneō,
         Conjugation::Petō,
         Conjugation::Cubō,
         Conjugation::Excipiō,
-        Conjugation::Mergō,
-        Conjugation::Volō,
+        Conjugation::Compescō,
         Conjugation::Impleō,
         Conjugation::Repōnō,
         Conjugation::Mittō,
         Conjugation::Labōrō,
-        Conjugation::Mōlior,
         Conjugation::Obeō,
         Conjugation::Perstringō,
         Conjugation::Coniungō,
-        Conjugation::Coniciō,
         Conjugation::Prōdō,
         Conjugation::Dēdūcō,
         Conjugation::Cōnsequor,
-        Conjugation::Pellō,
+        Conjugation::Mergō,
+        Conjugation::Coniciō,
         Conjugation::Gerō,
+        Conjugation::Mōlior,
+        Conjugation::Pellō,
+        Conjugation::Tueor,
         Conjugation::Ārdeō,
-        Conjugation::Profiteor,
         Conjugation::Praecīdō,
         Conjugation::Exsarciō,
         Conjugation::Solvō,
         Conjugation::Nāscor,
-        Conjugation::Referō,
         Conjugation::Abnuō,
-        Conjugation::Afflīgō,
         Conjugation::Cēdō,
-        Conjugation::Ēgredior,
         Conjugation::Possideō,
-        Conjugation::Dēsinō,
+        Conjugation::Ēgredior,
+        Conjugation::Referō,
         Conjugation::Dispiciō,
         Conjugation::Trahō,
         Conjugation::Compingō,
+        Conjugation::Dēsinō,
+        Conjugation::Nectō,
         Conjugation::Corripiō,
         Conjugation::Effundō,
-        Conjugation::Accumbō,
         Conjugation::Exigō,
-        Conjugation::Nectō,
+        Conjugation::Accumbō,
         Conjugation::Nītor,
+        Conjugation::Extruō,
         Conjugation::Dīcō,
         Conjugation::Regō,
         Conjugation::Struō,
         Conjugation::Rumpō,
         Conjugation::Fodiō,
         Conjugation::Ēveniō,
+        Conjugation::Nīvit,
         Conjugation::Tingō,
         Conjugation::Illābor,
         Conjugation::Ēvehō,
         Conjugation::Madeō,
-        Conjugation::Contendō,
-        Conjugation::Contorqueō,
+        Conjugation::Dēfīgō,
         Conjugation::Intersaepiō,
+        Conjugation::Contendō,
         Conjugation::Cōnsulō,
         Conjugation::Feriō,
-        Conjugation::Aperiō,
         Conjugation::Fugiō,
         Conjugation::Scindō,
         Conjugation::Fallō,
         Conjugation::Adsum,
-        Conjugation::Cēnseō,
         Conjugation::Misceō,
         Conjugation::Contineō,
         Conjugation::Opprimō,
         Conjugation::Incidō,
         Conjugation::Cernō,
         Conjugation::Decet,
-        Conjugation::Respondeō,
         Conjugation::Percutiō,
-        Conjugation::Exorior,
+        Conjugation::Aperiō,
+        Conjugation::Respondeō,
         Conjugation::Tergeō,
-        Conjugation::Vertō,
         Conjugation::Legō,
         Conjugation::Terō,
+        Conjugation::Calvor,
+        Conjugation::Vertō,
+        Conjugation::Contorqueō,
         Conjugation::Micō,
-        Conjugation::Interstinguō,
         Conjugation::Inveniō,
         Conjugation::Sternō,
         Conjugation::Vīsō,
         Conjugation::Sentiō,
         Conjugation::Mētior,
         Conjugation::Īnsiliō,
-        Conjugation::Calvor,
+        Conjugation::Interstinguō,
         Conjugation::Pervincō,
         Conjugation::Concoquō,
         Conjugation::Nūbō,
         Conjugation::Prōfluō,
+        Conjugation::Exorior,
         Conjugation::Cohaereō,
         Conjugation::Recolō,
         Conjugation::Gaudeō,
@@ -926,19 +1082,20 @@ impl Conjugation {
         Conjugation::Comedō,
         Conjugation::Maneō,
         Conjugation::Īnsistō,
-        Conjugation::Serō,
         Conjugation::Augeō,
         Conjugation::Ferveō,
         Conjugation::Īnsīdō,
         Conjugation::Dēpendeō,
         Conjugation::Peragō,
+        Conjugation::Īnserō,
+        Conjugation::Coorior,
+        Conjugation::Cēnseō,
         Conjugation::Pergō,
         Conjugation::Vīvō,
         Conjugation::Cōnstō,
         Conjugation::Capiō,
         Conjugation::Innectō,
         Conjugation::Eximō,
-        Conjugation::Incurrō,
         Conjugation::Vinciō,
         Conjugation::Scandō,
         Conjugation::Dēfluō,
@@ -954,14 +1111,12 @@ impl Conjugation {
         Conjugation::Adipīscor,
         Conjugation::Astō,
         Conjugation::Occinō,
-        Conjugation::Coorior,
         Conjugation::Mulceō,
         Conjugation::Sedeō,
         Conjugation::Clueō,
-        Conjugation::Cadō,
         Conjugation::Ambigō,
-        Conjugation::Fruor,
         Conjugation::Contremīscō,
+        Conjugation::Clangō,
         Conjugation::Dēpudet,
         Conjugation::Caveō,
         Conjugation::Cieō,
@@ -977,50 +1132,44 @@ impl Conjugation {
         Conjugation::Comperiō,
         Conjugation::Circumvehor,
         Conjugation::Adnītor,
+        Conjugation::Fruor,
+        Conjugation::Sum,
         Conjugation::Secō,
         Conjugation::Quaerō,
+        Conjugation::Tangō,
         Conjugation::Adliciō,
         Conjugation::Stō,
         Conjugation::Dīluō,
         Conjugation::Iubeō,
+        Conjugation::Apiō,
         Conjugation::Fundō,
         Conjugation::Scatō,
         Conjugation::Perpōtō,
         Conjugation::Dēfungor,
         Conjugation::Pāscō,
+        Conjugation::Ōdī,
         Conjugation::Dētergeō,
+        Conjugation::Differō,
         Conjugation::Antecapiō,
         Conjugation::Commeminī,
         Conjugation::Contemnō,
         Conjugation::Dētorreō,
+        Conjugation::Orior,
         Conjugation::Superstō,
+        Conjugation::Gignō,
         Conjugation::Assiliō,
         Conjugation::Convalēscō,
         Conjugation::Adhērēscō,
+        Conjugation::Lavō,
         Conjugation::Abblandior,
         Conjugation::Effervēscō,
-        Conjugation::Vesperāscit,
-        Conjugation::Coepī,
         Conjugation::Dīlūculat,
-        Conjugation::Pluit,
-        Conjugation::Autumnāscit,
-        Conjugation::Sum,
-        Conjugation::Ōdī,
+        Conjugation::Sepultō,
         Conjugation::Alāre,
-        Conjugation::Cōnfit,
-        Conjugation::Inquam,
         Conjugation::Coerceo,
         Conjugation::Rēfert,
         Conjugation::Coemo,
-        Conjugation::Ningit,
-        Conjugation::Compluit,
-        Conjugation::Īnfit,
-        Conjugation::Apage,
-        Conjugation::Ninguit,
-        Conjugation::Autumnēscit,
-        Conjugation::Coest,
-        Conjugation::Nīvit,
-        Conjugation::Licēscit,
+        Conjugation::Inclāmitō,
     ];
 
     /// Its table.
@@ -1038,9 +1187,10 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
-    // Agitō: 2,614 words (līberō, radiō, digitō, mundō, abaliēnō, picō).
-    conjugation!("agitō", 2614, "~ō";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 196] = [
+    // Agitō: 2,609 words (līberō, radiō, digitō, mundō, abaliēnō, picō).
+    conjugation!("agitō", 2609, "~ō";
+    stem participle_perf_pass: "~āt- like agitō";
     ind_act_pres_1: "~ō", "~āmus";
     ind_act_pres_2: "~ās", "~ātis";
     ind_act_pres_3: "~at", "~ant";
@@ -1088,100 +1238,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ā", "~āte";
     imperative_act_fut_2: "~ātō", "~ātōte";
     imperative_act_fut_3: _, "~antō";
-    imperative_pass_pres_2: "~āre", "~āminī";
+    imperative_pass_pres_2: "~āre", _;
     imperative_pass_fut_2: "~ātor", _;
     imperative_pass_fut_3: _, "~antor";
-    infinitive_act: "~āre", "~āvisse", _;
+    infinitive_act: _, "~āvisse", _;
     infinitive_pass: "~ārī", _, _;
-    participle: "~āns", "~ātus", "~ātūrus", "~andus";
+    participle: "~āns", _, _, "~andus";
     gerund: _, "~andī", "~andō", "~andum", _, _;
-    supine: _, _, _, "~ātum", "~ātū", _;
     ),
-    // Modulor: 357 words (for, cōnor, minor, māchinor, vōciferor, lupor).
-    conjugation!("modulor", 357, "~or";
-    ind_act_pres_1: "~or", "~āmur";
-    ind_act_pres_2: "~āris|~āre", "~āminī";
-    ind_act_pres_3: "~ātur", "~antur";
-    ind_act_impf_1: "~ābar", "~ābāmur";
-    ind_act_impf_2: "~ābāris|~ābāre", "~ābāminī";
-    ind_act_impf_3: "~ābātur", "~ābantur";
-    ind_act_fut_1: "~ābor", "~ābimur";
-    ind_act_fut_2: "~āberis|~ābere", "~ābiminī";
-    ind_act_fut_3: "~ābitur", "~ābuntur";
-    subj_act_pres_1: "~er", "~ēmur";
-    subj_act_pres_2: "~ēris|~ēre", "~ēminī";
-    subj_act_pres_3: "~ētur", "~entur";
-    subj_act_impf_1: "~ārer", "~ārēmur";
-    subj_act_impf_2: "~ārēris|~ārēre", "~ārēminī";
-    subj_act_impf_3: "~ārētur", "~ārentur";
-    imperative_act_pres_2: "~āre", "~āminī";
-    imperative_act_fut_2: "~ātor", _;
-    imperative_act_fut_3: _, "~antor";
-    infinitive_act: "~ārī", "~āsse", _;
-    participle: "~āns", _, "~ātūrus", "~andus";
-    gerund: _, "~andī", "~andō", "~andum", _, _;
-    supine: _, _, _, "~ātum", "~ātū", _;
+    // Modulor: 357 words (for, cōnor, minor, māchinor, vōciferor, lupor). Like Agitō, except in 37 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
+    conjugation!("modulor", 357, "~or", like Agitō as ACT_AS_PASS;
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_act_pres_2: _, "~āminī";
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: _, derived;
+    infinitive_act: _, "~āsse", _;
+    infinitive_pass: derived, _, _;
+    participle: _, derived, _, _;
     ),
-    // Quiēscō: 272 words (albēscō, frīgēscō, grandēscō, siccēscō, alēscō, nōscō).
-    conjugation!("quiēscō", 272, "~scō";
-    ind_act_pres_1: "~scō", "~scimus";
-    ind_act_pres_2: "~scis", "~scitis";
-    ind_act_pres_3: "~scit", "~scunt";
-    ind_act_impf_1: "~scēbam", "~scēbāmus";
-    ind_act_impf_2: "~scēbās", "~scēbātis";
-    ind_act_impf_3: "~scēbat", "~scēbant";
-    ind_act_fut_1: "~scam", "~scēmus";
-    ind_act_fut_2: "~scēs", "~scētis";
-    ind_act_fut_3: "~scet", "~scent";
-    ind_act_perf_1: "~vī", "~vimus";
-    ind_act_perf_2: "~vistī", "~vistis";
-    ind_act_perf_3: "~vit", "~vērunt";
-    ind_act_plup_1: "~veram", "~verāmus";
-    ind_act_plup_2: "~verās", "~verātis";
-    ind_act_plup_3: "~verat", "~verant";
-    ind_act_futp_1: "~verō", "~verimus";
-    ind_act_futp_2: "~veris", "~veritis";
-    ind_act_futp_3: "~verit", "~verint";
-    ind_pass_pres_1: "~scor", "~scimur";
-    ind_pass_pres_2: "~sceris", "~sciminī";
-    ind_pass_pres_3: "~scitur", "~scuntur";
-    ind_pass_impf_1: "~scēbar", "~scēbāmur";
-    ind_pass_impf_2: "~scēbāris", "~scēbāminī";
-    ind_pass_impf_3: "~scēbātur", "~scēbantur";
-    ind_pass_fut_1: "~scar", "~scēmur";
-    ind_pass_fut_2: "~scēris", "~scēminī";
-    ind_pass_fut_3: "~scētur", "~scentur";
-    subj_act_pres_1: "~scam", "~scāmus";
-    subj_act_pres_2: "~scās", "~scātis";
-    subj_act_pres_3: "~scat", "~scant";
-    subj_act_impf_1: "~scerem", "~scerēmus";
-    subj_act_impf_2: "~scerēs", "~scerētis";
-    subj_act_impf_3: "~sceret", "~scerent";
-    subj_act_perf_1: "~verim", "~verīmus";
-    subj_act_perf_2: "~verīs", "~verītis";
-    subj_act_plup_1: "~vissem", "~vissēmus";
-    subj_act_plup_2: "~vissēs", "~vissētis";
-    subj_act_plup_3: "~visset", "~vissent";
-    subj_pass_pres_1: "~scar", "~scāmur";
-    subj_pass_pres_2: "~scāris", "~scāminī";
-    subj_pass_pres_3: "~scātur", "~scantur";
-    subj_pass_impf_1: "~scerer", "~scerēmur";
-    subj_pass_impf_2: "~scerēris", "~scerēminī";
-    subj_pass_impf_3: "~scerētur", "~scerentur";
-    imperative_act_pres_2: "~sce", "~scite";
-    imperative_act_fut_2: "~scitō", "~scitōte";
-    imperative_act_fut_3: _, "~scuntō";
-    imperative_pass_pres_2: "~scere", "~sciminī";
-    imperative_pass_fut_2: "~scitor", _;
-    imperative_pass_fut_3: _, "~scuntor";
-    infinitive_act: "~scere", "~visse", _;
-    infinitive_pass: "~scī", _, _;
-    participle: "~scēns", "~tus", "~tūrus", "~scendus";
-    gerund: _, "~scendī", "~scendō", "~scendum", _, _;
-    supine: _, _, _, "~tum", "~tū", _;
-    ),
-    // Habeō: 263 words (abhorreō, moneō, aveō, oleō, stupeō, egeō).
-    conjugation!("habeō", 263, "~eō";
+    // Habeō: 274 words (abhorreō, moneō, aveō, oleō, stupeō, egeō).
+    conjugation!("habeō", 274, "~eō";
+    stem participle_perf_pass: "~it- like agitō";
     ind_act_pres_1: "~eō", "~ēmus";
     ind_act_pres_2: "~ēs", "~ētis";
     ind_act_pres_3: "~et", "~ent";
@@ -1229,17 +1321,67 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ē", "~ēte";
     imperative_act_fut_2: "~ētō", "~ētōte";
     imperative_act_fut_3: _, "~entō";
-    imperative_pass_pres_2: "~ēre", "~ēminī";
+    imperative_pass_pres_2: "~ēre", _;
     imperative_pass_fut_2: "~ētor", _;
     imperative_pass_fut_3: _, "~entor";
-    infinitive_act: "~ēre", "~uisse", _;
+    infinitive_act: _, "~uisse", _;
     infinitive_pass: "~ērī", _, _;
-    participle: "~ēns", "~itus", "~itūrus", "~endus";
+    participle: "~ēns", _, _, "~endus";
     gerund: _, "~endī", "~endō", "~endum", _, _;
-    supine: _, _, _, "~itum", "~itū", _;
+    ),
+    // Agō: 250 words (ferō, eō, vortō, sūmō, edō, vertō). Like Habeō, except in 86 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("agō", 250, "~ō", like Habeō;
+    stem participle_perf_pass: "~t- like agitō";
+    ind_act_pres_1: "~ō", "~imus";
+    ind_act_pres_2: "~is", "~itis";
+    ind_act_pres_3: "~it", "~unt";
+    ind_act_fut_1: "~am", "~ēmus";
+    ind_act_fut_2: "~ēs", "~ētis";
+    ind_act_fut_3: "~et", "~ent";
+    ind_act_perf_1: "~sī", "~simus";
+    ind_act_perf_2: "~sistī", "~sistis";
+    ind_act_perf_3: "~sit", "~sērunt|~sēre";
+    ind_act_plup_1: "~seram", "~serāmus";
+    ind_act_plup_2: "~serās", "~serātis";
+    ind_act_plup_3: "~serat", "~serant";
+    ind_act_futp_1: "~serō", "~serimus";
+    ind_act_futp_2: "~seris", "~seritis";
+    ind_act_futp_3: "~serit", "~serint";
+    ind_pass_pres_1: "~or", "~imur";
+    ind_pass_pres_2: "~eris", "~iminī";
+    ind_pass_pres_3: "~itur", "~untur";
+    ind_pass_fut_1: "~ar", "~ēmur";
+    ind_pass_fut_2: "~ēris", "~ēminī";
+    ind_pass_fut_3: "~ētur", "~entur";
+    subj_act_pres_1: "~am", "~āmus";
+    subj_act_pres_2: "~ās", "~ātis";
+    subj_act_pres_3: "~at", "~ant";
+    subj_act_impf_1: "~erem", "~erēmus";
+    subj_act_impf_2: "~erēs", "~erētis";
+    subj_act_impf_3: "~eret", "~erent";
+    subj_act_perf_1: "~serim", "~serīmus";
+    subj_act_perf_2: "~serīs", "~serītis";
+    subj_act_plup_1: "~sissem", "~sissēmus";
+    subj_act_plup_2: "~sissēs", "~sissētis";
+    subj_act_plup_3: "~sisset", "~sissent";
+    subj_pass_pres_1: "~ar", "~āmur";
+    subj_pass_pres_2: "~āris", "~āminī";
+    subj_pass_pres_3: "~ātur", "~antur";
+    subj_pass_impf_1: "~erer", "~erēmur";
+    subj_pass_impf_2: "~erēris", "~erēminī";
+    subj_pass_impf_3: "~erētur", "~erentur";
+    imperative_act_pres_2: "~e", "~ite";
+    imperative_act_fut_2: "~itō", "~itōte";
+    imperative_act_fut_3: _, "~untō";
+    imperative_pass_pres_2: "~ere", _;
+    imperative_pass_fut_2: "~itor", _;
+    imperative_pass_fut_3: _, "~untor";
+    infinitive_act: _, "~sisse", _;
+    infinitive_pass: "~ī", _, _;
     ),
     // Mūniō: 218 words (fīniō, hirriō, bombiō, poliō, audiō, odiō).
     conjugation!("mūniō", 218, "~iō";
+    stem participle_perf_pass: "~īt- like agitō";
     ind_act_pres_1: "~iō", "~īmus";
     ind_act_pres_2: "~īs", "~ītis";
     ind_act_pres_3: "~it", "~iunt";
@@ -1287,71 +1429,121 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ī", "~īte";
     imperative_act_fut_2: "~ītō", "~ītōte";
     imperative_act_fut_3: _, "~iuntō";
-    imperative_pass_pres_2: "~īre", "~īminī";
+    imperative_pass_pres_2: "~īre", _;
     imperative_pass_fut_2: "~ītor", _;
     imperative_pass_fut_3: _, "~iuntor";
-    infinitive_act: "~īre", "~īvisse", _;
+    infinitive_act: _, "~īvisse", _;
     infinitive_pass: "~īrī", _, _;
-    participle: "~iēns", "~ītus", "~ītūrus", "~iendus|~iundus";
+    participle: "~iēns", _, _, "~iendus|~iundus";
     gerund: _, "~iendī", "~iendō", "~iendum", _, _;
-    supine: _, _, _, "~ītum", "~ītū", _;
     ),
-    // Agō: 173 words (ferō, eō, vortō, sūmō, vertō, prōscrībō). Like Habeō, except in 92 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("agō", 173, "~ō", like Habeō;
-    ind_act_pres_1: "~ō", "~imus";
-    ind_act_pres_2: "~is", "~itis";
-    ind_act_pres_3: "~it", "~unt";
-    ind_act_fut_1: "~am", "~ēmus";
-    ind_act_fut_2: "~ēs", "~ētis";
-    ind_act_fut_3: "~et", "~ent";
-    ind_act_perf_1: "~sī", "~simus";
-    ind_act_perf_2: "~sistī", "~sistis";
-    ind_act_perf_3: "~sit", "~sērunt";
-    ind_act_plup_1: "~seram", "~serāmus";
-    ind_act_plup_2: "~serās", "~serātis";
-    ind_act_plup_3: "~serat", "~serant";
-    ind_act_futp_1: "~serō", "~serimus";
-    ind_act_futp_2: "~seris", "~seritis";
-    ind_act_futp_3: "~serit", "~serint";
-    ind_pass_pres_1: "~or", "~imur";
-    ind_pass_pres_2: "~eris", "~iminī";
-    ind_pass_pres_3: "~itur", "~untur";
-    ind_pass_fut_1: "~ar", "~ēmur";
-    ind_pass_fut_2: "~ēris", "~ēminī";
-    ind_pass_fut_3: "~ētur", "~entur";
-    subj_act_pres_1: "~am", "~āmus";
-    subj_act_pres_2: "~ās", "~ātis";
-    subj_act_pres_3: "~at", "~ant";
-    subj_act_impf_1: "~erem", "~erēmus";
-    subj_act_impf_2: "~erēs", "~erētis";
-    subj_act_impf_3: "~eret", "~erent";
-    subj_act_perf_1: "~serim", "~serīmus";
-    subj_act_perf_2: "~serīs", "~serītis";
-    subj_act_plup_1: "~sissem", "~sissēmus";
-    subj_act_plup_2: "~sissēs", "~sissētis";
-    subj_act_plup_3: "~sisset", "~sissent";
-    subj_pass_pres_1: "~ar", "~āmur";
-    subj_pass_pres_2: "~āris", "~āminī";
-    subj_pass_pres_3: "~ātur", "~antur";
-    subj_pass_impf_1: "~erer", "~erēmur";
-    subj_pass_impf_2: "~erēris", "~erēminī";
-    subj_pass_impf_3: "~erētur", "~erentur";
-    imperative_act_pres_2: "~e", "~ite";
-    imperative_act_fut_2: "~itō", "~itōte";
-    imperative_act_fut_3: _, "~untō";
-    imperative_pass_pres_2: "~ere", "~iminī";
-    imperative_pass_fut_2: "~itor", _;
-    imperative_pass_fut_3: _, "~untor";
-    infinitive_act: "~ere", "~sisse", _;
-    infinitive_pass: "~ī", _, _;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
+    // Quiēscō: 149 words (albēscō, grandēscō, siccēscō, alēscō, mānēscō, cornēscō).
+    conjugation!("quiēscō", 149, "~scō";
+    stem participle_perf_pass: "~t- like agitō";
+    ind_act_pres_1: "~scō", "~scimus";
+    ind_act_pres_2: "~scis", "~scitis";
+    ind_act_pres_3: "~scit", "~scunt";
+    ind_act_impf_1: "~scēbam", "~scēbāmus";
+    ind_act_impf_2: "~scēbās", "~scēbātis";
+    ind_act_impf_3: "~scēbat", "~scēbant";
+    ind_act_fut_1: "~scam", "~scēmus";
+    ind_act_fut_2: "~scēs", "~scētis";
+    ind_act_fut_3: "~scet", "~scent";
+    ind_act_perf_1: "~vī", "~vimus";
+    ind_act_perf_2: "~vistī", "~vistis";
+    ind_act_perf_3: "~vit", "~vērunt";
+    ind_act_plup_1: "~veram", "~verāmus";
+    ind_act_plup_2: "~verās", "~verātis";
+    ind_act_plup_3: "~verat", "~verant";
+    ind_act_futp_1: "~verō", "~verimus";
+    ind_act_futp_2: "~veris", "~veritis";
+    ind_act_futp_3: "~verit", "~verint";
+    ind_pass_pres_1: "~scor", "~scimur";
+    ind_pass_pres_2: "~sceris", "~sciminī";
+    ind_pass_pres_3: "~scitur", "~scuntur";
+    ind_pass_impf_1: "~scēbar", "~scēbāmur";
+    ind_pass_impf_2: "~scēbāris", "~scēbāminī";
+    ind_pass_impf_3: "~scēbātur", "~scēbantur";
+    ind_pass_fut_1: "~scar", "~scēmur";
+    ind_pass_fut_2: "~scēris", "~scēminī";
+    ind_pass_fut_3: "~scētur", "~scentur";
+    subj_act_pres_1: "~scam", "~scāmus";
+    subj_act_pres_2: "~scās", "~scātis";
+    subj_act_pres_3: "~scat", "~scant";
+    subj_act_impf_1: "~scerem", "~scerēmus";
+    subj_act_impf_2: "~scerēs", "~scerētis";
+    subj_act_impf_3: "~sceret", "~scerent";
+    subj_act_perf_1: "~verim", "~verīmus";
+    subj_act_perf_2: "~verīs", "~verītis";
+    subj_act_plup_1: "~vissem", "~vissēmus";
+    subj_act_plup_2: "~vissēs", "~vissētis";
+    subj_act_plup_3: "~visset", "~vissent";
+    subj_pass_pres_1: "~scar", "~scāmur";
+    subj_pass_pres_2: "~scāris", "~scāminī";
+    subj_pass_pres_3: "~scātur", "~scantur";
+    subj_pass_impf_1: "~scerer", "~scerēmur";
+    subj_pass_impf_2: "~scerēris", "~scerēminī";
+    subj_pass_impf_3: "~scerētur", "~scerentur";
+    imperative_act_pres_2: "~sce", "~scite";
+    imperative_act_fut_2: "~scitō", "~scitōte";
+    imperative_act_fut_3: _, "~scuntō";
+    imperative_pass_pres_2: "~scere", _;
+    imperative_pass_fut_2: "~scitor", _;
+    imperative_pass_fut_3: _, "~scuntor";
+    infinitive_act: _, "~visse", _;
+    infinitive_pass: "~scī", _, _;
+    participle: "~scēns", _, _, "~scendus";
+    gerund: _, "~scendī", "~scendō", "~scendum", _, _;
     ),
-    // Minuō: 82 words (nuō, minuō, futuō, innuō, spuō, luō). Like Habeō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("minuō", 82, "~uō", like Habeō;
-    ind_act_pres_1: "~uō", "~uimus";
+    // Compercō: 116 words (crūdēscō, vigēscō, cānēscō, senēscō, dulcēscō, tumēscō). Like Agō, except in 77 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("compercō", 116, "~cō", like Agō as ABL_AS_VOC;
+    ind_act_pres_1: "~cō", "~cimus";
+    ind_act_pres_2: "~cis", "~citis";
+    ind_act_pres_3: "~cit", "~cunt";
+    ind_act_impf_1: "~cēbam", "~cēbāmus";
+    ind_act_impf_2: "~cēbās", "~cēbātis";
+    ind_act_impf_3: "~cēbat", "~cēbant";
+    ind_act_fut_1: "~cam", "~cēmus";
+    ind_act_fut_2: "~cēs", "~cētis";
+    ind_act_fut_3: "~cet", "~cent";
+    ind_pass_pres_1: "~cor", "~cimur";
+    ind_pass_pres_2: "~ceris|~cere", "~ciminī";
+    ind_pass_pres_3: "~citur", "~cuntur";
+    ind_pass_impf_1: "~cēbar", "~cēbāmur";
+    ind_pass_impf_2: "~cēbāris|~cēbāre", "~cēbāminī";
+    ind_pass_impf_3: "~cēbātur", "~cēbantur";
+    ind_pass_fut_1: "~car", "~cēmur";
+    ind_pass_fut_2: "~cēris|~cēre", "~cēminī";
+    ind_pass_fut_3: "~cētur", "~centur";
+    subj_act_pres_1: "~cam", "~cāmus";
+    subj_act_pres_2: "~cās", "~cātis";
+    subj_act_pres_3: "~cat", "~cant";
+    subj_act_impf_1: "~cerem", "~cerēmus";
+    subj_act_impf_2: "~cerēs", "~cerētis";
+    subj_act_impf_3: "~ceret", "~cerent";
+    subj_pass_pres_1: "~car", "~cāmur";
+    subj_pass_pres_2: "~cāris|~cāre", "~cāminī";
+    subj_pass_pres_3: "~cātur", "~cantur";
+    subj_pass_impf_1: "~cerer", "~cerēmur";
+    subj_pass_impf_2: "~cerēris|~cerēre", "~cerēminī";
+    subj_pass_impf_3: "~cerētur", "~cerentur";
+    imperative_act_pres_2: "~ce", "~cite";
+    imperative_act_fut_2: "~citō", "~citōte";
+    imperative_act_fut_3: _, "~cuntō";
+    imperative_pass_pres_2: "~cere", _;
+    imperative_pass_fut_2: "~citor", _;
+    imperative_pass_fut_3: _, "~cuntor";
+    infinitive_pass: "~cī", _, _;
+    participle: "~cēns", derived, derived, "~cendus|~cundus";
+    gerund: _, "~cendī", "~cendō", "~cendum", _, _;
+    supine: _, _, _, derived, _, _;
+    ),
+    // Minuō: 79 words (nuō, minuō, futuō, innuō, spuō, luō). Like Habeō, except in 72 cells: ind_act_pres_1 sg, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ….
+    conjugation!("minuō", 79, "~uō", like Habeō as PRES_AS_PERF;
+    stem participle_perf_pass: "~ūt- like agitō";
+    ind_act_pres_1: "~uō", _;
     ind_act_pres_2: "~uis", "~uitis";
-    ind_act_pres_3: "~uit", "~uunt";
+    ind_act_pres_3: _, "~uunt";
     ind_act_impf_1: "~uēbam", "~uēbāmus";
     ind_act_impf_2: "~uēbās", "~uēbātis";
     ind_act_impf_3: "~uēbat", "~uēbant";
@@ -1382,17 +1574,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ue", "~uite";
     imperative_act_fut_2: "~uitō", "~uitōte";
     imperative_act_fut_3: _, "~uuntō";
-    imperative_pass_pres_2: "~uere", "~uiminī";
+    imperative_pass_pres_2: "~uere", _;
     imperative_pass_fut_2: "~uitor", _;
     imperative_pass_fut_3: _, "~uuntor";
-    infinitive_act: "~uere", _, _;
     infinitive_pass: "~uī", _, _;
-    participle: "~uēns", "~ūtus", "~ūtūrus", "~uendus";
+    participle: "~uēns", _, _, "~uendus";
     gerund: _, "~uendī", "~uendō", "~uendum", _, _;
-    supine: _, _, _, "~ūtum", "~ūtū", _;
     ),
-    // Ēvādō: 76 words (edō, lūdō, rādō, dīvidō, ēlūdō, ēvādō). Like Agō, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ēvādō", 76, "~dō", like Agō;
+    // Ēvādō: 63 words (lūdō, rādō, ēlūdō, ēvādō, extrūdō, rīdō). Like Agō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("ēvādō", 63, "~dō", like Agō;
+    stem participle_perf_pass: "~s- like agitō";
     ind_act_pres_1: "~dō", "~dimus";
     ind_act_pres_2: "~dis", "~ditis";
     ind_act_pres_3: "~dit", "~dunt";
@@ -1402,7 +1593,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_fut_1: "~dam", "~dēmus";
     ind_act_fut_2: "~dēs", "~dētis";
     ind_act_fut_3: "~det", "~dent";
-    ind_act_perf_3: _, "~sērunt|~sēre";
     ind_pass_pres_1: "~dor", "~dimur";
     ind_pass_pres_2: "~deris|~dere", "~diminī";
     ind_pass_pres_3: "~ditur", "~duntur";
@@ -1427,17 +1617,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~de", "~dite";
     imperative_act_fut_2: "~ditō", "~ditōte";
     imperative_act_fut_3: _, "~duntō";
-    imperative_pass_pres_2: "~dere", "~diminī";
+    imperative_pass_pres_2: "~dere", _;
     imperative_pass_fut_2: "~ditor", _;
     imperative_pass_fut_3: _, "~duntor";
-    infinitive_act: "~dere", _, _;
     infinitive_pass: "~dī", _, _;
-    participle: "~dēns", "~sus", "~sūrus", "~dendus|~dundus";
+    participle: "~dēns", _, _, "~dendus|~dundus";
     gerund: _, "~dendī", "~dendō", "~dendum", _, _;
-    supine: _, _, _, "~sum", "~sū", _;
     ),
     // Faciō: 53 words (faciō, patefaciō, satisfaciō, candefaciō, abolēfaciō, labefaciō).
     conjugation!("faciō", 53, "~aciō";
+    stem participle_perf_pass: "~act- like agitō";
     ind_act_pres_1: "~aciō", "~acimus";
     ind_act_pres_2: "~acis", "~acitis";
     ind_act_pres_3: "~acit", "~aciunt";
@@ -1490,56 +1679,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_pass_fut_3: _, "~īuntō";
     infinitive_act: "~acere", "~ēcisse", _;
     infinitive_pass: "~ierī", _, _;
-    participle: "~aciēns", "~actus", "~actūrus", "~aciendus|~aciundus";
+    participle: "~aciēns", _, _, "~aciendus|~aciundus";
     gerund: _, "~aciendī", "~aciendō", "~aciendum", _, _;
-    supine: _, _, _, "~actum", "~actū", _;
-    ),
-    // Clārēscō: 50 words (crūdēscō, vigēscō, exārēscō, mātūrēscō, ārēscō, lūcēscō). Like Habeō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("clārēscō", 50, "~ēscō", like Habeō;
-    ind_act_pres_1: "~ēscō", "~ēscimus";
-    ind_act_pres_2: "~ēscis", "~ēscitis";
-    ind_act_pres_3: "~ēscit", "~ēscunt";
-    ind_act_impf_1: "~ēscēbam", "~ēscēbāmus";
-    ind_act_impf_2: "~ēscēbās", "~ēscēbātis";
-    ind_act_impf_3: "~ēscēbat", "~ēscēbant";
-    ind_act_fut_1: "~ēscam", "~ēscēmus";
-    ind_act_fut_2: "~ēscēs", "~ēscētis";
-    ind_act_fut_3: "~ēscet", "~ēscent";
-    ind_pass_pres_1: "~ēscor", "~ēscimur";
-    ind_pass_pres_2: "~ēsceris", "~ēsciminī";
-    ind_pass_pres_3: "~ēscitur", "~ēscuntur";
-    ind_pass_impf_1: "~ēscēbar", "~ēscēbāmur";
-    ind_pass_impf_2: "~ēscēbāris", "~ēscēbāminī";
-    ind_pass_impf_3: "~ēscēbātur", "~ēscēbantur";
-    ind_pass_fut_1: "~ēscar", "~ēscēmur";
-    ind_pass_fut_2: "~ēscēris", "~ēscēminī";
-    ind_pass_fut_3: "~ēscētur", "~ēscentur";
-    subj_act_pres_1: "~ēscam", "~ēscāmus";
-    subj_act_pres_2: "~ēscās", "~ēscātis";
-    subj_act_pres_3: "~ēscat", "~ēscant";
-    subj_act_impf_1: "~ēscerem", "~ēscerēmus";
-    subj_act_impf_2: "~ēscerēs", "~ēscerētis";
-    subj_act_impf_3: "~ēsceret", "~ēscerent";
-    subj_pass_pres_1: "~ēscar", "~ēscāmur";
-    subj_pass_pres_2: "~ēscāris", "~ēscāminī";
-    subj_pass_pres_3: "~ēscātur", "~ēscantur";
-    subj_pass_impf_1: "~ēscerer", "~ēscerēmur";
-    subj_pass_impf_2: "~ēscerēris", "~ēscerēminī";
-    subj_pass_impf_3: "~ēscerētur", "~ēscerentur";
-    imperative_act_pres_2: "~ēsce", "~ēscite";
-    imperative_act_fut_2: "~ēscitō", "~ēscitōte";
-    imperative_act_fut_3: _, "~ēscuntō";
-    imperative_pass_pres_2: "~ēscere", "~ēsciminī";
-    imperative_pass_fut_2: "~ēscitor", _;
-    imperative_pass_fut_3: _, "~ēscuntor";
-    infinitive_act: "~ēscere", _, _;
-    infinitive_pass: "~ēscī", _, _;
-    participle: "~ēscēns", derived, derived, "~ēscendus";
-    gerund: _, "~ēscendī", "~ēscendō", "~ēscendum", _, _;
-    supine: _, _, _, derived, derived, _;
     ),
     // Comprehendō: 46 words (dēfendō, comprehendō, fendō, dēpendō, pendō, suspendō).
     conjugation!("comprehendō", 46, "~e~dō";
+    stem participle_perf_pass: "~ē~s- like agitō";
     ind_act_pres_1: "~e~dō", "~e~dimus";
     ind_act_pres_2: "~e~dis", "~e~ditis";
     ind_act_pres_3: "~e~dit", "~e~dunt";
@@ -1587,22 +1732,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~e~de", "~e~dite";
     imperative_act_fut_2: "~e~ditō", "~e~ditōte";
     imperative_act_fut_3: _, "~e~duntō";
-    imperative_pass_pres_2: "~e~dere", "~e~diminī";
+    imperative_pass_pres_2: "~e~dere", _;
     imperative_pass_fut_2: "~e~ditor", _;
     imperative_pass_fut_3: _, "~e~duntor";
-    infinitive_act: "~e~dere", "~e~disse", _;
+    infinitive_act: _, "~e~disse", _;
     infinitive_pass: "~e~dī", _, _;
-    participle: "~e~dēns", "~ē~sus", "~ē~sūrus", "~e~dendus|~e~dundus";
+    participle: "~e~dēns", _, _, "~e~dendus|~e~dundus";
     gerund: _, "~e~dendī", "~e~dendō", "~e~dendum", _, _;
-    supine: _, _, _, "~ē~sum", "~ē~sū", _;
     ),
-    // Teneō: 45 words (abarceō, doceō, teneō, addoceō, adiaceō, subiaceō). Like Habeō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
+    // Teneō: 45 words (abarceō, doceō, teneō, addoceō, adiaceō, subiaceō). Like Habeō, except in 0 cells: .
     conjugation!("teneō", 45, "~eō", like Habeō;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
+    stem participle_perf_pass: "~t- like agitō";
     ),
-    // Petō: 44 words (petō, impetō, competō, dīrigō, ērigō, dīligō). Like Agō, except in 39 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Petō: 44 words (petō, impetō, competō, dīrigō, ērigō, dīligō). Like Agō, except in 35 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("petō", 44, "~ō", like Agō;
+    stem participle_perf_pass: "~īt- like agitō";
     ind_act_perf_1: "~īvī", "~īvimus";
     ind_act_perf_2: "~īvistī", "~īvistis";
     ind_act_perf_3: "~īvit", "~īvērunt";
@@ -1623,11 +1767,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: "~āris|~āre", _;
     subj_pass_impf_2: "~erēris|~erēre", _;
     infinitive_act: _, "~īvisse", _;
-    participle: _, "~ītus", "~ītūrus", "~endus|~undus";
-    supine: _, _, _, "~ītum", "~ītū", _;
+    participle: _, _, _, "~endus|~undus";
     ),
-    // Cubō: 42 words (vetō, sonō, domō, incubō, tonō, votō). Like Agitō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Cubō: 42 words (vetō, sonō, domō, incubō, tonō, votō). Like Agitō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("cubō", 42, "~ō", like Agitō;
+    stem participle_perf_pass: "~it- like agitō";
     ind_act_perf_1: "~uī", "~uimus";
     ind_act_perf_2: "~uistī", "~uistis";
     ind_act_perf_3: "~uit", "~uērunt|~uēre";
@@ -1643,11 +1787,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~uissēs", "~uissētis";
     subj_act_plup_3: "~uisset", "~uissent";
     infinitive_act: _, "~uisse", _;
-    participle: _, "~itus", "~itūrus", _;
-    supine: _, _, _, "~itum", "~itū", _;
     ),
     // Excipiō: 41 words (praeficiō, accipiō, excipiō, recipiō, suscipiō, interficiō).
     conjugation!("excipiō", 41, "~i~iō";
+    stem participle_perf_pass: "~e~t- like agitō";
     ind_act_pres_1: "~i~iō", "~i~imus";
     ind_act_pres_2: "~i~is", "~i~itis";
     ind_act_pres_3: "~i~it", "~i~iunt";
@@ -1695,60 +1838,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~i~e", "~i~ite";
     imperative_act_fut_2: "~i~itō", "~i~itōte";
     imperative_act_fut_3: _, "~i~iuntō";
-    imperative_pass_pres_2: "~i~ere", "~i~iminī";
+    imperative_pass_pres_2: "~i~ere", _;
     imperative_pass_fut_2: "~i~itor", _;
     imperative_pass_fut_3: _, "~i~iuntor";
-    infinitive_act: "~i~ere", "~ē~isse", _;
+    infinitive_act: _, "~ē~isse", _;
     infinitive_pass: "~i~ī", _, _;
-    participle: "~i~iēns", "~e~tus", "~e~tūrus", "~i~iendus|~i~iundus";
+    participle: "~i~iēns", _, _, "~i~iendus|~i~iundus";
     gerund: _, "~i~iendī", "~i~iendō", "~i~iendum", _, _;
-    supine: _, _, _, "~e~tum", "~e~tū", _;
     ),
-    // Mergō: 38 words (fīgō, mergō, dēmergō, immergō, ēmergō, spargō). Like Ēvādō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("mergō", 38, "~gō", like Ēvādō;
-    ind_act_pres_1: "~gō", "~gimus";
-    ind_act_pres_2: "~gis", "~gitis";
-    ind_act_pres_3: "~git", "~gunt";
-    ind_act_impf_1: "~gēbam", "~gēbāmus";
-    ind_act_impf_2: "~gēbās", "~gēbātis";
-    ind_act_impf_3: "~gēbat", "~gēbant";
-    ind_act_fut_1: "~gam", "~gēmus";
-    ind_act_fut_2: "~gēs", "~gētis";
-    ind_act_fut_3: "~get", "~gent";
-    ind_pass_pres_1: "~gor", "~gimur";
-    ind_pass_pres_2: "~geris|~gere", "~giminī";
-    ind_pass_pres_3: "~gitur", "~guntur";
-    ind_pass_impf_1: "~gēbar", "~gēbāmur";
-    ind_pass_impf_2: "~gēbāris|~gēbāre", "~gēbāminī";
-    ind_pass_impf_3: "~gēbātur", "~gēbantur";
-    ind_pass_fut_1: "~gar", "~gēmur";
-    ind_pass_fut_2: "~gēris|~gēre", "~gēminī";
-    ind_pass_fut_3: "~gētur", "~gentur";
-    subj_act_pres_1: "~gam", "~gāmus";
-    subj_act_pres_2: "~gās", "~gātis";
-    subj_act_pres_3: "~gat", "~gant";
-    subj_act_impf_1: "~gerem", "~gerēmus";
-    subj_act_impf_2: "~gerēs", "~gerētis";
-    subj_act_impf_3: "~geret", "~gerent";
-    subj_pass_pres_1: "~gar", "~gāmur";
-    subj_pass_pres_2: "~gāris|~gāre", "~gāminī";
-    subj_pass_pres_3: "~gātur", "~gantur";
-    subj_pass_impf_1: "~gerer", "~gerēmur";
-    subj_pass_impf_2: "~gerēris|~gerēre", "~gerēminī";
-    subj_pass_impf_3: "~gerētur", "~gerentur";
-    imperative_act_pres_2: "~ge", "~gite";
-    imperative_act_fut_2: "~gitō", "~gitōte";
-    imperative_act_fut_3: _, "~guntō";
-    imperative_pass_pres_2: "~gere", "~giminī";
-    imperative_pass_fut_2: "~gitor", _;
-    imperative_pass_fut_3: _, "~guntor";
-    infinitive_act: "~gere", _, _;
-    infinitive_pass: "~gī", _, _;
-    participle: "~gēns", _, _, "~gendus|~gundus";
-    gerund: _, "~gendī", "~gendō", "~gendum", _, _;
-    ),
-    // Volō: 36 words (volō, mālō, molō, tremō, olō, nōlō). Like Petō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("volō", 36, "~ō", like Petō;
+    // Compescō: 36 words (volō, mālō, molō, tremō, olō, nōlō). Like Petō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("compescō", 36, "~ō", like Petō;
+    stem participle_perf_pass: "~it- like agitō";
     ind_act_perf_1: "~uī", "~uimus";
     ind_act_perf_2: "~uistī", "~uistis";
     ind_act_perf_3: "~uit", "~uērunt|~uēre";
@@ -1764,11 +1864,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~uissēs", "~uissētis";
     subj_act_plup_3: "~uisset", "~uissent";
     infinitive_act: _, "~uisse", _;
-    participle: _, "~itus", "~itūrus", _;
-    supine: _, _, _, "~itum", "~itū", _;
     ),
-    // Impleō: 29 words (dēleō, expleō, neō, fleō, aboleō, adimpleō). Like Habeō, except in 38 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Impleō: 29 words (dēleō, expleō, neō, fleō, aboleō, adimpleō). Like Habeō, except in 34 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("impleō", 29, "~eō", like Habeō;
+    stem participle_perf_pass: "~ēt- like agitō";
     ind_act_perf_1: "~ēvī", "~ēvimus";
     ind_act_perf_2: "~ēvistī", "~ēvistis";
     ind_act_perf_3: "~ēvit", "~ēvērunt|~ēvēre";
@@ -1789,11 +1888,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: "~eāris|~eāre", _;
     subj_pass_impf_2: "~ērēris|~ērēre", _;
     infinitive_act: _, "~ēvisse", _;
-    participle: _, "~ētus", "~ētūrus", _;
-    supine: _, _, _, "~ētum", "~ētū", _;
     ),
     // Repōnō: 29 words (pōnō, expōnō, oppōnō, antepōnō, prōpōnō, dēpōnō).
     conjugation!("repōnō", 29, "~ōnō";
+    stem participle_perf_pass: "~os- like repōnō";
     ind_act_pres_1: "~ōnō", "~ōnimus";
     ind_act_pres_2: "~ōnis", "~ōnitis";
     ind_act_pres_3: "~ōnit", "~ōnunt";
@@ -1829,7 +1927,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_3: "~ōneret", "~ōnerent";
     subj_act_perf_1: "~osuerim|~osīverim|~osīrim", "~osuerīmus|~osīverīmus|~osīrīmus";
     subj_act_perf_2: "~osuerīs|~osīverīs|~osīrīs", "~osuerītis|~osīverītis|~osīrītis";
-    subj_act_perf_3: "~osuerit|~osīverit|~osīrit", "~osuerint|~osīverint|~osīrint";
     subj_act_plup_1: "~osuissem|~osīvissem|~osīssem", "~osuissēmus|~osīvissēmus|~osīssēmus";
     subj_act_plup_2: "~osuissēs|~osīvissēs|~osīssēs", "~osuissētis|~osīvissētis|~osīssētis";
     subj_act_plup_3: "~osuisset|~osīvisset|~osīsset", "~osuissent|~osīvissent|~osīssent";
@@ -1842,17 +1939,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ōne", "~ōnite";
     imperative_act_fut_2: "~ōnitō", "~ōnitōte";
     imperative_act_fut_3: _, "~ōnuntō";
-    imperative_pass_pres_2: "~ōnere", "~ōniminī";
+    imperative_pass_pres_2: "~ōnere", _;
     imperative_pass_fut_2: "~ōnitor", _;
     imperative_pass_fut_3: _, "~ōnuntor";
-    infinitive_act: "~ōnere", "~osuisse|~osīvisse|~osīsse", _;
+    infinitive_act: _, "~osuisse|~osīvisse|~osīsse", _;
     infinitive_pass: "~ōnī", _, _;
-    participle: "~ōnēns", "~ositus|~ostus", "~ositūrus|~ostūrus", "~ōnendus|~ōnundus";
+    participle: "~ōnēns", _, _, "~ōnendus|~ōnundus";
     gerund: _, "~ōnendī", "~ōnendō", "~ōnendum", _, _;
-    supine: _, _, _, "~ositum|~ostum", "~ositū|~ostū", _;
     ),
     // Mittō: 28 words (mittō, prōmittō, āmittō, committō, admittō, remittō).
     conjugation!("mittō", 28, "~ittō";
+    stem participle_perf_pass: "~iss- like agitō";
     ind_act_pres_1: "~ittō", "~ittimus";
     ind_act_pres_2: "~ittis", "~ittitis";
     ind_act_pres_3: "~ittit", "~ittunt";
@@ -1900,17 +1997,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~itte", "~ittite";
     imperative_act_fut_2: "~ittitō", "~ittitōte";
     imperative_act_fut_3: _, "~ittuntō";
-    imperative_pass_pres_2: "~ittere", "~ittiminī";
+    imperative_pass_pres_2: "~ittere", _;
     imperative_pass_fut_2: "~ittitor", _;
     imperative_pass_fut_3: _, "~ittuntor";
-    infinitive_act: "~ittere", "~īsisse", _;
+    infinitive_act: _, "~īsisse", _;
     infinitive_pass: "~ittī", _, _;
-    participle: "~ittēns", "~issus", "~issūrus", "~ittendus|~ittundus";
+    participle: "~ittēns", _, _, "~ittendus|~ittundus";
     gerund: _, "~ittendī", "~ittendō", "~ittendum", _, _;
-    supine: _, _, _, "~issum", "~issū", _;
     ),
-    // Labōrō: 28 words (abambulō, labōrō, abortō, cursō, abequitō, lāpsō). Like Agitō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Labōrō: 28 words (abambulō, labōrō, abortō, cursō, abequitō, lāpsō). Like Agitō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("labōrō", 28, "~ō", like Agitō;
+    stem participle_perf_pass: "~āt- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -1921,38 +2018,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~ātor", _;
-    participle: _, "~ātum", _, "~andum";
+    infinitive_act: "~āre", _, _;
+    participle: _, _, _, "~andum";
     ),
-    // Mōlior: 27 words (dēmōlior, mōlior, mentior, partior, ōrdior, blandior). Like Modulor, except in 44 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("mōlior", 27, "~ior", like Modulor;
-    ind_act_pres_1: "~ior", "~īmur";
-    ind_act_pres_2: "~īris|~īre", "~īminī";
-    ind_act_pres_3: "~ītur", "~iuntur";
-    ind_act_impf_1: "~iēbar", "~iēbāmur";
-    ind_act_impf_2: "~iēbāris|~iēbāre", "~iēbāminī";
-    ind_act_impf_3: "~iēbātur", "~iēbantur";
-    ind_act_fut_1: "~iar", "~iēmur";
-    ind_act_fut_2: "~iēris|~iēre", "~iēminī";
-    ind_act_fut_3: "~iētur", "~ientur";
-    subj_act_pres_1: "~iar", "~iāmur";
-    subj_act_pres_2: "~iāris|~iāre", "~iāminī";
-    subj_act_pres_3: "~iātur", "~iantur";
-    subj_act_impf_1: "~īrer", "~īrēmur";
-    subj_act_impf_2: "~īrēris|~īrēre", "~īrēminī";
-    subj_act_impf_3: "~īrētur", "~īrentur";
-    imperative_act_pres_2: "~īre", "~īminī";
-    imperative_act_fut_2: "~ītor", _;
-    imperative_act_fut_3: _, "~iuntor";
-    infinitive_act: "~īrī", derived, _;
-    participle: "~iēns", _, "~ītūrus", "~iendus|~iundus";
-    gerund: _, "~iendī", "~iendō", "~iendum", _, _;
-    supine: _, _, _, "~ītum", "~ītū", _;
-    ),
-    // Obeō: 27 words (adeō, dispereō, exeō, queō, ineō, intereō). Like Mūniō, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
+    // Obeō: 27 words (adeō, dispereō, exeō, queō, ineō, intereō). Like Mūniō, except in 75 cells: ind_act_pres_1 sg, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
     conjugation!("obeō", 27, "~eō", like Mūniō;
+    stem participle_perf_pass: "~it- like agitō";
     ind_act_pres_1: "~eō", _;
     ind_act_pres_3: _, "~eunt";
     ind_act_impf_1: "~ībam", "~ībāmus";
@@ -1983,7 +2057,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_pres_3: "~eat", "~eant";
     subj_act_perf_1: "~ierim|~īverim", "~ierīmus|~īverīmus";
     subj_act_perf_2: "~ierīs|~īverīs", "~ierītis|~īverītis";
-    subj_act_perf_3: "~ierit|~īverit", "~ierint|~īverint";
     subj_act_plup_1: "~īssem|~iissem|~īvissem", "~īssēmus|~iissēmus|~īvissēmus";
     subj_act_plup_2: "~īssēs|~iissēs|~īvissēs", "~īssētis|~iissētis|~īvissētis";
     subj_act_plup_3: "~īsset|~iisset|~īvisset", "~īssent|~iissent|~īvissent";
@@ -1993,12 +2066,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_fut_3: _, "~euntō";
     imperative_pass_fut_3: _, "~euntor";
     infinitive_act: _, "~īsse|~iisse|~īvisse", _;
-    participle: _, "~itus", "~itūrus", "~eundus";
+    participle: _, _, _, "~eundus";
     gerund: _, "~eundī", "~eundō", "~eundum", _, _;
-    supine: _, _, _, "~itum", "~itū", _;
     ),
     // Perstringō: 27 words (cōnfingō, dēpingō, effingō, fingō, pingō, stringō).
     conjugation!("perstringō", 27, "~ingō";
+    stem participle_perf_pass: "~ict- like agitō";
     ind_act_pres_1: "~ingō", "~ingimus";
     ind_act_pres_2: "~ingis", "~ingitis";
     ind_act_pres_3: "~ingit", "~ingunt";
@@ -2046,17 +2119,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~inge", "~ingite";
     imperative_act_fut_2: "~ingitō", "~ingitōte";
     imperative_act_fut_3: _, "~inguntō";
-    imperative_pass_pres_2: "~ingere", "~ingiminī";
+    imperative_pass_pres_2: "~ingere", _;
     imperative_pass_fut_2: "~ingitor", _;
     imperative_pass_fut_3: _, "~inguntor";
-    infinitive_act: "~ingere", "~īnxisse", _;
+    infinitive_act: _, "~īnxisse", _;
     infinitive_pass: "~ingī", _, _;
-    participle: "~ingēns", "~ictus", "~ictūrus", "~ingendus|~ingundus";
+    participle: "~ingēns", _, _, "~ingendus|~ingundus";
     gerund: _, "~ingendī", "~ingendō", "~ingendum", _, _;
-    supine: _, _, _, "~ictum", "~ictū", _;
     ),
     // Coniungō: 27 words (ēmungō, pungō, compungō, interpungō, iungō, abiungō).
     conjugation!("coniungō", 27, "~u~gō";
+    stem participle_perf_pass: "~ū~ct- like agitō";
     ind_act_pres_1: "~u~gō", "~u~gimus";
     ind_act_pres_2: "~u~gis", "~u~gitis";
     ind_act_pres_3: "~u~git", "~u~gunt";
@@ -2104,60 +2177,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~u~ge", "~u~gite";
     imperative_act_fut_2: "~u~gitō", "~u~gitōte";
     imperative_act_fut_3: _, "~u~guntō";
-    imperative_pass_pres_2: "~u~gere", "~u~giminī";
+    imperative_pass_pres_2: "~u~gere", _;
     imperative_pass_fut_2: "~u~gitor", _;
     imperative_pass_fut_3: _, "~u~guntor";
-    infinitive_act: "~u~gere", "~ū~xisse", _;
+    infinitive_act: _, "~ū~xisse", _;
     infinitive_pass: "~u~gī", _, _;
-    participle: "~u~gēns", "~ū~ctus", "~ū~ctūrus", "~u~gendus|~u~gundus";
+    participle: "~u~gēns", _, _, "~u~gendus|~u~gundus";
     gerund: _, "~u~gendī", "~u~gendō", "~u~gendum", _, _;
-    supine: _, _, _, "~ū~ctum", "~ū~ctū", _;
     ),
-    // Coniciō: 27 words (prōficiō, apiō, rabiō, iniciō, pariō, speciō). Like Excipiō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("coniciō", 27, "~~iō", like Excipiō;
-    ind_act_pres_1: "~~iō", "~~imus";
-    ind_act_pres_2: "~~is", "~~itis";
-    ind_act_pres_3: "~~it", "~~iunt";
-    ind_act_impf_1: "~~iēbam", "~~iēbāmus";
-    ind_act_impf_2: "~~iēbās", "~~iēbātis";
-    ind_act_impf_3: "~~iēbat", "~~iēbant";
-    ind_act_fut_1: "~~iam", "~~iēmus";
-    ind_act_fut_2: "~~iēs", "~~iētis";
-    ind_act_fut_3: "~~iet", "~~ient";
-    ind_pass_pres_1: "~~ior", "~~imur";
-    ind_pass_pres_2: "~~eris|~~ere", "~~iminī";
-    ind_pass_pres_3: "~~itur", "~~iuntur";
-    ind_pass_impf_1: "~~iēbar", "~~iēbāmur";
-    ind_pass_impf_2: "~~iēbāris|~~iēbāre", "~~iēbāminī";
-    ind_pass_impf_3: "~~iēbātur", "~~iēbantur";
-    ind_pass_fut_1: "~~iar", "~~iēmur";
-    ind_pass_fut_2: "~~iēris|~~iēre", "~~iēminī";
-    ind_pass_fut_3: "~~iētur", "~~ientur";
-    subj_act_pres_1: "~~iam", "~~iāmus";
-    subj_act_pres_2: "~~iās", "~~iātis";
-    subj_act_pres_3: "~~iat", "~~iant";
-    subj_act_impf_1: "~~erem", "~~erēmus";
-    subj_act_impf_2: "~~erēs", "~~erētis";
-    subj_act_impf_3: "~~eret", "~~erent";
-    subj_pass_pres_1: "~~iar", "~~iāmur";
-    subj_pass_pres_2: "~~iāris|~~iāre", "~~iāminī";
-    subj_pass_pres_3: "~~iātur", "~~iantur";
-    subj_pass_impf_1: "~~erer", "~~erēmur";
-    subj_pass_impf_2: "~~erēris|~~erēre", "~~erēminī";
-    subj_pass_impf_3: "~~erētur", "~~erentur";
-    imperative_act_pres_2: "~~e", "~~ite";
-    imperative_act_fut_2: "~~itō", "~~itōte";
-    imperative_act_fut_3: _, "~~iuntō";
-    imperative_pass_pres_2: "~~ere", "~~iminī";
-    imperative_pass_fut_2: "~~itor", _;
-    imperative_pass_fut_3: _, "~~iuntor";
-    infinitive_act: "~~ere", _, _;
-    infinitive_pass: "~~ī", _, _;
-    participle: "~~iēns", _, _, "~~iendus|~~iundus";
-    gerund: _, "~~iendī", "~~iendō", "~~iendum", _, _;
-    ),
-    // Prōdō: 26 words (abdō, vēndō, dēdō, dīdō, condō, crēdō). Like Volō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("prōdō", 26, "~ō", like Volō;
+    // Prōdō: 26 words (abdō, vēndō, dēdō, dīdō, condō, crēdō). Like Compescō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("prōdō", 26, "~ō", like Compescō;
     ind_act_perf_1: "~idī", "~idimus";
     ind_act_perf_2: "~idistī", "~idistis";
     ind_act_perf_3: "~idit", "~idērunt|~idēre";
@@ -2176,6 +2205,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ),
     // Dēdūcō: 26 words (abdūcō, trādūcō, prōdūcō, condūcō, ēdūcō, dēdūcō).
     conjugation!("dēdūcō", 26, "~ūcō";
+    stem participle_perf_pass: "~uct- like agitō";
     ind_act_pres_1: "~ūcō", "~ūcimus";
     ind_act_pres_2: "~ūcis", "~ūcitis";
     ind_act_pres_3: "~ūcit", "~ūcunt";
@@ -2223,100 +2253,117 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ūc|~ūce", "~ūcite";
     imperative_act_fut_2: "~ūcitō", "~ūcitōte";
     imperative_act_fut_3: _, "~ūcuntō";
-    imperative_pass_pres_2: "~ūcere", "~ūciminī";
+    imperative_pass_pres_2: "~ūcere", _;
     imperative_pass_fut_2: "~ūcitor", _;
     imperative_pass_fut_3: _, "~ūcuntor";
-    infinitive_act: "~ūcere", "~ūxisse", _;
+    infinitive_act: _, "~ūxisse", _;
     infinitive_pass: "~ūcī", _, _;
-    participle: "~ūcēns", "~uctus", "~uctūrus", "~ūcendus|~ūcundus";
+    participle: "~ūcēns", _, _, "~ūcendus|~ūcundus";
     gerund: _, "~ūcendī", "~ūcendō", "~ūcendum", _, _;
-    supine: _, _, _, "~uctum", "~uctū", _;
     ),
-    // Cōnsequor: 25 words (sequor, līquor, prōsequor, loquor, persequor, adsequor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("cōnsequor", 25, "~quor", like Mōlior;
-    ind_act_pres_1: "~quor", "~quimur";
-    ind_act_pres_2: "~queris|~quere", "~quiminī";
-    ind_act_pres_3: "~quitur", "~quuntur";
+    // Cōnsequor: 25 words (sequor, līquor, prōsequor, loquor, persequor, adsequor). Like Modulor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("cōnsequor", 25, "~quor", like Modulor as PERF_AS_FUT;
+    stem verb_act_sg: "~qu- like cōnsequor";
+    stem participle_perf_pass: "~cūt- like modulor";
+    ind_act_pres_1: _, "~quimur";
     ind_act_impf_1: "~quēbar", "~quēbāmur";
     ind_act_impf_2: "~quēbāris|~quēbāre", "~quēbāminī";
     ind_act_impf_3: "~quēbātur", "~quēbantur";
     ind_act_fut_1: "~quar", "~quēmur";
     ind_act_fut_2: "~quēris|~quēre", "~quēminī";
-    ind_act_fut_3: "~quētur", "~quentur";
-    subj_act_pres_1: "~quar", "~quāmur";
-    subj_act_pres_2: "~quāris|~quāre", "~quāminī";
-    subj_act_pres_3: "~quātur", "~quantur";
-    subj_act_impf_1: "~querer", "~querēmur";
-    subj_act_impf_2: "~querēris|~querēre", "~querēminī";
-    subj_act_impf_3: "~querētur", "~querentur";
-    imperative_act_pres_2: "~quere", "~quiminī";
+    ind_act_fut_3: "~quētur", _;
+    subj_act_pres_3: "~quātur", _;
     imperative_act_fut_2: "~quitor", _;
-    imperative_act_fut_3: _, "~quuntor";
-    infinitive_act: "~quī", _, _;
-    participle: "~quēns", _, "~cūtūrus", "~quendus";
+    participle: "~quēns", _, _, "~quendus";
     gerund: _, "~quendī", "~quendō", "~quendum", _, _;
-    supine: _, _, _, "~cūtum", "~cūtū", _;
     ),
-    // Pellō: 25 words (pellō, vellō, appellō, dēpellō, prōpellō, repellō).
-    conjugation!("pellō", 25, "~e~lō";
-    ind_act_pres_1: "~e~lō", "~e~limus";
-    ind_act_pres_2: "~e~lis", "~e~litis";
-    ind_act_pres_3: "~e~lit", "~e~lunt";
-    ind_act_impf_1: "~e~lēbam", "~e~lēbāmus";
-    ind_act_impf_2: "~e~lēbās", "~e~lēbātis";
-    ind_act_impf_3: "~e~lēbat", "~e~lēbant";
-    ind_act_fut_1: "~e~lam", "~e~lēmus";
-    ind_act_fut_2: "~e~lēs", "~e~lētis";
-    ind_act_fut_3: "~e~let", "~e~lent";
-    ind_act_perf_1: "~u~ī", "~u~imus";
-    ind_act_perf_2: "~u~istī", "~u~istis";
-    ind_act_perf_3: "~u~it", "~u~ērunt|~u~ēre";
-    ind_act_plup_1: "~u~eram", "~u~erāmus";
-    ind_act_plup_2: "~u~erās", "~u~erātis";
-    ind_act_plup_3: "~u~erat", "~u~erant";
-    ind_act_futp_1: "~u~erō", "~u~erimus";
-    ind_act_futp_2: "~u~eris", "~u~eritis";
-    ind_act_futp_3: "~u~erit", "~u~erint";
-    ind_pass_pres_1: "~e~lor", "~e~limur";
-    ind_pass_pres_2: "~e~leris|~e~lere", "~e~liminī";
-    ind_pass_pres_3: "~e~litur", "~e~luntur";
-    ind_pass_impf_1: "~e~lēbar", "~e~lēbāmur";
-    ind_pass_impf_2: "~e~lēbāris|~e~lēbāre", "~e~lēbāminī";
-    ind_pass_impf_3: "~e~lēbātur", "~e~lēbantur";
-    ind_pass_fut_1: "~e~lar", "~e~lēmur";
-    ind_pass_fut_2: "~e~lēris|~e~lēre", "~e~lēminī";
-    ind_pass_fut_3: "~e~lētur", "~e~lentur";
-    subj_act_pres_1: "~e~lam", "~e~lāmus";
-    subj_act_pres_2: "~e~lās", "~e~lātis";
-    subj_act_pres_3: "~e~lat", "~e~lant";
-    subj_act_impf_1: "~e~lerem", "~e~lerēmus";
-    subj_act_impf_2: "~e~lerēs", "~e~lerētis";
-    subj_act_impf_3: "~e~leret", "~e~lerent";
-    subj_act_perf_1: "~u~erim", "~u~erīmus";
-    subj_act_perf_2: "~u~erīs", "~u~erītis";
-    subj_act_plup_1: "~u~issem", "~u~issēmus";
-    subj_act_plup_2: "~u~issēs", "~u~issētis";
-    subj_act_plup_3: "~u~isset", "~u~issent";
-    subj_pass_pres_1: "~e~lar", "~e~lāmur";
-    subj_pass_pres_2: "~e~lāris|~e~lāre", "~e~lāminī";
-    subj_pass_pres_3: "~e~lātur", "~e~lantur";
-    subj_pass_impf_1: "~e~lerer", "~e~lerēmur";
-    subj_pass_impf_2: "~e~lerēris|~e~lerēre", "~e~lerēminī";
-    subj_pass_impf_3: "~e~lerētur", "~e~lerentur";
-    imperative_act_pres_2: "~e~le", "~e~lite";
-    imperative_act_fut_2: "~e~litō", "~e~litōte";
-    imperative_act_fut_3: _, "~e~luntō";
-    imperative_pass_pres_2: "~e~lere", "~e~liminī";
-    imperative_pass_fut_2: "~e~litor", _;
-    imperative_pass_fut_3: _, "~e~luntor";
-    infinitive_act: "~e~lere", "~u~isse", _;
-    infinitive_pass: "~e~lī", _, _;
-    participle: "~e~lēns", "~u~sus", "~u~sūrus", "~e~lendus|~e~lundus";
-    gerund: _, "~e~lendī", "~e~lendō", "~e~lendum", _, _;
-    supine: _, _, _, "~u~sum", "~u~sū", _;
+    // Mergō: 25 words (mergō, dēmergō, immergō, ēmergō, spargō, cōnspargō). Like Ēvādō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("mergō", 25, "~gō", like Ēvādō;
+    ind_act_pres_1: "~gō", "~gimus";
+    ind_act_pres_2: "~gis", "~gitis";
+    ind_act_pres_3: "~git", "~gunt";
+    ind_act_impf_1: "~gēbam", "~gēbāmus";
+    ind_act_impf_2: "~gēbās", "~gēbātis";
+    ind_act_impf_3: "~gēbat", "~gēbant";
+    ind_act_fut_1: "~gam", "~gēmus";
+    ind_act_fut_2: "~gēs", "~gētis";
+    ind_act_fut_3: "~get", "~gent";
+    ind_pass_pres_1: "~gor", "~gimur";
+    ind_pass_pres_2: "~geris|~gere", "~giminī";
+    ind_pass_pres_3: "~gitur", "~guntur";
+    ind_pass_impf_1: "~gēbar", "~gēbāmur";
+    ind_pass_impf_2: "~gēbāris|~gēbāre", "~gēbāminī";
+    ind_pass_impf_3: "~gēbātur", "~gēbantur";
+    ind_pass_fut_1: "~gar", "~gēmur";
+    ind_pass_fut_2: "~gēris|~gēre", "~gēminī";
+    ind_pass_fut_3: "~gētur", "~gentur";
+    subj_act_pres_1: "~gam", "~gāmus";
+    subj_act_pres_2: "~gās", "~gātis";
+    subj_act_pres_3: "~gat", "~gant";
+    subj_act_impf_1: "~gerem", "~gerēmus";
+    subj_act_impf_2: "~gerēs", "~gerētis";
+    subj_act_impf_3: "~geret", "~gerent";
+    subj_pass_pres_1: "~gar", "~gāmur";
+    subj_pass_pres_2: "~gāris|~gāre", "~gāminī";
+    subj_pass_pres_3: "~gātur", "~gantur";
+    subj_pass_impf_1: "~gerer", "~gerēmur";
+    subj_pass_impf_2: "~gerēris|~gerēre", "~gerēminī";
+    subj_pass_impf_3: "~gerētur", "~gerentur";
+    imperative_act_pres_2: "~ge", "~gite";
+    imperative_act_fut_2: "~gitō", "~gitōte";
+    imperative_act_fut_3: _, "~guntō";
+    imperative_pass_pres_2: "~gere", _;
+    imperative_pass_fut_2: "~gitor", _;
+    imperative_pass_fut_3: _, "~guntor";
+    infinitive_pass: "~gī", _, _;
+    participle: "~gēns", _, _, "~gendus|~gundus";
+    gerund: _, "~gendī", "~gendō", "~gendum", _, _;
+    ),
+    // Coniciō: 25 words (prōficiō, rabiō, iniciō, pariō, abiciō, subiciō). Like Excipiō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("coniciō", 25, "~~iō", like Excipiō;
+    ind_act_pres_1: "~~iō", "~~imus";
+    ind_act_pres_2: "~~is", "~~itis";
+    ind_act_pres_3: "~~it", "~~iunt";
+    ind_act_impf_1: "~~iēbam", "~~iēbāmus";
+    ind_act_impf_2: "~~iēbās", "~~iēbātis";
+    ind_act_impf_3: "~~iēbat", "~~iēbant";
+    ind_act_fut_1: "~~iam", "~~iēmus";
+    ind_act_fut_2: "~~iēs", "~~iētis";
+    ind_act_fut_3: "~~iet", "~~ient";
+    ind_pass_pres_1: "~~ior", "~~imur";
+    ind_pass_pres_2: "~~eris|~~ere", "~~iminī";
+    ind_pass_pres_3: "~~itur", "~~iuntur";
+    ind_pass_impf_1: "~~iēbar", "~~iēbāmur";
+    ind_pass_impf_2: "~~iēbāris|~~iēbāre", "~~iēbāminī";
+    ind_pass_impf_3: "~~iēbātur", "~~iēbantur";
+    ind_pass_fut_1: "~~iar", "~~iēmur";
+    ind_pass_fut_2: "~~iēris|~~iēre", "~~iēminī";
+    ind_pass_fut_3: "~~iētur", "~~ientur";
+    subj_act_pres_1: "~~iam", "~~iāmus";
+    subj_act_pres_2: "~~iās", "~~iātis";
+    subj_act_pres_3: "~~iat", "~~iant";
+    subj_act_impf_1: "~~erem", "~~erēmus";
+    subj_act_impf_2: "~~erēs", "~~erētis";
+    subj_act_impf_3: "~~eret", "~~erent";
+    subj_pass_pres_1: "~~iar", "~~iāmur";
+    subj_pass_pres_2: "~~iāris|~~iāre", "~~iāminī";
+    subj_pass_pres_3: "~~iātur", "~~iantur";
+    subj_pass_impf_1: "~~erer", "~~erēmur";
+    subj_pass_impf_2: "~~erēris|~~erēre", "~~erēminī";
+    subj_pass_impf_3: "~~erētur", "~~erentur";
+    imperative_act_pres_2: "~~e", "~~ite";
+    imperative_act_fut_2: "~~itō", "~~itōte";
+    imperative_act_fut_3: _, "~~iuntō";
+    imperative_pass_pres_2: "~~ere", _;
+    imperative_pass_fut_2: "~~itor", _;
+    imperative_pass_fut_3: _, "~~iuntor";
+    infinitive_pass: "~~ī", _, _;
+    participle: "~~iēns", _, _, "~~iendus|~~iundus";
+    gerund: _, "~~iendī", "~~iendō", "~~iendum", _, _;
     ),
     // Gerō: 25 words (gerō, requīrō, inquīrō, ēgerō, conquīrō, aggerō).
     conjugation!("gerō", 25, "~rō";
+    stem participle_perf_pass: "~st- like agitō";
     ind_act_pres_1: "~rō", "~rimus";
     ind_act_pres_2: "~ris", "~ritis";
     ind_act_pres_3: "~rit", "~runt";
@@ -2364,26 +2411,127 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~re", "~rite";
     imperative_act_fut_2: "~ritō", "~ritōte";
     imperative_act_fut_3: _, "~runtō";
-    imperative_pass_pres_2: "~rere", "~riminī";
+    imperative_pass_pres_2: "~rere", _;
     imperative_pass_fut_2: "~ritor", _;
     imperative_pass_fut_3: _, "~runtor";
-    infinitive_act: "~rere", "~ssisse", _;
+    infinitive_act: _, "~ssisse", _;
     infinitive_pass: "~rī", _, _;
-    participle: "~rēns", "~stus", "~stūrus", "~rendus|~rundus";
+    participle: "~rēns", _, _, "~rendus|~rundus";
     gerund: _, "~rendī", "~rendō", "~rendum", _, _;
-    supine: _, _, _, "~stum", "~stū", _;
     ),
-    // Ārdeō: 24 words (audeō, ārdeō, rīdeō, persuādeō, subrīdeō, suādeō). Like Ēvādō, except in 60 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ārdeō", 24, "~deō", like Ēvādō;
-    ind_act_pres_1: "~deō", "~dēmus";
-    ind_act_pres_2: "~dēs", "~dētis";
-    ind_act_pres_3: "~det", "~dent";
+    // Mōlior: 25 words (dēmōlior, mōlior, mentior, partior, blandior, potior). Like Mūniō, except in 36 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
+    conjugation!("mōlior", 25, "~ior", like Mūniō as ACT_AS_PASS;
+    stem verb_act_sg: "~- like mōlior";
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_act_fut_2: _, derived;
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: _, derived;
+    infinitive_pass: derived, _, _;
+    participle: _, derived, _, _;
+    ),
+    // Pellō: 25 words (pellō, vellō, appellō, dēpellō, prōpellō, repellō).
+    conjugation!("pellō", 25, "~e~lō";
+    stem participle_perf_pass: "~u~s- like agitō";
+    ind_act_pres_1: "~e~lō", "~e~limus";
+    ind_act_pres_2: "~e~lis", "~e~litis";
+    ind_act_pres_3: "~e~lit", "~e~lunt";
+    ind_act_impf_1: "~e~lēbam", "~e~lēbāmus";
+    ind_act_impf_2: "~e~lēbās", "~e~lēbātis";
+    ind_act_impf_3: "~e~lēbat", "~e~lēbant";
+    ind_act_fut_1: "~e~lam", "~e~lēmus";
+    ind_act_fut_2: "~e~lēs", "~e~lētis";
+    ind_act_fut_3: "~e~let", "~e~lent";
+    ind_act_perf_1: "~u~ī", "~u~imus";
+    ind_act_perf_2: "~u~istī", "~u~istis";
+    ind_act_perf_3: "~u~it", "~u~ērunt|~u~ēre";
+    ind_act_plup_1: "~u~eram", "~u~erāmus";
+    ind_act_plup_2: "~u~erās", "~u~erātis";
+    ind_act_plup_3: "~u~erat", "~u~erant";
+    ind_act_futp_1: "~u~erō", "~u~erimus";
+    ind_act_futp_2: "~u~eris", "~u~eritis";
+    ind_act_futp_3: "~u~erit", "~u~erint";
+    ind_pass_pres_1: "~e~lor", "~e~limur";
+    ind_pass_pres_2: "~e~leris|~e~lere", "~e~liminī";
+    ind_pass_pres_3: "~e~litur", "~e~luntur";
+    ind_pass_impf_1: "~e~lēbar", "~e~lēbāmur";
+    ind_pass_impf_2: "~e~lēbāris|~e~lēbāre", "~e~lēbāminī";
+    ind_pass_impf_3: "~e~lēbātur", "~e~lēbantur";
+    ind_pass_fut_1: "~e~lar", "~e~lēmur";
+    ind_pass_fut_2: "~e~lēris|~e~lēre", "~e~lēminī";
+    ind_pass_fut_3: "~e~lētur", "~e~lentur";
+    subj_act_pres_1: "~e~lam", "~e~lāmus";
+    subj_act_pres_2: "~e~lās", "~e~lātis";
+    subj_act_pres_3: "~e~lat", "~e~lant";
+    subj_act_impf_1: "~e~lerem", "~e~lerēmus";
+    subj_act_impf_2: "~e~lerēs", "~e~lerētis";
+    subj_act_impf_3: "~e~leret", "~e~lerent";
+    subj_act_perf_1: "~u~erim", "~u~erīmus";
+    subj_act_perf_2: "~u~erīs", "~u~erītis";
+    subj_act_plup_1: "~u~issem", "~u~issēmus";
+    subj_act_plup_2: "~u~issēs", "~u~issētis";
+    subj_act_plup_3: "~u~isset", "~u~issent";
+    subj_pass_pres_1: "~e~lar", "~e~lāmur";
+    subj_pass_pres_2: "~e~lāris|~e~lāre", "~e~lāminī";
+    subj_pass_pres_3: "~e~lātur", "~e~lantur";
+    subj_pass_impf_1: "~e~lerer", "~e~lerēmur";
+    subj_pass_impf_2: "~e~lerēris|~e~lerēre", "~e~lerēminī";
+    subj_pass_impf_3: "~e~lerētur", "~e~lerentur";
+    imperative_act_pres_2: "~e~le", "~e~lite";
+    imperative_act_fut_2: "~e~litō", "~e~litōte";
+    imperative_act_fut_3: _, "~e~luntō";
+    imperative_pass_pres_2: "~e~lere", _;
+    imperative_pass_fut_2: "~e~litor", _;
+    imperative_pass_fut_3: _, "~e~luntor";
+    infinitive_act: _, "~u~isse", _;
+    infinitive_pass: "~e~lī", _, _;
+    participle: "~e~lēns", _, _, "~e~lendus|~e~lundus";
+    gerund: _, "~e~lendī", "~e~lendō", "~e~lendum", _, _;
+    ),
+    // Tueor: 23 words (polliceor, fateor, cōnfiteor, vereor, reor, intueor). Like Modulor, except in 36 cells: ind_act_pres_1 sg, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("tueor", 23, "~eor", like Modulor as IND_AS_SUBJ;
+    stem participle_perf_pass: "~it- like modulor";
+    ind_act_pres_1: "~eor", _;
+    ind_act_impf_1: "~ēbar", "~ēbāmur";
+    ind_act_impf_2: "~ēbāris|~ēbāre", "~ēbāminī";
+    ind_act_impf_3: "~ēbātur", "~ēbantur";
+    ind_act_fut_1: "~ēbor", "~ēbimur";
+    ind_act_fut_2: "~ēberis|~ēbere", "~ēbiminī";
+    ind_act_fut_3: "~ēbitur", "~ēbuntur";
+    subj_act_pres_1: "~ear", "~eāmur";
+    subj_act_pres_2: "~eāris|~eāre", "~eāminī";
+    subj_act_pres_3: "~eātur", "~eantur";
+    subj_act_impf_1: "~ērer", "~ērēmur";
+    subj_act_impf_2: "~ērēris|~ērēre", "~ērēminī";
+    subj_act_impf_3: "~ērētur", "~ērentur";
+    imperative_act_pres_2: "~ēre", "~ēminī";
+    imperative_act_fut_2: "~ētor", _;
+    imperative_act_fut_3: _, "~entor";
+    infinitive_act: "~ērī", derived, _;
+    participle: "~ēns", _, _, "~endus";
+    gerund: _, "~endī", "~endō", "~endum", _, _;
+    ),
+    // Ārdeō: 22 words (audeō, ārdeō, rīdeō, persuādeō, subrīdeō, suādeō). Like Ēvādō, except in 48 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("ārdeō", 22, "~deō", like Ēvādō as PRES_AS_FUT;
+    ind_act_pres_1: "~deō", _;
     ind_act_fut_1: "~dēbō", "~dēbimus";
     ind_act_fut_2: "~dēbis", "~dēbitis";
     ind_act_fut_3: "~dēbit", "~dēbunt";
-    ind_pass_pres_1: "~deor", "~dēmur";
-    ind_pass_pres_2: "~dēris|~dēre", "~dēminī";
-    ind_pass_pres_3: "~dētur", "~dentur";
+    ind_pass_pres_1: "~deor", _;
     ind_pass_fut_1: "~dēbor", "~dēbimur";
     ind_pass_fut_2: "~dēberis|~dēbere", "~dēbiminī";
     ind_pass_fut_3: "~dēbitur", "~dēbuntur";
@@ -2402,37 +2550,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~dē", "~dēte";
     imperative_act_fut_2: "~dētō", "~dētōte";
     imperative_act_fut_3: _, "~dentō";
-    imperative_pass_pres_2: "~dēre", "~dēminī";
+    imperative_pass_pres_2: "~dēre", _;
     imperative_pass_fut_2: "~dētor", _;
     imperative_pass_fut_3: _, "~dentor";
-    infinitive_act: "~dēre", _, _;
     infinitive_pass: "~dērī", _, _;
     participle: _, _, _, "~dendus";
-    ),
-    // Profiteor: 23 words (polliceor, fateor, cōnfiteor, vereor, reor, intueor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("profiteor", 23, "~eor", like Mōlior;
-    ind_act_pres_1: "~eor", "~ēmur";
-    ind_act_pres_2: "~ēris|~ēre", "~ēminī";
-    ind_act_pres_3: "~ētur", "~entur";
-    ind_act_impf_1: "~ēbar", "~ēbāmur";
-    ind_act_impf_2: "~ēbāris|~ēbāre", "~ēbāminī";
-    ind_act_impf_3: "~ēbātur", "~ēbantur";
-    ind_act_fut_1: "~ēbor", "~ēbimur";
-    ind_act_fut_2: "~ēberis|~ēbere", "~ēbiminī";
-    ind_act_fut_3: "~ēbitur", "~ēbuntur";
-    subj_act_pres_1: "~ear", "~eāmur";
-    subj_act_pres_2: "~eāris|~eāre", "~eāminī";
-    subj_act_pres_3: "~eātur", "~eantur";
-    subj_act_impf_1: "~ērer", "~ērēmur";
-    subj_act_impf_2: "~ērēris|~ērēre", "~ērēminī";
-    subj_act_impf_3: "~ērētur", "~ērentur";
-    imperative_act_pres_2: "~ēre", "~ēminī";
-    imperative_act_fut_2: "~ētor", _;
-    imperative_act_fut_3: _, "~entor";
-    infinitive_act: "~ērī", _, _;
-    participle: "~ēns", _, "~itūrus", "~endus";
-    gerund: _, "~endī", "~endō", "~endum", _, _;
-    supine: _, _, _, "~itum", "~itū", _;
     ),
     // Praecīdō: 22 words (sīdō, comprēndō, prēndō, reprēndō, apprēndō, strīdō). Like Ēvādō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("praecīdō", 22, "~dō", like Ēvādō;
@@ -2452,7 +2574,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~disset", "~dissent";
     infinitive_act: _, "~disse", _;
     ),
-    // Exsarciō: 22 words (crociō, saciō, farciō, micciō, effarciō, sarciō). Like Agō, except in 77 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Exsarciō: 22 words (crociō, saciō, farciō, micciō, effarciō, sarciō). Like Agō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("exsarciō", 22, "~ciō", like Agō;
     ind_act_pres_1: "~ciō", "~cīmus";
     ind_act_pres_2: "~cīs", "~cītis";
@@ -2463,7 +2585,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_fut_1: "~ciam", "~ciēmus";
     ind_act_fut_2: "~ciēs", "~ciētis";
     ind_act_fut_3: "~ciet", "~cient";
-    ind_act_perf_3: _, "~sērunt|~sēre";
     ind_pass_pres_1: "~cior", "~cīmur";
     ind_pass_pres_2: "~cīris|~cīre", "~cīminī";
     ind_pass_pres_3: "~cītur", "~ciuntur";
@@ -2488,19 +2609,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~cī", "~cīte";
     imperative_act_fut_2: "~cītō", "~cītōte";
     imperative_act_fut_3: _, "~ciuntō";
-    imperative_pass_pres_2: "~cīre", "~cīminī";
+    imperative_pass_pres_2: "~cīre", _;
     imperative_pass_fut_2: "~cītor", _;
     imperative_pass_fut_3: _, "~ciuntor";
-    infinitive_act: "~cīre", _, _;
     infinitive_pass: "~cīrī", _, _;
     participle: "~ciēns", _, _, "~ciendus|~ciundus";
     gerund: _, "~ciendī", "~ciendō", "~ciendum", _, _;
     ),
-    // Solvō: 21 words (volvō, solvō, ēvolvō, convolvō, dissolvō, resolvō). Like Quiēscō, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("solvō", 21, "~vō", like Quiēscō;
-    ind_act_pres_1: "~vō", "~vimus";
+    // Solvō: 21 words (volvō, solvō, ēvolvō, convolvō, dissolvō, resolvō). Like Quiēscō, except in 73 cells: ind_act_pres_1 sg, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ….
+    conjugation!("solvō", 21, "~vō", like Quiēscō as PRES_AS_PERF;
+    stem participle_perf_pass: "~ūt- like agitō";
+    ind_act_pres_1: "~vō", _;
     ind_act_pres_2: "~vis", "~vitis";
-    ind_act_pres_3: "~vit", "~vunt";
+    ind_act_pres_3: _, "~vunt";
     ind_act_impf_1: "~vēbam", "~vēbāmus";
     ind_act_impf_2: "~vēbās", "~vēbātis";
     ind_act_impf_3: "~vēbat", "~vēbant";
@@ -2532,100 +2653,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ve", "~vite";
     imperative_act_fut_2: "~vitō", "~vitōte";
     imperative_act_fut_3: _, "~vuntō";
-    imperative_pass_pres_2: "~vere", "~viminī";
+    imperative_pass_pres_2: "~vere", _;
     imperative_pass_fut_2: "~vitor", _;
     imperative_pass_fut_3: _, "~vuntor";
-    infinitive_act: "~vere", _, _;
     infinitive_pass: "~vī", _, _;
-    participle: "~vēns", "~ūtus", "~ūtūrus", "~vendus";
+    participle: "~vēns", _, _, "~vendus";
     gerund: _, "~vendī", "~vendō", "~vendum", _, _;
-    supine: _, _, _, "~ūtum", "~ūtū", _;
     ),
-    // Nāscor: 21 words (ulcīscor, īrāscor, nāscor, vēscor, aborīscor, oblīvīscor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("nāscor", 21, "~scor", like Mōlior;
-    ind_act_pres_1: "~scor", "~scimur";
-    ind_act_pres_2: "~sceris|~scere", "~sciminī";
-    ind_act_pres_3: "~scitur", "~scuntur";
-    ind_act_impf_1: "~scēbar", "~scēbāmur";
-    ind_act_impf_2: "~scēbāris|~scēbāre", "~scēbāminī";
-    ind_act_impf_3: "~scēbātur", "~scēbantur";
-    ind_act_fut_1: "~scar", "~scēmur";
-    ind_act_fut_2: "~scēris|~scēre", "~scēminī";
-    ind_act_fut_3: "~scētur", "~scentur";
-    subj_act_pres_1: "~scar", "~scāmur";
-    subj_act_pres_2: "~scāris|~scāre", "~scāminī";
-    subj_act_pres_3: "~scātur", "~scantur";
-    subj_act_impf_1: "~scerer", "~scerēmur";
-    subj_act_impf_2: "~scerēris|~scerēre", "~scerēminī";
-    subj_act_impf_3: "~scerētur", "~scerentur";
-    imperative_act_pres_2: "~scere", "~sciminī";
-    imperative_act_fut_2: "~scitor", _;
-    imperative_act_fut_3: _, "~scuntor";
-    infinitive_act: "~scī", _, _;
-    participle: "~scēns", _, "~tūrus", "~scendus|~scundus";
-    gerund: _, "~scendī", "~scendō", "~scendum", _, _;
-    supine: _, _, _, "~tum", "~tū", _;
+    // Nāscor: 21 words (ulcīscor, īrāscor, nāscor, vēscor, aborīscor, oblīvīscor). Like Quiēscō, except in 39 cells: ind_act_impf_2 sg, ind_act_fut_2 sg, ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ….
+    conjugation!("nāscor", 21, "~scor", like Quiēscō as ACT_AS_PASS;
+    stem verb_act_sg: "~sc- like cōnsequor";
+    ind_act_impf_2: "~scēbāris|~scēbāre", _;
+    ind_act_fut_2: "~scēris|~scēre", _;
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_act_fut_2: _, derived;
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: _, derived;
+    infinitive_pass: derived, _, _;
+    participle: _, derived, _, "~scendus|~scundus";
     ),
-    // Referō: 21 words (trānsferō, praeferō, īnferō, adferō, auferō, offerō).
-    conjugation!("referō", 21, "~ferō";
-    ind_act_pres_1: "~ferō", "~ferimus";
-    ind_act_pres_2: "~fers", "~fertis";
-    ind_act_pres_3: "~fert", "~ferunt";
-    ind_act_impf_1: "~ferēbam", "~ferēbāmus";
-    ind_act_impf_2: "~ferēbās", "~ferēbātis";
-    ind_act_impf_3: "~ferēbat", "~ferēbant";
-    ind_act_fut_1: "~feram", "~ferēmus";
-    ind_act_fut_2: "~ferēs", "~ferētis";
-    ind_act_fut_3: "~feret", "~ferent";
-    ind_act_perf_1: "~tulī", "~tulimus";
-    ind_act_perf_2: "~tulistī", "~tulistis";
-    ind_act_perf_3: "~tulit", "~tulērunt";
-    ind_act_plup_1: "~tuleram", "~tulerāmus";
-    ind_act_plup_2: "~tulerās", "~tulerātis";
-    ind_act_plup_3: "~tulerat", "~tulerant";
-    ind_act_futp_1: "~tulerō", "~tulerimus";
-    ind_act_futp_2: "~tuleris", "~tuleritis";
-    ind_act_futp_3: "~tulerit", "~tulerint";
-    ind_pass_pres_1: "~feror", "~ferimur";
-    ind_pass_pres_2: "~ferris|~ferre", "~feriminī";
-    ind_pass_pres_3: "~fertur", "~feruntur";
-    ind_pass_impf_1: "~ferēbar", "~ferēbāmur";
-    ind_pass_impf_2: "~ferēbāris|~ferēbāre", "~ferēbāminī";
-    ind_pass_impf_3: "~ferēbātur", "~ferēbantur";
-    ind_pass_fut_1: "~ferar", "~ferēmur";
-    ind_pass_fut_2: "~ferēris|~ferēre", "~ferēminī";
-    ind_pass_fut_3: "~ferētur", "~ferentur";
-    subj_act_pres_1: "~feram", "~ferāmus";
-    subj_act_pres_2: "~ferās", "~ferātis";
-    subj_act_pres_3: "~ferat", "~ferant";
-    subj_act_impf_1: "~ferrem", "~ferrēmus";
-    subj_act_impf_2: "~ferrēs", "~ferrētis";
-    subj_act_impf_3: "~ferret", "~ferrent";
-    subj_act_perf_1: "~tulerim", "~tulerīmus";
-    subj_act_perf_2: "~tulerīs", "~tulerītis";
-    subj_act_plup_1: "~tulissem", "~tulissēmus";
-    subj_act_plup_2: "~tulissēs", "~tulissētis";
-    subj_act_plup_3: "~tulisset", "~tulissent";
-    subj_pass_pres_1: "~ferar", "~ferāmur";
-    subj_pass_pres_2: "~ferāris|~ferāre", "~ferāminī";
-    subj_pass_pres_3: "~ferātur", "~ferantur";
-    subj_pass_impf_1: "~ferrer", "~ferrēmur";
-    subj_pass_impf_2: "~ferrēris|~ferrēre", "~ferrēminī";
-    subj_pass_impf_3: "~ferrētur", "~ferrentur";
-    imperative_act_pres_2: "~fer", "~ferte";
-    imperative_act_fut_2: "~fertō", "~fertōte";
-    imperative_act_fut_3: _, "~feruntō";
-    imperative_pass_pres_2: "~ferre", "~feriminī";
-    imperative_pass_fut_2: "~fertor", _;
-    imperative_pass_fut_3: _, "~feruntor";
-    infinitive_act: "~ferre", "~tulisse", _;
-    infinitive_pass: "~ferrī", _, _;
-    participle: "~ferēns", "~lātus", "~lātūrus", "~ferendus|~ferundus";
-    gerund: _, "~ferendī", "~ferendō", "~ferendum", _, _;
-    supine: _, _, _, "~lātum", "~lātū", _;
-    ),
-    // Abnuō: 20 words (ajō, bibō, uō, lambō, fervō, abscondō). Like Volō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("abnuō", 20, "~ō", like Volō;
+    // Abnuō: 20 words (ajō, bibō, uō, lambō, fervō, abscondō). Like Compescō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("abnuō", 20, "~ō", like Compescō;
     ind_act_perf_1: "~ī", "~imus";
     ind_act_perf_2: "~istī", "~istis";
     ind_act_perf_3: "~it", "~ērunt|~ēre";
@@ -2642,28 +2705,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~isset", "~issent";
     infinitive_act: _, "~isse", _;
     ),
-    // Afflīgō: 19 words (tāgō, frīgō, sūgō, tragō, discingō, succingō). Like Mergō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("afflīgō", 19, "~gō", like Mergō;
-    ind_act_perf_1: "~xī", "~ximus";
-    ind_act_perf_2: "~xistī", "~xistis";
-    ind_act_perf_3: "~xit", "~xērunt|~xēre";
-    ind_act_plup_1: "~xeram", "~xerāmus";
-    ind_act_plup_2: "~xerās", "~xerātis";
-    ind_act_plup_3: "~xerat", "~xerant";
-    ind_act_futp_1: "~xerō", "~xerimus";
-    ind_act_futp_2: "~xeris", "~xeritis";
-    ind_act_futp_3: "~xerit", "~xerint";
-    subj_act_perf_1: "~xerim", "~xerīmus";
-    subj_act_perf_2: "~xerīs", "~xerītis";
-    subj_act_plup_1: "~xissem", "~xissēmus";
-    subj_act_plup_2: "~xissēs", "~xissētis";
-    subj_act_plup_3: "~xisset", "~xissent";
-    infinitive_act: _, "~xisse", _;
-    participle: _, "~ctus", "~ctūrus", _;
-    supine: _, _, _, "~ctum", "~ctū", _;
-    ),
     // Cēdō: 19 words (cēdō, discēdō, concēdō, excēdō, prōcēdō, retrōcēdō).
     conjugation!("cēdō", 19, "~ēdō";
+    stem participle_perf_pass: "~ess- like agitō";
     ind_act_pres_1: "~ēdō", "~ēdimus";
     ind_act_pres_2: "~ēdis", "~ēditis";
     ind_act_pres_3: "~ēdit", "~ēdunt";
@@ -2711,42 +2755,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ēde", "~ēdite";
     imperative_act_fut_2: "~ēditō", "~ēditōte";
     imperative_act_fut_3: _, "~ēduntō";
-    imperative_pass_pres_2: "~ēdere", "~ēdiminī";
+    imperative_pass_pres_2: "~ēdere", _;
     imperative_pass_fut_2: "~ēditor", _;
     imperative_pass_fut_3: _, "~ēduntor";
-    infinitive_act: "~ēdere", "~essisse", _;
+    infinitive_act: _, "~essisse", _;
     infinitive_pass: "~ēdī", _, _;
-    participle: "~ēdēns", "~essus", "~essūrus", "~ēdendus|~ēdundus";
+    participle: "~ēdēns", _, _, "~ēdendus|~ēdundus";
     gerund: _, "~ēdendī", "~ēdendō", "~ēdendum", _, _;
-    supine: _, _, _, "~essum", "~essū", _;
-    ),
-    // Ēgredior: 19 words (ēgredior, gradior, aggredior, trānsgredior, antegredior, congredior). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ēgredior", 19, "~dior", like Mōlior;
-    ind_act_pres_1: "~dior", "~dimur";
-    ind_act_pres_2: "~deris|~dere", "~diminī";
-    ind_act_pres_3: "~ditur", "~diuntur";
-    ind_act_impf_1: "~diēbar", "~diēbāmur";
-    ind_act_impf_2: "~diēbāris|~diēbāre", "~diēbāminī";
-    ind_act_impf_3: "~diēbātur", "~diēbantur";
-    ind_act_fut_1: "~diar", "~diēmur";
-    ind_act_fut_2: "~diēris|~diēre", "~diēminī";
-    ind_act_fut_3: "~diētur", "~dientur";
-    subj_act_pres_1: "~diar", "~diāmur";
-    subj_act_pres_2: "~diāris|~diāre", "~diāminī";
-    subj_act_pres_3: "~diātur", "~diantur";
-    subj_act_impf_1: "~derer", "~derēmur";
-    subj_act_impf_2: "~derēris|~derēre", "~derēminī";
-    subj_act_impf_3: "~derētur", "~derentur";
-    imperative_act_pres_2: "~dere", "~diminī";
-    imperative_act_fut_2: "~ditor", _;
-    imperative_act_fut_3: _, "~diuntor";
-    infinitive_act: "~dī", _, _;
-    participle: "~diēns", _, "~ssūrus", "~diendus|~diundus";
-    gerund: _, "~diendī", "~diendō", "~diendum", _, _;
-    supine: _, _, _, "~ssum", "~ssū", _;
     ),
     // Possideō: 19 words (videō, resideō, assideō, invideō, revideō, īnsideō).
     conjugation!("possideō", 19, "~ideō";
+    stem participle_perf_pass: "~ess- like agitō";
     ind_act_pres_1: "~ideō", "~idēmus";
     ind_act_pres_2: "~idēs", "~idētis";
     ind_act_pres_3: "~idet", "~ident";
@@ -2794,61 +2813,91 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~idē", "~idēte";
     imperative_act_fut_2: "~idētō", "~idētōte";
     imperative_act_fut_3: _, "~identō";
-    imperative_pass_pres_2: "~idēre", "~idēminī";
+    imperative_pass_pres_2: "~idēre", _;
     imperative_pass_fut_2: "~idētor", _;
     imperative_pass_fut_3: _, "~identor";
-    infinitive_act: "~idēre", "~ēdisse", _;
+    infinitive_act: _, "~ēdisse", _;
     infinitive_pass: "~idērī", _, _;
-    participle: "~idēns", "~essus", "~essūrus", "~idendus";
+    participle: "~idēns", _, _, "~idendus";
     gerund: _, "~idendī", "~idendō", "~idendum", _, _;
-    supine: _, _, _, "~essum", "~essū", _;
     ),
-    // Dēsinō: 17 words (sinō, linō, dēsinō, oblinō, collinō, perlinō). Like Impleō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("dēsinō", 17, "~inō", like Impleō;
-    ind_act_pres_1: "~inō", "~inimus";
-    ind_act_pres_2: "~inis", "~initis";
-    ind_act_pres_3: "~init", "~inunt";
-    ind_act_impf_1: "~inēbam", "~inēbāmus";
-    ind_act_impf_2: "~inēbās", "~inēbātis";
-    ind_act_impf_3: "~inēbat", "~inēbant";
-    ind_act_fut_1: "~inam", "~inēmus";
-    ind_act_fut_2: "~inēs", "~inētis";
-    ind_act_fut_3: "~inet", "~inent";
-    ind_pass_pres_1: "~inor", "~inimur";
-    ind_pass_pres_2: "~ineris|~inere", "~iniminī";
-    ind_pass_pres_3: "~initur", "~inuntur";
-    ind_pass_impf_1: "~inēbar", "~inēbāmur";
-    ind_pass_impf_2: "~inēbāris|~inēbāre", "~inēbāminī";
-    ind_pass_impf_3: "~inēbātur", "~inēbantur";
-    ind_pass_fut_1: "~inar", "~inēmur";
-    ind_pass_fut_2: "~inēris|~inēre", "~inēminī";
-    ind_pass_fut_3: "~inētur", "~inentur";
-    subj_act_pres_1: "~inam", "~ināmus";
-    subj_act_pres_2: "~inās", "~inātis";
-    subj_act_pres_3: "~inat", "~inant";
-    subj_act_impf_1: "~inerem", "~inerēmus";
-    subj_act_impf_2: "~inerēs", "~inerētis";
-    subj_act_impf_3: "~ineret", "~inerent";
-    subj_pass_pres_1: "~inar", "~ināmur";
-    subj_pass_pres_2: "~ināris|~ināre", "~ināminī";
-    subj_pass_pres_3: "~inātur", "~inantur";
-    subj_pass_impf_1: "~inerer", "~inerēmur";
-    subj_pass_impf_2: "~inerēris|~inerēre", "~inerēminī";
-    subj_pass_impf_3: "~inerētur", "~inerentur";
-    imperative_act_pres_2: "~ine", "~inite";
-    imperative_act_fut_2: "~initō", "~initōte";
-    imperative_act_fut_3: _, "~inuntō";
-    imperative_pass_pres_2: "~inere", "~iniminī";
-    imperative_pass_fut_2: "~initor", _;
-    imperative_pass_fut_3: _, "~inuntor";
-    infinitive_act: "~inere", _, _;
-    infinitive_pass: "~inī", _, _;
-    participle: "~inēns", "~itus", "~itūrus", "~inendus|~inundus";
-    gerund: _, "~inendī", "~inendō", "~inendum", _, _;
-    supine: _, _, _, "~itum", "~itū", _;
+    // Ēgredior: 19 words (ēgredior, gradior, aggredior, trānsgredior, antegredior, congredior). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("ēgredior", 19, "~dior", like Cōnsequor;
+    stem verb_act_sg: "~d- like ēgredior";
+    stem participle_perf_pass: "~ss- like modulor";
+    ind_act_pres_1: _, "~dimur";
+    ind_act_impf_1: "~diēbar", "~diēbāmur";
+    ind_act_impf_2: "~diēbāris|~diēbāre", "~diēbāminī";
+    ind_act_impf_3: "~diēbātur", "~diēbantur";
+    ind_act_fut_1: "~diar", "~diēmur";
+    ind_act_fut_2: "~diēris|~diēre", "~diēminī";
+    ind_act_fut_3: "~diētur", _;
+    subj_act_pres_3: "~diātur", _;
+    imperative_act_fut_2: "~ditor", _;
+    participle: "~diēns", _, _, "~diendus|~diundus";
+    gerund: _, "~diendī", "~diendō", "~diendum", _, _;
+    ),
+    // Referō: 18 words (trānsferō, praeferō, īnferō, adferō, auferō, cōnferō).
+    conjugation!("referō", 18, "~ferō";
+    stem participle_perf_pass: "~lāt- like agitō";
+    ind_act_pres_1: "~ferō", "~ferimus";
+    ind_act_pres_2: "~fers", "~fertis";
+    ind_act_pres_3: "~fert", "~ferunt";
+    ind_act_impf_1: "~ferēbam", "~ferēbāmus";
+    ind_act_impf_2: "~ferēbās", "~ferēbātis";
+    ind_act_impf_3: "~ferēbat", "~ferēbant";
+    ind_act_fut_1: "~feram", "~ferēmus";
+    ind_act_fut_2: "~ferēs", "~ferētis";
+    ind_act_fut_3: "~feret", "~ferent";
+    ind_act_perf_1: "~tulī", "~tulimus";
+    ind_act_perf_2: "~tulistī", "~tulistis";
+    ind_act_perf_3: "~tulit", "~tulērunt|~tulēre";
+    ind_act_plup_1: "~tuleram", "~tulerāmus";
+    ind_act_plup_2: "~tulerās", "~tulerātis";
+    ind_act_plup_3: "~tulerat", "~tulerant";
+    ind_act_futp_1: "~tulerō", "~tulerimus";
+    ind_act_futp_2: "~tuleris", "~tuleritis";
+    ind_act_futp_3: "~tulerit", "~tulerint";
+    ind_pass_pres_1: "~feror", "~ferimur";
+    ind_pass_pres_2: "~ferris|~ferre", "~feriminī";
+    ind_pass_pres_3: "~fertur", "~feruntur";
+    ind_pass_impf_1: "~ferēbar", "~ferēbāmur";
+    ind_pass_impf_2: "~ferēbāris|~ferēbāre", "~ferēbāminī";
+    ind_pass_impf_3: "~ferēbātur", "~ferēbantur";
+    ind_pass_fut_1: "~ferar", "~ferēmur";
+    ind_pass_fut_2: "~ferēris|~ferēre", "~ferēminī";
+    ind_pass_fut_3: "~ferētur", "~ferentur";
+    subj_act_pres_1: "~feram", "~ferāmus";
+    subj_act_pres_2: "~ferās", "~ferātis";
+    subj_act_pres_3: "~ferat", "~ferant";
+    subj_act_impf_1: "~ferrem", "~ferrēmus";
+    subj_act_impf_2: "~ferrēs", "~ferrētis";
+    subj_act_impf_3: "~ferret", "~ferrent";
+    subj_act_perf_1: "~tulerim", "~tulerīmus";
+    subj_act_perf_2: "~tulerīs", "~tulerītis";
+    subj_act_plup_1: "~tulissem", "~tulissēmus";
+    subj_act_plup_2: "~tulissēs", "~tulissētis";
+    subj_act_plup_3: "~tulisset", "~tulissent";
+    subj_pass_pres_1: "~ferar", "~ferāmur";
+    subj_pass_pres_2: "~ferāris|~ferāre", "~ferāminī";
+    subj_pass_pres_3: "~ferātur", "~ferantur";
+    subj_pass_impf_1: "~ferrer", "~ferrēmur";
+    subj_pass_impf_2: "~ferrēris|~ferrēre", "~ferrēminī";
+    subj_pass_impf_3: "~ferrētur", "~ferrentur";
+    imperative_act_pres_2: "~fer", "~ferte";
+    imperative_act_fut_2: "~fertō", "~fertōte";
+    imperative_act_fut_3: _, "~feruntō";
+    imperative_pass_pres_2: "~ferre", _;
+    imperative_pass_fut_2: "~fertor", _;
+    imperative_pass_fut_3: _, "~feruntor";
+    infinitive_act: _, "~tulisse", _;
+    infinitive_pass: "~ferrī", _, _;
+    participle: "~ferēns", _, _, "~ferendus|~ferundus";
+    gerund: _, "~ferendī", "~ferendō", "~ferendum", _, _;
     ),
     // Dispiciō: 17 words (perspiciō, retrōspiciō, aspiciō, respiciō, cōnspiciō, suspiciō).
     conjugation!("dispiciō", 17, "~iciō";
+    stem participle_perf_pass: "~ect- like agitō";
     ind_act_pres_1: "~iciō", "~icimus";
     ind_act_pres_2: "~icis", "~icitis";
     ind_act_pres_3: "~icit", "~iciunt";
@@ -2896,17 +2945,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ice", "~icite";
     imperative_act_fut_2: "~icitō", "~icitōte";
     imperative_act_fut_3: _, "~iciuntō";
-    imperative_pass_pres_2: "~icere", "~iciminī";
+    imperative_pass_pres_2: "~icere", _;
     imperative_pass_fut_2: "~icitor", _;
     imperative_pass_fut_3: _, "~iciuntor";
-    infinitive_act: "~icere", "~exisse", _;
+    infinitive_act: _, "~exisse", _;
     infinitive_pass: "~icī", _, _;
-    participle: "~iciēns", "~ectus", "~ectūrus", "~iciendus|~iciundus";
+    participle: "~iciēns", _, _, "~iciendus|~iciundus";
     gerund: _, "~iciendī", "~iciendō", "~iciendum", _, _;
-    supine: _, _, _, "~ectum", "~ectū", _;
     ),
     // Trahō: 17 words (extrahō, trahō, abstrahō, subtrahō, attrahō, circumtrahō).
     conjugation!("trahō", 17, "~ahō";
+    stem participle_perf_pass: "~act- like agitō";
     ind_act_pres_1: "~ahō", "~ahimus";
     ind_act_pres_2: "~ahis", "~ahitis";
     ind_act_pres_3: "~ahit", "~ahunt";
@@ -2954,17 +3003,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ahe", "~ahite";
     imperative_act_fut_2: "~ahitō", "~ahitōte";
     imperative_act_fut_3: _, "~ahuntō";
-    imperative_pass_pres_2: "~ahere", "~ahiminī";
+    imperative_pass_pres_2: "~ahere", _;
     imperative_pass_fut_2: "~ahitor", _;
     imperative_pass_fut_3: _, "~ahuntor";
-    infinitive_act: "~ahere", "~āxisse", _;
+    infinitive_act: _, "~āxisse", _;
     infinitive_pass: "~ahī", _, _;
-    participle: "~ahēns", "~actus", "~actūrus", "~ahendus|~ahundus";
+    participle: "~ahēns", _, _, "~ahendus|~ahundus";
     gerund: _, "~ahendī", "~ahendō", "~ahendum", _, _;
-    supine: _, _, _, "~actum", "~actū", _;
     ),
-    // Compingō: 17 words (attingō, contingō, impingō, adtingō, compingō, cōnfringō). Like Perstringō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Compingō: 17 words (attingō, contingō, impingō, adtingō, compingō, cōnfringō). Like Perstringō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("compingō", 17, "~ingō", like Perstringō;
+    stem participle_perf_pass: "~āct- like agitō";
     ind_act_perf_1: "~ēgī", "~ēgimus";
     ind_act_perf_2: "~ēgistī", "~ēgistis";
     ind_act_perf_3: "~ēgit", "~ēgērunt|~ēgēre";
@@ -2980,8 +3029,107 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~ēgissēs", "~ēgissētis";
     subj_act_plup_3: "~ēgisset", "~ēgissent";
     infinitive_act: _, "~ēgisse", _;
-    participle: _, "~āctus", "~āctūrus", _;
-    supine: _, _, _, "~āctum", "~āctū", _;
+    ),
+    // Dēsinō: 17 words (sinō, linō, dēsinō, oblinō, collinō, perlinō). Like Impleō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("dēsinō", 17, "~inō", like Impleō;
+    stem participle_perf_pass: "~it- like agitō";
+    ind_act_pres_1: "~inō", "~inimus";
+    ind_act_pres_2: "~inis", "~initis";
+    ind_act_pres_3: "~init", "~inunt";
+    ind_act_impf_1: "~inēbam", "~inēbāmus";
+    ind_act_impf_2: "~inēbās", "~inēbātis";
+    ind_act_impf_3: "~inēbat", "~inēbant";
+    ind_act_fut_1: "~inam", "~inēmus";
+    ind_act_fut_2: "~inēs", "~inētis";
+    ind_act_fut_3: "~inet", "~inent";
+    ind_pass_pres_1: "~inor", "~inimur";
+    ind_pass_pres_2: "~ineris|~inere", "~iniminī";
+    ind_pass_pres_3: "~initur", "~inuntur";
+    ind_pass_impf_1: "~inēbar", "~inēbāmur";
+    ind_pass_impf_2: "~inēbāris|~inēbāre", "~inēbāminī";
+    ind_pass_impf_3: "~inēbātur", "~inēbantur";
+    ind_pass_fut_1: "~inar", "~inēmur";
+    ind_pass_fut_2: "~inēris|~inēre", "~inēminī";
+    ind_pass_fut_3: "~inētur", "~inentur";
+    subj_act_pres_1: "~inam", "~ināmus";
+    subj_act_pres_2: "~inās", "~inātis";
+    subj_act_pres_3: "~inat", "~inant";
+    subj_act_impf_1: "~inerem", "~inerēmus";
+    subj_act_impf_2: "~inerēs", "~inerētis";
+    subj_act_impf_3: "~ineret", "~inerent";
+    subj_pass_pres_1: "~inar", "~ināmur";
+    subj_pass_pres_2: "~ināris|~ināre", "~ināminī";
+    subj_pass_pres_3: "~inātur", "~inantur";
+    subj_pass_impf_1: "~inerer", "~inerēmur";
+    subj_pass_impf_2: "~inerēris|~inerēre", "~inerēminī";
+    subj_pass_impf_3: "~inerētur", "~inerentur";
+    imperative_act_pres_2: "~ine", "~inite";
+    imperative_act_fut_2: "~initō", "~initōte";
+    imperative_act_fut_3: _, "~inuntō";
+    imperative_pass_pres_2: "~inere", _;
+    imperative_pass_fut_2: "~initor", _;
+    imperative_pass_fut_3: _, "~inuntor";
+    infinitive_pass: "~inī", _, _;
+    participle: "~inēns", _, _, "~inendus|~inundus";
+    gerund: _, "~inendī", "~inendō", "~inendum", _, _;
+    ),
+    // Nectō: 16 words (flectō, īnflectō, genūflectō, reflectō, pectō, plectō).
+    conjugation!("nectō", 16, "~ctō";
+    stem participle_perf_pass: "~x- like agitō";
+    ind_act_pres_1: "~ctō", "~ctimus";
+    ind_act_pres_2: "~ctis", "~ctitis";
+    ind_act_pres_3: "~ctit", "~ctunt";
+    ind_act_impf_1: "~ctēbam", "~ctēbāmus";
+    ind_act_impf_2: "~ctēbās", "~ctēbātis";
+    ind_act_impf_3: "~ctēbat", "~ctēbant";
+    ind_act_fut_1: "~ctam", "~ctēmus";
+    ind_act_fut_2: "~ctēs", "~ctētis";
+    ind_act_fut_3: "~ctet", "~ctent";
+    ind_act_perf_1: "~xī", "~ximus";
+    ind_act_perf_2: "~xistī", "~xistis";
+    ind_act_perf_3: "~xit", "~xērunt|~xēre";
+    ind_act_plup_1: "~xeram", "~xerāmus";
+    ind_act_plup_2: "~xerās", "~xerātis";
+    ind_act_plup_3: "~xerat", "~xerant";
+    ind_act_futp_1: "~xerō", "~xerimus";
+    ind_act_futp_2: "~xeris", "~xeritis";
+    ind_act_futp_3: "~xerit", "~xerint";
+    ind_pass_pres_1: "~ctor", "~ctimur";
+    ind_pass_pres_2: "~cteris|~ctere", "~ctiminī";
+    ind_pass_pres_3: "~ctitur", "~ctuntur";
+    ind_pass_impf_1: "~ctēbar", "~ctēbāmur";
+    ind_pass_impf_2: "~ctēbāris|~ctēbāre", "~ctēbāminī";
+    ind_pass_impf_3: "~ctēbātur", "~ctēbantur";
+    ind_pass_fut_1: "~ctar", "~ctēmur";
+    ind_pass_fut_2: "~ctēris|~ctēre", "~ctēminī";
+    ind_pass_fut_3: "~ctētur", "~ctentur";
+    subj_act_pres_1: "~ctam", "~ctāmus";
+    subj_act_pres_2: "~ctās", "~ctātis";
+    subj_act_pres_3: "~ctat", "~ctant";
+    subj_act_impf_1: "~cterem", "~cterēmus";
+    subj_act_impf_2: "~cterēs", "~cterētis";
+    subj_act_impf_3: "~cteret", "~cterent";
+    subj_act_perf_1: "~xerim", "~xerīmus";
+    subj_act_perf_2: "~xerīs", "~xerītis";
+    subj_act_plup_1: "~xissem", "~xissēmus";
+    subj_act_plup_2: "~xissēs", "~xissētis";
+    subj_act_plup_3: "~xisset", "~xissent";
+    subj_pass_pres_1: "~ctar", "~ctāmur";
+    subj_pass_pres_2: "~ctāris|~ctāre", "~ctāminī";
+    subj_pass_pres_3: "~ctātur", "~ctantur";
+    subj_pass_impf_1: "~cterer", "~cterēmur";
+    subj_pass_impf_2: "~cterēris|~cterēre", "~cterēminī";
+    subj_pass_impf_3: "~cterētur", "~cterentur";
+    imperative_act_pres_2: "~cte", "~ctite";
+    imperative_act_fut_2: "~ctitō", "~ctitōte";
+    imperative_act_fut_3: _, "~ctuntō";
+    imperative_pass_pres_2: "~ctere", _;
+    imperative_pass_fut_2: "~ctitor", _;
+    imperative_pass_fut_3: _, "~ctuntor";
+    infinitive_act: _, "~xisse", _;
+    infinitive_pass: "~ctī", _, _;
+    participle: "~ctēns", _, _, "~ctendus|~ctundus";
+    gerund: _, "~ctendī", "~ctendō", "~ctendum", _, _;
     ),
     // Corripiō: 16 words (ēripiō, abripiō, dēripiō, alliciō, arripiō, dīripiō). Like Excipiō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("corripiō", 16, "~i~iō", like Excipiō;
@@ -3003,6 +3151,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ),
     // Effundō: 16 words (profundō, cōnfundō, īnfundō, effundō, circumfundō, diffundō).
     conjugation!("effundō", 16, "~undō";
+    stem participle_perf_pass: "~ūs- like agitō";
     ind_act_pres_1: "~undō", "~undimus";
     ind_act_pres_2: "~undis", "~unditis";
     ind_act_pres_3: "~undit", "~undunt";
@@ -3050,74 +3199,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~unde", "~undite";
     imperative_act_fut_2: "~unditō", "~unditōte";
     imperative_act_fut_3: _, "~unduntō";
-    imperative_pass_pres_2: "~undere", "~undiminī";
+    imperative_pass_pres_2: "~undere", _;
     imperative_pass_fut_2: "~unditor", _;
     imperative_pass_fut_3: _, "~unduntor";
-    infinitive_act: "~undere", "~ūdisse", _;
+    infinitive_act: _, "~ūdisse", _;
     infinitive_pass: "~undī", _, _;
-    participle: "~undēns", "~ūsus", "~ūsūrus", "~undendus|~undundus";
+    participle: "~undēns", _, _, "~undendus|~undundus";
     gerund: _, "~undendī", "~undendō", "~undendum", _, _;
-    supine: _, _, _, "~ūsum", "~ūsū", _;
     ),
-    // Accumbō: 16 words (recumbō, dēlambō, accumbō, adcumbō, succumbō, prōcumbō).
-    conjugation!("accumbō", 16, "~m~ō";
-    ind_act_pres_1: "~m~ō", "~m~imus";
-    ind_act_pres_2: "~m~is", "~m~itis";
-    ind_act_pres_3: "~m~it", "~m~unt";
-    ind_act_impf_1: "~m~ēbam", "~m~ēbāmus";
-    ind_act_impf_2: "~m~ēbās", "~m~ēbātis";
-    ind_act_impf_3: "~m~ēbat", "~m~ēbant";
-    ind_act_fut_1: "~m~am", "~m~ēmus";
-    ind_act_fut_2: "~m~ēs", "~m~ētis";
-    ind_act_fut_3: "~m~et", "~m~ent";
-    ind_act_perf_1: "~~uī", "~~uimus";
-    ind_act_perf_2: "~~uistī", "~~uistis";
-    ind_act_perf_3: "~~uit", "~~uērunt|~~uēre";
-    ind_act_plup_1: "~~ueram", "~~uerāmus";
-    ind_act_plup_2: "~~uerās", "~~uerātis";
-    ind_act_plup_3: "~~uerat", "~~uerant";
-    ind_act_futp_1: "~~uerō", "~~uerimus";
-    ind_act_futp_2: "~~ueris", "~~ueritis";
-    ind_act_futp_3: "~~uerit", "~~uerint";
-    ind_pass_pres_1: "~m~or", "~m~imur";
-    ind_pass_pres_2: "~m~eris", "~m~iminī";
-    ind_pass_pres_3: "~m~itur", "~m~untur";
-    ind_pass_impf_1: "~m~ēbar", "~m~ēbāmur";
-    ind_pass_impf_2: "~m~ēbāris", "~m~ēbāminī";
-    ind_pass_impf_3: "~m~ēbātur", "~m~ēbantur";
-    ind_pass_fut_1: "~m~ar", "~m~ēmur";
-    ind_pass_fut_2: "~m~ēris", "~m~ēminī";
-    ind_pass_fut_3: "~m~ētur", "~m~entur";
-    subj_act_pres_1: "~m~am", "~m~āmus";
-    subj_act_pres_2: "~m~ās", "~m~ātis";
-    subj_act_pres_3: "~m~at", "~m~ant";
-    subj_act_impf_1: "~m~erem", "~m~erēmus";
-    subj_act_impf_2: "~m~erēs", "~m~erētis";
-    subj_act_impf_3: "~m~eret", "~m~erent";
-    subj_act_perf_1: "~~uerim", "~~uerīmus";
-    subj_act_perf_2: "~~uerīs", "~~uerītis";
-    subj_act_plup_1: "~~uissem", "~~uissēmus";
-    subj_act_plup_2: "~~uissēs", "~~uissētis";
-    subj_act_plup_3: "~~uisset", "~~uissent";
-    subj_pass_pres_1: "~m~ar", "~m~āmur";
-    subj_pass_pres_2: "~m~āris", "~m~āminī";
-    subj_pass_pres_3: "~m~ātur", "~m~antur";
-    subj_pass_impf_1: "~m~erer", "~m~erēmur";
-    subj_pass_impf_2: "~m~erēris", "~m~erēminī";
-    subj_pass_impf_3: "~m~erētur", "~m~erentur";
-    imperative_act_pres_2: "~m~e", "~m~ite";
-    imperative_act_fut_2: "~m~itō", "~m~itōte";
-    imperative_act_fut_3: _, "~m~untō";
-    imperative_pass_pres_2: "~m~ere", "~m~iminī";
-    imperative_pass_fut_2: "~m~itor", _;
-    imperative_pass_fut_3: _, "~m~untor";
-    infinitive_act: "~m~ere", "~~uisse", _;
-    infinitive_pass: "~m~ī", _, _;
-    participle: "~m~ēns", "~~itus", "~~itūrus", "~m~endus";
-    gerund: _, "~m~endī", "~m~endō", "~m~endum", _, _;
-    supine: _, _, _, "~~itum", "~~itū", _;
-    ),
-    // Exigō: 16 words (adigō, redigō, prōdigō, abigō, trānsigō, colligō). Like Compingō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Exigō: 16 words (adigō, redigō, prōdigō, abigō, trānsigō, colligō). Like Compingō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("exigō", 16, "~igō", like Compingō;
     ind_act_pres_1: "~igō", "~igimus";
     ind_act_pres_2: "~igis", "~igitis";
@@ -3152,85 +3242,110 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ige", "~igite";
     imperative_act_fut_2: "~igitō", "~igitōte";
     imperative_act_fut_3: _, "~iguntō";
-    imperative_pass_pres_2: "~igere", "~igiminī";
+    imperative_pass_pres_2: "~igere", _;
     imperative_pass_fut_2: "~igitor", _;
     imperative_pass_fut_3: _, "~iguntor";
-    infinitive_act: "~igere", _, _;
     infinitive_pass: "~igī", _, _;
     participle: "~igēns", _, _, "~igendus|~igundus";
     gerund: _, "~igendī", "~igendō", "~igendum", _, _;
     ),
-    // Nectō: 15 words (flectō, īnflectō, genūflectō, reflectō, pectō, plectō). Like Afflīgō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("nectō", 15, "~ctō", like Afflīgō;
-    ind_act_pres_1: "~ctō", "~ctimus";
-    ind_act_pres_2: "~ctis", "~ctitis";
-    ind_act_pres_3: "~ctit", "~ctunt";
-    ind_act_impf_1: "~ctēbam", "~ctēbāmus";
-    ind_act_impf_2: "~ctēbās", "~ctēbātis";
-    ind_act_impf_3: "~ctēbat", "~ctēbant";
-    ind_act_fut_1: "~ctam", "~ctēmus";
-    ind_act_fut_2: "~ctēs", "~ctētis";
-    ind_act_fut_3: "~ctet", "~ctent";
-    ind_pass_pres_1: "~ctor", "~ctimur";
-    ind_pass_pres_2: "~cteris|~ctere", "~ctiminī";
-    ind_pass_pres_3: "~ctitur", "~ctuntur";
-    ind_pass_impf_1: "~ctēbar", "~ctēbāmur";
-    ind_pass_impf_2: "~ctēbāris|~ctēbāre", "~ctēbāminī";
-    ind_pass_impf_3: "~ctēbātur", "~ctēbantur";
-    ind_pass_fut_1: "~ctar", "~ctēmur";
-    ind_pass_fut_2: "~ctēris|~ctēre", "~ctēminī";
-    ind_pass_fut_3: "~ctētur", "~ctentur";
-    subj_act_pres_1: "~ctam", "~ctāmus";
-    subj_act_pres_2: "~ctās", "~ctātis";
-    subj_act_pres_3: "~ctat", "~ctant";
-    subj_act_impf_1: "~cterem", "~cterēmus";
-    subj_act_impf_2: "~cterēs", "~cterētis";
-    subj_act_impf_3: "~cteret", "~cterent";
-    subj_pass_pres_1: "~ctar", "~ctāmur";
-    subj_pass_pres_2: "~ctāris|~ctāre", "~ctāminī";
-    subj_pass_pres_3: "~ctātur", "~ctantur";
-    subj_pass_impf_1: "~cterer", "~cterēmur";
-    subj_pass_impf_2: "~cterēris|~cterēre", "~cterēminī";
-    subj_pass_impf_3: "~cterētur", "~cterentur";
-    imperative_act_pres_2: "~cte", "~ctite";
-    imperative_act_fut_2: "~ctitō", "~ctitōte";
-    imperative_act_fut_3: _, "~ctuntō";
-    imperative_pass_pres_2: "~ctere", "~ctiminī";
-    imperative_pass_fut_2: "~ctitor", _;
-    imperative_pass_fut_3: _, "~ctuntor";
-    infinitive_act: "~ctere", _, _;
-    infinitive_pass: "~ctī", _, _;
-    participle: "~ctēns", "~xus", "~xūrus", "~ctendus|~ctundus";
-    gerund: _, "~ctendī", "~ctendō", "~ctendum", _, _;
-    supine: _, _, _, "~xum", "~xū", _;
+    // Accumbō: 16 words (recumbō, dēlambō, accumbō, adcumbō, succumbō, prōcumbō).
+    conjugation!("accumbō", 16, "~m~ō";
+    stem participle_perf_pass: "~~it- like agitō";
+    ind_act_pres_1: "~m~ō", "~m~imus";
+    ind_act_pres_2: "~m~is", "~m~itis";
+    ind_act_pres_3: "~m~it", "~m~unt";
+    ind_act_impf_1: "~m~ēbam", "~m~ēbāmus";
+    ind_act_impf_2: "~m~ēbās", "~m~ēbātis";
+    ind_act_impf_3: "~m~ēbat", "~m~ēbant";
+    ind_act_fut_1: "~m~am", "~m~ēmus";
+    ind_act_fut_2: "~m~ēs", "~m~ētis";
+    ind_act_fut_3: "~m~et", "~m~ent";
+    ind_act_perf_1: "~~uī", "~~uimus";
+    ind_act_perf_2: "~~uistī", "~~uistis";
+    ind_act_perf_3: "~~uit", "~~uērunt|~~uēre";
+    ind_act_plup_1: "~~ueram", "~~uerāmus";
+    ind_act_plup_2: "~~uerās", "~~uerātis";
+    ind_act_plup_3: "~~uerat", "~~uerant";
+    ind_act_futp_1: "~~uerō", "~~uerimus";
+    ind_act_futp_2: "~~ueris", "~~ueritis";
+    ind_act_futp_3: "~~uerit", "~~uerint";
+    ind_pass_pres_1: "~m~or", "~m~imur";
+    ind_pass_pres_2: "~m~eris|~m~ere", "~m~iminī";
+    ind_pass_pres_3: "~m~itur", "~m~untur";
+    ind_pass_impf_1: "~m~ēbar", "~m~ēbāmur";
+    ind_pass_impf_2: "~m~ēbāris|~m~ēbāre", "~m~ēbāminī";
+    ind_pass_impf_3: "~m~ēbātur", "~m~ēbantur";
+    ind_pass_fut_1: "~m~ar", "~m~ēmur";
+    ind_pass_fut_2: "~m~ēris|~m~ēre", "~m~ēminī";
+    ind_pass_fut_3: "~m~ētur", "~m~entur";
+    subj_act_pres_1: "~m~am", "~m~āmus";
+    subj_act_pres_2: "~m~ās", "~m~ātis";
+    subj_act_pres_3: "~m~at", "~m~ant";
+    subj_act_impf_1: "~m~erem", "~m~erēmus";
+    subj_act_impf_2: "~m~erēs", "~m~erētis";
+    subj_act_impf_3: "~m~eret", "~m~erent";
+    subj_act_perf_1: "~~uerim", "~~uerīmus";
+    subj_act_perf_2: "~~uerīs", "~~uerītis";
+    subj_act_plup_1: "~~uissem", "~~uissēmus";
+    subj_act_plup_2: "~~uissēs", "~~uissētis";
+    subj_act_plup_3: "~~uisset", "~~uissent";
+    subj_pass_pres_1: "~m~ar", "~m~āmur";
+    subj_pass_pres_2: "~m~āris|~m~āre", "~m~āminī";
+    subj_pass_pres_3: "~m~ātur", "~m~antur";
+    subj_pass_impf_1: "~m~erer", "~m~erēmur";
+    subj_pass_impf_2: "~m~erēris|~m~erēre", "~m~erēminī";
+    subj_pass_impf_3: "~m~erētur", "~m~erentur";
+    imperative_act_pres_2: "~m~e", "~m~ite";
+    imperative_act_fut_2: "~m~itō", "~m~itōte";
+    imperative_act_fut_3: _, "~m~untō";
+    imperative_pass_pres_2: "~m~ere", _;
+    imperative_pass_fut_2: "~m~itor", _;
+    imperative_pass_fut_3: _, "~m~untor";
+    infinitive_act: _, "~~uisse", _;
+    infinitive_pass: "~m~ī", _, _;
+    participle: "~m~ēns", _, _, "~m~endus|~m~undus";
+    gerund: _, "~m~endī", "~m~endō", "~m~endum", _, _;
     ),
-    // Nītor: 15 words (revertor, deūtor, ūtor, abūtor, nītor, amplector). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("nītor", 15, "~tor", like Mōlior;
-    ind_act_pres_1: "~tor", "~timur";
-    ind_act_pres_2: "~teris|~tere", "~timinī";
-    ind_act_pres_3: "~titur", "~tuntur";
+    // Nītor: 15 words (revertor, deūtor, ūtor, abūtor, nītor, amplector). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("nītor", 15, "~tor", like Cōnsequor;
+    stem verb_act_sg: "~t- like cōnsequor";
+    stem participle_perf_pass: "~s- like modulor";
+    ind_act_pres_1: _, "~timur";
     ind_act_impf_1: "~tēbar", "~tēbāmur";
     ind_act_impf_2: "~tēbāris|~tēbāre", "~tēbāminī";
     ind_act_impf_3: "~tēbātur", "~tēbantur";
     ind_act_fut_1: "~tar", "~tēmur";
     ind_act_fut_2: "~tēris|~tēre", "~tēminī";
-    ind_act_fut_3: "~tētur", "~tentur";
-    subj_act_pres_1: "~tar", "~tāmur";
-    subj_act_pres_2: "~tāris|~tāre", "~tāminī";
-    subj_act_pres_3: "~tātur", "~tantur";
-    subj_act_impf_1: "~terer", "~terēmur";
-    subj_act_impf_2: "~terēris|~terēre", "~terēminī";
-    subj_act_impf_3: "~terētur", "~terentur";
-    imperative_act_pres_2: "~tere", "~timinī";
+    ind_act_fut_3: "~tētur", _;
+    subj_act_pres_3: "~tātur", _;
     imperative_act_fut_2: "~titor", _;
-    imperative_act_fut_3: _, "~tuntor";
-    infinitive_act: "~tī", _, _;
-    participle: "~tēns", _, "~sūrus", "~tendus|~tundus";
+    participle: "~tēns", _, _, "~tendus|~tundus";
     gerund: _, "~tendī", "~tendō", "~tendum", _, _;
-    supine: _, _, _, "~sum", "~sū", _;
+    ),
+    // Extruō: 15 words (tāgō, frīgō, sūgō, tragō, discingō, succingō). Like Petō, except in 30 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("extruō", 15, "~ō", like Petō;
+    stem participle_perf_pass: "~ct- like agitō";
+    ind_act_perf_1: "~xī", "~ximus";
+    ind_act_perf_2: "~xistī", "~xistis";
+    ind_act_perf_3: "~xit", "~xērunt|~xēre";
+    ind_act_plup_1: "~xeram", "~xerāmus";
+    ind_act_plup_2: "~xerās", "~xerātis";
+    ind_act_plup_3: "~xerat", "~xerant";
+    ind_act_futp_1: "~xerō", "~xerimus";
+    ind_act_futp_2: "~xeris", "~xeritis";
+    ind_act_futp_3: "~xerit", "~xerint";
+    subj_act_perf_1: "~xerim", "~xerīmus";
+    subj_act_perf_2: "~xerīs", "~xerītis";
+    subj_act_plup_1: "~xissem", "~xissēmus";
+    subj_act_plup_2: "~xissēs", "~xissētis";
+    subj_act_plup_3: "~xisset", "~xissent";
+    infinitive_act: _, "~xisse", _;
+    participle: _, _, _, "~endus";
     ),
     // Dīcō: 14 words (abdīcō, dīcō, addīcō, interdīcō, maledīcō, benedīcō).
     conjugation!("dīcō", 14, "~īcō";
+    stem participle_perf_pass: "~ict- like agitō";
     ind_act_pres_1: "~īcō", "~īcimus";
     ind_act_pres_2: "~īcis", "~īcitis";
     ind_act_pres_3: "~īcit", "~īcunt";
@@ -3278,17 +3393,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~īc|~īce", "~īcite";
     imperative_act_fut_2: "~īcitō", "~īcitōte";
     imperative_act_fut_3: _, "~īcuntō";
-    imperative_pass_pres_2: "~īcere", "~īciminī";
+    imperative_pass_pres_2: "~īcere", _;
     imperative_pass_fut_2: "~īcitor", _;
     imperative_pass_fut_3: _, "~īcuntor";
-    infinitive_act: "~īcere", "~īxisse", _;
+    infinitive_act: _, "~īxisse", _;
     infinitive_pass: "~īcī", _, _;
-    participle: "~īcēns", "~ictus", "~ictūrus", "~īcendus|~īcundus";
+    participle: "~īcēns", _, _, "~īcendus|~īcundus";
     gerund: _, "~īcendī", "~īcendō", "~īcendum", _, _;
-    supine: _, _, _, "~ictum", "~ictū", _;
     ),
     // Regō: 14 words (regō, neglegō, tegō, dētegō, intellegō, prōtegō).
     conjugation!("regō", 14, "~egō";
+    stem participle_perf_pass: "~ēct- like agitō";
     ind_act_pres_1: "~egō", "~egimus";
     ind_act_pres_2: "~egis", "~egitis";
     ind_act_pres_3: "~egit", "~egunt";
@@ -3336,17 +3451,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ege", "~egite";
     imperative_act_fut_2: "~egitō", "~egitōte";
     imperative_act_fut_3: _, "~eguntō";
-    imperative_pass_pres_2: "~egere", "~egiminī";
+    imperative_pass_pres_2: "~egere", _;
     imperative_pass_fut_2: "~egitor", _;
     imperative_pass_fut_3: _, "~eguntor";
-    infinitive_act: "~egere", "~ēxisse", _;
+    infinitive_act: _, "~ēxisse", _;
     infinitive_pass: "~egī", _, _;
-    participle: "~egēns", "~ēctus", "~ēctūrus", "~egendus|~egundus";
+    participle: "~egēns", _, _, "~egendus|~egundus";
     gerund: _, "~egendī", "~egendō", "~egendum", _, _;
-    supine: _, _, _, "~ēctum", "~ēctū", _;
     ),
-    // Struō: 14 words (dēstruō, struō, cōnstruō, īnstruō, exstruō, obstruō). Like Minuō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Struō: 14 words (dēstruō, struō, cōnstruō, īnstruō, exstruō, obstruō). Like Minuō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("struō", 14, "~uō", like Minuō;
+    stem participle_perf_pass: "~ūct- like agitō";
     ind_act_perf_1: "~ūxī", "~ūximus";
     ind_act_perf_2: "~ūxistī", "~ūxistis";
     ind_act_perf_3: "~ūxit", "~ūxērunt|~ūxēre";
@@ -3362,11 +3477,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~ūxissēs", "~ūxissētis";
     subj_act_plup_3: "~ūxisset", "~ūxissent";
     infinitive_act: _, "~ūxisse", _;
-    participle: _, "~ūctus", "~ūctūrus", _;
-    supine: _, _, _, "~ūctum", "~ūctū", _;
     ),
     // Rumpō: 14 words (irrumpō, interrumpō, abrumpō, rumpō, ērumpō, corrumpō).
     conjugation!("rumpō", 14, "~um~ō";
+    stem participle_perf_pass: "~u~t- like agitō";
     ind_act_pres_1: "~um~ō", "~um~imus";
     ind_act_pres_2: "~um~is", "~um~itis";
     ind_act_pres_3: "~um~it", "~um~unt";
@@ -3414,17 +3528,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~um~e", "~um~ite";
     imperative_act_fut_2: "~um~itō", "~um~itōte";
     imperative_act_fut_3: _, "~um~untō";
-    imperative_pass_pres_2: "~um~ere", "~um~iminī";
+    imperative_pass_pres_2: "~um~ere", _;
     imperative_pass_fut_2: "~um~itor", _;
     imperative_pass_fut_3: _, "~um~untor";
-    infinitive_act: "~um~ere", "~ū~isse", _;
+    infinitive_act: _, "~ū~isse", _;
     infinitive_pass: "~um~ī", _, _;
-    participle: "~um~ēns", "~u~tus", "~u~tūrus", "~um~endus|~um~undus";
+    participle: "~um~ēns", _, _, "~um~endus|~um~undus";
     gerund: _, "~um~endī", "~um~endō", "~um~endum", _, _;
-    supine: _, _, _, "~u~tum", "~u~tū", _;
     ),
     // Fodiō: 14 words (fodiō, cōnfodiō, affodiō, dēfodiō, effodiō, īnfodiō).
     conjugation!("fodiō", 14, "~odiō";
+    stem participle_perf_pass: "~oss- like agitō";
     ind_act_pres_1: "~odiō", "~odimus";
     ind_act_pres_2: "~odis", "~oditis";
     ind_act_pres_3: "~odit", "~odiunt";
@@ -3472,60 +3586,68 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ode", "~odite";
     imperative_act_fut_2: "~oditō", "~oditōte";
     imperative_act_fut_3: _, "~odiuntō";
-    imperative_pass_pres_2: "~odere", "~odiminī";
+    imperative_pass_pres_2: "~odere", _;
     imperative_pass_fut_2: "~oditor", _;
     imperative_pass_fut_3: _, "~odiuntor";
-    infinitive_act: "~odere", "~ōdisse", _;
+    infinitive_act: _, "~ōdisse", _;
     infinitive_pass: "~odī", _, _;
-    participle: "~odiēns", "~ossus", "~ossūrus", "~odiendus|~odiundus";
+    participle: "~odiēns", _, _, "~odiendus|~odiundus";
     gerund: _, "~odiendī", "~odiendō", "~odiendum", _, _;
-    supine: _, _, _, "~ossum", "~ossū", _;
     ),
-    // Ēveniō: 14 words (veniō, reveniō, interveniō, perveniō, adveniō, ēveniō). Like Excipiō, except in 78 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ēveniō", 14, "~e~iō", like Excipiō;
-    ind_act_pres_1: "~e~iō", "~e~īmus";
-    ind_act_pres_2: "~e~īs", "~e~ītis";
-    ind_act_pres_3: "~e~it", "~e~iunt";
+    // Ēveniō: 14 words (veniō, reveniō, interveniō, perveniō, adveniō, ēveniō). Like Excipiō, except in 42 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("ēveniō", 14, "~e~iō", like Excipiō as IMPF_AS_FUTP;
+    stem verb_act_sg: "~e~- like ēveniō";
+    stem participle_perf_pass: "~e~t- like labōrō";
+    ind_act_pres_1: _, "~e~īmus";
     ind_act_impf_1: "~e~iēbam", "~e~iēbāmus";
     ind_act_impf_2: "~e~iēbās", "~e~iēbātis";
     ind_act_impf_3: "~e~iēbat", "~e~iēbant";
     ind_act_fut_1: "~e~iam", "~e~iēmus";
     ind_act_fut_2: "~e~iēs", "~e~iētis";
-    ind_act_fut_3: "~e~iet", "~e~ient";
+    ind_act_fut_3: "~e~iet", _;
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
-    ind_pass_pres_3: "~e~ītur", "~e~iuntur";
-    ind_pass_impf_1: derived, derived;
-    ind_pass_impf_2: derived, derived;
-    ind_pass_impf_3: "~e~iēbātur", "~e~iēbantur";
+    ind_pass_pres_3: _, "~e~iuntur";
+    ind_pass_impf_3: _, "~e~iēbantur";
     ind_pass_fut_1: derived, derived;
     ind_pass_fut_2: derived, derived;
-    ind_pass_fut_3: "~e~iētur", "~e~ientur";
-    subj_act_pres_1: "~e~iam", "~e~iāmus";
-    subj_act_pres_2: "~e~iās", "~e~iātis";
-    subj_act_pres_3: "~e~iat", "~e~iant";
-    subj_act_impf_1: "~e~īrem", "~e~īrēmus";
-    subj_act_impf_2: "~e~īrēs", "~e~īrētis";
-    subj_act_impf_3: "~e~īret", "~e~īrent";
+    ind_pass_fut_3: _, "~e~ientur";
+    subj_act_pres_3: "~e~iat", _;
     subj_pass_pres_1: derived, derived;
     subj_pass_pres_2: derived, derived;
-    subj_pass_pres_3: "~e~iātur", "~e~iantur";
+    subj_pass_pres_3: _, "~e~iantur";
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    subj_pass_impf_3: "~e~īrētur", "~e~īrentur";
-    imperative_act_pres_2: "~e~ī", "~e~īte";
-    imperative_act_fut_2: "~e~ītō", "~e~ītōte";
-    imperative_act_fut_3: _, "~e~iuntō";
-    imperative_pass_pres_2: derived, derived;
+    imperative_act_fut_2: "~e~ītō", _;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
-    imperative_pass_fut_3: "~e~ītor", "~e~iuntor";
-    infinitive_act: "~e~īre", _, _;
-    infinitive_pass: "~e~īrī", _, _;
-    participle: "~e~iēns", "~e~tum", _, "~e~iendum|~e~iundum";
+    imperative_pass_fut_3: _, "~e~iuntor";
+    participle: "~e~iēns", _, _, "~e~iendum|~e~iundum";
     gerund: _, "~e~iendī", "~e~iendō", "~e~iendum", _, _;
+    ),
+    // Nīvit: 14 words (vesperāscit, cōnfit, pluit, advesperāscit, ningit, compluit). Like Tueor, except in 19 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_pass_pres_3 sg, ind_pass_impf_3 sg, ….
+    conjugation!("nīvit", 14, "~it", like Tueor as ACT_AS_PASS;
+    ind_act_pres_1: "~it", _;
+    ind_act_pres_3: "~it", _;
+    ind_act_impf_3: "~ēbat", _;
+    ind_act_fut_3: "~et", _;
+    ind_pass_pres_3: "~itur", _;
+    ind_pass_impf_3: "~ēbātur", _;
+    ind_pass_fut_3: "~ētur", _;
+    subj_act_pres_3: "~at", _;
+    subj_act_impf_3: "~eret", _;
+    subj_pass_pres_3: "~ātur", _;
+    subj_pass_impf_3: "~erētur", _;
+    imperative_act_fut_3: "~itō", _;
+    imperative_pass_fut_3: "~itor", _;
+    infinitive_act: "~ere", _, _;
+    infinitive_pass: "~ī", _, _;
+    participle: _, _, derived, "~endum";
+    supine: _, _, _, derived, derived, _;
     ),
     // Tingō: 13 words (lingō, cingō, accingō, circumcingō, incingō, recingō).
     conjugation!("tingō", 13, "~i~gō";
+    stem participle_perf_pass: "~ī~ct- like agitō";
     ind_act_pres_1: "~i~gō", "~i~gimus";
     ind_act_pres_2: "~i~gis", "~i~gitis";
     ind_act_pres_3: "~i~git", "~i~gunt";
@@ -3573,42 +3695,33 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~i~ge", "~i~gite";
     imperative_act_fut_2: "~i~gitō", "~i~gitōte";
     imperative_act_fut_3: _, "~i~guntō";
-    imperative_pass_pres_2: "~i~gere", "~i~giminī";
+    imperative_pass_pres_2: "~i~gere", _;
     imperative_pass_fut_2: "~i~gitor", _;
     imperative_pass_fut_3: _, "~i~guntor";
-    infinitive_act: "~i~gere", "~ī~xisse", _;
+    infinitive_act: _, "~ī~xisse", _;
     infinitive_pass: "~i~gī", _, _;
-    participle: "~i~gēns", "~ī~ctus", "~ī~ctūrus", "~i~gendus|~i~gundus";
+    participle: "~i~gēns", _, _, "~i~gendus|~i~gundus";
     gerund: _, "~i~gendī", "~i~gendō", "~i~gendum", _, _;
-    supine: _, _, _, "~ī~ctum", "~ī~ctū", _;
     ),
-    // Illābor: 13 words (lābor, collābor, dēlābor, conlābor, dīlābor, ēlābor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("illābor", 13, "~bor", like Mōlior;
-    ind_act_pres_1: "~bor", "~bimur";
-    ind_act_pres_2: "~beris|~bere", "~biminī";
-    ind_act_pres_3: "~bitur", "~buntur";
+    // Illābor: 13 words (lābor, collābor, dēlābor, conlābor, dīlābor, ēlābor). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("illābor", 13, "~bor", like Cōnsequor;
+    stem verb_act_sg: "~b- like cōnsequor";
+    stem participle_perf_pass: "~ps- like modulor";
+    ind_act_pres_1: _, "~bimur";
     ind_act_impf_1: "~bēbar", "~bēbāmur";
     ind_act_impf_2: "~bēbāris|~bēbāre", "~bēbāminī";
     ind_act_impf_3: "~bēbātur", "~bēbantur";
     ind_act_fut_1: "~bar", "~bēmur";
     ind_act_fut_2: "~bēris|~bēre", "~bēminī";
-    ind_act_fut_3: "~bētur", "~bentur";
-    subj_act_pres_1: "~bar", "~bāmur";
-    subj_act_pres_2: "~bāris|~bāre", "~bāminī";
-    subj_act_pres_3: "~bātur", "~bantur";
-    subj_act_impf_1: "~berer", "~berēmur";
-    subj_act_impf_2: "~berēris|~berēre", "~berēminī";
-    subj_act_impf_3: "~berētur", "~berentur";
-    imperative_act_pres_2: "~bere", "~biminī";
+    ind_act_fut_3: "~bētur", _;
+    subj_act_pres_3: "~bātur", _;
     imperative_act_fut_2: "~bitor", _;
-    imperative_act_fut_3: _, "~buntor";
-    infinitive_act: "~bī", _, _;
-    participle: "~bēns", _, "~psūrus", "~bendus|~bundus";
+    participle: "~bēns", _, _, "~bendus|~bundus";
     gerund: _, "~bendī", "~bendō", "~bendum", _, _;
-    supine: _, _, _, "~psum", "~psū", _;
     ),
     // Ēvehō: 13 words (vehō, advehō, āvehō, convehō, dēvehō, prōvehō).
     conjugation!("ēvehō", 13, "~ehō";
+    stem participle_perf_pass: "~ect- like agitō";
     ind_act_pres_1: "~ehō", "~ehimus";
     ind_act_pres_2: "~ehis", "~ehitis";
     ind_act_pres_3: "~ehit", "~ehunt";
@@ -3656,17 +3769,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ehe", "~ehite";
     imperative_act_fut_2: "~ehitō", "~ehitōte";
     imperative_act_fut_3: _, "~ehuntō";
-    imperative_pass_pres_2: "~ehere", "~ehiminī";
+    imperative_pass_pres_2: "~ehere", _;
     imperative_pass_fut_2: "~ehitor", _;
     imperative_pass_fut_3: _, "~ehuntor";
-    infinitive_act: "~ehere", "~ĕxisse", _;
+    infinitive_act: _, "~ĕxisse", _;
     infinitive_pass: "~ehī", _, _;
-    participle: "~ehēns", "~ectus", "~ectūrus", "~ehendus|~ehundus";
+    participle: "~ehēns", _, _, "~ehendus|~ehundus";
     gerund: _, "~ehendī", "~ehendō", "~ehendum", _, _;
-    supine: _, _, _, "~ectum", "~ectū", _;
     ),
-    // Madeō: 13 words (studeō, pāreō, horreō, vegeō, sileō, affleō). Like Habeō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Madeō: 13 words (studeō, pāreō, horreō, vegeō, sileō, affleō). Like Habeō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("madeō", 13, "~eō", like Habeō;
+    stem participle_perf_pass: "~it- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -3677,61 +3790,34 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~ētor", _;
-    participle: _, "~itum", _, "~endum";
+    infinitive_act: "~ēre", _, _;
+    participle: _, _, _, "~endum";
     ),
-    // Contendō: 13 words (ostendō, contendō, tendō, attendō, intendō, portendō). Like Praecīdō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
-    conjugation!("contendō", 13, "~dō", like Praecīdō;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
+    // Dēfīgō: 13 words (fīgō, praefīgō, īnfīgō, cōnfīgō, dēfīgō, trānsfīgō). Like Mergō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("dēfīgō", 13, "~gō", like Mergō;
+    stem participle_perf_pass: "~x- like agitō";
+    ind_act_perf_1: "~xī", "~ximus";
+    ind_act_perf_2: "~xistī", "~xistis";
+    ind_act_perf_3: "~xit", "~xērunt|~xēre";
+    ind_act_plup_1: "~xeram", "~xerāmus";
+    ind_act_plup_2: "~xerās", "~xerātis";
+    ind_act_plup_3: "~xerat", "~xerant";
+    ind_act_futp_1: "~xerō", "~xerimus";
+    ind_act_futp_2: "~xeris", "~xeritis";
+    ind_act_futp_3: "~xerit", "~xerint";
+    subj_act_perf_1: "~xerim", "~xerīmus";
+    subj_act_perf_2: "~xerīs", "~xerītis";
+    subj_act_plup_1: "~xissem", "~xissēmus";
+    subj_act_plup_2: "~xissēs", "~xissētis";
+    subj_act_plup_3: "~xisset", "~xissent";
+    infinitive_act: _, "~xisse", _;
     ),
-    // Contorqueō: 13 words (torqueō, extorqueō, attorqueō, circumtorqueō, dētorqueō, contorqueō). Like Exsarciō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("contorqueō", 13, "~queō", like Exsarciō;
-    ind_act_pres_1: "~queō", "~quēmus";
-    ind_act_pres_2: "~quēs", "~quētis";
-    ind_act_pres_3: "~quet", "~quent";
-    ind_act_impf_1: "~quēbam", "~quēbāmus";
-    ind_act_impf_2: "~quēbās", "~quēbātis";
-    ind_act_impf_3: "~quēbat", "~quēbant";
-    ind_act_fut_1: "~quēbō", "~quēbimus";
-    ind_act_fut_2: "~quēbis", "~quēbitis";
-    ind_act_fut_3: "~quēbit", "~quēbunt";
-    ind_pass_pres_1: "~queor", "~quēmur";
-    ind_pass_pres_2: "~quēris|~quēre", "~quēminī";
-    ind_pass_pres_3: "~quētur", "~quentur";
-    ind_pass_impf_1: "~quēbar", "~quēbāmur";
-    ind_pass_impf_2: "~quēbāris|~quēbāre", "~quēbāminī";
-    ind_pass_impf_3: "~quēbātur", "~quēbantur";
-    ind_pass_fut_1: "~quēbor", "~quēbimur";
-    ind_pass_fut_2: "~quēberis|~quēbere", "~quēbiminī";
-    ind_pass_fut_3: "~quēbitur", "~quēbuntur";
-    subj_act_pres_1: "~queam", "~queāmus";
-    subj_act_pres_2: "~queās", "~queātis";
-    subj_act_pres_3: "~queat", "~queant";
-    subj_act_impf_1: "~quērem", "~quērēmus";
-    subj_act_impf_2: "~quērēs", "~quērētis";
-    subj_act_impf_3: "~quēret", "~quērent";
-    subj_pass_pres_1: "~quear", "~queāmur";
-    subj_pass_pres_2: "~queāris|~queāre", "~queāminī";
-    subj_pass_pres_3: "~queātur", "~queantur";
-    subj_pass_impf_1: "~quērer", "~quērēmur";
-    subj_pass_impf_2: "~quērēris|~quērēre", "~quērēminī";
-    subj_pass_impf_3: "~quērētur", "~quērentur";
-    imperative_act_pres_2: "~quē", "~quēte";
-    imperative_act_fut_2: "~quētō", "~quētōte";
-    imperative_act_fut_3: _, "~quentō";
-    imperative_pass_pres_2: "~quēre", "~quēminī";
-    imperative_pass_fut_2: "~quētor", _;
-    imperative_pass_fut_3: _, "~quentor";
-    infinitive_act: "~quēre", _, _;
-    infinitive_pass: "~quērī", _, _;
-    participle: "~quēns", _, _, "~quendus";
-    gerund: _, "~quendī", "~quendō", "~quendum", _, _;
-    ),
-    // Intersaepiō: 13 words (saepiō, sēpiō, reperiō, praesaepiō, cōnsaepiō, cōnsēpiō). Like Mūniō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Intersaepiō: 13 words (saepiō, sēpiō, reperiō, praesaepiō, cōnsaepiō, cōnsēpiō). Like Mūniō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("intersaepiō", 13, "~iō", like Mūniō;
+    stem participle_perf_pass: "~t- like agitō";
     ind_act_perf_1: "~sī", "~simus";
     ind_act_perf_2: "~sistī", "~sistis";
     ind_act_perf_3: "~sit", "~sērunt|~sēre";
@@ -3747,13 +3833,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~sissēs", "~sissētis";
     subj_act_plup_3: "~sisset", "~sissent";
     infinitive_act: _, "~sisse", _;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
     ),
-    // Cōnsulō: 12 words (alō, cōnsulō, incumbō, furō, occulō, dēserō). Like Volō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
-    conjugation!("cōnsulō", 12, "~ō", like Volō;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
+    // Contendō: 13 words (ostendō, contendō, tendō, attendō, intendō, portendō). Like Praecīdō, except in 0 cells: .
+    conjugation!("contendō", 13, "~dō", like Praecīdō;
+    stem participle_perf_pass: "~t- like agitō";
+    ),
+    // Cōnsulō: 12 words (alō, cōnsulō, incumbō, furō, occulō, dēserō). Like Compescō, except in 0 cells: .
+    conjugation!("cōnsulō", 12, "~ō", like Compescō;
+    stem participle_perf_pass: "~t- like agitō";
     ),
     // Feriō: 12 words (ūniō, feriō, absiliō, ambiō, salliō, lascīviō). Like Mūniō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("feriō", 12, "~iō", like Mūniō;
@@ -3773,26 +3860,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~iisset", "~iissent";
     infinitive_act: _, "~iisse", _;
     ),
-    // Aperiō: 12 words (aperiō, rapiō, operiō, saliō, adaperiō, sarriō). Like Intersaepiō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("aperiō", 12, "~iō", like Intersaepiō;
-    ind_act_perf_1: "~uī", "~uimus";
-    ind_act_perf_2: "~uistī", "~uistis";
-    ind_act_perf_3: "~uit", "~uērunt|~uēre";
-    ind_act_plup_1: "~ueram", "~uerāmus";
-    ind_act_plup_2: "~uerās", "~uerātis";
-    ind_act_plup_3: "~uerat", "~uerant";
-    ind_act_futp_1: "~uerō", "~uerimus";
-    ind_act_futp_2: "~ueris", "~ueritis";
-    ind_act_futp_3: "~uerit", "~uerint";
-    subj_act_perf_1: "~uerim", "~uerīmus";
-    subj_act_perf_2: "~uerīs", "~uerītis";
-    subj_act_plup_1: "~uissem", "~uissēmus";
-    subj_act_plup_2: "~uissēs", "~uissētis";
-    subj_act_plup_3: "~uisset", "~uissent";
-    infinitive_act: _, "~uisse", _;
-    ),
-    // Fugiō: 12 words (fugiō, subterfugiō, effugiō, trānsfugiō, dēfugiō, supterfugiō). Like Rumpō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Fugiō: 12 words (fugiō, subterfugiō, effugiō, trānsfugiō, dēfugiō, supterfugiō). Like Rumpō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("fugiō", 12, "~u~iō", like Rumpō;
+    stem participle_perf_pass: "~u~it- like agitō";
     ind_act_pres_1: "~u~iō", "~u~imus";
     ind_act_pres_2: "~u~is", "~u~itis";
     ind_act_pres_3: "~u~it", "~u~iunt";
@@ -3826,17 +3896,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~u~e", "~u~ite";
     imperative_act_fut_2: "~u~itō", "~u~itōte";
     imperative_act_fut_3: _, "~u~iuntō";
-    imperative_pass_pres_2: "~u~ere", "~u~iminī";
+    imperative_pass_pres_2: "~u~ere", _;
     imperative_pass_fut_2: "~u~itor", _;
     imperative_pass_fut_3: _, "~u~iuntor";
-    infinitive_act: "~u~ere", _, _;
     infinitive_pass: "~u~ī", _, _;
-    participle: "~u~iēns", "~u~itus", "~u~itūrus", "~u~iendus";
+    participle: "~u~iēns", _, _, "~u~iendus";
     gerund: _, "~u~iendī", "~u~iendō", "~u~iendum", _, _;
-    supine: _, _, _, "~u~itum", "~u~itū", _;
     ),
-    // Scindō: 12 words (rescindō, scindō, abscindō, interscindō, findō, cōnscindō). Like Praecīdō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Scindō: 12 words (rescindō, scindō, abscindō, interscindō, findō, cōnscindō). Like Praecīdō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("scindō", 12, "~ndō", like Praecīdō;
+    stem participle_perf_pass: "~ss- like agitō";
     ind_act_pres_1: "~ndō", "~ndimus";
     ind_act_pres_2: "~ndis", "~nditis";
     ind_act_pres_3: "~ndit", "~ndunt";
@@ -3870,17 +3939,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~nde", "~ndite";
     imperative_act_fut_2: "~nditō", "~nditōte";
     imperative_act_fut_3: _, "~nduntō";
-    imperative_pass_pres_2: "~ndere", "~ndiminī";
+    imperative_pass_pres_2: "~ndere", _;
     imperative_pass_fut_2: "~nditor", _;
     imperative_pass_fut_3: _, "~nduntor";
-    infinitive_act: "~ndere", _, _;
     infinitive_pass: "~ndī", _, _;
-    participle: "~ndēns", "~ssus", "~ssūrus", "~ndendus|~ndundus";
+    participle: "~ndēns", _, _, "~ndendus|~ndundus";
     gerund: _, "~ndendī", "~ndendō", "~ndendum", _, _;
-    supine: _, _, _, "~ssum", "~ssū", _;
     ),
     // Fallō: 12 words (fallō, excellō, extollō, attollō, adtollō, sustollō).
     conjugation!("fallō", 12, "~lō";
+    stem participle_perf_pass: "~s- like agitō";
     ind_act_pres_1: "~lō", "~limus";
     ind_act_pres_2: "~lis", "~litis";
     ind_act_pres_3: "~lit", "~lunt";
@@ -3928,26 +3996,24 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~le", "~lite";
     imperative_act_fut_2: "~litō", "~litōte";
     imperative_act_fut_3: _, "~luntō";
-    imperative_pass_pres_2: "~lere", "~liminī";
+    imperative_pass_pres_2: "~lere", _;
     imperative_pass_fut_2: "~litor", _;
     imperative_pass_fut_3: _, "~luntor";
-    infinitive_act: "~lere", "~luisse", _;
+    infinitive_act: _, "~luisse", _;
     infinitive_pass: "~lī", _, _;
-    participle: "~lēns", "~sus", "~sūrus", "~lendus";
+    participle: "~lēns", _, _, "~lendus";
     gerund: _, "~lendī", "~lendō", "~lendum", _, _;
-    supine: _, _, _, "~sum", "~sū", _;
     ),
-    // Adsum: 12 words (possum, absum, adsum, īnsum, dēsum, obsum). Like Modulor, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("adsum", 12, "~sum", like Modulor;
-    ind_act_pres_1: "~sum", "~sumus";
-    ind_act_pres_2: "~es", "~estis";
-    ind_act_pres_3: "~est", "~sunt";
+    // Adsum: 12 words (possum, absum, adsum, īnsum, dēsum, obsum). Like Modulor, except in 49 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("adsum", 12, "~sum", like Modulor as ACC_AS_VOC;
+    stem verb_act_sg: "~- like adsum";
+    ind_act_pres_1: _, "~sumus";
     ind_act_impf_1: "~eram", "~erāmus";
     ind_act_impf_2: "~erās", "~erātis";
     ind_act_impf_3: "~erat", "~erant";
     ind_act_fut_1: "~erō", "~erimus";
     ind_act_fut_2: "~eris|~ere", "~eritis";
-    ind_act_fut_3: "~erit", "~erunt";
+    ind_act_fut_3: "~erit", _;
     ind_act_perf_1: "~fuī", "~fuimus";
     ind_act_perf_2: "~fuistī", "~fuistis";
     ind_act_perf_3: "~fuit", "~fuērunt|~fuēre";
@@ -3957,40 +4023,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~fuerō", "~fuerimus";
     ind_act_futp_2: "~fueris", "~fueritis";
     ind_act_futp_3: "~fuerit", "~fuerint";
-    subj_act_pres_1: "~sim|~siem|~fuam", "~sīmus|~siēmus|~fuāmus";
-    subj_act_pres_2: "~sīs|~siēs|~fuās", "~sītis|~siētis|~fuātis";
-    subj_act_pres_3: "~sit|~siet|~fuat", "~sint|~sient|~fuant";
-    subj_act_impf_1: "~essem|~forem", "~essēmus|~forēmus";
-    subj_act_impf_2: "~essēs|~forēs", "~essētis|~forētis";
-    subj_act_impf_3: "~esset|~foret", "~essent|~forent";
+    subj_act_pres_3: "~sit|~siet|~fuat", _;
     subj_act_perf_1: "~fuerim", "~fuerīmus";
     subj_act_perf_2: "~fuerīs", "~fuerītis";
     subj_act_plup_1: "~fuissem", "~fuissēmus";
     subj_act_plup_2: "~fuissēs", "~fuissētis";
     subj_act_plup_3: "~fuisset", "~fuissent";
-    imperative_act_pres_2: "~es", "~este";
-    imperative_act_fut_2: "~estō", "~estōte";
-    imperative_act_fut_3: _, "~suntō";
-    infinitive_act: "~esse", "~fuisse", "~fore";
+    imperative_act_fut_2: "~estō", _;
+    infinitive_act: _, "~fuisse", _;
     participle: "~sēns", _, "~futūrus", derived;
-    gerund: _, derived, derived, derived, _, _;
-    supine: _, _, _, derived, derived, _;
+    gerund: _, derived, derived, _, _, _;
+    supine: _, _, _, _, derived, _;
     ),
-    // Cēnseō: 11 words (recēnseō, cēnseō, paeniteō, accēnseō, percēnseō, succēnseō). Like Habeō, except in 9 cells: ind_pass_pres_2 sg, ind_pass_impf_2 sg, ind_pass_fut_2 sg, subj_pass_pres_2 sg, subj_pass_impf_2 sg, participle perf_pass, ….
-    conjugation!("cēnseō", 11, "~eō", like Habeō;
-    ind_pass_pres_2: "~ēris|~ēre", _;
-    ind_pass_impf_2: "~ēbāris|~ēbāre", _;
-    ind_pass_fut_2: "~ēberis|~ēbere", _;
-    subj_pass_pres_2: "~eāris|~eāre", _;
-    subj_pass_impf_2: "~ērēris|~ērēre", _;
-    participle: _, "~us", "~ūrus", _;
-    supine: _, _, _, "~um", "~ū", _;
-    ),
-    // Misceō: 11 words (misceō, admisceō, commisceō, immisceō, intermisceō, ammisceō). Like Quiēscō, except in 93 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("misceō", 11, "~sceō", like Quiēscō;
-    ind_act_pres_1: "~sceō", "~scēmus";
-    ind_act_pres_2: "~scēs", "~scētis";
-    ind_act_pres_3: "~scet", "~scent";
+    // Misceō: 11 words (misceō, admisceō, commisceō, immisceō, intermisceō, ammisceō). Like Quiēscō, except in 78 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("misceō", 11, "~sceō", like Quiēscō as PRES_AS_FUT;
+    stem participle_perf_pass: "~xt- like agitō";
+    ind_act_pres_1: "~sceō", _;
     ind_act_fut_1: "~scēbō", "~scēbimus";
     ind_act_fut_2: "~scēbis", "~scēbitis";
     ind_act_fut_3: "~scēbit", "~scēbunt";
@@ -4003,9 +4051,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~scuerō", "~scuerimus";
     ind_act_futp_2: "~scueris", "~scueritis";
     ind_act_futp_3: "~scuerit", "~scuerint";
-    ind_pass_pres_1: "~sceor", "~scēmur";
-    ind_pass_pres_2: "~scēris|~scēre", "~scēminī";
-    ind_pass_pres_3: "~scētur", "~scentur";
+    ind_pass_pres_1: "~sceor", _;
+    ind_pass_pres_2: "~scēris|~scēre", _;
     ind_pass_impf_2: "~scēbāris|~scēbāre", _;
     ind_pass_fut_1: "~scēbor", "~scēbimur";
     ind_pass_fut_2: "~scēberis|~scēbere", "~scēbiminī";
@@ -4030,15 +4077,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~scē", "~scēte";
     imperative_act_fut_2: "~scētō", "~scētōte";
     imperative_act_fut_3: _, "~scentō";
-    imperative_pass_pres_2: "~scēre", "~scēminī";
+    imperative_pass_pres_2: "~scēre", _;
     imperative_pass_fut_2: "~scētor", _;
     imperative_pass_fut_3: _, "~scentor";
-    infinitive_act: "~scēre", "~scuisse", _;
+    infinitive_act: _, "~scuisse", _;
     infinitive_pass: "~scērī", _, _;
-    participle: _, "~xtus", "~xtūrus", _;
-    supine: _, _, _, "~xtum", "~xtū", _;
     ),
-    // Contineō: 11 words (contineō, abstineō, dētineō, attineō, distineō, obtineō). Like Corripiō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Contineō: 11 words (contineō, abstineō, dētineō, attineō, distineō, obtineō). Like Corripiō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("contineō", 11, "~i~eō", like Corripiō;
     ind_act_pres_1: "~i~eō", "~i~ēmus";
     ind_act_pres_2: "~i~ēs", "~i~ētis";
@@ -4073,15 +4118,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~i~ē", "~i~ēte";
     imperative_act_fut_2: "~i~ētō", "~i~ētōte";
     imperative_act_fut_3: _, "~i~entō";
-    imperative_pass_pres_2: "~i~ēre", "~i~ēminī";
+    imperative_pass_pres_2: "~i~ēre", _;
     imperative_pass_fut_2: "~i~ētor", _;
     imperative_pass_fut_3: _, "~i~entor";
-    infinitive_act: "~i~ēre", _, _;
     infinitive_pass: "~i~ērī", _, _;
     participle: "~i~ēns", _, _, "~i~endus";
     gerund: _, "~i~endī", "~i~endō", "~i~endum", _, _;
     ),
-    // Opprimō: 11 words (dēprimō, exprimō, reprimō, comprimō, imprimō, opprimō). Like Cēdō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Opprimō: 11 words (dēprimō, exprimō, reprimō, comprimō, imprimō, opprimō). Like Cēdō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("opprimō", 11, "~imō", like Cēdō;
     ind_act_pres_1: "~imō", "~imimus";
     ind_act_pres_2: "~imis", "~imitis";
@@ -4116,19 +4160,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ime", "~imite";
     imperative_act_fut_2: "~imitō", "~imitōte";
     imperative_act_fut_3: _, "~imuntō";
-    imperative_pass_pres_2: "~imere", "~imiminī";
+    imperative_pass_pres_2: "~imere", _;
     imperative_pass_fut_2: "~imitor", _;
     imperative_pass_fut_3: _, "~imuntor";
-    infinitive_act: "~imere", _, _;
     infinitive_pass: "~imī", _, _;
     participle: "~imēns", _, _, "~imendus|~imundus";
     gerund: _, "~imendī", "~imendō", "~imendum", _, _;
     ),
-    // Incidō: 11 words (dēcidō, accidō, coincidō, incidō, intercidō, occidō). Like Prōdō, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("incidō", 11, "~idō", like Prōdō;
-    ind_act_pres_1: "~idō", "~idimus";
+    // Incidō: 11 words (dēcidō, accidō, coincidō, incidō, intercidō, occidō). Like Prōdō, except in 73 cells: ind_act_pres_1 sg, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ….
+    conjugation!("incidō", 11, "~idō", like Prōdō as PRES_AS_PERF;
+    stem participle_perf_pass: "~ās- like agitō";
+    ind_act_pres_1: "~idō", _;
     ind_act_pres_2: "~idis", "~iditis";
-    ind_act_pres_3: "~idit", "~idunt";
+    ind_act_pres_3: _, "~idunt";
     ind_act_impf_1: "~idēbam", "~idēbāmus";
     ind_act_impf_2: "~idēbās", "~idēbātis";
     ind_act_impf_3: "~idēbat", "~idēbant";
@@ -4160,17 +4204,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ide", "~idite";
     imperative_act_fut_2: "~iditō", "~iditōte";
     imperative_act_fut_3: _, "~iduntō";
-    imperative_pass_pres_2: "~idere", "~idiminī";
+    imperative_pass_pres_2: "~idere", _;
     imperative_pass_fut_2: "~iditor", _;
     imperative_pass_fut_3: _, "~iduntor";
-    infinitive_act: "~idere", _, _;
     infinitive_pass: "~idī", _, _;
-    participle: "~idēns", "~āsus", "~āsūrus", "~idendus";
+    participle: "~idēns", _, _, "~idendus";
     gerund: _, "~idendī", "~idendō", "~idendum", _, _;
-    supine: _, _, _, "~āsum", "~āsū", _;
     ),
     // Cernō: 11 words (cernō, concernō, sēcernō, discernō, dēcernō, condēcernō).
     conjugation!("cernō", 11, "~e~nō";
+    stem participle_perf_pass: "~~ēt- like agitō";
     ind_act_pres_1: "~e~nō", "~e~nimus";
     ind_act_pres_2: "~e~nis", "~e~nitis";
     ind_act_pres_3: "~e~nit", "~e~nunt";
@@ -4218,44 +4261,94 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~e~ne", "~e~nite";
     imperative_act_fut_2: "~e~nitō", "~e~nitōte";
     imperative_act_fut_3: _, "~e~nuntō";
-    imperative_pass_pres_2: "~e~nere", "~e~niminī";
+    imperative_pass_pres_2: "~e~nere", _;
     imperative_pass_fut_2: "~e~nitor", _;
     imperative_pass_fut_3: _, "~e~nuntor";
-    infinitive_act: "~e~nere", "~~ēvisse", _;
+    infinitive_act: _, "~~ēvisse", _;
     infinitive_pass: "~e~nī", _, _;
-    participle: "~e~nēns", "~~ētus", "~~ētūrus", "~e~nendus|~e~nundus";
+    participle: "~e~nēns", _, _, "~e~nendus|~e~nundus";
     gerund: _, "~e~nendī", "~e~nendō", "~e~nendum", _, _;
-    supine: _, _, _, "~~ētum", "~~ētū", _;
     ),
-    // Decet: 11 words (licet, libet, decet, addecet, miseret, oportet). Like Profiteor, except in 46 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("decet", 11, "~et", like Profiteor;
-    ind_act_pres_1: "~et", derived;
-    ind_act_pres_2: derived, derived;
+    // Decet: 11 words (licet, libet, decet, addecet, miseret, oportet). Like Tueor, except in 24 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_pres_3 pl, ind_act_impf_3 sg, ind_act_impf_3 pl, ind_act_fut_3 sg, ….
+    conjugation!("decet", 11, "~et", like Tueor as ACT_AS_PASS;
+    ind_act_pres_1: "~et", _;
     ind_act_pres_3: "~et", "~ent";
-    ind_act_impf_1: derived, derived;
-    ind_act_impf_2: derived, derived;
     ind_act_impf_3: "~ēbat", "~ēbant";
-    ind_act_fut_1: derived, derived;
-    ind_act_fut_2: derived, derived;
     ind_act_fut_3: "~ēbit", "~ēbunt";
     ind_act_perf_3: "~uit", "~uērunt";
     ind_act_plup_3: "~uerat", "~uerant";
     ind_act_futp_3: "~uerit", "~uerint";
-    subj_act_pres_1: derived, derived;
-    subj_act_pres_2: derived, derived;
     subj_act_pres_3: "~eat", "~eant";
-    subj_act_impf_1: derived, derived;
-    subj_act_impf_2: derived, derived;
     subj_act_impf_3: "~ēret", "~ērent";
     subj_act_plup_3: "~uisset", "~uissent";
-    imperative_act_pres_2: derived, derived;
-    imperative_act_fut_2: derived, _;
     imperative_act_fut_3: "~ētō", "~entō";
     infinitive_act: "~ēre", "~uisse", _;
     participle: _, _, _, derived;
     ),
+    // Percutiō: 11 words (patiō, recutiō, excutiō, quatiō, discutiō, percutiō). Like Gerō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("percutiō", 11, "~tiō", like Gerō;
+    stem participle_perf_pass: "~ss- like agitō";
+    ind_act_pres_1: "~tiō", "~timus";
+    ind_act_pres_2: "~tis", "~titis";
+    ind_act_pres_3: "~tit", "~tiunt";
+    ind_act_impf_1: "~tiēbam", "~tiēbāmus";
+    ind_act_impf_2: "~tiēbās", "~tiēbātis";
+    ind_act_impf_3: "~tiēbat", "~tiēbant";
+    ind_act_fut_1: "~tiam", "~tiēmus";
+    ind_act_fut_2: "~tiēs", "~tiētis";
+    ind_act_fut_3: "~tiet", "~tient";
+    ind_pass_pres_1: "~tior", "~timur";
+    ind_pass_pres_2: "~teris|~tere", "~timinī";
+    ind_pass_pres_3: "~titur", "~tiuntur";
+    ind_pass_impf_1: "~tiēbar", "~tiēbāmur";
+    ind_pass_impf_2: "~tiēbāris|~tiēbāre", "~tiēbāminī";
+    ind_pass_impf_3: "~tiēbātur", "~tiēbantur";
+    ind_pass_fut_1: "~tiar", "~tiēmur";
+    ind_pass_fut_2: "~tiēris|~tiēre", "~tiēminī";
+    ind_pass_fut_3: "~tiētur", "~tientur";
+    subj_act_pres_1: "~tiam", "~tiāmus";
+    subj_act_pres_2: "~tiās", "~tiātis";
+    subj_act_pres_3: "~tiat", "~tiant";
+    subj_act_impf_1: "~terem", "~terēmus";
+    subj_act_impf_2: "~terēs", "~terētis";
+    subj_act_impf_3: "~teret", "~terent";
+    subj_pass_pres_1: "~tiar", "~tiāmur";
+    subj_pass_pres_2: "~tiāris|~tiāre", "~tiāminī";
+    subj_pass_pres_3: "~tiātur", "~tiantur";
+    subj_pass_impf_1: "~terer", "~terēmur";
+    subj_pass_impf_2: "~terēris|~terēre", "~terēminī";
+    subj_pass_impf_3: "~terētur", "~terentur";
+    imperative_act_pres_2: "~te", "~tite";
+    imperative_act_fut_2: "~titō", "~titōte";
+    imperative_act_fut_3: _, "~tiuntō";
+    imperative_pass_pres_2: "~tere", _;
+    imperative_pass_fut_2: "~titor", _;
+    imperative_pass_fut_3: _, "~tiuntor";
+    infinitive_pass: "~tī", _, _;
+    participle: "~tiēns", _, _, "~tiendus|~tiundus";
+    gerund: _, "~tiendī", "~tiendō", "~tiendum", _, _;
+    ),
+    // Aperiō: 11 words (aperiō, operiō, saliō, adaperiō, sarriō, cooperiō). Like Intersaepiō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("aperiō", 11, "~iō", like Intersaepiō;
+    ind_act_perf_1: "~uī", "~uimus";
+    ind_act_perf_2: "~uistī", "~uistis";
+    ind_act_perf_3: "~uit", "~uērunt|~uēre";
+    ind_act_plup_1: "~ueram", "~uerāmus";
+    ind_act_plup_2: "~uerās", "~uerātis";
+    ind_act_plup_3: "~uerat", "~uerant";
+    ind_act_futp_1: "~uerō", "~uerimus";
+    ind_act_futp_2: "~ueris", "~ueritis";
+    ind_act_futp_3: "~uerit", "~uerint";
+    subj_act_perf_1: "~uerim", "~uerīmus";
+    subj_act_perf_2: "~uerīs", "~uerītis";
+    subj_act_plup_1: "~uissem", "~uissēmus";
+    subj_act_plup_2: "~uissēs", "~uissētis";
+    subj_act_plup_3: "~uisset", "~uissent";
+    infinitive_act: _, "~uisse", _;
+    ),
     // Respondeō: 11 words (tondeō, respondeō, dēspondeō, spondeō, attondeō, dētondeō).
     conjugation!("respondeō", 11, "~o~deō";
+    stem participle_perf_pass: "~ō~s- like agitō";
     ind_act_pres_1: "~o~deō", "~o~dēmus";
     ind_act_pres_2: "~o~dēs", "~o~dētis";
     ind_act_pres_3: "~o~det", "~o~dent";
@@ -4303,84 +4396,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~o~dē", "~o~dēte";
     imperative_act_fut_2: "~o~dētō", "~o~dētōte";
     imperative_act_fut_3: _, "~o~dentō";
-    imperative_pass_pres_2: "~o~dēre", "~o~dēminī";
+    imperative_pass_pres_2: "~o~dēre", _;
     imperative_pass_fut_2: "~o~dētor", _;
     imperative_pass_fut_3: _, "~o~dentor";
-    infinitive_act: "~o~dēre", "~o~disse", _;
+    infinitive_act: _, "~o~disse", _;
     infinitive_pass: "~o~dērī", _, _;
-    participle: "~o~dēns", "~ō~sus", "~ō~sūrus", "~o~dendus";
+    participle: "~o~dēns", _, _, "~o~dendus";
     gerund: _, "~o~dendī", "~o~dendō", "~o~dendum", _, _;
-    supine: _, _, _, "~ō~sum", "~ō~sū", _;
     ),
-    // Percutiō: 11 words (patiō, recutiō, excutiō, quatiō, discutiō, percutiō). Like Gerō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("percutiō", 11, "~tiō", like Gerō;
-    ind_act_pres_1: "~tiō", "~timus";
-    ind_act_pres_2: "~tis", "~titis";
-    ind_act_pres_3: "~tit", "~tiunt";
-    ind_act_impf_1: "~tiēbam", "~tiēbāmus";
-    ind_act_impf_2: "~tiēbās", "~tiēbātis";
-    ind_act_impf_3: "~tiēbat", "~tiēbant";
-    ind_act_fut_1: "~tiam", "~tiēmus";
-    ind_act_fut_2: "~tiēs", "~tiētis";
-    ind_act_fut_3: "~tiet", "~tient";
-    ind_pass_pres_1: "~tior", "~timur";
-    ind_pass_pres_2: "~teris|~tere", "~timinī";
-    ind_pass_pres_3: "~titur", "~tiuntur";
-    ind_pass_impf_1: "~tiēbar", "~tiēbāmur";
-    ind_pass_impf_2: "~tiēbāris|~tiēbāre", "~tiēbāminī";
-    ind_pass_impf_3: "~tiēbātur", "~tiēbantur";
-    ind_pass_fut_1: "~tiar", "~tiēmur";
-    ind_pass_fut_2: "~tiēris|~tiēre", "~tiēminī";
-    ind_pass_fut_3: "~tiētur", "~tientur";
-    subj_act_pres_1: "~tiam", "~tiāmus";
-    subj_act_pres_2: "~tiās", "~tiātis";
-    subj_act_pres_3: "~tiat", "~tiant";
-    subj_act_impf_1: "~terem", "~terēmus";
-    subj_act_impf_2: "~terēs", "~terētis";
-    subj_act_impf_3: "~teret", "~terent";
-    subj_pass_pres_1: "~tiar", "~tiāmur";
-    subj_pass_pres_2: "~tiāris|~tiāre", "~tiāminī";
-    subj_pass_pres_3: "~tiātur", "~tiantur";
-    subj_pass_impf_1: "~terer", "~terēmur";
-    subj_pass_impf_2: "~terēris|~terēre", "~terēminī";
-    subj_pass_impf_3: "~terētur", "~terentur";
-    imperative_act_pres_2: "~te", "~tite";
-    imperative_act_fut_2: "~titō", "~titōte";
-    imperative_act_fut_3: _, "~tiuntō";
-    imperative_pass_pres_2: "~tere", "~timinī";
-    imperative_pass_fut_2: "~titor", _;
-    imperative_pass_fut_3: _, "~tiuntor";
-    infinitive_act: "~tere", _, _;
-    infinitive_pass: "~tī", _, _;
-    participle: "~tiēns", "~ssus", "~ssūrus", "~tiendus|~tiundus";
-    gerund: _, "~tiendī", "~tiendō", "~tiendum", _, _;
-    supine: _, _, _, "~ssum", "~ssū", _;
-    ),
-    // Exorior: 11 words (morior, orior, ēmorior, exorior, commorior, conmorior). Like Mōlior, except in 17 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, subj_act_impf_1 sg, subj_act_impf_1 pl, ….
-    conjugation!("exorior", 11, "~ior", like Mōlior;
-    ind_act_pres_1: _, "~imur";
-    ind_act_pres_2: "~eris|~ere", "~iminī";
-    ind_act_pres_3: "~itur", _;
-    subj_act_impf_1: "~erer", "~erēmur";
-    subj_act_impf_2: "~erēris|~erēre", "~erēminī";
-    subj_act_impf_3: "~erētur", "~erentur";
-    imperative_act_pres_2: "~ere", "~iminī";
-    imperative_act_fut_2: "~itor", _;
-    infinitive_act: "~ī", _, _;
-    participle: _, _, "~itūrus", _;
-    supine: _, _, _, "~tuum", "~tuū", _;
-    ),
-    // Tergeō: 10 words (abstergeō, mulgeō, urgeō, perurgeō, extergeō, tergeō). Like Mergō, except in 61 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("tergeō", 10, "~geō", like Mergō;
-    ind_act_pres_1: "~geō", "~gēmus";
-    ind_act_pres_2: "~gēs", "~gētis";
-    ind_act_pres_3: "~get", "~gent";
+    // Tergeō: 10 words (abstergeō, mulgeō, urgeō, perurgeō, extergeō, tergeō). Like Mergō, except in 50 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("tergeō", 10, "~geō", like Mergō as PRES_AS_FUT;
+    ind_act_pres_1: "~geō", _;
     ind_act_fut_1: "~gēbō", "~gēbimus";
     ind_act_fut_2: "~gēbis", "~gēbitis";
     ind_act_fut_3: "~gēbit", "~gēbunt";
-    ind_pass_pres_1: "~geor", "~gēmur";
-    ind_pass_pres_2: "~gēris", "~gēminī";
-    ind_pass_pres_3: "~gētur", "~gentur";
+    ind_pass_pres_1: "~geor", _;
+    ind_pass_pres_2: "~gēris", _;
     ind_pass_impf_2: "~gēbāris", _;
     ind_pass_fut_1: "~gēbor", "~gēbimur";
     ind_pass_fut_2: "~gēberis", "~gēbiminī";
@@ -4400,57 +4431,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~gē", "~gēte";
     imperative_act_fut_2: "~gētō", "~gētōte";
     imperative_act_fut_3: _, "~gentō";
-    imperative_pass_pres_2: "~gēre", "~gēminī";
+    imperative_pass_pres_2: "~gēre", _;
     imperative_pass_fut_2: "~gētor", _;
     imperative_pass_fut_3: _, "~gentor";
-    infinitive_act: "~gēre", _, _;
     infinitive_pass: "~gērī", _, _;
     participle: _, _, _, "~gendus";
-    ),
-    // Vertō: 10 words (bētō, adbītō, complectō, dēpectō, interbītō, circumvertō). Like Percutiō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
-    conjugation!("vertō", 10, "~tō", like Percutiō;
-    ind_act_pres_1: "~tō", _;
-    ind_act_pres_3: _, "~tunt";
-    ind_act_impf_1: "~tēbam", "~tēbāmus";
-    ind_act_impf_2: "~tēbās", "~tēbātis";
-    ind_act_impf_3: "~tēbat", "~tēbant";
-    ind_act_fut_1: "~tam", "~tēmus";
-    ind_act_fut_2: "~tēs", "~tētis";
-    ind_act_fut_3: "~tet", "~tent";
-    ind_act_perf_1: "~tī", "~timus";
-    ind_act_perf_2: "~tistī", "~tistis";
-    ind_act_perf_3: "~tit", "~tērunt|~tēre";
-    ind_act_plup_1: "~teram", "~terāmus";
-    ind_act_plup_2: "~terās", "~terātis";
-    ind_act_plup_3: "~terat", "~terant";
-    ind_act_futp_1: "~terō", "~terimus";
-    ind_act_futp_2: "~teris", "~teritis";
-    ind_act_futp_3: "~terit", "~terint";
-    ind_pass_pres_1: "~tor", _;
-    ind_pass_pres_3: _, "~tuntur";
-    ind_pass_impf_1: "~tēbar", "~tēbāmur";
-    ind_pass_impf_2: "~tēbāris|~tēbāre", "~tēbāminī";
-    ind_pass_impf_3: "~tēbātur", "~tēbantur";
-    ind_pass_fut_1: "~tar", "~tēmur";
-    ind_pass_fut_2: "~tēris|~tēre", "~tēminī";
-    ind_pass_fut_3: "~tētur", "~tentur";
-    subj_act_pres_1: "~tam", "~tāmus";
-    subj_act_pres_2: "~tās", "~tātis";
-    subj_act_pres_3: "~tat", "~tant";
-    subj_act_perf_1: "~terim", "~terīmus";
-    subj_act_perf_2: "~terīs", "~terītis";
-    subj_act_plup_1: "~tissem", "~tissēmus";
-    subj_act_plup_2: "~tissēs", "~tissētis";
-    subj_act_plup_3: "~tisset", "~tissent";
-    subj_pass_pres_1: "~tar", "~tāmur";
-    subj_pass_pres_2: "~tāris|~tāre", "~tāminī";
-    subj_pass_pres_3: "~tātur", "~tantur";
-    imperative_act_fut_3: _, "~tuntō";
-    imperative_pass_fut_3: _, "~tuntor";
-    infinitive_act: _, "~tisse", _;
-    participle: "~tēns", "~sus", "~sūrus", "~tendus|~tundus";
-    gerund: _, "~tendī", "~tendō", "~tendum", _, _;
-    supine: _, _, _, "~sum", "~sū", _;
     ),
     // Legō: 10 words (legō, allegō, relegō, perlegō, praelegō, sublegō). Like Regō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("legō", 10, "~egō", like Regō;
@@ -4472,6 +4457,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ),
     // Terō: 10 words (terō, interō, dēterō, atterō, exterō, prōterō).
     conjugation!("terō", 10, "~e~ō";
+    stem participle_perf_pass: "~~īt- like agitō";
     ind_act_pres_1: "~e~ō", "~e~imus";
     ind_act_pres_2: "~e~is", "~e~itis";
     ind_act_pres_3: "~e~it", "~e~unt";
@@ -4519,65 +4505,111 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~e~e", "~e~ite";
     imperative_act_fut_2: "~e~itō", "~e~itōte";
     imperative_act_fut_3: _, "~e~untō";
-    imperative_pass_pres_2: "~e~ere", "~e~iminī";
+    imperative_pass_pres_2: "~e~ere", _;
     imperative_pass_fut_2: "~e~itor", _;
     imperative_pass_fut_3: _, "~e~untor";
-    infinitive_act: "~e~ere", "~~īvisse", _;
+    infinitive_act: _, "~~īvisse", _;
     infinitive_pass: "~e~ī", _, _;
-    participle: "~e~ēns", "~~ītus", "~~ītūrus", "~e~endus|~e~undus";
+    participle: "~e~ēns", _, _, "~e~endus|~e~undus";
     gerund: _, "~e~endī", "~e~endō", "~e~endum", _, _;
-    supine: _, _, _, "~~ītum", "~~ītū", _;
     ),
-    // Micō: 9 words (personō, plicō, intonō, affricō, circumsonō, adfricō). Like Cubō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
+    // Calvor: 10 words (queror, conqueror, locor, calvor, perdor, fraudor). Like Tueor, except in 8 cells: ind_act_pres_1 pl, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("calvor", 10, "~or", like Tueor;
+    stem verb_act_sg: "~- like cōnsequor";
+    ind_act_pres_1: _, "~imur";
+    ind_act_fut_1: "~ar", "~ēmur";
+    ind_act_fut_2: "~ēris|~ēre", "~ēminī";
+    ind_act_fut_3: "~ētur", _;
+    subj_act_pres_3: "~ātur", _;
+    imperative_act_fut_2: "~itor", _;
+    ),
+    // Vertō: 9 words (bētō, adbītō, complectō, interbītō, circumvertō, circumvortō). Like Nītor, except in 66 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("vertō", 9, "~tō", like Nītor as PASS_AS_ACT;
+    stem participle_perf_pass: "~s- like agitō";
+    ind_act_pres_1: "~tō", "~timus";
+    ind_act_pres_2: "~tis", "~titis";
+    ind_act_pres_3: "~tit", "~tunt";
+    ind_act_impf_1: "~tēbam", "~tēbāmus";
+    ind_act_impf_2: "~tēbās", "~tēbātis";
+    ind_act_impf_3: "~tēbat", "~tēbant";
+    ind_act_fut_1: "~tam", "~tēmus";
+    ind_act_fut_2: "~tēs", "~tētis";
+    ind_act_fut_3: "~tet", "~tent";
+    ind_act_perf_1: "~tī", "~timus";
+    ind_act_perf_2: "~tistī", "~tistis";
+    ind_act_perf_3: "~tit", "~tērunt|~tēre";
+    ind_act_plup_1: "~teram", "~terāmus";
+    ind_act_plup_2: "~terās", "~terātis";
+    ind_act_plup_3: "~terat", "~terant";
+    ind_act_futp_1: "~terō", "~terimus";
+    ind_act_futp_2: "~teris", "~teritis";
+    ind_act_futp_3: "~terit", "~terint";
+    subj_act_pres_1: "~tam", "~tāmus";
+    subj_act_pres_2: "~tās", "~tātis";
+    subj_act_pres_3: "~tat", "~tant";
+    subj_act_impf_1: "~terem", "~terēmus";
+    subj_act_impf_2: "~terēs", "~terētis";
+    subj_act_impf_3: "~teret", "~terent";
+    subj_act_perf_1: "~terim", "~terīmus";
+    subj_act_perf_2: "~terīs", "~terītis";
+    subj_act_plup_1: "~tissem", "~tissēmus";
+    subj_act_plup_2: "~tissēs", "~tissētis";
+    subj_act_plup_3: "~tisset", "~tissent";
+    imperative_act_pres_2: "~te", "~tite";
+    imperative_act_fut_2: "~titō", "~titōte";
+    imperative_act_fut_3: _, "~tuntō";
+    imperative_pass_pres_2: _, derived;
+    infinitive_act: derived, "~tisse", _;
+    ),
+    // Contorqueō: 9 words (torqueō, extorqueō, dētorqueō, contorqueō, distorqueō, intorqueō). Like Agō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("contorqueō", 9, "~queō", like Agō;
+    ind_act_pres_1: "~queō", "~quēmus";
+    ind_act_pres_2: "~quēs", "~quētis";
+    ind_act_pres_3: "~quet", "~quent";
+    ind_act_impf_1: "~quēbam", "~quēbāmus";
+    ind_act_impf_2: "~quēbās", "~quēbātis";
+    ind_act_impf_3: "~quēbat", "~quēbant";
+    ind_act_fut_1: "~quēbō", "~quēbimus";
+    ind_act_fut_2: "~quēbis", "~quēbitis";
+    ind_act_fut_3: "~quēbit", "~quēbunt";
+    ind_pass_pres_1: "~queor", "~quēmur";
+    ind_pass_pres_2: "~quēris|~quēre", "~quēminī";
+    ind_pass_pres_3: "~quētur", "~quentur";
+    ind_pass_impf_1: "~quēbar", "~quēbāmur";
+    ind_pass_impf_2: "~quēbāris|~quēbāre", "~quēbāminī";
+    ind_pass_impf_3: "~quēbātur", "~quēbantur";
+    ind_pass_fut_1: "~quēbor", "~quēbimur";
+    ind_pass_fut_2: "~quēberis|~quēbere", "~quēbiminī";
+    ind_pass_fut_3: "~quēbitur", "~quēbuntur";
+    subj_act_pres_1: "~queam", "~queāmus";
+    subj_act_pres_2: "~queās", "~queātis";
+    subj_act_pres_3: "~queat", "~queant";
+    subj_act_impf_1: "~quērem", "~quērēmus";
+    subj_act_impf_2: "~quērēs", "~quērētis";
+    subj_act_impf_3: "~quēret", "~quērent";
+    subj_pass_pres_1: "~quear", "~queāmur";
+    subj_pass_pres_2: "~queāris|~queāre", "~queāminī";
+    subj_pass_pres_3: "~queātur", "~queantur";
+    subj_pass_impf_1: "~quērer", "~quērēmur";
+    subj_pass_impf_2: "~quērēris|~quērēre", "~quērēminī";
+    subj_pass_impf_3: "~quērētur", "~quērentur";
+    imperative_act_pres_2: "~quē", "~quēte";
+    imperative_act_fut_2: "~quētō", "~quētōte";
+    imperative_act_fut_3: _, "~quentō";
+    imperative_pass_pres_2: "~quēre", _;
+    imperative_pass_fut_2: "~quētor", _;
+    imperative_pass_fut_3: _, "~quentor";
+    infinitive_pass: "~quērī", _, _;
+    participle: "~quēns", _, _, "~quendus";
+    gerund: _, "~quendī", "~quendō", "~quendum", _, _;
+    ),
+    // Micō: 9 words (personō, plicō, intonō, affricō, circumsonō, adfricō). Like Cubō, except in 0 cells: .
     conjugation!("micō", 9, "~ō", like Cubō;
-    participle: _, "~ātus", "~ātūrus", _;
-    supine: _, _, _, "~ātum", "~ātū", _;
+    stem participle_perf_pass: "~āt- like agitō";
     ),
-    // Interstinguō: 9 words (distinguō, stinguō, extinguō, exstinguō, restinguō, intinguō). Like Tingō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("interstinguō", 9, "~i~guō", like Tingō;
-    ind_act_pres_1: "~i~guō", "~i~guimus";
-    ind_act_pres_2: "~i~guis", "~i~guitis";
-    ind_act_pres_3: "~i~guit", "~i~guunt";
-    ind_act_impf_1: "~i~guēbam", "~i~guēbāmus";
-    ind_act_impf_2: "~i~guēbās", "~i~guēbātis";
-    ind_act_impf_3: "~i~guēbat", "~i~guēbant";
-    ind_act_fut_1: "~i~guam", "~i~guēmus";
-    ind_act_fut_2: "~i~guēs", "~i~guētis";
-    ind_act_fut_3: "~i~guet", "~i~guent";
-    ind_pass_pres_1: "~i~guor", "~i~guimur";
-    ind_pass_pres_2: "~i~gueris|~i~guere", "~i~guiminī";
-    ind_pass_pres_3: "~i~guitur", "~i~guuntur";
-    ind_pass_impf_1: "~i~guēbar", "~i~guēbāmur";
-    ind_pass_impf_2: "~i~guēbāris|~i~guēbāre", "~i~guēbāminī";
-    ind_pass_impf_3: "~i~guēbātur", "~i~guēbantur";
-    ind_pass_fut_1: "~i~guar", "~i~guēmur";
-    ind_pass_fut_2: "~i~guēris|~i~guēre", "~i~guēminī";
-    ind_pass_fut_3: "~i~guētur", "~i~guentur";
-    subj_act_pres_1: "~i~guam", "~i~guāmus";
-    subj_act_pres_2: "~i~guās", "~i~guātis";
-    subj_act_pres_3: "~i~guat", "~i~guant";
-    subj_act_impf_1: "~i~guerem", "~i~guerēmus";
-    subj_act_impf_2: "~i~guerēs", "~i~guerētis";
-    subj_act_impf_3: "~i~gueret", "~i~guerent";
-    subj_pass_pres_1: "~i~guar", "~i~guāmur";
-    subj_pass_pres_2: "~i~guāris|~i~guāre", "~i~guāminī";
-    subj_pass_pres_3: "~i~guātur", "~i~guantur";
-    subj_pass_impf_1: "~i~guerer", "~i~guerēmur";
-    subj_pass_impf_2: "~i~guerēris|~i~guerēre", "~i~guerēminī";
-    subj_pass_impf_3: "~i~guerētur", "~i~guerentur";
-    imperative_act_pres_2: "~i~gue", "~i~guite";
-    imperative_act_fut_2: "~i~guitō", "~i~guitōte";
-    imperative_act_fut_3: _, "~i~guuntō";
-    imperative_pass_pres_2: "~i~guere", "~i~guiminī";
-    imperative_pass_fut_2: "~i~guitor", _;
-    imperative_pass_fut_3: _, "~i~guuntor";
-    infinitive_act: "~i~guere", _, _;
-    infinitive_pass: "~i~guī", _, _;
-    participle: "~i~guēns", _, _, "~i~guendus";
-    gerund: _, "~i~guendī", "~i~guendō", "~i~guendum", _, _;
-    ),
-    // Inveniō: 9 words (inveniō, conveniō, circumveniō, contrāveniō, dēveniō, praeveniō). Like Ēveniō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Inveniō: 9 words (inveniō, conveniō, circumveniō, contrāveniō, dēveniō, praeveniō). Like Ēveniō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("inveniō", 9, "~e~iō", like Ēveniō;
+    stem participle_perf_pass: "~e~t- like agitō";
     ind_pass_pres_1: "~e~ior", "~e~īmur";
     ind_pass_pres_2: "~e~īris|~e~īre", "~e~īminī";
     ind_pass_impf_1: "~e~iēbar", "~e~iēbāmur";
@@ -4588,13 +4620,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: "~e~iāris|~e~iāre", "~e~iāminī";
     subj_pass_impf_1: "~e~īrer", "~e~īrēmur";
     subj_pass_impf_2: "~e~īrēris|~e~īrēre", "~e~īrēminī";
-    imperative_pass_pres_2: "~e~īre", "~e~īminī";
+    imperative_pass_pres_2: "~e~īre", _;
     imperative_pass_fut_2: "~e~ītor", _;
     imperative_pass_fut_3: derived, _;
-    participle: _, "~e~tus", _, "~e~iendus|~e~iundus";
+    infinitive_act: derived, _, _;
+    participle: _, _, _, "~e~iendus|~e~iundus";
     ),
-    // Sternō: 9 words (sternō, cōnsternō, asternō, prōsternō, substernō, dēsternō). Like Cernō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Sternō: 9 words (sternō, cōnsternō, asternō, prōsternō, substernō, dēsternō). Like Cernō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("sternō", 9, "~e~nō", like Cernō;
+    stem participle_perf_pass: "~~āt- like agitō";
     ind_act_perf_1: "~~āvī", "~~āvimus";
     ind_act_perf_2: "~~āvistī", "~~āvistis";
     ind_act_perf_3: "~~āvit", "~~āvērunt|~~āvēre";
@@ -4610,16 +4644,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~~āvissēs", "~~āvissētis";
     subj_act_plup_3: "~~āvisset", "~~āvissent";
     infinitive_act: _, "~~āvisse", _;
-    participle: _, "~~ātus", "~~ātūrus", _;
-    supine: _, _, _, "~~ātum", "~~ātū", _;
     ),
-    // Vīsō: 9 words (revīsō, vīsō, invīsō, praevertō, intervīsō, convīsō). Like Abnuō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
+    // Vīsō: 9 words (revīsō, vīsō, invīsō, praevertō, intervīsō, convīsō). Like Abnuō, except in 0 cells: .
     conjugation!("vīsō", 9, "~ō", like Abnuō;
-    participle: _, "~us", "~ūrus", _;
-    supine: _, _, _, "~um", "~ū", _;
+    stem participle_perf_pass: "~- like agitō";
     ),
     // Sentiō: 9 words (sentiō, cōnsentiō, dissentiō, praesentiō, assentiō, adsentiō).
     conjugation!("sentiō", 9, "~e~tiō";
+    stem participle_perf_pass: "~ē~s- like agitō";
     ind_act_pres_1: "~e~tiō", "~e~tīmus";
     ind_act_pres_2: "~e~tīs", "~e~tītis";
     ind_act_pres_3: "~e~tit", "~e~tiunt";
@@ -4667,42 +4699,33 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~e~tī", "~e~tīte";
     imperative_act_fut_2: "~e~tītō", "~e~tītōte";
     imperative_act_fut_3: _, "~e~tiuntō";
-    imperative_pass_pres_2: "~e~tīre", "~e~tīminī";
+    imperative_pass_pres_2: "~e~tīre", _;
     imperative_pass_fut_2: "~e~tītor", _;
     imperative_pass_fut_3: _, "~e~tiuntor";
-    infinitive_act: "~e~tīre", "~ē~sisse", _;
+    infinitive_act: _, "~ē~sisse", _;
     infinitive_pass: "~e~tīrī", _, _;
-    participle: "~e~tiēns", "~ē~sus", "~ē~sūrus", "~e~tiendus|~e~tiundus";
+    participle: "~e~tiēns", _, _, "~e~tiendus|~e~tiundus";
     gerund: _, "~e~tiendī", "~e~tiendō", "~e~tiendum", _, _;
-    supine: _, _, _, "~ē~sum", "~ē~sū", _;
     ),
-    // Mētior: 9 words (admētior, mētior, dīmētior, remētior, commētior, conmētior). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("mētior", 9, "~tior", like Mōlior;
-    ind_act_pres_1: "~tior", "~tīmur";
-    ind_act_pres_2: "~tīris|~tīre", "~tīminī";
-    ind_act_pres_3: "~tītur", "~tiuntur";
+    // Mētior: 9 words (admētior, mētior, dīmētior, remētior, commētior, conmētior). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("mētior", 9, "~tior", like Cōnsequor;
+    stem verb_act_sg: "~t- like mōlior";
+    stem participle_perf_pass: "~ns- like modulor";
+    ind_act_pres_1: _, "~tīmur";
     ind_act_impf_1: "~tiēbar", "~tiēbāmur";
     ind_act_impf_2: "~tiēbāris|~tiēbāre", "~tiēbāminī";
     ind_act_impf_3: "~tiēbātur", "~tiēbantur";
     ind_act_fut_1: "~tiar", "~tiēmur";
     ind_act_fut_2: "~tiēris|~tiēre", "~tiēminī";
-    ind_act_fut_3: "~tiētur", "~tientur";
-    subj_act_pres_1: "~tiar", "~tiāmur";
-    subj_act_pres_2: "~tiāris|~tiāre", "~tiāminī";
-    subj_act_pres_3: "~tiātur", "~tiantur";
-    subj_act_impf_1: "~tīrer", "~tīrēmur";
-    subj_act_impf_2: "~tīrēris|~tīrēre", "~tīrēminī";
-    subj_act_impf_3: "~tīrētur", "~tīrentur";
-    imperative_act_pres_2: "~tīre", "~tīminī";
+    ind_act_fut_3: "~tiētur", _;
+    subj_act_pres_3: "~tiātur", _;
     imperative_act_fut_2: "~tītor", _;
-    imperative_act_fut_3: _, "~tiuntor";
-    infinitive_act: "~tīrī", _, _;
-    participle: "~tiēns", _, "~nsūrus", "~tiendus|~tiundus";
+    participle: "~tiēns", _, _, "~tiendus|~tiundus";
     gerund: _, "~tiendī", "~tiendō", "~tiendum", _, _;
-    supine: _, _, _, "~nsum", "~nsū", _;
     ),
-    // Īnsiliō: 9 words (exiliō, trānsiliō, dēsiliō, exsiliō, īnsiliō, subsiliō). Like Corripiō, except in 37 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_perf_3 pl, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ….
+    // Īnsiliō: 9 words (exiliō, trānsiliō, dēsiliō, exsiliō, īnsiliō, subsiliō). Like Corripiō, except in 31 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_perf_3 pl, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ….
     conjugation!("īnsiliō", 9, "~i~iō", like Corripiō;
+    stem participle_perf_pass: "~u~t- like agitō";
     ind_act_pres_1: _, "~i~īmus";
     ind_act_pres_2: "~i~īs", "~i~ītis";
     ind_act_perf_3: _, "~i~uērunt";
@@ -4720,35 +4743,56 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_3: "~i~īrētur", "~i~īrentur";
     imperative_act_pres_2: "~i~ī", "~i~īte";
     imperative_act_fut_2: "~i~ītō", "~i~ītōte";
-    imperative_pass_pres_2: "~i~īre", "~i~īminī";
+    imperative_pass_pres_2: "~i~īre", _;
     imperative_pass_fut_2: "~i~ītor", _;
-    infinitive_act: "~i~īre", _, _;
     infinitive_pass: "~i~īrī", _, _;
-    participle: _, "~u~tus", "~u~tūrus", "~i~iendus";
-    supine: _, _, _, "~u~tum", "~u~tū", _;
+    participle: _, _, _, "~i~iendus";
     ),
-    // Calvor: 9 words (queror, conqueror, locor, calvor, perdor, fraudor). Like Profiteor, except in 30 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("calvor", 9, "~or", like Profiteor;
-    ind_act_pres_1: "~or", "~imur";
-    ind_act_pres_2: "~eris", "~iminī";
-    ind_act_pres_3: "~itur", "~untur";
-    ind_act_impf_2: "~ēbāris", _;
-    ind_act_fut_1: "~ar", "~ēmur";
-    ind_act_fut_2: "~ēris", "~ēminī";
-    ind_act_fut_3: "~ētur", "~entur";
-    subj_act_pres_1: "~ar", "~āmur";
-    subj_act_pres_2: "~āris", "~āminī";
-    subj_act_pres_3: "~ātur", "~antur";
-    subj_act_impf_1: "~erer", "~erēmur";
-    subj_act_impf_2: "~erēris", "~erēminī";
-    subj_act_impf_3: "~erētur", "~erentur";
-    imperative_act_pres_2: "~ere", "~iminī";
-    imperative_act_fut_2: "~itor", _;
-    imperative_act_fut_3: _, "~untor";
-    infinitive_act: "~ī", _, _;
+    // Interstinguō: 9 words (distinguō, stinguō, extinguō, exstinguō, restinguō, intinguō). Like Tingō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("interstinguō", 9, "~i~guō", like Tingō;
+    ind_act_pres_1: "~i~guō", "~i~guimus";
+    ind_act_pres_2: "~i~guis", "~i~guitis";
+    ind_act_pres_3: "~i~guit", "~i~guunt";
+    ind_act_impf_1: "~i~guēbam", "~i~guēbāmus";
+    ind_act_impf_2: "~i~guēbās", "~i~guēbātis";
+    ind_act_impf_3: "~i~guēbat", "~i~guēbant";
+    ind_act_fut_1: "~i~guam", "~i~guēmus";
+    ind_act_fut_2: "~i~guēs", "~i~guētis";
+    ind_act_fut_3: "~i~guet", "~i~guent";
+    ind_pass_pres_1: "~i~guor", "~i~guimur";
+    ind_pass_pres_2: "~i~gueris|~i~guere", "~i~guiminī";
+    ind_pass_pres_3: "~i~guitur", "~i~guuntur";
+    ind_pass_impf_1: "~i~guēbar", "~i~guēbāmur";
+    ind_pass_impf_2: "~i~guēbāris|~i~guēbāre", "~i~guēbāminī";
+    ind_pass_impf_3: "~i~guēbātur", "~i~guēbantur";
+    ind_pass_fut_1: "~i~guar", "~i~guēmur";
+    ind_pass_fut_2: "~i~guēris|~i~guēre", "~i~guēminī";
+    ind_pass_fut_3: "~i~guētur", "~i~guentur";
+    subj_act_pres_1: "~i~guam", "~i~guāmus";
+    subj_act_pres_2: "~i~guās", "~i~guātis";
+    subj_act_pres_3: "~i~guat", "~i~guant";
+    subj_act_impf_1: "~i~guerem", "~i~guerēmus";
+    subj_act_impf_2: "~i~guerēs", "~i~guerētis";
+    subj_act_impf_3: "~i~gueret", "~i~guerent";
+    subj_pass_pres_1: "~i~guar", "~i~guāmur";
+    subj_pass_pres_2: "~i~guāris|~i~guāre", "~i~guāminī";
+    subj_pass_pres_3: "~i~guātur", "~i~guantur";
+    subj_pass_impf_1: "~i~guerer", "~i~guerēmur";
+    subj_pass_impf_2: "~i~guerēris|~i~guerēre", "~i~guerēminī";
+    subj_pass_impf_3: "~i~guerētur", "~i~guerentur";
+    imperative_act_pres_2: "~i~gue", "~i~guite";
+    imperative_act_fut_2: "~i~guitō", "~i~guitōte";
+    imperative_act_fut_3: _, "~i~guuntō";
+    imperative_pass_pres_2: "~i~guere", _;
+    imperative_pass_fut_2: "~i~guitor", _;
+    imperative_pass_fut_3: _, "~i~guuntor";
+    infinitive_pass: "~i~guī", _, _;
+    participle: "~i~guēns", _, _, "~i~guendus";
+    gerund: _, "~i~guendī", "~i~guendō", "~i~guendum", _, _;
     ),
     // Pervincō: 8 words (vincō, convincō, ēvincō, dēvincō, prōvincō, revincō).
     conjugation!("pervincō", 8, "~in~ō";
+    stem participle_perf_pass: "~i~t- like agitō";
     ind_act_pres_1: "~in~ō", "~in~imus";
     ind_act_pres_2: "~in~is", "~in~itis";
     ind_act_pres_3: "~in~it", "~in~unt";
@@ -4796,17 +4840,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~in~e", "~in~ite";
     imperative_act_fut_2: "~in~itō", "~in~itōte";
     imperative_act_fut_3: _, "~in~untō";
-    imperative_pass_pres_2: "~in~ere", "~in~iminī";
+    imperative_pass_pres_2: "~in~ere", _;
     imperative_pass_fut_2: "~in~itor", _;
     imperative_pass_fut_3: _, "~in~untor";
-    infinitive_act: "~in~ere", "~ī~isse", _;
+    infinitive_act: _, "~ī~isse", _;
     infinitive_pass: "~in~ī", _, _;
-    participle: "~in~ēns", "~i~tus", "~i~tūrus", "~in~endus|~in~undus";
+    participle: "~in~ēns", _, _, "~in~endus|~in~undus";
     gerund: _, "~in~endī", "~in~endō", "~in~endum", _, _;
-    supine: _, _, _, "~i~tum", "~i~tū", _;
     ),
-    // Concoquō: 8 words (coquō, concoquō, discoquō, excoquō, dēcoquō, recoquō). Like Afflīgō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("concoquō", 8, "~quō", like Afflīgō;
+    // Concoquō: 8 words (coquō, concoquō, discoquō, excoquō, dēcoquō, recoquō). Like Cōnsequor, except in 66 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("concoquō", 8, "~quō", like Cōnsequor as PASS_AS_ACT;
+    stem participle_perf_pass: "~ct- like agitō";
     ind_act_pres_1: "~quō", "~quimus";
     ind_act_pres_2: "~quis", "~quitis";
     ind_act_pres_3: "~quit", "~quunt";
@@ -4816,40 +4860,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_fut_1: "~quam", "~quēmus";
     ind_act_fut_2: "~quēs", "~quētis";
     ind_act_fut_3: "~quet", "~quent";
-    ind_pass_pres_1: "~quor", "~quimur";
-    ind_pass_pres_2: "~queris|~quere", "~quiminī";
-    ind_pass_pres_3: "~quitur", "~quuntur";
-    ind_pass_impf_1: "~quēbar", "~quēbāmur";
-    ind_pass_impf_2: "~quēbāris|~quēbāre", "~quēbāminī";
-    ind_pass_impf_3: "~quēbātur", "~quēbantur";
-    ind_pass_fut_1: "~quar", "~quēmur";
-    ind_pass_fut_2: "~quēris|~quēre", "~quēminī";
-    ind_pass_fut_3: "~quētur", "~quentur";
+    ind_act_perf_1: "~xī", "~ximus";
+    ind_act_perf_2: "~xistī", "~xistis";
+    ind_act_perf_3: "~xit", "~xērunt|~xēre";
+    ind_act_plup_1: "~xeram", "~xerāmus";
+    ind_act_plup_2: "~xerās", "~xerātis";
+    ind_act_plup_3: "~xerat", "~xerant";
+    ind_act_futp_1: "~xerō", "~xerimus";
+    ind_act_futp_2: "~xeris", "~xeritis";
+    ind_act_futp_3: "~xerit", "~xerint";
     subj_act_pres_1: "~quam", "~quāmus";
     subj_act_pres_2: "~quās", "~quātis";
     subj_act_pres_3: "~quat", "~quant";
     subj_act_impf_1: "~querem", "~querēmus";
     subj_act_impf_2: "~querēs", "~querētis";
     subj_act_impf_3: "~queret", "~querent";
-    subj_pass_pres_1: "~quar", "~quāmur";
-    subj_pass_pres_2: "~quāris|~quāre", "~quāminī";
-    subj_pass_pres_3: "~quātur", "~quantur";
-    subj_pass_impf_1: "~querer", "~querēmur";
-    subj_pass_impf_2: "~querēris|~querēre", "~querēminī";
-    subj_pass_impf_3: "~querētur", "~querentur";
+    subj_act_perf_1: "~xerim", "~xerīmus";
+    subj_act_perf_2: "~xerīs", "~xerītis";
+    subj_act_plup_1: "~xissem", "~xissēmus";
+    subj_act_plup_2: "~xissēs", "~xissētis";
+    subj_act_plup_3: "~xisset", "~xissent";
     imperative_act_pres_2: "~que", "~quite";
     imperative_act_fut_2: "~quitō", "~quitōte";
     imperative_act_fut_3: _, "~quuntō";
-    imperative_pass_pres_2: "~quere", "~quiminī";
-    imperative_pass_fut_2: "~quitor", _;
-    imperative_pass_fut_3: _, "~quuntor";
-    infinitive_act: "~quere", _, _;
-    infinitive_pass: "~quī", _, _;
-    participle: "~quēns", _, _, "~quendus";
-    gerund: _, "~quendī", "~quendō", "~quendum", _, _;
+    imperative_pass_pres_2: _, derived;
+    infinitive_act: derived, "~xisse", _;
     ),
     // Nūbō: 8 words (nūbō, prōnūbō, glūbō, ēnūbō, dēglūbō, obnūbō).
     conjugation!("nūbō", 8, "~ūbō";
+    stem participle_perf_pass: "~ŭpt- like agitō";
     ind_act_pres_1: "~ūbō", "~ūbimus";
     ind_act_pres_2: "~ūbis", "~ūbitis";
     ind_act_pres_3: "~ūbit", "~ūbunt";
@@ -4897,26 +4936,32 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ūbe", "~ūbite";
     imperative_act_fut_2: "~ūbitō", "~ūbitōte";
     imperative_act_fut_3: _, "~ūbuntō";
-    imperative_pass_pres_2: "~ūbere", "~ūbiminī";
+    imperative_pass_pres_2: "~ūbere", _;
     imperative_pass_fut_2: "~ūbitor", _;
     imperative_pass_fut_3: _, "~ūbuntor";
-    infinitive_act: "~ūbere", "~ūpsisse", _;
+    infinitive_act: _, "~ūpsisse", _;
     infinitive_pass: "~ūbī", _, _;
-    participle: "~ūbēns", "~ŭptus", "~ŭptūrus", "~ūbendus|~ūbundus";
+    participle: "~ūbēns", _, _, "~ūbendus|~ūbundus";
     gerund: _, "~ūbendī", "~ūbendō", "~ūbendum", _, _;
-    supine: _, _, _, "~ŭptum", "~ŭptū", _;
     ),
-    // Prōfluō: 8 words (superfluō, circumfluō, cōnfluō, diffluō, interfluō, prōfluō). Like Struō, except in 9 cells: ind_pass_pres_2 sg, ind_pass_impf_2 sg, ind_pass_fut_2 sg, subj_pass_pres_2 sg, subj_pass_impf_2 sg, participle perf_pass, ….
+    // Prōfluō: 8 words (superfluō, circumfluō, cōnfluō, diffluō, interfluō, prōfluō). Like Struō, except in 5 cells: ind_pass_pres_2 sg, ind_pass_impf_2 sg, ind_pass_fut_2 sg, subj_pass_pres_2 sg, subj_pass_impf_2 sg.
     conjugation!("prōfluō", 8, "~uō", like Struō;
+    stem participle_perf_pass: "~ūx- like agitō";
     ind_pass_pres_2: "~ueris", _;
     ind_pass_impf_2: "~uēbāris", _;
     ind_pass_fut_2: "~uēris", _;
     subj_pass_pres_2: "~uāris", _;
     subj_pass_impf_2: "~uerēris", _;
-    participle: _, "~ūxus", "~ūxūrus", _;
-    supine: _, _, _, "~ūxum", "~ūxū", _;
     ),
-    // Cohaereō: 8 words (adhaereō, haereō, adhēreō, cohaereō, inhaereō, cohēreō). Like Ēvādō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Exorior: 8 words (exorior, commorior, conmorior, intermorior, dēmorior, praemorior). Like Mōlior, except in 5 cells: ind_act_pres_1 pl, imperative_act_fut_2 sg, participle fut_act, supine acc, supine abl.
+    conjugation!("exorior", 8, "~ior", like Mōlior;
+    stem verb_act_sg: "~- like ēgredior";
+    ind_act_pres_1: _, "~imur";
+    imperative_act_fut_2: "~itor", _;
+    participle: _, _, "~itūrus", _;
+    supine: _, _, _, "~tuum", "~tuū", _;
+    ),
+    // Cohaereō: 8 words (adhaereō, haereō, adhēreō, cohaereō, inhaereō, cohēreō). Like Ēvādō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("cohaereō", 8, "~reō", like Ēvādō;
     ind_act_pres_1: "~reō", "~rēmus";
     ind_act_pres_2: "~rēs", "~rētis";
@@ -4951,16 +4996,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~rē", "~rēte";
     imperative_act_fut_2: "~rētō", "~rētōte";
     imperative_act_fut_3: _, "~rentō";
-    imperative_pass_pres_2: "~rēre", "~rēminī";
+    imperative_pass_pres_2: "~rēre", _;
     imperative_pass_fut_2: "~rētor", _;
     imperative_pass_fut_3: _, "~rentor";
-    infinitive_act: "~rēre", _, _;
     infinitive_pass: "~rērī", _, _;
     participle: "~rēns", _, _, "~rendus";
     gerund: _, "~rendī", "~rendō", "~rendum", _, _;
     ),
     // Recolō: 7 words (colō, incolō, recolō, excolō, circumcolō, accolō).
     conjugation!("recolō", 7, "~o~ō";
+    stem participle_perf_pass: "~u~t- like agitō";
     ind_act_pres_1: "~o~ō", "~o~imus";
     ind_act_pres_2: "~o~is", "~o~itis";
     ind_act_pres_3: "~o~it", "~o~unt";
@@ -5008,42 +5053,33 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~o~e", "~o~ite";
     imperative_act_fut_2: "~o~itō", "~o~itōte";
     imperative_act_fut_3: _, "~o~untō";
-    imperative_pass_pres_2: "~o~ere", "~o~iminī";
+    imperative_pass_pres_2: "~o~ere", _;
     imperative_pass_fut_2: "~o~itor", _;
     imperative_pass_fut_3: _, "~o~untor";
-    infinitive_act: "~o~ere", "~o~uisse", _;
+    infinitive_act: _, "~o~uisse", _;
     infinitive_pass: "~o~ī", _, _;
-    participle: "~o~ēns", "~u~tus", "~u~tūrus", "~o~endus|~o~undus";
+    participle: "~o~ēns", _, _, "~o~endus|~o~undus";
     gerund: _, "~o~endī", "~o~endō", "~o~endum", _, _;
-    supine: _, _, _, "~u~tum", "~u~tū", _;
     ),
-    // Gaudeō: 7 words (gaudeō, aggaudeō, adgaudeō, congaudeō, pergaudeō, praegaudeō). Like Mōlior, except in 44 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("gaudeō", 7, "~audeō", like Mōlior;
-    ind_act_pres_1: "~audeō", "~audēmus";
-    ind_act_pres_2: "~audēs", "~audētis";
-    ind_act_pres_3: "~audet", "~audent";
+    // Gaudeō: 7 words (gaudeō, aggaudeō, adgaudeō, congaudeō, pergaudeō, praegaudeō). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("gaudeō", 7, "~audeō", like Cōnsequor;
+    stem verb_act_sg: "~aud- like gaudeō";
+    stem participle_perf_pass: "~āvīs- like modulor";
+    ind_act_pres_1: _, "~audēmus";
     ind_act_impf_1: "~audēbam", "~audēbāmus";
     ind_act_impf_2: "~audēbās", "~audēbātis";
     ind_act_impf_3: "~audēbat", "~audēbant";
     ind_act_fut_1: "~audēbō", "~audēbimus";
     ind_act_fut_2: "~audēbis", "~audēbitis";
-    ind_act_fut_3: "~audēbit", "~audēbunt";
-    subj_act_pres_1: "~audeam", "~audeāmus";
-    subj_act_pres_2: "~audeās", "~audeātis";
-    subj_act_pres_3: "~audeat", "~audeant";
-    subj_act_impf_1: "~audērem", "~audērēmus";
-    subj_act_impf_2: "~audērēs", "~audērētis";
-    subj_act_impf_3: "~audēret", "~audērent";
-    imperative_act_pres_2: "~audē", "~audēte";
-    imperative_act_fut_2: "~audētō", "~audētōte";
-    imperative_act_fut_3: _, "~audentō";
-    infinitive_act: "~audēre", _, _;
-    participle: "~audēns", _, "~āvīsūrus", "~audendus";
+    ind_act_fut_3: "~audēbit", _;
+    subj_act_pres_3: "~audeat", _;
+    imperative_act_fut_2: "~audētō", _;
+    participle: "~audēns", _, _, "~audendus";
     gerund: _, "~audendī", "~audendō", "~audendum", _, _;
-    supine: _, _, _, "~āvīsum", "~āvīsū", _;
     ),
     // Cognōscō: 7 words (conōscō, cognōscō, recognōscō, agnōscō, praecognōscō, adgnōscō).
     conjugation!("cognōscō", 7, "~ōscō";
+    stem participle_perf_pass: "~it- like agitō";
     ind_act_pres_1: "~ōscō", "~ōscimus";
     ind_act_pres_2: "~ōscis", "~ōscitis";
     ind_act_pres_3: "~ōscit", "~ōscunt";
@@ -5079,7 +5115,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_3: "~ōsceret", "~ōscerent";
     subj_act_perf_1: "~ōverim|~ōrim", "~ōverīmus|~ōrīmus";
     subj_act_perf_2: "~ōverīs|~ōrīs", "~ōverītis|~ōrītis";
-    subj_act_perf_3: "~ōverit|~ōrit", "~ōverint|~ōrint";
     subj_act_plup_1: "~ōvissem|~ōssem", "~ōvissēmus|~ōssēmus";
     subj_act_plup_2: "~ōvissēs|~ōssēs", "~ōvissētis|~ōssētis";
     subj_act_plup_3: "~ōvisset|~ōsset", "~ōvissent|~ōssent";
@@ -5092,17 +5127,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ōsce", "~ōscite";
     imperative_act_fut_2: "~ōscitō", "~ōscitōte";
     imperative_act_fut_3: _, "~ōscuntō";
-    imperative_pass_pres_2: "~ōscere", "~ōsciminī";
+    imperative_pass_pres_2: "~ōscere", _;
     imperative_pass_fut_2: "~ōscitor", _;
     imperative_pass_fut_3: _, "~ōscuntor";
-    infinitive_act: "~ōscere", "~ōvisse|~ōsse", _;
+    infinitive_act: _, "~ōvisse|~ōsse", _;
     infinitive_pass: "~ōscī", _, _;
-    participle: "~ōscēns", "~itus", "~itūrus", "~ōscendus|~ōscundus";
+    participle: "~ōscēns", _, _, "~ōscendus|~ōscundus";
     gerund: _, "~ōscendī", "~ōscendō", "~ōscendum", _, _;
-    supine: _, _, _, "~itum", "~itū", _;
     ),
-    // Comedō: 7 words (comedō, ambedō, adedō, exedō, peredō, subedō). Like Possideō, except in 82 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Comedō: 7 words (comedō, ambedō, adedō, exedō, peredō, subedō). Like Possideō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("comedō", 7, "~edō", like Possideō;
+    stem participle_perf_pass: "~ēs- like comedō";
     ind_act_pres_1: "~edō", "~edimus";
     ind_act_pres_2: "~edis|~ēs", "~editis|~ēstis";
     ind_act_pres_3: "~edit|~ēst", "~edunt";
@@ -5135,18 +5170,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_3: "~ederētur|~ēssētur", "~ederentur|~ēssentur";
     imperative_act_pres_2: "~ede|~ēs", "~edite|~ēste";
     imperative_act_fut_2: "~editō|~ēstō", "~editōte|~ēstōte";
-    imperative_act_fut_3: "~editō|~ēstō", "~eduntō";
-    imperative_pass_pres_2: "~edere|~ēsse", "~ediminī";
+    imperative_act_fut_3: _, "~eduntō";
+    imperative_pass_pres_2: "~edere|~ēsse", _;
     imperative_pass_fut_2: "~editor|~ēstor", _;
-    imperative_pass_fut_3: "~editor|~ēstor", "~eduntor";
-    infinitive_act: "~edere|~ēsse", _, _;
+    imperative_pass_fut_3: _, "~eduntor";
     infinitive_pass: "~edī", _, _;
-    participle: "~edēns", "~ēsus|~ēssus|~ēstus", "~ēsūrus|~ēssūrus|~ēstūrus", "~edendus|~edundus";
+    participle: "~edēns", _, _, "~edendus|~edundus";
     gerund: _, "~edendī", "~edendō", "~edendum", _, _;
-    supine: _, _, _, "~ēsum|~ēssum|~ēstum", "~ēsū|~ēssū|~ēstū", _;
     ),
     // Maneō: 7 words (remaneō, maneō, permaneō, commaneō, ēmaneō, immaneō).
     conjugation!("maneō", 7, "~a~eō";
+    stem participle_perf_pass: "~ā~s- like agitō";
     ind_act_pres_1: "~a~eō", "~a~ēmus";
     ind_act_pres_2: "~a~ēs", "~a~ētis";
     ind_act_pres_3: "~a~et", "~a~ent";
@@ -5194,26 +5228,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~a~ē", "~a~ēte";
     imperative_act_fut_2: "~a~ētō", "~a~ētōte";
     imperative_act_fut_3: _, "~a~entō";
-    imperative_pass_pres_2: "~a~ēre", "~a~ēminī";
+    imperative_pass_pres_2: "~a~ēre", _;
     imperative_pass_fut_2: "~a~ētor", _;
     imperative_pass_fut_3: _, "~a~entor";
-    infinitive_act: "~a~ēre", "~ā~sisse", _;
+    infinitive_act: _, "~ā~sisse", _;
     infinitive_pass: "~a~ērī", _, _;
-    participle: "~a~ēns", "~ā~sus", "~ā~sūrus", "~a~endus";
+    participle: "~a~ēns", _, _, "~a~endus";
     gerund: _, "~a~endī", "~a~endō", "~a~endum", _, _;
-    supine: _, _, _, "~ā~sum", "~ā~sū", _;
     ),
     // Īnsistō: 7 words (cōnsistō, dēsistō, resistō, īnsistō, exsistō, absistō).
     conjugation!("īnsistō", 7, "~~s~ō";
-    ind_act_pres_1: "~~s~ō", "~~s~imus";
-    ind_act_pres_2: "~~s~is", "~~s~itis";
-    ind_act_pres_3: "~~s~it", "~~s~unt";
+    stem verb_act_sg: "~~s~- like īnsistō";
+    stem participle_perf_pass: "~t~~- like labōrō";
+    ind_act_pres_1: _, "~~s~imus";
     ind_act_impf_1: "~~s~ēbam", "~~s~ēbāmus";
     ind_act_impf_2: "~~s~ēbās", "~~s~ēbātis";
     ind_act_impf_3: "~~s~ēbat", "~~s~ēbant";
     ind_act_fut_1: "~~s~am", "~~s~ēmus";
     ind_act_fut_2: "~~s~ēs", "~~s~ētis";
-    ind_act_fut_3: "~~s~et", "~~s~ent";
+    ind_act_fut_3: "~~s~et", _;
     ind_act_perf_1: "~t~~ī", "~t~~imus";
     ind_act_perf_2: "~t~~istī", "~t~~istis";
     ind_act_perf_3: "~t~~it", "~t~~ērunt|~t~~ēre";
@@ -5223,77 +5256,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~t~~erō", "~t~~erimus";
     ind_act_futp_2: "~t~~eris", "~t~~eritis";
     ind_act_futp_3: "~t~~erit", "~t~~erint";
-    ind_pass_pres_3: "~~s~itur", _;
-    ind_pass_impf_3: "~~s~ēbātur", _;
-    ind_pass_fut_3: "~~s~ētur", _;
-    subj_act_pres_1: "~~s~am", "~~s~āmus";
-    subj_act_pres_2: "~~s~ās", "~~s~ātis";
-    subj_act_pres_3: "~~s~at", "~~s~ant";
-    subj_act_impf_1: "~~s~erem", "~~s~erēmus";
-    subj_act_impf_2: "~~s~erēs", "~~s~erētis";
-    subj_act_impf_3: "~~s~eret", "~~s~erent";
+    subj_act_pres_3: "~~s~at", _;
     subj_act_perf_1: "~t~~erim", "~t~~erīmus";
     subj_act_perf_2: "~t~~erīs", "~t~~erītis";
     subj_act_plup_1: "~t~~issem", "~t~~issēmus";
     subj_act_plup_2: "~t~~issēs", "~t~~issētis";
     subj_act_plup_3: "~t~~isset", "~t~~issent";
-    subj_pass_pres_3: "~~s~ātur", _;
-    subj_pass_impf_3: "~~s~erētur", _;
-    imperative_act_pres_2: "~~s~e", "~~s~ite";
-    imperative_act_fut_2: "~~s~itō", "~~s~itōte";
-    imperative_act_fut_3: _, "~~s~untō";
-    imperative_pass_fut_3: "~~s~itor", _;
-    infinitive_act: "~~s~ere", "~t~~isse", _;
-    infinitive_pass: "~~s~ī", _, _;
-    participle: "~~s~ēns", "~t~~um", "~t~~ūrus", "~~s~endum|~~s~undum";
+    imperative_act_fut_2: "~~s~itō", _;
+    infinitive_act: _, "~t~~isse", _;
+    participle: "~~s~ēns", _, _, "~~s~endum|~~s~undum";
     gerund: _, "~~s~endī", "~~s~endō", "~~s~endum", _, _;
-    supine: _, _, _, "~t~~um", "~t~~ū", _;
     ),
-    // Serō: 7 words (disserō, serō, asserō, īnserō, cōnserō, adserō). Like Dēsinō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("serō", 7, "~erō", like Dēsinō;
-    ind_act_pres_1: "~erō", "~erimus";
-    ind_act_pres_2: "~eris", "~eritis";
-    ind_act_pres_3: "~erit", "~erunt";
-    ind_act_impf_1: "~erēbam", "~erēbāmus";
-    ind_act_impf_2: "~erēbās", "~erēbātis";
-    ind_act_impf_3: "~erēbat", "~erēbant";
-    ind_act_fut_1: "~eram", "~erēmus";
-    ind_act_fut_2: "~erēs", "~erētis";
-    ind_act_fut_3: "~eret", "~erent";
-    ind_pass_pres_1: "~eror", "~erimur";
-    ind_pass_pres_2: "~ereris|~erere", "~eriminī";
-    ind_pass_pres_3: "~eritur", "~eruntur";
-    ind_pass_impf_1: "~erēbar", "~erēbāmur";
-    ind_pass_impf_2: "~erēbāris|~erēbāre", "~erēbāminī";
-    ind_pass_impf_3: "~erēbātur", "~erēbantur";
-    ind_pass_fut_1: "~erar", "~erēmur";
-    ind_pass_fut_2: "~erēris|~erēre", "~erēminī";
-    ind_pass_fut_3: "~erētur", "~erentur";
-    subj_act_pres_1: "~eram", "~erāmus";
-    subj_act_pres_2: "~erās", "~erātis";
-    subj_act_pres_3: "~erat", "~erant";
-    subj_act_impf_1: "~ererem", "~ererēmus";
-    subj_act_impf_2: "~ererēs", "~ererētis";
-    subj_act_impf_3: "~ereret", "~ererent";
-    subj_pass_pres_1: "~erar", "~erāmur";
-    subj_pass_pres_2: "~erāris|~erāre", "~erāminī";
-    subj_pass_pres_3: "~erātur", "~erantur";
-    subj_pass_impf_1: "~ererer", "~ererēmur";
-    subj_pass_impf_2: "~ererēris|~ererēre", "~ererēminī";
-    subj_pass_impf_3: "~ererētur", "~ererentur";
-    imperative_act_pres_2: "~ere", "~erite";
-    imperative_act_fut_2: "~eritō", "~eritōte";
-    imperative_act_fut_3: _, "~eruntō";
-    imperative_pass_pres_2: "~erere", "~eriminī";
-    imperative_pass_fut_2: "~eritor", _;
-    imperative_pass_fut_3: _, "~eruntor";
-    infinitive_act: "~erere", _, _;
-    infinitive_pass: "~erī", _, _;
-    participle: "~erēns", _, _, "~erendus|~erundus";
-    gerund: _, "~erendī", "~erendō", "~erendum", _, _;
-    ),
-    // Augeō: 7 words (augeō, lūgeō, adaugeō, ēlūgeō, frīgeō, exaugeō). Like Tergeō, except in 38 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Augeō: 7 words (augeō, lūgeō, adaugeō, ēlūgeō, frīgeō, exaugeō). Like Tergeō, except in 34 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("augeō", 7, "~geō", like Tergeō;
+    stem participle_perf_pass: "~ct- like agitō";
     ind_act_perf_1: "~xī", "~ximus";
     ind_act_perf_2: "~xistī", "~xistis";
     ind_act_perf_3: "~xit", "~xērunt|~xēre";
@@ -5314,20 +5290,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: "~geāris|~geāre", _;
     subj_pass_impf_2: "~gērēris|~gērēre", _;
     infinitive_act: _, "~xisse", _;
-    participle: _, "~ctus", "~ctūrus", _;
-    supine: _, _, _, "~ctum", "~ctū", _;
     ),
-    // Ferveō: 7 words (ferveō, cōnferveō, dēferveō, īnferveō, perferveō, referveō). Like Modulor, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Ferveō: 7 words (ferveō, cōnferveō, dēferveō, īnferveō, perferveō, referveō). Like Modulor, except in 48 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
     conjugation!("ferveō", 7, "~veō", like Modulor;
-    ind_act_pres_1: "~veō", "~vēmus";
-    ind_act_pres_2: "~vēs", "~vētis";
-    ind_act_pres_3: "~vet", "~vent";
+    stem verb_act_sg: "~v- like ferveō";
+    stem participle_perf_pass: "~vit- like labōrō";
+    ind_act_pres_1: _, "~vēmus";
     ind_act_impf_1: "~vēbam", "~vēbāmus";
     ind_act_impf_2: "~vēbās", "~vēbātis";
     ind_act_impf_3: "~vēbat", "~vēbant";
     ind_act_fut_1: "~vēbō", "~vēbimus";
     ind_act_fut_2: "~vēbis", "~vēbitis";
-    ind_act_fut_3: "~vēbit", "~vēbunt";
+    ind_act_fut_3: "~vēbit", _;
     ind_act_perf_1: "~buī", "~buimus";
     ind_act_perf_2: "~buistī", "~buistis";
     ind_act_perf_3: "~buit", "~buērunt|~buēre";
@@ -5337,33 +5311,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~buerō", "~buerimus";
     ind_act_futp_2: "~bueris", "~bueritis";
     ind_act_futp_3: "~buerit", "~buerint";
-    ind_pass_pres_3: "~vētur", _;
-    ind_pass_impf_3: "~vēbātur", _;
-    ind_pass_fut_3: "~vēbitur", _;
-    subj_act_pres_1: "~veam", "~veāmus";
-    subj_act_pres_2: "~veās", "~veātis";
-    subj_act_pres_3: "~veat", "~veant";
-    subj_act_impf_1: "~vērem", "~vērēmus";
-    subj_act_impf_2: "~vērēs", "~vērētis";
-    subj_act_impf_3: "~vēret", "~vērent";
+    subj_act_pres_3: "~veat", _;
     subj_act_perf_1: "~buerim", "~buerīmus";
     subj_act_perf_2: "~buerīs", "~buerītis";
     subj_act_plup_1: "~buissem", "~buissēmus";
     subj_act_plup_2: "~buissēs", "~buissētis";
     subj_act_plup_3: "~buisset", "~buissent";
-    subj_pass_pres_3: "~veātur", _;
-    subj_pass_impf_3: "~vērētur", _;
-    imperative_act_pres_2: "~vē", "~vēte";
-    imperative_act_fut_2: "~vētō", "~vētōte";
-    imperative_act_fut_3: _, "~ventō";
-    imperative_pass_fut_3: "~vētor", _;
-    infinitive_act: "~vēre", "~buisse", _;
-    infinitive_pass: "~vērī", _, _;
-    participle: "~vēns", "~vitum", "~vitūrus", "~vendum";
+    imperative_act_fut_2: "~vētō", _;
+    infinitive_act: _, "~buisse", _;
+    participle: "~vēns", _, _, "~vendum";
     gerund: _, "~vendī", "~vendō", "~vendum", _, _;
-    supine: _, _, _, "~vitum", "~vitū", _;
     ),
-    // Īnsīdō: 7 words (resīdō, assīdō, subsīdō, cōnsīdō, īnsīdō, dēsīdō). Like Possideō, except in 77 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Īnsīdō: 7 words (resīdō, assīdō, subsīdō, cōnsīdō, īnsīdō, dēsīdō). Like Possideō, except in 75 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("īnsīdō", 7, "~īdō", like Possideō;
     ind_act_pres_1: "~īdō", "~īdimus";
     ind_act_pres_2: "~īdis", "~īditis";
@@ -5399,10 +5358,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~īde", "~īdite";
     imperative_act_fut_2: "~īditō", "~īditōte";
     imperative_act_fut_3: _, "~īduntō";
-    imperative_pass_pres_2: "~īdere", "~īdiminī";
+    imperative_pass_pres_2: "~īdere", _;
     imperative_pass_fut_2: "~īditor", _;
     imperative_pass_fut_3: _, "~īduntor";
-    infinitive_act: "~īdere", _, _;
     infinitive_pass: "~īdī", _, _;
     participle: "~īdēns", _, _, "~īdendus";
     gerund: _, "~īdendī", "~īdendō", "~īdendum", _, _;
@@ -5425,7 +5383,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~disset", "~dissent";
     infinitive_act: _, "~disse", _;
     ),
-    // Peragō: 7 words (peragō, satagō, reagō, circumagō, abagō, vervagō). Like Compingō, except in 77 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Peragō: 7 words (peragō, satagō, reagō, circumagō, abagō, vervagō). Like Compingō, except in 75 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("peragō", 7, "~agō", like Compingō;
     ind_act_pres_1: "~agō", "~agimus";
     ind_act_pres_2: "~agis", "~agitis";
@@ -5461,16 +5419,71 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~age", "~agite";
     imperative_act_fut_2: "~agitō", "~agitōte";
     imperative_act_fut_3: _, "~aguntō";
-    imperative_pass_pres_2: "~agere", "~agiminī";
+    imperative_pass_pres_2: "~agere", _;
     imperative_pass_fut_2: "~agitor", _;
     imperative_pass_fut_3: _, "~aguntor";
-    infinitive_act: "~agere", _, _;
     infinitive_pass: "~agī", _, _;
     participle: "~agēns", _, _, "~agendus";
     gerund: _, "~agendī", "~agendō", "~agendum", _, _;
     ),
-    // Pergō: 6 words (surgō, resurgō, pergō, cōnsurgō, exsurgō, exurgō). Like Mergō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Īnserō: 7 words (disserō, serō, asserō, īnserō, cōnserō, adserō). Like Dēsinō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("īnserō", 7, "~erō", like Dēsinō;
+    ind_act_pres_1: "~erō", "~erimus";
+    ind_act_pres_2: "~eris", "~eritis";
+    ind_act_pres_3: "~erit", "~erunt";
+    ind_act_impf_1: "~erēbam", "~erēbāmus";
+    ind_act_impf_2: "~erēbās", "~erēbātis";
+    ind_act_impf_3: "~erēbat", "~erēbant";
+    ind_act_fut_1: "~eram", "~erēmus";
+    ind_act_fut_2: "~erēs", "~erētis";
+    ind_act_fut_3: "~eret", "~erent";
+    ind_pass_pres_1: "~eror", "~erimur";
+    ind_pass_pres_2: "~ereris|~erere", "~eriminī";
+    ind_pass_pres_3: "~eritur", "~eruntur";
+    ind_pass_impf_1: "~erēbar", "~erēbāmur";
+    ind_pass_impf_2: "~erēbāris|~erēbāre", "~erēbāminī";
+    ind_pass_impf_3: "~erēbātur", "~erēbantur";
+    ind_pass_fut_1: "~erar", "~erēmur";
+    ind_pass_fut_2: "~erēris|~erēre", "~erēminī";
+    ind_pass_fut_3: "~erētur", "~erentur";
+    subj_act_pres_1: "~eram", "~erāmus";
+    subj_act_pres_2: "~erās", "~erātis";
+    subj_act_pres_3: "~erat", "~erant";
+    subj_act_impf_1: "~ererem", "~ererēmus";
+    subj_act_impf_2: "~ererēs", "~ererētis";
+    subj_act_impf_3: "~ereret", "~ererent";
+    subj_pass_pres_1: "~erar", "~erāmur";
+    subj_pass_pres_2: "~erāris|~erāre", "~erāminī";
+    subj_pass_pres_3: "~erātur", "~erantur";
+    subj_pass_impf_1: "~ererer", "~ererēmur";
+    subj_pass_impf_2: "~ererēris|~ererēre", "~ererēminī";
+    subj_pass_impf_3: "~ererētur", "~ererentur";
+    imperative_act_pres_2: "~ere", "~erite";
+    imperative_act_fut_2: "~eritō", "~eritōte";
+    imperative_act_fut_3: _, "~eruntō";
+    imperative_pass_pres_2: "~erere", _;
+    imperative_pass_fut_2: "~eritor", _;
+    imperative_pass_fut_3: _, "~eruntor";
+    infinitive_pass: "~erī", _, _;
+    participle: "~erēns", _, _, "~erendus|~erundus";
+    gerund: _, "~erendī", "~erendō", "~erendum", _, _;
+    ),
+    // Coorior: 7 words (aborior, ōrdior, experior, adorior, coorior, oborior). Like Mōlior, except in 0 cells: .
+    conjugation!("coorior", 7, "~ior", like Mōlior;
+    stem participle_perf_pass: "~t- like modulor";
+    ),
+    // Cēnseō: 6 words (recēnseō, cēnseō, paeniteō, accēnseō, percēnseō, poeniteō). Like Habeō, except in 5 cells: ind_pass_pres_2 sg, ind_pass_impf_2 sg, ind_pass_fut_2 sg, subj_pass_pres_2 sg, subj_pass_impf_2 sg.
+    conjugation!("cēnseō", 6, "~eō", like Habeō;
+    stem participle_perf_pass: "~- like agitō";
+    ind_pass_pres_2: "~ēris|~ēre", _;
+    ind_pass_impf_2: "~ēbāris|~ēbāre", _;
+    ind_pass_fut_2: "~ēberis|~ēbere", _;
+    subj_pass_pres_2: "~eāris|~eāre", _;
+    subj_pass_impf_2: "~ērēris|~ērēre", _;
+    ),
+    // Pergō: 6 words (surgō, resurgō, pergō, cōnsurgō, exsurgō, exurgō). Like Mergō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("pergō", 6, "~gō", like Mergō;
+    stem participle_perf_pass: "~rēct- like agitō";
     ind_act_perf_1: "~rēxī", "~rēximus";
     ind_act_perf_2: "~rēxistī", "~rēxistis";
     ind_act_perf_3: "~rēxit", "~rēxērunt|~rēxēre";
@@ -5486,11 +5499,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~rēxissēs", "~rēxissētis";
     subj_act_plup_3: "~rēxisset", "~rēxissent";
     infinitive_act: _, "~rēxisse", _;
-    participle: _, "~rēctus", "~rēctūrus", _;
-    supine: _, _, _, "~rēctum", "~rēctū", _;
     ),
-    // Vīvō: 6 words (vīvō, convīvō, revīvō, advīvō, supervīvō, fīvō). Like Solvō, except in 64 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Vīvō: 6 words (vīvō, convīvō, revīvō, advīvō, supervīvō, fīvō). Like Solvō, except in 58 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("vīvō", 6, "~vō", like Solvō;
+    stem verb_act_sg: "~v- like īnsistō";
+    stem participle_perf_pass: "~ct- like labōrō";
     ind_act_perf_1: "~xī", "~ximus";
     ind_act_perf_2: "~xistī", "~xistis";
     ind_act_perf_3: "~xit", "~xērunt|~xēre";
@@ -5520,12 +5533,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: _, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
-    imperative_pass_fut_3: "~vitor", derived;
+    imperative_pass_fut_3: _, derived;
     infinitive_act: _, "~xisse", _;
-    participle: _, "~ctum", "~ctūrus", "~vendum";
-    supine: _, _, _, "~ctum", "~ctū", _;
+    participle: _, _, _, "~vendum";
     ),
     // Cōnstō: 6 words (praestō, cōnstō, distō, īnstō, prōstō, antestō). Like Agitō, except in 34 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("cōnstō", 6, "~ō", like Agitō;
@@ -5550,8 +5562,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_2: "~ārēris", _;
     infinitive_act: _, "~itisse", _;
     ),
-    // Capiō: 6 words (ūsūcapiō, iaciō, laciō, capiō, cōnsuēfaciō, disfaciō). Like Excipiō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Capiō: 6 words (ūsūcapiō, iaciō, laciō, capiō, cōnsuēfaciō, disfaciō). Like Excipiō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("capiō", 6, "~a~iō", like Excipiō;
+    stem participle_perf_pass: "~a~t- like agitō";
     ind_act_pres_1: "~a~iō", "~a~imus";
     ind_act_pres_2: "~a~is", "~a~itis";
     ind_act_pres_3: "~a~it", "~a~iunt";
@@ -5585,14 +5598,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~a~e", "~a~ite";
     imperative_act_fut_2: "~a~itō", "~a~itōte";
     imperative_act_fut_3: _, "~a~iuntō";
-    imperative_pass_pres_2: "~a~ere", "~a~iminī";
+    imperative_pass_pres_2: "~a~ere", _;
     imperative_pass_fut_2: "~a~itor", _;
     imperative_pass_fut_3: _, "~a~iuntor";
-    infinitive_act: "~a~ere", _, _;
     infinitive_pass: "~a~ī", _, _;
-    participle: "~a~iēns", "~a~tus", "~a~tūrus", "~a~iendus|~a~iundus";
+    participle: "~a~iēns", _, _, "~a~iendus|~a~iundus";
     gerund: _, "~a~iendī", "~a~iendō", "~a~iendum", _, _;
-    supine: _, _, _, "~a~tum", "~a~tū", _;
     ),
     // Innectō: 6 words (cōnectō, connectō, subnectō, innectō, annectō, adnectō). Like Nectō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("innectō", 6, "~ctō", like Nectō;
@@ -5612,8 +5623,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~xuisset", "~xuissent";
     infinitive_act: _, "~xuisse", _;
     ),
-    // Eximō: 6 words (dirimō, eximō, redimō, adimō, interimō, perimō). Like Excipiō, except in 51 cells: ind_act_pres_1 sg, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
+    // Eximō: 6 words (dirimō, eximō, redimō, adimō, interimō, perimō). Like Excipiō, except in 47 cells: ind_act_pres_1 sg, ind_act_pres_3 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
     conjugation!("eximō", 6, "~i~ō", like Excipiō;
+    stem participle_perf_pass: "~ē~pt- like agitō";
     ind_act_pres_1: "~i~ō", _;
     ind_act_pres_3: _, "~i~unt";
     ind_act_impf_1: "~i~ēbam", "~i~ēbāmus";
@@ -5638,70 +5650,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_3: "~i~ātur", "~i~antur";
     imperative_act_fut_3: _, "~i~untō";
     imperative_pass_fut_3: _, "~i~untor";
-    participle: "~i~ēns", "~ē~ptus", "~ē~ptūrus", "~i~endus|~i~undus";
+    participle: "~i~ēns", _, _, "~i~endus|~i~undus";
     gerund: _, "~i~endī", "~i~endō", "~i~endum", _, _;
-    supine: _, _, _, "~ē~ptum", "~ē~ptū", _;
     ),
-    // Incurrō: 6 words (incurrō, accurrō, adcurrō, praecurrō, excurrō, intercurrō).
-    conjugation!("incurrō", 6, "~~rō";
-    ind_act_pres_1: "~~rō", "~~rimus";
-    ind_act_pres_2: "~~ris", "~~ritis";
-    ind_act_pres_3: "~~rit", "~~runt";
-    ind_act_impf_1: "~~rēbam", "~~rēbāmus";
-    ind_act_impf_2: "~~rēbās", "~~rēbātis";
-    ind_act_impf_3: "~~rēbat", "~~rēbant";
-    ind_act_fut_1: "~~ram", "~~rēmus";
-    ind_act_fut_2: "~~rēs", "~~rētis";
-    ind_act_fut_3: "~~ret", "~~rent";
-    ind_act_perf_1: "~~rī|~cu~rī", "~~rimus|~cu~rimus";
-    ind_act_perf_2: "~~ristī|~cu~ristī", "~~ristis|~cu~ristis";
-    ind_act_perf_3: "~~rit|~cu~rit", "~~rērunt|~~rēre|~cu~rērunt|~cu~rēre";
-    ind_act_plup_1: "~~reram|~cu~reram", "~~rerāmus|~cu~rerāmus";
-    ind_act_plup_2: "~~rerās|~cu~rerās", "~~rerātis|~cu~rerātis";
-    ind_act_plup_3: "~~rerat|~cu~rerat", "~~rerant|~cu~rerant";
-    ind_act_futp_1: "~~rerō|~cu~rerō", "~~rerimus|~cu~rerimus";
-    ind_act_futp_2: "~~reris|~cu~reris", "~~reritis|~cu~reritis";
-    ind_act_futp_3: "~~rerit|~cu~rerit", "~~rerint|~cu~rerint";
-    ind_pass_pres_1: "~~ror", "~~rimur";
-    ind_pass_pres_2: "~~reris|~~rere", "~~riminī";
-    ind_pass_pres_3: "~~ritur", "~~runtur";
-    ind_pass_impf_1: "~~rēbar", "~~rēbāmur";
-    ind_pass_impf_2: "~~rēbāris|~~rēbāre", "~~rēbāminī";
-    ind_pass_impf_3: "~~rēbātur", "~~rēbantur";
-    ind_pass_fut_1: "~~rar", "~~rēmur";
-    ind_pass_fut_2: "~~rēris|~~rēre", "~~rēminī";
-    ind_pass_fut_3: "~~rētur", "~~rentur";
-    subj_act_pres_1: "~~ram", "~~rāmus";
-    subj_act_pres_2: "~~rās", "~~rātis";
-    subj_act_pres_3: "~~rat", "~~rant";
-    subj_act_impf_1: "~~rerem", "~~rerēmus";
-    subj_act_impf_2: "~~rerēs", "~~rerētis";
-    subj_act_impf_3: "~~reret", "~~rerent";
-    subj_act_perf_1: "~~rerim|~cu~rerim", "~~rerīmus|~cu~rerīmus";
-    subj_act_perf_2: "~~rerīs|~cu~rerīs", "~~rerītis|~cu~rerītis";
-    subj_act_perf_3: "~~rerit|~cu~rerit", "~~rerint|~cu~rerint";
-    subj_act_plup_1: "~~rissem|~cu~rissem", "~~rissēmus|~cu~rissēmus";
-    subj_act_plup_2: "~~rissēs|~cu~rissēs", "~~rissētis|~cu~rissētis";
-    subj_act_plup_3: "~~risset|~cu~risset", "~~rissent|~cu~rissent";
-    subj_pass_pres_1: "~~rar", "~~rāmur";
-    subj_pass_pres_2: "~~rāris|~~rāre", "~~rāminī";
-    subj_pass_pres_3: "~~rātur", "~~rantur";
-    subj_pass_impf_1: "~~rerer", "~~rerēmur";
-    subj_pass_impf_2: "~~rerēris|~~rerēre", "~~rerēminī";
-    subj_pass_impf_3: "~~rerētur", "~~rerentur";
-    imperative_act_pres_2: "~~re", "~~rite";
-    imperative_act_fut_2: "~~ritō", "~~ritōte";
-    imperative_act_fut_3: _, "~~runtō";
-    imperative_pass_pres_2: "~~rere", "~~riminī";
-    imperative_pass_fut_2: "~~ritor", _;
-    imperative_pass_fut_3: _, "~~runtor";
-    infinitive_act: "~~rere", "~~risse|~cu~risse", _;
-    infinitive_pass: "~~rī", _, _;
-    participle: "~~rēns", "~~sus", "~~sūrus", "~~rendus|~~rundus";
-    gerund: _, "~~rendī", "~~rendō", "~~rendum", _, _;
-    supine: _, _, _, "~~sum", "~~sū", _;
-    ),
-    // Vinciō: 6 words (vinciō, revinciō, dēvinciō, ēvinciō, praevinciō, circumvinciō). Like Tingō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Vinciō: 6 words (vinciō, revinciō, dēvinciō, ēvinciō, praevinciō, circumvinciō). Like Tingō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("vinciō", 6, "~i~ciō", like Tingō;
     ind_act_pres_1: "~i~ciō", "~i~cīmus";
     ind_act_pres_2: "~i~cīs", "~i~cītis";
@@ -5736,16 +5688,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~i~cī", "~i~cīte";
     imperative_act_fut_2: "~i~cītō", "~i~cītōte";
     imperative_act_fut_3: _, "~i~ciuntō";
-    imperative_pass_pres_2: "~i~cīre", "~i~cīminī";
+    imperative_pass_pres_2: "~i~cīre", _;
     imperative_pass_fut_2: "~i~cītor", _;
     imperative_pass_fut_3: _, "~i~ciuntor";
-    infinitive_act: "~i~cīre", _, _;
     infinitive_pass: "~i~cīrī", _, _;
     participle: "~i~ciēns", _, _, "~i~ciendus|~i~ciundus";
     gerund: _, "~i~ciendī", "~i~ciendō", "~i~ciendum", _, _;
     ),
     // Scandō: 6 words (expandō, scandō, oppandō, superscandō, suprascandō, dispandō).
     conjugation!("scandō", 6, "~a~dō";
+    stem participle_perf_pass: "~ā~s- like agitō";
     ind_act_pres_1: "~a~dō", "~a~dimus";
     ind_act_pres_2: "~a~dis", "~a~ditis";
     ind_act_pres_3: "~a~dit", "~a~dunt";
@@ -5793,17 +5745,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~a~de", "~a~dite";
     imperative_act_fut_2: "~a~ditō", "~a~ditōte";
     imperative_act_fut_3: _, "~a~duntō";
-    imperative_pass_pres_2: "~a~dere", "~a~diminī";
+    imperative_pass_pres_2: "~a~dere", _;
     imperative_pass_fut_2: "~a~ditor", _;
     imperative_pass_fut_3: _, "~a~duntor";
-    infinitive_act: "~a~dere", "~a~disse", _;
+    infinitive_act: _, "~a~disse", _;
     infinitive_pass: "~a~dī", _, _;
-    participle: "~a~dēns", "~ā~sus", "~ā~sūrus", "~a~dendus|~a~dundus";
+    participle: "~a~dēns", _, _, "~a~dendus|~a~dundus";
     gerund: _, "~a~dendī", "~a~dendō", "~a~dendum", _, _;
-    supine: _, _, _, "~ā~sum", "~ā~sū", _;
     ),
-    // Dēfluō: 6 words (affluō, adfluō, īnfluō, dēfluō, effluō, perfluō). Like Prōfluō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Dēfluō: 6 words (affluō, adfluō, īnfluō, dēfluō, effluō, perfluō). Like Prōfluō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("dēfluō", 6, "~uō", like Prōfluō;
+    stem participle_perf_pass: "~ūx- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -5814,13 +5766,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~uitor", _;
-    participle: _, "~ūxum", _, "~uendum";
+    infinitive_act: "~uere", _, _;
+    participle: _, _, _, "~uendum";
     ),
-    // Cōnfugiō: 6 words (refugiō, aufugiō, perfugiō, cōnfugiō, diffugiō, profugiō). Like Fugiō, except in 32 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
+    // Cōnfugiō: 6 words (refugiō, aufugiō, perfugiō, cōnfugiō, diffugiō, profugiō). Like Fugiō, except in 31 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
     conjugation!("cōnfugiō", 6, "~u~iō", like Fugiō;
+    stem participle_perf_pass: "~u~it- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_pres_3: _, derived;
@@ -5836,37 +5790,29 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: _, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~u~itor", derived;
-    participle: _, "~u~itum", _, "~u~iendum|~u~iundum";
+    infinitive_act: "~u~ere", _, _;
+    participle: _, _, _, "~u~iendum|~u~iundum";
     ),
-    // Apīscor: 6 words (apīscor, dēpecīscor, pacīscor, compacīscor, compecīscor, dēpacīscor). Like Nāscor, except in 40 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Apīscor: 6 words (apīscor, dēpecīscor, pacīscor, compacīscor, compecīscor, dēpacīscor). Like Nāscor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
     conjugation!("apīscor", 6, "~īscor", like Nāscor;
-    ind_act_pres_1: "~īscor", "~īscimur";
-    ind_act_pres_2: "~īsceris|~īscere", "~īsciminī";
-    ind_act_pres_3: "~īscitur", "~īscuntur";
+    stem verb_act_sg: "~īsc- like cōnsequor";
+    ind_act_pres_1: _, "~īscimur";
     ind_act_impf_1: "~īscēbar", "~īscēbāmur";
     ind_act_impf_2: "~īscēbāris|~īscēbāre", "~īscēbāminī";
     ind_act_impf_3: "~īscēbātur", "~īscēbantur";
     ind_act_fut_1: "~īscar", "~īscēmur";
     ind_act_fut_2: "~īscēris|~īscēre", "~īscēminī";
-    ind_act_fut_3: "~īscētur", "~īscentur";
-    subj_act_pres_1: "~īscar", "~īscāmur";
-    subj_act_pres_2: "~īscāris|~īscāre", "~īscāminī";
-    subj_act_pres_3: "~īscātur", "~īscantur";
-    subj_act_impf_1: "~īscerer", "~īscerēmur";
-    subj_act_impf_2: "~īscerēris|~īscerēre", "~īscerēminī";
-    subj_act_impf_3: "~īscerētur", "~īscerentur";
-    imperative_act_pres_2: "~īscere", "~īsciminī";
+    ind_act_fut_3: "~īscētur", _;
+    subj_act_pres_3: "~īscātur", _;
     imperative_act_fut_2: "~īscitor", _;
-    imperative_act_fut_3: _, "~īscuntor";
-    infinitive_act: "~īscī", _, _;
     participle: "~īscēns", _, _, "~īscendus|~īscundus";
     gerund: _, "~īscendī", "~īscendō", "~īscendum", _, _;
     ),
-    // Sistō: 6 words (existō, persistō, subsistō, sistō, adsistō, coexsistō). Like Īnsistō, except in 35 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
-    conjugation!("sistō", 6, "~~s~ō", like Īnsistō;
+    // Sistō: 6 words (existō, persistō, subsistō, sistō, adsistō, coexsistō). Like Īnsistō, except in 34 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
+    conjugation!("sistō", 6, "~~s~ō", like Īnsistō as ABL_AS_VOC;
     ind_pass_pres_1: "~~s~or", "~~s~imur";
     ind_pass_pres_2: "~~s~eris", "~~s~iminī";
     ind_pass_pres_3: _, "~~s~untur";
@@ -5882,11 +5828,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: "~~s~erer", "~~s~erēmur";
     subj_pass_impf_2: "~~s~erēris", "~~s~erēminī";
     subj_pass_impf_3: _, "~~s~erentur";
-    imperative_pass_pres_2: "~~s~ere", "~~s~iminī";
+    imperative_pass_pres_2: "~~s~ere", _;
     imperative_pass_fut_2: "~~s~itor", _;
     imperative_pass_fut_3: derived, "~~s~untor";
+    infinitive_act: derived, _, _;
     participle: _, derived, derived, "~~s~endus";
-    supine: _, _, _, derived, derived, _;
+    supine: _, _, _, derived, _, _;
     ),
     // Discō: 6 words (discō, condiscō, addiscō, ēdiscō, dēdiscō, perdiscō).
     conjugation!("discō", 6, "~s~ō";
@@ -5937,16 +5884,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~s~e", "~s~ite";
     imperative_act_fut_2: "~s~itō", "~s~itōte";
     imperative_act_fut_3: _, "~s~untō";
-    imperative_pass_pres_2: "~s~ere", "~s~iminī";
+    imperative_pass_pres_2: "~s~ere", _;
     imperative_pass_fut_2: "~s~itor", _;
     imperative_pass_fut_3: _, "~s~untor";
-    infinitive_act: "~s~ere", "~di~isse", _;
+    infinitive_act: _, "~di~isse", _;
     infinitive_pass: "~s~ī", _, _;
     participle: "~s~ēns", _, _, "~s~endus";
     gerund: _, "~s~endī", "~s~endō", "~s~endum", _, _;
     ),
     // Deicō: 6 words (deicō, indeicō, addeicō, prodeicō, contrādeicō, interdeicō).
     conjugation!("deicō", 6, "~e~cō";
+    stem participle_perf_pass: "~~ct- like agitō";
     ind_act_pres_1: "~e~cō", "~e~cimus";
     ind_act_pres_2: "~e~cis", "~e~citis";
     ind_act_pres_3: "~e~cit", "~e~cunt";
@@ -5994,37 +5942,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~e~ce", "~e~cite";
     imperative_act_fut_2: "~e~citō", "~e~citōte";
     imperative_act_fut_3: _, "~e~cuntō";
-    imperative_pass_pres_2: "~e~cere", "~e~ciminī";
+    imperative_pass_pres_2: "~e~cere", _;
     imperative_pass_fut_2: "~e~citor", _;
     imperative_pass_fut_3: _, "~e~cuntor";
-    infinitive_act: "~e~cere", "~e~xisse", _;
+    infinitive_act: _, "~e~xisse", _;
     infinitive_pass: "~e~cī", _, _;
-    participle: "~e~cēns", "~~ctus", "~~ctūrus", "~e~cendus|~e~cundus";
+    participle: "~e~cēns", _, _, "~e~cendus|~e~cundus";
     gerund: _, "~e~cendī", "~e~cendō", "~e~cendum", _, _;
-    supine: _, _, _, "~~ctum", "~~ctū", _;
     ),
-    // Occurrō: 5 words (carrō, antecurrō, circumcurrō, converrō, convorrō). Like Gerō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Occurrō: 5 words (carrō, antecurrō, circumcurrō, converrō, convorrō). Like Gerō, except in 35 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("occurrō", 5, "~rō", like Gerō;
+    stem participle_perf_pass: "~s- like agitō";
     ind_act_perf_1: "~rī", "~rimus";
     ind_act_perf_2: "~ristī", "~ristis";
-    ind_act_perf_3: "~rit", "~rērunt|~rēre";
+    ind_act_perf_3: "~rit", "~rērunt";
     ind_act_plup_1: "~reram", "~rerāmus";
     ind_act_plup_2: "~rerās", "~rerātis";
     ind_act_plup_3: "~rerat", "~rerant";
     ind_act_futp_1: "~rerō", "~rerimus";
     ind_act_futp_2: "~reris", "~reritis";
     ind_act_futp_3: "~rerit", "~rerint";
+    ind_pass_pres_2: "~reris", _;
+    ind_pass_impf_2: "~rēbāris", _;
+    ind_pass_fut_2: "~rēris", _;
     subj_act_perf_1: "~rerim", "~rerīmus";
     subj_act_perf_2: "~rerīs", "~rerītis";
     subj_act_plup_1: "~rissem", "~rissēmus";
     subj_act_plup_2: "~rissēs", "~rissētis";
     subj_act_plup_3: "~risset", "~rissent";
+    subj_pass_pres_2: "~rāris", _;
+    subj_pass_impf_2: "~rerēris", _;
     infinitive_act: _, "~risse", _;
-    participle: _, "~sus", "~sūrus", _;
-    supine: _, _, _, "~sum", "~sū", _;
+    participle: _, _, _, "~rendus";
     ),
-    // Sūmō: 5 words (prōmō, dēmō, cōmō, exprōmō, dēprōmō). Like Petō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Sūmō: 5 words (prōmō, dēmō, cōmō, exprōmō, dēprōmō). Like Petō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("sūmō", 5, "~ō", like Petō;
+    stem participle_perf_pass: "~pt- like agitō";
     ind_act_perf_1: "~psī", "~psimus";
     ind_act_perf_2: "~psistī", "~psistis";
     ind_act_perf_3: "~psit", "~psērunt|~psēre";
@@ -6040,11 +5993,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~psissēs", "~psissētis";
     subj_act_plup_3: "~psisset", "~psissent";
     infinitive_act: _, "~psisse", _;
-    participle: _, "~ptus", "~ptūrus", _;
-    supine: _, _, _, "~ptum", "~ptū", _;
     ),
-    // Vēnumdō: 5 words (dō, circundō, circumdō, vēnundō, vēnumdō). Like Agitō, except in 83 cells: ind_act_pres_1 pl, ind_act_pres_2 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
+    // Vēnumdō: 5 words (dō, circundō, circumdō, vēnundō, vēnumdō). Like Agitō, except in 77 cells: ind_act_pres_1 pl, ind_act_pres_2 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ….
     conjugation!("vēnumdō", 5, "~ō", like Agitō;
+    stem participle_perf_pass: "~at- like agitō";
     ind_act_pres_1: _, "~amus";
     ind_act_pres_2: _, "~atis";
     ind_act_impf_1: "~abam", "~abāmus";
@@ -6084,15 +6036,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_3: "~arētur", "~arentur";
     imperative_act_pres_2: _, "~ate";
     imperative_act_fut_2: "~atō", "~atōte";
-    imperative_pass_pres_2: "~are", "~aminī";
+    imperative_pass_pres_2: "~are", _;
     imperative_pass_fut_2: "~ator", _;
-    infinitive_act: "~are", "~edisse", _;
+    infinitive_act: _, "~edisse", _;
     infinitive_pass: "~arī", _, _;
-    participle: _, "~atus", "~atūrus", _;
-    supine: _, _, _, "~atum", "~atū", _;
     ),
-    // Serviō: 5 words (serviō, dormiō, hymniō, saeviō, īnsāniō). Like Mūniō, except in 33 cells: ind_act_perf_1 sg, ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ….
+    // Serviō: 5 words (serviō, dormiō, hymniō, saeviō, īnsāniō). Like Mūniō, except in 32 cells: ind_act_perf_1 sg, ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ….
     conjugation!("serviō", 5, "~iō", like Mūniō;
+    stem participle_perf_pass: "~īt- like labōrō";
     ind_act_perf_1: "~īvī|~iī", _;
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
@@ -6109,59 +6060,38 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: _, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~ītor", derived;
-    participle: _, "~ītum", _, "~iendum|~iundum";
+    infinitive_act: "~īre", _, _;
+    participle: _, _, _, "~iendum|~iundum";
     ),
-    // Adipīscor: 5 words (proficīscor, adipīscor, comminīscor, indipīscor, minīscor). Like Cōnfugiō, except in 81 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("adipīscor", 5, "~i~īscor", like Cōnfugiō;
-    ind_act_pres_1: "~i~īscor", "~i~īscimur";
-    ind_act_pres_2: "~i~īsceris|~i~īscere", "~i~īsciminī";
-    ind_act_pres_3: "~i~īscitur", "~i~īscuntur";
+    // Adipīscor: 5 words (proficīscor, adipīscor, comminīscor, indipīscor, minīscor). Like Cōnfugiō, except in 29 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("adipīscor", 5, "~i~īscor", like Cōnfugiō as ACT_AS_PASS;
+    stem verb_act_sg: "~i~īsc- like cōnsequor";
+    stem participle_perf_pass: "~e~t- like modulor";
+    ind_act_pres_1: _, "~i~īscimur";
     ind_act_impf_1: "~i~īscēbar", "~i~īscēbāmur";
     ind_act_impf_2: "~i~īscēbāris|~i~īscēbāre", "~i~īscēbāminī";
     ind_act_impf_3: "~i~īscēbātur", "~i~īscēbantur";
     ind_act_fut_1: "~i~īscar", "~i~īscēmur";
     ind_act_fut_2: "~i~īscēris|~i~īscēre", "~i~īscēminī";
-    ind_act_fut_3: "~i~īscētur", "~i~īscentur";
-    ind_act_perf_1: derived, derived;
-    ind_act_perf_2: derived, derived;
-    ind_act_perf_3: derived, derived;
-    ind_act_plup_1: derived, derived;
-    ind_act_plup_2: derived, derived;
-    ind_act_plup_3: derived, derived;
-    ind_act_futp_1: derived, derived;
-    ind_act_futp_2: derived, derived;
-    ind_act_futp_3: derived, derived;
+    ind_act_fut_3: "~i~īscētur", _;
     ind_pass_pres_3: derived, _;
     ind_pass_impf_3: derived, _;
     ind_pass_fut_3: derived, _;
-    subj_act_pres_1: "~i~īscar", "~i~īscāmur";
-    subj_act_pres_2: "~i~īscāris|~i~īscāre", "~i~īscāminī";
-    subj_act_pres_3: "~i~īscātur", "~i~īscantur";
-    subj_act_impf_1: "~i~īscerer", "~i~īscerēmur";
-    subj_act_impf_2: "~i~īscerēris|~i~īscerēre", "~i~īscerēminī";
-    subj_act_impf_3: "~i~īscerētur", "~i~īscerentur";
-    subj_act_perf_1: derived, derived;
-    subj_act_perf_2: derived, derived;
-    subj_act_plup_1: derived, derived;
-    subj_act_plup_2: derived, derived;
-    subj_act_plup_3: derived, derived;
+    subj_act_pres_3: "~i~īscātur", _;
     subj_pass_pres_3: derived, _;
     subj_pass_impf_3: derived, _;
-    imperative_act_pres_2: "~i~īscere", "~i~īsciminī";
     imperative_act_fut_2: "~i~īscitor", derived;
-    imperative_act_fut_3: _, "~i~īscuntor";
+    imperative_act_fut_3: derived, _;
     imperative_pass_fut_3: derived, _;
-    infinitive_act: "~i~īscī", derived, _;
     infinitive_pass: derived, _, _;
-    participle: "~i~īscēns", derived, "~e~tūrus", "~i~īscendus|~i~īscundus";
+    participle: "~i~īscēns", derived, _, "~i~īscendus|~i~īscundus";
     gerund: _, "~i~īscendī", "~i~īscendō", "~i~īscendum", _, _;
-    supine: _, _, _, "~e~tum", "~e~tū", _;
     ),
-    // Astō: 5 words (restō, obstō, astō, perstō, adstō). Like Cōnstō, except in 34 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
-    conjugation!("astō", 5, "~ō", like Cōnstō;
+    // Astō: 5 words (restō, obstō, astō, perstō, adstō). Like Cōnstō, except in 33 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
+    conjugation!("astō", 5, "~ō", like Cōnstō as ABL_AS_VOC;
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_pres_3: _, derived;
@@ -6177,14 +6107,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: _, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~ātor", derived;
+    infinitive_act: "~āre", _, _;
     participle: _, derived, _, "~andum";
-    supine: _, _, _, derived, derived, _;
+    supine: _, _, _, derived, _, _;
     ),
-    // Occinō: 5 words (concinō, accinō, praecinō, incinō, occinō). Like Eximō, except in 39 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Occinō: 5 words (concinō, accinō, praecinō, incinō, occinō). Like Eximō, except in 35 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("occinō", 5, "~i~ō", like Eximō;
+    stem participle_perf_pass: "~e~t- like agitō";
     ind_act_perf_1: "~i~uī", "~i~uimus";
     ind_act_perf_2: "~i~uistī", "~i~uistis";
     ind_act_perf_3: "~i~uit", "~i~uērunt";
@@ -6205,31 +6137,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: "~i~āris", _;
     subj_pass_impf_2: "~i~erēris", _;
     infinitive_act: _, "~i~uisse", _;
-    participle: _, "~e~tus", "~e~tūrus", "~i~endus";
-    supine: _, _, _, "~e~tum", "~e~tū", _;
+    participle: _, _, _, "~i~endus";
     ),
-    // Coorior: 5 words (aborior, experior, adorior, coorior, oborior). Like Mōlior, except in 3 cells: participle fut_act, supine acc, supine abl.
-    conjugation!("coorior", 5, "~ior", like Mōlior;
-    participle: _, _, "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
-    ),
-    // Mulceō: 5 words (mulceō, commulceō, dēmulceō, permulceō, remulceō). Like Ēvādō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("mulceō", 5, "~ceō", like Ēvādō;
-    ind_act_pres_1: "~ceō", "~cēmus";
-    ind_act_pres_2: "~cēs", "~cētis";
-    ind_act_pres_3: "~cet", "~cent";
-    ind_act_impf_1: "~cēbam", "~cēbāmus";
-    ind_act_impf_2: "~cēbās", "~cēbātis";
-    ind_act_impf_3: "~cēbat", "~cēbant";
+    // Mulceō: 5 words (mulceō, commulceō, dēmulceō, permulceō, remulceō). Like Compercō, except in 48 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("mulceō", 5, "~ceō", like Compercō as PRES_AS_FUT;
+    stem participle_perf_pass: "~s- like agitō";
+    ind_act_pres_1: "~ceō", _;
     ind_act_fut_1: "~cēbō", "~cēbimus";
     ind_act_fut_2: "~cēbis", "~cēbitis";
     ind_act_fut_3: "~cēbit", "~cēbunt";
-    ind_pass_pres_1: "~ceor", "~cēmur";
-    ind_pass_pres_2: "~cēris|~cēre", "~cēminī";
-    ind_pass_pres_3: "~cētur", "~centur";
-    ind_pass_impf_1: "~cēbar", "~cēbāmur";
-    ind_pass_impf_2: "~cēbāris|~cēbāre", "~cēbāminī";
-    ind_pass_impf_3: "~cēbātur", "~cēbantur";
+    ind_pass_pres_1: "~ceor", _;
     ind_pass_fut_1: "~cēbor", "~cēbimur";
     ind_pass_fut_2: "~cēberis|~cēbere", "~cēbiminī";
     ind_pass_fut_3: "~cēbitur", "~cēbuntur";
@@ -6248,25 +6165,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~cē", "~cēte";
     imperative_act_fut_2: "~cētō", "~cētōte";
     imperative_act_fut_3: _, "~centō";
-    imperative_pass_pres_2: "~cēre", "~cēminī";
+    imperative_pass_pres_2: "~cēre", _;
     imperative_pass_fut_2: "~cētor", _;
     imperative_pass_fut_3: _, "~centor";
-    infinitive_act: "~cēre", _, _;
     infinitive_pass: "~cērī", _, _;
-    participle: "~cēns", _, _, "~cendus";
-    gerund: _, "~cendī", "~cendō", "~cendum", _, _;
+    participle: _, _, _, "~cendus";
     ),
-    // Sedeō: 5 words (sedeō, circumsedeō, persedeō, supersedeō, suprāsedeō). Like Comedō, except in 67 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("sedeō", 5, "~edeō", like Comedō;
-    ind_act_pres_1: "~edeō", "~edēmus";
-    ind_act_pres_2: "~edēs", "~edētis";
-    ind_act_pres_3: "~edet", "~edent";
+    // Sedeō: 5 words (sedeō, circumsedeō, persedeō, supersedeō, suprāsedeō). Like Comedō, except in 50 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("sedeō", 5, "~edeō", like Comedō as PRES_AS_FUT;
+    stem participle_perf_pass: "~ess- like agitō";
+    ind_act_pres_1: "~edeō", _;
     ind_act_fut_1: "~edēbō", "~edēbimus";
     ind_act_fut_2: "~edēbis", "~edēbitis";
     ind_act_fut_3: "~edēbit", "~edēbunt";
-    ind_pass_pres_1: "~edeor", "~edēmur";
-    ind_pass_pres_2: "~edēris", "~edēminī";
-    ind_pass_pres_3: "~edētur", "~edentur";
+    ind_pass_pres_1: "~edeor", _;
+    ind_pass_pres_2: "~edēris", _;
     ind_pass_impf_2: "~edēbāris", _;
     ind_pass_fut_1: "~edēbor", "~edēbimur";
     ind_pass_fut_2: "~edēberis", "~edēbiminī";
@@ -6285,14 +6198,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_3: "~edērētur", "~edērentur";
     imperative_act_pres_2: "~edē", "~edēte";
     imperative_act_fut_2: "~edētō", "~edētōte";
-    imperative_act_fut_3: derived, "~edentō";
-    imperative_pass_pres_2: "~edēre", "~edēminī";
+    imperative_act_fut_3: _, "~edentō";
+    imperative_pass_pres_2: "~edēre", _;
     imperative_pass_fut_2: "~edētor", _;
-    imperative_pass_fut_3: derived, "~edentor";
-    infinitive_act: "~edēre", _, _;
+    imperative_pass_fut_3: _, "~edentor";
     infinitive_pass: "~edērī", _, _;
-    participle: _, "~essus", "~essūrus", "~edendus";
-    supine: _, _, _, "~essum", "~essū", _;
+    participle: _, _, _, "~edendus";
     ),
     // Clueō: 5 words (clueō, langueō, abnueō, cēveō, connīveō). Like Habeō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("clueō", 5, "~eō", like Habeō;
@@ -6312,26 +6223,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~isset", "~issent";
     infinitive_act: _, "~isse", _;
     ),
-    // Cadō: 5 words (cadō, stertō, clangō, accanō, obtexō). Like Volō, except in 29 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
-    conjugation!("cadō", 5, "~ō", like Volō;
-    ind_pass_pres_1: derived, derived;
-    ind_pass_pres_2: derived, derived;
-    ind_pass_impf_1: derived, derived;
-    ind_pass_impf_2: derived, derived;
-    ind_pass_fut_1: derived, derived;
-    ind_pass_fut_2: derived, derived;
-    subj_pass_pres_1: derived, derived;
-    subj_pass_pres_2: derived, derived;
-    subj_pass_impf_1: derived, derived;
-    subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
-    imperative_pass_fut_2: derived, _;
-    imperative_pass_fut_3: "~itor", _;
-    participle: _, derived, derived, "~endum|~undum";
-    supine: _, _, _, derived, derived, _;
-    ),
-    // Ambigō: 5 words (convergō, assurgō, ambigō, īnsurgō, adsurgō). Like Pergō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Ambigō: 5 words (convergō, assurgō, ambigō, īnsurgō, adsurgō). Like Pergō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("ambigō", 5, "~gō", like Pergō;
+    stem participle_perf_pass: "~rēct- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -6342,38 +6236,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~gitor", _;
-    participle: _, "~rēctum", _, "~gendum|~gundum";
+    infinitive_act: "~gere", _, _;
+    participle: _, _, _, "~gendum|~gundum";
     ),
-    // Fruor: 5 words (fruor, perfruor, compluor, conpluor, tuor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("fruor", 5, "~uor", like Mōlior;
-    ind_act_pres_1: "~uor", "~uimur";
-    ind_act_pres_2: "~ueris|~uere", "~uiminī";
-    ind_act_pres_3: "~uitur", "~uuntur";
-    ind_act_impf_1: "~uēbar", "~uēbāmur";
-    ind_act_impf_2: "~uēbāris|~uēbāre", "~uēbāminī";
-    ind_act_impf_3: "~uēbātur", "~uēbantur";
-    ind_act_fut_1: "~uar", "~uēmur";
-    ind_act_fut_2: "~uēris|~uēre", "~uēminī";
-    ind_act_fut_3: "~uētur", "~uentur";
-    subj_act_pres_1: "~uar", "~uāmur";
-    subj_act_pres_2: "~uāris|~uāre", "~uāminī";
-    subj_act_pres_3: "~uātur", "~uantur";
-    subj_act_impf_1: "~uerer", "~uerēmur";
-    subj_act_impf_2: "~uerēris|~uerēre", "~uerēminī";
-    subj_act_impf_3: "~uerētur", "~uerentur";
-    imperative_act_pres_2: "~uere", "~uiminī";
-    imperative_act_fut_2: "~uitor", _;
-    imperative_act_fut_3: _, "~uuntor";
-    infinitive_act: "~uī", _, _;
-    participle: "~uēns", _, "~ūtūrus", "~uendus";
-    gerund: _, "~uendī", "~uendō", "~uendum", _, _;
-    supine: _, _, _, "~ūtum", "~ūtū", _;
-    ),
-    // Contremīscō: 5 words (resipīscō, ingemīscō, dēlitīscō, conticīscō, contremīscō). Like Clārēscō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("contremīscō", 5, "~īscō", like Clārēscō;
+    // Contremīscō: 5 words (resipīscō, ingemīscō, dēlitīscō, conticīscō, contremīscō). Like Apīscor, except in 69 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("contremīscō", 5, "~īscō", like Apīscor as PASS_AS_ACT;
     ind_act_pres_1: "~īscō", "~īscimus";
     ind_act_pres_2: "~īscis", "~īscitis";
     ind_act_pres_3: "~īscit", "~īscunt";
@@ -6383,61 +6253,77 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_fut_1: "~īscam", "~īscēmus";
     ind_act_fut_2: "~īscēs", "~īscētis";
     ind_act_fut_3: "~īscet", "~īscent";
-    ind_pass_pres_1: "~īscor", "~īscimur";
-    ind_pass_pres_2: "~īsceris|~īscere", "~īsciminī";
-    ind_pass_pres_3: "~īscitur", "~īscuntur";
-    ind_pass_impf_1: "~īscēbar", "~īscēbāmur";
-    ind_pass_impf_2: "~īscēbāris|~īscēbāre", "~īscēbāminī";
-    ind_pass_impf_3: "~īscēbātur", "~īscēbantur";
-    ind_pass_fut_1: "~īscar", "~īscēmur";
-    ind_pass_fut_2: "~īscēris|~īscēre", "~īscēminī";
-    ind_pass_fut_3: "~īscētur", "~īscentur";
+    ind_act_perf_1: "~uī", "~uimus";
+    ind_act_perf_2: "~uistī", "~uistis";
+    ind_act_perf_3: "~uit", "~uērunt|~uēre";
+    ind_act_plup_1: "~ueram", "~uerāmus";
+    ind_act_plup_2: "~uerās", "~uerātis";
+    ind_act_plup_3: "~uerat", "~uerant";
+    ind_act_futp_1: "~uerō", "~uerimus";
+    ind_act_futp_2: "~ueris", "~ueritis";
+    ind_act_futp_3: "~uerit", "~uerint";
     subj_act_pres_1: "~īscam", "~īscāmus";
     subj_act_pres_2: "~īscās", "~īscātis";
     subj_act_pres_3: "~īscat", "~īscant";
     subj_act_impf_1: "~īscerem", "~īscerēmus";
     subj_act_impf_2: "~īscerēs", "~īscerētis";
     subj_act_impf_3: "~īsceret", "~īscerent";
-    subj_pass_pres_1: "~īscar", "~īscāmur";
-    subj_pass_pres_2: "~īscāris|~īscāre", "~īscāminī";
-    subj_pass_pres_3: "~īscātur", "~īscantur";
-    subj_pass_impf_1: "~īscerer", "~īscerēmur";
-    subj_pass_impf_2: "~īscerēris|~īscerēre", "~īscerēminī";
-    subj_pass_impf_3: "~īscerētur", "~īscerentur";
+    subj_act_perf_1: "~uerim", "~uerīmus";
+    subj_act_perf_2: "~uerīs", "~uerītis";
+    subj_act_plup_1: "~uissem", "~uissēmus";
+    subj_act_plup_2: "~uissēs", "~uissētis";
+    subj_act_plup_3: "~uisset", "~uissent";
     imperative_act_pres_2: "~īsce", "~īscite";
     imperative_act_fut_2: "~īscitō", "~īscitōte";
     imperative_act_fut_3: _, "~īscuntō";
-    imperative_pass_pres_2: "~īscere", "~īsciminī";
-    imperative_pass_fut_2: "~īscitor", _;
-    imperative_pass_fut_3: _, "~īscuntor";
-    infinitive_act: "~īscere", _, _;
-    infinitive_pass: "~īscī", _, _;
-    participle: "~īscēns", _, _, "~īscendus|~īscundus";
-    gerund: _, "~īscendī", "~īscendō", "~īscendum", _, _;
+    imperative_pass_pres_2: _, derived;
+    infinitive_act: derived, "~uisse", _;
+    participle: _, _, derived, _;
+    supine: _, _, _, derived, derived, _;
     ),
-    // Dēpudet: 5 words (taedet, piget, pertaedet, dēpudet, dispudet). Like Decet, except in 19 cells: ind_act_pres_3 pl, ind_act_impf_3 pl, ind_act_fut_3 pl, ind_act_perf_3 pl, ind_act_plup_3 pl, ind_act_futp_3 pl, ….
-    conjugation!("dēpudet", 5, "~et", like Decet;
-    ind_act_pres_3: _, derived;
-    ind_act_impf_3: _, derived;
-    ind_act_fut_3: _, derived;
-    ind_act_perf_3: _, derived;
-    ind_act_plup_3: _, derived;
-    ind_act_futp_3: _, derived;
+    // Clangō: 5 words (cadō, stertō, clangō, accanō, obtexō). Like Compescō, except in 28 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    conjugation!("clangō", 5, "~ō", like Compescō as ABL_AS_VOC;
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: "~itor", _;
+    infinitive_act: "~ere", _, _;
+    participle: _, derived, derived, "~endum|~undum";
+    supine: _, _, _, derived, _, _;
+    ),
+    // Dēpudet: 5 words (taedet, piget, pertaedet, dēpudet, dispudet). Like Decet, except in 17 cells: ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ind_act_futp_3 sg, ind_pass_pres_3 sg, ….
+    conjugation!("dēpudet", 5, "~et", like Decet as C3_AS_1;
+    stem participle_perf_pass: "~it- like labōrō";
+    ind_act_impf_3: "~ēbat", _;
+    ind_act_fut_3: "~ēbit", _;
+    ind_act_perf_3: "~uit", _;
+    ind_act_plup_3: "~uerat", _;
+    ind_act_futp_3: "~uerit", _;
     ind_pass_pres_3: "~ētur", _;
     ind_pass_impf_3: "~ēbātur", _;
     ind_pass_fut_3: "~ēbitur", _;
-    subj_act_pres_3: _, derived;
-    subj_act_impf_3: _, derived;
-    subj_act_plup_3: _, derived;
+    subj_act_pres_3: "~eat", _;
+    subj_act_impf_3: "~ēret", _;
+    subj_act_plup_3: "~uisset", _;
     subj_pass_pres_3: "~eātur", _;
     subj_pass_impf_3: "~ērētur", _;
-    imperative_act_fut_3: _, derived;
+    imperative_act_fut_3: "~ētō", _;
     imperative_pass_fut_3: "~ētor", _;
     infinitive_pass: "~ērī", _, _;
-    participle: _, "~itum", _, "~endum";
+    participle: _, _, _, "~endum";
     ),
     // Caveō: 4 words (caveō, faveō, paveō, praecaveō).
     conjugation!("caveō", 4, "~aveō";
+    stem participle_perf_pass: "~aut- like agitō";
     ind_act_pres_1: "~aveō", "~avēmus";
     ind_act_pres_2: "~avēs", "~avētis";
     ind_act_pres_3: "~avet", "~avent";
@@ -6473,7 +6359,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_3: "~avēret", "~avērent";
     subj_act_perf_1: "~āverim|~ārim", "~āverīmus|~ārīmus";
     subj_act_perf_2: "~āverīs|~ārīs", "~āverītis|~ārītis";
-    subj_act_perf_3: "~āverit|~ārit", "~āverint|~ārint";
     subj_act_plup_1: "~āvissem|~āssem", "~āvissēmus|~āssēmus";
     subj_act_plup_2: "~āvissēs|~āssēs", "~āvissētis|~āssētis";
     subj_act_plup_3: "~āvisset|~āsset", "~āvissent|~āssent";
@@ -6486,26 +6371,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~avē", "~avēte";
     imperative_act_fut_2: "~avētō", "~avētōte";
     imperative_act_fut_3: _, "~aventō";
-    imperative_pass_pres_2: "~avēre", "~avēminī";
+    imperative_pass_pres_2: "~avēre", _;
     imperative_pass_fut_2: "~avētor", _;
     imperative_pass_fut_3: _, "~aventor";
-    infinitive_act: "~avēre", "~āvisse|~āsse", _;
+    infinitive_act: _, "~āvisse|~āsse", _;
     infinitive_pass: "~avērī", _, _;
-    participle: "~avēns", "~autus", "~autūrus", "~avendus";
+    participle: "~avēns", _, _, "~avendus";
     gerund: _, "~avendī", "~avendō", "~avendum", _, _;
-    supine: _, _, _, "~autum", "~autū", _;
     ),
-    // Cieō: 4 words (cieō, excieō, concieō, percieō). Like Mūniō, except in 64 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("cieō", 4, "~ieō", like Mūniō;
-    ind_act_pres_1: "~ieō", "~iēmus";
-    ind_act_pres_2: "~iēs", "~iētis";
-    ind_act_pres_3: "~iet", "~ient";
+    // Cieō: 4 words (cieō, excieō, concieō, percieō). Like Mūniō, except in 48 cells: ind_act_pres_1 sg, ind_act_fut_1 sg, ind_act_fut_1 pl, ind_act_fut_2 sg, ind_act_fut_2 pl, ind_act_fut_3 sg, ….
+    conjugation!("cieō", 4, "~ieō", like Mūniō as PRES_AS_FUT;
+    stem participle_perf_pass: "~it- like agitō";
+    ind_act_pres_1: "~ieō", _;
     ind_act_fut_1: "~iēbō", "~iēbimus";
     ind_act_fut_2: "~iēbis", "~iēbitis";
     ind_act_fut_3: "~iēbit", "~iēbunt";
-    ind_pass_pres_1: "~ieor", "~iēmur";
-    ind_pass_pres_2: "~iēris|~iēre", "~iēminī";
-    ind_pass_pres_3: "~iētur", "~ientur";
+    ind_pass_pres_1: "~ieor", _;
     ind_pass_fut_1: "~iēbor", "~iēbimur";
     ind_pass_fut_2: "~iēberis|~iēbere", "~iēbiminī";
     ind_pass_fut_3: "~iēbitur", "~iēbuntur";
@@ -6524,55 +6405,46 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~iē", "~iēte";
     imperative_act_fut_2: "~iētō", "~iētōte";
     imperative_act_fut_3: _, "~ientō";
-    imperative_pass_pres_2: "~iēre", "~iēminī";
+    imperative_pass_pres_2: "~iēre", _;
     imperative_pass_fut_2: "~iētor", _;
     imperative_pass_fut_3: _, "~ientor";
-    infinitive_act: "~iēre", _, _;
     infinitive_pass: "~iērī", _, _;
-    participle: _, "~itus", "~itūrus", "~iendus";
-    supine: _, _, _, "~itum", "~itū", _;
+    participle: _, _, _, "~iendus";
     ),
-    // Patior: 4 words (patior, compatior, perpetior, conpatior). Like Mētior, except in 17 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, subj_act_impf_1 sg, subj_act_impf_1 pl, ….
+    // Patior: 4 words (patior, compatior, perpetior, conpatior). Like Mētior, except in 2 cells: ind_act_pres_1 pl, imperative_act_fut_2 sg.
     conjugation!("patior", 4, "~tior", like Mētior;
+    stem verb_act_sg: "~t- like ēgredior";
+    stem participle_perf_pass: "~ss- like modulor";
     ind_act_pres_1: _, "~timur";
-    ind_act_pres_2: "~teris|~tere", "~timinī";
-    ind_act_pres_3: "~titur", _;
-    subj_act_impf_1: "~terer", "~terēmur";
-    subj_act_impf_2: "~terēris|~terēre", "~terēminī";
-    subj_act_impf_3: "~terētur", "~terentur";
-    imperative_act_pres_2: "~tere", "~timinī";
     imperative_act_fut_2: "~titor", _;
-    infinitive_act: "~tī", _, _;
-    participle: _, _, "~ssūrus", _;
-    supine: _, _, _, "~ssum", "~ssū", _;
     ),
-    // Fīō: 4 words (fīō, obsolefīō, dēfīō, vacēfīō). Like Mōlior, except in 44 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("fīō", 4, "~īō", like Mōlior;
-    ind_act_pres_1: "~īō", "~īmus";
-    ind_act_pres_2: "~īs", "~ītis";
-    ind_act_pres_3: "~it", "~īunt";
-    ind_act_impf_1: "~īēbam", "~īēbāmus";
-    ind_act_impf_2: "~īēbās", "~īēbātis";
-    ind_act_impf_3: "~īēbat", "~īēbant";
-    ind_act_fut_1: "~īam", "~īēmus";
-    ind_act_fut_2: "~īēs", "~īētis";
-    ind_act_fut_3: "~īet", "~īent";
-    subj_act_pres_1: "~īam", "~īāmus";
-    subj_act_pres_2: "~īās", "~īātis";
-    subj_act_pres_3: "~īat", "~īant";
-    subj_act_impf_1: "~ierem", "~ierēmus";
-    subj_act_impf_2: "~ierēs", "~ierētis";
-    subj_act_impf_3: "~ieret", "~ierent";
-    imperative_act_pres_2: "~ī", "~īte";
-    imperative_act_fut_2: "~ītō", "~ītōte";
-    imperative_act_fut_3: _, "~īuntō";
-    infinitive_act: "~ierī", _, _;
-    participle: "~īēns", _, derived, "~īendus";
+    // Fīō: 4 words (fīō, obsolefīō, dēfīō, vacēfīō). Like Faciō, except in 43 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
+    conjugation!("fīō", 4, "~īō", like Faciō as ACT_AS_PASS;
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_pass_pres_2: derived, derived;
+    imperative_pass_fut_2: derived, derived;
+    imperative_pass_fut_3: _, derived;
+    infinitive_pass: derived, _, _;
+    participle: "~īēns", derived, derived, "~īendus";
     gerund: _, "~īendī", "~īendō", "~īendum", _, _;
-    supine: _, _, _, "~actum", "~actū", _;
     ),
     // Relinquō: 4 words (dēlinquō, relinquō, linquō, dērelinquō).
     conjugation!("relinquō", 4, "~inquō";
+    stem participle_perf_pass: "~ict- like agitō";
     ind_act_pres_1: "~inquō", "~inquimus";
     ind_act_pres_2: "~inquis", "~inquitis";
     ind_act_pres_3: "~inquit", "~inquunt";
@@ -6620,16 +6492,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~inque", "~inquite";
     imperative_act_fut_2: "~inquitō", "~inquitōte";
     imperative_act_fut_3: _, "~inquuntō";
-    imperative_pass_pres_2: "~inquere", "~inquiminī";
+    imperative_pass_pres_2: "~inquere", _;
     imperative_pass_fut_2: "~inquitor", _;
     imperative_pass_fut_3: _, "~inquuntor";
-    infinitive_act: "~inquere", "~īquisse", _;
+    infinitive_act: _, "~īquisse", _;
     infinitive_pass: "~inquī", _, _;
-    participle: "~inquēns", "~ictus", "~ictūrus", "~inquendus";
+    participle: "~inquēns", _, _, "~inquendus";
     gerund: _, "~inquendī", "~inquendō", "~inquendum", _, _;
-    supine: _, _, _, "~ictum", "~ictū", _;
     ),
-    // Sapiō: 4 words (cupiō, sapiō, concupiō, supersapiō). Like Mūniō, except in 32 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ….
+    // Sapiō: 4 words (cupiō, sapiō, concupiō, supersapiō). Like Mūniō, except in 30 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ….
     conjugation!("sapiō", 4, "~iō", like Mūniō;
     ind_act_pres_1: _, "~imus";
     ind_act_pres_2: "~is", "~itis";
@@ -6647,14 +6518,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_3: "~erētur", "~erentur";
     imperative_act_pres_2: "~e", "~ite";
     imperative_act_fut_2: "~itō", "~itōte";
-    imperative_pass_pres_2: "~ere", "~iminī";
+    imperative_pass_pres_2: "~ere", _;
     imperative_pass_fut_2: "~itor", _;
-    infinitive_act: "~ere", _, _;
     infinitive_pass: "~ī", _, _;
     participle: _, _, _, "~iendus";
     ),
-    // Abeō: 4 words (abeō, prōdeō, pereō, redeō). Like Obeō, except in 32 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
+    // Abeō: 4 words (abeō, prōdeō, pereō, redeō). Like Obeō, except in 31 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 pl, ind_pass_impf_1 sg, ….
     conjugation!("abeō", 4, "~eō", like Obeō;
+    stem participle_perf_pass: "~it- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_pres_3: _, derived;
@@ -6670,10 +6541,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: _, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~ītor", derived;
-    participle: _, "~itum", _, "~eundum";
+    infinitive_act: "~īre", _, _;
+    participle: _, _, _, "~eundum";
     ),
     // Ēvellō: 4 words (dīvellō, convellō, ēvellō, refellō). Like Pellō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("ēvellō", 4, "~e~lō", like Pellō;
@@ -6693,8 +6565,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~e~lisset", "~e~lissent";
     infinitive_act: _, "~e~lisse", _;
     ),
-    // Currō: 4 words (currō, percurrō, prōcurrō, superexcurrō). Like Incurrō, except in 31 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("currō", 4, "~~rō", like Incurrō;
+    // Currō: 4 words (currō, percurrō, prōcurrō, superexcurrō).
+    conjugation!("currō", 4, "~~rō";
+    stem participle_perf_pass: "~~s- like agitō";
+    ind_act_pres_1: "~~rō", "~~rimus";
+    ind_act_pres_2: "~~ris", "~~ritis";
+    ind_act_pres_3: "~~rit", "~~runt";
+    ind_act_impf_1: "~~rēbam", "~~rēbāmus";
+    ind_act_impf_2: "~~rēbās", "~~rēbātis";
+    ind_act_impf_3: "~~rēbat", "~~rēbant";
+    ind_act_fut_1: "~~ram", "~~rēmus";
+    ind_act_fut_2: "~~rēs", "~~rētis";
+    ind_act_fut_3: "~~ret", "~~rent";
     ind_act_perf_1: "~cu~rī", "~cu~rimus";
     ind_act_perf_2: "~cu~ristī", "~cu~ristis";
     ind_act_perf_3: "~cu~rit", "~cu~rērunt";
@@ -6704,13 +6586,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~cu~rerō", "~cu~rerimus";
     ind_act_futp_2: "~cu~reris", "~cu~reritis";
     ind_act_futp_3: "~cu~rerit", "~cu~rerint";
+    ind_pass_pres_1: "~~ror", "~~rimur";
+    ind_pass_pres_2: "~~reris|~~rere", "~~riminī";
+    ind_pass_pres_3: "~~ritur", "~~runtur";
+    ind_pass_impf_1: "~~rēbar", "~~rēbāmur";
+    ind_pass_impf_2: "~~rēbāris|~~rēbāre", "~~rēbāminī";
+    ind_pass_impf_3: "~~rēbātur", "~~rēbantur";
+    ind_pass_fut_1: "~~rar", "~~rēmur";
+    ind_pass_fut_2: "~~rēris|~~rēre", "~~rēminī";
+    ind_pass_fut_3: "~~rētur", "~~rentur";
+    subj_act_pres_1: "~~ram", "~~rāmus";
+    subj_act_pres_2: "~~rās", "~~rātis";
+    subj_act_pres_3: "~~rat", "~~rant";
+    subj_act_impf_1: "~~rerem", "~~rerēmus";
+    subj_act_impf_2: "~~rerēs", "~~rerētis";
+    subj_act_impf_3: "~~reret", "~~rerent";
     subj_act_perf_1: "~cu~rerim", "~cu~rerīmus";
     subj_act_perf_2: "~cu~rerīs", "~cu~rerītis";
-    subj_act_perf_3: derived, derived;
     subj_act_plup_1: "~cu~rissem", "~cu~rissēmus";
     subj_act_plup_2: "~cu~rissēs", "~cu~rissētis";
     subj_act_plup_3: "~cu~risset", "~cu~rissent";
+    subj_pass_pres_1: "~~rar", "~~rāmur";
+    subj_pass_pres_2: "~~rāris|~~rāre", "~~rāminī";
+    subj_pass_pres_3: "~~rātur", "~~rantur";
+    subj_pass_impf_1: "~~rerer", "~~rerēmur";
+    subj_pass_impf_2: "~~rerēris|~~rerēre", "~~rerēminī";
+    subj_pass_impf_3: "~~rerētur", "~~rerentur";
+    imperative_act_pres_2: "~~re", "~~rite";
+    imperative_act_fut_2: "~~ritō", "~~ritōte";
+    imperative_act_fut_3: _, "~~runtō";
+    imperative_pass_pres_2: "~~rere", _;
+    imperative_pass_fut_2: "~~ritor", _;
+    imperative_pass_fut_3: _, "~~runtor";
     infinitive_act: _, "~cu~risse", _;
+    infinitive_pass: "~~rī", _, _;
+    participle: "~~rēns", _, _, "~~rendus|~~rundus";
+    gerund: _, "~~rendī", "~~rendō", "~~rendum", _, _;
     ),
     // Obtundō: 4 words (obtundō, pertundō, contundō, extundō). Like Effundō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("obtundō", 4, "~undō", like Effundō;
@@ -6730,8 +6641,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~udisset", "~udissent";
     infinitive_act: _, "~udisse", _;
     ),
-    // Hauriō: 4 words (exhauriō, hauriō, dehauriō, perhauriō). Like Ēvādō, except in 80 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("hauriō", 4, "~riō", like Ēvādō;
+    // Hauriō: 4 words (exhauriō, hauriō, dehauriō, perhauriō). Like Agō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("hauriō", 4, "~riō", like Agō;
+    stem participle_perf_pass: "~st- like agitō";
     ind_act_pres_1: "~riō", "~rīmus";
     ind_act_pres_2: "~rīs", "~rītis";
     ind_act_pres_3: "~rit", "~riunt";
@@ -6765,14 +6677,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~rī", "~rīte";
     imperative_act_fut_2: "~rītō", "~rītōte";
     imperative_act_fut_3: _, "~riuntō";
-    imperative_pass_pres_2: "~rīre", "~rīminī";
+    imperative_pass_pres_2: "~rīre", _;
     imperative_pass_fut_2: "~rītor", _;
     imperative_pass_fut_3: _, "~riuntor";
-    infinitive_act: "~rīre", _, _;
     infinitive_pass: "~rīrī", _, _;
-    participle: "~riēns", "~stus", "~stūrus", "~riendus|~riundus";
+    participle: "~riēns", _, _, "~riendus|~riundus";
     gerund: _, "~riendī", "~riendō", "~riendum", _, _;
-    supine: _, _, _, "~stum", "~stū", _;
     ),
     // Comperiō: 4 words (comperiō, īciō, repperiō, conperiō). Like Intersaepiō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("comperiō", 4, "~iō", like Intersaepiō;
@@ -6792,43 +6702,67 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~isset", "~issent";
     infinitive_act: _, "~isse", _;
     ),
-    // Circumvehor: 4 words (circumvehor, praetervehor, praevehor, supervehor). Like Mōlior, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("circumvehor", 4, "~hor", like Mōlior;
-    ind_act_pres_1: "~hor", "~himur";
-    ind_act_pres_2: "~heris|~here", "~himinī";
-    ind_act_pres_3: "~hitur", "~huntur";
+    // Circumvehor: 4 words (circumvehor, praetervehor, praevehor, supervehor). Like Cōnsequor, except in 19 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("circumvehor", 4, "~hor", like Cōnsequor;
+    stem verb_act_sg: "~h- like cōnsequor";
+    stem participle_perf_pass: "~ct- like modulor";
+    ind_act_pres_1: _, "~himur";
     ind_act_impf_1: "~hēbar", "~hēbāmur";
     ind_act_impf_2: "~hēbāris|~hēbāre", "~hēbāminī";
     ind_act_impf_3: "~hēbātur", "~hēbantur";
     ind_act_fut_1: "~har", "~hēmur";
     ind_act_fut_2: "~hēris|~hēre", "~hēminī";
-    ind_act_fut_3: "~hētur", "~hentur";
-    subj_act_pres_1: "~har", "~hāmur";
-    subj_act_pres_2: "~hāris|~hāre", "~hāminī";
-    subj_act_pres_3: "~hātur", "~hantur";
-    subj_act_impf_1: "~herer", "~herēmur";
-    subj_act_impf_2: "~herēris|~herēre", "~herēminī";
-    subj_act_impf_3: "~herētur", "~herentur";
-    imperative_act_pres_2: "~here", "~himinī";
+    ind_act_fut_3: "~hētur", _;
+    subj_act_pres_3: "~hātur", _;
     imperative_act_fut_2: "~hitor", _;
-    imperative_act_fut_3: _, "~huntor";
-    infinitive_act: "~hī", _, _;
-    participle: "~hēns", _, "~ctūrus", "~hendus|~hundus";
+    participle: "~hēns", _, _, "~hendus|~hundus";
     gerund: _, "~hendī", "~hendō", "~hendum", _, _;
-    supine: _, _, _, "~ctum", "~ctū", _;
     ),
     // Adnītor: 4 words (innītor, obnītor, adnītor, annītor). Like Nītor, except in 3 cells: participle fut_act, supine acc, supine abl.
     conjugation!("adnītor", 4, "~tor", like Nītor;
     participle: _, _, "~xūrus|~sūrus", _;
     supine: _, _, _, "~xum|~sum", "~xū|~sū", _;
     ),
-    // Secō: 3 words (secō, fricō, dēfricō). Like Cubō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
-    conjugation!("secō", 3, "~ō", like Cubō;
-    participle: _, "~tus", "~tūrus", _;
-    supine: _, _, _, "~tum", "~tū", _;
+    // Fruor: 4 words (fruor, compluor, conpluor, tuor). Like Minuō, except in 36 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
+    conjugation!("fruor", 4, "~uor", like Minuō as ACT_AS_PASS;
+    stem verb_act_sg: "~u- like cōnsequor";
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_act_fut_2: _, derived;
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: _, derived;
+    infinitive_pass: derived, _, _;
+    participle: _, derived, _, _;
     ),
-    // Quaerō: 3 words (quaerō, conquaerō, disquīrō). Like Gerō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    // Sum: 4 words (sum, inquam, apage, coest). Like Adipīscor, except in 11 cells: ind_act_pres_1 sg, imperative_act_pres_2 sg, imperative_act_pres_2 pl, participle pres_act, participle fut_act, participle fut_pass, ….
+    conjugation!("sum", 4, "~~", like Adipīscor as ACT_AS_PASS;
+    ind_act_pres_1: "~~", _;
+    imperative_act_pres_2: "~~", "~it~";
+    participle: derived, _, derived, derived;
+    gerund: _, derived, derived, derived, _, _;
+    supine: _, _, _, derived, derived, _;
+    ),
+    // Secō: 3 words (secō, fricō, dēfricō). Like Cubō, except in 0 cells: .
+    conjugation!("secō", 3, "~ō", like Cubō;
+    stem participle_perf_pass: "~t- like agitō";
+    ),
+    // Quaerō: 3 words (quaerō, conquaerō, disquīrō). Like Gerō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("quaerō", 3, "~rō", like Gerō;
+    stem participle_perf_pass: "~sīt- like agitō";
     ind_act_perf_1: "~sīvī", "~sīvimus";
     ind_act_perf_2: "~sīvistī", "~sīvistis";
     ind_act_perf_3: "~sīvit", "~sīvērunt|~sīvēre";
@@ -6844,8 +6778,48 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_2: "~sīvissēs", "~sīvissētis";
     subj_act_plup_3: "~sīvisset", "~sīvissent";
     infinitive_act: _, "~sīvisse", _;
-    participle: _, "~sītus", "~sītūrus", _;
-    supine: _, _, _, "~sītum", "~sītū", _;
+    ),
+    // Tangō: 3 words (frangō, tangō, dēpangō). Like Peragō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("tangō", 3, "~angō", like Peragō;
+    ind_act_pres_1: "~angō", "~angimus";
+    ind_act_pres_2: "~angis", "~angitis";
+    ind_act_pres_3: "~angit", "~angunt";
+    ind_act_impf_1: "~angēbam", "~angēbāmus";
+    ind_act_impf_2: "~angēbās", "~angēbātis";
+    ind_act_impf_3: "~angēbat", "~angēbant";
+    ind_act_fut_1: "~angam", "~angēmus";
+    ind_act_fut_2: "~angēs", "~angētis";
+    ind_act_fut_3: "~anget", "~angent";
+    ind_pass_pres_1: "~angor", "~angimur";
+    ind_pass_pres_2: "~angeris|~angere", "~angiminī";
+    ind_pass_pres_3: "~angitur", "~anguntur";
+    ind_pass_impf_1: "~angēbar", "~angēbāmur";
+    ind_pass_impf_2: "~angēbāris|~angēbāre", "~angēbāminī";
+    ind_pass_impf_3: "~angēbātur", "~angēbantur";
+    ind_pass_fut_1: "~angar", "~angēmur";
+    ind_pass_fut_2: "~angēris|~angēre", "~angēminī";
+    ind_pass_fut_3: "~angētur", "~angentur";
+    subj_act_pres_1: "~angam", "~angāmus";
+    subj_act_pres_2: "~angās", "~angātis";
+    subj_act_pres_3: "~angat", "~angant";
+    subj_act_impf_1: "~angerem", "~angerēmus";
+    subj_act_impf_2: "~angerēs", "~angerētis";
+    subj_act_impf_3: "~angeret", "~angerent";
+    subj_pass_pres_1: "~angar", "~angāmur";
+    subj_pass_pres_2: "~angāris|~angāre", "~angāminī";
+    subj_pass_pres_3: "~angātur", "~angantur";
+    subj_pass_impf_1: "~angerer", "~angerēmur";
+    subj_pass_impf_2: "~angerēris|~angerēre", "~angerēminī";
+    subj_pass_impf_3: "~angerētur", "~angerentur";
+    imperative_act_pres_2: "~ange", "~angite";
+    imperative_act_fut_2: "~angitō", "~angitōte";
+    imperative_act_fut_3: _, "~anguntō";
+    imperative_pass_pres_2: "~angere", _;
+    imperative_pass_fut_2: "~angitor", _;
+    imperative_pass_fut_3: _, "~anguntor";
+    infinitive_pass: "~angī", _, _;
+    participle: "~angēns", _, _, "~angendus|~angundus";
+    gerund: _, "~angendī", "~angendō", "~angendum", _, _;
     ),
     // Adliciō: 3 words (illiciō, inliciō, adliciō). Like Dispiciō, except in 29 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
     conjugation!("adliciō", 3, "~iciō", like Dispiciō;
@@ -6885,8 +6859,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     participle: _, "~atum", _, _;
     supine: _, _, _, "~atum", "~atū", _;
     ),
-    // Dīluō: 3 words (suō, tribuō, dīluō). Like Minuō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Dīluō: 3 words (suō, tribuō, dīluō). Like Minuō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("dīluō", 3, "~uō", like Minuō;
+    stem participle_perf_pass: "~ūt- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -6897,12 +6872,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~uitor", _;
-    participle: _, "~ūtum", _, "~uendum";
+    infinitive_act: "~uere", _, _;
+    participle: _, _, _, "~uendum";
     ),
-    // Iubeō: 3 words (iubeō, fidēiubeō, ioubeō). Like Percutiō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Iubeō: 3 words (iubeō, fidēiubeō, ioubeō). Like Percutiō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("iubeō", 3, "~beō", like Percutiō;
     ind_act_pres_1: "~beō", "~bēmus";
     ind_act_pres_2: "~bēs", "~bētis";
@@ -6937,16 +6913,36 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~bē", "~bēte";
     imperative_act_fut_2: "~bētō", "~bētōte";
     imperative_act_fut_3: _, "~bentō";
-    imperative_pass_pres_2: "~bēre", "~bēminī";
+    imperative_pass_pres_2: "~bēre", _;
     imperative_pass_fut_2: "~bētor", _;
     imperative_pass_fut_3: _, "~bentor";
-    infinitive_act: "~bēre", _, _;
     infinitive_pass: "~bērī", _, _;
     participle: "~bēns", _, _, "~bendus";
     gerund: _, "~bendī", "~bendō", "~bendum", _, _;
     ),
-    // Fundō: 3 words (fundō, refundō, praefundō). Like Effundō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Apiō: 3 words (rapiō, apiō, speciō). Like Aperiō, except in 27 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_perf_3 pl, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ….
+    conjugation!("apiō", 3, "~iō", like Aperiō;
+    ind_act_pres_1: _, "~imus";
+    ind_act_pres_2: "~is", "~itis";
+    ind_act_perf_3: _, "~uērunt";
+    ind_pass_pres_1: _, "~imur";
+    ind_pass_pres_2: "~eris|~ere", "~iminī";
+    ind_pass_pres_3: "~itur", _;
+    subj_act_impf_1: "~erem", "~erēmus";
+    subj_act_impf_2: "~erēs", "~erētis";
+    subj_act_impf_3: "~eret", "~erent";
+    subj_pass_impf_1: "~erer", "~erēmur";
+    subj_pass_impf_2: "~erēris|~erēre", "~erēminī";
+    subj_pass_impf_3: "~erētur", "~erentur";
+    imperative_act_pres_2: "~e", "~ite";
+    imperative_act_fut_2: "~itō", "~itōte";
+    imperative_pass_pres_2: "~ere", _;
+    imperative_pass_fut_2: "~itor", _;
+    infinitive_pass: "~ī", _, _;
+    ),
+    // Fundō: 3 words (fundō, refundō, praefundō). Like Effundō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("fundō", 3, "~undō", like Effundō;
+    stem participle_perf_pass: "~ūs- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -6957,48 +6953,48 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~unditor", _;
-    participle: _, "~ūsum", _, "~undendum|~undundum";
+    infinitive_act: "~undere", _, _;
+    participle: _, _, _, "~undendum|~undundum";
     ),
-    // Scatō: 3 words (scatō, battō, abbattō). Like Volō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
-    conjugation!("scatō", 3, "~ō", like Volō;
-    participle: _, "~ūtus", "~ūtūrus", _;
-    supine: _, _, _, "~ūtum", "~ūtū", _;
+    // Scatō: 3 words (scatō, battō, abbattō). Like Compescō, except in 0 cells: .
+    conjugation!("scatō", 3, "~ō", like Compescō;
+    stem participle_perf_pass: "~ūt- like agitō";
     ),
-    // Perpōtō: 3 words (pōtō, ēpōtō, perpōtō). Like Agitō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
+    // Perpōtō: 3 words (pōtō, ēpōtō, perpōtō). Like Agitō, except in 0 cells: .
     conjugation!("perpōtō", 3, "~ō", like Agitō;
-    participle: _, "~us", "~ūrus", _;
-    supine: _, _, _, "~um", "~ū", _;
+    stem participle_perf_pass: "~- like agitō";
     ),
-    // Dēfungor: 3 words (fungor, dēfungor, perfungor). Like Adipīscor, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("dēfungor", 3, "~u~gor", like Adipīscor;
-    ind_act_pres_1: "~u~gor", "~u~gimur";
-    ind_act_pres_2: "~u~geris|~u~gere", "~u~giminī";
-    ind_act_pres_3: "~u~gitur", "~u~guntur";
-    ind_act_impf_1: "~u~gēbar", "~u~gēbāmur";
-    ind_act_impf_2: "~u~gēbāris|~u~gēbāre", "~u~gēbāminī";
-    ind_act_impf_3: "~u~gēbātur", "~u~gēbantur";
-    ind_act_fut_1: "~u~gar", "~u~gēmur";
-    ind_act_fut_2: "~u~gēris|~u~gēre", "~u~gēminī";
-    ind_act_fut_3: "~u~gētur", "~u~gentur";
-    subj_act_pres_1: "~u~gar", "~u~gāmur";
-    subj_act_pres_2: "~u~gāris|~u~gāre", "~u~gāminī";
-    subj_act_pres_3: "~u~gātur", "~u~gantur";
-    subj_act_impf_1: "~u~gerer", "~u~gerēmur";
-    subj_act_impf_2: "~u~gerēris|~u~gerēre", "~u~gerēminī";
-    subj_act_impf_3: "~u~gerētur", "~u~gerentur";
-    imperative_act_pres_2: "~u~gere", "~u~giminī";
-    imperative_act_fut_2: "~u~gitor", _;
-    imperative_act_fut_3: _, "~u~guntor";
-    infinitive_act: "~u~gī", _, _;
-    participle: "~u~gēns", _, "~ū~ctūrus", "~u~gendus|~u~gundus";
-    gerund: _, "~u~gendī", "~u~gendō", "~u~gendum", _, _;
-    supine: _, _, _, "~ū~ctum", "~ū~ctū", _;
+    // Dēfungor: 3 words (fungor, dēfungor, perfungor). Like Coniungō, except in 36 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
+    conjugation!("dēfungor", 3, "~u~gor", like Coniungō as ACT_AS_PASS;
+    stem verb_act_sg: "~u~g- like cōnsequor";
+    ind_pass_pres_1: derived, derived;
+    ind_pass_pres_2: derived, derived;
+    ind_pass_pres_3: derived, derived;
+    ind_pass_impf_1: derived, derived;
+    ind_pass_impf_2: derived, derived;
+    ind_pass_impf_3: derived, derived;
+    ind_pass_fut_1: derived, derived;
+    ind_pass_fut_2: derived, derived;
+    ind_pass_fut_3: derived, derived;
+    subj_pass_pres_1: derived, derived;
+    subj_pass_pres_2: derived, derived;
+    subj_pass_pres_3: derived, derived;
+    subj_pass_impf_1: derived, derived;
+    subj_pass_impf_2: derived, derived;
+    subj_pass_impf_3: derived, derived;
+    imperative_act_fut_2: _, derived;
+    imperative_pass_pres_2: derived, _;
+    imperative_pass_fut_2: derived, _;
+    imperative_pass_fut_3: _, derived;
+    infinitive_pass: derived, _, _;
+    participle: _, derived, _, _;
     ),
-    // Pāscō: 3 words (pāscō, dēpāscō, repāscō). Like Quiēscō, except in 40 cells: ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ind_act_plup_1 sg, ….
+    // Pāscō: 3 words (pāscō, dēpāscō, repāscō). Like Quiēscō, except in 34 cells: ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ind_act_plup_1 sg, ….
     conjugation!("pāscō", 3, "~scō", like Quiēscō;
+    stem participle_perf_pass: "~st- like agitō";
     ind_act_perf_1: _, "~vimus|~mus";
     ind_act_perf_2: "~vistī|~stī", "~vistis|~stis";
     ind_act_perf_3: "~vit|~t", "~vērunt|~runt|~vēre";
@@ -7013,18 +7009,38 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_pass_fut_2: "~scēris|~scēre", _;
     subj_act_perf_1: "~verim|~rim", "~verīmus|~rīmus";
     subj_act_perf_2: "~verīs|~rīs", "~verītis|~rītis";
-    subj_act_perf_3: "~verit|~rit", "~verint|~rint";
     subj_act_plup_1: "~vissem|~ssem", "~vissēmus|~ssēmus";
     subj_act_plup_2: "~vissēs|~ssēs", "~vissētis|~ssētis";
     subj_act_plup_3: "~visset|~sset", "~vissent|~ssent";
     subj_pass_pres_2: "~scāris|~scāre", _;
     subj_pass_impf_2: "~scerēris|~scerēre", _;
     infinitive_act: _, "~visse|~sse", _;
-    participle: _, "~stus", "~stūrus", "~scendus|~scundus";
-    supine: _, _, _, "~stum", "~stū", _;
+    participle: _, _, _, "~scendus|~scundus";
     ),
-    // Dētergeō: 3 words (dētergeō, immulgeō, inmulgeō). Like Tergeō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Ōdī: 3 words (ōdī, coepī, recoepī). Like Adsum, except in 31 cells: ind_act_pres_1 sg, ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ….
+    conjugation!("ōdī", 3, "~ī", like Adsum as ACT_AS_PASS;
+    stem participle_perf_pass: "~t- like agitō";
+    ind_act_pres_1: "~ī", _;
+    ind_act_perf_1: "~ī", "~imus";
+    ind_act_perf_2: "~istī", "~istis";
+    ind_act_perf_3: "~it", "~ērunt|~ēre";
+    ind_act_plup_1: "~eram", "~erāmus";
+    ind_act_plup_2: "~erās", "~erātis";
+    ind_act_plup_3: "~erat", "~erant";
+    ind_act_futp_1: "~erō", "~erimus";
+    ind_act_futp_2: "~eris", "~eritis";
+    ind_act_futp_3: "~erit", "~erint";
+    subj_act_perf_1: "~erim", "~erīmus";
+    subj_act_perf_2: "~erīs", "~erītis";
+    subj_act_plup_1: "~issem", "~issēmus";
+    subj_act_plup_2: "~issēs", "~issētis";
+    subj_act_plup_3: "~isset", "~issent";
+    infinitive_act: _, "~isse", _;
+    participle: derived, _, _, _;
+    ),
+    // Dētergeō: 3 words (dētergeō, immulgeō, inmulgeō). Like Tergeō, except in 25 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("dētergeō", 3, "~geō", like Tergeō;
+    stem participle_perf_pass: "~s- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -7035,18 +7051,76 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
     imperative_pass_fut_3: "~gētor", _;
-    participle: _, "~sum", _, "~gendum";
+    infinitive_act: "~gēre", _, _;
+    participle: _, _, _, "~gendum";
     ),
-    // Antecapiō: 3 words (superiaciō, interiaciō, antecapiō). Like Capiō, except in 4 cells: participle perf_pass, participle fut_act, supine acc, supine abl.
+    // Differō: 3 words (offerō, differō, sufferō).
+    conjugation!("differō", 3, "~fferō";
+    stem participle_perf_pass: "~blāt- like agitō";
+    ind_act_pres_1: "~fferō", "~fferimus";
+    ind_act_pres_2: "~ffers", "~ffertis";
+    ind_act_pres_3: "~ffert", "~fferunt";
+    ind_act_impf_1: "~fferēbam", "~fferēbāmus";
+    ind_act_impf_2: "~fferēbās", "~fferēbātis";
+    ind_act_impf_3: "~fferēbat", "~fferēbant";
+    ind_act_fut_1: "~fferam", "~fferēmus";
+    ind_act_fut_2: "~fferēs", "~fferētis";
+    ind_act_fut_3: "~fferet", "~fferent";
+    ind_act_perf_1: "~stulī", "~stulimus";
+    ind_act_perf_2: "~stulistī", "~stulistis";
+    ind_act_perf_3: "~stulit", "~stulērunt";
+    ind_act_plup_1: "~stuleram", "~stulerāmus";
+    ind_act_plup_2: "~stulerās", "~stulerātis";
+    ind_act_plup_3: "~stulerat", "~stulerant";
+    ind_act_futp_1: "~stulerō", "~stulerimus";
+    ind_act_futp_2: "~stuleris", "~stuleritis";
+    ind_act_futp_3: "~stulerit", "~stulerint";
+    ind_pass_pres_1: "~fferor", "~fferimur";
+    ind_pass_pres_2: "~fferris|~fferre", "~fferiminī";
+    ind_pass_pres_3: "~ffertur", "~fferuntur";
+    ind_pass_impf_1: "~fferēbar", "~fferēbāmur";
+    ind_pass_impf_2: "~fferēbāris|~fferēbāre", "~fferēbāminī";
+    ind_pass_impf_3: "~fferēbātur", "~fferēbantur";
+    ind_pass_fut_1: "~fferar", "~fferēmur";
+    ind_pass_fut_2: "~fferēris|~fferēre", "~fferēminī";
+    ind_pass_fut_3: "~fferētur", "~fferentur";
+    subj_act_pres_1: "~fferam", "~fferāmus";
+    subj_act_pres_2: "~fferās", "~fferātis";
+    subj_act_pres_3: "~fferat", "~fferant";
+    subj_act_impf_1: "~fferrem", "~fferrēmus";
+    subj_act_impf_2: "~fferrēs", "~fferrētis";
+    subj_act_impf_3: "~fferret", "~fferrent";
+    subj_act_perf_1: "~stulerim", "~stulerīmus";
+    subj_act_perf_2: "~stulerīs", "~stulerītis";
+    subj_act_plup_1: "~stulissem", "~stulissēmus";
+    subj_act_plup_2: "~stulissēs", "~stulissētis";
+    subj_act_plup_3: "~stulisset", "~stulissent";
+    subj_pass_pres_1: "~fferar", "~fferāmur";
+    subj_pass_pres_2: "~fferāris|~fferāre", "~fferāminī";
+    subj_pass_pres_3: "~fferātur", "~fferantur";
+    subj_pass_impf_1: "~fferrer", "~fferrēmur";
+    subj_pass_impf_2: "~fferrēris|~fferrēre", "~fferrēminī";
+    subj_pass_impf_3: "~fferrētur", "~fferrentur";
+    imperative_act_pres_2: "~ffer", "~fferte";
+    imperative_act_fut_2: "~ffertō", "~ffertōte";
+    imperative_act_fut_3: _, "~fferuntō";
+    imperative_pass_pres_2: "~fferre", _;
+    imperative_pass_fut_2: "~ffertor", _;
+    imperative_pass_fut_3: _, "~fferuntor";
+    infinitive_act: _, "~stulisse", _;
+    infinitive_pass: "~fferrī", _, _;
+    participle: "~fferēns", _, _, "~fferendus|~fferundus";
+    gerund: _, "~fferendī", "~fferendō", "~fferendum", _, _;
+    ),
+    // Antecapiō: 3 words (superiaciō, interiaciō, antecapiō). Like Capiō, except in 0 cells: .
     conjugation!("antecapiō", 3, "~a~iō", like Capiō;
-    participle: _, "~e~tus", "~e~tūrus", _;
-    supine: _, _, _, "~e~tum", "~e~tū", _;
+    stem participle_perf_pass: "~e~t- like agitō";
     ),
-    // Commeminī: 3 words (meminī, commeminī, rememinī). Like Adipīscor, except in 44 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("commeminī", 3, "~i~ī", like Adipīscor;
+    // Commeminī: 3 words (meminī, commeminī, rememinī). Like Sum, except in 34 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    conjugation!("commeminī", 3, "~i~ī", like Sum as PRES_AS_FUT;
     ind_act_pres_1: "~i~ī", "~i~imus";
     ind_act_pres_2: "~i~istī", "~i~istis";
     ind_act_pres_3: "~i~it", "~i~ērunt|~i~ēre";
@@ -7062,13 +7136,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_1: "~i~issem", "~i~issēmus";
     subj_act_impf_2: "~i~issēs", "~i~issētis";
     subj_act_impf_3: "~i~isset", "~i~issent";
-    imperative_act_pres_2: derived, derived;
     imperative_act_fut_2: "~e~tō", "~e~tōte";
-    imperative_act_fut_3: _, derived;
     infinitive_act: "~i~isse", _, _;
-    participle: "~i~ēns", _, derived, derived;
-    gerund: _, derived, derived, derived, _, _;
-    supine: _, _, _, derived, derived, _;
+    participle: "~i~ēns", _, _, _;
     ),
     // Contemnō: 3 words (vannō, temnō, contemnō).
     conjugation!("contemnō", 3, "~nō";
@@ -7107,7 +7177,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_3: "~neret", "~nerent";
     subj_act_perf_1: "~pserim|~serim", "~pserīmus|~serīmus";
     subj_act_perf_2: "~pserīs|~serīs", "~pserītis|~serītis";
-    subj_act_perf_3: "~pserit|~serit", "~pserint|~serint";
     subj_act_plup_1: "~psissem|~sissem", "~psissēmus|~sissēmus";
     subj_act_plup_2: "~psissēs|~sissēs", "~psissētis|~sissētis";
     subj_act_plup_3: "~psisset|~sisset", "~psissent|~sissent";
@@ -7120,10 +7189,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ne", "~nite";
     imperative_act_fut_2: "~nitō", "~nitōte";
     imperative_act_fut_3: _, "~nuntō";
-    imperative_pass_pres_2: "~nere", "~niminī";
+    imperative_pass_pres_2: "~nere", _;
     imperative_pass_fut_2: "~nitor", _;
     imperative_pass_fut_3: _, "~nuntor";
-    infinitive_act: "~nere", "~psisse|~sisse", _;
+    infinitive_act: _, "~psisse|~sisse", _;
     infinitive_pass: "~nī", _, _;
     participle: "~nēns", "~ptus|~tus", "~ptūrus|~tūrus", "~nendus|~nundus";
     gerund: _, "~nendī", "~nendō", "~nendum", _, _;
@@ -7131,6 +7200,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ),
     // Dētorreō: 3 words (contorreō, dētorreō, extorreō).
     conjugation!("dētorreō", 3, "~orreō";
+    stem participle_perf_pass: "~ŏst- like agitō";
     ind_act_pres_1: "~orreō", "~orrēmus";
     ind_act_pres_2: "~orrēs", "~orrētis";
     ind_act_pres_3: "~orret", "~orrent";
@@ -7178,17 +7248,29 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~orrē", "~orrēte";
     imperative_act_fut_2: "~orrētō", "~orrētōte";
     imperative_act_fut_3: _, "~orrentō";
-    imperative_pass_pres_2: "~orrēre", "~orrēminī";
+    imperative_pass_pres_2: "~orrēre", _;
     imperative_pass_fut_2: "~orrētor", _;
     imperative_pass_fut_3: _, "~orrentor";
-    infinitive_act: "~orrēre", "~orruisse", _;
+    infinitive_act: _, "~orruisse", _;
     infinitive_pass: "~orrērī", _, _;
-    participle: "~orrēns", "~ŏstus", "~ŏstūrus", "~orrendus";
+    participle: "~orrēns", _, _, "~orrendus";
     gerund: _, "~orrendī", "~orrendō", "~orrendum", _, _;
-    supine: _, _, _, "~ŏstum", "~ŏstū", _;
     ),
-    // Superstō: 3 words (superstō, circumstō, antistō). Like Cōnstō, except in 33 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
-    conjugation!("superstō", 3, "~ō", like Cōnstō;
+    // Orior: 3 words (morior, orior, ēmorior). Like Exorior, except in 15 cells: ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, subj_act_impf_1 sg, subj_act_impf_1 pl, ….
+    conjugation!("orior", 3, "~ior", like Exorior;
+    ind_act_pres_1: _, "~ĭmur";
+    ind_act_pres_2: "~eris|~īris|~ere|~īre", "~ĭminī";
+    ind_act_pres_3: "~ĭtur", _;
+    subj_act_impf_1: "~erer|~īrer", "~erēmur|~īrēmur";
+    subj_act_impf_2: "~erēris|~īrēris|~erēre|~īrēre", "~erēminī|~īrēminī";
+    subj_act_impf_3: "~erētur|~īrētur", "~erentur|~īrentur";
+    imperative_act_pres_2: "~ere|~īre", "~ĭminī";
+    imperative_act_fut_2: "~ĭtor", _;
+    infinitive_act: "~ī|~īrī", _, _;
+    participle: _, _, _, "~iendus";
+    ),
+    // Superstō: 3 words (superstō, circumstō, antistō). Like Cōnstō, except in 32 cells: ind_act_perf_1 sg, ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ….
+    conjugation!("superstō", 3, "~ō", like Cōnstō as ABL_AS_VOC;
     ind_act_perf_1: "~etī", "~etimus";
     ind_act_perf_2: "~etistī", "~etistis";
     ind_act_perf_3: "~etit", "~etērunt|~etēre";
@@ -7205,10 +7287,70 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~etisset", "~etissent";
     infinitive_act: _, "~etisse", _;
     participle: _, derived, derived, _;
-    supine: _, _, _, derived, derived, _;
+    supine: _, _, _, derived, _, _;
     ),
-    // Assiliō: 3 words (assiliō, prōsiliō, resiliō). Like Īnsiliō, except in 26 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
+    // Gignō: 3 words (gignō, ingignō, prōgignō).
+    conjugation!("gignō", 3, "~ig~ō";
+    stem participle_perf_pass: "~e~it- like agitō";
+    ind_act_pres_1: "~ig~ō", "~ig~imus";
+    ind_act_pres_2: "~ig~is", "~ig~itis";
+    ind_act_pres_3: "~ig~it", "~ig~unt";
+    ind_act_impf_1: "~ig~ēbam", "~ig~ēbāmus";
+    ind_act_impf_2: "~ig~ēbās", "~ig~ēbātis";
+    ind_act_impf_3: "~ig~ēbat", "~ig~ēbant";
+    ind_act_fut_1: "~ig~am", "~ig~ēmus";
+    ind_act_fut_2: "~ig~ēs", "~ig~ētis";
+    ind_act_fut_3: "~ig~et", "~ig~ent";
+    ind_act_perf_1: "~e~uī", "~e~uimus";
+    ind_act_perf_2: "~e~uistī", "~e~uistis";
+    ind_act_perf_3: "~e~uit", "~e~uērunt|~e~uēre";
+    ind_act_plup_1: "~e~ueram", "~e~uerāmus";
+    ind_act_plup_2: "~e~uerās", "~e~uerātis";
+    ind_act_plup_3: "~e~uerat", "~e~uerant";
+    ind_act_futp_1: "~e~uerō", "~e~uerimus";
+    ind_act_futp_2: "~e~ueris", "~e~ueritis";
+    ind_act_futp_3: "~e~uerit", "~e~uerint";
+    ind_pass_pres_1: "~ig~or", "~ig~imur";
+    ind_pass_pres_2: "~ig~eris|~ig~ere", "~ig~iminī";
+    ind_pass_pres_3: "~ig~itur", "~ig~untur";
+    ind_pass_impf_1: "~ig~ēbar", "~ig~ēbāmur";
+    ind_pass_impf_2: "~ig~ēbāris|~ig~ēbāre", "~ig~ēbāminī";
+    ind_pass_impf_3: "~ig~ēbātur", "~ig~ēbantur";
+    ind_pass_fut_1: "~ig~ar", "~ig~ēmur";
+    ind_pass_fut_2: "~ig~ēris|~ig~ēre", "~ig~ēminī";
+    ind_pass_fut_3: "~ig~ētur", "~ig~entur";
+    subj_act_pres_1: "~ig~am", "~ig~āmus";
+    subj_act_pres_2: "~ig~ās", "~ig~ātis";
+    subj_act_pres_3: "~ig~at", "~ig~ant";
+    subj_act_impf_1: "~ig~erem", "~ig~erēmus";
+    subj_act_impf_2: "~ig~erēs", "~ig~erētis";
+    subj_act_impf_3: "~ig~eret", "~ig~erent";
+    subj_act_perf_1: "~e~uerim", "~e~uerīmus";
+    subj_act_perf_2: "~e~uerīs", "~e~uerītis";
+    subj_act_plup_1: "~e~uissem", "~e~uissēmus";
+    subj_act_plup_2: "~e~uissēs", "~e~uissētis";
+    subj_act_plup_3: "~e~uisset", "~e~uissent";
+    subj_pass_pres_1: "~ig~ar", "~ig~āmur";
+    subj_pass_pres_2: "~ig~āris|~ig~āre", "~ig~āminī";
+    subj_pass_pres_3: "~ig~ātur", "~ig~antur";
+    subj_pass_impf_1: "~ig~erer", "~ig~erēmur";
+    subj_pass_impf_2: "~ig~erēris|~ig~erēre", "~ig~erēminī";
+    subj_pass_impf_3: "~ig~erētur", "~ig~erentur";
+    imperative_act_pres_2: "~ig~e", "~ig~ite";
+    imperative_act_fut_2: "~ig~itō", "~ig~itōte";
+    imperative_act_fut_3: _, "~ig~untō";
+    imperative_pass_pres_2: "~ig~ere", _;
+    imperative_pass_fut_2: "~ig~itor", _;
+    imperative_pass_fut_3: _, "~ig~untor";
+    infinitive_act: _, "~e~uisse", _;
+    infinitive_pass: "~ig~ī", _, _;
+    participle: "~ig~ēns", _, _, "~ig~endus|~ig~undus";
+    gerund: _, "~ig~endī", "~ig~endō", "~ig~endum", _, _;
+    ),
+    // Assiliō: 3 words (assiliō, prōsiliō, resiliō). Like Īnsiliō, except in 23 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_impf_1 sg, ind_pass_impf_1 pl, ….
     conjugation!("assiliō", 3, "~i~iō", like Īnsiliō;
+    stem verb_act_sg: "~i~- like ēveniō";
+    stem participle_perf_pass: "~u~t- like labōrō";
     ind_pass_pres_1: derived, derived;
     ind_pass_pres_2: derived, derived;
     ind_pass_impf_1: derived, derived;
@@ -7219,46 +7361,43 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_pass_pres_2: derived, derived;
     subj_pass_impf_1: derived, derived;
     subj_pass_impf_2: derived, derived;
-    imperative_pass_pres_2: derived, derived;
+    imperative_pass_pres_2: derived, _;
     imperative_pass_fut_2: derived, _;
-    imperative_pass_fut_3: "~i~ītor", _;
-    participle: _, "~u~tum", _, "~i~iendum|~i~iundum";
+    participle: _, _, _, "~i~iendum|~i~iundum";
     ),
-    // Convalēscō: 3 words (convalēscō, coalēscō, tonēscō). Like Clārēscō, except in 39 cells: ind_pass_pres_1 sg, ind_pass_pres_1 pl, ind_pass_pres_2 sg, ind_pass_pres_2 pl, ind_pass_pres_3 sg, ind_pass_pres_3 pl, ….
-    conjugation!("convalēscō", 3, "~ēscō", like Clārēscō;
-    ind_pass_pres_1: derived, derived;
-    ind_pass_pres_2: derived, derived;
+    // Convalēscō: 3 words (convalēscō, coalēscō, tonēscō). Like Madeō, except in 32 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("convalēscō", 3, "~ēscō", like Madeō as IMPF_AS_FUTP;
+    stem verb_act_sg: "~ēsc- like convalēscō";
+    ind_act_pres_1: _, "~ēscimus";
+    ind_act_impf_1: "~ēscēbam", "~ēscēbāmus";
+    ind_act_impf_2: "~ēscēbās", "~ēscēbātis";
+    ind_act_impf_3: "~ēscēbat", "~ēscēbant";
+    ind_act_fut_1: "~ēscam", "~ēscēmus";
+    ind_act_fut_2: "~ēscēs", "~ēscētis";
+    ind_act_fut_3: "~ēscet", _;
     ind_pass_pres_3: derived, derived;
-    ind_pass_impf_1: derived, derived;
-    ind_pass_impf_2: derived, derived;
-    ind_pass_impf_3: derived, derived;
-    ind_pass_fut_1: derived, derived;
-    ind_pass_fut_2: derived, derived;
+    ind_pass_impf_3: derived, _;
     ind_pass_fut_3: derived, derived;
-    subj_pass_pres_1: derived, derived;
-    subj_pass_pres_2: derived, derived;
+    subj_act_pres_3: "~ēscat", _;
     subj_pass_pres_3: derived, derived;
-    subj_pass_impf_1: derived, derived;
-    subj_pass_impf_2: derived, derived;
     subj_pass_impf_3: derived, derived;
-    imperative_pass_pres_2: derived, derived;
-    imperative_pass_fut_2: derived, _;
-    imperative_pass_fut_3: _, derived;
+    imperative_act_fut_2: "~ēscitō", _;
+    imperative_pass_fut_3: derived, derived;
     infinitive_pass: derived, _, _;
-    participle: _, _, "~itūrus", derived;
-    supine: _, _, _, "~itum", "~itū", _;
+    participle: "~ēscēns", derived, _, derived;
+    gerund: _, "~ēscendī", "~ēscendō", "~ēscendum", _, _;
     ),
-    // Adhērēscō: 3 words (adhērēscō, adhaerēscō, cohaerēscō). Like Commeminī, except in 72 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("adhērēscō", 3, "~rē~cō", like Commeminī;
-    ind_act_pres_1: "~rē~cō", "~rē~cimus";
-    ind_act_pres_2: "~rē~cis", "~rē~citis";
-    ind_act_pres_3: "~rē~cit", "~rē~cunt";
+    // Adhērēscō: 3 words (adhērēscō, adhaerēscō, cohaerēscō). Like Sum, except in 47 cells: ind_act_pres_1 pl, ind_act_impf_1 sg, ind_act_impf_1 pl, ind_act_impf_2 sg, ind_act_impf_2 pl, ind_act_impf_3 sg, ….
+    conjugation!("adhērēscō", 3, "~rē~cō", like Sum;
+    stem verb_act_sg: "~rē~c- like convalēscō";
+    stem participle_perf_pass: "~~- like modulor";
+    ind_act_pres_1: _, "~rē~cimus";
     ind_act_impf_1: "~rē~cēbam", "~rē~cēbāmus";
     ind_act_impf_2: "~rē~cēbās", "~rē~cēbātis";
     ind_act_impf_3: "~rē~cēbat", "~rē~cēbant";
     ind_act_fut_1: "~rē~cam", "~rē~cēmus";
     ind_act_fut_2: "~rē~cēs", "~rē~cētis";
-    ind_act_fut_3: "~rē~cet", "~rē~cent";
+    ind_act_fut_3: "~rē~cet", _;
     ind_act_perf_1: "~~ī", "~~imus";
     ind_act_perf_2: "~~istī", "~~istis";
     ind_act_perf_3: "~~it", "~~ērunt|~~ēre";
@@ -7268,29 +7407,78 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_1: "~~erō", "~~erimus";
     ind_act_futp_2: "~~eris", "~~eritis";
     ind_act_futp_3: "~~erit", "~~erint";
-    subj_act_pres_1: "~rē~cam", "~rē~cāmus";
-    subj_act_pres_2: "~rē~cās", "~rē~cātis";
-    subj_act_pres_3: "~rē~cat", "~rē~cant";
-    subj_act_impf_1: "~rē~cerem", "~rē~cerēmus";
-    subj_act_impf_2: "~rē~cerēs", "~rē~cerētis";
-    subj_act_impf_3: "~rē~ceret", "~rē~cerent";
+    subj_act_pres_3: "~rē~cat", _;
     subj_act_perf_1: "~~erim", "~~erīmus";
     subj_act_perf_2: "~~erīs", "~~erītis";
     subj_act_plup_1: "~~issem", "~~issēmus";
     subj_act_plup_2: "~~issēs", "~~issētis";
     subj_act_plup_3: "~~isset", "~~issent";
-    imperative_act_pres_2: "~rē~ce", "~rē~cite";
-    imperative_act_fut_2: "~rē~citō", "~rē~citōte";
-    imperative_act_fut_3: _, "~rē~cuntō";
-    infinitive_act: "~rē~cere", "~~isse", _;
-    participle: "~rē~cēns", _, "~~ūrus", _;
+    imperative_act_fut_2: "~rē~citō", _;
+    infinitive_act: _, "~~isse", _;
+    participle: "~rē~cēns", _, _, _;
     gerund: _, "~rē~cendī", "~rē~cendō", "~rē~cendum", _, _;
-    supine: _, _, _, "~~um", "~~ū", _;
     ),
-    // Abblandior: 3 words (ēblandior, abblandior, adblandior). Like Mōlior, except in 3 cells: participle fut_act, supine acc, supine abl.
+    // Lavō: 3 words (lavō, perlavō, adlavō).
+    conjugation!("lavō", 3, "~a~ō";
+    stem participle_perf_pass: "~a~āt- like agitō";
+    ind_act_pres_1: "~a~ō", "~a~āmus";
+    ind_act_pres_2: "~a~ās", "~a~ātis";
+    ind_act_pres_3: "~a~at", "~a~ant";
+    ind_act_impf_1: "~a~ābam", "~a~ābāmus";
+    ind_act_impf_2: "~a~ābās", "~a~ābātis";
+    ind_act_impf_3: "~a~ābat", "~a~ābant";
+    ind_act_fut_1: "~a~ābō", "~a~ābimus";
+    ind_act_fut_2: "~a~ābis", "~a~ābitis";
+    ind_act_fut_3: "~a~ābit", "~a~ābunt";
+    ind_act_perf_1: "~ā~ī", "~ā~imus";
+    ind_act_perf_2: "~ā~istī", "~ā~istis";
+    ind_act_perf_3: "~ā~it", "~ā~ērunt|~ā~ēre";
+    ind_act_plup_1: "~ā~eram", "~ā~erāmus";
+    ind_act_plup_2: "~ā~erās", "~ā~erātis";
+    ind_act_plup_3: "~ā~erat", "~ā~erant";
+    ind_act_futp_1: "~ā~erō", "~ā~erimus";
+    ind_act_futp_2: "~ā~eris", "~ā~eritis";
+    ind_act_futp_3: "~ā~erit", "~ā~erint";
+    ind_pass_pres_1: "~a~or", "~a~āmur";
+    ind_pass_pres_2: "~a~āris|~a~āre", "~a~āminī";
+    ind_pass_pres_3: "~a~ātur", "~a~antur";
+    ind_pass_impf_1: "~a~ābar", "~a~ābāmur";
+    ind_pass_impf_2: "~a~ābāris|~a~ābāre", "~a~ābāminī";
+    ind_pass_impf_3: "~a~ābātur", "~a~ābantur";
+    ind_pass_fut_1: "~a~ābor", "~a~ābimur";
+    ind_pass_fut_2: "~a~āberis|~a~ābere", "~a~ābiminī";
+    ind_pass_fut_3: "~a~ābitur", "~a~ābuntur";
+    subj_act_pres_1: "~a~em", "~a~ēmus";
+    subj_act_pres_2: "~a~ēs", "~a~ētis";
+    subj_act_pres_3: "~a~et", "~a~ent";
+    subj_act_impf_1: "~a~ārem", "~a~ārēmus";
+    subj_act_impf_2: "~a~ārēs", "~a~ārētis";
+    subj_act_impf_3: "~a~āret", "~a~ārent";
+    subj_act_perf_1: "~ā~erim", "~ā~erīmus";
+    subj_act_perf_2: "~ā~erīs", "~ā~erītis";
+    subj_act_plup_1: "~ā~issem", "~ā~issēmus";
+    subj_act_plup_2: "~ā~issēs", "~ā~issētis";
+    subj_act_plup_3: "~ā~isset", "~ā~issent";
+    subj_pass_pres_1: "~a~er", "~a~ēmur";
+    subj_pass_pres_2: "~a~ēris|~a~ēre", "~a~ēminī";
+    subj_pass_pres_3: "~a~ētur", "~a~entur";
+    subj_pass_impf_1: "~a~ārer", "~a~ārēmur";
+    subj_pass_impf_2: "~a~ārēris|~a~ārēre", "~a~ārēminī";
+    subj_pass_impf_3: "~a~ārētur", "~a~ārentur";
+    imperative_act_pres_2: "~a~ā", "~a~āte";
+    imperative_act_fut_2: "~a~ātō", "~a~ātōte";
+    imperative_act_fut_3: _, "~a~antō";
+    imperative_pass_pres_2: "~a~āre", _;
+    imperative_pass_fut_2: "~a~ātor", _;
+    imperative_pass_fut_3: _, "~a~antor";
+    infinitive_act: _, "~ā~isse", _;
+    infinitive_pass: "~a~ārī", _, _;
+    participle: "~a~āns", _, _, "~a~andus";
+    gerund: _, "~a~andī", "~a~andō", "~a~andum", _, _;
+    ),
+    // Abblandior: 3 words (ēblandior, abblandior, adblandior). Like Mōlior, except in 0 cells: .
     conjugation!("abblandior", 3, "~ior", like Mōlior;
-    participle: _, _, "~itūrus", _;
-    supine: _, _, _, "~itum", "~itū", _;
+    stem participle_perf_pass: "~it- like modulor";
     ),
     // Effervēscō: 3 words (effervēscō, dēfervēscō, cōnfervēscō).
     conjugation!("effervēscō", 3, "~vēscō";
@@ -7329,7 +7517,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_impf_3: "~vēsceret", "~vēscerent";
     subj_act_perf_1: "~buerim|~verim", "~buerīmus|~verīmus";
     subj_act_perf_2: "~buerīs|~verīs", "~buerītis|~verītis";
-    subj_act_perf_3: "~buerit|~verit", "~buerint|~verint";
     subj_act_plup_1: "~buissem|~vissem", "~buissēmus|~vissēmus";
     subj_act_plup_2: "~buissēs|~vissēs", "~buissētis|~vissētis";
     subj_act_plup_3: "~buisset|~visset", "~buissent|~vissent";
@@ -7342,69 +7529,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~vēsce", "~vēscite";
     imperative_act_fut_2: "~vēscitō", "~vēscitōte";
     imperative_act_fut_3: _, "~vēscuntō";
-    imperative_pass_pres_2: "~vēscere", "~vēsciminī";
+    imperative_pass_pres_2: "~vēscere", _;
     imperative_pass_fut_2: "~vēscitor", _;
     imperative_pass_fut_3: _, "~vēscuntor";
-    infinitive_act: "~vēscere", "~buisse|~visse", _;
+    infinitive_act: _, "~buisse|~visse", _;
     infinitive_pass: "~vēscī", _, _;
     participle: "~vēscēns", _, _, "~vēscendus";
     gerund: _, "~vēscendī", "~vēscendō", "~vēscendum", _, _;
     ),
-    // Vesperāscit: 2 words (vesperāscit, advesperāscit). Like Dēpudet, except in 29 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("vesperāscit", 2, "~scit", like Dēpudet;
-    ind_act_pres_1: "~scit", _;
-    ind_act_pres_3: "~scit", _;
-    ind_act_impf_3: "~scēbat", _;
-    ind_act_fut_3: "~scet", _;
-    ind_act_perf_3: "~vit", _;
-    ind_act_plup_3: "~verat", _;
-    ind_act_futp_3: "~verit", _;
-    ind_pass_pres_3: derived, _;
-    ind_pass_impf_3: derived, _;
-    ind_pass_fut_3: derived, _;
-    subj_act_pres_3: "~scat", _;
-    subj_act_impf_3: "~sceret", _;
-    subj_act_plup_3: "~visset", _;
-    subj_pass_pres_3: derived, _;
-    subj_pass_impf_3: derived, _;
-    imperative_act_fut_3: "~scitō", _;
-    imperative_pass_fut_3: derived, _;
-    infinitive_act: "~scere", "~visse", _;
-    infinitive_pass: derived, _, _;
-    participle: "~scēns", derived, derived, derived;
-    gerund: _, "~scendī", "~scendō", "~scendum", _, _;
-    supine: _, _, _, derived, derived, _;
-    ),
-    // Coepī: 2 words (coepī, recoepī). Like Vesperāscit, except in 45 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_1 sg, ind_act_perf_1 pl, ….
-    conjugation!("coepī", 2, "~ī", like Vesperāscit;
-    ind_act_pres_1: "~ī", _;
-    ind_act_pres_3: derived, _;
-    ind_act_impf_3: derived, _;
-    ind_act_fut_3: derived, _;
-    ind_act_perf_1: "~ī", "~imus";
-    ind_act_perf_2: "~istī", "~istis";
-    ind_act_perf_3: "~it", "~ērunt|~ēre";
-    ind_act_plup_1: "~eram", "~erāmus";
-    ind_act_plup_2: "~erās", "~erātis";
-    ind_act_plup_3: "~erat", "~erant";
-    ind_act_futp_1: "~erō", "~erimus";
-    ind_act_futp_2: "~eris", "~eritis";
-    ind_act_futp_3: "~erit", "~erint";
-    subj_act_pres_3: derived, _;
-    subj_act_impf_3: derived, _;
-    subj_act_perf_1: "~erim", "~erīmus";
-    subj_act_perf_2: "~erīs", "~erītis";
-    subj_act_plup_1: "~issem", "~issēmus";
-    subj_act_plup_2: "~issēs", "~issētis";
-    subj_act_plup_3: "~isset", "~issent";
-    imperative_act_fut_3: derived, _;
-    infinitive_act: derived, "~isse", _;
-    participle: derived, "~tus", "~tūrus", _;
-    gerund: _, derived, derived, derived, _, _;
-    supine: _, _, _, "~tum", "~tū", _;
-    ),
-    // Dīlūculat: 2 words (grandinat, dīlūculat). Like Vesperāscit, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("dīlūculat", 2, "~at", like Vesperāscit;
+    // Dīlūculat: 2 words (grandinat, dīlūculat). Like Modulor, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
+    conjugation!("dīlūculat", 2, "~at", like Modulor as ACT_AS_PASS;
     ind_act_pres_1: "~at", _;
     ind_act_pres_3: "~at", _;
     ind_act_impf_3: "~ābat", _;
@@ -7417,114 +7551,68 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     subj_act_plup_3: "~āvisset", _;
     imperative_act_fut_3: "~ātō", _;
     infinitive_act: "~āre", "~āvisse", _;
-    participle: "~āns", _, _, _;
-    gerund: _, "~andī", "~andō", "~andum", _, _;
-    ),
-    // Pluit: 2 words (pluit, impluit). Like Dēpudet, except in 24 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_pass_pres_3 sg, ind_pass_impf_3 sg, ….
-    conjugation!("pluit", 2, "~uit", like Dēpudet;
-    ind_act_pres_1: "~uit", _;
-    ind_act_pres_3: "~uit", _;
-    ind_act_impf_3: "~uēbat", _;
-    ind_act_fut_3: "~uet", _;
-    ind_pass_pres_3: "~uitur", _;
-    ind_pass_impf_3: "~uēbātur", _;
-    ind_pass_fut_3: "~uētur", _;
-    subj_act_pres_3: "~uat", _;
-    subj_act_impf_3: "~ueret", _;
-    subj_pass_pres_3: "~uātur", _;
-    subj_pass_impf_3: "~uerētur", _;
-    imperative_act_fut_3: "~uitō", _;
-    imperative_pass_fut_3: "~uitor", _;
-    infinitive_act: "~uere", _, _;
-    infinitive_pass: "~uī", _, _;
-    participle: "~uēns", "~ūtum", "~ūtūrus", "~uendum";
-    gerund: _, "~uendī", "~uendō", "~uendum", _, _;
-    supine: _, _, _, "~ūtum", "~ūtū", _;
-    ),
-    // Autumnāscit: 2 words (autumnāscit, invesperāscit). Like Dēpudet, except in 22 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ind_act_futp_3 sg, ….
-    conjugation!("autumnāscit", 2, "~it", like Dēpudet;
-    ind_act_pres_1: "~it", _;
-    ind_act_pres_3: "~it", _;
-    ind_act_fut_3: "~et", _;
-    ind_act_perf_3: derived, _;
-    ind_act_plup_3: derived, _;
-    ind_act_futp_3: derived, _;
-    ind_pass_pres_3: "~itur", _;
-    ind_pass_fut_3: "~ētur", _;
-    subj_act_pres_3: "~at", _;
-    subj_act_impf_3: "~eret", _;
-    subj_act_plup_3: derived, _;
-    subj_pass_pres_3: "~ātur", _;
-    subj_pass_impf_3: "~erētur", _;
-    imperative_act_fut_3: "~itō", _;
-    imperative_pass_fut_3: "~itor", _;
-    infinitive_act: "~ere", derived, _;
-    infinitive_pass: "~ī", _, _;
-    participle: _, derived, derived, _;
+    participle: _, _, derived, derived;
     supine: _, _, _, derived, derived, _;
     ),
-    // Sum: 1 words (sum).
-    conjugation!("sum", 1, "sum";
-    ind_act_pres_1: "sum", "sumus";
-    ind_act_pres_2: "es", "estis";
-    ind_act_pres_3: "est", "sunt";
-    ind_act_impf_1: "eram", "erāmus";
-    ind_act_impf_2: "erās", "erātis";
-    ind_act_impf_3: "erat", "erant";
-    ind_act_fut_1: "erō", "erimus";
-    ind_act_fut_2: "eris|ere", "eritis";
-    ind_act_fut_3: "erit", "erunt";
-    ind_act_perf_1: "fuī", "fuimus";
-    ind_act_perf_2: "fuistī", "fuistis";
-    ind_act_perf_3: "fuit", "fuērunt|fuēre";
-    ind_act_plup_1: "fueram", "fuerāmus";
-    ind_act_plup_2: "fuerās", "fuerātis";
-    ind_act_plup_3: "fuerat", "fuerant";
-    ind_act_futp_1: "fuerō", "fuerimus";
-    ind_act_futp_2: "fueris", "fueritis";
-    ind_act_futp_3: "fuerit", "fuerint";
-    subj_act_pres_1: "sim|siem|fuam", "sīmus|siēmus|fuāmus";
-    subj_act_pres_2: "sīs|siēs|fuās", "sītis|siētis|fuātis";
-    subj_act_pres_3: "sit|siet|fuat", "sint|sient|fuant";
-    subj_act_impf_1: "essem|forem", "essēmus|forēmus";
-    subj_act_impf_2: "essēs|forēs", "essētis|forētis";
-    subj_act_impf_3: "esset|foret", "essent|forent";
-    subj_act_perf_1: "fuerim", "fuerīmus";
-    subj_act_perf_2: "fuerīs", "fuerītis";
-    subj_act_plup_1: "fuissem", "fuissēmus";
-    subj_act_plup_2: "fuissēs", "fuissētis";
-    subj_act_plup_3: "fuisset", "fuissent";
-    imperative_act_pres_2: "es", "este";
-    imperative_act_fut_2: "estō", "estōte";
-    imperative_act_fut_3: _, "suntō";
-    infinitive_act: "esse", "fuisse", "fore";
-    participle: _, _, "futūrus", _;
+    // Sepultō: 1 words (sepultō).
+    conjugation!("sepultō", 1, "~~ō";
+    stem participle_perf_pass: "~t~āt- like agitō";
+    ind_act_pres_1: "~t~ō", "~t~āmus";
+    ind_act_pres_2: "~t~ās", "~t~ātis";
+    ind_act_pres_3: "~t~at", "~t~ant";
+    ind_act_impf_1: "~t~ābam", "~t~ābāmus";
+    ind_act_impf_2: "~t~ābās", "~t~ābātis";
+    ind_act_impf_3: "~t~ābat", "~t~ābant";
+    ind_act_fut_1: "~t~ābō", "~t~ābimus";
+    ind_act_fut_2: "~t~ābis", "~t~ābitis";
+    ind_act_fut_3: "~t~ābit", "~t~ābunt";
+    ind_act_perf_1: "~t~āvī", "~t~āvimus";
+    ind_act_perf_2: "~t~āvistī", "~t~āvistis";
+    ind_act_perf_3: "~t~āvit", "~t~āvērunt|~t~āvēre";
+    ind_act_plup_1: "~t~āveram", "~t~āverāmus";
+    ind_act_plup_2: "~t~āverās", "~t~āverātis";
+    ind_act_plup_3: "~t~āverat", "~t~āverant";
+    ind_act_futp_1: "~t~āverō", "~t~āverimus";
+    ind_act_futp_2: "~t~āveris", "~t~āveritis";
+    ind_act_futp_3: "~t~āverit", "~t~āverint";
+    ind_pass_pres_1: "~t~or", "~t~āmur";
+    ind_pass_pres_2: "~t~āris|~t~āre", "~t~āminī";
+    ind_pass_pres_3: "~t~ātur", "~t~antur";
+    ind_pass_impf_1: "~t~ābar", "~t~ābāmur";
+    ind_pass_impf_2: "~t~ābāris|~t~ābāre", "~t~ābāminī";
+    ind_pass_impf_3: "~t~ābātur", "~t~ābantur";
+    ind_pass_fut_1: "~t~ābor", "~t~ābimur";
+    ind_pass_fut_2: "~t~āberis|~t~ābere", "~t~ābiminī";
+    ind_pass_fut_3: "~t~ābitur", "~t~ābuntur";
+    subj_act_pres_1: "~t~em", "~t~ēmus";
+    subj_act_pres_2: "~t~ēs", "~t~ētis";
+    subj_act_pres_3: "~t~et", "~t~ent";
+    subj_act_impf_1: "~t~ārem", "~t~ārēmus";
+    subj_act_impf_2: "~t~ārēs", "~t~ārētis";
+    subj_act_impf_3: "~t~āret", "~t~ārent";
+    subj_act_perf_1: "~t~āverim", "~t~āverīmus";
+    subj_act_perf_2: "~t~āverīs", "~t~āverītis";
+    subj_act_plup_1: "~t~āvissem", "~t~āvissēmus";
+    subj_act_plup_2: "~t~āvissēs", "~t~āvissētis";
+    subj_act_plup_3: "~t~āvisset", "~t~āvissent";
+    subj_pass_pres_1: "~t~er", "~t~ēmur";
+    subj_pass_pres_2: "~t~ēris|~t~ēre", "~t~ēminī";
+    subj_pass_pres_3: "~t~ētur", "~t~entur";
+    subj_pass_impf_1: "~t~ārer", "~t~ārēmur";
+    subj_pass_impf_2: "~t~ārēris|~t~ārēre", "~t~ārēminī";
+    subj_pass_impf_3: "~t~ārētur", "~t~ārentur";
+    imperative_act_pres_2: "~t~ā", "~t~āte";
+    imperative_act_fut_2: "~t~ātō", "~t~ātōte";
+    imperative_act_fut_3: _, "~t~antō";
+    imperative_pass_pres_2: "~t~āre", _;
+    imperative_pass_fut_2: "~t~ātor", _;
+    imperative_pass_fut_3: _, "~t~antor";
+    infinitive_act: _, "~t~āvisse", _;
+    infinitive_pass: "~t~ārī", _, _;
+    participle: "~t~āns", _, _, "~t~andus";
+    gerund: _, "~t~andī", "~t~andō", "~t~andum", _, _;
     ),
-    // Ōdī: 1 words (ōdī). Like Nītor, except in 40 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ōdī", 1, "~dī", like Nītor;
-    ind_act_pres_1: "~dī", "~dimus";
-    ind_act_pres_2: "~distī", "~distis";
-    ind_act_pres_3: "~dit", "~dērunt|~dēre";
-    ind_act_impf_1: "~deram", "~derāmus";
-    ind_act_impf_2: "~derās", "~derātis";
-    ind_act_impf_3: "~derat", "~derant";
-    ind_act_fut_1: "~derō", "~derimus";
-    ind_act_fut_2: "~deris", "~deritis";
-    ind_act_fut_3: "~derit", "~derint";
-    subj_act_pres_1: "~derim", "~derīmus";
-    subj_act_pres_2: "~derīs", "~derītis";
-    subj_act_pres_3: "~derit", "~derint";
-    subj_act_impf_1: "~dissem", "~dissēmus";
-    subj_act_impf_2: "~dissēs", "~dissētis";
-    subj_act_impf_3: "~disset", "~dissent";
-    imperative_act_pres_2: derived, derived;
-    imperative_act_fut_2: derived, _;
-    imperative_act_fut_3: _, derived;
-    infinitive_act: "~disse", _, _;
-    participle: derived, _, _, derived;
-    gerund: _, derived, derived, derived, _, _;
-    ),
-    // Alāre: 1 words (alāre). Like Agitō, except in 30 cells: ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ind_act_plup_1 sg, ….
+    // Alāre: 1 words (alāre). Like Agitō, except in 28 cells: ind_act_perf_1 pl, ind_act_perf_2 sg, ind_act_perf_2 pl, ind_act_perf_3 sg, ind_act_perf_3 pl, ind_act_plup_1 sg, ….
     conjugation!("alāre", 1, "~āre", like Agitō;
     ind_act_perf_1: _, "~āvimus|~āmus";
     ind_act_perf_2: "~āvistī|~āstī", "~āvistis|~āstis";
@@ -7537,56 +7625,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     ind_act_futp_3: "~āverit|~ārit", "~āverint|~ārint";
     subj_act_perf_1: "~āverim|~ārim", "~āverīmus|~ārīmus";
     subj_act_perf_2: "~āverīs|~ārīs", "~āverītis|~ārītis";
-    subj_act_perf_3: "~āverit|~ārit", "~āverint|~ārint";
     subj_act_plup_1: "~āvissem|~āssem", "~āvissēmus|~āssēmus";
     subj_act_plup_2: "~āvissēs|~āssēs", "~āvissētis|~āssētis";
     subj_act_plup_3: "~āvisset|~āsset", "~āvissent|~āssent";
     infinitive_act: _, "~āvisse|~āsse", _;
     ),
-    // Cōnfit: 1 words (cōnfit). Like Vesperāscit, except in 25 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_pres_3 pl, ind_act_impf_3 sg, ind_act_impf_3 pl, ind_act_fut_3 sg, ….
-    conjugation!("cōnfit", 1, "~it", like Vesperāscit;
-    ind_act_pres_1: "~it", _;
-    ind_act_pres_3: "~it", "~īunt";
-    ind_act_impf_3: "~īēbat", "~īēbant";
-    ind_act_fut_3: "~īet", "~īent";
-    ind_act_perf_3: derived, _;
-    ind_act_plup_3: derived, _;
-    ind_act_futp_3: derived, _;
-    subj_act_pres_3: "~īat", "~īant";
-    subj_act_impf_3: "~ieret", "~ierent";
-    subj_act_plup_3: derived, _;
-    imperative_act_fut_3: "~ītō", "~īuntō";
-    infinitive_act: "~ierī", derived, _;
-    participle: "~īēns", _, _, _;
-    gerund: _, "~īendī", "~īendō", "~īendum", _, _;
-    supine: _, _, _, "~actum", "~actū", _;
-    ),
-    // Inquam: 1 words (inquam). Like Vesperāscit, except in 29 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("inquam", 1, "~am", like Vesperāscit;
-    ind_act_pres_1: "~am", "~imus";
-    ind_act_pres_2: "~is", "~itis";
-    ind_act_pres_3: "~it", "~iunt";
-    ind_act_impf_3: "~iēbat", _;
-    ind_act_fut_2: "~iēs", _;
-    ind_act_fut_3: "~iet", "~ient";
-    ind_act_perf_1: "~iī", _;
-    ind_act_perf_2: "~istī", _;
-    ind_act_perf_3: "~it", _;
-    ind_act_plup_3: derived, _;
-    ind_act_futp_3: derived, _;
-    subj_act_pres_2: "~iās", _;
-    subj_act_pres_3: "~iat", "~iant";
-    subj_act_impf_3: derived, _;
-    subj_act_plup_3: derived, _;
-    imperative_act_pres_2: "~e", _;
-    imperative_act_fut_2: "~itō", _;
-    imperative_act_fut_3: derived, _;
-    infinitive_act: derived, derived, _;
-    participle: "~iēns", _, _, _;
-    gerund: _, derived, derived, derived, _, _;
-    ),
     // Coerceo: 1 words (coerceo).
     conjugation!("coerceo", 1, "~e~eo";
+    stem participle_perf_pass: "~ë~it- like agitō";
     ind_act_pres_1: "~ë~eō", "~ë~ēmus";
     ind_act_pres_2: "~ë~ēs", "~ë~ētis";
     ind_act_pres_3: "~ë~et", "~ë~ent";
@@ -7634,17 +7680,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ë~ē", "~ë~ēte";
     imperative_act_fut_2: "~ë~ētō", "~ë~ētōte";
     imperative_act_fut_3: _, "~ë~entō";
-    imperative_pass_pres_2: "~ë~ēre", "~ë~ēminī";
+    imperative_pass_pres_2: "~ë~ēre", _;
     imperative_pass_fut_2: "~ë~ētor", _;
     imperative_pass_fut_3: _, "~ë~entor";
-    infinitive_act: "~ë~ēre", "~ë~uisse", _;
+    infinitive_act: _, "~ë~uisse", _;
     infinitive_pass: "~ë~ērī", _, _;
-    participle: "~ë~ēns", "~ë~itus", "~ë~itūrus", "~ë~endus";
+    participle: "~ë~ēns", _, _, "~ë~endus";
     gerund: _, "~ë~endī", "~ë~endō", "~ë~endum", _, _;
-    supine: _, _, _, "~ë~itum", "~ë~itū", _;
     ),
-    // Rēfert: 1 words (rēfert). Like Vesperāscit, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("rēfert", 1, "~fert", like Vesperāscit;
+    // Rēfert: 1 words (rēfert). Like Dīlūculat, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
+    conjugation!("rēfert", 1, "~fert", like Dīlūculat;
     ind_act_pres_1: "~fert", _;
     ind_act_pres_3: "~fert", _;
     ind_act_impf_3: "~ferēbat", _;
@@ -7660,7 +7705,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     participle: "~ferēns", _, _, _;
     gerund: _, "~ferendī", "~ferendō", "~ferendum", _, _;
     ),
-    // Coemo: 1 words (coemo). Like Eximō, except in 76 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
+    // Coemo: 1 words (coemo). Like Eximō, except in 74 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
     conjugation!("coemo", 1, "~e~o", like Eximō;
     ind_act_pres_1: "~ë~ō", "~ë~imus";
     ind_act_pres_2: "~ë~is", "~ë~itis";
@@ -7695,159 +7740,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 202] = [
     imperative_act_pres_2: "~ë~e", "~ë~ite";
     imperative_act_fut_2: "~ë~itō", "~ë~itōte";
     imperative_act_fut_3: _, "~ë~untō";
-    imperative_pass_pres_2: "~ë~ere", "~ë~iminī";
+    imperative_pass_pres_2: "~ë~ere", _;
     imperative_pass_fut_2: "~ë~itor", _;
     imperative_pass_fut_3: _, "~ë~untor";
-    infinitive_act: "~ë~ere", _, _;
     infinitive_pass: "~ë~ī", _, _;
     participle: "~ë~ēns", _, _, "~ë~endus|~ë~undus";
     gerund: _, "~ë~endī", "~ë~endō", "~ë~endum", _, _;
     ),
-    // Ningit: 1 words (ningit). Like Commeminī, except in 43 cells: ind_act_pres_1 sg, ind_act_pres_1 pl, ind_act_pres_2 sg, ind_act_pres_2 pl, ind_act_pres_3 sg, ind_act_pres_3 pl, ….
-    conjugation!("ningit", 1, "~i~git", like Commeminī;
-    ind_act_pres_1: "~i~git", derived;
-    ind_act_pres_2: derived, derived;
-    ind_act_pres_3: "~i~git", derived;
-    ind_act_impf_1: derived, derived;
-    ind_act_impf_2: derived, derived;
-    ind_act_impf_3: "~i~gēbat", derived;
-    ind_act_fut_1: derived, derived;
-    ind_act_fut_2: derived, derived;
-    ind_act_fut_3: "~i~get", derived;
-    ind_act_perf_3: "~ī~xit", _;
-    ind_act_plup_3: "~ī~xerat", _;
-    ind_act_futp_3: "~ī~xerit", _;
-    subj_act_pres_1: derived, derived;
-    subj_act_pres_2: derived, derived;
-    subj_act_pres_3: "~i~gat", derived;
-    subj_act_impf_1: derived, derived;
-    subj_act_impf_2: derived, derived;
-    subj_act_impf_3: "~i~geret", derived;
-    subj_act_plup_3: "~ī~xisset", _;
-    imperative_act_fut_2: derived, derived;
-    imperative_act_fut_3: "~i~gitō", _;
-    infinitive_act: "~i~gere", "~ī~xisse", _;
-    participle: "~i~gēns", _, _, _;
-    gerund: _, "~i~gendī", "~i~gendō", "~i~gendum", _, _;
-    ),
-    // Compluit: 1 words (compluit). Like Vesperāscit, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("compluit", 1, "~uit", like Vesperāscit;
-    ind_act_pres_1: "~uit", _;
-    ind_act_pres_3: "~uit", _;
-    ind_act_impf_3: "~uēbat", _;
-    ind_act_fut_3: "~uet", _;
-    ind_act_perf_3: "~ūvit", _;
-    ind_act_plup_3: "~ūverat", _;
-    ind_act_futp_3: "~ūverit", _;
-    subj_act_pres_3: "~uat", _;
-    subj_act_impf_3: "~ueret", _;
-    subj_act_plup_3: "~ūvisset", _;
-    imperative_act_fut_3: "~uitō", _;
-    infinitive_act: "~uere", "~ūvisse", _;
-    participle: "~uēns", _, _, _;
-    gerund: _, "~uendī", "~uendō", "~uendum", _, _;
-    ),
-    // Īnfit: 1 words (īnfit). Like Cōnfit, except in 9 cells: ind_act_pres_3 pl, ind_act_impf_3 pl, ind_act_fut_3 pl, subj_act_pres_3 pl, subj_act_impf_3 pl, imperative_act_fut_3 pl, ….
-    conjugation!("īnfit", 1, "~it", like Cōnfit;
-    ind_act_pres_3: _, derived;
-    ind_act_impf_3: _, derived;
-    ind_act_fut_3: _, derived;
-    subj_act_pres_3: _, derived;
-    subj_act_impf_3: _, derived;
-    imperative_act_fut_3: _, derived;
-    participle: _, _, _, "~īendum";
-    supine: _, _, _, derived, derived, _;
-    ),
-    // Apage: 1 words (apage). Like Ningit, except in 19 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("apage", 1, "~~", like Ningit;
-    ind_act_pres_1: "~~", _;
-    ind_act_pres_3: derived, _;
-    ind_act_impf_3: derived, _;
-    ind_act_fut_3: derived, _;
-    ind_act_perf_3: derived, _;
-    ind_act_plup_3: derived, _;
-    ind_act_futp_3: derived, _;
-    subj_act_pres_3: derived, _;
-    subj_act_impf_3: derived, _;
-    subj_act_plup_3: derived, _;
-    imperative_act_pres_2: "~~", "~it~";
-    imperative_act_fut_3: derived, _;
-    infinitive_act: derived, derived, _;
-    participle: derived, _, _, _;
-    gerund: _, derived, derived, derived, _, _;
-    ),
-    // Ninguit: 1 words (ninguit). Like Ningit, except in 12 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, subj_act_pres_3 sg, subj_act_impf_3 sg, ….
-    conjugation!("ninguit", 1, "~i~guit", like Ningit;
-    ind_act_pres_1: "~i~guit", _;
-    ind_act_pres_3: "~i~guit", _;
-    ind_act_impf_3: "~i~guēbat", _;
-    ind_act_fut_3: "~i~guet", _;
-    subj_act_pres_3: "~i~guat", _;
-    subj_act_impf_3: "~i~gueret", _;
-    imperative_act_fut_3: "~i~guitō", _;
-    infinitive_act: "~i~guere", _, _;
-    participle: "~i~guēns", _, _, _;
-    gerund: _, "~i~guendī", "~i~guendō", "~i~guendum", _, _;
-    ),
-    // Autumnēscit: 1 words (autumnēscit). Like Vesperāscit, except in 17 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("autumnēscit", 1, "~cit", like Vesperāscit;
-    ind_act_pres_1: "~cit", _;
-    ind_act_pres_3: "~cit", _;
-    ind_act_impf_3: "~cēbat", _;
-    ind_act_fut_3: "~cet", _;
-    ind_act_perf_3: "~it", _;
-    ind_act_plup_3: "~erat", _;
-    ind_act_futp_3: "~erit", _;
-    subj_act_pres_3: "~cat", _;
-    subj_act_impf_3: "~ceret", _;
-    subj_act_plup_3: "~isset", _;
-    imperative_act_fut_3: "~citō", _;
-    infinitive_act: "~cere", "~isse", _;
-    participle: "~cēns", _, _, _;
-    gerund: _, "~cendī", "~cendō", "~cendum", _, _;
-    ),
-    // Coest: 1 words (coest). Like Vesperāscit, except in 19 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, ind_act_perf_3 sg, ind_act_plup_3 sg, ….
-    conjugation!("coest", 1, "~oest", like Vesperāscit;
-    ind_act_pres_1: "~oest", _;
-    ind_act_pres_3: "~oest", _;
-    ind_act_impf_3: "~oerat", _;
-    ind_act_fut_3: "~oerit", _;
-    ind_act_perf_3: "~ōnfuit", _;
-    ind_act_plup_3: "~ōnfuerat", _;
-    ind_act_futp_3: "~ōnfuerit", _;
-    subj_act_pres_3: "~ōnsit|~ōnsiet|~ōnfuat", _;
-    subj_act_impf_3: "~oesset|~ōnforet", _;
-    subj_act_plup_3: "~ōnfuisset", _;
-    imperative_act_fut_3: "~oestō", _;
-    infinitive_act: "~oesse", "~ōnfuisse", "~ōnfore";
-    participle: "~ōnsēns", _, "~ōnfutūrus", _;
-    gerund: _, derived, derived, derived, _, _;
-    ),
-    // Nīvit: 1 words (nīvit). Like Autumnēscit, except in 12 cells: ind_act_pres_1 sg, ind_act_pres_3 sg, ind_act_impf_3 sg, ind_act_fut_3 sg, subj_act_pres_3 sg, subj_act_impf_3 sg, ….
-    conjugation!("nīvit", 1, "~it", like Autumnēscit;
-    ind_act_pres_1: "~it", _;
-    ind_act_pres_3: "~it", _;
-    ind_act_impf_3: "~ēbat", _;
-    ind_act_fut_3: "~et", _;
-    subj_act_pres_3: "~at", _;
-    subj_act_impf_3: "~eret", _;
-    imperative_act_fut_3: "~itō", _;
-    infinitive_act: "~ere", _, _;
-    participle: "~ēns", _, _, _;
-    gerund: _, "~endī", "~endō", "~endum", _, _;
-    ),
-    // Licēscit: 1 words (licēscit). Like Nīvit, except in 11 cells: ind_act_pres_3 pl, ind_act_impf_3 pl, ind_act_fut_3 pl, ind_act_perf_3 sg, ind_act_plup_3 sg, ind_act_futp_3 sg, ….
-    conjugation!("licēscit", 1, "~it", like Nīvit;
-    ind_act_pres_3: _, "~unt";
-    ind_act_impf_3: _, "~ēbant";
-    ind_act_fut_3: _, "~ent";
-    ind_act_perf_3: derived, _;
-    ind_act_plup_3: derived, _;
-    ind_act_futp_3: derived, _;
-    subj_act_pres_3: _, "~ant";
-    subj_act_impf_3: _, "~erent";
-    subj_act_plup_3: derived, _;
-    imperative_act_fut_3: _, "~untō";
-    infinitive_act: _, derived, _;
+    // Inclāmitō: 1 words (inclāmitō). Like Agitō, except in 0 cells: .
+    conjugation!("inclāmitō", 1, "in~ō", like Agitō;
     ),
 ];

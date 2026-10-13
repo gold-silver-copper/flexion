@@ -1,0 +1,796 @@
+//! Harmony: a letter of an ending that paradigms of one shape write
+//! differently (`-lar`, `-ler`) is written once, as a class letter (`-lAr`),
+//! and a law fills it from the nearest letter of a tier before it, as the law
+//! has written it: the value passes from the stem to the first suffix and on
+//! from suffix to suffix (Koskenniemi 1983 p. 77; Belth 2023 Table 4).
+//!
+//! The classes come from the tables' alternations (Ermolaeva 2018 §3): the
+//! letters paradigms of one shape write at one place of one cell's ending
+//! (not those the lemma ends in: the word shows them), the widest set first.
+//! A class's tier is learned by taking letters off the alphabet (Burness &
+//! McMullin 2019 §5.3; Belth 2025 pp. 45–46): every letter before the class
+//! letter starts on it, and the letter after which its value is least
+//! decided leaves it, one at a time, while one isn't decided; a letter that
+//! decides one (a trigger, or a blocker) stays. "Decided" is Yang's
+//! tolerance, at most n/ln n exceptions in n (Belth 2024 eq. 14), counting
+//! a word once (a loan that breaks harmony is one exception, not one per
+//! form). A letter that decides only what a letter before it would leaves
+//! too. The tier is learned on half the words and checked on the other half
+//! (Rasin & Katzir 2020: what a law must not do, the words it is learned
+//! from never pay for). A class is kept when its law decides it within the
+//! tolerance on both halves, writes at least two of its letters, and is along
+//! a tier: a letter further back than the one just before decides most of its
+//! places (else it is a law at the stem's edge, Belth 2024 p. 8). Classes
+//! whose values agree are one class letter; classes one tier decides are one
+//! law,
+//! written in one pass. A paradigm writes the class letter where the law
+//! gives its words' letter, breaking few; a class that makes no two endings
+//! one goes; paradigms then alike are one.
+
+use super::{BREAKS, Change, Law, MIN_WORDS, Word, held_out};
+use crate::HashMap;
+use flexion::{Orthography, Paradigm, pattern};
+use std::borrow::Cow;
+use std::collections::{BTreeMap, BTreeSet};
+
+/// The most alternations tried as classes.
+const CANDIDATES: usize = 24;
+
+/// A place a paradigm's ending writes a letter others of its shape don't:
+/// the paradigm, the cell, and the letter's place in the ending.
+type Spot = (usize, usize, usize);
+
+/// Where a letter of a word's form is: the word, and its byte in the form
+/// of the spot's cell.
+type Example = (usize, usize);
+
+/// A pattern before its ending (`~` and what comes before it), and its
+/// ending's letters.
+type Split = (String, Vec<char>);
+
+/// A form up to a place, the letter there, and the word.
+type Seen<'w> = (&'w str, char, usize);
+
+/// Per tier letter before a place (or none), the letters seen there, each
+/// counted once a word: a word that breaks a law breaks it once however
+/// many of its forms show it (a lexical exception is one, `saat`, `saatler`,
+/// `saatlerde`).
+type Units = BTreeMap<Option<char>, BTreeMap<char, u32>>;
+
+/// What `seen` shows on `tier` (see [`Units`]).
+fn units(seen: &[Seen<'_>], tier: &BTreeSet<char>) -> Units {
+    let mut distinct: Vec<(Option<char>, char, usize)> = seen
+        .iter()
+        .map(|(before, at, w)| (nearest(before, tier), *at, *w))
+        .collect();
+    distinct.sort_unstable();
+    distinct.dedup();
+    let mut by = Units::new();
+    for (t, at, _) in distinct {
+        *by.entry(t).or_default().entry(at).or_default() += 1;
+    }
+    by
+}
+
+/// The value seen most often after each tier letter (and none); where no
+/// word has none, the value seen most often of all.
+fn values(by: &Units) -> Option<BTreeMap<Option<char>, char>> {
+    let mut total: BTreeMap<char, u32> = BTreeMap::new();
+    for values in by.values() {
+        for (&v, &n) in values {
+            *total.entry(v).or_default() += n;
+        }
+    }
+    let mut map: BTreeMap<Option<char>, char> = by
+        .iter()
+        .filter_map(|(t, values)| Some((*t, commonest(values)?)))
+        .collect();
+    if let std::collections::btree_map::Entry::Vacant(none) = map.entry(None) {
+        none.insert(commonest(&total)?);
+    }
+    Some(map)
+}
+
+/// How many of `by`'s words `map` gets wrong, and how many it has.
+fn judged(by: &Units, map: &BTreeMap<Option<char>, char>) -> (u32, u32) {
+    let mut n = 0;
+    let mut wrong = 0;
+    for (t, values) in by {
+        let v = map.get(t).or_else(|| map.get(&None));
+        for (x, &k) in values {
+            n += k;
+            if v != Some(x) {
+                wrong += k;
+            }
+        }
+    }
+    (n, wrong)
+}
+
+/// A learned class: its letters, its tier, and its value after each tier
+/// letter and after none.
+struct Class {
+    letters: Vec<char>,
+    tier: BTreeSet<char>,
+    map: BTreeMap<Option<char>, char>,
+    /// Its letters, commonest first.
+    common: Vec<char>,
+}
+
+/// The nearest of `tier` before the end of `before`.
+fn nearest(before: &str, tier: &BTreeSet<char>) -> Option<char> {
+    before.chars().rev().find(|c| tier.contains(c))
+}
+
+impl Class {
+    /// Its value after `before`.
+    fn value(&self, before: &str) -> Option<char> {
+        let trigger = nearest(before, &self.tier);
+        self.map
+            .get(&trigger)
+            .or_else(|| self.map.get(&None))
+            .copied()
+    }
+}
+
+/// A class's examples: its letters, and what its places show on the words
+/// it is learned from and those it is checked on (see [`held_out`]).
+struct Pool<'w> {
+    letters: Vec<char>,
+    learned: Vec<Seen<'w>>,
+    held: Vec<Seen<'w>>,
+}
+
+/// The harmony laws, and the paradigms with their class letters (those
+/// then alike merged) and the assignment.
+pub(super) fn learn<'s>(
+    orthography: &Orthography<'_>,
+    words: &[Word<'_>],
+    paradigms: Vec<Paradigm<'s>>,
+    assignment: Vec<u16>,
+) -> (Vec<Law>, Vec<Paradigm<'s>>, Vec<u16>) {
+    let cells = paradigms
+        .first()
+        .map_or(0, |p| p.table.split('\t').count().saturating_sub(1));
+    // Per paradigm and cell, its usual pattern, split before its ending.
+    let usual: Vec<Vec<Option<Split>>> = paradigms
+        .iter()
+        .map(|p| {
+            (0..cells)
+                .map(|c| {
+                    let v = pattern::variants(p.pattern(&paradigms, c)?).next()?;
+                    let (head, end) = v.rsplit_once('~')?;
+                    Some((head.to_string(), end.chars().collect()))
+                })
+                .collect()
+        })
+        .collect();
+    let mut members: Vec<Vec<usize>> = vec![Vec::new(); paradigms.len()];
+    for (w, &p) in assignment.iter().enumerate() {
+        if let Some(m) = members.get_mut(usize::from(p)) {
+            m.push(w);
+        }
+    }
+    // Paradigms of one shape (their lemmas' letters aside), by cell, head
+    // and ending length.
+    let shape = |lemma: &str| -> String {
+        lemma
+            .chars()
+            .map(|c| {
+                if c == '~' || c == pattern::COPY {
+                    c
+                } else {
+                    '.'
+                }
+            })
+            .collect()
+    };
+    let mut groups: BTreeMap<(String, usize, &str, usize), Vec<usize>> = BTreeMap::new();
+    for (p, par) in paradigms.iter().enumerate() {
+        for (c, u) in usual.get(p).into_iter().flatten().enumerate() {
+            if let Some((head, end)) = u {
+                groups
+                    .entry((shape(&par.lemma), c, head, end.len()))
+                    .or_default()
+                    .push(p);
+            }
+        }
+    }
+    // The places where they differ, with the letters written there: not
+    // the letters a paradigm's lemma ends in, which the word itself shows
+    // (`~i` of `kedi`, `~isi`).
+    let given = |p: usize, end: &[char], at: usize| {
+        let lemma: Vec<char> = paradigms
+            .get(p)
+            .and_then(|par| par.lemma.rsplit_once('~'))
+            .map_or(Vec::new(), |(_, e)| e.chars().collect());
+        at < lemma.len() && end.starts_with(&lemma)
+    };
+    let mut spots: BTreeMap<Spot, Vec<char>> = BTreeMap::new();
+    for (&(_, c, _, len), ps) in groups.iter().filter(|(_, ps)| ps.len() > 1) {
+        for at in 0..len {
+            let letters: Vec<(usize, char)> = ps
+                .iter()
+                .filter_map(|&p| {
+                    let end = &usual.get(p)?.get(c)?.as_ref()?.1;
+                    let letter = *end.get(at)?;
+                    (!given(p, end, at)).then_some((p, letter))
+                })
+                .collect();
+            let mut set: Vec<char> = letters.iter().map(|e| e.1).collect();
+            set.sort_unstable();
+            set.dedup();
+            if set.len() > 1 {
+                for &(p, _) in &letters {
+                    spots.insert((p, c, at), set.clone());
+                }
+            }
+        }
+    }
+    if spots.is_empty() {
+        return (Vec::new(), paradigms, assignment);
+    }
+    // Each spot's examples: the words its paradigm builds that form of.
+    let mut examples: BTreeMap<Spot, Vec<Example>> = BTreeMap::new();
+    for (p, par) in paradigms.iter().enumerate() {
+        let mine: Vec<&(usize, usize, usize)> = spots.keys().filter(|s| s.0 == p).collect();
+        if mine.is_empty() {
+            continue;
+        }
+        for &w in members.get(p).into_iter().flatten() {
+            let Some(word) = words.get(w) else { continue };
+            let Some(stems) = par.stems(orthography, word.letters) else {
+                continue;
+            };
+            for &&(_, c, at) in &mine {
+                let (Some(Some(form)), Some(Some((head, end)))) =
+                    (word.forms.get(c), usual.get(p).and_then(|u| u.get(c)))
+                else {
+                    continue;
+                };
+                let ending: String = end.iter().collect();
+                if pattern::fill(&format!("{head}~{ending}"), &stems) != *form {
+                    continue;
+                }
+                let places: Vec<usize> = form.char_indices().map(|(i, _)| i).collect();
+                let Some(&byte) = (places.len() + at)
+                    .checked_sub(end.len())
+                    .and_then(|k| places.get(k))
+                else {
+                    continue;
+                };
+                examples.entry((p, c, at)).or_default().push((w, byte));
+            }
+        }
+    }
+    let seen = |spot: &Spot, e: &Example| -> Option<Seen<'_>> {
+        let form: &str = words.get(e.0)?.forms.get(spot.1)?.as_ref()?;
+        let at = form.get(e.1..)?.chars().next()?;
+        Some((form.get(..e.1)?, at, e.0))
+    };
+    // The alternations, those whose letters cover the most examples first:
+    // a class is the widest set one law decides (`ı i u ü`, not `ı i`).
+    let mut sizes: BTreeMap<&Vec<char>, usize> = BTreeMap::new();
+    for (spot, letters) in &spots {
+        *sizes.entry(letters).or_default() += examples.get(spot).map_or(0, Vec::len);
+    }
+    let mut candidates: Vec<(&Vec<char>, usize)> = sizes
+        .keys()
+        .map(|&set| {
+            let within = sizes
+                .iter()
+                .filter(|(l, _)| l.iter().all(|c| set.contains(c)));
+            (set, within.map(|(_, n)| n).sum())
+        })
+        .collect();
+    candidates.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+    let mut pools: Vec<Pool<'_>> = Vec::new();
+    let mut claimed: BTreeSet<Spot> = BTreeSet::new();
+    for (letters, _) in candidates.into_iter().take(CANDIDATES) {
+        let pool: Vec<&Spot> = spots
+            .iter()
+            .filter(|(s, l)| !claimed.contains(*s) && l.iter().all(|c| letters.contains(c)))
+            .map(|(s, _)| s)
+            .collect();
+        let mut users: Vec<usize> = pool
+            .iter()
+            .flat_map(|s| examples.get(s).into_iter().flatten().map(|e| e.0))
+            .collect();
+        users.sort_unstable();
+        users.dedup();
+        if users.len() < MIN_WORDS {
+            continue;
+        }
+        // Learned on half the words, checked on the other half: a law whose
+        // blocking letters only the words it was learned from pay for fails
+        // on words it hasn't seen (Rasin & Katzir 2020).
+        let mut candidate = Pool {
+            letters: letters.clone(),
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for s in &pool {
+            for e in examples.get(*s).into_iter().flatten() {
+                let (Some(x), Some(w)) = (seen(s, e), words.get(e.0)) else {
+                    continue;
+                };
+                if held_out(w.letters) {
+                    candidate.held.push(x);
+                } else {
+                    candidate.learned.push(x);
+                }
+            }
+        }
+        if fit(&[&candidate]).is_some() {
+            claimed.extend(pool.into_iter().copied());
+            pools.push(candidate);
+        }
+    }
+    // Classes one tier decides are one law, written in one pass: what one
+    // writes the next reads (`-lArI`: `I` reads the `a` or `e` just written).
+    let mut laws_of: Vec<Vec<usize>> = Vec::new();
+    for k in 0..pools.len() {
+        let joins = laws_of.iter().position(|ks| {
+            let together: Vec<&Pool<'_>> = ks
+                .iter()
+                .chain([&k])
+                .filter_map(|&i| pools.get(i))
+                .collect();
+            fit(&together).is_some()
+        });
+        match joins.and_then(|j| laws_of.get_mut(j)) {
+            Some(ks) => ks.push(k),
+            None => laws_of.push(vec![k]),
+        }
+    }
+    let mut classes: Vec<Class> = Vec::new();
+    for ks in &laws_of {
+        let together: Vec<&Pool<'_>> = ks.iter().filter_map(|&i| pools.get(i)).collect();
+        let Some(tier) = fit(&together) else {
+            continue;
+        };
+        for pool in together {
+            // Its values from all its words, on the tier learned.
+            let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
+            let by = units(&all, &tier);
+            let Some(map) = values(&by) else { continue };
+            let mut total: BTreeMap<char, u32> = BTreeMap::new();
+            for (&v, &n) in by.values().flat_map(|v| v.iter()) {
+                *total.entry(v).or_default() += n;
+            }
+            let mut common: Vec<(u32, char)> = total.iter().map(|(&c, &n)| (n, c)).collect();
+            common.sort_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
+            // A class whose values are another's on the same tier is that
+            // class: one letter.
+            let value = |m: &BTreeMap<Option<char>, char>, t: Option<char>| {
+                m.get(&t).or_else(|| m.get(&None)).copied()
+            };
+            let alike = |c: &Class| {
+                let triggers = tier.iter().map(|&t| Some(t)).chain([None]);
+                c.tier == tier
+                    && triggers
+                        .into_iter()
+                        .all(|t| value(&c.map, t) == value(&map, t))
+            };
+            if let Some(same) = classes.iter_mut().find(|c| alike(c)) {
+                for l in &pool.letters {
+                    if !same.letters.contains(l) {
+                        same.letters.push(*l);
+                    }
+                }
+                continue;
+            }
+            classes.push(Class {
+                letters: pool.letters.clone(),
+                tier: tier.clone(),
+                map,
+                common: common.into_iter().map(|(_, c)| c).collect(),
+            });
+        }
+    }
+    if classes.is_empty() {
+        return (Vec::new(), paradigms, assignment);
+    }
+    // Each paradigm's spots its words' letters the law gives: with the
+    // class, the forms it gets wrong there.
+    let mut chosen: BTreeMap<Spot, (usize, u32)> = BTreeMap::new();
+    for spot in spots.keys() {
+        let Some(letter) = usual
+            .get(spot.0)
+            .and_then(|u| u.get(spot.1)?.as_ref()?.1.get(spot.2).copied())
+        else {
+            continue;
+        };
+        let es: Vec<Seen<'_>> = examples
+            .get(spot)
+            .into_iter()
+            .flatten()
+            .filter_map(|e| seen(spot, e))
+            .collect();
+        if es.is_empty() {
+            continue;
+        }
+        let fits = classes.iter().enumerate().find_map(|(k, class)| {
+            if !class.letters.contains(&letter) {
+                return None;
+            }
+            let wrong = es
+                .iter()
+                .filter(|(before, at, _)| class.value(before) != Some(*at))
+                .count();
+            #[allow(clippy::cast_precision_loss)]
+            let ok = wrong as f64 <= BREAKS * es.len() as f64;
+            ok.then(|| (k, u32::try_from(wrong).unwrap_or(u32::MAX)))
+        });
+        if let Some(f) = fits {
+            chosen.insert(*spot, f);
+        }
+    }
+    // A class that makes no two endings of a shape one states nothing once:
+    // it goes, and the others are counted again without it.
+    loop {
+        let mut credit: BTreeMap<usize, usize> = BTreeMap::new();
+        for (&(_, c, _, _), ps) in &groups {
+            let ends = |rewrite: bool| -> BTreeSet<Vec<char>> {
+                ps.iter()
+                    .filter_map(|&p| {
+                        let mut end = usual.get(p)?.get(c)?.as_ref()?.1.clone();
+                        if rewrite {
+                            for (at, l) in end.iter_mut().enumerate() {
+                                if let Some((k, _)) = chosen.get(&(p, c, at)) {
+                                    *l = char::from_u32(0xE000 + u32::try_from(*k).ok()?)?;
+                                }
+                            }
+                        }
+                        Some(end)
+                    })
+                    .collect()
+            };
+            let one = ends(false).len().saturating_sub(ends(true).len());
+            if one > 0 {
+                let used: BTreeSet<usize> = ps
+                    .iter()
+                    .flat_map(|&p| chosen.range((p, c, 0)..(p, c + 1, 0)).map(|(_, (k, _))| *k))
+                    .collect();
+                for k in used {
+                    *credit.entry(k).or_default() += one;
+                }
+            }
+        }
+        let used: BTreeSet<usize> = chosen.values().map(|(k, _)| *k).collect();
+        let idle: Vec<usize> = used
+            .into_iter()
+            .filter(|k| !credit.contains_key(k))
+            .collect();
+        if idle.is_empty() {
+            break;
+        }
+        chosen.retain(|_, (k, _)| !idle.contains(k));
+    }
+    // The class letters: a letter of the class written as a capital (the
+    // commonest first), or another Latin capital, none a word writes. A
+    // class with none left is no class.
+    let mut used: BTreeSet<char> = words
+        .iter()
+        .flat_map(|w| {
+            w.letters
+                .chars()
+                .chain(w.forms.iter().flatten().flat_map(|f| f.chars()))
+        })
+        .collect();
+    let names: Vec<Option<char>> = classes
+        .iter()
+        .map(|class| {
+            let capitals = class.common.iter().filter_map(|&c| {
+                let mut upper = c.to_uppercase();
+                match (upper.next(), upper.next()) {
+                    (Some(u), None) if u != c => Some(u),
+                    _ => None,
+                }
+            });
+            let name = capitals.chain('A'..='Z').find(|c| !used.contains(c))?;
+            used.insert(name);
+            Some(name)
+        })
+        .collect();
+    chosen.retain(|_, (k, _)| names.get(*k).copied().flatten().is_some());
+    // The tables rewritten.
+    let mut paradigms = paradigms;
+    for (p, par) in paradigms.iter_mut().enumerate() {
+        let mine: Vec<(&Spot, &(usize, u32))> = chosen.iter().filter(|(s, _)| s.0 == p).collect();
+        if mine.is_empty() {
+            continue;
+        }
+        let mut table: Vec<String> = par.table.split('\t').map(str::to_string).collect();
+        for (c, cell) in table.iter_mut().enumerate() {
+            let Some(Some((head, end))) = usual.get(p).and_then(|u| u.get(c)) else {
+                continue;
+            };
+            let here: Vec<(usize, char, &Class)> = mine
+                .iter()
+                .filter(|(s, _)| s.1 == c)
+                .filter_map(|(s, (k, _))| Some((s.2, (*names.get(*k)?)?, classes.get(*k)?)))
+                .collect();
+            if here.is_empty() {
+                continue;
+            }
+            let rewritten: Vec<String> = pattern::variants(cell)
+                .map(|v| {
+                    let Some((h, e)) = v.rsplit_once('~') else {
+                        return v.to_string();
+                    };
+                    let mut e: Vec<char> = e.chars().collect();
+                    if h != head.as_str() || e.len() != end.len() {
+                        return v.to_string();
+                    }
+                    for &(at, name, class) in &here {
+                        if let Some(l) = e.get_mut(at).filter(|l| class.letters.contains(l)) {
+                            *l = name;
+                        }
+                    }
+                    format!("{h}~{}", e.into_iter().collect::<String>())
+                })
+                .collect();
+            *cell = rewritten.join("|");
+        }
+        par.table = Cow::Owned(table.join("\t"));
+    }
+    // Paradigms now alike are one: the commoner.
+    let mut first: HashMap<(String, String), u16> = HashMap::default();
+    let mut into: Vec<u16> = Vec::with_capacity(paradigms.len());
+    for (p, par) in paradigms.iter().enumerate() {
+        let me = u16::try_from(p).unwrap_or(u16::MAX);
+        let key = (par.lemma.to_string(), par.table.to_string());
+        into.push(*first.entry(key).or_insert(me));
+    }
+    let assignment: Vec<u16> = assignment
+        .iter()
+        .map(|&a| into.get(usize::from(a)).copied().unwrap_or(a))
+        .collect();
+    let (paradigms, assignment) = super::drop_empty(paradigms, assignment);
+    // One law per tier: its classes, with their evidence.
+    let mut tiers: Vec<(&BTreeSet<char>, Vec<usize>)> = Vec::new();
+    for (k, class) in classes.iter().enumerate() {
+        match tiers.iter_mut().find(|(t, _)| *t == &class.tier) {
+            Some((_, ks)) => ks.push(k),
+            None => tiers.push((&class.tier, vec![k])),
+        }
+    }
+    let laws = tiers
+        .into_iter()
+        .filter_map(|(tier, ks)| {
+            let mine: Vec<(&Spot, &(usize, u32))> =
+                chosen.iter().filter(|(_, (k, _))| ks.contains(k)).collect();
+            if mine.is_empty() {
+                return None;
+            }
+            let mut users: Vec<usize> = mine
+                .iter()
+                .flat_map(|(s, _)| examples.get(s).into_iter().flatten().map(|e| e.0))
+                .collect();
+            users.sort_unstable();
+            users.dedup();
+            let map = ks
+                .iter()
+                .filter_map(|&k| Some(((*names.get(k)?)?, classes.get(k)?)))
+                .flat_map(|(name, class)| {
+                    let triggers = tier.iter().map(|&t| Some(t)).chain([None]);
+                    triggers.filter_map(move |t| {
+                        let v = class.map.get(&t).or_else(|| class.map.get(&None))?;
+                        Some((name, t, *v))
+                    })
+                })
+                .collect();
+            Some(Law {
+                change: Change::Harmony {
+                    tier: tier.iter().copied().collect(),
+                    map,
+                },
+                words: u32::try_from(users.len()).unwrap_or(u32::MAX),
+                examples: users
+                    .iter()
+                    .take(4)
+                    .filter_map(|&w| words.get(w).map(|w| w.letters.to_string()))
+                    .collect(),
+                breaks: mine.iter().map(|(_, (_, b))| b).sum(),
+            })
+        })
+        .collect();
+    (laws, paradigms, assignment)
+}
+
+/// The value seen most often (the first in order of those as often).
+fn commonest(values: &BTreeMap<char, u32>) -> Option<char> {
+    values
+        .iter()
+        .max_by(|a, b| a.1.cmp(b.1).then(b.0.cmp(a.0)))
+        .map(|(&v, _)| v)
+}
+
+/// Whether `exceptions` in `n` are few enough to state a rule over them
+/// (Yang's tolerance: at most n/ln n; with fewer than three, none).
+#[allow(clippy::cast_precision_loss)]
+pub(super) fn tolerated(n: u32, exceptions: u32) -> bool {
+    if n < 3 {
+        exceptions == 0
+    } else {
+        f64::from(exceptions) <= f64::from(n) / f64::from(n).ln()
+    }
+}
+
+/// The tier one law decides `pools`' classes on, learned on their words not
+/// held out: `None` unless it decides every class within the tolerance on
+/// the words learned from and on those held out, writes at least two of
+/// each class's letters, and is not local (see the module documentation).
+fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
+    let mut tier: BTreeSet<char> = pools
+        .iter()
+        .flat_map(|p| p.learned.iter().flat_map(|s| s.0.chars()))
+        .collect();
+    let after = |tier: &BTreeSet<char>| -> Vec<Units> {
+        pools.iter().map(|p| units(&p.learned, tier)).collect()
+    };
+    // The letter whose value after it is least decided: of those not
+    // tolerated, for any class, the one with the most exceptions (Belth's
+    // learner deletes the letters that mispredict). One at a time, since
+    // what a letter decides shows only once the letters between it and the
+    // class letter are off the tier.
+    let undecided = |bys: &[Units]| -> Option<char> {
+        bys.iter()
+            .flat_map(|by| by.iter())
+            .filter_map(|(t, values)| {
+                let n: u32 = values.values().sum();
+                let most = values.values().max().copied().unwrap_or(0);
+                (!tolerated(n, n - most)).then_some((n - most, (*t)?))
+            })
+            .max_by(|a, b| a.0.cmp(&b.0).then(b.1.cmp(&a.1)))
+            .map(|(_, t)| t)
+    };
+    let mut local = true;
+    while let Some(off) = undecided(&after(&tier)) {
+        local = false;
+        tier.remove(&off);
+    }
+    // A letter that decides what a letter before it would decide anyway
+    // leaves too (`j` of `garaj`, after `a`): the smallest tier that decides
+    // as well (the seldom first). Not one whose words, with none before it,
+    // would change what a word with none takes (`o` of `kol`, where few
+    // words show the default).
+    let wrong = |bys: &[Units]| -> u32 {
+        bys.iter()
+            .flat_map(|by| by.values())
+            .map(|v| v.values().sum::<u32>() - v.values().max().copied().unwrap_or(0))
+            .sum()
+    };
+    let default = |bys: &[Units]| -> Vec<Option<char>> {
+        bys.iter()
+            .map(|by| by.get(&None).and_then(commonest))
+            .collect()
+    };
+    let bys = after(&tier);
+    let mut order: Vec<(u32, char)> = tier
+        .iter()
+        .map(|&t| {
+            let n = bys
+                .iter()
+                .filter_map(|by| by.get(&Some(t)))
+                .flat_map(|v| v.values());
+            (n.sum(), t)
+        })
+        .collect();
+    order.sort_unstable();
+    let mut errors = wrong(&bys);
+    let mut none = default(&bys);
+    for (_, t) in order {
+        let mut fewer = tier.clone();
+        fewer.remove(&t);
+        let bys = after(&fewer);
+        let now = default(&bys);
+        let kept = none.iter().zip(&now).all(|(a, b)| a.is_none() || a == b);
+        if !kept {
+            continue;
+        }
+        let e = wrong(&bys);
+        if e <= errors {
+            (tier, errors, none) = (fewer, e, now);
+        }
+    }
+    // A law is along a tier where a letter further back than the one just
+    // before decides most places; else it is local: one at the stem's edge
+    // (Belth 2024 p. 8), or none at all.
+    let all = pools.iter().flat_map(|p| &p.learned);
+    let (far, n) = all.fold((0usize, 0usize), |(far, n), (before, _, _)| {
+        let just = before
+            .chars()
+            .next_back()
+            .is_some_and(|c| tier.contains(&c));
+        let back = !just && nearest(before, &tier).is_some();
+        (far + usize::from(back), n + 1)
+    });
+    if local || 2 * far <= n || tier.is_empty() {
+        return None;
+    }
+    let maps: Vec<BTreeMap<Option<char>, char>> = after(&tier)
+        .iter()
+        .map(values)
+        .collect::<Option<Vec<_>>>()?;
+    let decides = pools.iter().zip(&maps).all(|(pool, map)| {
+        let outputs: BTreeSet<&char> = map.values().collect();
+        let fits = |seen: &[Seen<'_>]| {
+            let (n, wrong) = judged(&units(seen, &tier), map);
+            n > 0 && tolerated(n, wrong)
+        };
+        outputs.len() > 1
+            && outputs.iter().all(|c| pool.letters.contains(c))
+            && fits(&pool.learned)
+            && fits(&pool.held)
+    });
+    decides.then_some(tier)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn neutral_vowels_leave_the_tier_and_take_the_default() {
+        // Finnish inessive `-ssA`: back after `a o u`, front after `ä ö y`;
+        // `e i` decide nothing (`kahvissa`, `käsissä`), and a word with only
+        // them takes the front value (`tiessä`). Two-syllable words of every
+        // pair of vowels, in enough frames that what a letter decides shows.
+        let back = ['a', 'o', 'u'];
+        let front = ['ä', 'ö', 'y'];
+        let vowels = ['a', 'o', 'u', 'ä', 'ö', 'y', 'e', 'i'];
+        let mut words: Vec<(String, char)> = Vec::new();
+        let frames = [
+            ["k", "l"],
+            ["t", "p"],
+            ["m", "r"],
+            ["s", "n"],
+            ["h", "v"],
+            ["p", "k"],
+            ["l", "t"],
+            ["v", "s"],
+        ];
+        for frame in frames {
+            for v in vowels {
+                for w in vowels {
+                    let word = format!("{}{v}{}{w}", frame[0], frame[1]);
+                    // The last vowel that isn't `e` or `i` decides; none: front.
+                    let last = [w, v].into_iter().find(|c| !matches!(c, 'e' | 'i'));
+                    let value = match last {
+                        Some(c) if back.contains(&c) => 'a',
+                        Some(c) if front.contains(&c) => 'ä',
+                        _ => 'ä',
+                    };
+                    words.push((word, value));
+                }
+            }
+        }
+        let forms: Vec<String> = words.iter().map(|(w, _)| format!("{w}ss")).collect();
+        let mut pool = Pool {
+            letters: vec!['a', 'ä'],
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for (i, (form, (_, value))) in forms.iter().zip(&words).enumerate() {
+            let seen = (form.as_str(), *value, i);
+            // A third held out, across the vowels.
+            if i % 3 == 0 {
+                pool.held.push(seen);
+            } else {
+                pool.learned.push(seen);
+            }
+        }
+        let tier = fit(&[&pool]).expect("a law on a tier");
+        for c in ['a', 'o', 'u', 'ä', 'ö', 'y'] {
+            assert!(tier.contains(&c), "{c} decides: {tier:?}");
+        }
+        for c in ['e', 'i', 's', 't', 'k'] {
+            assert!(!tier.contains(&c), "{c} decides nothing: {tier:?}");
+        }
+        let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
+        let map = values(&units(&all, &tier)).expect("values");
+        assert_eq!(map.get(&None), Some(&'ä'), "{map:?}");
+    }
+}

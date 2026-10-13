@@ -6844,7 +6844,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ятро" => 101,
         "яхью" => 125,
         "ёкоо" => 0,
-    }, true, None),
+    }, false, None),
     // DAT_SG, from GEN_SG.
     relation!(DAT_SG, [GEN_SG], [("~", "~"), ("~а", "~у"), ("~го", "~му"), ("~гося", "~муся"), ("~и", "~е"), ("~х", "~м"), ("~ы", "~е"), ("~я", "~ю")], rules {
         "" => [1 47921, 0 18089, 7 15616, 4 13968, 6 10235, 2 895, 5 14, 3 8],
@@ -11348,7 +11348,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ёбаря" => 22,
         "ёбыря" => 22,
         "ёзи" => 0,
-    }, true, None),
+    }, false, None),
     // INS_PL, from DAT_PL.
     relation!(INS_PL, [DAT_PL], [("~", "~"), ("~", "~и"), ("~ам", "~"), ("~ому", "~ем"), ("~ся", "~ися"), ("~у", "~"), ("~ям", "~ьми")], rules {
         "" => [1 102239, 0 3369, 4 9, 6 9, 2 2, 3 2, 5 2],
@@ -13765,9 +13765,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "харедим" => 0,
     }, true, None),
     // NOUN_SECOND_CASE_PART, from DAT_SG.
-    relation!(NOUN_SECOND_CASE_PART, [DAT_SG], [("~", "~")], rules {
-        "" => [0 198],
-    } listed {}, true, None),
+    relation!(NOUN_SECOND_CASE_PART, [DAT_SG], [], none, true, None),
     // NOUN_SECOND_CASE_LOC, from DAT_SG.
     relation!(NOUN_SECOND_CASE_LOC, [DAT_SG], [("~", "~"), ("~у", "~е")], rules {
         "" => [0 106, 1 2],

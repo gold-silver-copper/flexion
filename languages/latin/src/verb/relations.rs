@@ -927,7 +927,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "vēneam" => 2,
         "vēnumdem" => 5,
         "vēnundem" => 5,
-    }, true, None),
+    }, false, None),
     // IND_ACT_FUT_1_PL, from IND_ACT_FUT_1_SG.
     relation!(IND_ACT_FUT_1_PL, [IND_ACT_FUT_1_SG], [("~am", "~ēmus"), ("~ar", "~ēmur"), ("~or", "~imur"), ("~ō", "~imus")], rules {
         "" => [3 3304, 0 2256, 2 380, 1 188],
@@ -1585,7 +1585,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "tētūliī" => 1,
         "warniī" => 1,
         "ūniī" => 1,
-    }, true, None),
+    }, false, None),
     // IND_ACT_PERF_2_PL, from IND_ACT_PERF_2_SG.
     relation!(IND_ACT_PERF_2_PL, [IND_ACT_PERF_2_SG], [("~ī", "~is")], rules {
         "" => [0 4911],
@@ -1593,7 +1593,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
     // IND_ACT_PERF_3_SG, from IND_ACT_PERF_1_SG.
     relation!(IND_ACT_PERF_3_SG, [IND_ACT_PERF_1_SG], [("~ī", "~it")], rules {
         "" => [0 4910],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // IND_ACT_PERF_3_PL, from IND_ACT_PERF_1_SG.
     relation!(IND_ACT_PERF_3_PL, [IND_ACT_PERF_1_SG], [("~ī", "~ērunt")], rules {
         "" => [0 4910],
@@ -1747,13 +1747,27 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "sōpiar" => 4,
         "werpiar" => 4,
     }, true, None),
-    // IND_PASS_PRES_2_SG, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(IND_PASS_PRES_2_SG, [IMPERATIVE_PASS_PRES_2_SG], [("~", "~s"), ("~e", "~is")], rules {
+    // IND_PASS_PRES_2_SG, from SUBJ_ACT_IMPF_1_SG.
+    relation!(IND_PASS_PRES_2_SG, [SUBJ_ACT_IMPF_1_SG], [("~acerem", "~īs"), ("~em", "~is")], rules {
         "" => [1 4469, 0 52],
-        "e" => [1 4469],
-        "ī" => [0 52],
-        "fī" => [0 52],
-    } listed {}, true, None),
+        "erem" => [1 1416, 0 52],
+        "cerem" => [1 245, 0 52],
+        "acerem" => [0 52, 1 7],
+        "icerem" => [1 75],
+        "scerem" => [1 108],
+        "derem" => [1 256],
+        "gerem" => [1 216],
+        "uerem" => [1 121],
+        "ārem" => [1 2470],
+    } listed {
+        "cōnsuēfacerem" => 1,
+        "disfacerem" => 1,
+        "iacerem" => 1,
+        "interiacerem" => 1,
+        "lacerem" => 1,
+        "praejacerem" => 1,
+        "superiacerem" => 1,
+    }, true, None),
     // IND_PASS_PRES_2_PL, from IND_PASS_PRES_1_PL.
     relation!(IND_PASS_PRES_2_PL, [IND_PASS_PRES_1_PL], [("~mus", "~tis"), ("~ur", "~inī")], rules {
         "" => [1 4469, 0 52],
@@ -4243,13 +4257,23 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "" => [0 4910],
     } listed {}, true, None),
     // SUBJ_ACT_PERF_3_SG, from IND_ACT_FUTP_3_SG.
-    relation!(SUBJ_ACT_PERF_3_SG, [IND_ACT_FUTP_3_SG], [("~", "~")], rules {
-        "" => [0 4933],
-    } listed {}, true, None),
+    relation!(
+        SUBJ_ACT_PERF_3_SG,
+        [IND_ACT_FUTP_3_SG],
+        [],
+        none,
+        true,
+        None
+    ),
     // SUBJ_ACT_PERF_3_PL, from IND_ACT_FUTP_3_PL.
-    relation!(SUBJ_ACT_PERF_3_PL, [IND_ACT_FUTP_3_PL], [("~", "~")], rules {
-        "" => [0 4913],
-    } listed {}, true, None),
+    relation!(
+        SUBJ_ACT_PERF_3_PL,
+        [IND_ACT_FUTP_3_PL],
+        [],
+        none,
+        true,
+        None
+    ),
     // SUBJ_ACT_PLUP_1_SG, from IND_ACT_PERF_2_SG.
     relation!(SUBJ_ACT_PLUP_1_SG, [IND_ACT_PERF_2_SG], [("~tī", "~sem")], rules {
         "" => [0 4911],
@@ -4370,47 +4394,41 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "am" => [0 52],
         "r" => [1 4469],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_1_SG, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_1_SG, [IMPERATIVE_PASS_PRES_2_SG], [("~", "~r"), ("~ī", "~ierem")], rules {
+    // SUBJ_PASS_IMPF_1_SG, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_1_SG, [IND_PASS_PRES_2_SG], [("~is", "~er"), ("~īs", "~ierem")], rules {
         "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_1_PL, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_1_PL, [IMPERATIVE_PASS_PRES_2_SG], [("~e", "~ēmur"), ("~ī", "~ierēmus")], rules {
+    // SUBJ_PASS_IMPF_1_PL, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_1_PL, [IND_PASS_PRES_2_SG], [("~is", "~ēmur"), ("~īs", "~ierēmus")], rules {
         "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_2_SG, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_2_SG, [IMPERATIVE_PASS_PRES_2_SG], [("~e", "~ēris"), ("~ī", "~ierēs")], rules {
-        "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+    // SUBJ_PASS_IMPF_2_SG, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_2_SG, [IND_PASS_PRES_2_SG], [("~is", "~ēris"), ("~īs", "~ierēs")], rules {
+        "" => [0 4467, 1 52],
+        "is" => [0 4467],
+        "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_2_PL, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_2_PL, [IMPERATIVE_PASS_PRES_2_SG], [("~e", "~ēminī"), ("~ī", "~ierētis")], rules {
+    // SUBJ_PASS_IMPF_2_PL, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_2_PL, [IND_PASS_PRES_2_SG], [("~is", "~ēminī"), ("~īs", "~ierētis")], rules {
         "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_3_SG, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_3_SG, [IMPERATIVE_PASS_PRES_2_SG], [("~e", "~ētur"), ("~ī", "~ieret")], rules {
+    // SUBJ_PASS_IMPF_3_SG, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_3_SG, [IND_PASS_PRES_2_SG], [("~is", "~ētur"), ("~īs", "~ieret")], rules {
         "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_3_PL, from IMPERATIVE_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_3_PL, [IMPERATIVE_PASS_PRES_2_SG], [("~", "~ntur"), ("~ī", "~ierent")], rules {
+    // SUBJ_PASS_IMPF_3_PL, from IND_PASS_PRES_2_SG.
+    relation!(SUBJ_PASS_IMPF_3_PL, [IND_PASS_PRES_2_SG], [("~is", "~entur"), ("~īs", "~ierent")], rules {
         "" => [0 4469, 1 52],
-        "e" => [0 4469],
-        "ī" => [1 52],
-        "fī" => [1 52],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
     // SUBJ_PASS_FUT_1_SG, from IND_PASS_FUT_1_SG. Few or no words have it: changed as IND_PASS_PRES_1_SG is into SUBJ_PASS_PRES_1_SG.
     relation!(SUBJ_PASS_FUT_1_SG, [IND_PASS_FUT_1_SG], [("~or", "~ar"), ("~or", "~er"), ("~ō", "~am")], rules {
@@ -11001,9 +11019,14 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "remeministis" => 0,
     }, true, None),
     // IMPERATIVE_ACT_FUT_3_SG, from IMPERATIVE_ACT_FUT_2_SG.
-    relation!(IMPERATIVE_ACT_FUT_3_SG, [IMPERATIVE_ACT_FUT_2_SG], [("~", "~")], rules {
-        "" => [0 6122],
-    } listed {}, true, None),
+    relation!(
+        IMPERATIVE_ACT_FUT_3_SG,
+        [IMPERATIVE_ACT_FUT_2_SG],
+        [],
+        none,
+        true,
+        None
+    ),
     // IMPERATIVE_ACT_FUT_3_PL, from IND_ACT_PRES_3_PL.
     relation!(IMPERATIVE_ACT_FUT_3_PL, [IND_ACT_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
         "" => [0 5557, 1 568],
@@ -11024,38 +11047,21 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "is" => [1 52],
         "ī" => [0 4469],
     } listed {}, true, Some((IND_PASS_PRES_2_PL, IND_PASS_PRES_1_PL))),
-    // IMPERATIVE_PASS_PRES_2_SG, from INFINITIVE_ACT_PRES.
-    relation!(IMPERATIVE_PASS_PRES_2_SG, [INFINITIVE_ACT_PRES], [("~", "~"), ("~acere", "~ī")], rules {
+    // IMPERATIVE_PASS_PRES_2_SG, from IND_PASS_PRES_2_SG.
+    relation!(IMPERATIVE_PASS_PRES_2_SG, [IND_PASS_PRES_2_SG], [("~is", "~e"), ("~s", "~")], rules {
         "" => [0 4469, 1 52],
-        "ere" => [0 1416, 1 52],
-        "cere" => [0 245, 1 52],
-        "acere" => [1 52, 0 7],
-        "icere" => [0 75],
-        "scere" => [0 108],
-        "ūcere" => [0 26],
-        "dere" => [0 256],
-        "gere" => [0 216],
-        "tere" => [0 101],
-        "uere" => [0 121],
-        "āre" => [0 2470],
-        "ēre" => [0 300],
-        "īre" => [0 256],
-    } listed {
-        "cōnsuēfacere" => 0,
-        "disfacere" => 0,
-        "iacere" => 0,
-        "interiacere" => 0,
-        "lacere" => 0,
-        "praejacere" => 0,
-        "superiacere" => 0,
-    }, true, None),
-    // IMPERATIVE_PASS_PRES_2_PL, from IND_PASS_PRES_2_PL.
-    relation!(IMPERATIVE_PASS_PRES_2_PL, [IND_PASS_PRES_2_PL], [("~", "~"), ("~is", "~e")], rules {
-        "" => [0 4469, 1 52],
-        "s" => [1 52],
-        "is" => [1 52],
-        "ī" => [0 4469],
+        "is" => [0 4469],
+        "īs" => [1 52],
     } listed {}, true, None),
+    // IMPERATIVE_PASS_PRES_2_PL, from IND_PASS_PRES_2_PL.
+    relation!(
+        IMPERATIVE_PASS_PRES_2_PL,
+        [IND_PASS_PRES_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
     // IMPERATIVE_PASS_PRES_3_SG, from IMPERATIVE_PASS_PRES_2_SG. Few or no words have it: changed as IMPERATIVE_PASS_FUT_2_SG is into IMPERATIVE_PASS_FUT_3_SG.
     relation!(
         IMPERATIVE_PASS_PRES_3_SG,
@@ -11094,9 +11100,14 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "" => [0 52],
     } listed {}, true, None),
     // IMPERATIVE_PASS_FUT_3_SG, from IMPERATIVE_PASS_FUT_2_SG.
-    relation!(IMPERATIVE_PASS_FUT_3_SG, [IMPERATIVE_PASS_FUT_2_SG], [("~", "~")], rules {
-        "" => [0 4521],
-    } listed {}, true, None),
+    relation!(
+        IMPERATIVE_PASS_FUT_3_SG,
+        [IMPERATIVE_PASS_FUT_2_SG],
+        [],
+        none,
+        true,
+        None
+    ),
     // IMPERATIVE_PASS_FUT_3_PL, from IND_PASS_PRES_3_PL.
     relation!(IMPERATIVE_PASS_FUT_3_PL, [IND_PASS_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
         "" => [1 4508, 0 52],
@@ -11104,19 +11115,15 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "t" => [0 52],
         "nt" => [0 52],
     } listed {}, true, None),
-    // INFINITIVE_ACT_PRES, from SUBJ_ACT_IMPF_1_SG.
-    relation!(INFINITIVE_ACT_PRES, [SUBJ_ACT_IMPF_1_SG], [("~em", "~ī"), ("~er", "~ī"), ("~erer", "~ī"), ("~m", "~")], rules {
-        "" => [3 5559, 1 426, 2 142, 0 4],
-        "m" => [3 5559, 0 4],
-        "ierem" => [0 4, 3 1],
-        "r" => [1 426, 2 142],
-        "erer" => [2 142],
-        "ārer" => [1 357],
-        "ērer" => [1 23],
-        "īrer" => [1 45],
-    } listed {
-        "mēierem" => 3,
-    }, true, None),
+    // INFINITIVE_ACT_PRES, from IMPERATIVE_PASS_PRES_2_SG.
+    relation!(
+        INFINITIVE_ACT_PRES,
+        [IMPERATIVE_PASS_PRES_2_SG],
+        [],
+        none,
+        true,
+        None
+    ),
     // INFINITIVE_ACT_PERF, from IND_ACT_PERF_2_SG.
     relation!(INFINITIVE_ACT_PERF, [IND_ACT_PERF_2_SG], [("~tī", "~se")], rules {
         "" => [0 4911],
@@ -11161,7 +11168,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "superiace" => 3,
         "vēnumdā" => 4,
         "vēnundā" => 4,
-    }, true, None),
+    }, false, None),
     // INFINITIVE_PASS_PERF, from INFINITIVE_ACT_PERF. Few or no words have it: changed as INFINITIVE_ACT_PRES is into INFINITIVE_PASS_PRES.
     relation!(INFINITIVE_PASS_PERF, [INFINITIVE_ACT_PERF], [("~acere", "~ierī"), ("~e", "~ī"), ("~ere", "~ī")], rules {
         "" => [1 3145, 2 1465, 0 51],
@@ -11729,7 +11736,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
     } listed {
         "statum" => 0,
         "substatum" => 0,
-    }, true, None),
+    }, false, None),
     // PARTICIPLE_FUT_PASS, from SUBJ_ACT_PRES_1_SG.
     relation!(PARTICIPLE_FUT_PASS, [SUBJ_ACT_PRES_1_SG], [("~am", "~endum"), ("~am", "~endus"), ("~am", "~ndum"), ("~am", "~ndus"), ("~am", "~undum"), ("~am", "~undus"), ("~ar", "~endus"), ("~ar", "~ndus"), ("~em", "~andum"), ("~em", "~andus"), ("~er", "~andus")], rules {
         "" => [9 2477, 1 1734, 10 352, 3 312, 6 185, 0 69, 8 37, 2 25, 5 24, 7 23, 4 5],
@@ -11953,9 +11960,7 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "s" => [1 5108],
     } listed {}, true, None),
     // GERUND_ABL, from GERUND_DAT.
-    relation!(GERUND_ABL, [GERUND_DAT], [("~", "~")], rules {
-        "" => [0 6140],
-    } listed {}, true, None),
+    relation!(GERUND_ABL, [GERUND_DAT], [], none, true, None),
     // GERUND_VOC, from GERUND_GEN. Few or no words have it: as it is.
     relation!(
         GERUND_VOC,

@@ -1,13 +1,20 @@
 //! Sound laws: changes where a stem meets its ending (Greek `γ+σ → +ξ`,
 //! Russian `[к|г|х]+ы → +и`), of a letter of the ending by the nearest of
-//! some letters before it (Sanskrit `न → ण` after `र`), or of a copied
+//! some letters before it (Sanskrit `न → ण` after `र`), of a class letter
+//! an ending writes by the nearest letter of a tier before it as written
+//! (harmony: Turkish `-lAr`), or of a copied
 //! letter (Greek `φ` copied as `π`: `πεφίληκα`), or where a literal before
 //! the stem meets it (the Greek augment lengthens a vowel: `ἐ‹ἀ → ἠ`,
-//! `ἤγον`). They are found
-//! where a word's paradigm, or a more general one, would build its forms but
-//! for such a change, and kept when they fix many forms and break few. The
-//! words they explain join the more general paradigm, and paradigms left
-//! without words go.
+//! `ἤγον`). They are found where a word's paradigm, or a more general one,
+//! would build its forms but for such a change, and kept when they fix many
+//! forms and break few, on the words they are learned from and on words
+//! held out (Rasin & Katzir 2020). A change at the stem's edge that breaks
+//! too many is tried again with a letter more of context on whichever side
+//! best tells the forms it gives from those it breaks (Belth 2024 (11),
+//! p. 8). The words they explain join the more general paradigm, and
+//! paradigms left without words go.
+
+mod harmony;
 
 use crate::HashMap;
 use flexion::pattern::{self, BOUNDARY, COPIED, FRONT};
@@ -23,13 +30,16 @@ pub enum Change {
     /// become `to` (with the boundary): `ε+ο → +ου`. With `keep`, the stem's
     /// letter stays before `to`: `[к|г|х]+ы → +и`. With `earlier`, only
     /// where one of those letters (the vowels) comes earlier in the stem
-    /// (`φιλε+ο` contracts, `πλε+ο` doesn't).
+    /// (`φιλε+ο` contracts, `πλε+ο` doesn't). With `left` and `right`,
+    /// only between those letters, a set per letter, the nearest first.
     Edge {
         stem: Vec<String>,
         ending: String,
         to: String,
         keep: bool,
         earlier: Vec<char>,
+        left: Vec<Vec<char>>,
+        right: Vec<Vec<char>>,
     },
     /// Along a tier: `letter` in the ending becomes `to` where the nearest
     /// of `on` and `off` before it is one of `on`, and none of `stop`
@@ -40,6 +50,13 @@ pub enum Change {
         on: Vec<char>,
         off: Vec<char>,
         stop: Vec<char>,
+    },
+    /// Harmony: each class letter an ending writes (`A` of `-lAr`) is,
+    /// after the nearest of `tier` before it as written (or none), what
+    /// `map` says: `(class letter, tier letter, value)`.
+    Harmony {
+        tier: Vec<char>,
+        map: Vec<(char, Option<char>, char)>,
     },
     /// A copy of `letter` (see [`pattern::COPY`]) is `to`.
     Copy { letter: char, to: char },
@@ -79,6 +96,8 @@ impl std::fmt::Display for Law {
                 ending,
                 to,
                 earlier,
+                left,
+                right,
                 ..
             } => {
                 match stem.as_slice() {
@@ -87,6 +106,23 @@ impl std::fmt::Display for Law {
                 }
                 if !earlier.is_empty() {
                     write!(f, " after a vowel earlier in the stem")?;
+                }
+                // The letters around it, as they come.
+                let sets = |sets: &mut dyn Iterator<Item = &Vec<char>>| -> String {
+                    sets.map(|s| match s.as_slice() {
+                        [one] => one.to_string(),
+                        many => {
+                            let letters: Vec<String> = many.iter().map(char::to_string).collect();
+                            format!("[{}]", letters.join("|"))
+                        }
+                    })
+                    .collect()
+                };
+                if !left.is_empty() {
+                    write!(f, " after {}", sets(&mut left.iter().rev()))?;
+                }
+                if !right.is_empty() {
+                    write!(f, " before {}", sets(&mut right.iter()))?;
                 }
                 Ok(())
             }
@@ -105,6 +141,28 @@ impl std::fmt::Display for Law {
                     write!(f, ", not before {}", list(stop))?;
                 }
                 Ok(())
+            }
+            // `A → a after a, ı, o, u; e after e, i, ö, ü, none`.
+            Change::Harmony { tier, map } => {
+                let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
+                classes.dedup();
+                for (k, class) in classes.iter().enumerate() {
+                    let mut values: Vec<(char, Vec<String>)> = Vec::new();
+                    for &(_, t, v) in map.iter().filter(|e| e.0 == *class) {
+                        let t = t.map_or("none".to_string(), String::from);
+                        match values.iter_mut().find(|(w, _)| *w == v) {
+                            Some((_, ts)) => ts.push(t),
+                            None => values.push((v, vec![t])),
+                        }
+                    }
+                    let values: Vec<String> = values
+                        .iter()
+                        .map(|(v, ts)| format!("{v} after {}", ts.join(", ")))
+                        .collect();
+                    let sep = if k == 0 { "" } else { "; " };
+                    write!(f, "{sep}{class} → {}", values.join("; "))?;
+                }
+                write!(f, " (the nearest of {} before it, as written)", list(tier))
             }
             Change::Copy { letter, to } => write!(f, "copy of {letter} → {to}"),
             // A copy as the pattern writes it: `%ε‹ἀ → ἠ`.
@@ -152,6 +210,7 @@ impl Change {
                     && stem.iter().any(|l| before.ends_with(l.as_str()))
             }
             Change::Tier { letter, .. } => built.contains(*letter),
+            Change::Harmony { map, .. } => map.iter().any(|e| built.contains(e.0)),
             Change::Copy { letter, .. } => built.contains(&format!("{COPIED}{letter}")),
             Change::Front { literal, stem, .. } => {
                 built.starts_with(&format!("{literal}{FRONT}{stem}"))
@@ -159,10 +218,8 @@ impl Change {
         }
     }
 
-    /// As `sound-law` states it, as rule `name`: what changes into what,
-    /// what must come before, and what after stops it; and the letters a
-    /// captured letter becomes, if it says so.
-    fn rule(&self, name: &str) -> ([String; 4], Vec<(String, String)>) {
+    /// As `sound-law` states it, as rule `name`.
+    fn rule(&self, name: &str) -> Stated {
         let list = |l: &[char]| l.iter().map(char::to_string).collect::<Vec<_>>().join("|");
         let rule = match self {
             Change::Edge {
@@ -171,6 +228,8 @@ impl Change {
                 to,
                 keep,
                 earlier,
+                left,
+                right,
             } => {
                 let stem = stem.join("|");
                 let (target, to) = if *keep {
@@ -179,18 +238,21 @@ impl Change {
                     (stem, to.clone())
                 };
                 // A vowel, then none until the target.
-                let before = if earlier.is_empty() {
+                let mut before = if earlier.is_empty() {
                     String::new()
                 } else {
                     let v = list(earlier);
                     format!("{{[{v}]}}{{![{v}]*}}")
                 };
-                [
-                    format!("{target}{BOUNDARY}{ending}"),
+                let set = |s: &Vec<char>| format!("{{[{}]}}", list(s));
+                before.extend(left.iter().rev().map(set));
+                return Stated {
+                    target: format!("{target}{BOUNDARY}{ending}"),
                     to,
                     before,
-                    String::new(),
-                ]
+                    after: right.iter().map(set).collect(),
+                    ..Stated::default()
+                };
             }
             // The letter is the ending's: the stem's are as the dictionary
             // writes them.
@@ -216,6 +278,30 @@ impl Change {
                     },
                 ]
             }
+            // The class letter, the nearest tier letter before it as
+            // written (or none), and the gap between: read on the output.
+            Change::Harmony { tier, map } => {
+                let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
+                classes.dedup();
+                let t = list(tier);
+                return Stated {
+                    target: format!("{{x:[{}]}}", list(&classes)),
+                    to: format!("{{x|{name}[t]}}"),
+                    before: format!("{{t:[{t}]?}}{{g:![{t}]*}}"),
+                    agree: map
+                        .iter()
+                        .map(|(x, t, v)| {
+                            (
+                                x.to_string(),
+                                t.map_or(String::new(), String::from),
+                                v.to_string(),
+                            )
+                        })
+                        .collect(),
+                    iterative: true,
+                    ..Stated::default()
+                };
+            }
             Change::Copy { letter, to } => [
                 format!("{COPIED}{letter}"),
                 to.to_string(),
@@ -233,49 +319,91 @@ impl Change {
                     .chain(plain.iter().map(|(c, p)| (c.to_string(), p.clone())))
                     .collect();
                 let letters: Vec<&str> = map.iter().map(|(c, _)| c.as_str()).collect();
-                let rule = [
-                    format!("^{literal}{FRONT}{{x:[{}]}}", letters.join("|")),
-                    format!("{{x|{name}}}"),
-                    String::new(),
-                    String::new(),
-                ];
-                return (rule, map);
+                return Stated {
+                    target: format!("^{literal}{FRONT}{{x:[{}]}}", letters.join("|")),
+                    to: format!("{{x|{name}}}"),
+                    map,
+                    ..Stated::default()
+                };
             }
         };
-        (rule, Vec::new())
+        let [target, to, before, stop] = rule;
+        Stated {
+            target,
+            to,
+            before,
+            stop,
+            ..Stated::default()
+        }
     }
+}
+
+/// A law as `sound-law` states it: what changes into what, what must come
+/// before, and what after stops it; the letters a captured letter becomes
+/// (`{x|law}`), or becomes by the letter captured before it
+/// (`{x|law[t]}`); and whether it reads its own output.
+#[derive(Default)]
+struct Stated {
+    target: String,
+    to: String,
+    before: String,
+    after: String,
+    stop: String,
+    map: Vec<(String, String)>,
+    agree: Vec<(String, String, String)>,
+    iterative: bool,
 }
 
 /// The laws compiled, in order.
 pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
-    let texts: Vec<_> = changes
+    let texts: Vec<(String, Stated)> = changes
         .iter()
         .enumerate()
         .map(|(i, c)| {
             let name = format!("law{i}");
-            let (rule, map) = c.rule(&name);
-            (name, rule, map)
+            let stated = c.rule(&name);
+            (name, stated)
         })
         .collect();
     let pairs: Vec<Vec<(&str, &str)>> = texts
         .iter()
-        .map(|(_, _, map)| map.iter().map(|(a, b)| (a.as_str(), b.as_str())).collect())
+        .map(|(_, s)| {
+            s.map
+                .iter()
+                .map(|(a, b)| (a.as_str(), b.as_str()))
+                .collect()
+        })
+        .collect();
+    let triples: Vec<Vec<(&str, &str, &str)>> = texts
+        .iter()
+        .map(|(_, s)| {
+            let agree = s.agree.iter();
+            agree
+                .map(|(a, k, b)| (a.as_str(), k.as_str(), b.as_str()))
+                .collect()
+        })
         .collect();
     let maps: Vec<Map<'_>> = texts
         .iter()
-        .zip(&pairs)
-        .filter(|(_, pairs)| !pairs.is_empty())
-        .map(|((name, ..), pairs)| Map::new(name, pairs))
+        .zip(pairs.iter().zip(&triples))
+        .filter_map(
+            |((name, _), (pairs, triples))| match (pairs.is_empty(), triples.is_empty()) {
+                (false, _) => Some(Map::new(name, pairs)),
+                (true, false) => Some(Map::keyed(name, triples)),
+                (true, true) => None,
+            },
+        )
         .collect();
     let rules: Vec<Rule<'_>> = texts
         .iter()
-        .map(|(name, [target, to, before, stop], _)| {
-            let rule = Rule::new(name, target, to).in_context(before, "");
-            if stop.is_empty() {
+        .map(|(name, s)| {
+            let rule = Rule::new(name, &s.target, &s.to).in_context(&s.before, &s.after);
+            let rule = if s.stop.is_empty() {
                 rule
             } else {
-                rule.unless_context("", stop)
-            }
+                rule.unless_context("", &s.stop)
+            };
+            if s.iterative { rule.iterative() } else { rule }
         })
         .collect();
     RuleSet::new_with_maps(&[], &maps, &rules).compile().ok()
@@ -326,6 +454,12 @@ pub fn learn<'s>(
     Vec<Paradigm<'s>>,
     Vec<u16>,
 ) {
+    // Harmony first: the other laws see its class letters filled.
+    let (harmony, paradigms, assignment) =
+        harmony::learn(orthography, words, paradigms, assignment);
+    let filled: Vec<Change> = harmony.iter().map(|l| l.change.clone()).collect();
+    let pre = (!filled.is_empty()).then(|| compile(&filled)).flatten();
+    let pre = pre.as_ref();
     let cells = paradigms
         .first()
         .map_or(0, |p| p.table.split('\t').count().saturating_sub(1));
@@ -360,7 +494,7 @@ pub fn learn<'s>(
             let own = usize::from(own);
             std::iter::once(own)
                 .chain(neighbours.get(own).into_iter().flatten().copied())
-                .filter_map(|p| reading(orthography, &paradigms, p, w))
+                .filter_map(|p| reading(orthography, &paradigms, p, w, pre))
                 .collect()
         })
         .collect();
@@ -410,6 +544,7 @@ pub fn learn<'s>(
             std::iter::once((change, n)).chain(twin)
         })
         .collect();
+    let held: Vec<bool> = words.iter().map(|w| held_out(w.letters)).collect();
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -417,8 +552,9 @@ pub fn learn<'s>(
         &cells_of,
         assignment.clone(),
         &rank,
+        &held,
     );
-    let mut laws: Vec<Law> = laws
+    let kept = laws
         .into_iter()
         .filter(|(l, users, forms)| pays(users.len(), l.breaks, *forms))
         .map(|(mut law, users, _)| {
@@ -429,41 +565,66 @@ pub fn learn<'s>(
                 .filter_map(|&w| words.get(w).map(|w| w.letters.to_string()))
                 .collect();
             law
-        })
-        .collect();
+        });
+    let mut laws: Vec<Law> = harmony.into_iter().chain(kept).collect();
     plain(orthography, &mut laws);
-    let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
-    let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
     // A word stays where it was unless, under the laws kept, the paradigm
     // it moved to builds its forms as well.
-    let right = |p: u16, w: &Word<'_>| {
-        reading(orthography, &paradigms, usize::from(p), w).map_or(0, |r| {
+    let right = |program: Option<&Program<'_>>, p: u16, w: &Word<'_>| {
+        reading(orthography, &paradigms, usize::from(p), w, None).map_or(0, |r| {
+            let built = |b: &String| program.map_or_else(|| b.clone(), |p| p.apply(b));
+            let forms = w.forms.iter().flatten();
             r.builds
                 .iter()
-                .zip(w.forms.iter().flatten())
-                .filter(|(b, f)| {
-                    same(
-                        &program
-                            .as_ref()
-                            .map_or_else(|| b.to_string(), |p| p.apply(b)),
-                        f,
-                    )
-                })
+                .zip(forms)
+                .filter(|(b, f)| same(&built(b), f))
                 .count()
         })
     };
-    let assignment: Vec<u16> = assignment
+    let settle = |laws: &[Law]| {
+        let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
+        let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
+        // Where the laws last moved it, else where the plain laws did.
+        let [plain, last] = &moved;
+        let assignment: Vec<u16> = assignment
+            .iter()
+            .zip(plain.iter().zip(last))
+            .zip(words)
+            .map(|((&was, (&mid, &now)), w)| {
+                let right = |p| right(program.as_ref(), p, w);
+                [now, mid]
+                    .into_iter()
+                    .find(|&p| p != was && right(p) >= right(was))
+                    .unwrap_or(was)
+            })
+            .collect();
+        let total: usize = assignment
+            .iter()
+            .zip(words)
+            .map(|(&p, w)| right(program.as_ref(), p, w))
+            .sum();
+        (program, assignment, total)
+    };
+    // A law grown context must pay in the end too, with the words where
+    // they settled: dropped where the grammar builds as many forms without
+    // it.
+    let (mut program, mut assignment, mut total) = settle(&laws);
+    let grown: Vec<Change> = laws
         .iter()
-        .zip(&moved)
-        .zip(words)
-        .map(|((&was, &now), w)| {
-            if now != was && right(now, w) >= right(was, w) {
-                now
-            } else {
-                was
-            }
-        })
+        .map(|l| l.change.clone())
+        .filter(|c| matches!(c, Change::Edge { left, right, .. } if !left.is_empty() || !right.is_empty()))
         .collect();
+    for change in grown {
+        let without: Vec<Law> = laws
+            .iter()
+            .filter(|l| l.change != change)
+            .cloned()
+            .collect();
+        let (p, a, t) = settle(&without);
+        if t >= total {
+            (laws, program, assignment, total) = (without, p, a, t);
+        }
+    }
     let (paradigms, assignment) = drop_empty(paradigms, assignment);
     (laws, program, paradigms, assignment)
 }
@@ -542,12 +703,14 @@ fn plain(orthography: &Orthography<'_>, laws: &mut [Law]) {
     }
 }
 
-/// What paradigm `p` builds for word `w`, if it can take it.
+/// What paradigm `p` builds for word `w`, if it can take it, through the
+/// laws `pre` (harmony) if any.
 fn reading(
     orthography: &Orthography<'_>,
     paradigms: &[Paradigm<'_>],
     p: usize,
     w: &Word<'_>,
+    pre: Option<&Program<'_>>,
 ) -> Option<Reading> {
     let par = paradigms.get(p)?;
     let stems = par.stems(orthography, w.letters)?;
@@ -559,7 +722,10 @@ fn reading(
         .map(|(cell, _)| {
             par.pattern(paradigms, cell)
                 .and_then(|pat| pattern::variants(pat).next())
-                .map(|v| pattern::fill_marked(v, &stems))
+                .map(|v| {
+                    let built = pattern::fill_marked(v, &stems);
+                    pre.map_or_else(|| built.clone(), |p| p.apply(&built))
+                })
                 .unwrap_or_default()
         })
         .collect();
@@ -578,8 +744,11 @@ fn reading(
 /// The laws, tried in turn (the best supported first), and the assignment
 /// after the words they explain moved. A law is kept when it fixes forms of
 /// enough words, in more than one cell (a sound law applies wherever its
-/// letters meet), and breaks few their paradigm gave; with each, the words
-/// whose forms it gives (by their place in `forms`) and how many forms.
+/// letters meet), and breaks few their paradigm gave, on the words `held`
+/// out too (see [`Tried::kept`]); one at the stem's edge that breaks too
+/// many grows context first (see [`grow`]). With each, the words whose
+/// forms it gives (by their place in `forms`) and how many forms; and the
+/// words' paradigms after the plain laws, and after all.
 fn greedy(
     candidates: &[(Change, u32)],
     mut readings: Vec<Vec<Reading>>,
@@ -587,7 +756,8 @@ fn greedy(
     cells_of: &[Vec<usize>],
     mut assignment: Vec<u16>,
     rank: &dyn Fn(usize) -> (usize, usize),
-) -> (Vec<Kept>, Vec<u16>) {
+    held: &[bool],
+) -> (Vec<Kept>, [Vec<u16>; 2]) {
     // Builds by the letters around their boundary.
     let mut index: HashMap<(String, String), Vec<At>> = HashMap::default();
     for (w, rs) in readings.iter().enumerate() {
@@ -599,128 +769,337 @@ fn greedy(
     }
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
     let mut laws: Vec<(Law, Vec<At>)> = Vec::new();
-    for (change, _) in candidates {
-        let Some(program) = compile(std::slice::from_ref(change)) else {
-            continue;
+    let mut credited: Vec<Kept> = Vec::new();
+    let mut plain = Vec::new();
+    // Every change as it is first; then those at the stem's edge that broke
+    // too many, grown a letter of context at a time while they do (Belth
+    // 2024 (11), p. 8): a law with context comes after the laws without.
+    // Each pass's laws are credited with the words they gave when it ends.
+    let mut later: Vec<usize> = Vec::new();
+    for growing in [false, true] {
+        let todo = if growing {
+            std::mem::take(&mut later)
+        } else {
+            (0..candidates.len()).collect()
         };
-        let mut at: Vec<At> = index
-            .iter()
-            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
-            .flat_map(|(_, v)| v.iter().copied())
-            .collect();
-        at.sort_unstable();
-        at.dedup();
-        let mut changes: Vec<(At, String)> = Vec::new();
-        let mut fixed: Vec<At> = Vec::new();
-        let mut breaks = 0u32;
-        for (w, r, k) in at {
-            let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
+        for i in todo {
+            let Some((change, _)) = candidates.get(i) else {
                 continue;
             };
-            // Not an entry the laws so far have moved elsewhere.
-            let Some(built) = reading
-                .builds
-                .get(k)
-                .filter(|b| change.applies(&window(b), b))
+            let mut change = change.clone();
+            let mut tried = None;
+            for _ in 0..=if growing { GROWN } else { 0 } {
+                let Some(t) = try_law(&change, &index, &readings, forms, &assignment) else {
+                    break;
+                };
+                let kept = t.kept(cells_of, held);
+                let grown = (!kept && growing)
+                    .then(|| grow(&change, &t, &readings, held))
+                    .flatten();
+                tried = Some((t, kept));
+                match grown {
+                    Some(g) => change = g,
+                    None => break,
+                }
+            }
+            let growable = |t: &Tried| t.growable(cells_of);
+            if !growing
+                && matches!(&tried, Some((t, false)) if growable(t))
+                && matches!(change, Change::Edge { .. })
+            {
+                later.push(i);
+            }
+            let Some((
+                Tried {
+                    changes,
+                    fixed,
+                    broken,
+                },
+                true,
+            )) = tried
             else {
                 continue;
             };
-            let after = program.apply(built);
-            if after == *built {
-                continue;
+            let breaks = u32::try_from(broken.len()).unwrap_or(u32::MAX);
+            let mut fixed_words: Vec<usize> = fixed.iter().map(|a| a.0).collect();
+            fixed_words.dedup();
+            for ((w, r, k), after) in changes {
+                let want = form(w, k);
+                let Some(built) =
+                    readings
+                        .get_mut(w)
+                        .and_then(|rs| rs.get_mut(r))
+                        .and_then(|reading| {
+                            reading.right = (reading.right + usize::from(same(&after, want)))
+                                .saturating_sub(usize::from(same(reading.builds.get(k)?, want)));
+                            reading.builds.get_mut(k)
+                        })
+                else {
+                    continue;
+                };
+                index.entry(window(&after)).or_default().push((w, r, k));
+                *built = after;
             }
-            let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
-            let own = assignment
-                .get(w)
-                .is_some_and(|&p| usize::from(p) == reading.paradigm);
-            breaks += u32::from(own && was && !is);
-            if !was && is {
-                fixed.push((w, r, k));
+            // A word whose forms a more general paradigm now builds as well as
+            // its own joins it.
+            for &w in &fixed_words {
+                let (Some(rs), Some(own)) = (readings.get(w), assignment.get_mut(w)) else {
+                    continue;
+                };
+                let mine = rs
+                    .iter()
+                    .find(|r| r.paradigm == usize::from(*own))
+                    .map_or(0, |r| r.right);
+                let best = rs
+                    .iter()
+                    .filter(|r| r.right >= mine)
+                    .map(|r| r.paradigm)
+                    .min_by_key(|&p| rank(p));
+                if let Some(p) = best.filter(|&p| rank(p) < rank(usize::from(*own)))
+                    && let Ok(p) = u16::try_from(p)
+                {
+                    *own = p;
+                }
             }
-            changes.push(((w, r, k), after));
+            let law = Law {
+                change,
+                words: 0,
+                examples: Vec::new(),
+                breaks,
+            };
+            laws.push((law, fixed));
         }
-        let mut fixed_words: Vec<usize> = fixed.iter().map(|a| a.0).collect();
-        fixed_words.dedup();
-        let mut fixed_cells: Vec<usize> = fixed
+        credited.extend(
+            laws.drain(..)
+                .map(|l| credit(l, &readings, &assignment, forms)),
+        );
+        if !growing {
+            plain = assignment.clone();
+        }
+    }
+    (credited, [plain, assignment])
+}
+
+/// What a law did for the words that moved, once its pass is over: the
+/// forms it fixed (`fixed`) that their new paradigm still builds, and their
+/// words.
+fn credit(
+    (law, fixed): (Law, Vec<At>),
+    readings: &[Vec<Reading>],
+    assignment: &[u16],
+    forms: &[Vec<&str>],
+) -> Kept {
+    let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
+    let used: Vec<At> = fixed
+        .into_iter()
+        .filter(|&(w, r, k)| {
+            readings
+                .get(w)
+                .and_then(|rs| rs.get(r))
+                .is_some_and(|reading| {
+                    assignment
+                        .get(w)
+                        .is_some_and(|&p| usize::from(p) == reading.paradigm)
+                        && reading.builds.get(k).is_some_and(|b| same(b, form(w, k)))
+                })
+        })
+        .collect();
+    let mut users: Vec<usize> = used.iter().map(|a| a.0).collect();
+    users.dedup();
+    (law, users, used.len())
+}
+
+/// Whether a word is in the half laws are checked on, not learned from
+/// (Rasin & Katzir 2020: what a law must not do, the words it was learned
+/// from never pay for).
+pub(crate) fn held_out(letters: &str) -> bool {
+    use std::hash::{Hash, Hasher};
+    let mut h = std::collections::hash_map::DefaultHasher::new();
+    letters.hash(&mut h);
+    h.finish() % 2 == 1
+}
+
+/// How many letters of context a law at the stem's edge may grow.
+const GROWN: usize = 2;
+
+/// A law tried on the builds: what it makes of each it changes, those it
+/// makes the dictionary's form (`fixed`), and those it makes wrong in the
+/// word's own paradigm (`broken`).
+struct Tried {
+    changes: Vec<(At, String)>,
+    fixed: Vec<At>,
+    broken: Vec<At>,
+}
+
+impl Tried {
+    /// Whether the law is kept: it gives forms in more than one cell, pays
+    /// for itself, and on the words held out (see [`held_out`]) breaks no
+    /// more forms than the tolerance allows.
+    fn kept(&self, cells_of: &[Vec<usize>], held: &[bool]) -> bool {
+        let (words, cells) = self.gives(cells_of);
+        let breaks = u32::try_from(self.broken.len()).unwrap_or(u32::MAX);
+        let dev = |l: &[At]| l.iter().filter(|a| held.get(a.0) == Some(&true)).count();
+        let (fixed, broken) = (dev(&self.fixed), dev(&self.broken));
+        cells >= MIN_CELLS
+            && pays(words, breaks, self.fixed.len())
+            && harmony::tolerated(
+                u32::try_from(fixed + broken).unwrap_or(u32::MAX),
+                u32::try_from(broken).unwrap_or(u32::MAX),
+            )
+    }
+}
+
+impl Tried {
+    /// How many words and cells it gives forms of.
+    fn gives(&self, cells_of: &[Vec<usize>]) -> (usize, usize) {
+        let mut words: Vec<usize> = self.fixed.iter().map(|a| a.0).collect();
+        words.dedup();
+        let mut cells: Vec<usize> = self
+            .fixed
             .iter()
             .filter_map(|&(w, _, k)| cells_of.get(w)?.get(k).copied())
             .collect();
-        fixed_cells.sort_unstable();
-        fixed_cells.dedup();
-        if fixed_cells.len() < MIN_CELLS || !pays(fixed_words.len(), breaks, fixed.len()) {
+        cells.sort_unstable();
+        cells.dedup();
+        (words.len(), cells.len())
+    }
+
+    /// Whether context could make it a law: it gives enough forms, and
+    /// breaks some (context only ever gives fewer).
+    fn growable(&self, cells_of: &[Vec<usize>]) -> bool {
+        let (words, cells) = self.gives(cells_of);
+        words >= MIN_WORDS && cells >= MIN_CELLS && !self.broken.is_empty()
+    }
+}
+
+/// What law `change` does to the builds (`index` finds them by the letters
+/// around their boundary): `None` if it doesn't compile.
+fn try_law(
+    change: &Change,
+    index: &HashMap<(String, String), Vec<At>>,
+    readings: &[Vec<Reading>],
+    forms: &[Vec<&str>],
+    assignment: &[u16],
+) -> Option<Tried> {
+    let program = compile(std::slice::from_ref(change))?;
+    let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
+    let mut at: Vec<At> = index
+        .iter()
+        .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
+        .flat_map(|(_, v)| v.iter().copied())
+        .collect();
+    at.sort_unstable();
+    at.dedup();
+    let mut tried = Tried {
+        changes: Vec::new(),
+        fixed: Vec::new(),
+        broken: Vec::new(),
+    };
+    for (w, r, k) in at {
+        let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
+            continue;
+        };
+        // Not an entry the laws so far have moved elsewhere.
+        let Some(built) = reading
+            .builds
+            .get(k)
+            .filter(|b| change.applies(&window(b), b))
+        else {
+            continue;
+        };
+        let after = program.apply(built);
+        if after == *built {
             continue;
         }
-        for ((w, r, k), after) in changes {
-            let want = form(w, k);
-            let Some(built) =
-                readings
-                    .get_mut(w)
-                    .and_then(|rs| rs.get_mut(r))
-                    .and_then(|reading| {
-                        reading.right = (reading.right + usize::from(same(&after, want)))
-                            .saturating_sub(usize::from(same(reading.builds.get(k)?, want)));
-                        reading.builds.get_mut(k)
-                    })
-            else {
-                continue;
-            };
-            index.entry(window(&after)).or_default().push((w, r, k));
-            *built = after;
+        let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
+        let own = assignment
+            .get(w)
+            .is_some_and(|&p| usize::from(p) == reading.paradigm);
+        if own && was && !is {
+            tried.broken.push((w, r, k));
         }
-        // A word whose forms a more general paradigm now builds as well as
-        // its own joins it.
-        for &w in &fixed_words {
-            let (Some(rs), Some(own)) = (readings.get(w), assignment.get_mut(w)) else {
-                continue;
-            };
-            let mine = rs
-                .iter()
-                .find(|r| r.paradigm == usize::from(*own))
-                .map_or(0, |r| r.right);
-            let best = rs
-                .iter()
-                .filter(|r| r.right >= mine)
-                .map(|r| r.paradigm)
-                .min_by_key(|&p| rank(p));
-            if let Some(p) = best.filter(|&p| rank(p) < rank(usize::from(*own)))
-                && let Ok(p) = u16::try_from(p)
-            {
-                *own = p;
+        if !was && is {
+            tried.fixed.push((w, r, k));
+        }
+        tried.changes.push(((w, r, k), after));
+    }
+    Some(tried)
+}
+
+/// A law at the stem's edge that breaks too many forms, with one more
+/// letter of context: on the side (before its stem letters, or after its
+/// ending's) whose letters best tell the forms it gives from those it
+/// breaks, the letters there where it breaks few (one in twenty of what
+/// it gives, as [`pays`] asks), learned on the words not held out. `None`
+/// for any other law, or where no letter helps.
+fn grow(
+    change: &Change,
+    tried: &Tried,
+    readings: &[Vec<Reading>],
+    held: &[bool],
+) -> Option<Change> {
+    let Change::Edge {
+        stem,
+        ending,
+        earlier,
+        left,
+        right,
+        ..
+    } = change
+    else {
+        return None;
+    };
+    if !earlier.is_empty() {
+        return None;
+    }
+    let built = |&(w, r, k): &At| -> Option<&str> {
+        readings.get(w)?.get(r)?.builds.get(k).map(String::as_str)
+    };
+    // The letter `n` past the context on a side of a build's change.
+    let letter = |b: &str, before: bool| -> Option<char> {
+        let (head, tail) = b.split_once(BOUNDARY)?;
+        if before {
+            let alt = stem.iter().find(|s| head.ends_with(s.as_str()))?;
+            head.chars().rev().nth(alt.chars().count() + left.len())
+        } else {
+            tail.chars().nth(ending.chars().count() + right.len())
+        }
+    };
+    let mut best: Option<(usize, bool, Vec<char>)> = None;
+    for before in [true, false] {
+        let mut counts: std::collections::BTreeMap<char, (usize, usize)> = Default::default();
+        let learned = |a: &&At| held.get(a.0) != Some(&true);
+        for a in tried.fixed.iter().filter(learned) {
+            if let Some(c) = built(a).and_then(|b| letter(b, before)) {
+                counts.entry(c).or_default().0 += 1;
             }
         }
-        let law = Law {
-            change: change.clone(),
-            words: 0,
-            examples: Vec::new(),
-            breaks,
-        };
-        laws.push((law, fixed));
+        for a in tried.broken.iter().filter(learned) {
+            if let Some(c) = built(a).and_then(|b| letter(b, before)) {
+                counts.entry(c).or_default().1 += 1;
+            }
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let set: Vec<char> = counts
+            .iter()
+            .filter(|(_, (f, b))| *f > 0 && *b as f64 <= BREAKS * *f as f64)
+            .map(|(&c, _)| c)
+            .collect();
+        let gives: usize = set.iter().filter_map(|c| counts.get(c)).map(|e| e.0).sum();
+        if !set.is_empty() && best.as_ref().is_none_or(|b| gives > b.0) {
+            best = Some((gives, before, set));
+        }
     }
-    // What each law did for the words that moved: forms it fixed that their
-    // new paradigm still builds.
-    let laws = laws
-        .into_iter()
-        .map(|(law, fixed)| {
-            let used: Vec<At> = fixed
-                .into_iter()
-                .filter(|&(w, r, k)| {
-                    readings
-                        .get(w)
-                        .and_then(|rs| rs.get(r))
-                        .is_some_and(|reading| {
-                            assignment
-                                .get(w)
-                                .is_some_and(|&p| usize::from(p) == reading.paradigm)
-                                && reading.builds.get(k).is_some_and(|b| same(b, form(w, k)))
-                        })
-                })
-                .collect();
-            let mut users: Vec<usize> = used.iter().map(|a| a.0).collect();
-            users.dedup();
-            (law, users, used.len())
-        })
-        .collect();
-    (laws, assignment)
+    let (_, before, set) = best?;
+    let mut grown = change.clone();
+    if let Change::Edge { left, right, .. } = &mut grown {
+        if before {
+            left.push(set)
+        } else {
+            right.push(set)
+        }
+    }
+    Some(grown)
 }
 
 /// Whether a law pays for itself: it gives `forms` of enough `words`, and
@@ -912,6 +1291,8 @@ fn edits(built: &str, want: &str) -> Vec<Change> {
                 to: kept_part.iter().chain(&[BOUNDARY]).chain(rest).collect(),
                 keep: false,
                 earlier: Vec::new(),
+                left: Vec::new(),
+                right: Vec::new(),
             });
         }
     }
@@ -1018,6 +1399,8 @@ fn classes(support: &HashMap<Change, u32>) -> Vec<(Change, u32)> {
                 to: rest.to_string(),
                 keep: true,
                 earlier: Vec::new(),
+                left: Vec::new(),
+                right: Vec::new(),
             };
             (change, letters.iter().map(|l| l.0).sum())
         })
@@ -1053,56 +1436,77 @@ fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<(Change, u32)> {
             })
         })
         .collect();
-    // The changes of one letter of the ending past its first, and the words
-    // with them.
-    let mut changes: HashMap<(char, char), Vec<usize>> = HashMap::default();
-    for (w, built, form, edge) in &pairs {
-        let differ: Vec<(usize, (char, char))> = built
+    // The changes of a letter of the ending past its first, and the words
+    // with them: a form whose ending differs from its build only by that
+    // change, in one letter or more, whatever its stem's edge does (another
+    // law's).
+    let only = |built: &[char], form: &[char], edge: usize| -> Option<(char, char)> {
+        let mut differ = built
             .iter()
             .zip(form)
-            .enumerate()
-            .filter(|(_, (a, b))| a != b)
-            .map(|(i, (a, b))| (i, (*a, *b)))
-            .collect();
-        if let [(at, change)] = differ.as_slice()
-            && at > edge
-        {
-            let words = changes.entry(*change).or_default();
+            .skip(edge + 1)
+            .filter(|(a, b)| a != b)
+            .map(|(a, b)| (*a, *b));
+        let first = differ.next()?;
+        differ.all(|d| d == first).then_some(first)
+    };
+    let mut changes: HashMap<(char, char), Vec<usize>> = HashMap::default();
+    for (w, built, form, edge) in &pairs {
+        if let Some(change) = only(built, form, *edge) {
+            let words = changes.entry(change).or_default();
             if words.last() != Some(w) {
                 words.push(*w);
             }
         }
     }
-    let mut out: Vec<(Change, u32)> = changes
+    let changes: Vec<((char, char), usize)> = changes
         .into_iter()
         .filter(|(_, words)| words.len() >= MIN_WORDS)
-        .filter_map(|((letter, to), words)| {
-            let mut examples: HashMap<Example, u32> = HashMap::default();
-            for (_, built, form, edge) in &pairs {
-                if built
-                    .iter()
-                    .zip(form)
-                    .any(|(a, b)| a != b && (*a, *b) != (letter, to))
-                {
+        .map(|(c, words)| (c, words.len()))
+        .collect();
+    // Each change's examples, in one pass: every place a letter it changes
+    // stands in the ending, in a form whose ending no other change touches.
+    let mut by_letter: HashMap<char, Vec<usize>> = HashMap::default();
+    for (k, ((letter, _), _)) in changes.iter().enumerate() {
+        by_letter.entry(*letter).or_default().push(k);
+    }
+    let mut examples: Vec<HashMap<Example, u32>> = vec![HashMap::default(); changes.len()];
+    for (_, built, form, edge) in &pairs {
+        let theirs = only(built, form, *edge);
+        for (i, (&a, &b)) in built.iter().zip(form).enumerate().skip(*edge) {
+            let Some(ks) = by_letter.get(&a) else {
+                continue;
+            };
+            let mut before: Option<Vec<char>> = None;
+            for &k in ks {
+                let Some(((_, to), _)) = changes.get(k) else {
+                    continue;
+                };
+                if theirs.is_some_and(|c| c != (a, *to)) {
                     continue;
                 }
-                for (i, (&a, &b)) in built.iter().zip(form).enumerate().skip(*edge) {
-                    if a == letter {
-                        let before: Vec<char> = built
-                            .get(..i)
-                            .unwrap_or_default()
-                            .iter()
-                            .rev()
-                            .copied()
-                            .collect();
-                        *examples
-                            .entry((before, built.get(i + 1).copied(), b == to))
-                            .or_default() += 1;
-                    }
+                let before = before.get_or_insert_with(|| {
+                    built
+                        .get(..i)
+                        .unwrap_or_default()
+                        .iter()
+                        .rev()
+                        .copied()
+                        .collect()
+                });
+                if let Some(e) = examples.get_mut(k) {
+                    *e.entry((before.clone(), built.get(i + 1).copied(), b == *to))
+                        .or_default() += 1;
                 }
             }
+        }
+    }
+    let mut out: Vec<(Change, u32)> = changes
+        .into_iter()
+        .zip(examples)
+        .filter_map(|(((letter, to), words), examples)| {
             let [on, off, stop] = tier(&examples)?;
-            let words = u32::try_from(words.len()).unwrap_or(u32::MAX);
+            let words = u32::try_from(words).unwrap_or(u32::MAX);
             Some((
                 Change::Tier {
                     letter,
@@ -1135,43 +1539,63 @@ fn tier(examples: &HashMap<Example, u32>) -> Option<[Vec<char>; 3]> {
         .collect();
     letters.sort_unstable();
     letters.dedup();
-    let right = |[on, off, stop]: &[Vec<char>; 3]| -> u32 {
-        examples
-            .iter()
-            .filter(|((before, next, y), _)| {
-                let decides = before.iter().find(|c| on.contains(c) || off.contains(c));
-                (decides.is_some_and(|c| on.contains(c)) && next.is_none_or(|n| !stop.contains(&n)))
-                    == *y
-            })
-            .map(|e| e.1)
-            .sum()
-    };
     let mut sets: [Vec<char>; 3] = Default::default();
-    let mut best = right(&sets);
     loop {
-        let mut step: Option<(u32, [Vec<char>; 3])> = None;
+        // How many it predicts right, and how many more with each letter
+        // added on a side: added on the tier, a letter before the nearest
+        // tier letter becomes the nearest; added to `stop`, it stops the
+        // change where it follows.
+        let [on, off, stop] = &sets;
+        let mut right = 0i64;
+        let mut more: HashMap<(char, usize), i64> = HashMap::default();
+        for ((before, next, y), n) in &examples {
+            let n = i64::from(*n);
+            let at = before
+                .iter()
+                .position(|c| on.contains(c) || off.contains(c));
+            let stopped = next.is_some_and(|x| stop.contains(&x));
+            let was = at
+                .and_then(|i| before.get(i))
+                .is_some_and(|c| on.contains(c))
+                && !stopped;
+            let ok = |p: bool| i64::from(p == *y);
+            right += n * ok(was);
+            let mut first: Vec<char> = Vec::new();
+            for &c in before.get(..at.unwrap_or(before.len())).unwrap_or_default() {
+                if !first.contains(&c) {
+                    first.push(c);
+                    *more.entry((c, 0)).or_default() += n * (ok(!stopped) - ok(was));
+                    *more.entry((c, 1)).or_default() += n * (ok(false) - ok(was));
+                }
+            }
+            if let Some(x) = next.filter(|x| !stop.contains(x)) {
+                *more.entry((x, 2)).or_default() += n * (ok(false) - ok(was));
+            }
+        }
+        // The best step, the first of the best in letter and side order.
+        let mut step: Option<(i64, char, usize)> = None;
         for &l in &letters {
             for side in 0..3 {
-                let mut next = sets.clone();
                 // A letter is on the tier on one side, and stops it or not.
-                let [on, off, stop] = &next;
                 let free = if side == 2 {
                     !stop.contains(&l)
                 } else {
                     !on.contains(&l) && !off.contains(&l)
                 };
-                let Some(set) = next.get_mut(side).filter(|_| free) else {
-                    continue;
-                };
-                set.push(l);
-                let score = right(&next);
-                if step.as_ref().is_none_or(|s| score > s.0) {
-                    step = Some((score, next));
+                let score = right + more.get(&(l, side)).copied().unwrap_or(0);
+                if free && step.is_none_or(|s| score > s.0) {
+                    step = Some((score, l, side));
                 }
             }
         }
+        #[allow(clippy::cast_possible_wrap)]
+        let enough = MIN_WORDS as i64;
         match step {
-            Some((score, next)) if score >= best + MIN_WORDS as u32 => (best, sets) = (score, next),
+            Some((score, l, side)) if score >= right + enough => {
+                if let Some(set) = sets.get_mut(side) {
+                    set.push(l);
+                }
+            }
             _ => break,
         }
     }
@@ -1242,6 +1666,8 @@ mod tests {
             to: to.to_string(),
             keep: false,
             earlier: Vec::new(),
+            left: Vec::new(),
+            right: Vec::new(),
         };
         // Greek contraction: ποιε + ομεν → ποιουμεν.
         assert!(edits("ποιε+ομεν", "ποιουμεν").contains(&edge("ε", "ο", "+ου")));
@@ -1293,12 +1719,35 @@ mod tests {
             to: "+и".into(),
             keep: true,
             earlier: Vec::new(),
+            left: Vec::new(),
+            right: Vec::new(),
         };
         assert_eq!(class, [(velar.clone(), 5)]);
         // Contraction where a vowel comes earlier in the stem: not in `πλε`.
         let vowels: Vec<char> = "αεηιουω".chars().collect();
         let contract = edge("ε", "ο", "+ου").after(&vowels).expect("an edge law");
+        // Context grown on each side: English `-es` after a hushing letter
+        // only before `s` (`march+s`, not `march+ing`).
+        let grown = Change::Edge {
+            stem: vec!["h".into()],
+            ending: String::new(),
+            to: "h+e".into(),
+            keep: false,
+            earlier: Vec::new(),
+            left: vec![vec!['c', 's']],
+            right: vec![vec!['s']],
+        };
+        let law = |change: &Change| Law {
+            change: change.clone(),
+            words: 0,
+            examples: Vec::new(),
+            breaks: 0,
+        };
+        assert_eq!(law(&grown).to_string(), "h+ → h+e after [c|s] before s");
         for (change, built, after) in [
+            (grown.clone(), "march+s", "march+es"),
+            (grown.clone(), "march+ing", "march+ing"),
+            (grown, "sigh+s", "sigh+s"),
             (velar, "книг+ы", "книг+и"),
             (edge("γ", "σ", "+ξ"), "λεγ+σω", "λε+ξω"),
             (contract.clone(), "φιλε+ομεν", "φιλ+ουμεν"),

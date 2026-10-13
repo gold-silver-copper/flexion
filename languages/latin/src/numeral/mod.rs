@@ -9,6 +9,7 @@ mod paradigms;
 mod relations;
 mod rules;
 mod spellings;
+mod stems;
 
 pub use paradigms::Declension;
 
@@ -72,9 +73,16 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(marks::MARKS),
+    slots: Cow::Borrowed(&stems::SLOTS),
+    tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 0.5,
+    sharpness: 1.0,
+    trust: flexion::Trust {
+        regular: 1.0,
+        unsettled: 1.0,
+        unattested: 1.0,
+    },
 };
 
 /// A numeral form: which cell of its declension.

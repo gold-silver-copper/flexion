@@ -109,9 +109,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         Some((GEN_M_PL, GEN_F_PL))
     ),
     // GEN_F_PL, from GEN_M_PL.
-    relation!(GEN_F_PL, [GEN_M_PL], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, None),
+    relation!(GEN_F_PL, [GEN_M_PL], [], none, true, None),
     // GEN_N_SG, from GEN_M_SG.
     relation!(GEN_N_SG, [GEN_M_SG], [("~", "~")], rules {
         "" => [0 2],
@@ -121,9 +119,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [0 2],
     } listed {}, true, None),
     // GEN_N_PL, from GEN_M_PL.
-    relation!(GEN_N_PL, [GEN_M_PL], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, None),
+    relation!(GEN_N_PL, [GEN_M_PL], [], none, true, None),
     // DAT_M_SG, from GEN_M_SG. Few or no words have it: changed as GEN_M_DU is into DAT_M_DU.
     relation!(
         DAT_M_SG,
@@ -211,9 +207,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [0 2],
     } listed {}, true, None),
     // ACC_N_PL, from NOM_N_PL.
-    relation!(ACC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, None),
+    relation!(ACC_N_PL, [NOM_N_PL], [], none, true, None),
     // VOC_M_SG, from NOM_M_SG. Few or no words have it: changed as NOM_M_PL is into VOC_M_PL.
     relation!(
         VOC_M_SG,
@@ -228,9 +222,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [0 2],
     } listed {}, true, None),
     // VOC_M_PL, from NOM_M_PL.
-    relation!(VOC_M_PL, [NOM_M_PL], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, None),
+    relation!(VOC_M_PL, [NOM_M_PL], [], none, true, None),
     // VOC_F_SG, from NOM_F_SG.
     relation!(VOC_F_SG, [NOM_F_SG], [("~", "~")], rules {
         "" => [0 2],
@@ -240,9 +232,7 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [0 2],
     } listed {}, true, None),
     // VOC_F_PL, from NOM_F_PL.
-    relation!(VOC_F_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, None),
+    relation!(VOC_F_PL, [NOM_F_PL], [], none, true, None),
     // VOC_N_SG, from NOM_N_SG.
     relation!(VOC_N_SG, [NOM_N_SG], [("~", "~")], rules {
         "" => [0 2],
@@ -252,7 +242,5 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "" => [0 2],
     } listed {}, true, None),
     // VOC_N_PL, from NOM_N_PL.
-    relation!(VOC_N_PL, [NOM_N_PL], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, None),
+    relation!(VOC_N_PL, [NOM_N_PL], [], none, true, None),
 ];

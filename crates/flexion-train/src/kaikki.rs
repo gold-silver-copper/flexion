@@ -19,6 +19,11 @@ pub struct Entry {
     pub senses: Vec<Sense>,
     #[serde(default)]
     pub head_templates: Vec<HeadTemplate>,
+    /// The templates that write the entry's inflection tables, with their
+    /// arguments: the editors' own analysis (see
+    /// [`crate::extract::Editors`]).
+    #[serde(default)]
+    pub inflection_templates: Vec<Template>,
     /// Tags of the word itself (other editions put gender and aspect here).
     #[serde(default)]
     pub tags: Vec<String>,
@@ -68,6 +73,19 @@ pub struct HeadTemplate {
     pub name: String,
     #[serde(default)]
     pub expansion: String,
+    /// Its arguments, as the editors wrote them (any JSON, so that an odd
+    /// one never makes the entry unreadable).
+    #[serde(default)]
+    pub args: std::collections::BTreeMap<String, serde_json::Value>,
+}
+
+/// An inflection template and its arguments.
+#[derive(Debug, Clone, Deserialize)]
+pub struct Template {
+    #[serde(default)]
+    pub name: String,
+    #[serde(default)]
+    pub args: std::collections::BTreeMap<String, serde_json::Value>,
 }
 
 /// Stream every entry of a dump (`.jsonl` or `.jsonl.gz`). Lines that fail

@@ -43,6 +43,86 @@ pub struct Lexeme {
     /// after.
     #[serde(default)]
     pub vulgar: bool,
+    /// The dictionary editors' own analysis of the word. **For scoring
+    /// only**: the learner never reads it (the grammar must find classes,
+    /// stems and features itself); `xtask` compares what was learned with it.
+    #[serde(default, skip_serializing_if = "Editors::is_empty")]
+    pub editors: Editors,
+}
+
+/// What the dictionary's editors wrote about a word's inflection: its
+/// head-line and inflection templates with their arguments (Latin `la-conj`
+/// `3.sigm tāgō tetig tāct`, Russian `ru-conj` `6a`, Greek `grc-conj` per
+/// tense stem) and the tags of its senses (`deponent`). Carried for scoring
+/// only; see [`Lexeme::editors`].
+#[derive(Debug, Clone, Default, PartialEq, serde::Serialize, serde::Deserialize)]
+pub struct Editors {
+    /// `(template, arguments)`, in the entry's order: head-line templates,
+    /// then inflection templates. Arguments are `(name, value)`, empty and
+    /// long (over [`EDITOR_ARGUMENT`] bytes: notes) ones left out.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub templates: Vec<(String, Vec<(String, String)>)>,
+    /// Every tag of every sense, sorted, once each.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tags: Vec<String>,
+}
+
+/// The longest template argument kept in [`Editors`], in bytes.
+pub const EDITOR_ARGUMENT: usize = 48;
+
+impl Editors {
+    pub fn is_empty(&self) -> bool {
+        self.templates.is_empty() && self.tags.is_empty()
+    }
+
+    /// Read from a dump entry.
+    pub fn of(entry: &Entry) -> Editors {
+        let args = |a: &std::collections::BTreeMap<String, serde_json::Value>| {
+            a.iter()
+                .filter_map(|(k, v)| {
+                    let v = match v {
+                        serde_json::Value::String(s) => s.clone(),
+                        serde_json::Value::Number(n) => n.to_string(),
+                        _ => return None,
+                    };
+                    (!v.is_empty() && v.len() <= EDITOR_ARGUMENT).then(|| (k.clone(), v))
+                })
+                .collect::<Vec<_>>()
+        };
+        let templates = entry
+            .head_templates
+            .iter()
+            .filter(|t| t.name != "head")
+            .map(|t| (t.name.clone(), args(&t.args)))
+            .chain(
+                entry
+                    .inflection_templates
+                    .iter()
+                    .map(|t| (t.name.clone(), args(&t.args))),
+            )
+            .collect();
+        let tags: BTreeSet<String> = entry
+            .senses
+            .iter()
+            .flat_map(|s| s.tags.iter().cloned())
+            .collect();
+        Editors {
+            templates,
+            tags: tags.into_iter().collect(),
+        }
+    }
+
+    /// The arguments of the templates named `name`, in order.
+    pub fn template<'e>(&'e self, name: &'e str) -> impl Iterator<Item = &'e [(String, String)]> {
+        self.templates
+            .iter()
+            .filter(move |(n, _)| n == name)
+            .map(|(_, a)| a.as_slice())
+    }
+
+    pub fn has_tag(&self, tag: &str) -> bool {
+        self.tags.iter().any(|t| t == tag)
+    }
 }
 
 /// Every lexeme of one part of speech.
@@ -401,6 +481,7 @@ fn lexeme(
                 .iter()
                 .any(|t| matches!(t.as_str(), "vulgar" | "offensive" | "derogatory" | "slur"))
         }),
+        editors: Editors::of(entry),
     })
 }
 

@@ -9,6 +9,7 @@ pub type HashSet<K> = std::collections::HashSet<K, Fixed>;
 pub type Fixed = std::hash::BuildHasherDefault<std::collections::hash_map::DefaultHasher>;
 
 pub mod baseline;
+pub mod bits;
 pub mod cells;
 pub mod choose;
 pub mod eval;
@@ -16,12 +17,14 @@ pub mod extract;
 pub mod kaikki;
 pub mod laws;
 pub mod learn;
+pub mod measure;
 pub mod pipeline;
 pub mod print;
 pub mod relations;
 pub mod script;
 pub mod skeleton;
 pub mod spec;
+pub mod stems;
 
 use spec::{Language, PartOfSpeech};
 
@@ -72,9 +75,11 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
     }
     Ok(learn::Shape {
         coordinates,
+        names: print::cell_names(&cells),
         cells: cells.total,
         lemma_cell,
         capitalized: part.capitalized,
+        max_words: part.max_words,
         inherent: part
             .inherent
             .iter()

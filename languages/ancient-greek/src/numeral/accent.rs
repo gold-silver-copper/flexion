@@ -122,9 +122,9 @@ pub static PATTERNS: [AccentPattern<'static>; 1] = [
 /// Every accent class: a pattern and the stem's accented syllable.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AccentClass {
-    /// Pattern `δευτερος`, the stem accented on its next-to-last: 12 words.
+    /// Pattern `δευτερος`, the stem accented on its next-to-last: 13 words.
     Δῠο,
-    /// Pattern `δευτερος`, the stem accented on its syllable 3 from the end: 5 words.
+    /// Pattern `δευτερος`, the stem accented on its syllable 3 from the end: 4 words.
     Δευτερος,
     /// Pattern `δευτερος`, never on the stem: 1 words.
     Τρεῑς,
@@ -157,13 +157,13 @@ pub static CLASSES: [StressClass<'static>; 4] = [
         name: Cow::Borrowed("δῠο"),
         pattern: 0, // δευτερος
         vowel: Some(1),
-        words: 12,
+        words: 13,
     },
     StressClass {
         name: Cow::Borrowed("δευτερος"),
         pattern: 0, // δευτερος
         vowel: Some(2),
-        words: 5,
+        words: 4,
     },
     StressClass {
         name: Cow::Borrowed("τρεῑς"),
@@ -181,25 +181,29 @@ pub static CLASSES: [StressClass<'static>; 4] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 3 rules and 3 listed words.
+/// Which class a word is of: 2 rules and 8 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
-        "" => [Δῠο 12, Δευτερος 5, Τρεῑς 1, Εἱς 1],
+        "" => [Δῠο 13, Δευτερος 4, Τρεῑς 1, Εἱς 1],
         "ι" => [Δῠο 11],
-        "σ" => [Δευτερος 5, Τρεῑς 1, Εἱς 1],
     }
     listed {
+        "δεκατεσσαρεσ" => Δευτερος,
+        "δευτεροσ" => Δευτερος,
         "δυο" => Δῠο,
         "εισ" => Εἱς,
+        "πισυρεσ" => Δῠο,
+        "τεσσαρεσ" => Δευτερος,
+        "τετταρεσ" => Δευτερος,
         "τρεισ" => Τρεῑς,
     }
 };
 
 /// Per declension, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 8] = [
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 7] = [
     Cow::Borrowed(&[]), // Χῑλῐοι
-    Cow::Borrowed(&[]), // Τεσσᾰρες
+    Cow::Borrowed(&[]), // Πισῠρες
     Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Δῠο
     Cow::Borrowed(&[
         NOM_M_PL, NOM_F_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, ACC_M_PL, ACC_F_PL,
@@ -207,7 +211,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 8] = [
     Cow::Borrowed(&[]), // Δεκᾰτεσσᾰρες
     Cow::Borrowed(&[NOM_M_SG, GEN_F_SG, DAT_F_SG, VOC_M_SG]), // Εἱς
     Cow::Borrowed(&[]), // Δευτερος
-    Cow::Borrowed(&[]), // Πισῠρες
 ];
 
 /// The cells whose final `-αι`, `-οι` counts as long.

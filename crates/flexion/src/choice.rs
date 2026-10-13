@@ -38,6 +38,10 @@ pub struct Rule<'a, L: Label> {
     /// How many of the dictionary's words with this ending take each value,
     /// commonest first.
     pub counts: Cow<'a, [(L, u32)]>,
+    /// Productive (Yang's Tolerance Principle, judged by the trainer on the
+    /// commonest words with this ending): its readings are `regular`, else
+    /// `unsettled`.
+    pub regular: bool,
 }
 
 /// How sure a choice is about a word.
@@ -112,14 +116,12 @@ impl<'a, L: Label> Rule<'a, L> {
             .find(|&&(l, _)| l == value)
             .map_or(0, |&(_, n)| n)
     }
+}
 
-    /// Whether the rule's commonest value is productive: its exceptions are
-    /// at most `N / ln N` of its `N` words (Yang 2016).
-    pub fn productive(&self) -> bool {
-        let n = f64::from(self.total());
-        let exceptions = n - f64::from(self.counts.first().map_or(0, |&(_, c)| c));
-        exceptions <= if n < 2.0 { 0.0 } else { n / n.ln() }
-    }
+/// Whether a rule over `n` words with `exceptions` of them going against it
+/// is productive: at most `n / ln n` exceptions (Yang 2016).
+pub fn tolerates(n: f64, exceptions: f64) -> bool {
+    exceptions <= if n < 2.0 { 0.0 } else { n / n.ln() }
 }
 
 /// The order of rules: by ending, read from its last letter back.
@@ -199,7 +201,7 @@ impl<'a, L: Label> Choice<'a, L> {
         if mass <= 0.0 {
             return Vec::new();
         }
-        let status = if decisive.productive() {
+        let status = if decisive.regular {
             Status::Regular
         } else {
             Status::Unsettled
@@ -270,14 +272,17 @@ mod tests {
                 Rule {
                     ending: "".into(),
                     counts: Cow::Owned(vec![(0, 100), (1, 40), (2, 50)]),
+                    regular: false,
                 },
                 Rule {
                     ending: "а".into(),
                     counts: Cow::Owned(vec![(1, 30), (0, 2)]),
+                    regular: true,
                 },
                 Rule {
                     ending: "ость".into(),
                     counts: Cow::Owned(vec![(2, 50), (0, 1)]),
+                    regular: true,
                 },
             ]),
             exceptions: Cow::Owned(vec![("путь".into(), 3)]),
@@ -308,14 +313,10 @@ mod tests {
 
     #[test]
     fn tolerance_follows_yang() {
-        let rule = |counts: Vec<(u16, u32)>| Rule {
-            ending: "".into(),
-            counts: Cow::Owned(counts),
-        };
         // Of 1000 words, up to 1000 / ln 1000 = 144.8 exceptions.
-        assert!(rule(vec![(0, 856), (1, 144)]).productive());
-        assert!(!rule(vec![(0, 854), (1, 146)]).productive());
+        assert!(tolerates(1000.0, 144.0));
+        assert!(!tolerates(1000.0, 146.0));
         // Polish masculine genitives in -a and -u: neither is productive.
-        assert!(!rule(vec![(0, 837), (1, 516)]).productive());
+        assert!(!tolerates(1353.0, 516.0));
     }
 }

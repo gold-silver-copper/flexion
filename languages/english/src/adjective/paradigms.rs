@@ -10,13 +10,18 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `adjective` (pos, comp, sup)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem adjective_pos: $s0:tt;)?
+     $(stem adjective: $s1:tt;)?
      $(adjective: $c0:tt, $c1:tt, $c2:tt;)?
     ) => {
         Paradigm {
@@ -24,11 +29,16 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
                 $(flexion::cell!($c1),)? "\t",
                 $(flexion::cell!($c2),)? "\t",
+            )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+                $(flexion::cell!($s1),)? "\t",
             )),
         }
     };
@@ -44,56 +54,55 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `open`: 58,596 words.
+    /// Like `open`: 58,666 words.
     Open,
     /// Like `heavy`: 1,863 words.
     Heavy,
-    /// Like `soft`: 704 words.
+    /// Like `soft`: 707 words.
     Soft,
     /// Like `tonguey`: 120 words.
     Tonguey,
-    /// Like `fiery`: 61 words.
-    Fiery,
     /// Like `awful`: 49 words.
     Awful,
     /// Like `right`: 30 words.
     Right,
-    /// Like `mid`: 7 words.
-    Mid,
+    /// Like `first`: 7 words.
+    First,
     /// Like `inner`: 6 words.
     Inner,
-    /// Like `gamey`: 5 words.
-    Gamey,
-    /// Like `lightweight`: 4 words.
-    Lightweight,
     /// Like `flip`: 3 words.
     Flip,
     /// Like `thin`: 3 words.
     Thin,
-    /// Like `damned`: 3 words.
-    Damned,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 14] = [
+    pub const ALL: [Declension; 10] = [
         Declension::Open,
         Declension::Heavy,
         Declension::Soft,
         Declension::Tonguey,
-        Declension::Fiery,
         Declension::Awful,
         Declension::Right,
-        Declension::Mid,
+        Declension::First,
         Declension::Inner,
-        Declension::Gamey,
-        Declension::Lightweight,
         Declension::Flip,
         Declension::Thin,
-        Declension::Damned,
     ];
 
     /// Its table.
@@ -111,26 +120,25 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
-    // Open: 58,596 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
-    declension!("open", 58596, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
+    // Open: 58,666 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
+    declension!("open", 58666, "~";
     adjective: "~", "more ~", "most ~";
     ),
     // Heavy: 1,863 words (craggy, country, early, baby, cherry, yeasty).
     declension!("heavy", 1863, "~y";
-    adjective: "~y", "~ier", "~iest";
+    stem adjective: "~ie- like heavy";
+    adjective: "~y", _, _;
     ),
-    // Soft: 704 words (free, brown, august, minute, abject, able).
-    declension!("soft", 704, "~";
-    adjective: "~", "~er", "~est";
+    // Soft: 707 words (free, brown, august, minute, abject, able).
+    declension!("soft", 707, "~";
+    stem adjective: "~e- like heavy";
+    adjective: "~", _, _;
     ),
     // Tonguey: 120 words (smiley, horsey, dykey, limey, cagey, dickey).
     declension!("tonguey", 120, "~~y";
-    adjective: "~~y", "~i~r", "~i~st";
-    ),
-    // Fiery: 61 words (fiery, brotherly, likely, cringeworthy, priestly, namely).
-    declension!("fiery", 61, "~y";
-    adjective: "~y", "more ~y|~ier", "most ~y|~iest";
+    stem adjective: "~i~- like heavy";
+    adjective: "~~y", _, _;
     ),
     // Awful: 49 words (big, red, shit, hot, fit, bog).
     declension!("awful", 49, "~";
@@ -140,32 +148,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     declension!("right", 30, "~";
     adjective: "~", "further ~|farther ~", "furthest ~|farthest ~";
     ),
-    // Mid: 7 words (first, ben, middle, fore, mid, rightern).
-    declension!("mid", 7, "~";
+    // First: 7 words (first, ben, middle, fore, mid, rightern).
+    declension!("first", 7, "~";
     adjective: "~", "~ner", "~most";
     ),
-    // Inner: 6 words (thither, upper, outer, inner, nether, nither). Like Mid, except in 1 cell: adjective comp.
-    declension!("inner", 6, "~", like Mid;
+    // Inner: 6 words (thither, upper, outer, inner, nether, nither). Like First, except in 1 cell: adjective comp.
+    declension!("inner", 6, "~", like First;
     adjective: _, "~more", _;
-    ),
-    // Gamey: 5 words (motley, gamey, echoey, rapey, dudey).
-    declension!("gamey", 5, "~~y";
-    adjective: "~~y", "more ~~y|~i~r", "most ~~y|~i~st";
-    ),
-    // Lightweight: 4 words (dumbass, lightweight, hardheaded, hardhearted).
-    declension!("lightweight", 4, "~~";
-    adjective: "~~", "more ~~|~er~", "most ~~|~est~";
     ),
     // Flip: 3 words (crap, hip, flip).
     declension!("flip", 3, "~";
-    adjective: "~", "~per", "~pest";
+    stem adjective: "~pe- like heavy";
+    adjective: "~", _, _;
     ),
-    // Thin: 3 words (thin, tan, wan). Like Mid, except in 1 cell: adjective sup.
-    declension!("thin", 3, "~", like Mid;
-    adjective: _, _, "~nest";
-    ),
-    // Damned: 3 words (damned, darned, doggoned).
-    declension!("damned", 3, "~e~";
-    adjective: "~e~", "~e~er", "~e~est";
+    // Thin: 3 words (thin, tan, wan). Like First, except in 0 cells: .
+    declension!("thin", 3, "~", like First;
+    stem adjective: "~ne- like heavy";
     ),
 ];

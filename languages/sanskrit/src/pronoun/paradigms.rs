@@ -10,10 +10,13 @@ use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), then a row of patterns
-/// per line (`derived`: the form comes from another cell's, see
-/// `relations.rs`; `_`, or a row left out: the form is the declension's it is like,
-/// or, in a declension like no other, derived):
+/// they share them), the declension it is like (if any), the stem slots
+/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
+/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
+/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
+/// from another cell's, see `relations.rs`; `_`, or a row left out: the
+/// form is its stem slot's, or the declension's it is like, or, in a declension like
+/// no other, derived):
 /// `nom_m` (sg, du, pl)
 /// `nom_f` (sg, du, pl)
 /// `nom_n` (sg, du, pl)
@@ -39,7 +42,8 @@ use flexion::Paradigm;
 /// `voc_f` (sg, du, pl)
 /// `voc_n` (sg, du, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+     $(stem pronoun: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
      $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
@@ -70,6 +74,7 @@ macro_rules! declension {
             words: $words,
             lemma: ::std::borrow::Cow::Borrowed($lemma),
             parent: like!($($parent)?),
+            reads: view!($($($view)?)?),
             inherent: ::std::borrow::Cow::Borrowed(&[]),
             table: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($c0),)? "\t",
@@ -145,6 +150,9 @@ macro_rules! declension {
                 $(flexion::cell!($c70),)? "\t",
                 $(flexion::cell!($c71),)? "\t",
             )),
+            stems: ::std::borrow::Cow::Borrowed(concat!(
+                $(flexion::cell!($s0),)? "\t",
+            )),
         }
     };
 }
@@ -159,16 +167,31 @@ macro_rules! like {
     };
 }
 
+/// The cells a declension reads in the one it is like, by the view's name (see
+/// the views below); none: the same cells.
+macro_rules! view {
+    () => {
+        None
+    };
+    ($view:ident) => {
+        Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `कतम`: 15 words.
+    /// Like `कतम`: 9 words.
     कतम,
+    /// Like `कतर`: 4 words.
+    कतर,
+    /// Like `तद्`: 2 words.
+    तद,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 1] = [Declension::कतम];
+    pub const ALL: [Declension; 3] = [Declension::कतम, Declension::कतर, Declension::तद];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {
@@ -185,9 +208,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 1] = [
-    // कतम: 15 words (सर्व, तद्, तक, अन्य, कतर, यद्).
-    declension!("कतम", 15, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
+    // कतम: 9 words (तक, अन्य, किम्, स्व, त्व, उभ).
+    declension!("कतम", 9, "~";
     nom_m: "~ः", "~ौ", "~े";
     nom_f: "~ा", "~े", "~ाः";
     nom_n: _, _, "~ानि";
@@ -205,5 +228,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 1] = [
     loc_m: "~स्मिन्", _, "~ेषु";
     loc_f: "~स्याम्", _, "~ासु";
     voc_m: "~", _, _;
+    ),
+    // कतर: 4 words (सर्व, कतर, अन्यतर, यतर). Like कतम, except in 2 cells: nom_n pl, ins_m sg.
+    declension!("कतर", 4, "~", like कतम;
+    nom_n: _, _, "~ाणि";
+    ins_m: "~ेण", _, _;
+    ),
+    // तद: 2 words (तद्, यद्). Like कतम, except in 1 cell: voc_m sg.
+    declension!("तद्", 2, "~द्", like कतम;
+    voc_m: derived, _, _;
     ),
 ];

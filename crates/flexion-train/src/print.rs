@@ -171,6 +171,26 @@ impl Layout {
     }
 }
 
+/// Each cell's name: its constant in lowercase, after its group's name
+/// (`present_ind_act_1_sg`, `noun_gen_pl`).
+pub fn cell_names(cells: &Cells<'_>) -> Vec<String> {
+    let mut names: Vec<String> = Layout::new(cells)
+        .names
+        .into_iter()
+        .map(|n| n.to_lowercase())
+        .collect();
+    // The first group's cells are named without it: named with it here.
+    for g in &cells.groups {
+        let group = underscored(g.name).to_lowercase();
+        for name in names.iter_mut().skip(g.offset).take(g.len()) {
+            if *name != group && !name.starts_with(&format!("{group}_")) {
+                *name = format!("{group}_{name}");
+            }
+        }
+    }
+    names
+}
+
 /// A cell's constant: `gen_pl` → `GEN_PL`, `non_past_1_sg` → `NON_PAST_1_SG`.
 fn const_name(s: &str) -> String {
     let mut out = underscored(s).trim_start_matches('_').to_ascii_uppercase();
@@ -284,6 +304,7 @@ fn grammar_files(
         (g.prefixes.is_some(), "mod prefixes"),
         (g.marks.is_some(), "mod marks"),
         (true, "mod irregular"),
+        (!g.slots.is_empty(), "mod stems"),
         (g.laws.is_some(), "mod laws"),
         (true, "mod paradigms;\nmod rules;\nmod spellings"),
     ];
@@ -306,7 +327,7 @@ fn grammar_files(
     };
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -314,6 +335,19 @@ fn grammar_files(
         one.to_uppercase(),
         g.smoothing,
         g.sharpness,
+        g.trust.regular,
+        g.trust.unsettled,
+        g.trust.unattested,
+        slots = if g.slots.is_empty() {
+            "Cow::Borrowed(&[])"
+        } else {
+            "Cow::Borrowed(&stems::SLOTS)"
+        },
+        tables = if g.slots.is_empty() {
+            "Cow::Borrowed(&[])"
+        } else {
+            "Cow::Borrowed(&stems::TABLES)"
+        },
         generics = match (g.accent.is_some(), feature_name) {
             (false, None) => String::new(),
             (true, None) => ", accent::AccentClass".to_string(),
@@ -352,14 +386,36 @@ fn grammar_files(
     files.push((format!("{dir}/mod.rs"), m));
 
     // paradigms.rs
+    // The class letters a harmony law writes (`A` of `~lAr`).
+    let classes: Vec<String> = learned
+        .laws
+        .iter()
+        .filter_map(|l| match &l.change {
+            crate::laws::Change::Harmony { map, .. } => Some(map),
+            _ => None,
+        })
+        .flat_map(|map| {
+            let mut letters: Vec<char> = map.iter().map(|e| e.0).collect();
+            letters.dedup();
+            letters
+        })
+        .map(|c| format!("`{c}`"))
+        .collect();
+    let harmony = match classes.as_slice() {
+        [] => String::new(),
+        _ => format!(
+            " A capital ({})\n//! is a class letter: a harmony law in `laws.rs` writes it, by the\n//! letter before it.",
+            classes.join(", ")
+        ),
+    };
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro (a table with no rows needs none).
     if !g.paradigms.is_empty() {
         let _ = writeln!(
             p,
-            "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), then a row of patterns\n/// per line (`derived`: the form comes from another cell's, see\n/// `relations.rs`; `_`, or a row left out: the form is the {one}'s it is like,\n/// or, in a {one} like no other, derived):"
+            "/// Writes one {one}: the word it is named after, how many words follow it,\n/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if\n/// they share them), the {one} it is like (if any), the stem slots\n/// it states with a stem and an ending table (`stem aorist: \"~σ- like λυω\"`:\n/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see\n/// `stems.rs`), then a row of patterns per line (`derived`: the form comes\n/// from another cell's, see `relations.rs`; `_`, or a row left out: the\n/// form is its stem slot's, or the {one}'s it is like, or, in a {one} like\n/// no other, derived):"
         );
         for row in &layout.rows {
             let cols = if row.columns.is_empty() {
@@ -378,9 +434,19 @@ fn grammar_files(
             )
         };
         let (rows, table) = layout.macro_rows();
+        // A row per stem slot, before the cells' rows.
+        let stem_rows: String = g
+            .slots
+            .iter()
+            .enumerate()
+            .map(|(i, slot)| format!("     $(stem {}: $s{i}:tt;)?\n", slot.name))
+            .collect();
+        let stems: String = (0..g.slots.len())
+            .map(|i| format!("                $(flexion::cell!($s{i}),)? \"\\t\",\n"))
+            .collect();
         let _ = writeln!(
             p,
-            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
+            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
         );
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
             let _ = writeln!(
@@ -413,6 +479,28 @@ fn grammar_files(
         .iter()
         .map(|v| format!("        {ty}::{v},\n"))
         .collect();
+    // The views paradigms read their parents through, each once.
+    let mut used: Vec<&crate::learn::View> = Vec::new();
+    for par in g.paradigms.iter() {
+        if let Some(v) = par
+            .reads
+            .as_ref()
+            .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
+            && !used.iter().any(|u| u.0 == v.0)
+        {
+            used.push(v);
+        }
+    }
+    for (name, map) in used {
+        let cells: Vec<String> = map.iter().map(u16::to_string).collect();
+        let _ = writeln!(
+            p,
+            "/// A view: per cell (in the cells' order), the cell of the {one} it is\n/// like that it reads (`{name}`: one value read as another).\nconst {}: [u16; {}] = [{}];\n",
+            const_name(name),
+            map.len(),
+            cells.join(", ")
+        );
+    }
     let _ = write!(
         p,
         "/// Every {one} learned.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum {ty} {{\n{enumerated}}}\n\nimpl {ty} {{\n    /// Every {one}, in order.\n    pub const ALL: [{ty}; {n}] = [\n{all}    ];\n\n    /// Its table.\n    pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {{\n        {many_}.get(self as usize)\n    }}\n}}\n\n{}pub(super) static {many_}: [Paradigm<'static>; {n}] = [\n",
@@ -484,8 +572,21 @@ fn grammar_files(
             } else {
                 format!(", [{}]", values.join(", "))
             },
-            parent.map_or(String::new(), |q| format!(", like {q}"))
+            parent.map_or(String::new(), |q| {
+                let view = par
+                    .reads
+                    .as_ref()
+                    .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
+                    .map_or(String::new(), |v| format!(" as {}", const_name(&v.0)));
+                format!(", like {q}{view}")
+            })
         );
+        // The slots it states with a stem and an ending table.
+        for (slot, entry) in g.slots.iter().zip(par.stems.split('\t')) {
+            if !entry.is_empty() {
+                let _ = writeln!(p, "    stem {}: {};", slot.name, Lit(entry));
+            }
+        }
         p.push_str(&layout.table(|c| match par.own(c) {
             Some(flexion::Form::Pattern(p)) => Lit(p).to_string(),
             Some(flexion::Form::Derived) => "derived".to_string(),
@@ -627,7 +728,7 @@ fn grammar_files(
     // laws.rs
     if let Some(program) = &g.laws {
         let mut l = format!(
-            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a\n//! `%` copies (`°`): every form a {one} builds goes through them, in order, so\n//! one {one} serves words whose stems change its endings. Each with the\n//! words whose forms it gives, and how many of the dictionary's forms it\n//! gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
         );
         for (law, rule) in learned.laws.iter().zip(program.rules()) {
             let _ = writeln!(
@@ -651,11 +752,110 @@ fn grammar_files(
             .unwrap_or(1),
     );
     let ir = format!(
-        "//! The dictionary's forms no {one} gives, as it writes them: a line per word,\n//! sorted, the word then each listed cell's number (see `super::cell`) and its\n//! form, tab-separated. They are the answer for that word and cell.\n\nuse flexion::Irregular;\nuse std::borrow::Cow;\n\n/// {} forms.\npub(super) const IRREGULAR: Irregular<'static> = Irregular {{\n    table: Cow::Borrowed(\n        r{hashes}\"{table}\"{hashes},\n    ),\n}};\n",
+        "//! What no {one} gives a word, as the dictionary writes it: a line per word,\n//! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):\n//! the slot's name and the stem with the ending table its slot's cells are\n//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its\n//! cell's number (see `super::cell`), all tab-separated. They are the answer\n//! for that word.\n\nuse flexion::Irregular;\nuse std::borrow::Cow;\n\n/// {} stems, {} forms.\npub(super) const IRREGULAR: Irregular<'static> = Irregular {{\n    table: Cow::Borrowed(\n        r{hashes}\"{table}\"{hashes},\n    ),\n}};\n",
+        thousands(g.irregular.stems()),
         thousands(g.irregular.len())
     );
     files.push((format!("{dir}/irregular.rs"), ir));
+    if !g.slots.is_empty() {
+        files.push((format!("{dir}/stems.rs"), stems_file(g, layout, one)));
+    }
     files
+}
+
+/// A part of speech's `stems.rs`: its stem slots, each with its cells, and
+/// the ending tables listed stems are built with, each a line per row of
+/// cells.
+fn stems_file<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
+    g: &flexion::Grammar<'_, P, A, F>,
+    layout: &Layout,
+    one: &str,
+) -> String {
+    let mut s = format!(
+        "//! The stem slots: the cells a word builds on one stem, learned from the\n//! words that put different stems in different cells; and the ending tables a\n//! word that lists its stem for a slot (see `irregular.rs`) builds the slot's\n//! cells with: per cell of the slot, in the slot's order, a tab after each, a\n//! {one}'s pattern with the slot's stem as its one piece (`~`), the stem being\n//! what every cell's form keeps of the word and what all its endings begin\n//! with. Each table is named after the commonest word built with it.\n\nuse super::cell::*;\nuse flexion::{{EndingTable, Slot}};\nuse std::borrow::Cow;\n\n"
+    );
+    let _ = writeln!(
+        s,
+        "/// The slots, in the order of their first cells.\npub(super) static SLOTS: [Slot<'static>; {}] = [",
+        g.slots.len()
+    );
+    for slot in g.slots.iter() {
+        // A line per row of cells.
+        let mut lines: Vec<String> = Vec::new();
+        let mut row: Option<usize> = None;
+        for &c in slot.cells.iter() {
+            let here = layout
+                .rows
+                .iter()
+                .position(|r| r.cells.contains(&usize::from(c)));
+            let name = layout.name(c);
+            match lines.last_mut() {
+                Some(line) if here == row => line.push_str(&format!(" {name},")),
+                _ => lines.push(format!("{name},")),
+            }
+            row = here;
+        }
+        let _ = writeln!(
+            s,
+            "    Slot {{\n        name: Cow::Borrowed({:?}),\n        cells: Cow::Borrowed(&[\n            {}\n        ]),\n    }},",
+            slot.name,
+            lines.join("\n            ")
+        );
+    }
+    s.push_str("];\n\n");
+    let _ = writeln!(
+        s,
+        "/// The ending tables, by slot, most words first.\npub(super) static TABLES: [EndingTable<'static>; {}] = [",
+        g.tables.len()
+    );
+    for t in g.tables.iter() {
+        let Some(slot) = g.slots.get(usize::from(t.slot)) else {
+            continue;
+        };
+        let _ = writeln!(
+            s,
+            "    // {} like {}: {} words.\n    EndingTable {{\n        name: Cow::Borrowed({:?}),\n        words: {},\n        slot: {},",
+            slot.name,
+            t.name,
+            thousands(t.words),
+            t.name,
+            t.words,
+            t.slot
+        );
+        // A line per row of cells, in the slot's order.
+        let patterns: Vec<&str> = t.table.split('\t').collect();
+        let mut row: Option<usize> = None;
+        let mut lines: Vec<String> = Vec::new();
+        for (k, &c) in slot.cells.iter().enumerate() {
+            let here = layout
+                .rows
+                .iter()
+                .position(|r| r.cells.contains(&usize::from(c)));
+            if here != row || lines.is_empty() {
+                lines.push(String::new());
+            }
+            row = here;
+            if let Some(line) = lines.last_mut() {
+                line.push_str(patterns.get(k).copied().unwrap_or(""));
+                line.push('\t');
+            }
+        }
+        match lines.as_slice() {
+            [line] => {
+                let _ = writeln!(s, "        table: Cow::Borrowed({line:?}),");
+            }
+            _ => {
+                s.push_str("        table: Cow::Borrowed(concat!(\n");
+                for line in &lines {
+                    let _ = writeln!(s, "            {line:?},");
+                }
+                s.push_str("        )),\n");
+            }
+        }
+        s.push_str("    },\n");
+    }
+    s.push_str("];\n");
+    s
 }
 
 fn thousands(n: impl std::fmt::Display) -> String {
@@ -917,7 +1117,12 @@ fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) ->
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
-        format!("        {} => [{}],\n", Lit(&r.ending), counts.join(", "))
+        let regular = if r.regular { " regular" } else { "" };
+        format!(
+            "        {} => [{}]{regular},\n",
+            Lit(&r.ending),
+            counts.join(", ")
+        )
     };
     choice.rules.iter().map(rule).collect()
 }
@@ -1324,7 +1529,8 @@ pub fn readme(lang: &Language, report: &str) -> String {
          - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
            form's ending that change it;\n\
          - `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a\n  \
-           tier, or on a copied letter), each with the words whose forms it gives and the forms it gets wrong;\n\
+           tier, on a copied letter, or on a class letter an ending writes: harmony), each with the\n  \
+           words whose forms it gives and the forms it gets wrong;\n\
          - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
            the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
            gets right, listed;\n\
@@ -1334,7 +1540,11 @@ pub fn readme(lang: &Language, report: &str) -> String {
          - `compounds.rs`: whether a word written in parts inflects each part;\n\
          - `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,\n  \
            `ё`) is spelled;\n\
-         - `irregular.rs`: the forms no paradigm gives;\n\
+         - `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the\n  \
+           words that put different stems in different cells) and the ending tables paradigms\n  \
+           share over a slot (`ἐ~ᾰ`, `~ω`), each named after its commonest word;\n\
+         - `irregular.rs`: what no paradigm gives a word: the stem it lists for a slot, built\n  \
+           with an ending table (`aorist`, `ἀγγειλ- like λυω`), and the forms no stem gives;\n\
          - a module per principal part, where a part of speech is built on them: each cell\n  \
            belongs to one part's system and is inflected from that part.\n\n\
          A word the dictionary lists gets its own forms. Any other word gets the paradigm its\n\

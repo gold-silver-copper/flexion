@@ -1,17 +1,19 @@
-//! The dictionary's forms no declension gives, as it writes them: a line per word,
-//! sorted, the word then each listed cell's number (see `super::cell`) and its
-//! form, tab-separated. They are the answer for that word and cell.
+//! What no declension gives a word, as the dictionary writes it: a line per word,
+//! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
+//! the slot's name and the stem with the ending table its slot's cells are
+//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
+//! cell's number (see `super::cell`), all tab-separated. They are the answer
+//! for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 253 forms.
+/// 0 stems, 249 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aandblom	1	aandblomme
 achua	1	wochua
 aett	1	aettir
-agape	1	agapae
 agapet	1	agapetae
 airplaneful	1	airplanesful
 alamsoa	1	alamosi
@@ -167,7 +169,6 @@ paczek	1	paczki
 pampas	0	pampa
 pampushok	1	pampushky
 panegyris	1	panegyreis
-parabole	1	parabolae
 paralipsis	1	paraleipses
 parnas	1	parnassim
 passerby	1	passersby
@@ -194,7 +195,6 @@ pus	1	pura
 pussyification	1	pussyfications
 qass	1	qussas
 qintar	1	qindarka
-raphe	1	raphae
 raqi	1	ruqat
 remex	1	remiges
 retiarius	1	retiari
@@ -208,7 +208,6 @@ ryllet	1	ryllettys
 safek	1	sfekot
 sahabi	1	sahaba
 saraph	1	seraphim
-scolopale	1	scolopalae
 sente	1	lisente
 sephira	1	sephiroth
 seq	1	seqq

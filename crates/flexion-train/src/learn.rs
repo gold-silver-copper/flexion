@@ -27,6 +27,10 @@ pub struct Shape {
     /// on: its group (`present`, `future`), then each feature's value
     /// (`u16::MAX` where its group hasn't the feature).
     pub coordinates: Vec<Vec<u16>>,
+    /// The most words to learn from (see `PartOfSpeech::max_words`).
+    pub max_words: Option<usize>,
+    /// Per cell, its name (`gen_pl`), as the crate's constants are named.
+    pub names: Vec<String>,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -45,6 +49,11 @@ pub struct Learned<'s> {
     /// The sound laws at the stem's edge, with their evidence.
     pub laws: Vec<crate::laws::Law>,
     pub stats: Stats,
+    /// How often the paradigm rules' productivity verdicts agree across the
+    /// vocabularies they are judged on.
+    pub stability: f64,
+    /// The views paradigms may read their parents through (see [`View`]).
+    pub views: Vec<View>,
 }
 
 /// Counts for the report.
@@ -54,6 +63,7 @@ pub struct Stats {
     pub paradigms: usize,
     pub accent_patterns: usize,
     pub irregular_forms: usize,
+    pub listed_stems: usize,
 }
 
 /// One dictionary word, read.
@@ -91,6 +101,17 @@ pub fn learn<'s>(
     lexemes: &[Lexeme],
     settings: Settings,
 ) -> Learned<'s> {
+    // At most so many words, the commonest.
+    let capped: Vec<Lexeme>;
+    let lexemes = match shape.max_words {
+        Some(max) if lexemes.len() > max => {
+            let mut by: Vec<&Lexeme> = lexemes.iter().collect();
+            by.sort_by_key(|l| (std::cmp::Reverse(l.senses), l.source, l.order));
+            capped = by.into_iter().take(max).cloned().collect();
+            capped.as_slice()
+        }
+        _ => lexemes,
+    };
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
     let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
@@ -274,7 +295,26 @@ pub fn learn<'s>(
             .get(usize::from(p))
             .is_some_and(|x| x.stems(&orthography, word).is_some())
     };
-    let paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
+    let mut paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
+    // Which rules are productive, judged on the commonest words: in the
+    // most dictionaries, with the most senses.
+    let mut by_commonness: Vec<usize> = (0..words.len()).collect();
+    by_commonness.sort_by_key(|&i| {
+        words.get(i).map(|w| {
+            (
+                std::cmp::Reverse(w.dictionaries),
+                std::cmp::Reverse(w.senses),
+                w.key.clone(),
+            )
+        })
+    });
+    let mut rank = vec![0; words.len()];
+    for (r, &i) in by_commonness.iter().enumerate() {
+        if let Some(slot) = rank.get_mut(i) {
+            *slot = r;
+        }
+    }
+    let stability = choose::judge(&mut paradigm_choice, &paradigm_examples, &rank);
     let (accent, stress_labels) = (!orthography.stress_marks.is_empty())
         .then(|| {
             let laws = program.as_ref();
@@ -351,9 +391,12 @@ pub fn learn<'s>(
         laws: program,
         spellings: Cow::Owned(spellings),
         marks,
+        slots: Cow::Borrowed(&[]),
+        tables: Cow::Borrowed(&[]),
         irregular: flexion::Irregular::default(),
         smoothing: settings.smoothing,
         sharpness: 1.0,
+        trust: flexion::Trust::FULL,
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.
@@ -395,39 +438,143 @@ pub fn learn<'s>(
     let made = |w: &Word| made.contains(w.key.as_str());
     // A word's listed forms are its principal parts: the forms no relation
     // tells from another listed one. The forms told wrong are listed too.
-    let wrong = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
-    if let Cow::Owned(relations) = &mut grammar.relations {
-        for r in relations.iter_mut() {
-            r.listed = tells_listed(r, &wrong, all_words, grammar.smoothing);
+    let checked = misbuilt(&grammar, all_lexemes, all_words, |w| !made(w));
+    let wrong: Vec<(String, usize, String)> = checked
+        .iter()
+        .map(|(k, c, f, _)| (k.clone(), *c, f.clone()))
+        .collect();
+    // The stem slots: learned from the words' own analyses, and the forms
+    // the grammar builds with the wrong letters.
+    let keys: Vec<&str> = words.iter().map(|w| w.key.as_str()).collect();
+    let root_of = crate::stems::roots(&keys);
+    let mut letters_wrong: HashMap<&str, Vec<bool>> = HashMap::default();
+    for (k, c, _, letters) in &checked {
+        if *letters {
+            let flags = letters_wrong
+                .entry(k.as_str())
+                .or_insert_with(|| vec![false; shape.cells]);
+            if let Some(f) = flags.get_mut(*c) {
+                *f = true;
+            }
         }
     }
-    let mut irregular = roots(&grammar, &wrong);
-    let mut unsure: crate::HashSet<String> = wrong.into_iter().map(|(k, _, _)| k).collect();
-    settle(
-        &mut grammar,
-        &mut irregular,
-        all_lexemes,
-        all_words,
-        &unsure,
-    );
-    let made_wrong = self::irregular(&grammar, all_lexemes, all_words, made);
-    unsure.extend(made_wrong.iter().map(|(k, _, _)| k.clone()));
-    irregular.extend(made_wrong);
-    settle(
-        &mut grammar,
-        &mut irregular,
-        all_lexemes,
-        all_words,
-        &unsure,
-    );
-    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
-        inherit(paradigms, &grammar.relations);
+    let evidence: Vec<crate::stems::Evidence<'_>> = words
+        .iter()
+        .zip(&analyses)
+        .zip(&root_of)
+        .map(|((w, a), &root)| crate::stems::Evidence {
+            root,
+            cells: (0..shape.cells)
+                .map(|c| {
+                    let f = first_form(w, c)?;
+                    let p = a.cells.get(c)?.as_deref()?;
+                    (p != DERIVED).then(|| (f, self::usual(p)))
+                })
+                .collect(),
+            wrong: letters_wrong
+                .get(w.key.as_str())
+                .cloned()
+                .unwrap_or_default(),
+        })
+        .collect();
+    let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
+    for w in &words {
+        for f in w.cells.iter().flatten() {
+            alphabet.extend(f.letters.chars());
+        }
     }
+    let prices = crate::bits::Prices::new(alphabet.len(), shape.cells);
+    let slot_of = crate::stems::slots(&evidence, shape.cells, grammar.laws.as_ref(), &prices);
+    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names);
+    grammar.slots = Cow::Owned(built.slots);
+    grammar.tables = Cow::Owned(built.tables);
+    // A word the grammar builds with the wrong letters lists the stems that
+    // build more of its forms right than they cost.
+    // Every word that lists something is checked again once all is listed.
+    let mut unsure: crate::HashSet<String> = wrong.iter().map(|(k, _, _)| k.clone()).collect();
+    let candidates = listed_stems(&grammar, all_words, &letters_wrong, &prices);
+    // Each word's listing two ways: its forms (those no relation tells from
+    // another listed one, then those told wrong), and the stems worth
+    // listing for it with the forms still wrong; with the forms listed for
+    // the words made of it (`hineinlassen` of `lassen`: they take its
+    // stems). Each word and those made of it keep the cheaper (see
+    // `crate::bits`).
+    // Which relations tell listed words' forms: judged on the forms wrong
+    // with every candidate stem listed, the same for both listings.
+    grammar.irregular = flexion::Irregular::new(&[], &candidates);
+    let judged = rebuilt(&grammar, all_words, &candidates, wrong.clone());
+    if let Cow::Owned(relations) = &mut grammar.relations {
+        for r in relations.iter_mut() {
+            r.listed = tells_listed(r, &judged, all_words, grammar.smoothing);
+        }
+    }
+    let words_of = (all_lexemes, all_words);
+    let forms_only = listing(&mut grammar, &[], &wrong, words_of, &made, &mut unsure);
+    let on_stems = listing(
+        &mut grammar,
+        &candidates,
+        &wrong,
+        words_of,
+        &made,
+        &mut unsure,
+    );
+    let prefixes = grammar.prefixes.clone();
+    let base_of = |key: &str| -> String {
+        let rest = prefixes
+            .as_ref()
+            .and_then(|p| p.split(key))
+            .and_then(|(letters, ..)| key.char_indices().nth(letters))
+            .and_then(|(at, _)| key.get(at..));
+        rest.unwrap_or(key).to_string()
+    };
+    let stems = cheaper(
+        &grammar,
+        &forms_only,
+        &on_stems,
+        candidates,
+        &prices,
+        &base_of,
+    );
+    let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
+    // The ending tables listed stems are built with; paradigms stated
+    // through stem slots where that pays; the tables either uses are the
+    // grammar's.
+    let slot_index = |name: &str| grammar.slots.iter().position(|s| s.name == name);
+    let listed_tables: crate::HashSet<(u16, String)> = stems
+        .iter()
+        .filter_map(|(_, slot, _, table)| {
+            Some((u16::try_from(slot_index(slot)?).ok()?, table.clone()))
+        })
+        .collect();
+    let all_tables = grammar.tables.to_vec();
+    let mut used: Vec<usize> = Vec::new();
+    let views = views(shape);
+    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        inherit(paradigms, &grammar.relations, &views);
+        used = crate::stems::state(
+            paradigms,
+            &grammar.slots,
+            &all_tables,
+            &listed_tables,
+            &prices,
+        );
+    }
+    grammar.tables = Cow::Owned(
+        all_tables
+            .into_iter()
+            .enumerate()
+            .filter(|(i, t)| {
+                used.contains(i) || listed_tables.contains(&(t.slot, t.name.to_string()))
+            })
+            .map(|(_, t)| t)
+            .collect(),
+    );
     let stats = Stats {
         words: all_words.len(),
         paradigms: grammar.paradigms.len(),
         accent_patterns: grammar.accent.as_ref().map_or(0, |a| a.patterns.len()),
         irregular_forms: irregular.len(),
+        listed_stems: stems.len(),
     };
     Learned {
         grammar,
@@ -437,6 +584,8 @@ pub fn learn<'s>(
         seen,
         laws,
         stats,
+        stability,
+        views,
     }
 }
 
@@ -456,28 +605,91 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
     Some((first_key.to_string(), how))
 }
 
-/// Make each paradigm like the earlier (commoner) one it shares the most
-/// cells with, when that is at least half of them: its own table keeps only
-/// the cells that differ. Every paradigm still has the same forms.
-///
-/// A cell a relation copies from another, unchanged, needn't be written
-/// where the paradigm writes the same in both: it is derived (the passive
-/// is the middle), where it writes the usual form only (not one with
-/// alternatives).
-fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
-    let copied: Vec<(usize, usize)> = relations
+/// A view: a cell order in which each cell reads another of the same
+/// part of speech (one feature's value read as another's, `act_as_pass`),
+/// named after the value names it swaps.
+pub type View = (String, Vec<u16>);
+
+/// The views one value of one of the cells' features read as another make
+/// (see [`View`]): each cell with the first value reads the cell like it
+/// but for that value.
+fn views(shape: &Shape) -> Vec<View> {
+    let at = |c: usize| shape.coordinates.get(c).map_or(&[][..], Vec::as_slice);
+    let dims = shape.coordinates.iter().map(Vec::len).max().unwrap_or(0);
+    let mut out: Vec<View> = Vec::new();
+    for k in 0..dims {
+        let mut values: Vec<u16> = (0..shape.cells)
+            .filter_map(|c| at(c).get(k).copied())
+            .filter(|&v| v != u16::MAX)
+            .collect();
+        values.sort_unstable();
+        values.dedup();
+        for &a in &values {
+            for &b in values.iter().filter(|&&b| b != a) {
+                let map: Vec<u16> = (0..shape.cells)
+                    .map(|c| {
+                        let mut target = at(c).to_vec();
+                        if target.get(k) != Some(&a) {
+                            return c;
+                        }
+                        if let Some(slot) = target.get_mut(k) {
+                            *slot = b;
+                        }
+                        (0..shape.cells)
+                            .find(|&d| at(d) == target.as_slice())
+                            .unwrap_or(c)
+                    })
+                    .filter_map(|c| u16::try_from(c).ok())
+                    .collect();
+                // Named by the name parts the first cell it moves changes.
+                let Some((from, to)) = map
+                    .iter()
+                    .enumerate()
+                    .find(|&(c, &d)| usize::from(d) != c)
+                    .and_then(|(c, &d)| {
+                        Some((shape.names.get(c)?, shape.names.get(usize::from(d))?))
+                    })
+                else {
+                    continue;
+                };
+                let parts = |n: &str| n.split('_').map(str::to_string).collect::<Vec<_>>();
+                let (x, y) = (parts(from), parts(to));
+                let name = x
+                    .iter()
+                    .zip(&y)
+                    .find(|(p, q)| p != q)
+                    .map_or_else(String::new, |(p, q)| format!("{p}_as_{q}"));
+                if !name.is_empty() && !out.iter().any(|v| v.1 == map) {
+                    out.push((name, map));
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Each paradigm made like the earlier paradigm (with as many stem pieces)
+/// it shares the most cells with, read as it is or through a view (see
+/// [`View`]), if that is at least half of its own: it then writes only the
+/// cells that differ. Cells that are a copy of another (by a relation) are
+/// derived.
+fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>], views: &[View]) {
+    let copied: Vec<(usize, usize, bool)> = relations
         .iter()
         .filter(|r| r.analogy.is_none() && r.changes.iter().all(|(old, new)| old == new))
-        .filter_map(|r| Some((usize::from(r.cell), r.source()?)))
+        .filter_map(|r| Some((usize::from(r.cell), r.source()?, r.change.is_none())))
         .collect();
     let cells: Vec<Vec<String>> = paradigms
         .iter()
         .map(|p| {
             let written: Vec<&str> = p.table.split('\t').collect();
+            // A copy with no changes copies every form; one read off a
+            // change, the usual one only.
             let copy = |c: usize, m: &str| {
-                let from =
-                    |&(cell, from): &(usize, usize)| cell == c && written.get(from) == Some(&m);
-                m != DERIVED && !m.contains('|') && copied.iter().any(from)
+                let from = |&(cell, from, all): &(usize, usize, bool)| {
+                    cell == c && written.get(from) == Some(&m) && (all || !m.contains('|'))
+                };
+                m != DERIVED && copied.iter().any(from)
             };
             let cells = written.iter().enumerate();
             cells
@@ -493,22 +705,30 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
         let (Some(mine), Some(&my_pieces)) = (cells.get(i), pieces.get(i)) else {
             continue;
         };
-        let shared = |j: usize| {
+        // The parent's cell `c` reads, through view `v`.
+        let read = |v: Option<usize>, c: usize| {
+            v.and_then(|v| views.get(v)?.1.get(c))
+                .map_or(c, |&d| usize::from(d))
+        };
+        let shared = |j: usize, v: Option<usize>| {
             cells.get(j).map_or(0, |theirs| {
                 mine.iter()
-                    .zip(theirs)
-                    .filter(|(a, b)| a == b && !a.is_empty())
+                    .enumerate()
+                    .filter(|&(c, a)| !a.is_empty() && theirs.get(read(v, c)) == Some(a))
                     .count()
             })
         };
         let filled = mine.iter().filter(|c| !c.is_empty()).count();
+        let ways = std::iter::once(None).chain((0..views.len()).map(Some));
         let parent = (0..i)
             .filter(|&j| pieces.get(j) == Some(&my_pieces))
-            .map(|j| (shared(j), std::cmp::Reverse(j)))
-            .max()
-            .filter(|&(n, _)| n > 0 && 2 * n >= filled)
-            .map(|(_, std::cmp::Reverse(j))| j);
-        let theirs = parent.and_then(|j| cells.get(j));
+            .flat_map(|j| ways.clone().map(move |v| (j, v)))
+            .map(|(j, v)| (shared(j, v), v.is_none(), std::cmp::Reverse(j), v))
+            .max_by_key(|&(n, plain, j, _)| (n, plain, j))
+            .filter(|&(n, ..)| n > 0 && 2 * n >= filled)
+            .map(|(_, _, std::cmp::Reverse(j), v)| (j, v));
+        let view = parent.and_then(|(_, v)| v);
+        let theirs = parent.and_then(|(j, _)| cells.get(j));
         // A cell like the parent's isn't written; like no other, nor are
         // its derived cells.
         let table: String = mine
@@ -516,12 +736,15 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
             .enumerate()
             .take(mine.len().saturating_sub(1))
             .map(|(c, m)| match theirs {
-                Some(t) if t.get(c) == Some(m) => "\t".to_string(),
+                Some(t) if t.get(read(view, c)) == Some(m) => "\t".to_string(),
                 None if m == DERIVED => "\t".to_string(),
                 _ => format!("{m}\t"),
             })
             .collect();
-        paradigm.parent = parent.and_then(|j| u16::try_from(j).ok());
+        paradigm.parent = parent.and_then(|(j, _)| u16::try_from(j).ok());
+        paradigm.reads = view
+            .and_then(|v| views.get(v))
+            .map(|v| Cow::Owned(v.1.clone()));
         paradigm.table = Cow::Owned(table);
     }
 }
@@ -1206,33 +1429,86 @@ fn paradigms<'s>(
         }
         chosen.push(best.3);
     }
-    // A paradigm needs MIN_WORDS words; a word of a rarer one inflects like
-    // the paradigm that builds the most of its forms (its other forms are
-    // then listed as irregular).
-    let mut members: HashMap<usize, u32> = HashMap::default();
-    for &c in &chosen {
-        *members.entry(c).or_default() += 1;
-    }
-    let supported = |s: usize| members.get(&s).copied().unwrap_or(0) >= MIN_WORDS;
-    let (by_lemma, by_last) = index(&supported);
-    for (i, w) in words.iter().enumerate() {
-        if chosen.get(i).is_none_or(|&c| supported(c)) {
-            continue;
+    // A paradigm of more than one word is kept where it pays for itself (see
+    // `crate::bits`): from the one with fewest words up, its words go to the
+    // paradigm that builds the most of their forms when listing the forms it
+    // doesn't build costs less than stating the paradigm.
+    let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
+    for w in words {
+        for f in w.cells.iter().flatten() {
+            alphabet.extend(f.letters.chars());
         }
-        let mut best: Option<((usize, u32), usize)> = None;
-        for (lp, stems) in fitting(&by_last, &w.letters) {
-            for &cand in by_lemma.get(lp).into_iter().flatten() {
-                let built = (0..shape.cells)
-                    .filter(|&c| builds(cand, i, c, &stems))
-                    .count();
-                let key = (built, members.get(&cand).copied().unwrap_or(0));
-                if best.is_none_or(|(b, _)| key > b) {
-                    best = Some((key, cand));
+    }
+    let prices = crate::bits::Prices::new(alphabet.len(), shape.cells);
+    let mut members: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+    for (i, &c) in chosen.iter().enumerate() {
+        members.entry(c).or_default().push(i);
+    }
+    let mut order: Vec<usize> = members.keys().copied().collect();
+    order.sort_by_key(|s| (members.get(s).map_or(0, Vec::len), *s));
+    let mut kept: crate::HashSet<usize> = order.iter().copied().collect();
+    for s in order {
+        kept.remove(&s);
+        let (by_lemma, by_last) = index(&|c| kept.contains(&c));
+        let mine = members.get(&s).cloned().unwrap_or_default();
+        // Each word's best other paradigm, and the forms it lists there.
+        let mut moves: Vec<(usize, usize)> = Vec::with_capacity(mine.len());
+        let mut near = true;
+        let mut listed = 0.0;
+        let mut stated = crate::bits::ITEM;
+        for &i in &mine {
+            let Some(w) = words.get(i) else { continue };
+            let mut best: Option<((usize, usize), usize, Vec<String>)> = None;
+            for (lp, stems) in fitting(&by_last, &w.letters) {
+                for &cand in by_lemma.get(lp).into_iter().flatten() {
+                    let built = (0..shape.cells)
+                        .filter(|&c| builds(cand, i, c, &stems))
+                        .count();
+                    let key = (built, members.get(&cand).map_or(0, Vec::len));
+                    if best.as_ref().is_none_or(|b| key > b.0) {
+                        let owned = stems.iter().map(|x| (*x).to_string()).collect();
+                        best = Some((key, cand, owned));
+                    }
                 }
             }
+            let stems: Vec<&str> = best
+                .as_ref()
+                .map_or(Vec::new(), |b| b.2.iter().map(String::as_str).collect());
+            for c in 0..shape.cells {
+                let Some(form) = first_form(w, c) else {
+                    continue;
+                };
+                if best.as_ref().is_none_or(|b| !builds(b.1, i, c, &stems)) {
+                    listed += prices.listed(form);
+                    // What the paradigm states there instead, once.
+                    if i == mine.first().copied().unwrap_or(i) {
+                        let p = signatures.get(s).and_then(|x| x.1.get(c)?.as_deref());
+                        stated += prices.cell + p.map_or(0.0, |p| prices.text(p));
+                    }
+                }
+            }
+            let forms = (0..shape.cells)
+                .filter(|&c| first_form(w, c).is_some())
+                .count();
+            if let Some(b) = best {
+                // Most of its forms built there, for a word moved anyway.
+                near &= 2 * b.0.0 >= forms;
+                moves.push((i, b.1));
+            }
         }
-        if let (Some((_, cand)), Some(slot)) = (best, chosen.get_mut(i)) {
-            *slot = cand;
+        // One word's own table generalizes to no other: where another
+        // paradigm builds most of its forms, its word is listed there.
+        let alone = mine.len() < 2 && near;
+        if moves.len() == mine.len() && (listed < stated || alone) {
+            for (i, cand) in moves {
+                if let Some(slot) = chosen.get_mut(i) {
+                    *slot = cand;
+                }
+                members.entry(cand).or_default().push(i);
+            }
+            members.remove(&s);
+        } else {
+            kept.insert(s);
         }
     }
     // Paradigms: the chosen signatures, most words first.
@@ -1284,6 +1560,8 @@ fn paradigms<'s>(
             parent: None,
             inherent: Cow::Borrowed(&[]),
             table: Cow::Owned(table),
+            stems: Cow::Borrowed(""),
+            reads: None,
         })
     });
     let id = |c: usize| order.iter().position(|e| e.0 == c);
@@ -1332,6 +1610,202 @@ fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) 
     }
 }
 
+/// The stems each word of `words` the grammar builds with the wrong letters
+/// (`letters`: per word, per cell) may list, as [`crate::stems::listed`]
+/// finds them: `(word, slot, stem, table)`, by name.
+fn listed_stems(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    words: &[Word],
+    letters: &HashMap<&str, Vec<bool>>,
+    prices: &crate::bits::Prices,
+) -> Vec<flexion::ListedStem> {
+    let mine: Vec<(&Word, &Vec<bool>)> = words
+        .iter()
+        .filter_map(|w| Some((w, letters.get(w.key.as_str())?)))
+        .collect();
+    let chunk = mine.len().div_ceil(THREADS).max(1);
+    let mut out: Vec<flexion::ListedStem> = std::thread::scope(|scope| {
+        let handles: Vec<_> = mine
+            .chunks(chunk)
+            .map(|part| {
+                scope.spawn(move || {
+                    let mut out = Vec::new();
+                    for &(w, flags) in part {
+                        let word = crate::stems::Wrong {
+                            key: &w.key,
+                            cells: (0..w.cells.len())
+                                .map(|c| {
+                                    let f = first_form(w, c)?;
+                                    Some((f, flags.get(c).copied().unwrap_or(false)))
+                                })
+                                .collect(),
+                        };
+                        for (s, stem, t) in crate::stems::listed(grammar, &word, prices) {
+                            let (Some(slot), Some(table)) =
+                                (grammar.slots.get(s), grammar.tables.get(t))
+                            else {
+                                continue;
+                            };
+                            out.push((
+                                w.key.clone(),
+                                slot.name.to_string(),
+                                stem,
+                                table.name.to_string(),
+                            ));
+                        }
+                    }
+                    out
+                })
+            })
+            .collect();
+        handles
+            .into_iter()
+            .filter_map(|h| h.join().ok())
+            .flatten()
+            .collect()
+    });
+    out.sort();
+    out
+}
+
+/// The forms listed for the words with `wrong` forms (`(key, cell, form)`,
+/// sorted) when they list `stems`, and for the words `made` of others:
+/// those no relation tells from another listed or built one, then those
+/// told wrong, until none is (see [`settle`]); every word listing anything
+/// added to `unsure`.
+fn listing(
+    grammar: &mut Grammar<'_, u16, u16, u8>,
+    stems: &[flexion::ListedStem],
+    wrong: &[(String, usize, String)],
+    (lexemes, words): (&[Lexeme], &[Word]),
+    made: &dyn Fn(&Word) -> bool,
+    unsure: &mut crate::HashSet<String>,
+) -> Vec<(String, usize, String)> {
+    grammar.irregular = flexion::Irregular::new(&[], stems);
+    let wrong = rebuilt(grammar, words, stems, wrong.to_vec());
+    unsure.extend(wrong.iter().map(|(k, _, _)| k.clone()));
+    let mut irregular = roots(grammar, &wrong);
+    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
+    let made_wrong = self::irregular(grammar, lexemes, words, made);
+    unsure.extend(made_wrong.iter().map(|(k, _, _)| k.clone()));
+    irregular.extend(made_wrong);
+    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
+    irregular
+}
+
+/// The stems of `stems` the words listing them keep: those whose listing on
+/// them (`on_stems`: the forms still listed, `(word, cell, form)`) costs
+/// fewer bits with the stems than the word's listing of `forms` only; a
+/// word judged with the words made of it (`base`: the word a word is made
+/// of, or itself), which take its stems. An ending table is kept where the
+/// words built with it save more than stating it costs; a word using a
+/// table not kept lists its forms.
+fn cheaper(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    forms: &[(String, usize, String)],
+    on_stems: &[(String, usize, String)],
+    stems: Vec<flexion::ListedStem>,
+    prices: &crate::bits::Prices,
+    base: &dyn Fn(&str) -> String,
+) -> Vec<flexion::ListedStem> {
+    let refs = crate::bits::log2(grammar.slots.len()) + crate::bits::log2(grammar.tables.len());
+    let mut bits: HashMap<String, (f64, f64)> = HashMap::default();
+    for (k, _, f) in forms {
+        bits.entry(base(k)).or_default().0 += prices.listed(f);
+    }
+    for (k, _, f) in on_stems {
+        bits.entry(base(k)).or_default().1 += prices.listed(f);
+    }
+    for (k, _, stem, _) in &stems {
+        bits.entry(base(k)).or_default().1 += prices.text(stem) + refs;
+    }
+    // What stating each table costs: an item, and its patterns.
+    let cost = |slot: &str, name: &str| -> f64 {
+        let s = grammar.slots.iter().position(|s| s.name == slot);
+        let table = grammar
+            .tables
+            .iter()
+            .find(|t| Some(usize::from(t.slot)) == s && t.name == name);
+        table.map_or(0.0, |t| {
+            crate::bits::ITEM + t.table.split('\t').map(|p| prices.text(p)).sum::<f64>()
+        })
+    };
+    let mut on: crate::HashSet<String> = bits
+        .iter()
+        .filter(|(_, b)| b.1 < b.0)
+        .map(|(k, _)| k.clone())
+        .collect();
+    // Tables that don't pay go, from the one saving least, until all pay.
+    loop {
+        let mut saved: BTreeMap<(&str, &str), (f64, crate::HashSet<String>)> = BTreeMap::new();
+        for (k, slot, _, name) in &stems {
+            let group = base(k);
+            if !on.contains(&group) {
+                continue;
+            }
+            let entry = saved.entry((slot.as_str(), name.as_str())).or_default();
+            if entry.1.insert(group.clone()) {
+                entry.0 += bits.get(&group).map_or(0.0, |b| b.0 - b.1);
+            }
+        }
+        let worst = saved
+            .iter()
+            .map(|(t, (s, groups))| (s - cost(t.0, t.1), t, groups))
+            .filter(|(net, ..)| *net <= 0.0)
+            .min_by(|a, b| a.0.total_cmp(&b.0).then_with(|| a.1.cmp(b.1)));
+        let Some((_, _, groups)) = worst else { break };
+        for g in groups.clone() {
+            on.remove(&g);
+        }
+    }
+    stems
+        .into_iter()
+        .filter(|(k, ..)| on.contains(&base(k)))
+        .collect()
+}
+
+/// The forms `wrong` (`(key, cell, form)`, sorted) and those of the cells
+/// listed `stems` build, as the grammar now builds them: those still built
+/// with the wrong letters (a form only stressed wrong is checked later).
+fn rebuilt(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    words: &[Word],
+    stems: &[flexion::ListedStem],
+    wrong: Vec<(String, usize, String)>,
+) -> Vec<(String, usize, String)> {
+    let o = &grammar.orthography;
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    let mut out: Vec<(String, usize, String)> = wrong
+        .into_iter()
+        .filter(|(k, c, f)| {
+            grammar
+                .stem_form(k, *c)
+                .is_none_or(|b| b != o.read(f).letters)
+        })
+        .collect();
+    for (key, slot, _, _) in stems {
+        let (Some(w), Some(slot)) = (
+            by_key.get(key.as_str()),
+            grammar.slots.iter().find(|s| &s.name == slot),
+        ) else {
+            continue;
+        };
+        for &c in slot.cells.iter() {
+            let c = usize::from(c);
+            let Some(form) = w.cells.get(c).and_then(|fs| fs.first()) else {
+                continue;
+            };
+            if grammar.stem_form(key, c).is_some_and(|b| b != form.letters) {
+                let written = o.write(&form.letters, form.stress, flexion::Casing::Lower);
+                out.push((key.clone(), c, written));
+            }
+        }
+    }
+    out.sort();
+    out.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
+    out
+}
+
 /// How many times the forms derivations from listed forms get wrong are
 /// listed, at most.
 const ROUNDS: usize = 8;
@@ -1342,13 +1816,14 @@ const ROUNDS: usize = 8;
 fn settle(
     grammar: &mut Grammar<'_, u16, u16, u8>,
     irregular: &mut Vec<(String, usize, String)>,
+    stems: &[flexion::ListedStem],
     lexemes: &[Lexeme],
     words: &[Word],
     keys: &crate::HashSet<String>,
 ) {
     for _ in 0..ROUNDS {
         irregular.sort();
-        grammar.irregular = flexion::Irregular::new(irregular);
+        grammar.irregular = flexion::Irregular::new(irregular, stems);
         let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key));
         if more.is_empty() {
             return;
@@ -1356,7 +1831,7 @@ fn settle(
         irregular.extend(more);
     }
     irregular.sort();
-    grammar.irregular = flexion::Irregular::new(irregular);
+    grammar.irregular = flexion::Irregular::new(irregular, stems);
 }
 
 /// Whether relation `r` tells the forms of the words whose form of the cell
@@ -1399,26 +1874,50 @@ fn roots(
             continue;
         };
         let forms: BTreeMap<usize, &String> = word.iter().map(|(_, c, f)| (*c, f)).collect();
-        // Per cell, the letters the word has there: listed, or told.
-        let mut have: BTreeMap<usize, String> = BTreeMap::new();
-        for &c in &order {
-            let told = grammar.relation(c).filter(|r| r.listed).and_then(|r| {
-                let source = have.get(&r.source()?)?;
-                r.told(source, grammar.smoothing).map(|t| t.0)
-            });
-            let listed = forms.get(&c).map(|&form| {
-                let letters = grammar.orthography.read(form).letters;
-                if told.as_ref() != Some(&letters) {
-                    out.push((key.clone(), c, form.clone()));
-                }
-                letters
-            });
-            if let Some(letters) = listed.or(told) {
-                have.insert(c, letters);
+        let built = |c: usize| grammar.stem_form(key, c);
+        for c in word_roots(grammar, &order, &forms, &built) {
+            if let Some(&form) = forms.get(&c) {
+                out.push((key.clone(), c, form.clone()));
             }
         }
     }
     out.sort();
+    out
+}
+
+/// Of a word's listed `forms` (by cell), the cells no relation tells from
+/// another listed form of the word, or from a form `built` on a stem it
+/// lists, or one told so in turn (`order`: the cells, each after the one it
+/// is told from).
+fn word_roots(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    order: &[usize],
+    forms: &BTreeMap<usize, &String>,
+    built: &dyn Fn(usize) -> Option<String>,
+) -> Vec<usize> {
+    let mut out = Vec::new();
+    // Per cell, the letters the word has there: listed, built, or told.
+    let mut have: BTreeMap<usize, String> = BTreeMap::new();
+    for &c in order {
+        let told = grammar.relation(c).filter(|r| r.listed).and_then(|r| {
+            let source = have.get(&r.source()?)?;
+            r.told(source, grammar.smoothing).map(|t| t.0)
+        });
+        // A form built on a listed stem is the cell's unless a form is listed
+        // (relations tell no cell a stem builds); it tells others as a
+        // listed one.
+        let on_stem = built(c);
+        let listed = forms.get(&c).map(|&form| {
+            let letters = grammar.orthography.read(form).letters;
+            if on_stem.is_some() || told.as_ref() != Some(&letters) {
+                out.push(c);
+            }
+            letters
+        });
+        if let Some(letters) = listed.or(on_stem).or(told) {
+            have.insert(c, letters);
+        }
+    }
     out
 }
 
@@ -1816,6 +2315,20 @@ fn irregular(
     words: &[Word],
     only: impl Fn(&Word) -> bool,
 ) -> Vec<(String, usize, String)> {
+    misbuilt(grammar, lexemes, words, only)
+        .into_iter()
+        .map(|(k, c, f, _)| (k, c, f))
+        .collect()
+}
+
+/// [`irregular`], each form with whether the grammar's letters are wrong
+/// (not only its stress).
+fn misbuilt(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    lexemes: &[Lexeme],
+    words: &[Word],
+    only: impl Fn(&Word) -> bool,
+) -> Vec<(String, usize, String, bool)> {
     let orthography = &grammar.orthography;
     let wrong = |l: &Lexeme, w: &Word| {
         let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
@@ -1829,14 +2342,19 @@ fn irregular(
         let mut out = Vec::new();
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else { continue };
-            let right = tables.iter().all(|t| {
-                let top = t.get(cell).and_then(|c| c.first());
-                top.is_some_and(|c| crate::eval::same_form(orthography, &c.form, want))
-            });
+            let tops = tables
+                .iter()
+                .map(|t| t.get(cell).and_then(|c| c.first()).map(|c| c.form.as_str()));
+            let mut right = true;
+            let mut letters = false;
+            let read = orthography.read(want);
+            for top in tops {
+                right &= top.is_some_and(|t| crate::eval::same_form(orthography, t, want));
+                letters |= top.is_none_or(|t| orthography.read(t).letters != read.letters);
+            }
             if !right {
-                let read = orthography.read(want);
                 let form = orthography.write(&read.letters, read.stress, flexion::Casing::Lower);
-                out.push((w.key.clone(), cell, form));
+                out.push((w.key.clone(), cell, form, letters));
             }
         }
         out
@@ -1844,7 +2362,7 @@ fn irregular(
     let wrong = &wrong;
     let mine: Vec<(&Lexeme, &Word)> = lexemes.iter().zip(words).filter(|e| only(e.1)).collect();
     let chunk = mine.len().div_ceil(THREADS).max(1);
-    let mut out: Vec<(String, usize, String)> = std::thread::scope(|scope| {
+    let mut out: Vec<(String, usize, String, bool)> = std::thread::scope(|scope| {
         let handles: Vec<_> = mine
             .chunks(chunk)
             .map(|part| {

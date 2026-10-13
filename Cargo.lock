@@ -231,6 +231,7 @@ dependencies = [
  "flexion-configs",
  "flexion-train",
  "serde_json",
+ "unicode-normalization",
 ]
 
 [[package]]

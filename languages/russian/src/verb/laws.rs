@@ -1,9 +1,10 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
-//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), or on a letter a
-//! `%` copies (`°`): every form a conjugation builds goes through them, in order, so
-//! one conjugation serves words whose stems change its endings. Each with the
-//! words whose forms it gives, and how many of the dictionary's forms it
-//! gets wrong (those are listed in `irregular.rs`).
+//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
+//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written): every form a conjugation builds
+//! goes through them, in order, so one conjugation serves words whose stems change
+//! its endings. Each with the words whose forms it gives, and how many of
+//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
 
 use flexion::sound_law::compiled::*;
 
@@ -128,7 +129,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ж+я")]),
     },
-    // ш+ю → ш+у: 269 words (оглушить, разрешить, совершить, спешить), 1 forms wrong.
+    // ш+ю → ш+у: 271 words (оглушить, разрешить, совершить, спешить), 1 forms wrong.
     CompiledRule {
         name: B("law4"),
         left: Pattern {
@@ -188,7 +189,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ш+я")]),
     },
-    // с+щ → +щ: 205 words (допустить, пропустить, крестить, чистить), 0 forms wrong.
+    // с+щ → +щ: 203 words (допустить, пропустить, крестить, чистить), 0 forms wrong.
     CompiledRule {
         name: B("law6"),
         left: Pattern {
@@ -398,89 +399,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("др+ь")]),
     },
-    // [й|и|ы]+и → +ди: 5 words (выйти, низойти, нейти, повыйти), 0 forms wrong.
-    CompiledRule {
-        name: B("law13"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[
-                Atom {
-                    matcher: Matcher::Class(B(&[B("й"), B("и"), B("ы")])),
-                    quantifier: Quantifier::One,
-                    capture: Some(0),
-                },
-                Atom {
-                    matcher: Matcher::Literal(B("+и")),
-                    quantifier: Quantifier::One,
-                    capture: None,
-                },
-            ]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[
-            ReplacementPart::Capture(0),
-            ReplacementPart::Literal(B("+ди")),
-        ]),
-        capture_count: 1,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("+и")]),
-    },
-    // [й|и|ы]+у → +ду: 5 words (выйти, низойти, нейти, повыйти), 0 forms wrong.
-    CompiledRule {
-        name: B("law14"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[
-                Atom {
-                    matcher: Matcher::Class(B(&[B("й"), B("и"), B("ы")])),
-                    quantifier: Quantifier::One,
-                    capture: Some(0),
-                },
-                Atom {
-                    matcher: Matcher::Literal(B("+у")),
-                    quantifier: Quantifier::One,
-                    capture: None,
-                },
-            ]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[
-            ReplacementPart::Capture(0),
-            ReplacementPart::Literal(B("+ду")),
-        ]),
-        capture_count: 1,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("+у")]),
-    },
     // е+ь → е+й: 27 words (клеить, приклеить, наклеить, заклеить), 0 forms wrong.
     CompiledRule {
-        name: B("law15"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -508,9 +429,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("е+ь")]),
     },
-    // ре+жи → ре+жь: 23 words (резать, отрезать, урезать, нарезать), 1 forms wrong.
+    // ре+жи → ре+жь: 22 words (резать, отрезать, урезать, нарезать), 1 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -540,7 +461,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // мн+ь → мн+и: 11 words (помнить, запомнить, вспомнить, мнить), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -570,7 +491,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // гл+ь → гл+и: 10 words (гуглить, обуглить, загуглить, погуглить), 0 forms wrong.
     CompiledRule {
-        name: B("law18"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -600,7 +521,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ис+ть → ис+ти: 18 words (чистить, почистить, очистить, расчистить), 0 forms wrong.
     CompiledRule {
-        name: B("law19"),
+        name: B("law17"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -628,9 +549,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ис+ть")]),
     },
-    // ма+жи → ма+жь: 18 words (промазать, смазать, мазать, помазать), 1 forms wrong.
+    // ма+жи → ма+жь: 17 words (промазать, смазать, мазать, помазать), 1 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law18"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -660,7 +581,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // хл+ь → хл+и: 5 words (барахлить, забарахлить, нахохлить, хохлить), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -690,7 +611,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // бл+ь → бл+и: 16 words (скоблить, выскоблить, доскоблить, заскоблить), 0 forms wrong.
     CompiledRule {
-        name: B("law22"),
+        name: B("law20"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -720,7 +641,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // м+ед → м+ет: 6 words (домести, промести, перемести, умести), 0 forms wrong.
     CompiledRule {
-        name: B("law23"),
+        name: B("law21"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -750,7 +671,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ря+к → ря+г: 11 words (спрячь, сопрячь, перенапрячь, отпрячь), 0 forms wrong.
     CompiledRule {
-        name: B("law24"),
+        name: B("law22"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -780,7 +701,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ын+ё → ын+е: 5 words (отхлынуть, опостынуть, недовынуть, повынуть), 0 forms wrong.
     CompiledRule {
-        name: B("law25"),
+        name: B("law23"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -808,9 +729,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ын+ё")]),
     },
-    // ни+ву → ни+ю: 15 words (гнить, сгнить, прогнить, загнить), 0 forms wrong.
+    // ни+ву → ни+ю: 13 words (прогнить, загнить, догнить, изгнить), 0 forms wrong.
     CompiledRule {
-        name: B("law26"),
+        name: B("law24"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -840,7 +761,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ря+чё → ря+жё: 11 words (спрячь, сопрячь, перенапрячь, отпрячь), 0 forms wrong.
     CompiledRule {
-        name: B("law27"),
+        name: B("law25"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -870,7 +791,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // пл+у → пл+ю: 11 words (плевать, наплевать, заплевать, поплевать), 0 forms wrong.
     CompiledRule {
-        name: B("law28"),
+        name: B("law26"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -900,7 +821,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // тл+ь → тл+и: 5 words (тлить, высветлить, петлить, баттлить), 0 forms wrong.
     CompiledRule {
-        name: B("law29"),
+        name: B("law27"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -930,7 +851,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ып+ли → ып+ь: 12 words (засыпать, насыпать, посыпать, рассыпать), 0 forms wrong.
     CompiledRule {
-        name: B("law30"),
+        name: B("law28"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -960,7 +881,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // гр+ь → гр+и: 9 words (сбагрить, агрить, сагрить, заагрить), 0 forms wrong.
     CompiledRule {
-        name: B("law31"),
+        name: B("law29"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -990,7 +911,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ж+еж → ж+ж: 12 words (жечь, зажечь, пожечь, прижечь), 0 forms wrong.
     CompiledRule {
-        name: B("law32"),
+        name: B("law30"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1020,7 +941,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // зл+ь → зл+и: 6 words (злить, козлить, подкозлить, покозлить), 0 forms wrong.
     CompiledRule {
-        name: B("law33"),
+        name: B("law31"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1050,7 +971,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // кл+ь → кл+и: 5 words (зациклить, паклить, циклить, пропаклить), 0 forms wrong.
     CompiledRule {
-        name: B("law34"),
+        name: B("law32"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1080,7 +1001,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // мо+к → мо+г: 10 words (мочь, смочь, помочь, изнемочь), 0 forms wrong.
     CompiledRule {
-        name: B("law35"),
+        name: B("law33"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1110,7 +1031,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // мо+чё → мо+же: 10 words (мочь, смочь, помочь, изнемочь), 1 forms wrong.
     CompiledRule {
-        name: B("law36"),
+        name: B("law34"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1140,7 +1061,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ря+чи → ря+чь: 9 words (прятать, спрятать, упрятать, запрятать), 0 forms wrong.
     CompiledRule {
-        name: B("law37"),
+        name: B("law35"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1170,7 +1091,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // хи+ч → хи+щ: 7 words (похитить, предвосхитить, расхитить, хитить), 0 forms wrong.
     CompiledRule {
-        name: B("law38"),
+        name: B("law36"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1200,7 +1121,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ъе+ше → ъе+де: 8 words (въехать, объехать, подъехать, съехать), 0 forms wrong.
     CompiledRule {
-        name: B("law39"),
+        name: B("law37"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1230,7 +1151,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ъе+шу → ъе+ду: 8 words (въехать, объехать, подъехать, съехать), 0 forms wrong.
     CompiledRule {
-        name: B("law40"),
+        name: B("law38"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1260,7 +1181,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [в|р]+оё → +ё: 5 words (взреветь, зареветь, отреветь, пореветь), 0 forms wrong.
     CompiledRule {
-        name: B("law41"),
+        name: B("law39"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1300,7 +1221,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // га+не → +жё: 5 words (лгать, солгать, налгать, прилгать), 0 forms wrong.
     CompiledRule {
-        name: B("law42"),
+        name: B("law40"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1330,7 +1251,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // га+ну → г+у: 5 words (лгать, солгать, налгать, прилгать), 0 forms wrong.
     CompiledRule {
-        name: B("law43"),
+        name: B("law41"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1360,7 +1281,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // га+нь → г+и: 5 words (лгать, солгать, налгать, прилгать), 0 forms wrong.
     CompiledRule {
-        name: B("law44"),
+        name: B("law42"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1390,7 +1311,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ча+не → ч+нё: 7 words (начать, зачать, почать, учать), 0 forms wrong.
     CompiledRule {
-        name: B("law45"),
+        name: B("law43"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1420,7 +1341,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ча+ну → ч+ну: 7 words (начать, зачать, почать, учать), 0 forms wrong.
     CompiledRule {
-        name: B("law46"),
+        name: B("law44"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1450,7 +1371,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ча+нь → ч+ни: 7 words (начать, зачать, почать, учать), 0 forms wrong.
     CompiledRule {
-        name: B("law47"),
+        name: B("law45"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1480,7 +1401,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ев+ой → ев+и: 5 words (взреветь, зареветь, отреветь, пореветь), 0 forms wrong.
     CompiledRule {
-        name: B("law48"),
+        name: B("law46"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1510,7 +1431,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ев+ою → ев+у: 5 words (взреветь, зареветь, отреветь, пореветь), 0 forms wrong.
     CompiledRule {
-        name: B("law49"),
+        name: B("law47"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1540,7 +1461,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // цв+ёт → цв+ет: 6 words (цвести, расцвести, зацвести, отцвести), 0 forms wrong.
     CompiledRule {
-        name: B("law50"),
+        name: B("law48"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1570,7 +1491,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ъе+ши → ъе+зжай: 6 words (въехать, объехать, подъехать, съехать), 0 forms wrong.
     CompiledRule {
-        name: B("law51"),
+        name: B("law49"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1600,7 +1521,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // сы+ч → сы+щ: 5 words (насытить, перенасытить, пересытить, пресытить), 0 forms wrong.
     CompiledRule {
-        name: B("law52"),
+        name: B("law50"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1628,17 +1549,67 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("сы+ч")]),
     },
-    // ъ+и → +ы: 5 words (подъять, изъять, разъять, отъять), 0 forms wrong.
+    // ел+ё → ел+е after [р|т|ц] before [м|н|ш]: 22 words (выстрелить, подстрелить, стлать, постлать), 1 forms wrong.
     CompiledRule {
-        name: B("law53"),
+        name: B("law51"),
         left: Pattern {
-            atoms: B(&[]),
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("р"), B("т"), B("ц")])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ъ+и")),
+                matcher: Matcher::Literal(B("ел+ё")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("м"), B("н"), B("ш")])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ел+е"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ел+ё")]),
+    },
+    // ел+у → ел+ю after [б|д|п|р|с|т|щ]: 15 words (стлать, постлать, застлать, устлать), 0 forms wrong.
+    CompiledRule {
+        name: B("law52"),
+        left: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[
+                    B("б"),
+                    B("д"),
+                    B("п"),
+                    B("р"),
+                    B("с"),
+                    B("т"),
+                    B("щ"),
+                ])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ел+у")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -1652,11 +1623,11 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ы"))]),
+        replacement: B(&[ReplacementPart::Literal(B("ел+ю"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ъ+и")]),
+        required: B(&[B("ел+у")]),
     },
 ];
 
