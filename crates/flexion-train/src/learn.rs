@@ -27,6 +27,8 @@ pub struct Shape {
     /// on: its group (`present`, `future`), then each feature's value
     /// (`u16::MAX` where its group hasn't the feature).
     pub coordinates: Vec<Vec<u16>>,
+    /// The most words to learn from (see `PartOfSpeech::max_words`).
+    pub max_words: Option<usize>,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -91,6 +93,17 @@ pub fn learn<'s>(
     lexemes: &[Lexeme],
     settings: Settings,
 ) -> Learned<'s> {
+    // At most so many words, the commonest.
+    let capped: Vec<Lexeme>;
+    let lexemes = match shape.max_words {
+        Some(max) if lexemes.len() > max => {
+            let mut by: Vec<&Lexeme> = lexemes.iter().collect();
+            by.sort_by_key(|l| (std::cmp::Reverse(l.senses), l.source, l.order));
+            capped = by.into_iter().take(max).cloned().collect();
+            capped.as_slice()
+        }
+        _ => lexemes,
+    };
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
     let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);

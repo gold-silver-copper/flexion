@@ -55,6 +55,8 @@ pub enum Matcher<'a> {
     Any,
     WordBoundary,
     Backreference(usize),
+    /// Nothing, where no member begins: `{?!V}`, read ahead.
+    NotAhead(Cow<'a, [Cow<'a, str>]>),
 }
 
 /// How many times an atom matches: once, `?`, `*` or `+`.
@@ -67,7 +69,7 @@ pub enum Quantifier {
 }
 
 /// One piece of a replacement: literal text, a capture, or a capture put
-/// through a map.
+/// through a map, or through an agreement map by another capture (`key`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ReplacementPart<'a> {
     Literal(Cow<'a, str>),
@@ -76,7 +78,16 @@ pub enum ReplacementPart<'a> {
         capture: usize,
         entries: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
     },
+    AgreeingCapture {
+        capture: usize,
+        key: usize,
+        entries: Cow<'a, [Agreement<'a>]>,
+    },
 }
+
+/// One entry of an agreement map: a source, the key it is keyed by, and
+/// its output.
+pub type Agreement<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
 
 #[derive(Debug, Clone)]
 struct ResolvedClass {
@@ -86,6 +97,7 @@ struct ResolvedClass {
 #[derive(Debug, Clone)]
 struct ResolvedMap {
     entries: Vec<(String, String)>,
+    keyed: Vec<(String, String, String)>,
 }
 
 #[derive(Debug, Clone)]
@@ -216,30 +228,57 @@ fn resolve_maps(spec: &RuleSet<'_>) -> Result<HashMap<String, ResolvedMap>, Comp
             )));
         }
 
+        let plain = map
+            .entries()
+            .iter()
+            .map(|&(source, output)| (source, "", output));
+        let keyed = map.keyed_entries().iter().copied();
         let mut seen = HashSet::new();
         let mut entries = Vec::with_capacity(map.entries().len());
-        for (source, output) in map.entries() {
+        let mut agreeing = Vec::with_capacity(map.keyed_entries().len());
+        for (source, key, output) in plain.chain(keyed) {
             if source.is_empty() {
                 return Err(CompileError::global(format!(
                     "sound-law map `{}` contains an empty source",
                     map.name()
                 )));
             }
-            if !seen.insert(*source) {
+            if !seen.insert((source, key)) {
                 return Err(CompileError::global(format!(
-                    "sound-law map `{}` contains duplicate source `{source}`",
-                    map.name()
+                    "sound-law map `{}` contains duplicate source `{source}`{}",
+                    map.name(),
+                    if map.keyed_entries().is_empty() {
+                        String::new()
+                    } else {
+                        format!(" for key `{key}`")
+                    }
                 )));
             }
-            entries.push(((*source).to_owned(), (*output).to_owned()));
+            if map.keyed_entries().is_empty() {
+                entries.push((source.to_owned(), output.to_owned()));
+            } else {
+                agreeing.push((source.to_owned(), key.to_owned(), output.to_owned()));
+            }
         }
-        if entries.is_empty() {
+        if !map.entries().is_empty() && !map.keyed_entries().is_empty() {
+            return Err(CompileError::global(format!(
+                "sound-law map `{}` is both plain and keyed",
+                map.name()
+            )));
+        }
+        if entries.is_empty() && agreeing.is_empty() {
             return Err(CompileError::global(format!(
                 "sound-law map `{}` has no entries",
                 map.name()
             )));
         }
-        maps.insert(map.name().to_owned(), ResolvedMap { entries });
+        maps.insert(
+            map.name().to_owned(),
+            ResolvedMap {
+                entries,
+                keyed: agreeing,
+            },
+        );
     }
 
     Ok(maps)
@@ -421,6 +460,23 @@ fn parse_placeholder(
         ));
     }
 
+    if let Some(expression) = core.strip_prefix("?!") {
+        if quantifier != Quantifier::One {
+            return Err(pattern_error(
+                rule,
+                location,
+                "a look-ahead cannot be quantified",
+            ));
+        }
+        return Ok(Atom {
+            matcher: Matcher::NotAhead(owned(resolve_class_expression(
+                classes, expression, rule, location,
+            )?)),
+            quantifier,
+            capture: None,
+        });
+    }
+
     if let Some(name) = core.strip_prefix('=') {
         if quantifier != Quantifier::One {
             return Err(pattern_error(
@@ -499,10 +555,18 @@ fn parse_placeholder(
                 ));
             }
             let index = captures.len();
+            // An optional capture that matched nothing has the empty text.
             let values = match (&matcher, quantifier) {
                 (Matcher::Class(members), Quantifier::One) => {
                     Some(members.iter().map(|m| m.to_string()).collect())
                 }
+                (Matcher::Class(members), Quantifier::Optional) => Some(
+                    members
+                        .iter()
+                        .map(|m| m.to_string())
+                        .chain(std::iter::once(String::new()))
+                        .collect(),
+                ),
                 _ => None,
             };
             captures.insert(name.to_owned(), CaptureDef { index, values });
@@ -780,6 +844,12 @@ fn parse_replacement(
                     }
                 }
                 let reference = name.trim();
+                // `{x|MAP[k]}`: an agreement map keyed by capture `k`.
+                let (reference, key_name) =
+                    match reference.strip_suffix(']').and_then(|r| r.split_once('[')) {
+                        Some((r, k)) => (r.trim(), Some(k.trim())),
+                        None => (reference, None),
+                    };
                 let (capture_name, map_name) = match reference.split_once('|') {
                     Some((capture, map)) => {
                         if map.contains('|') {
@@ -806,7 +876,21 @@ fn parse_replacement(
                         format!("replacement refers to unknown capture `{capture_name}`"),
                     )
                 })?;
-                if let Some(map_name) = map_name {
+                if let (Some(map_name), Some(key_name)) = (map_name, key_name) {
+                    parts.push(agreeing(
+                        rule,
+                        maps,
+                        captures,
+                        (capture_name, capture),
+                        map_name,
+                        key_name,
+                    )?);
+                } else if key_name.is_some() {
+                    return Err(CompileError::in_rule(
+                        rule,
+                        format!("replacement `{reference}` has a key but no map"),
+                    ));
+                } else if let Some(map_name) = map_name {
                     if !is_identifier(map_name) {
                         return Err(CompileError::in_rule(
                             rule,
@@ -864,6 +948,69 @@ fn parse_replacement(
     }
     push_replacement_literal(&mut parts, &mut literal);
     Ok(parts)
+}
+
+/// `{capture|map[key]}`: the capture through agreement map `map`, keyed by
+/// capture `key`, which must cover every pair of their possible values.
+fn agreeing(
+    rule: &str,
+    maps: &HashMap<String, ResolvedMap>,
+    captures: &HashMap<String, CaptureDef>,
+    (capture_name, capture): (&str, &CaptureDef),
+    map_name: &str,
+    key_name: &str,
+) -> Result<ReplacementPart<'static>, CompileError> {
+    let error = |message: String| CompileError::in_rule(rule, message);
+    if !is_identifier(map_name) || !is_identifier(key_name) {
+        return Err(error(format!(
+            "replacement has invalid agreement `{map_name}[{key_name}]`"
+        )));
+    }
+    let map = maps
+        .get(map_name)
+        .filter(|m| !m.keyed.is_empty())
+        .ok_or_else(|| {
+            error(format!(
+                "replacement refers to unknown agreement map `{map_name}`"
+            ))
+        })?;
+    let key = captures.get(key_name).ok_or_else(|| {
+        error(format!(
+            "replacement refers to unknown capture `{key_name}`"
+        ))
+    })?;
+    let (Some(values), Some(keys)) = (&capture.values, &key.values) else {
+        return Err(error(format!(
+            "captures `{capture_name}` and `{key_name}` cannot use agreement map `{map_name}` because their possible values are not statically known"
+        )));
+    };
+    let missing: Vec<String> = values
+        .iter()
+        .flat_map(|v| keys.iter().map(move |k| (v, k)))
+        .filter(|(v, k)| !map.keyed.iter().any(|(s, x, _)| s == *v && x == *k))
+        .map(|(v, k)| format!("{v} by `{k}`"))
+        .collect();
+    if !missing.is_empty() {
+        return Err(error(format!(
+            "agreement map `{map_name}` does not cover capture `{capture_name}` keyed by `{key_name}`: {}",
+            missing.join(", ")
+        )));
+    }
+    Ok(ReplacementPart::AgreeingCapture {
+        capture: capture.index,
+        key: key.index,
+        entries: map
+            .keyed
+            .iter()
+            .map(|(a, b, c)| {
+                (
+                    Cow::Owned(a.clone()),
+                    Cow::Owned(b.clone()),
+                    Cow::Owned(c.clone()),
+                )
+            })
+            .collect(),
+    })
 }
 
 /// Members as a compiled class.

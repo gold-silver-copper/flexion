@@ -46,6 +46,9 @@
 //!   backtracking and capture the complete matched span;
 //! - `{x:!V}` matches and captures one scalar value that does not begin a member
 //!   of `V`;
+//! - `{?!V}` matches nowhere but where no member of `V` begins (it reads
+//!   ahead, consuming nothing: `"о" => "е" / "{[ш|ж]}" _ "{?![́]}"` changes an
+//!   unstressed vowel, one no stress mark follows, at the word's end too);
 //! - `{=v}` matches the exact text captured earlier as `v`;
 //! - `^` and `$` anchor a pattern to the start and end of the complete form;
 //! - `#` matches a zero-width edge of a whitespace-delimited word.
@@ -57,11 +60,39 @@
 //! empty target inserts at every boundary satisfying its context:
 //! `"" => "ə" / "{C}" _ "{C}"`.
 //!
+//! `{v|MAP[k]}` emits it through an agreement map, keyed by capture `k` too.
+//!
 //! Rules apply globally and left-to-right by default, to the result of the
 //! preceding rule. `[rtl]` changes overlap selection and `[once]` selects only
 //! the first directional match. Matches made by one rule are simultaneous: its
 //! own output is not reconsidered until another pass is explicitly requested
-//! with [`Program::apply_until_stable`].
+//! with [`Program::apply_until_stable`], unless the rule is `[iterative]`:
+//! then each match is written before the next is sought, and the context
+//! behind it reads what the rule wrote (harmony through stacked suffixes):
+//!
+//! ```
+//! use sound_law::{RuleSet, sound_laws};
+//!
+//! // `A` is `a` after a back vowel, `e` after a front one or none.
+//! const HARMONY: RuleSet<'static> = sound_laws! {
+//!     classes {
+//!         V = ["a", "e", "o", "i"];
+//!     }
+//!     agreements {
+//!         AGREE = [
+//!             ("A", "a") => "a", ("A", "o") => "a",
+//!             ("A", "e") => "e", ("A", "i") => "e", ("A", "") => "e",
+//!         ];
+//!     }
+//!     rules {
+//!         harmony[iterative]: "{x:[A]}" => "{x|AGREE[t]}" / "{t:V?}{gap:!V*}" _ "";
+//!     }
+//! };
+//! assert_eq!(HARMONY.apply("kotlAndA")?, "kotlanda");
+//! assert_eq!(HARMONY.apply("ellAndA")?, "ellende");
+//! assert_eq!(HARMONY.apply("srbA")?, "srbe");
+//! # Ok::<(), sound_law::CompileError>(())
+//! ```
 
 #![forbid(unsafe_code)]
 
@@ -71,7 +102,7 @@ mod rust;
 
 use std::fmt;
 
-pub use compile::{Atom, CompiledRule, Matcher, Pattern, Quantifier, ReplacementPart};
+pub use compile::{Agreement, Atom, CompiledRule, Matcher, Pattern, Quantifier, ReplacementPart};
 pub use engine::{
     IterationError, MatchLimitError, Program, ProgramCompositionError, RuleRangeError, TraceStep,
 };
@@ -96,14 +127,22 @@ pub enum Direction {
     RightToLeft,
 }
 
-/// How many matches one rule applies to in a word.
+/// How many matches one rule applies to in a word, and what their contexts
+/// read.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Application {
-    /// Apply to every non-overlapping match selected in the rule's direction.
+    /// Apply to every non-overlapping match selected in the rule's direction,
+    /// all of them found in the rule's input.
     #[default]
     All,
     /// Apply only to the first match selected in the rule's direction.
     Once,
+    /// Apply to every match in the rule's direction, one after another: each
+    /// is written before the next is sought, so the context on the side
+    /// already passed reads what the rule wrote there (its output), and the
+    /// other side its input. Harmony runs through a chain of suffixes this
+    /// way, each vowel agreeing with the one before it as written.
+    Iterative,
 }
 
 /// A named set of possible segments.
@@ -138,16 +177,35 @@ impl<'a> Class<'a> {
 /// A pattern captures a source member normally, then `{capture|MAP}` emits the
 /// corresponding output. Compilation rejects maps that do not cover every
 /// possible value of that capture.
+///
+/// An agreement map ([`Map::keyed`]) is keyed by a second capture too:
+/// `{capture|MAP[key]}` emits the output for both values (a suffix vowel
+/// by the vowel before it). A key may be empty: what an optional capture
+/// that matched nothing gets (a word with no vowel before the suffix).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Map<'a> {
     name: &'a str,
     entries: &'a [(&'a str, &'a str)],
+    keyed: &'a [(&'a str, &'a str, &'a str)],
 }
 
 impl<'a> Map<'a> {
     /// Construct a correspondence map.
     pub const fn new(name: &'a str, entries: &'a [(&'a str, &'a str)]) -> Self {
-        Self { name, entries }
+        Self {
+            name,
+            entries,
+            keyed: &[],
+        }
+    }
+
+    /// Construct an agreement map: `(source, key, output)` entries.
+    pub const fn keyed(name: &'a str, keyed: &'a [(&'a str, &'a str, &'a str)]) -> Self {
+        Self {
+            name,
+            entries: &[],
+            keyed,
+        }
     }
 
     /// The name used after `|` in replacement capture references.
@@ -158,6 +216,11 @@ impl<'a> Map<'a> {
     /// The source-to-output correspondence entries.
     pub const fn entries(&self) -> &'a [(&'a str, &'a str)] {
         self.entries
+    }
+
+    /// An agreement map's `(source, key, output)` entries.
+    pub const fn keyed_entries(&self) -> &'a [(&'a str, &'a str, &'a str)] {
+        self.keyed
     }
 }
 
@@ -218,6 +281,13 @@ impl<'a> Rule<'a> {
     /// Apply only to the first match selected in this rule's direction.
     pub const fn once(mut self) -> Self {
         self.application = Application::Once;
+        self
+    }
+
+    /// Apply to each match in turn, its context on the side already passed
+    /// read on the rule's output (see [`Application::Iterative`]).
+    pub const fn iterative(mut self) -> Self {
+        self.application = Application::Iterative;
         self
     }
 
@@ -380,7 +450,10 @@ impl std::error::Error for CompileError {}
 /// `/ "left" _ "right"` before the semicolon to constrain its environment. An
 /// empty target denotes insertion at a boundary rather than replacement. Add
 /// `unless "left" _ "right"` to exclude an environment. Rule options `[rtl]`,
-/// `[once]`, or `[rtl, once]` control match selection.
+/// `[once]`, or `[rtl, once]` control match selection; `[iterative]` makes a
+/// rule read its own output on the side it has passed. An `agreements`
+/// block after `maps` declares maps keyed by a second capture
+/// (`V = [("A", "a") => "a", ("A", "") => "e"];`, used as `{x|V[t]}`).
 #[macro_export]
 macro_rules! sound_laws {
     (
@@ -390,6 +463,13 @@ macro_rules! sound_laws {
         $(
             maps {
                 $( $map:ident = [ $( $map_from:literal => $map_to:literal ),+ $(,)? ]; )*
+            }
+        )?
+        $(
+            agreements {
+                $( $keyed:ident = [
+                    $( ( $keyed_from:literal, $keyed_key:literal ) => $keyed_to:literal ),+ $(,)?
+                ]; )*
             }
         )?
         rules {
@@ -412,8 +492,14 @@ macro_rules! sound_laws {
                     $crate::Map::new(
                         stringify!($map),
                         &[ $( ($map_from, $map_to) ),+ ],
-                    )
-                ),*)?
+                    ),
+                )*)?
+                $($(
+                    $crate::Map::keyed(
+                        stringify!($keyed),
+                        &[ $( ($keyed_from, $keyed_key, $keyed_to) ),+ ],
+                    ),
+                )*)?
             ],
             &[
                 $(
@@ -434,6 +520,9 @@ macro_rules! sound_laws {
     };
     (@options $rule:expr; once $(, $rest:ident)*) => {
         $crate::sound_laws!(@options $rule.once(); $( $rest ),*)
+    };
+    (@options $rule:expr; iterative $(, $rest:ident)*) => {
+        $crate::sound_laws!(@options $rule.iterative(); $( $rest ),*)
     };
     (@options $rule:expr; $unknown:ident $(, $rest:ident)*) => {
         compile_error!(concat!("unknown sound-law rule option `", stringify!($unknown), "`"))

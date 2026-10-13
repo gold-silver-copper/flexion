@@ -66,6 +66,7 @@ fn atom(a: &Atom<'_>) -> String {
         Matcher::Any => "Matcher::Any".to_string(),
         Matcher::WordBoundary => "Matcher::WordBoundary".to_string(),
         Matcher::Backreference(i) => format!("Matcher::Backreference({i})"),
+        Matcher::NotAhead(m) => format!("Matcher::NotAhead(B({}))", strings(m)),
     };
     format!(
         "Atom {{ matcher: {matcher}, quantifier: Quantifier::{:?}, capture: {:?} }}",
@@ -83,6 +84,19 @@ fn part(p: &ReplacementPart<'_>) -> String {
                 let _ = write!(e, "(B({a:?}), B({b:?})), ");
             }
             format!("ReplacementPart::MappedCapture {{ capture: {capture}, entries: B(&[{e}]) }}")
+        }
+        ReplacementPart::AgreeingCapture {
+            capture,
+            key,
+            entries,
+        } => {
+            let mut e = String::new();
+            for (a, k, b) in entries.iter() {
+                let _ = write!(e, "(B({a:?}), B({k:?}), B({b:?})), ");
+            }
+            format!(
+                "ReplacementPart::AgreeingCapture {{ capture: {capture}, key: {key}, entries: B(&[{e}]) }}"
+            )
         }
     }
 }

@@ -3,6 +3,7 @@
 
 pub mod ancient_greek;
 pub mod english;
+pub mod finnish;
 pub mod french;
 pub mod german;
 pub mod italian;
@@ -12,6 +13,7 @@ pub mod romance;
 pub mod russian;
 pub mod sanskrit;
 pub mod spanish;
+pub mod turkish;
 
 use flexion_train::spec::Language;
 
@@ -35,6 +37,8 @@ pub fn every() -> Vec<Language> {
         spanish::language(),
         french::language(),
         italian::language(),
+        finnish::language(),
+        turkish::language(),
     ]);
     every
 }
