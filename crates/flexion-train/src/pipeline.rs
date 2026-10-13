@@ -170,8 +170,9 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          among its answers at all. *Every cell right*: the share of words with every form right.\n\
          *Log loss*: bits per form, −log₂ of the probability it gives the right answer (a form\n\
          it doesn't give costs 5 bits a letter). *1 / 2 / 3 forms given*: top-1 of the other\n\
-         forms, typed in full, given that many of the word's forms chosen at random. *Seen* and *unseen cells*: top-1 on the cells\n\
-         some training word of the word's paradigm has a form in, and on the others, derived\n\
+         forms, typed in full, given that many of the word's forms chosen at random.\n\
+         *Seen* and *unseen cells*: top-1 on the cells some training word of the word's\n\
+         paradigm has a form in, and on the others, derived\n\
          from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017\n\
          shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped\n\
          grammar on the dictionary's own words, typed in full.\n\n",
