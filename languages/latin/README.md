@@ -106,7 +106,7 @@ grammar on the dictionary's own words, typed in full.
 |---|---:|---:|
 | noun | 13422 | 422381 |
 | adjective | 11186 | 373351 |
-| verb | 17366 | 743979 |
+| verb | 24606 | 1007611 |
 | pronoun | 1268 | 48860 |
 | numeral | 914 | 32202 |
 
