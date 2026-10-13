@@ -24,6 +24,7 @@ pub mod relations;
 pub mod script;
 pub mod skeleton;
 pub mod spec;
+pub mod stems;
 
 use spec::{Language, PartOfSpeech};
 
@@ -74,6 +75,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
     }
     Ok(learn::Shape {
         coordinates,
+        names: print::cell_names(&cells),
         cells: cells.total,
         lemma_cell,
         capitalized: part.capitalized,

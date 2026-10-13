@@ -482,6 +482,25 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             st.accent_patterns,
             st.irregular_forms,
         );
+        println!(
+            "  stem slots {}, ending tables {}, listed stems {}",
+            g.slots.len(),
+            g.tables.len(),
+            st.listed_stems
+        );
+        for s in g.slots.iter() {
+            let names: Vec<&str> = s
+                .cells
+                .iter()
+                .filter_map(|&c| shape.names.get(usize::from(c)).map(String::as_str))
+                .collect();
+            println!(
+                "  slot {}: {} cells: {}",
+                s.name,
+                s.cells.len(),
+                names.join(" ")
+            );
+        }
         for l in &learned.laws {
             println!(
                 "  law {l}: {} words ({}), breaks {}",

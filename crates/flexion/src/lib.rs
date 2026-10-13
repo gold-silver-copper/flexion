@@ -6,16 +6,18 @@ mod grammar;
 mod orthography;
 mod paradigm;
 pub mod pattern;
+mod stems;
 mod stress;
 
 pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
 pub use grammar::{
-    Compound, Grammar, Irregular, Known, Placement, Prefix, Prefixes, Separation, Trust, WORD_END,
-    restore, sharpen,
+    Compound, Grammar, Irregular, Known, ListedStem, Placement, Prefix, Prefixes, Separation,
+    Trust, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{DERIVED, Form, Paradigm, Relation};
+pub use paradigm::{DERIVED, Form, Paradigm, Relation, Space};
 pub use sound_law;
+pub use stems::{EndingTable, LIKE, Slot, compose, factor};
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
     position as stress_position, positions as stress_positions,
@@ -78,6 +80,9 @@ pub struct Candidate<'g> {
     pub paradigm: &'g str,
     /// The rule that chose the paradigm, when no listing did.
     pub evidence: Option<Evidence<'g>>,
+    /// The listed stem it is built on, for a word that lists the stem of the
+    /// cell's slot (`paradigm` is then the ending table's name).
+    pub stem: Option<&'g str>,
 }
 
 /// The evidence behind a rule: of the dictionary's `total` words ending in
@@ -102,7 +107,8 @@ impl fmt::Display for Evidence<'_> {
 
 impl fmt::Display for Candidate<'_> {
     /// `книги (97%, regular): like книга; 1203 of 1210 words in -га`; a
-    /// listed form: `adiūvistī (100%, listed)`.
+    /// listed form: `adiūvistī (100%, listed)`; a form built on a listed
+    /// stem: `ἤγγειλᾰ (100%, listed): like λυω; stem ἀγγειλ-`.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -116,6 +122,9 @@ impl fmt::Display for Candidate<'_> {
         }
         if let Some(e) = self.evidence {
             write!(f, "; {e}")?;
+        }
+        if let Some(stem) = self.stem {
+            write!(f, "; stem {stem}-")?;
         }
         Ok(())
     }
