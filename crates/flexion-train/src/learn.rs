@@ -678,7 +678,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             // Something put before the rest's form: it begins otherwise
             // than the rest, and goes on as the rest begins.
             let first = base.letters.chars().next();
-            if first != Some(head) && tail.chars().next() == first {
+            if first != Some(head) && (crate::off("strict") || tail.chars().next() == first) {
                 augmented
                     .entry(pk.as_str())
                     .or_default()
@@ -914,13 +914,10 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     (Some(prefixes), bases)
 }
 
-/// The most letters around a letter a rule on how it is written reads.
-const MARK_CONTEXT: usize = 12;
-
 /// How a letter typed without its mark is written (see
 /// [`flexion::Grammar::marks`]): learned from every letter of the words that
-/// a mark could stand on, by the letters around it (see [`flexion::around`]).
-/// `None` where no word writes such a mark.
+/// a mark could stand on, by the letter before it and the letters from it
+/// on. `None` where no word writes such a mark.
 fn marks<'a>(
     orthography: &Orthography<'_>,
     words: &[Word],
@@ -930,24 +927,24 @@ fn marks<'a>(
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
     for w in words {
-        for (at, (k, l)) in w.key.chars().zip(w.letters.chars()).enumerate() {
-            if markable(k) {
+        let mut before = flexion::WORD_END;
+        for ((i, k), l) in w.key.char_indices().zip(w.letters.chars()) {
+            if markable(k)
+                && let Some(rest) = w.key.get(i..)
+            {
                 marked |= l != k;
-                examples.push((flexion::around(&w.key, at), l));
+                examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
             }
+            before = k;
         }
     }
     if !marked {
         return None;
     }
-    let settings = Settings {
-        longest: MARK_CONTEXT,
-        ..settings
-    };
     let mut choice = choose::learn_starts(&examples, settings, |around, m| {
         around
             .chars()
-            .next()
+            .nth(1)
             .is_some_and(|c| orthography.fold(m) == c)
     });
     // What the rules get wrong is a word's own spelling, listed with it.
@@ -2052,23 +2049,26 @@ fn irregular(
                         let plain = grammar
                             .orthography
                             .write(&w.key, None, flexion::Casing::Lower);
-                        for (cell, forms) in l.cells.iter().enumerate() {
-                            let Some(want) = forms.first() else {
-                                continue;
-                            };
-                            let right = [(l.full.as_str(), true), (plain.as_str(), false)]
+                        let tables: Vec<Vec<Vec<flexion::Candidate<'_>>>> =
+                            [(l.full.as_str(), true), (plain.as_str(), false)]
                                 .iter()
-                                .all(|&(input, full)| {
+                                .map(|&(input, full)| {
                                     let known = flexion::Known {
                                         full,
                                         ..flexion::Known::default()
                                     };
-                                    crate::eval::same_form(
-                                        &grammar.orthography,
-                                        &grammar.best(input, cell, &known),
-                                        want,
-                                    )
-                                });
+                                    grammar.table(input, &known)
+                                })
+                                .collect();
+                        for (cell, forms) in l.cells.iter().enumerate() {
+                            let Some(want) = forms.first() else {
+                                continue;
+                            };
+                            let right = tables.iter().all(|t| {
+                                t.get(cell).and_then(|c| c.first()).is_some_and(|c| {
+                                    crate::eval::same_form(&grammar.orthography, &c.form, want)
+                                })
+                            });
                             if !right {
                                 let read = grammar.orthography.read(want);
                                 let written = grammar.orthography.write(

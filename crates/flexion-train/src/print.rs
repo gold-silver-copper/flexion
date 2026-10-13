@@ -603,7 +603,7 @@ fn grammar_files(
     // marks.rs
     if let Some(marks) = &g.marks {
         let r = format!(
-            "//! How a letter typed without its mark is written. Each rule reads the letter,\n//! then in turn the letters after it and before it, outward (`#` is the\n//! word's start or end): the longest one that matches decides (`atti` → `ā`,\n//! as in `-ātiō`; `e#d` → `ē`, as in `dē-`), giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
+            "//! How a letter typed without its mark is written. Each rule reads the letter\n//! before it, the letter and the letters after it (`#` is the word's start or\n//! end): the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`;\n//! `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong), giving each way of writing\n//! the letter with how many of the dictionary's letters in that place are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
             thousands(marks.rules.len()),
             choice_macro("starts", marks, |c| format!("{c:?}"))
         );

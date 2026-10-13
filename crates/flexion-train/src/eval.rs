@@ -164,6 +164,7 @@ pub fn score<P: Label, A: Label, F: Label>(
             .readings(&typed, &known)
             .first()
             .and_then(|r| seen.get(r.value.index()));
+        let table = grammar.table(&typed, &known);
         for (cell, forms) in l.cells.iter().enumerate() {
             let Some(want) = forms.first() else {
                 continue;
@@ -171,7 +172,7 @@ pub fn score<P: Label, A: Label, F: Label>(
             if parts.contains(&cell) {
                 continue;
             }
-            let candidates = grammar.candidates(&typed, cell, &known);
+            let candidates = table.get(cell).cloned().unwrap_or_default();
             s.forms += 1;
             let same = |form: &str| same_form(orthography, form, want);
             let right = candidates.first().is_some_and(|c| same(&c.form));
@@ -253,11 +254,12 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
                 full,
                 ..flexion::Known::default()
             };
+            let table = grammar.table(typed, &known);
             for (cell, fs) in l.cells.iter().enumerate() {
                 let Some(want) = fs.first() else {
                     continue;
                 };
-                let c = grammar.candidates(typed, cell, &known);
+                let c = table.get(cell).cloned().unwrap_or_default();
                 forms.push(
                     c.iter()
                         .map(|c| (c.probability, same_form(orthography, &c.form, want)))

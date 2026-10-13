@@ -388,10 +388,15 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         data.get(pi).ok_or("data")?,
     );
     let shape = flexion_train::shape(lang, part)?;
+    // TEMPORARY: `ONLY=a,b`: learn from the words whose key contains one.
+    let only: Vec<String> = std::env::var("ONLY")
+        .map(|v| v.split(',').map(str::to_string).collect())
+        .unwrap_or_default();
     let lexemes: Vec<Lexeme> = d
         .lexemes
         .iter()
         .filter(|l| !holdout || eval::bucket(&l.key) != eval::TEST)
+        .filter(|l| only.is_empty() || only.iter().any(|o| l.key.contains(o.as_str())))
         .cloned()
         .collect();
     let learned = learn::learn(

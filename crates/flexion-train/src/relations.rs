@@ -30,7 +30,7 @@ pub fn learn<'s>(
     // change is the commonest after the source's last two letters; of equal
     // shares, the one telling more words' forms as they are.
     let score = |s: usize, c: usize| -> (usize, usize) {
-        let mut counts: HashMap<(String, (&str, &str)), usize> = HashMap::default();
+        let mut counts: HashMap<(String, (String, String)), usize> = HashMap::default();
         let mut same = 0;
         for f in &sample {
             if let (Some(Some(a)), Some(Some(b))) = (f.get(s), f.get(c)) {
@@ -96,26 +96,26 @@ fn edge<'s>(
     c: usize,
     settings: Settings,
 ) -> Option<Relation<'s>> {
-    let pairs: Vec<(&str, (&str, &str))> = forms
+    let pairs: Vec<(&str, (String, String))> = forms
         .iter()
         .filter_map(|f| {
             let (a, b) = (f.get(s).copied().flatten()?, f.get(c).copied().flatten()?);
             Some((a, change(a, b)))
         })
         .collect();
-    let mut seen: HashMap<(&str, &str), usize> = HashMap::default();
+    let mut seen: HashMap<&(String, String), usize> = HashMap::default();
     for (_, ch) in &pairs {
-        *seen.entry(*ch).or_default() += 1;
+        *seen.entry(ch).or_default() += 1;
     }
-    let mut changes: Vec<(&str, &str)> = seen
+    let mut changes: Vec<&(String, String)> = seen
         .into_iter()
         .filter(|&(_, n)| n >= MIN_WORDS)
         .map(|(ch, _)| ch)
         .collect();
     changes.sort_unstable();
-    let index = |ch: &(&str, &str)| {
+    let index = |ch: &(String, String)| {
         changes
-            .binary_search(ch)
+            .binary_search(&ch)
             .ok()
             .and_then(|i| u16::try_from(i).ok())
     };
@@ -129,7 +129,7 @@ fn edge<'s>(
     let fits = |word: &str, i: u16| {
         changes
             .get(usize::from(i))
-            .is_some_and(|(old, _)| word.ends_with(old))
+            .is_some_and(|(old, _)| flexion::pattern::bind(old, word).is_some())
     };
     let choice = choose::learn(&examples, settings, fits);
     Some(Relation {
@@ -138,7 +138,7 @@ fn edge<'s>(
         changes: Cow::Owned(
             changes
                 .iter()
-                .map(|(old, new)| (Cow::Owned(old.to_string()), Cow::Owned(new.to_string())))
+                .map(|(old, new)| (Cow::Owned(old.clone()), Cow::Owned(new.clone())))
                 .collect(),
         ),
         change: Some(choice),
@@ -322,16 +322,34 @@ pub fn analogies<'s>(
     out
 }
 
-/// How `a`'s end changes into `b`'s: what follows the letters they share
-/// at the start (`("ī", "istī")` for `amāvī`, `amāvistī`).
-fn change<'f>(a: &'f str, b: &'f str) -> (&'f str, &'f str) {
-    let shared = a
-        .char_indices()
-        .zip(b.chars())
-        .take_while(|((_, x), y)| x == y)
-        .last()
-        .map_or(0, |((i, x), _)| i + x.len_utf8());
-    (a.get(shared..).unwrap_or(""), b.get(shared..).unwrap_or(""))
+/// How `a` changes into `b`, as patterns around the letters they share (`~`):
+/// the most of them in a row, with at most three letters before them in
+/// either (`("~ī", "~istī")` for `amāvī`, `amāvistī`; `("~", "ἐ~")` for the
+/// augment, `λύομεν`, `ἐλύομεν`).
+fn change(a: &str, b: &str) -> (String, String) {
+    let (a, b): (Vec<char>, Vec<char>) = (a.chars().collect(), b.chars().collect());
+    let shared = |j: usize, k: usize| {
+        a.iter()
+            .skip(j)
+            .zip(b.iter().skip(k))
+            .take_while(|(x, y)| x == y)
+            .count()
+    };
+    // The longest run; of equally long, the one beginning earliest.
+    let (n, j, k) = (0..=3usize)
+        .flat_map(|j| (0..=3usize).map(move |k| (j, k)))
+        .map(|(j, k)| (shared(j, k), j, k))
+        .max_by_key(|&(n, j, k)| (n, std::cmp::Reverse(j + k)))
+        .unwrap_or((0, 0, 0));
+    let around = |w: &[char], at: usize| -> String {
+        let head: String = w.iter().take(at).collect();
+        let tail: String = w.iter().skip(at + n).collect();
+        format!("{head}~{tail}")
+    };
+    if n == 0 {
+        return (around(&a, a.len()), around(&b, b.len()));
+    }
+    (around(&a, j), around(&b, k))
 }
 
 /// The cells in the order their relations can be followed: each after the
@@ -393,6 +411,8 @@ mod tests {
             second.apply("portāvī", 2.0).first().map(|f| f.0.as_str()),
             Some("portāvistī")
         );
-        assert_eq!(change("amāvī", "amāvistī"), ("ī", "istī"));
+        assert_eq!(change("amāvī", "amāvistī"), ("~ī".into(), "~istī".into()));
+        // The augment: before the stem.
+        assert_eq!(change("λυομεν", "ελυομεν"), ("~".into(), "ε~".into()));
     }
 }

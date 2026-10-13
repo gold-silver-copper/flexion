@@ -53,6 +53,7 @@ name = "flexion"
 version = "0.2.0"
 dependencies = [
  "sound-law",
+ "unicode-normalization",
 ]
 
 [[package]]
