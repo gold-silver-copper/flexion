@@ -21,6 +21,7 @@
 //! - `inspect`: a word's readings and forms, and a sample of irregular forms.
 
 mod audit;
+mod bench;
 mod editors;
 mod outcomes;
 mod yardsticks;
@@ -31,7 +32,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [<file>]; cargo xtask compare <a> <b>";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
 
 fn main() {
     if let Err(e) = run() {
@@ -127,6 +128,15 @@ fn run() -> Result<(), String> {
             } else {
                 yardsticks::sigmorphon(&lang, &data, file.as_ref())
             }
+        }
+        "bench" => {
+            let data = load(&lang)?;
+            bench::run(
+                &lang,
+                &data,
+                flag("--pos").as_deref(),
+                flag("--dump").as_deref(),
+            )
         }
         "inspect" => inspect(
             &lang,
