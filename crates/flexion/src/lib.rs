@@ -18,8 +18,8 @@ pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{DERIVED, Form, Paradigm, Relation};
 pub use sound_law;
 pub use stress::{
-    Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, carry as stress_carry,
-    place as stress_place, position as stress_position, positions as stress_positions,
+    Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,
+    position as stress_position, positions as stress_positions,
 };
 
 use std::fmt;

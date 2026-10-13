@@ -355,71 +355,6 @@ pub fn place(
     }
 }
 
-/// The accent `stress` of `before` (letters), on `after`: the same letters
-/// changed where the sound laws changed them. An accent outside what
-/// changed stays on its vowel; one on letters the laws merged goes to what
-/// they became, a circumflex where it was on the first of them and that is
-/// long (`ποιέ+ομεν` → `ποιοῦμεν`), an acute otherwise (`ποιε+όμενος` →
-/// `ποιούμενος`).
-pub fn carry(
-    orthography: &Orthography<'_>,
-    before: &str,
-    after: &str,
-    stress: Stress,
-) -> Option<Stress> {
-    if before == after {
-        return Some(stress);
-    }
-    let o = orthography;
-    let (b, a): (Vec<char>, Vec<char>) = (before.chars().collect(), after.chars().collect());
-    let head = b.iter().zip(&a).take_while(|(x, y)| x == y).count();
-    let tail = b
-        .iter()
-        .rev()
-        .zip(a.iter().rev())
-        .take_while(|(x, y)| x == y)
-        .count()
-        .min(b.len().min(a.len()).saturating_sub(head));
-    // The accented vowel's place among `before`'s letters.
-    let at = b
-        .iter()
-        .enumerate()
-        .filter(|(_, c)| o.is_vowel(**c))
-        .nth(usize::from(stress.vowel))
-        .map(|(i, _)| i)?;
-    let vowels = |cs: &[char]| cs.iter().filter(|c| o.is_vowel(**c)).count();
-    if at < head {
-        return Some(stress);
-    }
-    if at >= b.len() - tail {
-        let from_end = vowels(&b) - usize::from(stress.vowel);
-        let vowel = vowels(&a).checked_sub(from_end)?;
-        return Some(Stress {
-            vowel: u8::try_from(vowel).ok()?,
-            ..stress
-        });
-    }
-    // On merged letters: the first vowel of what they became (the second of
-    // a diphthong).
-    let p = o.prosody.as_ref()?;
-    let start: usize = a.iter().take(head).map(|c| c.len_utf8()).sum();
-    let end: usize = a.iter().take(a.len() - tail).map(|c| c.len_utf8()).sum();
-    let syllable = p
-        .syllables(o, after, false)
-        .into_iter()
-        .find(|s| s.at >= start && s.at < end)?;
-    let first = b.get(head..at).is_some_and(|cs| vowels(cs) == 0);
-    let kind = if first && syllable.long {
-        p.circumflex
-    } else {
-        p.acute
-    };
-    Some(Stress {
-        vowel: syllable.vowel,
-        kind,
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -468,21 +403,6 @@ mod tests {
             stem,
         );
         GREEK.write(letters, s, crate::Casing::Lower)
-    }
-
-    #[test]
-    fn an_accent_goes_where_its_letters_go() {
-        let carried = |before: &str, after: &str| {
-            let w = GREEK.read(before);
-            let s = carry(&GREEK, &w.letters, after, w.stress.expect("accented"));
-            GREEK.write(after, s, crate::Casing::Lower)
-        };
-        // Contraction: on the first vowel, a circumflex; on the second, an
-        // acute.
-        assert_eq!(carried("ποιέομεν", "ποιουμεν"), "ποιοῦμεν");
-        assert_eq!(carried("ποιεόμενος", "ποιουμενος"), "ποιούμενος");
-        // Elsewhere it stays on its vowel.
-        assert_eq!(carried("λέγσω", "λεξω"), "λέξω");
     }
 
     #[test]

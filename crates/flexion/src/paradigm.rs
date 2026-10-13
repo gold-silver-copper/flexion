@@ -191,18 +191,6 @@ impl<'a> Paradigm<'a> {
         self.form(family, cell) == Some(Form::Derived)
     }
 
-    /// The usual form of `cell` for these stems before any sound law, and
-    /// where its ending starts; `None` for a derived cell.
-    pub fn unlawed(
-        &self,
-        family: &[Paradigm<'a>],
-        cell: usize,
-        stems: &[&str],
-    ) -> Option<(String, usize)> {
-        let p = pattern::variants(self.pattern(family, cell)?).next()?;
-        Some((pattern::fill(p, stems), pattern::ending_start(p, stems)))
-    }
-
     /// The forms of `cell` for these stems, the usual one first, each with
     /// where its ending starts: the patterns filled, then `laws` applied at
     /// the stem's edge (see [`pattern::BOUNDARY`]) and to copied letters

@@ -30,7 +30,7 @@ pub struct Settings {
 impl Default for Settings {
     fn default() -> Self {
         Settings {
-            rule_bits: 4.0,
+            rule_bits: 1.0,
             min_gain: 2,
             smoothing: 2.0,
         }
@@ -78,7 +78,10 @@ pub fn learn<'a, L: Label + Hash + Ord>(
         }
         let list: Vec<(L, u32)> = c.iter().map(|(&l, &n)| (l, n)).collect();
         if ending.is_empty() {
-            kept.insert(ending.as_str(), flexion::blend(&list, &[], settings.smoothing));
+            kept.insert(
+                ending.as_str(),
+                flexion::blend(&list, &[], settings.smoothing),
+            );
             continue;
         }
         let total: u32 = c.values().sum();

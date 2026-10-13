@@ -648,7 +648,7 @@ fn grammar_files(
             .unwrap_or(1),
     );
     let ir = format!(
-        "//! The dictionary's forms no {one} gives, as it writes them: a line per form,\n//! the word, its cell's number (see `super::cell`) and the form, sorted by word\n//! and cell. They are the answer for that word and cell.\n\nuse flexion::Irregular;\nuse std::borrow::Cow;\n\n/// {} forms.\npub(super) const IRREGULAR: Irregular<'static> = Irregular {{\n    table: Cow::Borrowed(\n        r{hashes}\"{table}\"{hashes},\n    ),\n}};\n",
+        "//! The dictionary's forms no {one} gives, as it writes them: a line per word,\n//! sorted, the word then each listed cell's number (see `super::cell`) and its\n//! form, tab-separated. They are the answer for that word and cell.\n\nuse flexion::Irregular;\nuse std::borrow::Cow;\n\n/// {} forms.\npub(super) const IRREGULAR: Irregular<'static> = Irregular {{\n    table: Cow::Borrowed(\n        r{hashes}\"{table}\"{hashes},\n    ),\n}};\n",
         thousands(g.irregular.len())
     );
     files.push((format!("{dir}/irregular.rs"), ir));

@@ -162,9 +162,9 @@ impl Prefixes<'_> {
     }
 }
 
-/// The forms no rule gives, as a table: a line per form, `word`, tab, the
-/// cell's number, tab, `form`, sorted by word and cell. A word is as it is
-/// looked up (see [`Orthography::key`]).
+/// The forms no rule gives, as a table: a line per word, sorted, its key
+/// (see [`Orthography::key`]) then each listed cell's number and form, all
+/// tab-separated, cells in order.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Irregular<'a> {
     pub table: Cow<'a, str>,
@@ -173,16 +173,26 @@ pub struct Irregular<'a> {
 impl Irregular<'_> {
     /// The table of `forms`: `(word, cell, form)`.
     pub fn new(forms: &[(String, usize, String)]) -> Irregular<'static> {
-        let mut lines: Vec<(&str, usize, &str)> = forms
+        let mut rows: Vec<(&str, usize, &str)> = forms
             .iter()
             .map(|(w, c, f)| (w.as_str(), *c, f.as_str()))
             .collect();
-        lines.sort_unstable();
-        lines.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
-        let table = lines
-            .iter()
-            .map(|(w, c, f)| format!("{w}\t{c}\t{f}\n"))
-            .collect();
+        rows.sort_unstable();
+        rows.dedup_by(|a, b| a.0 == b.0 && a.1 == b.1);
+        let mut table = String::new();
+        for (i, (w, c, f)) in rows.iter().enumerate() {
+            let first = i == 0 || rows.get(i - 1).is_none_or(|p| p.0 != *w);
+            if first {
+                if i > 0 {
+                    table.push('\n');
+                }
+                table.push_str(w);
+            }
+            table.push_str(&format!("\t{c}\t{f}"));
+        }
+        if !table.is_empty() {
+            table.push('\n');
+        }
         Irregular {
             table: Cow::Owned(table),
         }
@@ -190,12 +200,22 @@ impl Irregular<'_> {
 
     /// Every form: `(word, cell, form)`.
     pub fn iter(&self) -> impl Iterator<Item = (&str, u16, &str)> {
-        self.table.lines().filter_map(line)
+        self.table.lines().flat_map(|line| {
+            let mut parts = line.split('\t');
+            let word = parts.next().unwrap_or("");
+            let rest: Vec<&str> = parts.collect();
+            rest.chunks(2)
+                .filter_map(move |p| match p {
+                    [c, f] => Some((word, c.parse().ok()?, *f)),
+                    _ => None,
+                })
+                .collect::<Vec<_>>()
+        })
     }
 
     /// How many forms the table lists.
     pub fn len(&self) -> usize {
-        self.table.lines().count()
+        self.iter().count()
     }
 
     pub fn is_empty(&self) -> bool {
@@ -204,16 +224,22 @@ impl Irregular<'_> {
 
     /// The form of `cell` for the word looked up as `word`, if listed.
     pub fn get(&self, word: &str, cell: u16) -> Option<&str> {
-        self.find(word, Some(cell))
+        let mut parts = self.line(word)?.split('\t').skip(1);
+        while let (Some(c), Some(f)) = (parts.next(), parts.next()) {
+            if c.parse::<u16>().ok() == Some(cell) {
+                return Some(f);
+            }
+        }
+        None
     }
 
     /// Whether the word looked up as `word` has listed forms.
     pub fn has(&self, word: &str) -> bool {
-        self.find(word, None).is_some()
+        self.line(word).is_some()
     }
 
-    /// A listed form of the word, of `cell` if given.
-    fn find(&self, word: &str, cell: Option<u16>) -> Option<&str> {
+    /// The word's line.
+    fn line(&self, word: &str) -> Option<&str> {
         let table = self.table.as_ref();
         let bytes = table.as_bytes();
         let (mut low, mut high) = (0, table.len());
@@ -230,26 +256,15 @@ impl Irregular<'_> {
                 .iter()
                 .position(|&b| b == b'\n')
                 .map_or(table.len(), |i| start + i);
-            let (w, c, f) = line(table.get(start..end)?)?;
-            match w
-                .cmp(word)
-                .then(cell.map_or(std::cmp::Ordering::Equal, |cell| c.cmp(&cell)))
-            {
+            let line = table.get(start..end)?;
+            match line.split('\t').next()?.cmp(word) {
                 std::cmp::Ordering::Less => low = end + 1,
                 std::cmp::Ordering::Greater => high = start,
-                std::cmp::Ordering::Equal => return Some(f),
+                std::cmp::Ordering::Equal => return Some(line),
             }
         }
         None
     }
-}
-
-/// A table line's word, cell and form.
-fn line(line: &str) -> Option<(&str, u16, &str)> {
-    let mut parts = line.splitn(3, '\t');
-    let word = parts.next()?;
-    let cell = parts.next()?.parse().ok()?;
-    Some((word, cell, parts.next()?))
 }
 
 /// What the caller knows about a word besides its lemma: forms of it, such
@@ -395,10 +410,27 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // A word typed without some of its marks: as listed, or as its
         // letters say.
         let mut spelled = 1.0;
+        let mut otherwise: Option<(String, f32)> = None;
         if !known.full {
             match self.spelling(&word.letters, &key) {
                 Some(letters) => word.letters = letters.to_string(),
-                None => (word.letters, spelled) = self.restore(&word.letters, &key),
+                None => {
+                    if let Some(marks) = &self.marks {
+                        let mut spellings = restorations(
+                            &self.orthography,
+                            marks,
+                            self.smoothing,
+                            &word.letters,
+                            &key,
+                        );
+                        if spellings.len() > 1 {
+                            otherwise = spellings.pop();
+                        }
+                        if let Some(first) = spellings.pop() {
+                            (word.letters, spelled) = first;
+                        }
+                    }
+                }
             }
         }
         let casing = if self.capitalized {
@@ -607,6 +639,20 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             }
             out.retain(|c| c.probability > 0.0);
             lists.push(out);
+        }
+        // The word spelled the next likeliest way, as likely as that is.
+        if let Some((letters, p)) = otherwise {
+            let typed = self.orthography.write(&letters, word.stress, casing);
+            let full = Known {
+                full: true,
+                ..*known
+            };
+            for (out, more) in lists.iter_mut().zip(self.unsharpened(&typed, cells, &full)) {
+                for mut c in more {
+                    c.probability *= p;
+                    add(out, c);
+                }
+            }
         }
         lists
     }
@@ -999,11 +1045,6 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let positions = stress::positions(o, letters);
         let finals = accent.finals(inf.reading.value.index(), cell);
         let given_at = word.stress.map(|g| stress::position(o, letters, g));
-        let unlawed = inf
-            .paradigm
-            .unlawed(&self.paradigms, cell, &inf.stems)
-            .filter(|_| self.laws.is_some())
-            .filter(|_| std::env::var("FLEXION_OFF").map_or(true, |v| !v.contains("carry")));
         let mut out: Vec<(Option<crate::Stress>, f32)> = Vec::new();
         // The form's letters, to place the stress in.
         for (reading, places) in classes {
@@ -1025,15 +1066,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .vowel
                     .and_then(|v| positions.checked_sub(1)?.checked_sub(usize::from(v))),
             };
-            // Placed before the sound laws, and carried through them
-            // (`ποιέ+ομεν` → `ποιοῦμεν`).
-            let s = match &unlawed {
-                Some((before, at)) if before != form => {
-                    stress::place(o, before, *at, finals, place, k.unwrap_or(0))
-                        .and_then(|s| stress::carry(o, before, form, s))
-                }
-                _ => stress::place(o, form, ending, finals, place, k.unwrap_or(0)),
-            };
+            let s = stress::place(o, form, ending, finals, place, k.unwrap_or(0));
             match out.iter_mut().find(|e| e.0 == s) {
                 Some(e) => e.1 += reading.probability,
                 None => out.push((s, reading.probability)),
@@ -1056,31 +1089,63 @@ pub fn restore(
     letters: &str,
     key: &str,
 ) -> (String, f32) {
+    let mut spellings = restorations(orthography, marks, smoothing, letters, key);
+    if spellings.is_empty() {
+        return (letters.to_string(), 1.0);
+    }
+    spellings.swap_remove(0)
+}
+
+/// The likeliest spelling (see [`restore`]), and the next likeliest, the
+/// letter it is least sure of written otherwise, if that is at least a
+/// tenth as likely.
+pub fn restorations(
+    orthography: &Orthography<'_>,
+    marks: &Choice<'_, char>,
+    smoothing: f32,
+    letters: &str,
+    key: &str,
+) -> Vec<(String, f32)> {
     let o = orthography;
     let mut p = 1.0;
-    let mut out = String::with_capacity(letters.len().saturating_add(8));
+    let mut out: Vec<char> = Vec::with_capacity(letters.len());
+    // The letter least sure of: where, what else, and how much less likely.
+    let mut doubt: Option<(usize, char, f32)> = None;
     let mut before = WORD_END;
     for ((i, k), c) in key.char_indices().zip(letters.chars()) {
         let markable = c == k && o.folded.iter().any(|e| e.1 == c);
         let around = format!("{before}{}{WORD_END}", key.get(i..).unwrap_or(""));
         before = k;
-        let reading = markable
-            .then(|| {
-                marks
-                    .read(&around, smoothing, |m| o.fold(m) == c)
-                    .into_iter()
-                    .next()
-            })
-            .flatten();
-        match reading {
-            Some(r) => {
-                out.push(r.value);
-                p *= r.probability;
+        let readings = if markable {
+            marks.read(&around, smoothing, |m| o.fold(m) == c)
+        } else {
+            Vec::new()
+        };
+        match readings.as_slice() {
+            [first, rest @ ..] => {
+                out.push(first.value);
+                p *= first.probability;
+                if let Some(second) = rest.first()
+                    && first.probability > 0.0
+                {
+                    let ratio = second.probability / first.probability;
+                    if doubt.is_none_or(|d| ratio > d.2) {
+                        doubt = Some((out.len() - 1, second.value, ratio));
+                    }
+                }
             }
-            None => out.push(c),
+            [] => out.push(c),
         }
     }
-    (out, p)
+    let mut spellings = vec![(out.iter().collect(), p)];
+    if let Some((at, other, ratio)) = doubt.filter(|d| d.2 >= 0.1) {
+        let mut alt = out.clone();
+        if let Some(slot) = alt.get_mut(at) {
+            *slot = other;
+        }
+        spellings.push((alt.into_iter().collect(), p * ratio));
+    }
+    spellings
 }
 
 /// A form the dictionary lists.

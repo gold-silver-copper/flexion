@@ -1713,10 +1713,9 @@ fn accent<'s>(
     shape: &Shape,
     settings: Settings,
 ) -> (Accent<'s, u16>, HashMap<String, u16>) {
-    // Per word: per cell, its accent, letters and where the ending starts,
-    // and the same before the sound laws; and where its lemma accents its
-    // stem.
-    type Fact = (flexion::Stress, String, usize, Option<(String, usize)>);
+    // Per word: per cell, its accent, letters and where the ending starts;
+    // and where its lemma accents its stem.
+    type Fact = (flexion::Stress, String, usize);
     let mut facts: Vec<(u16, Vec<Option<Fact>>, Option<usize>)> = Vec::with_capacity(words.len());
     for (w, &p) in words.iter().zip(assignment) {
         let Some(par) = paradigms.get(usize::from(p)) else {
@@ -1728,12 +1727,8 @@ fn accent<'s>(
         let cells: Vec<Option<Fact>> = (0..shape.cells)
             .map(|c| {
                 let f = form(c)?;
-                let (built, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
-                let before = par
-                    .unlawed(paradigms, c, &stems)
-                    .filter(|(b, _)| *b != built)
-                    .filter(|_| !crate::off("carry"));
-                Some((f.stress?, f.letters.clone(), ending, before))
+                let (_, ending) = par.built(paradigms, laws, c, &stems).into_iter().next()?;
+                Some((f.stress?, f.letters.clone(), ending))
             })
             .collect();
         // The lemma's accent; else where the cells accented before their
@@ -1748,7 +1743,7 @@ fn accent<'s>(
                 .map(|s| flexion::stress_position(orthography, &f.letters, s)),
             None => {
                 let mut votes: BTreeMap<usize, u32> = BTreeMap::new();
-                for (s, letters, ending, _) in cells.iter().flatten() {
+                for (s, letters, ending) in cells.iter().flatten() {
                     if vowel_at(orthography, letters, s.vowel) < *ending {
                         *votes
                             .entry(flexion::stress_position(orthography, letters, *s))
@@ -1760,24 +1755,16 @@ fn accent<'s>(
         };
         facts.push((p, cells, stem));
     }
-    // Placed before the sound laws, and carried through them.
     let explains = |fact: &Fact, finals: Finals, place: Place, stem: Option<usize>| {
-        let at = |letters: &str, ending: usize| {
-            flexion::stress_place(
+        (place != Place::Stem || stem.is_some())
+            && flexion::stress_place(
                 orthography,
-                letters,
-                ending,
+                &fact.1,
+                fact.2,
                 finals,
                 place,
                 stem.unwrap_or(0),
-            )
-        };
-        let placed = match &fact.3 {
-            Some((before, ending)) => at(before, *ending)
-                .and_then(|s| flexion::stress_carry(orthography, before, &fact.1, s)),
-            None => at(&fact.1, fact.2),
-        };
-        (place != Place::Stem || stem.is_some()) && placed == Some(fact.0)
+            ) == Some(fact.0)
     };
     let explained = |fact: &Fact, long: bool, stem: Option<usize>| {
         [false, true].iter().any(|&circumflex| {
