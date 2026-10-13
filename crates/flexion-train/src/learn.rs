@@ -1233,10 +1233,10 @@ fn paradigms<'s>(
         }
         chosen.push(best.3);
     }
-    // A paradigm is kept where it pays for itself (see `crate::bits`): from
-    // the one with fewest words up, its words go to the paradigm that builds
-    // the most of their forms when listing the forms it doesn't build costs
-    // less than stating the paradigm.
+    // A paradigm of more than one word is kept where it pays for itself (see
+    // `crate::bits`): from the one with fewest words up, its words go to the
+    // paradigm that builds the most of their forms when listing the forms it
+    // doesn't build costs less than stating the paradigm.
     let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
     for w in words {
         for f in w.cells.iter().flatten() {
@@ -1294,7 +1294,8 @@ fn paradigms<'s>(
                 moves.push((i, b.1));
             }
         }
-        if moves.len() == mine.len() && listed < stated {
+        // One word's own table generalizes to no other: its word is listed.
+        if moves.len() == mine.len() && (listed < stated || mine.len() < 2) {
             for (i, cand) in moves {
                 if let Some(slot) = chosen.get_mut(i) {
                     *slot = cand;
