@@ -265,6 +265,7 @@ mod tests {
             inherent: Cow::Borrowed(&[]),
             table: Cow::Borrowed(table),
             stems: Cow::Borrowed(stems),
+            reads: None,
         };
         let family = [
             paradigm("~ω\tἐ~ξα\t~ξω\t~ξαι\t", "", None),

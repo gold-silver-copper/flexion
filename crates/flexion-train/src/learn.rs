@@ -52,6 +52,8 @@ pub struct Learned<'s> {
     /// How often the paradigm rules' productivity verdicts agree across the
     /// vocabularies they are judged on.
     pub stability: f64,
+    /// The views paradigms may read their parents through (see [`View`]).
+    pub views: Vec<View>,
 }
 
 /// Counts for the report.
@@ -546,8 +548,9 @@ pub fn learn<'s>(
         .collect();
     let all_tables = grammar.tables.to_vec();
     let mut used: Vec<usize> = Vec::new();
+    let views = views(shape);
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
-        inherit(paradigms, &grammar.relations);
+        inherit(paradigms, &grammar.relations, &views);
         used = crate::stems::state(
             paradigms,
             &grammar.slots,
@@ -582,6 +585,7 @@ pub fn learn<'s>(
         laws,
         stats,
         stability,
+        views,
     }
 }
 
@@ -601,15 +605,75 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
     Some((first_key.to_string(), how))
 }
 
-/// Make each paradigm like the earlier (commoner) one it shares the most
-/// cells with, when that is at least half of them: its own table keeps only
-/// the cells that differ. Every paradigm still has the same forms.
-///
-/// A cell a relation copies from another, unchanged, needn't be written
-/// where the paradigm writes the same in both: it is derived (the passive
-/// is the middle), where it writes the usual form only (not one with
-/// alternatives).
-fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
+/// A view: a cell order in which each cell reads another of the same
+/// part of speech (one feature's value read as another's, `act_as_pass`),
+/// named after the value names it swaps.
+pub type View = (String, Vec<u16>);
+
+/// The views one value of one of the cells' features read as another make
+/// (see [`View`]): each cell with the first value reads the cell like it
+/// but for that value.
+fn views(shape: &Shape) -> Vec<View> {
+    let at = |c: usize| shape.coordinates.get(c).map_or(&[][..], Vec::as_slice);
+    let dims = shape.coordinates.iter().map(Vec::len).max().unwrap_or(0);
+    let mut out: Vec<View> = Vec::new();
+    for k in 0..dims {
+        let mut values: Vec<u16> = (0..shape.cells)
+            .filter_map(|c| at(c).get(k).copied())
+            .filter(|&v| v != u16::MAX)
+            .collect();
+        values.sort_unstable();
+        values.dedup();
+        for &a in &values {
+            for &b in values.iter().filter(|&&b| b != a) {
+                let map: Vec<u16> = (0..shape.cells)
+                    .map(|c| {
+                        let mut target = at(c).to_vec();
+                        if target.get(k) != Some(&a) {
+                            return c;
+                        }
+                        if let Some(slot) = target.get_mut(k) {
+                            *slot = b;
+                        }
+                        (0..shape.cells)
+                            .find(|&d| at(d) == target.as_slice())
+                            .unwrap_or(c)
+                    })
+                    .filter_map(|c| u16::try_from(c).ok())
+                    .collect();
+                // Named by the name parts the first cell it moves changes.
+                let Some((from, to)) = map
+                    .iter()
+                    .enumerate()
+                    .find(|&(c, &d)| usize::from(d) != c)
+                    .and_then(|(c, &d)| {
+                        Some((shape.names.get(c)?, shape.names.get(usize::from(d))?))
+                    })
+                else {
+                    continue;
+                };
+                let parts = |n: &str| n.split('_').map(str::to_string).collect::<Vec<_>>();
+                let (x, y) = (parts(from), parts(to));
+                let name = x
+                    .iter()
+                    .zip(&y)
+                    .find(|(p, q)| p != q)
+                    .map_or_else(String::new, |(p, q)| format!("{p}_as_{q}"));
+                if !name.is_empty() && !out.iter().any(|v| v.1 == map) {
+                    out.push((name, map));
+                }
+            }
+        }
+    }
+    out
+}
+
+/// Each paradigm made like the earlier paradigm (with as many stem pieces)
+/// it shares the most cells with, read as it is or through a view (see
+/// [`View`]), if that is at least half of its own: it then writes only the
+/// cells that differ. Cells that are a copy of another (by a relation) are
+/// derived.
+fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>], views: &[View]) {
     let copied: Vec<(usize, usize, bool)> = relations
         .iter()
         .filter(|r| r.analogy.is_none() && r.changes.iter().all(|(old, new)| old == new))
@@ -641,22 +705,30 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
         let (Some(mine), Some(&my_pieces)) = (cells.get(i), pieces.get(i)) else {
             continue;
         };
-        let shared = |j: usize| {
+        // The parent's cell `c` reads, through view `v`.
+        let read = |v: Option<usize>, c: usize| {
+            v.and_then(|v| views.get(v)?.1.get(c))
+                .map_or(c, |&d| usize::from(d))
+        };
+        let shared = |j: usize, v: Option<usize>| {
             cells.get(j).map_or(0, |theirs| {
                 mine.iter()
-                    .zip(theirs)
-                    .filter(|(a, b)| a == b && !a.is_empty())
+                    .enumerate()
+                    .filter(|&(c, a)| !a.is_empty() && theirs.get(read(v, c)) == Some(a))
                     .count()
             })
         };
         let filled = mine.iter().filter(|c| !c.is_empty()).count();
+        let ways = std::iter::once(None).chain((0..views.len()).map(Some));
         let parent = (0..i)
             .filter(|&j| pieces.get(j) == Some(&my_pieces))
-            .map(|j| (shared(j), std::cmp::Reverse(j)))
-            .max()
-            .filter(|&(n, _)| n > 0 && 2 * n >= filled)
-            .map(|(_, std::cmp::Reverse(j))| j);
-        let theirs = parent.and_then(|j| cells.get(j));
+            .flat_map(|j| ways.clone().map(move |v| (j, v)))
+            .map(|(j, v)| (shared(j, v), v.is_none(), std::cmp::Reverse(j), v))
+            .max_by_key(|&(n, plain, j, _)| (n, plain, j))
+            .filter(|&(n, ..)| n > 0 && 2 * n >= filled)
+            .map(|(_, _, std::cmp::Reverse(j), v)| (j, v));
+        let view = parent.and_then(|(_, v)| v);
+        let theirs = parent.and_then(|(j, _)| cells.get(j));
         // A cell like the parent's isn't written; like no other, nor are
         // its derived cells.
         let table: String = mine
@@ -664,12 +736,15 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>]) {
             .enumerate()
             .take(mine.len().saturating_sub(1))
             .map(|(c, m)| match theirs {
-                Some(t) if t.get(c) == Some(m) => "\t".to_string(),
+                Some(t) if t.get(read(view, c)) == Some(m) => "\t".to_string(),
                 None if m == DERIVED => "\t".to_string(),
                 _ => format!("{m}\t"),
             })
             .collect();
-        paradigm.parent = parent.and_then(|j| u16::try_from(j).ok());
+        paradigm.parent = parent.and_then(|(j, _)| u16::try_from(j).ok());
+        paradigm.reads = view
+            .and_then(|v| views.get(v))
+            .map(|v| Cow::Owned(v.1.clone()));
         paradigm.table = Cow::Owned(table);
     }
 }
@@ -1486,6 +1561,7 @@ fn paradigms<'s>(
             inherent: Cow::Borrowed(&[]),
             table: Cow::Owned(table),
             stems: Cow::Borrowed(""),
+            reads: None,
         })
     });
     let id = |c: usize| order.iter().position(|e| e.0 == c);

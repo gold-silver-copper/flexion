@@ -446,7 +446,7 @@ fn grammar_files(
             .collect();
         let _ = writeln!(
             p,
-            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n"
+            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
         );
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
             let _ = writeln!(
@@ -479,6 +479,28 @@ fn grammar_files(
         .iter()
         .map(|v| format!("        {ty}::{v},\n"))
         .collect();
+    // The views paradigms read their parents through, each once.
+    let mut used: Vec<&crate::learn::View> = Vec::new();
+    for par in g.paradigms.iter() {
+        if let Some(v) = par
+            .reads
+            .as_ref()
+            .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
+            && !used.iter().any(|u| u.0 == v.0)
+        {
+            used.push(v);
+        }
+    }
+    for (name, map) in used {
+        let cells: Vec<String> = map.iter().map(u16::to_string).collect();
+        let _ = writeln!(
+            p,
+            "/// A view: per cell (in the cells' order), the cell of the {one} it is\n/// like that it reads (`{name}`: one value read as another).\nconst {}: [u16; {}] = [{}];\n",
+            name.to_uppercase(),
+            map.len(),
+            cells.join(", ")
+        );
+    }
     let _ = write!(
         p,
         "/// Every {one} learned.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum {ty} {{\n{enumerated}}}\n\nimpl {ty} {{\n    /// Every {one}, in order.\n    pub const ALL: [{ty}; {n}] = [\n{all}    ];\n\n    /// Its table.\n    pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {{\n        {many_}.get(self as usize)\n    }}\n}}\n\n{}pub(super) static {many_}: [Paradigm<'static>; {n}] = [\n",
@@ -550,7 +572,14 @@ fn grammar_files(
             } else {
                 format!(", [{}]", values.join(", "))
             },
-            parent.map_or(String::new(), |q| format!(", like {q}"))
+            parent.map_or(String::new(), |q| {
+                let view = par
+                    .reads
+                    .as_ref()
+                    .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
+                    .map_or(String::new(), |v| format!(" as {}", v.0.to_uppercase()));
+                format!(", like {q}{view}")
+            })
         );
         // The slots it states with a stem and an ending table.
         for (slot, entry) in g.slots.iter().zip(par.stems.split('\t')) {

@@ -36,6 +36,10 @@ pub struct Paradigm<'a> {
     /// `λυω`'s table builds it). A cell its own table leaves empty is its
     /// slot's, where it states one.
     pub stems: Cow<'a, str>,
+    /// The cell of its parent each of its cells reads where that is another
+    /// (a deponent's active cells read as its parent's passive ones), by the
+    /// cells' order; `None`: each the same cell.
+    pub reads: Option<Cow<'a, [u16]>>,
 }
 
 /// A part of speech's stem slots and ending tables, which paradigms state
@@ -191,15 +195,26 @@ impl<'a> Paradigm<'a> {
     /// what they state through stem slots (see [`Paradigm::pattern_in`]);
     /// `None` for a derived cell (and one no paradigm up the line writes).
     pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
-        let parent = |p: &&'s Paradigm<'a>| family.get(usize::from(p.parent?));
+        let (mut p, mut cell) = (self, cell);
         // Parents come before their children, so this ends.
-        let form = std::iter::successors(Some(self), parent)
-            .take(family.len() + 1)
-            .find_map(|p| p.own(cell));
-        match form {
-            Some(Form::Pattern(p)) => Some(p),
-            Some(Form::Derived) | None => None,
+        for _ in 0..=family.len() {
+            match p.own(cell) {
+                Some(Form::Pattern(pattern)) => return Some(pattern),
+                Some(Form::Derived) => return None,
+                None => {}
+            }
+            cell = p.read(cell);
+            p = family.get(usize::from(p.parent?))?;
         }
+        None
+    }
+
+    /// The cell of its parent its `cell` reads (see [`Paradigm::reads`]).
+    pub fn read(&self, cell: usize) -> usize {
+        self.reads
+            .as_ref()
+            .and_then(|r| r.get(cell))
+            .map_or(cell, |&c| usize::from(c))
     }
 
     /// The cell's pattern (all its alternatives): its own table's, else its
@@ -212,9 +227,9 @@ impl<'a> Paradigm<'a> {
         space: Space<'_, '_>,
         cell: usize,
     ) -> Option<Cow<'s, str>> {
-        let parent = |p: &&'s Paradigm<'a>| family.get(usize::from(p.parent?));
+        let (mut p, mut cell) = (self, cell);
         // Parents come before their children, so this ends.
-        for p in std::iter::successors(Some(self), parent).take(family.len() + 1) {
+        for _ in 0..=family.len() {
             match p.own(cell) {
                 Some(Form::Pattern(pattern)) => return Some(Cow::Borrowed(pattern)),
                 Some(Form::Derived) => return None,
@@ -223,6 +238,8 @@ impl<'a> Paradigm<'a> {
             if let Some(pattern) = p.stated(space, cell) {
                 return Some(Cow::Owned(pattern));
             }
+            cell = p.read(cell);
+            p = family.get(usize::from(p.parent?))?;
         }
         None
     }
