@@ -260,7 +260,7 @@ pub fn unseen<P: Label, A: Label, F: Label>(
 
 /// The sharpness (see [`flexion::Grammar::sharpness`]) that makes `grammar`'s
 /// stated probabilities match how often its answers are right on `words`
-/// (held out, typed as their headwords and in full): the one, of a grid from 0.5 to 4,
+/// (held out, typed as their headwords): the one, of a grid from 0.5 to 4,
 /// with the smallest calibration error.
 pub fn fit_sharpness<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
@@ -269,23 +269,18 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
 ) -> f32 {
     // Every scored form's candidates: (probability, right) each.
     let mut forms: Vec<Vec<(f32, bool)>> = Vec::new();
+    // From the headword, as the grammar is most often asked (and scored).
     for l in words {
-        for (typed, full) in [(l.full.as_str(), true), (l.lemma.as_str(), false)] {
-            let known = flexion::Known {
-                full,
-                ..flexion::Known::default()
+        let table = grammar.table(&l.lemma, &flexion::Known::default());
+        for (cell, fs) in l.cells.iter().enumerate() {
+            let Some(want) = fs.first() else {
+                continue;
             };
-            let table = grammar.table(typed, &known);
-            for (cell, fs) in l.cells.iter().enumerate() {
-                let Some(want) = fs.first() else {
-                    continue;
-                };
-                let c = table.get(cell).map_or(&[][..], Vec::as_slice);
-                let scored = c
-                    .iter()
-                    .map(|c| (c.probability, same_form(orthography, &c.form, want)));
-                forms.push(scored.collect());
-            }
+            let c = table.get(cell).map_or(&[][..], Vec::as_slice);
+            let scored = c
+                .iter()
+                .map(|c| (c.probability, same_form(orthography, &c.form, want)));
+            forms.push(scored.collect());
         }
     }
     let error = |power: f32| {

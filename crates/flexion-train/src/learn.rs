@@ -380,14 +380,19 @@ pub fn learn<'s>(
     }
     // Words made of others (`hineinlassen`, `диван-кровать`) are checked
     // once the words they are made of have their irregular forms.
-    let made = |w: &Word| {
-        w.key.contains('-')
-            || grammar
-                .prefixes
-                .as_ref()
-                .and_then(|p| p.split(&w.key))
-                .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
-    };
+    let made: crate::HashSet<&str> = all_words
+        .iter()
+        .filter(|w| {
+            w.key.contains('-')
+                || grammar
+                    .prefixes
+                    .as_ref()
+                    .and_then(|p| p.split(&w.key))
+                    .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
+        })
+        .map(|w| w.key.as_str())
+        .collect();
+    let made = |w: &Word| made.contains(w.key.as_str());
     // A word's listed forms are its principal parts: the forms no relation
     // tells from another listed one. The forms told wrong are listed too.
     let wrong = irregular(&grammar, all_lexemes, all_words, |w| !made(w));
@@ -397,22 +402,24 @@ pub fn learn<'s>(
         }
     }
     let mut irregular = roots(&grammar, &wrong);
-    grammar.irregular = flexion::Irregular::new(&irregular);
-    for _ in 0..ROUNDS {
-        let listed: crate::HashSet<String> = irregular.iter().map(|(k, _, _)| k.clone()).collect();
-        let more = self::irregular(&grammar, all_lexemes, all_words, |w| {
-            !made(w) && listed.contains(&w.key)
-        });
-        if more.is_empty() {
-            break;
-        }
-        irregular.extend(more);
-        irregular.sort();
-        grammar.irregular = flexion::Irregular::new(&irregular);
-    }
-    irregular.extend(self::irregular(&grammar, all_lexemes, all_words, made));
-    irregular.sort();
-    grammar.irregular = flexion::Irregular::new(&irregular);
+    let mut unsure: crate::HashSet<String> = wrong.into_iter().map(|(k, _, _)| k).collect();
+    settle(
+        &mut grammar,
+        &mut irregular,
+        all_lexemes,
+        all_words,
+        &unsure,
+    );
+    let made_wrong = self::irregular(&grammar, all_lexemes, all_words, made);
+    unsure.extend(made_wrong.iter().map(|(k, _, _)| k.clone()));
+    irregular.extend(made_wrong);
+    settle(
+        &mut grammar,
+        &mut irregular,
+        all_lexemes,
+        all_words,
+        &unsure,
+    );
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         inherit(paradigms, &grammar.relations);
     }
@@ -1327,7 +1334,30 @@ fn inherent(words: &[Word], assignment: &[u16], paradigms: &mut [Paradigm<'_>]) 
 
 /// How many times the forms derivations from listed forms get wrong are
 /// listed, at most.
-const ROUNDS: usize = 3;
+const ROUNDS: usize = 8;
+
+/// Lists `irregular` in `grammar`, then, while the words of `keys` have
+/// forms told wrong from their listed ones (or their accent misplaced),
+/// those too.
+fn settle(
+    grammar: &mut Grammar<'_, u16, u16, u8>,
+    irregular: &mut Vec<(String, usize, String)>,
+    lexemes: &[Lexeme],
+    words: &[Word],
+    keys: &crate::HashSet<String>,
+) {
+    for _ in 0..ROUNDS {
+        irregular.sort();
+        grammar.irregular = flexion::Irregular::new(irregular);
+        let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key));
+        if more.is_empty() {
+            return;
+        }
+        irregular.extend(more);
+    }
+    irregular.sort();
+    grammar.irregular = flexion::Irregular::new(irregular);
+}
 
 /// Whether relation `r` tells the forms of the words whose form of the cell
 /// it comes from is `wrong` (sorted) right as often as their paradigm does.

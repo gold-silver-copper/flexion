@@ -10,7 +10,7 @@ use std::borrow::Cow;
 
 /// The words a pair of cells is scored on, at most: those with the most
 /// forms.
-const SAMPLE: usize = 300;
+const SAMPLE: usize = 3000;
 /// The fewest words a change of an ending is learned from.
 const MIN_WORDS: usize = 2;
 /// The most letters a change reaches past the shared run, at each edge.
