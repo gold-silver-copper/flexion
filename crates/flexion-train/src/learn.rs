@@ -774,11 +774,16 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>], views: &[
             v.and_then(|v| views.get(v)?.1.get(c))
                 .map_or(c, |&d| usize::from(d))
         };
+        // A derived cell is told from its own source: read through a view,
+        // it is no other cell's.
+        let like = |theirs: &[String], v: Option<usize>, c: usize, m: &String| {
+            theirs.get(read(v, c)) == Some(m) && (v.is_none() || m != DERIVED)
+        };
         let shared = |j: usize, v: Option<usize>| {
             cells.get(j).map_or(0, |theirs| {
                 mine.iter()
                     .enumerate()
-                    .filter(|&(c, a)| !a.is_empty() && theirs.get(read(v, c)) == Some(a))
+                    .filter(|&(c, a)| !a.is_empty() && like(theirs, v, c, a))
                     .count()
             })
         };
@@ -800,7 +805,7 @@ fn inherit(paradigms: &mut [Paradigm<'_>], relations: &[Relation<'_>], views: &[
             .enumerate()
             .take(mine.len().saturating_sub(1))
             .map(|(c, m)| match theirs {
-                Some(t) if t.get(read(view, c)) == Some(m) => "\t".to_string(),
+                Some(t) if like(t, view, c, m) => "\t".to_string(),
                 None if m == DERIVED => "\t".to_string(),
                 _ => format!("{m}\t"),
             })
