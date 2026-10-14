@@ -25,13 +25,6 @@ pub fn all() -> Vec<Language> {
         latin::language(),
         ancient_greek::language(),
         sanskrit::language(),
-    ]
-}
-
-/// Every configured language, built or not.
-pub fn every() -> Vec<Language> {
-    let mut every = all();
-    every.extend([
         polish::language(),
         german::language(),
         spanish::language(),
@@ -39,11 +32,10 @@ pub fn every() -> Vec<Language> {
         italian::language(),
         finnish::language(),
         turkish::language(),
-    ]);
-    every
+    ]
 }
 
-/// A configured language by crate name, built or not.
+/// A configured language by crate name.
 pub fn by_name(name: &str) -> Option<Language> {
-    every().into_iter().find(|l| l.name == name)
+    all().into_iter().find(|l| l.name == name)
 }

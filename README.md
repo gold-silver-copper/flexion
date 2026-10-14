@@ -19,11 +19,13 @@ for c in Noun::new("бокр").candidates((Case::Accusative, Number::Singular)) 
 // (inanimate, or animate: say which with `.animacy(…)`, and the guess is gone)
 ```
 
-Five languages are built from the same trainer, with nothing language-specific in the
+Twelve languages are built from the same trainer, with nothing language-specific in the
 trainer or the runtime: [English](languages/english), [Russian](languages/russian),
-[Latin](languages/latin), [Ancient Greek](languages/ancient-greek) and
-[Sanskrit](languages/sanskrit). Configs for Polish, German, Spanish, French and Italian
-are kept in `crates/flexion-configs`; `cargo xtask build german` builds one.
+[Latin](languages/latin), [Ancient Greek](languages/ancient-greek),
+[Sanskrit](languages/sanskrit), [Polish](languages/polish), [German](languages/german),
+[Spanish](languages/spanish), [French](languages/french), [Italian](languages/italian),
+[Finnish](languages/finnish) and [Turkish](languages/turkish). Each is a config in
+`crates/flexion-configs`; `cargo xtask build german` rebuilds one.
 
 ## How well it does
 
@@ -57,6 +59,26 @@ version of these crates before PR #10 (a model, not a grammar), from the bare le
 | sanskrit | noun | **92.10%** ± 2.2 | 92.10% |  | 97.30% | 92.10% (13801) |  | 91.70% | 93.55% | 100.00% | 0.017 |
 | sanskrit | adjective | **92.00%** ± 3.9 | 92.00% |  |  | 92.06% (13447) | 11.11% (9) | 89.95% | 91.21% | 100.00% | 0.022 |
 | sanskrit | verb | **90.05%** ± 6.3 | 90.05% | 90.77% |  | 90.45% (6953) | 80.28% (284) | 90.01% | 90.13% | 100.00% | 0.054 |
+| polish | noun | **93.91%** ± 0.7 | 93.91% | 96.09% | 96.49% | 93.92% (48466) | 62.50% (16) | 93.78% |  | 100.00% | 0.004 |
+| polish | adjective | **99.95%** ± 0.1 | 99.95% |  |  | 99.95% (83790) |  | 99.99% |  | 100.00% | 0.001 |
+| polish | verb | **96.66%** ± 1.0 | 96.66% | 97.99% | 96.82% | 96.67% (55069) | 93.75% (128) | 96.84% |  | 100.00% | 0.010 |
+| german | noun | **94.22%** ± 0.6 | 94.22% | 98.62% | 94.59% | 94.22% (46353) |  | 94.71% |  | 100.00% | 0.005 |
+| german | adjective | **98.78%** ± 0.6 | 98.78% | 99.82% |  | 98.78% (126633) |  | 99.01% |  | 100.00% | 0.004 |
+| german | verb | **95.20%** ± 1.3 | 95.20% | 95.88% | 95.22% | 95.19% (51549) | 100.00% (50) | 73.53% |  | 100.00% | 0.013 |
+| spanish | noun | **99.31%** ± 0.2 | 99.31% |  | 99.31% | 99.31% (12164) |  | 99.31% |  | 100.00% | 0.002 |
+| spanish | adjective | **98.80%** ± 0.4 | 98.80% | 99.79% |  | 98.80% (9619) |  | 98.93% |  | 100.00% | 0.003 |
+| spanish | verb | **98.90%** ± 0.7 | 98.90% | 99.71% |  | 98.90% (67865) |  | 99.20% |  | 100.00% | 0.004 |
+| french | noun | **98.78%** ± 0.3 | 98.78% |  | 98.78% | 98.78% (8636) |  | 98.51% |  | 100.00% | 0.003 |
+| french | adjective | **98.11%** ± 0.6 | 98.11% | 99.97% |  | 98.14% (7354) | 0.00% (2) | 98.29% |  | 100.00% | 0.006 |
+| french | verb | **98.78%** ± 0.8 | 98.78% | 99.36% |  | 98.78% (35550) |  | 99.30% |  | 100.00% | 0.007 |
+| french | participle | **99.88%** ± 0.3 | 99.88% |  |  | 99.88% (2508) |  | 99.64% |  | 100.00% | 0.004 |
+| italian | noun | **97.91%** ± 0.4 | 97.91% |  | 98.19% | 97.91% (12784) |  | 97.54% |  | 100.00% | 0.003 |
+| italian | adjective | **98.84%** ± 0.4 | 98.84% | 99.87% |  | 98.84% (10530) | 100.00% (5) | 98.84% |  | 100.00% | 0.007 |
+| italian | verb | **97.42%** ± 0.9 | 97.42% | 98.13% | 99.05% | 97.42% (71585) | 100.00% (1) | 99.24% |  | 100.00% | 0.021 |
+| italian | participle | **100.00%** ± 0.0 | 100.00% |  |  | 100.00% (3284) |  | 100.00% |  | 100.00% | 0.000 |
+| finnish | noun | **92.49%** ± 0.5 | 92.49% |  |  | 92.51% (1912243) | 8.49% (365) | 98.30% |  | 93.26% | 0.011 |
+| finnish | adjective | **97.50%** ± 0.7 | 97.50% |  |  | 97.50% (46113) | 33.33% (3) | 97.51% |  | 100.00% | 0.008 |
+| turkish | noun | **96.53%** ± 1.1 | 96.53% |  |  | 96.53% (72174) |  | 93.37% |  | 100.00% | 0.012 |
 
 Where the grammar is below the baseline or the floor, and why:
 
@@ -79,6 +101,13 @@ Where the grammar is below the baseline or the floor, and why:
   takes it from 92.1% to 97.3%. The verbs are small (a tenth is ~300 words): over all ten
   tenths they score 87.8% ± 1.6, the tenths ranging from 84.5% to 91.3%. Few full perfect
   tables leave the reduplicated perfect unlearned.
+- **Finnish nouns** are learned from the 6,000 commonest (Durrett & DeNero found that
+  enough), but the dictionary has ~116,000: the floor, learned from all of them, knows
+  the last part of far more compounds (98.3% against 92.5%), and the dictionary's own
+  words beyond the 6,000 aren't listed, so 6.7% of their forms come back wrong.
+- **Italian verbs** (97.4% against the floor's 99.2%), and by less than a point Spanish
+  and French verbs, German nouns and Polish verbs, are below the floor: not looked into
+  yet.
 - **Russian** has no stress any more (stripped from input, never written), so its
   numbers aren't comparable with the baseline's, which placed stress.
 
@@ -211,6 +240,13 @@ grammar was learned from and on held-out words:
 | latin | 2.0 | 5 | 785 | 61 | 21 / 23 µs | 32 / 40 µs |
 | ancient-greek | 4.7 | 6 | 855 | 73 | 44 / 81 µs | 52 / 146 µs |
 | sanskrit | 0.9 | 2 | 441 | 38 | 5 / 7 µs | 19 / 25 µs |
+| polish | 1.7 | 4 | 693 | 55 | 13 / 25 µs | 13 / 17 µs |
+| german | 2.7 | 11 | 1024 | 64 | 12 / 22 µs | 16 / 24 µs |
+| spanish | 1.6 | 6 | 794 | 43 | 4 / 4 µs | 9 / 12 µs |
+| french | 0.4 | 2 | 339 | 40 | 4 / 4 µs | 6 / 6 µs |
+| italian | 1.4 | 3 | 506 | 49 | 4 / 4 µs | 6 / 11 µs |
+| finnish | 1.1 | 2 | 484 | 26 | 16 / 16 µs | adjectives 10 / 11 µs |
+| turkish | 0.3 | 1 | 226 | 20 | 8 / 9 µs | adjectives 5 / 5 µs |
 
 Ancient Greek's verbs, 624 cells each, are most of its size: their paradigms (1.2 MB,
 292 conjugations) and their irregular forms (1.0 MB: 1,827 listed stems with the ending

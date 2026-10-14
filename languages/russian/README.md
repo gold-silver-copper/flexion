@@ -43,29 +43,25 @@ Russian entries. Each part of speech is a module under `src/`, and has what its
 grammar needs of:
 
 - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that
-  follows it, with a pattern per form (`~а`: the stem, then `а`; `derived`: another
-  cell's form, changed);
+  follows it, with a pattern per form (`~`: the stem, then what follows it;
+  `derived`: another cell's form, changed);
 - `relations.rs`: which cell each cell's form is told from, and the rules on that
   form's ending that change it;
 - `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a
-  tier, on a copied letter, or on a class letter an ending writes: harmony), each with the
-  words whose forms it gives and the forms it gets wrong;
-- `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of
-  the dictionary's words with that ending follow each paradigm, and the words no rule
-  gets right, listed;
-- `accent.rs`: per cell, which rule places the accent, and which words have which
-  pattern;
-- `prefixes.rs`: prefixes a word inflects behind, separable or not;
+  tier, on a copied letter, or on a class letter an ending writes: harmony), each
+  with the words whose forms it gives and the forms it gets wrong;
+- `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many
+  of the dictionary's words with that ending follow each paradigm, and the words no
+  rule gets right, listed;
 - `compounds.rs`: whether a word written in parts inflects each part;
-- `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,
-  `ё`) is spelled;
+- `spellings.rs`: the words whose spelling their typed form doesn't show;
 - `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the
   words that put different stems in different cells) and the ending tables paradigms
-  share over a slot (`ἐ~ᾰ`, `~ω`), each named after its commonest word;
+  share over a slot, each named after its commonest word;
 - `irregular.rs`: what no paradigm gives a word: the stem it lists for a slot, built
-  with an ending table (`aorist`, `ἀγγειλ- like λυω`), and the forms no stem gives;
-- a module per principal part, where a part of speech is built on them: each cell
-  belongs to one part's system and is inflected from that part.
+  with an ending table, and the forms no stem gives;
+- `animacy.rs`: a word's animacy, which decides which cell some cells' forms
+  come from.
 
 A word the dictionary lists gets its own forms. Any other word gets the paradigm its
 ending suggests, with a probability that says how often such a guess is right, and the

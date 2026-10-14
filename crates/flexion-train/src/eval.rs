@@ -388,28 +388,25 @@ pub fn floor(
     unseen: impl Fn(&Lexeme, usize) -> bool,
 ) -> (f64, f64) {
     let letters = |s: &str| orthography.read(s).letters;
-    let pairs: Vec<(String, usize, String)> = train
-        .iter()
-        .flat_map(|l| {
-            let lemma = letters(&l.lemma);
-            l.cells
-                .iter()
-                .enumerate()
-                .filter_map(move |(c, fs)| Some((lemma.clone(), c, letters(fs.first()?))))
-        })
-        .collect();
-    let baseline = crate::baseline::Baseline::learn(
-        pairs.iter().map(|(l, c, f)| (l.as_str(), *c, f.as_str())),
-    );
+    let lemmas: Vec<String> = train.iter().map(|l| letters(&l.lemma)).collect();
+    let tests: Vec<String> = test.iter().map(|l| letters(&l.lemma)).collect();
+    let cells = train.iter().chain(test).map(|l| l.cells.len()).max();
     // `(forms, right)` of all, and of the unseen cells.
     let (mut all, mut unseen_cells) = ((0, 0), (0, 0));
-    for l in test {
-        let lemma = letters(&l.lemma);
-        for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms.first() else {
+    // A cell at a time: its rules alone are small.
+    for cell in 0..cells.unwrap_or(0) {
+        let forms: Vec<(&str, String)> = train
+            .iter()
+            .zip(&lemmas)
+            .filter_map(|(l, lemma)| Some((lemma.as_str(), letters(l.cells.get(cell)?.first()?))))
+            .collect();
+        let baseline =
+            crate::baseline::Baseline::learn(forms.iter().map(|(l, f)| (*l, f.as_str())));
+        for (l, lemma) in test.iter().zip(&tests) {
+            let Some(want) = l.cells.get(cell).and_then(|forms| forms.first()) else {
                 continue;
             };
-            let ok = usize::from(baseline.inflect(&lemma, cell) == letters(want));
+            let ok = usize::from(baseline.inflect(lemma) == letters(want));
             all = (all.0 + 1, all.1 + ok);
             if unseen(l, cell) {
                 unseen_cells = (unseen_cells.0 + 1, unseen_cells.1 + ok);

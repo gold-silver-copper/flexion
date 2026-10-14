@@ -25,7 +25,6 @@ pub fn files(
 ) -> Result<Vec<(String, String)>, String> {
     let mut out = vec![
         ("Cargo.toml".to_string(), manifest(lang)),
-        ("README.md".to_string(), readme(lang, report)),
         ("DATA-LICENSE.md".to_string(), data_license(lang)),
         ("src/orthography.rs".to_string(), orthography(script)),
         ("src/lib.rs".to_string(), library(lang, parts)?),
@@ -37,6 +36,13 @@ pub fn files(
         let cells = Cells::new(lang, part.spec)?;
         out.extend(grammar_files(lang, part.spec, part.learned, &cells));
     }
+    let mut grammar: Vec<String> = out
+        .iter()
+        .filter_map(|(path, _)| Some(path.strip_prefix("src/")?.split_once('/')?.1.to_string()))
+        .collect();
+    grammar.sort();
+    grammar.dedup();
+    out.push(("README.md".to_string(), readme(lang, report, &grammar)));
     Ok(out)
 }
 
@@ -620,8 +626,13 @@ fn grammar_files(
                 .map_or("", |x| x.name)
                 .to_string()
         };
+        let uses = if choice.rules.is_empty() && choice.exceptions.is_empty() {
+            ""
+        } else {
+            "::{self, *}"
+        };
         let r = format!(
-            "//! A word's {lower}, which decides which cell some cells' forms come from\n//! (see `relations.rs`). The rule with the longest ending the word has\n//! decides; the words no rule gets right are listed.\n\nuse crate::{f}::{{self, *}};\nuse flexion::Choice;\n\n{}",
+            "//! A word's {lower}, which decides which cell some cells' forms come from\n//! (see `relations.rs`). The rule with the longest ending the word has\n//! decides; the words no rule gets right are listed.\n\nuse crate::{f}{uses};\nuse flexion::Choice;\n\n{}",
             choice_const(&f.to_uppercase(), f, "words", choice, value),
             lower = f.to_lowercase()
         );
@@ -1509,44 +1520,97 @@ workspace = true
     )
 }
 
-/// The crate's README: the language's intro, how the grammar is laid out,
-/// and `report` (what it is and how well it does).
-pub fn readme(lang: &Language, report: &str) -> String {
+/// The crate's README: the language's intro, how the grammar is laid out
+/// (the files its parts of speech have, by name: `files`), and `report`
+/// (what it is and how well it does).
+pub fn readme(lang: &Language, report: &str, files: &[String]) -> String {
     let sources: String = lang
         .editions
         .iter()
         .map(|e| format!(" and {}'s", e.name))
         .collect();
+    let has = |f: &str| files.iter().any(|g| g == f);
+    let known = [
+        (
+            "paradigms.rs",
+            "how words inflect, one table per paradigm, named after a word that\n  \
+             follows it, with a pattern per form (`~`: the stem, then what follows it;\n  \
+             `derived`: another cell's form, changed)",
+        ),
+        (
+            "relations.rs",
+            "which cell each cell's form is told from, and the rules on that\n  \
+             form's ending that change it",
+        ),
+        (
+            "laws.rs",
+            "sound laws where a stem meets its ending or a literal before it (along a\n  \
+             tier, on a copied letter, or on a class letter an ending writes: harmony), each\n  \
+             with the words whose forms it gives and the forms it gets wrong",
+        ),
+        (
+            "rules.rs",
+            "which paradigm a word takes, as rules on its ending, each with how many\n  \
+             of the dictionary's words with that ending follow each paradigm, and the words no\n  \
+             rule gets right, listed",
+        ),
+        (
+            "accent.rs",
+            "per cell, which rule places the accent, and which words have which\n  \
+             pattern",
+        ),
+        (
+            "prefixes.rs",
+            "prefixes a word inflects behind, separable or not",
+        ),
+        (
+            "compounds.rs",
+            "whether a word written in parts inflects each part",
+        ),
+        (
+            "marks.rs",
+            "how a letter typed without its mark (vowel length) is written",
+        ),
+        (
+            "spellings.rs",
+            "the words whose spelling their typed form doesn't show",
+        ),
+        (
+            "stems.rs",
+            "the stem slots (the cells a word builds on one stem, learned from the\n  \
+             words that put different stems in different cells) and the ending tables paradigms\n  \
+             share over a slot, each named after its commonest word",
+        ),
+        (
+            "irregular.rs",
+            "what no paradigm gives a word: the stem it lists for a slot, built\n  \
+             with an ending table, and the forms no stem gives",
+        ),
+    ];
+    let mut list: String = known
+        .iter()
+        .filter(|(f, _)| has(f))
+        .map(|(f, what)| format!("- `{f}`: {what};\n"))
+        .collect();
+    // A file per inherent feature relations depend on (`gender.rs`).
+    for f in files
+        .iter()
+        .filter(|f| f.as_str() != "mod.rs" && known.iter().all(|(k, _)| k != f))
+    {
+        let feature = f.trim_end_matches(".rs").replace('_', " ");
+        let _ = writeln!(
+            list,
+            "- `{f}`: a word's {feature}, which decides which cell some cells' forms\n  come from;"
+        );
+    }
+    let list = list.trim_end().trim_end_matches(';');
     format!(
         "# {name}\n\n{intro}\n## How it works\n\n\
          This crate is {display} inflection as a grammar, learned by\n\
          [flexion](https://github.com/gold-silver-copper/flexion) from the English Wiktionary's{sources}\n\
          {display} entries. Each part of speech is a module under `src/`, and has what its\n\
          grammar needs of:\n\n\
-         - `paradigms.rs`: how words inflect, one table per paradigm, named after a word that\n  \
-           follows it, with a pattern per form (`~а`: the stem, then `а`; `derived`: another\n  \
-           cell's form, changed);\n\
-         - `relations.rs`: which cell each cell's form is told from, and the rules on that\n  \
-           form's ending that change it;\n\
-         - `laws.rs`: sound laws where a stem meets its ending or a literal before it (along a\n  \
-           tier, on a copied letter, or on a class letter an ending writes: harmony), each with the\n  \
-           words whose forms it gives and the forms it gets wrong;\n\
-         - `rules.rs`: which paradigm a word takes, as rules on its ending, each with how many of\n  \
-           the dictionary's words with that ending follow each paradigm, and the words no rule\n  \
-           gets right, listed;\n\
-         - `accent.rs`: per cell, which rule places the accent, and which words have which\n  \
-           pattern;\n\
-         - `prefixes.rs`: prefixes a word inflects behind, separable or not;\n\
-         - `compounds.rs`: whether a word written in parts inflects each part;\n\
-         - `marks.rs` and `spellings.rs`: how a word typed without its marks (vowel length,\n  \
-           `ё`) is spelled;\n\
-         - `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the\n  \
-           words that put different stems in different cells) and the ending tables paradigms\n  \
-           share over a slot (`ἐ~ᾰ`, `~ω`), each named after its commonest word;\n\
-         - `irregular.rs`: what no paradigm gives a word: the stem it lists for a slot, built\n  \
-           with an ending table (`aorist`, `ἀγγειλ- like λυω`), and the forms no stem gives;\n\
-         - a module per principal part, where a part of speech is built on them: each cell\n  \
-           belongs to one part's system and is inflected from that part.\n\n\
+         {list}.\n\n\
          A word the dictionary lists gets its own forms. Any other word gets the paradigm its\n\
          ending suggests, with a probability that says how often such a guess is right, and the\n\
          reason (the rule and its counts).\n\n\

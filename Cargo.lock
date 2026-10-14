@@ -38,6 +38,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "finnish"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
+
+[[package]]
 name = "flate2"
 version = "1.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -78,6 +85,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "french"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
+
+[[package]]
+name = "german"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
+
+[[package]]
+name = "italian"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
+
+[[package]]
 name = "itoa"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -104,6 +132,13 @@ checksum = "b63fbc4a50860e98e7b2aa7804ded1db5cbc3aff9193adaff57a6931bf7c4b4c"
 dependencies = [
  "adler2",
  "simd-adler32",
+]
+
+[[package]]
+name = "polish"
+version = "0.1.0"
+dependencies = [
+ "flexion",
 ]
 
 [[package]]
@@ -192,6 +227,13 @@ name = "sound-law"
 version = "0.1.0"
 
 [[package]]
+name = "spanish"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
+
+[[package]]
 name = "syn"
 version = "3.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -207,6 +249,13 @@ name = "tinyvec"
 version = "1.13.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fd3ca314f692efd6c868f8408f53fe444634a845f96c028b97d35f6a1f79f0ee"
+
+[[package]]
+name = "turkish"
+version = "0.1.0"
+dependencies = [
+ "flexion",
+]
 
 [[package]]
 name = "unicode-ident"

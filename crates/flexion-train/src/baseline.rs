@@ -6,11 +6,12 @@
 //! matched letter is a prefix change, what follows the last a suffix change.
 //! Every ending of the aligned pair from the stem on gives a suffix rule
 //! (`en>` → `t>`), and the prefix change with 0 or more stem letters a prefix
-//! rule (`<` → `<ge`); rules are counted per cell. A lemma takes the longest
+//! rule (`<` → `<ge`); rules are counted. A lemma takes the longest
 //! suffix rule its end matches (the commonest output, then the longest), and
-//! then the commonest prefix rule its start matches. A cell no training word
-//! has gets the lemma unchanged. Prefixing languages (the original's reversed
-//! mode) aren't among ours.
+//! then the commonest prefix rule its start matches. A baseline is one cell's
+//! (cells share nothing, so each is learned and scored alone); one no training
+//! word has gives the lemma unchanged. Prefixing languages (the original's
+//! reversed mode) aren't among ours.
 
 use crate::HashMap;
 
@@ -18,32 +19,20 @@ use crate::HashMap;
 const END: char = '>';
 const START: char = '<';
 
-/// The rules of one cell.
+/// The baseline of one cell, learned from training pairs.
 #[derive(Debug, Default)]
-struct Cell {
+pub struct Baseline {
     /// Lemma end → (form end → count).
     suffixes: HashMap<String, HashMap<String, u32>>,
     /// Lemma start → (form start → count).
     prefixes: HashMap<String, HashMap<String, u32>>,
 }
 
-/// The baseline learned from training pairs.
-#[derive(Debug, Default)]
-pub struct Baseline {
-    cells: Vec<Cell>,
-}
-
 impl Baseline {
-    /// Learn from `(lemma, cell, form)` triples.
-    pub fn learn<'a>(pairs: impl IntoIterator<Item = (&'a str, usize, &'a str)>) -> Baseline {
-        let mut b = Baseline::default();
-        for (lemma, cell, form) in pairs {
-            if b.cells.len() <= cell {
-                b.cells.resize_with(cell + 1, Cell::default);
-            }
-            let Some(rules) = b.cells.get_mut(cell) else {
-                continue;
-            };
+    /// Learn from `(lemma, form)` pairs.
+    pub fn learn<'a>(pairs: impl IntoIterator<Item = (&'a str, &'a str)>) -> Baseline {
+        let mut rules = Baseline::default();
+        for (lemma, form) in pairs {
             let (a, f) = align(lemma, form);
             let matched = |i: &usize| {
                 a.get(*i)
@@ -79,19 +68,19 @@ impl Baseline {
                     .or_default() += 1;
             }
         }
-        b
+        rules
     }
 
-    /// The form of `cell` for `lemma`.
-    pub fn inflect(&self, lemma: &str, cell: usize) -> String {
-        let Some(rules) = self.cells.get(cell).filter(|r| !r.suffixes.is_empty()) else {
+    /// The cell's form for `lemma`.
+    pub fn inflect(&self, lemma: &str) -> String {
+        if self.suffixes.is_empty() {
             return lemma.to_string();
-        };
+        }
         let word = format!("{lemma}{END}");
         // The longest matching lemma end; its commonest, then longest, output.
         let suffixed = word
             .char_indices()
-            .filter_map(|(i, _)| Some((i, rules.suffixes.get(word.get(i..)?)?)))
+            .filter_map(|(i, _)| Some((i, self.suffixes.get(word.get(i..)?)?)))
             .next()
             .and_then(|(i, outputs)| {
                 let (rhs, _) = outputs.iter().max_by(|a, b| {
@@ -110,8 +99,7 @@ impl Baseline {
             .filter_map(|end| {
                 let lhs = word.get(..end)?;
                 Some(
-                    rules
-                        .prefixes
+                    self.prefixes
                         .get(lhs)?
                         .iter()
                         .map(move |(rhs, n)| ((lhs, rhs.as_str()), n)),
@@ -191,12 +179,12 @@ mod tests {
     #[test]
     fn learns_suffix_and_prefix_rules() {
         let b = Baseline::learn([
-            ("schielen", 0, "geschielt"),
-            ("machen", 0, "gemacht"),
-            ("sagen", 0, "gesagt"),
+            ("schielen", "geschielt"),
+            ("machen", "gemacht"),
+            ("sagen", "gesagt"),
         ]);
-        assert_eq!(b.inflect("lachen", 0), "gelacht");
+        assert_eq!(b.inflect("lachen"), "gelacht");
         // A cell nothing was learned for gives the lemma.
-        assert_eq!(b.inflect("lachen", 1), "lachen");
+        assert_eq!(Baseline::learn([]).inflect("lachen"), "lachen");
     }
 }
