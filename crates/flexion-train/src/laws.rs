@@ -1413,10 +1413,7 @@ fn credit(
 /// (Rasin & Katzir 2020: what a law must not do, the words it was learned
 /// from never pay for).
 pub(crate) fn held_out(letters: &str) -> bool {
-    use std::hash::{Hash, Hasher};
-    let mut h = std::collections::hash_map::DefaultHasher::new();
-    letters.hash(&mut h);
-    h.finish() % 2 == 1
+    crate::eval::hash(&format!("laws\u{1f}{letters}")) % 2 == 1
 }
 
 /// Which words laws are learned from and which they are checked on (see

@@ -27,9 +27,6 @@ pub struct Lexeme {
     pub cells: Vec<Vec<String>>,
     /// One value index per inherent feature (`u8::MAX` if unknown).
     pub inherent: Vec<u8>,
-    /// 1 for a standard entry, less for an entry whose every sense is a
-    /// register variant (slang, dialectal…).
-    pub weight: f64,
     /// Position in the dump, which orders homographs the way Wiktionary does.
     pub order: usize,
     /// How many senses the entry has: common words have many.
@@ -454,25 +451,12 @@ fn lexeme(
         })
         .collect();
 
-    let soft_entry = !entry.senses.is_empty()
-        && entry.senses.iter().all(|s| {
-            s.tags.iter().any(|t| {
-                policy.soft_sense.contains(&t.as_str())
-                    || policy.soft.contains(&t.as_str())
-                    || policy.exclude.contains(&t.as_str())
-            })
-        });
     Some(Lexeme {
         key,
         full: written,
         lemma,
         cells: forms,
         inherent,
-        weight: if soft_entry {
-            policy.soft_entry_weight
-        } else {
-            1.0
-        },
         order,
         senses: u16::try_from(entry.senses.len()).unwrap_or(u16::MAX),
         source: 0,

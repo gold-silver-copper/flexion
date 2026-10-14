@@ -396,21 +396,36 @@ fn print_and_compare(lang: Language) {
 }
 
 #[test]
-fn the_same_entries_print_the_same_crate() {
-    let print = || {
-        let lang = flexion_configs::russian::language();
+fn the_same_entries_print_the_same_crate_whatever_order_the_hash_maps_take() {
+    // The trainer's hash maps are filled in another order under another
+    // seed: nothing it writes may depend on that order.
+    let print = |lang: &Language, seed| {
+        flexion_train::reseed(seed);
         let script = Script::new(&lang.spelling);
-        let data = data(&lang, &script);
-        let learned = grammars(&lang, &script, &data);
+        let data = data(lang, &script);
+        let learned = grammars(lang, &script, &data);
         let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
             .parts
             .iter()
             .zip(&learned)
             .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
             .collect();
-        flexion_train::print::files(&lang, &script, &parts, "").expect("printed")
+        flexion_train::print::files(lang, &script, &parts, "").expect("printed")
     };
-    assert!(print() == print(), "two runs printed different crates");
+    for lang in [
+        flexion_configs::russian::language(),
+        flexion_configs::finnish::language(),
+    ] {
+        let a = print(&lang, 0xcbf2_9ce4_8422_2325);
+        let b = print(&lang, 0x9e37_79b9_7f4a_7c15);
+        for ((path, x), (_, y)) in a.iter().zip(&b) {
+            assert!(
+                x == y,
+                "{}: {path} differs under another hash seed",
+                lang.name
+            );
+        }
+    }
 }
 
 #[test]

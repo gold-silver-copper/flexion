@@ -534,7 +534,6 @@ mod tests {
                 key: format!("{root}o"),
                 cells: cells.iter().map(|f| vec![f.clone()]).collect(),
                 inherent: Vec::new(),
-                weight: 1.0,
                 order: i,
                 senses: 1,
                 source: 0,

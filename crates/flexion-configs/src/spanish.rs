@@ -262,7 +262,6 @@ pub fn language() -> Language {
         tags: TagPolicy {
             soft: SOFT.to_vec(),
             exclude: EXCLUDE.to_vec(),
-            soft_sense: vec!["vulgar", "derogatory", "offensive"],
             ..TagPolicy::default()
         },
         hooks: Box::new(SpanishHooks),

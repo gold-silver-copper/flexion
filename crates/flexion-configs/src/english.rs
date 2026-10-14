@@ -128,7 +128,6 @@ pub fn language() -> Language {
                 "sometimes",
                 "colloquial",
             ],
-            soft_sense: vec!["slang", "vulgar", "derogatory", "offensive"],
             ..TagPolicy::default()
         },
         hooks: Box::new(EnglishHooks),
