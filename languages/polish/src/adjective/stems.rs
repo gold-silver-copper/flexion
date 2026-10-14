@@ -1,0 +1,85 @@
+//! The stem slots: the cells a word builds on one stem, learned from the
+//! words that put different stems in different cells; and the ending tables a
+//! word that lists its stem for a slot (see `irregular.rs`) builds the slot's
+//! cells with: per cell of the slot, in the slot's order, a tab after each, a
+//! declension's pattern with the slot's stem as its one piece (`~`), the stem being
+//! what every cell's form keeps of the word and what all its endings begin
+//! with. Each table is named after the commonest word built with it.
+
+use super::cell::*;
+use flexion::{EndingTable, Slot};
+use std::borrow::Cow;
+
+/// The slots, in the order of their first cells.
+pub(super) static SLOTS: [Slot<'static>; 2] = [
+    Slot {
+        name: Cow::Borrowed("adjective"),
+        cells: Cow::Borrowed(&[
+            NOM_M_ANIM,
+            NOM_M_INAN,
+            NOM_F_ANIM,
+            NOM_F_INAN,
+            NOM_N_ANIM,
+            NOM_N_INAN,
+            NOM_NVIR_ANIM,
+            NOM_NVIR_INAN,
+            GEN_M_ANIM,
+            GEN_M_INAN,
+            GEN_F_ANIM,
+            GEN_F_INAN,
+            GEN_N_ANIM,
+            GEN_N_INAN,
+            GEN_VIR_ANIM,
+            GEN_VIR_INAN,
+            GEN_NVIR_ANIM,
+            GEN_NVIR_INAN,
+            DAT_M_ANIM,
+            DAT_M_INAN,
+            DAT_F_ANIM,
+            DAT_F_INAN,
+            DAT_N_ANIM,
+            DAT_N_INAN,
+            DAT_VIR_ANIM,
+            DAT_VIR_INAN,
+            DAT_NVIR_ANIM,
+            DAT_NVIR_INAN,
+            ACC_M_ANIM,
+            ACC_M_INAN,
+            ACC_F_ANIM,
+            ACC_F_INAN,
+            ACC_N_ANIM,
+            ACC_N_INAN,
+            ACC_VIR_ANIM,
+            ACC_VIR_INAN,
+            ACC_NVIR_ANIM,
+            ACC_NVIR_INAN,
+            INS_M_ANIM,
+            INS_M_INAN,
+            INS_F_ANIM,
+            INS_F_INAN,
+            INS_N_ANIM,
+            INS_N_INAN,
+            INS_VIR_ANIM,
+            INS_VIR_INAN,
+            INS_NVIR_ANIM,
+            INS_NVIR_INAN,
+            LOC_M_ANIM,
+            LOC_M_INAN,
+            LOC_F_ANIM,
+            LOC_F_INAN,
+            LOC_N_ANIM,
+            LOC_N_INAN,
+            LOC_VIR_ANIM,
+            LOC_VIR_INAN,
+            LOC_NVIR_ANIM,
+            LOC_NVIR_INAN,
+        ]),
+    },
+    Slot {
+        name: Cow::Borrowed("adjective_nom_vir_anim"),
+        cells: Cow::Borrowed(&[NOM_VIR_ANIM, NOM_VIR_INAN, COMPARATIVE, SUPERLATIVE]),
+    },
+];
+
+/// The ending tables, by slot, most words first.
+pub(super) static TABLES: [EndingTable<'static>; 0] = [];

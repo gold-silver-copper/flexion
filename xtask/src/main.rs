@@ -945,7 +945,19 @@ fn readme(lang: &Language) -> Result<(), String> {
         return Err(format!("{}: no report", path.display()));
     };
     let report = old.get(a..b).unwrap_or("").trim_end();
-    let text = flexion_train::print::readme(lang, &format!("{report}\n"));
+    // The grammar files its parts of speech have.
+    let src = path.with_file_name("src");
+    let mut files: Vec<String> = std::fs::read_dir(&src)
+        .map_err(|e| format!("{}: {e}", src.display()))?
+        .flatten()
+        .filter_map(|part| std::fs::read_dir(part.path()).ok())
+        .flatten()
+        .flatten()
+        .filter_map(|f| f.file_name().into_string().ok())
+        .collect();
+    files.sort();
+    files.dedup();
+    let text = flexion_train::print::readme(lang, &format!("{report}\n"), &files);
     std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
 }
 
