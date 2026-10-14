@@ -108,13 +108,18 @@ impl Script {
                             )
                         })
                         .flatten();
-                    if let Some(plain) =
-                        lengthened.or_else(|| compose(base, without.iter().copied()))
-                    {
-                        // A letter whose mark is only read as a stress mark (the
-                        // grave) is never written: it goes after the others.
-                        let aliased = !rest.iter().any(|m| marks.contains(m));
-                        stressed.push((aliased, c, plain, u8::try_from(kind).unwrap_or(0)));
+                    let short = compose(base, without.iter().copied());
+                    // A letter whose mark is only read as a stress mark (the
+                    // grave) is never written: it goes after the others.
+                    let aliased = !rest.iter().any(|m| marks.contains(m));
+                    let kind = u8::try_from(kind).unwrap_or(0);
+                    if let Some(plain) = lengthened.or(short) {
+                        stressed.push((aliased, c, plain, kind));
+                    }
+                    // Closing a diphthong, the circumflex is the diphthong's
+                    // (`οῦ` reads `ου`; see `Orthography::read`).
+                    if let (Some(_), Some(short)) = (lengthened, short) {
+                        stressed.push((aliased, c, short, kind));
                     }
                 }
                 None => {

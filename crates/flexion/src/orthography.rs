@@ -151,8 +151,8 @@ impl Orthography<'_> {
             if self.dropped.contains(c) {
                 continue;
             }
-            let (c, kind) = match self.stressed.iter().find(|e| e.0 == c) {
-                Some(&(_, plain, kind)) => (plain, main.then_some(kind)),
+            let (c, kind) = match self.unstressed(c, letters.chars().next_back()) {
+                Some((plain, kind)) => (plain, main.then_some(kind)),
                 None => (c, None),
             };
             let c = if self.lowercase { lower(c) } else { c };
@@ -179,6 +179,27 @@ impl Orthography<'_> {
             stress,
             casing,
         }
+    }
+
+    /// The letter a stressed letter `c` is without its stress mark, and the
+    /// mark's kind: its first reading, or one that closes a diphthong with
+    /// the letter `before` it (Greek `ῦ` is a long `ῡ`, but in `οῦ` the
+    /// diphthong `ου`).
+    fn unstressed(&self, c: char, before: Option<char>) -> Option<(char, u8)> {
+        let mut readings = self.stressed.iter().filter(|e| e.0 == c);
+        let first = readings.next()?;
+        let closes = |plain: char| {
+            let (Some(before), Some(p)) = (before, &self.prosody) else {
+                return false;
+            };
+            p.diphthongs.iter().any(|d| {
+                let mut letters = d.chars();
+                (letters.next(), letters.next(), letters.next())
+                    == (Some(before), Some(plain), None)
+            })
+        };
+        let e = readings.find(|e| closes(e.1)).unwrap_or(first);
+        Some((e.1, e.2))
     }
 
     /// Write `letters` with `stress` marked (if the language marks it and the

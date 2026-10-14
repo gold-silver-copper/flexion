@@ -442,3 +442,18 @@ fn the_lemma_s_own_form_is_scored_only_where_it_is_not_what_was_typed() {
     assert!(typed_back(0, "rēx", "rēx"));
     assert!(!typed_back(1, "rēx", "rēx"));
 }
+
+#[test]
+fn a_circumflex_closing_a_diphthong_is_not_vowel_length() {
+    // `ῦ` alone is a long `ῡ` (`σῦς`), but in `ἀριθμοῦ` it is the
+    // diphthong `ου`'s: the same letters as `ἀριθμός`'s stem and ending.
+    // A diaeresis parts the two vowels: `ῧ` closes no diphthong.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let o = script.orthography();
+    assert_eq!(o.read("ἀριθμοῦ").letters, "ἀριθμου");
+    assert_eq!(o.read("σῦς").letters, "σῡς");
+    assert_eq!(o.read("προῧπτος").letters, "προϋπτος");
+    let w = o.read("ἀριθμοῦ");
+    assert_eq!(o.write(&w.letters, w.stress, w.casing), "ἀριθμοῦ");
+}
