@@ -2295,7 +2295,6 @@ fn heads(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> Opti
     // Counts of words; exact as floats.
     #[allow(clippy::cast_precision_loss)]
     let holds = |&(n, same): &(usize, usize)| same as f64 >= HEAD_SHARE * n as f64;
-    eprintln!("HEADS {by_length:?}");
     // The shortest length from which on every length's words do (those of
     // a length too few to judge, with the next).
     (1..=HEAD_MOST)
