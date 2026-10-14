@@ -25,6 +25,9 @@ const KEEP: usize = 4;
 /// What joins the parts of a compound written in parts.
 const JOINER: char = '-';
 
+/// The fewest letters before a compound's last part (see [`Grammar::head`]).
+pub const FRONT_LETTERS: usize = 3;
+
 /// How a word written in parts (`диван-кровать`) inflects.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Compound {
@@ -345,6 +348,9 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub feature: Option<(u8, Choice<'a, F>)>,
     /// Prefixes words inflect behind, where the part of speech has them.
     pub prefixes: Option<Prefixes<'a>>,
+    /// Where words inflect their last part (compounds): the fewest letters
+    /// that part has (see [`Grammar::head`]).
+    pub heads: Option<u8>,
     /// Which words written in parts inflect each part, read off the first
     /// part (`диван` of `диван-кровать`).
     pub compound: Option<Choice<'a, Compound>>,
@@ -462,6 +468,38 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         } else {
             word.casing
         };
+        // A word ending in a listed one (its head, `meri` of Finnish
+        // `aavameri`): the head's forms, behind the letters before it.
+        if let Some((front, head)) = self.head(&key, &word.letters) {
+            let given: Vec<(usize, String)> = known
+                .forms
+                .iter()
+                .filter_map(|&(c, f)| {
+                    let letters = self.orthography.read(f).letters;
+                    Some((c, letters.strip_prefix(front)?.to_string()))
+                })
+                .collect();
+            let given: Vec<(usize, &str)> = given.iter().map(|(c, f)| (*c, f.as_str())).collect();
+            let base = Known {
+                forms: &given,
+                ..*known
+            };
+            let joined =
+                |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
+            return self
+                .unsharpened(head, cells, &base)
+                .into_iter()
+                .map(|list| {
+                    list.into_iter()
+                        .map(|c| Candidate {
+                            form: joined(&c.form),
+                            also: c.also.iter().map(|a| joined(a)).collect(),
+                            ..c
+                        })
+                        .collect()
+                })
+                .collect();
+        }
         // The forms the caller gives, as letters.
         let given: Vec<(usize, String)> = known
             .forms
@@ -1033,6 +1071,45 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .zip(listed.chars())
                 .all(|(t, l)| t == l || self.orthography.fold(t) == t);
         agrees.then_some(listed)
+    }
+
+    /// Whether the grammar lists the word looked up as `key`: its forms, or
+    /// its paradigm.
+    fn lists(&self, key: &str) -> bool {
+        self.irregular.has(key)
+            || self
+                .paradigm
+                .listed(&format!("{WORD_END}{key}"))
+                .next()
+                .is_some()
+    }
+
+    /// The listed word a word the grammar doesn't list ends in (its head;
+    /// where words inflect their last part, see [`Grammar::heads`]), the
+    /// longest, behind at least [`FRONT_LETTERS`] letters: the letters
+    /// before it and its letters (`letters` the word's, `key` how it is
+    /// looked up). None for a word a prefix splits (see [`Prefixes`]): the
+    /// prefix decides where its letters go.
+    pub fn head<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
+        let least = usize::from(self.heads?);
+        if self.lists(key)
+            || self
+                .prefixes
+                .as_ref()
+                .and_then(|p| p.split(key))
+                .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
+        {
+            return None;
+        }
+        let n = key.chars().count();
+        let at = (FRONT_LETTERS..=n.checked_sub(least)?).find(|&i| {
+            key.char_indices()
+                .nth(i)
+                .and_then(|(b, _)| key.get(b..))
+                .is_some_and(|head| self.lists(head))
+        })?;
+        let (b, _) = letters.char_indices().nth(at)?;
+        Some(letters.split_at(b))
     }
 
     /// The listed form of `cell` for the word looked up as `key`, if any.

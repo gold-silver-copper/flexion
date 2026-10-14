@@ -333,7 +333,7 @@ fn grammar_files(
     };
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads:?},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -374,6 +374,7 @@ fn grammar_files(
             )),
         compound = some(g.compound.is_some(), "compounds::COMPOUND"),
         prefixes = some(g.prefixes.is_some(), "prefixes::PREFIXES"),
+        heads = g.heads,
         accent = some(
             g.accent.is_some(),
             "flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    }"
