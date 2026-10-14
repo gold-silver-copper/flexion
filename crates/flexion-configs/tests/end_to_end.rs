@@ -412,3 +412,18 @@ fn the_same_entries_print_the_same_crate() {
     };
     assert!(print() == print(), "two runs printed different crates");
 }
+
+#[test]
+fn the_lemma_s_own_form_is_scored_only_where_it_is_not_what_was_typed() {
+    // Typed as its headword, `rex`, the lemma's cell asks for `rēx`: vowel
+    // length the headword doesn't write, a real answer. Typed `rēx`, the
+    // cell's answer is the input itself. Other cells always count.
+    let lang = flexion_configs::latin::language();
+    let script = Script::new(&lang.spelling);
+    let o = script.orthography();
+    let typed_back =
+        |cell, want, typed| flexion_train::eval::typed_back(&o, Some(0), cell, want, typed);
+    assert!(!typed_back(0, "rēx", "rex"));
+    assert!(typed_back(0, "rēx", "rēx"));
+    assert!(!typed_back(1, "rēx", "rēx"));
+}

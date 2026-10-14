@@ -18,6 +18,8 @@ pub struct Measured {
     pub test_words: usize,
     pub full: Score,
     pub headword: Score,
+    /// The 95% interval of the headword's top-1, resampling words.
+    pub interval: (f64, f64),
     /// Given the dictionary's principal parts, where the part of speech has
     /// them.
     pub citation: Option<Score>,
@@ -31,6 +33,16 @@ pub struct Measured {
     pub floor: f64,
     /// Its share right on the unseen cells (see [`eval::Score::unseen`]).
     pub floor_unseen: f64,
+    /// The grammar (letters, from the headword) against the floor, word by
+    /// word on the same forms.
+    pub against_floor: crate::measure::Comparison,
+    /// The share of the headword's forms any grammar could get right
+    /// (see [`eval::ceiling`]).
+    pub ceiling: f64,
+    /// From the headword: the words built on a training word (see
+    /// [`crate::measure::prefixed`]), and the rest.
+    pub on_training: Score,
+    pub new_root: Score,
     /// The shipped grammar on the dictionary's own words, typed in full.
     pub attested: Score,
 }
@@ -83,14 +95,26 @@ pub fn build<'s>(
             .collect();
         let score = |input| eval::score(g, &orthography, &test, input, &scored.seen);
         let full = score(Input::Full);
-        let headword = score(Input::Headword);
+        let outcomes = eval::outcomes(
+            g,
+            &orthography,
+            &test,
+            Input::Headword,
+            &scored.seen,
+            |_| true,
+        );
+        let headword = Score::of(&outcomes);
+        let interval = crate::measure::interval(&eval::by_word(&outcomes));
         let citation = (!parts.is_empty()).then(|| score(Input::Citation(&parts)));
         let features = (!part.inherent.is_empty()).then(|| score(Input::Features));
         let given = (1..=3).map(|k| score(Input::Given(k))).collect();
         let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-        let (floor, floor_unseen) = eval::floor(&orthography, &main, &test, |l, c| {
-            eval::unseen(g, &scored.seen, l, c)
-        });
+        let floored = eval::floor(&orthography, &main, &test, g.lemma_cell);
+        let (floor, floor_unseen) = eval::floor_shares(&outcomes, &floored);
+        let against_floor =
+            crate::measure::compare(&eval::against_floor(&outcomes, &floored, |_| true));
+        let ceiling = eval::ceiling(&orthography, &test, &outcomes);
+        let (on_training, new_root) = strata(&train, g, &test, &outcomes);
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
         shipped.grammar.trust = trust;
@@ -125,16 +149,46 @@ pub fn build<'s>(
             test_words: test.len(),
             full,
             headword,
+            interval,
             citation,
             features,
             given,
             floor,
             floor_unseen,
+            against_floor,
+            ceiling,
+            on_training,
+            new_root,
             attested,
         });
         grammars.push(shipped);
     }
     Ok((grammars, measured))
+}
+
+/// `outcomes` of the held-out `test` words split into those built on a
+/// training word (see [`crate::measure::prefixed`]) and the rest.
+pub fn strata<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
+    train: &[Lexeme],
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    test: &[&Lexeme],
+    outcomes: &[eval::Outcome],
+) -> (Score, Score) {
+    let keys: crate::HashSet<&str> = train.iter().map(|l| l.key.as_str()).collect();
+    let prefixes: Vec<&str> = grammar
+        .prefixes
+        .iter()
+        .flat_map(|p| p.prefixes.iter().map(|p| p.letters.as_ref()))
+        .collect();
+    let on: Vec<bool> = test
+        .iter()
+        .map(|l| crate::measure::prefixed(&l.key, &keys, &prefixes))
+        .collect();
+    let (built, rest): (Vec<eval::Outcome>, Vec<eval::Outcome>) = outcomes
+        .iter()
+        .cloned()
+        .partition(|o| on.get(o.word).copied().unwrap_or(false));
+    (Score::of(&built), Score::of(&rest))
 }
 
 /// The README's report: the grammar's size and how well it does.
@@ -164,7 +218,9 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is\n\
          right; *top-3*: the right answer is among its first three. *Calibration error*: how far\n\
          its stated probabilities are, on average, from how often it is right (0 is perfect).\n\
-         The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed\n\
+         The lemma's own form isn't scored where it is the letters typed (it is the input); where\n\
+         it isn't (vowel length the headword doesn't write) it is scored, and also apart (*lemma\n\
+         spelling*). After top-1, its 95% interval, resampling words. *Lemma in full*: top-1 typed\n\
          with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).\n\
          *Principal parts given*: top-1 of the other forms, given the dictionary's principal\n\
          parts. *Features given*: top-1 from the headword, told the word's inherent features\n\
@@ -176,11 +232,18 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          *Seen* and *unseen cells*: top-1 on the cells some training word of the word's\n\
          paradigm has a form in, and on the others, derived\n\
          from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017\n\
-         shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped\n\
-         grammar on the dictionary's own words, typed in full.\n\n",
+         shared task's non-neural baseline (letters only), and on the unseen cells. *Against the\n\
+         floor*: the grammar's letters right less the floor's, on the same forms, with its 95%\n\
+         interval (resampling words). *Any listed form*: top-1 where any of the forms the\n\
+         dictionary lists in the cell counts. *Homograph ceiling*: the most any grammar could get\n\
+         right, words typed alike getting one answer per cell. *On a training word / new root*:\n\
+         top-1 of the held-out words that are a training word with a prefix or a compound's front\n\
+         before it, and of the rest. *Attested*: top-1 of the shipped grammar on the dictionary's\n\
+         own words, typed in full. The held-out tenth was looked at while the trainer was being\n\
+         developed (changes are judged on another tenth since PR #16).\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | attested |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -207,16 +270,16 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
                 .collect::<Vec<_>>()
                 .join(" / ")
         };
-        #[allow(clippy::cast_precision_loss)]
-        let noise = 1.96 * (p * (1.0 - p) / m.test_words.max(1) as f64).sqrt();
+        let f = &m.against_floor;
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ± {:.1} | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ({:.1}–{:.1}) | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:+.2} ({:+.2}…{:+.2}) | {:.2}% | {:.2}% | {:.2}% / {:.2}% | {} | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
             100.0 * p,
-            100.0 * noise,
+            100.0 * m.interval.0,
+            100.0 * m.interval.1,
             100.0 * m.headword.top3_accuracy(),
             100.0 * m.headword.among_accuracy(),
             100.0 * m.headword.whole_words(),
@@ -230,6 +293,14 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             share(m.headword.unseen),
             100.0 * m.floor,
             100.0 * m.floor_unseen,
+            100.0 * (f.b - f.a),
+            100.0 * f.low,
+            100.0 * f.high,
+            100.0 * m.headword.any_accuracy(),
+            100.0 * m.ceiling,
+            100.0 * m.on_training.accuracy(),
+            100.0 * m.new_root.accuracy(),
+            share(m.headword.lemma),
             100.0 * m.attested.accuracy(),
         );
     }

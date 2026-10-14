@@ -4,9 +4,11 @@
 //!   (`--to <file>`: elsewhere);
 //! - `build`: learn the language's grammar, measure it, and write its crate;
 //! - `readme`: rewrite a built crate's README, keeping its report;
-//! - `try`: learn on nine tenths of the words and score the held-out tenth
-//!   (`--quick`: without fitting the sharpness, from the headword and the
-//!   principal parts only; `--fold N`: score tenth N instead of the first;
+//! - `try`: learn on nine tenths of the words and score the held-out tenth,
+//!   the development tenth (`--final`: the tenth the READMEs report; it
+//!   isn't what changes are judged on) (`--quick`: without fitting the
+//!   sharpness, from the headword and the principal parts only; `--fold N`:
+//!   score tenth N;
 //!   `--given`: also with 1, 2, 3 random forms given when quick;
 //!   `--save <file>`: every scored form's outcome, for `compare`;
 //!   `--hold-cells auto|<cells>`: hold those cells out of training and
@@ -32,7 +34,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
 
 fn main() {
     if let Err(e) = run() {
@@ -65,9 +67,13 @@ fn run() -> Result<(), String> {
                 .ok_or(format!("bad {f}"))
         })
     };
-    let fold = flag("--fold").map_or(Ok(eval::TEST), |f| {
+    let last = args.iter().any(|a| a == "--final");
+    let fold = flag("--fold").map_or(Ok(if last { eval::TEST } else { eval::DEVELOP }), |f| {
         f.parse::<u64>().map_err(|_| "bad --fold")
     })? % 10;
+    if fold == eval::TEST && !last {
+        return Err("tenth 0 is the READMEs' test tenth: score it with --final".into());
+    }
     match command.as_str() {
         "extract" => extract_dumps(
             &lang,
@@ -589,18 +595,18 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
         }
         {
             let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
-            let s = eval::Score::of(&eval::outcomes(
+            let out = eval::outcomes(
                 g,
                 &g.orthography,
                 &test,
                 eval::Input::Headword,
                 &learned.seen,
                 |c| !is_held(c),
-            ));
+            );
+            let s = eval::Score::of(&out);
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
-            let (floor, floor_unseen) = eval::floor(&g.orthography, &main, &test, |l, c| {
-                eval::unseen(g, &learned.seen, l, c)
-            });
+            let floored = eval::floor(&g.orthography, &main, &test, g.lemma_cell);
+            let (floor, floor_unseen) = eval::floor_shares(&out, &floored);
             println!(
                 "  floor {:.2}% (unseen cells {:.2}%); seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
                 100.0 * floor,
@@ -609,6 +615,33 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 s.seen.0,
                 pct(s.unseen),
                 s.unseen.0
+            );
+            let c = measure::compare(&eval::against_floor(&out, &floored, |_| true));
+            println!(
+                "  against the floor (letters, same forms): {:+.2} ({:+.2} … {:+.2}), {} words better, {} worse, sign p {:.2e}",
+                100.0 * (c.b - c.a),
+                100.0 * c.low,
+                100.0 * c.high,
+                c.better,
+                c.worse,
+                c.p
+            );
+            floor_cells(&out, &floored, &names);
+            let (lo, hi) = measure::interval(&eval::by_word(&out));
+            let (on, rest) = flexion_train::pipeline::strata(&train, g, &test, &out);
+            println!(
+                "  top-1 {:.2}% ({:.2} … {:.2}); any listed form {:.2}%; homograph ceiling {:.2}%; lemma spelling {:.2}% ({}); on a training word {:.2}% ({} words), new root {:.2}% ({} words)",
+                100.0 * s.accuracy(),
+                100.0 * lo,
+                100.0 * hi,
+                100.0 * s.any_accuracy(),
+                100.0 * eval::ceiling(&g.orthography, &test, &out),
+                pct(s.lemma),
+                s.lemma.0,
+                100.0 * on.accuracy(),
+                on.words,
+                100.0 * rest.accuracy(),
+                rest.words,
             );
         }
         let parts = flexion_train::parts(lang, part)?;
@@ -645,37 +678,6 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 .map(|&(n, r, p)| format!("{:.2}→{:.2} ({n})", p / n as f64, r as f64 / n as f64))
                 .collect();
             println!("    stated → right: {}", bins.join(", "));
-            if input == eval::Input::Headword {
-                // Words built on a training word by a prefix, apart.
-                let keys: flexion_train::HashSet<&str> =
-                    train.iter().map(|l| l.key.as_str()).collect();
-                let learned_prefixes: Vec<&str> = g
-                    .prefixes
-                    .iter()
-                    .flat_map(|p| p.prefixes.iter().map(|p| p.letters.as_ref()))
-                    .collect();
-                let on: Vec<bool> = test
-                    .iter()
-                    .map(|l| measure::prefixed(&l.key, &keys, &learned_prefixes))
-                    .collect();
-                let split = |want: bool| {
-                    let mine: Vec<eval::Outcome> = out
-                        .iter()
-                        .filter(|x| on.get(x.word).copied() == Some(want))
-                        .cloned()
-                        .collect();
-                    eval::Score::of(&mine)
-                };
-                let (pre, rest) = (split(true), split(false));
-                println!(
-                    "    prefixed on a training word: {} words, top-1 {:.2}% ({} forms); the rest: {} words, top-1 {:.2}%",
-                    pre.words,
-                    100.0 * pre.accuracy(),
-                    pre.forms,
-                    rest.words,
-                    100.0 * rest.accuracy()
-                );
-            }
             saved.add(part.name, &outcomes::mode(input), &ids, &out);
         }
         if !held.is_empty() {
@@ -754,6 +756,49 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
         eprintln!("wrote {}", path.display());
     }
     Ok(())
+}
+
+/// The cells where the grammar and the floor differ beyond chance (their
+/// paired 95% interval leaves out 0), largest gap first, at most twenty.
+fn floor_cells(out: &[eval::Outcome], floored: &[eval::FloorOutcome], names: &[String]) {
+    let floor: std::collections::HashMap<(usize, usize), bool> = floored
+        .iter()
+        .map(|f| ((f.word, f.cell), f.right))
+        .collect();
+    let mut by_cell: Vec<Vec<measure::Paired>> = vec![Vec::new(); names.len()];
+    for o in out {
+        if let (Some(&right), Some(words)) = (floor.get(&(o.word, o.cell)), by_cell.get_mut(o.cell))
+        {
+            words.push(measure::Paired {
+                forms: 1,
+                a: usize::from(right),
+                b: usize::from(o.letters),
+            });
+        }
+    }
+    let mut cells: Vec<(usize, measure::Comparison)> = by_cell
+        .iter()
+        .enumerate()
+        .filter(|(_, words)| words.iter().any(|w| w.a != w.b))
+        .map(|(cell, words)| (cell, measure::compare(words)))
+        .filter(|(_, c)| c.low > 0.0 || c.high < 0.0)
+        .collect();
+    cells.sort_by(|(_, x), (_, y)| (x.b - x.a).total_cmp(&(y.b - y.a)));
+    if cells.is_empty() {
+        println!("    no cell differs from the floor beyond chance");
+    }
+    for (cell, c) in cells.iter().take(20) {
+        println!(
+            "    cell {cell} {}: grammar {:.2}%, floor {:.2}%, {:+.2} ({:+.2} … {:+.2}), {} forms",
+            names.get(*cell).map_or("", String::as_str),
+            100.0 * c.b,
+            100.0 * c.a,
+            100.0 * (c.b - c.a),
+            100.0 * c.low,
+            100.0 * c.high,
+            c.forms
+        );
+    }
 }
 
 /// Each cell's name: its group and its values' short names (`present 1 sg`).
