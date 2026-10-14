@@ -788,7 +788,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .0
             }
         };
-        self.changing(relation).told(&source, self.smoothing)
+        self.changing(relation)
+            .told(&source, self.smoothing, self.laws.as_ref())
     }
 
     /// The forms (letters, each with where its ending starts) of `cell` for
@@ -981,7 +982,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     let Some((usual, ending)) = forms.first() else {
                         continue;
                     };
-                    for (changed, at, r) in relation.apply(usual, self.smoothing) {
+                    for (changed, at, r) in
+                        relation.apply(usual, self.smoothing, self.laws.as_ref())
+                    {
                         out.push((vec![(changed, (*ending).min(at))], p * q * r));
                     }
                 }

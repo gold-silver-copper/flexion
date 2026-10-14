@@ -104,16 +104,28 @@ impl Relation<'_> {
     }
 
     /// The likeliest form `form` gives, and where its change starts.
-    pub fn told(&self, form: &str, smoothing: f32) -> Option<(String, usize)> {
-        self.apply(form, smoothing)
+    pub fn told(
+        &self,
+        form: &str,
+        smoothing: f32,
+        laws: Option<&sound_law::Program<'_>>,
+    ) -> Option<(String, usize)> {
+        self.apply(form, smoothing, laws)
             .into_iter()
             .max_by(|a, b| a.2.total_cmp(&b.2))
             .map(|(f, at, _)| (f, at))
     }
 
     /// The forms `form` gives (its letters), each with where its change
-    /// starts and how likely it is.
-    pub fn apply(&self, form: &str, smoothing: f32) -> Vec<(String, usize, f32)> {
+    /// starts and how likely it is: the change's new ending put where the
+    /// old one was, and `laws` run over the form, as over a paradigm's (a
+    /// class letter it writes, `~Im`, is what the harmony makes it).
+    pub fn apply(
+        &self,
+        form: &str,
+        smoothing: f32,
+        laws: Option<&sound_law::Program<'_>>,
+    ) -> Vec<(String, usize, f32)> {
         let start = |p: &str| p.split('~').next().map_or(0, str::len);
         let fitting = |c: u16| {
             self.changes
@@ -134,8 +146,16 @@ impl Relation<'_> {
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
                 let stems = pattern::bind(old, form)?;
-                let at = pattern::ending_start(new, &stems);
-                Some((pattern::fill(new, &stems), at, r.probability))
+                let (told, at) = match laws {
+                    None => (
+                        pattern::fill(new, &stems),
+                        pattern::ending_start(new, &stems),
+                    ),
+                    Some(laws) => {
+                        pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems)))
+                    }
+                };
+                Some((told, at, r.probability))
             })
             .collect();
         // No change, or none fits its ending: the form itself (as a guess).

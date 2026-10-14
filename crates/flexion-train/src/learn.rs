@@ -245,22 +245,10 @@ pub fn learn<'s>(
     let feature_choice = found
         .as_ref()
         .map(|_| choose::learn(&feature_examples, settings, |_, _| true));
-    // Each cell's relation to the cell its form is best told from; the
-    // referrals (by the word's feature) take their cells' place.
     let usual: Vec<Vec<Option<&str>>> = words
         .iter()
         .map(|w| (0..shape.cells).map(|c| first_form(w, c)).collect())
         .collect();
-    let root = shape.lemma_cell.unwrap_or(0);
-    let mut relations = crate::relations::learn(&usual, shape.cells, root, settings);
-    if let Some((_, referrals)) = &found {
-        relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
-        relations.extend(referrals.iter().cloned());
-    }
-    // The cells no relation tells (too few words have them): by analogy.
-    let told = crate::relations::analogies(&usual, &shape.coordinates, &relations, root, settings);
-    relations.extend(told);
-    relations.sort_by_key(|r| r.cell);
     let (paradigms, assignment) = paradigms(&words, &analyses, shape);
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
@@ -287,6 +275,42 @@ pub fn learn<'s>(
         program.as_ref(),
     );
     inherent(&words, &assignment, &mut paradigms);
+    // Each cell's relation to the cell its form is best told from, said
+    // through the laws; the referrals (by the word's feature) take their
+    // cells' place.
+    let classes: Vec<(char, Vec<char>)> = laws
+        .iter()
+        .filter_map(|l| match &l.change {
+            crate::laws::Change::Harmony { map, .. } => Some(map),
+            _ => None,
+        })
+        .flatten()
+        .fold(Vec::new(), |mut classes, &(class, _, value)| {
+            match classes.iter_mut().find(|(c, _)| *c == class) {
+                Some((_, values)) if !values.contains(&value) => values.push(value),
+                Some(_) => {}
+                None => classes.push((class, vec![value])),
+            }
+            classes
+        });
+    let root = shape.lemma_cell.unwrap_or(0);
+    let through = program.as_ref().map(|p| (p, classes.as_slice()));
+    let mut relations = crate::relations::learn(&usual, shape.cells, root, settings, through);
+    if let Some((_, referrals)) = &found {
+        relations.retain(|r| !referrals.iter().any(|q| q.cell == r.cell));
+        relations.extend(referrals.iter().cloned());
+    }
+    // The cells no relation tells (too few words have them): by analogy.
+    let told = crate::relations::analogies(
+        &usual,
+        &shape.coordinates,
+        &relations,
+        root,
+        settings,
+        through,
+    );
+    relations.extend(told);
+    relations.sort_by_key(|r| r.cell);
     // The words the structure wasn't learned from: each takes the paradigm
     // that builds the most of its forms (none, written in parts that each
     // inflect).
@@ -302,6 +326,21 @@ pub fn learn<'s>(
                 .filter_map(|(w, p)| Some((w, (*p)?))),
         )
         .collect();
+    let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
+    for w in &words {
+        for f in w.cells.iter().flatten() {
+            alphabet.extend(f.letters.chars());
+        }
+    }
+    let prices = crate::bits::Prices::new(alphabet.len(), shape.cells);
+    derive(
+        &mut paradigms,
+        &relations,
+        &assigned,
+        &prices,
+        settings.smoothing,
+        program.as_ref(),
+    );
     let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
         for (c, fs) in w.cells.iter().enumerate() {
@@ -503,13 +542,6 @@ pub fn learn<'s>(
                 .unwrap_or_default(),
         })
         .collect();
-    let mut alphabet: crate::HashSet<char> = crate::HashSet::default();
-    for w in &words {
-        for f in w.cells.iter().flatten() {
-            alphabet.extend(f.letters.chars());
-        }
-    }
-    let prices = crate::bits::Prices::new(alphabet.len(), shape.cells);
     let slot_of = crate::stems::slots(&evidence, shape.cells, grammar.laws.as_ref(), &prices);
     let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names);
     grammar.slots = Cow::Owned(built.slots);
@@ -531,7 +563,13 @@ pub fn learn<'s>(
     let judged = rebuilt(&grammar, &everyone, &candidates, wrong.clone());
     if let Cow::Owned(relations) = &mut grammar.relations {
         for r in relations.iter_mut() {
-            r.listed = tells_listed(r, &judged, &everyone, grammar.smoothing);
+            r.listed = tells_listed(
+                r,
+                &judged,
+                &everyone,
+                grammar.smoothing,
+                grammar.laws.as_ref(),
+            );
         }
     }
     let words_of = (every.as_slice(), everyone.as_slice());
@@ -1867,6 +1905,7 @@ fn tells_listed(
     wrong: &[(String, usize, String)],
     words: &[Word],
     smoothing: f32,
+    laws: Option<&sound_law::Program<'_>>,
 ) -> bool {
     let (Some(from), cell) = (r.source(), usize::from(r.cell)) else {
         return false;
@@ -1881,7 +1920,7 @@ fn tells_listed(
         let (Some(source), Some(want)) = (first_form(w, from), first_form(w, cell)) else {
             continue;
         };
-        told += usize::from(r.told(source, smoothing).is_some_and(|t| t.0 == want));
+        told += usize::from(r.told(source, smoothing, laws).is_some_and(|t| t.0 == want));
         built += usize::from(!is_wrong(&w.key, cell));
     }
     told >= built
@@ -1927,7 +1966,8 @@ fn word_roots(
     for &c in order {
         let told = grammar.relation(c).filter(|r| r.listed).and_then(|r| {
             let source = have.get(&r.source()?)?;
-            r.told(source, grammar.smoothing).map(|t| t.0)
+            r.told(source, grammar.smoothing, grammar.laws.as_ref())
+                .map(|t| t.0)
         });
         // A form built on a listed stem is the cell's unless a form is listed
         // (relations tell no cell a stem builds); it tells others as a
@@ -1983,6 +2023,66 @@ fn rehome<'s>(
         }
     }
     crate::laws::drop_empty(paradigms, assignment)
+}
+
+/// Each paradigm's cells its relation tells from the paradigm's own form
+/// of the cell it comes from with its one change, derived, where the forms
+/// of its words the
+/// relation tells wrong cost fewer bits listed than the cell's pattern
+/// stated (Finnish `talossani`: `talossa` and `ni`, for every noun).
+fn derive(
+    paradigms: &mut [Paradigm<'_>],
+    relations: &[Relation<'_>],
+    assigned: &[(&Word, u16)],
+    prices: &crate::bits::Prices,
+    smoothing: f32,
+    laws: Option<&sound_law::Program<'_>>,
+) {
+    let mut members: Vec<Vec<&Word>> = vec![Vec::new(); paradigms.len()];
+    for &(w, p) in assigned {
+        if let Some(m) = members.get_mut(usize::from(p)) {
+            m.push(w);
+        }
+    }
+    for (paradigm, words) in paradigms.iter_mut().zip(&members) {
+        let mut cells: Vec<String> = paradigm.table.split('\t').map(str::to_string).collect();
+        // A relation with one change makes every word's form the same way:
+        // a held-out word's too (one choosing by ending may not).
+        for r in relations
+            .iter()
+            .filter(|r| r.analogy.is_none() && r.changes.len() == 1)
+        {
+            let (c, Some(s)) = (usize::from(r.cell), r.source()) else {
+                continue;
+            };
+            let Some(pattern) = cells
+                .get(c)
+                .filter(|m| !m.is_empty() && m.as_str() != DERIVED && !m.contains('|'))
+            else {
+                continue;
+            };
+            // The forms it tells wrong, listed; judged on a word at least.
+            let pairs: Vec<(&str, &str)> = words
+                .iter()
+                .filter_map(|w| Some((first_form(w, s)?, first_form(w, c)?)))
+                .collect();
+            let wrong: f64 = pairs
+                .iter()
+                .filter(|(from, form)| {
+                    r.told(from, smoothing, laws)
+                        .is_none_or(|(told, _)| told != *form)
+                })
+                .map(|(_, form)| prices.listed(form))
+                .sum();
+            if !pairs.is_empty()
+                && wrong < prices.text(pattern)
+                && let Some(slot) = cells.get_mut(c)
+            {
+                *slot = DERIVED.to_string();
+            }
+        }
+        paradigm.table = Cow::Owned(cells.join("\t"));
+    }
 }
 
 /// How many of `w`'s forms `par` builds right.
