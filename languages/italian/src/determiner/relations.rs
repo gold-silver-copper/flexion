@@ -56,5 +56,5 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
         "" => [1 34, 0 2],
         "i" => [0 2],
         "o" => [1 34],
-    } listed {}, true, None),
+    } listed {}, false, None),
 ];

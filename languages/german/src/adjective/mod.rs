@@ -181,6 +181,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     feature: None,
     compound: Some(compounds::COMPOUND),
     prefixes: None,
+    heads: None,
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
@@ -191,7 +192,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     smoothing: 2.0,
     sharpness: 0.75,
     trust: flexion::Trust {
-        regular: 0.9950699,
+        regular: 0.9967954,
         unsettled: 1.0,
         unattested: 1.0,
     },

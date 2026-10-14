@@ -102,4 +102,57 @@ pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
 }];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 0] = [];
+pub(super) static TABLES: [EndingTable<'static>; 2] = [
+    // adjective like faydalı: 26 words.
+    EndingTable {
+        name: Cow::Borrowed("faydalı"),
+        words: 26,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~\t\t",
+            "~yI\t\t",
+            "~yE\t\t",
+            "~dE\t\t",
+            "\t\t",
+            "~nIn\t\t",
+            "~m\t\t~sI\t\t~nIz\t~lErI\t",
+            "\t~lErIn\t~lErI\t\t\t~lErI\t",
+            "\t~nI\t~sInI\t\t~nIzI\t\t",
+            "\t~lErInI\t~lErInI\t\t\t~lErInI\t",
+            "~mE\t~nE\t\t\t~nIzE\t\t",
+            "\t~lErInE\t~lErInE\t\t\t~lErInE\t",
+            "~mdE\t~ndE\t~sIndE\t\t~nIzdE\t\t",
+            "\t~lErIndE\t~lErIndE\t\t\t~lErIndE\t",
+            "~mdEn\t~ndEn\t~sIndEn\t\t~nIzdEn\t\t",
+            "\t~lErIndEn\t~lErIndEn\t\t\t~lErIndEn\t",
+            "\t~nIn\t\t\t~nIzIn\t\t",
+            "\t~lErInIn\t~lErInIn\t\t\t~lErInIn\t",
+        )),
+    },
+    // adjective like dazlak: 5 words.
+    EndingTable {
+        name: Cow::Borrowed("dazlak"),
+        words: 5,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~k\t\t",
+            "~ğı\t\t",
+            "~ğa\t\t",
+            "~kta\t\t",
+            "\t\t",
+            "~ğın\t\t",
+            "~ğım\t\t~ğı\t\t~ğınız\t~kları\t",
+            "\t~kların\t~kları\t\t\t~kları\t",
+            "\t~ğını\t~ğını\t\t~ğınızı\t\t",
+            "\t~klarını\t~klarını\t\t\t~klarını\t",
+            "~ğıma\t~ğına\t\t\t~ğınıza\t\t",
+            "\t~klarına\t~klarına\t\t\t~klarına\t",
+            "~ğımda\t~ğında\t~ğında\t\t~ğınızda\t\t",
+            "\t~klarında\t~klarında\t\t\t~klarında\t",
+            "~ğımdan\t~ğından\t~ğından\t\t~ğınızdan\t\t",
+            "\t~klarından\t~klarından\t\t\t~klarından\t",
+            "\t~ğının\t\t\t~ğınızın\t\t",
+            "\t~klarının\t~klarının\t\t\t~klarının\t",
+        )),
+    },
+];

@@ -1,7 +1,8 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
 //! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
-//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
-//! nearest letter of a tier before it as written): every form a declension builds
+//! `%` copies (`°`), on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written), or inside a stem that
+//! alternates (`ˇ`, by what follows it): every form a declension builds
 //! goes through them, in order, so one declension serves words whose stems change
 //! its endings. Each with the words whose forms it gives, and how many of
 //! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
@@ -97,37 +98,82 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::Iterative,
         required: B(&[]),
     },
-    // g+n → g+en: 8,440 words (bestellung, teilung, abteilung, zerstörung), 0 forms wrong.
+    // ∅ → e after [a|b|d|f|g|h|i|k|l|m|n|o|p|r|s|t|u|v|x|y|z|ß|ö] in alternating stems (ˇ), before +n: 19,098 words (uhr, wv, bestellung, wissenschaft), 839 forms wrong.
     CompiledRule {
         name: B("law1"),
         left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("g+n")),
+                matcher: Matcher::Class(B(&[
+                    B("ß"),
+                    B("ö"),
+                    B("a"),
+                    B("b"),
+                    B("d"),
+                    B("f"),
+                    B("g"),
+                    B("h"),
+                    B("i"),
+                    B("k"),
+                    B("l"),
+                    B("m"),
+                    B("n"),
+                    B("o"),
+                    B("p"),
+                    B("r"),
+                    B("s"),
+                    B("t"),
+                    B("u"),
+                    B("v"),
+                    B("x"),
+                    B("y"),
+                    B("z"),
+                ])),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
-        right: Pattern {
+        target: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
+        right: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Literal(B("+")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("n")])),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                    quantifier: Quantifier::ZeroOrMore,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Literal(B("ˇ")),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: true,
+        },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("g+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("e¦"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("g+n")]),
+        required: B(&[B("+"), B("ˇ")]),
     },
-    // t+n → t+en: 4,517 words (wissenschaft, welt, schlucht, abart), 0 forms wrong.
+    // in+en → in+nen: 7,250 words (ärztin, freundin, ehegattin, gattin), 1,007 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {
@@ -137,7 +183,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("t+n")),
+                matcher: Matcher::Literal(B("in+en")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -151,11 +197,11 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("t+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("in+nen"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("t+n")]),
+        required: B(&[B("in+en")]),
     },
     // en+n → en+: 4,896 words (possessivpronomen, garten, boden, rappen), 0 forms wrong.
     CompiledRule {
@@ -217,17 +263,38 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("e+e")]),
     },
-    // on+n → on+en: 2,211 words (auktion, definition, aberration, abrasion), 0 forms wrong.
+    // um → ∅ after [b|c|d|e|g|i|k|l|m|n|r|s|t|u|v|ä] in alternating stems (ˇ), before +[a|e|i|o|u|y|ä|ö|ü]$, +[a|e|i|o|u|y|ä|ö|ü]n, .¦: 960 words (impressum, vakuum, elysium, album), 9 forms wrong.
     CompiledRule {
         name: B("law5"),
         left: Pattern {
-            atoms: B(&[]),
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[
+                    B("ä"),
+                    B("b"),
+                    B("c"),
+                    B("d"),
+                    B("e"),
+                    B("g"),
+                    B("i"),
+                    B("k"),
+                    B("l"),
+                    B("m"),
+                    B("n"),
+                    B("r"),
+                    B("s"),
+                    B("t"),
+                    B("u"),
+                    B("v"),
+                ])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("on+n")),
+                matcher: Matcher::Literal(B("um")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -235,291 +302,140 @@ const RULES: &[CompiledRule<'static>] = &[
             anchored_at_end: false,
         },
         right: Pattern {
-            atoms: B(&[]),
+            atoms: B(&[Atom {
+                matcher: Matcher::Either(B(&[
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[
+                                    B("ä"),
+                                    B("ö"),
+                                    B("ü"),
+                                    B("a"),
+                                    B("e"),
+                                    B("i"),
+                                    B("o"),
+                                    B("u"),
+                                    B("y"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[
+                                    B("ä"),
+                                    B("ö"),
+                                    B("ü"),
+                                    B("a"),
+                                    B("e"),
+                                    B("i"),
+                                    B("o"),
+                                    B("u"),
+                                    B("y"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("n")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("¦")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("+")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                ])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("on+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("¦"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("on+n")]),
+        required: B(&[B("um"), B("+"), B("ˇ")]),
     },
-    // k+n → k+en: 646 words (gebrauchsmusik, verbrauchsmusik, depositenbank, datenbank), 0 forms wrong.
+    // a+en → a+s: 425 words (digitalkamera, diaspora, bosna, aba), 15 forms wrong.
     CompiledRule {
         name: B("law6"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("k+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("k+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("k+n")]),
-    },
-    // h+n → h+en: 26 words (milch, couch, blötsch, kirchweih), 0 forms wrong.
-    CompiledRule {
-        name: B("law7"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("h+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("h+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("h+n")]),
-    },
-    // m+n → m+en: 265 words (farm, form, norm, reform), 0 forms wrong.
-    CompiledRule {
-        name: B("law8"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("m+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("m+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("m+n")]),
-    },
-    // d+n → d+en: 127 words (maid, schuld, gegend, jagd), 0 forms wrong.
-    CompiledRule {
-        name: B("law9"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("d+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("d+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("d+n")]),
-    },
-    // z+n → z+en: 445 words (terz, nelkenwurz, milz, kadenz), 0 forms wrong.
-    CompiledRule {
-        name: B("law10"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("z+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("z+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("z+n")]),
-    },
-    // s+n → s+en: 20 words (eins, geiss, stewardess, sechs), 0 forms wrong.
-    CompiledRule {
-        name: B("law11"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("s+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("s+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("s+n")]),
-    },
-    // ur+n → ur+en: 726 words (architektur, natur, spur, temperatur), 0 forms wrong.
-    CompiledRule {
-        name: B("law12"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ur+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ur+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ur+n")]),
-    },
-    // f+n → f+en: 10 words (elf, zwölf, fünf, startelf), 0 forms wrong.
-    CompiledRule {
-        name: B("law13"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("f+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("f+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("f+n")]),
-    },
-    // i+n → i+en: 620 words (drei, lei, zwei, partei), 9 forms wrong.
-    CompiledRule {
-        name: B("law14"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("i+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("i+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("i+n")]),
-    },
-    // a+en → a+s: 425 words (digitalkamera, diaspora, bosna, aba), 31 forms wrong.
-    CompiledRule {
-        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -547,99 +463,225 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("a+en")]),
     },
-    // hr+n → hr+en: 209 words (uhr, wehr, gefahr, feuerwehr), 0 forms wrong.
+    // us → ∅ after [b|c|d|e|g|i|k|l|m|n|p|r|s|t]; is → ∅ after [l|s|x]; os → ∅ after [h|p] in alternating stems (ˇ), before +.$, +.n, .¦+.$: 605 words (amaryllis, kapitalismus, analphabetismus, anus), 21 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law7"),
         left: Pattern {
-            atoms: B(&[]),
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[
+                    B("b"),
+                    B("c"),
+                    B("d"),
+                    B("e"),
+                    B("g"),
+                    B("h"),
+                    B("i"),
+                    B("k"),
+                    B("l"),
+                    B("m"),
+                    B("n"),
+                    B("p"),
+                    B("r"),
+                    B("s"),
+                    B("t"),
+                    B("x"),
+                ])),
+                quantifier: Quantifier::One,
+                capture: Some(0),
+            }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("hr+n")),
+                matcher: Matcher::Class(B(&[B("is"), B("os"), B("us")])),
+                quantifier: Quantifier::One,
+                capture: Some(1),
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Either(B(&[
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("n")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("¦")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                ])),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("hr+en"))]),
-        capture_count: 0,
+        replacement: B(&[ReplacementPart::AgreeingCapture {
+            capture: 1,
+            key: 0,
+            entries: B(&[
+                (B("is"), B("b"), B("is")),
+                (B("is"), B("c"), B("is")),
+                (B("is"), B("d"), B("is")),
+                (B("is"), B("e"), B("is")),
+                (B("is"), B("g"), B("is")),
+                (B("is"), B("h"), B("is")),
+                (B("is"), B("i"), B("is")),
+                (B("is"), B("k"), B("is")),
+                (B("is"), B("l"), B("¦")),
+                (B("is"), B("m"), B("is")),
+                (B("is"), B("n"), B("is")),
+                (B("is"), B("p"), B("is")),
+                (B("is"), B("r"), B("is")),
+                (B("is"), B("s"), B("¦")),
+                (B("is"), B("t"), B("is")),
+                (B("is"), B("x"), B("¦")),
+                (B("os"), B("b"), B("os")),
+                (B("os"), B("c"), B("os")),
+                (B("os"), B("d"), B("os")),
+                (B("os"), B("e"), B("os")),
+                (B("os"), B("g"), B("os")),
+                (B("os"), B("h"), B("¦")),
+                (B("os"), B("i"), B("os")),
+                (B("os"), B("k"), B("os")),
+                (B("os"), B("l"), B("os")),
+                (B("os"), B("m"), B("os")),
+                (B("os"), B("n"), B("os")),
+                (B("os"), B("p"), B("¦")),
+                (B("os"), B("r"), B("os")),
+                (B("os"), B("s"), B("os")),
+                (B("os"), B("t"), B("os")),
+                (B("os"), B("x"), B("os")),
+                (B("us"), B("b"), B("¦")),
+                (B("us"), B("c"), B("¦")),
+                (B("us"), B("d"), B("¦")),
+                (B("us"), B("e"), B("¦")),
+                (B("us"), B("g"), B("¦")),
+                (B("us"), B("h"), B("us")),
+                (B("us"), B("i"), B("¦")),
+                (B("us"), B("k"), B("¦")),
+                (B("us"), B("l"), B("¦")),
+                (B("us"), B("m"), B("¦")),
+                (B("us"), B("n"), B("¦")),
+                (B("us"), B("p"), B("¦")),
+                (B("us"), B("r"), B("¦")),
+                (B("us"), B("s"), B("¦")),
+                (B("us"), B("t"), B("¦")),
+                (B("us"), B("x"), B("us")),
+            ]),
+        }]),
+        capture_count: 2,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("hr+n")]),
-    },
-    // al+n → al+en: 6 words (moral, qual, todesqual, höllenqual), 0 forms wrong.
-    CompiledRule {
-        name: B("law17"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("al+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("al+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("al+n")]),
-    },
-    // hl+n → hl+en: 203 words (zahl, wahl, auswahl, ordnungszahl), 4 forms wrong.
-    CompiledRule {
-        name: B("law18"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("hl+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("hl+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("hl+n")]),
+        required: B(&[B("+"), B("ˇ")]),
     },
     // ss+s → ss+es: 43 words (cross, miss, dünnschiss, beschiss), 0 forms wrong.
     CompiledRule {
-        name: B("law19"),
+        name: B("law8"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -667,39 +709,186 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ss+s")]),
     },
-    // ll+n → ll+en: 5 words (null, nachtigall, mamsell, margell), 0 forms wrong.
+    // a → ∅ after [b|d|g|i|k|l|m|n|r|s|t|v]; o → ∅ after [d|i|k|l|n|p|t] in alternating stems (ˇ), before +[a|e|i|o|u|y|ä|ö|ü], .¦+[^a|e|i|o|u|y|ä|ö|ü]: 537 words (tara, agenda, algebra, ambrosia), 36 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law9"),
         left: Pattern {
-            atoms: B(&[]),
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[
+                    B("b"),
+                    B("d"),
+                    B("g"),
+                    B("i"),
+                    B("k"),
+                    B("l"),
+                    B("m"),
+                    B("n"),
+                    B("p"),
+                    B("r"),
+                    B("s"),
+                    B("t"),
+                    B("v"),
+                ])),
+                quantifier: Quantifier::One,
+                capture: Some(0),
+            }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ll+n")),
+                matcher: Matcher::Class(B(&[B("a"), B("o")])),
+                quantifier: Quantifier::One,
+                capture: Some(1),
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Either(B(&[
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[
+                                    B("ä"),
+                                    B("ö"),
+                                    B("ü"),
+                                    B("a"),
+                                    B("e"),
+                                    B("i"),
+                                    B("o"),
+                                    B("u"),
+                                    B("y"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("¦")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("ä"),
+                                    B("ö"),
+                                    B("ü"),
+                                    B("+"),
+                                    B("a"),
+                                    B("e"),
+                                    B("i"),
+                                    B("o"),
+                                    B("u"),
+                                    B("y"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                ])),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ll+en"))]),
-        capture_count: 0,
+        replacement: B(&[ReplacementPart::AgreeingCapture {
+            capture: 1,
+            key: 0,
+            entries: B(&[
+                (B("a"), B("b"), B("¦")),
+                (B("a"), B("d"), B("¦")),
+                (B("a"), B("g"), B("¦")),
+                (B("a"), B("i"), B("¦")),
+                (B("a"), B("k"), B("¦")),
+                (B("a"), B("l"), B("¦")),
+                (B("a"), B("m"), B("¦")),
+                (B("a"), B("n"), B("¦")),
+                (B("a"), B("p"), B("a")),
+                (B("a"), B("r"), B("¦")),
+                (B("a"), B("s"), B("¦")),
+                (B("a"), B("t"), B("¦")),
+                (B("a"), B("v"), B("¦")),
+                (B("o"), B("b"), B("o")),
+                (B("o"), B("d"), B("¦")),
+                (B("o"), B("g"), B("o")),
+                (B("o"), B("i"), B("¦")),
+                (B("o"), B("k"), B("¦")),
+                (B("o"), B("l"), B("¦")),
+                (B("o"), B("m"), B("o")),
+                (B("o"), B("n"), B("¦")),
+                (B("o"), B("p"), B("¦")),
+                (B("o"), B("r"), B("o")),
+                (B("o"), B("s"), B("o")),
+                (B("o"), B("t"), B("¦")),
+                (B("o"), B("v"), B("o")),
+            ]),
+        }]),
+        capture_count: 2,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ll+n")]),
+        required: B(&[B("+"), B("ˇ")]),
     },
-    // an+n → an+en: 6 words (membran, zellmembran, tulipan, thylakoidmembran), 0 forms wrong.
+    // ß+s → +ss: 108 words (haß, biß, naß, schiß), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -707,7 +896,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("an+n")),
+                matcher: Matcher::Literal(B("ß+s")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -721,45 +910,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("an+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("+ss"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("an+n")]),
-    },
-    // ar+n → ar+en: 17 words (schar, pflugschar, schaar, kriegsschar), 1 forms wrong.
-    CompiledRule {
-        name: B("law22"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ar+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ar+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ar+n")]),
+        required: B(&[B("ß+s")]),
     },
     // er+er → er+: 44 words (bruder, stiefbruder, halbbruder, blutsbruder), 4 forms wrong.
     CompiledRule {
-        name: B("law23"),
+        name: B("law11"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -787,9 +946,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("er+er")]),
     },
-    // hn+n → hn+en: 138 words (u-bahn, autobahn, bahn, straßenbahn), 0 forms wrong.
+    // i+n → i+: 35 words (suaheli, lapislazuli, broccoli, brokkoli), 0 forms wrong.
     CompiledRule {
-        name: B("law24"),
+        name: B("law12"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -797,7 +956,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("hn+n")),
+                matcher: Matcher::Literal(B("i+n")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -811,15 +970,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("hn+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("i+"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("hn+n")]),
+        required: B(&[B("i+n")]),
     },
-    // or+n → or+en: 5 words (isolator, retardationsfaktor, retardierungsfaktor, punktionisator), 1 forms wrong.
+    // o+i → +i: 7 words (mafioso, paparazzo, scherzo, intermezzo), 0 forms wrong.
     CompiledRule {
-        name: B("law25"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -827,7 +986,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("or+n")),
+                matcher: Matcher::Literal(B("o+i")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -841,45 +1000,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("or+en"))]),
+        replacement: B(&[ReplacementPart::Literal(B("+i"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("or+n")]),
-    },
-    // ür+n → ür+en: 140 words (tür, falltür, hintertür, kür), 0 forms wrong.
-    CompiledRule {
-        name: B("law26"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ür+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ür+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ür+n")]),
+        required: B(&[B("o+i")]),
     },
     // ds+s → ds+: 32 words (fonds, shakehands, dachfonds, indexfonds), 0 forms wrong.
     CompiledRule {
-        name: B("law27"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -907,9 +1036,129 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ds+s")]),
     },
+    // di+n → di+s: 9 words (badi, bufdi, mahdi, bolandi), 0 forms wrong.
+    CompiledRule {
+        name: B("law15"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("di+n")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("di+s"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("di+n")]),
+    },
+    // ip+en → ip+ien: 27 words (partizip, prinzip, programmierprinzip, äquivalenzprinzip), 3 forms wrong.
+    CompiledRule {
+        name: B("law16"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ip+en")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ip+ien"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ip+en")]),
+    },
+    // ni+n → ni+s: 14 words (uni, zucchini, martini, edel-uni), 0 forms wrong.
+    CompiledRule {
+        name: B("law17"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ni+n")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ni+s"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ni+n")]),
+    },
+    // ri+n → ri+s: 11 words (safari, huri, harakiri, haori), 0 forms wrong.
+    CompiledRule {
+        name: B("law18"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ri+n")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ri+s"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ri+n")]),
+    },
     // ki+n → ki+s: 9 words (kaki, schoki, brocki, raki), 0 forms wrong.
     CompiledRule {
-        name: B("law28"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -939,7 +1188,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ps+s → ps+: 24 words (corps, nps, korps, sps), 1 forms wrong.
     CompiledRule {
-        name: B("law29"),
+        name: B("law20"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -969,7 +1218,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ok+n → ok+s: 6 words (lok, audiobook, dampflok, e-lok), 0 forms wrong.
     CompiledRule {
-        name: B("law30"),
+        name: B("law21"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -997,9 +1246,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ok+n")]),
     },
+    // hi+n → hi+s: 7 words (litschi, muschi, nashi, katschi), 1 forms wrong.
+    CompiledRule {
+        name: B("law22"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("hi+n")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("hi+s"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("hi+n")]),
+    },
     // ln+n → ln+: 16 words (röteln, bratkartoffeln, porzeln, katzenlächeln), 0 forms wrong.
     CompiledRule {
-        name: B("law31"),
+        name: B("law23"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1029,7 +1308,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ns+s → ns+: 13 words (tangens, jeans, ons, dingens), 0 forms wrong.
     CompiledRule {
-        name: B("law32"),
+        name: B("law24"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1059,7 +1338,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ts+en → ts+: 15 words (hotpants, shorts, peanuts, boxershorts), 2 forms wrong.
     CompiledRule {
-        name: B("law33"),
+        name: B("law25"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1087,9 +1366,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ts+en")]),
     },
-    // n+d → n+zi: 14 words (stimulans, ingrediens, formans, adjuvans), 0 forms wrong.
+    // ns+ie → n+zie: 13 words (stimulans, ingrediens, formans, adjuvans), 0 forms wrong.
     CompiledRule {
-        name: B("law34"),
+        name: B("law26"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1097,7 +1376,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("n+d")),
+                matcher: Matcher::Literal(B("ns+ie")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -1111,15 +1390,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("n+zi"))]),
+        replacement: B(&[ReplacementPart::Literal(B("n+zie"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("n+d")]),
+        required: B(&[B("ns+ie")]),
     },
     // ae+n → ae+: 11 words (australopithecinae, dryopithecinae, boinae, boidae), 0 forms wrong.
     CompiledRule {
-        name: B("law35"),
+        name: B("law27"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1147,39 +1426,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ae+n")]),
     },
-    // ö+n → ö+en: 11 words (diarrhö, bö, amenorrhö, urethrorrhö), 0 forms wrong.
-    CompiledRule {
-        name: B("law36"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ö+n")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ö+en"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ö+n")]),
-    },
     // ks+s → ks+: 10 words (binks, bks, butterkeks, pieks), 0 forms wrong.
     CompiledRule {
-        name: B("law37"),
+        name: B("law28"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1209,7 +1458,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // rs+s → rs+: 8 words (mars, revers, parcours, velours), 0 forms wrong.
     CompiledRule {
-        name: B("law38"),
+        name: B("law29"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1239,7 +1488,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [h|y|s|j|i]+ä → +ot: 6 words (aliya, alija, chanukkia, mesusa), 0 forms wrong.
     CompiledRule {
-        name: B("law39"),
+        name: B("law30"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1279,7 +1528,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [i|e]+im → +m: 6 words (sephardi, energieaufnahme, aschkenasi, charedi), 0 forms wrong.
     CompiledRule {
-        name: B("law40"),
+        name: B("law31"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1317,39 +1566,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+im")]),
     },
-    // ß+s → ß+: 6 words (gernegroß, ß, radlermaß, wieß), 0 forms wrong.
-    CompiledRule {
-        name: B("law41"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ß+s")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ß+"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ß+s")]),
-    },
     // cs+n → cs+: 6 words (abenomics, basics, paralympics, lyrics), 0 forms wrong.
     CompiledRule {
-        name: B("law42"),
+        name: B("law32"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1377,9 +1596,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("cs+n")]),
     },
+    // e+i → +i: 5 words (condottiere, kondottiere, bacile, zanne), 0 forms wrong.
+    CompiledRule {
+        name: B("law33"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("e+i")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("+i"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("e+i")]),
+    },
     // ms+s → ms+: 5 words (dingsbums, gams, sms, tanzbums), 0 forms wrong.
     CompiledRule {
-        name: B("law43"),
+        name: B("law34"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1406,6 +1655,74 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("ms+s")]),
+    },
+    // ns+en → n+zien before ˇ: 14 words (stimulans, ingrediens, formans, adjuvans), 0 forms wrong.
+    CompiledRule {
+        name: B("law35"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ns+en")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("ˇ")])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("n+zien"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ns+en")]),
+    },
+    // ar+i → ar+n after [b|g]: 10 words (nachbar, tischnachbar, periodennachbar, gruppennachbar), 0 forms wrong.
+    CompiledRule {
+        name: B("law36"),
+        left: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("b"), B("g")])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ar+i")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ar+n"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ar+i")]),
     },
 ];
 

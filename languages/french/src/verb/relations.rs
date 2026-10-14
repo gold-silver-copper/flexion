@@ -1066,7 +1066,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "s" => [0 3],
     } listed {}, true, None),
     // SUBJ_2_PL, from IMPF_2_PL.
-    relation!(SUBJ_2_PL, [IMPF_2_PL], [], none, true, None),
+    relation!(SUBJ_2_PL, [IMPF_2_PL], [], none, false, None),
     // SUBJ_3_SG, from SUBJ_1_SG.
     relation!(SUBJ_3_SG, [SUBJ_1_SG], [], none, true, None),
     // SUBJ_3_PL, from PRES_3_PL.
@@ -1106,7 +1106,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
     // IMPERATIVE_TU, from PRES_1_SG.
     relation!(IMPERATIVE_TU, [PRES_1_SG], [], none, false, None),
     // IMPERATIVE_NOUS, from PRES_1_PL.
-    relation!(IMPERATIVE_NOUS, [PRES_1_PL], [], none, true, None),
+    relation!(IMPERATIVE_NOUS, [PRES_1_PL], [], none, false, None),
     // IMPERATIVE_VOUS, from PRES_2_PL.
     relation!(IMPERATIVE_VOUS, [PRES_2_PL], [], none, true, None),
     // PARTICIPLE_PRES, from PARTICIPLE_PAST.

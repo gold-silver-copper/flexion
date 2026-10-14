@@ -109,18 +109,6 @@ macro_rules! feature {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`nom_as_acc`: one value read as another).
-const NOM_AS_ACC: [u16; 24] = [
-    3, 4, 5, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`acc_as_voc`: one value read as another).
-const ACC_AS_VOC: [u16; 24] = [
-    0, 1, 2, 21, 22, 23, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -326,9 +314,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     loc: "~े", _, "~ेषु";
     voc: "~", _, _;
     ),
-    // साधन: 1,091 words (विश्व, ख, साम्य, तृण, आसन, तीर). Like योग, except in 3 cells: nom du, nom pl, acc pl.
-    declension!("साधन", 1091, "~", [gender: Neuter], like योग as NOM_AS_ACC;
-    nom: _, "~े", "~ानि";
+    // साधन: 1,091 words (विश्व, ख, साम्य, तृण, आसन, तीर). Like योग, except in 4 cells: nom sg, nom du, nom pl, acc pl.
+    declension!("साधन", 1091, "~", [gender: Neuter], like योग;
+    nom: "~म्", "~े", "~ानि";
     acc: _, _, "~ानि";
     ),
     // कला: 506 words (देवता, काला, घृणा, भाषा, जरा, अहिंसा).
@@ -694,10 +682,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     gen_: "~भः", "~भोः", "~भाम्";
     loc: "~भि", _, _;
     ),
-    // जगत: 4 words (जगत्, यकृत्, बृहत्, असत्). Like मरुत, except in 3 cells: nom du, nom pl, acc pl.
-    declension!("जगत्", 4, "~त्", [gender: Neuter], like मरुत as ACC_AS_VOC;
+    // जगत: 4 words (जगत्, यकृत्, बृहत्, असत्). Like मरुत, except in 4 cells: nom du, nom pl, acc sg, acc pl.
+    declension!("जगत्", 4, "~त्", [gender: Neuter], like मरुत;
     nom: _, "~ती", "~न्ति";
-    acc: _, _, "~न्ति";
+    acc: "~त्", _, "~न्ति";
     ),
     // गलौ: 3 words (नौ, ज्यौ, ग्लौ).
     declension!("ग्लौ", 3, "~ौ";

@@ -46,8 +46,8 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 5963 | 143 | 48 | 699 | 895 | 498 |
-| adjective | 17353 | 90 | 5 | 622 | 995 | 658 |
+| noun | 126530 | 105 | 21 | 4408 | 6691 | 9860 |
+| adjective | 17353 | 81 | 10 | 606 | 1032 | 646 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -78,13 +78,13 @@ grammar on the dictionary's own words, typed in full.
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 12869 | 1912608 | **92.49%** ± 0.5 | 97.71% | 97.82% | 85.07% | 0.011 | 2.041 | 92.49% |  | 96.66 / 96.91 / 97.23 |  | 92.51% (1912243) | 8.49% (365) | 98.30% (98.90%) | 93.26% |
-| adjective | 1721 | 46116 | **97.50%** ± 0.7 | 99.26% | 99.30% | 94.60% | 0.008 | 0.511 | 97.50% |  | 98.65 / 98.71 / 98.87 |  | 97.50% (46113) | 33.33% (3) | 97.51% (66.67%) | 100.00% |
+| noun | 12869 | 1912608 | **97.75%** ± 0.3 | 98.91% | 98.92% | 94.79% | 0.008 | 0.931 | 97.75% |  | 98.69 / 98.74 / 98.84 |  | 97.76% (1912316) | 57.88% (292) | 98.30% (98.97%) | 99.99% |
+| adjective | 1721 | 46116 | **97.64%** ± 0.7 | 99.38% | 99.38% | 94.77% | 0.010 | 0.472 | 97.64% |  | 98.77 / 98.84 / 99.03 |  | 97.64% (46113) | 33.33% (3) | 97.51% (66.67%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 16828 | 635120 |
-| adjective | 11651 | 402643 |
+| noun | 25191 | 1140127 |
+| adjective | 9011 | 349101 |
 
 ## Data and license
 

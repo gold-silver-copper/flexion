@@ -60,7 +60,7 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
         [NOM_M_ANIM],
         [],
         none,
-        false,
+        true,
         Some((GEN_M_ANIM, GEN_N_ANIM))
     ),
     // NOM_N_INAN, from NOM_N_ANIM.

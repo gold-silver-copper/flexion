@@ -217,92 +217,127 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
     nom_n: "~ое", _;
     nom_pl: "~ые", _;
     gen_m: "~ого", _;
-    gen_f: "~ой", _;
+    gen_f: _, "~ой";
     gen_pl: "~ых", _;
-    dat_m: "~ому", _;
-    dat_pl: "~ым", _;
+    dat_m: _, "~ому";
+    dat_f: "~ой", "~ой";
+    dat_n: "~ому", "~ому";
+    dat_pl: _, "~ым";
+    acc_m: _, "~ый";
     acc_f: "~ую", _;
+    ins_m: "~ым", "~ым";
     ins_f: "~ой|~ою", "~ой|~ою";
-    ins_pl: "~ыми", _;
+    ins_n: "~ым", "~ым";
+    ins_pl: _, "~ыми";
     prep_m: "~ом", _;
+    prep_f: "~ой", "~ой";
     ),
-    // Свой: 5 words (мой, твой, свой, кой, никой). Like Оный, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("свой", 5, "~й", like Оный;
+    // Свой: 5 words (мой, твой, свой, кой, никой).
+    declension!("свой", 5, "~й";
     nom_m: _, "~й";
     nom_f: "~я", _;
     nom_n: "~ё", _;
     nom_pl: "~и", _;
     gen_m: "~его", _;
-    gen_f: "~ей", _;
+    gen_f: _, "~ей";
     gen_pl: "~их", _;
-    dat_m: "~ему", _;
-    dat_pl: "~им", _;
+    dat_m: _, "~ему";
+    dat_f: "~ей", "~ей";
+    dat_n: "~ему", "~ему";
+    dat_pl: _, "~им";
+    acc_m: _, "~й";
     acc_f: "~ю", _;
+    ins_m: "~им", "~им";
     ins_f: "~ей|~ею", "~ей|~ею";
-    ins_pl: "~ими", _;
+    ins_n: "~им", "~им";
+    ins_pl: _, "~ими";
     prep_m: "~ём", _;
+    prep_f: "~ей", "~ей";
     ),
-    // Чей: 4 words (чей, сей, ничей, кое-чей). Like Оный, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("чей", 4, "~ей", like Оный;
+    // Чей: 4 words (чей, сей, ничей, кое-чей).
+    declension!("чей", 4, "~ей";
     nom_m: _, "~ей";
     nom_f: "~ья", _;
     nom_n: "~ьё", _;
     nom_pl: "~ьи", _;
     gen_m: "~ьего", _;
-    gen_f: "~ьей", _;
+    gen_f: _, "~ьей";
     gen_pl: "~ьих", _;
-    dat_m: "~ьему", _;
-    dat_pl: "~ьим", _;
+    dat_m: _, "~ьему";
+    dat_f: "~ьей", "~ьей";
+    dat_n: "~ьему", "~ьему";
+    dat_pl: _, "~ьим";
+    acc_m: _, "~ей";
     acc_f: "~ью", _;
+    ins_m: "~ьим", "~ьим";
     ins_f: "~ьей|~ьею", "~ьей|~ьею";
-    ins_pl: "~ьими", _;
+    ins_n: "~ьим", "~ьим";
+    ins_pl: _, "~ьими";
     prep_m: "~ьём", _;
+    prep_f: "~ьей", "~ьей";
     ),
-    // Иной: 4 words (иной, любой, таковой, каковой). Like Оный, except in 1 cell: nom_m inan.
+    // Иной: 4 words (иной, любой, таковой, каковой). Like Оный, except in 2 cells: nom_m inan, acc_m inan.
     declension!("иной", 4, "~ой", like Оный;
     nom_m: _, "~ой";
+    acc_m: _, "~ой";
     ),
-    // Некий: 4 words (некий, всякий, этакий, эдакий). Like Оный, except in 5 cells: nom_m inan, nom_pl anim, gen_pl anim, dat_pl anim, ins_pl anim.
+    // Некий: 4 words (некий, всякий, этакий, эдакий). Like Оный, except in 16 cells: nom_m inan, nom_pl anim, gen_f anim, gen_f inan, gen_pl anim, dat_f anim, ….
     declension!("некий", 4, "~ий", like Оный;
     nom_m: _, "~ий";
     nom_pl: "~ие", _;
+    gen_f: "~ой", derived;
     gen_pl: "~их", _;
-    dat_pl: "~им", _;
-    ins_pl: "~ими", _;
+    dat_f: derived, derived;
+    dat_pl: _, "~им";
+    acc_m: _, "~ий";
+    ins_m: "~им", "~им";
+    ins_n: "~им", "~им";
+    ins_pl: _, "~ими";
+    prep_f: derived, derived;
     ),
-    // Другой: 3 words (другой, кое-какой, никакой). Like Некий, except in 1 cell: nom_m inan.
-    declension!("другой", 3, "~ой", like Некий;
-    nom_m: _, "~ой";
+    // Другой: 3 words (другой, кое-какой, никакой). Like Иной, except in 8 cells: nom_pl anim, gen_pl anim, dat_pl inan, ins_m anim, ins_m inan, ins_n anim, ….
+    declension!("другой", 3, "~ой", like Иной;
+    nom_pl: "~ие", _;
+    gen_pl: "~их", _;
+    dat_pl: _, "~им";
+    ins_m: "~им", "~им";
+    ins_n: "~им", "~им";
+    ins_pl: _, "~ими";
     ),
-    // Наш: 2 words (ваш, наш). Like Свой, except in 5 cells: nom_m inan, nom_f anim, nom_n anim, acc_f anim, prep_m anim.
+    // Наш: 2 words (ваш, наш). Like Свой, except in 6 cells: nom_m inan, nom_f anim, nom_n anim, acc_m inan, acc_f anim, prep_m anim.
     declension!("наш", 2, "~", like Свой;
     nom_m: _, "~";
     nom_f: "~а", _;
     nom_n: "~е", _;
+    acc_m: _, "~";
     acc_f: "~у", _;
     prep_m: "~ем", _;
     ),
-    // Тот: 2 words (этот, тот). Like Оный, except in 8 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_pl anim, dat_pl anim, ….
+    // Тот: 2 words (этот, тот). Like Оный, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_pl anim, dat_pl inan, ….
     declension!("тот", 2, "~от", like Оный;
     nom_m: _, "~от";
     nom_f: "~а", _;
     nom_n: "~о", _;
     nom_pl: "~е", _;
     gen_pl: "~ех", _;
-    dat_pl: "~ем", _;
+    dat_pl: _, "~ем";
+    acc_m: _, "~от";
     acc_f: "~у", _;
-    ins_pl: "~еми", _;
+    ins_m: "~ем", "~ем";
+    ins_n: "~ем", "~ем";
+    ins_pl: _, "~еми";
     ),
-    // Сам: 1 words (сам). Like Некий, except in 5 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, acc_f anim.
-    declension!("сам", 1, "~", like Некий;
+    // Сам: 1 words (сам). Like Другой, except in 6 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, acc_m inan, acc_f anim.
+    declension!("сам", 1, "~", like Другой;
     nom_m: _, "~";
     nom_f: "~а", _;
     nom_n: "~о", _;
     nom_pl: "~и", _;
+    acc_m: _, "~";
     acc_f: "~у|~оё", _;
     ),
-    // Иже: 1 words (иже). Like Оный, except in 24 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_m anim, gen_f anim, ….
-    declension!("иже", 1, "и~", like Оный;
+    // Иже: 1 words (иже).
+    declension!("иже", 1, "и~";
     nom_m: _, "и~";
     nom_f: "я~", _;
     nom_n: "е~", _;

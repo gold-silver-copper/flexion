@@ -1263,5 +1263,5 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
         "zähe" => 8,
         "überspielt" => 0,
         "überteuert" => 1,
-    }, false, None),
+    }, true, None),
 ];

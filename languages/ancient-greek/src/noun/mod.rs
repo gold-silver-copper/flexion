@@ -50,6 +50,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     feature: None,
     compound: None,
     prefixes: None,
+    heads: None,
     accent: Some(flexion::Accent {
         patterns: Cow::Borrowed(&accent::PATTERNS),
         classes: Cow::Borrowed(&accent::CLASSES),

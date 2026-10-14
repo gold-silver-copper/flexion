@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -189,59 +191,71 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `wolny`: 5,051 words.
+    /// Like `wolny`: 8,195 words.
     Wolny,
-    /// Like `słaby`: 4,843 words.
+    /// Like `słaby`: 1,412 words.
     Słaby,
     /// Like `lekki`: 1,310 words.
     Lekki,
-    /// Like `odpowiedni`: 1,238 words.
-    Odpowiedni,
+    /// Like `party`: 1,218 words.
+    Party,
     /// Like `ciężki`: 618 words.
     Ciężki,
+    /// Like `odpowiedni`: 238 words.
+    Odpowiedni,
     /// Like `drugi`: 49 words.
     Drugi,
-    /// Like `jasny`: 38 words.
-    Jasny,
-    /// Like `herbaciany`: 17 words.
-    Herbaciany,
-    /// Like `stały`: 15 words.
-    Stały,
-    /// Like `mały`: 10 words.
+    /// Like `mały`: 30 words.
     Mały,
+    /// Like `otwarty`: 29 words.
+    Otwarty,
+    /// Like `soboli`: 25 words.
+    Soboli,
+    /// Like `prosty`: 23 words.
+    Prosty,
+    /// Like `stały`: 19 words.
+    Stały,
+    /// Like `herbaciany`: 14 words.
+    Herbaciany,
+    /// Like `zajęczy`: 12 words.
+    Zajęczy,
     /// Like `rad`: 8 words.
     Rad,
-    /// Like `zwięzły`: 7 words.
-    Zwięzły,
     /// Like `ostry`: 6 words.
     Ostry,
+    /// Like `zwięzły`: 6 words.
+    Zwięzły,
     /// Like `uczulony`: 5 words.
     Uczulony,
-    /// Like `żyzny`: 5 words.
-    Żyzny,
     /// Like `wązki`: 4 words.
     Wązki,
+    /// Like `żyzny`: 3 words.
+    Żyzny,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 16] = [
+    pub const ALL: [Declension; 20] = [
         Declension::Wolny,
         Declension::Słaby,
         Declension::Lekki,
-        Declension::Odpowiedni,
+        Declension::Party,
         Declension::Ciężki,
+        Declension::Odpowiedni,
         Declension::Drugi,
-        Declension::Jasny,
-        Declension::Herbaciany,
-        Declension::Stały,
         Declension::Mały,
+        Declension::Otwarty,
+        Declension::Soboli,
+        Declension::Prosty,
+        Declension::Stały,
+        Declension::Herbaciany,
+        Declension::Zajęczy,
         Declension::Rad,
-        Declension::Zwięzły,
         Declension::Ostry,
+        Declension::Zwięzły,
         Declension::Uczulony,
-        Declension::Żyzny,
         Declension::Wązki,
+        Declension::Żyzny,
     ];
 
     /// Its table.
@@ -259,9 +273,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
-    // Wolny: 5,051 words (wolny, jenny, bury, hardy, bezwstydny, homoseksualny).
-    declension!("wolny", 5051, "~y";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
+    // Wolny: 8,195 words (wolny, jenny, bury, bezwstydny, homoseksualny, uszny).
+    declension!("wolny", 8195, "~y";
     nom_m: _, "~y";
     nom_f: "~a", _;
     nom_n: "~e", _;
@@ -270,16 +284,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~ej", _;
     gen_vir: "~ych", _;
     dat_m: "~emu", _;
-    dat_vir: "~ym", _;
-    acc_f: "~ą", _;
-    ins_vir: "~ymi", _;
+    dat_vir: _, "~ym";
+    dat_nvir: "~ym", "~ym";
+    acc_m: _, "~y";
+    acc_f: _, "~ą";
+    ins_m: "~ym", "~ym";
+    ins_f: "~ą", "~ą";
+    ins_n: "~ym", "~ym";
+    ins_vir: _, "~ymi";
+    ins_nvir: "~ymi", "~ymi";
+    loc_m: "~ym", "~ym";
+    loc_n: "~ym", "~ym";
     comparative: "~iejszy";
-    superlative: "naj~iejszy";
     ),
-    // Słaby: 4,843 words (party, złoty, pity, prosty, międzynarodowy, różowy). Like Wolny, except in 2 cells: comparative, superlative.
-    declension!("słaby", 4843, "~y", like Wolny;
+    // Słaby: 1,412 words (mulczujący, różowy, żółty, dany, chory, stary). Like Wolny, except in 1 cell: comparative.
+    declension!("słaby", 1412, "~y", like Wolny;
     comparative: "~szy";
-    superlative: "naj~szy";
     ),
     // Lekki: 1,310 words (polski, rosyjski, norweski, ruski, łaciński, morski).
     declension!("lekki", 1310, "~~ki";
@@ -291,23 +311,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~~kiej", _;
     gen_vir: "~~kich", _;
     dat_m: "~~kiemu", _;
-    dat_vir: "~~kim", _;
-    acc_f: "~~ką", _;
-    ins_vir: "~~kimi", _;
+    dat_vir: _, "~~kim";
+    dat_nvir: "~~kim", "~~kim";
+    acc_m: _, "~~ki";
+    acc_f: _, "~~ką";
+    ins_m: "~~kim", "~~kim";
+    ins_f: "~~ką", "~~ką";
+    ins_n: "~~kim", "~~kim";
+    ins_vir: _, "~~kimi";
+    ins_nvir: "~~kimi", "~~kimi";
+    loc_m: "~~kim", "~~kim";
+    loc_n: "~~kim", "~~kim";
     comparative: "~ż~zy";
-    superlative: "naj~ż~zy";
     ),
-    // Odpowiedni: 1,238 words (psi, kani, babi, mulczujący, kuni, tani). Like Wolny, except in 7 cells: nom_m inan, nom_vir anim, gen_vir anim, dat_vir anim, ins_vir anim, comparative, ….
-    declension!("odpowiedni", 1238, "~", like Wolny;
-    nom_m: _, "~";
-    nom_vir: "~", _;
-    gen_vir: "~ch", _;
-    dat_vir: "~m", _;
-    ins_vir: "~mi", _;
-    comparative: "~ejszy";
-    superlative: "naj~ejszy";
+    // Party: 1,218 words (party, złoty, hardy, pity, pusty, ciasny). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("party", 1218, "~yˇ", like Wolny;
+    nom_m: _, "~yˇ";
+    nom_f: "~aˇ", _;
+    nom_n: "~eˇ", _;
+    nom_vir: "~iˇ", _;
+    gen_m: "~egoˇ", _;
+    gen_f: "~ejˇ", _;
+    gen_vir: "~ychˇ", _;
+    dat_m: "~emuˇ", _;
+    dat_vir: _, "~ymˇ";
+    dat_nvir: "~ymˇ", "~ymˇ";
+    acc_m: _, "~yˇ";
+    acc_f: _, "~ąˇ";
+    ins_m: "~ymˇ", "~ymˇ";
+    ins_f: "~ąˇ", "~ąˇ";
+    ins_n: "~ymˇ", "~ymˇ";
+    ins_vir: _, "~ymiˇ";
+    ins_nvir: "~ymiˇ", "~ymiˇ";
+    loc_m: "~ymˇ", "~ymˇ";
+    loc_n: "~ymˇ", "~ymˇ";
+    comparative: "~iejszyˇ";
     ),
-    // Ciężki: 618 words (słodki, jaki, wszelki, malutki, niderlandzki, niemiecki). Like Słaby, except in 11 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Ciężki: 618 words (słodki, jaki, wszelki, malutki, niderlandzki, niemiecki). Like Słaby, except in 26 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
     declension!("ciężki", 618, "~ki", like Słaby;
     nom_m: _, "~ki";
     nom_f: "~ka", _;
@@ -317,11 +357,35 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~kiej", _;
     gen_vir: "~kich", _;
     dat_m: "~kiemu", _;
-    dat_vir: "~kim", _;
-    acc_f: "~ką", _;
-    ins_vir: "~kimi", _;
+    dat_vir: _, "~kim";
+    dat_nvir: "~kim", "~kim";
+    acc_m: _, "~ki";
+    acc_f: _, "~ką";
+    ins_m: "~kim", "~kim";
+    ins_f: "~ką", "~ką";
+    ins_n: "~kim", "~kim";
+    ins_vir: _, "~kimi";
+    ins_nvir: "~kimi", "~kimi";
+    loc_m: "~kim", "~kim";
+    loc_n: "~kim", "~kim";
     ),
-    // Drugi: 49 words (drogi, nagi, drugi, długi, mnogi, wrogi). Like Wolny, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Odpowiedni: 238 words (psi, kani, babi, kuni, tani, dropi). Like Wolny, except in 19 cells: nom_m inan, nom_vir anim, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ….
+    declension!("odpowiedni", 238, "~", like Wolny;
+    nom_m: _, "~";
+    nom_vir: "~", _;
+    gen_vir: "~ch", _;
+    dat_vir: _, "~m";
+    dat_nvir: "~m", "~m";
+    acc_m: _, "~";
+    ins_m: "~m", "~m";
+    ins_n: "~m", "~m";
+    ins_vir: _, "~mi";
+    ins_nvir: "~mi", "~mi";
+    loc_m: "~m", "~m";
+    loc_n: "~m", "~m";
+    comparative: "~ejszy";
+    ),
+    // Drugi: 49 words (drogi, nagi, drugi, długi, mnogi, wrogi). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
     declension!("drugi", 49, "~gi", like Wolny;
     nom_m: _, "~gi";
     nom_f: "~ga", _;
@@ -331,46 +395,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~giej", _;
     gen_vir: "~gich", _;
     dat_m: "~giemu", _;
-    dat_vir: "~gim", _;
-    acc_f: "~gą", _;
-    ins_vir: "~gimi", _;
+    dat_vir: _, "~gim";
+    dat_nvir: "~gim", "~gim";
+    acc_m: _, "~gi";
+    acc_f: _, "~gą";
+    ins_m: "~gim", "~gim";
+    ins_f: "~gą", "~gą";
+    ins_n: "~gim", "~gim";
+    ins_vir: _, "~gimi";
+    ins_nvir: "~gimi", "~gimi";
+    loc_m: "~gim", "~gim";
+    loc_n: "~gim", "~gim";
     comparative: "~ższy";
-    superlative: "naj~ższy";
     ),
-    // Jasny: 38 words (ciasny, własny, jasny, równoczesny, jednoczesny, wczesny). Like Lekki, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("jasny", 38, "~s~y", like Lekki;
-    nom_m: _, "~s~y";
-    nom_f: "~s~a", _;
-    nom_n: "~s~e", _;
-    nom_vir: "~ś~i", _;
-    gen_m: "~s~ego", _;
-    gen_f: "~s~ej", _;
-    gen_vir: "~s~ych", _;
-    dat_m: "~s~emu", _;
-    dat_vir: "~s~ym", _;
-    acc_f: "~s~ą", _;
-    ins_vir: "~s~ymi", _;
-    comparative: "~ś~iejszy";
-    superlative: "naj~ś~iejszy";
-    ),
-    // Herbaciany: 17 words (słony, jasnozielony, ciemnoczerwony, biało-czerwony, podczerwony, infraczerwony). Like Wolny, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("herbaciany", 17, "~ny", like Wolny;
-    nom_m: _, "~ny";
-    nom_f: "~na", _;
-    nom_n: "~ne", _;
-    nom_vir: "~ni", _;
-    gen_m: "~nego", _;
-    gen_f: "~nej", _;
-    gen_vir: "~nych", _;
-    dat_m: "~nemu", _;
-    dat_vir: "~nym", _;
-    acc_f: "~ną", _;
-    ins_vir: "~nymi", _;
-    comparative: "~ńszy";
-    superlative: "naj~ńszy";
-    ),
-    // Stały: 15 words (miły, dojrzały, stały, doskonały, czuły, trwały). Like Wolny, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("stały", 15, "~ły", like Wolny;
+    // Mały: 30 words (zwykły, ciekły, niezwykły, ścisły, nikły, smukły). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("mały", 30, "~ły", like Wolny;
     nom_m: _, "~ły";
     nom_f: "~ła", _;
     nom_n: "~łe", _;
@@ -379,25 +418,107 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~łej", _;
     gen_vir: "~łych", _;
     dat_m: "~łemu", _;
-    dat_vir: "~łym", _;
-    acc_f: "~łą", _;
-    ins_vir: "~łymi", _;
-    comparative: "~lszy";
-    superlative: "naj~lszy";
-    ),
-    // Mały: 10 words (zwykły, niezwykły, ścisły, nikły, smukły, wściekły). Like Stały, except in 2 cells: comparative, superlative.
-    declension!("mały", 10, "~ły", like Stały;
+    dat_vir: _, "~łym";
+    dat_nvir: "~łym", "~łym";
+    acc_m: _, "~ły";
+    acc_f: _, "~łą";
+    ins_m: "~łym", "~łym";
+    ins_f: "~łą", "~łą";
+    ins_n: "~łym", "~łym";
+    ins_vir: _, "~łymi";
+    ins_nvir: "~łymi", "~łymi";
+    loc_m: "~łym", "~łym";
+    loc_n: "~łym", "~łym";
     comparative: "~lejszy";
-    superlative: "naj~lejszy";
     ),
-    // Rad: 8 words (wart, rad, syt, łaskaw, miłościw, kontent). Like Wolny, except in 3 cells: nom_m inan, comparative, superlative.
+    // Otwarty: 29 words (odkryty, szyty, uszyty, umyty, myty, zmyty). Like Wolny, except in 28 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("otwarty", 29, "~ty", like Wolny;
+    nom_m: _, "~ty";
+    nom_f: "~ta", _;
+    nom_n: "~te", _;
+    nom_vir: "~ci", _;
+    gen_m: "~tego", _;
+    gen_f: "~tej", _;
+    gen_vir: "~tych", _;
+    dat_m: "~temu", _;
+    dat_vir: _, "~tym";
+    dat_nvir: "~tym", "~tym";
+    acc_m: _, "~ty";
+    acc_f: _, "~tą";
+    ins_m: "~tym", "~tym";
+    ins_f: "~tą", "~tą";
+    ins_n: "~tym", "~tym";
+    ins_vir: _, "~tymi";
+    ins_nvir: "~tymi", "~tymi";
+    loc_m: "~tym", "~tym";
+    loc_n: "~tym", "~tym";
+    comparative: "~tszy";
+    superlative: "naj~tszy";
+    ),
+    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli). Like Wolny, except in 18 cells: nom_m inan, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, acc_m inan, ….
+    declension!("soboli", 25, "~i", like Wolny;
+    nom_m: _, "~i";
+    gen_vir: "~ich", _;
+    dat_vir: _, "~im";
+    dat_nvir: "~im", "~im";
+    acc_m: _, "~i";
+    ins_m: "~im", "~im";
+    ins_n: "~im", "~im";
+    ins_vir: _, "~imi";
+    ins_nvir: "~imi", "~imi";
+    loc_m: "~im", "~im";
+    loc_n: "~im", "~im";
+    comparative: derived;
+    ),
+    // Prosty: 23 words (prosty, młody, twardy, częsty, chudy, tłusty). Like Party, except in 1 cell: comparative.
+    declension!("prosty", 23, "~yˇ", like Party;
+    comparative: "~szyˇ";
+    ),
+    // Stały: 19 words (miły, były, dojrzały, stały, doskonały, czuły). Like Mały, except in 1 cell: comparative.
+    declension!("stały", 19, "~ły", like Mały;
+    comparative: "~lszy";
+    ),
+    // Herbaciany: 14 words (słony, jasnozielony, ciemnoczerwony, biało-czerwony, podczerwony, infraczerwony). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("herbaciany", 14, "~ny", like Wolny;
+    nom_m: _, "~ny";
+    nom_f: "~na", _;
+    nom_n: "~ne", _;
+    nom_vir: "~ni", _;
+    gen_m: "~nego", _;
+    gen_f: "~nej", _;
+    gen_vir: "~nych", _;
+    dat_m: "~nemu", _;
+    dat_vir: _, "~nym";
+    dat_nvir: "~nym", "~nym";
+    acc_m: _, "~ny";
+    acc_f: _, "~ną";
+    ins_m: "~nym", "~nym";
+    ins_f: "~ną", "~ną";
+    ins_n: "~nym", "~nym";
+    ins_vir: _, "~nymi";
+    ins_nvir: "~nymi", "~nymi";
+    loc_m: "~nym", "~nym";
+    loc_n: "~nym", "~nym";
+    comparative: "~ńszy";
+    ),
+    // Zajęczy: 12 words (bosy, łasy, rusy, krasy, kusy, kosy). Like Słaby, except in 2 cells: nom_vir anim, superlative.
+    declension!("zajęczy", 12, "~y", like Słaby;
+    nom_vir: "~y", _;
+    superlative: "naj~szy";
+    ),
+    // Rad: 8 words (wart, rad, syt, łaskaw, miłościw, kontent). Like Wolny, except in 3 cells: nom_m inan, acc_m inan, comparative.
     declension!("rad", 8, "~", like Wolny;
     nom_m: _, "~";
+    acc_m: _, "~";
     comparative: derived;
-    superlative: derived;
     ),
-    // Zwięzły: 7 words (zwięzły, rozwiązły, niezły, rozlazły, spełzły, wypełzły). Like Wolny, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("zwięzły", 7, "~zły", like Wolny;
+    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Wolny, except in 2 cells: nom_vir anim, comparative.
+    declension!("ostry", 6, "~y", like Wolny;
+    nom_vir: "~zy", _;
+    comparative: "~zejszy";
+    ),
+    // Zwięzły: 6 words (zwięzły, rozwiązły, niezły, spełzły, wypełzły, sczezły). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("zwięzły", 6, "~zły", like Wolny;
     nom_m: _, "~zły";
     nom_f: "~zła", _;
     nom_n: "~złe", _;
@@ -406,19 +527,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~złej", _;
     gen_vir: "~złych", _;
     dat_m: "~złemu", _;
-    dat_vir: "~złym", _;
-    acc_f: "~złą", _;
-    ins_vir: "~złymi", _;
+    dat_vir: _, "~złym";
+    dat_nvir: "~złym", "~złym";
+    acc_m: _, "~zły";
+    acc_f: _, "~złą";
+    ins_m: "~złym", "~złym";
+    ins_f: "~złą", "~złą";
+    ins_n: "~złym", "~złym";
+    ins_vir: _, "~złymi";
+    ins_nvir: "~złymi", "~złymi";
+    loc_m: "~złym", "~złym";
+    loc_n: "~złym", "~złym";
     comparative: "~źlejszy";
-    superlative: "naj~źlejszy";
     ),
-    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Wolny, except in 3 cells: nom_vir anim, comparative, superlative.
-    declension!("ostry", 6, "~y", like Wolny;
-    nom_vir: "~zy", _;
-    comparative: "~zejszy";
-    superlative: "naj~zejszy";
-    ),
-    // Uczulony: 5 words (ulubiony, szalony, uczony, zasłużony, uniżony). Like Wolny, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Uczulony: 5 words (ulubiony, szalony, uczony, zasłużony, uniżony). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
     declension!("uczulony", 5, "~ony", like Wolny;
     nom_m: _, "~ony";
     nom_f: "~ona", _;
@@ -428,29 +550,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~onej", _;
     gen_vir: "~onych", _;
     dat_m: "~onemu", _;
-    dat_vir: "~onym", _;
-    acc_f: "~oną", _;
-    ins_vir: "~onymi", _;
+    dat_vir: _, "~onym";
+    dat_nvir: "~onym", "~onym";
+    acc_m: _, "~ony";
+    acc_f: _, "~oną";
+    ins_m: "~onym", "~onym";
+    ins_f: "~oną", "~oną";
+    ins_n: "~onym", "~onym";
+    ins_vir: _, "~onymi";
+    ins_nvir: "~onymi", "~onymi";
+    loc_m: "~onym", "~onym";
+    loc_n: "~onym", "~onym";
     comparative: "~eńszy";
-    superlative: "naj~eńszy";
     ),
-    // Żyzny: 5 words (żelazny, przyjazny, żyzny, nieprzyjazny, nieżelazny). Like Lekki, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("żyzny", 5, "~z~y", like Lekki;
-    nom_m: _, "~z~y";
-    nom_f: "~z~a", _;
-    nom_n: "~z~e", _;
-    nom_vir: "~ź~i", _;
-    gen_m: "~z~ego", _;
-    gen_f: "~z~ej", _;
-    gen_vir: "~z~ych", _;
-    dat_m: "~z~emu", _;
-    dat_vir: "~z~ym", _;
-    acc_f: "~z~ą", _;
-    ins_vir: "~z~ymi", _;
-    comparative: "~ź~iejszy";
-    superlative: "naj~ź~iejszy";
-    ),
-    // Wązki: 4 words (sąsiedzki, wązki, dobrosąsiedzki, grudziądzki). Like Lekki, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Wązki: 4 words (sąsiedzki, wązki, dobrosąsiedzki, grudziądzki). Like Lekki, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
     declension!("wązki", 4, "~ą~ki", like Lekki;
     nom_m: _, "~ą~ki";
     nom_f: "~ą~ka", _;
@@ -460,10 +573,40 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_f: "~ą~kiej", _;
     gen_vir: "~ą~kich", _;
     dat_m: "~ą~kiemu", _;
-    dat_vir: "~ą~kim", _;
-    acc_f: "~ą~ką", _;
-    ins_vir: "~ą~kimi", _;
+    dat_vir: _, "~ą~kim";
+    dat_nvir: "~ą~kim", "~ą~kim";
+    acc_m: _, "~ą~ki";
+    acc_f: _, "~ą~ką";
+    ins_m: "~ą~kim", "~ą~kim";
+    ins_f: "~ą~ką", "~ą~ką";
+    ins_n: "~ą~kim", "~ą~kim";
+    ins_vir: _, "~ą~kimi";
+    ins_nvir: "~ą~kimi", "~ą~kimi";
+    loc_m: "~ą~kim", "~ą~kim";
+    loc_n: "~ą~kim", "~ą~kim";
     comparative: "~ężs~y";
-    superlative: "naj~ężs~y";
+    ),
+    // Żyzny: 3 words (przyjazny, żyzny, nieprzyjazny). Like Lekki, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("żyzny", 3, "~z~y", like Lekki;
+    nom_m: _, "~z~y";
+    nom_f: "~z~a", _;
+    nom_n: "~z~e", _;
+    nom_vir: "~ź~i", _;
+    gen_m: "~z~ego", _;
+    gen_f: "~z~ej", _;
+    gen_vir: "~z~ych", _;
+    dat_m: "~z~emu", _;
+    dat_vir: _, "~z~ym";
+    dat_nvir: "~z~ym", "~z~ym";
+    acc_m: _, "~z~y";
+    acc_f: _, "~z~ą";
+    ins_m: "~z~ym", "~z~ym";
+    ins_f: "~z~ą", "~z~ą";
+    ins_n: "~z~ym", "~z~ym";
+    ins_vir: _, "~z~ymi";
+    ins_nvir: "~z~ymi", "~z~ymi";
+    loc_m: "~z~ym", "~z~ym";
+    loc_n: "~z~ym", "~z~ym";
+    comparative: "~ź~iejszy";
     ),
 ];

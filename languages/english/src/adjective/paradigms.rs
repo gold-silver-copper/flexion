@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -68,18 +70,24 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `open`: 58,666 words.
+    /// Like `open`: 58,664 words.
     Open,
-    /// Like `heavy`: 1,863 words.
+    /// Like `heavy`: 1,984 words.
     Heavy,
-    /// Like `soft`: 707 words.
+    /// Like `soft`: 695 words.
     Soft,
-    /// Like `tonguey`: 120 words.
-    Tonguey,
-    /// Like `awful`: 49 words.
-    Awful,
     /// Like `right`: 30 words.
     Right,
+    /// Like `awful`: 22 words.
+    Awful,
+    /// Like `slim`: 13 words.
+    Slim,
+    /// Like `flat`: 10 words.
+    Flat,
+    /// Like `sad`: 9 words.
+    Sad,
+    /// Like `big`: 8 words.
+    Big,
     /// Like `first`: 7 words.
     First,
     /// Like `inner`: 6 words.
@@ -92,13 +100,16 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 10] = [
+    pub const ALL: [Declension; 13] = [
         Declension::Open,
         Declension::Heavy,
         Declension::Soft,
-        Declension::Tonguey,
-        Declension::Awful,
         Declension::Right,
+        Declension::Awful,
+        Declension::Slim,
+        Declension::Flat,
+        Declension::Sad,
+        Declension::Big,
         Declension::First,
         Declension::Inner,
         Declension::Flip,
@@ -120,33 +131,48 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
-    // Open: 58,666 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
-    declension!("open", 58666, "~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
+    // Open: 58,664 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
+    declension!("open", 58664, "~";
     adjective: "~", "more ~", "most ~";
     ),
-    // Heavy: 1,863 words (craggy, country, early, baby, cherry, yeasty).
-    declension!("heavy", 1863, "~y";
-    stem adjective: "~ie- like heavy";
-    adjective: "~y", _, _;
-    ),
-    // Soft: 707 words (free, brown, august, minute, abject, able).
-    declension!("soft", 707, "~";
+    // Heavy: 1,984 words (craggy, country, early, smiley, baby, cherry).
+    declension!("heavy", 1984, "~ˇ";
     stem adjective: "~e- like heavy";
+    adjective: "~ˇ", _, _;
+    ),
+    // Soft: 695 words (free, brown, august, minute, abject, able).
+    declension!("soft", 695, "~";
+    stem adjective: "~e- like soft";
     adjective: "~", _, _;
-    ),
-    // Tonguey: 120 words (smiley, horsey, dykey, limey, cagey, dickey).
-    declension!("tonguey", 120, "~~y";
-    stem adjective: "~i~- like heavy";
-    adjective: "~~y", _, _;
-    ),
-    // Awful: 49 words (big, red, shit, hot, fit, bog).
-    declension!("awful", 49, "~";
-    adjective: "~", "~ler|more ~", "~lest|most ~";
     ),
     // Right: 30 words (left, right, gone, inset, downstairs, upstairs).
     declension!("right", 30, "~";
     adjective: "~", "further ~|farther ~", "furthest ~|farthest ~";
+    ),
+    // Awful: 22 words (evil, fab, painful, awful, grateful, sib).
+    declension!("awful", 22, "~";
+    adjective: "~", "~ler|more ~", "~lest|most ~";
+    ),
+    // Slim: 13 words (slim, bum, prim, clam, dim, rum).
+    declension!("slim", 13, "~";
+    stem adjective: "~me- like soft";
+    adjective: "~", _, _;
+    ),
+    // Flat: 10 words (shit, hot, fit, wet, flat, jet).
+    declension!("flat", 10, "~";
+    stem adjective: "~te- like soft";
+    adjective: "~", _, _;
+    ),
+    // Sad: 9 words (red, dud, glad, rad, sad, mad).
+    declension!("sad", 9, "~";
+    stem adjective: "~de- like soft";
+    adjective: "~", _, _;
+    ),
+    // Big: 8 words (big, bog, mug, snug, brag, smug).
+    declension!("big", 8, "~";
+    stem adjective: "~ge- like soft";
+    adjective: "~", _, _;
     ),
     // First: 7 words (first, ben, middle, fore, mid, rightern).
     declension!("first", 7, "~";
@@ -158,11 +184,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
     ),
     // Flip: 3 words (crap, hip, flip).
     declension!("flip", 3, "~";
-    stem adjective: "~pe- like heavy";
+    stem adjective: "~pe- like soft";
     adjective: "~", _, _;
     ),
     // Thin: 3 words (thin, tan, wan). Like First, except in 0 cells: .
     declension!("thin", 3, "~", like First;
-    stem adjective: "~ne- like heavy";
+    stem adjective: "~ne- like soft";
     ),
 ];

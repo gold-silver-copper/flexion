@@ -78,13 +78,15 @@ const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `sauvage`: 9,034 words.
+    /// Like `sauvage`: 9,035 words.
     Sauvage,
-    /// Like `fini`: 5,819 words.
+    /// Like `fini`: 4,603 words.
     Fini,
+    /// Like `bon`: 1,295 words.
+    Bon,
     /// Like `trivial`: 888 words.
     Trivial,
-    /// Like `chaleureux`: 584 words.
+    /// Like `chaleureux`: 583 words.
     Chaleureux,
     /// Like `vif`: 543 words.
     Vif,
@@ -94,22 +96,20 @@ pub enum Declension {
     Dar,
     /// Like `régulier`: 222 words.
     Régulier,
-    /// Like `bon`: 220 words.
-    Bon,
     /// Like `fellateur`: 209 words.
     Fellateur,
+    /// Like `rageur`: 143 words.
+    Rageur,
     /// Like `beau`: 10 words.
     Beau,
+    /// Like `bateau`: 4 words.
+    Bateau,
     /// Like `long`: 3 words.
     Long,
     /// Like `franc`: 3 words.
     Franc,
     /// Like `faux`: 3 words.
     Faux,
-    /// Like `bateau`: 3 words.
-    Bateau,
-    /// Like `hébreu`: 3 words.
-    Hébreu,
     /// Like `pécheur`: 3 words.
     Pécheur,
     /// Like `afrodescendants`: 1 words.
@@ -123,20 +123,20 @@ impl Declension {
     pub const ALL: [Declension; 19] = [
         Declension::Sauvage,
         Declension::Fini,
+        Declension::Bon,
         Declension::Trivial,
         Declension::Chaleureux,
         Declension::Vif,
         Declension::Gentil,
         Declension::Dar,
         Declension::Régulier,
-        Declension::Bon,
         Declension::Fellateur,
+        Declension::Rageur,
         Declension::Beau,
+        Declension::Bateau,
         Declension::Long,
         Declension::Franc,
         Declension::Faux,
-        Declension::Bateau,
-        Declension::Hébreu,
         Declension::Pécheur,
         Declension::Afrodescendants,
         Declension::Afrodescendantes,
@@ -158,22 +158,26 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
-    // Sauvage: 9,034 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
-    declension!("sauvage", 9034, "~";
+    // Sauvage: 9,035 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
+    declension!("sauvage", 9035, "~";
     stem adjective_m: "~- like sauvage";
     stem adjective_f: "~- like sauvage";
     ),
-    // Fini: 5,819 words (gratuit, chien, aberrant, abject, abrupt, nu). Like Sauvage, except in 0 cells: .
-    declension!("fini", 5819, "~", like Sauvage;
+    // Fini: 4,603 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Sauvage, except in 0 cells: .
+    declension!("fini", 4603, "~", like Sauvage;
     stem adjective_f: "~e- like sauvage";
+    ),
+    // Bon: 1,295 words (chien, sot, moron, con, tien, mien). Like Sauvage, except in 0 cells: .
+    declension!("bon", 1295, "~", like Sauvage;
+    stem adjective_f: "~ne- like sauvage";
     ),
     // Trivial: 888 words (adjectival, abbatial, abdominal, abnormal, abyssal, plural).
     declension!("trivial", 888, "~l";
     stem adjective_f: "~le- like sauvage";
     m: "~l", "~ux";
     ),
-    // Chaleureux: 584 words (doux, gueux, heureux, paresseux, nuageux, douteux).
-    declension!("chaleureux", 584, "~x";
+    // Chaleureux: 583 words (gueux, heureux, paresseux, nuageux, douteux, merdeux).
+    declension!("chaleureux", 583, "~x";
     stem adjective_f: "~se- like sauvage";
     m: "~x", "~x";
     ),
@@ -186,28 +190,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     declension!("gentil", 367, "~", like Sauvage;
     stem adjective_f: "~le- like sauvage";
     ),
-    // Dar: 234 words (orange, bio, poison, dar, nickel, cool). Like Sauvage, except in 0 cells: .
+    // Dar: 234 words (orange, bio, poison, dar, nickel, cool). Like Sauvage, except in 1 cell: before_vowel.
     declension!("dar", 234, "~", like Sauvage as PL_AS_SG;
+    before_vowel: derived;
     ),
     // Régulier: 222 words (secret, quiet, fier, premier, cher, léger).
     declension!("régulier", 222, "~e~";
     stem adjective_m: "~e~- like sauvage";
     stem adjective_f: "~è~e- like sauvage";
     ),
-    // Bon: 220 words (sot, moron, con, bon, chou, poseur). Like Sauvage, except in 0 cells: .
-    declension!("bon", 220, "~", like Sauvage;
-    stem adjective_f: "~ne- like sauvage";
-    ),
     // Fellateur: 209 words (observateur, moteur, directeur, provocateur, transformateur, formateur).
     declension!("fellateur", 209, "~eu~";
     stem adjective_m: "~eu~- like sauvage";
     stem adjective_f: "~~ice- like sauvage";
+    ),
+    // Rageur: 143 words (poseur, bricoleur, joueur, voyageur, voleur, songeur). Like Chaleureux, except in 0 cells: .
+    declension!("rageur", 143, "~r", like Chaleureux;
+    stem adjective_m: "~r- like sauvage";
     ),
     // Beau: 10 words (beau, nouveau, puceau, tourangeau, manceau, quadrijumeau).
     declension!("beau", 10, "~au";
     m: "~au", "~aux";
     f: "~lle", "~lles";
     before_vowel: "~l";
+    ),
+    // Bateau: 4 words (bateau, scrogneugneu, marteau, morvandiau). Like Sauvage, except in 2 cells: m pl, f pl.
+    declension!("bateau", 4, "~", like Sauvage;
+    m: _, "~x";
+    f: _, "~x";
     ),
     // Long: 3 words (long, oblong, barlong). Like Sauvage, except in 0 cells: .
     declension!("long", 3, "~", like Sauvage;
@@ -220,15 +230,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     // Faux: 3 words (faux, roux, archifaux). Like Chaleureux, except in 0 cells: .
     declension!("faux", 3, "~x", like Chaleureux;
     stem adjective_f: "~sse- like sauvage";
-    ),
-    // Bateau: 3 words (bateau, marteau, morvandiau). Like Sauvage, except in 2 cells: m pl, f pl.
-    declension!("bateau", 3, "~", like Sauvage;
-    m: _, "~x";
-    f: _, "~x";
-    ),
-    // Hébreu: 3 words (hébreu, scrogneugneu, mantchou). Like Fini, except in 1 cell: m pl.
-    declension!("hébreu", 3, "~", like Fini;
-    m: _, "~x";
     ),
     // Pécheur: 3 words (pécheur, vengeur, enchanteur).
     declension!("pécheur", 3, "~u~";

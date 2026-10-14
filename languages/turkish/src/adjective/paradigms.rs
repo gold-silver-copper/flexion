@@ -220,76 +220,32 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     // Faydalı: 26 words (fino, maço, yaşlı, ayna, hamile, yabancı).
     declension!("faydalı", 26, "~";
-    nom: "~", "~lEr";
-    acc: "~yI", "~lErI";
-    dat: "~yE", "~lErE";
-    loc: "~dE", "~lErdE";
-    abl: "~dEn", "~lErdEn";
-    gen_: "~nIn", "~lErIn";
-    adjective_possessive_nom_one: "~m", "~n", "~sI", "~mIz", "~nIz", _;
-    adjective_possessive_nom_many: "~lErIm", _, _, "~lErImIz", "~lErInIz", _;
-    adjective_possessive_acc_one: "~mI", "~nI", "~sInI", "~mIzI", "~nIzI", "~lErInI";
-    adjective_possessive_acc_many: "~lErImI", _, _, "~lErImIzI", "~lErInIzI", _;
-    adjective_possessive_dat_one: "~mE", "~nE", "~sInE", "~mIzE", "~nIzE", "~lErInE";
-    adjective_possessive_dat_many: "~lErImE", _, _, "~lErImIzE", "~lErInIzE", _;
-    adjective_possessive_loc_one: "~mdE", "~ndE", "~sIndE", "~mIzdE", "~nIzdE", "~lErIndE";
-    adjective_possessive_loc_many: "~lErImdE", _, _, "~lErImIzdE", "~lErInIzdE", _;
-    adjective_possessive_abl_one: "~mdEn", "~ndEn", "~sIndEn", "~mIzdEn", "~nIzdEn", "~lErIndEn";
-    adjective_possessive_abl_many: "~lErImdEn", _, _, "~lErImIzdEn", "~lErInIzdEn", _;
-    adjective_possessive_gen_one: "~mIn", "~nIn", "~sInIn", "~mIzIn", "~nIzIn", "~lErInIn";
-    adjective_possessive_gen_many: "~lErImIn", _, _, "~lErImIzIn", "~lErInIzIn", _;
+    stem adjective: "~- like faydalı";
     ),
-    // Sivil: 17 words (sik, kel, derin, iç, âlem, tembel).
-    declension!("sivil", 17, "~";
-    nom: "~", "~ler";
-    acc: "~i", "~lerI";
-    dat: "~e", "~lerE";
-    loc: "~de", "~lerdE";
-    abl: "~den", "~lerdEn";
-    gen_: "~in", "~lerIn";
-    adjective_possessive_nom_one: "~Im", "~In", "~I", "~ImIz", "~InIz", "~lErI";
-    adjective_possessive_nom_many: "~lErIm", "~lErIn", "~lErI", "~lErImIz", "~lErInIz", "~lErI";
-    adjective_possessive_acc_one: "~ImI", "~InI", "~InI", "~ImIzI", "~InIzI", "~lErInI";
-    adjective_possessive_acc_many: "~lErImI", _, _, "~lErImIzI", "~lErInIzI", _;
-    adjective_possessive_dat_one: "~ImE", "~InE", "~InE", "~ImIzE", "~InIzE", "~lErInE";
-    adjective_possessive_dat_many: "~lErImE", _, _, "~lErImIzE", "~lErInIzE", _;
-    adjective_possessive_loc_one: "~ImdE", "~IndE", "~IndE", "~ImIzdE", "~InIzdE", "~lErIndE";
-    adjective_possessive_loc_many: "~lErImdE", _, _, "~lErImIzdE", "~lErInIzdE", _;
-    adjective_possessive_abl_one: "~ImdEn", "~IndEn", "~IndEn", "~ImIzdEn", "~InIzdEn", "~lErIndEn";
-    adjective_possessive_abl_many: "~lErImdEn", _, _, "~lErImIzdEn", "~lErInIzdEn", _;
-    adjective_possessive_gen_one: "~ImIn", "~InIn", "~InIn", "~ImIzIn", "~InIzIn", "~lErInIn";
-    adjective_possessive_gen_many: "~lErImIn", _, _, "~lErImIzIn", "~lErInIzIn", _;
+    // Sivil: 17 words (sik, kel, derin, iç, âlem, tembel). Like Faydalı, except in 24 cells: nom pl, acc sg, dat sg, loc sg, gen_ sg, adjective_possessive_nom_one _1sg, ….
+    declension!("sivil", 17, "~", like Faydalı;
+    nom: _, "~ler";
+    acc: "~i", _;
+    dat: "~e", _;
+    loc: "~de", _;
+    gen_: "~in", _;
+    adjective_possessive_nom_one: "~Im", _, "~I", _, "~InIz", _;
+    adjective_possessive_acc_one: _, "~InI", "~InI", _, "~InIzI", _;
+    adjective_possessive_dat_one: "~ImE", "~InE", _, _, "~InIzE", _;
+    adjective_possessive_loc_one: "~ImdE", "~IndE", "~IndE", _, "~InIzdE", _;
+    adjective_possessive_abl_one: "~ImdEn", "~IndEn", "~IndEn", _, "~InIzdEn", _;
+    adjective_possessive_gen_one: _, "~InIn", _, _, "~InIzIn", _;
     ),
-    // Alp: 12 words (bay, alp, bön, ihtiyar, mağmum, müslüman). Like Sivil, except in 15 cells: nom pl, acc sg, acc pl, dat sg, dat pl, loc sg, ….
+    // Alp: 12 words (bay, alp, bön, ihtiyar, mağmum, müslüman). Like Sivil, except in 5 cells: nom pl, acc sg, dat sg, loc sg, gen_ sg.
     declension!("alp", 12, "~", like Sivil;
-    nom: _, "~lEr";
-    acc: "~I", "~lErI";
-    dat: "~E", "~lErE";
-    loc: "~dE", "~lErdE";
-    abl: "~dEn", "~lErdEn";
-    gen_: "~In", "~lErIn";
-    adjective_possessive_nom_one: _, _, _, _, _, derived;
-    adjective_possessive_nom_many: _, derived, derived, _, _, derived;
+    nom: _, derived;
+    acc: "~I", _;
+    dat: "~E", _;
+    loc: "~dE", _;
+    gen_: "~In", _;
     ),
     // Dazlak: 5 words (kazak, yuvarlak, dazlak, çorak, aylak).
     declension!("dazlak", 5, "~k";
-    nom: "~k", "~klar";
-    acc: "~ğı", "~kları";
-    dat: "~ğa", "~klara";
-    loc: "~kta", "~klarda";
-    abl: "~ktan", "~klardan";
-    gen_: "~ğın", "~kların";
-    adjective_possessive_nom_one: "~ğım", "~ğın", "~ğı", "~ğımız", "~ğınız", _;
-    adjective_possessive_nom_many: "~klarım", _, _, "~klarımız", "~klarınız", _;
-    adjective_possessive_acc_one: "~ğımı", "~ğını", "~ğını", "~ğımızı", "~ğınızı", "~klarını";
-    adjective_possessive_acc_many: "~klarımı", _, _, "~klarımızı", "~klarınızı", _;
-    adjective_possessive_dat_one: "~ğıma", "~ğına", "~ğına", "~ğımıza", "~ğınıza", "~klarına";
-    adjective_possessive_dat_many: "~klarıma", _, _, "~klarımıza", "~klarınıza", _;
-    adjective_possessive_loc_one: "~ğımda", "~ğında", "~ğında", "~ğımızda", "~ğınızda", "~klarında";
-    adjective_possessive_loc_many: "~klarımda", _, _, "~klarımızda", "~klarınızda", _;
-    adjective_possessive_abl_one: "~ğımdan", "~ğından", "~ğından", "~ğımızdan", "~ğınızdan", "~klarından";
-    adjective_possessive_abl_many: "~klarımdan", _, _, "~klarımızdan", "~klarınızdan", _;
-    adjective_possessive_gen_one: "~ğımın", "~ğının", "~ğının", "~ğımızın", "~ğınızın", "~klarının";
-    adjective_possessive_gen_many: "~klarımın", _, _, "~klarımızın", "~klarınızın", _;
+    stem adjective: "~- like dazlak";
     ),
 ];

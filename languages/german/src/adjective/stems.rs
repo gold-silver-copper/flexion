@@ -177,4 +177,47 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 0] = [];
+pub(super) static TABLES: [EndingTable<'static>; 2] = [
+    // superlative like veraltet: 14,377 words.
+    EndingTable {
+        name: Cow::Borrowed("veraltet"),
+        words: 14377,
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "\t\t\t~\t",
+            "\t~r\t~n\t~r\t",
+            "\t~r\t~m\t~n\t",
+            "~n\t~\t~s\t~\t",
+            "~\t~\t~\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~\t~n\t",
+            "~r\t~\t~s\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~s\t~n\t",
+            "am ~n\t",
+        )),
+    },
+    // superlative like arg: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("arg"),
+        words: 3,
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "\t\t\tä~\t",
+            "\tä~r\tä~n\tä~r\t",
+            "\tä~r\tä~m\tä~n\t",
+            "ä~n\tä~\tä~s\tä~\t",
+            "ä~\tä~\tä~\tä~n\t",
+            "ä~n\tä~n\tä~n\tä~n\t",
+            "ä~n\tä~n\tä~n\tä~n\t",
+            "ä~n\tä~\tä~\tä~n\t",
+            "ä~r\tä~\tä~s\tä~n\t",
+            "ä~n\tä~n\tä~n\tä~n\t",
+            "ä~n\tä~n\tä~n\tä~n\t",
+            "ä~n\tä~\tä~s\tä~n\t",
+            "am ä~n\t",
+        )),
+    },
+];

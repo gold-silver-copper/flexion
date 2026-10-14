@@ -22,9 +22,9 @@ aurica	adjective_f	auric- like lubrico
 avocatorio	1	avocatorii
 bacio	1	bacii
 belga	adjective_f	belg- like lubrico
+caduco	1	caduchi
 capinero	adjective_f	capiner- like maggiore	2	capinero
 compressore	adjective_f	comprimitric- like maggiore	1	compressori
-cringe	4	cringissimo
 difensore	adjective_f	difenditric- like maggiore
 dio	1	dii
 femmina	1	femmina	3	femmine

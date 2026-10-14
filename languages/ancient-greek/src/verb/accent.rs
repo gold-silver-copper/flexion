@@ -1956,7 +1956,7 @@ pub static CLASSES: [StressClass<'static>; 64] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 66 rules and 1,301 listed words.
+/// Which class a word is of: 66 rules and 1,302 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Ἐχω 1042, Ποιεω 279, Καθιζω 168, Οἰομαι 145, Ὁρῐζω 61, Ἀνῐστημῐ 45, Τῐθημῐ 22, Χεω 19, Προσερχομαι 18, Ἡγεομαι 18, Χρᾰομαι 17, Ἐξαιρεω 15, Ὑπᾰγω 12, Πᾰρεχω 12, Πᾰρερχομαι 11, Δεῑ 10, Ἐνῑημῐ 10, Σῠναιρεω 10, Λογῐζομαι 9, Ὑποκοριζομαι 9, Ἀναιρεω 9, Ἐπευχομαι 8, Στειχω 8, Ἀφῑημῐ 7, Ἐπῐλᾰμβᾰνω 7, Ὑπᾰρχω 7, Ἀρνυμαι 6, Πᾰσχω 6, Δῐᾰφερω 6, Ἐπορον 5, Ἀντιλεγω 4, Ἀπεῑπον 4, Εἰδον 4, Λᾰμβᾰνω 4, Προβαλλω 4, Τελεω 4, Ἐξευρῐσκω 3, Προεῑπον 3, Γῐγνομαι 3, Προϊσχω 3, Ἀγωνιζομαι 2, Ὠχρῐω 2, Ὀττευομαι 2, Ἐφορᾰω 2, Ὠνεομαι 2, Δᾰμαζω 2, Περθω 2, Ἀμῠσσω 2, Ἀλαομαι 1, Ζω 1, Μωμᾰομαι 1, Περνημῐ 1, Χρη 1, Φημῐ 1, Δεξῐοομαι 1, Ἐξικνεομαι 1, Ἐξῑημῐ 1, Αἰσθᾰνομαι 1, Ἀνερχομαι 1, Ἀνιημῐ 1, Δρᾱω 1, Ἀρᾰρῐσκω 1, Διαζωννῡμῐ 1, Κῐω 1],
@@ -3249,6 +3249,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπεραττικιζω" => Ἐχω,
         "υπερεχω" => Ἐξαιρεω,
         "υπερνικαω" => Ἐχω,
+        "υπερφερω" => Ἐχω,
         "υπισχνεομαι" => Οἰομαι,
         "υπνοω" => Ἐχω,
         "υπογιγνομαι" => Γῐγνομαι,
@@ -3333,7 +3334,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 
 /// Per conjugation, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 293] = [
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3426,7 +3427,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
         AORIST_SUBJ_PASS_3_SG,
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
-    ]), // Βᾰπτῐζω
+    ]), // Χρημᾰτῐζω
     Cow::Borrowed(&[
         FUTURE_IND_ACT_1_SG,
         FUTURE_IND_ACT_2_SG,
@@ -3437,7 +3438,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
         AORIST_SUBJ_PASS_3_SG,
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
-    ]), // Χρημᾰτῐζω
+    ]), // Βᾰπτῐζω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,
@@ -3594,6 +3595,11 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
         INFINITIVE_FUT_ACT,
         PARTICIPLE_FUT_ACT,
     ]), // Ἁπτω
+    Cow::Borrowed(&[
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+    ]), // Σκᾰνδᾰλῐζω
     Cow::Borrowed(&[]), // Μῑγνῡμῐ
     Cow::Borrowed(&[
         IND_ACT_1_SG,
@@ -3680,25 +3686,6 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
         AORIST_SUBJ_PASS_3_SG,
         AORIST_IMP_MID_2_SG,
     ]), // Δερκομαι
-    Cow::Borrowed(&[
-        IND_ACT_1_SG,
-        IND_ACT_2_SG,
-        IND_ACT_3_SG,
-        IND_MID_2_SG,
-        IND_PASS_2_SG,
-        SUBJ_ACT_1_SG,
-        SUBJ_ACT_2_SG,
-        SUBJ_ACT_3_SG,
-        SUBJ_MID_2_SG,
-        SUBJ_PASS_2_SG,
-        IMP_MID_2_SG,
-        IMP_PASS_2_SG,
-        AORIST_SUBJ_PASS_1_SG,
-        AORIST_SUBJ_PASS_2_SG,
-        AORIST_SUBJ_PASS_3_SG,
-        INFINITIVE_PRES_ACT,
-        PARTICIPLE_PRES_ACT,
-    ]), // Χρῑω
     Cow::Borrowed(&[
         IND_ACT_1_SG,
         IND_ACT_2_SG,
@@ -3814,6 +3801,25 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 292] = [
         AORIST_SUBJ_MID_2_SG,
         AORIST_IMP_MID_2_SG,
     ]), // Ἀφῑημῐ
+    Cow::Borrowed(&[
+        IND_ACT_1_SG,
+        IND_ACT_2_SG,
+        IND_ACT_3_SG,
+        IND_MID_2_SG,
+        IND_PASS_2_SG,
+        SUBJ_ACT_1_SG,
+        SUBJ_ACT_2_SG,
+        SUBJ_ACT_3_SG,
+        SUBJ_MID_2_SG,
+        SUBJ_PASS_2_SG,
+        IMP_MID_2_SG,
+        IMP_PASS_2_SG,
+        AORIST_SUBJ_PASS_1_SG,
+        AORIST_SUBJ_PASS_2_SG,
+        AORIST_SUBJ_PASS_3_SG,
+        INFINITIVE_PRES_ACT,
+        PARTICIPLE_PRES_ACT,
+    ]), // Χρῑω
     Cow::Borrowed(&[
         AORIST_SUBJ_PASS_1_SG,
         AORIST_SUBJ_PASS_2_SG,

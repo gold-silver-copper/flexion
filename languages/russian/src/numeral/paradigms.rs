@@ -158,13 +158,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`m_as_n`: one value read as another).
-const M_AS_N: [u16; 48] = [
-    4, 5, 2, 3, 4, 5, 6, 7, 12, 13, 10, 11, 12, 13, 14, 15, 20, 21, 18, 19, 20, 21, 22, 23, 28, 29,
-    26, 27, 28, 29, 30, 31, 36, 37, 34, 35, 36, 37, 38, 39, 44, 45, 42, 43, 44, 45, 46, 47,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -205,29 +198,23 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     // Биллион: 61 words (шесть, один, два, три, четыре, пять).
     declension!("биллион", 61, "~";
-    nom_m: _, "~";
-    nom_pl: "~|~ы", "~|~ы";
+    stem numeral_nom_m_anim: "~- like биллион";
     gen_m: "~а", _;
     gen_pl: "~а|~ов", "~а|~ов";
     dat_m: "~у", _;
     dat_pl: "~у|~ам", "~у|~ам";
-    acc_pl: "~|~ы", "~|~ы";
     ins_m: "~ом", _;
     ins_pl: "~ом|~ами", "~ом|~ами";
     prep_m: "~е", _;
     prep_pl: "~е|~ах", "~е|~ах";
     ),
-    // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро). Like Биллион, except in 9 cells: nom_m inan, nom_pl anim, nom_pl inan, gen_m anim, dat_m anim, acc_pl anim, ….
-    declension!("пятеро", 7, "~о", like Биллион as M_AS_N;
+    // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро).
+    declension!("пятеро", 7, "~о";
     stem numeral: "~ы- like пятеро";
     stem numeral_ins: "~ыми- like пятеро";
     nom_m: _, "~о";
     nom_pl: "~о", "~о";
-    gen_m: derived, _;
-    dat_m: derived, _;
     acc_pl: "~ых", "~о";
-    ins_m: derived, _;
-    prep_m: derived, _;
     ),
     // Пятьсот: 5 words (пятьсот, шестьсот, семьсот, восемьсот, девятьсот).
     declension!("пятьсот", 5, "~ь~о~";
@@ -239,7 +226,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     ),
     // Пятьдесят: 4 words (пятьдесят, шестьдесят, семьдесят, восемьдесят).
     declension!("пятьдесят", 4, "~ь~";
-    nom_m: _, "~ь~";
+    stem numeral_nom_m_anim: "~ь~- like пятьдесят";
     gen_m: "~и~и", _;
     dat_m: "~и~и", _;
     ins_m: "~ью~ью", _;

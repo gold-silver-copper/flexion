@@ -1058,7 +1058,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "stregnevo" => 1,
         "uprivo" => 1,
         "vienivo" => 1,
-    }, false, None),
+    }, true, None),
     // IMPF_2_SG, from IMPF_1_SG.
     relation!(IMPF_2_SG, [IMPF_1_SG], [("~o", "~i")], rules {
         "" => [0 11614],
@@ -1915,13 +1915,13 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "" => [1 11558, 0 13],
         "si" => [0 13],
         "ti" => [1 11558],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // SUBJ_IMPF_1_PL, from PAST_2_SG.
     relation!(SUBJ_IMPF_1_PL, [PAST_2_SG], [("~", "~mo"), ("~ti", "~simo")], rules {
         "" => [1 11558, 0 13],
         "si" => [0 13],
         "ti" => [1 11558],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // SUBJ_IMPF_2_SG, from SUBJ_IMPF_1_SG.
     relation!(SUBJ_IMPF_2_SG, [SUBJ_IMPF_1_SG], [], none, true, None),
     // SUBJ_IMPF_2_PL, from PAST_2_PL.
@@ -1931,7 +1931,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "" => [1 11558, 0 13],
         "si" => [0 13],
         "ti" => [1 11558],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // SUBJ_IMPF_3_PL, from PAST_2_SG.
     relation!(SUBJ_IMPF_3_PL, [PAST_2_SG], [("~", "~no"), ("~ti", "~sero"), ("~ti", "~sino")], rules {
         "" => [1 11556, 0 12, 2 2],
@@ -10790,7 +10790,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "zittiate" => 1,
         "zziate" => 0,
         "zziate" => 1,
-    }, true, None),
+    }, false, None),
     // IMPERATIVE_VOI, from INFINITIVE.
     relation!(IMPERATIVE_VOI, [INFINITIVE], [("~ere", "~piate"), ("~ere", "~te"), ("~ersi", "~tevi"), ("~ggere", "~ete"), ("~lere", "~gliate"), ("~re", "~te"), ("~re", "~vete"), ("~rre", "~cete"), ("~rre", "~ete"), ("~rre", "~gliete"), ("~rre", "~nete"), ("~rsi", "~cetevi"), ("~rsi", "~etevi"), ("~rsi", "~netevi"), ("~rsi", "~tevi"), ("~vere", "~bbiate")], rules {
         "" => [5 9216, 14 2250, 10 45, 7 21, 13 17, 8 12, 11 10, 12 9, 0 4, 3 4, 4 4, 6 3, 9 3, 1 2, 2 2, 15 2],
@@ -10844,7 +10844,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "torre" => 9,
         "trabere" => 6,
         "trarsi" => 12,
-    }, true, None),
+    }, false, None),
     // IMPERATIVE_LORO, from SUBJ_3_PL.
     relation!(IMPERATIVE_LORO, [SUBJ_3_PL], [], none, true, None),
     // NEGATIVE_IMPERATIVE_TU, from INFINITIVE.

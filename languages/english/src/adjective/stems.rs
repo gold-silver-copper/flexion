@@ -23,11 +23,18 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // adjective like heavy: 2,696 words.
+pub(super) static TABLES: [EndingTable<'static>; 2] = [
+    // adjective like heavy: 1,984 words.
     EndingTable {
         name: Cow::Borrowed("heavy"),
-        words: 2696,
+        words: 1984,
+        slot: 1,
+        table: Cow::Borrowed("~rˇ\t~stˇ\t"),
+    },
+    // adjective like soft: 741 words.
+    EndingTable {
+        name: Cow::Borrowed("soft"),
+        words: 741,
         slot: 1,
         table: Cow::Borrowed("~r\t~st\t"),
     },

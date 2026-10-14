@@ -11,51 +11,41 @@ use flexion::{EndingTable, Slot};
 use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
-pub(super) static SLOTS: [Slot<'static>; 2] = [
+pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
         name: Cow::Borrowed("verb"),
-        cells: Cow::Borrowed(&[VERB_INF, VERB_3SG, VERB_PRP]),
+        cells: Cow::Borrowed(&[VERB_INF, VERB_3SG]),
     },
     Slot {
         name: Cow::Borrowed("verb_past"),
         cells: Cow::Borrowed(&[VERB_PAST, VERB_PP]),
     },
+    Slot {
+        name: Cow::Borrowed("verb_prp"),
+        cells: Cow::Borrowed(&[VERB_PRP]),
+    },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 9] = [
-    // verb like settle: 17,203 words.
+pub(super) static TABLES: [EndingTable<'static>; 7] = [
+    // verb like settle: 18,062 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 17203,
+        words: 18062,
         slot: 0,
-        table: Cow::Borrowed("~e\t~es\t~ing\t"),
-    },
-    // verb like burn: 14,869 words.
-    EndingTable {
-        name: Cow::Borrowed("burn"),
-        words: 14869,
-        slot: 0,
-        table: Cow::Borrowed("~\t~s\t~ing\t"),
+        table: Cow::Borrowed("~\t~s\t"),
     },
     // verb like pass: 2,095 words.
     EndingTable {
         name: Cow::Borrowed("pass"),
         words: 2095,
         slot: 0,
-        table: Cow::Borrowed("~\t~es\t~ing\t"),
+        table: Cow::Borrowed("~\t~es\t"),
     },
-    // verb like set: 308 words.
-    EndingTable {
-        name: Cow::Borrowed("set"),
-        words: 308,
-        slot: 0,
-        table: Cow::Borrowed("~\t~s\t~ting\t"),
-    },
-    // verb_past like settle: 37,608 words.
+    // verb_past like settle: 37,494 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 37608,
+        words: 37494,
         slot: 1,
         table: Cow::Borrowed("~\t~\t"),
     },

@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -67,10 +69,6 @@ macro_rules! view {
         Some(::std::borrow::Cow::Borrowed(&$view))
     };
 }
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_sg`: one value read as another).
-const PL_AS_SG: [u16; 4] = [0, 0, 2, 2];
 
 /// A view: per cell (in the cells' order), the cell of the declension it is
 /// like that it reads (`m_as_f`: one value read as another).
@@ -136,13 +134,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     f: "~e", _;
     ),
     // Mesdits: 6 words (mesdits, tesdits, sesdits, nosdits, vosdits, leursdits).
-    declension!("mesdits", 6, "~~";
-    m: "~~", _;
-    f: _, "~e~";
+    declension!("mesdits", 6, "~ˇ";
+    m: "~ˇ", "~sˇ";
+    f: "~eˇ", "~esˇ";
     ),
-    // Mesdites: 5 words (mesdites, sesdites, nosdites, vosdites, leursdites). Like Mesdits, except in 1 cell: m sg.
-    declension!("mesdites", 5, "~e~", like Mesdits as PL_AS_SG;
-    m: "~e~", _;
+    // Mesdites: 5 words (mesdites, sesdites, nosdites, vosdites, leursdites).
+    declension!("mesdites", 5, "~e~";
+    m: "~e~", "~~";
     ),
     // Mon: 3 words (son, ton, mon). Like Tes, except in 2 cells: m sg, f sg.
     declension!("mon", 3, "~on", like Tes as M_AS_F;

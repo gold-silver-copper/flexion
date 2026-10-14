@@ -144,27 +144,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_sg`: one value read as another).
-const PL_AS_SG: [u16; 36] = [
-    0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24,
-    26, 26, 28, 28, 30, 30, 32, 32, 34, 34,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`abl_as_dat`: one value read as another).
-const ABL_AS_DAT: [u16; 36] = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 12, 13,
-    14, 15, 16, 17, 30, 31, 32, 33, 34, 35,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`sg_as_pl`: one value read as another).
-const SG_AS_PL: [u16; 36] = [
-    1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25,
-    27, 27, 29, 29, 31, 31, 33, 33, 35, 35,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -273,14 +252,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     abl_m: "~~ō", _;
     abl_f: "~~ā", _;
     ),
-    // Ecquis: 6 words (aliquis, ecquis, nēquis, sīquis, numquis, nesciōquis). Like Ecquīnam, except in 17 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
-    declension!("ecquis", 6, "~q~is", like Ecquīnam as PL_AS_SG;
+    // Ecquis: 6 words (aliquis, ecquis, nēquis, sīquis, numquis, nesciōquis). Like Ecquīnam, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
+    declension!("ecquis", 6, "~q~is", like Ecquīnam;
     nom_m: "~q~is", "~q~ī";
     nom_f: "~q~a", "~q~ae";
     nom_n: "~q~id", "~q~a";
     gen_m: "~c~ius", _;
     gen_f: "~c~ius", _;
-    dat_m: "~c~i", _;
+    dat_m: "~c~i", derived;
     dat_f: "~c~i", _;
     acc_m: "~q~em", "~q~ōs";
     acc_f: "~q~am", "~q~ās";
@@ -353,30 +332,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     dat_m: "~ī", _;
     dat_f: "~ī", _;
     ),
-    // Quis: 3 words (quis, quisquis, quālis). Like Iste, except in 16 cells: nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, gen_m sg, ….
-    declension!("quis", 3, "~is", like Iste as ABL_AS_DAT;
+    // Quis: 3 words (quis, quisquis, quālis).
+    declension!("quis", 3, "~is";
     stem pronoun_m_sg: "~is- like uter";
     nom_m: _, "~ēs";
     nom_f: "~is", "~ēs";
     nom_n: "~e", "~ia";
     gen_m: "~is", "~ium";
     gen_f: "~is", "~ium";
-    dat_m: _, "~ibus";
+    dat_m: "~ī", "~ibus";
+    dat_f: "~ī", _;
     acc_m: "~em", "~īs";
     acc_f: "~em", "~īs";
     acc_n: "~e", _;
-    abl_m: _, derived;
+    abl_m: "~ī", _;
+    abl_f: "~ī", _;
     ),
-    // Complūria: 2 words (complūria, conplūria). Like Quis, except in 13 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
-    declension!("complūria", 2, "~ia", like Quis as SG_AS_PL;
+    // Complūria: 2 words (complūria, conplūria). Like Quis, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
+    declension!("complūria", 2, "~ia", like Quis;
     nom_m: "~ia", "~a|~ia";
     nom_f: derived, "~a|~ia";
     nom_n: derived, "~a|~ia";
     gen_m: derived, _;
     gen_f: derived, _;
     dat_m: derived, _;
+    dat_f: derived, _;
     acc_m: derived, "~a|~ia";
     acc_f: derived, "~a|~ia";
+    acc_n: derived, _;
+    abl_m: derived, _;
+    abl_f: derived, _;
+    voc_m: derived, _;
     ),
     // Ambŏ: 1 words (ambŏ). Like Complūria, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, gen_f pl, ….
     declension!("ambŏ", 1, "~ŏ", like Complūria;
@@ -391,18 +377,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     acc_f: _, "~ās";
     abl_f: _, "~ābus";
     ),
-    // Temet: 1 words (temet). Like Ecquīnam, except in 12 cells: nom_m pl, nom_f sg, nom_n sg, gen_m sg, gen_f sg, dat_m sg, ….
-    declension!("temet", 1, "~e~", like Ecquīnam as PL_AS_SG;
+    // Temet: 1 words (temet). Like Ecquis, except in 16 cells: nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, gen_m sg, ….
+    declension!("temet", 1, "~e~", like Ecquis;
     stem pronoun_m_sg: "~ūte~- like uter";
     nom_m: _, derived;
-    nom_f: "~ūte~", _;
-    nom_n: "~ūte~", _;
+    nom_f: "~ūte~", derived;
+    nom_n: "~ūte~", derived;
     gen_m: "~uī~", _;
     gen_f: "~uī~", _;
     dat_m: "~ibi~", _;
     dat_f: "~ibi~", _;
-    acc_m: "~e~", _;
-    acc_f: "~e~", _;
+    acc_m: "~e~", derived;
+    acc_f: "~e~", derived;
     acc_n: "~e~", _;
     abl_m: "~e~", _;
     abl_f: "~e~", _;

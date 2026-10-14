@@ -42,10 +42,10 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~а\t", "~у\t",)),
     },
-    // noun_nom_sg like скопление: 9,452 words.
+    // noun_nom_sg like скопление: 9,560 words.
     EndingTable {
         name: Cow::Borrowed("скопление"),
-        words: 9452,
+        words: 9560,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
@@ -63,10 +63,10 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~а|~\t",)),
     },
-    // noun_pl like приём: 38,051 words.
+    // noun_pl like приём: 38,202 words.
     EndingTable {
         name: Cow::Borrowed("приём"),
-        words: 38051,
+        words: 38202,
         slot: 1,
         table: Cow::Borrowed(concat!("~ы\t", "~ов\t", "~ам\t", "\t", "~ами\t", "~ах\t",)),
     },
@@ -77,10 +77,10 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 1,
         table: Cow::Borrowed(concat!("~ы\t", "~\t", "~ам\t", "\t", "~ами\t", "~ах\t",)),
     },
-    // noun_pl like склонность: 10,266 words.
+    // noun_pl like склонность: 10,270 words.
     EndingTable {
         name: Cow::Borrowed("склонность"),
-        words: 10266,
+        words: 10270,
         slot: 1,
         table: Cow::Borrowed(concat!("~и\t", "~ей\t", "~ям\t", "\t", "~ями\t", "~ях\t",)),
     },
@@ -91,10 +91,17 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 1,
         table: Cow::Borrowed(concat!("~я\t", "~й\t", "~ям\t", "\t", "~ями\t", "~ях\t",)),
     },
-    // noun_pl like сходство: 2,962 words.
+    // noun_pl like какао: 3,420 words.
+    EndingTable {
+        name: Cow::Borrowed("какао"),
+        words: 3420,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "\t", "~\t", "~\t",)),
+    },
+    // noun_pl like сходство: 2,965 words.
     EndingTable {
         name: Cow::Borrowed("сходство"),
-        words: 2962,
+        words: 2965,
         slot: 1,
         table: Cow::Borrowed(concat!("~а\t", "~\t", "~ам\t", "\t", "~ами\t", "~ах\t",)),
     },
@@ -119,24 +126,10 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 1,
         table: Cow::Borrowed(concat!("~и\t", "~ей\t", "~ам\t", "\t", "~ами\t", "~ах\t",)),
     },
-    // noun_pl like жнивьё: 122 words.
-    EndingTable {
-        name: Cow::Borrowed("жнивьё"),
-        words: 122,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ья\t",
-            "~ей\t",
-            "~ьям\t",
-            "\t",
-            "~ьями\t",
-            "~ьях\t",
-        )),
-    },
-    // noun_pl like устье: 84 words.
+    // noun_pl like устье: 86 words.
     EndingTable {
         name: Cow::Borrowed("устье"),
-        words: 84,
+        words: 86,
         slot: 1,
         table: Cow::Borrowed(concat!("~я\t", "~ев\t", "~ям\t", "\t", "~ями\t", "~ях\t",)),
     },
@@ -168,6 +161,20 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 1,
         table: Cow::Borrowed(concat!("~ы\t", "~ов\t", "~ам\t", "~ы\t", "~ами\t", "~ах\t",)),
     },
+    // noun_pl like жнивьё: 18 words.
+    EndingTable {
+        name: Cow::Borrowed("жнивьё"),
+        words: 18,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ья\t",
+            "~ей\t",
+            "~ьям\t",
+            "\t",
+            "~ьями\t",
+            "~ьях\t",
+        )),
+    },
     // noun_pl like кокцинеллида: 16 words.
     EndingTable {
         name: Cow::Borrowed("кокцинеллида"),
@@ -181,13 +188,6 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         words: 12,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~х\t", "~м\t", "\t", "~ми\t", "~х\t",)),
-    },
-    // noun_pl like остриё: 4 words.
-    EndingTable {
-        name: Cow::Borrowed("остриё"),
-        words: 4,
-        slot: 1,
-        table: Cow::Borrowed(concat!("~я\t", "~ёв\t", "~ям\t", "\t", "~ями\t", "~ях\t",)),
     },
     // noun_pl like сынуля: 4 words.
     EndingTable {
@@ -245,17 +245,17 @@ pub(super) static TABLES: [EndingTable<'static>; 44] = [
         slot: 2,
         table: Cow::Borrowed(concat!("~а\t", "~у\t", "~ом\t", "~е\t", "~у\t~у\t",)),
     },
-    // noun_sg like полнота: 12,739 words.
+    // noun_sg like полнота: 12,750 words.
     EndingTable {
         name: Cow::Borrowed("полнота"),
-        words: 12739,
+        words: 12750,
         slot: 2,
         table: Cow::Borrowed(concat!("~ы\t", "~е\t", "~ой|~ою\t", "~е\t", "\t\t",)),
     },
-    // noun_sg like стрелка: 10,015 words.
+    // noun_sg like стрелка: 10,004 words.
     EndingTable {
         name: Cow::Borrowed("стрелка"),
-        words: 10015,
+        words: 10004,
         slot: 2,
         table: Cow::Borrowed(concat!("~и\t", "~е\t", "~ой|~ою\t", "~е\t", "\t\t",)),
     },

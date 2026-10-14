@@ -24,10 +24,10 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 9] = [
-    // noun_sg like action: 3,464 words.
+    // noun_sg like ärztin: 10,041 words.
     EndingTable {
-        name: Cow::Borrowed("action"),
-        words: 3464,
+        name: Cow::Borrowed("ärztin"),
+        words: 10041,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
@@ -66,17 +66,17 @@ pub(super) static TABLES: [EndingTable<'static>; 9] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~N\t", "~N\t", "~\t",)),
     },
-    // noun_pl like platte: 75,524 words.
+    // noun_pl like platte: 75,296 words.
     EndingTable {
         name: Cow::Borrowed("platte"),
-        words: 75524,
+        words: 75296,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // noun_pl like lager: 42,976 words.
+    // noun_pl like lager: 43,067 words.
     EndingTable {
         name: Cow::Borrowed("lager"),
-        words: 42976,
+        words: 43067,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~n\t", "~\t",)),
     },

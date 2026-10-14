@@ -36,6 +36,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     feature: None,
     compound: None,
     prefixes: None,
+    heads: None,
     accent: None,
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),

@@ -66,10 +66,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`f_as_m`: one value read as another).
-const F_AS_M: [u16; 4] = [0, 1, 0, 1];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -116,7 +112,7 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     // Todo: 24 words (tanto, uno, todo, mucho, cuyo, alguno).
     declension!("todo", 24, "~o";
-    m: "~o", "~os";
+    m: "~o", _;
     f: "~a", "~as";
     ),
     // Docientos: 13 words (los, quinientos, doscientos, setecientos, novecientos, trescientos).
@@ -136,9 +132,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     declension!("dambos", 3, "~o~", like Docientos;
     f: derived, "~a~";
     ),
-    // Cuál: 1 words (la). Like Unx, except in 2 cells: m pl, f pl.
-    declension!("cuál", 1, "~", like Unx as F_AS_M;
-    m: _, "~es";
-    f: _, "~es";
+    // Cuál: 1 words (la). Like Unx, except in 2 cells: f sg, f pl.
+    declension!("cuál", 1, "~", like Unx;
+    f: "~", "~es";
     ),
 ];

@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 82 stems, 214 forms.
+/// 87 stems, 205 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"ales	24	ālitī
@@ -45,7 +45,7 @@ dicax	adjective_n_sg	dĭcāx- like iacitūrus	adjective_pl	dĭcāc- like pinguis
 dissolubilis	36	dissolūbilius
 dives	comparative	dīviti- like iacitūrus
 elamentabilis	37	ēlāmentābilissumus
-ens	3	entēs	5	entia	6	entis	9	entium	13	entibus	20	entem	24	ente
+ens	24	ente
 esaianus	adjective_n_sg	ĕsāïānum- like iacitūrus	adjective_pl	ĕsāïān- like iacitūrus	adjective_sg	ĕsāïān- like iacitūrus
 esculentus	comparative	esculenti- like iacitūrus
 exlex	adjective_pl	exlēg- like pinguis
@@ -53,6 +53,7 @@ exos	adjective_pl	exoss- like pinguis
 exter	37	extrēmus
 favorabilis	36	favōrābilius
 ferinus	37	ferinīssimus
+flŭxus	comparative	flŭxi- like iacitūrus
 humidus	comparative	humidi- like iacitūrus
 iens	0	ïēns	3	euntēs	4	ïēns	5	euntia	6	euntis	9	euntium	13	euntibus	20	euntem	24	eunte
 immaturus	comparative	immātūr- like miser
@@ -71,6 +72,7 @@ intimus	comparative	int- like dexter
 intumus	comparative	int- like dexter
 isaianus	adjective_n_sg	ĭsāïānum- like iacitūrus	adjective_pl	ĭsāïān- like iacitūrus	adjective_sg	ĭsāïān- like iacitūrus
 iuvenis	24	iuvene	36	iūnior
+laxus	comparative	laxi- like iacitūrus
 ludicer	30	lūdicre
 ludicrus	0	lūdicer
 macropus	adjective_pl	macropod- like pinguis
@@ -89,6 +91,7 @@ neuter	6	neutrĭus
 octuplex	19	octuplicēs
 omnipotens	comparative	omnipotēnti- like iacitūrus
 oportunus	36	oportunior
+orthodoxus	comparative	orthodoxi- like iacitūrus
 parissumus	comparative	pari- like iacitūrus
 particeps	24	participe
 parvus	comparative	min- like iacitūrus	37	minimus
@@ -96,7 +99,6 @@ pauperus	0	pauper
 perceler	2	perceleris	4	percelere
 peritum	adjective_pl	perit- like iacitūrus	adjective_sg	perit- like iacitūrus
 pernox	3	pernoctēs	5	pernoctia	6	pernoctis	9	pernoctium	13	pernoctibus	20	pernoctem	24	pernocte
-pertenuis	5	pertenuïa	7	pertenuïum	9	pertenuïum
 pervetus	adjective_pl	perveter- like hȳoīdēs
 phoenix	adjective_pl	phoenīc- like hȳoīdēs
 planus	comparative	plani- like iacitūrus
@@ -104,6 +106,7 @@ plus	5	plūra	19	plūrēs
 posterus	37	postrēmus
 primoris	0	prīmor
 prior	37	prīmus
+prolixus	comparative	prōlixi- like iacitūrus
 pronubans	19	prōnubantēs
 prosperus	comparative	prosper- like miser
 prudens	comparative	prudenti- like iacitūrus
@@ -112,6 +115,7 @@ pubes	adjective_pl	pūber- like hȳoīdēs
 quispiam	1	quīpiam	2	quaepiam	3	quaepiam	4	quodpiam	5	quaepiam	6	cuiuspiam	7	quōrumpiam	9	quārumpiam	12	cuipiam	13	quibuspiam	14	cuipiam	15	quibuspiam	17	quibuspiam	18	quempiam	19	quōspiam	20	quampiam	21	quāspiam	24	quōpiam	25	quibuspiam	26	quāpiam	27	quibuspiam	29	quibuspiam
 quotusquisque	2	quotaquaeque	3	quotaequaeque	4	quotumquidque	5	quotaquaeque	6	quotīcuiusque	8	quotaecuiusque	9	quotārumquārumque	12	quotōcuique	14	quotaecuique	18	quotumquemque	20	quotamquamque	21	quotāsquāsque	24	quotōquōque
 rhetoricus	36	rhētoricōteros
+seminex	adjective_pl	sēminec- like pinguis
 senex	6	senis	20	senem	24	sene	36	senior
 serius	comparative	sēri- like iacitūrus
 sesquialter	6	sēsquialterĭus

@@ -2354,7 +2354,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "" => [0 1915],
     } listed {}, true, None),
     // IMP_MID_3_PL, from IMP_MID_3_DU.
-    relation!(IMP_MID_3_PL, [IMP_MID_3_DU], [], none, true, None),
+    relation!(IMP_MID_3_PL, [IMP_MID_3_DU], [], none, false, None),
     // IMP_PASS_1_SG, from IND_PASS_1_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
     relation!(IMP_PASS_1_SG, [IND_PASS_1_SG], [("~ται", "~σθω"), ("~ῑται", "~ισθω"), ("~ῡται", "~υσθω")], rules {
         "" => [0 1353, 1 372, 2 108],
@@ -2387,7 +2387,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     // IMP_PASS_3_DU, from IMP_MID_3_DU.
     relation!(IMP_PASS_3_DU, [IMP_MID_3_DU], [], none, true, None),
     // IMP_PASS_3_PL, from IMP_MID_3_DU.
-    relation!(IMP_PASS_3_PL, [IMP_MID_3_DU], [], none, true, None),
+    relation!(IMP_PASS_3_PL, [IMP_MID_3_DU], [], none, false, None),
     // IMPERFECT_ACT_1_SG, from IMPERFECT_MID_1_SG.
     relation!(IMPERFECT_ACT_1_SG, [IMPERFECT_MID_1_SG], [("~εμην", "~ην"), ("~ιχομην", "~ῑχον"), ("~μην", "~ν"), ("~μην", "~υν"), ("~ᾰμην", "~ην"), ("~ῠμην", "~ῡν")], rules {
         "" => [2 1374, 5 35, 4 26, 0 14, 1 8, 3 3],
@@ -6481,7 +6481,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ὀρωρεσο" => 8,
         "ὀρωρῠσο" => 18,
         "ὠξῠψο" => 19,
-    }, true, None),
+    }, false, None),
     // PERFECT_IND_ACT_1_DU, from PERFECT_IND_ACT_1_PL. Few or no words have it: changed as PERFECT_IND_ACT_3_PL is into PERFECT_IND_ACT_3_DU.
     relation!(PERFECT_IND_ACT_1_DU, [PERFECT_IND_ACT_1_PL], [("~ᾱσῐ", "~ᾰτον")], rules {
         "" => [0 1134],
@@ -7966,7 +7966,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ἀνεῑσθον" => 1,
         "ἀφεῑσθον" => 1,
         "ἐφεῑσθον" => 1,
-    }, true, None),
+    }, false, None),
     // PERFECT_IMP_MID_3_DU, from PERFECT_IMP_MID_3_SG.
     relation!(PERFECT_IMP_MID_3_DU, [PERFECT_IMP_MID_3_SG], [("~", "~ν")], rules {
         "" => [0 1171],
@@ -8824,7 +8824,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "πεπᾰσαι" => 0,
         "συγκεκρῠσαι" => 2,
         "ἐκκεκρῠσαι" => 2,
-    }, false, None),
+    }, true, None),
     // FUTURE_PERFECT_IND_MID_1_DU, from FUTURE_PERFECT_IND_MID_1_SG. Few or no words have it: changed as FUTURE_PERFECT_IND_MID_2_SG is into FUTURE_PERFECT_IND_MID_2_DU.
     relation!(FUTURE_PERFECT_IND_MID_1_DU, [FUTURE_PERFECT_IND_MID_1_SG], [("~ῃ", "~εσθον")], rules {
         "" => [0 75],

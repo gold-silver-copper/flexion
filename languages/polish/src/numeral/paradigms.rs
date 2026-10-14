@@ -178,14 +178,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`vir_as_nvir`: one value read as another).
-const VIR_AS_NVIR: [u16; 60] = [
-    0, 1, 2, 3, 4, 5, 8, 9, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 18, 19, 20, 21, 22, 23, 24, 25,
-    28, 29, 28, 29, 30, 31, 32, 33, 34, 35, 38, 39, 38, 39, 40, 41, 42, 43, 44, 45, 48, 49, 48, 49,
-    50, 51, 52, 53, 54, 55, 58, 59, 58, 59,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -264,53 +256,55 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     declension!("dwieście", 9, "~ście";
     nom_m: _, "~ście";
     nom_vir: "~stu", _;
+    acc_vir: _, "~stu";
     ),
-    // Pięćdziesiąt: 5 words (sześćdziesiąt, dziewięćdziesiąt, pięćdziesiąt, osiemdziesiąt, siedemdziesiąt). Like Dwieście, except in 2 cells: nom_m inan, nom_vir anim.
+    // Pięćdziesiąt: 5 words (sześćdziesiąt, dziewięćdziesiąt, pięćdziesiąt, osiemdziesiąt, siedemdziesiąt). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("pięćdziesiąt", 5, "~ąt", like Dwieście;
     nom_m: _, "~ąt";
     nom_vir: "~ęciu", _;
+    acc_vir: _, "~ęciu";
     ),
-    // Sto: 5 words (jeden, sto, osiem, szereg, wtóry). Like Dwieście, except in 17 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Sto: 5 words (jeden, sto, osiem, szereg, wtóry). Like Dwieście, except in 12 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, nom_nvir inan, gen_m anim, ….
     declension!("sto", 5, "~", like Dwieście;
     nom_m: _, "~";
     nom_f: "~", _;
     nom_n: "~", _;
     nom_vir: "~", _;
+    nom_nvir: _, "~";
     gen_m: "~u", _;
-    gen_f: "~u", _;
-    gen_vir: "~u", _;
     dat_m: "~owi", _;
-    dat_f: "~owi", _;
-    dat_vir: "~owi", _;
     acc_m: "~", _;
     acc_f: "~", _;
+    acc_vir: _, "~";
     acc_nvir: "~", _;
-    ins_m: "~iem", _;
-    ins_f: "~iem", _;
     ins_nvir: "~iem", _;
-    loc_m: "~u", _;
     ),
-    // Pięć: 3 words (pięć, dziewięć, dziesięć). Like Dwieście, except in 2 cells: nom_m inan, nom_vir anim.
+    // Pięć: 3 words (pięć, dziewięć, dziesięć). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("pięć", 3, "~ć", like Dwieście;
     nom_m: _, "~ć";
     nom_vir: "~ciu", _;
+    acc_vir: _, "~ciu";
     ),
     // Pięćset: 3 words (dziewięćset, pięćset, sześćset).
     declension!("pięćset", 3, "~ć~";
     nom_m: _, "~ć~";
     nom_vir: "~ciu~", _;
+    acc_vir: _, "~ciu~";
     ),
-    // Dwa: 2 words (oba, dwa). Like Dwieście, except in 4 cells: nom_m inan, nom_nvir anim, acc_nvir anim, ins_nvir anim.
-    declension!("dwa", 2, "~a", like Dwieście as VIR_AS_NVIR;
+    // Dwa: 2 words (oba, dwa). Like Dwieście, except in 6 cells: nom_m inan, nom_vir anim, nom_nvir anim, acc_vir inan, acc_nvir anim, ins_nvir anim.
+    declension!("dwa", 2, "~a", like Dwieście;
     nom_m: _, "~a";
+    nom_vir: derived, _;
     nom_nvir: "~aj|~a", _;
+    acc_vir: _, derived;
     acc_nvir: "~u|~óch|~a", _;
     ins_nvir: "~oma|~u", _;
     ),
-    // Tyle: 2 words (wiele, tyle). Like Dwieście, except in 2 cells: nom_m inan, nom_vir anim.
+    // Tyle: 2 words (wiele, tyle). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("tyle", 2, "~e", like Dwieście;
     nom_m: _, "~e";
     nom_vir: "~u", _;
+    acc_vir: _, "~u";
     ),
     // Obydwa: 2 words (trzysta, obydwa). Like Tyle, except in 1 cell: nom_m inan.
     declension!("obydwa", 2, "~a", like Tyle;
@@ -320,21 +314,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     declension!("trzydzieści", 2, "~ści", like Dwieście;
     nom_m: _, "~ści";
     ),
-    // Dwanaście: 1 words (dwanaście). Like Pięćset, except in 2 cells: nom_m inan, nom_vir anim.
+    // Dwanaście: 1 words (dwanaście). Like Pięćset, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("dwanaście", 1, "~a~ście", like Pięćset;
     nom_m: _, "~a~ście";
     nom_vir: "~u~stu", _;
+    acc_vir: _, "~u~stu";
     ),
-    // Cztery: 1 words (cztery). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir anim.
+    // Cztery: 1 words (cztery). Like Dwieście, except in 4 cells: nom_m inan, nom_vir anim, acc_vir anim, acc_vir inan.
     declension!("cztery", 1, "~y", like Dwieście;
     nom_m: _, "~y";
     nom_vir: "~ej", _;
-    acc_vir: "~ech", _;
+    acc_vir: "~ech", derived;
     ),
-    // Siedem: 1 words (siedem). Like Pięćset, except in 2 cells: nom_m inan, nom_vir anim.
+    // Siedem: 1 words (siedem). Like Pięćset, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("siedem", 1, "~e~", like Pięćset;
     nom_m: _, "~e~";
     nom_vir: "~~iu", _;
+    acc_vir: _, "~~iu";
     ),
     // Dwadzieścia: 1 words (dwadzieścia). Like Dwanaście, except in 1 cell: nom_m inan.
     declension!("dwadzieścia", 1, "~a~ścia", like Dwanaście;
@@ -344,15 +340,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     declension!("siedemset", 1, "~e~~";
     nom_m: _, "~e~~";
     nom_vir: "~~iu~", _;
+    acc_vir: _, "~~iu~";
     ),
-    // Osiemset: 1 words (osiemset). Like Siedemset, except in 2 cells: nom_m inan, nom_vir anim.
+    // Osiemset: 1 words (osiemset). Like Siedemset, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("osiemset", 1, "~sie~~", like Siedemset;
     nom_m: _, "~sie~~";
     nom_vir: "~ś~iu~", _;
+    acc_vir: _, "~ś~iu~";
     ),
-    // Pińcet: 1 words (pińcet). Like Pięćset, except in 2 cells: nom_m inan, nom_vir anim.
+    // Pińcet: 1 words (pińcet). Like Pięćset, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
     declension!("pińcet", 1, "~~", like Pięćset;
     nom_m: _, "~~";
     nom_vir: "~ius~", _;
+    acc_vir: _, "~ius~";
     ),
 ];

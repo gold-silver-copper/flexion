@@ -1310,5 +1310,5 @@ pub(super) static RELATIONS: [Relation<'static>; 4] = [
         "celebri" => 1,
         "integri" => 1,
         "salubri" => 1,
-    }, true, None),
+    }, false, None),
 ];

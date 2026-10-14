@@ -80,10 +80,10 @@ pub(super) static TABLES: [EndingTable<'static>; 8] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~ς\t", "~ν\t", "~ν\t", "~ν\t",)),
     },
-    // adjective_sg like προσηκων: 327 words.
+    // adjective_sg like προσηκων: 329 words.
     EndingTable {
         name: Cow::Borrowed("προσηκων"),
-        words: 327,
+        words: 329,
         slot: 0,
         table: Cow::Borrowed(concat!("~ων\t", "~ον\t", "~ον\t", "~ον\t",)),
     },
@@ -174,10 +174,10 @@ pub(super) static TABLES: [EndingTable<'static>; 8] = [
             "\t",
         )),
     },
-    // adjective_f like ἡσσων: 24 words.
+    // adjective_f like ἡσσων: 20 words.
     EndingTable {
         name: Cow::Borrowed("ἡσσων"),
-        words: 24,
+        words: 20,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~νε\t",

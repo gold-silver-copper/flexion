@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -23,8 +25,8 @@ use flexion::Paradigm;
 /// `before_noun`
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem adjective_m: $s0:tt;)?
-     $(stem adjective_f: $s1:tt;)?
+     $(stem adjective_sg: $s0:tt;)?
+     $(stem adjective_pl: $s1:tt;)?
      $(stem superlative: $s2:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
@@ -77,10 +79,6 @@ macro_rules! view {
 }
 
 /// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`superlative_as_before`: one value read as another).
-const SUPERLATIVE_AS_BEFORE: [u16; 6] = [0, 1, 2, 3, 5, 5];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
 /// like that it reads (`pl_as_sg`: one value read as another).
 const PL_AS_SG: [u16; 6] = [0, 0, 2, 2, 4, 5];
 
@@ -93,24 +91,20 @@ const F_AS_M: [u16; 6] = [0, 1, 0, 1, 4, 5];
 pub enum Declension {
     /// Like `duro`: 14,448 words.
     Duro,
-    /// Like `natural`: 6,818 words.
+    /// Like `natural`: 6,632 words.
     Natural,
     /// Like `fiel`: 1,150 words.
     Fiel,
-    /// Like `entrador`: 982 words.
+    /// Like `entrador`: 983 words.
     Entrador,
-    /// Like `santiagués`: 262 words.
+    /// Like `santiagués`: 551 words.
     Santiagués,
-    /// Like `pelón`: 248 words.
-    Pelón,
-    /// Like `tuanis`: 232 words.
+    /// Like `tuanis`: 498 words.
     Tuanis,
-    /// Like `piola`: 188 words.
+    /// Like `piola`: 115 words.
     Piola,
-    /// Like `sagaz`: 49 words.
-    Sagaz,
-    /// Like `bacán`: 38 words.
-    Bacán,
+    /// Like `rapaz`: 65 words.
+    Rapaz,
     /// Like `catrín`: 31 words.
     Catrín,
     /// Like `fácil`: 28 words.
@@ -123,45 +117,28 @@ pub enum Declension {
     Grandote,
     /// Like `tontolaba`: 9 words.
     Tontolaba,
-    /// Like `común`: 8 words.
-    Común,
-    /// Like `afín`: 7 words.
-    Afín,
-    /// Like `euscaldún`: 5 words.
-    Euscaldún,
-    /// Like `cortés`: 4 words.
-    Cortés,
     /// Like `loco`: 3 words.
     Loco,
-    /// Like `marrón`: 3 words.
-    Marrón,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 22] = [
+    pub const ALL: [Declension; 15] = [
         Declension::Duro,
         Declension::Natural,
         Declension::Fiel,
         Declension::Entrador,
         Declension::Santiagués,
-        Declension::Pelón,
         Declension::Tuanis,
         Declension::Piola,
-        Declension::Sagaz,
-        Declension::Bacán,
+        Declension::Rapaz,
         Declension::Catrín,
         Declension::Fácil,
         Declension::Verde,
         Declension::Aweonao,
         Declension::Grandote,
         Declension::Tontolaba,
-        Declension::Común,
-        Declension::Afín,
-        Declension::Euscaldún,
-        Declension::Cortés,
         Declension::Loco,
-        Declension::Marrón,
     ];
 
     /// Its table.
@@ -179,80 +156,68 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     // Duro: 14,448 words (chiapaneco, perro, centavo, derecho, monetario, paceño).
     declension!("duro", 14448, "~o";
-    stem adjective_f: "~a- like duro";
     m: "~o", "~os";
+    f: "~a", "~as";
     superlative: "~ísimo";
-    before_noun: "~";
     ),
-    // Natural: 6,818 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
-    declension!("natural", 6818, "~";
-    m: "~", "~es";
-    f: "~", "~es";
+    // Natural: 6,632 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
+    declension!("natural", 6632, "~";
+    stem adjective_sg: "~- like natural";
+    stem adjective_pl: "~es- like natural";
     superlative: "~ísimo";
     ),
     // Fiel: 1,150 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
     declension!("fiel", 1150, "~~";
-    m: "~~", "~~es";
-    f: "~~", "~~es";
+    stem adjective_sg: "~~- like natural";
+    stem adjective_pl: "~~es- like natural";
     superlative: "~d~ísimo";
     ),
-    // Entrador: 982 words (accelerator, bel, español, tractor, semiconductor, computador). Like Natural, except in 0 cells: .
-    declension!("entrador", 982, "~", like Natural as SUPERLATIVE_AS_BEFORE;
-    stem adjective_f: "~a- like duro";
+    // Entrador: 983 words (accelerator, bel, español, tractor, semiconductor, computador). Like Duro, except in 3 cells: m sg, m pl, superlative.
+    declension!("entrador", 983, "~", like Duro;
+    m: "~", "~es";
+    superlative: derived;
     ),
-    // Santiagués: 262 words (japonés, luxemburgués, inglés, francés, ugandés, javanés).
-    declension!("santiagués", 262, "~é~";
-    stem adjective_f: "~e~a- like duro";
-    m: "~é~", "~e~es";
+    // Santiagués: 551 words (chingón, catalán, japonés, luxemburgués, inglés, francés).
+    declension!("santiagués", 551, "~ˇ";
+    m: "~ˇ", "~esˇ";
+    f: "~aˇ", "~asˇ";
     ),
-    // Pelón: 248 words (chingón, juguetón, cabrón, llorón, zorrastrón, cabezón).
-    declension!("pelón", 248, "~ó~";
-    stem adjective_f: "~o~a- like duro";
-    m: "~ó~", "~o~es";
+    // Tuanis: 498 words (gratis, acid, tao, bio, beige, magenta). Like Natural, except in 1 cell: before_noun.
+    declension!("tuanis", 498, "~", like Natural as PL_AS_SG;
+    before_noun: derived;
     ),
-    // Tuanis: 232 words (beige, magenta, hot, touch, ok, perfect). Like Natural, except in 0 cells: .
-    declension!("tuanis", 232, "~", like Natural as PL_AS_SG;
-    ),
-    // Piola: 188 words (gratis, acid, cool, god, hard, fit). Like Natural, except in 1 cell: superlative.
-    declension!("piola", 188, "~", like Natural;
-    stem adjective_m: "~- like piola";
-    stem adjective_f: "~- like duro";
+    // Piola: 115 words (fit, heavy, teen, gourmet, pop, random). Like Natural, except in 1 cell: superlative.
+    declension!("piola", 115, "~", like Natural;
+    stem adjective_pl: "~s- like natural";
     superlative: "~lísimo";
     ),
-    // Sagaz: 49 words (rapaz, fugaz, feliz, locuaz, capaz, incapaz).
-    declension!("sagaz", 49, "~z";
-    m: "~z", "~ces";
-    f: "~z", "~ces";
-    superlative: "~císimo";
-    ),
-    // Bacán: 38 words (catalán, musulmán, alemán, charlatán, chuán, haragán).
-    declension!("bacán", 38, "~á~";
-    stem adjective_f: "~a~a- like duro";
-    m: "~á~", "~a~es";
+    // Rapaz: 65 words (rapaz, fugaz, feliz, locuaz, capaz, cortés). Like Santiagués, except in 2 cells: superlative, before_noun.
+    declension!("rapaz", 65, "~ˇ", like Santiagués as F_AS_M;
+    superlative: "~ísimoˇ";
+    before_noun: derived;
     ),
     // Catrín: 31 words (parlanchín, chiquitín, comodín, bailarín, borrachín, pequeñín).
     declension!("catrín", 31, "~í~";
-    stem adjective_f: "~i~a- like duro";
     m: "~í~", "~i~es";
+    f: "~i~a", "~i~as";
     ),
-    // Fácil: 28 words (grácil, versátil, hábil, fácil, estándar, frágil). Like Bacán, except in 3 cells: m pl, f pl, superlative.
-    declension!("fácil", 28, "~á~", like Bacán as F_AS_M;
-    m: _, "~á~es";
-    f: _, "~á~es";
+    // Fácil: 28 words (grácil, versátil, hábil, fácil, estándar, frágil).
+    declension!("fácil", 28, "~á~";
+    stem adjective_sg: "~á~- like natural";
+    stem adjective_pl: "~á~es- like natural";
     superlative: "~a~ísimo";
     ),
-    // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural, except in 2 cells: m sg, f sg.
+    // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural, except in 0 cells: .
     declension!("verde", 14, "~e", like Natural;
-    m: "~e", _;
-    f: "~e", _;
+    stem adjective_sg: "~e- like natural";
     ),
     // Aweonao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
     declension!("aweonao", 14, "~ao";
-    stem adjective_m: "~ao- like piola";
-    stem adjective_f: "~á- like duro";
+    m: "~ao", "~aos";
+    f: "~á", "~ás";
     ),
     // Grandote: 11 words (grandote, cerote, chilote, regordete, franchute, hugonote). Like Entrador, except in 1 cell: m sg.
     declension!("grandote", 11, "~e", like Entrador;
@@ -260,31 +225,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Tontolaba: 9 words (ambos, tropecientos, entrambos, tontolaba, cuchucientos, sopotocientos).
     declension!("tontolaba", 9, "~o~";
-    stem adjective_m: "~o~- like piola";
-    stem adjective_f: "~a~- like duro";
-    ),
-    // Común: 8 words (común, supercomún, incomún, cajún, bidún, putún).
-    declension!("común", 8, "~ú~";
-    m: "~ú~", "~u~es";
-    f: "~ú~", "~u~es";
-    ),
-    // Afín: 7 words (afín, carmesín, machín, argentafín, cinzolín, coronigrís). Like Catrín, except in 0 cells: .
-    declension!("afín", 7, "~í~", like Catrín as F_AS_M;
-    ),
-    // Euscaldún: 5 words (pastún, euscaldún, euskaldún, pashtún, zunzún). Like Común, except in 0 cells: .
-    declension!("euscaldún", 5, "~ú~", like Común;
-    stem adjective_f: "~u~a- like duro";
-    ),
-    // Cortés: 4 words (cortés, descortés, parisién, mosetén). Like Santiagués, except in 0 cells: .
-    declension!("cortés", 4, "~é~", like Santiagués as F_AS_M;
+    m: "~o~", "~o~s";
+    f: "~a~", "~a~s";
     ),
     // Loco: 3 words (loco, seco, flaco).
     declension!("loco", 3, "~co";
-    stem adjective_m: "~co- like piola";
-    stem adjective_f: "~ca- like duro";
+    m: "~co", "~cos";
+    f: "~ca", "~cas";
     superlative: "~quísimo";
-    ),
-    // Marrón: 3 words (marrón, dicotiledón, alegrón). Like Pelón, except in 0 cells: .
-    declension!("marrón", 3, "~ó~", like Pelón as F_AS_M;
     ),
 ];

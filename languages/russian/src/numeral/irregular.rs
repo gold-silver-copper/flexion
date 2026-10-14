@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 28 stems, 76 forms.
+/// 25 stems, 85 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"восемь	numeral	восьми- like пятьдесят
@@ -19,7 +19,7 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 двое	numeral	двои- like пятеро	numeral_ins	двоими- like пятеро	30	двоих
 девяносто	numeral	девяноста- like пятьдесят	numeral_ins	девяноста- like пятьдесят
 оба	numeral	обои- like пятеро	numeral_ins	обоими- like пятеро	8	обоего	30	обоих
-один	numeral	одни- like пятеро	numeral_ins	одним- like пятьдесят	numeral_nom_m_anim	одни- like пятьсот	1	один	2	одна	4	одно	5	одно	10	одной	11	одной	16	одному	18	одной	19	одной	24	одного	26	одну	27	одну	28	одно	29	одно	30	одних	34	одной	35	одной	38	одними	39	одними	40	одном	42	одной	43	одной
+один	2	одна	4	одно	5	одно	6	одни	7	одни	10	одной	11	одной	14	одних	15	одних	16	одному	18	одной	19	одной	22	одним	23	одним	24	одного	26	одну	27	одну	28	одно	29	одно	30	одних	31	одни	32	одним	34	одной	35	одной	38	одними	39	одними	40	одном	42	одной	43	одной	46	одних	47	одних
 полтора	numeral	полутора- like пятьдесят	numeral_ins	полутора- like пятьдесят	2	полторы	26	полторы
 полтораста	numeral	полутораста- like пятьдесят	numeral_ins	полутораста- like пятьдесят
 сорок	numeral	сорока- like пятьдесят	numeral_ins	сорока- like пятьдесят

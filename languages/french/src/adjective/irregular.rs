@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 60 forms.
+/// 0 stems, 62 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abaxial	1	abaxiaux	3	abaxiaux
@@ -37,11 +37,13 @@ gras	2	grasse
 grec	2	grecque
 grief	2	griève
 gros	2	grosse
+hébreu	1	hébreux
 ier	1	iᵉʳˢ	2	iʳᵉ	3	iʳᵉˢ
 irradiateur	2	irradiatice
 kirghiz	1	kirghiz
 las	2	lasse
 malin	2	maligne
+mantchou	1	mantchoux
 maous	2	maousse
 mou	2	molle
 métis	2	métisse

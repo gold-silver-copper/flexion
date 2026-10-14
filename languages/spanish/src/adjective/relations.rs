@@ -1183,7 +1183,7 @@ pub(super) static RELATIONS: [Relation<'static>; 5] = [
         "limpias" => 3,
         "notables" => 4,
         "serias" => 3,
-    }, false, None),
+    }, true, None),
     // BEFORE_NOUN, from M_SG.
     relation!(BEFORE_NOUN, [M_SG], [("~o", "~")], rules {
         "" => [0 9],

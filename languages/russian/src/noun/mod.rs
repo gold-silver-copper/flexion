@@ -49,6 +49,7 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Animacy> = Grammar {
     feature: Some((1, animacy::ANIMACY)),
     compound: Some(compounds::COMPOUND),
     prefixes: None,
+    heads: None,
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
@@ -60,7 +61,7 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Animacy> = Grammar {
     sharpness: 1.0,
     trust: flexion::Trust {
         regular: 1.0,
-        unsettled: 0.99762255,
+        unsettled: 0.9985772,
         unattested: 1.0,
     },
 };

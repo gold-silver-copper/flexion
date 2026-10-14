@@ -81,4 +81,12 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 0] = [];
+pub(super) static TABLES: [EndingTable<'static>; 1] = [
+    // pronoun_nom_m like ów: 26 words.
+    EndingTable {
+        name: Cow::Borrowed("ów"),
+        words: 26,
+        slot: 0,
+        table: Cow::Borrowed(concat!("\t~\t", "~\t",)),
+    },
+];
