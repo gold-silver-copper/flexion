@@ -591,10 +591,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~mich\t", "~sich\t",)),
     },
-    // verb_pret_pl like machen: 4,112 words.
+    // verb_pret_pl like machen: 4,114 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4112,
+        words: 4114,
         slot: 5,
         table: Cow::Borrowed(concat!("~n\t", "~st\t", "~n\t", "~n\t", "~n\t",)),
     },
@@ -666,10 +666,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~n sich\t",
         )),
     },
-    // verb_pret_2_pl like machen: 4,131 words.
+    // verb_pret_2_pl like machen: 4,133 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4131,
+        words: 4133,
         slot: 6,
         table: Cow::Borrowed(concat!("~t\t", "~st\t~t\t",)),
     },
@@ -871,24 +871,24 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "sich ~\tsich ~n\t",
         )),
     },
-    // infinitive like machen: 3,308 words.
+    // infinitive like machen: 3,309 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3308,
+        words: 3309,
         slot: 10,
         table: Cow::Borrowed(concat!("\t", "ge~\t",)),
     },
-    // infinitive like kassieren: 1,196 words.
+    // infinitive like kassieren: 1,195 words.
     EndingTable {
         name: Cow::Borrowed("kassieren"),
-        words: 1196,
+        words: 1195,
         slot: 10,
         table: Cow::Borrowed(concat!("\t", "~\t",)),
     },
-    // infinitive like einleuchten: 10 words.
+    // infinitive like einleuchten: 9 words.
     EndingTable {
         name: Cow::Borrowed("einleuchten"),
-        words: 10,
+        words: 9,
         slot: 10,
         table: Cow::Borrowed(concat!("~en\t", "ge~t\t",)),
     },

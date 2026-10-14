@@ -11,8 +11,8 @@ mod stress;
 
 pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
 pub use grammar::{
-    Compound, Grammar, Irregular, Known, ListedStem, Placement, Prefix, Prefixes, Separation,
-    Trust, WORD_END, restore, sharpen,
+    Compound, FRONT_LETTERS, Grammar, Irregular, Known, ListedStem, Placement, Prefix, Prefixes,
+    Separation, Trust, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{DERIVED, Form, Paradigm, Relation, Space};

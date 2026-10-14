@@ -13,12 +13,12 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
-        name: Cow::Borrowed("adjective_m"),
-        cells: Cow::Borrowed(&[M_SG, M_PL, BEFORE_NOUN]),
+        name: Cow::Borrowed("adjective_sg"),
+        cells: Cow::Borrowed(&[M_SG, F_SG, BEFORE_NOUN]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_f"),
-        cells: Cow::Borrowed(&[F_SG, F_PL]),
+        name: Cow::Borrowed("adjective_pl"),
+        cells: Cow::Borrowed(&[M_PL, F_PL]),
     },
     Slot {
         name: Cow::Borrowed("superlative"),
@@ -28,18 +28,18 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // adjective_m like piola: 239 words.
+    // adjective_sg like natural: 8,502 words.
     EndingTable {
-        name: Cow::Borrowed("piola"),
-        words: 239,
+        name: Cow::Borrowed("natural"),
+        words: 8502,
         slot: 0,
-        table: Cow::Borrowed(concat!("~\t~s\t", "\t",)),
+        table: Cow::Borrowed(concat!("~\t", "~\t", "\t",)),
     },
-    // adjective_f like duro: 16,253 words.
+    // adjective_pl like natural: 8,502 words.
     EndingTable {
-        name: Cow::Borrowed("duro"),
-        words: 16253,
+        name: Cow::Borrowed("natural"),
+        words: 8502,
         slot: 1,
-        table: Cow::Borrowed("~\t~s\t"),
+        table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
 ];

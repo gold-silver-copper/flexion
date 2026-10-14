@@ -1,7 +1,8 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
 //! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
-//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
-//! nearest letter of a tier before it as written): every form a declension builds
+//! `%` copies (`°`), on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written), or inside a stem that
+//! alternates (`ˇ`, by what follows it): every form a declension builds
 //! goes through them, in order, so one declension serves words whose stems change
 //! its endings. Each with the words whose forms it gives, and how many of
 //! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
@@ -189,7 +190,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+ы")]),
     },
-    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 84 words (ночь, помочь, печь, рожь), 6 forms wrong.
+    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 82 words (ночь, помочь, печь, речь), 6 forms wrong.
     CompiledRule {
         name: B("law6"),
         left: Pattern {
@@ -298,39 +299,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ж+ы")]),
     },
-    // ц+и → ц+ы: 162 words (овца, отец, свинец, боец), 1 forms wrong.
-    CompiledRule {
-        name: B("law9"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ц+и")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ц+ы"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ц+и")]),
-    },
     // [к|щ|ш|ч|ж|г|х]+ых → +их: 28 words (телеведущая, неверующая, составляющая, заведующая), 0 forms wrong.
     CompiledRule {
-        name: B("law10"),
+        name: B("law9"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -378,7 +349,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // щ+ы → щ+и: 101 words (тёща, пища, гуща, роща), 0 forms wrong.
     CompiledRule {
-        name: B("law11"),
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -408,7 +379,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ч+я → ч+а: 46 words (ночь, помочь, печь, речь), 1 forms wrong.
     CompiledRule {
-        name: B("law12"),
+        name: B("law11"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -438,7 +409,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ч+ог → ч+ег: 20 words (лесничий, рабочий, ничто, городничий), 0 forms wrong.
     CompiledRule {
-        name: B("law13"),
+        name: B("law12"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -466,9 +437,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+ог")]),
     },
-    // ж+я → ж+а: 22 words (рожь, ложь, вожжи, дрожжи), 0 forms wrong.
+    // ж+я → ж+а: 20 words (вожжи, дрожжи, дрожь, упряжь), 0 forms wrong.
     CompiledRule {
-        name: B("law14"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -498,7 +469,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // оч+ом → оч+ем: 5 words (рабочий, чернорабочий, горнорабочий, разнорабочий), 0 forms wrong.
     CompiledRule {
-        name: B("law15"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -528,7 +499,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // зж+о → зж+е: 6 words (съезжая, приезжий, заезжий, новоприезжий), 0 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -558,7 +529,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ьб+и → ьб+ы: 5 words (судьба, свадьба, усадьба, шмальба), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,

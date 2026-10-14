@@ -26,6 +26,14 @@
 //! written in one pass. A paradigm writes the class letter where the law
 //! gives its words' letter, breaking few; a class that makes no two endings
 //! one goes; paradigms then alike are one.
+//!
+//! A class whose value is the tier letter itself is a copy (the Finnish
+//! illative `-Vn`: `taloon`, `kylään`, `maahan`), a law however near its
+//! letter is (no law at the stem's edge states it once): it copies each of
+//! its letters (every vowel, for one of vowels), is a law of its own,
+//! written last (it reads the others' letters, `talossaan` of `~ssAVn`),
+//! and is tried on the places writing just its letters where wider ones
+//! fail (`-ssA` writes `a` or `ä` after any vowel).
 
 use super::{BREAKS, Change, Law, MIN_WORDS, Word, held_out};
 use crate::HashMap;
@@ -285,52 +293,74 @@ pub(super) fn learn<'s>(
         .collect();
     candidates.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
     let mut pools: Vec<Pool<'_>> = Vec::new();
+    // Whether each is a copy: a law of its own.
+    let mut copying: Vec<bool> = Vec::new();
     let mut claimed: BTreeSet<Spot> = BTreeSet::new();
     for (letters, _) in candidates.into_iter().take(CANDIDATES) {
-        let pool: Vec<&Spot> = spots
-            .iter()
-            .filter(|(s, l)| !claimed.contains(*s) && l.iter().all(|c| letters.contains(c)))
-            .map(|(s, _)| s)
-            .collect();
-        let mut users: Vec<usize> = pool
-            .iter()
-            .flat_map(|s| examples.get(s).into_iter().flatten().map(|e| e.0))
-            .collect();
-        users.sort_unstable();
-        users.dedup();
-        if users.len() < MIN_WORDS {
-            continue;
-        }
-        // Learned on half the words, checked on the other half: a law whose
-        // blocking letters only the words it was learned from pay for fails
-        // on words it hasn't seen (Rasin & Katzir 2020).
-        let mut candidate = Pool {
-            letters: letters.clone(),
-            learned: Vec::new(),
-            held: Vec::new(),
-        };
-        for s in &pool {
-            for e in examples.get(*s).into_iter().flatten() {
-                let (Some(x), Some(w)) = (seen(s, e), words.get(e.0)) else {
-                    continue;
-                };
-                if held_out(w.letters) {
-                    candidate.held.push(x);
-                } else {
-                    candidate.learned.push(x);
+        // The places writing these letters or fewer; failing that, those
+        // writing just these (a copy of every vowel, `-Vn`, is no law of the
+        // places writing `a` or `ä` after any, `-ssA`).
+        for exact in [false, true] {
+            let pool: Vec<&Spot> = spots
+                .iter()
+                .filter(|(s, l)| {
+                    !claimed.contains(*s)
+                        && if exact {
+                            *l == letters
+                        } else {
+                            l.iter().all(|c| letters.contains(c))
+                        }
+                })
+                .map(|(s, _)| s)
+                .collect();
+            let mut users: Vec<usize> = pool
+                .iter()
+                .flat_map(|s| examples.get(s).into_iter().flatten().map(|e| e.0))
+                .collect();
+            users.sort_unstable();
+            users.dedup();
+            if users.len() < MIN_WORDS {
+                continue;
+            }
+            // Learned on half the words, checked on the other half: a law
+            // whose blocking letters only the words it was learned from pay
+            // for fails on words it hasn't seen (Rasin & Katzir 2020).
+            let mut candidate = Pool {
+                letters: letters.clone(),
+                learned: Vec::new(),
+                held: Vec::new(),
+            };
+            for s in &pool {
+                for e in examples.get(*s).into_iter().flatten() {
+                    let (Some(x), Some(w)) = (seen(s, e), words.get(e.0)) else {
+                        continue;
+                    };
+                    if held_out(w.letters) {
+                        candidate.held.push(x);
+                    } else {
+                        candidate.learned.push(x);
+                    }
                 }
             }
-        }
-        if fit(&[&candidate]).is_some() {
-            claimed.extend(pool.into_iter().copied());
-            pools.push(candidate);
+            // Just these letters: only as a copy.
+            let copy = fit(&[&candidate]).map(|tier| copies(&candidate, &tier));
+            if copy.is_some_and(|copy| !exact || copy) {
+                claimed.extend(pool.into_iter().copied());
+                pools.push(candidate);
+                copying.push(copy == Some(true));
+                break;
+            }
         }
     }
     // Classes one tier decides are one law, written in one pass: what one
     // writes the next reads (`-lArI`: `I` reads the `a` or `e` just written).
     let mut laws_of: Vec<Vec<usize>> = Vec::new();
+    let copy = |k: &usize| copying.get(*k).copied().unwrap_or(false);
     for k in 0..pools.len() {
         let joins = laws_of.iter().position(|ks| {
+            if copy(&k) || ks.iter().any(copy) {
+                return false;
+            }
             let together: Vec<&Pool<'_>> = ks
                 .iter()
                 .chain([&k])
@@ -343,6 +373,13 @@ pub(super) fn learn<'s>(
             None => laws_of.push(vec![k]),
         }
     }
+    let mut vowels: Vec<char> = words
+        .iter()
+        .flat_map(|w| w.letters.chars())
+        .filter(|&c| orthography.is_vowel(c))
+        .collect();
+    vowels.sort_unstable();
+    vowels.dedup();
     let mut classes: Vec<Class> = Vec::new();
     for ks in &laws_of {
         let together: Vec<&Pool<'_>> = ks.iter().filter_map(|&i| pools.get(i)).collect();
@@ -353,7 +390,23 @@ pub(super) fn learn<'s>(
             // Its values from all its words, on the tier learned.
             let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
             let by = units(&all, &tier);
-            let Some(map) = values(&by) else { continue };
+            let Some(mut map) = values(&by) else { continue };
+            // A copy of vowels copies every vowel, those no ending shows it
+            // after too.
+            let mut tier = tier.clone();
+            let mut letters = pool.letters.clone();
+            if copies(pool, &tier) {
+                if letters.iter().all(|&c| orthography.is_vowel(c)) {
+                    tier.extend(&vowels);
+                    let more: Vec<char> = vowels
+                        .iter()
+                        .copied()
+                        .filter(|v| !letters.contains(v))
+                        .collect();
+                    letters.extend(more);
+                }
+                map.extend(tier.iter().map(|&t| (Some(t), t)));
+            }
             let mut total: BTreeMap<char, u32> = BTreeMap::new();
             for (&v, &n) in by.values().flat_map(|v| v.iter()) {
                 *total.entry(v).or_default() += n;
@@ -365,15 +418,20 @@ pub(super) fn learn<'s>(
             let value = |m: &BTreeMap<Option<char>, char>, t: Option<char>| {
                 m.get(&t).or_else(|| m.get(&None)).copied()
             };
+            // Copies are one class whatever a word with no tier letter
+            // takes (`-Vn`, `-ssAAn`: few words show it).
+            let copied =
+                |m: &BTreeMap<Option<char>, char>| m.iter().all(|(t, v)| t.is_none_or(|t| t == *v));
             let alike = |c: &Class| {
-                let triggers = tier.iter().map(|&t| Some(t)).chain([None]);
+                let none = !(copied(&c.map) && copied(&map));
+                let triggers = tier.iter().map(|&t| Some(t)).chain(none.then_some(None));
                 c.tier == tier
                     && triggers
                         .into_iter()
                         .all(|t| value(&c.map, t) == value(&map, t))
             };
             if let Some(same) = classes.iter_mut().find(|c| alike(c)) {
-                for l in &pool.letters {
+                for l in &letters {
                     if !same.letters.contains(l) {
                         same.letters.push(*l);
                     }
@@ -381,8 +439,8 @@ pub(super) fn learn<'s>(
                 continue;
             }
             classes.push(Class {
-                letters: pool.letters.clone(),
-                tier: tier.clone(),
+                letters,
+                tier,
                 map,
                 common: common.into_iter().map(|(_, c)| c).collect(),
             });
@@ -478,21 +536,36 @@ pub(super) fn learn<'s>(
                 .chain(w.forms.iter().flatten().flat_map(|f| f.chars()))
         })
         .collect();
-    let names: Vec<Option<char>> = classes
-        .iter()
-        .map(|class| {
-            let capitals = class.common.iter().filter_map(|&c| {
-                let mut upper = c.to_uppercase();
-                match (upper.next(), upper.next()) {
-                    (Some(u), None) if u != c => Some(u),
-                    _ => None,
-                }
-            });
-            let name = capitals.chain('A'..='Z').find(|c| !used.contains(c))?;
+    // Copies are named after the other classes (those have their own
+    // letters' capitals); a copy of the vowel before it is `V`, as grammars
+    // write it.
+    let copy = |class: &Class| class.map.iter().all(|(t, v)| t.is_none_or(|t| t == *v));
+    let mut order: Vec<usize> = (0..classes.len()).collect();
+    order.sort_by_key(|&k| classes.get(k).is_some_and(copy));
+    let mut names: Vec<Option<char>> = vec![None; classes.len()];
+    for k in order {
+        let Some(class) = classes.get(k) else {
+            continue;
+        };
+        let capitals = class.common.iter().filter_map(|&c| {
+            let mut upper = c.to_uppercase();
+            match (upper.next(), upper.next()) {
+                (Some(u), None) if u != c => Some(u),
+                _ => None,
+            }
+        });
+        let vowels = copy(class) && class.letters.iter().all(|&c| orthography.is_vowel(c));
+        let name = vowels
+            .then_some('V')
+            .into_iter()
+            .chain(capitals)
+            .chain('A'..='Z')
+            .find(|c| !used.contains(c));
+        if let (Some(name), Some(slot)) = (name, names.get_mut(k)) {
             used.insert(name);
-            Some(name)
-        })
-        .collect();
+            *slot = Some(name);
+        }
+    }
     chosen.retain(|_, (k, _)| names.get(*k).copied().flatten().is_some());
     // The tables rewritten.
     let mut paradigms = paradigms;
@@ -556,7 +629,7 @@ pub(super) fn learn<'s>(
             None => tiers.push((&class.tier, vec![k])),
         }
     }
-    let laws = tiers
+    let mut laws: Vec<Law> = tiers
         .into_iter()
         .filter_map(|(tier, ks)| {
             let mine: Vec<(&Spot, &(usize, u32))> =
@@ -596,6 +669,13 @@ pub(super) fn learn<'s>(
             })
         })
         .collect();
+    // A copy reads the letters before it as the other laws write them
+    // (`~ssAVn`, `talossaan`): it comes last.
+    let copies = |l: &Law| match &l.change {
+        Change::Harmony { map, .. } => map.iter().all(|&(_, t, v)| t.is_none_or(|t| t == v)),
+        _ => false,
+    };
+    laws.sort_by_key(copies);
     (laws, paradigms, assignment)
 }
 
@@ -616,6 +696,15 @@ pub(super) fn tolerated(n: u32, exceptions: u32) -> bool {
     } else {
         f64::from(exceptions) <= f64::from(n) / f64::from(n).ln()
     }
+}
+
+/// Whether `pool`'s class is, on `tier`, the nearest tier letter itself
+/// (of two tier letters at least).
+fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>) -> bool {
+    values(&units(&pool.learned, tier)).is_some_and(|map| {
+        let mut tiered = map.iter().filter_map(|(t, v)| Some(((*t)?, *v)));
+        tiered.clone().count() > 1 && tiered.all(|(t, v)| t == v)
+    })
 }
 
 /// The tier one law decides `pools`' classes on, learned on their words not
@@ -651,6 +740,21 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
         local = false;
         tier.remove(&off);
     }
+    // A class that is the nearest tier letter itself (a copy: the Finnish
+    // illative `-Vn`, `taloon`, `kylään`, `maahan`) is a law however near
+    // that letter is (no law at the stem's edge states it once), and copies
+    // each of its letters, those few words show too.
+    let copy = pools.iter().all(|p| copies(p, &tier));
+    // A copy is a law of its own: no other class's letters are its tier.
+    if copy && pools.len() > 1 {
+        return None;
+    }
+    if copy {
+        tier = pools
+            .iter()
+            .flat_map(|p| p.letters.iter().copied())
+            .collect();
+    }
     // A letter that decides what a letter before it would decide anyway
     // leaves too (`j` of `garaj`, after `a`): the smallest tier that decides
     // as well (the seldom first). Not one whose words, with none before it,
@@ -681,7 +785,7 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
     order.sort_unstable();
     let mut errors = wrong(&bys);
     let mut none = default(&bys);
-    for (_, t) in order {
+    for (_, t) in order.into_iter().filter(|_| !copy) {
         let mut fewer = tier.clone();
         fewer.remove(&t);
         let bys = after(&fewer);
@@ -707,7 +811,7 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
         let back = !just && nearest(before, &tier).is_some();
         (far + usize::from(back), n + 1)
     });
-    if local || 2 * far <= n || tier.is_empty() {
+    if tier.is_empty() || (!copy && (local || 2 * far <= n)) {
         return None;
     }
     let maps: Vec<BTreeMap<Option<char>, char>> = after(&tier)
@@ -792,5 +896,41 @@ mod tests {
         let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
         let map = values(&units(&all, &tier)).expect("values");
         assert_eq!(map.get(&None), Some(&'ä'), "{map:?}");
+    }
+
+    #[test]
+    fn a_copy_of_the_vowel_before_is_a_law_however_near() {
+        // The Finnish illative `-Vn`: `taloon`, `kylään`, `katuun`; the
+        // vowel copied is just before the class letter, as a law at the
+        // stem's edge would read it, but no one such law states it.
+        let vowels = ['a', 'e', 'i', 'o', 'u', 'y', 'ä', 'ö'];
+        let frames = [["k", "l"], ["t", "p"], ["m", "r"], ["s", "n"], ["h", "v"]];
+        let mut forms: Vec<(String, char)> = Vec::new();
+        for frame in frames {
+            for v in vowels {
+                for w in vowels {
+                    forms.push((format!("{}{v}{}{w}", frame[0], frame[1]), w));
+                }
+            }
+        }
+        let mut pool = Pool {
+            letters: vowels.to_vec(),
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for (i, (form, value)) in forms.iter().enumerate() {
+            let seen = (form.as_str(), *value, i);
+            if i % 3 == 0 {
+                pool.held.push(seen);
+            } else {
+                pool.learned.push(seen);
+            }
+        }
+        let tier = fit(&[&pool]).expect("a copy");
+        let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
+        let map = values(&units(&all, &tier)).expect("values");
+        for v in vowels {
+            assert_eq!(map.get(&Some(v)), Some(&v), "{map:?}");
+        }
     }
 }

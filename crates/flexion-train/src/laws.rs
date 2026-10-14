@@ -2,22 +2,37 @@
 //! Russian `[к|г|х]+ы → +и`), of a letter of the ending by the nearest of
 //! some letters before it (Sanskrit `न → ण` after `र`), of a class letter
 //! an ending writes by the nearest letter of a tier before it as written
-//! (harmony: Turkish `-lAr`), or of a copied
+//! (harmony: Turkish `-lAr`; or the letter itself, a copy: the Finnish
+//! illative `-Vn`), or of a copied
 //! letter (Greek `φ` copied as `π`: `πεφίληκα`), or where a literal before
 //! the stem meets it (the Greek augment lengthens a vowel: `ἐ‹ἀ → ἠ`,
-//! `ἤγον`). They are found where a word's paradigm, or a more general one,
-//! would build its forms but for such a change, and kept when they fix many
+//! `ἤγον`), or inside a stem that alternates, by what follows it (Finnish
+//! consonant gradation, `katu`, `kadun`). They are found where a word's
+//! paradigm, or a more general one, would build its forms but for such a
+//! change, and kept when they fix many
 //! forms and break few, on the words they are learned from and on words
 //! held out (Rasin & Katzir 2020). A change at the stem's edge that breaks
 //! too many is tried again with a letter more of context on whichever side
 //! best tells the forms it gives from those it breaks (Belth 2024 (11),
 //! p. 8). The words they explain join the more general paradigm, and
 //! paradigms left without words go.
+//!
+//! Which stems alternate is the word's (Finnish `auto`, `auton` keeps its
+//! `t`): a more general paradigm has a twin whose patterns end in
+//! [`ALTERNATES`] (a rule feature, Chomsky & Halle 1968 ch. 8; Koskenniemi
+//! 1983's morphophonemes), and only its forms go through the laws inside
+//! the stem. Such a law's context is a decision tree on the letters after
+//! the change (Quinlan 1986), read as any letter, vowel or not, or letter
+//! by letter, whichever gives as many forms; its shifts after different
+//! letters are one law where one context makes them all (`t → d after
+//! [a|o|u|h]; t → n after n; k → ∅ after k; …`), applying at once (a
+//! changed letter is marked [`CHANGED`]: `voitto`, `voiton`, not
+//! `voidon`).
 
 mod harmony;
 
 use crate::HashMap;
-use flexion::pattern::{self, BOUNDARY, COPIED, FRONT};
+use flexion::pattern::{self, ALTERNATES, BOUNDARY, CHANGED, COPIED, FRONT};
 use flexion::{Orthography, Paradigm};
 use sound_law::{Map, Program, Rule, RuleSet};
 use std::borrow::Cow;
@@ -60,6 +75,16 @@ pub enum Change {
     },
     /// A copy of `letter` (see [`pattern::COPY`]) is `to`.
     Copy { letter: char, to: char },
+    /// Inside a stem that alternates (its paradigm's patterns end in
+    /// [`ALTERNATES`]): each of `shifts` where what follows it begins as one
+    /// of `after` says, a set of letters per place (the stem's end `+`
+    /// among them, `$` the form's end): Finnish consonant gradation, `t → d
+    /// after [a|o|u|h]; t → n after n; … before [o|u]+n$` (`katu`, `kadun`,
+    /// `ranta`, `rannan`; Koskenniemi 1983 pp. 73–75).
+    Inner {
+        shifts: Vec<Shift>,
+        after: Vec<Vec<Vec<char>>>,
+    },
     /// Where the literal a form begins with meets the stem (see [`FRONT`]):
     /// the literal (as built, a copy marked) and the stem's first letters
     /// `stem` become `to`: `ἐ‹ἀ → ἠ`. A one-letter stem written without
@@ -72,6 +97,10 @@ pub enum Change {
         plain: Vec<(char, String)>,
     },
 }
+
+/// One change of [`Change::Inner`]: after one of the letters, the first
+/// string becomes the second (`t → d` after `[a|o|u|h]`).
+pub type Shift = (Vec<char>, String, String);
 
 /// One learned law.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -147,6 +176,17 @@ impl std::fmt::Display for Law {
                 let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
                 classes.dedup();
                 for (k, class) in classes.iter().enumerate() {
+                    let sep = if k == 0 { "" } else { "; " };
+                    // A copy: `V → that letter; a after none`.
+                    let mine = map.iter().filter(|e| e.0 == *class);
+                    if mine.clone().all(|&(_, t, v)| t.is_none_or(|t| t == v)) {
+                        let none = mine.filter(|e| e.1.is_none()).map(|e| e.2);
+                        write!(f, "{sep}{class} → that letter")?;
+                        for v in none {
+                            write!(f, "; {v} after none")?;
+                        }
+                        continue;
+                    }
                     let mut values: Vec<(char, Vec<String>)> = Vec::new();
                     for &(_, t, v) in map.iter().filter(|e| e.0 == *class) {
                         let t = t.map_or("none".to_string(), String::from);
@@ -159,12 +199,47 @@ impl std::fmt::Display for Law {
                         .iter()
                         .map(|(v, ts)| format!("{v} after {}", ts.join(", ")))
                         .collect();
-                    let sep = if k == 0 { "" } else { "; " };
                     write!(f, "{sep}{class} → {}", values.join("; "))?;
                 }
                 write!(f, " (the nearest of {} before it, as written)", list(tier))
             }
             Change::Copy { letter, to } => write!(f, "copy of {letter} → {to}"),
+            // `t → d after [a|o|u|h], before [o|u]+n$, [o|u]+ss`.
+            Change::Inner { shifts, after } => {
+                // `.`: any letter; `[^a|e]`: any but these.
+                let set = |s: &[char]| match s {
+                    ['!'] => ".".to_string(),
+                    ['!', but @ ..] => format!("[^{}]", list(but).replace(", ", "|")),
+                    [one] => one.to_string(),
+                    many => format!("[{}]", list(many).replace(", ", "|")),
+                };
+                let or = |s: &str| {
+                    if s.is_empty() {
+                        "∅".to_string()
+                    } else {
+                        s.to_string()
+                    }
+                };
+                let shifts: Vec<String> = shifts
+                    .iter()
+                    .map(|(left, from, to)| {
+                        format!("{} → {} after {}", or(from), or(to), set(left))
+                    })
+                    .collect();
+                write!(
+                    f,
+                    "{} in alternating stems ({ALTERNATES})",
+                    shifts.join("; ")
+                )?;
+                let paths: Vec<String> = after
+                    .iter()
+                    .map(|p| p.iter().map(|s| set(s)).collect())
+                    .collect();
+                if !paths.is_empty() {
+                    write!(f, ", before {}", paths.join(", "))?;
+                }
+                Ok(())
+            }
             // A copy as the pattern writes it: `%ε‹ἀ → ἠ`.
             Change::Front {
                 literal, stem, to, ..
@@ -212,6 +287,14 @@ impl Change {
             Change::Tier { letter, .. } => built.contains(*letter),
             Change::Harmony { map, .. } => map.iter().any(|e| built.contains(e.0)),
             Change::Copy { letter, .. } => built.contains(&format!("{COPIED}{letter}")),
+            Change::Inner { shifts, .. } => {
+                built.ends_with(ALTERNATES)
+                    && built.split_once(BOUNDARY).is_some_and(|(stem, _)| {
+                        shifts
+                            .iter()
+                            .any(|(_, from, _)| stem.contains(from.as_str()))
+                    })
+            }
             Change::Front { literal, stem, .. } => {
                 built.starts_with(&format!("{literal}{FRONT}{stem}"))
             }
@@ -308,6 +391,88 @@ impl Change {
                 String::new(),
                 String::new(),
             ],
+            // One shift: its letters; several: a capture, which the law's
+            // map gives by the letter before it (as it was where no shift
+            // has that letter before it). Before each path's sets, then the
+            // rest of the form, which an alternating stem's mark ends.
+            Change::Inner { shifts, after } => {
+                let (target, to, before, agree) = match shifts.as_slice() {
+                    [(left, from, to)] => (
+                        from.clone(),
+                        format!("{to}{CHANGED}"),
+                        format!("{{[{}]}}", list(left)),
+                        Vec::new(),
+                    ),
+                    many => {
+                        let mut froms: Vec<&str> = many.iter().map(|s| s.1.as_str()).collect();
+                        froms.sort_unstable();
+                        froms.dedup();
+                        let mut lefts: Vec<char> = many.iter().flat_map(|s| s.0.clone()).collect();
+                        lefts.sort_unstable();
+                        lefts.dedup();
+                        let agree: Vec<(String, String, String)> = froms
+                            .iter()
+                            .flat_map(|&f| lefts.iter().map(move |&l| (f, l)))
+                            .map(|(f, l)| {
+                                let to = many
+                                    .iter()
+                                    .find(|s| s.1 == f && s.0.contains(&l))
+                                    .map_or(f.to_string(), |s| format!("{}{CHANGED}", s.2));
+                                (f.to_string(), l.to_string(), to)
+                            })
+                            .collect();
+                        (
+                            format!("{{x:[{}]}}", froms.join("|")),
+                            format!("{{x|{name}[l]}}"),
+                            format!("{{l:[{}]}}", list(&lefts)),
+                            agree,
+                        )
+                    }
+                };
+                let rights: Vec<String> = after
+                    .iter()
+                    .map(|path| {
+                        let mut right = String::new();
+                        for set in path {
+                            match set.as_slice() {
+                                ['$'] => break,
+                                [BOUNDARY] => right.push(BOUNDARY),
+                                ['!', but @ ..] => {
+                                    let marks = [BOUNDARY, ALTERNATES, CHANGED, COPIED, FRONT];
+                                    let but: Vec<char> = marks.iter().chain(but).copied().collect();
+                                    right.push_str(&format!("{{![{}]}}", list(&but)));
+                                }
+                                letters => right.push_str(&format!("{{[{}]}}", list(letters))),
+                            }
+                        }
+                        // The change is in the stem: the stem's end follows.
+                        if path.last().is_some_and(|s| s.as_slice() == ['$']) {
+                            right.push(ALTERNATES);
+                        } else {
+                            if !path.iter().any(|s| s.as_slice() == [BOUNDARY]) {
+                                right.push_str(&format!("{{![{BOUNDARY}]*}}{BOUNDARY}"));
+                            }
+                            right.push_str(&format!("{{![{ALTERNATES}]*}}{ALTERNATES}"));
+                        }
+                        right.push('$');
+                        right
+                    })
+                    .collect();
+                // No context: nowhere (the mark ends a form once).
+                let (after, or) = match rights.split_first() {
+                    Some((first, rest)) => (first.clone(), rest.to_vec()),
+                    None => (format!("{ALTERNATES}{ALTERNATES}$"), Vec::new()),
+                };
+                return Stated {
+                    target,
+                    to,
+                    before,
+                    after,
+                    or,
+                    agree,
+                    ..Stated::default()
+                };
+            }
             // A capture, whose letters become those the law says.
             Change::Front {
                 literal,
@@ -352,6 +517,8 @@ struct Stated {
     map: Vec<(String, String)>,
     agree: Vec<(String, String, String)>,
     iterative: bool,
+    /// What may follow instead of `after`.
+    or: Vec<String>,
 }
 
 /// The laws compiled, in order.
@@ -394,10 +561,17 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
             },
         )
         .collect();
+    let ors: Vec<Vec<&str>> = texts
+        .iter()
+        .map(|(_, s)| s.or.iter().map(String::as_str).collect())
+        .collect();
     let rules: Vec<Rule<'_>> = texts
         .iter()
-        .map(|(name, s)| {
-            let rule = Rule::new(name, &s.target, &s.to).in_context(&s.before, &s.after);
+        .zip(&ors)
+        .map(|((name, s), or)| {
+            let rule = Rule::new(name, &s.target, &s.to)
+                .in_context(&s.before, &s.after)
+                .or_before(or);
             let rule = if s.stop.is_empty() {
                 rule
             } else {
@@ -465,14 +639,29 @@ pub fn learn<'s>(
         .map_or(0, |p| p.table.split('\t').count().saturating_sub(1));
     // A paradigm is more general than another when its lemma fixes fewer
     // letters (`~ω` takes `ποιεω` as well as `λυω`); of equally general
-    // ones, the commoner.
-    let rank: Vec<(usize, usize)> = paradigms
+    // ones, the commoner. A paradigm's twin whose stems alternate is as
+    // general as it.
+    let mut rank: Vec<(usize, usize)> = paradigms
         .iter()
         .enumerate()
         .map(|(i, p)| (p.lemma.chars().filter(|&c| c != '~').count(), i))
         .collect();
+    let mut neighbours = neighbours(&paradigms, cells, |p| {
+        rank.get(p).copied().unwrap_or((usize::MAX, p))
+    });
+    let originals = paradigms.len();
+    let (paradigms, twins) = twins(orthography, words, paradigms, &assignment, pre, &rank);
+    for (twin, of, _) in &twins {
+        rank.push(rank.get(*of).copied().unwrap_or((usize::MAX, *twin)));
+    }
+    for (twin, _, from) in &twins {
+        for &p in from {
+            if let Some(n) = neighbours.get_mut(p) {
+                n.push(*twin);
+            }
+        }
+    }
     let rank = |p: usize| rank.get(p).copied().unwrap_or((usize::MAX, p));
-    let neighbours = neighbours(&paradigms, cells, rank);
     let forms: Vec<Vec<&str>> = words
         .iter()
         .map(|w| w.forms.iter().flatten().copied().collect())
@@ -492,9 +681,22 @@ pub fn learn<'s>(
         .zip(&assignment)
         .map(|(w, &own)| {
             let own = usize::from(own);
+            // A twin only where its stems alternate as the word's do: it
+            // builds every form, or does but for a change inside the stem,
+            // some so.
+            let alternate = |r: &Reading| {
+                let mut wrong = r
+                    .builds
+                    .iter()
+                    .zip(w.forms.iter().flatten())
+                    .filter(|(b, f)| !same(b, f))
+                    .peekable();
+                wrong.peek().is_some() && wrong.all(|(b, f)| !inners(b, f).is_empty())
+            };
             std::iter::once(own)
                 .chain(neighbours.get(own).into_iter().flatten().copied())
                 .filter_map(|p| reading(orthography, &paradigms, p, w, pre))
+                .filter(|r| r.paradigm < originals || alternate(r))
                 .collect()
         })
         .collect();
@@ -524,6 +726,20 @@ pub fn learn<'s>(
         }
     }
     let mut candidates: Vec<(Change, u32)> = classes(&support);
+    // A change inside a stem after several letters is tried after them all
+    // only.
+    let grouped = lefts(&support);
+    let pair = |c: &Change| match c {
+        Change::Inner { shifts, .. } => match shifts.as_slice() {
+            [(_, from, to)] => Some((from.clone(), to.clone())),
+            _ => None,
+        },
+        _ => None,
+    };
+    let after_several: crate::HashSet<(String, String)> =
+        grouped.iter().filter_map(|(c, _)| pair(c)).collect();
+    support.retain(|c, _| pair(c).is_none_or(|p| !after_several.contains(&p)));
+    candidates.extend(grouped);
     candidates.extend(support);
     candidates.extend(tiers(&readings, &forms));
     candidates.retain(|&(_, n)| n as usize >= MIN_WORDS);
@@ -552,7 +768,11 @@ pub fn learn<'s>(
         &cells_of,
         assignment.clone(),
         &rank,
-        &held,
+        &Halves {
+            held: &held,
+            vowels: &vowels,
+            cells: &cells_of,
+        },
     );
     let kept = laws
         .into_iter()
@@ -625,8 +845,209 @@ pub fn learn<'s>(
             (laws, program, assignment, total) = (without, p, a, t);
         }
     }
-    let (paradigms, assignment) = drop_empty(paradigms, assignment);
+    // A law inside alternating stems pays in bits (see `crate::bits`): the
+    // grammar is shorter with it, its paradigms that have words, its laws
+    // and the forms it gets wrong (listed) counted, than without it.
+    let alphabet: crate::HashSet<char> = forms.iter().flatten().flat_map(|f| f.chars()).collect();
+    let prices = crate::bits::Prices::new(alphabet.len(), cells);
+    let all: usize = forms.iter().map(Vec::len).sum();
+    let letters: usize = forms.iter().flatten().map(|f| f.chars().count()).sum();
+    #[allow(clippy::cast_precision_loss)]
+    let listed = prices.cell + prices.letter * (letters as f64 / all.max(1) as f64 + 1.0);
+    let cost = |laws: &[Law], assignment: &[u16], right: usize| -> f64 {
+        let mut used = vec![false; paradigms.len()];
+        for &a in assignment {
+            if let Some(u) = used.get_mut(usize::from(a)) {
+                *u = true;
+            }
+        }
+        let tables: f64 = paradigms
+            .iter()
+            .zip(&used)
+            .filter(|(_, u)| **u)
+            .map(|(p, _)| {
+                let cells: f64 = p.table.split('\t').map(|c| prices.text(c)).sum();
+                crate::bits::ITEM + cells
+            })
+            .sum();
+        let stated: f64 = laws
+            .iter()
+            .map(|l| crate::bits::ITEM + prices.text(&l.to_string()))
+            .sum();
+        #[allow(clippy::cast_precision_loss)]
+        let wrong = all.saturating_sub(right) as f64 * listed;
+        tables + stated + wrong
+    };
+    let inner: Vec<Change> = laws
+        .iter()
+        .map(|l| l.change.clone())
+        .filter(|c| matches!(c, Change::Inner { .. }))
+        .collect();
+    for change in inner {
+        let without: Vec<Law> = laws
+            .iter()
+            .filter(|l| l.change != change)
+            .cloned()
+            .collect();
+        let (p, a, t) = settle(&without);
+        if cost(&without, &a, t) <= cost(&laws, &assignment, total) {
+            (laws, program, assignment, total) = (without, p, a, t);
+        }
+    }
+    let before: Vec<String> = paradigms
+        .iter()
+        .take(originals)
+        .map(|p| p.name.to_string())
+        .collect();
+    let (mut paradigms, assignment) = drop_empty(paradigms, assignment);
+    // A twin with words is named after the word a paradigm it took the
+    // words of was named after (commonest first), else its first word no
+    // paradigm is named after.
+    let mut names: crate::HashSet<String> = paradigms.iter().map(|p| p.name.to_string()).collect();
+    for (p, par) in paradigms.iter_mut().enumerate() {
+        if !par.lemma.ends_with(ALTERNATES) {
+            continue;
+        }
+        let mine: Vec<&str> = assignment
+            .iter()
+            .zip(words)
+            .filter(|(a, _)| usize::from(**a) == p)
+            .map(|(_, w)| w.letters)
+            .collect();
+        let named = before.iter().find(|n| mine.contains(&n.as_str()));
+        let first = mine.iter().find(|n| !names.contains(**n));
+        if let Some(name) = named
+            .map(String::as_str)
+            .filter(|n| !names.contains(*n))
+            .or(first.copied())
+        {
+            names.insert(name.to_string());
+            par.name = Cow::Owned(name.to_string());
+        }
+    }
     (laws, program, paradigms, assignment)
+}
+
+/// A twin (see [`twins`]): its place, the paradigm it is a twin of, and
+/// the paradigms it may take the words of.
+type Twin = (usize, usize, Vec<usize>);
+
+/// The words of a paradigm its more general paradigms are tried on, to find
+/// those whose twin with alternating stems builds them (see [`twins`]).
+const SAMPLE: usize = 3;
+/// The share of those words' forms such a twin must build, or build but
+/// for a change inside the stem.
+const TWIN_SHARE: f64 = 0.9;
+
+/// Twins of more general paradigms whose stems alternate (see
+/// [`ALTERNATES`]): every pattern ends in the mark, and the laws that hold
+/// only for such stems change them. A paradigm gets a twin where, for its
+/// first words, the twin builds nearly every form, or does but for one
+/// change inside the stem (`veto`, `vedon` of `taso`, `tason`: `t → d`),
+/// some forms differing so. The paradigms with the twins after them, and
+/// per twin its place, the paradigm it is a twin of, and the paradigms it
+/// may take the words of (at most [`NEIGHBOURS`] each, the closest).
+fn twins<'s>(
+    orthography: &Orthography<'_>,
+    words: &[Word<'_>],
+    mut paradigms: Vec<Paradigm<'s>>,
+    assignment: &[u16],
+    pre: Option<&Program<'_>>,
+    rank: &[(usize, usize)],
+) -> (Vec<Paradigm<'s>>, Vec<Twin>) {
+    let marked = |p: &Paradigm<'_>| -> Paradigm<'s> {
+        let mark = |cell: &str| -> String {
+            if cell.is_empty() || cell == flexion::DERIVED {
+                return cell.to_string();
+            }
+            let variants: Vec<String> = pattern::variants(cell)
+                .map(|v| format!("{v}{ALTERNATES}"))
+                .collect();
+            variants.join("|")
+        };
+        let table: Vec<String> = p.table.split('\t').map(mark).collect();
+        Paradigm {
+            name: Cow::Owned(format!("{}{ALTERNATES}", p.name)),
+            words: 0,
+            lemma: Cow::Owned(format!("{}{ALTERNATES}", p.lemma)),
+            parent: None,
+            inherent: Cow::Owned(p.inherent.to_vec()),
+            table: Cow::Owned(table.join("\t")),
+            stems: Cow::Owned(p.stems.to_string()),
+            reads: None,
+        }
+    };
+    let originals = paradigms.len();
+    // Of paradigms of one stem piece: an alternating stem is the word's.
+    let one = |q: usize| {
+        paradigms
+            .get(q)
+            .is_some_and(|p| pattern::pieces(&p.lemma) == 1)
+    };
+    let twins: Vec<Paradigm<'s>> = paradigms.iter().map(marked).collect();
+    let mut members: Vec<Vec<usize>> = vec![Vec::new(); originals];
+    for (w, &p) in assignment.iter().enumerate() {
+        if let Some(m) = members.get_mut(usize::from(p))
+            && m.len() < SAMPLE
+        {
+            m.push(w);
+        }
+    }
+    // Per paradigm, the twins building its first words' forms, closest
+    // first.
+    let mut close: Vec<Vec<((usize, usize), usize)>> = vec![Vec::new(); originals];
+    let all: Vec<Paradigm<'s>> = paradigms
+        .iter()
+        .cloned()
+        .chain(twins.iter().cloned())
+        .collect();
+    for (p, mine) in members.iter().enumerate() {
+        let Some(&me) = rank.get(p) else { continue };
+        for q in (0..originals).filter(|&q| one(q) && rank.get(q).is_some_and(|r| *r < me)) {
+            let (mut right, mut changed, mut forms) = (0usize, 0usize, 0usize);
+            for &w in mine {
+                let Some(word) = words.get(w) else { continue };
+                let Some(r) = reading(orthography, &all, originals + q, word, pre) else {
+                    forms = usize::MAX / 2;
+                    break;
+                };
+                for (built, want) in r.builds.iter().zip(word.forms.iter().flatten()) {
+                    forms += 1;
+                    if same(built, want) {
+                        right += 1;
+                    } else if !inners(built, want).is_empty() {
+                        changed += 1;
+                    }
+                }
+            }
+            #[allow(clippy::cast_precision_loss)]
+            let enough = (right + changed) as f64 >= TWIN_SHARE * forms as f64;
+            if changed > 0
+                && forms > 0
+                && enough
+                && let Some(c) = close.get_mut(p)
+            {
+                c.push(((right + changed, right), q));
+            }
+        }
+    }
+    let mut from: Vec<Vec<usize>> = vec![Vec::new(); originals];
+    for (p, mut c) in close.into_iter().enumerate() {
+        c.sort_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
+        for (_, q) in c.into_iter().take(NEIGHBOURS) {
+            if let Some(f) = from.get_mut(q) {
+                f.push(p);
+            }
+        }
+    }
+    let mut out = Vec::new();
+    for (q, (twin, from)) in twins.into_iter().zip(from).enumerate() {
+        if !from.is_empty() {
+            out.push((paradigms.len(), q, from));
+            paradigms.push(twin);
+        }
+    }
+    (paradigms, out)
 }
 
 /// The letters each law where a literal meets a one-letter stem (see
@@ -756,14 +1177,22 @@ fn greedy(
     cells_of: &[Vec<usize>],
     mut assignment: Vec<u16>,
     rank: &dyn Fn(usize) -> (usize, usize),
-    held: &[bool],
+    halves: &Halves<'_>,
 ) -> (Vec<Kept>, [Vec<u16>; 2]) {
+    let held = halves.held;
     // Builds by the letters around their boundary.
     let mut index: HashMap<(String, String), Vec<At>> = HashMap::default();
+    let mut alternating: HashMap<String, Vec<At>> = HashMap::default();
     for (w, rs) in readings.iter().enumerate() {
         for (r, reading) in rs.iter().enumerate() {
             for (k, built) in reading.builds.iter().enumerate() {
                 index.entry(window(built)).or_default().push((w, r, k));
+                if built.ends_with(ALTERNATES) {
+                    alternating
+                        .entry(stem_end(built))
+                        .or_default()
+                        .push((w, r, k));
+                }
             }
         }
     }
@@ -788,13 +1217,66 @@ fn greedy(
             };
             let mut change = change.clone();
             let mut tried = None;
+            // A shift inside a stem learns its context first (it gives
+            // nothing without), and joins a law of such shifts whose context
+            // gives as many of its forms (consonant gradation: one law).
+            let mut into = None;
+            if let Change::Inner { shifts, after } = &change
+                && let [shift] = shifts.as_slice()
+                && after.is_empty()
+            {
+                let own = context(&change, &alternating, &readings, forms, halves);
+                let gives = own.as_ref().map_or(0, |own| {
+                    try_law(own, &index, &alternating, &readings, forms, &assignment)
+                        .filter(|t| t.kept(cells_of, held))
+                        .map_or(0, |t| t.fixed.len())
+                });
+                for (j, (law, _)) in laws.iter().enumerate() {
+                    let Change::Inner {
+                        shifts: theirs,
+                        after: paths,
+                    } = &law.change
+                    else {
+                        continue;
+                    };
+                    // Not one that changes the same letters after the same
+                    // letter, and none inserting.
+                    let clash =
+                        |s: &Shift| s.1 == shift.1 && s.0.iter().any(|l| shift.0.contains(l));
+                    let inserts = |s: &Shift| s.1.is_empty();
+                    if theirs.iter().any(|s| clash(s) || inserts(s)) || inserts(shift) {
+                        continue;
+                    }
+                    let trial = Change::Inner {
+                        shifts: vec![shift.clone()],
+                        after: paths.clone(),
+                    };
+                    let t = try_law(&trial, &index, &alternating, &readings, forms, &assignment);
+                    #[allow(clippy::cast_precision_loss)]
+                    let enough = |t: &Tried| t.fixed.len() as f64 >= (1.0 - BREAKS) * gives as f64;
+                    if let Some(t) = t.filter(|t| t.kept(cells_of, held) && enough(t)) {
+                        (into, tried, change) = (Some(j), Some((t, true)), trial);
+                        break;
+                    }
+                }
+                if into.is_none() {
+                    match own {
+                        Some(c) => change = c,
+                        None => continue,
+                    }
+                }
+            }
             for _ in 0..=if growing { GROWN } else { 0 } {
-                let Some(t) = try_law(&change, &index, &readings, forms, &assignment) else {
+                if into.is_some() {
+                    break;
+                }
+                let Some(t) = try_law(&change, &index, &alternating, &readings, forms, &assignment)
+                else {
                     break;
                 };
                 let kept = t.kept(cells_of, held);
                 let grown = (!kept && growing)
-                    .then(|| grow(&change, &t, &readings, held))
+                    .then(|| grow(&change, &t, &readings, halves))
                     .flatten();
                 tried = Some((t, kept));
                 match grown {
@@ -838,6 +1320,12 @@ fn greedy(
                     continue;
                 };
                 index.entry(window(&after)).or_default().push((w, r, k));
+                if after.ends_with(ALTERNATES) {
+                    alternating
+                        .entry(stem_end(&after))
+                        .or_default()
+                        .push((w, r, k));
+                }
                 *built = after;
             }
             // A word whose forms a more general paradigm now builds as well as
@@ -860,6 +1348,17 @@ fn greedy(
                 {
                     *own = p;
                 }
+            }
+            // Joined: the law makes its shift too.
+            if let Some((law, theirs)) = into.and_then(|j| laws.get_mut(j)) {
+                if let (Change::Inner { shifts, .. }, Change::Inner { shifts: mine, .. }) =
+                    (&mut law.change, change)
+                {
+                    shifts.extend(mine);
+                }
+                law.breaks = law.breaks.saturating_add(breaks);
+                theirs.extend(fixed);
+                continue;
             }
             let law = Law {
                 change,
@@ -905,6 +1404,7 @@ fn credit(
         })
         .collect();
     let mut users: Vec<usize> = used.iter().map(|a| a.0).collect();
+    users.sort_unstable();
     users.dedup();
     (law, users, used.len())
 }
@@ -917,6 +1417,15 @@ pub(crate) fn held_out(letters: &str) -> bool {
     let mut h = std::collections::hash_map::DefaultHasher::new();
     letters.hash(&mut h);
     h.finish() % 2 == 1
+}
+
+/// Which words laws are learned from and which they are checked on (see
+/// [`held_out`]), the vowels their letters have, and per word the cells of
+/// its forms.
+struct Halves<'a> {
+    held: &'a [bool],
+    vowels: &'a [char],
+    cells: &'a [Vec<usize>],
 }
 
 /// How many letters of context a law at the stem's edge may grow.
@@ -977,17 +1486,32 @@ impl Tried {
 fn try_law(
     change: &Change,
     index: &HashMap<(String, String), Vec<At>>,
+    alternating: &HashMap<String, Vec<At>>,
     readings: &[Vec<Reading>],
     forms: &[Vec<&str>],
     assignment: &[u16],
 ) -> Option<Tried> {
     let program = compile(std::slice::from_ref(change))?;
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
-    let mut at: Vec<At> = index
-        .iter()
-        .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
-        .flat_map(|(_, v)| v.iter().copied())
-        .collect();
+    let inner = matches!(change, Change::Inner { .. });
+    let mut at: Vec<At> = if let Change::Inner { shifts, .. } = change {
+        let near = |end: &String| {
+            shifts
+                .iter()
+                .any(|(left, from, _)| left.iter().any(|l| end.contains(&format!("{l}{from}"))))
+        };
+        alternating
+            .iter()
+            .filter(|(end, _)| near(end))
+            .flat_map(|(_, v)| v.iter().copied())
+            .collect()
+    } else {
+        index
+            .iter()
+            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
+            .flat_map(|(_, v)| v.iter().copied())
+            .collect()
+    };
     at.sort_unstable();
     at.dedup();
     let mut tried = Tried {
@@ -1015,7 +1539,9 @@ fn try_law(
         let own = assignment
             .get(w)
             .is_some_and(|&p| usize::from(p) == reading.paradigm);
-        if own && was && !is {
+        // A law inside alternating stems breaks the forms of the twins
+        // too: the words it is for may join them.
+        if (own || inner) && was && !is {
             tried.broken.push((w, r, k));
         }
         if !was && is {
@@ -1036,8 +1562,9 @@ fn grow(
     change: &Change,
     tried: &Tried,
     readings: &[Vec<Reading>],
-    held: &[bool],
+    halves: &Halves<'_>,
 ) -> Option<Change> {
+    let held = halves.held;
     let Change::Edge {
         stem,
         ending,
@@ -1102,11 +1629,311 @@ fn grow(
     Some(grown)
 }
 
+/// The most letters after a change inside a stem its context reads.
+const DEPTH: usize = 6;
+/// The most letters between a change inside a stem and the stem's end.
+const NEAR: usize = 2;
+
+/// A change inside alternating stems (see [`Change::Inner`]) with the
+/// context it is made in: what follows it where it gives forms and not
+/// where it breaks them, in the builds of alternating stems (`alternating`
+/// finds them by their stem's end) of the words not held out. The letters
+/// after the change (the stem's end `+` among them, `$` the form's end)
+/// are read one place at a time while they don't yet tell the two apart (a
+/// decision tree, Quinlan 1986), the places where they do kept as paths.
+/// Finnish weak grades: `kadun` (`katu+nˇ`), `kadussa`, not `katuun`,
+/// `katumme`. `None` where no path gives enough forms.
+fn context(
+    change: &Change,
+    alternating: &HashMap<String, Vec<At>>,
+    readings: &[Vec<Reading>],
+    forms: &[Vec<&str>],
+    halves: &Halves<'_>,
+) -> Option<Change> {
+    let Change::Inner { shifts, .. } = change else {
+        return None;
+    };
+    let [(left, from, to)] = shifts.as_slice() else {
+        return None;
+    };
+    let (from, to): (Vec<char>, Vec<char>) = (from.chars().collect(), to.chars().collect());
+    let mut examples: Vec<(Vec<char>, bool, usize, usize)> = Vec::new();
+    let near = |end: &String| {
+        left.iter().any(|l| {
+            let mut x = String::from(*l);
+            x.extend(&from);
+            end.contains(&x)
+        })
+    };
+    for &(w, r, k) in alternating
+        .iter()
+        .filter(|(end, _)| near(end))
+        .flat_map(|(_, v)| v)
+    {
+        let (Some(built), Some(want)) = (
+            readings.get(w).and_then(|rs| rs.get(r)?.builds.get(k)),
+            forms.get(w).and_then(|f| f.get(k)),
+        ) else {
+            continue;
+        };
+        if halves.held.get(w) == Some(&true) {
+            continue;
+        }
+        let seq: Vec<char> = built
+            .chars()
+            .filter(|&c| c != COPIED && c != FRONT)
+            .map(|c| if c == ALTERNATES { '$' } else { c })
+            .collect();
+        let Some(edge) = seq.iter().position(|&c| c == BOUNDARY) else {
+            continue;
+        };
+        // Its last place in the stem, near the stem's end, not one a law
+        // has changed.
+        let Some(at) = (1..=edge.saturating_sub(from.len())).rev().find(|&i| {
+            seq.get(i - 1).is_some_and(|c| left.contains(c))
+                && seq.get(i..i + from.len()) == Some(from.as_slice())
+                && seq.get(i + from.len()) != Some(&CHANGED)
+        }) else {
+            continue;
+        };
+        if edge - at - from.len() > NEAR {
+            continue;
+        }
+        let (Some(head), Some(rest)) = (seq.get(..at), seq.get(at + from.len()..)) else {
+            continue;
+        };
+        let letters = |s: &mut dyn Iterator<Item = &char>| -> String {
+            s.filter(|&&c| c != BOUNDARY && c != '$' && c != CHANGED)
+                .collect()
+        };
+        let was = letters(&mut seq.iter()) == **want;
+        let is = letters(&mut head.iter().chain(&to).chain(rest)) == **want;
+        if was != is {
+            let cell = halves
+                .cells
+                .get(w)
+                .and_then(|c| c.get(k))
+                .copied()
+                .unwrap_or(k);
+            examples.push((rest.iter().take(DEPTH).copied().collect(), is, w, cell));
+        }
+    }
+    let places: Vec<Place<'_>> = examples
+        .iter()
+        .map(|(after, gives, word, cell)| Place {
+            after,
+            gives: *gives,
+            word: *word,
+            cell: *cell,
+        })
+        .collect();
+    let mut after = Vec::new();
+    flatten(
+        &decide(&places, 0, halves.vowels),
+        &mut Vec::new(),
+        &mut after,
+    );
+    (!after.is_empty()).then(|| Change::Inner {
+        shifts: shifts.clone(),
+        after,
+    })
+}
+
+/// A place a change inside a stem could be made (see [`context`]): what
+/// follows it, whether the change gives the form there (else breaks it),
+/// and the form's word and cell.
+#[derive(Clone, Copy)]
+struct Place<'a> {
+    after: &'a [char],
+    gives: bool,
+    word: usize,
+    cell: usize,
+}
+
+/// A node of the tree [`context`] grows: the change made here, not made, or
+/// decided by the next letter (a set of letters each).
+#[derive(PartialEq)]
+enum Node {
+    Made,
+    Not,
+    By(Vec<(Vec<char>, Node)>),
+}
+
+/// Whether letter `c` is one of `set` (a set `!` and letters: any letter
+/// but those, the form's end and marks not letters).
+fn within(set: &[char], c: char) -> bool {
+    match set {
+        ['!', but @ ..] => c != '$' && !pattern::is_mark(c) && !but.contains(&c),
+        letters => letters.contains(&c),
+    }
+}
+
+/// The letters of either set (see [`within`]).
+fn union(a: &[char], b: &[char]) -> Vec<char> {
+    let mut out: Vec<char> = match (a, b) {
+        (['!', x @ ..], ['!', y @ ..]) => std::iter::once('!')
+            .chain(x.iter().copied().filter(|c| y.contains(c)))
+            .collect(),
+        (['!', but @ ..], letters) | (letters, ['!', but @ ..]) => std::iter::once('!')
+            .chain(but.iter().copied().filter(|c| !letters.contains(c)))
+            .collect(),
+        (x, y) => x.iter().chain(y).copied().collect(),
+    };
+    out.sort_unstable();
+    out.dedup();
+    out
+}
+
+/// The places of `places` whose letter at `at` is one of `set`.
+fn among<'a>(places: &[Place<'a>], at: usize, set: &[char]) -> Vec<Place<'a>> {
+    let has = |p: &&Place<'_>| p.after.get(at).is_some_and(|&c| within(set, c));
+    places.iter().filter(has).copied().collect()
+}
+
+impl Node {
+    /// How many forms it gives.
+    fn gives(&self, places: &[Place<'_>], at: usize) -> usize {
+        match self {
+            Node::Made => places.iter().filter(|p| p.gives).count(),
+            Node::Not => 0,
+            Node::By(children) => children
+                .iter()
+                .map(|(set, n)| n.gives(&among(places, at, set), at + 1))
+                .sum(),
+        }
+    }
+}
+
+/// Whether the change may be made at all of `places`: it breaks few of the
+/// forms it gives (as [`pays`] asks), and, in each cell, the forms of few
+/// of the words it gives forms of (a lexical exception), never a cell's
+/// forms it gives none of (Finnish `vetoineen`, among the weak `vedoin`).
+fn settled(places: &[Place<'_>]) -> bool {
+    let gives = places.iter().filter(|p| p.gives).count();
+    #[allow(clippy::cast_precision_loss)]
+    let few = |breaks: usize, gives: usize| breaks as f64 <= BREAKS * gives as f64;
+    if !few(places.len() - gives, gives) {
+        return false;
+    }
+    let mut by: std::collections::BTreeMap<usize, (Vec<usize>, Vec<usize>)> = Default::default();
+    for p in places {
+        let (g, b) = by.entry(p.cell).or_default();
+        if p.gives { g } else { b }.push(p.word);
+    }
+    by.into_values().all(|(mut g, mut b)| {
+        g.sort_unstable();
+        g.dedup();
+        b.sort_unstable();
+        b.dedup();
+        b.is_empty() || (!g.is_empty() && (b.len() <= 1 || few(b.len(), g.len())))
+    })
+}
+
+/// The tree on `places` from place `at`: made where [`settled`] and giving
+/// at least [`MIN_WORDS`] forms; not where it gives fewer, or [`DEPTH`]
+/// letters don't tell. A place is read as any letter, as a vowel (of
+/// `vowels`) or any other letter, or letter by letter (the stem's end and
+/// the form's end apart each time): the coarsest that gives as many as
+/// any.
+fn decide(places: &[Place<'_>], at: usize, vowels: &[char]) -> Node {
+    let gives = places.iter().filter(|p| p.gives).count();
+    if gives < MIN_WORDS {
+        return Node::Not;
+    }
+    if settled(places) {
+        return Node::Made;
+    }
+    if at >= DEPTH {
+        return Node::Not;
+    }
+    let split = |sets: Vec<Vec<char>>| -> Node {
+        let children: Vec<(Vec<char>, Node)> = sets
+            .into_iter()
+            .filter(|set| !set.is_empty())
+            .map(|set| {
+                let node = decide(&among(places, at, &set), at + 1, vowels);
+                (set, node)
+            })
+            .filter(|(_, n)| *n != Node::Not)
+            .collect();
+        if children.is_empty() {
+            Node::Not
+        } else {
+            Node::By(children)
+        }
+    };
+    let mut letters: Vec<char> = places
+        .iter()
+        .filter_map(|p| p.after.get(at).copied())
+        .collect();
+    letters.sort_unstable();
+    letters.dedup();
+    let marks: Vec<char> = letters
+        .iter()
+        .copied()
+        .filter(|&c| c == '$' || c == BOUNDARY)
+        .collect();
+    let apart = || marks.iter().map(|&c| vec![c]);
+    let consonants: Vec<char> = std::iter::once('!').chain(vowels.iter().copied()).collect();
+    let readings = [
+        apart().chain([vec!['!']]).collect(),
+        apart().chain([vowels.to_vec(), consonants]).collect(),
+        letters.iter().map(|&c| vec![c]).collect(),
+    ]
+    .map(split);
+    let given: Vec<usize> = readings.iter().map(|n| n.gives(places, at)).collect();
+    let most = given.iter().copied().max().unwrap_or(0);
+    let coarsest = given.iter().position(|&g| g == most).unwrap_or(0);
+    readings.into_iter().nth(coarsest).unwrap_or(Node::Not)
+}
+
+/// The paths to where `node` makes the change, after `prefix`: sets whose
+/// rest is the same one set (the stem's end and the form's end apart).
+fn flatten(node: &Node, prefix: &mut Vec<Vec<char>>, out: &mut Vec<Vec<Vec<char>>>) {
+    match node {
+        Node::Not => {}
+        Node::Made => out.push(prefix.clone()),
+        Node::By(children) => {
+            let alone = |c: &char| *c == '$' || *c == BOUNDARY;
+            let mut groups: Vec<(Vec<char>, &Node)> = Vec::new();
+            for (set, n) in children {
+                let apart = set.iter().any(alone);
+                match groups
+                    .iter_mut()
+                    .find(|(g, m)| *m == n && !apart && !g.iter().any(alone))
+                {
+                    Some((g, _)) => *g = union(g, set),
+                    None => groups.push((set.clone(), n)),
+                }
+            }
+            for (mut set, n) in groups {
+                set.sort_unstable();
+                prefix.push(set);
+                flatten(n, prefix, out);
+                prefix.pop();
+            }
+        }
+    }
+}
+
 /// Whether a law pays for itself: it gives `forms` of enough `words`, and
 /// breaks few.
 #[allow(clippy::cast_precision_loss)]
 fn pays(words: usize, breaks: u32, forms: usize) -> bool {
     words >= MIN_WORDS && f64::from(breaks) <= BREAKS * forms as f64
+}
+
+/// The letters of a build's stem a change inside it may touch, with the one
+/// before them: the last [`NEAR`] and four more.
+fn stem_end(built: &str) -> String {
+    let stem: Vec<char> = built
+        .split_once(BOUNDARY)
+        .map_or("", |s| s.0)
+        .chars()
+        .filter(|&c| c != COPIED && c != FRONT)
+        .collect();
+    let skip = stem.len().saturating_sub(NEAR + 4);
+    stem.get(skip..).unwrap_or_default().iter().collect()
 }
 
 /// The letters around a build's boundary: up to two before, two after.
@@ -1242,7 +2069,58 @@ fn explain(built: &str, want: &str) -> Vec<Change> {
         .into_iter()
         .chain(copies(built, want))
         .chain(fronts(built, want))
+        .chain(inners(built, want))
         .collect()
+}
+
+/// The change inside an alternating stem (see [`Change::Inner`]) that
+/// turns `built` into `want`: the one place they differ, of at most two
+/// letters each, in the stem, after the letter before it (`veto+nˇ`,
+/// `vedon`: `t → d` after `e`; `paikk+anˇ`, `paikan`: `k → ∅` after `k`).
+/// Its context is learned later (see [`paths`]).
+fn inners(built: &str, want: &str) -> Vec<Change> {
+    if !built.ends_with(ALTERNATES) {
+        return Vec::new();
+    }
+    let letters: Vec<char> = built.chars().filter(|&c| !pattern::is_mark(c)).collect();
+    let Some(edge) = built
+        .chars()
+        .filter(|&c| c == BOUNDARY || !pattern::is_mark(c))
+        .position(|c| c == BOUNDARY)
+    else {
+        return Vec::new();
+    };
+    let want: Vec<char> = want.chars().collect();
+    let head = letters
+        .iter()
+        .zip(&want)
+        .take_while(|(a, b)| a == b)
+        .count();
+    let most = letters.len().min(want.len()) - head;
+    let tail = letters
+        .iter()
+        .rev()
+        .zip(want.iter().rev())
+        .take(most)
+        .take_while(|(a, b)| a == b)
+        .count();
+    let (Some(from), Some(to), Some(&left)) = (
+        letters.get(head..letters.len() - tail),
+        want.get(head..want.len() - tail),
+        head.checked_sub(1).and_then(|h| letters.get(h)),
+    ) else {
+        return Vec::new();
+    };
+    // In the stem, at most [`NEAR`] letters before its end.
+    let end = letters.len() - tail;
+    let inside = end <= edge && edge - end <= NEAR;
+    if !inside || from.len() > 2 || to.len() > 2 || from == to {
+        return Vec::new();
+    }
+    vec![Change::Inner {
+        shifts: vec![(vec![left], from.iter().collect(), to.iter().collect())],
+        after: Vec::new(),
+    }]
 }
 
 /// The changes of the stem's last letters (one or two) and the ending's
@@ -1251,7 +2129,7 @@ fn explain(built: &str, want: &str) -> Vec<Change> {
 fn edits(built: &str, want: &str) -> Vec<Change> {
     let built: String = built
         .chars()
-        .filter(|&c| c != COPIED && c != FRONT)
+        .filter(|&c| c != COPIED && c != FRONT && c != ALTERNATES && c != CHANGED)
         .collect();
     let Some((stem, ending)) = built.split_once(BOUNDARY) else {
         return Vec::new();
@@ -1366,6 +2244,37 @@ fn fronts(built: &str, want: &str) -> Vec<Change> {
         }
     }
     out
+}
+
+/// The same change inside alternating stems after one letter or another
+/// (`t → d` after `a`, after `u`), as one law after those letters (`t → d`
+/// after `[a|u]`), with the words of all of them.
+fn lefts(support: &HashMap<Change, u32>) -> Vec<(Change, u32)> {
+    let mut by_change: HashMap<(&str, &str), Vec<(u32, char)>> = HashMap::default();
+    for (change, &n) in support {
+        if let Change::Inner { shifts, .. } = change
+            && let [(left, from, to)] = shifts.as_slice()
+            && let [l] = left.as_slice()
+            && n as usize >= MIN_WORDS
+        {
+            by_change.entry((from, to)).or_default().push((n, *l));
+        }
+    }
+    by_change
+        .into_iter()
+        .filter(|(_, letters)| letters.len() > 1)
+        .map(|((from, to), mut letters)| {
+            letters.sort_unstable_by(|x, y| y.cmp(x));
+            let n = letters.iter().map(|l| l.0).sum();
+            let mut left: Vec<char> = letters.into_iter().map(|l| l.1).collect();
+            left.sort_unstable();
+            let change = Change::Inner {
+                shifts: vec![(left, from.to_string(), to.to_string())],
+                after: Vec::new(),
+            };
+            (change, n)
+        })
+        .collect()
 }
 
 /// The same change of an ending after one letter or another (`к+ы → к+и`,
@@ -1765,6 +2674,93 @@ mod tests {
         ] {
             let program = compile(std::slice::from_ref(&change)).expect("compiles");
             assert_eq!(program.apply(built), after, "{change:?} on {built}");
+        }
+    }
+
+    #[test]
+    fn learns_a_change_inside_alternating_stems() {
+        // Finnish consonant gradation: `veto`, `vedon` (`taso`'s twin
+        // builds `veto+nˇ`); a plain paradigm's builds have no such law.
+        let found = inners("veto+nˇ", "vedon");
+        let bare = Change::Inner {
+            shifts: vec![(vec!['e'], "t".into(), "d".into())],
+            after: Vec::new(),
+        };
+        assert_eq!(found, std::slice::from_ref(&bare));
+        assert!(inners("veto+n", "vedon").is_empty());
+        assert!(inners("paikk+anˇ", "paikan").contains(&Change::Inner {
+            shifts: vec![(vec!['k'], "k".into(), String::new())],
+            after: Vec::new(),
+        }));
+        // Where it gives forms (a closed syllable) and where it breaks them
+        // (an open one, the illative's long vowel, a possessive `-mme`).
+        let mut examples: Vec<(String, bool)> = Vec::new();
+        for v in ['o', 'u', 'a'] {
+            for (rest, weak) in [
+                ("+n$", true),
+                ("+ssa$", true),
+                ("+lla$", true),
+                ("+t$", true),
+                ("+issa$", true),
+                ("+$", false),
+                ("+a$", false),
+                ("+na$", false),
+                ("+mme$", false),
+                ("+nsa$", false),
+                ("+", false),
+            ] {
+                let rest = if rest == "+" {
+                    format!("+{v}n$")
+                } else {
+                    rest.to_string()
+                };
+                for _ in 0..3 {
+                    examples.push((format!("{v}{rest}"), weak));
+                }
+            }
+        }
+        let seqs: Vec<(Vec<char>, bool)> = examples
+            .iter()
+            .map(|(e, y)| (e.chars().collect(), *y))
+            .collect();
+        let seqs: Vec<Place<'_>> = seqs
+            .iter()
+            .enumerate()
+            .map(|(i, (e, y))| Place {
+                after: e,
+                gives: *y,
+                word: i,
+                cell: 0,
+            })
+            .collect();
+        let mut after = Vec::new();
+        let vowels: Vec<char> = "aeiouyäö".chars().collect();
+        flatten(&decide(&seqs, 0, &vowels), &mut Vec::new(), &mut after);
+        // With the geminate's shift, in one law: `kukka`, `kukan`.
+        let law = Change::Inner {
+            after,
+            shifts: vec![
+                (vec!['a', 'e', 'u'], "t".into(), "d".into()),
+                (vec!['k'], "k".into(), String::new()),
+            ],
+        };
+        let program = compile(std::slice::from_ref(&law)).expect("compiles");
+        for (built, after) in [
+            ("katu+nˇ", "kadun"),
+            ("katu+issaˇ", "kaduissa"),
+            ("katu+ˇ", "katu"),
+            ("katu+unˇ", "katuun"),
+            ("katu+mmeˇ", "katumme"),
+            ("katu+nsaˇ", "katunsa"),
+            ("katu+naˇ", "katuna"),
+            // Not in an alternating stem, nor in the ending.
+            ("katu+n", "katun"),
+            ("ka+tunˇ", "katun"),
+            ("kukka+nˇ", "kukan"),
+            ("kukka+naˇ", "kukkana"),
+        ] {
+            let built_now = program.apply(built);
+            assert_eq!(pattern::unmarked(&built_now).0, after, "{law:?} on {built}");
         }
     }
 }

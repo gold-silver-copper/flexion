@@ -1,7 +1,8 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
 //! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
-//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
-//! nearest letter of a tier before it as written): every form a conjugation builds
+//! `%` copies (`°`), on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written), or inside a stem that
+//! alternates (`ˇ`, by what follows it): every form a conjugation builds
 //! goes through them, in order, so one conjugation serves words whose stems change
 //! its endings. Each with the words whose forms it gives, and how many of
 //! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).

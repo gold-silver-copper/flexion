@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 4,367 stems, 7,470 forms.
+/// 4,355 stems, 5,709 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abarrarsi	verb_pres_1_sg	abarr- like strapiombare	42	abarrati
@@ -26,8 +26,8 @@ abbandonarsi	verb_pres_1_sg	abbandon- like strapiombare	42	abbandonati
 abbarbagliare	verb_pres_1_sg	abbarbagli- like strapiombare
 abbarbagliarsi	verb_pres_1_sg	abbarbagli- like strapiombare	42	abbarbagliati
 abbarbarsi	verb_pres_1_sg	abbarb- like strapiombare	42	abbarbati
-abbarbicare	43	abbarbichi	48	abbarbichi	51	abbarbichino
-abbarbicarsi	43	abbarbichi	48	abbarbichi	51	abbarbichino
+abbarbicare	verb_pres_1_sg	abbarbic- like strapiombare
+abbarbicarsi	verb_pres_1_sg	abbarbic- like strapiombare	42	abbarbicati
 abbarcare	43	abbarchi	48	abbarchi	51	abbarchino
 abbarrarsi	verb_pres_1_sg	abbarr- like strapiombare	42	abbarrati
 abbaruffare	verb_pres_1_sg	abbaruff- like strapiombare
@@ -40,8 +40,8 @@ abbellarsi	verb_pres_1_sg	abbell- like strapiombare	42	abbellati
 abbellire	verb_pres_1_sg	abbellisc- like urgere
 abbellirsi	verb_pres_1_sg	abbellisc- like urgere	42	abbellisciti
 abbeverarsi	verb_pres_1_sg	abbever- like strapiombare	42	abbeverati
-abbicare	43	abbichi	48	abbichi	51	abbichino
-abbicarsi	43	abbichi	48	abbichi	51	abbichino
+abbicare	verb_pres_1_sg	abbic- like strapiombare
+abbicarsi	verb_pres_1_sg	abbic- like strapiombare	42	abbicati
 abbigliare	verb_pres_1_sg	abbigli- like strapiombare
 abbigliarsi	verb_pres_1_sg	abbigli- like strapiombare	42	abbigliati
 abbinarsi	verb_pres_1_sg	abbin- like strapiombare	42	abbinati
@@ -98,17 +98,14 @@ abbuffarsi	verb_pres_1_sg	abbuff- like strapiombare	42	abbuffati
 abbuiare	verb_pres_1_sg	abbui- like strapiombare
 abbuiarsi	verb_pres_1_sg	abbui- like strapiombare	42	abbuiati
 abbuzzire	verb_pres_1_sg	abbuzzisc- like urgere
-abdicare	43	abdichi	48	abdichi	51	abdichino
+abdicare	verb_pres_1_sg	abdic- like strapiombare
 abdurre	verb_pres_1_sg	abduc- like urgere
 abilitarsi	verb_pres_1_sg	abilit- like strapiombare	42	abilitati
-abituare	verb_pres_1_sg	abitu- like strapiombare
 abituarsi	verb_pres_1_sg	abitu- like strapiombare	42	abituati
-abnegare	43	abneghi	48	abneghi	51	abneghino
 abolire	verb_pres_1_sg	abolisc- like urgere
 aborrire	verb_pres_1_sg	aborrisc- like urgere
 abortire	verb_pres_1_sg	abortisc- like urgere
 abradere	verb_pres_1_sg	abrad- like urgere
-abrogare	43	abroghi	48	abroghi	51	abroghino
 accaffare	verb_pres_1_sg	accaff- like strapiombare
 accagliare	verb_pres_1_sg	accagli- like strapiombare
 accagliarsi	verb_pres_1_sg	accagli- like strapiombare	42	accagliati
@@ -124,10 +121,8 @@ accaneggiare	verb_pres_1_sg	accaneggi- like strapiombare
 accanire	verb_pres_1_sg	accanisc- like urgere
 accanirsi	verb_pres_1_sg	accanisc- like urgere	42	accanisciti
 accaparrarsi	verb_pres_1_sg	accaparr- like strapiombare	42	accaparrati
-accapigliare	verb_pres_1_sg	accapigli- like strapiombare
 accapigliarsi	verb_pres_1_sg	accapigli- like strapiombare	42	accapigliati
 accappiare	verb_pres_1_sg	accappi- like strapiombare
-accappucciare	verb_pres_1_sg	accappucci- like strapiombare
 accapricciare	verb_pres_1_sg	accapricci- like strapiombare
 accareggiare	verb_pres_1_sg	accareggi- like strapiombare
 accarezzarsi	verb_pres_1_sg	accarezz- like strapiombare	42	accarezzati
@@ -137,18 +132,15 @@ accartocciarsi	verb_pres_1_sg	accartocci- like strapiombare	42	accartocciati
 accasarsi	verb_pres_1_sg	accas- like strapiombare	42	accasati
 accasciare	verb_pres_1_sg	accasci- like strapiombare
 accasciarsi	verb_pres_1_sg	accasci- like strapiombare	42	accasciati
-accattivarsi	verb_pres_1_sg	accattiv- like strapiombare	42	accattivati
 accavalcare	43	accavalchi	48	accavalchi	51	accavalchino
 accavalciare	verb_pres_1_sg	accavalci- like strapiombare
 accavallarsi	verb_pres_1_sg	accavall- like strapiombare	42	accavallati
-accavigliare	verb_pres_1_sg	accavigli- like strapiombare
 accecare	verb_pres_1_sg	accec- like strapiombare
 accecarsi	verb_pres_1_sg	accec- like strapiombare	42	accecati
 accedere	verb_pres_1_sg	acced- like urgere
 acceffare	verb_pres_1_sg	acceff- like strapiombare
 accendersi	verb_pres_1_sg	accend- like urgere	42	accenditi
 accentrarsi	verb_pres_1_sg	accentr- like strapiombare	42	accentrati
-accentuare	verb_pres_1_sg	accentu- like strapiombare
 accentuarsi	verb_pres_1_sg	accentu- like strapiombare	42	accentuati
 accerchiare	verb_pres_1_sg	accerchi- like strapiombare
 accertarsi	verb_pres_1_sg	accert- like strapiombare	42	accertati
@@ -160,7 +152,7 @@ acchiocciolarsi	verb_pres_1_sg	acchiocciol- like strapiombare	42	acchiocciolati
 acciaccare	43	acciacchi	48	acciacchi	51	acciacchino
 acciaiare	verb_pres_1_sg	acciai- like strapiombare
 acciambellarsi	verb_pres_1_sg	acciambell- like strapiombare	42	acciambellati
-accidere	verb_pres_1_pl	accide- like lanciare	verb_pres_1_sg	accid- like strapiombare	4	accide	5	accideno	7	accidemio	9	accidevio	11	accideveno	14	accidessi	17	acciseno	23	acciderorno	24	acciderebbi	25	accideressimo	26	accideressi	27	accideressivo	29	acciderebbeno	42	accide
+accidere	verb_pres_1_pl	accide- like noiare	verb_pres_1_sg	accid- like strapiombare	4	accide	5	accideno	7	accidemio	9	accidevio	11	accideveno	14	accidessi	17	acciseno	23	acciderorno	24	acciderebbi	25	accideressimo	26	accideressi	27	accideressivo	29	acciderebbeno	33	accidete	42	accide
 acciecare	verb_pres_1_sg	acciec- like strapiombare
 accigliare	verb_pres_1_sg	accigli- like strapiombare
 accigliarsi	verb_pres_1_sg	accigli- like strapiombare	42	accigliati
@@ -216,17 +208,15 @@ accularsi	verb_pres_1_sg	accul- like strapiombare	42	acculati
 acculturarsi	verb_pres_1_sg	accultur- like strapiombare	42	acculturati
 accumularsi	verb_pres_1_sg	accumul- like strapiombare	42	accumulati
 accusarsi	verb_pres_1_sg	accus- like strapiombare	42	accusati
-acetificare	43	acetifichi	48	acetifichi	51	acetifichino
+acetificare	verb_pres_1_sg	acetific- like strapiombare
 acetire	verb_pres_1_sg	acetisc- like urgere
-acidificare	43	acidifichi	48	acidifichi	51	acidifichino
+acidificare	verb_pres_1_sg	acidific- like strapiombare
 acquagliare	verb_pres_1_sg	acquagli- like strapiombare
-acquare	verb_pres_1_sg	acqu- like strapiombare
 acquattarsi	verb_pres_1_sg	acquatt- like strapiombare	42	acquattati
 acquietarsi	verb_pres_1_sg	acquiet- like strapiombare	42	acquietati
 acquisire	verb_pres_1_sg	acquisisc- like urgere
 acuirsi	verb_pres_1_sg	acuisc- like urgere	42	acuisciti
 acutizzarsi	verb_pres_1_sg	acutizz- like strapiombare	42	acutizzati
-adacquare	verb_pres_1_sg	adacqu- like strapiombare
 adagiare	verb_pres_1_sg	adagi- like strapiombare
 adagiarsi	verb_pres_1_sg	adagi- like strapiombare	42	adagiati
 adastiare	verb_pres_1_sg	adasti- like strapiombare
@@ -239,35 +229,29 @@ addensarsi	verb_pres_1_sg	addens- like strapiombare	42	addensati
 addentrarsi	verb_pres_1_sg	addentr- like strapiombare	42	addentrati
 addestrarsi	verb_pres_1_sg	addestr- like strapiombare	42	addestrati
 addiacciare	verb_pres_1_sg	addiacci- like strapiombare
-addimesticare	43	addimestichi	48	addimestichi	51	addimestichino
-addire	verb_pres_1_sg	addic- like urgere
-addirsi	verb_pres_1_sg	addic- like urgere	42	addiciti
+addire	43	addica	48	addica	51	addicano
+addirsi	43	addica	48	addica	51	addicano
 addivenire	43	addivenga	48	addivenga	51	addivengano
 addocilire	verb_pres_1_sg	addocilisc- like urgere
-addogare	43	addoghi	48	addoghi	51	addoghino
 addogliare	verb_pres_1_sg	addogli- like strapiombare
 addolcare	43	addolchi	48	addolchi	51	addolchino
 addolciare	verb_pres_1_sg	addolci- like strapiombare
 addolcire	verb_pres_1_sg	addolcisc- like urgere
 addolcirsi	verb_pres_1_sg	addolcisc- like urgere	42	addolcisciti
 addolorarsi	verb_pres_1_sg	addolor- like strapiombare	42	addolorati
-addomesticare	43	addomestichi	48	addomestichi	51	addomestichino
-addomesticarsi	43	addomestichi	48	addomestichi	51	addomestichino
+addomesticarsi	verb_pres_1_sg	addomestic- like strapiombare	42	addomesticati
 addoppiare	verb_pres_1_sg	addoppi- like strapiombare
 addormentarsi	verb_pres_1_sg	addorment- like strapiombare	42	addormentati
 addossarsi	verb_pres_1_sg	addoss- like strapiombare	42	addossati
 addottorarsi	verb_pres_1_sg	addottor- like strapiombare	42	addottorati
 addottrinarsi	verb_pres_1_sg	addottrin- like strapiombare	42	addottrinati
-adduare	verb_pres_1_sg	addu- like strapiombare
 adduarsi	verb_pres_1_sg	addu- like strapiombare	42	adduati
 addugliare	verb_pres_1_sg	addugli- like strapiombare
 addurre	verb_pres_1_sg	adduc- like urgere
 addursi	verb_pres_1_sg	adduc- like urgere	42	adduciti
-adeguare	verb_pres_1_sg	adegu- like strapiombare
 adeguarsi	verb_pres_1_sg	adegu- like strapiombare	42	adeguati
 adempiersi	3	adempite	43	adempia	45	adempitevi	48	adempia	51	adempiano
 adempire	verb_impf	adempi- like uscire	verb_pres_1_sg	adempisc- like urgere
-adequare	verb_pres_1_sg	adequ- like strapiombare
 adergere	verb_pres_1_sg	aderg- like urgere
 adescare	43	adeschi	48	adeschi	51	adeschino
 adibire	verb_pres_1_sg	adibisc- like urgere
@@ -286,13 +270,12 @@ adularsi	verb_pres_1_sg	adul- like strapiombare	42	adulati
 adunarsi	verb_pres_1_sg	adun- like strapiombare	42	adunati
 adunghiare	verb_pres_1_sg	adunghi- like strapiombare
 affaccendarsi	verb_pres_1_sg	affaccend- like strapiombare	42	affaccendati
-affacchinarsi	verb_pres_1_sg	affacchin- like strapiombare	42	affacchinati
 affacciare	verb_pres_1_sg	affacci- like strapiombare
 affacciarsi	verb_pres_1_sg	affacci- like strapiombare	42	affacciati
 affamigliare	verb_pres_1_sg	affamigli- like strapiombare
 affannarsi	verb_pres_1_sg	affann- like strapiombare	42	affannati
-affaticare	43	affatichi	48	affatichi	51	affatichino
-affaticarsi	43	affatichi	48	affatichi	51	affatichino
+affaticare	verb_pres_1_sg	affatic- like strapiombare
+affaticarsi	verb_pres_1_sg	affatic- like strapiombare	42	affaticati
 affattucchiare	verb_pres_1_sg	affattucchi- like strapiombare
 affermarsi	verb_pres_1_sg	afferm- like strapiombare	42	affermati
 afferrarsi	verb_pres_1_sg	afferr- like strapiombare	42	afferrati
@@ -312,13 +295,11 @@ affiliarsi	verb_pres_1_sg	affili- like strapiombare	42	affiliati
 affiochire	verb_pres_1_sg	affiochisc- like urgere
 affiochirsi	verb_pres_1_sg	affiochisc- like urgere	42	affiochisciti
 affittire	verb_pres_1_sg	affittisc- like urgere
-affliggere	verb_pres_1_sg	affligg- like urgere
 affliggersi	verb_pres_1_sg	affligg- like urgere	42	affliggiti
 afflosciare	verb_pres_1_sg	afflosci- like strapiombare
 afflosciarsi	verb_pres_1_sg	afflosci- like strapiombare	42	afflosciati
 affocare	4	affuoca	30	affuochi	43	affuochi	48	affuochi	51	affuochino
-affogare	43	affoghi	48	affoghi	51	affoghino
-affogarsi	43	affoghi	48	affoghi	51	affoghino
+affogarsi	verb_pres_1_sg	affog- like strapiombare	42	affogati
 affogliare	verb_pres_1_sg	affogli- like strapiombare
 affollarsi	verb_pres_1_sg	affoll- like strapiombare	42	affollati
 affondarsi	verb_pres_1_sg	affond- like strapiombare	42	affondati
@@ -331,9 +312,9 @@ affrecciare	verb_pres_1_sg	affrecci- like strapiombare
 affreddarsi	verb_pres_1_sg	affredd- like strapiombare	42	affreddati
 affrescare	43	affreschi	48	affreschi	51	affreschino
 affrettarsi	verb_pres_1_sg	affrett- like strapiombare	42	affrettati
-affricare	43	affrichi	48	affrichi	51	affrichino
+affricare	verb_pres_1_sg	affric- like strapiombare
 affrontarsi	verb_pres_1_sg	affront- like strapiombare	42	affrontati
-affumicare	43	affumichi	48	affumichi	51	affumichino
+affumicare	verb_pres_1_sg	affumic- like strapiombare
 affumigare	43	affumighi	48	affumighi	51	affumighino
 affuocare	43	affuochi	48	affuochi	51	affuochino
 agganciare	verb_pres_1_sg	agganci- like strapiombare
@@ -343,12 +324,10 @@ agghiacciare	verb_pres_1_sg	agghiacci- like strapiombare
 agghiaiare	verb_pres_1_sg	agghiai- like strapiombare
 agghindarsi	verb_pres_1_sg	agghind- like strapiombare	42	agghindati
 aggiaccare	43	aggiacchi	48	aggiacchi	51	aggiacchino
-aggiogare	43	aggioghi	48	aggioghi	51	aggioghino
 aggiornarsi	verb_pres_1_sg	aggiorn- like strapiombare	42	aggiornati
 aggirarsi	verb_pres_1_sg	aggir- like strapiombare	42	aggirati
 aggiucchire	verb_pres_1_sg	aggiucchisc- like urgere
-aggiudicare	43	aggiudichi	48	aggiudichi	51	aggiudichino
-aggiudicarsi	43	aggiudichi	48	aggiudichi	51	aggiudichino
+aggiudicarsi	verb_pres_1_sg	aggiudic- like strapiombare	42	aggiudicati
 aggiungersi	verb_pres_1_sg	aggiung- like urgere	42	aggiungiti
 aggiustarsi	verb_pres_1_sg	aggiust- like strapiombare	42	aggiustati
 agglomerarsi	verb_pres_1_sg	agglomer- like strapiombare	42	agglomerati
@@ -365,8 +344,7 @@ aggraticciare	verb_pres_1_sg	aggraticci- like strapiombare
 aggravarsi	verb_pres_1_sg	aggrav- like strapiombare	42	aggravati
 aggraziare	verb_pres_1_sg	aggrazi- like strapiombare
 aggredire	verb_pres_1_sg	aggredisc- like urgere
-aggregare	43	aggreghi	48	aggreghi	51	aggreghino
-aggregarsi	43	aggreghi	48	aggreghi	51	aggreghino
+aggregarsi	verb_pres_1_sg	aggreg- like strapiombare	42	aggregati
 aggricchiare	verb_pres_1_sg	aggricchi- like strapiombare
 aggricciare	verb_pres_1_sg	aggricci- like strapiombare
 aggriffare	verb_pres_1_sg	aggriff- like strapiombare
@@ -374,7 +352,6 @@ aggrinzarsi	verb_pres_1_sg	aggrinz- like strapiombare	42	aggrinzati
 aggrinzire	verb_pres_1_sg	aggrinzisc- like urgere
 aggrinzirsi	verb_pres_1_sg	aggrinzisc- like urgere	42	aggrinzisciti
 aggrondarsi	verb_pres_1_sg	aggrond- like strapiombare	42	aggrondati
-aggrovigliare	verb_pres_1_sg	aggrovigli- like strapiombare
 aggrovigliarsi	verb_pres_1_sg	aggrovigli- like strapiombare	42	aggrovigliati
 aggrumarsi	verb_pres_1_sg	aggrum- like strapiombare	42	aggrumati
 aggrupparsi	verb_pres_1_sg	aggrupp- like strapiombare	42	aggruppati
@@ -391,7 +368,7 @@ agucchiare	verb_pres_1_sg	agucchi- like strapiombare
 aiutarsi	verb_pres_1_sg	aiut- like strapiombare	42	aiutati
 albeggiare	verb_pres_1_sg	albeggi- like strapiombare
 albergare	43	alberghi	48	alberghi	51	alberghino
-albicare	43	albichi	48	albichi	51	albichino
+albicare	verb_pres_1_sg	albic- like strapiombare
 alchimiare	2	alchimii	30	alchimii	43	alchimii	48	alchimii	51	alchimiino
 alcolizzarsi	verb_pres_1_sg	alcolizz- like strapiombare	42	alcolizzati
 aleggiare	verb_pres_1_sg	aleggi- like strapiombare
@@ -407,7 +384,6 @@ allargarsi	43	allarghi	48	allarghi	51	allarghino
 allarmarsi	verb_pres_1_sg	allarm- like strapiombare	42	allarmati
 allascare	43	allaschi	48	allaschi	51	allaschino
 allearsi	verb_pres_1_sg	alle- like strapiombare	42	alleati
-allegare	43	alleghi	48	alleghi	51	alleghino
 alleggiare	verb_pres_1_sg	alleggi- like strapiombare
 allegrarsi	verb_pres_1_sg	allegr- like strapiombare	42	allegrati
 alleluiare	verb_pres_1_sg	allelui- like strapiombare
@@ -423,12 +399,11 @@ allietarsi	verb_pres_1_sg	alliet- like strapiombare	42	allietati
 allinearsi	verb_pres_1_sg	alline- like strapiombare	42	allineati
 allocare	43	allochi	48	allochi	51	allochino
 allocchire	verb_pres_1_sg	allocchisc- like urgere
-allogare	43	alloghi	48	alloghi	51	alloghino
-allogarsi	43	alloghi	48	alloghi	51	alloghino
+allogarsi	verb_pres_1_sg	allog- like strapiombare	42	allogati
 alloggiare	verb_pres_1_sg	alloggi- like strapiombare
 allontanarsi	verb_pres_1_sg	allontan- like strapiombare	42	allontanati
 alloppiare	verb_pres_1_sg	alloppi- like strapiombare
-alluccare	verb_pres_1_pl	allucca- like lanciare	5	alluccheno	7	alluccamio	9	alluccavio	11	alluccaveno	14	alluccassi	17	alluccorno	24	alluccherebbi	25	alluccheressimo	26	alluccheressi	27	alluccheressivo	29	alluccherebbeno	43	allucchi	48	allucchi	51	allucchino
+alluccare	verb_pres_1_pl	allucca- like noiare	5	alluccheno	7	alluccamio	9	alluccavio	11	alluccaveno	14	alluccassi	17	alluccorno	24	alluccherebbi	25	alluccheressimo	26	alluccheressi	27	alluccheressivo	29	alluccherebbeno	33	alluccate	43	allucchi	48	allucchi	51	allucchino
 allumacare	43	allumachi	48	allumachi	51	allumachino
 alluminiare	verb_pres_1_sg	allumini- like strapiombare
 allungare	43	allunghi	48	allunghi	51	allunghino
@@ -444,15 +419,15 @@ alzarsi	verb_pres_1_sg	alz- like strapiombare	42	alzati
 amalgamarsi	verb_pres_1_sg	amalgam- like strapiombare	42	amalgamati
 amareggiare	verb_pres_1_sg	amareggi- like strapiombare
 amareggiarsi	verb_pres_1_sg	amareggi- like strapiombare	42	amareggiati
-amaricare	43	amarichi	48	amarichi	51	amarichino
+amaricare	verb_pres_1_sg	amaric- like strapiombare
 amarsi	verb_pres_1_sg	am- like strapiombare	42	amati
 ambasciare	verb_pres_1_sg	ambasci- like strapiombare
 ambiare	verb_pres_1_sg	ambi- like strapiombare
 ambientarsi	verb_pres_1_sg	ambient- like strapiombare	42	ambientati
 ambire	verb_pres_1_sg	ambisc- like urgere
 americanizzarsi	verb_pres_1_sg	americanizz- like strapiombare	42	americanizzati
-amicare	43	amichi	48	amichi	51	amichino
-amicarsi	43	amichi	48	amichi	51	amichino
+amicare	verb_pres_1_sg	amic- like strapiombare
+amicarsi	verb_pres_1_sg	amic- like strapiombare	42	amicati
 ammaccare	43	ammacchi	48	ammacchi	51	ammacchino
 ammaccarsi	43	ammacchi	48	ammacchi	51	ammacchino
 ammagliare	verb_pres_1_sg	ammagli- like strapiombare
@@ -460,7 +435,7 @@ ammalarsi	verb_pres_1_sg	ammal- like strapiombare	42	ammalati
 ammaliare	verb_pres_1_sg	ammali- like strapiombare
 ammalinconire	verb_pres_1_sg	ammalinconisc- like urgere
 ammaliziare	verb_pres_1_sg	ammalizi- like strapiombare
-ammanicarsi	43	ammanichi	48	ammanichi	51	ammanichino
+ammanicarsi	verb_pres_1_sg	ammanic- like strapiombare	42	ammanicati
 ammanigliare	verb_pres_1_sg	ammanigli- like strapiombare
 ammannire	verb_pres_1_sg	ammannisc- like urgere
 ammansire	verb_pres_1_sg	ammansisc- like urgere
@@ -498,31 +473,29 @@ amoreggiare	verb_pres_1_sg	amoreggi- like strapiombare
 ampiare	verb_pres_1_sg	ampi- like strapiombare
 ampliare	verb_pres_1_sg	ampli- like strapiombare
 ampliarsi	verb_pres_1_sg	ampli- like strapiombare	42	ampliati
-amplificare	43	amplifichi	48	amplifichi	51	amplifichino
-amplificarsi	43	amplifichi	48	amplifichi	51	amplifichino
+amplificare	verb_pres_1_sg	amplific- like strapiombare
+amplificarsi	verb_pres_1_sg	amplific- like strapiombare	42	amplificati
 analizzarsi	verb_pres_1_sg	analizz- like strapiombare	42	analizzati
 anastomizzarsi	verb_pres_1_sg	anastomizz- like strapiombare	42	anastomizzati
 ancheggiare	verb_pres_1_sg	ancheggi- like strapiombare
 anchilosarsi	verb_pres_1_sg	anchilos- like strapiombare	42	anchilosati
 ancorarsi	verb_pres_1_sg	ancor- like strapiombare	42	ancorati
-andare	verb	and- like uscire	verb_pres_1_sg	vad- like urgere	2	vai	3	andate	4	va	5	vanno	42	vai	47	andare	52	andare
+andare	verb	and- like vivere	verb_pres_1_sg	vad- like urgere	2	vai	3	andate	4	va	5	vanno	42	vai	47	andare	52	andare
 angariare	verb_pres_1_sg	angari- like strapiombare
-angelicare	43	angelichi	48	angelichi	51	angelichino
+angelicare	verb_pres_1_sg	angelic- like strapiombare
 anglicizzarsi	verb_pres_1_sg	anglicizz- like strapiombare	42	anglicizzati
 angosciare	verb_pres_1_sg	angosci- like strapiombare
 angosciarsi	verb_pres_1_sg	angosci- like strapiombare	42	angosciati
 angustiare	verb_pres_1_sg	angusti- like strapiombare
 angustiarsi	verb_pres_1_sg	angusti- like strapiombare	42	angustiati
 animarsi	verb_pres_1_sg	anim- like strapiombare	42	animati
-annacquare	verb_pres_1_sg	annacqu- like strapiombare
 annaffiare	verb_pres_1_sg	annaffi- like strapiombare
 annare	4	va	7	annavimo	9	annavivo	11	annaveno	12	agnedi	14	annassi	23	annerorno	24	annerebbi	25	anneressimo	26	anneressi	27	anneressivo	29	annerebbeno	30	vadi	43	vadi	48	vadi	51	vadino	55	ito
-annaspicare	43	annaspichi	48	annaspichi	51	annaspichino
+annaspicare	verb_pres_1_sg	annaspic- like strapiombare
 annebbiare	verb_pres_1_sg	annebbi- like strapiombare
 annebbiarsi	verb_pres_1_sg	annebbi- like strapiombare	42	annebbiati
-annegare	43	anneghi	48	anneghi	51	anneghino
 annerarsi	verb_pres_1_sg	anner- like strapiombare	42	annerati
-annericare	43	annerichi	48	annerichi	51	annerichino
+annericare	verb_pres_1_sg	anneric- like strapiombare
 annerirsi	verb_pres_1_sg	annerisc- like urgere	42	annerisciti
 annettersi	verb_pres_1_sg	annett- like urgere	42	annettiti
 annichilarsi	verb_pres_1_sg	annichil- like strapiombare	42	annichilati
@@ -556,14 +529,14 @@ aontarsi	verb_pres_1_sg	aont- like strapiombare	42	aontati
 apostrofare	verb_pres_1_sg	apostrof- like strapiombare
 apostrofarsi	verb_pres_1_sg	apostrof- like strapiombare	42	apostrofati
 appaciare	verb_pres_1_sg	appaci- like strapiombare
-appacificare	43	appacifichi	48	appacifichi	51	appacifichino
-appacificarsi	43	appacifichi	48	appacifichi	51	appacifichino
+appacificare	verb_pres_1_sg	appacific- like strapiombare
+appacificarsi	verb_pres_1_sg	appacific- like strapiombare	42	appacificati
 appagare	43	appaghi	48	appaghi	51	appaghino
 appagarsi	43	appaghi	48	appaghi	51	appaghino
 appaiare	verb_pres_1_sg	appai- like strapiombare
 appaiarsi	verb_pres_1_sg	appai- like strapiombare	42	appaiati
 appallottolarsi	verb_pres_1_sg	appallottol- like strapiombare	42	appallottolati
-appalugarsi	43	appalughi	48	appalughi	51	appalughino
+appalugarsi	verb_pres_1_sg	appalug- like strapiombare	42	appalugati
 appannarsi	verb_pres_1_sg	appann- like strapiombare	42	appannati
 apparecchiare	verb_pres_1_sg	apparecchi- like strapiombare
 apparentarsi	verb_pres_1_sg	apparent- like strapiombare	42	apparentati
@@ -588,16 +561,15 @@ appiattire	verb_pres_1_sg	appiattisc- like urgere
 appiattirsi	verb_pres_1_sg	appiattisc- like urgere	42	appiattisciti
 appiccare	43	appicchi	48	appicchi	51	appicchino
 appiccarsi	43	appicchi	48	appicchi	51	appicchino
-appiccicare	43	appiccichi	48	appiccichi	51	appiccichino
-appiccicarsi	43	appiccichi	48	appiccichi	51	appiccichino
+appiccicare	verb_pres_1_sg	appiccic- like strapiombare
+appiccicarsi	verb_pres_1_sg	appiccic- like strapiombare	42	appiccicati
 appiccolire	verb_pres_1_sg	appiccolisc- like urgere
 appigliare	verb_pres_1_sg	appigli- like strapiombare
 appigliarsi	verb_pres_1_sg	appigli- like strapiombare	42	appigliati
-appisolarsi	verb_pres_1_sg	appisol- like strapiombare	42	appisolati
 applaudere	verb_pres_1_sg	applaud- like urgere	55	applauso
 applaudire	verb_pres_1_sg	applaud- like urgere
-applicare	43	applichi	48	applichi	51	applichino
-applicarsi	43	applichi	48	applichi	51	applichino
+applicare	verb_pres_1_sg	applic- like strapiombare
+applicarsi	verb_pres_1_sg	applic- like strapiombare	42	applicati
 appodiare	verb_pres_1_sg	appodi- like strapiombare
 appoggiare	verb_pres_1_sg	appoggi- like strapiombare
 appoggiarsi	verb_pres_1_sg	appoggi- like strapiombare	42	appoggiati
@@ -608,19 +580,16 @@ appostarsi	verb_pres_1_sg	appost- like strapiombare	42	appostati
 appozzarsi	verb_pres_1_sg	appozz- like strapiombare	42	appozzati
 appratire	verb_pres_1_sg	appratisc- like urgere
 appressarsi	verb_pres_1_sg	appress- like strapiombare	42	appressati
-apprestarsi	verb_pres_1_sg	apprest- like strapiombare	42	apprestati
 apprezzarsi	verb_pres_1_sg	apprezz- like strapiombare	42	apprezzati
 approcciare	verb_pres_1_sg	approcci- like strapiombare
 approfittarsi	verb_pres_1_sg	approfitt- like strapiombare	42	approfittati
 approfondire	verb_pres_1_sg	approfondisc- like urgere
 approfondirsi	verb_pres_1_sg	approfondisc- like urgere	42	approfondisciti
-appropinquare	verb_pres_1_sg	appropinqu- like strapiombare
 appropinquarsi	verb_pres_1_sg	appropinqu- like strapiombare	42	appropinquati
 appropriare	verb_pres_1_sg	appropri- like strapiombare
 appropriarsi	verb_pres_1_sg	appropri- like strapiombare	42	appropriati
 approssimarsi	verb_pres_1_sg	approssim- like strapiombare	42	approssimati
 approvvigionarsi	verb_pres_1_sg	approvvigion- like strapiombare	42	approvvigionati
-appruare	verb_pres_1_sg	appru- like strapiombare
 appruarsi	verb_pres_1_sg	appru- like strapiombare	42	appruati
 appuntarsi	verb_pres_1_sg	appunt- like strapiombare	42	appuntati
 appuntire	verb_pres_1_sg	appuntisc- like urgere
@@ -633,7 +602,6 @@ arcare	43	archi	48	archi	51	archino
 archeggiare	verb_pres_1_sg	archeggi- like strapiombare
 archibugiare	verb_pres_1_sg	archibugi- like strapiombare
 archiviare	verb_pres_1_sg	archivi- like strapiombare
-arcuare	verb_pres_1_sg	arcu- like strapiombare
 arcuarsi	verb_pres_1_sg	arcu- like strapiombare	42	arcuati
 ardere	verb_pres_1_sg	ard- like urgere
 ardire	verb_pres_1_sg	ardisc- like urgere
@@ -641,7 +609,7 @@ arenarsi	verb_pres_1_sg	aren- like strapiombare	42	arenati
 arguire	verb_pres_1_sg	arguisc- like urgere
 arieggiare	verb_pres_1_sg	arieggi- like strapiombare
 arindare	4	arivà	7	arindamio	9	arindavio	11	arindaveno	12	arignedi	13	arignedimo	14	arindassi	24	arinderebbi	25	arinderessimo	26	arinderessi	27	arinderessivo	29	arinderebbeno	30	arivadi	42	ariva'	43	arivadi	48	arivadi	51	arivadino
-arissomigliare	verb	arissomiglia- like uscire	verb_pres_1_sg	arissomigli- like strapiombare	5	arissomiglieno	7	arissomigliamio	9	arissomigliavio	11	arissomigliaveno	14	arissomigliassi	17	arissomigliorno	24	arissomigliaria	25	arissomigliariamo	26	arissomigliarissi	27	arissomigliariavo	28	arissomigliaria	29	arissomigliarieno
+arissomigliare	5	arissomiglieno	7	arissomigliamio	9	arissomigliavio	11	arissomigliaveno	14	arissomigliassi	17	arissomigliorno	18	arissomigliarò	22	arissomigliarà	23	arissomigliaranno	24	arissomigliaria	25	arissomigliariamo	26	arissomigliarissi	27	arissomigliariavo	29	arissomigliarieno	43	arissomigli	48	arissomigli	51	arissomiglino
 armarsi	verb_pres_1_sg	arm- like strapiombare	42	armati
 armeggiare	verb_pres_1_sg	armeggi- like strapiombare
 armonizzarsi	verb_pres_1_sg	armonizz- like strapiombare	42	armonizzati
@@ -651,8 +619,8 @@ arrabbiare	verb_pres_1_sg	arrabbi- like strapiombare
 arrabbiarsi	verb_pres_1_sg	arrabbi- like strapiombare	42	arrabbiati
 arraffare	verb_pres_1_sg	arraff- like strapiombare
 arraffiare	verb_pres_1_sg	arraffi- like strapiombare
-arrampicare	43	arrampichi	48	arrampichi	51	arrampichino
-arrampicarsi	43	arrampichi	48	arrampichi	51	arrampichino
+arrampicare	verb_pres_1_sg	arrampic- like strapiombare
+arrampicarsi	verb_pres_1_sg	arrampic- like strapiombare	42	arrampicati
 arrancare	43	arranchi	48	arranchi	51	arranchino
 arrangiare	verb_pres_1_sg	arrangi- like strapiombare
 arrangiarsi	verb_pres_1_sg	arrangi- like strapiombare	42	arrangiati
@@ -668,13 +636,12 @@ arriffare	verb_pres_1_sg	arriff- like strapiombare
 arringare	43	arringhi	48	arringhi	51	arringhino
 arrischiare	verb_pres_1_sg	arrischi- like strapiombare
 arrischiarsi	verb_pres_1_sg	arrischi- like strapiombare	42	arrischiati
-arrisicare	43	arrisichi	48	arrisichi	51	arrisichino
+arrisicare	verb_pres_1_sg	arrisic- like strapiombare
 arrocare	43	arrochi	48	arrochi	51	arrochino
 arroccare	43	arrocchi	48	arrocchi	51	arrocchino
 arroccarsi	43	arrocchi	48	arrocchi	51	arrocchino
 arrochire	verb_pres_1_sg	arrochisc- like urgere
-arrogare	43	arroghi	48	arroghi	51	arroghino
-arrogarsi	43	arroghi	48	arroghi	51	arroghino
+arrogarsi	verb_pres_1_sg	arrog- like strapiombare	42	arrogati
 arrolare	verb_pres_1_sg	arruol- like strapiombare
 arroncare	43	arronchi	48	arronchi	51	arronchino
 arroncigliare	verb_pres_1_sg	arroncigli- like strapiombare
@@ -698,11 +665,10 @@ arsicciare	verb_pres_1_sg	arsicci- like strapiombare
 artefare	43	artefaccia	48	artefaccia	51	artefacciano
 articolarsi	verb_pres_1_sg	articol- like strapiombare	42	articolati
 artigliare	verb_pres_1_sg	artigli- like strapiombare
-aruspicare	43	aruspichi	48	aruspichi	51	aruspichino
+aruspicare	verb_pres_1_sg	aruspic- like strapiombare
 asciare	verb_pres_1_sg	asci- like strapiombare
 asciolvere	verb_pres_1_sg	asciolv- like urgere	55	asciolto
-asciugare	43	asciughi	48	asciughi	51	asciughino
-asciugarsi	43	asciughi	48	asciughi	51	asciughino
+asciugarsi	verb_pres_1_sg	asciug- like strapiombare	42	asciugati
 ascoltarsi	verb_pres_1_sg	ascolt- like strapiombare	42	ascoltati
 ascondere	verb_pres_1_sg	ascond- like urgere
 ascondersi	verb_pres_1_sg	ascond- like urgere	42	asconditi
@@ -727,7 +693,6 @@ assembrarsi	verb_pres_1_sg	assembr- like strapiombare	42	assembrati
 assennire	verb_pres_1_sg	assennisc- like urgere
 assentarsi	verb_pres_1_sg	assent- like strapiombare	42	assentati
 assentire	verb_pres_1_sg	assent- like urgere
-asserragliare	verb_pres_1_sg	asserragli- like strapiombare
 asserragliarsi	verb_pres_1_sg	asserragli- like strapiombare	42	asserragliati
 asservire	verb_pres_1_sg	asservisc- like urgere
 asservirsi	verb_pres_1_sg	asservisc- like urgere	42	asservisciti
@@ -743,7 +708,6 @@ assistersi	verb_pres_1_sg	assist- like urgere	42	assistiti	55	assistitosi
 associare	verb_pres_1_sg	associ- like strapiombare
 associarsi	verb_pres_1_sg	associ- like strapiombare	42	associati
 assodarsi	verb_pres_1_sg	assod- like strapiombare	42	assodati
-assoggettarsi	verb_pres_1_sg	assoggett- like strapiombare	42	assoggettati
 assolcare	43	assolchi	48	assolchi	51	assolchino
 assolvere	verb_pres_1_sg	assolv- like urgere
 assolversi	verb_pres_1_sg	assolv- like urgere	42	assolviti
@@ -765,12 +729,11 @@ assumersi	verb_past	assun- like tingersi	verb_pres_1_sg	assum- like urgere	42	as
 asteggiare	verb_pres_1_sg	asteggi- like strapiombare
 astenere	43	astenga	48	astenga	51	astengano
 astenersi	43	astenga	48	astenga	51	astengano
-astraere	1	astraggiamo	4	astragge	12	astrassi	18	astrarrò	22	astrarrà	23	astrarranno	26	astrarresti	30	astragga	31	astraggiamo	33	astraggiate	43	astragga	48	astragga	51	astraggano	55	astratto
+astraere	verb	astrar- like vivere	verb_past	astra- like reggere	verb_pres_1_pl	astra- like traggere	verb_pres_1_sg	astragg- like urgere	3	astraete	33	astraggiate	47	astraere	52	astraere
 astraggere	verb_pres_1_sg	astragg- like urgere
 astrarre	43	astragga	48	astragga	51	astraggano
 astrarsi	43	astragga	48	astragga	51	astraggano
 astrignere	43	astringa	48	astringa	51	astringano	55	astretto
-astrologare	43	astrologhi	48	astrologhi	51	astrologhino
 atrofizzarsi	verb_pres_1_sg	atrofizz- like strapiombare	42	atrofizzati
 atrovarsi	verb_pres_1_sg	atrov- like strapiombare	42	atrovati
 attaccare	43	attacchi	48	attacchi	51	attacchino
@@ -789,7 +752,6 @@ attendersi	verb_pres_1_sg	attend- like urgere	42	attenditi
 attenere	43	attenga	48	attenga	51	attengano
 attenersi	43	attenga	48	attenga	51	attengano
 attentarsi	verb_pres_1_sg	attent- like strapiombare	42	attentati
-attenuare	verb_pres_1_sg	attenu- like strapiombare
 attenuarsi	verb_pres_1_sg	attenu- like strapiombare	42	attenuati
 attergare	43	atterghi	48	atterghi	51	atterghino
 atterrire	verb_pres_1_sg	atterrisc- like urgere
@@ -804,8 +766,7 @@ attorniare	verb_pres_1_sg	attorni- like strapiombare
 attorniarsi	verb_pres_1_sg	attorni- like strapiombare	42	attorniati
 attortigliare	verb_pres_1_sg	attortigli- like strapiombare
 attoscare	43	attoschi	48	attoschi	51	attoschino
-attossicare	43	attossichi	48	attossichi	51	attossichino
-attovagliare	verb_pres_1_sg	attovagli- like strapiombare
+attossicare	verb_pres_1_sg	attossic- like strapiombare
 attovagliarsi	verb_pres_1_sg	attovagli- like strapiombare	42	attovagliati
 attraccare	43	attracchi	48	attracchi	51	attracchino
 attrapparsi	verb_pres_1_sg	attrapp- like strapiombare	42	attrappati
@@ -817,7 +778,6 @@ attribuirsi	verb_pres_1_sg	attribuisc- like urgere	42	attribuisciti
 attristire	verb_pres_1_sg	attristisc- like urgere
 attroncare	43	attronchi	48	attronchi	51	attronchino
 attrupparsi	verb_pres_1_sg	attrupp- like strapiombare	42	attruppati
-attuare	verb_pres_1_sg	attu- like strapiombare
 attuarsi	verb_pres_1_sg	attu- like strapiombare	42	attuati
 attuffare	verb_pres_1_sg	attuff- like strapiombare
 attutire	verb_pres_1_sg	attutisc- like urgere
@@ -831,79 +791,29 @@ aumiliare	verb_pres_1_sg	aumili- like strapiombare
 aunarsi	verb_pres_1_sg	aun- like strapiombare	42	aunati
 aunghiare	verb_pres_1_sg	aunghi- like strapiombare
 ausarsi	verb_pres_1_sg	aus- like strapiombare	42	ausati
-auspicare	43	auspichi	48	auspichi	51	auspichino
-auspicarsi	43	auspichi	48	auspichi	51	auspichino
-autenticare	43	autentichi	48	autentichi	51	autentichino
-autenticarsi	43	autentichi	48	autentichi	51	autentichino
-autentificare	43	autentifichi	48	autentifichi	51	autentifichino
-autoaccusarsi	verb_pres_1_sg	autoaccus- like strapiombare	42	autoaccusati
-autoadempiersi	3	autoadempite	43	autoadempia	45	autoadempitevi	48	autoadempia	51	autoadempiano
-autoaffondarsi	verb_pres_1_sg	autoaffond- like strapiombare	42	autoaffondati
-autoalimentarsi	verb_pres_1_sg	autoaliment- like strapiombare	42	autoalimentati
-autoassemblarsi	verb_pres_1_sg	autoassembl- like strapiombare	42	autoassemblati
-autoassolversi	verb_pres_1_sg	autoassolv- like urgere	42	autoassolviti
-autoavverarsi	verb_pres_1_sg	autoavver- like strapiombare	42	autoavverati
-autocandidarsi	verb_pres_1_sg	autocandid- like strapiombare	42	autocandidati
+auspicare	verb_pres_1_sg	auspic- like strapiombare
+auspicarsi	verb_pres_1_sg	auspic- like strapiombare	42	auspicati
+autenticare	verb_pres_1_sg	autentic- like strapiombare
+autenticarsi	verb_pres_1_sg	autentic- like strapiombare	42	autenticati
+autentificare	verb_pres_1_sg	autentific- like strapiombare
 autocensurarsi	verb_pres_1_sg	autocensur- like strapiombare	42	autocensurati
-autocertificare	43	autocertifichi	48	autocertifichi	51	autocertifichino
 autocitarsi	verb_pres_1_sg	autocit- like strapiombare	42	autocitati
-autocommiserarsi	verb_pres_1_sg	autocommiser- like strapiombare	42	autocommiserati
-autocontraddirsi	verb_pres_1_sg	autocontraddic- like urgere	42	autocontraddiciti
-autocontrarsi	43	autocontragga	48	autocontragga	51	autocontraggano
-autocontrollarsi	verb_pres_1_sg	autocontroll- like strapiombare	42	autocontrollati
-autoconvincersi	verb_pres_1_sg	autoconvinc- like urgere	42	autoconvinciti
-autodefinirsi	verb_pres_1_sg	autodefinisc- like urgere	42	autodefinisciti
-autodenunciarsi	verb_pres_1_sg	autodenunci- like strapiombare	42	autodenunciati
-autodeterminarsi	verb_pres_1_sg	autodetermin- like strapiombare	42	autodeterminati
-autodichiararsi	verb_pres_1_sg	autodichiar- like strapiombare	42	autodichiarati
-autodistruggere	verb_pres_1_sg	autodistrugg- like urgere
-autodistruggersi	verb_pres_1_sg	autodistrugg- like urgere	42	autodistruggiti
-autoeccitarsi	verb_pres_1_sg	autoeccit- like strapiombare	42	autoeccitati
-autoescludersi	verb_pres_1_sg	autoesclud- like urgere	42	autoescluditi
-autoesiliarsi	verb_pres_1_sg	autoesili- like strapiombare	42	autoesiliati
-autofinanziarsi	verb_pres_1_sg	autofinanzi- like strapiombare	42	autofinanziati
 autogestire	verb_pres_1_sg	autogestisc- like urgere
-autogestirsi	verb_pres_1_sg	autogestisc- like urgere	42	autogestisciti
-autogiustificarsi	43	autogiustifichi	48	autogiustifichi	51	autogiustifichino
 autogovernarsi	verb_pres_1_sg	autogovern- like strapiombare	42	autogovernati
 autografare	verb_pres_1_sg	autograf- like strapiombare
-autoimmolarsi	verb_pres_1_sg	autoimmol- like strapiombare	42	autoimmolati
 autoimporsi	43	autoimponga	48	autoimponga	51	autoimpongano
 autoincensarsi	verb_pres_1_sg	autoincens- like strapiombare	42	autoincensati
-autoinfliggersi	verb_pres_1_sg	autoinfligg- like urgere	42	autoinfliggiti
-autointersecarsi	verb_pres_1_sg	autointersec- like strapiombare	42	autointersecati
-autoinvitarsi	verb_pres_1_sg	autoinvit- like strapiombare	42	autoinvitati
-autolesionarsi	verb_pres_1_sg	autolesion- like strapiombare	42	autolesionati
-autolimitarsi	verb_pres_1_sg	autolimit- like strapiombare	42	autolimitati
-automedicare	43	automedichi	48	automedichi	51	automedichino
-automedicarsi	43	automedichi	48	automedichi	51	automedichino
 automotivarsi	verb_pres_1_sg	automotiv- like strapiombare	42	automotivati
 autonominarsi	verb_pres_1_sg	autonomin- like strapiombare	42	autonominati
-autoproclamarsi	verb_pres_1_sg	autoproclam- like strapiombare	42	autoproclamati
-autoprodurre	verb_pres_1_sg	autoproduc- like urgere
-autopromuoversi	verb_pres_1_sg	autopromuov- like urgere	42	autopromuoviti
-autoproteggersi	verb_pres_1_sg	autoprotegg- like urgere	42	autoproteggiti
-autopubblicare	43	autopubblichi	48	autopubblichi	51	autopubblichino
 autopubblicizzarsi	verb_pres_1_sg	autopubblicizz- like strapiombare	42	autopubblicizzati
-autorealizzarsi	verb_pres_1_sg	autorealizz- like strapiombare	42	autorealizzati
-autoregolamentarsi	verb_pres_1_sg	autoregolament- like strapiombare	42	autoregolamentati
-autoregolarsi	verb_pres_1_sg	autoregol- like strapiombare	42	autoregolati
 autoridurre	verb_pres_1_sg	autoriduc- like urgere
 autoripararsi	verb_pres_1_sg	autoripar- like strapiombare	42	autoriparati
-autorizzarsi	verb_pres_1_sg	autorizz- like strapiombare	42	autorizzati
-autosospendersi	verb_pres_1_sg	autosospend- like urgere	42	autosospenditi
-autosostenere	43	autosostenga	48	autosostenga	51	autosostengano
-autosostenersi	43	autosostenga	48	autosostenga	51	autosostengano
-autosuggestionarsi	verb_pres_1_sg	autosuggestion- like strapiombare	42	autosuggestionati
-autotassarsi	verb_pres_1_sg	autotass- like strapiombare	42	autotassati
-autotrattarsi	verb_pres_1_sg	autotratt- like strapiombare	42	autotrattati
 avacciare	verb_pres_1_sg	avacci- like strapiombare
 avanzarsi	verb_pres_1_sg	avanz- like strapiombare	42	avanzati
 avariare	verb_pres_1_sg	avari- like strapiombare
 avariarsi	verb_pres_1_sg	avari- like strapiombare	42	avariati
 avellere	verb_past	vuls- like ardere	verb_pres_1_sg	avell- like urgere
-avere	verb_past	ebb- like urgere	verb_pres_1_pl	abbi- like girare	verb_pres_1_sg	abbi- like urgere	0	ho	2	hai	4	ha	5	hanno
-aviolanciare	verb_pres_1_sg	aviolanci- like strapiombare
+avere	verb_past	ebb- like urgere	verb_pres_1_pl	abbi- like girare	verb_pres_1_sg	abbi- like urgere	0	ho	2	hai	4	ha	5	hanno	33	abbiate
 avocare	43	avochi	48	avochi	51	avochino
 avvalersi	verb_past	avvals- like perdersi	verb_pres_1_sg	avvalg- like urgere	2	avvali	4	avvale	42	avvaliti
 avvallarsi	verb_pres_1_sg	avvall- like strapiombare	42	avvallati
@@ -953,7 +863,6 @@ azzurrarsi	verb_pres_1_sg	azzurr- like strapiombare	42	azzurrati
 azzurreggiare	verb_pres_1_sg	azzurreggi- like strapiombare
 bacare	43	bachi	48	bachi	51	bachino
 bacarsi	43	bachi	48	bachi	51	bachino
-baccagliare	verb_pres_1_sg	baccagli- like strapiombare
 bacchiare	verb_pres_1_sg	bacchi- like strapiombare
 baciare	verb_pres_1_sg	baci- like strapiombare
 baciarsi	verb_pres_1_sg	baci- like strapiombare	42	baciati
@@ -969,13 +878,13 @@ bandire	verb_pres_1_sg	bandisc- like urgere
 baraccare	43	baracchi	48	baracchi	51	baracchino
 barbagliare	verb_pres_1_sg	barbagli- like strapiombare
 barbareggiare	verb_pres_1_sg	barbareggi- like strapiombare
-barbicare	43	barbichi	48	barbichi	51	barbichino
-barbificare	43	barbifichi	48	barbifichi	51	barbifichino
+barbicare	verb_pres_1_sg	barbic- like strapiombare
+barbificare	verb_pres_1_sg	barbific- like strapiombare
 barbugliare	verb_pres_1_sg	barbugli- like strapiombare
 barcamenarsi	verb_pres_1_sg	barcamen- like strapiombare	42	barcamenati
 bardarsi	verb_pres_1_sg	bard- like strapiombare	42	bardati
-barricare	43	barrichi	48	barrichi	51	barrichino
-barricarsi	43	barrichi	48	barrichi	51	barrichino
+barricare	verb_pres_1_sg	barric- like strapiombare
+barricarsi	verb_pres_1_sg	barric- like strapiombare	42	barricati
 barrire	verb_pres_1_sg	barrisc- like urgere
 baruffare	verb_pres_1_sg	baruff- like strapiombare
 basarsi	verb_pres_1_sg	bas- like strapiombare	42	basati
@@ -983,15 +892,13 @@ basciare	verb_pres_1_sg	basci- like strapiombare
 basire	verb_pres_1_sg	basisc- like urgere
 bastire	verb_pres_1_sg	bastisc- like urgere
 bastonarsi	verb_pres_1_sg	baston- like strapiombare	42	bastonati
-battagliare	verb_pres_1_sg	battagli- like strapiombare
 battersi	verb_pres_1_sg	batt- like urgere	42	battiti
 battezzarsi	verb_pres_1_sg	battezz- like strapiombare	42	battezzati
 battibeccare	43	battibecchi	48	battibecchi	51	battibecchino
-battibeccarsi	43	battibecchi	48	battibecchi	51	battibecchino
-bazzicare	43	bazzichi	48	bazzichi	51	bazzichino
+bazzicare	verb_pres_1_sg	bazzic- like strapiombare
 beare	verb_pres_1_sg	be- like strapiombare
 bearsi	verb_pres_1_sg	be- like strapiombare	42	beati
-beatificare	43	beatifichi	48	beatifichi	51	beatifichino
+beatificare	verb_pres_1_sg	beatific- like strapiombare
 beccare	43	becchi	48	becchi	51	becchino
 beccarsi	43	becchi	48	becchi	51	becchino
 beccheggiare	verb_pres_1_sg	beccheggi- like strapiombare
@@ -1000,39 +907,35 @@ beccucchiare	verb_pres_1_sg	beccucchi- like strapiombare
 beffare	verb_pres_1_sg	beff- like strapiombare
 beffarsi	verb_pres_1_sg	beff- like strapiombare	42	beffati
 beffeggiare	verb_pres_1_sg	beffeggi- like strapiombare
-begare	43	beghi	48	beghi	51	beghino
 bendarsi	verb_pres_1_sg	bend- like strapiombare	42	bendati
-bendisporre	43	bendisponga	48	bendisponga	51	bendispongano
 benedicere	3	benedite	12	benedissi	43	benedica	45	benedite	48	benedica	51	benedicano	55	benedetto
-benedire	verb_pres_1_sg	benedic- like urgere
+benedire	43	benedica	48	benedica	51	benedicano
 benefare	43	benefaccia	48	benefaccia	51	benefacciano
-beneficare	43	benefichi	48	benefichi	51	benefichino
+beneficare	verb_pres_1_sg	benefic- like strapiombare
 beneficiare	verb_pres_1_sg	benefici- like strapiombare
 berciare	verb_pres_1_sg	berci- like strapiombare
 bere	verb_pres_1_sg	bev- like urgere
 bersagliare	verb_pres_1_sg	bersagli- like strapiombare
-bersi	1	beviamo	3	bevete	6	bevevo	7	bevevamo	12	bevvi	14	bevesti	30	beva	31	beviamo	33	beviate	43	beva	45	bevetevi	48	beva	51	bevano	55	bevutosi
+bersi	1	beviamo	3	bevete	6	bevevo	12	bevvi	14	bevesti	30	beva	31	beviamo	33	beviate	36	bevessi	37	bevessimo	40	bevesse	43	beva	44	beviamoci	45	bevetevi	48	beva	51	bevano	55	bevutosi
 bestemmiare	verb_pres_1_sg	bestemmi- like strapiombare
 bevere	verb_pres_1_sg	bev- like urgere
 bevicchiare	verb_pres_1_sg	bevicchi- like strapiombare
 biancheggiare	verb_pres_1_sg	biancheggi- like strapiombare
 bianchire	verb_pres_1_sg	bianchisc- like urgere
-biancicare	43	biancichi	48	biancichi	51	biancichino
+biancicare	verb_pres_1_sg	biancic- like strapiombare
 biasciare	verb_pres_1_sg	biasci- like strapiombare
-biascicare	43	biascichi	48	biascichi	51	biascichino
+biascicare	verb_pres_1_sg	biascic- like strapiombare
 biasimarsi	verb_pres_1_sg	biasim- like strapiombare	42	biasimati
 biforcare	43	biforchi	48	biforchi	51	biforchino
 biforcarsi	43	biforchi	48	biforchi	51	biforchino
 bigiare	verb_pres_1_sg	bigi- like strapiombare
 bilanciare	verb_pres_1_sg	bilanci- like strapiombare
 bilanciarsi	verb_pres_1_sg	bilanci- like strapiombare	42	bilanciati
-biodegradarsi	verb_pres_1_sg	biodegrad- like strapiombare	42	biodegradati
 biografare	verb_pres_1_sg	biograf- like strapiombare
 biondeggiare	verb_pres_1_sg	biondeggi- like strapiombare
 bipartire	verb_pres_1_sg	bipartisc- like urgere
 bipartirsi	verb_pres_1_sg	bipartisc- like urgere	42	bipartisciti
 bisbigliare	verb_pres_1_sg	bisbigli- like strapiombare
-bisbocciare	verb_pres_1_sg	bisbocci- like strapiombare
 biscuocere	verb_pres_1_sg	biscuoci- like urgere
 bisecare	verb_pres_1_sg	bisec- like strapiombare
 bisticciare	verb_pres_1_sg	bisticci- like strapiombare
@@ -1050,7 +953,7 @@ bocciare	verb_pres_1_sg	bocci- like strapiombare
 bofonchiare	verb_pres_1_sg	bofonchi- like strapiombare
 boglire	verb_pres_1_sg	bogli- like urgere
 bollire	verb_pres_1_sg	boll- like urgere
-bonificare	43	bonifichi	48	bonifichi	51	bonifichino
+bonificare	verb_pres_1_sg	bonific- like strapiombare
 borbogliare	verb_pres_1_sg	borbogli- like strapiombare
 bordeggiare	verb_pres_1_sg	bordeggi- like strapiombare
 boriarsi	verb_pres_1_sg	bori- like strapiombare	42	boriati
@@ -1060,7 +963,7 @@ braccare	43	bracchi	48	bracchi	51	bracchino
 bracciare	verb_pres_1_sg	bracci- like strapiombare
 bramire	verb_pres_1_sg	bramisc- like urgere
 brancare	43	branchi	48	branchi	51	branchino
-brancicare	43	brancichi	48	brancichi	51	brancichino
+brancicare	verb_pres_1_sg	brancic- like strapiombare
 brandeggiare	verb_pres_1_sg	brandeggi- like strapiombare
 brandire	verb_pres_1_sg	brandisc- like urgere
 breviare	verb_pres_1_sg	brevi- like strapiombare
@@ -1074,7 +977,7 @@ bruciacchiarsi	verb_pres_1_sg	bruciacchi- like strapiombare	42	bruciacchiati
 bruciare	verb_pres_1_sg	bruci- like strapiombare
 bruciarsi	verb_pres_1_sg	bruci- like strapiombare	42	bruciati
 bruire	16	brui
-brulicare	43	brulichi	48	brulichi	51	brulichino
+brulicare	verb_pres_1_sg	brulic- like strapiombare
 brunire	verb_pres_1_sg	brunisc- like urgere
 bruscare	43	bruschi	48	bruschi	51	bruschino
 bruteggiare	verb_pres_1_sg	bruteggi- like strapiombare
@@ -1084,13 +987,13 @@ bucare	43	buchi	48	buchi	51	buchino
 bucarsi	43	buchi	48	buchi	51	buchino
 buffare	verb_pres_1_sg	buff- like strapiombare
 buffoneggiare	verb_pres_1_sg	buffoneggi- like strapiombare
-bulicare	43	bulichi	48	bulichi	51	bulichino
+bulicare	verb_pres_1_sg	bulic- like strapiombare
 burlarsi	verb_pres_1_sg	burl- like strapiombare	42	burlati
-burrificare	43	burrifichi	48	burrifichi	51	burrifichino
+burrificare	verb_pres_1_sg	burrific- like strapiombare
 buscare	43	buschi	48	buschi	51	buschino
 buscarsi	43	buschi	48	buschi	51	buschino
 buttarsi	verb_pres_1_sg	butt- like strapiombare	42	buttati
-buzzicare	43	buzzichi	48	buzzichi	51	buzzichino
+buzzicare	verb_pres_1_sg	buzzic- like strapiombare
 cacare	43	cachi	48	cachi	51	cachino
 cacarsi	43	cachi	48	cachi	51	cachino
 cacciare	verb_pres_1_sg	cacci- like strapiombare
@@ -1101,13 +1004,13 @@ caducare	43	caduchi	48	caduchi	51	caduchino
 caducarsi	43	caduchi	48	caduchi	51	caduchino
 cagare	43	caghi	48	caghi	51	caghino
 cagarsi	43	caghi	48	caghi	51	caghino
-caggere	verb_pres_1_sg	caggi- like urgere	4	cagge
+caggere	verb_pres_1_sg	caggi- like urgere
 cagliare	verb_pres_1_sg	cagli- like strapiombare
 calarsi	verb_pres_1_sg	cal- like strapiombare	42	calati
 calcare	43	calchi	48	calchi	51	calchino
 calciare	verb_pres_1_sg	calci- like strapiombare
-calcificare	43	calcifichi	48	calcifichi	51	calcifichino
-calcificarsi	43	calcifichi	48	calcifichi	51	calcifichino
+calcificare	verb_pres_1_sg	calcific- like strapiombare
+calcificarsi	verb_pres_1_sg	calcific- like strapiombare	42	calcificati
 calcolarsi	verb_pres_1_sg	calcol- like strapiombare	42	calcolati
 caldeggiare	verb_pres_1_sg	caldeggi- like strapiombare
 caleffare	verb_pres_1_sg	caleff- like strapiombare
@@ -1117,12 +1020,10 @@ calunniare	verb_pres_1_sg	calunni- like strapiombare
 cambiare	verb_pres_1_sg	cambi- like strapiombare
 cambiarsi	verb_pres_1_sg	cambi- like strapiombare	42	cambiati
 campeggiare	verb_pres_1_sg	campeggi- like strapiombare
-campicchiare	verb_pres_1_sg	campicchi- like strapiombare
 campire	verb_pres_1_sg	campisc- like urgere
 camuffare	verb_pres_1_sg	camuff- like strapiombare
 camuffarsi	verb_pres_1_sg	camuff- like strapiombare	42	camuffati
 cancellarsi	verb_pres_1_sg	cancell- like strapiombare	42	cancellati
-cancerizzarsi	verb_pres_1_sg	cancerizz- like strapiombare	42	cancerizzati
 candeggiare	verb_pres_1_sg	candeggi- like strapiombare
 candidarsi	verb_pres_1_sg	candid- like strapiombare	42	candidati
 candire	verb_pres_1_sg	candisc- like urgere
@@ -1135,27 +1036,22 @@ capeggiare	verb_pres_1_sg	capeggi- like strapiombare
 capire	verb_pres_1_sg	capisc- like urgere
 capirsi	verb_pres_1_sg	capisc- like urgere	42	capisciti
 capitaneggiare	verb_pres_1_sg	capitaneggi- like strapiombare
-capovolgersi	verb_pres_1_sg	capovolg- like urgere	42	capovolgiti
-capovoltarsi	verb_pres_1_sg	capovolt- like strapiombare	42	capovoltati
-caratterizzarsi	verb_pres_1_sg	caratterizz- like strapiombare	42	caratterizzati
 carbonizzarsi	verb_pres_1_sg	carbonizz- like strapiombare	42	carbonizzati
 carcare	43	carchi	48	carchi	51	carchino
 carezzarsi	verb_pres_1_sg	carezz- like strapiombare	42	carezzati
 cariare	verb_pres_1_sg	cari- like strapiombare
 cariarsi	verb_pres_1_sg	cari- like strapiombare	42	cariati
-caricare	43	carichi	48	carichi	51	carichino
-caricarsi	43	carichi	48	carichi	51	carichino
+caricare	verb_pres_1_sg	caric- like strapiombare
+caricarsi	verb_pres_1_sg	caric- like strapiombare	42	caricati
 carpire	verb_pres_1_sg	carpisc- like urgere
 carreggiare	verb_pres_1_sg	carreggi- like strapiombare
 carteggiare	verb_pres_1_sg	carteggi- like strapiombare
 cartografare	verb_pres_1_sg	cartograf- like strapiombare
 cascare	43	caschi	48	caschi	51	caschino
 castigare	43	castighi	48	castighi	51	castighino
-catalogare	43	cataloghi	48	cataloghi	51	cataloghino
 catapultarsi	verb_pres_1_sg	catapult- like strapiombare	42	catapultati
 catoneggiare	verb_pres_1_sg	catoneggi- like strapiombare
-cattiveggiare	verb_pres_1_sg	cattiveggi- like strapiombare
-causticare	43	caustichi	48	caustichi	51	caustichino
+causticare	verb_pres_1_sg	caustic- like strapiombare
 cautelarsi	verb_pres_1_sg	cautel- like strapiombare	42	cautelati
 cavalcare	43	cavalchi	48	cavalchi	51	cavalchino
 cavarsi	verb_pres_1_sg	cav- like strapiombare	42	cavati
@@ -1167,39 +1063,36 @@ cedere	verb_pres_1_sg	ced- like urgere
 celarsi	verb_pres_1_sg	cel- like strapiombare	42	celati
 celiare	verb_pres_1_sg	celi- like strapiombare
 cementarsi	verb_pres_1_sg	cement- like strapiombare	42	cementati
-cementificare	43	cementifichi	48	cementifichi	51	cementifichino
+cementificare	verb_pres_1_sg	cementific- like strapiombare
 censire	verb_pres_1_sg	censisc- like urgere
-centrifugare	43	centrifughi	48	centrifughi	51	centrifughino
-centuplicare	43	centuplichi	48	centuplichi	51	centuplichino
-centuplicarsi	43	centuplichi	48	centuplichi	51	centuplichino
+centuplicare	verb_pres_1_sg	centuplic- like strapiombare
+centuplicarsi	verb_pres_1_sg	centuplic- like strapiombare	42	centuplicati
 cercare	43	cerchi	48	cerchi	51	cerchino
 cercarsi	43	cerchi	48	cerchi	51	cerchino
 cerchiare	verb_pres_1_sg	cerchi- like strapiombare
 cernere	verb_pres_1_sg	cern- like urgere
-certificare	43	certifichi	48	certifichi	51	certifichino
+certificare	verb_pres_1_sg	certific- like strapiombare
 cherere	verb_pres_1_sg	cher- like urgere
 chetarsi	verb_pres_1_sg	chet- like strapiombare	42	chetati
 chiamarsi	verb_pres_1_sg	chiam- like strapiombare	42	chiamati
-chiarificare	43	chiarifichi	48	chiarifichi	51	chiarifichino
+chiarificare	verb_pres_1_sg	chiarific- like strapiombare
 chiarire	verb_pres_1_sg	chiarisc- like urgere
 chiarirsi	verb_pres_1_sg	chiarisc- like urgere	42	chiarisciti
 chicchiriare	2	chicchirii	30	chicchirii	43	chicchirii	48	chicchirii	51	chicchiriino
 chiedere	verb_pres_1_sg	chied- like urgere
 chiedersi	43	chieda	48	chieda	51	chiedano	55	chiestosi
 chierere	verb_pres_1_sg	chier- like urgere
-chilificare	43	chilifichi	48	chilifichi	51	chilifichino
-chimificare	43	chimifichi	48	chimifichi	51	chimifichino
+chilificare	verb_pres_1_sg	chilific- like strapiombare
+chimificare	verb_pres_1_sg	chimific- like strapiombare
 chinarsi	verb_pres_1_sg	chin- like strapiombare	42	chinati
 chiocciare	verb_pres_1_sg	chiocci- like strapiombare
 chiudersi	verb_pres_1_sg	chiud- like urgere	42	chiuditi
 choccare	43	chocchi	48	chocchi	51	chocchino
 ciacciare	verb_pres_1_sg	ciacci- like strapiombare
-ciampicare	43	ciampichi	48	ciampichi	51	ciampichino
+ciampicare	verb_pres_1_sg	ciampic- like strapiombare
 cianciare	verb_pres_1_sg	cianci- like strapiombare
-ciancicare	43	ciancichi	48	ciancichi	51	ciancichino
-cianfrugliare	verb_pres_1_sg	cianfrugli- like strapiombare
+ciancicare	verb_pres_1_sg	ciancic- like strapiombare
 cibarsi	verb_pres_1_sg	cib- like strapiombare	42	cibati
-cicatrizzarsi	verb_pres_1_sg	cicatrizz- like strapiombare	42	cicatrizzati
 ciccare	43	cicchi	48	cicchi	51	cicchino
 ciecare	verb_pres_1_sg	ciec- like strapiombare
 cimentarsi	verb_pres_1_sg	ciment- like strapiombare	42	cimentati
@@ -1210,35 +1103,25 @@ ciocciare	verb_pres_1_sg	ciocci- like strapiombare
 cioncare	43	cionchi	48	cionchi	51	cionchino
 circoncidersi	verb_pres_1_sg	circoncid- like urgere	42	circonciditi
 circondarsi	verb_pres_1_sg	circond- like strapiombare	42	circondati
-circondurre	verb_pres_1_sg	circonduc- like urgere
-circonfondere	verb_pres_1_sg	circonfond- like urgere
-circonscrivere	verb_pres_1_sg	circonscriv- like urgere
-circonvenire	43	circonvenga	48	circonvenga	51	circonvengano
-circonvolvere	verb_pres_1_sg	circonvolv- like urgere
-circoscrivere	verb_pres_1_sg	circoscriv- like urgere
-circostanziare	verb_pres_1_sg	circostanzi- like strapiombare
-circumnavigare	43	circumnavighi	48	circumnavighi	51	circumnavighino
 citarsi	verb_pres_1_sg	cit- like strapiombare	42	citati
 ciucciare	verb_pres_1_sg	ciucci- like strapiombare
 ciucciarsi	verb_pres_1_sg	ciucci- like strapiombare	42	ciucciati
 classicheggiare	verb_pres_1_sg	classicheggi- like strapiombare
-classificare	43	classifichi	48	classifichi	51	classifichino
-classificarsi	43	classifichi	48	classifichi	51	classifichino
-claudicare	43	claudichi	48	claudichi	51	claudichino
+classificare	verb_pres_1_sg	classific- like strapiombare
+classificarsi	verb_pres_1_sg	classific- like strapiombare	42	classificati
+claudicare	verb_pres_1_sg	claudic- like strapiombare
 cliccare	43	clicchi	48	clicchi	51	clicchino
 coagularsi	verb_pres_1_sg	coagul- like strapiombare	42	coagulati
 coalizzarsi	verb_pres_1_sg	coalizz- like strapiombare	42	coalizzati
 coccolarsi	verb_pres_1_sg	coccol- like strapiombare	42	coccolati
-codificare	43	codifichi	48	codifichi	51	codifichino
+codificare	verb_pres_1_sg	codific- like strapiombare
 coesistere	verb_pres_1_sg	coesist- like urgere
 cofinanziare	verb_pres_1_sg	cofinanzi- like strapiombare
 cogestire	verb_pres_1_sg	cogestisc- like urgere
 cogliere	43	colga	48	colga	51	colgano
-cokificare	43	cokifichi	48	cokifichi	51	cokifichino
+cokificare	verb_pres_1_sg	cokific- like strapiombare
 colcare	43	colchi	48	colchi	51	colchino
-collegare	43	colleghi	48	colleghi	51	colleghino
-collegarsi	43	colleghi	48	colleghi	51	colleghino
-colliquare	verb_pres_1_sg	colliqu- like strapiombare
+collegarsi	verb_pres_1_sg	colleg- like strapiombare	42	collegati
 collocare	43	collochi	48	collochi	51	collochino
 collocarsi	43	collochi	48	collochi	51	collochino
 colloquiare	verb_pres_1_sg	colloqui- like strapiombare
@@ -1250,7 +1133,6 @@ colpevolizzarsi	verb_pres_1_sg	colpevolizz- like strapiombare	42	colpevolizzati
 colpire	verb_pres_1_sg	colpisc- like urgere
 colpirsi	verb_pres_1_sg	colpisc- like urgere	42	colpisciti
 combaciare	verb_pres_1_sg	combaci- like strapiombare
-combattersi	verb_pres_1_sg	combatt- like urgere	42	combattiti
 combinarsi	verb_pres_1_sg	combin- like strapiombare	42	combinati
 comburere	verb_past	combus- like volgere	verb_pres_1_sg	combur- like urgere
 cominciare	verb_pres_1_sg	cominci- like strapiombare
@@ -1259,7 +1141,6 @@ commerciare	verb_pres_1_sg	commerci- like strapiombare
 commiserarsi	verb_pres_1_sg	commiser- like strapiombare	42	commiserati
 commissariare	verb_pres_1_sg	commissari- like strapiombare
 commuovere	verb_pres_1_sg	commuov- like urgere
-commuoversi	verb_pres_1_sg	commuov- like urgere	42	commuoviti
 comparire	43	compaia	48	compaia	51	compaiano
 compartire	verb_pres_1_sg	compartisc- like urgere
 compatire	verb_pres_1_sg	compatisc- like urgere
@@ -1267,27 +1148,20 @@ compatirsi	verb_pres_1_sg	compatisc- like urgere	42	compatisciti
 compattarsi	verb_pres_1_sg	compatt- like strapiombare	42	compattati
 compendiare	verb_pres_1_sg	compendi- like strapiombare
 compenetrarsi	verb_pres_1_sg	compenetr- like strapiombare	42	compenetrati
-compensarsi	verb_pres_1_sg	compens- like strapiombare	42	compensati
 compiacere	43	compiaccia	48	compiaccia	51	compiacciano
-compiacersi	43	compiaccia	48	compiaccia	51	compiacciano
-compiangersi	verb_pres_1_sg	compiang- like urgere	42	compiangiti
-compiere	verb	compie- like uscire	verb_pres_1_pl	compi- like volgere	verb_pres_1_sg	compi- like urgere
+compiere	3	compiete	42	compi	43	compia	45	compiete	48	compia	51	compiano
 compiersi	verb_pres_1_sg	compi- like urgere	42	compiti
 compire	verb_impf	compi- like uscire	verb_pres_1_sg	compisc- like urgere
-complessificare	43	complessifichi	48	complessifichi	51	complessifichino
+complessificare	verb_pres_1_sg	complessific- like strapiombare
 completarsi	verb_pres_1_sg	complet- like strapiombare	42	completati
-complicare	43	complichi	48	complichi	51	complichino
-complicarsi	43	complichi	48	complichi	51	complichino
+complicare	verb_pres_1_sg	complic- like strapiombare
+complicarsi	verb_pres_1_sg	complic- like strapiombare	42	complicati
 complimentarsi	verb_pres_1_sg	compliment- like strapiombare	42	complimentati
 comporre	43	componga	48	componga	51	compongano
 comporsi	43	componga	48	componga	51	compongano
-comportarsi	verb_pres_1_sg	comport- like strapiombare	42	comportati
 comprarsi	verb_pres_1_sg	compr- like strapiombare	42	comprati
-comprendersi	verb_pres_1_sg	comprend- like urgere	42	comprenditi
-compromettersi	verb_pres_1_sg	compromett- like urgere	42	compromettiti
-compungersi	verb_pres_1_sg	compung- like urgere	42	compungiti
-comunicare	43	comunichi	48	comunichi	51	comunichino
-comunicarsi	43	comunichi	48	comunichi	51	comunichino
+comunicare	verb_pres_1_sg	comunic- like strapiombare
+comunicarsi	verb_pres_1_sg	comunic- like strapiombare	42	comunicati
 comunisteggiare	verb_pres_1_sg	comunisteggi- like strapiombare
 concedere	verb_pres_1_sg	conced- like urgere
 concedersi	verb_past	concess- like perdersi	verb_pres_1_sg	conced- like urgere	42	concediti
@@ -1305,48 +1179,37 @@ concretizzarsi	verb_pres_1_sg	concretizz- like strapiombare	42	concretizzati
 conculcare	43	conculchi	48	conculchi	51	conculchino
 concuocere	verb_pres_1_sg	concuoci- like urgere
 concupire	participle_pres	concupiscente- like girare	verb_pres_1_sg	concupisc- like urgere
-condannarsi	verb_pres_1_sg	condann- like strapiombare	42	condannati
 condensarsi	verb_pres_1_sg	condens- like strapiombare	42	condensati
 condire	verb_pres_1_sg	condisc- like urgere
 condolersi	43	condolga	48	condolga	51	condolgano
 condurre	verb_pres_1_sg	conduc- like urgere
 condursi	verb_pres_1_sg	conduc- like urgere	42	conduciti
 confarsi	verb_pres_1_sg	confacci- like urgere	4	confà	5	confanno
-confederarsi	verb_pres_1_sg	confeder- like strapiombare	42	confederati
 conferirsi	verb_pres_1_sg	conferisc- like urgere	42	conferisciti
-confermarsi	verb_pres_1_sg	conferm- like strapiombare	42	confermati
 confessarsi	verb_pres_1_sg	confess- like strapiombare	42	confessati
 conficcare	43	conficchi	48	conficchi	51	conficchino
 confidarsi	verb_pres_1_sg	confid- like strapiombare	42	confidati
-configgere	verb_pres_1_sg	configg- like urgere
-configurarsi	verb_pres_1_sg	configur- like strapiombare	42	configurati
 confinarsi	verb_pres_1_sg	confin- like strapiombare	42	confinati
 confiscare	43	confischi	48	confischi	51	confischino
-confliggere	verb_pres_1_sg	confligg- like urgere
 confondere	verb_pres_1_sg	confond- like urgere
-confondersi	verb_pres_1_sg	confond- like urgere	42	confonditi
-conformarsi	verb_pres_1_sg	conform- like strapiombare	42	conformati
 confortarsi	verb_pres_1_sg	confort- like strapiombare	42	confortati
-confricare	43	confrichi	48	confrichi	51	confrichino
+confricare	verb_pres_1_sg	confric- like strapiombare
 confrontarsi	verb_pres_1_sg	confront- like strapiombare	42	confrontati
 congedarsi	verb_pres_1_sg	conged- like strapiombare	42	congedati
 congelarsi	verb_pres_1_sg	congel- like strapiombare	42	congelati
 congiungersi	verb_pres_1_sg	congiung- like urgere	42	congiungiti
 conglutinarsi	verb_pres_1_sg	conglutin- like strapiombare	42	conglutinati
 congratularsi	verb_pres_1_sg	congratul- like strapiombare	42	congratulati
-congregare	43	congreghi	48	congreghi	51	congreghino
-congregarsi	43	congreghi	48	congreghi	51	congreghino
+congregarsi	verb_pres_1_sg	congreg- like strapiombare	42	congregati
 conguagliare	verb_pres_1_sg	conguagli- like strapiombare
 coniare	verb_pres_1_sg	coni- like strapiombare
-coniugare	43	coniughi	48	coniughi	51	coniughino
-coniugarsi	43	coniughi	48	coniughi	51	coniughino
+coniugarsi	verb_pres_1_sg	coniug- like strapiombare	42	coniugati
 connaturarsi	verb_pres_1_sg	connatur- like strapiombare	42	connaturati
 connettersi	verb_pres_1_sg	connett- like urgere	42	connettiti
 conoscersi	verb_pres_1_sg	conosc- like urgere	42	conosciti
 conquistarsi	verb_pres_1_sg	conquist- like strapiombare	42	conquistati
 consacrarsi	verb_pres_1_sg	consacr- like strapiombare	42	consacrati
 consapevolizzarsi	verb_pres_1_sg	consapevolizz- like strapiombare	42	consapevolizzati
-consegnarsi	verb_pres_1_sg	consegn- like strapiombare	42	consegnati
 conseguire	verb_pres_1_sg	consegu- like urgere
 consentire	verb_pres_1_sg	consent- like urgere
 consentirsi	participle_pres	consenzientesi- like girare	verb_pres_1_sg	consent- like urgere	42	consentiti
@@ -1373,41 +1236,26 @@ contendersi	verb_pres_1_sg	contend- like urgere	42	contenditi
 contenere	43	contenga	48	contenga	51	contengano
 contenersi	43	contenga	48	contenga	51	contengano
 contentarsi	verb_pres_1_sg	content- like strapiombare	42	contentati
-continuare	verb_pres_1_sg	continu- like strapiombare
-contorcersi	verb_pres_1_sg	contorc- like urgere	42	contorciti
-contornarsi	verb_pres_1_sg	contorn- like strapiombare	42	contornati
-contraccambiare	verb_pres_1_sg	contraccambi- like strapiombare
-contraddire	verb_pres_1_sg	contraddic- like urgere
-contraddirsi	verb_pres_1_sg	contraddic- like urgere	42	contraddiciti
-contraddistinguersi	verb_pres_1_sg	contraddistingu- like urgere	42	contraddistinguiti
-contradire	verb_pres_1_sg	contradic- like urgere
+contraddire	43	contraddica	48	contraddica	51	contraddicano
+contraddirsi	43	contraddica	48	contraddica	51	contraddicano
+contradire	43	contradica	48	contradica	51	contradicano
 contraffare	43	contraffaccia	48	contraffaccia	51	contraffacciano
 contraffarsi	43	contraffaccia	48	contraffaccia	51	contraffacciano
 contrappesarsi	verb_pres_1_sg	contrappes- like strapiombare	42	contrappesati
-contrapporre	43	contrapponga	48	contrapponga	51	contrappongano
 contrapporsi	43	contrapponga	48	contrapponga	51	contrappongano
 contrariare	verb_pres_1_sg	contrari- like strapiombare
 contrariarsi	verb_pres_1_sg	contrari- like strapiombare	42	contrariati
 contrarre	43	contragga	48	contragga	51	contraggano
 contrarsi	43	contragga	48	contragga	51	contraggano
-contrattaccare	43	contrattacchi	48	contrattacchi	51	contrattacchino
 contravvalere	43	contravvalga	48	contravvalga	51	contravvalgano
-contravvenire	43	contravvenga	48	contravvenga	51	contravvengano
 contristarsi	verb_pres_1_sg	contrist- like strapiombare	42	contristati
-controbilanciare	verb_pres_1_sg	controbilanci- like strapiombare
-controbracciare	verb_pres_1_sg	controbracci- like strapiombare
-controindicare	43	controindichi	48	controindichi	51	controindichino
 controllarsi	verb_pres_1_sg	controll- like strapiombare	42	controllati
-controproporre	43	controproponga	48	controproponga	51	contropropongano
-controreplicare	43	controreplichi	48	controreplichi	51	controreplichino
-controrispondere	verb_pres_1_sg	controrispond- like urgere
 contundere	verb_pres_1_sg	contund- like urgere
 convenire	43	convenga	48	convenga	51	convengano
 convenirsi	43	convenga	48	convenga	51	convengano
 convenzionarsi	verb_pres_1_sg	convenzion- like strapiombare	42	convenzionati
 convertire	verb_pres_1_sg	convert- like urgere
 convertirsi	verb_pres_1_sg	convert- like urgere	42	convertiti
-convincersi	verb_pres_1_sg	convinc- like urgere	42	convinciti
 convivere	verb_pres_1_sg	conviv- like urgere
 convocare	43	convochi	48	convochi	51	convochino
 convogliare	verb_pres_1_sg	convogli- like strapiombare
@@ -1422,24 +1270,19 @@ coprodurre	verb_pres_1_sg	coproduc- like urgere
 corazzarsi	verb_pres_1_sg	corazz- like strapiombare	42	corazzati
 corcare	43	corchi	48	corchi	51	corchino
 coreografare	verb_pres_1_sg	coreograf- like strapiombare
-coricare	43	corichi	48	corichi	51	corichino
-coricarsi	43	corichi	48	corichi	51	corichino
+coricare	verb_pres_1_sg	coric- like strapiombare
+coricarsi	verb_pres_1_sg	coric- like strapiombare	42	coricati
 cornarsi	verb_pres_1_sg	corn- like strapiombare	42	cornati
-cornificare	43	cornifichi	48	cornifichi	51	cornifichino
+cornificare	verb_pres_1_sg	cornific- like strapiombare
 correggere	verb_pres_1_sg	corregg- like urgere
-correggersi	verb_pres_1_sg	corregg- like urgere	42	correggiti
 correre	verb_pres_1_sg	corr- like urgere
 corrersi	verb_past	cors- like perdersi	verb_pres_1_sg	corr- like urgere	42	corriti
 corricchiare	verb_pres_1_sg	corricchi- like strapiombare
-corrispondere	verb_pres_1_sg	corrispond- like urgere
-corrispondersi	verb_pres_1_sg	corrispond- like urgere	42	corrisponditi
 corrodere	verb_pres_1_sg	corrod- like urgere
 corrodersi	verb_pres_1_sg	corrod- like urgere	42	corroditi
-corrompersi	verb_pres_1_sg	corromp- like urgere	42	corrompiti
 corrucciare	verb_pres_1_sg	corrucci- like strapiombare
 corrucciarsi	verb_pres_1_sg	corrucci- like strapiombare	42	corrucciati
-corrugare	43	corrughi	48	corrughi	51	corrughino
-corrugarsi	43	corrughi	48	corrughi	51	corrughino
+corrugarsi	verb_pres_1_sg	corrug- like strapiombare	42	corrugati
 corruscare	43	corruschi	48	corruschi	51	corruschino
 corseggiare	verb_pres_1_sg	corseggi- like strapiombare
 corteggiare	verb_pres_1_sg	corteggi- like strapiombare
@@ -1463,11 +1306,10 @@ creparsi	verb_pres_1_sg	crep- like strapiombare	42	crepati
 cresimarsi	verb_pres_1_sg	cresim- like strapiombare	42	cresimati
 crettarsi	verb_pres_1_sg	crett- like strapiombare	42	crettati
 cristallizzarsi	verb_pres_1_sg	cristallizz- like strapiombare	42	cristallizzati
-criticare	43	critichi	48	critichi	51	critichino
-criticarsi	43	critichi	48	critichi	51	critichino
+criticare	verb_pres_1_sg	critic- like strapiombare
+criticarsi	verb_pres_1_sg	critic- like strapiombare	42	criticati
 crittografare	verb_pres_1_sg	crittograf- like strapiombare
 crocchiare	verb_pres_1_sg	crocchi- like strapiombare
-crocefiggere	verb_pres_1_sg	crocefigg- like urgere
 crocifiggere	verb_pres_1_sg	crocifigg- like urgere
 crocifiggersi	verb_pres_1_sg	crocifigg- like urgere	42	crocifiggiti
 crogiolarsi	verb_pres_1_sg	crogiol- like strapiombare	42	crogiolati
@@ -1497,21 +1339,20 @@ dardeggiare	verb_pres_1_sg	dardeggi- like strapiombare
 dare	verb_past	died- like urgere	0	do	43	dia	48	dia	51	diano
 darsi	0	do	43	dia	48	dia	51	diano
 dattilografare	verb_pres_1_sg	dattilograf- like strapiombare
-dattiloscrivere	verb_pres_1_sg	dattiloscriv- like urgere
 daziare	verb_pres_1_sg	dazi- like strapiombare
-deacidificare	43	deacidifichi	48	deacidifichi	51	deacidifichino
+deacidificare	verb_pres_1_sg	deacidific- like strapiombare
 debbiare	verb_pres_1_sg	debbi- like strapiombare
 debilitarsi	verb_pres_1_sg	debilit- like strapiombare	42	debilitati
 debuggare	43	debugghi	48	debugghi	51	debugghino
 decadere	verb_pres_1_sg	decad- like urgere
 decalcare	43	decalchi	48	decalchi	51	decalchino
-decalcificare	43	decalcifichi	48	decalcifichi	51	decalcifichino
+decalcificare	verb_pres_1_sg	decalcific- like strapiombare
 decedere	verb_pres_1_sg	deced- like urgere
 decernere	verb_pres_1_sg	decern- like urgere	55	decreto
 decespugliare	verb_pres_1_sg	decespugli- like strapiombare
 decidersi	verb_pres_1_sg	decid- like urgere	42	deciditi
-declassificare	43	declassifichi	48	declassifichi	51	declassifichino
-decodificare	43	decodifichi	48	decodifichi	51	decodifichino
+declassificare	verb_pres_1_sg	declassific- like strapiombare
+decodificare	verb_pres_1_sg	decodific- like strapiombare
 decomporre	43	decomponga	48	decomponga	51	decompongano
 decomporsi	43	decomponga	48	decomponga	51	decompongano
 deconcentrarsi	verb_pres_1_sg	deconcentr- like strapiombare	42	deconcentrati
@@ -1519,47 +1360,44 @@ decongestionarsi	verb_pres_1_sg	decongestion- like strapiombare	42	decongestiona
 decontrarre	43	decontragga	48	decontragga	51	decontraggano
 decontrarsi	43	decontragga	48	decontragga	51	decontraggano
 decorrere	verb_pres_1_sg	decorr- like urgere
-decorticare	43	decortichi	48	decortichi	51	decortichino
+decorticare	verb_pres_1_sg	decortic- like strapiombare
 decuocere	verb_pres_1_sg	decuoci- like urgere
-decuplicare	43	decuplichi	48	decuplichi	51	decuplichino
-decuplicarsi	43	decuplichi	48	decuplichi	51	decuplichino
-dedicare	43	dedichi	48	dedichi	51	dedichino
-dedicarsi	43	dedichi	48	dedichi	51	dedichino
+decuplicare	verb_pres_1_sg	decuplic- like strapiombare
+decuplicarsi	verb_pres_1_sg	decuplic- like strapiombare	42	decuplicati
+dedicare	verb_pres_1_sg	dedic- like strapiombare
+dedicarsi	verb_pres_1_sg	dedic- like strapiombare	42	dedicati
 dedurre	verb_pres_1_sg	deduc- like urgere
 dedursi	verb_pres_1_sg	deduc- like urgere	42	deduciti
 defacciare	verb_pres_1_sg	defacci- like strapiombare
 defalcare	43	defalchi	48	defalchi	51	defalchino
 defecare	verb_pres_1_sg	defec- like strapiombare
-defiggere	verb_pres_1_sg	defigg- like urgere
 defilarsi	verb_pres_1_sg	defil- like strapiombare	42	defilati
 definire	verb_pres_1_sg	definisc- like urgere
 definirsi	verb_pres_1_sg	definisc- like urgere	42	definisciti
 defogliare	verb_pres_1_sg	defogli- like strapiombare
 defoliare	verb_pres_1_sg	defoli- like strapiombare
 deformarsi	verb_pres_1_sg	deform- like strapiombare	42	deformati
-degassificare	43	degassifichi	48	degassifichi	51	degassifichino
+degassificare	verb_pres_1_sg	degassific- like strapiombare
 deglutire	verb_pres_1_sg	deglutisc- like urgere
 degnarsi	verb_pres_1_sg	degn- like strapiombare	42	degnati
 degradarsi	verb_pres_1_sg	degrad- like strapiombare	42	degradati
-deificare	43	deifichi	48	deifichi	51	deifichino
-delegare	43	deleghi	48	deleghi	51	deleghino
-delegificare	43	delegifichi	48	delegifichi	51	delegifichino
+deificare	verb_pres_1_sg	deific- like strapiombare
+delegificare	verb_pres_1_sg	delegific- like strapiombare
 delinearsi	verb_pres_1_sg	deline- like strapiombare	42	delineati
-delinquere	43	delinqua	48	delinqua	51	delinquano	55	delitto
+delinquere	verb_past	deli- like reggere	verb_pres_1_sg	delinqu- like urgere
 deliziare	verb_pres_1_sg	delizi- like strapiombare
 deliziarsi	verb_pres_1_sg	delizi- like strapiombare	42	deliziati
 deludersi	verb_pres_1_sg	delud- like urgere	42	deluditi
 demarcare	43	demarchi	48	demarchi	51	demarchino
-demistificare	43	demistifichi	48	demistifichi	51	demistifichino
+demistificare	verb_pres_1_sg	demistific- like strapiombare
 demolire	verb_pres_1_sg	demolisc- like urgere
-demoltiplicare	43	demoltiplichi	48	demoltiplichi	51	demoltiplichino
+demoltiplicare	verb_pres_1_sg	demoltiplic- like strapiombare
 demoralizzarsi	verb_pres_1_sg	demoralizz- like strapiombare	42	demoralizzati
 demordere	verb_pres_1_sg	demord- like urgere
 demotivarsi	verb_pres_1_sg	demotiv- like strapiombare	42	demotivati
 denaturarsi	verb_pres_1_sg	denatur- like strapiombare	42	denaturati
-denazificare	43	denazifichi	48	denazifichi	51	denazifichino
-denegare	43	deneghi	48	deneghi	51	deneghino
-denitrificare	43	denitrifichi	48	denitrifichi	51	denitrifichino
+denazificare	verb_pres_1_sg	denazific- like strapiombare
+denitrificare	verb_pres_1_sg	denitrific- like strapiombare
 denudarsi	verb_pres_1_sg	denud- like strapiombare	42	denudati
 denunciare	verb_pres_1_sg	denunci- like strapiombare
 denunciarsi	verb_pres_1_sg	denunci- like strapiombare	42	denunciati
@@ -1567,24 +1405,22 @@ denunziare	verb_pres_1_sg	denunzi- like strapiombare
 denunziarsi	verb_pres_1_sg	denunzi- like strapiombare	42	denunziati
 depauperarsi	verb_pres_1_sg	depauper- like strapiombare	42	depauperati
 depilarsi	verb_pres_1_sg	depil- like strapiombare	42	depilati
-depolimerizzarsi	verb_pres_1_sg	depolimerizz- like strapiombare	42	depolimerizzati
 deporre	43	deponga	48	deponga	51	depongano
 depositarsi	verb_pres_1_sg	deposit- like strapiombare	42	depositati
 depotenziare	verb_pres_1_sg	depotenzi- like strapiombare
 deprecare	verb_pres_1_sg	deprec- like strapiombare
 deprimersi	verb_pres_1_sg	deprim- like urgere	42	deprimiti
 depurarsi	verb_pres_1_sg	depur- like strapiombare	42	depurati
-dequalificare	43	dequalifichi	48	dequalifichi	51	dequalifichino
+dequalificare	verb_pres_1_sg	dequalific- like strapiombare
 deradicalizzarsi	verb_pres_1_sg	deradicalizz- like strapiombare	42	deradicalizzati
 deragliare	verb_pres_1_sg	deragli- like strapiombare
 dereferenziare	verb_pres_1_sg	dereferenzi- like strapiombare
 derequisire	verb_pres_1_sg	derequisisc- like urgere
 deresponsabilizzarsi	verb_pres_1_sg	deresponsabilizz- like strapiombare	42	deresponsabilizzati
-derogare	43	deroghi	48	deroghi	51	deroghino
-derubricare	43	derubrichi	48	derubrichi	51	derubrichino
+derubricare	verb_pres_1_sg	derubric- like strapiombare
 descrivere	verb_pres_1_sg	descriv- like urgere
 descriversi	verb_pres_1_sg	descriv- like urgere	42	descriviti
-desertificare	43	desertifichi	48	desertifichi	51	desertifichino
+desertificare	verb_pres_1_sg	desertific- like strapiombare
 desiare	2	desii	30	desii	43	desii	48	desii	51	desiino
 desistere	verb_pres_1_sg	desist- like urgere
 desorbire	verb_pres_1_sg	desorb- like urgere
@@ -1600,22 +1436,19 @@ detenere	43	detenga	48	detenga	51	detengano
 deteriorarsi	verb_pres_1_sg	deterior- like strapiombare	42	deteriorati
 determinarsi	verb_pres_1_sg	determin- like strapiombare	42	determinati
 detestarsi	verb_pres_1_sg	detest- like strapiombare	42	detestati
-detossificare	43	detossifichi	48	detossifichi	51	detossifichino
 detrarre	43	detragga	48	detragga	51	detraggano
-dettagliare	verb_pres_1_sg	dettagli- like strapiombare
-deumidificare	43	deumidifichi	48	deumidifichi	51	deumidifichino
+deumidificare	verb_pres_1_sg	deumidific- like strapiombare
 devenire	43	devenga	48	devenga	51	devengano
 deviare	2	devii	30	devii	43	devii	48	devii	51	deviino
 devolvere	verb_pres_1_sg	devolv- like urgere	55	devoluto
 diacciare	verb_pres_1_sg	diacci- like strapiombare
-diagnosticare	43	diagnostichi	48	diagnostichi	51	diagnostichino
-dialogare	43	dialoghi	48	dialoghi	51	dialoghino
+diagnosticare	verb_pres_1_sg	diagnostic- like strapiombare
 dibattersi	verb_pres_1_sg	dibatt- like urgere	42	dibattiti
 diboscare	43	diboschi	48	diboschi	51	diboschino
 dibrucare	43	dibruchi	48	dibruchi	51	dibruchino
 dibruscare	43	dibruschi	48	dibruschi	51	dibruschino
 dibucciare	verb_pres_1_sg	dibucci- like strapiombare
-dicere	verb	di- like uscire	verb_past	d- like dire	verb_pres_1_pl	dice- like lanciare	verb_pres_1_sg	dic- like urgere	3	dicete	42	di'	47	dicere	52	dicere
+dicere	1	dicemo	12	dissi	18	dirò	22	dirà	23	diranno	26	diresti	31	dicemo	33	dicete	42	di'	43	dica	44	dicemo	48	dica	51	dicano	55	detto
 dichiararsi	verb_pres_1_sg	dichiar- like strapiombare	42	dichiarati
 difendersi	verb_pres_1_sg	difend- like urgere	42	difenditi
 differenziare	verb_pres_1_sg	differenzi- like strapiombare
@@ -1623,14 +1456,12 @@ differenziarsi	verb_pres_1_sg	differenzi- like strapiombare	42	differenziati
 diffidarsi	verb_pres_1_sg	diffid- like strapiombare	42	diffidati
 diffinire	verb_pres_1_sg	diffinisc- like urgere
 diffondere	verb_pres_1_sg	diffond- like urgere
-diffondersi	verb_pres_1_sg	diffond- like urgere	42	diffonditi
 diffrangersi	verb_pres_1_sg	diffrang- like urgere	42	diffrangiti
 dilagare	43	dilaghi	48	dilaghi	51	dilaghino
 dilaniare	verb_pres_1_sg	dilani- like strapiombare
 dilaniarsi	verb_pres_1_sg	dilani- like strapiombare	42	dilaniati
 dilatarsi	verb_pres_1_sg	dilat- like strapiombare	42	dilatati
 dileggiare	verb_pres_1_sg	dileggi- like strapiombare
-dileguare	verb_pres_1_sg	dilegu- like strapiombare
 dileguarsi	verb_pres_1_sg	dilegu- like strapiombare	42	dileguati
 dilettarsi	verb_pres_1_sg	dilett- like strapiombare	42	dilettati
 diligere	verb_pres_1_sg	dilig- like urgere
@@ -1640,13 +1471,11 @@ dilungarsi	43	dilunghi	48	dilunghi	51	dilunghino
 diluviare	verb_pres_1_sg	diluvi- like strapiombare
 dimagrire	verb_pres_1_sg	dimagrisc- like urgere
 dimenarsi	verb_pres_1_sg	dimen- like strapiombare	42	dimenati
-dimenticare	43	dimentichi	48	dimentichi	51	dimentichino
-dimenticarsi	43	dimentichi	48	dimentichi	51	dimentichino
+dimenticare	verb_pres_1_sg	dimentic- like strapiombare
+dimenticarsi	verb_pres_1_sg	dimentic- like strapiombare	42	dimenticati
 dimettersi	verb_pres_1_sg	dimett- like urgere	42	dimettiti
 dimoiare	verb_pres_1_sg	dimoi- like strapiombare
 dimostrarsi	verb_pres_1_sg	dimostr- like strapiombare	42	dimostrati
-dinegare	43	dineghi	48	dineghi	51	dineghino
-diniegare	43	dinieghi	48	dinieghi	51	dinieghino
 dinoccare	43	dinocchi	48	dinocchi	51	dinocchino
 dipanarsi	verb_pres_1_sg	dipan- like strapiombare	42	dipanati
 dipartire	verb_pres_1_sg	dipart- like urgere
@@ -1656,7 +1485,7 @@ diplomarsi	verb_pres_1_sg	diplom- like strapiombare	42	diplomati
 diporre	43	diponga	48	diponga	51	dipongano
 diradarsi	verb_pres_1_sg	dirad- like strapiombare	42	diradati
 diramarsi	verb_pres_1_sg	diram- like strapiombare	42	diramati
-dire	verb_pres_1_sg	dic- like urgere	42	di'
+dire	verb_pres_1_sg	dic- like urgere	2	dici	4	dice	42	di'
 direggere	verb_pres_1_sg	diregg- like urgere
 direzionarsi	verb_pres_1_sg	direzion- like strapiombare	42	direzionati
 dirigere	verb_pres_1_sg	dirig- like urgere
@@ -1664,48 +1493,23 @@ dirigersi	verb_past	dire- like reggersi	verb_pres_1_sg	dirig- like urgere	42	dir
 dirimere	verb_past	diren- like volgere	verb_pres_1_sg	dirim- like urgere
 diroccare	43	dirocchi	48	dirocchi	51	dirocchino
 dirozzarsi	verb_pres_1_sg	dirozz- like strapiombare	42	dirozzati
-dirsi	verb_pres_1_sg	dic- like urgere	42	ditti
+dirsi	verb_pres_1_sg	dic- like urgere	2	dici	4	dice	42	ditti
 dirugginire	verb_pres_1_sg	dirugginisc- like urgere
-disabituare	verb_pres_1_sg	disabitu- like strapiombare
-disabituarsi	verb_pres_1_sg	disabitu- like strapiombare	42	disabituati
-disaccoppiare	verb_pres_1_sg	disaccoppi- like strapiombare
-disaccordarsi	verb_pres_1_sg	disaccord- like strapiombare	42	disaccordati
+disabbonare	verb_pres_1_sg	disabbon- like strapiombare
 disacerbarsi	verb_pres_1_sg	disacerb- like strapiombare	42	disacerbati
-disacidificare	43	disacidifichi	48	disacidifichi	51	disacidifichino
 disacidire	verb_pres_1_sg	disacidisc- like urgere
-disaffezionarsi	verb_pres_1_sg	disaffezion- like strapiombare	42	disaffezionati
-disaggregare	43	disaggreghi	48	disaggreghi	51	disaggreghino
-disaggregarsi	43	disaggreghi	48	disaggreghi	51	disaggreghino
 disagiare	verb_pres_1_sg	disagi- like strapiombare
-disambiguare	verb_pres_1_sg	disambigu- like strapiombare
 disambiguarsi	verb_pres_1_sg	disambigu- like strapiombare	42	disambiguati
 disamorarsi	verb_pres_1_sg	disamor- like strapiombare	42	disamorati
-disanimarsi	verb_pres_1_sg	disanim- like strapiombare	42	disanimati
-disappaiare	verb_pres_1_sg	disappai- like strapiombare
-disapplicare	43	disapplichi	48	disapplichi	51	disapplichino
-disascondere	verb_pres_1_sg	disascond- like urgere
-disassuefare	43	disassuefaccia	48	disassuefaccia	51	disassuefacciano
-disassuefarsi	43	disassuefaccia	48	disassuefaccia	51	disassuefacciano
-disavvezzarsi	verb_pres_1_sg	disavvezz- like strapiombare	42	disavvezzati
 disboscare	43	disboschi	48	disboschi	51	disboschino
 disbrigare	43	disbrighi	48	disbrighi	51	disbrighino
 disbrigarsi	43	disbrighi	48	disbrighi	51	disbrighino
-discacciare	verb_pres_1_sg	discacci- like strapiombare
 discadere	verb_pres_1_sg	discad- like urgere
-discaricare	43	discarichi	48	discarichi	51	discarichino
-discavalcare	43	discavalchi	48	discavalchi	51	discavalchino
 discedere	verb_pres_1_sg	disced- like urgere
-dischiedere	verb_pres_1_sg	dischied- like urgere
 disciogliere	43	disciolga	48	disciolga	51	disciolgano
 disciogliersi	43	disciolga	48	disciolga	51	disciolgano
-discolorarsi	verb_pres_1_sg	discolor- like strapiombare	42	discolorati
 discolparsi	verb_pres_1_sg	discolp- like strapiombare	42	discolpati
-discomporre	43	discomponga	48	discomponga	51	discompongano
-disconfiggere	verb_pres_1_sg	disconfigg- like urgere
-disconnettersi	verb_pres_1_sg	disconnett- like urgere	42	disconnettiti
-disconvenire	43	disconvenga	48	disconvenga	51	disconvengano
 discoprire	verb_pres_1_sg	discopr- like urgere
-discoraggiare	verb_pres_1_sg	discoraggi- like strapiombare
 discorrere	verb_pres_1_sg	discorr- like urgere
 discostarsi	verb_pres_1_sg	discost- like strapiombare	42	discostati
 discredere	verb_pres_1_sg	discred- like urgere
@@ -1714,75 +1518,37 @@ discrivere	verb_pres_1_sg	discriv- like urgere
 discucire	verb_pres_1_sg	discuci- like urgere
 discuoiare	verb_pres_1_sg	discuoi- like strapiombare
 discutere	verb_pres_1_sg	discut- like urgere
-disdire	verb_pres_1_sg	disdic- like urgere
-disdirsi	verb_pres_1_sg	disdic- like urgere	42	disdiciti
+disdire	43	disdica	48	disdica	51	disdicano
+disdirsi	43	disdica	48	disdica	51	disdicano
 diseccare	43	disecchi	48	disecchi	51	disecchino
 diseducare	43	diseduchi	48	diseduchi	51	diseduchino
 disegnarsi	verb_pres_1_sg	disegn- like strapiombare	42	disegnati
 disfarsi	0	disfò
 disgelarsi	verb_pres_1_sg	disgel- like strapiombare	42	disgelati
-disgregare	43	disgreghi	48	disgreghi	51	disgreghino
-disgregarsi	43	disgreghi	48	disgreghi	51	disgreghino
-disgustarsi	verb_pres_1_sg	disgust- like strapiombare	42	disgustati
+disgregarsi	verb_pres_1_sg	disgreg- like strapiombare	42	disgregati
 disiare	2	disii	30	disii	43	disii	48	disii	51	disiino
-disidentificare	43	disidentifichi	48	disidentifichi	51	disidentifichino
-disidentificarsi	43	disidentifichi	48	disidentifichi	51	disidentifichino
-disidratarsi	verb_pres_1_sg	disidrat- like strapiombare	42	disidratati
-disilludersi	verb_pres_1_sg	disillud- like urgere	42	disilluditi
-disimbrogliare	verb_pres_1_sg	disimbrogli- like strapiombare
-disimpegnarsi	verb_pres_1_sg	disimpegn- like strapiombare	42	disimpegnati
-disimpiegare	43	disimpieghi	48	disimpieghi	51	disimpieghino
-disimpiegarsi	43	disimpieghi	48	disimpieghi	51	disimpieghino
-disincagliare	verb_pres_1_sg	disincagli- like strapiombare
-disincagliarsi	verb_pres_1_sg	disincagli- like strapiombare	42	disincagliati
 disincrostarsi	verb_pres_1_sg	disincrost- like strapiombare	42	disincrostati
-disingannarsi	verb_pres_1_sg	disingann- like strapiombare	42	disingannati
 disinibire	verb_pres_1_sg	disinibisc- like urgere
 disinibirsi	verb_pres_1_sg	disinibisc- like urgere	42	disinibisciti
-disinnamorarsi	verb_pres_1_sg	disinnamor- like strapiombare	42	disinnamorati
-disinnescare	43	disinneschi	48	disinneschi	51	disinneschino
-disintegrarsi	verb_pres_1_sg	disintegr- like strapiombare	42	disintegrati
-disinteressarsi	verb_pres_1_sg	disinteress- like strapiombare	42	disinteressati
-disintossicare	43	disintossichi	48	disintossichi	51	disintossichino
-disintossicarsi	43	disintossichi	48	disintossichi	51	disintossichino
-disinvestire	verb_pres_1_sg	disinvest- like urgere
-dislegare	43	disleghi	48	disleghi	51	disleghino
 dislocare	43	dislochi	48	dislochi	51	dislochino
 disnodarsi	verb_pres_1_sg	disnod- like strapiombare	42	disnodati
-disobbedire	verb_pres_1_sg	disobbedisc- like urgere
-disobbligare	43	disobblighi	48	disobblighi	51	disobblighino
-disobbligarsi	43	disobblighi	48	disobblighi	51	disobblighino
-disonorarsi	verb_pres_1_sg	disonor- like strapiombare	42	disonorati
-disorientarsi	verb_pres_1_sg	disorient- like strapiombare	42	disorientati
-disormeggiare	verb_pres_1_sg	disormeggi- like strapiombare
 dispaccare	43	dispacchi	48	dispacchi	51	dispacchino
 dispaiare	verb_pres_1_sg	dispai- like strapiombare
 disparire	43	dispaia	48	dispaia	51	dispaiano	55	disparito
 dispegnere	43	dispenga	48	dispenga	51	dispengano
-dispensarsi	verb_pres_1_sg	dispens- like strapiombare	42	dispensati
 disperarsi	verb_pres_1_sg	disper- like strapiombare	42	disperati
 disperdere	verb_pres_1_sg	disperd- like urgere
-disperdersi	verb_pres_1_sg	disperd- like urgere	42	disperditi
 dispiacere	43	dispiaccia	48	dispiaccia	51	dispiacciano
-dispiacersi	43	dispiaccia	48	dispiaccia	51	dispiacciano
-dispiegare	43	dispieghi	48	dispieghi	51	dispieghino
-dispiegarsi	43	dispieghi	48	dispieghi	51	dispieghino
 dispogliare	verb_pres_1_sg	dispogli- like strapiombare
 disporre	43	disponga	48	disponga	51	dispongano
 disporsi	43	disponga	48	disponga	51	dispongano
-dispregiare	verb_pres_1_sg	dispregi- like strapiombare
 disprezzarsi	verb_pres_1_sg	disprezz- like strapiombare	42	disprezzati
 disputarsi	verb_pres_1_sg	disput- like strapiombare	42	disputati
-disqualificare	43	disqualifichi	48	disqualifichi	51	disqualifichino
 disquisire	verb_pres_1_sg	disquisisc- like urgere
-dissanguare	verb_pres_1_sg	dissangu- like strapiombare
 dissanguarsi	verb_pres_1_sg	dissangu- like strapiombare	42	dissanguati
 dissecare	verb_pres_1_sg	dissec- like strapiombare
 disseccare	43	dissecchi	48	dissecchi	51	dissecchino
-disseccarsi	43	dissecchi	48	dissecchi	51	dissecchino
-disselciare	verb_pres_1_sg	disselci- like strapiombare
 dissentire	verb_pres_1_sg	dissent- like urgere
-disseppellire	verb_pres_1_sg	disseppellisc- like urgere	55	dissepolto
 disservire	verb_pres_1_sg	disserv- like urgere
 dissetarsi	verb_pres_1_sg	disset- like strapiombare	42	dissetati
 dissiparsi	verb_pres_1_sg	dissip- like strapiombare	42	dissipati
@@ -1790,7 +1556,6 @@ dissociare	verb_pres_1_sg	dissoci- like strapiombare
 dissociarsi	verb_pres_1_sg	dissoci- like strapiombare	42	dissociati
 dissolvere	verb_pres_1_sg	dissolv- like urgere
 dissolversi	verb_pres_1_sg	dissolv- like urgere	42	dissolviti
-dissomigliare	verb_pres_1_sg	dissomigli- like strapiombare
 dissuadere	verb_pres_1_sg	dissuad- like urgere
 distaccare	43	distacchi	48	distacchi	51	distacchino
 distaccarsi	43	distacchi	48	distacchi	51	distacchino
@@ -1799,29 +1564,20 @@ distanziare	verb_pres_1_sg	distanzi- like strapiombare
 distanziarsi	verb_pres_1_sg	distanzi- like strapiombare	42	distanziati
 distendersi	verb_pres_1_sg	distend- like urgere	42	distenditi
 distinguersi	verb_pres_1_sg	distingu- like urgere	42	distinguiti
-distogliere	43	distolga	48	distolga	51	distolgano
-distogliersi	43	distolga	48	distolga	51	distolgano
-distorcersi	verb_pres_1_sg	distorc- like urgere	42	distorciti
-distraggere	verb_pres_1_sg	distragg- like urgere
 distrarre	43	distragga	48	distragga	51	distraggano
 distrarsi	43	distragga	48	distragga	51	distraggano
 distribuirsi	verb_pres_1_sg	distribuisc- like urgere	42	distribuisciti
-districare	43	districhi	48	districhi	51	districhino
-districarsi	43	districhi	48	districhi	51	districhino
+districare	verb_pres_1_sg	distric- like strapiombare
+districarsi	verb_pres_1_sg	distric- like strapiombare	42	districati
 distrigare	43	distrighi	48	distrighi	51	distrighino
 distrigarsi	43	distrighi	48	distrighi	51	distrighino
 distruggere	verb_pres_1_sg	distrugg- like urgere
 distruggersi	verb_pres_1_sg	distrugg- like urgere	42	distruggiti
-disturbarsi	verb_pres_1_sg	disturb- like strapiombare	42	disturbati
-disubbidire	verb_pres_1_sg	disubbidisc- like urgere
-disuguagliare	verb_pres_1_sg	disuguagli- like strapiombare
-disumanarsi	verb_pres_1_sg	disuman- like strapiombare	42	disumanati
-disumanizzarsi	verb_pres_1_sg	disumanizz- like strapiombare	42	disumanizzati
 disunire	verb_pres_1_sg	disunisc- like urgere
 disunirsi	verb_pres_1_sg	disunisc- like urgere	42	disunisciti
 disvalere	43	disvalga	48	disvalga	51	disvalgano
 disvedere	verb_pres_1_sg	disved- like urgere
-disverre	participle_pres	disvellente- like girare	verb_impf	disvelle- like girare	verb_pres_1_pl	disvell- like volgere	verb_pres_1_sg	disvell- like urgere	3	disvellete
+disverre	participle_pres	disvellente- like girare	verb_impf	disvelle- like girare	verb_pres_1_pl	disvell- like volgere	verb_pres_1_sg	disvell- like urgere	3	disvellete	33	disvelliate
 disviare	2	disvii	30	disvii	43	disvii	48	disvii	51	disviino
 disviarsi	2	disvii	30	disvii	43	disvii	48	disvii	51	disviino
 disvolere	verb_pres_1_sg	disvogli- like urgere	2	disvuoi	4	disvuole
@@ -1830,10 +1586,10 @@ dittongare	43	dittonghi	48	dittonghi	51	dittonghino
 divagare	43	divaghi	48	divaghi	51	divaghino
 divagarsi	43	divaghi	48	divaghi	51	divaghino
 divariare	verb_pres_1_sg	divari- like strapiombare
-divaricare	43	divarichi	48	divarichi	51	divarichino
+divaricare	verb_pres_1_sg	divaric- like strapiombare
 divellere	verb_pres_1_sg	divell- like urgere
 divenire	43	divenga	48	divenga	51	divengano
-diversificare	43	diversifichi	48	diversifichi	51	diversifichino
+diversificare	verb_pres_1_sg	diversific- like strapiombare
 divertire	verb_pres_1_sg	divert- like urgere
 divertirsi	verb_pres_1_sg	divert- like urgere	42	divertiti
 dividersi	verb_pres_1_sg	divid- like urgere	42	dividiti
@@ -1845,12 +1601,11 @@ divulgarsi	43	divulghi	48	divulghi	51	divulghino
 docciare	verb_pres_1_sg	docci- like strapiombare
 docciarsi	verb_pres_1_sg	docci- like strapiombare	42	docciati
 documentarsi	verb_pres_1_sg	document- like strapiombare	42	documentati
-dogare	43	doghi	48	doghi	51	doghino
-dolcificare	43	dolcifichi	48	dolcifichi	51	dolcifichino
+dolcificare	verb_pres_1_sg	dolcific- like strapiombare
 dolere	verb_pres_1_sg	dolg- like urgere	2	duoli	4	duole	42	duoli	55	doluto
 dolersi	43	dolga	48	dolga	51	dolgano
 domandarsi	verb_pres_1_sg	domand- like strapiombare	42	domandati
-domesticare	43	domestichi	48	domestichi	51	domestichino
+domesticare	verb_pres_1_sg	domestic- like strapiombare
 domiciliare	verb_pres_1_sg	domicili- like strapiombare
 domiciliarsi	verb_pres_1_sg	domicili- like strapiombare	42	domiciliati
 dominarsi	verb_pres_1_sg	domin- like strapiombare	42	dominati
@@ -1867,27 +1622,24 @@ dragare	43	draghi	48	draghi	51	draghino
 drappeggiare	verb_pres_1_sg	drappeggi- like strapiombare
 drappeggiarsi	verb_pres_1_sg	drappeggi- like strapiombare	42	drappeggiati
 drizzarsi	verb_pres_1_sg	drizz- like strapiombare	42	drizzati
-drogare	43	droghi	48	droghi	51	droghino
-drogarsi	43	droghi	48	droghi	51	droghino
+drogarsi	verb_pres_1_sg	drog- like strapiombare	42	drogati
 dubbiare	verb_pres_1_sg	dubbi- like strapiombare
 dugliare	verb_pres_1_sg	dugli- like strapiombare
-duplicare	43	duplichi	48	duplichi	51	duplichino
-duplicarsi	43	duplichi	48	duplichi	51	duplichino
-duramificare	43	duramifichi	48	duramifichi	51	duramifichino
+duplicare	verb_pres_1_sg	duplic- like strapiombare
+duplicarsi	verb_pres_1_sg	duplic- like strapiombare	42	duplicati
+duramificare	verb_pres_1_sg	duramific- like strapiombare
 eccedere	verb_pres_1_sg	ecced- like urgere
 eccellere	verb_past	eccel- like volgere
 eccepire	verb_pres_1_sg	eccepisc- like urgere
-eccettuare	verb_pres_1_sg	eccettu- like strapiombare
 eccitarsi	verb_pres_1_sg	eccit- like strapiombare	42	eccitati
 echeggiare	verb_pres_1_sg	echeggi- like strapiombare
 eclissarsi	verb_pres_1_sg	ecliss- like strapiombare	42	eclissati
-edificare	43	edifichi	48	edifichi	51	edifichino
-edificarsi	43	edifichi	48	edifichi	51	edifichino
+edificare	verb_pres_1_sg	edific- like strapiombare
+edificarsi	verb_pres_1_sg	edific- like strapiombare	42	edificati
 educare	43	educhi	48	educhi	51	educhino
 educarsi	43	educhi	48	educhi	51	educhino
 edurre	verb_pres_1_sg	educ- like urgere
 effeminarsi	verb_pres_1_sg	effemin- like strapiombare	42	effeminati
-effettuare	verb_pres_1_sg	effettu- like strapiombare
 effettuarsi	verb_pres_1_sg	effettu- like strapiombare	42	effettuati
 effigiare	verb_pres_1_sg	effigi- like strapiombare
 effondere	verb_pres_1_sg	effond- like urgere
@@ -1896,22 +1648,22 @@ eguagliare	verb_pres_1_sg	eguagli- like strapiombare
 elargire	verb_pres_1_sg	elargisc- like urgere
 eleggere	verb_pres_1_sg	elegg- like urgere
 elencare	43	elenchi	48	elenchi	51	elenchino
-elettrificare	43	elettrifichi	48	elettrifichi	51	elettrifichino
+elettrificare	verb_pres_1_sg	elettrific- like strapiombare
 elevarsi	verb_pres_1_sg	elev- like strapiombare	42	elevati
 elidersi	verb_pres_1_sg	elid- like urgere	42	eliditi
 eliminarsi	verb_pres_1_sg	elimin- like strapiombare	42	eliminati
-elogiare	verb_pres_1_sg	elogi- like strapiombare
+elogiare	verb	eloge- like vivere	verb_pres_1_sg	elogi- like strapiombare	3	elogiate	47	elogiare	52	elogiare
 emaciare	verb_pres_1_sg	emaci- like strapiombare
 emaciarsi	verb_pres_1_sg	emaci- like strapiombare	42	emaciati
 emanarsi	verb_pres_1_sg	eman- like strapiombare	42	emanati
 emanciparsi	verb_pres_1_sg	emancip- like strapiombare	42	emancipati
-embricare	43	embrichi	48	embrichi	51	embrichino
-embricarsi	43	embrichi	48	embrichi	51	embrichino
+embricare	verb_pres_1_sg	embric- like strapiombare
+embricarsi	verb_pres_1_sg	embric- like strapiombare	42	embricati
 emendarsi	verb_pres_1_sg	emend- like strapiombare	42	emendati
 emozionarsi	verb_pres_1_sg	emozion- like strapiombare	42	emozionati
 empiere	participle_pres	empente- like girare	verb_impf	emp- like uscire	verb_past	emp- like uscire	verb_pres_1_sg	empi- like urgere	4	empe	55	empiuto
 empire	verb_pres_1_sg	empi- like urgere
-emulsificare	43	emulsifichi	48	emulsifichi	51	emulsifichino
+emulsificare	verb_pres_1_sg	emulsific- like strapiombare
 encomiare	verb_pres_1_sg	encomi- like strapiombare
 enfiare	verb_pres_1_sg	enfi- like strapiombare
 enfiarsi	verb_pres_1_sg	enfi- like strapiombare	42	enfiati
@@ -1919,23 +1671,20 @@ entusiasmarsi	verb_pres_1_sg	entusiasm- like strapiombare	42	entusiasmati
 enuclearsi	verb_pres_1_sg	enucle- like strapiombare	42	enucleati
 enunciare	verb_pres_1_sg	enunci- like strapiombare
 epicureggiare	verb_pres_1_sg	epicureggi- like strapiombare
-equare	verb_pres_1_sg	equ- like strapiombare
-equilibrarsi	verb_pres_1_sg	equilibr- like strapiombare	42	equilibrati
 equipaggiare	verb_pres_1_sg	equipaggi- like strapiombare
 equipaggiarsi	verb_pres_1_sg	equipaggi- like strapiombare	42	equipaggiati
 equivalere	43	equivalga	48	equivalga	51	equivalgano
 equivocare	43	equivochi	48	equivochi	51	equivochino
 eradere	verb_pres_1_sg	erad- like urgere
-eradicare	43	eradichi	48	eradichi	51	eradichino
+eradicare	verb_pres_1_sg	eradic- like strapiombare
 ereggere	verb_pres_1_sg	eregg- like urgere
 ergere	verb_pres_1_sg	erg- like urgere
 ergersi	verb_pres_1_sg	erg- like urgere	42	ergiti
 erigere	verb_pres_1_sg	erig- like urgere
 erigersi	verb_past	ere- like reggersi	verb_pres_1_sg	erig- like urgere	42	erigiti
 erodere	verb_pres_1_sg	erod- like urgere
-erogare	43	eroghi	48	eroghi	51	eroghino
 erompere	12	eruppi
-erpicare	43	erpichi	48	erpichi	51	erpichino
+erpicare	verb_pres_1_sg	erpic- like strapiombare
 erudire	verb_pres_1_sg	erudisc- like urgere
 erudirsi	verb_pres_1_sg	erudisc- like urgere	42	erudisciti
 esacerbarsi	verb_pres_1_sg	esacerb- like strapiombare	42	esacerbati
@@ -1954,7 +1703,7 @@ escoriarsi	verb_pres_1_sg	escori- like strapiombare	42	escoriati
 escuotere	verb_pres_1_sg	escuot- like urgere
 escutere	verb_pres_1_sg	escut- like urgere
 eseguire	verb_pres_1_sg	eseguisc- like urgere
-esemplificare	43	esemplifichi	48	esemplifichi	51	esemplifichino
+esemplificare	verb_pres_1_sg	esemplific- like strapiombare
 esercire	verb_pres_1_sg	esercisc- like urgere
 esercitarsi	verb_pres_1_sg	esercit- like strapiombare	42	esercitati
 esfoliare	verb_pres_1_sg	esfoli- like strapiombare
@@ -1974,22 +1723,21 @@ espandere	verb_past	espan- like volgere	verb_pres_1_sg	espand- like urgere
 espandersi	verb_past	espan- like tingersi	verb_pres_1_sg	espand- like urgere	42	espanditi
 espatriare	verb_pres_1_sg	espatri- like strapiombare
 espiare	2	espii	30	espii	43	espii	48	espii	51	espiino
-esplicare	43	esplichi	48	esplichi	51	esplichino
-esplicarsi	43	esplichi	48	esplichi	51	esplichino
+esplicare	verb_pres_1_sg	esplic- like strapiombare
+esplicarsi	verb_pres_1_sg	esplic- like strapiombare	42	esplicati
 esplodere	verb_pres_1_sg	esplod- like urgere
 esporre	43	esponga	48	esponga	51	espongano
 esporsi	43	esponga	48	esponga	51	espongano
 esprimersi	verb_pres_1_sg	esprim- like urgere	42	esprimiti
 espropriare	verb_pres_1_sg	espropri- like strapiombare
 espurgare	43	espurghi	48	espurghi	51	espurghino
-essere	verb	sa- like uscire	verb_impf	fo- like girare	verb_past	fu- like fruire	verb_pres_1_pl	si- like girare	verb_pres_1_sg	si- like urgere	0	sono	2	sei	3	siete	4	è	5	sono	6	ero	7	eravamo	8	eri	9	eravate	10	era	11	erano	13	fummo	42	sii	47	essere	52	essere	53	essendo	55	stato
+essere	verb	sa- like vivere	verb_impf	fo- like girare	verb_past	fu- like fruire	verb_pres_1_pl	si- like girare	verb_pres_1_sg	si- like urgere	0	sono	2	sei	3	siete	4	è	5	sono	6	ero	7	eravamo	9	eravate	11	erano	13	fummo	33	siate	42	sii	47	essere	52	essere	53	essendo	55	stato
 essiccare	43	essicchi	48	essicchi	51	essicchino
 essiccarsi	43	essicchi	48	essicchi	51	essicchino
 estasiare	verb_pres_1_sg	estasi- like strapiombare
 estasiarsi	verb_pres_1_sg	estasi- like strapiombare	42	estasiati
 estendersi	verb_pres_1_sg	estend- like urgere	42	estenditi
-estenuare	verb_pres_1_sg	estenu- like strapiombare
-esterificare	43	esterifichi	48	esterifichi	51	esterifichino
+esterificare	verb_pres_1_sg	esterific- like strapiombare
 estinguersi	verb_pres_1_sg	estingu- like urgere	42	estinguiti
 estollersi	verb_pres_1_sg	estoll- like urgere	42	estolliti
 estraniare	verb_pres_1_sg	estrani- like strapiombare
@@ -1997,11 +1745,9 @@ estraniarsi	verb_pres_1_sg	estrani- like strapiombare	42	estraniati
 estrarre	43	estragga	48	estragga	51	estraggano
 estrinsecare	verb_pres_1_sg	estrinsec- like strapiombare
 estrinsecarsi	verb_pres_1_sg	estrinsec- like strapiombare	42	estrinsecati
-estromettersi	verb_pres_1_sg	estromett- like urgere	42	estromettiti
-eterificare	43	eterifichi	48	eterifichi	51	eterifichino
-eterificarsi	43	eterifichi	48	eterifichi	51	eterifichino
+eterificare	verb_pres_1_sg	eterific- like strapiombare
+eterificarsi	verb_pres_1_sg	eterific- like strapiombare	42	eterificati
 eternarsi	verb_pres_1_sg	etern- like strapiombare	42	eternati
-evacuare	verb_pres_1_sg	evacu- like strapiombare
 evadere	verb_pres_1_sg	evad- like urgere
 evidenziare	verb_pres_1_sg	evidenzi- like strapiombare
 evidenziarsi	verb_pres_1_sg	evidenzi- like strapiombare	42	evidenziati
@@ -2009,24 +1755,23 @@ evitarsi	verb_pres_1_sg	evit- like strapiombare	42	evitati
 evocare	43	evochi	48	evochi	51	evochino
 evolvere	verb_pres_1_sg	evolv- like urgere	55	evoluto
 evolversi	43	evolva	48	evolva	51	evolvano	55	evolutosi
-fabbricare	43	fabbrichi	48	fabbrichi	51	fabbrichino
+fabbricare	verb_pres_1_sg	fabbric- like strapiombare
 fagliare	verb_pres_1_sg	fagli- like strapiombare
 falcare	43	falchi	48	falchi	51	falchino
 falciare	verb_pres_1_sg	falci- like strapiombare
 falcidiare	verb_pres_1_sg	falcidi- like strapiombare
 fallarsi	verb_pres_1_sg	fall- like strapiombare	42	fallati
 fallire	verb_pres_1_sg	fallisc- like urgere
-falsificare	43	falsifichi	48	falsifichi	51	falsifichino
-familiarizzarsi	verb_pres_1_sg	familiarizz- like strapiombare	42	familiarizzati
-fantasticare	43	fantastichi	48	fantastichi	51	fantastichino
+falsificare	verb_pres_1_sg	falsific- like strapiombare
+fantasticare	verb_pres_1_sg	fantastic- like strapiombare
 farcire	verb_pres_1_sg	farcisc- like urgere
 fare	verb_pres_1_sg	facci- like urgere	2	fai	4	fa	5	fanno	42	fai
 farfugliare	verb_pres_1_sg	farfugli- like strapiombare
-farneticare	43	farnetichi	48	farnetichi	51	farnetichino
+farneticare	verb_pres_1_sg	farnetic- like strapiombare
 farsi	4	fa	43	faccia	48	faccia	51	facciano
 fasciare	verb_pres_1_sg	fasci- like strapiombare
 fasciarsi	verb_pres_1_sg	fasci- like strapiombare	42	fasciati
-faticare	43	fatichi	48	fatichi	51	fatichino
+faticare	verb_pres_1_sg	fatic- like strapiombare
 favoleggiare	verb_pres_1_sg	favoleggi- like strapiombare
 favoreggiare	verb_pres_1_sg	favoreggi- like strapiombare
 favorire	verb_pres_1_sg	favorisc- like urgere
@@ -2048,7 +1793,6 @@ ficcare	43	ficchi	48	ficchi	51	ficchino
 ficcarsi	43	ficchi	48	ficchi	51	ficchino
 fidanzarsi	verb_pres_1_sg	fidanz- like strapiombare	42	fidanzati
 fidarsi	verb_pres_1_sg	fid- like strapiombare	42	fidati
-figgere	verb_pres_1_sg	figg- like urgere
 figliare	verb_pres_1_sg	figli- like strapiombare
 figurarsi	verb_pres_1_sg	figur- like strapiombare	42	figurati
 fileggiare	verb_pres_1_sg	fileggi- like strapiombare
@@ -2063,15 +1807,13 @@ fiondarsi	verb_pres_1_sg	fiond- like strapiombare	42	fiondati
 fiorentineggiare	verb_pres_1_sg	fiorentineggi- like strapiombare
 fiorire	verb_pres_1_sg	fiorisc- like urgere
 fire	22	fia	23	fiano
-fiscaleggiare	verb_pres_1_sg	fiscaleggi- like strapiombare
 fischiare	verb_pres_1_sg	fischi- like strapiombare
 fissarsi	verb_pres_1_sg	fiss- like strapiombare	42	fissati
 flaggare	43	flagghi	48	flagghi	51	flagghino
 flangiare	verb_pres_1_sg	flangi- like strapiombare
 flettersi	verb_pres_1_sg	flett- like urgere	42	flettiti
-fluidificare	43	fluidifichi	48	fluidifichi	51	fluidifichino
+fluidificare	verb_pres_1_sg	fluidific- like strapiombare
 fluire	verb_pres_1_sg	fluisc- like urgere
-fluttuare	verb_pres_1_sg	fluttu- like strapiombare
 focalizzarsi	verb_pres_1_sg	focalizz- like strapiombare	42	focalizzati
 focheggiare	verb_pres_1_sg	focheggi- like strapiombare
 foggiare	verb_pres_1_sg	foggi- like strapiombare
@@ -2087,42 +1829,32 @@ forbire	verb_pres_1_sg	forbisc- like urgere
 forgiare	verb_pres_1_sg	forgi- like strapiombare
 formalizzarsi	verb_pres_1_sg	formalizz- like strapiombare	42	formalizzati
 formarsi	verb_pres_1_sg	form- like strapiombare	42	formati
-fornicare	43	fornichi	48	fornichi	51	fornichino
+fornicare	verb_pres_1_sg	fornic- like strapiombare
 fornire	verb_pres_1_sg	fornisc- like urgere
 fornirsi	verb_pres_1_sg	fornisc- like urgere	42	fornisciti
-fortificare	43	fortifichi	48	fortifichi	51	fortifichino
-fortificarsi	43	fortifichi	48	fortifichi	51	fortifichino
+fortificare	verb_pres_1_sg	fortific- like strapiombare
+fortificarsi	verb_pres_1_sg	fortific- like strapiombare	42	fortificati
 forviare	2	forvii	30	forvii	43	forvii	48	forvii	51	forviino
 forzarsi	verb_pres_1_sg	forz- like strapiombare	42	forzati
-fotocomporre	43	fotocomponga	48	fotocomponga	51	fotocompongano
 fotocopiare	verb_pres_1_sg	fotocopi- like strapiombare
 fotografare	verb_pres_1_sg	fotograf- like strapiombare
 fottersi	verb_pres_1_sg	fott- like urgere	42	fottiti
 fracassarsi	verb_pres_1_sg	fracass- like strapiombare	42	fracassati
-fraintendersi	verb_pres_1_sg	fraintend- like urgere	42	fraintenditi
 frammentarsi	verb_pres_1_sg	framment- like strapiombare	42	frammentati
-frammettersi	verb_pres_1_sg	frammett- like urgere	42	frammettiti
-frammischiare	verb_pres_1_sg	frammischi- like strapiombare
-frammischiarsi	verb_pres_1_sg	frammischi- like strapiombare	42	frammischiati
 franceseggiare	verb_pres_1_sg	franceseggi- like strapiombare
 frangiare	verb_pres_1_sg	frangi- like strapiombare
 frantumarsi	verb_pres_1_sg	frantum- like strapiombare	42	frantumati
 frapporre	43	frapponga	48	frapponga	51	frappongano
 frapporsi	43	frapponga	48	frapponga	51	frappongano
-frascheggiare	verb_pres_1_sg	frascheggi- like strapiombare
 fraseggiare	verb_pres_1_sg	fraseggi- like strapiombare
-frastagliare	verb_pres_1_sg	frastagli- like strapiombare
-frastagliarsi	verb_pres_1_sg	frastagli- like strapiombare	42	frastagliati
 frazionarsi	verb_pres_1_sg	frazion- like strapiombare	42	frazionati
 freddarsi	verb_pres_1_sg	fredd- like strapiombare	42	freddati
-fregare	43	freghi	48	freghi	51	freghino
-fregarsi	43	freghi	48	freghi	51	freghino
+fregarsi	verb_pres_1_sg	freg- like strapiombare	42	fregati
 fregiare	verb_pres_1_sg	fregi- like strapiombare
 fregiarsi	verb_pres_1_sg	fregi- like strapiombare	42	fregiati
 fremire	verb_pres_1_sg	fremisc- like urgere
 frenarsi	verb_pres_1_sg	fren- like strapiombare	42	frenati
 frequentarsi	verb_pres_1_sg	frequent- like strapiombare	42	frequentati
-friggere	verb_pres_1_sg	frigg- like urgere
 frinire	verb_pres_1_sg	frinisc- like urgere
 frivoleggiare	verb_pres_1_sg	frivoleggi- like strapiombare
 frizionarsi	verb_pres_1_sg	frizion- like strapiombare	42	frizionati
@@ -2131,11 +1863,9 @@ frollarsi	verb_pres_1_sg	froll- like strapiombare	42	frollati
 frondeggiare	verb_pres_1_sg	frondeggi- like strapiombare
 fronteggiare	verb_pres_1_sg	fronteggi- like strapiombare
 fronteggiarsi	verb_pres_1_sg	fronteggi- like strapiombare	42	fronteggiati
-frugare	43	frughi	48	frughi	51	frughino
 fruire	verb_pres_1_sg	fruisc- like urgere
 frusciare	verb_pres_1_sg	frusci- like strapiombare
-fruttificare	43	fruttifichi	48	fruttifichi	51	fruttifichino
-fugare	43	fughi	48	fughi	51	fughino
+fruttificare	verb_pres_1_sg	fruttific- like strapiombare
 fuggire	verb_pres_1_sg	fugg- like urgere
 fulminarsi	verb_pres_1_sg	fulmin- like strapiombare	42	fulminati
 fumarsi	verb_pres_1_sg	fum- like strapiombare	42	fumati
@@ -2153,16 +1883,14 @@ garantire	verb_pres_1_sg	garantisc- like urgere
 garantirsi	verb_pres_1_sg	garantisc- like urgere	42	garantisciti
 gareggiare	verb_pres_1_sg	gareggi- like strapiombare
 garrire	verb_pres_1_sg	garrisc- like urgere
-gassificare	43	gassifichi	48	gassifichi	51	gassifichino
+gassificare	verb_pres_1_sg	gassific- like strapiombare
 gatteggiare	verb_pres_1_sg	gatteggi- like strapiombare
 gelatinizzarsi	verb_pres_1_sg	gelatinizz- like strapiombare	42	gelatinizzati
-gelificare	43	gelifichi	48	gelifichi	51	gelifichino
+gelificare	verb_pres_1_sg	gelific- like strapiombare
 gemellarsi	verb_pres_1_sg	gemell- like strapiombare	42	gemellati
-gemicare	43	gemichi	48	gemichi	51	gemichino
+gemicare	verb_pres_1_sg	gemic- like strapiombare
 generarsi	verb_pres_1_sg	gener- like strapiombare	42	generati
-gentrificare	43	gentrifichi	48	gentrifichi	51	gentrifichino
-genuflettersi	verb_pres_1_sg	genuflett- like urgere	42	genuflettiti
-georeferenziare	verb_pres_1_sg	georeferenzi- like strapiombare
+gentrificare	verb_pres_1_sg	gentrific- like strapiombare
 germogliare	verb_pres_1_sg	germogli- like strapiombare
 gestire	verb_pres_1_sg	gestisc- like urgere
 gestirsi	verb_pres_1_sg	gestisc- like urgere	42	gestisciti
@@ -2177,49 +1905,46 @@ giocare	43	giochi	48	giochi	51	giochino
 giocarsi	43	giochi	48	giochi	51	giochino
 gioire	verb_pres_1_sg	gioisc- like urgere
 giostrarsi	verb_pres_1_sg	giostr- like strapiombare	42	giostrati
-giovaneggiare	verb_pres_1_sg	giovaneggi- like strapiombare
 giovarsi	verb_pres_1_sg	giov- like strapiombare	42	giovati
 girarsi	verb_pres_1_sg	gir- like strapiombare	42	girati
 gire	verb_pres_1_sg	vad- like urgere	2	vai	4	va	5	vanno	42	va'
 girovagare	43	girovaghi	48	girovaghi	51	girovaghino
 giucare	43	giuchi	48	giuchi	51	giuchino
-giudicare	43	giudichi	48	giudichi	51	giudichino
-giudicarsi	43	giudichi	48	giudichi	51	giudichino
+giudicare	verb_pres_1_sg	giudic- like strapiombare
+giudicarsi	verb_pres_1_sg	giudic- like strapiombare	42	giudicati
 giulebbarsi	verb_pres_1_sg	giulebb- like strapiombare	42	giulebbati
 giuocare	43	giuochi	48	giuochi	51	giuochino
 giuracchiare	verb_pres_1_sg	giuracchi- like strapiombare
 giurarsi	verb_pres_1_sg	giur- like strapiombare	42	giurati
 giustapporre	43	giustapponga	48	giustapponga	51	giustappongano
 giustapporsi	43	giustapponga	48	giustapponga	51	giustappongano
-giustificare	43	giustifichi	48	giustifichi	51	giustifichino
-giustificarsi	43	giustifichi	48	giustifichi	51	giustifichino
+giustificare	verb_pres_1_sg	giustific- like strapiombare
+giustificarsi	verb_pres_1_sg	giustific- like strapiombare	42	giustificati
 giustiziare	verb_pres_1_sg	giustizi- like strapiombare
 gloriare	verb_pres_1_sg	glori- like strapiombare
 gloriarsi	verb_pres_1_sg	glori- like strapiombare	42	gloriati
-glorificare	43	glorifichi	48	glorifichi	51	glorifichino
-glorificarsi	43	glorifichi	48	glorifichi	51	glorifichino
+glorificare	verb_pres_1_sg	glorific- like strapiombare
+glorificarsi	verb_pres_1_sg	glorific- like strapiombare	42	glorificati
 gocciare	verb_pres_1_sg	gocci- like strapiombare
 godere	verb_pres_1_sg	god- like urgere
-godersi	verb	god- like vedersi	verb_pres_1_sg	god- like urgere	42	goditi
+godersi	verb	god- like vivere	verb_pres_1_sg	god- like urgere	42	goditi	47	goderti	52	godersi
 gonfiare	verb_pres_1_sg	gonfi- like strapiombare
 gonfiarsi	verb_pres_1_sg	gonfi- like strapiombare	42	gonfiati
 gorgheggiare	verb_pres_1_sg	gorgheggi- like strapiombare
 gorgogliare	verb_pres_1_sg	gorgogli- like strapiombare
-gozzovigliare	verb_pres_1_sg	gozzovigli- like strapiombare
 gracchiare	verb_pres_1_sg	gracchi- like strapiombare
 gradire	verb_pres_1_sg	gradisc- like urgere
-graduare	verb_pres_1_sg	gradu- like strapiombare
 graffare	verb_pres_1_sg	graff- like strapiombare
 graffiare	verb_pres_1_sg	graffi- like strapiombare
 graffiarsi	verb_pres_1_sg	graffi- like strapiombare	42	graffiati
 graffire	verb_pres_1_sg	graffisc- like urgere
-graficare	43	grafichi	48	grafichi	51	grafichino
+graficare	verb_pres_1_sg	grafic- like strapiombare
 granagliare	verb_pres_1_sg	granagli- like strapiombare
 grandeggiare	verb_pres_1_sg	grandeggi- like strapiombare
 granire	verb_pres_1_sg	granisc- like urgere
 graticciare	verb_pres_1_sg	graticci- like strapiombare
-gratificare	43	gratifichi	48	gratifichi	51	gratifichino
-gratificarsi	43	gratifichi	48	gratifichi	51	gratifichino
+gratificare	verb_pres_1_sg	gratific- like strapiombare
+gratificarsi	verb_pres_1_sg	gratific- like strapiombare	42	gratificati
 grattarsi	verb_pres_1_sg	gratt- like strapiombare	42	grattati
 grattugiare	verb_pres_1_sg	grattugi- like strapiombare
 graziare	verb_pres_1_sg	grazi- like strapiombare
@@ -2230,7 +1955,6 @@ griffare	verb_pres_1_sg	griff- like strapiombare
 grigliare	verb_pres_1_sg	grigli- like strapiombare
 gripparsi	verb_pres_1_sg	gripp- like strapiombare	42	grippati
 groccare	43	grocchi	48	grocchi	51	grocchino
-grugare	43	grughi	48	grughi	51	grughino
 grugnire	verb_pres_1_sg	grugnisc- like urgere
 guadagnarsi	verb_pres_1_sg	guadagn- like strapiombare	42	guadagnati
 guadambiare	verb_pres_1_sg	guadambi- like strapiombare
@@ -2246,15 +1970,14 @@ guerreggiarsi	verb_pres_1_sg	guerreggi- like strapiombare	42	guerreggiati
 gufare	verb_pres_1_sg	guf- like strapiombare
 guidarsi	verb_pres_1_sg	guid- like strapiombare	42	guidati
 gustarsi	verb_pres_1_sg	gust- like strapiombare	42	gustati
-havere	verb_past	hebb- like urgere	verb_pres_1_pl	habbi- like girare	verb_pres_1_sg	habbi- like urgere	0	ho	2	hai	4	ha	5	hanno
+havere	verb_past	hebb- like urgere	verb_pres_1_pl	habbi- like girare	verb_pres_1_sg	habbi- like urgere	0	ho	2	hai	4	ha	5	hanno	33	habbiate
 humiliare	verb_pres_1_sg	humili- like strapiombare
 iacere	1	iacemo	5	iaccio	13	iacestimo	15	iacestivo	18	iacerraio	22	iacerrao	23	iacerraco	24	iaceria	25	iaceriamo	27	iaceriavo	29	iaceriano	39	iaceste	41	iacessino	43	iaccia	48	iaccia	51	iacciano
-identificare	43	identifichi	48	identifichi	51	identifichino
-identificarsi	43	identifichi	48	identifichi	51	identifichino
+identificare	verb_pres_1_sg	identific- like strapiombare
+identificarsi	verb_pres_1_sg	identific- like strapiombare	42	identificati
 idoleggiare	verb_pres_1_sg	idoleggi- like strapiombare
 idratarsi	verb_pres_1_sg	idrat- like strapiombare	42	idratati
 idrolizzarsi	verb_pres_1_sg	idrolizz- like strapiombare	42	idrolizzati
-ignifugare	43	ignifughi	48	ignifughi	51	ignifughino
 ignorarsi	verb_pres_1_sg	ignor- like strapiombare	42	ignorati
 illanguidire	verb_pres_1_sg	illanguidisc- like urgere
 illeggiadrire	verb_pres_1_sg	illeggiadrisc- like urgere
@@ -2282,7 +2005,6 @@ imbastardirsi	verb_pres_1_sg	imbastardisc- like urgere	42	imbastardisciti
 imbastire	verb_pres_1_sg	imbastisc- like urgere
 imbastirsi	verb_pres_1_sg	imbastisc- like urgere	42	imbastisciti
 imbattersi	verb_pres_1_sg	imbatt- like urgere	42	imbattiti
-imbavagliare	verb_pres_1_sg	imbavagli- like strapiombare
 imbeccare	43	imbecchi	48	imbecchi	51	imbecchino
 imbellettarsi	verb_pres_1_sg	imbellett- like strapiombare	42	imbellettati
 imbellire	verb_pres_1_sg	imbellisc- like urgere
@@ -2291,7 +2013,7 @@ imbestialire	verb_pres_1_sg	imbestialisc- like urgere
 imbestialirsi	verb_pres_1_sg	imbestialisc- like urgere	42	imbestialisciti
 imbestiare	verb_pres_1_sg	imbesti- like strapiombare
 imbevere	verb_pres_1_sg	imbev- like urgere
-imbeversi	12	imbevvi	18	imberrò	22	imberrà	23	imberranno	26	imberresti	43	imbeva	48	imbeva	51	imbevano
+imbeversi	verb	imber- like vivere	verb_past	imbevv- like urgere	verb_pres_1_sg	imbev- like urgere	3	imbevete	42	imbeviti	47	imbeverti	52	imbeversi
 imbiaccare	43	imbiacchi	48	imbiacchi	51	imbiacchino
 imbiancare	43	imbianchi	48	imbianchi	51	imbianchino
 imbiancarsi	43	imbianchi	48	imbianchi	51	imbianchino
@@ -2386,9 +2108,9 @@ impataccarsi	43	impatacchi	48	impatacchi	51	impatacchino
 impaurire	verb_pres_1_sg	impaurisc- like urgere
 impaurirsi	verb_pres_1_sg	impaurisc- like urgere	42	impaurisciti
 impazzire	verb_pres_1_sg	impazzisc- like urgere
-impeciare	verb	impece- like uscire	verb_pres_1_sg	impeci- like strapiombare	3	impeciate	47	impeciare	52	impeciare
+impeciare	verb	impece- like vivere	verb_pres_1_sg	impeci- like strapiombare	3	impeciate	47	impeciare	52	impeciare
 impedantire	verb_pres_1_sg	impedantisc- like urgere
-impedicare	43	impedichi	48	impedichi	51	impedichino
+impedicare	verb_pres_1_sg	impedic- like strapiombare
 impedire	verb_pres_1_sg	impedisc- like urgere
 impedirsi	verb_pres_1_sg	impedisc- like urgere	42	impedisciti
 impegnarsi	verb_pres_1_sg	impegn- like strapiombare	42	impegnati
@@ -2405,7 +2127,6 @@ impermeabilizzarsi	verb_pres_1_sg	impermeabilizz- like strapiombare	42	impermeab
 imperniare	verb_pres_1_sg	imperni- like strapiombare
 impestarsi	verb_pres_1_sg	impest- like strapiombare	42	impestati
 impiagare	43	impiaghi	48	impiaghi	51	impiaghino
-impiallacciare	verb_pres_1_sg	impiallacci- like strapiombare
 impiantarsi	verb_pres_1_sg	impiant- like strapiombare	42	impiantati
 impiastricciare	verb_pres_1_sg	impiastricci- like strapiombare
 impiccare	43	impicchi	48	impicchi	51	impicchino
@@ -2416,8 +2137,7 @@ impicciolire	verb_pres_1_sg	impicciolisc- like urgere
 impiccolire	verb_pres_1_sg	impiccolisc- like urgere
 impidocchiare	verb_pres_1_sg	impidocchi- like strapiombare
 impidocchiarsi	verb_pres_1_sg	impidocchi- like strapiombare	42	impidocchiati
-impiegare	43	impieghi	48	impieghi	51	impieghino
-impiegarsi	43	impieghi	48	impieghi	51	impieghino
+impiegarsi	verb_pres_1_sg	impieg- like strapiombare	42	impiegati
 impietosire	verb_pres_1_sg	impietosisc- like urgere
 impietosirsi	verb_pres_1_sg	impietosisc- like urgere	42	impietosisciti
 impietrire	verb_pres_1_sg	impietrisc- like urgere
@@ -2426,12 +2146,11 @@ impigliarsi	verb_pres_1_sg	impigli- like strapiombare	42	impigliati
 impignere	43	impinga	48	impinga	51	impingano
 impigrire	verb_pres_1_sg	impigrisc- like urgere
 impigrirsi	verb_pres_1_sg	impigrisc- like urgere	42	impigrisciti
-impinguare	verb_pres_1_sg	impingu- like strapiombare
 impinguarsi	verb_pres_1_sg	impingu- like strapiombare	42	impinguati
 impinzarsi	verb_pres_1_sg	impinz- like strapiombare	42	impinzati
 impiparsi	verb_pres_1_sg	impip- like strapiombare	42	impipati
 impiumarsi	verb_pres_1_sg	impium- like strapiombare	42	impiumati
-implicare	43	implichi	48	implichi	51	implichino
+implicare	verb_pres_1_sg	implic- like strapiombare
 implodere	verb_pres_1_sg	implod- like urgere
 impolparsi	verb_pres_1_sg	impolp- like strapiombare	42	impolpati
 impoltronire	verb_pres_1_sg	impoltronisc- like urgere
@@ -2453,7 +2172,6 @@ impreziosire	verb_pres_1_sg	impreziosisc- like urgere
 imprimersi	verb_pres_1_sg	imprim- like urgere	42	imprimiti
 improntarsi	verb_pres_1_sg	impront- like strapiombare	42	improntati
 improsciuttire	verb_pres_1_sg	improsciuttisc- like urgere
-impruare	verb_pres_1_sg	impru- like strapiombare
 impruarsi	verb_pres_1_sg	impru- like strapiombare	42	impruati
 impuntarsi	verb_pres_1_sg	impunt- like strapiombare	42	impuntati
 impuntire	verb_pres_1_sg	impuntisc- like urgere
@@ -2508,12 +2226,11 @@ incaparsi	verb_pres_1_sg	incap- like strapiombare	42	incapati
 incaponirsi	verb_pres_1_sg	incaponisc- like urgere	42	incaponisciti
 incappiare	verb_pres_1_sg	incappi- like strapiombare
 incappottarsi	verb_pres_1_sg	incappott- like strapiombare	42	incappottati
-incappucciare	verb_pres_1_sg	incappucci- like strapiombare
 incappucciarsi	verb_pres_1_sg	incappucci- like strapiombare	42	incappucciati
 incapricciarsi	verb_pres_1_sg	incapricci- like strapiombare	42	incapricciati
 incardinarsi	verb_pres_1_sg	incardin- like strapiombare	42	incardinati
-incaricare	43	incarichi	48	incarichi	51	incarichino
-incaricarsi	43	incarichi	48	incarichi	51	incarichino
+incaricare	verb_pres_1_sg	incaric- like strapiombare
+incaricarsi	verb_pres_1_sg	incaric- like strapiombare	42	incaricati
 incarnire	verb_pres_1_sg	incarnisc- like urgere
 incarnirsi	verb_pres_1_sg	incarnisc- like urgere	42	incarnisciti
 incarognire	verb_pres_1_sg	incarognisc- like urgere
@@ -2527,7 +2244,6 @@ incatenarsi	verb_pres_1_sg	incaten- like strapiombare	42	incatenati
 incattivire	verb_pres_1_sg	incattivisc- like urgere
 incavalcare	43	incavalchi	48	incavalchi	51	incavalchino
 incavalcarsi	43	incavalchi	48	incavalchi	51	incavalchino
-incavigliare	verb_pres_1_sg	incavigli- like strapiombare
 incavolarsi	verb_pres_1_sg	incavol- like strapiombare	42	incavolati
 incazzarsi	verb_pres_1_sg	incazz- like strapiombare	42	incazzati
 incedere	verb_pres_1_sg	inced- like urgere
@@ -2536,7 +2252,7 @@ incendiarsi	verb_pres_1_sg	incendi- like strapiombare	42	incendiati
 incentrarsi	verb_pres_1_sg	incentr- like strapiombare	42	incentrati
 incepparsi	verb_pres_1_sg	incepp- like strapiombare	42	inceppati
 inceralaccare	43	inceralacchi	48	inceralacchi	51	inceralacchino
-incespicare	43	incespichi	48	incespichi	51	incespichino
+incespicare	verb_pres_1_sg	incespic- like strapiombare
 inchiedere	verb_pres_1_sg	inchied- like urgere
 inchinarsi	verb_pres_1_sg	inchin- like strapiombare	42	inchinati
 inchiodarsi	verb_pres_1_sg	inchiod- like strapiombare	42	inchiodati
@@ -2564,7 +2280,6 @@ incomodarsi	verb_pres_1_sg	incomod- like strapiombare	42	incomodati
 inconcare	43	inconchi	48	inconchi	51	inconchino
 inconocchiare	verb_pres_1_sg	inconocchi- like strapiombare
 incontrarsi	verb_pres_1_sg	incontr- like strapiombare	42	incontrati
-incoraggiare	verb_pres_1_sg	incoraggi- like strapiombare
 incoraggiarsi	verb_pres_1_sg	incoraggi- like strapiombare	42	incoraggiati
 incordarsi	verb_pres_1_sg	incord- like strapiombare	42	incordati
 incorniciare	verb_pres_1_sg	incornici- like strapiombare
@@ -2593,17 +2308,15 @@ indebitarsi	verb_pres_1_sg	indebit- like strapiombare	42	indebitati
 indebolire	verb_pres_1_sg	indebolisc- like urgere
 indebolirsi	verb_pres_1_sg	indebolisc- like urgere	42	indebolisciti
 indemaniare	verb_pres_1_sg	indemani- like strapiombare
-indicare	43	indichi	48	indichi	51	indichino
-indicarsi	43	indichi	48	indichi	51	indichino
+indicare	verb_pres_1_sg	indic- like strapiombare
+indicarsi	verb_pres_1_sg	indic- like strapiombare	42	indicati
 indietreggiare	verb_pres_1_sg	indietreggi- like strapiombare
 indignarsi	verb_pres_1_sg	indign- like strapiombare	42	indignati
-indire	verb_pres_1_sg	indic- like urgere
-indirigere	55	indiritto
-indirizzarsi	verb_pres_1_sg	indirizz- like strapiombare	42	indirizzati
+indire	43	indica	48	indica	51	indicano
+indirigere	verb_past	indiri- like reggere
 indispettire	verb_pres_1_sg	indispettisc- like urgere
 indispettirsi	verb_pres_1_sg	indispettisc- like urgere	42	indispettisciti
 indisporre	43	indisponga	48	indisponga	51	indispongano
-individuare	verb_pres_1_sg	individu- like strapiombare
 individuarsi	verb_pres_1_sg	individu- like strapiombare	42	individuati
 indiziare	verb_pres_1_sg	indizi- like strapiombare
 indolcire	verb_pres_1_sg	indolcisc- like urgere
@@ -2622,7 +2335,7 @@ industriarsi	verb_pres_1_sg	industri- like strapiombare	42	industriati
 inebetire	verb_pres_1_sg	inebetisc- like urgere
 inebetirsi	verb_pres_1_sg	inebetisc- like urgere	42	inebetisciti
 inebriare	verb_pres_1_sg	inebri- like strapiombare
-inerpicarsi	43	inerpichi	48	inerpichi	51	inerpichino
+inerpicarsi	verb_pres_1_sg	inerpic- like strapiombare	42	inerpicati
 infagottarsi	verb_pres_1_sg	infagott- like strapiombare	42	infagottati
 infanatichire	verb_pres_1_sg	infanatichisc- like urgere
 infangare	43	infanghi	48	infanghi	51	infanghino
@@ -2630,7 +2343,6 @@ infangarsi	43	infanghi	48	infanghi	51	infanghino
 infarcire	verb_pres_1_sg	infarcisc- like urgere
 infastidire	verb_pres_1_sg	infastidisc- like urgere
 infastidirsi	verb_pres_1_sg	infastidisc- like urgere	42	infastidisciti
-infatuare	verb_pres_1_sg	infatu- like strapiombare
 infatuarsi	verb_pres_1_sg	infatu- like strapiombare	42	infatuati
 infeltrire	verb_pres_1_sg	infeltrisc- like urgere
 infeltrirsi	verb_pres_1_sg	infeltrisc- like urgere	42	infeltrisciti
@@ -2657,7 +2369,6 @@ infistolire	verb_pres_1_sg	infistolisc- like urgere
 infittire	verb_pres_1_sg	infittisc- like urgere
 infittirsi	verb_pres_1_sg	infittisc- like urgere	42	infittisciti
 inflaccidire	verb_pres_1_sg	inflaccidisc- like urgere
-infliggere	verb_pres_1_sg	infligg- like urgere
 infliggersi	verb_pres_1_sg	infligg- like urgere	42	infliggiti
 infocare	4	infuoca	30	infuochi	42	infuoca	43	infuochi	48	infuochi	51	infuochino
 infocarsi	4	infuoca	30	infuochi	43	infuochi	48	infuochi	51	infuochino
@@ -2680,8 +2391,6 @@ infossarsi	verb_pres_1_sg	infoss- like strapiombare	42	infossati
 infradiciare	verb_pres_1_sg	infradici- like strapiombare
 infradiciarsi	verb_pres_1_sg	infradici- like strapiombare	42	infradiciati
 infragilire	verb_pres_1_sg	infragilisc- like urgere
-inframmettersi	verb_pres_1_sg	inframmett- like urgere	42	inframmettiti
-inframmischiare	verb_pres_1_sg	inframmischi- like strapiombare
 infrancesarsi	verb_pres_1_sg	infrances- like strapiombare	42	infrancesati
 infrangersi	verb_pres_1_sg	infrang- like urgere	42	infrangiti
 infrapporre	43	infrapponga	48	infrapponga	51	infrappongano
@@ -2756,14 +2465,13 @@ inguantarsi	verb_pres_1_sg	inguant- like strapiombare	42	inguantati
 ingubbiare	verb_pres_1_sg	ingubbi- like strapiombare
 inibire	verb_pres_1_sg	inibisc- like urgere
 iniettarsi	verb_pres_1_sg	iniett- like strapiombare	42	iniettati
-inimicare	43	inimichi	48	inimichi	51	inimichino
-inimicarsi	43	inimichi	48	inimichi	51	inimichino
+inimicare	verb_pres_1_sg	inimic- like strapiombare
+inimicarsi	verb_pres_1_sg	inimic- like strapiombare	42	inimicati
 iniziare	verb_pres_1_sg	inizi- like strapiombare
 iniziarsi	verb_pres_1_sg	inizi- like strapiombare	42	iniziati
 inleiarsi	verb_pres_1_sg	inlei- like strapiombare	42	inleiati
 inluiarsi	verb_pres_1_sg	inlui- like strapiombare	42	inluiati
 inmiarsi	2	inmii	30	inmii	43	inmii	48	inmii	51	inmiino
-innacquare	verb_pres_1_sg	innacqu- like strapiombare
 innaffiare	verb_pres_1_sg	innaffi- like strapiombare
 innalzarsi	verb_pres_1_sg	innalz- like strapiombare	42	innalzati
 innamorarsi	verb_pres_1_sg	innamor- like strapiombare	42	innamorati
@@ -2797,7 +2505,6 @@ inscrivere	verb_pres_1_sg	inscriv- like urgere
 insecchire	verb_pres_1_sg	insecchisc- like urgere
 insediare	verb_pres_1_sg	insedi- like strapiombare
 insediarsi	verb_pres_1_sg	insedi- like strapiombare	42	insediati
-insegare	43	inseghi	48	inseghi	51	inseghino
 insegnarsi	verb_pres_1_sg	insegn- like strapiombare	42	insegnati
 inseguire	verb_pres_1_sg	insegu- like urgere
 inseguirsi	verb_pres_1_sg	insegu- like urgere	42	inseguiti
@@ -2809,7 +2516,6 @@ inserpentire	verb_pres_1_sg	inserpentisc- like urgere
 inserpentirsi	verb_pres_1_sg	inserpentisc- like urgere	42	inserpentisciti
 insidiare	verb_pres_1_sg	insidi- like strapiombare
 insignire	verb_pres_1_sg	insignisc- like urgere
-insinuare	verb_pres_1_sg	insinu- like strapiombare
 insinuarsi	verb_pres_1_sg	insinu- like strapiombare	42	insinuati
 insistere	verb_pres_1_sg	insist- like urgere
 insolentire	verb_pres_1_sg	insolentisc- like urgere
@@ -2833,7 +2539,6 @@ insultarsi	verb_pres_1_sg	insult- like strapiombare	42	insultati
 insuperbire	verb_pres_1_sg	insuperbisc- like urgere
 insuperbirsi	verb_pres_1_sg	insuperbisc- like urgere	42	insuperbisciti
 intabaccare	43	intabacchi	48	intabacchi	51	intabacchino
-intabarrarsi	verb_pres_1_sg	intabarr- like strapiombare	42	intabarrati
 intaccare	43	intacchi	48	intacchi	51	intacchino
 intagliare	verb_pres_1_sg	intagli- like strapiombare
 intarlarsi	verb_pres_1_sg	intarl- like strapiombare	42	intarlati
@@ -2845,18 +2550,13 @@ intelaiare	verb_pres_1_sg	intelai- like strapiombare
 intendersi	verb_pres_1_sg	intend- like urgere	42	intenditi
 intenebrarsi	verb_pres_1_sg	intenebr- like strapiombare	42	intenebrati
 intenerirsi	verb_pres_1_sg	intenerisc- like urgere	42	intenerisciti
-intensificare	43	intensifichi	48	intensifichi	51	intensifichino
-intensificarsi	43	intensifichi	48	intensifichi	51	intensifichino
+intensificare	verb_pres_1_sg	intensific- like strapiombare
+intensificarsi	verb_pres_1_sg	intensific- like strapiombare	42	intensificati
 intepidire	verb_pres_1_sg	intepidisc- like urgere
 interagire	verb_pres_1_sg	interagisc- like urgere
-intercambiare	verb_pres_1_sg	intercambi- like strapiombare
 intercedere	verb_pres_1_sg	interced- like urgere
-intercollegare	43	intercolleghi	48	intercolleghi	51	intercolleghino
-interconnettersi	verb_pres_1_sg	interconnett- like urgere	42	interconnettiti
-interconvertire	verb_pres_1_sg	interconvert- like urgere
-interconvertirsi	verb_pres_1_sg	interconvert- like urgere	42	interconvertiti
 intercorrere	verb_pres_1_sg	intercorr- like urgere
-interdire	verb_pres_1_sg	interdic- like urgere
+interdire	43	interdica	48	interdica	51	interdicano
 interessarsi	verb_pres_1_sg	interess- like strapiombare	42	interessati
 interfacciare	verb_pres_1_sg	interfacci- like strapiombare
 interfacciarsi	verb_pres_1_sg	interfacci- like strapiombare	42	interfacciati
@@ -2865,10 +2565,7 @@ interfoliare	verb_pres_1_sg	interfoli- like strapiombare
 interlacciare	verb_pres_1_sg	interlacci- like strapiombare
 interporre	43	interponga	48	interponga	51	interpongano
 interporsi	43	interponga	48	interponga	51	interpongano
-interrogare	43	interroghi	48	interroghi	51	interroghino
-interrogarsi	43	interroghi	48	interroghi	51	interroghino
-interrompersi	verb_pres_1_sg	interromp- like urgere	42	interrompiti
-interscambiare	verb_pres_1_sg	interscambi- like strapiombare
+interrogarsi	verb_pres_1_sg	interrog- like strapiombare	42	interrogati
 intersecare	verb_pres_1_sg	intersec- like strapiombare
 intersecarsi	verb_pres_1_sg	intersec- like strapiombare	42	intersecati
 intertenere	43	intertenga	48	intertenga	51	intertengano
@@ -2894,23 +2591,19 @@ intorbidire	verb_pres_1_sg	intorbidisc- like urgere
 intorbidirsi	verb_pres_1_sg	intorbidisc- like urgere	42	intorbidisciti
 intormentire	verb_pres_1_sg	intormentisc- like urgere
 intorpidire	verb_pres_1_sg	intorpidisc- like urgere
-intossicare	43	intossichi	48	intossichi	51	intossichino
-intossicarsi	43	intossichi	48	intossichi	51	intossichino
-intralasciare	verb_pres_1_sg	intralasci- like strapiombare
+intossicare	verb_pres_1_sg	intossic- like strapiombare
+intossicarsi	verb_pres_1_sg	intossic- like strapiombare	42	intossicati
 intralciare	verb_pres_1_sg	intralci- like strapiombare
 intrasentire	verb_pres_1_sg	intrasent- like urgere
-intrattenere	43	intrattenga	48	intrattenga	51	intrattengano
-intrattenersi	43	intrattenga	48	intrattenga	51	intrattengano
 intravedere	verb_pres_1_sg	intraved- like urgere
 intravedersi	verb_pres_1_sg	intraved- like urgere	42	intravediti
 intravenire	43	intravenga	48	intravenga	51	intravengano
-intravienire	0	intraviengo	1	intravienimo	2	intravienghi	4	intraviè	5	intraviengheno	7	intravienimio	9	intravienivio	11	intravieniveno	12	intravinni	14	intravienissi	18	intravierò	22	intravierà	23	intravieranno	24	intravienirebbi	25	intravieniressimo	26	intravieniressi	30	intravienghi	31	intravienimo	33	intravienite	43	intravienghi	48	intravienghi	51	intravienghino	55	intravienuto
+intravienire	0	intraviengo	1	intravienimo	2	intravienghi	4	intraviè	5	intraviengheno	7	intravienimio	9	intravienivio	11	intravieniveno	12	intravinni	14	intravienissi	18	intravierò	22	intravierà	23	intravieranno	24	intravienirebbi	25	intravieniressimo	26	intravieniressi	30	intravienghi	31	intravienimo	33	intravienite	43	intravienghi	44	intravienimo	48	intravienghi	51	intravienghino	55	intravienuto
 intravvedere	verb_pres_1_sg	intravved- like urgere
-intravvenire	43	intravvenga	48	intravvenga	51	intravvengano
 intrecciare	verb_pres_1_sg	intrecci- like strapiombare
 intrecciarsi	verb_pres_1_sg	intrecci- like strapiombare	42	intrecciati
-intricare	43	intrichi	48	intrichi	51	intrichino
-intricarsi	43	intrichi	48	intrichi	51	intrichino
+intricare	verb_pres_1_sg	intric- like strapiombare
+intricarsi	verb_pres_1_sg	intric- like strapiombare	42	intricati
 intrigare	43	intrighi	48	intrighi	51	intrighino
 intrigarsi	43	intrighi	48	intrighi	51	intrighino
 intrinsecare	verb_pres_1_sg	intrinsec- like strapiombare
@@ -2918,14 +2611,11 @@ intripparsi	verb_pres_1_sg	intripp- like strapiombare	42	intrippati
 intristire	verb_pres_1_sg	intristisc- like urgere
 introdurre	verb_pres_1_sg	introduc- like urgere
 introdursi	verb_pres_1_sg	introduc- like urgere	42	introduciti
-introflettersi	verb_pres_1_sg	introflett- like urgere	42	introflettiti
-intromettersi	verb_pres_1_sg	intromett- like urgere	42	intromettiti
 introvertere	verb_past	introvers- like ardere	verb_pres_1_sg	introvert- like urgere
 introvertersi	verb_past	introvers- like perdersi	verb_pres_1_sg	introvert- like urgere	42	introvertiti
 introvertire	verb_pres_1_sg	introvertisc- like urgere
 introvertirsi	verb_pres_1_sg	introvertisc- like urgere	42	introvertisciti
 intrufolarsi	verb_pres_1_sg	intrufol- like strapiombare	42	intrufolati
-intrugliare	verb_pres_1_sg	intrugli- like strapiombare
 intrugliarsi	verb_pres_1_sg	intrugli- like strapiombare	42	intrugliati
 intrupparsi	verb_pres_1_sg	intrupp- like strapiombare	42	intruppati
 intuarsi	verb_pres_1_sg	intu- like strapiombare	42	intuati
@@ -2989,7 +2679,7 @@ inzupparsi	verb_pres_1_sg	inzupp- like strapiombare	42	inzuppati
 ipertrofizzarsi	verb_pres_1_sg	ipertrofizz- like strapiombare	42	ipertrofizzati
 ipotecare	verb_pres_1_sg	ipotec- like strapiombare
 irarsi	verb_pres_1_sg	ir- like strapiombare	42	irati
-ire	verb	i- like uscire	verb_impf	i- like girare	verb_past	i- like morire	verb_pres_1_pl	i- like lanciare	16	i	53	endo
+ire	verb	i- like vivere	verb_impf	i- like girare	verb_past	i- like morire	verb_pres_1_pl	i- like noiare	3	ite	16	i	52	ire	53	endo
 irradiare	verb_pres_1_sg	irradi- like strapiombare
 irradiarsi	verb_pres_1_sg	irradi- like strapiombare	42	irradiati
 irraggiare	verb_pres_1_sg	irraggi- like strapiombare
@@ -3000,7 +2690,6 @@ irrigidire	verb_pres_1_sg	irrigidisc- like urgere
 irritarsi	verb_pres_1_sg	irrit- like strapiombare	42	irritati
 irrobustire	verb_pres_1_sg	irrobustisc- like urgere
 irrobustirsi	verb_pres_1_sg	irrobustisc- like urgere	42	irrobustisciti
-irrogare	43	irroghi	48	irroghi	51	irroghino
 irrompere	12	irruppi
 irrugginire	verb_pres_1_sg	irrugginisc- like urgere
 irruvidire	verb_pres_1_sg	irruvidisc- like urgere
@@ -3025,8 +2714,8 @@ istupidire	verb_pres_1_sg	istupidisc- like urgere
 istupidirsi	verb_pres_1_sg	istupidisc- like urgere	42	istupidisciti
 italianeggiare	verb_pres_1_sg	italianeggi- like strapiombare
 italianizzarsi	verb_pres_1_sg	italianizz- like strapiombare	42	italianizzati
-iudicare	43	iudichi	48	iudichi	51	iudichino
-kirkificare	43	kirkifichi	48	kirkifichi	51	kirkifichino
+iudicare	verb_pres_1_sg	iudic- like strapiombare
+kirkificare	verb_pres_1_sg	kirkific- like strapiombare
 labbreggiare	verb_pres_1_sg	labbreggi- like strapiombare
 labializzarsi	verb_pres_1_sg	labializz- like strapiombare	42	labializzati
 laccare	43	lacchi	48	lacchi	51	lacchino
@@ -3044,14 +2733,14 @@ lanciare	verb_pres_1_sg	lanci- like strapiombare
 lanciarsi	verb_pres_1_sg	lanci- like strapiombare	42	lanciati
 langueggiare	verb_pres_1_sg	langueggi- like strapiombare
 languire	verb_pres_1_sg	languisc- like urgere
-lapidificare	43	lapidifichi	48	lapidifichi	51	lapidifichino
-lapidificarsi	43	lapidifichi	48	lapidifichi	51	lapidifichino
+lapidificare	verb_pres_1_sg	lapidific- like strapiombare
+lapidificarsi	verb_pres_1_sg	lapidific- like strapiombare	42	lapidificati
 largheggiare	verb_pres_1_sg	largheggi- like strapiombare
 largire	verb_pres_1_sg	largisc- like urgere
 lascare	43	laschi	48	laschi	51	laschino
 lasciare	verb_pres_1_sg	lasci- like strapiombare
 lasciarsi	verb_pres_1_sg	lasci- like strapiombare	42	lasciati
-lastricare	43	lastrichi	48	lastrichi	51	lastrichino
+lastricare	verb_pres_1_sg	lastric- like strapiombare
 latineggiare	verb_pres_1_sg	latineggi- like strapiombare
 latteggiare	verb_pres_1_sg	latteggi- like strapiombare
 laurearsi	verb_pres_1_sg	laure- like strapiombare	42	laureati
@@ -3064,8 +2753,7 @@ lazzeggiare	verb_pres_1_sg	lazzeggi- like strapiombare
 leccare	43	lecchi	48	lecchi	51	lecchino
 leccarsi	43	lecchi	48	lecchi	51	lecchino
 ledere	verb_pres_1_sg	led- like urgere
-legare	43	leghi	48	leghi	51	leghino
-legarsi	43	leghi	48	leghi	51	leghino
+legarsi	verb_pres_1_sg	leg- like strapiombare	42	legati
 leggere	verb_pres_1_sg	legg- like urgere
 leggersi	verb_pres_1_sg	legg- like urgere	42	leggiti
 leggicchiare	verb_pres_1_sg	leggicchi- like strapiombare
@@ -3077,8 +2765,8 @@ lenteggiare	verb_pres_1_sg	lenteggi- like strapiombare
 leopardeggiare	verb_pres_1_sg	leopardeggi- like strapiombare
 lesionarsi	verb_pres_1_sg	lesion- like strapiombare	42	lesionati
 lessicalizzarsi	verb_pres_1_sg	lessicalizz- like strapiombare	42	lessicalizzati
-leticare	43	letichi	48	letichi	51	letichino
-letificare	43	letifichi	48	letifichi	51	letifichino
+leticare	verb_pres_1_sg	letic- like strapiombare
+letificare	verb_pres_1_sg	letific- like strapiombare
 letiziare	verb_pres_1_sg	letizi- like strapiombare
 levarsi	verb_pres_1_sg	lev- like strapiombare	42	levati
 levigare	43	levighi	48	levighi	51	levighino
@@ -3086,22 +2774,22 @@ liberarsi	verb_pres_1_sg	liber- like strapiombare	42	liberati
 librarsi	verb_pres_1_sg	libr- like strapiombare	42	librati
 licenziare	verb_pres_1_sg	licenzi- like strapiombare
 licenziarsi	verb_pres_1_sg	licenzi- like strapiombare	42	licenziati
-licere	verb_past	leci- like volgere
-lignificare	43	lignifichi	48	lignifichi	51	lignifichino
-lignificarsi	43	lignifichi	48	lignifichi	51	lignifichino
+licere	4	lice	55	lecito
+lignificare	verb_pres_1_sg	lignific- like strapiombare
+lignificarsi	verb_pres_1_sg	lignific- like strapiombare	42	lignificati
 limitarsi	verb_pres_1_sg	limit- like strapiombare	42	limitati
 limonarsi	verb_pres_1_sg	limon- like strapiombare	42	limonati
 linciare	verb_pres_1_sg	linci- like strapiombare
 lingueggiare	verb_pres_1_sg	lingueggi- like strapiombare
 liquefare	43	liquefaccia	48	liquefaccia	51	liquefacciano
 liquefarsi	43	liquefaccia	48	liquefaccia	51	liquefacciano
-liricare	43	lirichi	48	lirichi	51	lirichino
+liricare	verb_pres_1_sg	liric- like strapiombare
 lisarsi	verb_pres_1_sg	lis- like strapiombare	42	lisati
 lisciare	verb_pres_1_sg	lisci- like strapiombare
 lisciarsi	verb_pres_1_sg	lisci- like strapiombare	42	lisciati
 lisciviare	verb_pres_1_sg	liscivi- like strapiombare
 litaniare	2	litanii	30	litanii	43	litanii	48	litanii	51	litaniino
-liticare	43	litichi	48	litichi	51	litichino
+liticare	verb_pres_1_sg	litic- like strapiombare
 litigare	43	litighi	48	litighi	51	litighino
 litigarsi	43	litighi	48	litighi	51	litighino
 litografare	verb_pres_1_sg	litograf- like strapiombare
@@ -3112,8 +2800,8 @@ lodarsi	verb_pres_1_sg	lod- like strapiombare	42	lodati
 loggare	43	logghi	48	logghi	51	logghino
 logorarsi	verb_pres_1_sg	logor- like strapiombare	42	logorati
 lordarsi	verb_pres_1_sg	lord- like strapiombare	42	lordati
-lubrificare	43	lubrifichi	48	lubrifichi	51	lubrifichino
-luccicare	43	luccichi	48	luccichi	51	luccichino
+lubrificare	verb_pres_1_sg	lubrific- like strapiombare
+luccicare	verb_pres_1_sg	luccic- like strapiombare
 lumacare	43	lumachi	48	lumachi	51	lumachino
 lumeggiare	verb_pres_1_sg	lumeggi- like strapiombare
 lusingare	43	lusinghi	48	lusinghi	51	lusinghino
@@ -3125,18 +2813,15 @@ macchiare	verb_pres_1_sg	macchi- like strapiombare
 macchiarsi	verb_pres_1_sg	macchi- like strapiombare	42	macchiati
 macerarsi	verb_pres_1_sg	macer- like strapiombare	42	macerati
 madreggiare	verb_pres_1_sg	madreggi- like strapiombare
-madrigaleggiare	verb_pres_1_sg	madrigaleggi- like strapiombare
-maestraleggiare	verb_pres_1_sg	maestraleggi- like strapiombare
 magare	43	maghi	48	maghi	51	maghino
 magliare	verb_pres_1_sg	magli- like strapiombare
 magnetizzarsi	verb_pres_1_sg	magnetizz- like strapiombare	42	magnetizzati
-magnificare	43	magnifichi	48	magnifichi	51	magnifichino
-maiolicare	43	maiolichi	48	maiolichi	51	maiolichino
-maladire	verb_pres_1_sg	maladic- like urgere
-malandare	verb	maland- like uscire	verb_pres_1_sg	malvad- like urgere	2	malvai	3	malandate	4	malvà	5	malvanno	42	malvai	47	malandare	52	malandare
-maledire	verb_pres_1_sg	maledic- like urgere
-maledirsi	verb_pres_1_sg	maledic- like urgere	42	malediciti
-malgiudicare	43	malgiudichi	48	malgiudichi	51	malgiudichino
+magnificare	verb_pres_1_sg	magnific- like strapiombare
+maiolicare	verb_pres_1_sg	maiolic- like strapiombare
+maladire	43	maladica	48	maladica	51	maladicano
+malandare	verb	maland- like vivere	verb_pres_1_sg	malvad- like urgere	2	malvai	3	malandate	4	malvà	5	malvanno	42	malvai	47	malandare	52	malandare
+maledire	43	maledica	48	maledica	51	maledicano
+maledirsi	43	maledica	48	maledica	51	maledicano
 maliziare	verb_pres_1_sg	malizi- like strapiombare
 malvedere	verb_pres_1_sg	malved- like urgere
 mammoleggiare	verb_pres_1_sg	mammoleggi- like strapiombare
@@ -3168,59 +2853,51 @@ marconigrafare	verb_pres_1_sg	marconigraf- like strapiombare
 mareggiare	verb_pres_1_sg	mareggi- like strapiombare
 maritarsi	verb_pres_1_sg	marit- like strapiombare	42	maritati
 marmoreggiare	verb_pres_1_sg	marmoreggi- like strapiombare
-martirizzarsi	verb_pres_1_sg	martirizz- like strapiombare	42	martirizzati
 martoriare	verb_pres_1_sg	martori- like strapiombare
 marzeggiare	verb_pres_1_sg	marzeggi- like strapiombare
 mascherarsi	verb_pres_1_sg	mascher- like strapiombare	42	mascherati
 maschiare	verb_pres_1_sg	maschi- like strapiombare
 mascolinizzarsi	verb_pres_1_sg	mascolinizz- like strapiombare	42	mascolinizzati
 massacrarsi	verb_pres_1_sg	massacr- like strapiombare	42	massacrati
-massaggiare	verb_pres_1_sg	massaggi- like strapiombare
 massaggiarsi	verb_pres_1_sg	massaggi- like strapiombare	42	massaggiati
 massicciare	verb_pres_1_sg	massicci- like strapiombare
-massificare	43	massifichi	48	massifichi	51	massifichino
-masticare	43	mastichi	48	mastichi	51	mastichino
-masturbarsi	verb_pres_1_sg	masturb- like strapiombare	42	masturbati
+massificare	verb_pres_1_sg	massific- like strapiombare
+masticare	verb_pres_1_sg	mastic- like strapiombare
 materializzarsi	verb_pres_1_sg	materializz- like strapiombare	42	materializzati
 matrigneggiare	verb_pres_1_sg	matrigneggi- like strapiombare
 matteggiare	verb_pres_1_sg	matteggi- like strapiombare
 maturarsi	verb_pres_1_sg	matur- like strapiombare	42	maturati
-mazzapicchiare	verb_pres_1_sg	mazzapicchi- like strapiombare
 mazziare	verb_pres_1_sg	mazzi- like strapiombare
 mazzolare	verb_pres_1_sg	mazzuol- like strapiombare
 meare	verb_pres_1_sg	me- like strapiombare
 medagliare	verb_pres_1_sg	medagli- like strapiombare
 mediare	verb_pres_1_sg	medi- like strapiombare
-medicare	43	medichi	48	medichi	51	medichino
-medicarsi	43	medichi	48	medichi	51	medichino
-mellificare	43	mellifichi	48	mellifichi	51	mellifichino
-mendicare	43	mendichi	48	mendichi	51	mendichino
-menstruare	verb_pres_1_sg	menstru- like strapiombare
+medicare	verb_pres_1_sg	medic- like strapiombare
+medicarsi	verb_pres_1_sg	medic- like strapiombare	42	medicati
+mellificare	verb_pres_1_sg	mellific- like strapiombare
+mendicare	verb_pres_1_sg	mendic- like strapiombare
 mentire	verb_pres_1_sg	ment- like urgere
 mentirsi	verb_pres_1_sg	ment- like urgere	42	mentiti
-meravigliare	verb_pres_1_sg	meravigli- like strapiombare
 meravigliarsi	verb_pres_1_sg	meravigli- like strapiombare	42	meravigliati
 mercanteggiare	verb_pres_1_sg	mercanteggi- like strapiombare
 mercare	43	merchi	48	merchi	51	merchino
-mercificare	43	mercifichi	48	mercifichi	51	mercifichino
+mercificare	verb_pres_1_sg	mercific- like strapiombare
 meriggiare	verb_pres_1_sg	meriggi- like strapiombare
 meritarsi	verb_pres_1_sg	merit- like strapiombare	42	meritati
 mescere	43	mesca	48	mesca	51	mescano	55	mesciuto
 meschiare	verb_pres_1_sg	meschi- like strapiombare
 mesciare	verb_pres_1_sg	mesci- like strapiombare
 mescolarsi	verb_pres_1_sg	mescol- like strapiombare	42	mescolati
-messaggiare	verb_pres_1_sg	messaggi- like strapiombare
-mesticare	43	mestichi	48	mestichi	51	mestichino
+mesticare	verb_pres_1_sg	mestic- like strapiombare
 mesticciare	verb_pres_1_sg	mesticci- like strapiombare
-mestruare	verb_pres_1_sg	mestru- like strapiombare
-metafisicare	43	metafisichi	48	metafisichi	51	metafisichino
+metafisicare	verb_pres_1_sg	metafisic- like strapiombare
 metaforeggiare	verb_pres_1_sg	metaforeggi- like strapiombare
-metallificare	43	metallifichi	48	metallifichi	51	metallifichino
+metallificare	verb_pres_1_sg	metallific- like strapiombare
 metamorfosarsi	verb_pres_1_sg	metamorfos- like strapiombare	42	metamorfosati
 mettersi	verb_pres_1_sg	mett- like urgere	42	mettiti
 migliorarsi	verb_pres_1_sg	miglior- like strapiombare	42	migliorati
 millantarsi	verb_pres_1_sg	millant- like strapiombare	42	millantati
-millecuplicare	43	millecuplichi	48	millecuplichi	51	millecuplichino
+millecuplicare	verb_pres_1_sg	millecuplic- like strapiombare
 mimeografare	verb_pres_1_sg	mimeograf- like strapiombare
 mimetizzarsi	verb_pres_1_sg	mimetizz- like strapiombare	42	mimetizzati
 minacciare	verb_pres_1_sg	minacci- like strapiombare
@@ -3232,54 +2909,51 @@ mischiarsi	verb_pres_1_sg	mischi- like strapiombare	42	mischiati
 miscredere	verb_pres_1_sg	miscred- like urgere
 misfare	43	misfaccia	48	misfaccia	51	misfacciano
 misticheggiare	verb_pres_1_sg	misticheggi- like strapiombare
-mistificare	43	mistifichi	48	mistifichi	51	mistifichino
+mistificare	verb_pres_1_sg	mistific- like strapiombare
 misurarsi	verb_pres_1_sg	misur- like strapiombare	42	misurati
 mitigare	43	mitighi	48	mitighi	51	mitighino
 mitigarsi	43	mitighi	48	mitighi	51	mitighino
-mitragliare	verb_pres_1_sg	mitragli- like strapiombare
 mobiliare	verb_pres_1_sg	mobili- like strapiombare
 mobilitarsi	verb_pres_1_sg	mobilit- like strapiombare	42	mobilitati
-moccicare	43	moccichi	48	moccichi	51	moccichino
+moccicare	verb_pres_1_sg	moccic- like strapiombare
 modellarsi	verb_pres_1_sg	modell- like strapiombare	42	modellati
 moderarsi	verb_pres_1_sg	moder- like strapiombare	42	moderati
 modernizzarsi	verb_pres_1_sg	modernizz- like strapiombare	42	modernizzati
-modificare	43	modifichi	48	modifichi	51	modifichino
-modificarsi	43	modifichi	48	modifichi	51	modifichino
+modificare	verb_pres_1_sg	modific- like strapiombare
+modificarsi	verb_pres_1_sg	modific- like strapiombare	42	modificati
 mollarsi	verb_pres_1_sg	moll- like strapiombare	42	mollati
 molleggiare	verb_pres_1_sg	molleggi- like strapiombare
 molleggiarsi	verb_pres_1_sg	molleggi- like strapiombare	42	molleggiati
-mollificare	43	mollifichi	48	mollifichi	51	mollifichino
-moltiplicare	43	moltiplichi	48	moltiplichi	51	moltiplichino
-moltiplicarsi	43	moltiplichi	48	moltiplichi	51	moltiplichino
+mollificare	verb_pres_1_sg	mollific- like strapiombare
+moltiplicare	verb_pres_1_sg	moltiplic- like strapiombare
+moltiplicarsi	verb_pres_1_sg	moltiplic- like strapiombare	42	moltiplicati
 monacare	43	monachi	48	monachi	51	monachino
 monacarsi	43	monachi	48	monachi	51	monachino
 moncare	43	monchi	48	monchi	51	monchino
 mondaneggiare	verb_pres_1_sg	mondaneggi- like strapiombare
-monologare	43	monologhi	48	monologhi	51	monologhino
 monottongare	43	monottonghi	48	monottonghi	51	monottonghino
 montarsi	verb_pres_1_sg	mont- like strapiombare	42	montati
-monticare	43	montichi	48	montichi	51	montichino
-moraleggiare	verb_pres_1_sg	moraleggi- like strapiombare
+monticare	verb_pres_1_sg	montic- like strapiombare
 mordere	verb_pres_1_sg	mord- like urgere
 mordersi	verb_pres_1_sg	mord- like urgere	42	morditi
-mordicare	43	mordichi	48	mordichi	51	mordichino
+mordicare	verb_pres_1_sg	mordic- like strapiombare
 mordicchiare	verb_pres_1_sg	mordicchi- like strapiombare
 mordicchiarsi	verb_pres_1_sg	mordicchi- like strapiombare	42	mordicchiati
 morire	43	muoia	48	muoia	51	muoiano
-morirsi	verb_pres_1_sg	muoi- like urgere	2	muori	4	muore	42	muoriti	55	mortosi
+morirsi	4	muore	30	muoia	43	muoia	48	muoia	51	muoiano	55	mortosi
 mormoracchiare	verb_pres_1_sg	mormoracchi- like strapiombare
 mormoreggiare	verb_pres_1_sg	mormoreggi- like strapiombare
 morsecchiare	verb_pres_1_sg	morsecchi- like strapiombare
 morseggiare	verb_pres_1_sg	morseggi- like strapiombare
-morsicare	43	morsichi	48	morsichi	51	morsichino
+morsicare	verb_pres_1_sg	morsic- like strapiombare
 morsicchiare	verb_pres_1_sg	morsicchi- like strapiombare
-mortificare	43	mortifichi	48	mortifichi	51	mortifichino
-mortificarsi	43	mortifichi	48	mortifichi	51	mortifichino
+mortificare	verb_pres_1_sg	mortific- like strapiombare
+mortificarsi	verb_pres_1_sg	mortific- like strapiombare	42	mortificati
 mostrarsi	verb_pres_1_sg	mostr- like strapiombare	42	mostrati
 mostreggiare	verb_pres_1_sg	mostreggi- like strapiombare
 motteggiare	verb_pres_1_sg	motteggi- like strapiombare
 movimentarsi	verb_pres_1_sg	moviment- like strapiombare	42	movimentati
-mozzicare	43	mozzichi	48	mozzichi	51	mozzichino
+mozzicare	verb_pres_1_sg	mozzic- like strapiombare
 mucciare	verb_pres_1_sg	mucci- like strapiombare
 muffare	verb_pres_1_sg	muff- like strapiombare
 muffire	verb_pres_1_sg	muffisc- like urgere
@@ -3287,39 +2961,36 @@ mugghiare	verb_pres_1_sg	mugghi- like strapiombare
 muggire	verb_pres_1_sg	muggisc- like urgere
 mugliare	verb_pres_1_sg	mugli- like strapiombare
 mulcire	verb_pres_1_sg	mulcisc- like urgere
-multiplicare	43	multiplichi	48	multiplichi	51	multiplichino
-mummificare	43	mummifichi	48	mummifichi	51	mummifichino
-mummificarsi	43	mummifichi	48	mummifichi	51	mummifichino
+multiplicare	verb_pres_1_sg	multiplic- like strapiombare
+mummificare	verb_pres_1_sg	mummific- like strapiombare
+mummificarsi	verb_pres_1_sg	mummific- like strapiombare	42	mummificati
 munire	verb_pres_1_sg	munisc- like urgere
 munirsi	verb_pres_1_sg	munisc- like urgere	42	munisciti
 muovere	verb_pres_1_sg	muov- like urgere
 muoversi	verb_pres_1_sg	muov- like urgere	42	muoviti
 murarsi	verb_pres_1_sg	mur- like strapiombare	42	murati
-museificare	43	museifichi	48	museifichi	51	museifichino
-musicare	43	musichi	48	musichi	51	musichino
-mutuare	verb_pres_1_sg	mutu- like strapiombare
+museificare	verb_pres_1_sg	museific- like strapiombare
+musicare	verb_pres_1_sg	music- like strapiombare
 nascere	verb_past	nac- like tacere	verb_pres_1_sg	nasc- like urgere	55	nato
 nascondere	verb_pres_1_sg	nascond- like urgere
 nascondersi	verb_pres_1_sg	nascond- like urgere	42	nasconditi
-naturaleggiare	verb_pres_1_sg	naturaleggi- like strapiombare
 naturalizzarsi	verb_pres_1_sg	naturalizz- like strapiombare	42	naturalizzati
 naufragare	43	naufraghi	48	naufraghi	51	naufraghino
-navicare	43	navichi	48	navichi	51	navichino
+navicare	verb_pres_1_sg	navic- like strapiombare
 navigare	43	navighi	48	navighi	51	navighino
-nazificare	43	nazifichi	48	nazifichi	51	nazifichino
-negare	43	neghi	48	neghi	51	neghino
-negarsi	43	neghi	48	neghi	51	neghino
+nazificare	verb_pres_1_sg	nazific- like strapiombare
+negarsi	verb_pres_1_sg	neg- like strapiombare	42	negati
 negativizzarsi	verb_pres_1_sg	negativizz- like strapiombare	42	negativizzati
 negoziare	verb_pres_1_sg	negozi- like strapiombare
 negreggiare	verb_pres_1_sg	negreggi- like strapiombare
 nereggiare	verb_pres_1_sg	nereggi- like strapiombare
 nerfare	verb_pres_1_sg	nerf- like strapiombare
-nericare	43	nerichi	48	nerichi	51	nerichino
+nericare	verb_pres_1_sg	neric- like strapiombare
 nevrotizzarsi	verb_pres_1_sg	nevrotizz- like strapiombare	42	nevrotizzati
 nicchiare	verb_pres_1_sg	nicchi- like strapiombare
-nidificare	43	nidifichi	48	nidifichi	51	nidifichino
+nidificare	verb_pres_1_sg	nidific- like strapiombare
 ninfeggiare	verb_pres_1_sg	ninfeggi- like strapiombare
-nitrificare	43	nitrifichi	48	nitrifichi	51	nitrifichino
+nitrificare	verb_pres_1_sg	nitrific- like strapiombare
 nitrire	verb_pres_1_sg	nitrisc- like urgere
 nobilitarsi	verb_pres_1_sg	nobilit- like strapiombare	42	nobilitati
 nodeggiare	verb_pres_1_sg	nodeggi- like strapiombare
@@ -3327,16 +2998,16 @@ nodrire	verb_pres_1_sg	nodrisc- like urgere
 noiare	verb_pres_1_sg	noi- like strapiombare
 noleggiare	verb_pres_1_sg	noleggi- like strapiombare
 normalizzarsi	verb_pres_1_sg	normalizz- like strapiombare	42	normalizzati
-notare	verb_pres_1_pl	nota- like lanciare	verb_pres_1_sg	not- like strapiombare	5	noteno	7	notamio	9	notavio	11	notaveno	14	notassi	17	notorno	23	noterorno	24	noterebbi	25	noteressimo	26	noteressi	27	noteressivo	29	noterebbeno
-notificare	43	notifichi	48	notifichi	51	notifichino
-notificarsi	43	notifichi	48	notifichi	51	notifichino
+notare	verb_pres_1_pl	nota- like noiare	verb_pres_1_sg	not- like strapiombare	5	noteno	7	notamio	9	notavio	11	notaveno	14	notassi	17	notorno	23	noterorno	24	noterebbi	25	noteressimo	26	noteressi	27	noteressivo	29	noterebbeno	33	notate
+notificare	verb_pres_1_sg	notific- like strapiombare
+notificarsi	verb_pres_1_sg	notific- like strapiombare	42	notificati
 notiziare	verb_pres_1_sg	notizi- like strapiombare
-notricare	43	notrichi	48	notrichi	51	notrichino
+notricare	verb_pres_1_sg	notric- like strapiombare
 novelleggiare	verb_pres_1_sg	novelleggi- like strapiombare
-nudricare	43	nudrichi	48	nudrichi	51	nudrichino
+nudricare	verb_pres_1_sg	nudric- like strapiombare
 nudrire	verb_pres_1_sg	nudr- like urgere
-nullificare	43	nullifichi	48	nullifichi	51	nullifichino
-nullificarsi	43	nullifichi	48	nullifichi	51	nullifichino
+nullificare	verb_pres_1_sg	nullific- like strapiombare
+nullificarsi	verb_pres_1_sg	nullific- like strapiombare	42	nullificati
 nuocere	participle_pres	nocente- like girare	verb_past	noc- like tacere	verb_pres_1_sg	nocci- like urgere	2	nuoci	4	nuoce	42	nuoci
 nutrire	participle_pres	nutriente- like girare	verb_pres_1_sg	nutr- like urgere
 nutrirsi	participle_pres	nutrientesi- like girare	verb_pres_1_sg	nutr- like urgere	42	nutriti
@@ -3369,13 +3040,11 @@ ofiziare	verb_pres_1_sg	ofizi- like strapiombare
 oggettivarsi	verb_pres_1_sg	oggettiv- like strapiombare	42	oggettivati
 oliare	verb_pres_1_sg	oli- like strapiombare
 olografare	verb_pres_1_sg	olograf- like strapiombare
-oltraggiare	verb_pres_1_sg	oltraggi- like strapiombare
 oltrarsi	verb_pres_1_sg	oltr- like strapiombare	42	oltrati
 omaggiare	verb_pres_1_sg	omaggi- like strapiombare
 ombreggiare	verb_pres_1_sg	ombreggi- like strapiombare
 ombreggiarsi	verb_pres_1_sg	ombreggi- like strapiombare	42	ombreggiati
-omologare	43	omologhi	48	omologhi	51	omologhino
-omologarsi	43	omologhi	48	omologhi	51	omologhino
+omologarsi	verb_pres_1_sg	omolog- like strapiombare	42	omologati
 ondeggiare	verb_pres_1_sg	ondeggi- like strapiombare
 onorarsi	verb_pres_1_sg	onor- like strapiombare	42	onorati
 opacare	43	opachi	48	opachi	51	opachino
@@ -3386,7 +3055,7 @@ opporsi	43	opponga	48	opponga	51	oppongano
 oracoleggiare	verb_pres_1_sg	oracoleggi- like strapiombare
 ordire	verb_pres_1_sg	ordisc- like urgere
 orecchiare	verb_pres_1_sg	orecchi- like strapiombare
-organicare	43	organichi	48	organichi	51	organichino
+organicare	verb_pres_1_sg	organic- like strapiombare
 organizzarsi	verb_pres_1_sg	organizz- like strapiombare	42	organizzati
 orgoglire	verb_pres_1_sg	orgoglisc- like urgere
 orientarsi	verb_pres_1_sg	orient- like strapiombare	42	orientati
@@ -3402,8 +3071,8 @@ ossedere	verb_pres_1_sg	ossied- like urgere
 ossequiare	verb_pres_1_sg	ossequi- like strapiombare
 osservarsi	verb_pres_1_sg	osserv- like strapiombare	42	osservati
 ossidarsi	verb_pres_1_sg	ossid- like strapiombare	42	ossidati
-ossificare	43	ossifichi	48	ossifichi	51	ossifichino
-ossificarsi	43	ossifichi	48	ossifichi	51	ossifichino
+ossificare	verb_pres_1_sg	ossific- like strapiombare
+ossificarsi	verb_pres_1_sg	ossific- like strapiombare	42	ossificati
 ossigenarsi	verb_pres_1_sg	ossigen- like strapiombare	42	ossigenati
 ostacolarsi	verb_pres_1_sg	ostacol- like strapiombare	42	ostacolati
 ostare	4	osta	43	ostia	48	ostia	51	ostiano
@@ -3415,7 +3084,7 @@ ottenebrarsi	verb_pres_1_sg	ottenebr- like strapiombare	42	ottenebrati
 ottenere	43	ottenga	48	ottenga	51	ottengano
 ottriare	verb_pres_1_sg	ottri- like strapiombare
 ottundere	verb_pres_1_sg	ottund- like urgere
-ottuplicare	43	ottuplichi	48	ottuplichi	51	ottuplichino
+ottuplicare	verb_pres_1_sg	ottuplic- like strapiombare
 otturarsi	verb_pres_1_sg	ottur- like strapiombare	42	otturati
 ovalizzarsi	verb_pres_1_sg	ovalizz- like strapiombare	42	ovalizzati
 overcloccare	43	overclocchi	48	overclocchi	51	overclocchino
@@ -3427,8 +3096,8 @@ pacare	43	pachi	48	pachi	51	pachino
 pacarsi	43	pachi	48	pachi	51	pachino
 paccare	43	pacchi	48	pacchi	51	pacchino
 pacchiare	verb_pres_1_sg	pacchi- like strapiombare
-paceficare	43	pacefichi	48	pacefichi	51	pacefichino
-pacificare	43	pacifichi	48	pacifichi	51	pacifichino
+paceficare	verb_pres_1_sg	pacefic- like strapiombare
+pacificare	verb_pres_1_sg	pacific- like strapiombare
 pacioccare	43	paciocchi	48	paciocchi	51	paciocchino
 padire	verb_pres_1_sg	padisc- like urgere
 padreggiare	verb_pres_1_sg	padreggi- like strapiombare
@@ -3441,15 +3110,15 @@ pagarsi	43	paghi	48	paghi	51	paghino
 paidire	verb_pres_1_sg	paidisc- like urgere
 paleggiare	verb_pres_1_sg	paleggi- like strapiombare
 palesarsi	verb_pres_1_sg	pales- like strapiombare	42	palesati
-palificare	43	palifichi	48	palifichi	51	palifichino
+palificare	verb_pres_1_sg	palific- like strapiombare
 palladiare	verb_pres_1_sg	palladi- like strapiombare
 palleggiare	verb_pres_1_sg	palleggi- like strapiombare
 palleggiarsi	verb_pres_1_sg	palleggi- like strapiombare	42	palleggiati
 palliare	verb_pres_1_sg	palli- like strapiombare
 palpeggiare	verb_pres_1_sg	palpeggi- like strapiombare
-panificare	43	panifichi	48	panifichi	51	panifichino
+panificare	verb_pres_1_sg	panific- like strapiombare
 panneggiare	verb_pres_1_sg	panneggi- like strapiombare
-panoramicare	43	panoramichi	48	panoramichi	51	panoramichino
+panoramicare	verb_pres_1_sg	panoramic- like strapiombare
 paracadutarsi	verb_pres_1_sg	paracadut- like strapiombare	42	paracadutati
 parafare	verb_pres_1_sg	paraf- like strapiombare
 paragonarsi	verb_pres_1_sg	paragon- like strapiombare	42	paragonati
@@ -3461,7 +3130,7 @@ parcheggiare	verb_pres_1_sg	parcheggi- like strapiombare
 pareggiare	verb_pres_1_sg	pareggi- like strapiombare
 parere	0	paio	1	paiamo	5	paiono	12	parvi	30	paia	31	paiamo	33	paiate	54	parvente	55	parso
 pargoleggiare	verb_pres_1_sg	pargoleggi- like strapiombare
-parificare	43	parifichi	48	parifichi	51	parifichino
+parificare	verb_pres_1_sg	parific- like strapiombare
 parlarsi	verb_pres_1_sg	parl- like strapiombare	42	parlati
 parlucchiare	verb_pres_1_sg	parlucchi- like strapiombare
 parodiare	verb_pres_1_sg	parodi- like strapiombare
@@ -3473,14 +3142,12 @@ partirsi	verb_pres_1_sg	partisc- like urgere	42	partisciti
 partorire	verb_pres_1_sg	partorisc- like urgere
 pascere	43	pasca	48	pasca	51	pascano	55	pasciuto
 pascersi	43	pasca	48	pasca	51	pascano	55	pasciutosi
-pasquare	verb_pres_1_sg	pasqu- like strapiombare
 passarsi	verb_pres_1_sg	pass- like strapiombare	42	passati
-passavogare	43	passavoghi	48	passavoghi	51	passavoghino
 passeggiare	verb_pres_1_sg	passeggi- like strapiombare
 passire	verb_pres_1_sg	passisc- like urgere
 pasteggiare	verb_pres_1_sg	pasteggi- like strapiombare
 pasticciare	verb_pres_1_sg	pasticci- like strapiombare
-pastificare	43	pastifichi	48	pastifichi	51	pastifichino
+pastificare	verb_pres_1_sg	pastific- like strapiombare
 pastigliare	verb_pres_1_sg	pastigli- like strapiombare
 pastrocchiare	verb_pres_1_sg	pastrocchi- like strapiombare
 patire	verb_pres_1_sg	patisc- like urgere
@@ -3491,7 +3158,6 @@ pavoneggiarsi	verb_pres_1_sg	pavoneggi- like strapiombare	42	pavoneggiati
 pazzeggiare	verb_pres_1_sg	pazzeggi- like strapiombare
 pazziare	2	pazzii	30	pazzii	43	pazzii	48	pazzii	51	pazziino
 peccare	43	pecchi	48	pecchi	51	pecchino
-pedaleggiare	verb_pres_1_sg	pedaleggi- like strapiombare
 pedanteggiare	verb_pres_1_sg	pedanteggi- like strapiombare
 pelacchiare	verb_pres_1_sg	pelacchi- like strapiombare
 pendere	verb_pres_1_sg	pend- like urgere
@@ -3507,16 +3173,12 @@ perdere	verb_pres_1_sg	perd- like urgere
 perdersi	verb_pres_1_sg	perd- like urgere	42	perditi
 perdonarsi	verb_pres_1_sg	perdon- like strapiombare	42	perdonati
 perdurre	verb_pres_1_sg	perduc- like urgere
-perequare	verb_pres_1_sg	perequ- like strapiombare
 perfare	43	perfaccia	48	perfaccia	51	perfacciano
 perfezionarsi	verb_pres_1_sg	perfezion- like strapiombare	42	perfezionati
 perfidiare	verb_pres_1_sg	perfidi- like strapiombare
 peritarsi	verb_pres_1_sg	perit- like strapiombare	42	peritati
 periziare	verb_pres_1_sg	perizi- like strapiombare
 permanere	verb_past	perma- like volgere	verb_pres_1_sg	permang- like urgere	2	permani	4	permane	42	permani
-permettersi	verb_pres_1_sg	permett- like urgere	42	permettiti
-permischiare	verb_pres_1_sg	permischi- like strapiombare
-perpetuare	verb_pres_1_sg	perpetu- like strapiombare
 perpetuarsi	verb_pres_1_sg	perpetu- like strapiombare	42	perpetuati
 perplettere	12	perplessi	43	perpletta	48	perpletta	51	perplettano
 perplimere	verb_pres_1_sg	perplim- like urgere	55	perplesso
@@ -3524,11 +3186,10 @@ perquisire	verb_pres_1_sg	perquisisc- like urgere
 perseguire	verb_pres_1_sg	persegu- like urgere
 persistere	verb_pres_1_sg	persist- like urgere
 personeggiare	verb_pres_1_sg	personeggi- like strapiombare
-personificare	43	personifichi	48	personifichi	51	personifichino
+personificare	verb_pres_1_sg	personific- like strapiombare
 persuadere	verb_pres_1_sg	persuad- like urgere
 persuadersi	verb_pres_1_sg	persuad- like urgere	42	persuaditi
 pertenere	43	pertenga	48	pertenga	51	pertengano
-perturbarsi	verb_pres_1_sg	perturb- like strapiombare	42	perturbati
 pervadere	verb_pres_1_sg	pervad- like urgere
 pervenire	43	pervenga	48	pervenga	51	pervengano
 pervertire	verb_pres_1_sg	pervert- like urgere
@@ -3536,7 +3197,6 @@ pervertirsi	verb_pres_1_sg	pervert- like urgere	42	pervertiti
 pesarsi	verb_pres_1_sg	pes- like strapiombare	42	pesati
 pescare	43	peschi	48	peschi	51	peschino
 pesticciare	verb_pres_1_sg	pesticci- like strapiombare
-petrarcheggiare	verb_pres_1_sg	petrarcheggi- like strapiombare
 pettegoleggiare	verb_pres_1_sg	pettegoleggi- like strapiombare
 pettinarsi	verb_pres_1_sg	pettin- like strapiombare	42	pettinati
 pezzire	verb_pres_1_sg	pezzisc- like urgere
@@ -3551,7 +3211,7 @@ piaggiare	verb_pres_1_sg	piaggi- like strapiombare
 pianeggiare	verb_pres_1_sg	pianeggi- like strapiombare
 piangersi	verb_pres_1_sg	piang- like urgere	42	piangiti
 piangiucchiare	verb_pres_1_sg	piangiucchi- like strapiombare
-pianificare	43	pianifichi	48	pianifichi	51	pianifichino
+pianificare	verb_pres_1_sg	pianific- like strapiombare
 piantarsi	verb_pres_1_sg	piant- like strapiombare	42	piantati
 piare	2	pii	30	pii	43	pii	48	pii	51	piino
 piatire	verb_pres_1_sg	piatisc- like urgere
@@ -3561,51 +3221,43 @@ piccare	43	picchi	48	picchi	51	picchino
 piccarsi	43	picchi	48	picchi	51	picchino
 picchiare	verb_pres_1_sg	picchi- like strapiombare
 picchiarsi	verb_pres_1_sg	picchi- like strapiombare	42	picchiati
-piegare	43	pieghi	48	pieghi	51	pieghino
-piegarsi	43	pieghi	48	pieghi	51	pieghino
+piegarsi	verb_pres_1_sg	pieg- like strapiombare	42	piegati
 pietire	verb_pres_1_sg	pietisc- like urgere
-pietrificare	43	pietrifichi	48	pietrifichi	51	pietrifichino
-pietrificarsi	43	pietrifichi	48	pietrifichi	51	pietrifichino
+pietrificare	verb_pres_1_sg	pietrific- like strapiombare
+pietrificarsi	verb_pres_1_sg	pietrific- like strapiombare	42	pietrificati
 pigiare	verb_pres_1_sg	pigi- like strapiombare
 pigliare	verb_pres_1_sg	pigli- like strapiombare
 pigmentarsi	verb_pres_1_sg	pigment- like strapiombare	42	pigmentati
 pignere	43	pinga	48	pinga	51	pingano
-pignoleggiare	verb_pres_1_sg	pignoleggi- like strapiombare
 piluccare	43	pilucchi	48	pilucchi	51	pilucchino
 pinneggiare	verb_pres_1_sg	pinneggi- like strapiombare
 piovere	12	piovvi	43	piova	48	piova	51	piovano
 pirateggiare	verb_pres_1_sg	pirateggi- like strapiombare
 pirografare	verb_pres_1_sg	pirograf- like strapiombare
-piroscindere	verb_pres_1_sg	piroscind- like urgere
 pisciare	verb_pres_1_sg	pisci- like strapiombare
-pispigliare	verb_pres_1_sg	pispigli- like strapiombare
 pitagoreggiare	verb_pres_1_sg	pitagoreggi- like strapiombare
 pitoccare	43	pitocchi	48	pitocchi	51	pitocchino
 pitturarsi	verb_pres_1_sg	pittur- like strapiombare	42	pitturati
-pizzicare	43	pizzichi	48	pizzichi	51	pizzichino
+pizzicare	verb_pres_1_sg	pizzic- like strapiombare
 placare	43	plachi	48	plachi	51	plachino
 placarsi	43	plachi	48	plachi	51	plachino
 placcare	43	placchi	48	placchi	51	placchino
 plagiare	verb_pres_1_sg	plagi- like strapiombare
-plasticare	43	plastichi	48	plastichi	51	plastichino
-plastificare	43	plastifichi	48	plastifichi	51	plastifichino
-plaudere	verb_past	plaud- like uscire	verb_pres_1_sg	plaud- like urgere	14	plaudisti	36	plaudessi	37	plaudessimo	38	plaudessi	39	plaudeste	40	plaudesse	41	plaudessero
+plasticare	verb_pres_1_sg	plastic- like strapiombare
+plastificare	verb_pres_1_sg	plastific- like strapiombare
+plaudere	verb_past	plaud- like uscire	verb_pres_1_sg	plaud- like urgere	14	plaudisti	39	plaudeste	41	plaudessero
 plaudire	verb_pres_1_sg	plaudisc- like urgere
 pocciare	verb_pres_1_sg	pocci- like strapiombare
 poeteggiare	verb_pres_1_sg	poeteggi- like strapiombare
-pogare	43	poghi	48	poghi	51	poghino
 poggiare	verb_pres_1_sg	poggi- like strapiombare
 poggiarsi	verb_pres_1_sg	poggi- like strapiombare	42	poggiati
-polarizzarsi	verb_pres_1_sg	polarizz- like strapiombare	42	polarizzati
 poligrafare	verb_pres_1_sg	poligraf- like strapiombare
 politicheggiare	verb_pres_1_sg	politicheggi- like strapiombare
 politicizzarsi	verb_pres_1_sg	politicizz- like strapiombare	42	politicizzati
 poltrire	verb_pres_1_sg	poltrisc- like urgere
-poltroneggiare	verb_pres_1_sg	poltroneggi- like strapiombare
-polverizzarsi	verb_pres_1_sg	polverizz- like strapiombare	42	polverizzati
 pomiciare	verb_pres_1_sg	pomici- like strapiombare
 pompeggiare	verb_pres_1_sg	pompeggi- like strapiombare
-pontificare	43	pontifichi	48	pontifichi	51	pontifichino
+pontificare	verb_pres_1_sg	pontific- like strapiombare
 popolarsi	verb_pres_1_sg	popol- like strapiombare	42	popolati
 porporeggiare	verb_pres_1_sg	porporeggi- like strapiombare
 porre	43	ponga	48	ponga	51	pongano
@@ -3615,46 +3267,27 @@ posarsi	verb_pres_1_sg	pos- like strapiombare	42	posati
 posizionarsi	verb_pres_1_sg	posizion- like strapiombare	42	posizionati
 posporre	43	posponga	48	posponga	51	pospongano
 possedere	verb_pres_1_sg	possied- like urgere
-possere	0	posso	1	possemo	4	po	5	possono	6	posseva	8	possevi	9	possevavo	11	possevano	12	potei	13	potestimo	14	potesti	15	potestivo	18	porraio	22	porrà	23	porranno	24	porria	25	porriamo	26	porresti	27	porriavo	29	porriano	31	pozzamo	33	pozzate	39	potessivo	42	possi	43	possa	48	possa	51	possano
+possere	verb	por- like vivere	verb_impf	pote- like girare	verb_past	pot- like competere	verb_pres_1_pl	pozz- like uscire	verb_pres_1_sg	poss- like urgere	1	possemo	2	poi	3	possete	4	po	6	posseva	7	possevamo	8	possevi	9	possevavo	11	possevano	13	potestimo	15	potestivo	18	porraio	24	porria	25	porriamo	27	porriavo	28	porria	29	porriano	33	pozzate	39	potessivo	41	potessino	45	possete	47	possere	50	possete	52	possere	53	possendo
 posteggiare	verb_pres_1_sg	posteggi- like strapiombare
 posteggiarsi	verb_pres_1_sg	posteggi- like strapiombare	42	posteggiati
 postergare	43	posterghi	48	posterghi	51	posterghino
 posticciare	verb_pres_1_sg	posticci- like strapiombare
 potenziare	verb_pres_1_sg	potenzi- like strapiombare
 potere	1	possiamo	4	può	12	potei	30	possa	31	possiamo	33	possiate
-praticare	43	pratichi	48	pratichi	51	pratichino
-preallegare	43	prealleghi	48	prealleghi	51	prealleghino
-preannunciare	verb_pres_1_sg	preannunci- like strapiombare
-preannunciarsi	verb_pres_1_sg	preannunci- like strapiombare	42	preannunciati
-preannunziare	verb_pres_1_sg	preannunzi- like strapiombare
-preavvertire	verb_pres_1_sg	preavvert- like urgere
-precaricare	43	precarichi	48	precarichi	51	precarichino
+praticare	verb_pres_1_sg	pratic- like strapiombare
 precedere	verb_pres_1_sg	preced- like urgere
 precipitarsi	verb_pres_1_sg	precipit- like strapiombare	42	precipitati
 precisarsi	verb_pres_1_sg	precis- like strapiombare	42	precisati
 precludersi	verb_pres_1_sg	preclud- like urgere	42	precluditi
 precorrere	verb_pres_1_sg	precorr- like urgere
-precostituirsi	verb_pres_1_sg	precostituisc- like urgere	42	precostituisciti
-predefinire	verb_pres_1_sg	predefinisc- like urgere
-predicare	43	predichi	48	predichi	51	predichino
-prediligere	verb_pres_1_sg	predilig- like urgere
-predire	verb_pres_1_sg	predic- like urgere
-predisporre	43	predisponga	48	predisponga	51	predispongano
-predisporsi	43	predisponga	48	predisponga	51	predispongano
-preeleggere	verb_pres_1_sg	preelegg- like urgere
-preesistere	verb_pres_1_sg	preesist- like urgere
-prefabbricare	43	prefabbrichi	48	prefabbrichi	51	prefabbrichino
+predicare	verb_pres_1_sg	predic- like strapiombare
+predire	43	predica	48	predica	51	predicano
 prefare	43	prefaccia	48	prefaccia	51	prefacciano	55	prefato
-prefiggere	verb_pres_1_sg	prefigg- like urgere
 prefiggersi	verb_pres_1_sg	prefigg- like urgere	42	prefiggiti
-prefinanziare	verb_pres_1_sg	prefinanzi- like strapiombare
 prefinire	verb_pres_1_sg	prefinisc- like urgere
 prefiorire	verb_pres_1_sg	prefiorisc- like urgere
-pregare	43	preghi	48	preghi	51	preghino
 pregiare	verb_pres_1_sg	pregi- like strapiombare
 pregiarsi	verb_pres_1_sg	pregi- like strapiombare	42	pregiati
-pregiudicare	43	pregiudichi	48	pregiudichi	51	pregiudichino
-pregiudicarsi	43	pregiudichi	48	pregiudichi	51	pregiudichino
 preliare	verb_pres_1_sg	preli- like strapiombare
 preludiare	verb_pres_1_sg	preludi- like strapiombare
 premiare	verb_pres_1_sg	premi- like strapiombare
@@ -3668,17 +3301,12 @@ prendersi	verb_pres_1_sg	prend- like urgere	42	prenditi
 prenotarsi	verb_pres_1_sg	prenot- like strapiombare	42	prenotati
 prenunciare	verb_pres_1_sg	prenunci- like strapiombare
 prenunziare	verb_pres_1_sg	prenunzi- like strapiombare
-preoccuparsi	verb_pres_1_sg	preoccup- like strapiombare	42	preoccupati
 prepararsi	verb_pres_1_sg	prepar- like strapiombare	42	preparati
 prepensionarsi	verb_pres_1_sg	prepension- like strapiombare	42	prepensionati
 preporre	43	preponga	48	preponga	51	prepongano
 prepotere	1	prepossiamo	4	prepuò	12	prepotei	30	prepossa	31	prepossiamo	33	prepossiate
 presagire	verb_pres_1_sg	presagisc- like urgere
 presapere	43	presappia	48	presappia	51	presappiano
-prescegliere	43	prescelga	48	prescelga	51	prescelgano
-prescindere	verb_pres_1_sg	prescind- like urgere
-prescrivere	verb_pres_1_sg	prescriv- like urgere
-prescriversi	verb_pres_1_sg	prescriv- like urgere	42	prescriviti
 presedere	verb_pres_1_sg	presied- like urgere
 presentarsi	verb_pres_1_sg	present- like strapiombare	42	presentati
 presentire	verb_pres_1_sg	present- like urgere
@@ -3687,15 +3315,12 @@ preservarsi	verb_pres_1_sg	preserv- like strapiombare	42	preservati
 presidiare	verb_pres_1_sg	presidi- like strapiombare
 presiedere	verb_pres_1_sg	presied- like urgere
 pressarsi	verb_pres_1_sg	press- like strapiombare	42	pressati
-prestabilire	verb_pres_1_sg	prestabilisc- like urgere
 prestarsi	verb_pres_1_sg	prest- like strapiombare	42	prestati
 prestigiare	verb_pres_1_sg	prestigi- like strapiombare
 presummere	verb_past	presun- like volgere	verb_pres_1_sg	presumm- like urgere
-presupporre	43	presupponga	48	presupponga	51	presuppongano
 pretessere	verb_pres_1_sg	pretess- like urgere
 prevalere	43	prevalga	48	prevalga	51	prevalgano
-prevalicare	43	prevalichi	48	prevalichi	51	prevalichino
-prevaricare	43	prevarichi	48	prevarichi	51	prevarichino
+prevaricare	verb_pres_1_sg	prevaric- like strapiombare
 prevedere	verb_pres_1_sg	preved- like urgere
 prevenire	43	prevenga	48	prevenga	51	prevengano
 prevertire	verb_pres_1_sg	prevert- like urgere
@@ -3704,8 +3329,6 @@ primeggiare	verb_pres_1_sg	primeggi- like strapiombare
 principiare	verb_pres_1_sg	principi- like strapiombare
 privarsi	verb_pres_1_sg	priv- like strapiombare	42	privati
 privilegiare	verb_pres_1_sg	privilegi- like strapiombare
-procacciare	verb_pres_1_sg	procacci- like strapiombare
-procacciarsi	verb_pres_1_sg	procacci- like strapiombare	42	procacciati
 procedere	verb_pres_1_sg	proced- like urgere
 proclamarsi	verb_pres_1_sg	proclam- like strapiombare	42	proclamati
 procurarsi	verb_pres_1_sg	procur- like strapiombare	42	procurati
@@ -3720,23 +3343,19 @@ professarsi	verb_pres_1_sg	profess- like strapiombare	42	professati
 profeteggiare	verb_pres_1_sg	profeteggi- like strapiombare
 profferire	verb_past	proffer- like morire	verb_pres_1_sg	profferisc- like urgere
 profilarsi	verb_pres_1_sg	profil- like strapiombare	42	profilati
-profondarsi	verb_pres_1_sg	profond- like strapiombare	42	profondati
 profondere	verb_pres_1_sg	profond- like urgere
-profondersi	verb_pres_1_sg	profond- like urgere	42	profonditi
 profumarsi	verb_pres_1_sg	profum- like strapiombare	42	profumati
-prognosticare	43	prognostichi	48	prognostichi	51	prognostichino
+prognosticare	verb_pres_1_sg	prognostic- like strapiombare
 progredire	verb_pres_1_sg	progredisc- like urgere
 proibire	verb_pres_1_sg	proibisc- like urgere
 proiettarsi	verb_pres_1_sg	proiett- like strapiombare	42	proiettati
-proletarizzarsi	verb_pres_1_sg	proletarizz- like strapiombare	42	proletarizzati
 proliferarsi	verb_pres_1_sg	prolifer- like strapiombare	42	proliferati
-prolificare	43	prolifichi	48	prolifichi	51	prolifichino
+prolificare	verb_pres_1_sg	prolific- like strapiombare
 prolungare	43	prolunghi	48	prolunghi	51	prolunghino
 prolungarsi	43	prolunghi	48	prolunghi	51	prolunghino
-promettersi	verb_pres_1_sg	promett- like urgere	42	promettiti
 promulgare	43	promulghi	48	promulghi	51	promulghino
 promuovere	verb_pres_1_sg	promuov- like urgere
-pronosticare	43	pronostichi	48	pronostichi	51	pronostichino
+pronosticare	verb_pres_1_sg	pronostic- like strapiombare
 pronunciare	verb_pres_1_sg	pronunci- like strapiombare
 pronunciarsi	verb_pres_1_sg	pronunci- like strapiombare	42	pronunciati
 pronunziare	verb_pres_1_sg	pronunzi- like strapiombare
@@ -3748,11 +3367,7 @@ propiziare	verb_pres_1_sg	propizi- like strapiombare
 propiziarsi	verb_pres_1_sg	propizi- like strapiombare	42	propiziati
 proporre	43	proponga	48	proponga	51	propongano
 proporsi	43	proponga	48	proponga	51	propongano
-prorogare	43	proroghi	48	proroghi	51	proroghino
-prosciogliere	43	prosciolga	48	prosciolga	51	prosciolgano
-prosciugare	43	prosciughi	48	prosciughi	51	prosciughino
-prosciugarsi	43	prosciughi	48	prosciughi	51	prosciughino
-proscrivere	verb_pres_1_sg	proscriv- like urgere
+prosciugarsi	verb_pres_1_sg	prosciug- like strapiombare	42	prosciugati
 proseggiare	verb_pres_1_sg	proseggi- like strapiombare
 proseguire	verb_pres_1_sg	prosegu- like urgere
 prospettarsi	verb_pres_1_sg	prospett- like strapiombare	42	prospettati
@@ -3768,7 +3383,6 @@ protrarsi	43	protragga	48	protragga	51	protraggano
 provarsi	verb_pres_1_sg	prov- like strapiombare	42	provati
 provedere	verb_pres_1_sg	proved- like urgere
 provenire	43	provenga	48	provenga	51	provengano
-provenzaleggiare	verb_pres_1_sg	provenzaleggi- like strapiombare
 proverbiare	verb_pres_1_sg	proverbi- like strapiombare
 provocare	43	provochi	48	provochi	51	provochino
 provocarsi	43	provochi	48	provochi	51	provochino
@@ -3776,7 +3390,7 @@ provvedere	verb_pres_1_sg	provved- like urgere
 provvedersi	verb_past	provvid- like urgere	verb_pres_1_sg	provved- like urgere	42	provvediti
 prueggiare	verb_pres_1_sg	prueggi- like strapiombare
 prurire	verb_pres_1_sg	prurisc- like urgere
-pubblicare	43	pubblichi	48	pubblichi	51	pubblichino
+pubblicare	verb_pres_1_sg	pubblic- like strapiombare
 pucciare	verb_pres_1_sg	pucci- like strapiombare
 puggiare	verb_pres_1_sg	puggi- like strapiombare
 pulire	verb_pres_1_sg	pulisc- like urgere
@@ -3791,8 +3405,8 @@ punzecchiare	verb_pres_1_sg	punzecchi- like strapiombare
 punzecchiarsi	verb_pres_1_sg	punzecchi- like strapiombare	42	punzecchiati
 purgare	43	purghi	48	purghi	51	purghino
 purgarsi	43	purghi	48	purghi	51	purghino
-purificare	43	purifichi	48	purifichi	51	purifichino
-purificarsi	43	purifichi	48	purifichi	51	purifichino
+purificare	verb_pres_1_sg	purific- like strapiombare
+purificarsi	verb_pres_1_sg	purific- like strapiombare	42	purificati
 purpureggiare	verb_pres_1_sg	purpureggi- like strapiombare
 putire	verb_pres_1_sg	putisc- like urgere
 putrefare	43	putrefaccia	48	putrefaccia	51	putrefacciano
@@ -3801,29 +3415,24 @@ putrire	verb_pres_1_sg	putrisc- like urgere
 puttaneggiare	verb_pres_1_sg	puttaneggi- like strapiombare
 puzzacchiare	verb_pres_1_sg	puzzacchi- like strapiombare
 puzzicchiare	verb_pres_1_sg	puzzicchi- like strapiombare
-quadruplicare	43	quadruplichi	48	quadruplichi	51	quadruplichino
-quadruplicarsi	43	quadruplichi	48	quadruplichi	51	quadruplichino
+quadruplicare	verb_pres_1_sg	quadruplic- like strapiombare
+quadruplicarsi	verb_pres_1_sg	quadruplic- like strapiombare	42	quadruplicati
 quagliare	verb_pres_1_sg	quagli- like strapiombare
-qualificare	43	qualifichi	48	qualifichi	51	qualifichino
-qualificarsi	43	qualifichi	48	qualifichi	51	qualifichino
-quantificare	43	quantifichi	48	quantifichi	51	quantifichino
-questuare	verb_pres_1_sg	questu- like strapiombare
+qualificare	verb_pres_1_sg	qualific- like strapiombare
+qualificarsi	verb_pres_1_sg	qualific- like strapiombare	42	qualificati
+quantificare	verb_pres_1_sg	quantific- like strapiombare
 quietarsi	verb_pres_1_sg	quiet- like strapiombare	42	quietati
 quintessenziare	verb_pres_1_sg	quintessenzi- like strapiombare
-quintuplicare	43	quintuplichi	48	quintuplichi	51	quintuplichino
-quintuplicarsi	43	quintuplichi	48	quintuplichi	51	quintuplichino
-rabbaruffare	verb_pres_1_sg	rabbaruff- like strapiombare
+quintuplicare	verb_pres_1_sg	quintuplic- like strapiombare
+quintuplicarsi	verb_pres_1_sg	quintuplic- like strapiombare	42	quintuplicati
 rabbellire	verb_pres_1_sg	rabbellisc- like urgere
-rabberciare	verb_pres_1_sg	rabberci- like strapiombare
 rabboccare	43	rabbocchi	48	rabbocchi	51	rabbocchino
 rabbonacciare	verb_pres_1_sg	rabbonacci- like strapiombare
 rabbonacciarsi	verb_pres_1_sg	rabbonacci- like strapiombare	42	rabbonacciati
 rabbonire	verb_pres_1_sg	rabbonisc- like urgere
 rabbonirsi	verb_pres_1_sg	rabbonisc- like urgere	42	rabbonisciti
-rabbracciare	verb_pres_1_sg	rabbracci- like strapiombare
-rabbriccicare	43	rabbriccichi	48	rabbriccichi	51	rabbriccichino
+rabbriccicare	verb_pres_1_sg	rabbriccic- like strapiombare
 rabbrividire	verb_pres_1_sg	rabbrividisc- like urgere
-rabbruscare	43	rabbruschi	48	rabbruschi	51	rabbruschino
 rabbuffare	verb_pres_1_sg	rabbuff- like strapiombare
 rabbuffarsi	verb_pres_1_sg	rabbuff- like strapiombare	42	rabbuffati
 rabbuiare	verb_pres_1_sg	rabbui- like strapiombare
@@ -3835,15 +3444,8 @@ raccapigliarsi	verb_pres_1_sg	raccapigli- like strapiombare	42	raccapigliati
 raccapricciare	verb_pres_1_sg	raccapricci- like strapiombare
 raccare	43	racchi	48	racchi	51	racchino
 raccenciare	verb_pres_1_sg	raccenci- like strapiombare
-raccerchiare	verb_pres_1_sg	raccerchi- like strapiombare
-racchetarsi	verb_pres_1_sg	racchet- like strapiombare	42	racchetati
-racchiudersi	verb_pres_1_sg	racchiud- like urgere	42	racchiuditi
 raccoccare	43	raccocchi	48	raccocchi	51	raccocchino
-raccogliere	43	raccolga	48	raccolga	51	raccolgano
 raccogliersi	43	raccolga	48	raccolga	51	raccolgano
-raccomandarsi	verb_pres_1_sg	raccomand- like strapiombare	42	raccomandati
-racconciare	verb_pres_1_sg	racconci- like strapiombare
-raccontarsi	verb_pres_1_sg	raccont- like strapiombare	42	raccontati
 raccoppiare	verb_pres_1_sg	raccoppi- like strapiombare
 raccorciare	verb_pres_1_sg	raccorci- like strapiombare
 raccorciarsi	verb_pres_1_sg	raccorci- like strapiombare	42	raccorciati
@@ -3854,32 +3456,22 @@ racquattarsi	verb_pres_1_sg	racquatt- like strapiombare	42	racquattati
 raddensarsi	verb_pres_1_sg	raddens- like strapiombare	42	raddensati
 raddolcire	verb_pres_1_sg	raddolcisc- like urgere
 raddolcirsi	verb_pres_1_sg	raddolcisc- like urgere	42	raddolcisciti
-raddoppiare	verb_pres_1_sg	raddoppi- like strapiombare
-raddrizzarsi	verb_pres_1_sg	raddrizz- like strapiombare	42	raddrizzati
 raddurre	verb_pres_1_sg	radduc- like urgere
 raddursi	verb_pres_1_sg	radduc- like urgere	42	radduciti
 radere	verb_pres_1_sg	rad- like urgere
 radersi	verb_pres_1_sg	rad- like urgere	42	raditi
 radiare	verb_pres_1_sg	radi- like strapiombare
-radicaleggiare	verb_pres_1_sg	radicaleggi- like strapiombare
-radicare	43	radichi	48	radichi	51	radichino
-radicarsi	43	radichi	48	radichi	51	radichino
-radioassistere	verb_pres_1_sg	radioassist- like urgere
-radiodiffondere	verb_pres_1_sg	radiodiffond- like urgere
+radicare	verb_pres_1_sg	radic- like strapiombare
+radicarsi	verb_pres_1_sg	radic- like strapiombare	42	radicati
 radiografare	verb_pres_1_sg	radiograf- like strapiombare
 radiomarcare	43	radiomarchi	48	radiomarchi	51	radiomarchino
-radiotelegrafare	verb_pres_1_sg	radiotelegraf- like strapiombare
 radunarsi	verb_pres_1_sg	radun- like strapiombare	42	radunati
 raffacciare	verb_pres_1_sg	raffacci- like strapiombare
 raffare	verb_pres_1_sg	raff- like strapiombare
-raffermarsi	verb_pres_1_sg	rafferm- like strapiombare	42	raffermati
 raffibbiare	verb_pres_1_sg	raffibbi- like strapiombare
 raffievolire	verb_pres_1_sg	raffievolisc- like urgere
 raffinire	verb_pres_1_sg	raffinisc- like urgere
 raffittire	verb_pres_1_sg	raffittisc- like urgere
-rafforzarsi	verb_pres_1_sg	rafforz- like strapiombare	42	rafforzati
-raffreddarsi	verb_pres_1_sg	raffredd- like strapiombare	42	raffreddati
-raffrenarsi	verb_pres_1_sg	raffren- like strapiombare	42	raffrenati
 raffrescare	43	raffreschi	48	raffreschi	51	raffreschino
 raggelarsi	verb_pres_1_sg	raggel- like strapiombare	42	raggelati
 raggentilire	verb_pres_1_sg	raggentilisc- like urgere
@@ -3893,7 +3485,6 @@ raggranchire	verb_pres_1_sg	raggranchisc- like urgere
 raggricciare	verb_pres_1_sg	raggricci- like strapiombare
 raggrinzire	verb_pres_1_sg	raggrinzisc- like urgere
 raggrinzirsi	verb_pres_1_sg	raggrinzisc- like urgere	42	raggrinzisciti
-raggrovigliare	verb_pres_1_sg	raggrovigli- like strapiombare
 raggrumarsi	verb_pres_1_sg	raggrum- like strapiombare	42	raggrumati
 raggrupparsi	verb_pres_1_sg	raggrupp- like strapiombare	42	raggruppati
 ragguagliare	verb_pres_1_sg	ragguagli- like strapiombare
@@ -3903,17 +3494,15 @@ ralingare	43	ralinghi	48	ralinghi	51	ralinghino
 rallacciare	verb_pres_1_sg	rallacci- like strapiombare
 rallargare	43	rallarghi	48	rallarghi	51	rallarghino
 rallegrarsi	verb_pres_1_sg	rallegr- like strapiombare	42	rallegrati
-rallentarsi	verb_pres_1_sg	rallent- like strapiombare	42	rallentati
 rallungare	43	rallunghi	48	rallunghi	51	rallunghino
 ramacciare	verb_pres_1_sg	ramacci- like strapiombare	5	ramacceno	7	ramacciamio	9	ramacciavio	11	ramacciaveno	14	ramacciassi	17	ramacciorno	24	ramaccerebbi	25	ramacceressimo	26	ramacceressi	27	ramacceressivo	29	ramaccerebbeno
 rameggiare	verb_pres_1_sg	rameggi- like strapiombare
-ramificare	43	ramifichi	48	ramifichi	51	ramifichino
-ramificarsi	43	ramifichi	48	ramifichi	51	ramifichino
+ramificare	verb_pres_1_sg	ramific- like strapiombare
+ramificarsi	verb_pres_1_sg	ramific- like strapiombare	42	ramificati
 ramingare	43	raminghi	48	raminghi	51	raminghino
-rammagliare	verb_pres_1_sg	rammagli- like strapiombare
 rammarcare	43	rammarchi	48	rammarchi	51	rammarchino
-rammaricare	43	rammarichi	48	rammarichi	51	rammarichino
-rammaricarsi	43	rammarichi	48	rammarichi	51	rammarichino
+rammaricare	verb_pres_1_sg	rammaric- like strapiombare
+rammaricarsi	verb_pres_1_sg	rammaric- like strapiombare	42	rammaricati
 rammemorarsi	verb_pres_1_sg	rammemor- like strapiombare	42	rammemorati
 rammentarsi	verb_pres_1_sg	ramment- like strapiombare	42	rammentati
 rammeschinire	verb_pres_1_sg	rammeschinisc- like urgere
@@ -3921,49 +3510,34 @@ rammollire	verb_pres_1_sg	rammollisc- like urgere
 rammollirsi	verb_pres_1_sg	rammollisc- like urgere	42	rammollisciti
 rammorbidire	verb_pres_1_sg	rammorbidisc- like urgere
 rammorbidirsi	verb_pres_1_sg	rammorbidisc- like urgere	42	rammorbidisciti
-rampicare	43	rampichi	48	rampichi	51	rampichino
+rampicare	verb_pres_1_sg	rampic- like strapiombare
 rancheggiare	verb_pres_1_sg	rancheggi- like strapiombare
-rancicare	43	rancichi	48	rancichi	51	rancichino
+rancicare	verb_pres_1_sg	rancic- like strapiombare
 rancidire	verb_pres_1_sg	rancidisc- like urgere
 randeggiare	verb_pres_1_sg	randeggi- like strapiombare
-rannicchiare	verb_pres_1_sg	rannicchi- like strapiombare
 rannicchiarsi	verb_pres_1_sg	rannicchi- like strapiombare	42	rannicchiati
 rannobilire	verb_pres_1_sg	rannobilisc- like urgere
 rannuvolarsi	verb_pres_1_sg	rannuvol- like strapiombare	42	rannuvolati
 rapire	verb_pres_1_sg	rapisc- like urgere
 rappaciare	verb_pres_1_sg	rappaci- like strapiombare
-rappacificare	43	rappacifichi	48	rappacifichi	51	rappacifichino
-rappacificarsi	43	rappacifichi	48	rappacifichi	51	rappacifichino
+rappacificarsi	verb_pres_1_sg	rappacific- like strapiombare	42	rappacificati
 rappallottolarsi	verb_pres_1_sg	rappallottol- like strapiombare	42	rappallottolati
 rappattumarsi	verb_pres_1_sg	rappattum- like strapiombare	42	rappattumati
 rappiccare	43	rappicchi	48	rappicchi	51	rappicchino
-rappiccicare	43	rappiccichi	48	rappiccichi	51	rappiccichino
+rappiccicare	verb_pres_1_sg	rappiccic- like strapiombare
 rappiccinire	verb_pres_1_sg	rappiccinisc- like urgere
 rappicciolire	verb_pres_1_sg	rappicciolisc- like urgere
 rappiccolire	verb_pres_1_sg	rappiccolisc- like urgere
-rappigliare	verb_pres_1_sg	rappigli- like strapiombare
-rappisolarsi	verb_pres_1_sg	rappisol- like strapiombare	42	rappisolati
-rapportarsi	verb_pres_1_sg	rapport- like strapiombare	42	rapportati
-rapprendersi	verb_pres_1_sg	rapprend- like urgere	42	rapprenditi
-rappresentarsi	verb_pres_1_sg	rappresent- like strapiombare	42	rappresentati
 rappropriare	verb_pres_1_sg	rappropri- like strapiombare
 rarefare	43	rarefaccia	48	rarefaccia	51	rarefacciano
 rarefarsi	43	rarefaccia	48	rarefaccia	51	rarefacciano
 rasarsi	verb_pres_1_sg	ras- like strapiombare	42	rasati
 raschiare	verb_pres_1_sg	raschi- like strapiombare
-rasciugare	43	rasciughi	48	rasciughi	51	rasciughino
-rassegare	43	rasseghi	48	rasseghi	51	rasseghino
-rassegnarsi	verb_pres_1_sg	rassegn- like strapiombare	42	rassegnati
-rasserenarsi	verb_pres_1_sg	rasseren- like strapiombare	42	rasserenati
 rassicurarsi	verb_pres_1_sg	rassicur- like strapiombare	42	rassicurati
-rassimigliare	verb_pres_1_sg	rassimigli- like strapiombare
 rassodarsi	verb_pres_1_sg	rassod- like strapiombare	42	rassodati
-rassomigliare	verb_pres_1_sg	rassomigli- like strapiombare
-rassomigliarsi	verb_pres_1_sg	rassomigli- like strapiombare	42	rassomigliati
-rassottigliare	verb_pres_1_sg	rassottigli- like strapiombare
 rassottigliarsi	verb_pres_1_sg	rassottigli- like strapiombare	42	rassottigliati
 rastremarsi	verb_pres_1_sg	rastrem- like strapiombare	42	rastremati
-ratificare	43	ratifichi	48	ratifichi	51	ratifichino
+ratificare	verb_pres_1_sg	ratific- like strapiombare
 rattaccare	43	rattacchi	48	rattacchi	51	rattacchino
 rattenere	43	rattenga	48	rattenga	51	rattengano
 rattepidire	verb_pres_1_sg	rattepidisc- like urgere
@@ -3979,11 +3553,8 @@ ravagliare	verb_pres_1_sg	ravagli- like strapiombare
 ravvedersi	verb_pres_1_sg	ravved- like urgere	42	ravvediti	55	ravvedutosi
 ravviare	2	ravvii	30	ravvii	43	ravvii	48	ravvii	51	ravviino
 ravviarsi	2	ravvii	30	ravvii	43	ravvii	48	ravvii	51	ravviino
-ravvigorire	verb_pres_1_sg	ravvigorisc- like urgere
 ravvilupparsi	verb_pres_1_sg	ravvilupp- like strapiombare	42	ravviluppati
 ravvivarsi	verb_pres_1_sg	ravviv- like strapiombare	42	ravvivati
-ravvolgersi	verb_pres_1_sg	ravvolg- like urgere	42	ravvolgiti
-ravvoltolarsi	verb_pres_1_sg	ravvoltol- like strapiombare	42	ravvoltolati
 razziare	2	razzii	30	razzii	43	razzii	48	razzii	51	razziino
 razzuffarsi	verb_pres_1_sg	razzuff- like strapiombare	42	razzuffati
 reagire	verb_pres_1_sg	reagisc- like urgere
@@ -4005,26 +3576,22 @@ redimere	verb_past	reden- like volgere	verb_pres_1_sg	redim- like urgere
 redimersi	verb_past	reden- like tingersi	verb_pres_1_sg	redim- like urgere	42	redimiti
 redire	verb_pres_1_sg	ried- like urgere
 redolire	verb_pres_1_sg	redolisc- like urgere
-reduplicare	43	reduplichi	48	reduplichi	51	reduplichino
+reduplicare	verb_pres_1_sg	reduplic- like strapiombare
 redurre	verb_pres_1_sg	reduc- like urgere
 referenziare	verb_pres_1_sg	referenzi- like strapiombare
 regalarsi	verb_pres_1_sg	regal- like strapiombare	42	regalati
 reggere	verb_pres_1_sg	regg- like urgere
 reggersi	verb_pres_1_sg	regg- like urgere	42	reggiti
 registrarsi	verb_pres_1_sg	registr- like strapiombare	42	registrati
-regolarizzarsi	verb_pres_1_sg	regolarizz- like strapiombare	42	regolarizzati
 regolarsi	verb_pres_1_sg	regol- like strapiombare	42	regolati
 regredire	verb_pres_1_sg	regredisc- like urgere
-reificare	43	reifichi	48	reifichi	51	reifichino
+reificare	verb_pres_1_sg	reific- like strapiombare
 reimbarcare	43	reimbarchi	48	reimbarchi	51	reimbarchino
 reimbarcarsi	43	reimbarchi	48	reimbarchi	51	reimbarchino
 reimmergersi	verb_pres_1_sg	reimmerg- like urgere	42	reimmergiti
-reimpiegare	43	reimpieghi	48	reimpieghi	51	reimpieghino
-reincaricare	43	reincarichi	48	reincarichi	51	reincarichino
 reincarnarsi	verb_pres_1_sg	reincarn- like strapiombare	42	reincarnati
 reinfettarsi	verb_pres_1_sg	reinfett- like strapiombare	42	reinfettati
 reingaggiare	verb_pres_1_sg	reingaggi- like strapiombare
-reinscrivere	verb_pres_1_sg	reinscriv- like urgere
 reinsediare	verb_pres_1_sg	reinsedi- like strapiombare
 reinsediarsi	verb_pres_1_sg	reinsedi- like strapiombare	42	reinsediati
 reinserirsi	verb_pres_1_sg	reinserisc- like urgere	42	reinserisciti
@@ -4035,15 +3602,14 @@ reintrodursi	verb_pres_1_sg	reintroduc- like urgere	42	reintroduciti
 reinventarsi	verb_pres_1_sg	reinvent- like strapiombare	42	reinventati
 reinvestire	verb_pres_1_sg	reinvest- like urgere
 relazionarsi	verb_pres_1_sg	relazion- like strapiombare	42	relazionati
-relegare	43	releghi	48	releghi	51	releghino
-relinquere	55	relitto
+relinquere	verb_past	reli- like reggere
 remeggiare	verb_pres_1_sg	remeggi- like strapiombare
 remigare	43	remighi	48	remighi	51	remighino
 remorchiare	verb_pres_1_sg	remorchi- like strapiombare
 rendersi	verb_pres_1_sg	rend- like urgere	42	renditi
 repentirsi	verb_pres_1_sg	repent- like urgere	42	repentiti
-replicare	43	replichi	48	replichi	51	replichino
-replicarsi	43	replichi	48	replichi	51	replichino
+replicare	verb_pres_1_sg	replic- like strapiombare
+replicarsi	verb_pres_1_sg	replic- like strapiombare	42	replicati
 reporre	43	reponga	48	reponga	51	repongano
 reprimersi	verb_pres_1_sg	reprim- like urgere	42	reprimiti
 reputarsi	verb_pres_1_sg	reput- like strapiombare	42	reputati
@@ -4051,8 +3617,7 @@ requiare	verb_pres_1_sg	requi- like strapiombare
 requisire	verb_pres_1_sg	requisisc- like urgere
 rescindere	verb_pres_1_sg	rescind- like urgere
 resecare	verb_pres_1_sg	resec- like strapiombare
-residuare	verb_pres_1_sg	residu- like strapiombare
-resinificare	43	resinifichi	48	resinifichi	51	resinifichino
+resinificare	verb_pres_1_sg	resinific- like strapiombare
 resistere	verb_pres_1_sg	resist- like urgere
 resolvere	verb_pres_1_sg	resolv- like urgere
 respingersi	verb_pres_1_sg	resping- like urgere	42	respingiti
@@ -4065,7 +3630,7 @@ retentire	verb_pres_1_sg	retentisc- like urgere
 retrarre	43	retragga	48	retragga	51	retraggano
 retroagire	verb_pres_1_sg	retroagisc- like urgere
 retrocedere	verb_pres_1_sg	retroced- like urgere
-rettificare	43	rettifichi	48	rettifichi	51	rettifichino
+rettificare	verb_pres_1_sg	rettific- like strapiombare
 revocare	43	revochi	48	revochi	51	revochino
 riammollire	54	riammollente
 riandare	0	rivado	4	rivà
@@ -4099,7 +3664,6 @@ ridimensionarsi	43	ridimensioni	48	ridimensioni	51	ridimensionino
 ridurre	43	riduca	48	riduca	51	riducano
 ridursi	43	riduca	48	riduca	51	riducano
 riempirsi	0	riempio	4	riempie	5	riempiono	30	riempia	32	riempia	34	riempia	35	riempiano	42	riempiti	43	riempia	46	riempiano	48	riempia	51	riempiano	53	riempiendosi	54	riempientesi
-riepilogare	43	riepiloghi	48	riepiloghi	51	riepiloghino
 riessere	0	risono	2	risei	4	rie	5	risono	16	rifù	42	risii
 rifare	4	rifà
 rifarsi	4	rifà	42	rifatti
@@ -4111,7 +3675,7 @@ rifrangersi	43	rifranga	48	rifranga	51	rifrangano
 rifronzire	43	rifronzisca	48	rifronzisca	51	rifronziscano
 rifugiare	43	rifugi	48	rifugi	51	rifugino
 rifugiarsi	43	rifugi	48	rifugi	51	rifugino
-rigare	43	righi	48	righi	51	righino
+rigare	43	righi	48	righi
 riguernire	43	riguernisca	48	riguernisca	51	riguerniscano
 rilassarsi	43	rilassi	48	rilassi	51	rilassino
 rimanere	2	rimani	4	rimane	12	rimasi	16	rimase	17	rimasero	42	rimani	43	rimanga	48	rimanga	51	rimangano	55	rimasto
@@ -4156,7 +3720,7 @@ rimmelensire	43	rimmelensisca	48	rimmelensisca	51	rimmelensiscano
 rimminchionire	43	rimminchionisca	48	rimminchionisca	51	rimminchioniscano
 rimorchiare	43	rimorchi	48	rimorchi	51	rimorchino
 rimorchiarsi	43	rimorchi	48	rimorchi	51	rimorchino
-rimovere	43	rimova	48	rimova	51	rimovano	55	rimosso
+rimovere	43	rimova	48	rimova	51	rimovano
 rimpaciare	43	rimpaci	48	rimpaci	51	rimpacino
 rimpadronirsi	43	rimpadronisca	48	rimpadronisca	51	rimpadroniscano
 rimpagliare	43	rimpagli	48	rimpagli	51	rimpaglino
@@ -4169,8 +3733,7 @@ rimpeciare	43	rimpeci	48	rimpeci	51	rimpecino
 rimpellicciare	43	rimpellicci	48	rimpellicci	51	rimpelliccino
 rimpennarsi	43	rimpenni	48	rimpenni	51	rimpennino
 rimpiaccicare	43	rimpiaccichi	48	rimpiaccichi	51	rimpiaccichino
-rimpiagare	43	rimpiaghi	48	rimpiaghi	51	rimpiaghino
-rimpiallacciare	43	rimpiallacci	48	rimpiallacci	51	rimpiallaccino
+rimpiagare	43	rimpiaghi	48	rimpiaghi
 rimpiastricciare	43	rimpiastricci	48	rimpiastricci	51	rimpiastriccino
 rimpiattarsi	43	rimpiatti	48	rimpiatti	51	rimpiattino
 rimpiccinire	43	rimpiccinisca	48	rimpiccinisca	51	rimpicciniscano
@@ -4178,10 +3741,8 @@ rimpicciolire	43	rimpicciolisca	48	rimpicciolisca	51	rimpiccioliscano
 rimpicciolirsi	43	rimpicciolisca	48	rimpicciolisca	51	rimpiccioliscano
 rimpiccolire	43	rimpiccolisca	48	rimpiccolisca	51	rimpiccoliscano
 rimpiccolirsi	43	rimpiccolisca	48	rimpiccolisca	51	rimpiccoliscano
-rimpiegare	43	rimpieghi	48	rimpieghi	51	rimpieghino
 rimpietosire	43	rimpietosisca	48	rimpietosisca	51	rimpietosiscano
 rimpigrire	43	rimpigrisca	48	rimpigrisca	51	rimpigriscano
-rimpinguare	43	rimpingui	48	rimpingui	51	rimpinguino
 rimpinzarsi	43	rimpinzi	48	rimpinzi	51	rimpinzino
 rimpoltronire	43	rimpoltronisca	48	rimpoltronisca	51	rimpoltroniscano
 rimpossessarsi	43	rimpossessi	48	rimpossessi	51	rimpossessino
@@ -4201,7 +3762,6 @@ rincanagliarsi	43	rincanagli	48	rincanagli	51	rincanaglino
 rincantucciare	43	rincantucci	48	rincantucci	51	rincantuccino
 rincantucciarsi	43	rincantucci	48	rincantucci	51	rincantuccino
 rincaponirsi	43	rincaponisca	48	rincaponisca	51	rincaponiscano
-rincappucciare	43	rincappucci	48	rincappucci	51	rincappuccino
 rincarire	43	rincarisca	48	rincarisca	51	rincariscano
 rincarnarsi	43	rincarni	48	rincarni	51	rincarnino
 rincarognire	43	rincarognisca	48	rincarognisca	51	rincarogniscano
@@ -4219,7 +3779,6 @@ rincoglionire	43	rincoglionisca	48	rincoglionisca	51	rincoglioniscano
 rincoglionirsi	43	rincoglionisca	48	rincoglionisca	51	rincoglioniscano
 rincominciare	43	rincominci	48	rincominci	51	rincomincino
 rincontrarsi	43	rincontri	48	rincontri	51	rincontrino
-rincoraggiare	43	rincoraggi	48	rincoraggi	51	rincoraggino
 rincoraggire	43	rincoraggisca	48	rincoraggisca	51	rincoraggiscano
 rincorarsi	43	rincori	48	rincori	51	rincorino
 rincorbellire	43	rincorbellisca	48	rincorbellisca	51	rincorbelliscano
@@ -4239,7 +3798,7 @@ rindugiare	43	rindugi	48	rindugi	51	rindugino
 rindurire	43	rindurisca	48	rindurisca	51	rinduriscano
 rinevicare	43	rinevichi	48	rinevichi	51	rinevichino
 rinfacciare	43	rinfacci	48	rinfacci	51	rinfaccino
-rinfangare	43	rinfanghi	48	rinfanghi	51	rinfanghino
+rinfangare	43	rinfanghi	48	rinfanghi
 rinfarcire	43	rinfarcisca	48	rinfarcisca	51	rinfarciscano
 rinfiammarsi	43	rinfiammi	48	rinfiammi	51	rinfiammino
 rinfiancare	43	rinfianchi	48	rinfianchi	51	rinfianchino
@@ -4280,7 +3839,7 @@ ringiovanirsi	43	ringiovanisca	48	ringiovanisca	51	ringiovaniscano
 ringiovenire	43	ringiovenisca	48	ringiovenisca	51	ringioveniscano
 ringoiare	43	ringoi	48	ringoi	51	ringoino
 ringolfare	43	ringolfi	48	ringolfi	51	ringolfino
-ringorgare	43	ringorghi	48	ringorghi	51	ringorghino
+ringorgare	43	ringorghi	48	ringorghi
 ringrandire	43	ringrandisca	48	ringrandisca	51	ringrandiscano
 ringraziare	43	ringrazi	48	ringrazi	51	ringrazino
 ringraziarsi	43	ringrazi	48	ringrazi	51	ringrazino
@@ -4288,14 +3847,12 @@ ringrinzire	43	ringrinzisca	48	ringrinzisca	51	ringrinziscano
 ringrullire	43	ringrullisca	48	ringrullisca	51	ringrulliscano
 rinnaffiare	43	rinnaffi	48	rinnaffi	51	rinnaffino
 rinnamorarsi	43	rinnamori	48	rinnamori	51	rinnamorino
-rinnegare	43	rinneghi	48	rinneghi	51	rinneghino
 rinnervarsi	43	rinnervi	48	rinnervi	51	rinnervino
 rinnovarsi	43	rinnovi	48	rinnovi	51	rinnovino
 rinsabbiare	43	rinsabbi	48	rinsabbi	51	rinsabbino
 rinsaccare	43	rinsacchi	48	rinsacchi	51	rinsacchino
 rinsaldarsi	43	rinsaldi	48	rinsaldi	51	rinsaldino
 rinsalvatichire	43	rinsalvatichisca	48	rinsalvatichisca	51	rinsalvatichiscano
-rinsanguare	43	rinsangui	48	rinsangui	51	rinsanguino
 rinsanire	43	rinsanisca	48	rinsanisca	51	rinsaniscano
 rinsavire	43	rinsavisca	48	rinsavisca	51	rinsaviscano
 rinsecchire	43	rinsecchisca	48	rinsecchisca	51	rinsecchiscano
@@ -4308,7 +3865,6 @@ rintanarsi	43	rintani	48	rintani	51	rintanino
 rintascare	43	rintaschi	48	rintaschi	51	rintaschino
 rintelaiare	43	rintelai	48	rintelai	51	rintelaino
 rintepidire	43	rintepidisca	48	rintepidisca	51	rintepidiscano
-rinterrogare	43	rinterroghi	48	rinterroghi	51	rinterroghino
 rintiepidire	43	rintiepidisca	48	rintiepidisca	51	rintiepidiscano
 rintimidire	43	rintimidisca	48	rintimidisca	51	rintimidiscano
 rintoccare	43	rintocchi	48	rintocchi	51	rintocchino
@@ -4326,13 +3882,13 @@ rinumidire	43	rinumidisca	48	rinumidisca	51	rinumidiscano
 rinunciare	43	rinunci	48	rinunci	51	rinuncino
 rinunziare	43	rinunzi	48	rinunzi	51	rinunzino
 rinutrire	verb_pres_1_sg	rinutrisc- like urgere
-rinvangare	43	rinvanghi	48	rinvanghi	51	rinvanghino
+rinvangare	43	rinvanghi	48	rinvanghi
 rinvelenire	43	rinvelenisca	48	rinvelenisca	51	rinveleniscano
 rinvenire	43	rinvenga	48	rinvenga	51	rinvengano
 rinvenirsi	43	rinvenga	48	rinvenga	51	rinvengano
 rinverdire	43	rinverdisca	48	rinverdisca	51	rinverdiscano
 rinverdirsi	43	rinverdisca	48	rinverdisca	51	rinverdiscano
-rinvergare	43	rinverghi	48	rinverghi	51	rinverghino
+rinvergare	43	rinverghi	48	rinverghi
 rinverminire	43	rinverminisca	48	rinverminisca	51	rinverminiscano
 rinverniciare	43	rinvernici	48	rinvernici	51	rinvernicino
 rinvertire	43	rinverta	48	rinverta	51	rinvertano
@@ -4352,7 +3908,6 @@ ripetersi	43	ripeta	48	ripeta	51	ripetano
 ripigliarsi	43	ripigli	48	ripigli	51	ripiglino
 ripolire	43	ripolisca	48	ripolisca	51	ripoliscano
 ripudiare	43	ripudi	48	ripudi	51	ripudino
-risanguare	43	risangui	48	risangui	51	risanguino
 risapere	0	risò	4	risà
 risarcire	43	risarcisca	48	risarcisca	51	risarciscano
 riscalducciare	43	riscalducci	48	riscalducci	51	riscalduccino
@@ -4388,62 +3943,58 @@ robotizzarsi	verb_pres_1_sg	robotizz- like strapiombare	42	robotizzati
 rodere	verb_pres_1_sg	rod- like urgere
 rodersi	verb_pres_1_sg	rod- like urgere	42	roditi
 rodiare	verb_pres_1_sg	rodi- like strapiombare
-rogare	43	roghi	48	roghi	51	roghino
 romanzeggiare	verb_pres_1_sg	romanzeggi- like strapiombare
 rompersi	verb_pres_1_sg	romp- like urgere	42	rompiti
 roncare	43	ronchi	48	ronchi	51	ronchino
 ronfare	verb_pres_1_sg	ronf- like strapiombare
-rosicare	43	rosichi	48	rosichi	51	rosichino
+rosicare	verb_pres_1_sg	rosic- like strapiombare
 rosicchiare	verb_pres_1_sg	rosicchi- like strapiombare
 rosseggiare	verb_pres_1_sg	rosseggi- like strapiombare
-rossicare	43	rossichi	48	rossichi	51	rossichino
+rossicare	verb_pres_1_sg	rossic- like strapiombare
 rotare	verb_pres_1_sg	ruot- like strapiombare
 roteggiare	verb_pres_1_sg	roteggi- like strapiombare
 rotolarsi	verb_pres_1_sg	rotol- like strapiombare	42	rotolati
-rotondeggiare	verb_pres_1_sg	rotondeggi- like strapiombare
 rovesciare	verb_pres_1_sg	rovesci- like strapiombare
 rovesciarsi	verb_pres_1_sg	rovesci- like strapiombare	42	rovesciati
 rovigliare	verb_pres_1_sg	rovigli- like strapiombare
 rovinarsi	verb_pres_1_sg	rovin- like strapiombare	42	rovinati
 rubacchiare	verb_pres_1_sg	rubacchi- like strapiombare
 rubarsi	verb_pres_1_sg	rub- like strapiombare	42	rubati
-rubricare	43	rubrichi	48	rubrichi	51	rubrichino
+rubricare	verb_pres_1_sg	rubric- like strapiombare
 ruffianeggiare	verb_pres_1_sg	ruffianeggi- like strapiombare
-rugare	43	rughi	48	rughi	51	rughino
 rugghiare	verb_pres_1_sg	rugghi- like strapiombare
 ruggire	verb_pres_1_sg	ruggisc- like urgere
 rugliare	verb_pres_1_sg	rugli- like strapiombare
 rumoreggiare	verb_pres_1_sg	rumoreggi- like strapiombare
-russificare	43	russifichi	48	russifichi	51	russifichino
+russificare	verb_pres_1_sg	russific- like strapiombare
 sabbiare	verb_pres_1_sg	sabbi- like strapiombare
-saccarificare	43	saccarifichi	48	saccarifichi	51	saccarifichino
+saccarificare	verb_pres_1_sg	saccarific- like strapiombare
 saccheggiare	verb_pres_1_sg	saccheggi- like strapiombare
-sacrificare	43	sacrifichi	48	sacrifichi	51	sacrifichino
-sacrificarsi	43	sacrifichi	48	sacrifichi	51	sacrifichino
+sacrificare	verb_pres_1_sg	sacrific- like strapiombare
+sacrificarsi	verb_pres_1_sg	sacrific- like strapiombare	42	sacrificati
 saggiare	verb_pres_1_sg	saggi- like strapiombare
 saglire	verb_pres_1_sg	sagli- like urgere
-sagrificare	43	sagrifichi	48	sagrifichi	51	sagrifichino
+sagrificare	verb_pres_1_sg	sagrific- like strapiombare
 salameleccare	43	salamelecchi	48	salamelecchi	51	salamelecchino
 salamoiare	verb_pres_1_sg	salamoi- like strapiombare
 salariare	verb_pres_1_sg	salari- like strapiombare
 saldarsi	verb_pres_1_sg	sald- like strapiombare	42	saldati
-salificare	43	salifichi	48	salifichi	51	salifichino
+salificare	verb_pres_1_sg	salific- like strapiombare
 salire	verb_pres_1_sg	salg- like urgere	2	sali	4	sale	42	sali
 salmeggiare	verb_pres_1_sg	salmeggi- like strapiombare
 salmodiare	verb_pres_1_sg	salmodi- like strapiombare
 saltabeccare	43	saltabecchi	48	saltabecchi	51	saltabecchino
 salutarsi	verb_pres_1_sg	salut- like strapiombare	42	salutati
-salvaguardarsi	verb_pres_1_sg	salvaguard- like strapiombare	42	salvaguardati
 salvarsi	verb_pres_1_sg	salv- like strapiombare	42	salvati
 sanarsi	verb_pres_1_sg	san- like strapiombare	42	sanati
 sancire	verb_pres_1_sg	sancisc- like urgere
-sanguificare	43	sanguifichi	48	sanguifichi	51	sanguifichino
-sanguificarsi	43	sanguifichi	48	sanguifichi	51	sanguifichino
-sanificare	43	sanifichi	48	sanifichi	51	sanifichino
-santificare	43	santifichi	48	santifichi	51	santifichino
+sanguificare	verb_pres_1_sg	sanguific- like strapiombare
+sanguificarsi	verb_pres_1_sg	sanguific- like strapiombare	42	sanguificati
+sanificare	verb_pres_1_sg	sanific- like strapiombare
+santificare	verb_pres_1_sg	santific- like strapiombare
 sapere	verb_pres_1_sg	sappi- like urgere	0	so	2	sai	4	sa	5	sanno
-sapersi	verb	sap- like vedersi	verb_past	sepp- like urgere	verb_pres_1_pl	sappi- like tapparsi	verb_pres_1_sg	sappi- like urgere	0	so	2	sai	4	sa	5	sanno	42	sappiti	53	sapendosi
-saponificare	43	saponifichi	48	saponifichi	51	saponifichino
+sapersi	verb	sap- like vivere	verb_past	sepp- like urgere	verb_pres_1_pl	sappi- like tapparsi	verb_pres_1_sg	sappi- like urgere	0	so	2	sai	4	sa	5	sanno	33	sappiate	42	sappiti	47	saperti	52	sapersi	53	sapendosi
+saponificare	verb_pres_1_sg	saponific- like strapiombare
 saporire	verb_pres_1_sg	saporisc- like urgere
 saporirsi	verb_pres_1_sg	saporisc- like urgere	42	saporisciti
 sarchiare	verb_pres_1_sg	sarchi- like strapiombare
@@ -4476,31 +4027,26 @@ sbandarsi	verb_pres_1_sg	sband- like strapiombare	42	sbandati
 sbandeggiare	verb_pres_1_sg	sbandeggi- like strapiombare
 sbandire	verb_pres_1_sg	sbandisc- like urgere
 sbaraccare	43	sbaracchi	48	sbaracchi	51	sbaracchino
-sbaragliare	verb_pres_1_sg	sbaragli- like strapiombare
 sbarazzarsi	verb_pres_1_sg	sbarazz- like strapiombare	42	sbarazzati
 sbarbagliare	verb_pres_1_sg	sbarbagli- like strapiombare
 sbarbarire	verb_pres_1_sg	sbarbarisc- like urgere
 sbarbarsi	verb_pres_1_sg	sbarb- like strapiombare	42	sbarbati
-sbarbicare	43	sbarbichi	48	sbarbichi	51	sbarbichino
-sbarbificare	43	sbarbifichi	48	sbarbifichi	51	sbarbifichino
+sbarbicare	verb_pres_1_sg	sbarbic- like strapiombare
+sbarbificare	verb_pres_1_sg	sbarbific- like strapiombare
 sbarcare	43	sbarchi	48	sbarchi	51	sbarchino
 sbasire	verb_pres_1_sg	sbasisc- like urgere
 sbastire	verb_pres_1_sg	sbastisc- like urgere
 sbatacchiare	verb_pres_1_sg	sbatacchi- like strapiombare
-sbattagliare	verb_pres_1_sg	sbattagli- like strapiombare
 sbattersi	verb_pres_1_sg	sbatt- like urgere	42	sbattiti
 sbattezzarsi	verb_pres_1_sg	sbattezz- like strapiombare	42	sbattezzati
 sbaudire	verb_pres_1_sg	sbaudisc- like urgere
-sbavagliare	verb_pres_1_sg	sbavagli- like strapiombare
 sbavarsi	verb_pres_1_sg	sbav- like strapiombare	42	sbavati
 sbavicchiare	verb_pres_1_sg	sbavicchi- like strapiombare
-sbavigliare	verb_pres_1_sg	sbavigli- like strapiombare
 sbeccare	43	sbecchi	48	sbecchi	51	sbecchino
-sbeccucciare	verb_pres_1_sg	sbeccucci- like strapiombare
 sbeffare	verb_pres_1_sg	sbeff- like strapiombare
 sbeffeggiare	verb_pres_1_sg	sbeffeggi- like strapiombare
-sbellicare	43	sbellichi	48	sbellichi	51	sbellichino
-sbellicarsi	43	sbellichi	48	sbellichi	51	sbellichino
+sbellicare	verb_pres_1_sg	sbellic- like strapiombare
+sbellicarsi	verb_pres_1_sg	sbellic- like strapiombare	42	sbellicati
 sberciare	verb_pres_1_sg	sberci- like strapiombare
 sberleffare	verb_pres_1_sg	sberleff- like strapiombare
 sberlingacciare	verb_pres_1_sg	sberlingacci- like strapiombare
@@ -4513,13 +4059,11 @@ sbiadirsi	verb_pres_1_sg	sbiadisc- like urgere	42	sbiadisciti
 sbiancare	43	sbianchi	48	sbianchi	51	sbianchino
 sbianchire	verb_pres_1_sg	sbianchisc- like urgere
 sbiasciare	verb_pres_1_sg	sbiasci- like strapiombare
-sbiascicarsi	43	sbiascichi	48	sbiascichi	51	sbiascichino
+sbiascicarsi	verb_pres_1_sg	sbiascic- like strapiombare	42	sbiascicati
 sbiecare	verb_pres_1_sg	sbiec- like strapiombare
 sbigonciare	verb_pres_1_sg	sbigonci- like strapiombare
 sbigottire	verb_pres_1_sg	sbigottisc- like urgere
 sbigottirsi	verb_pres_1_sg	sbigottisc- like urgere	42	sbigottisciti
-sbilanciare	verb_pres_1_sg	sbilanci- like strapiombare
-sbilanciarsi	verb_pres_1_sg	sbilanci- like strapiombare	42	sbilanciati
 sbilencare	43	sbilenchi	48	sbilenchi	51	sbilenchino
 sbiluciare	verb_pres_1_sg	sbiluci- like strapiombare
 sbirciare	verb_pres_1_sg	sbirci- like strapiombare
@@ -4534,7 +4078,6 @@ sbloccarsi	43	sblocchi	48	sblocchi	51	sblocchino
 sboccare	43	sbocchi	48	sbocchi	51	sbocchino
 sbocciare	verb_pres_1_sg	sbocci- like strapiombare
 sbolgiare	verb_pres_1_sg	sbolgi- like strapiombare
-sbollentarsi	verb_pres_1_sg	sbollent- like strapiombare	42	sbollentati
 sbollire	verb_pres_1_sg	sbollisc- like urgere
 sborniare	verb_pres_1_sg	sborni- like strapiombare
 sborniarsi	verb_pres_1_sg	sborni- like strapiombare	42	sborniati
@@ -4549,7 +4092,7 @@ sbragare	43	sbraghi	48	sbraghi	51	sbraghino
 sbranarsi	verb_pres_1_sg	sbran- like strapiombare	42	sbranati
 sbrancare	43	sbranchi	48	sbranchi	51	sbranchino
 sbrancarsi	43	sbranchi	48	sbranchi	51	sbranchino
-sbrancicare	43	sbrancichi	48	sbrancichi	51	sbrancichino
+sbrancicare	verb_pres_1_sg	sbrancic- like strapiombare
 sbreccare	43	sbrecchi	48	sbrecchi	51	sbrecchino
 sbreccarsi	43	sbrecchi	48	sbrecchi	51	sbrecchino
 sbrecciare	verb_pres_1_sg	sbrecci- like strapiombare
@@ -4560,7 +4103,6 @@ sbrigare	43	sbrighi	48	sbrighi	51	sbrighino
 sbrigarsi	43	sbrighi	48	sbrighi	51	sbrighino
 sbrigliare	verb_pres_1_sg	sbrigli- like strapiombare
 sbrigliarsi	verb_pres_1_sg	sbrigli- like strapiombare	42	sbrigliati
-sbrilluccicare	43	sbrilluccichi	48	sbrilluccichi	51	sbrilluccichino
 sbroccare	43	sbrocchi	48	sbrocchi	51	sbrocchino
 sbrodolarsi	verb_pres_1_sg	sbrodol- like strapiombare	42	sbrodolati
 sbrogliare	verb_pres_1_sg	sbrogli- like strapiombare
@@ -4591,7 +4133,6 @@ scalciare	verb_pres_1_sg	scalci- like strapiombare
 scaldarsi	verb_pres_1_sg	scald- like strapiombare	42	scaldati
 scalducciarsi	verb_pres_1_sg	scalducci- like strapiombare	42	scalducciati
 scalfare	verb_pres_1_sg	scalf- like strapiombare
-scalfiggere	verb_pres_1_sg	scalfigg- like urgere
 scalfire	verb_pres_1_sg	scalfisc- like urgere
 scalfirsi	verb_pres_1_sg	scalfisc- like urgere	42	scalfisciti
 scalmanarsi	verb_pres_1_sg	scalman- like strapiombare	42	scalmanati
@@ -4616,25 +4157,22 @@ scantucciare	verb_pres_1_sg	scantucci- like strapiombare
 scaparsi	verb_pres_1_sg	scap- like strapiombare	42	scapati
 scapecchiare	verb_pres_1_sg	scapecchi- like strapiombare
 scapicollarsi	verb_pres_1_sg	scapicoll- like strapiombare	42	scapicollati
-scapigliare	verb_pres_1_sg	scapigli- like strapiombare
 scapocchiare	verb_pres_1_sg	scapocchi- like strapiombare
 scappellarsi	verb_pres_1_sg	scappell- like strapiombare	42	scappellati
-scappucciare	verb_pres_1_sg	scappucci- like strapiombare
 scapricciare	verb_pres_1_sg	scapricci- like strapiombare
 scapriccire	verb_pres_1_sg	scapriccisc- like urgere
 scarabocchiare	verb_pres_1_sg	scarabocchi- like strapiombare
 scaracchiare	verb_pres_1_sg	scaracchi- like strapiombare
 scaracciare	verb_pres_1_sg	scaracci- like strapiombare
-scaramucciare	verb_pres_1_sg	scaramucci- like strapiombare
 scaraventarsi	verb_pres_1_sg	scaravent- like strapiombare	42	scaraventati
 scarcare	43	scarchi	48	scarchi	51	scarchino
 scardinarsi	verb_pres_1_sg	scardin- like strapiombare	42	scardinati
 scarduffare	verb_pres_1_sg	scarduff- like strapiombare
-scaricare	43	scarichi	48	scarichi	51	scarichino
-scarificare	43	scarifichi	48	scarifichi	51	scarifichino
+scaricare	verb_pres_1_sg	scaric- like strapiombare
+scarificare	verb_pres_1_sg	scarific- like strapiombare
 scarmigliare	verb_pres_1_sg	scarmigli- like strapiombare
 scarmigliarsi	verb_pres_1_sg	scarmigli- like strapiombare	42	scarmigliati
-scarnificare	43	scarnifichi	48	scarnifichi	51	scarnifichino
+scarnificare	verb_pres_1_sg	scarnific- like strapiombare
 scarnire	verb_pres_1_sg	scarnisc- like urgere
 scarpicciare	verb_pres_1_sg	scarpicci- like strapiombare
 scarrocciare	verb_pres_1_sg	scarrocci- like strapiombare
@@ -4652,9 +4190,9 @@ scazzarsi	verb_pres_1_sg	scazz- like strapiombare	42	scazzati
 scazzottarsi	verb_pres_1_sg	scazzott- like strapiombare	42	scazzottati
 scegliere	43	scelga	48	scelga	51	scelgano
 scegliersi	43	scelga	48	scelga	51	scelgano
-scegnere	verb_pres_1_pl	scegne- like lanciare	verb_pres_1_sg	scegn- like strapiombare	4	scegne	5	scegneno	7	scegnemio	9	scegnevio	11	scegneveno	14	scegnessi	17	scenseno	24	scegnerebbi	25	scegneressimo	26	scegneressi	27	scegneressivo	29	scegnerebbeno	42	scegne
+scegnere	verb_pres_1_pl	scegne- like noiare	verb_pres_1_sg	scegn- like strapiombare	4	scegne	5	scegneno	7	scegnemio	9	scegnevio	11	scegneveno	14	scegnessi	17	scenseno	24	scegnerebbi	25	scegneressimo	26	scegneressi	27	scegneressivo	29	scegnerebbeno	33	scegnete	42	scegne
 scempiare	verb_pres_1_sg	scempi- like strapiombare
-scempicare	43	scempichi	48	scempichi	51	scempichino
+scempicare	verb_pres_1_sg	scempic- like strapiombare
 sceneggiare	verb_pres_1_sg	sceneggi- like strapiombare
 scernere	verb_past	scer- like volgere	verb_pres_1_sg	scern- like urgere
 scervellarsi	verb_pres_1_sg	scervell- like strapiombare	42	scervellati
@@ -4674,9 +4212,8 @@ schiantarsi	verb_pres_1_sg	schiant- like strapiombare	42	schiantati
 schiarire	verb_pres_1_sg	schiarisc- like urgere
 schiarirsi	verb_pres_1_sg	schiarisc- like urgere	42	schiarisciti
 schiattire	verb_pres_1_sg	schiattisc- like urgere
-schiavacciare	verb_pres_1_sg	schiavacci- like strapiombare
 schierarsi	verb_pres_1_sg	schier- like strapiombare	42	schierati
-schiericare	43	schierichi	48	schierichi	51	schierichino
+schiericare	verb_pres_1_sg	schieric- like strapiombare
 schifare	verb_pres_1_sg	schif- like strapiombare
 schifarsi	verb_pres_1_sg	schif- like strapiombare	42	schifati
 schinciare	verb_pres_1_sg	schinci- like strapiombare
@@ -4684,18 +4221,15 @@ schioccare	43	schiocchi	48	schiocchi	51	schiocchino
 schiodarsi	verb_pres_1_sg	schiod- like strapiombare	42	schiodati
 schiostrarsi	verb_pres_1_sg	schiostr- like strapiombare	42	schiostrati
 schiudersi	verb_pres_1_sg	schiud- like urgere	42	schiuditi
-sciabicare	43	sciabichi	48	sciabichi	51	sciabichino
-sciacquare	verb_pres_1_sg	sciacqu- like strapiombare
+sciabicare	verb_pres_1_sg	sciabic- like strapiombare
 sciacquarsi	verb_pres_1_sg	sciacqu- like strapiombare	42	sciacquati
-scialacquare	verb_pres_1_sg	scialacqu- like strapiombare
 scialarsi	verb_pres_1_sg	scial- like strapiombare	42	scialati
 sciampiare	verb_pres_1_sg	sciampi- like strapiombare
 sciancare	43	scianchi	48	scianchi	51	scianchino
 sciancarsi	43	scianchi	48	scianchi	51	scianchino
-sciare	2	scii	18	scierò	22	scierà	23	scieranno	26	scieresti	30	scii	43	scii	48	scii	51	sciino
+sciare	verb	scie- like vivere	2	scii	3	sciate	30	scii	43	scii	47	sciare	48	scii	51	sciino	52	sciare
 scignere	43	scinga	48	scinga	51	scingano
 scilaccare	43	scilacchi	48	scilacchi	51	scilacchino
-scilinguare	verb_pres_1_sg	scilingu- like strapiombare
 scimmieggiare	verb_pres_1_sg	scimmieggi- like strapiombare
 scindere	verb_pres_1_sg	scind- like urgere
 scindersi	verb_past	sciss- like perdersi	verb_pres_1_sg	scind- like urgere	42	scinditi
@@ -4707,8 +4241,6 @@ scioncare	43	scionchi	48	scionchi	51	scionchino
 scionnarsi	verb_pres_1_sg	scionn- like strapiombare	42	scionnati
 sciorre	43	sciolga	48	sciolga	51	sciolgano
 scipidire	verb_pres_1_sg	scipidisc- like urgere
-sciugare	43	sciughi	48	sciughi	51	sciughino
-sciupacchiare	verb_pres_1_sg	sciupacchi- like strapiombare
 sciuparsi	verb_pres_1_sg	sciup- like strapiombare	42	sciupati
 sciusciuliare	verb_pres_1_sg	sciusciuli- like strapiombare
 sclerotizzarsi	verb_pres_1_sg	sclerotizz- like strapiombare	42	sclerotizzati
@@ -4720,7 +4252,6 @@ scoglionarsi	verb_pres_1_sg	scoglion- like strapiombare	42	scoglionati
 scoiare	verb_pres_1_sg	scoi- like strapiombare
 scollacciarsi	verb_pres_1_sg	scollacci- like strapiombare	42	scollacciati
 scollarsi	verb_pres_1_sg	scoll- like strapiombare	42	scollati
-scollegare	43	scolleghi	48	scolleghi	51	scolleghino
 scolorarsi	verb_pres_1_sg	scolor- like strapiombare	42	scolorati
 scolorire	verb_pres_1_sg	scolorisc- like urgere
 scolorirsi	verb_pres_1_sg	scolorisc- like urgere	42	scolorisciti
@@ -4729,8 +4260,7 @@ scolpire	verb_pres_1_sg	scolpisc- like urgere
 scombaciare	verb_pres_1_sg	scombaci- like strapiombare
 scombugliare	verb_pres_1_sg	scombugli- like strapiombare
 scombuiare	verb_pres_1_sg	scombui- like strapiombare
-scommettersi	verb_pres_1_sg	scommett- like urgere	42	scommettiti
-scommunicare	43	scommunichi	48	scommunichi	51	scommunichino
+scommunicare	verb_pres_1_sg	scommunic- like strapiombare
 scommuovere	verb_pres_1_sg	scommuov- like urgere
 scomodarsi	verb_pres_1_sg	scomod- like strapiombare	42	scomodati
 scompaginarsi	verb_pres_1_sg	scompagin- like strapiombare	42	scompaginati
@@ -4738,18 +4268,15 @@ scompagnarsi	verb_pres_1_sg	scompagn- like strapiombare	42	scompagnati
 scomparire	43	scompaia	48	scompaia	51	scompaiano
 scompartire	verb_pres_1_sg	scompartisc- like urgere
 scompiacere	43	scompiaccia	48	scompiaccia	51	scompiacciano
-scompigliare	verb_pres_1_sg	scompigli- like strapiombare
-scompisciare	verb_pres_1_sg	scompisci- like strapiombare
 scompisciarsi	verb_pres_1_sg	scompisci- like strapiombare	42	scompisciati
 scomporre	43	scomponga	48	scomponga	51	scompongano
 scomporsi	43	scomponga	48	scomponga	51	scompongano
-scomunicare	43	scomunichi	48	scomunichi	51	scomunichino
+scomunicare	verb_pres_1_sg	scomunic- like strapiombare
 sconcare	43	sconchi	48	sconchi	51	sconchino
 sconcertarsi	verb_pres_1_sg	sconcert- like strapiombare	42	sconcertati
 sconciare	verb_pres_1_sg	sconci- like strapiombare
 scondizionarsi	verb_pres_1_sg	scondizion- like strapiombare	42	scondizionati
 sconficcare	43	sconficchi	48	sconficchi	51	sconficchino
-sconfiggere	verb_pres_1_sg	sconfigg- like urgere
 sconfondere	verb_pres_1_sg	sconfond- like urgere
 sconfortarsi	verb_pres_1_sg	sconfort- like strapiombare	42	sconfortati
 scongelarsi	verb_pres_1_sg	scongel- like strapiombare	42	scongelati
@@ -4761,24 +4288,21 @@ scontessere	verb_pres_1_sg	scontess- like urgere
 scontrarsi	verb_pres_1_sg	scontr- like strapiombare	42	scontrati
 sconvenire	43	sconvenga	48	sconvenga	51	sconvengano
 sconvocare	43	sconvochi	48	sconvochi	51	sconvochino
-sconvolgersi	verb_pres_1_sg	sconvolg- like urgere	42	sconvolgiti
 scoparsi	verb_pres_1_sg	scop- like strapiombare	42	scopati
 scoperchiare	verb_pres_1_sg	scoperchi- like strapiombare
 scoppiare	verb_pres_1_sg	scoppi- like strapiombare
 scoprire	verb_pres_1_sg	scopr- like urgere
 scoprirsi	verb_pres_1_sg	scopr- like urgere	42	scopriti
-scoraggiare	verb_pres_1_sg	scoraggi- like strapiombare
 scoraggiarsi	verb_pres_1_sg	scoraggi- like strapiombare	42	scoraggiati
 scoraggire	verb_pres_1_sg	scoraggisc- like urgere
 scorare	verb_pres_1_sg	scuor- like strapiombare
 scorarsi	verb_pres_1_sg	scuor- like strapiombare	42	scuorati
-scorbacchiare	verb_pres_1_sg	scorbacchi- like strapiombare
 scorciare	verb_pres_1_sg	scorci- like strapiombare
 scorciarsi	verb_pres_1_sg	scorci- like strapiombare	42	scorciati
 scorcire	verb_pres_1_sg	scorcisc- like urgere
 scordarsi	verb_pres_1_sg	scord- like strapiombare	42	scordati
 scoreggiare	verb_pres_1_sg	scoreggi- like strapiombare
-scorificare	43	scorifichi	48	scorifichi	51	scorifichino
+scorificare	verb_pres_1_sg	scorific- like strapiombare
 scornacchiare	verb_pres_1_sg	scornacchi- like strapiombare
 scornarsi	verb_pres_1_sg	scorn- like strapiombare	42	scornati
 scorniciare	verb_pres_1_sg	scornici- like strapiombare
@@ -4787,20 +4311,19 @@ scorreggiare	verb_pres_1_sg	scorreggi- like strapiombare
 scorrere	verb_pres_1_sg	scorr- like urgere
 scorrucciarsi	verb_pres_1_sg	scorrucci- like strapiombare	42	scorrucciati
 scortecciare	verb_pres_1_sg	scortecci- like strapiombare
-scorticare	43	scortichi	48	scortichi	51	scortichino
-scorticarsi	43	scortichi	48	scortichi	51	scortichino
+scorticare	verb_pres_1_sg	scortic- like strapiombare
+scorticarsi	verb_pres_1_sg	scortic- like strapiombare	42	scorticati
 scorzarsi	verb_pres_1_sg	scorz- like strapiombare	42	scorzati
 scosciare	verb_pres_1_sg	scosci- like strapiombare
 scosciarsi	verb_pres_1_sg	scosci- like strapiombare	42	scosciati
 scostarsi	verb_pres_1_sg	scost- like strapiombare	42	scostati
-scoticare	43	scotichi	48	scotichi	51	scotichino
+scoticare	verb_pres_1_sg	scotic- like strapiombare
 scottarsi	verb_pres_1_sg	scott- like strapiombare	42	scottati
 scoverchiare	verb_pres_1_sg	scoverchi- like strapiombare
 scovrire	verb_pres_1_sg	scovr- like urgere
 scredere	verb_pres_1_sg	scred- like urgere
 screpolarsi	verb_pres_1_sg	screpol- like strapiombare	42	screpolati
 screziare	verb_pres_1_sg	screzi- like strapiombare
-scribacchiare	verb_pres_1_sg	scribacchi- like strapiombare
 scricchiare	verb_pres_1_sg	scricchi- like strapiombare
 scrivacchiare	verb_pres_1_sg	scrivacchi- like strapiombare
 scrivere	verb_pres_1_sg	scriv- like urgere
@@ -4834,8 +4357,8 @@ sdentarsi	verb_pres_1_sg	sdent- like strapiombare	42	sdentati
 sdiacciare	verb_pres_1_sg	sdiacci- like strapiombare
 sdigiunarsi	verb_pres_1_sg	sdigiun- like strapiombare	42	sdigiunati
 sdilinquirsi	verb_pres_1_sg	sdilinquisc- like urgere	42	sdilinquisciti
-sdimenticare	43	sdimentichi	48	sdimentichi	51	sdimentichino
-sdire	verb_pres_1_sg	sdic- like urgere
+sdimenticare	verb_pres_1_sg	sdimentic- like strapiombare
+sdire	43	sdica	48	sdica	51	sdicano
 sdolere	verb_pres_1_sg	sdolg- like urgere	2	sduoli	4	sduole	42	sduoli	55	sdoluto
 sdoppiare	verb_pres_1_sg	sdoppi- like strapiombare
 sdoppiarsi	verb_pres_1_sg	sdoppi- like strapiombare	42	sdoppiati
@@ -4850,21 +4373,19 @@ seccarsi	43	secchi	48	secchi	51	secchino
 secernere	verb_pres_1_sg	secern- like urgere	55	secreto
 secolareggiare	verb_pres_1_sg	secolareggi- like strapiombare
 sedere	verb_pres_1_sg	sied- like urgere
-sedersi	4	siede	18	siederò	22	siederà	23	siederanno	26	siederesti	30	sieda	43	sieda	48	sieda	51	siedano
+sedersi	verb	siede- like vivere	verb_pres_1_sg	sied- like urgere	3	sedete	42	siediti	47	sederti	52	sedersi
 sedimentarsi	verb_pres_1_sg	sediment- like strapiombare	42	sedimentati
 sedurre	verb_pres_1_sg	seduc- like urgere
-segare	43	seghi	48	seghi	51	seghino
-segarsi	43	seghi	48	seghi	51	seghino
+segarsi	verb_pres_1_sg	seg- like strapiombare	42	segati
 segnalarsi	verb_pres_1_sg	segnal- like strapiombare	42	segnalati
 segnarsi	verb_pres_1_sg	segn- like strapiombare	42	segnati
 segnoreggiare	verb_pres_1_sg	segnoreggi- like strapiombare
-segregare	43	segreghi	48	segreghi	51	segreghino
 seguire	verb_pres_1_sg	segu- like urgere
 seguirsi	verb_pres_1_sg	segu- like urgere	42	seguiti
 selciare	verb_pres_1_sg	selci- like strapiombare
 sembiare	verb_pres_1_sg	sembi- like strapiombare
 sementire	verb_pres_1_sg	sementisc- like urgere
-semplificare	43	semplifichi	48	semplifichi	51	semplifichino
+semplificare	verb_pres_1_sg	semplific- like strapiombare
 sentenziare	verb_pres_1_sg	sentenzi- like strapiombare
 sentire	verb_pres_1_sg	sent- like urgere
 sentirsi	verb_pres_1_sg	sent- like urgere	42	sentiti
@@ -4881,11 +4402,10 @@ serpeggiare	verb_pres_1_sg	serpeggi- like strapiombare
 serrarsi	verb_pres_1_sg	serr- like strapiombare	42	serrati
 servire	verb_pres_1_sg	serv- like urgere
 servirsi	verb_pres_1_sg	serv- like urgere	42	serviti
-servoassistere	verb_pres_1_sg	servoassist- like urgere
-sestuplicare	43	sestuplichi	48	sestuplichi	51	sestuplichino
+sestuplicare	verb_pres_1_sg	sestuplic- like strapiombare
 setacciare	verb_pres_1_sg	setacci- like strapiombare
-setificare	43	setifichi	48	setifichi	51	setifichino
-settuplicare	43	settuplichi	48	settuplichi	51	settuplichino
+setificare	verb_pres_1_sg	setific- like strapiombare
+settuplicare	verb_pres_1_sg	settuplic- like strapiombare
 seviziare	verb_pres_1_sg	sevizi- like strapiombare
 sfacciare	verb_pres_1_sg	sfacci- like strapiombare
 sfagliare	verb_pres_1_sg	sfagli- like strapiombare
@@ -4897,11 +4417,10 @@ sfarinarsi	verb_pres_1_sg	sfarin- like strapiombare	42	sfarinati
 sfarsi	4	sfa	43	sfaccia	48	sfaccia	51	sfacciano
 sfasciare	verb_pres_1_sg	sfasci- like strapiombare
 sfasciarsi	verb_pres_1_sg	sfasci- like strapiombare	42	sfasciati
-sfaticare	43	sfatichi	48	sfatichi	51	sfatichino
+sfaticare	verb_pres_1_sg	sfatic- like strapiombare
 sfavorire	verb_pres_1_sg	sfavorisc- like urgere
 sfegatarsi	verb_pres_1_sg	sfegat- like strapiombare	42	sfegatati
 sfendere	verb_pres_1_sg	sfend- like urgere
-sferragliare	verb_pres_1_sg	sferragli- like strapiombare
 sfiancare	43	sfianchi	48	sfianchi	51	sfianchino
 sfiancarsi	43	sfianchi	48	sfianchi	51	sfianchino
 sfiatarsi	verb_pres_1_sg	sfiat- like strapiombare	42	sfiatati
@@ -4911,7 +4430,7 @@ sfiduciare	verb_pres_1_sg	sfiduci- like strapiombare
 sfiduciarsi	verb_pres_1_sg	sfiduci- like strapiombare	42	sfiduciati
 sfilacciare	verb_pres_1_sg	sfilacci- like strapiombare
 sfilacciarsi	verb_pres_1_sg	sfilacci- like strapiombare	42	sfilacciati
-sfilaccicare	43	sfilaccichi	48	sfilaccichi	51	sfilaccichino
+sfilaccicare	verb_pres_1_sg	sfilaccic- like strapiombare
 sfilarsi	verb_pres_1_sg	sfil- like strapiombare	42	sfilati
 sfinire	verb_pres_1_sg	sfinisc- like urgere
 sfinirsi	verb_pres_1_sg	sfinisc- like urgere	42	sfinisciti
@@ -4921,8 +4440,7 @@ sfiorire	verb_pres_1_sg	sfiorisc- like urgere
 sfittire	verb_pres_1_sg	sfittisc- like urgere
 sfocare	43	sfochi	48	sfochi	51	sfochino
 sfociare	verb_pres_1_sg	sfoci- like strapiombare
-sfogare	43	sfoghi	48	sfoghi	51	sfoghino
-sfogarsi	43	sfoghi	48	sfoghi	51	sfoghino
+sfogarsi	verb_pres_1_sg	sfog- like strapiombare	42	sfogati
 sfoggiare	verb_pres_1_sg	sfoggi- like strapiombare
 sfogliare	verb_pres_1_sg	sfogli- like strapiombare
 sfolgoreggiare	verb_pres_1_sg	sfolgoreggi- like strapiombare
@@ -4945,11 +4463,9 @@ sfratarsi	verb_pres_1_sg	sfrat- like strapiombare	42	sfratati
 sfrecciare	verb_pres_1_sg	sfrecci- like strapiombare
 sfreddarsi	verb_pres_1_sg	sfredd- like strapiombare	42	sfreddati
 sfregacciare	verb_pres_1_sg	sfregacci- like strapiombare
-sfregare	43	sfreghi	48	sfreghi	51	sfreghino
-sfregarsi	43	sfreghi	48	sfreghi	51	sfreghino
+sfregarsi	verb_pres_1_sg	sfreg- like strapiombare	42	sfregati
 sfregiare	verb_pres_1_sg	sfregi- like strapiombare
 sfrenarsi	verb_pres_1_sg	sfren- like strapiombare	42	sfrenati
-sfriggere	verb_pres_1_sg	sfrigg- like urgere
 sfrondarsi	verb_pres_1_sg	sfrond- like strapiombare	42	sfrondati
 sfrucugliare	verb_pres_1_sg	sfrucugli- like strapiombare
 sfruculiare	verb_pres_1_sg	sfruculi- like strapiombare
@@ -4979,7 +4495,7 @@ sgorbiare	verb_pres_1_sg	sgorbi- like strapiombare
 sgorgare	43	sgorghi	48	sgorghi	51	sgorghino
 sgradire	verb_pres_1_sg	sgradisc- like urgere
 sgraffiare	verb_pres_1_sg	sgraffi- like strapiombare
-sgrammaticare	43	sgrammatichi	48	sgrammatichi	51	sgrammatichino
+sgrammaticare	verb_pres_1_sg	sgrammatic- like strapiombare
 sgranchiare	verb_pres_1_sg	sgranchi- like strapiombare
 sgranchire	verb_pres_1_sg	sgranchisc- like urgere
 sgranchirsi	verb_pres_1_sg	sgranchisc- like urgere	42	sgranchisciti
@@ -4987,7 +4503,6 @@ sgranocchiare	verb_pres_1_sg	sgranocchi- like strapiombare
 sgravarsi	verb_pres_1_sg	sgrav- like strapiombare	42	sgravati
 sgretolarsi	verb_pres_1_sg	sgretol- like strapiombare	42	sgretolati
 sgrillettarsi	verb_pres_1_sg	sgrillett- like strapiombare	42	sgrillettati	55	sgrillettatasi
-sgrovigliare	verb_pres_1_sg	sgrovigli- like strapiombare
 sgualcire	verb_pres_1_sg	sgualcisc- like urgere
 sgualcirsi	verb_pres_1_sg	sgualcisc- like urgere	42	sgualcisciti
 sguanciare	verb_pres_1_sg	sguanci- like strapiombare
@@ -4997,7 +4512,7 @@ sguiggiare	verb_pres_1_sg	sguiggi- like strapiombare
 sguinzagliare	verb_pres_1_sg	sguinzagli- like strapiombare
 sgusciare	verb_pres_1_sg	sgusci- like strapiombare
 shoccare	43	shocchi	48	shocchi	51	shocchino
-significare	43	significhi	48	significhi	51	significhino
+significare	verb_pres_1_sg	signific- like strapiombare
 signoreggiare	verb_pres_1_sg	signoreggi- like strapiombare
 silenziare	verb_pres_1_sg	silenzi- like strapiombare
 simboleggiare	verb_pres_1_sg	simboleggi- like strapiombare
@@ -5013,7 +4528,6 @@ sintonizzarsi	verb_pres_1_sg	sintonizz- like strapiombare	42	sintonizzati
 siringare	43	siringhi	48	siringhi	51	siringhino
 sistemarsi	verb_pres_1_sg	sistem- like strapiombare	42	sistemati
 sitire	verb_pres_1_sg	sitisc- like urgere
-situare	verb_pres_1_sg	situ- like strapiombare
 situarsi	verb_pres_1_sg	situ- like strapiombare	42	situati
 slabbrarsi	verb_pres_1_sg	slabbr- like strapiombare	42	slabbrati
 slacciare	verb_pres_1_sg	slacci- like strapiombare
@@ -5023,10 +4537,7 @@ slanciare	verb_pres_1_sg	slanci- like strapiombare
 slanciarsi	verb_pres_1_sg	slanci- like strapiombare	42	slanciati
 slargare	43	slarghi	48	slarghi	51	slarghino
 slargarsi	43	slarghi	48	slarghi	51	slarghino
-slegare	43	sleghi	48	sleghi	51	sleghino
-slegarsi	43	sleghi	48	sleghi	51	sleghino
-slinguare	verb_pres_1_sg	slingu- like strapiombare
-slogare	43	sloghi	48	sloghi	51	sloghino
+slegarsi	verb_pres_1_sg	sleg- like strapiombare	42	slegati
 sloggare	43	slogghi	48	slogghi	51	slogghino
 sloggiare	verb_pres_1_sg	sloggi- like strapiombare
 slumacare	43	slumachi	48	slumachi	51	slumachino
@@ -5047,7 +4558,7 @@ smanacciare	verb_pres_1_sg	smanacci- like strapiombare
 smangiare	verb_pres_1_sg	smangi- like strapiombare
 smangiucchiare	verb_pres_1_sg	smangiucchi- like strapiombare
 smaniare	verb_pres_1_sg	smani- like strapiombare
-smanicarsi	43	smanichi	48	smanichi	51	smanichino
+smanicarsi	verb_pres_1_sg	smanic- like strapiombare	42	smanicati
 smantellarsi	verb_pres_1_sg	smantell- like strapiombare	42	smantellati
 smarcare	43	smarchi	48	smarchi	51	smarchino
 smarcarsi	43	smarchi	48	smarchi	51	smarchino
@@ -5059,7 +4570,7 @@ smaterializzarsi	verb_pres_1_sg	smaterializz- like strapiombare	42	smaterializza
 smembrarsi	verb_pres_1_sg	smembr- like strapiombare	42	smembrati
 smemorarsi	verb_pres_1_sg	smemor- like strapiombare	42	smemorati
 smencire	verb_pres_1_sg	smencisc- like urgere
-smenticare	43	smentichi	48	smentichi	51	smentichino
+smenticare	verb_pres_1_sg	smentic- like strapiombare
 smentire	verb_pres_1_sg	smentisc- like urgere
 smentirsi	verb_pres_1_sg	smentisc- like urgere	42	smentisciti
 smerciare	verb_pres_1_sg	smerci- like strapiombare
@@ -5067,12 +4578,11 @@ smerigliare	verb_pres_1_sg	smerigli- like strapiombare
 smerlucciare	verb_pres_1_sg	smerlucci- like strapiombare
 sminchiare	verb_pres_1_sg	sminchi- like strapiombare
 sminuirsi	verb_pres_1_sg	sminuisc- like urgere	42	sminuisciti
-smitragliare	verb_pres_1_sg	smitragli- like strapiombare
 smobiliare	verb_pres_1_sg	smobili- like strapiombare
-smoccicare	43	smoccichi	48	smoccichi	51	smoccichino
+smoccicare	verb_pres_1_sg	smoccic- like strapiombare
 smogliarsi	verb_pres_1_sg	smogli- like strapiombare	42	smogliati
-smollicare	43	smollichi	48	smollichi	51	smollichino
-smollicarsi	43	smollichi	48	smollichi	51	smollichino
+smollicare	verb_pres_1_sg	smollic- like strapiombare
+smollicarsi	verb_pres_1_sg	smollic- like strapiombare	42	smollicati
 smonacare	43	smonachi	48	smonachi	51	smonachino
 smonacarsi	43	smonachi	48	smonachi	51	smonachino
 smoncare	43	smonchi	48	smonchi	51	smonchino
@@ -5080,8 +4590,8 @@ smontarsi	verb_pres_1_sg	smont- like strapiombare	42	smontati
 smorire	43	smuoia	48	smuoia	51	smuoiano
 smortire	verb_pres_1_sg	smortisc- like urgere
 smorzarsi	verb_pres_1_sg	smorz- like strapiombare	42	smorzati
-smovere	43	smova	48	smova	51	smovano	55	smosso
-smozzicare	43	smozzichi	48	smozzichi	51	smozzichino
+smovere	verb_pres_1_sg	smov- like urgere
+smozzicare	verb_pres_1_sg	smozzic- like strapiombare
 smucciare	verb_pres_1_sg	smucci- like strapiombare
 smuovere	verb_pres_1_sg	smuov- like urgere
 smuoversi	verb_pres_1_sg	smuov- like urgere	42	smuoviti
@@ -5099,22 +4609,16 @@ sobbollire	verb_pres_1_sg	sobboll- like urgere
 soccombere	verb_pres_1_sg	soccomb- like urgere
 soccorrere	verb_pres_1_sg	soccorr- like urgere
 socrateggiare	verb_pres_1_sg	socrateggi- like strapiombare
-soddisfarsi	0	soddisfò
 sofferere	verb_pres_1_sg	soffer- like urgere	55	sofferto
 sofferire	verb_past	soffer- like morire	verb_pres_1_sg	soffer- like urgere
-soffermarsi	verb_pres_1_sg	sofferm- like strapiombare	42	soffermati
 soffiare	verb_pres_1_sg	soffi- like strapiombare
 soffiarsi	verb_pres_1_sg	soffi- like strapiombare	42	soffiati
 soffocare	43	soffochi	48	soffochi	51	soffochino
 soffocarsi	43	soffochi	48	soffochi	51	soffochino
-soffogare	43	soffoghi	48	soffoghi	51	soffoghino
 soffondere	verb_pres_1_sg	soffond- like urgere
-soffregare	43	soffreghi	48	soffreghi	51	soffreghino
-soffriggere	verb_pres_1_sg	soffrigg- like urgere
 soffrire	participle_pres	sofferente- like girare	verb_pres_1_sg	soffr- like urgere
-sofisticare	43	sofistichi	48	sofistichi	51	sofistichino
+sofisticare	verb_pres_1_sg	sofistic- like strapiombare
 soggiacere	43	soggiaccia	48	soggiaccia	51	soggiacciano
-soggiogare	43	soggioghi	48	soggioghi	51	soggioghino
 sognarsi	verb_pres_1_sg	sogn- like strapiombare	42	sognati
 soiare	verb_pres_1_sg	soi- like strapiombare
 solcare	43	solchi	48	solchi	51	solchino
@@ -5122,10 +4626,9 @@ soleggiare	verb_pres_1_sg	soleggi- like strapiombare
 solere	2	suoli
 solfare	verb_pres_1_sg	solf- like strapiombare
 solfeggiare	verb_pres_1_sg	solfeggi- like strapiombare
-solidificare	43	solidifichi	48	solidifichi	51	solidifichino
-solidificarsi	43	solidifichi	48	solidifichi	51	solidifichino
+solidificare	verb_pres_1_sg	solidific- like strapiombare
+solidificarsi	verb_pres_1_sg	solidific- like strapiombare	42	solidificati
 sollazzarsi	verb_pres_1_sg	sollazz- like strapiombare	42	sollazzati
-solleticare	43	solletichi	48	solletichi	51	solletichino
 sollevarsi	verb_pres_1_sg	sollev- like strapiombare	42	sollevati
 solvere	verb_pres_1_sg	solv- like urgere	55	soluto
 someggiare	verb_pres_1_sg	someggi- like strapiombare
@@ -5142,32 +4645,18 @@ sopirsi	verb_pres_1_sg	sopisc- like urgere	42	sopisciti
 soppalcare	43	soppalchi	48	soppalchi	51	soppalchino
 soppellire	verb_pres_1_sg	soppellisc- like urgere	55	sepolto
 sopporre	43	sopponga	48	sopponga	51	soppongano
-sopportarsi	verb_pres_1_sg	sopport- like strapiombare	42	sopportati
 soprabbevere	verb_pres_1_sg	soprabbev- like urgere
-sopraccaricare	43	sopraccarichi	48	sopraccarichi	51	sopraccarichino
-sopraccorrere	verb_pres_1_sg	sopraccorr- like urgere
-sopraedificare	43	sopraedifichi	48	sopraedifichi	51	sopraedifichino
-sopraelevarsi	verb_pres_1_sg	sopraelev- like strapiombare	42	sopraelevati
 sopraffare	43	sopraffaccia	48	sopraffaccia	51	sopraffacciano
-sopraggiudicare	43	sopraggiudichi	48	sopraggiudichi	51	sopraggiudichino
 soprapagare	43	soprapaghi	48	soprapaghi	51	soprapaghino
 sopraporre	43	sopraponga	48	sopraponga	51	soprapongano
-soprappagare	43	soprappaghi	48	soprappaghi	51	soprappaghino
 soprapporre	43	soprapponga	48	soprapponga	51	soprappongano
-soprascrivere	verb_pres_1_sg	soprascriv- like urgere
 soprassapere	43	soprassappia	48	soprassappia	51	soprassappiano
 soprassedere	verb_pres_1_sg	soprassied- like urgere
-sopravvalutarsi	verb_pres_1_sg	sopravvalut- like strapiombare	42	sopravvalutati
 sopravvedere	verb_pres_1_sg	sopravved- like urgere
-sopravvegliare	verb_pres_1_sg	sopravvegli- like strapiombare
-sopravvenire	43	sopravvenga	48	sopravvenga	51	sopravvengano
 sopravvivere	verb_pres_1_sg	sopravviv- like urgere
-sopreccedere	verb_pres_1_sg	soprecced- like urgere
-sopredificare	43	sopredifichi	48	sopredifichi	51	sopredifichino
 sorbire	verb_pres_1_sg	sorbisc- like urgere
 sorbirsi	verb_pres_1_sg	sorbisc- like urgere	42	sorbisciti
 sornacchiare	verb_pres_1_sg	sornacchi- like strapiombare
-sorprendersi	verb_pres_1_sg	sorprend- like urgere	42	sorprenditi
 sorradere	verb_pres_1_sg	sorrad- like urgere
 sorrecchiare	verb_pres_1_sg	sorrecchi- like strapiombare
 sorreggere	verb_pres_1_sg	sorregg- like urgere
@@ -5175,11 +4664,10 @@ sorridersi	verb_pres_1_sg	sorrid- like urgere	42	sorriditi
 sorseggiare	verb_pres_1_sg	sorseggi- like strapiombare
 sorteggiare	verb_pres_1_sg	sorteggi- like strapiombare
 sortire	verb_pres_1_sg	sort- like urgere
-sorvegliare	verb_pres_1_sg	sorvegli- like strapiombare
 sorvenire	43	sorvenga	48	sorvenga	51	sorvengano
 soscrivere	verb_pres_1_sg	soscriv- like urgere
 sospecciare	verb_pres_1_sg	sospecci- like strapiombare
-sospicare	43	sospichi	48	sospichi	51	sospichino
+sospicare	verb_pres_1_sg	sospic- like strapiombare
 sospicciare	verb_pres_1_sg	sospicci- like strapiombare
 sospignere	verb_pres_1_sg	sospign- like urgere
 sostantivarsi	verb_pres_1_sg	sostantiv- like strapiombare	42	sostantivati
@@ -5193,28 +4681,18 @@ sottacere	43	sottaccia	48	sottaccia	51	sottacciano
 sottigliare	verb_pres_1_sg	sottigli- like strapiombare
 sottoesporre	43	sottoesponga	48	sottoesponga	51	sottoespongano
 sottogiacere	43	sottogiaccia	48	sottogiaccia	51	sottogiacciano
-sottomettersi	verb_pres_1_sg	sottomett- like urgere	42	sottomettiti
 sottopagare	43	sottopaghi	48	sottopaghi	51	sottopaghino
 sottoporre	43	sottoponga	48	sottoponga	51	sottopongano
 sottoporsi	43	sottoponga	48	sottoponga	51	sottopongano
-sottoscrivere	verb_pres_1_sg	sottoscriv- like urgere
 sottostare	43	sottostia	48	sottostia	51	sottostiano
-sottovalutarsi	verb_pres_1_sg	sottovalut- like strapiombare	42	sottovalutati
-sottraggere	verb_pres_1_sg	sottragg- like urgere
 sottrarre	43	sottragga	48	sottragga	51	sottraggano
 sottrarsi	43	sottragga	48	sottragga	51	sottraggano
 soverchiare	verb_pres_1_sg	soverchi- like strapiombare
 sovesciare	verb_pres_1_sg	sovesci- like strapiombare
-sovraccaricare	43	sovraccarichi	48	sovraccarichi	51	sovraccarichino
-sovraccaricarsi	43	sovraccarichi	48	sovraccarichi	51	sovraccarichino
 sovraesporre	43	sovraesponga	48	sovraesponga	51	sovraespongano
-sovraffaticare	43	sovraffatichi	48	sovraffatichi	51	sovraffatichino
-sovraffaticarsi	43	sovraffatichi	48	sovraffatichi	51	sovraffatichino
 sovraimporre	43	sovraimponga	48	sovraimponga	51	sovraimpongano
 sovrapporre	43	sovrapponga	48	sovrapponga	51	sovrappongano
 sovrapporsi	43	sovrapponga	48	sovrapponga	51	sovrappongano
-sovrascorrere	verb_pres_1_sg	sovrascorr- like urgere
-sovrascrivere	verb_pres_1_sg	sovrascriv- like urgere
 sovresporre	43	sovresponga	48	sovresponga	51	sovrespongano
 sovrimporre	43	sovrimponga	48	sovrimponga	51	sovrimpongano
 sovvenire	43	sovvenga	48	sovvenga	51	sovvengano
@@ -5268,7 +4746,7 @@ spazzolarsi	verb_pres_1_sg	spazzol- like strapiombare	42	spazzolati
 specchiare	verb_pres_1_sg	specchi- like strapiombare
 specchiarsi	verb_pres_1_sg	specchi- like strapiombare	42	specchiati
 specializzarsi	verb_pres_1_sg	specializz- like strapiombare	42	specializzati
-specificare	43	specifichi	48	specifichi	51	specifichino
+specificare	verb_pres_1_sg	specific- like strapiombare
 spedantire	verb_pres_1_sg	spedantisc- like urgere
 spedire	verb_pres_1_sg	spedisc- like urgere
 spedirsi	verb_pres_1_sg	spedisc- like urgere	42	spedisciti
@@ -5285,17 +4763,16 @@ spennacchiare	verb_pres_1_sg	spennacchi- like strapiombare
 spennarsi	verb_pres_1_sg	spenn- like strapiombare	42	spennati
 spenzolarsi	verb_pres_1_sg	spenzol- like strapiombare	42	spenzolati
 sperdere	verb_pres_1_sg	sperd- like urgere
-sperequare	verb_pres_1_sg	sperequ- like strapiombare
 spericolarsi	verb_pres_1_sg	spericol- like strapiombare	42	spericolati
 spernacchiare	verb_pres_1_sg	spernacchi- like strapiombare
 spersonalizzarsi	verb_pres_1_sg	spersonalizz- like strapiombare	42	spersonalizzati
-sperticarsi	43	spertichi	48	spertichi	51	spertichino
+sperticarsi	verb_pres_1_sg	spertic- like strapiombare	42	sperticati
 spessire	verb_pres_1_sg	spessisc- like urgere
 spettinarsi	verb_pres_1_sg	spettin- like strapiombare	42	spettinati
 speziare	verb_pres_1_sg	spezi- like strapiombare
 spezzarsi	verb_pres_1_sg	spezz- like strapiombare	42	spezzati
-spiaccicare	43	spiaccichi	48	spiaccichi	51	spiaccichino
-spiaccicarsi	43	spiaccichi	48	spiaccichi	51	spiaccichino
+spiaccicare	verb_pres_1_sg	spiaccic- like strapiombare
+spiaccicarsi	verb_pres_1_sg	spiaccic- like strapiombare	42	spiaccicati
 spiacere	43	spiaccia	48	spiaccia	51	spiacciano
 spiacersi	43	spiaccia	48	spiaccia	51	spiacciano
 spiaggiare	verb_pres_1_sg	spiaggi- like strapiombare
@@ -5305,23 +4782,22 @@ spiccare	43	spicchi	48	spicchi	51	spicchino
 spicchiare	verb_pres_1_sg	spicchi- like strapiombare
 spicciare	verb_pres_1_sg	spicci- like strapiombare
 spicciarsi	verb_pres_1_sg	spicci- like strapiombare	42	spicciati
-spiccicare	43	spiccichi	48	spiccichi	51	spiccichino
-spiccicarsi	43	spiccichi	48	spiccichi	51	spiccichino
+spiccicare	verb_pres_1_sg	spiccic- like strapiombare
+spiccicarsi	verb_pres_1_sg	spiccic- like strapiombare	42	spiccicati
 spidocchiare	verb_pres_1_sg	spidocchi- like strapiombare
 spiegacciare	verb_pres_1_sg	spiegacci- like strapiombare
-spiegare	43	spieghi	48	spieghi	51	spieghino
-spiegarsi	43	spieghi	48	spieghi	51	spieghino
+spiegarsi	verb_pres_1_sg	spieg- like strapiombare	42	spiegati
 spiegazzarsi	verb_pres_1_sg	spiegazz- like strapiombare	42	spiegazzati
 spiemontizzarsi	verb_pres_1_sg	spiemontizz- like strapiombare	42	spiemontizzati
 spigare	43	spighi	48	spighi	51	spighino
 spigionarsi	verb_pres_1_sg	spigion- like strapiombare	42	spigionati
 spigrire	verb_pres_1_sg	spigrisc- like urgere
-spilluzzicare	43	spilluzzichi	48	spilluzzichi	51	spilluzzichino
+spilluzzicare	verb_pres_1_sg	spilluzzic- like strapiombare
 spiluccare	43	spilucchi	48	spilucchi	51	spilucchino
 spingersi	verb_pres_1_sg	sping- like urgere	42	spingiti
 spiovere	12	spiovvi	43	spiova	48	spiova	51	spiovano
 spiumacciare	verb_pres_1_sg	spiumacci- like strapiombare
-spizzicare	43	spizzichi	48	spizzichi	51	spizzichino
+spizzicare	verb_pres_1_sg	spizzic- like strapiombare
 spogliare	verb_pres_1_sg	spogli- like strapiombare
 spogliarsi	verb_pres_1_sg	spogli- like strapiombare	42	spogliati
 spoliare	verb_pres_1_sg	spoli- like strapiombare
@@ -5340,13 +4816,10 @@ spostarsi	verb_pres_1_sg	spost- like strapiombare	42	spostati
 sprangare	43	spranghi	48	spranghi	51	spranghino
 sprecare	verb_pres_1_sg	sprec- like strapiombare
 spregiare	verb_pres_1_sg	spregi- like strapiombare
-spregiudicare	43	spregiudichi	48	spregiudichi	51	spregiudichino
-spregiudicarsi	43	spregiudichi	48	spregiudichi	51	spregiudichino
 spremersi	verb_pres_1_sg	sprem- like urgere	42	spremiti
 spretarsi	verb_pres_1_sg	spret- like strapiombare	42	spretati
 sprigionarsi	verb_pres_1_sg	sprigion- like strapiombare	42	sprigionati
 sprimacciare	verb_pres_1_sg	sprimacci- like strapiombare
-sprofondarsi	verb_pres_1_sg	sprofond- like strapiombare	42	sprofondati
 sproloquiare	verb_pres_1_sg	sproloqui- like strapiombare
 sproteggere	verb_pres_1_sg	sprotegg- like urgere
 sprovarsi	verb_pres_1_sg	sprov- like strapiombare	42	sprovati
@@ -5358,13 +4831,12 @@ spurgare	43	spurghi	48	spurghi	51	spurghino
 sputacchiare	verb_pres_1_sg	sputacchi- like strapiombare
 squagliare	verb_pres_1_sg	squagli- like strapiombare
 squagliarsi	verb_pres_1_sg	squagli- like strapiombare	42	squagliati
-squalificare	43	squalifichi	48	squalifichi	51	squalifichino
+squalificare	verb_pres_1_sg	squalific- like strapiombare
 squarciare	verb_pres_1_sg	squarci- like strapiombare
 squarciarsi	verb_pres_1_sg	squarci- like strapiombare	42	squarciati
-squilibrarsi	verb_pres_1_sg	squilibr- like strapiombare	42	squilibrati
 squittire	verb_pres_1_sg	squittisc- like urgere
-sradicare	43	sradichi	48	sradichi	51	sradichino
-sradicarsi	43	sradichi	48	sradichi	51	sradichino
+sradicare	verb_pres_1_sg	sradic- like strapiombare
+sradicarsi	verb_pres_1_sg	sradic- like strapiombare	42	sradicati
 srugginire	verb_pres_1_sg	srugginisc- like urgere
 stabaccare	43	stabacchi	48	stabacchi	51	stabacchino
 stabbiare	verb_pres_1_sg	stabbi- like strapiombare
@@ -5382,7 +4854,6 @@ stagionarsi	verb_pres_1_sg	stagion- like strapiombare	42	stagionati
 stagliare	verb_pres_1_sg	stagli- like strapiombare
 stagliarsi	verb_pres_1_sg	stagli- like strapiombare	42	stagliati
 stamparsi	verb_pres_1_sg	stamp- like strapiombare	42	stampati
-stampigliare	verb_pres_1_sg	stampigli- like strapiombare
 stancare	43	stanchi	48	stanchi	51	stanchino
 stancarsi	43	stanchi	48	stanchi	51	stanchino
 stangare	43	stanghi	48	stanghi	51	stanghino
@@ -5392,7 +4863,6 @@ stare	4	sta	42	stai	43	stia	48	stia	51	stiano
 starnutire	verb_pres_1_sg	starnutisc- like urgere
 starsi	verb_past	stett- like urgere	4	sta	43	stia	48	stia	51	stiano
 stasarsi	verb_pres_1_sg	stas- like strapiombare	42	stasati
-steccacciare	verb_pres_1_sg	steccacci- like strapiombare
 steccare	43	stecchi	48	stecchi	51	stecchino
 stecchire	verb_pres_1_sg	stecchisc- like urgere
 stemperarsi	verb_pres_1_sg	stemper- like strapiombare	42	stemperati
@@ -5423,7 +4893,6 @@ stormeggiare	verb_pres_1_sg	stormeggi- like strapiombare
 stormire	verb_pres_1_sg	stormisc- like urgere
 storpiare	verb_pres_1_sg	storpi- like strapiombare
 storpiarsi	verb_pres_1_sg	storpi- like strapiombare	42	storpiati
-strabenedire	verb_pres_1_sg	strabenedic- like urgere
 strabere	verb_pres_1_sg	strabev- like urgere
 strabiliare	verb_pres_1_sg	strabili- like strapiombare
 strabiliarsi	verb_pres_1_sg	strabili- like strapiombare	42	strabiliati
@@ -5432,13 +4901,11 @@ straccare	43	stracchi	48	stracchi	51	stracchino
 stracciare	verb_pres_1_sg	stracci- like strapiombare
 stracciarsi	verb_pres_1_sg	stracci- like strapiombare	42	stracciati
 stracuocere	verb_pres_1_sg	stracuoci- like urgere
-strafalciare	verb_pres_1_sg	strafalci- like strapiombare
 strafare	43	strafaccia	48	strafaccia	51	strafacciano
 strafarsi	43	strafaccia	48	strafaccia	51	strafacciano
-strafogarsi	43	strafoghi	48	strafoghi	51	strafoghino
+strafogarsi	verb_pres_1_sg	strafog- like strapiombare	42	strafogati
 stragodere	verb_pres_1_sg	stragod- like urgere
 stralciare	verb_pres_1_sg	stralci- like strapiombare
-stramaledire	verb_pres_1_sg	stramaledic- like urgere
 stramortire	verb_pres_1_sg	stramortisc- like urgere
 strangolarsi	verb_pres_1_sg	strangol- like strapiombare	42	strangolati
 straniare	verb_pres_1_sg	strani- like strapiombare
@@ -5447,19 +4914,18 @@ strapagare	43	strapaghi	48	strapaghi	51	strapaghino
 straperdere	verb_pres_1_sg	straperd- like urgere
 strapparsi	verb_pres_1_sg	strapp- like strapiombare	42	strappati
 strasapere	43	strasappia	48	strasappia	51	strasappiano
-strascicare	43	strascichi	48	strascichi	51	strascichino
-strascicarsi	43	strascichi	48	strascichi	51	strascichino
+strascicare	verb_pres_1_sg	strascic- like strapiombare
+strascicarsi	verb_pres_1_sg	strascic- like strapiombare	42	strascicati
 strascinarsi	verb_pres_1_sg	strascin- like strapiombare	42	strascinati
-stratificare	43	stratifichi	48	stratifichi	51	stratifichino
-stratificarsi	43	stratifichi	48	stratifichi	51	stratifichino
+stratificare	verb_pres_1_sg	stratific- like strapiombare
+stratificarsi	verb_pres_1_sg	stratific- like strapiombare	42	stratificati
 strattonarsi	verb_pres_1_sg	stratton- like strapiombare	42	strattonati
 stravaccarsi	43	stravacchi	48	stravacchi	51	stravacchino
 stravedere	verb_pres_1_sg	straved- like urgere
 straviziare	verb_pres_1_sg	stravizi- like strapiombare
 stravolere	verb_pres_1_sg	stravogli- like urgere	2	stravuoi	4	stravuole
 straziare	verb_pres_1_sg	strazi- like strapiombare
-stregare	43	streghi	48	streghi	51	streghino
-stregnere	verb_pres_1_pl	stregne- like lanciare	verb_pres_1_sg	stregn- like strapiombare	4	stregne	5	stregneno	7	stregnemio	9	stregnevio	11	stregneveno	14	stregnessi	17	strenseno	24	stregnerebbi	25	stregneressimo	26	stregneressi	27	stregneressivo	29	stregnerebbeno	42	stregne
+stregnere	verb_pres_1_pl	stregne- like noiare	verb_pres_1_sg	stregn- like strapiombare	4	stregne	5	stregneno	7	stregnemio	9	stregnevio	11	stregneveno	14	stregnessi	17	strenseno	24	stregnerebbi	25	stregneressimo	26	stregneressi	27	stregneressivo	29	stregnerebbeno	33	stregnete	42	stregne
 striare	2	strii	30	strii	43	strii	48	strii	51	striino
 striarsi	2	strii	30	strii	43	strii	48	strii	51	striino
 strigare	43	strighi	48	strighi	51	strighino
@@ -5473,7 +4939,6 @@ stringersi	verb_pres_1_sg	string- like urgere	42	stringiti
 strisciare	verb_pres_1_sg	strisci- like strapiombare
 strisciarsi	verb_pres_1_sg	strisci- like strapiombare	42	strisciati
 strofinarsi	verb_pres_1_sg	strofin- like strapiombare	42	strofinati
-strologare	43	strologhi	48	strologhi	51	strologhino
 stroncare	43	stronchi	48	stronchi	51	stronchino
 stropicciare	verb_pres_1_sg	stropicci- like strapiombare
 stropicciarsi	verb_pres_1_sg	stropicci- like strapiombare	42	stropicciati
@@ -5498,16 +4963,13 @@ stupefare	43	stupefaccia	48	stupefaccia	51	stupefacciano
 stupefarsi	43	stupefaccia	48	stupefaccia	51	stupefacciano
 stupire	verb_pres_1_sg	stupisc- like urgere
 stupirsi	verb_pres_1_sg	stupisc- like urgere	42	stupisciti
-stuzzicare	43	stuzzichi	48	stuzzichi	51	stuzzichino
-stuzzicarsi	43	stuzzichi	48	stuzzichi	51	stuzzichino
+stuzzicare	verb_pres_1_sg	stuzzic- like strapiombare
+stuzzicarsi	verb_pres_1_sg	stuzzic- like strapiombare	42	stuzzicati
 suadere	verb_pres_1_sg	suad- like urgere
 subbiare	verb_pres_1_sg	subbi- like strapiombare
 subbollire	verb_pres_1_sg	subboll- like urgere
-subconcedere	verb_pres_1_sg	subconced- like urgere
-subdelegare	43	subdeleghi	48	subdeleghi	51	subdeleghino
 subire	verb_pres_1_sg	subisc- like urgere
 subirsi	verb_pres_1_sg	subisc- like urgere	42	subisciti
-sublicenziare	verb_pres_1_sg	sublicenzi- like strapiombare
 sublocare	43	sublochi	48	sublochi	51	sublochino
 subsistere	verb_pres_1_sg	subsist- like urgere
 sucare	43	suchi	48	suchi	51	suchino
@@ -5517,27 +4979,23 @@ succhiare	verb_pres_1_sg	succhi- like strapiombare
 succhiarsi	verb_pres_1_sg	succhi- like strapiombare	42	succhiati
 succiare	verb_pres_1_sg	succi- like strapiombare
 sudarsi	verb_pres_1_sg	sud- like strapiombare	42	sudati
-suddividersi	verb_pres_1_sg	suddivid- like urgere	42	suddividiti
 suffiggere	verb_pres_1_sg	suffigg- like urgere
 suffondere	verb_pres_1_sg	suffond- like urgere
 suffragare	43	suffraghi	48	suffraghi	51	suffraghino
-suffumicare	43	suffumichi	48	suffumichi	51	suffumichino
+suffumicare	verb_pres_1_sg	suffumic- like strapiombare
 suggere	verb_pres_1_sg	sugg- like urgere
 suggerirsi	verb_pres_1_sg	suggerisc- like urgere	42	suggerisciti
 suggestionarsi	verb_pres_1_sg	suggestion- like strapiombare	42	suggestionati
 suicidarsi	verb_pres_1_sg	suicid- like strapiombare	42	suicidati
 sunteggiare	verb_pres_1_sg	sunteggi- like strapiombare
 superarsi	verb_pres_1_sg	super- like strapiombare	42	superati
-supplicare	43	supplichi	48	supplichi	51	supplichino
+supplicare	verb_pres_1_sg	supplic- like strapiombare
 supplire	verb_pres_1_sg	supplisc- like urgere
 supporre	43	supponga	48	supponga	51	suppongano
 surfare	verb_pres_1_sg	surf- like strapiombare
 surgelarsi	verb_pres_1_sg	surgel- like strapiombare	42	surgelati
-surriscaldarsi	verb_pres_1_sg	surriscald- like strapiombare	42	surriscaldati
-surrogare	43	surroghi	48	surroghi	51	surroghino
-surrogarsi	43	surroghi	48	surroghi	51	surroghino
+surrogarsi	verb_pres_1_sg	surrog- like strapiombare	42	surrogati
 susseguire	verb_pres_1_sg	sussegu- like urgere
-susseguirsi	verb_pres_1_sg	sussegu- like urgere	42	susseguiti
 sussidiare	verb_pres_1_sg	sussidi- like strapiombare
 sussistere	verb_pres_1_sg	sussist- like urgere
 sussurrarsi	verb_pres_1_sg	sussurr- like strapiombare	42	sussurrati
@@ -5562,7 +5020,6 @@ sveltire	verb_pres_1_sg	sveltisc- like urgere
 svenarsi	verb_pres_1_sg	sven- like strapiombare	42	svenati
 svendersi	verb_pres_1_sg	svend- like urgere	42	svenditi
 svenire	43	svenga	48	svenga	51	svengano
-sventagliare	verb_pres_1_sg	sventagli- like strapiombare
 svergare	43	sverghi	48	sverghi	51	sverghino
 sverniciare	verb_pres_1_sg	svernici- like strapiombare
 svestire	verb_pres_1_sg	svest- like urgere
@@ -5602,39 +5059,30 @@ tarlarsi	verb_pres_1_sg	tarl- like strapiombare	42	tarlati
 tarmarsi	verb_pres_1_sg	tarm- like strapiombare	42	tarmati
 taroccare	43	tarocchi	48	tarocchi	51	tarocchino
 tarsiare	verb_pres_1_sg	tarsi- like strapiombare
-tartagliare	verb_pres_1_sg	tartagli- like strapiombare
 tartufare	verb_pres_1_sg	tartuf- like strapiombare
 tassarsi	verb_pres_1_sg	tass- like strapiombare	42	tassati
 tasteggiare	verb_pres_1_sg	tasteggi- like strapiombare
-tatuare	verb_pres_1_sg	tatu- like strapiombare
-tedescheggiare	verb_pres_1_sg	tedescheggi- like strapiombare
 tediare	verb_pres_1_sg	tedi- like strapiombare
 tediarsi	verb_pres_1_sg	tedi- like strapiombare	42	tediati
-telecomunicare	43	telecomunichi	48	telecomunichi	51	telecomunichino
 telecopiare	verb_pres_1_sg	telecopi- like strapiombare
-telecopiarsi	verb_pres_1_sg	telecopi- like strapiombare	42	telecopiati
-telediffondere	verb_pres_1_sg	telediffond- like urgere
 telefonarsi	verb_pres_1_sg	telefon- like strapiombare	42	telefonati
 telegrafare	verb_pres_1_sg	telegraf- like strapiombare
-telericevere	verb_pres_1_sg	telericev- like urgere
-teletrasportarsi	verb_pres_1_sg	teletrasport- like strapiombare	42	teletrasportati
 televedere	verb_pres_1_sg	televed- like urgere
 temersi	verb_pres_1_sg	tem- like urgere	42	temiti
 temperarsi	verb_pres_1_sg	temper- like strapiombare	42	temperati
-tempificare	43	tempifichi	48	tempifichi	51	tempifichino
+tempificare	verb_pres_1_sg	tempific- like strapiombare
 temporeggiare	verb_pres_1_sg	temporeggi- like strapiombare
 tenagliare	verb_pres_1_sg	tenagli- like strapiombare
 tenere	43	tenga	48	tenga	51	tengano
 tenersi	43	tenga	48	tenga	51	tengano
 tenoreggiare	verb_pres_1_sg	tenoreggi- like strapiombare
-teologare	43	teologhi	48	teologhi	51	teologhino
 tepefare	43	tepefaccia	48	tepefaccia	51	tepefacciano
 tepefarsi	43	tepefaccia	48	tepefaccia	51	tepefacciano
-terrificare	43	terrifichi	48	terrifichi	51	terrifichino
+terrificare	verb_pres_1_sg	terrific- like strapiombare
 terziare	verb_pres_1_sg	terzi- like strapiombare
 tesoreggiare	verb_pres_1_sg	tesoreggi- like strapiombare
 tesserarsi	verb_pres_1_sg	tesser- like strapiombare	42	tesserati
-testificare	43	testifichi	48	testifichi	51	testifichino
+testificare	verb_pres_1_sg	testific- like strapiombare
 testimoniare	verb_pres_1_sg	testimoni- like strapiombare
 tifare	verb_pres_1_sg	tif- like strapiombare
 timoneggiare	verb_pres_1_sg	timoneggi- like strapiombare
@@ -5654,7 +5102,7 @@ tondeggiare	verb_pres_1_sg	tondeggi- like strapiombare
 tondere	verb_pres_1_sg	tond- like urgere
 toneggiare	verb_pres_1_sg	toneggi- like strapiombare
 tonfare	verb_pres_1_sg	tonf- like strapiombare
-tonificare	43	tonifichi	48	tonifichi	51	tonifichino
+tonificare	verb_pres_1_sg	tonific- like strapiombare
 tonneggiare	verb_pres_1_sg	tonneggi- like strapiombare
 torcersi	verb_pres_1_sg	torc- like urgere	42	torciti
 torchiare	verb_pres_1_sg	torchi- like strapiombare
@@ -5685,14 +5133,9 @@ tradire	verb_pres_1_sg	tradisc- like urgere
 tradirsi	verb_pres_1_sg	tradisc- like urgere	42	tradisciti
 tradurre	verb_pres_1_sg	traduc- like urgere
 tradursi	verb_pres_1_sg	traduc- like urgere	42	traduciti
-trafficare	43	traffichi	48	traffichi	51	traffichino
-trafiggere	verb_pres_1_sg	trafigg- like urgere
+trafficare	verb_pres_1_sg	traffic- like strapiombare
 trafiggersi	verb_pres_1_sg	trafigg- like urgere	42	trafiggiti
-trafugare	43	trafughi	48	trafughi	51	trafughino
 traggere	verb_pres_1_sg	tragg- like urgere
-tralasciare	verb_pres_1_sg	tralasci- like strapiombare
-trambasciare	verb_pres_1_sg	trambasci- like strapiombare
-tramischiare	verb_pres_1_sg	tramischi- like strapiombare
 tramortire	verb_pres_1_sg	tramortisc- like urgere
 tramutarsi	verb_pres_1_sg	tramut- like strapiombare	42	tramutati
 tranciare	verb_pres_1_sg	tranci- like strapiombare
@@ -5700,17 +5143,10 @@ trangugiare	verb_pres_1_sg	trangugi- like strapiombare
 tranquillarsi	verb_pres_1_sg	tranquill- like strapiombare	42	tranquillati
 tranquillizzarsi	verb_pres_1_sg	tranquillizz- like strapiombare	42	tranquillizzati
 transandarsi	verb_pres_1_sg	transand- like strapiombare	42	transandati
-transcodificare	43	transcodifichi	48	transcodifichi	51	transcodifichino
-transcorrere	verb_pres_1_sg	transcorr- like urgere
-transcrivere	verb_pres_1_sg	transcriv- like urgere
 transfondere	verb_pres_1_sg	transfond- like urgere
 transigere	verb_pres_1_sg	transig- like urgere
 transire	verb_pres_1_sg	transisc- like urgere
 transporre	43	transponga	48	transponga	51	transpongano
-transricevere	verb_pres_1_sg	transricev- like urgere
-transubstanziare	verb_pres_1_sg	transubstanzi- like strapiombare
-transustanziare	verb_pres_1_sg	transustanzi- like strapiombare
-transustanziarsi	verb_pres_1_sg	transustanzi- like strapiombare	42	transustanziati
 transvedere	verb_pres_1_sg	transved- like urgere
 traporre	43	traponga	48	traponga	51	trapongano
 trapporre	43	trapponga	48	trapponga	51	trappongano
@@ -5718,26 +5154,18 @@ trarre	43	tragga	48	tragga	51	traggano
 trarsi	43	tragga	48	tragga	51	traggano
 trasalire	verb_pres_1_sg	trasalisc- like urgere
 trasandarsi	verb_pres_1_sg	trasand- like strapiombare	42	trasandati
-trascegliere	43	trascelga	48	trascelga	51	trascelgano
 trascinarsi	verb_pres_1_sg	trascin- like strapiombare	42	trascinati
-trascolorarsi	verb_pres_1_sg	trascolor- like strapiombare	42	trascolorati
-trascorrere	verb_pres_1_sg	trascorr- like urgere
-trascrivere	verb_pres_1_sg	trascriv- like urgere
 trascurarsi	verb_pres_1_sg	trascur- like strapiombare	42	trascurati
 trasdurre	verb_pres_1_sg	trasduc- like urgere
 trasferirsi	verb_pres_1_sg	trasferisc- like urgere	42	trasferisciti
-trasfigurarsi	verb_pres_1_sg	trasfigur- like strapiombare	42	trasfigurati
 trasfigurire	verb_pres_1_sg	trasfigurisc- like urgere
 trasfondere	verb_pres_1_sg	trasfond- like urgere
-trasformarsi	verb_pres_1_sg	trasform- like strapiombare	42	trasformati
 trasgredire	verb_pres_1_sg	trasgredisc- like urgere
 traslocare	43	traslochi	48	traslochi	51	traslochino
 traslocarsi	43	traslochi	48	traslochi	51	traslochino
-trasmettersi	verb_pres_1_sg	trasmett- like urgere	42	trasmettiti
 trasmutarsi	verb_pres_1_sg	trasmut- like strapiombare	42	trasmutati
 trasparire	verb_past	traspar- like uscire	43	traspaia	48	traspaia	51	traspaiano
 trasporre	43	trasponga	48	trasponga	51	traspongano
-trasportarsi	verb_pres_1_sg	trasport- like strapiombare	42	trasportati
 trasricchire	verb_pres_1_sg	trasricchisc- like urgere
 trastullarsi	verb_pres_1_sg	trastull- like strapiombare	42	trastullati
 trasvedere	verb_pres_1_sg	trasved- like urgere
@@ -5745,22 +5173,19 @@ trattarsi	verb_pres_1_sg	tratt- like strapiombare	42	trattati
 tratteggiare	verb_pres_1_sg	tratteggi- like strapiombare
 trattenere	43	trattenga	48	trattenga	51	trattengano
 trattenersi	43	trattenga	48	trattenga	51	trattengano
-traudire	verb	traud- like uscire	verb_pres_1_sg	traod- like urgere	3	traudite	47	traudire	52	traudire
-travagliare	verb_pres_1_sg	travagli- like strapiombare
+traudire	verb	traud- like vivere	verb_pres_1_sg	traod- like urgere	3	traudite	47	traudire	52	traudire
 travagliarsi	verb_pres_1_sg	travagli- like strapiombare	42	travagliati
 travalcare	43	travalchi	48	travalchi	51	travalchino
-travalicare	43	travalichi	48	travalichi	51	travalichino
 travarcare	43	travarchi	48	travarchi	51	travarchino
 travedere	verb_pres_1_sg	traved- like urgere
 travestire	verb_pres_1_sg	travest- like urgere
-travestirsi	verb_pres_1_sg	travest- like urgere	42	travestiti
 traviare	verb_pres_1_sg	travi- like strapiombare
 traviarsi	verb_pres_1_sg	travi- like strapiombare	42	traviati
 travolvere	verb_pres_1_sg	travolv- like urgere
 trebbiare	verb_pres_1_sg	trebbi- like strapiombare
 treccare	43	trecchi	48	trecchi	51	trecchino
 treppiare	verb_pres_1_sg	treppi- like strapiombare
-treppicare	43	treppichi	48	treppichi	51	treppichino
+treppicare	verb_pres_1_sg	treppic- like strapiombare
 trescare	43	treschi	48	treschi	51	treschino
 tribbiare	verb_pres_1_sg	tribbi- like strapiombare
 triforcare	43	triforchi	48	triforchi	51	triforchino
@@ -5770,8 +5195,8 @@ trincerarsi	verb_pres_1_sg	trincer- like strapiombare	42	trincerati
 trinciare	verb_pres_1_sg	trinci- like strapiombare
 trionfare	verb_pres_1_sg	trionf- like strapiombare
 tripartire	verb_pres_1_sg	tripartisc- like urgere
-triplicare	43	triplichi	48	triplichi	51	triplichino
-triplicarsi	43	triplichi	48	triplichi	51	triplichino
+triplicare	verb_pres_1_sg	triplic- like strapiombare
+triplicarsi	verb_pres_1_sg	triplic- like strapiombare	42	triplicati
 tripudiare	verb_pres_1_sg	tripudi- like strapiombare
 trisecare	verb_pres_1_sg	trisec- like strapiombare
 trogliare	verb_pres_1_sg	trogli- like strapiombare
@@ -5787,39 +5212,35 @@ tuffare	verb_pres_1_sg	tuff- like strapiombare
 tuffarsi	verb_pres_1_sg	tuff- like strapiombare	42	tuffati
 tumefare	43	tumefaccia	48	tumefaccia	51	tumefacciano
 tumefarsi	43	tumefaccia	48	tumefaccia	51	tumefacciano
-tumultuare	verb_pres_1_sg	tumultu- like strapiombare
 turarsi	verb_pres_1_sg	tur- like strapiombare	42	turati
 turbarsi	verb_pres_1_sg	turb- like strapiombare	42	turbati
 tutelarsi	verb_pres_1_sg	tutel- like strapiombare	42	tutelati
 ubbidire	verb_pres_1_sg	ubbidisc- like urgere
 ubbligare	43	ubblighi	48	ubblighi	51	ubblighino
-ubicare	43	ubichi	48	ubichi	51	ubichino
+ubicare	verb_pres_1_sg	ubic- like strapiombare
 ubidire	verb_pres_1_sg	ubidisc- like urgere
 ubriacare	43	ubriachi	48	ubriachi	51	ubriachino
 ubriacarsi	43	ubriachi	48	ubriachi	51	ubriachino
 uccidersi	verb_pres_1_sg	uccid- like urgere	42	ucciditi
-udire	verb	ud- like uscire	verb_pres_1_sg	od- like urgere	3	udite	47	udire	52	udire
+udire	verb	ud- like vivere	verb_pres_1_sg	od- like urgere	3	udite	47	udire	52	udire
 ufficiare	verb_pres_1_sg	uffici- like strapiombare
 uggire	verb_pres_1_sg	uggisc- like urgere
 ugnere	43	unga	48	unga	51	ungano
 uguagliare	verb_pres_1_sg	uguagli- like strapiombare
 ulcerarsi	verb_pres_1_sg	ulcer- like strapiombare	42	ulcerati
 ulire	verb_pres_1_sg	ulisc- like urgere
-ultracentrifugare	43	ultracentrifughi	48	ultracentrifughi	51	ultracentrifughino
 umanarsi	verb_pres_1_sg	uman- like strapiombare	42	umanati
 umanizzarsi	verb_pres_1_sg	umanizz- like strapiombare	42	umanizzati
-umidificare	43	umidifichi	48	umidifichi	51	umidifichino
+umidificare	verb_pres_1_sg	umidific- like strapiombare
 umidire	verb_pres_1_sg	umidisc- like urgere
 umiliare	verb_pres_1_sg	umili- like strapiombare
 umiliarsi	verb_pres_1_sg	umili- like strapiombare	42	umiliati
 ungersi	verb_pres_1_sg	ung- like urgere	42	ungiti
-unificare	43	unifichi	48	unifichi	51	unifichino
-uniformarsi	verb_pres_1_sg	uniform- like strapiombare	42	uniformati
+unificare	verb_pres_1_sg	unific- like strapiombare
 unire	verb_pres_1_sg	unisc- like urgere
 unirsi	verb_pres_1_sg	unisc- like urgere	42	unisciti
-universaleggiare	verb_pres_1_sg	universaleggi- like strapiombare
 universalizzarsi	verb_pres_1_sg	universalizz- like strapiombare	42	universalizzati
-uprire	verb_past	uper- like volgere	verb_pres_1_pl	upri- like lanciare	verb_pres_1_sg	opr- like strapiombare	4	opre	5	opreno	7	uprimio	9	uprivio	11	upriveno	14	uprissi	17	uperseno	24	uprirebbi	25	upriressimo	26	upriressi	27	upriressivo	29	uprirebbeno	41	uprisseno	42	opre
+uprire	verb_past	uper- like volgere	verb_pres_1_pl	upri- like noiare	verb_pres_1_sg	opr- like strapiombare	4	opre	5	opreno	7	uprimio	9	uprivio	11	upriveno	14	uprissi	17	uperseno	24	uprirebbi	25	upriressimo	26	upriressi	27	upriressivo	29	uprirebbeno	33	uprite	41	uprisseno	42	opre
 urtacchiare	verb_pres_1_sg	urtacchi- like strapiombare
 urtarsi	verb_pres_1_sg	urt- like strapiombare	42	urtati
 urticchiare	verb_pres_1_sg	urticchi- like strapiombare
@@ -5832,8 +5253,6 @@ usureggiare	verb_pres_1_sg	usureggi- like strapiombare
 uzzolire	verb_pres_1_sg	uzzolisc- like urgere
 vacare	43	vachi	48	vachi	51	vachino
 vaccinarsi	verb_pres_1_sg	vaccin- like strapiombare	42	vaccinati
-vacuare	verb_pres_1_sg	vacu- like strapiombare
-vagabondeggiare	verb_pres_1_sg	vagabondeggi- like strapiombare
 vagare	43	vaghi	48	vaghi	51	vaghino
 vagheggiare	verb_pres_1_sg	vagheggi- like strapiombare
 vagheggiarsi	verb_pres_1_sg	vagheggi- like strapiombare	42	vagheggiati
@@ -5843,19 +5262,16 @@ vaiare	verb_pres_1_sg	vai- like strapiombare
 valcare	43	valchi	48	valchi	51	valchino
 valere	43	valga	48	valga	51	valgano
 valersi	verb_past	vals- like perdersi	verb_pres_1_sg	valg- like urgere	2	vali	4	vale	42	valiti
-valicare	43	valichi	48	valichi	51	valichino
-valorizzarsi	verb_pres_1_sg	valorizz- like strapiombare	42	valorizzati
+valicare	verb_pres_1_sg	valic- like strapiombare
 valutarsi	verb_pres_1_sg	valut- like strapiombare	42	valutati
 vampeggiare	verb_pres_1_sg	vampeggi- like strapiombare
-vanagloriarsi	verb_pres_1_sg	vanaglori- like strapiombare	42	vanagloriati
 vaneggiare	verb_pres_1_sg	vaneggi- like strapiombare
 vangare	43	vanghi	48	vanghi	51	vanghino
 vangheggiare	verb_pres_1_sg	vangheggi- like strapiombare
-vanificare	43	vanifichi	48	vanifichi	51	vanifichino
+vanificare	verb_pres_1_sg	vanific- like strapiombare
 vanire	verb_pres_1_sg	vanisc- like urgere
 vantaggiare	verb_pres_1_sg	vantaggi- like strapiombare
 vantarsi	verb_pres_1_sg	vant- like strapiombare	42	vantati
-vaporizzarsi	verb_pres_1_sg	vaporizz- like strapiombare	42	vaporizzati
 varcare	43	varchi	48	varchi	51	varchino
 variare	verb_pres_1_sg	vari- like strapiombare
 vedere	verb_pres_1_sg	ved- like urgere
@@ -5865,66 +5281,61 @@ vegliare	verb_pres_1_sg	vegli- like strapiombare
 velarsi	verb_pres_1_sg	vel- like strapiombare	42	velati
 veleggiare	verb_pres_1_sg	veleggi- like strapiombare
 vellere	verb_pres_1_sg	vell- like urgere
-vellicare	43	vellichi	48	vellichi	51	vellichino
+vellicare	verb_pres_1_sg	vellic- like strapiombare
 velocizzarsi	verb_pres_1_sg	velocizz- like strapiombare	42	velocizzati
 vendemmiare	verb_pres_1_sg	vendemmi- like strapiombare
 vendersi	verb_pres_1_sg	vend- like urgere	42	venditi
-vendicare	43	vendichi	48	vendichi	51	vendichino
-vendicarsi	43	vendichi	48	vendichi	51	vendichino
+vendicare	verb_pres_1_sg	vendic- like strapiombare
+vendicarsi	verb_pres_1_sg	vendic- like strapiombare	42	vendicati
 vendicchiare	verb_pres_1_sg	vendicchi- like strapiombare
 venducchiare	verb_pres_1_sg	venducchi- like strapiombare
 vengiare	verb_pres_1_sg	vengi- like strapiombare
 venire	43	venga	48	venga	51	vengano
-ventagliare	verb_pres_1_sg	ventagli- like strapiombare
 verdeggiare	verb_pres_1_sg	verdeggi- like strapiombare
-verdicare	43	verdichi	48	verdichi	51	verdichino
+verdicare	verb_pres_1_sg	verdic- like strapiombare
 vergare	43	verghi	48	verghi	51	verghino
 vergheggiare	verb_pres_1_sg	vergheggi- like strapiombare
 vergognarsi	verb_pres_1_sg	vergogn- like strapiombare	42	vergognati
-verificare	43	verifichi	48	verifichi	51	verifichino
-verificarsi	43	verifichi	48	verifichi	51	verifichino
+verificare	verb_pres_1_sg	verific- like strapiombare
+verificarsi	verb_pres_1_sg	verific- like strapiombare	42	verificati
 vermigliare	verb_pres_1_sg	vermigli- like strapiombare
 verniciare	verb_pres_1_sg	vernici- like strapiombare
 versarsi	verb_pres_1_sg	vers- like strapiombare	42	versati
 verseggiare	verb_pres_1_sg	verseggi- like strapiombare
-versificare	43	versifichi	48	versifichi	51	versifichino
+versificare	verb_pres_1_sg	versific- like strapiombare
 vestire	verb_pres_1_sg	vest- like urgere
 vestirsi	verb_pres_1_sg	vest- like urgere	42	vestiti
-vetrificare	43	vetrifichi	48	vetrifichi	51	vetrifichino
-vetrificarsi	43	vetrifichi	48	vetrifichi	51	vetrifichino
+vetrificare	verb_pres_1_sg	vetrific- like strapiombare
+vetrificarsi	verb_pres_1_sg	vetrific- like strapiombare	42	vetrificati
 vetrioleggiare	verb_pres_1_sg	vetrioleggi- like strapiombare
-vettovagliare	verb_pres_1_sg	vettovagli- like strapiombare
 vezzeggiare	verb_pres_1_sg	vezzeggi- like strapiombare
 vezzeggiarsi	verb_pres_1_sg	vezzeggi- like strapiombare	42	vezzeggiati
 viaggiare	verb_pres_1_sg	viaggi- like strapiombare
 vicariare	verb_pres_1_sg	vicari- like strapiombare
-videocomunicare	43	videocomunichi	48	videocomunichi	51	videocomunichino
 videogiocare	43	videogiochi	48	videogiochi	51	videogiochino
-videoscrivere	verb_pres_1_sg	videoscriv- like urgere
-vienire	0	viengo	1	vienimo	2	vienghi	5	viengheno	7	vienimio	9	vienivio	11	vieniveno	12	vinni	14	vienissi	18	vierò	22	vierà	23	vierorno	26	vieressi	30	vienghi	31	vienimo	33	vienite	42	vie	43	vienghi	48	vienghi	51	vienghino	55	vienuto
+vienire	0	viengo	1	vienimo	2	vienghi	5	viengheno	7	vienimio	9	vienivio	11	vieniveno	12	vinni	14	vienissi	18	vierò	22	vierà	23	vierorno	26	vieressi	30	vienghi	31	vienimo	33	vienite	42	vie	43	vienghi	44	vienimo	48	vienghi	51	vienghino	55	vienuto
 vigliare	verb_pres_1_sg	vigli- like strapiombare
 vigoreggiare	verb_pres_1_sg	vigoreggi- like strapiombare
 vigorire	verb_pres_1_sg	vigorisc- like urgere
-vilificare	43	vilifichi	48	vilifichi	51	vilifichino
+vilificare	verb_pres_1_sg	vilific- like strapiombare
 villaneggiare	verb_pres_1_sg	villaneggi- like strapiombare
 villeggiare	verb_pres_1_sg	villeggi- like strapiombare
 vincersi	verb_pres_1_sg	vinc- like urgere	42	vinciti
-vinificare	43	vinifichi	48	vinifichi	51	vinifichino
+vinificare	verb_pres_1_sg	vinific- like strapiombare
 virgoleggiare	verb_pres_1_sg	virgoleggi- like strapiombare
 visitarsi	verb_pres_1_sg	visit- like strapiombare	42	visitati
 vitaliziare	verb_pres_1_sg	vitalizi- like strapiombare
 vivacchiare	verb_pres_1_sg	vivacchi- like strapiombare
 vivere	verb_pres_1_sg	viv- like urgere
-viversi	verb	viv- like vedersi	verb_pres_1_sg	viv- like urgere	42	viviti	55	vissutosi
-vivificare	43	vivifichi	48	vivifichi	51	vivifichino
-vivificarsi	43	vivifichi	48	vivifichi	51	vivifichino
+viversi	verb	viv- like vivere	verb_pres_1_sg	viv- like urgere	42	viviti	47	viverti	52	viversi	55	vissutosi
+vivificare	verb_pres_1_sg	vivific- like strapiombare
+vivificarsi	verb_pres_1_sg	vivific- like strapiombare	42	vivificati
 viziare	verb_pres_1_sg	vizi- like strapiombare
 vocare	43	vochi	48	vochi	51	vochino
 vociare	verb_pres_1_sg	voci- like strapiombare
-vogare	43	voghi	48	voghi	51	voghino
 volatilizzarsi	verb_pres_1_sg	volatilizz- like strapiombare	42	volatilizzati
 volere	verb_pres_1_sg	vogli- like urgere	2	vuoi	4	vuole
-volersi	verb_past	voll- like urgere	verb_pres_1_pl	vogli- like tapparsi	verb_pres_1_sg	vogli- like urgere	2	vuoi	4	vuole	42	vogliti	53	volendosi	54	volentesi
+volersi	verb_past	voll- like urgere	verb_pres_1_pl	vogli- like tapparsi	verb_pres_1_sg	vogli- like urgere	2	vuoi	4	vuole	33	vogliate	42	vogliti	53	volendosi	54	volentesi
 volgersi	verb_pres_1_sg	volg- like urgere	42	volgiti
 volicchiare	verb_pres_1_sg	volicchi- like strapiombare
 volpeggiare	verb_pres_1_sg	volpeggi- like strapiombare
@@ -5933,14 +5344,14 @@ volteggiare	verb_pres_1_sg	volteggi- like strapiombare
 voltolarsi	verb_pres_1_sg	voltol- like strapiombare	42	voltolati
 volvere	verb_past	vol- like volgere
 vomire	verb_pres_1_sg	vomisc- like urgere
-vorticare	43	vortichi	48	vortichi	51	vortichino
+vorticare	verb_pres_1_sg	vortic- like strapiombare
 votarsi	verb_pres_1_sg	vot- like strapiombare	42	votati
 vuotarsi	verb_pres_1_sg	vuot- like strapiombare	42	vuotati
-wikificare	43	wikifichi	48	wikifichi	51	wikifichino
+wikificare	verb_pres_1_sg	wikific- like strapiombare
 xerocopiare	verb_pres_1_sg	xerocopi- like strapiombare
 zaffare	verb_pres_1_sg	zaff- like strapiombare
 zampeggiare	verb_pres_1_sg	zampeggi- like strapiombare
-zampicare	43	zampichi	48	zampichi	51	zampichino
+zampicare	verb_pres_1_sg	zampic- like strapiombare
 zeccare	43	zecchi	48	zecchi	51	zecchino
 zigare	43	zighi	48	zighi	51	zighino
 zigzagare	43	zigzaghi	48	zigzaghi	51	zigzaghino
@@ -5949,7 +5360,7 @@ zittire	verb_pres_1_sg	zittisc- like urgere
 zittirsi	verb_pres_1_sg	zittisc- like urgere	42	zittisciti
 zizzagare	43	zizzaghi	48	zizzaghi	51	zizzaghino
 zoppeggiare	verb_pres_1_sg	zoppeggi- like strapiombare
-zoppicare	43	zoppichi	48	zoppichi	51	zoppichino
+zoppicare	verb_pres_1_sg	zoppic- like strapiombare
 "#,
     ),
 };

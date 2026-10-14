@@ -26,32 +26,32 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 28] = [
-    // noun_sg like założenie: 18,317 words.
+pub(super) static TABLES: [EndingTable<'static>; 29] = [
+    // noun_sg like założenie: 18,314 words.
     EndingTable {
         name: Cow::Borrowed("założenie"),
-        words: 18317,
+        words: 18314,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // noun_sg like babka: 12,652 words.
+    // noun_sg like babka: 12,119 words.
     EndingTable {
         name: Cow::Borrowed("babka"),
-        words: 12652,
+        words: 12119,
         slot: 0,
         table: Cow::Borrowed(concat!("~a\t", "~ę\t",)),
     },
-    // noun_sg like gospodarz: 4,418 words.
+    // noun_sg like gospodarz: 4,413 words.
     EndingTable {
         name: Cow::Borrowed("gospodarz"),
-        words: 4418,
+        words: 4413,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~a\t",)),
     },
-    // noun_sg like woźny: 225 words.
+    // noun_sg like woźny: 239 words.
     EndingTable {
         name: Cow::Borrowed("woźny"),
-        words: 225,
+        words: 239,
         slot: 0,
         table: Cow::Borrowed(concat!("~y\t", "~ego\t",)),
     },
@@ -69,10 +69,17 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~å\t", "~ą\t",)),
     },
-    // noun_pl like obraz: 3,497 words.
+    // noun_sg like uczeń: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("uczeń"),
+        words: 4,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~eń\t", "~nia\t",)),
+    },
+    // noun_pl like obraz: 3,501 words.
     EndingTable {
         name: Cow::Borrowed("obraz"),
-        words: 3497,
+        words: 3501,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~y\t",
@@ -84,10 +91,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~ie\t~y\t",
         )),
     },
-    // noun_pl like linia: 2,460 words.
+    // noun_pl like linia: 2,442 words.
     EndingTable {
         name: Cow::Borrowed("linia"),
-        words: 2460,
+        words: 2442,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -99,10 +106,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~o\t~e\t",
         )),
     },
-    // noun_pl like sieć: 1,519 words.
+    // noun_pl like sieć: 1,524 words.
     EndingTable {
         name: Cow::Borrowed("sieć"),
-        words: 1519,
+        words: 1524,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~\t",
@@ -112,21 +119,6 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~ą\t~ami\t",
             "~\t~ach\t",
             "~\t~\t",
-        )),
-    },
-    // noun_pl like grunt: 1,180 words.
-    EndingTable {
-        name: Cow::Borrowed("grunt"),
-        words: 1180,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ty\t",
-            "~tu\t~tów\t",
-            "~towi\t~tom\t",
-            "\t",
-            "~tem\t~tami\t",
-            "~cie\t~tach\t",
-            "~cie\t~ty\t",
         )),
     },
     // noun_pl like różnica: 1,103 words.
@@ -144,10 +136,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~o\t~e\t",
         )),
     },
-    // noun_pl like gospodarz: 1,100 words.
+    // noun_pl like gospodarz: 1,103 words.
     EndingTable {
         name: Cow::Borrowed("gospodarz"),
-        words: 1100,
+        words: 1103,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -157,6 +149,21 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~em\t~ami\t",
             "~u\t~ach\t",
             "~u\t~e\t",
+        )),
+    },
+    // noun_pl like grunt: 1,086 words.
+    EndingTable {
+        name: Cow::Borrowed("grunt"),
+        words: 1086,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ty\t",
+            "~tu\t~tów\t",
+            "~towi\t~tom\t",
+            "\t",
+            "~tem\t~tami\t",
+            "~cie\t~tach\t",
+            "~cie\t~ty\t",
         )),
     },
     // noun_pl like stara: 154 words.
@@ -189,10 +196,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~ie\t~owie\t",
         )),
     },
-    // noun_pl like woźny: 150 words.
+    // noun_pl like woźny: 148 words.
     EndingTable {
         name: Cow::Borrowed("woźny"),
-        words: 150,
+        words: 148,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~i\t",
@@ -204,10 +211,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~y\t~i\t",
         )),
     },
-    // noun_pl like przestrzeń: 148 words.
+    // noun_pl like przestrzeń: 143 words.
     EndingTable {
         name: Cow::Borrowed("przestrzeń"),
-        words: 148,
+        words: 143,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -234,10 +241,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~u\t~e\t",
         )),
     },
-    // noun_pl like moc: 96 words.
+    // noun_pl like moc: 97 words.
     EndingTable {
         name: Cow::Borrowed("moc"),
-        words: 96,
+        words: 97,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -279,10 +286,10 @@ pub(super) static TABLES: [EndingTable<'static>; 28] = [
             "~u\t~owie\t",
         )),
     },
-    // noun_pl like konował: 43 words.
+    // noun_pl like konował: 38 words.
     EndingTable {
         name: Cow::Borrowed("konował"),
-        words: 43,
+        words: 38,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ły\t",

@@ -1522,7 +1522,7 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "īnsignia" => 8,
         "ōra" => 2,
         "ōra" => 3,
-    }, false, None),
+    }, true, None),
     // DAT_PL, from ACC_PL.
     relation!(DAT_PL, [ACC_PL], [("~", "~"), ("~a", "~bus"), ("~a", "~ibus"), ("~a", "~īs"), ("~aque", "~īsque"), ("~as", "~ibus"), ("~s", "~bus"), ("~ua", "~ibus"), ("~ās", "~īs"), ("~ē", "~īs"), ("~ēs", "~ibus"), ("~īs", "~ibus"), ("~ōs", "~īs"), ("~ūs", "~ibus"), ("~ūs", "~ubus"), ("~ūs", "~īs")], rules {
         "" => [10 5403, 8 3656, 3 2856, 12 2486, 13 508, 2 416, 1 188, 6 60, 5 38, 0 6, 14 6, 7 5, 11 5, 4 4, 9 3, 15 2],

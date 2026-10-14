@@ -1279,7 +1279,7 @@ pub(super) static RELATIONS: [Relation<'static>; 48] = [
         "przeschłem" => 1,
         "przyschłem" => 1,
         "rozeschłem" => 3,
-    }, false, None),
+    }, true, None),
     // PAST_3_F, from PAST_1_F.
     relation!(PAST_3_F, [PAST_1_F], [("~m", "~")], rules {
         "" => [0 12010],
@@ -2198,7 +2198,7 @@ pub(super) static RELATIONS: [Relation<'static>; 48] = [
         "zwęził" => 15,
         "zżył" => 35,
         "zżółkł" => 31,
-    }, true, None),
+    }, false, None),
     // ADVERBIAL_PARTICIPLE_CONTEMP, from NON_PAST_3_PL.
     relation!(ADVERBIAL_PARTICIPLE_CONTEMP, [NON_PAST_3_PL], [("~", "~c")], rules {
         "" => [0 6603],

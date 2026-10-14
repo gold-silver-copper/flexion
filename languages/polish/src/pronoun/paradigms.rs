@@ -180,22 +180,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`n_as_nvir`: one value read as another).
-const N_AS_NVIR: [u16; 60] = [
-    0, 1, 2, 3, 8, 9, 6, 7, 8, 9, 10, 11, 12, 13, 18, 19, 16, 17, 18, 19, 20, 21, 22, 23, 28, 29,
-    26, 27, 28, 29, 30, 31, 32, 33, 38, 39, 36, 37, 38, 39, 40, 41, 42, 43, 48, 49, 46, 47, 48, 49,
-    50, 51, 52, 53, 58, 59, 56, 57, 58, 59,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`anim_as_inan`: one value read as another).
-const ANIM_AS_INAN: [u16; 60] = [
-    1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25,
-    27, 27, 29, 29, 31, 31, 33, 33, 35, 35, 37, 37, 39, 39, 41, 41, 43, 43, 45, 45, 47, 47, 49, 49,
-    51, 51, 53, 53, 55, 55, 57, 57, 59, 59,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -242,7 +226,7 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     // Ów: 14 words (on, ki, nasz, tamten, wasz, pewien).
     declension!("ów", 14, "~";
-    nom_m: _, "~";
+    stem pronoun_nom_m: "~- like ów";
     nom_f: "~a", _;
     nom_n: "~o", _;
     nom_vir: "~i", _;
@@ -255,14 +239,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~ą", _;
     ins_vir: "~ymi", _;
     ),
-    // Każdy: 6 words (który, każdy, niektóry, owy, takowy, poniektóry). Like Ów, except in 2 cells: nom_m inan, nom_vir anim.
-    declension!("każdy", 6, "~y", like Ów as N_AS_NVIR;
-    nom_m: _, "~y";
+    // Każdy: 6 words (który, każdy, niektóry, owy, takowy, poniektóry). Like Ów, except in 2 cells: nom_n anim, nom_vir anim.
+    declension!("każdy", 6, "~y", like Ów;
+    stem pronoun_nom_m: "~y- like ów";
+    nom_n: "~e", _;
     nom_vir: "~zy", _;
     ),
-    // Taki: 3 words (taki, sraki, każdziutki). Like Ów, except in 12 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, ….
+    // Taki: 3 words (taki, sraki, każdziutki). Like Ów, except in 11 cells: nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, ….
     declension!("taki", 3, "~ki", like Ów;
-    nom_m: _, "~ki";
+    stem pronoun_nom_m: "~ki- like ów";
     nom_f: "~ka", _;
     nom_n: "~kie", _;
     nom_vir: "~cy", _;
@@ -275,9 +260,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~ką", _;
     ins_vir: "~kimi", _;
     ),
-    // Mój: 3 words (mój, twój, swój). Like Ów, except in 12 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, ….
+    // Mój: 3 words (mój, twój, swój). Like Ów, except in 11 cells: nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, ….
     declension!("mój", 3, "~ój", like Ów;
-    nom_m: _, "~ój";
+    stem pronoun_nom_m: "~ój- like ów";
     nom_f: "~oja", _;
     nom_n: "~oje", _;
     nom_vir: "~oi", _;
@@ -290,12 +275,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~oją", _;
     ins_vir: "~oimi", _;
     ),
-    // Ile: 1 words (ile). Like Ów, except in 6 cells: nom_m anim, nom_m inan, nom_vir anim, nom_nvir anim, acc_vir anim, acc_vir inan.
-    declension!("ile", 1, "~e", like Ów as ANIM_AS_INAN;
-    nom_m: derived, "~e";
+    // Ile: 1 words (ile). Like Ów, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    declension!("ile", 1, "~e", like Ów;
+    nom_m: _, "~e";
+    nom_f: derived, _;
+    nom_n: derived, _;
     nom_vir: "~u", _;
-    nom_nvir: "~e", _;
+    gen_m: derived, _;
+    gen_f: derived, _;
+    gen_vir: derived, _;
+    dat_m: derived, _;
+    dat_vir: derived, _;
+    acc_m: _, derived;
+    acc_f: derived, _;
     acc_vir: "~u", "~u";
+    ins_vir: derived, _;
     ),
     // Ilekolwiek: 1 words (ilekolwiek).
     declension!("ilekolwiek", 1, "~e~";

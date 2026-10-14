@@ -33,7 +33,7 @@ pub(super) static TABLES: [EndingTable<'static>; 1] = [
             "~ες\t\t~ες\t",
             "\t\t~ες\t",
             "\t\t~ᾰ\t",
-            "\t\t~ων\t",
+            "\t\t\t",
             "\t\t~ων\t",
             "\t\t~ων\t",
             "\t\t~σῐ|~σῐν\t",

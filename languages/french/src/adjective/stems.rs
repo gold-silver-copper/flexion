@@ -24,17 +24,17 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // adjective_m like sauvage: 16,424 words.
+    // adjective_m like sauvage: 16,427 words.
     EndingTable {
         name: Cow::Borrowed("sauvage"),
-        words: 16424,
+        words: 16427,
         slot: 0,
         table: Cow::Borrowed("~\t~s\t"),
     },
-    // adjective_f like sauvage: 17,902 words.
+    // adjective_f like sauvage: 17,901 words.
     EndingTable {
         name: Cow::Borrowed("sauvage"),
-        words: 17902,
+        words: 17901,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t~s\t", "\t",)),
     },

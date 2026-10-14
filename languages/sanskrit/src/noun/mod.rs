@@ -58,6 +58,7 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Gender> = Grammar {
     feature: Some((0, gender::GENDER)),
     compound: None,
     prefixes: None,
+    heads: None,
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
@@ -68,8 +69,8 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Gender> = Grammar {
     smoothing: 2.0,
     sharpness: 0.75,
     trust: flexion::Trust {
-        regular: 0.9924584,
-        unsettled: 0.97866577,
+        regular: 0.9926831,
+        unsettled: 0.98185396,
         unattested: 1.0,
     },
 };

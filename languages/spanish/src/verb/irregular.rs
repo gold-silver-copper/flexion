@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 319 stems, 418 forms.
+/// 267 stems, 410 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abeldar	verb_pres_1_sg	abield- like echar
@@ -27,7 +27,7 @@ ahincarse	30	ahínque	58	ahínquese	61	ahínquense
 albeldar	verb_pres_1_sg	albield- like echar
 alentar	verb_pres_1_sg	alient- like echar
 aliquebrar	verb_pres_1_sg	aliquiebr- like echar
-almorçar	0	almuerço	2	almuerças	4	almuerça	5	almuerçan	12	almorcé	30	almuerce	31	almorcemos	33	almorcéis	58	almuerce	61	almuercen
+almorçar	verb_pres_1_sg	almuer- like realizar	verb_subj_1_pl	almorce- like guiar	0	almuerço	2	almuerças	12	almorcé	33	almorcéis	55	almorcés	57	almuerça	65	almorcéis
 alzarse	57	álzate	58	álcese	61	álcense
 amelar	verb_pres_1_sg	amiel- like echar
 amelarchiarse	56	amelarchiáte
@@ -52,15 +52,14 @@ aterrar	verb_pres_1_sg	atierr- like echar
 atestar	verb_pres_1_sg	atiest- like echar
 atravesar	verb_pres_1_sg	atravies- like echar
 aungar	verb_pres_1_sg	aúng- like echar
-autoprotegerse	18	autoprotegeré	30	autoproteja	31	autoprotejamos	33	autoprotejáis	57	autoprotégete	58	autoprotéjase	61	autoprotéjanse	67	autoprotegerse
 autosatisfacerse	57	autosatisfácete
 avaharse	56	avaháte
 aventar	verb_pres_1_sg	avient- like echar
 avergonzar	verb_pres_1_sg	avergüen- like realizar
 avergonzarse	verb_pres_1_sg	avergüen- like realizar	57	avergüénzate	58	avergüéncese	61	avergüéncense
 beldar	verb_pres_1_sg	bield- like echar
-bendecir	participle	bendecid- like echar
-caber	verb_pres_1_sg	quep- like curtir	verb_subj_1_pl	quep- like conocer	2	cabes	4	cabe	5	caben	57	cabe
+bendecir	69	bendecido
+caber	0	quepo
 caerse	30	caiga	31	caigamos	33	caigáis	57	cáete
 calentar	verb_pres_1_sg	calient- like echar
 cegar	verb_pres_1_sg	cieg- like echar
@@ -75,11 +74,10 @@ comenzar	verb_pres_1_sg	comien- like realizar
 compungirse	30	compunja	31	compunjamos	33	compunjáis	57	compúngete	58	compúnjase	61	compúnjanse
 concernir	verb_pres_1_sg	conciern- like curtir
 concertar	verb_pres_1_sg	conciert- like echar
-condescender	verb_pres_1_sg	condesciend- like curtir
 condolerse	verb_pres_1_sg	conduel- like curtir	57	conduélete	58	conduélase	61	conduélanse
 confesar	verb_pres_1_sg	confies- like echar
 contender	verb_pres_1_sg	contiend- like curtir
-contradecirse	participle	contradich- like echar	verb	contradij- like reducir	verb_pres_1_sg	contradi- like hacer	verb_subj_1_pl	contradig- like autoabastecerse	57	contradícete	58	contradígase	61	contradíganse
+contradecirse	participle	contradicho- like echar	verb	contradij- like reducir	verb_pres_1_sg	contrad- like seguirse	verb_subj_1_pl	contradig- like autoabastecerse	2	contradices	57	contradícete
 contrahacer	12	contrahíce	16	contrahízo
 contrahacerse	12	contrahíce	16	contrahízo
 corroer	55	corroyás
@@ -87,9 +85,9 @@ corroerse	57	corróete	58	corróase	61	corróanse
 coscar	verb_pres_1_pl	cosc- like incautarse	verb_subj_1_pl	cosqu- like incautarse	57	cóscate	58	cósquese	61	cósquense
 crecentar	verb_pres_1_sg	crecient- like echar
 dar	verb	d- like conocer	verb_pres_1_pl	d- like guiar	verb_subj_1_pl	de- like guiar	2	das	4	da	5	dan	12	di	16	dio	30	dé	58	dé	61	den
-darse	verb	d- like conocer	verb_pres_1_pl	d- like criarse	verb_subj_1_pl	d- like criarse	2	das	4	da	5	dan	12	di	16	dio	30	dé	61	dense
+darse	2	das	4	da	5	dan	12	di	13	dimos	16	dio	17	dieron	30	dé	33	deis	37	diéramos	56	date	61	dense
 decender	verb_pres_1_sg	deciend- like curtir
-decernir	verb	dicirn- like conocer	verb_pres_1_sg	diciern- like curtir	verb_subj_1_pl	dicirn- like conocer	12	decerní	13	decernimos	14	decerniste	15	decernisteis	68	dicirniendo
+decernir	verb	dicirn- like conocer	verb_pres_1_sg	diciern- like curtir	verb_subj_1_pl	dicirn- like conocer	12	decerní	13	decernimos	68	dicirniendo
 decir	57	di
 defender	verb_pres_1_sg	defiend- like curtir
 dehender	verb_pres_1_sg	dehiend- like curtir
@@ -101,30 +99,19 @@ derrenegar	verb_pres_1_sg	derrenieg- like echar
 desacertar	verb_pres_1_sg	desaciert- like echar
 desalentar	verb_pres_1_sg	desalient- like echar
 desandar	verb	desanduv- like poner
-desarrendar	verb_pres_1_sg	desarriend- like echar
 desasentar	verb_pres_1_sg	desasient- like echar
 desasir	verb_fut_1_sg	desasir- like echar	57	desase
-desasosegar	verb_pres_1_sg	desasosieg- like echar
 desatender	verb_pres_1_sg	desatiend- like curtir
 desatentar	verb_pres_1_sg	desatient- like echar
 desaterrar	verb_pres_1_sg	desatierr- like echar
-desatravesar	verb_pres_1_sg	desatravies- like echar
-desavaharse	56	desavaháte
 descender	verb_pres_1_sg	desciend- like curtir
 descerrar	verb_pres_1_sg	descierr- like echar
-descimentar	verb_pres_1_sg	descimient- like echar
-desconcertar	verb_pres_1_sg	desconciert- like echar
 desdar	verb	desd- like conocer	30	desdé	57	desdá	58	desdé	61	desdén
-desdecirse	participle	desdich- like echar	verb	desdij- like reducir	verb_pres_1_sg	desdi- like hacer	verb_subj_1_pl	desdig- like autoabastecerse	57	desdícete	58	desdígase	61	desdíganse
-desempedrar	verb_pres_1_sg	desempiedr- like echar
-desencerrar	verb_pres_1_sg	desencierr- like echar
-desenterrar	verb_pres_1_sg	desentierr- like echar
+desdecirse	participle	desdicho- like echar	verb	desdij- like reducir	verb_pres_1_sg	desd- like seguirse	verb_subj_1_pl	desdig- like autoabastecerse	2	desdices	57	desdícete
 desferrar	verb_pres_1_sg	desfierr- like echar
-desgobernar	verb_pres_1_sg	desgobiern- like echar
 deshelar	verb_pres_1_sg	deshiel- like echar
 desherbar	verb_pres_1_sg	deshierb- like echar
 desherrar	verb_pres_1_sg	deshierr- like echar
-desinvernar	verb_pres_1_sg	desinviern- like echar
 deslendrar	verb_pres_1_sg	desliendr- like echar
 deslenguarse	30	deslengüe	31	deslengüemos	58	desléngüese	61	desléngüense
 desmelar	verb_pres_1_sg	desmiel- like echar
@@ -138,11 +125,11 @@ despernar	verb_pres_1_sg	despiern- like echar
 despertar	verb_pres_1_sg	despiert- like echar
 desplegar	verb_pres_1_sg	desplieg- like echar
 despoder	verb	despud- like poner	verb_fut_1_sg	despodr- like echar	verb_pres_1_sg	despued- like curtir	68	despudiendo
-desproveer	participle	desprovist- like echar
+desproveer	69	desprovisto
 destender	verb_pres_1_sg	destiend- like curtir
 destentar	verb_pres_1_sg	destient- like echar
 desterrar	verb_pres_1_sg	destierr- like echar
-desvaír	verb_pres_1_sg	desvay- like curtir	verb_subj_1_pl	desvay- like conocer	2	desvaes	4	desvae	5	desvaen	57	desvae
+desvaír	verb_pres_1_sg	desvay- like curtir	verb_subj_1_pl	desvay- like conocer	2	desvaes	57	desvae
 desventar	verb_pres_1_sg	desvient- like echar
 desvergonzarse	verb_pres_1_sg	desvergüen- like realizar	57	desvergüénzate	58	desvergüéncese	61	desvergüéncense
 discerner	verb_pres_1_sg	disciern- like curtir
@@ -171,19 +158,18 @@ ensarmentar	verb_pres_1_sg	ensarmient- like echar
 entender	verb_pres_1_sg	entiend- like curtir
 enterrar	verb_pres_1_sg	entierr- like echar
 entrarse	57	éntrate	58	éntrese	61	éntrense
-entreabrirse	participle	entreabiert- like echar
 entrecerrar	verb_pres_1_sg	entrecierr- like echar
 entredecir	57	entredí
 entrepernar	verb_pres_1_sg	entrepiern- like echar
 envergonzar	verb_pres_1_sg	envergüen- like realizar
 ercer	30	yerza	57	yerce	58	yerza	61	yerzan
-erguir	verb	irgu- like conocer	verb_pres_1_sg	irg- like curtir	verb_subj_1_pl	irg- like conocer	12	erguí	13	erguimos	14	erguiste	15	erguisteis	55	yergás	68	irguiendo
-erguirse	verb	irgu- like conocer	verb_pres_1_sg	yerg- like curtir	verb_subj_1_pl	irg- like autoabastecerse	12	erguí	13	erguimos	14	erguiste	15	erguisteis	57	yérguete	58	yérgase	61	yérganse	68	irguiéndose
+erguir	verb	irgu- like conocer	verb_pres_1_sg	irg- like curtir	verb_subj_1_pl	irg- like conocer	12	erguí	13	erguimos	55	yergás	68	irguiendo
+erguirse	16	irguió	30	yerga	31	irgamos	33	irgáis	37	irguiéramos	57	yérguete	68	irguiéndose
 errar	verb_pres_1_sg	yerr- like echar
 errarse	30	yerre	57	yérrate
 escalentar	verb_pres_1_sg	escalient- like echar
 escarmentar	verb_pres_1_sg	escarmient- like echar
-eser	participle	sid- like echar	verb	fu- like reducir	verb_fut_1_sg	ser- like echar	verb_pres_1_sg	s- like curtir	verb_subj_1_pl	s- like conocer	0	só	1	sedemos	2	sees	3	seedes	4	siede	5	seyen	6	era	9	érades	12	fu	13	fuemos	14	fueste	15	fuestes	16	fo	17	foron	21	seredes	27	seríades	33	seades	39	fuérades	51	fuéredes	54	sos	55	seades	56	seades	57	sé	58	sea	59	seamos	60	seades	61	sean	65	seades	68	siendo
+eser	0	só	1	sedemos	2	sees	3	seedes	4	siede	5	seyen	6	era	9	érades	12	fu	13	fuemos	15	fuestes	16	fo	17	foron	18	seré	21	seredes	27	seríades	30	sa	31	samos	33	seades	36	fuera	37	fuéramos	38	fueras	39	fuérades	41	fueran	42	fuese	44	fueses	47	fuesen	48	fuere	50	fueres	51	fuéredes	53	fueren	54	sos	56	seades	57	sé	58	sea	59	seamos	60	seades	61	sean	68	siendo	69	sido
 esparcirse	30	esparza	31	esparzamos	33	esparzáis	57	espárcete
 estar	verb	estuv- like poner	30	esté	57	está	58	esté
 estarse	verb	estuv- like poner	verb_pres_1_pl	est- like incautarse	30	esté	61	estense
@@ -195,12 +181,12 @@ far	3	fais	12	fe	16	fo	33	feis
 ferrar	verb_pres_1_sg	fierr- like echar
 fregar	verb_pres_1_sg	frieg- like echar
 freír	verb_subj_1_pl	fria- like guiar	16	frio
-freírse	participle	frit- like echar
+freírse	69	frito
 fruncirse	30	frunza	31	frunzamos	33	frunzáis	57	frúncete
 gobernar	verb_pres_1_sg	gobiern- like echar
 gubernar	verb_pres_1_sg	gubiern- like echar
-haber	verb	hub- like poner	verb_pres_1_sg	hay- like curtir	verb_subj_1_pl	hay- like conocer	0	he	1	hemos	2	has	4	ha	5	han	57	habe
-haberse	verb	hub- like poner	verb_fut_1_sg	habr- like echar	verb_pres_1_sg	hay- like curtir	verb_subj_1_pl	hay- like conocer	0	he	1	hemos	2	has	3	habéis	4	ha	5	han	54	has
+haber	verb	hub- like poner	verb_pres_1_sg	hay- like curtir	verb_subj_1_pl	hay- like conocer	0	he	1	hemos	2	has	57	habe
+haberse	verb	hub- like poner	verb_fut_1_sg	habr- like echar	verb_pres_1_sg	hay- like curtir	verb_subj_1_pl	hay- like conocer	0	he	1	hemos	2	has	3	habéis	54	has
 hacendar	verb_pres_1_sg	haciend- like echar
 heder	verb_pres_1_sg	hied- like curtir
 helar	verb_pres_1_sg	hiel- like echar
@@ -215,19 +201,18 @@ huirse	56	huíte
 incensar	verb_pres_1_sg	inciens- like echar
 infernar	verb_pres_1_sg	infiern- like echar
 inflarse	57	ínflate	58	ínflese	61	ínflense
-inhestar	participle	inhiest- like echar	verb_pres_1_sg	inhiest- like echar
+inhestar	30	inhieste	57	inhiesta	58	inhieste	61	inhiesten	69	inhiesto
 intender	verb_pres_1_sg	intiend- like curtir
 invernar	verb_pres_1_sg	inviern- like echar
 jamerdar	verb_pres_1_sg	jamierd- like echar
 jeder	verb_pres_1_sg	jied- like curtir
 jerber	verb_pres_1_sg	jierb- like curtir
 jerver	verb_pres_1_sg	jierv- like curtir
-jier	participle	jiíd- like echar	verb_subj_1_pl	jia- like guiar	3	jieis	13	jiímos	16	jio
+jier	participle	jiído- like echar	verb_subj_1_pl	jia- like guiar	3	jieis	13	jiímos	16	jio
 jugarse	verb_pres_1_sg	jueg- like echar	57	juégate	58	juéguese	61	juéguense
 kgar	3	kgais	12	kgue	16	kgo	33	kgueis
 lagarear	57	lagaréate	58	lagaréese	59	lagareémonos	61	lagaréense	67	lagarearse	68	lagareándose
-maldecir	participle	maldecid- like echar
-malentender	verb_pres_1_sg	malentiend- like curtir
+maldecir	69	maldecido
 maloler	verb_pres_1_sg	malhuel- like curtir
 malpensar	verb_pres_1_sg	malpiens- like echar
 manifestar	verb_pres_1_sg	manifiest- like echar
@@ -237,9 +222,8 @@ mentar	verb_pres_1_sg	mient- like echar
 merendar	verb_pres_1_sg	meriend- like echar
 meucar	30	meúque	57	meúca	58	meúque	61	meúquen
 miar	3	miais	12	mie	16	mio	33	mieis
-morder	verb_pres_1_sg	muerd- like curtir
 morderse	30	muerda	57	muérdete
-morirse	participle	muert- like echar
+morirse	69	muerto
 negar	verb_pres_1_sg	nieg- like echar
 nevar	verb_pres_1_sg	niev- like echar
 ociarse	57	óciate	58	óciese	61	óciense
@@ -248,23 +232,22 @@ ornarse	57	órnate	58	órnese	61	órnense
 pensar	verb_pres_1_sg	piens- like echar
 perder	verb_pres_1_sg	pierd- like curtir
 perniquebrar	verb_pres_1_sg	perniquiebr- like echar
-plañirse	16	plañó	36	plañera	37	plañéramos	38	plañeras	41	plañeran	42	plañese	44	plañeses	47	plañesen	48	plañere	50	plañeres	53	plañeren	68	plañéndose
+plañirse	16	plañó	37	plañéramos	68	plañéndose
 plegar	verb_pres_1_sg	plieg- like echar
 poder	verb	pud- like poner	verb_fut_1_sg	podr- like echar	verb_pres_1_sg	pued- like curtir	68	pudiendo
 podrir	verb_pres_1_sg	pudr- like curtir
 podrirse	30	pudra	57	púdrete
 poner	57	pon
-precalentar	verb_pres_1_sg	precalient- like echar
 prevalerse	18	prevaldré	30	prevalga	31	prevalgamos	33	prevalgáis	58	preválgase	61	preválganse
 protegerse	18	protegeré	30	proteja	31	protejamos	33	protejáis	57	protégete	67	protegerse
-proveer	participle	provist- like echar
-proveerse	participle	provist- like echar
+proveer	69	provisto
+proveerse	69	provisto
 puar	16	puo	33	pueis	56	pua
-pudrir	participle	podrid- like echar
-pudrirse	participle	podrid- like echar
+pudrir	69	podrido
+pudrirse	69	podrido
 quebrar	verb_pres_1_sg	quiebr- like echar
 raer	55	rayás
-reabrirse	participle	reabiert- like echar
+reabrirse	69	reabierto
 reapretar	verb_pres_1_sg	reapriet- like echar
 reasentar	verb_pres_1_sg	reasient- like echar
 reaventar	verb_pres_1_sg	reavient- like echar
@@ -291,7 +274,6 @@ rehuirse	verb_pres_1_sg	rehúy- like freírse	56	rehuíte
 rehundir	verb_pres_1_sg	rehúnd- like curtir
 remecerse	57	remécete	58	remézase	61	remézanse
 remendar	verb_pres_1_sg	remiend- like echar
-remorder	verb_pres_1_sg	remuerd- like curtir
 remorderse	verb_pres_1_sg	remuerd- like curtir	57	remuérdete	58	remuérdase	61	remuérdanse
 rendirse	56	rendite	57	ríndete	58	ríndase	61	ríndanse
 renegar	verb_pres_1_sg	renieg- like echar
@@ -299,8 +281,8 @@ repensar	verb_pres_1_sg	repiens- like echar
 replegar	verb_pres_1_sg	replieg- like echar
 repodrir	verb_pres_1_sg	repudr- like curtir
 repodrirse	30	repudra	57	repúdrete	61	repúdranse
-repudrir	participle	repodrid- like echar
-repudrirse	participle	repodrid- like echar
+repudrir	69	repodrido
+repudrirse	69	repodrido
 requebrar	verb_pres_1_sg	requiebr- like echar
 resarcirse	30	resarza	31	resarzamos	33	resarzáis	57	resárcete	61	resárzanse
 resegar	verb_pres_1_sg	resieg- like echar
@@ -313,9 +295,9 @@ reunirse	verb_pres_1_sg	reún- like freírse
 reventar	verb_pres_1_sg	revient- like echar
 reverter	verb_pres_1_sg	reviert- like curtir
 reír	verb_subj_1_pl	ria- like guiar	16	rio
-reírse	16	reyó	30	rea	31	reamos	33	reáis	36	reyera	37	reyéramos	38	reyeras	41	reyeran	42	reyese	44	reyeses	47	reyesen	48	reyere	50	reyeres	53	reyeren	57	réete	61	réanse	68	reyéndose
+reírse	16	reyó	30	rea	31	reamos	33	reáis	37	reyéramos	57	réete	61	réanse	68	reyéndose
 roer	55	royás
-romperse	participle	rot- like echar
+romperse	69	roto
 ruar	16	ruo	33	rueis	56	rua
 salirse	18	saldré	30	salga	31	salgamos	33	salgáis	57	salte
 salpimentar	verb_pres_1_sg	salpimient- like echar
@@ -325,22 +307,14 @@ segar	verb_pres_1_sg	sieg- like echar
 sembrar	verb_pres_1_sg	siembr- like echar
 sementar	verb_pres_1_sg	semient- like echar
 sentar	verb_pres_1_sg	sient- like echar
-ser	participle	sid- like echar	verb	fu- like reducir	0	soy	1	somos	2	eres	4	es	5	son	6	era	12	fui	16	fue	54	sos
+ser	0	soy	1	somos	2	eres	4	es	5	son	6	era	12	fui	13	fuimos	16	fue	17	fueron	37	fuéramos	54	sos	69	sido
 serrar	verb_pres_1_sg	sierr- like echar
 servirse	56	servite	57	sírvete	58	sírvase	61	sírvanse
-sobrecalentar	verb_pres_1_sg	sobrecalient- like echar
-sobreentender	verb_pres_1_sg	sobreentiend- like curtir
-sobrentender	verb_pres_1_sg	sobrentiend- like curtir
-sobrepensar	verb_pres_1_sg	sobrepiens- like echar
-sobresembrar	verb_pres_1_sg	sobresiembr- like echar
 sorregar	verb_pres_1_sg	sorrieg- like echar
 sosegar	verb_pres_1_sg	sosieg- like echar
 soterrar	verb_pres_1_sg	sotierr- like echar
-subarrendar	verb_pres_1_sg	subarriend- like echar
-subentender	verb_pres_1_sg	subentiend- like curtir
 subtender	verb_pres_1_sg	subtiend- like curtir
 sumergirse	30	sumerja	31	sumerjamos	33	sumerjáis	57	sumérgete	58	sumérjase	61	sumérjanse
-superentender	verb_pres_1_sg	superentiend- like curtir
 tar	verb	tuv- like poner	verb_pres_1_pl	t- like guiar	verb_subj_1_pl	te- like guiar	2	tas	4	ta	5	tan	30	té	61	ten
 temblar	verb_pres_1_sg	tiembl- like echar
 tender	verb_pres_1_sg	tiend- like curtir

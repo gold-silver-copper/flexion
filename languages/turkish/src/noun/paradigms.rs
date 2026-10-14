@@ -6,7 +6,9 @@
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
 //! as the copy laws in `laws.rs` change it. A capital (`I`, `A`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
-//! letter before it.
+//! letter before it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -182,15 +184,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_sg`: one value read as another).
-const PL_AS_SG: [u16; 84] = [
-    0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
-    50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
-    74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -198,18 +191,12 @@ pub enum Declension {
     Dalga,
     /// Like `sav`: 2,910 words.
     Sav,
-    /// Like `mazak`: 1,349 words.
-    Mazak,
-    /// Like `makas`: 757 words.
+    /// Like `ant`: 1,717 words.
+    Ant,
+    /// Like `makas`: 755 words.
     Makas,
     /// Like `kiriş`: 681 words.
     Kiriş,
-    /// Like `kâğıt`: 173 words.
-    Kâğıt,
-    /// Like `kıskaç`: 124 words.
-    Kıskaç,
-    /// Like `hesap`: 122 words.
-    Hesap,
     /// Like `yer`: 105 words.
     Yer,
     /// Like `devir`: 47 words.
@@ -222,8 +209,16 @@ pub enum Declension {
     Ekolog,
     /// Like `gönül`: 17 words.
     Gönül,
+    /// Like `hesap`: 16 words.
+    Hesap,
+    /// Like `mazak`: 13 words.
+    Mazak,
+    /// Like `kıskaç`: 13 words.
+    Kıskaç,
     /// Like `keyif`: 12 words.
     Keyif,
+    /// Like `kâğıt`: 11 words.
+    Kâğıt,
     /// Like `nakış`: 9 words.
     Nakış,
     /// Like `efkâr`: 7 words.
@@ -240,22 +235,23 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 21] = [
+    pub const ALL: [Declension; 22] = [
         Declension::Dalga,
         Declension::Sav,
-        Declension::Mazak,
+        Declension::Ant,
         Declension::Makas,
         Declension::Kiriş,
-        Declension::Kâğıt,
-        Declension::Kıskaç,
-        Declension::Hesap,
         Declension::Yer,
         Declension::Devir,
         Declension::Akıl,
         Declension::Göz,
         Declension::Ekolog,
         Declension::Gönül,
+        Declension::Hesap,
+        Declension::Mazak,
+        Declension::Kıskaç,
         Declension::Keyif,
+        Declension::Kâğıt,
         Declension::Nakış,
         Declension::Efkâr,
         Declension::Burun,
@@ -279,291 +275,131 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     // Dalga: 3,955 words (abide, bone, nine, sela, banko, yeti).
     declension!("dalga", 3955, "~";
     stem noun_acc_sg: "~- like dalga";
     nom: "~", "~lAr";
-    acc: _, "~lArI";
-    dat: _, "~lArA";
-    loc: "~dA", "~lArdA";
-    abl: "~dAn", "~lArdAn";
-    gen_: _, "~lArIn";
-    possessive_nom_many: "~lArIm", _, _, "~lArImIz", "~lArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~lArInI";
-    possessive_acc_many: "~lArImI", _, _, "~lArImIzI", "~lArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~lArInA";
-    possessive_dat_many: "~lArImA", _, _, "~lArImIzA", "~lArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~lArIndA";
-    possessive_loc_many: "~lArImdA", _, _, "~lArImIzdA", "~lArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~lArIndAn";
-    possessive_abl_many: "~lArImdAn", _, _, "~lArImIzdAn", "~lArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~lArInIn";
-    possessive_gen_many: "~lArImIn", _, _, "~lArImIzIn", "~lArInIzIn", _;
+    loc: "~dA", _;
+    possessive_nom_one: _, _, _, _, _, "~lArI";
+    possessive_nom_many: _, "~lArIn", "~lArI", _, _, "~lArI";
+    possessive_acc_many: _, "~lArInI", "~lArInI", _, _, "~lArInI";
+    possessive_dat_many: _, "~lArInA", "~lArInA", _, _, "~lArInA";
+    possessive_loc_many: _, "~lArIndA", "~lArIndA", _, _, "~lArIndA";
+    possessive_abl_many: _, "~lArIndAn", "~lArIndAn", _, _, "~lArIndAn";
+    possessive_gen_many: _, "~lArInIn", "~lArInIn", _, _, "~lArInIn";
     ),
     // Sav: 2,910 words (pound, ab, abdal, en, in, seven). Like Dalga, except in 0 cells: .
     declension!("sav", 2910, "~", like Dalga;
     stem noun_acc_sg: "~- like sav";
     ),
-    // Mazak: 1,349 words (şibidak, müzik, kayak, matematik, aerodinamik, kulak).
-    declension!("mazak", 1349, "~k";
-    stem noun_acc_sg: "~ğ- like sav";
-    nom: "~k", "~klAr";
-    acc: _, "~klArI";
-    dat: _, "~klArA";
-    loc: "~ktA", "~klArdA";
-    abl: "~ktAn", "~klArdAn";
-    gen_: _, "~klArIn";
-    possessive_nom_many: "~klArIm", _, _, "~klArImIz", "~klArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~klArInI";
-    possessive_acc_many: "~klArImI", _, _, "~klArImIzI", "~klArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~klArInA";
-    possessive_dat_many: "~klArImA", _, _, "~klArImIzA", "~klArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~klArIndA";
-    possessive_loc_many: "~klArImdA", _, _, "~klArImIzdA", "~klArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~klArIndAn";
-    possessive_abl_many: "~klArImdAn", _, _, "~klArImIzdAn", "~klArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~klArInIn";
-    possessive_gen_many: "~klArImIn", _, _, "~klArImIzIn", "~klArInIzIn", _;
+    // Ant: 1,717 words (ant, art, bap, şibidak, müzik, kayak).
+    declension!("ant", 1717, "~ˇ";
+    stem noun_acc_sg: "~- like ant";
+    nom: "~ˇ", "~lArˇ";
+    loc: "~tAˇ", _;
+    possessive_nom_one: _, _, _, _, _, "~lArIˇ";
+    possessive_nom_many: _, "~lArInˇ", "~lArIˇ", _, _, "~lArIˇ";
+    possessive_acc_many: _, "~lArInIˇ", "~lArInIˇ", _, _, "~lArInIˇ";
+    possessive_dat_many: _, "~lArInAˇ", "~lArInAˇ", _, _, "~lArInAˇ";
+    possessive_loc_many: _, "~lArIndAˇ", "~lArIndAˇ", _, _, "~lArIndAˇ";
+    possessive_abl_many: _, "~lArIndAnˇ", "~lArIndAnˇ", _, _, "~lArIndAnˇ";
+    possessive_gen_many: _, "~lArInInˇ", "~lArInInˇ", _, _, "~lArInInˇ";
     ),
-    // Makas: 757 words (robot, port, bot, bank, but, mars). Like Sav, except in 2 cells: loc sg, abl sg.
-    declension!("makas", 757, "~", like Sav;
-    loc: "~tA", _;
-    abl: "~tAn", _;
+    // Makas: 755 words (robot, port, bot, bank, but, mars). Like Sav, except in 0 cells: .
+    declension!("makas", 755, "~", like Sav;
+    stem noun_nom_sg: "~- like makas";
     ),
-    // Kiriş: 681 words (abdest, lens, planet, bit, is, market).
-    declension!("kiriş", 681, "~";
-    stem noun_acc_sg: "~- like kiriş";
-    nom: "~", "~lAr";
-    acc: _, "~lArI";
-    dat: _, "~lArA";
-    loc: "~tA", "~lArdA";
-    abl: "~tAn", "~lArdAn";
-    gen_: _, "~lArIn";
-    possessive_nom_one: _, _, _, _, _, "~lerI";
-    possessive_nom_many: "~lerIm", "~lerIn", "~lerI", "~lerImIz", "~lerInIz", "~lerI";
-    possessive_acc_one: _, _, _, _, _, "~lerInI";
-    possessive_acc_many: "~lerImI", _, _, "~lerImIzI", "~lerInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~lerInA";
-    possessive_dat_many: "~lerImA", _, _, "~lerImIzA", "~lerInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~lerIndA";
-    possessive_loc_many: "~lerImdA", _, _, "~lerImIzdA", "~lerInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~lerIndAn";
-    possessive_abl_many: "~lerImdAn", _, _, "~lerImIzdAn", "~lerInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~lerInIn";
-    possessive_gen_many: "~lerImIn", _, _, "~lerImIzIn", "~lerInIzIn", _;
+    // Kiriş: 681 words (abdest, lens, planet, bit, is, market). Like Makas, except in 38 cells: possessive_nom_one _1sg, possessive_nom_one _3sg, possessive_nom_one _1pl, possessive_nom_one _2pl, possessive_nom_one _3pl, possessive_nom_many _2sg, ….
+    declension!("kiriş", 681, "~", like Makas;
+    possessive_nom_one: "~im", _, "~i", "~imIz", "~inIz", "~lerI";
+    possessive_nom_many: _, "~lerIn", "~lerI", _, _, "~lerI";
+    possessive_acc_one: _, "~inI", _, _, "~inIzI", _;
+    possessive_acc_many: _, "~lerInI", "~lerInI", _, _, "~lerInI";
+    possessive_dat_one: "~imA", "~inA", _, _, "~inIzA", _;
+    possessive_dat_many: _, "~lerInA", "~lerInA", _, _, "~lerInA";
+    possessive_loc_one: "~imdA", "~indA", "~indA", _, "~inIzdA", _;
+    possessive_loc_many: _, "~lerIndA", "~lerIndA", _, _, "~lerIndA";
+    possessive_abl_one: "~imdAn", "~indAn", "~indAn", _, "~inIzdAn", _;
+    possessive_abl_many: _, "~lerIndAn", "~lerIndAn", _, _, "~lerIndAn";
+    possessive_gen_one: _, "~inIn", _, _, "~inIzIn", _;
+    possessive_gen_many: _, "~lerInIn", "~lerInIn", _, _, "~lerInIn";
     ),
-    // Kâğıt: 173 words (ant, art, aft, ut, abat, adet).
-    declension!("kâğıt", 173, "~t";
-    stem noun_acc_sg: "~d- like sav";
-    nom: "~t", "~tlAr";
-    acc: _, "~tlArI";
-    dat: _, "~tlArA";
-    loc: "~ttA", "~tlArdA";
-    abl: "~ttAn", "~tlArdAn";
-    gen_: _, "~tlArIn";
-    possessive_nom_many: "~tlArIm", _, _, "~tlArImIz", "~tlArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~tlArInI";
-    possessive_acc_many: "~tlArImI", _, _, "~tlArImIzI", "~tlArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~tlArInA";
-    possessive_dat_many: "~tlArImA", _, _, "~tlArImIzA", "~tlArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~tlArIndA";
-    possessive_loc_many: "~tlArImdA", _, _, "~tlArImIzdA", "~tlArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~tlArIndAn";
-    possessive_abl_many: "~tlArImdAn", _, _, "~tlArImIzdAn", "~tlArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~tlArInIn";
-    possessive_gen_many: "~tlArImIn", _, _, "~tlArImIzIn", "~tlArInIzIn", _;
-    ),
-    // Kıskaç: 124 words (ilaç, kılıç, öç, pirinç, tunç, ağaç).
-    declension!("kıskaç", 124, "~ç";
-    stem noun_acc_sg: "~c- like sav";
-    nom: "~ç", "~çlAr";
-    acc: _, "~çlArI";
-    dat: _, "~çlArA";
-    loc: "~çtA", "~çlArdA";
-    abl: "~çtAn", "~çlArdAn";
-    gen_: _, "~çlArIn";
-    possessive_nom_many: "~çlArIm", _, _, "~çlArImIz", "~çlArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~çlArInI";
-    possessive_acc_many: "~çlArImI", _, _, "~çlArImIzI", "~çlArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~çlArInA";
-    possessive_dat_many: "~çlArImA", _, _, "~çlArImIzA", "~çlArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~çlArIndA";
-    possessive_loc_many: "~çlArImdA", _, _, "~çlArImIzdA", "~çlArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~çlArIndAn";
-    possessive_abl_many: "~çlArImdAn", _, _, "~çlArImIzdAn", "~çlArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~çlArInIn";
-    possessive_gen_many: "~çlArImIn", _, _, "~çlArImIzIn", "~çlArInIzIn", _;
-    ),
-    // Hesap: 122 words (bap, dip, asap, cep, kap, lep).
-    declension!("hesap", 122, "~p";
-    stem noun_acc_sg: "~b- like sav";
-    nom: "~p", "~plAr";
-    acc: _, "~plArI";
-    dat: _, "~plArA";
-    loc: "~ptA", "~plArdA";
-    abl: "~ptAn", "~plArdAn";
-    gen_: _, "~plArIn";
-    possessive_nom_many: "~plArIm", _, _, "~plArImIz", "~plArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~plArInI";
-    possessive_acc_many: "~plArImI", _, _, "~plArImIzI", "~plArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~plArInA";
-    possessive_dat_many: "~plArImA", _, _, "~plArImIzA", "~plArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~plArIndA";
-    possessive_loc_many: "~plArImdA", _, _, "~plArImIzdA", "~plArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~plArIndAn";
-    possessive_abl_many: "~plArImdAn", _, _, "~plArImIzdAn", "~plArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~plArInIn";
-    possessive_gen_many: "~plArImIn", _, _, "~plArImIzIn", "~plArInIzIn", _;
-    ),
-    // Yer: 105 words (general, montreal, ideal, metal, terminal, meal). Like Kiriş, except in 12 cells: nom pl, acc pl, dat pl, loc sg, loc pl, abl sg, ….
+    // Yer: 105 words (general, montreal, ideal, metal, terminal, meal). Like Kiriş, except in 2 cells: nom pl, loc sg.
     declension!("yer", 105, "~", like Kiriş;
     stem noun_acc_sg: "~- like yer";
     nom: _, "~ler";
-    acc: _, "~lerI";
-    dat: _, "~lerA";
-    loc: "~de", "~lerdA";
-    abl: "~den", "~lerdAn";
-    gen_: _, "~lerIn";
-    possessive_nom_one: _, _, _, _, _, derived;
-    possessive_nom_many: _, derived, derived, _, _, derived;
+    loc: "~de", _;
     ),
     // Devir: 47 words (zehir, emir, isim, dahil, devir, aciz).
     declension!("devir", 47, "~i~";
+    stem noun_nom_sg: "~i~- like devir";
     stem noun_acc_sg: "~~- like yer";
-    nom: "~i~", "~i~ler";
-    acc: _, "~i~leri";
-    dat: _, "~i~lere";
-    loc: "~i~de", "~i~lerde";
-    abl: "~i~den", "~i~lerden";
-    gen_: _, "~i~lerin";
-    possessive_nom_many: "~i~lerim", _, _, "~i~lerimiz", "~i~leriniz", _;
-    possessive_acc_one: _, _, _, _, _, "~i~lerini";
-    possessive_acc_many: "~i~lerimi", _, _, "~i~lerimizi", "~i~lerinizi", _;
-    possessive_dat_one: _, _, _, _, _, "~i~lerine";
-    possessive_dat_many: "~i~lerime", _, _, "~i~lerimize", "~i~lerinize", _;
-    possessive_loc_one: _, _, _, _, _, "~i~lerinde";
-    possessive_loc_many: "~i~lerimde", _, _, "~i~lerimizde", "~i~lerinizde", _;
-    possessive_abl_one: _, _, _, _, _, "~i~lerinden";
-    possessive_abl_many: "~i~lerimden", _, _, "~i~lerimizden", "~i~lerinizden", _;
-    possessive_gen_one: _, _, _, _, _, "~i~lerinin";
-    possessive_gen_many: "~i~lerimin", _, _, "~i~lerimizin", "~i~lerinizin", _;
     ),
     // Akıl: 25 words (hayır, ağız, akıl, asır, bağır, kayın).
     declension!("akıl", 25, "~ı~";
+    stem noun_nom_sg: "~ı~- like akıl";
     stem noun_acc_sg: "~~- like sav";
-    nom: "~ı~", "~ı~lar";
-    acc: _, "~ı~ları";
-    dat: _, "~ı~lara";
-    loc: "~ı~da", "~ı~larda";
-    abl: "~ı~dan", "~ı~lardan";
-    gen_: _, "~ı~ların";
-    possessive_nom_many: "~ı~larım", _, _, "~ı~larımız", "~ı~larınız", _;
-    possessive_acc_one: _, _, _, _, _, "~ı~larını";
-    possessive_acc_many: "~ı~larımı", _, _, "~ı~larımızı", "~ı~larınızı", _;
-    possessive_dat_one: _, _, _, _, _, "~ı~larına";
-    possessive_dat_many: "~ı~larıma", _, _, "~ı~larımıza", "~ı~larınıza", _;
-    possessive_loc_one: _, _, _, _, _, "~ı~larında";
-    possessive_loc_many: "~ı~larımda", _, _, "~ı~larımızda", "~ı~larınızda", _;
-    possessive_abl_one: _, _, _, _, _, "~ı~larından";
-    possessive_abl_many: "~ı~larımdan", _, _, "~ı~larımızdan", "~ı~larınızdan", _;
-    possessive_gen_one: _, _, _, _, _, "~ı~larının";
-    possessive_gen_many: "~ı~larımın", _, _, "~ı~larımızın", "~ı~larınızın", _;
     ),
     // Göz: 20 words (petrol, spoiler, gol, ampul, ful, rol). Like Yer, except in 0 cells: .
     declension!("göz", 20, "~", like Yer;
     stem noun_acc_sg: "~- like göz";
     ),
-    // Ekolog: 17 words (monolog, antropolog, ekolog, klimatolog, arkeolog, katalog). Like Mazak, except in 32 cells: nom sg, nom pl, acc pl, dat pl, loc sg, loc pl, ….
-    declension!("ekolog", 17, "~g", like Mazak;
-    nom: "~g", "~glAr";
-    acc: _, "~glArI";
-    dat: _, "~glArA";
-    loc: "~gdA", "~glArdA";
-    abl: "~gdAn", "~glArdAn";
-    gen_: _, "~glArIn";
-    possessive_nom_many: "~glArIm", _, _, "~glArImIz", "~glArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~glArInI";
-    possessive_acc_many: "~glArImI", _, _, "~glArImIzI", "~glArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~glArInA";
-    possessive_dat_many: "~glArImA", _, _, "~glArImIzA", "~glArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~glArIndA";
-    possessive_loc_many: "~glArImdA", _, _, "~glArImIzdA", "~glArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~glArIndAn";
-    possessive_abl_many: "~glArImdAn", _, _, "~glArImIzdAn", "~glArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~glArInIn";
-    possessive_gen_many: "~glArImIn", _, _, "~glArImIzIn", "~glArInIzIn", _;
+    // Ekolog: 17 words (monolog, antropolog, ekolog, klimatolog, arkeolog, katalog). Like Ant, except in 1 cell: loc sg.
+    declension!("ekolog", 17, "~ˇ", like Ant;
+    loc: "~dAˇ", _;
     ),
     // Gönül: 17 words (göğüs, ömür, şükür, zulüm, gönül, özür).
     declension!("gönül", 17, "~ü~";
+    stem noun_nom_sg: "~ü~- like devir";
     stem noun_acc_sg: "~~- like göz";
-    nom: "~ü~", "~ü~ler";
-    acc: _, "~ü~leri";
-    dat: _, "~ü~lere";
-    loc: "~ü~de", "~ü~lerde";
-    abl: "~ü~den", "~ü~lerden";
-    gen_: _, "~ü~lerin";
-    possessive_nom_many: "~ü~lerim", _, _, "~ü~lerimiz", "~ü~leriniz", _;
-    possessive_acc_one: _, _, _, _, _, "~ü~lerini";
-    possessive_acc_many: "~ü~lerimi", _, _, "~ü~lerimizi", "~ü~lerinizi", _;
-    possessive_dat_one: _, _, _, _, _, "~ü~lerine";
-    possessive_dat_many: "~ü~lerime", _, _, "~ü~lerimize", "~ü~lerinize", _;
-    possessive_loc_one: _, _, _, _, _, "~ü~lerinde";
-    possessive_loc_many: "~ü~lerimde", _, _, "~ü~lerimizde", "~ü~lerinizde", _;
-    possessive_abl_one: _, _, _, _, _, "~ü~lerinden";
-    possessive_abl_many: "~ü~lerimden", _, _, "~ü~lerimizden", "~ü~lerinizden", _;
-    possessive_gen_one: _, _, _, _, _, "~ü~lerinin";
-    possessive_gen_many: "~ü~lerimin", _, _, "~ü~lerimizin", "~ü~lerinizin", _;
     ),
-    // Keyif: 12 words (vakit, akis, beyit, hapis, bahis, nefis). Like Devir, except in 2 cells: loc sg, abl sg.
+    // Hesap: 16 words (kalıp, garp, kulüp, darp, celp, teyp).
+    declension!("hesap", 16, "~p";
+    stem noun_nom_sg: "~p- like makas";
+    stem noun_acc_sg: "~b- like sav";
+    ),
+    // Mazak: 13 words (gök, olgunluk, lakayıtlık, basketbolculuk, soğukkanlılık, plâk).
+    declension!("mazak", 13, "~k";
+    stem noun_nom_sg: "~k- like makas";
+    stem noun_acc_sg: "~ğ- like sav";
+    ),
+    // Kıskaç: 13 words (öç, güç, felç, zangoç, ilâç, harç).
+    declension!("kıskaç", 13, "~ç";
+    stem noun_nom_sg: "~ç- like makas";
+    stem noun_acc_sg: "~c- like sav";
+    ),
+    // Keyif: 12 words (vakit, akis, beyit, hapis, bahis, nefis). Like Devir, except in 0 cells: .
     declension!("keyif", 12, "~i~", like Devir;
-    loc: "~i~te", _;
-    abl: "~i~ten", _;
+    stem noun_nom_sg: "~i~- like keyif";
     ),
-    // Nakış: 9 words (vakıf, şahıs, satıh, kasıt, vasıf, nakış). Like Akıl, except in 2 cells: loc sg, abl sg.
+    // Kâğıt: 11 words (aft, ametist, cilt, külot, sergüzeşt, metot).
+    declension!("kâğıt", 11, "~t";
+    stem noun_nom_sg: "~t- like makas";
+    stem noun_acc_sg: "~d- like sav";
+    ),
+    // Nakış: 9 words (vakıf, şahıs, satıh, kasıt, vasıf, nakış). Like Akıl, except in 1 cell: loc sg.
     declension!("nakış", 9, "~ı~", like Akıl;
     loc: "~ı~ta", _;
-    abl: "~ı~tan", _;
     ),
-    // Efkâr: 7 words (abanozgiller, efkâr, evsaf, sübyancılık, ağyar, fokgiller). Like Sav, except in 32 cells: acc sg, dat sg, loc sg, abl sg, gen_ sg, possessive_nom_one _3pl, ….
-    declension!("efkâr", 7, "~", like Sav as PL_AS_SG;
+    // Efkâr: 7 words (abanozgiller, efkâr, evsaf, sübyancılık, ağyar, fokgiller). Like Sav, except in 24 cells: nom pl, acc sg, dat sg, loc sg, gen_ sg, possessive_nom_one _3pl, ….
+    declension!("efkâr", 7, "~", like Sav;
+    nom: _, "~";
     acc: derived, _;
     dat: derived, _;
     loc: derived, _;
-    abl: derived, _;
     gen_: derived, _;
     possessive_nom_one: _, _, _, _, _, "~ı";
-    possessive_nom_many: "~ım", "~ın", "~ı", "~ımız", "~ınız", "~ı";
-    possessive_acc_one: _, _, _, _, _, "~ını";
-    possessive_acc_many: "~ımı", _, _, "~ımızı", "~ınızı", _;
-    possessive_dat_one: _, _, _, _, _, "~ına";
-    possessive_dat_many: "~ıma", _, _, "~ımıza", "~ınıza", _;
-    possessive_loc_one: _, _, _, _, _, "~ında";
-    possessive_loc_many: "~ımda", _, _, "~ımızda", "~ınızda", _;
-    possessive_abl_one: _, _, _, _, _, "~ından";
-    possessive_abl_many: "~ımdan", _, _, "~ımızdan", "~ınızdan", _;
-    possessive_gen_one: _, _, _, _, _, "~ının";
-    possessive_gen_many: "~ımın", _, _, "~ımızın", "~ınızın", _;
+    possessive_nom_many: _, "~ın", "~ı", _, _, "~ı";
+    possessive_acc_many: _, "~ını", "~ını", _, _, "~ını";
+    possessive_dat_many: _, "~ına", "~ına", _, _, "~ına";
+    possessive_loc_many: _, "~ında", "~ında", _, _, "~ında";
+    possessive_abl_many: _, "~ından", "~ından", _, _, "~ından";
+    possessive_gen_many: _, "~ının", "~ının", _, _, "~ının";
     ),
-    // Burun: 5 words (burun, oğul, uğur, boyun, omuz). Like Akıl, except in 32 cells: nom sg, nom pl, acc pl, dat pl, loc sg, loc pl, ….
+    // Burun: 5 words (burun, oğul, uğur, boyun, omuz). Like Akıl, except in 0 cells: .
     declension!("burun", 5, "~u~", like Akıl;
-    nom: "~u~", "~u~lar";
-    acc: _, "~u~ları";
-    dat: _, "~u~lara";
-    loc: "~u~da", "~u~larda";
-    abl: "~u~dan", "~u~lardan";
-    gen_: _, "~u~ların";
-    possessive_nom_many: "~u~larım", _, _, "~u~larımız", "~u~larınız", _;
-    possessive_acc_one: _, _, _, _, _, "~u~larını";
-    possessive_acc_many: "~u~larımı", _, _, "~u~larımızı", "~u~larınızı", _;
-    possessive_dat_one: _, _, _, _, _, "~u~larına";
-    possessive_dat_many: "~u~larıma", _, _, "~u~larımıza", "~u~larınıza", _;
-    possessive_loc_one: _, _, _, _, _, "~u~larında";
-    possessive_loc_many: "~u~larımda", _, _, "~u~larımızda", "~u~larınızda", _;
-    possessive_abl_one: _, _, _, _, _, "~u~larından";
-    possessive_abl_many: "~u~larımdan", _, _, "~u~larımızdan", "~u~larınızdan", _;
-    possessive_gen_one: _, _, _, _, _, "~u~larının";
-    possessive_gen_many: "~u~larımın", _, _, "~u~larımızın", "~u~larınızın", _;
+    stem noun_nom_sg: "~u~- like akıl";
     ),
     // Set: 4 words (met, set, ret, cet). Like Kâğıt, except in 0 cells: .
     declension!("set", 4, "~t", like Kâğıt;
@@ -571,29 +407,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     ),
     // Ahit: 3 words (nakit, lahit, ahit).
     declension!("ahit", 3, "~it";
+    stem noun_nom_sg: "~it- like makas";
     stem noun_acc_sg: "~d- like yer";
-    nom: "~it", "~itlAr";
-    acc: _, "~itlArI";
-    dat: _, "~itlArA";
-    loc: "~ittA", "~itlArdA";
-    abl: "~ittAn", "~itlArdAn";
-    gen_: _, "~itlArIn";
-    possessive_nom_many: "~itlArIm", _, _, "~itlArImIz", "~itlArInIz", _;
-    possessive_acc_one: _, _, _, _, _, "~itlArInI";
-    possessive_acc_many: "~itlArImI", _, _, "~itlArImIzI", "~itlArInIzI", _;
-    possessive_dat_one: _, _, _, _, _, "~itlArInA";
-    possessive_dat_many: "~itlArImA", _, _, "~itlArImIzA", "~itlArInIzA", _;
-    possessive_loc_one: _, _, _, _, _, "~itlArIndA";
-    possessive_loc_many: "~itlArImdA", _, _, "~itlArImIzdA", "~itlArInIzdA", _;
-    possessive_abl_one: _, _, _, _, _, "~itlArIndAn";
-    possessive_abl_many: "~itlArImdAn", _, _, "~itlArImIzdAn", "~itlArInIzdAn", _;
-    possessive_gen_one: _, _, _, _, _, "~itlArInIn";
-    possessive_gen_many: "~itlArImIn", _, _, "~itlArImIzIn", "~itlArInIzIn", _;
     ),
-    // Ufuk: 3 words (ufuk, nutuk, lütuf). Like Burun, except in 2 cells: loc sg, abl sg.
+    // Ufuk: 3 words (ufuk, nutuk, lütuf). Like Burun, except in 1 cell: loc sg.
     declension!("ufuk", 3, "~u~", like Burun;
     stem noun_acc_sg: "~~- like ufuk";
     loc: "~u~ta", _;
-    abl: "~u~tan", _;
     ),
 ];

@@ -576,6 +576,9 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 .unwrap_or("-"),
             by.join(" ")
         );
+        if let Some(least) = g.heads {
+            println!("  words inflect their last part: of at least {least} letters");
+        }
         if let Some(a) = &g.accent {
             println!(
                 "  stress: {} classes, {} rules, {} listed",

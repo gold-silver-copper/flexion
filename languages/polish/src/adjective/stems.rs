@@ -82,4 +82,12 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 0] = [];
+pub(super) static TABLES: [EndingTable<'static>; 1] = [
+    // adjective_nom_vir_anim like słaby: 1,431 words.
+    EndingTable {
+        name: Cow::Borrowed("słaby"),
+        words: 1431,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~i\t~i\t", "~szy\t", "\t",)),
+    },
+];

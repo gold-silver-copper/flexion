@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a conjugation whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -209,14 +211,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the conjugation it is
-/// like that it reads (`pret_as_pres`: one value read as another).
-const PRET_AS_PRES: [u16; 73] = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27,
-    28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
-];
-
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
@@ -236,30 +230,30 @@ pub enum Conjugation {
     Emputarse,
     /// Like `regodearse`: 358 words.
     Regodearse,
-    /// Like `conocer`: 334 words.
+    /// Like `conocer`: 332 words.
     Conocer,
-    /// Like `curtir`: 327 words.
+    /// Like `curtir`: 328 words.
     Curtir,
-    /// Like `sacar`: 252 words.
+    /// Like `sacar`: 250 words.
     Sacar,
     /// Like `fosilizarse`: 249 words.
     Fosilizarse,
     /// Like `autoabastecerse`: 176 words.
     Autoabastecerse,
-    /// Like `cerrar`: 157 words.
-    Cerrar,
     /// Like `meter`: 145 words.
     Meter,
     /// Like `osificarse`: 134 words.
     Osificarse,
-    /// Like `volar`: 117 words.
-    Volar,
+    /// Like `cerrar`: 132 words.
+    Cerrar,
     /// Like `darse`: 115 words.
     Darse,
     /// Like `desviar`: 109 words.
     Desviar,
     /// Like `instruir`: 105 words.
     Instruir,
+    /// Like `sonar`: 73 words.
+    Sonar,
     /// Like `atravesarse`: 70 words.
     Atravesarse,
     /// Like `sentir`: 56 words.
@@ -272,6 +266,8 @@ pub enum Conjugation {
     Musirse,
     /// Like `dirigir`: 46 words.
     Dirigir,
+    /// Like `volar`: 41 words.
+    Volar,
     /// Like `resfriarse`: 40 words.
     Resfriarse,
     /// Like `poner`: 37 words.
@@ -282,6 +278,8 @@ pub enum Conjugation {
     Rendir,
     /// Like `descocarse`: 31 words.
     Descocarse,
+    /// Like `regar`: 30 words.
+    Regar,
     /// Like `desvivirse`: 30 words.
     Desvivirse,
     /// Like `situarse`: 27 words.
@@ -316,12 +314,12 @@ pub enum Conjugation {
     Aunar,
     /// Like `abatirse`: 20 words.
     Abatirse,
-    /// Like `fruncir`: 19 words.
-    Fruncir,
     /// Like `chuzarse`: 19 words.
     Chuzarse,
     /// Like `resentirse`: 19 words.
     Resentirse,
+    /// Like `fruncir`: 18 words.
+    Fruncir,
     /// Like `calzarse`: 18 words.
     Calzarse,
     /// Like `desentenderse`: 17 words.
@@ -330,6 +328,8 @@ pub enum Conjugation {
     Creer,
     /// Like `traer`: 16 words.
     Traer,
+    /// Like `moler`: 16 words.
+    Moler,
     /// Like `entecarse`: 16 words.
     Entecarse,
     /// Like `aborrascarse`: 14 words.
@@ -354,8 +354,6 @@ pub enum Conjugation {
     Armarse,
     /// Like `hacer`: 12 words.
     Hacer,
-    /// Like `empezar`: 11 words.
-    Empezar,
     /// Like `escabullirse`: 11 words.
     Escabullirse,
     /// Like `apanucarse`: 11 words.
@@ -390,12 +388,10 @@ pub enum Conjugation {
     Desmedirse,
     /// Like `creerse`: 8 words.
     Creerse,
-    /// Like `moler`: 7 words.
-    Moler,
+    /// Like `empezar`: 7 words.
+    Empezar,
     /// Like `regir`: 7 words.
     Regir,
-    /// Like `mover`: 7 words.
-    Mover,
     /// Like `ver`: 7 words.
     Ver,
     /// Like `tañer`: 7 words.
@@ -490,6 +486,8 @@ pub enum Conjugation {
     Torcerse,
     /// Like `servirse`: 4 words.
     Servirse,
+    /// Like `comenzar`: 4 words.
+    Comenzar,
     /// Like `vencerse`: 4 words.
     Vencerse,
     /// Like `yacer`: 3 words.
@@ -542,7 +540,7 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 159] = [
+    pub const ALL: [Conjugation; 161] = [
         Conjugation::Echar,
         Conjugation::Realizar,
         Conjugation::Incautarse,
@@ -556,24 +554,26 @@ impl Conjugation {
         Conjugation::Sacar,
         Conjugation::Fosilizarse,
         Conjugation::Autoabastecerse,
-        Conjugation::Cerrar,
         Conjugation::Meter,
         Conjugation::Osificarse,
-        Conjugation::Volar,
+        Conjugation::Cerrar,
         Conjugation::Darse,
         Conjugation::Desviar,
         Conjugation::Instruir,
+        Conjugation::Sonar,
         Conjugation::Atravesarse,
         Conjugation::Sentir,
         Conjugation::Situar,
         Conjugation::Desencontrarse,
         Conjugation::Musirse,
         Conjugation::Dirigir,
+        Conjugation::Volar,
         Conjugation::Resfriarse,
         Conjugation::Poner,
         Conjugation::Fraguar,
         Conjugation::Rendir,
         Conjugation::Descocarse,
+        Conjugation::Regar,
         Conjugation::Desvivirse,
         Conjugation::Situarse,
         Conjugation::Embazarse,
@@ -591,13 +591,14 @@ impl Conjugation {
         Conjugation::Inmiscuirse,
         Conjugation::Aunar,
         Conjugation::Abatirse,
-        Conjugation::Fruncir,
         Conjugation::Chuzarse,
         Conjugation::Resentirse,
+        Conjugation::Fruncir,
         Conjugation::Calzarse,
         Conjugation::Desentenderse,
         Conjugation::Creer,
         Conjugation::Traer,
+        Conjugation::Moler,
         Conjugation::Entecarse,
         Conjugation::Aborrascarse,
         Conjugation::Revolver,
@@ -610,7 +611,6 @@ impl Conjugation {
         Conjugation::Ahilarse,
         Conjugation::Armarse,
         Conjugation::Hacer,
-        Conjugation::Empezar,
         Conjugation::Escabullirse,
         Conjugation::Apanucarse,
         Conjugation::Suscribirse,
@@ -628,9 +628,8 @@ impl Conjugation {
         Conjugation::Reducirse,
         Conjugation::Desmedirse,
         Conjugation::Creerse,
-        Conjugation::Moler,
+        Conjugation::Empezar,
         Conjugation::Regir,
-        Conjugation::Mover,
         Conjugation::Ver,
         Conjugation::Tañer,
         Conjugation::Ahumarse,
@@ -678,6 +677,7 @@ impl Conjugation {
         Conjugation::Traslucirse,
         Conjugation::Torcerse,
         Conjugation::Servirse,
+        Conjugation::Comenzar,
         Conjugation::Vencerse,
         Conjugation::Yacer,
         Conjugation::Argüir,
@@ -719,467 +719,244 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     // Echar: 9,691 words (estar, amar, generar, crear, dar, abandonar).
     conjugation!("echar", 9691, "~ar";
-    stem participle: "~ad- like echar";
+    stem verb: "~- like echar";
+    stem verb_fut_1_sg: "~ar- like echar";
     pres_1: "~o", "~amos";
     pres_2: "~as", "~áis";
-    pres_3: "~a", "~an";
     impf_1: "~aba", "~ábamos";
-    impf_2: "~abas", "~abais";
-    impf_3: _, "~aban";
-    pret_1: "~é", "~amos";
-    pret_2: "~aste", "~asteis";
-    pret_3: "~ó", "~aron";
-    fut_1: "~aré", "~aremos";
-    fut_2: "~arás", "~aréis";
-    fut_3: "~ará", "~arán";
-    cond_1: "~aría", "~aríamos";
-    cond_2: "~arías", "~aríais";
-    cond_3: _, "~arían";
     subj_1: "~e", "~emos";
     subj_2: "~es", "~éis";
     subj_3: _, "~en";
-    subj_impf_1: "~ara", "~áramos";
-    subj_impf_2: "~aras", "~arais";
-    subj_impf_3: _, "~aran";
-    subj_impf_se_1: "~ase", "~ásemos";
-    subj_impf_se_2: "~ases", "~aseis";
-    subj_impf_se_3: _, "~asen";
-    subj_fut_1: "~are", "~áremos";
-    subj_fut_2: "~ares", "~areis";
-    subj_fut_3: _, "~aren";
     vos: "~ás", "~és", "~á";
     imperative: "~a", "~e", "~emos", "~ad", "~en";
     infinitive: "~ar";
     gerund: "~ando";
+    participle_m: "~ado", _;
     ),
-    // Realizar: 1,202 words (profundizar, utilizar, realzar, avergonzar, lanzar, alcanzar).
-    conjugation!("realizar", 1202, "~zar";
-    stem participle: "~zad- like echar";
+    // Realizar: 1,202 words (profundizar, utilizar, realzar, avergonzar, lanzar, alcanzar). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("realizar", 1202, "~zar", like Echar;
+    stem verb: "~- like realizar";
+    stem verb_fut_1_sg: "~zar- like echar";
     pres_1: "~zo", "~zamos";
     pres_2: "~zas", "~záis";
-    pres_3: "~za", "~zan";
     impf_1: "~zaba", "~zábamos";
-    impf_2: "~zabas", "~zabais";
-    impf_3: _, "~zaban";
-    pret_1: "~cé", "~zamos";
-    pret_2: "~zaste", "~zasteis";
-    pret_3: "~zó", "~zaron";
-    fut_1: "~zaré", "~zaremos";
-    fut_2: "~zarás", "~zaréis";
-    fut_3: "~zará", "~zarán";
-    cond_1: "~zaría", "~zaríamos";
-    cond_2: "~zarías", "~zaríais";
-    cond_3: _, "~zarían";
     subj_1: "~ce", "~cemos";
     subj_2: "~ces", "~céis";
     subj_3: _, "~cen";
-    subj_impf_1: "~zara", "~záramos";
-    subj_impf_2: "~zaras", "~zarais";
-    subj_impf_3: _, "~zaran";
-    subj_impf_se_1: "~zase", "~zásemos";
-    subj_impf_se_2: "~zases", "~zaseis";
-    subj_impf_se_3: _, "~zasen";
-    subj_fut_1: "~zare", "~záremos";
-    subj_fut_2: "~zares", "~zareis";
-    subj_fut_3: _, "~zaren";
     vos: "~zás", "~cés", "~zá";
     imperative: "~za", "~ce", "~cemos", "~zad", "~cen";
     infinitive: "~zar";
     gerund: "~zando";
+    participle_m: "~zado", _;
     ),
     // Incautarse: 724 words (llamarse, jambarse, amoratarse, infartarse, autoengañarse, ahorcajarse).
     conjugation!("incautarse", 724, "~a~arse";
-    stem participle: "~a~ad- like echar";
+    stem verb: "~a~- like echar";
+    stem verb_fut_1_sg: "~a~ar- like echar";
     pres_1: "~a~o", "~a~amos";
     pres_2: "~a~as", "~a~áis";
-    pres_3: "~a~a", "~a~an";
     impf_1: "~a~aba", "~a~ábamos";
-    impf_2: "~a~abas", "~a~abais";
-    impf_3: _, "~a~aban";
-    pret_1: "~a~é", "~a~amos";
-    pret_2: "~a~aste", "~a~asteis";
-    pret_3: "~a~ó", "~a~aron";
-    fut_1: "~a~aré", "~a~aremos";
-    fut_2: "~a~arás", "~a~aréis";
-    fut_3: "~a~ará", "~a~arán";
-    cond_1: "~a~aría", "~a~aríamos";
-    cond_2: "~a~arías", "~a~aríais";
-    cond_3: _, "~a~arían";
     subj_1: "~a~e", "~a~emos";
     subj_2: "~a~es", "~a~éis";
     subj_3: _, "~a~en";
-    subj_impf_1: "~a~ara", "~a~áramos";
-    subj_impf_2: "~a~aras", "~a~arais";
-    subj_impf_3: _, "~a~aran";
-    subj_impf_se_1: "~a~ase", "~a~ásemos";
-    subj_impf_se_2: "~a~ases", "~a~aseis";
-    subj_impf_se_3: _, "~a~asen";
-    subj_fut_1: "~a~are", "~a~áremos";
-    subj_fut_2: "~a~ares", "~a~areis";
-    subj_fut_3: _, "~a~aren";
     vos: "~a~ás", "~a~és", "~a~ate";
     imperative: "~á~ate", "~á~ese", "~a~émonos", "~a~aos", "~á~ense";
     infinitive: "~a~arse";
     gerund: "~a~ándose";
+    participle_m: "~a~ado", _;
     ),
-    // Acomodarse: 591 words (acodarse, acomodarse, endrogarse, personarse, autocontrolarse, amonarse).
-    conjugation!("acomodarse", 591, "~o~arse";
-    stem participle: "~o~ad- like echar";
+    // Acomodarse: 591 words (acodarse, acomodarse, endrogarse, personarse, autocontrolarse, amonarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("acomodarse", 591, "~o~arse", like Incautarse;
+    stem verb: "~o~- like echar";
+    stem verb_fut_1_sg: "~o~ar- like echar";
     pres_1: "~o~o", "~o~amos";
     pres_2: "~o~as", "~o~áis";
-    pres_3: "~o~a", "~o~an";
     impf_1: "~o~aba", "~o~ábamos";
-    impf_2: "~o~abas", "~o~abais";
-    impf_3: _, "~o~aban";
-    pret_1: "~o~é", "~o~amos";
-    pret_2: "~o~aste", "~o~asteis";
-    pret_3: "~o~ó", "~o~aron";
-    fut_1: "~o~aré", "~o~aremos";
-    fut_2: "~o~arás", "~o~aréis";
-    fut_3: "~o~ará", "~o~arán";
-    cond_1: "~o~aría", "~o~aríamos";
-    cond_2: "~o~arías", "~o~aríais";
-    cond_3: _, "~o~arían";
     subj_1: "~o~e", "~o~emos";
     subj_2: "~o~es", "~o~éis";
     subj_3: _, "~o~en";
-    subj_impf_1: "~o~ara", "~o~áramos";
-    subj_impf_2: "~o~aras", "~o~arais";
-    subj_impf_3: _, "~o~aran";
-    subj_impf_se_1: "~o~ase", "~o~ásemos";
-    subj_impf_se_2: "~o~ases", "~o~aseis";
-    subj_impf_se_3: _, "~o~asen";
-    subj_fut_1: "~o~are", "~o~áremos";
-    subj_fut_2: "~o~ares", "~o~areis";
-    subj_fut_3: _, "~o~aren";
     vos: "~o~ás", "~o~és", "~o~ate";
     imperative: "~ó~ate", "~ó~ese", "~o~émonos", "~o~aos", "~ó~ense";
     infinitive: "~o~arse";
     gerund: "~o~ándose";
+    participle_m: "~o~ado", _;
     ),
-    // Quejarse: 564 words (quejarse, querellarse, despertarse, pegarse, autocremarse, afiebrarse).
-    conjugation!("quejarse", 564, "~e~arse";
-    stem participle: "~e~ad- like echar";
+    // Quejarse: 564 words (quejarse, querellarse, despertarse, pegarse, autocremarse, afiebrarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("quejarse", 564, "~e~arse", like Incautarse;
+    stem verb: "~e~- like echar";
+    stem verb_fut_1_sg: "~e~ar- like echar";
     pres_1: "~e~o", "~e~amos";
     pres_2: "~e~as", "~e~áis";
-    pres_3: "~e~a", "~e~an";
     impf_1: "~e~aba", "~e~ábamos";
-    impf_2: "~e~abas", "~e~abais";
-    impf_3: _, "~e~aban";
-    pret_1: "~e~é", "~e~amos";
-    pret_2: "~e~aste", "~e~asteis";
-    pret_3: "~e~ó", "~e~aron";
-    fut_1: "~e~aré", "~e~aremos";
-    fut_2: "~e~arás", "~e~aréis";
-    fut_3: "~e~ará", "~e~arán";
-    cond_1: "~e~aría", "~e~aríamos";
-    cond_2: "~e~arías", "~e~aríais";
-    cond_3: _, "~e~arían";
     subj_1: "~e~e", "~e~emos";
     subj_2: "~e~es", "~e~éis";
     subj_3: _, "~e~en";
-    subj_impf_1: "~e~ara", "~e~áramos";
-    subj_impf_2: "~e~aras", "~e~arais";
-    subj_impf_3: _, "~e~aran";
-    subj_impf_se_1: "~e~ase", "~e~ásemos";
-    subj_impf_se_2: "~e~ases", "~e~aseis";
-    subj_impf_se_3: _, "~e~asen";
-    subj_fut_1: "~e~are", "~e~áremos";
-    subj_fut_2: "~e~ares", "~e~areis";
-    subj_fut_3: _, "~e~aren";
     vos: "~e~ás", "~e~és", "~e~ate";
     imperative: "~é~ate", "~é~ese", "~e~émonos", "~e~aos", "~é~ense";
     infinitive: "~e~arse";
     gerund: "~e~ándose";
+    participle_m: "~e~ado", _;
     ),
-    // Rilarse: 548 words (fijarse, chisparse, ababillarse, agüitarse, refanfinflarse, encapricharse).
-    conjugation!("rilarse", 548, "~i~arse";
-    stem participle: "~i~ad- like echar";
+    // Rilarse: 548 words (fijarse, chisparse, ababillarse, agüitarse, refanfinflarse, encapricharse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("rilarse", 548, "~i~arse", like Incautarse;
+    stem verb: "~i~- like echar";
+    stem verb_fut_1_sg: "~i~ar- like echar";
     pres_1: "~i~o", "~i~amos";
     pres_2: "~i~as", "~i~áis";
-    pres_3: "~i~a", "~i~an";
     impf_1: "~i~aba", "~i~ábamos";
-    impf_2: "~i~abas", "~i~abais";
-    impf_3: _, "~i~aban";
-    pret_1: "~i~é", "~i~amos";
-    pret_2: "~i~aste", "~i~asteis";
-    pret_3: "~i~ó", "~i~aron";
-    fut_1: "~i~aré", "~i~aremos";
-    fut_2: "~i~arás", "~i~aréis";
-    fut_3: "~i~ará", "~i~arán";
-    cond_1: "~i~aría", "~i~aríamos";
-    cond_2: "~i~arías", "~i~aríais";
-    cond_3: _, "~i~arían";
     subj_1: "~i~e", "~i~emos";
     subj_2: "~i~es", "~i~éis";
     subj_3: _, "~i~en";
-    subj_impf_1: "~i~ara", "~i~áramos";
-    subj_impf_2: "~i~aras", "~i~arais";
-    subj_impf_3: _, "~i~aran";
-    subj_impf_se_1: "~i~ase", "~i~ásemos";
-    subj_impf_se_2: "~i~ases", "~i~aseis";
-    subj_impf_se_3: _, "~i~asen";
-    subj_fut_1: "~i~are", "~i~áremos";
-    subj_fut_2: "~i~ares", "~i~areis";
-    subj_fut_3: _, "~i~aren";
     vos: "~i~ás", "~i~és", "~i~ate";
     imperative: "~í~ate", "~í~ese", "~i~émonos", "~i~aos", "~í~ense";
     infinitive: "~i~arse";
     gerund: "~i~ándose";
+    participle_m: "~i~ado", _;
     ),
-    // Emputarse: 398 words (acalenturarse, emputarse, confabularse, autoinculparse, enfurruñarse, despreocuparse).
-    conjugation!("emputarse", 398, "~u~arse";
-    stem participle: "~u~ad- like echar";
+    // Emputarse: 398 words (acalenturarse, emputarse, confabularse, autoinculparse, enfurruñarse, despreocuparse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("emputarse", 398, "~u~arse", like Incautarse;
+    stem verb: "~u~- like echar";
+    stem verb_fut_1_sg: "~u~ar- like echar";
     pres_1: "~u~o", "~u~amos";
     pres_2: "~u~as", "~u~áis";
-    pres_3: "~u~a", "~u~an";
     impf_1: "~u~aba", "~u~ábamos";
-    impf_2: "~u~abas", "~u~abais";
-    impf_3: _, "~u~aban";
-    pret_1: "~u~é", "~u~amos";
-    pret_2: "~u~aste", "~u~asteis";
-    pret_3: "~u~ó", "~u~aron";
-    fut_1: "~u~aré", "~u~aremos";
-    fut_2: "~u~arás", "~u~aréis";
-    fut_3: "~u~ará", "~u~arán";
-    cond_1: "~u~aría", "~u~aríamos";
-    cond_2: "~u~arías", "~u~aríais";
-    cond_3: _, "~u~arían";
     subj_1: "~u~e", "~u~emos";
     subj_2: "~u~es", "~u~éis";
     subj_3: _, "~u~en";
-    subj_impf_1: "~u~ara", "~u~áramos";
-    subj_impf_2: "~u~aras", "~u~arais";
-    subj_impf_3: _, "~u~aran";
-    subj_impf_se_1: "~u~ase", "~u~ásemos";
-    subj_impf_se_2: "~u~ases", "~u~aseis";
-    subj_impf_se_3: _, "~u~asen";
-    subj_fut_1: "~u~are", "~u~áremos";
-    subj_fut_2: "~u~ares", "~u~areis";
-    subj_fut_3: _, "~u~aren";
     vos: "~u~ás", "~u~és", "~u~ate";
     imperative: "~ú~ate", "~ú~ese", "~u~émonos", "~u~aos", "~ú~ense";
     infinitive: "~u~arse";
     gerund: "~u~ándose";
+    participle_m: "~u~ado", _;
     ),
-    // Regodearse: 358 words (carcajearse, petatearse, autobombearse, regodearse, mamonearse, cachiporrearse).
-    conjugation!("regodearse", 358, "~~arse";
-    stem participle: "~~ad- like echar";
+    // Regodearse: 358 words (carcajearse, petatearse, autobombearse, regodearse, mamonearse, cachiporrearse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("regodearse", 358, "~~arse", like Incautarse;
+    stem verb: "~~- like echar";
+    stem verb_fut_1_sg: "~~ar- like echar";
     pres_1: "~~o", "~~amos";
     pres_2: "~~as", "~~áis";
-    pres_3: "~~a", "~~an";
     impf_1: "~~aba", "~~ábamos";
-    impf_2: "~~abas", "~~abais";
-    impf_3: _, "~~aban";
-    pret_1: "~~é", "~~amos";
-    pret_2: "~~aste", "~~asteis";
-    pret_3: "~~ó", "~~aron";
-    fut_1: "~~aré", "~~aremos";
-    fut_2: "~~arás", "~~aréis";
-    fut_3: "~~ará", "~~arán";
-    cond_1: "~~aría", "~~aríamos";
-    cond_2: "~~arías", "~~aríais";
-    cond_3: _, "~~arían";
     subj_1: "~~e", "~~emos";
     subj_2: "~~es", "~~éis";
     subj_3: _, "~~en";
-    subj_impf_1: "~~ara", "~~áramos";
-    subj_impf_2: "~~aras", "~~arais";
-    subj_impf_3: _, "~~aran";
-    subj_impf_se_1: "~~ase", "~~ásemos";
-    subj_impf_se_2: "~~ases", "~~aseis";
-    subj_impf_se_3: _, "~~asen";
-    subj_fut_1: "~~are", "~~áremos";
-    subj_fut_2: "~~ares", "~~areis";
-    subj_fut_3: _, "~~aren";
     vos: "~~ás", "~~és", "~~ate";
     imperative: "~éat~", "~é~se", "~~émonos", "~~aos", "~é~nse";
     infinitive: "~~arse";
     gerund: "~~ándose";
+    participle_m: "~~ado", _;
     ),
-    // Conocer: 334 words (conocer, tender, placer, perder, encender, nacer).
-    conjugation!("conocer", 334, "~~er";
-    stem participle: "~~id- like echar";
+    // Conocer: 332 words (conocer, tender, placer, perder, encender, nacer). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("conocer", 332, "~~er", like Incautarse;
+    stem verb: "~~- like conocer";
+    stem verb_fut_1_sg: "~~er- like echar";
     pres_1: "~z~o", "~~emos";
     pres_2: "~~es", "~~éis";
-    pres_3: "~~e", "~~en";
     impf_1: "~~ía", "~~íamos";
-    impf_2: "~~ías", "~~íais";
-    impf_3: _, "~~ían";
-    pret_1: "~~í", "~~imos";
-    pret_2: "~~iste", "~~isteis";
-    pret_3: "~~ió", "~~ieron";
-    fut_1: "~~eré", "~~eremos";
-    fut_2: "~~erás", "~~eréis";
-    fut_3: "~~erá", "~~erán";
-    cond_1: "~~ería", "~~eríamos";
-    cond_2: "~~erías", "~~eríais";
-    cond_3: _, "~~erían";
     subj_1: "~z~a", "~z~amos";
     subj_2: "~z~as", "~z~áis";
     subj_3: _, "~z~an";
-    subj_impf_1: "~~iera", "~~iéramos";
-    subj_impf_2: "~~ieras", "~~ierais";
-    subj_impf_3: _, "~~ieran";
-    subj_impf_se_1: "~~iese", "~~iésemos";
-    subj_impf_se_2: "~~ieses", "~~ieseis";
-    subj_impf_se_3: _, "~~iesen";
-    subj_fut_1: "~~iere", "~~iéremos";
-    subj_fut_2: "~~ieres", "~~iereis";
-    subj_fut_3: _, "~~ieren";
     vos: "~~és", "~z~ás", "~~é";
     imperative: "~~e", "~z~a", "~z~amos", "~~ed", "~z~an";
     infinitive: "~~er";
     gerund: "~~iendo";
+    participle_m: "~~ido", _;
     ),
-    // Curtir: 327 words (partir, polir, abolir, cumplir, finir, vivir).
-    conjugation!("curtir", 327, "~ir";
-    stem participle: "~id- like echar";
-    pres_1: "~o", "~imos";
+    // Curtir: 328 words (partir, polir, abolir, cumplir, finir, vivir). Like Echar, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("curtir", 328, "~ir", like Echar;
+    stem verb: "~- like conocer";
+    stem verb_fut_1_sg: "~ir- like echar";
+    pres_1: _, "~imos";
     pres_2: "~es", "~ís";
-    pres_3: "~e", "~en";
     impf_1: "~ía", "~íamos";
-    impf_2: "~ías", "~íais";
-    impf_3: _, "~ían";
-    pret_1: "~í", "~imos";
-    pret_2: "~iste", "~isteis";
-    pret_3: "~ió", "~ieron";
-    fut_1: "~iré", "~iremos";
-    fut_2: "~irás", "~iréis";
-    fut_3: "~irá", "~irán";
-    cond_1: "~iría", "~iríamos";
-    cond_2: "~irías", "~iríais";
-    cond_3: _, "~irían";
     subj_1: "~a", "~amos";
     subj_2: "~as", "~áis";
     subj_3: _, "~an";
-    subj_impf_1: "~iera", "~iéramos";
-    subj_impf_2: "~ieras", "~ierais";
-    subj_impf_3: _, "~ieran";
-    subj_impf_se_1: "~iese", "~iésemos";
-    subj_impf_se_2: "~ieses", "~ieseis";
-    subj_impf_se_3: _, "~iesen";
-    subj_fut_1: "~iere", "~iéremos";
-    subj_fut_2: "~ieres", "~iereis";
-    subj_fut_3: _, "~ieren";
     vos: "~ís", "~ás", "~í";
     imperative: "~e", "~a", "~amos", "~id", "~an";
     infinitive: "~ir";
     gerund: "~iendo";
+    participle_m: "~ido", _;
     ),
-    // Sacar: 252 words (buscar, sacar, rascar, pecar, tocar, atacar).
-    conjugation!("sacar", 252, "~car";
-    stem participle: "~cad- like echar";
+    // Sacar: 250 words (buscar, sacar, rascar, pecar, tocar, atacar). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("sacar", 250, "~car", like Echar;
+    stem verb: "~- like sacar";
+    stem verb_fut_1_sg: "~car- like echar";
     pres_1: "~co", "~camos";
     pres_2: "~cas", "~cáis";
-    pres_3: "~ca", "~can";
     impf_1: "~caba", "~cábamos";
-    impf_2: "~cabas", "~cabais";
-    impf_3: _, "~caban";
-    pret_1: "~qué", "~camos";
-    pret_2: "~caste", "~casteis";
-    pret_3: "~có", "~caron";
-    fut_1: "~caré", "~caremos";
-    fut_2: "~carás", "~caréis";
-    fut_3: "~cará", "~carán";
-    cond_1: "~caría", "~caríamos";
-    cond_2: "~carías", "~caríais";
-    cond_3: _, "~carían";
     subj_1: "~que", "~quemos";
     subj_2: "~ques", "~quéis";
     subj_3: _, "~quen";
-    subj_impf_1: "~cara", "~cáramos";
-    subj_impf_2: "~caras", "~carais";
-    subj_impf_3: _, "~caran";
-    subj_impf_se_1: "~case", "~cásemos";
-    subj_impf_se_2: "~cases", "~caseis";
-    subj_impf_se_3: _, "~casen";
-    subj_fut_1: "~care", "~cáremos";
-    subj_fut_2: "~cares", "~careis";
-    subj_fut_3: _, "~caren";
     vos: "~cás", "~qués", "~cá";
     imperative: "~ca", "~que", "~quemos", "~cad", "~quen";
     infinitive: "~car";
     gerund: "~cando";
+    participle_m: "~cado", _;
     ),
-    // Fosilizarse: 249 words (fosilizarse, autorrealizarse, autobautizarse, autoanalizarse, autopolinizarse, autoorganizarse).
-    conjugation!("fosilizarse", 249, "~izarse";
-    stem participle: "~izad- like echar";
+    // Fosilizarse: 249 words (fosilizarse, autorrealizarse, autobautizarse, autoanalizarse, autopolinizarse, autoorganizarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("fosilizarse", 249, "~izarse", like Echar;
+    stem verb: "~i- like realizar";
+    stem verb_fut_1_sg: "~izar- like echar";
     pres_1: "~izo", "~izamos";
     pres_2: "~izas", "~izáis";
-    pres_3: "~iza", "~izan";
     impf_1: "~izaba", "~izábamos";
-    impf_2: "~izabas", "~izabais";
-    impf_3: _, "~izaban";
-    pret_1: "~icé", "~izamos";
-    pret_2: "~izaste", "~izasteis";
-    pret_3: "~izó", "~izaron";
-    fut_1: "~izaré", "~izaremos";
-    fut_2: "~izarás", "~izaréis";
-    fut_3: "~izará", "~izarán";
-    cond_1: "~izaría", "~izaríamos";
-    cond_2: "~izarías", "~izaríais";
-    cond_3: _, "~izarían";
     subj_1: "~ice", "~icemos";
     subj_2: "~ices", "~icéis";
     subj_3: _, "~icen";
-    subj_impf_1: "~izara", "~izáramos";
-    subj_impf_2: "~izaras", "~izarais";
-    subj_impf_3: _, "~izaran";
-    subj_impf_se_1: "~izase", "~izásemos";
-    subj_impf_se_2: "~izases", "~izaseis";
-    subj_impf_se_3: _, "~izasen";
-    subj_fut_1: "~izare", "~izáremos";
-    subj_fut_2: "~izares", "~izareis";
-    subj_fut_3: _, "~izaren";
     vos: "~izás", "~icés", "~izate";
     imperative: "~ízate", "~ícese", "~icémonos", "~izaos", "~ícense";
     infinitive: "~izarse";
     gerund: "~izándose";
+    participle_m: "~izado", _;
     ),
-    // Autoabastecerse: 176 words (autoabastecerse, entrometerse, entremeterse, autoprotegerse, entigrecerse, ensilvecerse).
-    conjugation!("autoabastecerse", 176, "~e~erse";
-    stem participle: "~e~id- like echar";
+    // Autoabastecerse: 176 words (autoabastecerse, entrometerse, entremeterse, autoprotegerse, entigrecerse, ensilvecerse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("autoabastecerse", 176, "~e~erse", like Incautarse;
+    stem verb: "~e~- like conocer";
+    stem verb_fut_1_sg: "~e~er- like echar";
     pres_1: "~ez~o", "~e~emos";
     pres_2: "~e~es", "~e~éis";
-    pres_3: "~e~e", "~e~en";
     impf_1: "~e~ía", "~e~íamos";
-    impf_2: "~e~ías", "~e~íais";
-    impf_3: _, "~e~ían";
-    pret_1: "~e~í", "~e~imos";
-    pret_2: "~e~iste", "~e~isteis";
-    pret_3: "~e~ió", "~e~ieron";
-    fut_1: "~e~eré", "~e~eremos";
-    fut_2: "~e~erás", "~e~eréis";
-    fut_3: "~e~erá", "~e~erán";
-    cond_1: "~e~ería", "~e~eríamos";
-    cond_2: "~e~erías", "~e~eríais";
-    cond_3: _, "~e~erían";
     subj_1: "~ez~a", "~ez~amos";
     subj_2: "~ez~as", "~ez~áis";
     subj_3: _, "~ez~an";
-    subj_impf_1: "~e~iera", "~e~iéramos";
-    subj_impf_2: "~e~ieras", "~e~ierais";
-    subj_impf_3: _, "~e~ieran";
-    subj_impf_se_1: "~e~iese", "~e~iésemos";
-    subj_impf_se_2: "~e~ieses", "~e~ieseis";
-    subj_impf_se_3: _, "~e~iesen";
-    subj_fut_1: "~e~iere", "~e~iéremos";
-    subj_fut_2: "~e~ieres", "~e~iereis";
-    subj_fut_3: _, "~e~ieren";
     vos: "~e~és", "~ez~ás", "~e~ete";
     imperative: "~é~ete", "~éz~ase", "~ez~ámonos", "~e~eos", "~éz~anse";
     infinitive: "~e~erse";
     gerund: "~e~iéndose";
+    participle_m: "~e~ido", _;
     ),
-    // Cerrar: 157 words (pensar, quebrar, helar, negar, gobernar, confesar). Like Regodearse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
-    conjugation!("cerrar", 157, "~~ar", like Regodearse;
+    // Meter: 145 words (absconder, absorber, her, meter, acceder, beber). Like Curtir, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
+    conjugation!("meter", 145, "~er", like Curtir;
+    stem verb_fut_1_sg: "~er- like echar";
+    pres_1: _, "~emos";
+    pres_2: _, "~éis";
+    vos: "~és", _, "~é";
+    imperative: _, _, _, "~ed", _;
+    infinitive: "~er";
+    ),
+    // Osificarse: 134 words (gelificarse, automedicarse, autocalificarse, autoaplicarse, osificarse, autoidentificarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("osificarse", 134, "~icarse", like Echar;
+    stem verb: "~i- like sacar";
+    stem verb_fut_1_sg: "~icar- like echar";
+    pres_1: "~ico", "~icamos";
+    pres_2: "~icas", "~icáis";
+    impf_1: "~icaba", "~icábamos";
+    subj_1: "~ique", "~iquemos";
+    subj_2: "~iques", "~iquéis";
+    subj_3: _, "~iquen";
+    vos: "~icás", "~iqués", "~icate";
+    imperative: "~ícate", "~íquese", "~iquémonos", "~icaos", "~íquense";
+    infinitive: "~icarse";
+    gerund: "~icándose";
+    participle_m: "~icado", _;
+    ),
+    // Cerrar: 132 words (pensar, quebrar, helar, gobernar, confesar, atestar). Like Regodearse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
+    conjugation!("cerrar", 132, "~~ar", like Regodearse;
     pres_1: "~i~o", _;
     pres_2: "~i~as", _;
-    pres_3: "~i~a", "~i~an";
     subj_1: "~i~e", _;
     subj_2: "~i~es", _;
     subj_3: _, "~i~en";
@@ -1188,68 +965,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~~ar";
     gerund: "~~ando";
     ),
-    // Meter: 145 words (absconder, absorber, her, meter, acceder, beber). Like Curtir, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
-    conjugation!("meter", 145, "~er", like Curtir;
-    pres_1: _, "~emos";
-    pres_2: _, "~éis";
-    fut_1: "~eré", "~eremos";
-    fut_2: "~erás", "~eréis";
-    fut_3: "~erá", "~erán";
-    cond_1: "~ería", "~eríamos";
-    cond_2: "~erías", "~eríais";
-    cond_3: _, "~erían";
-    vos: "~és", _, "~é";
-    imperative: _, _, _, "~ed", _;
-    infinitive: "~er";
-    ),
-    // Osificarse: 134 words (gelificarse, automedicarse, autocalificarse, autoaplicarse, osificarse, autoidentificarse).
-    conjugation!("osificarse", 134, "~icarse";
-    stem participle: "~icad- like echar";
-    pres_1: "~ico", "~icamos";
-    pres_2: "~icas", "~icáis";
-    pres_3: "~ica", "~ican";
-    impf_1: "~icaba", "~icábamos";
-    impf_2: "~icabas", "~icabais";
-    impf_3: _, "~icaban";
-    pret_1: "~iqué", "~icamos";
-    pret_2: "~icaste", "~icasteis";
-    pret_3: "~icó", "~icaron";
-    fut_1: "~icaré", "~icaremos";
-    fut_2: "~icarás", "~icaréis";
-    fut_3: "~icará", "~icarán";
-    cond_1: "~icaría", "~icaríamos";
-    cond_2: "~icarías", "~icaríais";
-    cond_3: _, "~icarían";
-    subj_1: "~ique", "~iquemos";
-    subj_2: "~iques", "~iquéis";
-    subj_3: _, "~iquen";
-    subj_impf_1: "~icara", "~icáramos";
-    subj_impf_2: "~icaras", "~icarais";
-    subj_impf_3: _, "~icaran";
-    subj_impf_se_1: "~icase", "~icásemos";
-    subj_impf_se_2: "~icases", "~icaseis";
-    subj_impf_se_3: _, "~icasen";
-    subj_fut_1: "~icare", "~icáremos";
-    subj_fut_2: "~icares", "~icareis";
-    subj_fut_3: _, "~icaren";
-    vos: "~icás", "~iqués", "~icate";
-    imperative: "~ícate", "~íquese", "~iquémonos", "~icaos", "~íquense";
-    infinitive: "~icarse";
-    gerund: "~icándose";
-    ),
-    // Volar: 117 words (sonar, soltar, encontrar, volar, solar, acostar). Like Acomodarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
-    conjugation!("volar", 117, "~o~ar", like Acomodarse;
-    pres_1: "~ue~o", _;
-    pres_2: "~ue~as", _;
-    pres_3: "~ue~a", "~ue~an";
-    subj_1: "~ue~e", _;
-    subj_2: "~ue~es", _;
-    subj_3: _, "~ue~en";
-    vos: _, _, "~o~á";
-    imperative: "~ue~a", "~ue~e", "~o~emos", "~o~ad", "~ue~en";
-    infinitive: "~o~ar";
-    gerund: "~o~ando";
-    ),
     // Darse: 115 words (acovacharse, abicharse, abrocharse, arreguincharse, reguincharse, emborracharse). Like Echar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("darse", 115, "~arse", like Echar;
     vos: _, _, "~áte";
@@ -1257,219 +972,145 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~arse";
     gerund: "~ándose";
     ),
-    // Desviar: 109 words (enviar, enfriar, ampliar, aviar, confiar, agriar).
-    conjugation!("desviar", 109, "~iar";
-    stem participle: "~iad- like echar";
+    // Desviar: 109 words (enviar, enfriar, ampliar, aviar, confiar, agriar). Like Curtir, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("desviar", 109, "~iar", like Curtir;
+    stem verb: "~i- like echar";
+    stem verb_fut_1_sg: "~iar- like echar";
     pres_1: "~ío", "~iamos";
     pres_2: "~ías", "~iáis";
-    pres_3: "~ía", "~ían";
     impf_1: "~iaba", "~iábamos";
-    impf_2: "~iabas", "~iabais";
-    impf_3: _, "~iaban";
-    pret_1: "~ié", "~iamos";
-    pret_2: "~iaste", "~iasteis";
-    pret_3: "~ió", "~iaron";
-    fut_1: "~iaré", "~iaremos";
-    fut_2: "~iarás", "~iaréis";
-    fut_3: "~iará", "~iarán";
-    cond_1: "~iaría", "~iaríamos";
-    cond_2: "~iarías", "~iaríais";
-    cond_3: _, "~iarían";
     subj_1: "~íe", "~iemos";
     subj_2: "~íes", "~iéis";
     subj_3: _, "~íen";
-    subj_impf_1: "~iara", "~iáramos";
-    subj_impf_2: "~iaras", "~iarais";
-    subj_impf_3: _, "~iaran";
-    subj_impf_se_1: "~iase", "~iásemos";
-    subj_impf_se_2: "~iases", "~iaseis";
-    subj_impf_se_3: _, "~iasen";
-    subj_fut_1: "~iare", "~iáremos";
-    subj_fut_2: "~iares", "~iareis";
-    subj_fut_3: _, "~iaren";
     vos: "~iás", "~iés", "~iá";
     imperative: "~ía", "~íe", "~iemos", "~iad", "~íen";
     infinitive: "~iar";
     gerund: "~iando";
+    participle_m: "~iado", _;
     ),
-    // Instruir: 105 words (construir, destruir, bullir, incluir, excluir, sustituir). Like Curtir, except in 32 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, pret_3 sg, pret_3 pl, ….
+    // Instruir: 105 words (construir, destruir, bullir, incluir, excluir, sustituir). Like Curtir, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, ….
     conjugation!("instruir", 105, "~ir", like Curtir;
+    stem verb: "~- like instruir";
     pres_1: "~yo", _;
     pres_2: "~yes", _;
-    pres_3: "~ye", "~yen";
-    pret_3: "~yó", "~yeron";
     subj_1: "~ya", "~yamos";
     subj_2: "~yas", "~yáis";
     subj_3: _, "~yan";
-    subj_impf_1: "~yera", "~yéramos";
-    subj_impf_2: "~yeras", "~yerais";
-    subj_impf_3: _, "~yeran";
-    subj_impf_se_1: "~yese", "~yésemos";
-    subj_impf_se_2: "~yeses", "~yeseis";
-    subj_impf_se_3: _, "~yesen";
-    subj_fut_1: "~yere", "~yéremos";
-    subj_fut_2: "~yeres", "~yereis";
-    subj_fut_3: _, "~yeren";
     vos: _, "~yás", _;
     imperative: "~ye", "~ya", "~yamos", _, "~yan";
     gerund: "~yendo";
     ),
-    // Atravesarse: 70 words (autogobernarse, quebrarse, abnegarse, sentarse, regarse, atravesarse). Like Quejarse, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Sonar: 73 words (sonar, soltar, volar, solar, acostar, acordar). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("sonar", 73, "~arˇ", like Echar;
+    stem verb_fut_1_sg: "~ar- like sonar";
+    pres_1: "~oˇ", "~amosˇ";
+    pres_2: "~asˇ", "~áisˇ";
+    impf_1: "~abaˇ", "~ábamosˇ";
+    pret_1: "~éˇ", "~amosˇ";
+    pret_3: "~óˇ", "~aronˇ";
+    subj_1: "~eˇ", "~emosˇ";
+    subj_2: "~esˇ", "~éisˇ";
+    subj_3: _, "~enˇ";
+    subj_impf_1: _, "~áramosˇ";
+    subj_impf_3: "~araˇ", _;
+    subj_impf_se_3: "~aseˇ", _;
+    subj_fut_3: "~areˇ", _;
+    vos: "~ásˇ", "~ésˇ", "~áˇ";
+    imperative: "~aˇ", "~eˇ", "~emosˇ", "~adˇ", "~enˇ";
+    infinitive: "~arˇ";
+    gerund: "~andoˇ";
+    participle_m: "~adoˇ", _;
+    ),
+    // Atravesarse: 70 words (autogobernarse, quebrarse, abnegarse, sentarse, regarse, atravesarse). Like Quejarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("atravesarse", 70, "~e~arse", like Quejarse;
     pres_1: "~ie~o", _;
     pres_2: "~ie~as", _;
-    pres_3: "~ie~a", "~ie~an";
     subj_1: "~ie~e", _;
     subj_2: "~ie~es", _;
     subj_3: _, "~ie~en";
     imperative: "~ié~ate", "~ié~ese", _, _, "~ié~ense";
     ),
-    // Sentir: 56 words (mentir, sentir, zaherir, herir, advertir, sugerir).
-    conjugation!("sentir", 56, "~e~ir";
-    stem participle: "~e~id- like echar";
+    // Sentir: 56 words (mentir, sentir, zaherir, herir, advertir, sugerir). Like Autoabastecerse, except in 25 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_3 sg, pret_3 pl, ….
+    conjugation!("sentir", 56, "~e~ir", like Autoabastecerse;
+    stem verb_fut_1_sg: "~e~ir- like echar";
     pres_1: "~ie~o", "~e~imos";
     pres_2: "~ie~es", "~e~ís";
-    pres_3: "~ie~e", "~ie~en";
-    impf_1: "~e~ía", "~e~íamos";
-    impf_2: "~e~ías", "~e~íais";
-    impf_3: _, "~e~ían";
-    pret_1: "~e~í", "~e~imos";
-    pret_2: "~e~iste", "~e~isteis";
     pret_3: "~i~ió", "~i~ieron";
-    fut_1: "~e~iré", "~e~iremos";
-    fut_2: "~e~irás", "~e~iréis";
-    fut_3: "~e~irá", "~e~irán";
-    cond_1: "~e~iría", "~e~iríamos";
-    cond_2: "~e~irías", "~e~iríais";
-    cond_3: _, "~e~irían";
     subj_1: "~ie~a", "~i~amos";
     subj_2: "~ie~as", "~i~áis";
     subj_3: _, "~ie~an";
-    subj_impf_1: "~i~iera", "~i~iéramos";
-    subj_impf_2: "~i~ieras", "~i~ierais";
-    subj_impf_3: _, "~i~ieran";
-    subj_impf_se_1: "~i~iese", "~i~iésemos";
-    subj_impf_se_2: "~i~ieses", "~i~ieseis";
-    subj_impf_se_3: _, "~i~iesen";
-    subj_fut_1: "~i~iere", "~i~iéremos";
-    subj_fut_2: "~i~ieres", "~i~iereis";
-    subj_fut_3: _, "~i~ieren";
+    subj_impf_1: _, "~i~iéramos";
+    subj_impf_3: "~i~iera", _;
+    subj_impf_se_3: "~i~iese", _;
+    subj_fut_3: "~i~iere", _;
     vos: "~e~ís", "~i~ás", "~e~í";
     imperative: "~ie~e", "~ie~a", "~i~amos", "~e~id", "~ie~an";
     infinitive: "~e~ir";
     gerund: "~i~iendo";
     ),
-    // Situar: 56 words (puntuar, continuar, efectuar, actuar, situar, menstruar).
-    conjugation!("situar", 56, "~uar";
-    stem participle: "~uad- like echar";
+    // Situar: 56 words (puntuar, continuar, efectuar, actuar, situar, menstruar). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("situar", 56, "~uar", like Echar;
+    stem verb: "~u- like echar";
+    stem verb_fut_1_sg: "~uar- like echar";
     pres_1: "~úo", "~uamos";
     pres_2: "~úas", "~uáis";
-    pres_3: "~úa", "~úan";
     impf_1: "~uaba", "~uábamos";
-    impf_2: "~uabas", "~uabais";
-    impf_3: _, "~uaban";
-    pret_1: "~ué", "~uamos";
-    pret_2: "~uaste", "~uasteis";
-    pret_3: "~uó", "~uaron";
-    fut_1: "~uaré", "~uaremos";
-    fut_2: "~uarás", "~uaréis";
-    fut_3: "~uará", "~uarán";
-    cond_1: "~uaría", "~uaríamos";
-    cond_2: "~uarías", "~uaríais";
-    cond_3: _, "~uarían";
     subj_1: "~úe", "~uemos";
     subj_2: "~úes", "~uéis";
     subj_3: _, "~úen";
-    subj_impf_1: "~uara", "~uáramos";
-    subj_impf_2: "~uaras", "~uarais";
-    subj_impf_3: _, "~uaran";
-    subj_impf_se_1: "~uase", "~uásemos";
-    subj_impf_se_2: "~uases", "~uaseis";
-    subj_impf_se_3: _, "~uasen";
-    subj_fut_1: "~uare", "~uáremos";
-    subj_fut_2: "~uares", "~uareis";
-    subj_fut_3: _, "~uaren";
     vos: "~uás", "~ués", "~uá";
     imperative: "~úa", "~úe", "~uemos", "~uad", "~úen";
     infinitive: "~uar";
     gerund: "~uando";
+    participle_m: "~uado", _;
     ),
-    // Desencontrarse: 54 words (desencontrarse, colarse, encontrarse, poblarse, encordarse, acostarse). Like Volar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("desencontrarse", 54, "~o~arse", like Volar;
-    vos: _, _, "~o~ate";
-    imperative: "~ué~ate", "~ué~ese", "~o~émonos", "~o~aos", "~ué~ense";
-    infinitive: "~o~arse";
-    gerund: "~o~ándose";
+    // Desencontrarse: 54 words (desencontrarse, colarse, encontrarse, poblarse, encordarse, acostarse). Like Acomodarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
+    conjugation!("desencontrarse", 54, "~o~arse", like Acomodarse;
+    pres_1: "~ue~o", _;
+    pres_2: "~ue~as", _;
+    subj_1: "~ue~e", _;
+    subj_2: "~ue~es", _;
+    subj_3: _, "~ue~en";
+    imperative: "~ué~ate", "~ué~ese", _, _, "~ué~ense";
     ),
-    // Musirse: 54 words (desnutrirse, musirse, entumirse, ocurrirse, consumirse, eludirse).
-    conjugation!("musirse", 54, "~u~irse";
-    stem participle: "~u~id- like echar";
-    pres_1: "~u~o", "~u~imos";
+    // Musirse: 54 words (desnutrirse, musirse, entumirse, ocurrirse, consumirse, eludirse). Like Emputarse, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("musirse", 54, "~u~irse", like Emputarse;
+    stem verb: "~u~- like conocer";
+    stem verb_fut_1_sg: "~u~ir- like echar";
+    pres_1: _, "~u~imos";
     pres_2: "~u~es", "~u~ís";
-    pres_3: "~u~e", "~u~en";
     impf_1: "~u~ía", "~u~íamos";
-    impf_2: "~u~ías", "~u~íais";
-    impf_3: _, "~u~ían";
-    pret_1: "~u~í", "~u~imos";
-    pret_2: "~u~iste", "~u~isteis";
-    pret_3: "~u~ió", "~u~ieron";
-    fut_1: "~u~iré", "~u~iremos";
-    fut_2: "~u~irás", "~u~iréis";
-    fut_3: "~u~irá", "~u~irán";
-    cond_1: "~u~iría", "~u~iríamos";
-    cond_2: "~u~irías", "~u~iríais";
-    cond_3: _, "~u~irían";
     subj_1: "~u~a", "~u~amos";
     subj_2: "~u~as", "~u~áis";
     subj_3: _, "~u~an";
-    subj_impf_1: "~u~iera", "~u~iéramos";
-    subj_impf_2: "~u~ieras", "~u~ierais";
-    subj_impf_3: _, "~u~ieran";
-    subj_impf_se_1: "~u~iese", "~u~iésemos";
-    subj_impf_se_2: "~u~ieses", "~u~ieseis";
-    subj_impf_se_3: _, "~u~iesen";
-    subj_fut_1: "~u~iere", "~u~iéremos";
-    subj_fut_2: "~u~ieres", "~u~iereis";
-    subj_fut_3: _, "~u~ieren";
     vos: "~u~ís", "~u~ás", "~u~ite";
     imperative: "~ú~ete", "~ú~ase", "~u~ámonos", "~u~íos", "~ú~anse";
     infinitive: "~u~irse";
     gerund: "~u~iéndose";
+    participle_m: "~u~ido", _;
     ),
-    // Dirigir: 46 words (urgir, mugir, exigir, fingir, agir, dirigir).
-    conjugation!("dirigir", 46, "~gir";
-    stem participle: "~gid- like echar";
+    // Dirigir: 46 words (urgir, mugir, exigir, fingir, agir, dirigir). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("dirigir", 46, "~gir", like Echar;
+    stem verb: "~g- like conocer";
+    stem verb_fut_1_sg: "~gir- like echar";
     pres_1: "~jo", "~gimos";
     pres_2: "~ges", "~gís";
-    pres_3: "~ge", "~gen";
     impf_1: "~gía", "~gíamos";
-    impf_2: "~gías", "~gíais";
-    impf_3: _, "~gían";
-    pret_1: "~gí", "~gimos";
-    pret_2: "~giste", "~gisteis";
-    pret_3: "~gió", "~gieron";
-    fut_1: "~giré", "~giremos";
-    fut_2: "~girás", "~giréis";
-    fut_3: "~girá", "~girán";
-    cond_1: "~giría", "~giríamos";
-    cond_2: "~girías", "~giríais";
-    cond_3: _, "~girían";
     subj_1: "~ja", "~jamos";
     subj_2: "~jas", "~jáis";
     subj_3: _, "~jan";
-    subj_impf_1: "~giera", "~giéramos";
-    subj_impf_2: "~gieras", "~gierais";
-    subj_impf_3: _, "~gieran";
-    subj_impf_se_1: "~giese", "~giésemos";
-    subj_impf_se_2: "~gieses", "~gieseis";
-    subj_impf_se_3: _, "~giesen";
-    subj_fut_1: "~giere", "~giéremos";
-    subj_fut_2: "~gieres", "~giereis";
-    subj_fut_3: _, "~gieren";
     vos: "~gís", "~jás", "~gí";
     imperative: "~ge", "~ja", "~jamos", "~gid", "~jan";
     infinitive: "~gir";
     gerund: "~giendo";
+    participle_m: "~gido", _;
+    ),
+    // Volar: 41 words (encontrar, demostrar, mostrar, poblar, rogar, rodar). Like Desencontrarse, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("volar", 41, "~o~ar", like Desencontrarse;
+    vos: _, _, "~o~á";
+    imperative: "~ue~a", "~ue~e", "~o~emos", "~o~ad", "~ue~en";
+    infinitive: "~o~ar";
+    gerund: "~o~ando";
     ),
     // Resfriarse: 40 words (resfriarse, guiarse, confiarse, demasiarse, enfriarse, aliarse). Like Desviar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("resfriarse", 40, "~iarse", like Desviar;
@@ -1478,118 +1119,79 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~iarse";
     gerund: "~iándose";
     ),
-    // Poner: 37 words (poner, yuxtaponer, imponer, suponer, exponer, posponer).
-    conjugation!("poner", 37, "~oner";
-    stem participle: "~uest- like echar";
+    // Poner: 37 words (poner, yuxtaponer, imponer, suponer, exponer, posponer). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("poner", 37, "~oner", like Echar;
+    stem verb: "~us- like poner";
+    stem verb_fut_1_sg: "~ondr- like echar";
     pres_1: "~ongo", "~onemos";
     pres_2: "~ones", "~onéis";
-    pres_3: "~one", "~onen";
     impf_1: "~onía", "~oníamos";
-    impf_2: "~onías", "~oníais";
-    impf_3: _, "~onían";
-    pret_1: "~use", "~usimos";
-    pret_2: "~usiste", "~usisteis";
-    pret_3: "~uso", "~usieron";
-    fut_1: "~ondré", "~ondremos";
-    fut_2: "~ondrás", "~ondréis";
-    fut_3: "~ondrá", "~ondrán";
-    cond_1: "~ondría", "~ondríamos";
-    cond_2: "~ondrías", "~ondríais";
-    cond_3: _, "~ondrían";
     subj_1: "~onga", "~ongamos";
     subj_2: "~ongas", "~ongáis";
     subj_3: _, "~ongan";
-    subj_impf_1: "~usiera", "~usiéramos";
-    subj_impf_2: "~usieras", "~usierais";
-    subj_impf_3: _, "~usieran";
-    subj_impf_se_1: "~usiese", "~usiésemos";
-    subj_impf_se_2: "~usieses", "~usieseis";
-    subj_impf_se_3: _, "~usiesen";
-    subj_fut_1: "~usiere", "~usiéremos";
-    subj_fut_2: "~usieres", "~usiereis";
-    subj_fut_3: _, "~usieren";
     vos: "~onés", "~ongás", "~oné";
     imperative: "~ón", "~onga", "~ongamos", "~oned", "~ongan";
     infinitive: "~oner";
     gerund: "~oniendo";
+    participle_m: "~uesto", _;
     ),
-    // Fraguar: 32 words (averiguar, atestiguar, menguar, aguar, testiguar, apaciguar). Like Situar, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, pret_1 sg, subj_1 sg, ….
+    // Fraguar: 32 words (averiguar, atestiguar, menguar, aguar, testiguar, apaciguar). Like Situar, except in 12 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, ….
     conjugation!("fraguar", 32, "~uar", like Situar;
+    stem verb: "~- like fraguar";
     pres_1: "~uo", _;
     pres_2: "~uas", _;
-    pres_3: "~ua", "~uan";
-    pret_1: "~üé", _;
     subj_1: "~üe", "~üemos";
     subj_2: "~ües", "~üéis";
     subj_3: _, "~üen";
     vos: _, "~üés", _;
     imperative: "~ua", "~üe", "~üemos", _, "~üen";
     ),
-    // Rendir: 32 words (pedir, servir, despedir, vestir, investir, medir). Like Sentir, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Rendir: 32 words (pedir, servir, despedir, vestir, investir, medir). Like Sentir, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("rendir", 32, "~e~ir", like Sentir;
     pres_1: "~i~o", _;
     pres_2: "~i~es", _;
-    pres_3: "~i~e", "~i~en";
     subj_1: "~i~a", _;
     subj_2: "~i~as", _;
     subj_3: _, "~i~an";
     imperative: "~i~e", "~i~a", _, _, "~i~an";
     ),
-    // Descocarse: 31 words (autoconvocarse, descocarse, abocarse, apocarse, equivocarse, enfocarse).
-    conjugation!("descocarse", 31, "~ocarse";
-    stem participle: "~ocad- like echar";
+    // Descocarse: 31 words (autoconvocarse, descocarse, abocarse, apocarse, equivocarse, enfocarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("descocarse", 31, "~ocarse", like Echar;
+    stem verb: "~o- like sacar";
+    stem verb_fut_1_sg: "~ocar- like echar";
     pres_1: "~oco", "~ocamos";
     pres_2: "~ocas", "~ocáis";
-    pres_3: "~oca", "~ocan";
     impf_1: "~ocaba", "~ocábamos";
-    impf_2: "~ocabas", "~ocabais";
-    impf_3: _, "~ocaban";
-    pret_1: "~oqué", "~ocamos";
-    pret_2: "~ocaste", "~ocasteis";
-    pret_3: "~ocó", "~ocaron";
-    fut_1: "~ocaré", "~ocaremos";
-    fut_2: "~ocarás", "~ocaréis";
-    fut_3: "~ocará", "~ocarán";
-    cond_1: "~ocaría", "~ocaríamos";
-    cond_2: "~ocarías", "~ocaríais";
-    cond_3: _, "~ocarían";
     subj_1: "~oque", "~oquemos";
     subj_2: "~oques", "~oquéis";
     subj_3: _, "~oquen";
-    subj_impf_1: "~ocara", "~ocáramos";
-    subj_impf_2: "~ocaras", "~ocarais";
-    subj_impf_3: _, "~ocaran";
-    subj_impf_se_1: "~ocase", "~ocásemos";
-    subj_impf_se_2: "~ocases", "~ocaseis";
-    subj_impf_se_3: _, "~ocasen";
-    subj_fut_1: "~ocare", "~ocáremos";
-    subj_fut_2: "~ocares", "~ocareis";
-    subj_fut_3: _, "~ocaren";
     vos: "~ocás", "~oqués", "~ocate";
     imperative: "~ócate", "~óquese", "~oquémonos", "~ocaos", "~óquense";
     infinitive: "~ocarse";
     gerund: "~ocándose";
+    participle_m: "~ocado", _;
     ),
-    // Desvivirse: 30 words (desvivirse, autodefinirse, autopercibirse, inhibirse, extinguirse, distinguirse). Like Rendir, except in 31 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, impf_2 sg, impf_2 pl, ….
+    // Regar: 30 words (negar, colgar, renegar, fregar, regar, segar). Like Sonar, except in 10 cells: pret_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
+    conjugation!("regar", 30, "~arˇ", like Sonar;
+    pret_1: "~uéˇ", _;
+    subj_1: "~ueˇ", "~uemosˇ";
+    subj_2: "~uesˇ", "~uéisˇ";
+    subj_3: _, "~uenˇ";
+    vos: _, "~uésˇ", _;
+    imperative: _, "~ueˇ", "~uemosˇ", _, "~uenˇ";
+    ),
+    // Desvivirse: 30 words (desvivirse, autodefinirse, autopercibirse, inhibirse, extinguirse, distinguirse). Like Rendir, except in 14 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, vos ind, vos imp, ….
     conjugation!("desvivirse", 30, "~i~irse", like Rendir;
-    stem participle: "~i~id- like echar";
+    stem verb: "~i~- like conocer";
+    stem verb_fut_1_sg: "~i~ir- like echar";
     pres_1: _, "~i~imos";
     pres_2: _, "~i~ís";
     impf_1: "~i~ía", "~i~íamos";
-    impf_2: "~i~ías", "~i~íais";
-    impf_3: _, "~i~ían";
-    pret_1: "~i~í", "~i~imos";
-    pret_2: "~i~iste", "~i~isteis";
-    fut_1: "~i~iré", "~i~iremos";
-    fut_2: "~i~irás", "~i~iréis";
-    fut_3: "~i~irá", "~i~irán";
-    cond_1: "~i~iría", "~i~iríamos";
-    cond_2: "~i~irías", "~i~iríais";
-    cond_3: _, "~i~irían";
     vos: "~i~ís", _, "~i~ite";
     imperative: "~í~ete", "~í~ase", "~i~ámonos", "~i~íos", "~í~anse";
     infinitive: "~i~irse";
     gerund: "~i~iéndose";
+    participle_m: "~i~ido", _;
     ),
     // Situarse: 27 words (autoevaluarse, adecuarse, atenuarse, extenuarse, situarse, insinuarse). Like Situar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("situarse", 27, "~uarse", like Situar;
@@ -1598,219 +1200,111 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~uarse";
     gerund: "~uándose";
     ),
-    // Embazarse: 27 words (embazarse, abrazarse, acarrazarse, amostazarse, desplazarse, tarazarse).
-    conjugation!("embazarse", 27, "~azarse";
-    stem participle: "~azad- like echar";
+    // Embazarse: 27 words (embazarse, abrazarse, acarrazarse, amostazarse, desplazarse, tarazarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("embazarse", 27, "~azarse", like Echar;
+    stem verb: "~a- like realizar";
+    stem verb_fut_1_sg: "~azar- like echar";
     pres_1: "~azo", "~azamos";
     pres_2: "~azas", "~azáis";
-    pres_3: "~aza", "~azan";
     impf_1: "~azaba", "~azábamos";
-    impf_2: "~azabas", "~azabais";
-    impf_3: _, "~azaban";
-    pret_1: "~acé", "~azamos";
-    pret_2: "~azaste", "~azasteis";
-    pret_3: "~azó", "~azaron";
-    fut_1: "~azaré", "~azaremos";
-    fut_2: "~azarás", "~azaréis";
-    fut_3: "~azará", "~azarán";
-    cond_1: "~azaría", "~azaríamos";
-    cond_2: "~azarías", "~azaríais";
-    cond_3: _, "~azarían";
     subj_1: "~ace", "~acemos";
     subj_2: "~aces", "~acéis";
     subj_3: _, "~acen";
-    subj_impf_1: "~azara", "~azáramos";
-    subj_impf_2: "~azaras", "~azarais";
-    subj_impf_3: _, "~azaran";
-    subj_impf_se_1: "~azase", "~azásemos";
-    subj_impf_se_2: "~azases", "~azaseis";
-    subj_impf_se_3: _, "~azasen";
-    subj_fut_1: "~azare", "~azáremos";
-    subj_fut_2: "~azares", "~azareis";
-    subj_fut_3: _, "~azaren";
     vos: "~azás", "~acés", "~azate";
     imperative: "~ázate", "~ácese", "~acémonos", "~azaos", "~ácense";
     infinitive: "~azarse";
     gerund: "~azándose";
+    participle_m: "~azado", _;
     ),
-    // Destoserse: 27 words (destoserse, correrse, coserse, corresponderse, dolerse, carcomerse).
-    conjugation!("destoserse", 27, "~o~erse";
-    stem participle: "~o~id- like echar";
-    pres_1: "~o~o", "~o~emos";
+    // Destoserse: 27 words (destoserse, correrse, coserse, corresponderse, dolerse, carcomerse). Like Acomodarse, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("destoserse", 27, "~o~erse", like Acomodarse;
+    stem verb: "~o~- like conocer";
+    stem verb_fut_1_sg: "~o~er- like echar";
+    pres_1: _, "~o~emos";
     pres_2: "~o~es", "~o~éis";
-    pres_3: "~o~e", "~o~en";
     impf_1: "~o~ía", "~o~íamos";
-    impf_2: "~o~ías", "~o~íais";
-    impf_3: _, "~o~ían";
-    pret_1: "~o~í", "~o~imos";
-    pret_2: "~o~iste", "~o~isteis";
-    pret_3: "~o~ió", "~o~ieron";
-    fut_1: "~o~eré", "~o~eremos";
-    fut_2: "~o~erás", "~o~eréis";
-    fut_3: "~o~erá", "~o~erán";
-    cond_1: "~o~ería", "~o~eríamos";
-    cond_2: "~o~erías", "~o~eríais";
-    cond_3: _, "~o~erían";
     subj_1: "~o~a", "~o~amos";
     subj_2: "~o~as", "~o~áis";
     subj_3: _, "~o~an";
-    subj_impf_1: "~o~iera", "~o~iéramos";
-    subj_impf_2: "~o~ieras", "~o~ierais";
-    subj_impf_3: _, "~o~ieran";
-    subj_impf_se_1: "~o~iese", "~o~iésemos";
-    subj_impf_se_2: "~o~ieses", "~o~ieseis";
-    subj_impf_se_3: _, "~o~iesen";
-    subj_fut_1: "~o~iere", "~o~iéremos";
-    subj_fut_2: "~o~ieres", "~o~iereis";
-    subj_fut_3: _, "~o~ieren";
     vos: "~o~és", "~o~ás", "~o~ete";
     imperative: "~ó~ete", "~ó~ase", "~o~ámonos", "~o~eos", "~ó~anse";
     infinitive: "~o~erse";
     gerund: "~o~iéndose";
+    participle_m: "~o~ido", _;
     ),
-    // Venir: 24 words (devenir, venir, intervenir, avenir, revenir, convenir). Like Sentir, except in 27 cells: pres_1 sg, pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, pret_3 sg, ….
+    // Venir: 24 words (devenir, venir, intervenir, avenir, revenir, convenir). Like Sentir, except in 11 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("venir", 24, "~e~ir", like Sentir;
+    stem verb: "~i~- like poner";
+    stem verb_fut_1_sg: "~e~dr- like echar";
     pres_1: "~e~go", _;
-    pret_1: "~i~e", "~i~imos";
-    pret_2: "~i~iste", "~i~isteis";
-    pret_3: "~i~o", _;
-    fut_1: "~e~dré", "~e~dremos";
-    fut_2: "~e~drás", "~e~dréis";
-    fut_3: "~e~drá", "~e~drán";
-    cond_1: "~e~dría", "~e~dríamos";
-    cond_2: "~e~drías", "~e~dríais";
-    cond_3: _, "~e~drían";
     subj_1: "~e~ga", "~e~gamos";
     subj_2: "~e~gas", "~e~gáis";
     subj_3: _, "~e~gan";
     vos: _, "~e~gás", _;
     imperative: "~é~", "~e~ga", "~e~gamos", _, "~e~gan";
     ),
-    // Reducir: 24 words (traducir, producir, reducir, conducir, introducir, inducir).
-    conjugation!("reducir", 24, "~cir";
-    stem participle: "~cid- like echar";
+    // Reducir: 24 words (traducir, producir, reducir, conducir, introducir, inducir). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("reducir", 24, "~cir", like Echar;
+    stem verb: "~j- like reducir";
+    stem verb_fut_1_sg: "~cir- like echar";
     pres_1: "~zco", "~cimos";
     pres_2: "~ces", "~cís";
-    pres_3: "~ce", "~cen";
     impf_1: "~cía", "~cíamos";
-    impf_2: "~cías", "~cíais";
-    impf_3: _, "~cían";
-    pret_1: "~je", "~jimos";
-    pret_2: "~jiste", "~jisteis";
-    pret_3: "~jo", "~jeron";
-    fut_1: "~ciré", "~ciremos";
-    fut_2: "~cirás", "~ciréis";
-    fut_3: "~cirá", "~cirán";
-    cond_1: "~ciría", "~ciríamos";
-    cond_2: "~cirías", "~ciríais";
-    cond_3: _, "~cirían";
     subj_1: "~zca", "~zcamos";
     subj_2: "~zcas", "~zcáis";
     subj_3: _, "~zcan";
-    subj_impf_1: "~jera", "~jéramos";
-    subj_impf_2: "~jeras", "~jerais";
-    subj_impf_3: _, "~jeran";
-    subj_impf_se_1: "~jese", "~jésemos";
-    subj_impf_se_2: "~jeses", "~jeseis";
-    subj_impf_se_3: _, "~jesen";
-    subj_fut_1: "~jere", "~jéremos";
-    subj_fut_2: "~jeres", "~jereis";
-    subj_fut_3: _, "~jeren";
     vos: "~cís", "~zcás", "~cí";
     imperative: "~ce", "~zca", "~zcamos", "~cid", "~zcan";
     infinitive: "~cir";
     gerund: "~ciendo";
+    participle_m: "~cido", _;
     ),
-    // Escribir: 23 words (escribir, describir, inscribir, transcribir, prescribir, proscribir).
-    conjugation!("escribir", 23, "~bir";
+    // Escribir: 23 words (escribir, describir, inscribir, transcribir, prescribir, proscribir). Like Echar, except in 21 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("escribir", 23, "~bir", like Echar;
+    stem verb: "~b- like conocer";
+    stem verb_fut_1_sg: "~bir- like echar";
     stem participle: "~- like escribir";
     pres_1: "~bo", "~bimos";
     pres_2: "~bes", "~bís";
-    pres_3: "~be", "~ben";
     impf_1: "~bía", "~bíamos";
-    impf_2: "~bías", "~bíais";
-    impf_3: _, "~bían";
-    pret_1: "~bí", "~bimos";
-    pret_2: "~biste", "~bisteis";
-    pret_3: "~bió", "~bieron";
-    fut_1: "~biré", "~biremos";
-    fut_2: "~birás", "~biréis";
-    fut_3: "~birá", "~birán";
-    cond_1: "~biría", "~biríamos";
-    cond_2: "~birías", "~biríais";
-    cond_3: _, "~birían";
     subj_1: "~ba", "~bamos";
     subj_2: "~bas", "~báis";
     subj_3: _, "~ban";
-    subj_impf_1: "~biera", "~biéramos";
-    subj_impf_2: "~bieras", "~bierais";
-    subj_impf_3: _, "~bieran";
-    subj_impf_se_1: "~biese", "~biésemos";
-    subj_impf_se_2: "~bieses", "~bieseis";
-    subj_impf_se_3: _, "~biesen";
-    subj_fut_1: "~biere", "~biéremos";
-    subj_fut_2: "~bieres", "~biereis";
-    subj_fut_3: _, "~bieren";
     vos: "~bís", "~bás", "~bí";
     imperative: "~be", "~ba", "~bamos", "~bid", "~ban";
     infinitive: "~bir";
     gerund: "~biendo";
     ),
-    // Sacarse: 23 words (abarracarse, abellacarse, desajacarse, trelacarse, atracarse, enflacarse).
-    conjugation!("sacarse", 23, "~acarse";
-    stem participle: "~acad- like echar";
+    // Sacarse: 23 words (abarracarse, abellacarse, desajacarse, trelacarse, atracarse, enflacarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("sacarse", 23, "~acarse", like Echar;
+    stem verb: "~a- like sacar";
+    stem verb_fut_1_sg: "~acar- like echar";
     pres_1: "~aco", "~acamos";
     pres_2: "~acas", "~acáis";
-    pres_3: "~aca", "~acan";
     impf_1: "~acaba", "~acábamos";
-    impf_2: "~acabas", "~acabais";
-    impf_3: _, "~acaban";
-    pret_1: "~aqué", "~acamos";
-    pret_2: "~acaste", "~acasteis";
-    pret_3: "~acó", "~acaron";
-    fut_1: "~acaré", "~acaremos";
-    fut_2: "~acarás", "~acaréis";
-    fut_3: "~acará", "~acarán";
-    cond_1: "~acaría", "~acaríamos";
-    cond_2: "~acarías", "~acaríais";
-    cond_3: _, "~acarían";
     subj_1: "~aque", "~aquemos";
     subj_2: "~aques", "~aquéis";
     subj_3: _, "~aquen";
-    subj_impf_1: "~acara", "~acáramos";
-    subj_impf_2: "~acaras", "~acarais";
-    subj_impf_3: _, "~acaran";
-    subj_impf_se_1: "~acase", "~acásemos";
-    subj_impf_se_2: "~acases", "~acaseis";
-    subj_impf_se_3: _, "~acasen";
-    subj_fut_1: "~acare", "~acáremos";
-    subj_fut_2: "~acares", "~acareis";
-    subj_fut_3: _, "~acaren";
     vos: "~acás", "~aqués", "~acate";
     imperative: "~ácate", "~áquese", "~aquémonos", "~acaos", "~áquense";
     infinitive: "~acarse";
     gerund: "~acándose";
+    participle_m: "~acado", _;
     ),
-    // Meliar: 23 words (gilidiar, chalequiar, meliar, cangrejiar, jariniar, jonjoliar). Like Desviar, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Meliar: 23 words (gilidiar, chalequiar, meliar, cangrejiar, jariniar, jonjoliar). Like Desviar, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("meliar", 23, "~iar", like Desviar;
     pres_1: "~eo", _;
     pres_2: "~eas", _;
-    pres_3: "~ea", "~ean";
     subj_1: "~ee", _;
     subj_2: "~ees", _;
     subj_3: _, "~een";
     imperative: "~ea", "~ee", _, _, "~een";
     ),
-    // Coger: 22 words (proteger, coger, recoger, escoger, acoger, emerger). Like Dirigir, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Coger: 22 words (proteger, coger, recoger, escoger, acoger, emerger). Like Dirigir, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
     conjugation!("coger", 22, "~ger", like Dirigir;
+    stem verb_fut_1_sg: "~ger- like echar";
     pres_1: _, "~gemos";
     pres_2: _, "~géis";
-    fut_1: "~geré", "~geremos";
-    fut_2: "~gerás", "~geréis";
-    fut_3: "~gerá", "~gerán";
-    cond_1: "~gería", "~geríamos";
-    cond_2: "~gerías", "~geríais";
-    cond_3: _, "~gerían";
     vos: "~gés", _, "~gé";
     imperative: _, _, _, "~ged", _;
     infinitive: "~ger";
@@ -1822,11 +1316,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~onerse";
     gerund: "~oniéndose";
     ),
-    // Ahijar: 22 words (prohijar, descafeinar, aislar, ahincar, amohinar, cabrahigar). Like Rilarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Ahijar: 22 words (prohijar, descafeinar, aislar, ahincar, amohinar, cabrahigar). Like Rilarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
     conjugation!("ahijar", 22, "~i~ar", like Rilarse;
     pres_1: "~í~o", _;
     pres_2: "~í~as", _;
-    pres_3: "~í~a", "~í~an";
     subj_1: "~í~e", _;
     subj_2: "~í~es", _;
     subj_3: _, "~í~en";
@@ -1835,40 +1328,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~i~ar";
     gerund: "~i~ando";
     ),
-    // Alzarse: 22 words (emperezarse, esperezarse, alzarse, vezarse, avezarse, avergonzarse).
-    conjugation!("alzarse", 22, "~~zarse";
-    stem participle: "~~zad- like echar";
+    // Alzarse: 22 words (emperezarse, esperezarse, alzarse, vezarse, avezarse, avergonzarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("alzarse", 22, "~~zarse", like Incautarse;
+    stem verb: "~~- like realizar";
+    stem verb_fut_1_sg: "~~zar- like echar";
     pres_1: "~~zo", "~~zamos";
     pres_2: "~~zas", "~~záis";
-    pres_3: "~~za", "~~zan";
     impf_1: "~~zaba", "~~zábamos";
-    impf_2: "~~zabas", "~~zabais";
-    impf_3: _, "~~zaban";
-    pret_1: "~~cé", "~~zamos";
-    pret_2: "~~zaste", "~~zasteis";
-    pret_3: "~~zó", "~~zaron";
-    fut_1: "~~zaré", "~~zaremos";
-    fut_2: "~~zarás", "~~zaréis";
-    fut_3: "~~zará", "~~zarán";
-    cond_1: "~~zaría", "~~zaríamos";
-    cond_2: "~~zarías", "~~zaríais";
-    cond_3: _, "~~zarían";
     subj_1: "~~ce", "~~cemos";
     subj_2: "~~ces", "~~céis";
     subj_3: _, "~~cen";
-    subj_impf_1: "~~zara", "~~záramos";
-    subj_impf_2: "~~zaras", "~~zarais";
-    subj_impf_3: _, "~~zaran";
-    subj_impf_se_1: "~~zase", "~~zásemos";
-    subj_impf_se_2: "~~zases", "~~zaseis";
-    subj_impf_se_3: _, "~~zasen";
-    subj_fut_1: "~~zare", "~~záremos";
-    subj_fut_2: "~~zares", "~~zareis";
-    subj_fut_3: _, "~~zaren";
     vos: "~~zás", "~~cés", "~~zate";
     imperative: "~ézat~", "~éc~se", "~~cémonos", "~~zaos", "~éc~nse";
     infinitive: "~~zarse";
     gerund: "~~zándose";
+    participle_m: "~~zado", _;
     ),
     // Entremeterse: 21 words (prenderse, comprenderse, tejerse, sorprenderse, emperescerse, venderse). Like Autoabastecerse, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("entremeterse", 21, "~e~erse", like Autoabastecerse;
@@ -1879,46 +1353,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     vos: _, "~e~ás", _;
     imperative: _, "~é~ase", "~e~ámonos", _, "~é~anse";
     ),
-    // Inmiscuirse: 21 words (autodestruirse, inmiscuirse, autoexcluirse, autoconstruirse, rehuirse, atribuirse).
-    conjugation!("inmiscuirse", 21, "~uirse";
-    stem participle: "~uid- like echar";
+    // Inmiscuirse: 21 words (autodestruirse, inmiscuirse, autoexcluirse, autoconstruirse, rehuirse, atribuirse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("inmiscuirse", 21, "~uirse", like Echar;
+    stem verb: "~u- like instruir";
+    stem verb_fut_1_sg: "~uir- like echar";
     pres_1: "~uyo", "~uimos";
     pres_2: "~uyes", "~uís";
-    pres_3: "~uye", "~uyen";
     impf_1: "~uía", "~uíamos";
-    impf_2: "~uías", "~uíais";
-    impf_3: _, "~uían";
-    pret_1: "~uí", "~uimos";
-    pret_2: "~uiste", "~uisteis";
-    pret_3: "~uyó", "~uyeron";
-    fut_1: "~uiré", "~uiremos";
-    fut_2: "~uirás", "~uiréis";
-    fut_3: "~uirá", "~uirán";
-    cond_1: "~uiría", "~uiríamos";
-    cond_2: "~uirías", "~uiríais";
-    cond_3: _, "~uirían";
     subj_1: "~uya", "~uyamos";
     subj_2: "~uyas", "~uyáis";
     subj_3: _, "~uyan";
-    subj_impf_1: "~uyera", "~uyéramos";
-    subj_impf_2: "~uyeras", "~uyerais";
-    subj_impf_3: _, "~uyeran";
-    subj_impf_se_1: "~uyese", "~uyésemos";
-    subj_impf_se_2: "~uyeses", "~uyeseis";
-    subj_impf_se_3: _, "~uyesen";
-    subj_fut_1: "~uyere", "~uyéremos";
-    subj_fut_2: "~uyeres", "~uyereis";
-    subj_fut_3: _, "~uyeren";
     vos: "~uís", "~uyás", "~uite";
     imperative: "~úyete", "~úyase", "~uyámonos", "~uíos", "~úyanse";
     infinitive: "~uirse";
     gerund: "~uyéndose";
+    participle_m: "~uido", _;
     ),
-    // Aunar: 20 words (aunar, rehusar, ahumar, maullar, aupar, aullar). Like Emputarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Aunar: 20 words (aunar, rehusar, ahumar, maullar, aupar, aullar). Like Emputarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
     conjugation!("aunar", 20, "~u~ar", like Emputarse;
     pres_1: "~ú~o", _;
     pres_2: "~ú~as", _;
-    pres_3: "~ú~a", "~ú~an";
     subj_1: "~ú~e", _;
     subj_2: "~ú~es", _;
     subj_3: _, "~ú~en";
@@ -1927,96 +1381,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~u~ar";
     gerund: "~u~ando";
     ),
-    // Abatirse: 20 words (batirse, partirse, persuadirse, abatirse, debatirse, expandirse).
-    conjugation!("abatirse", 20, "~a~irse";
-    stem participle: "~a~id- like echar";
-    pres_1: "~a~o", "~a~imos";
+    // Abatirse: 20 words (batirse, partirse, persuadirse, abatirse, debatirse, expandirse). Like Incautarse, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("abatirse", 20, "~a~irse", like Incautarse;
+    stem verb: "~a~- like conocer";
+    stem verb_fut_1_sg: "~a~ir- like echar";
+    pres_1: _, "~a~imos";
     pres_2: "~a~es", "~a~ís";
-    pres_3: "~a~e", "~a~en";
     impf_1: "~a~ía", "~a~íamos";
-    impf_2: "~a~ías", "~a~íais";
-    impf_3: _, "~a~ían";
-    pret_1: "~a~í", "~a~imos";
-    pret_2: "~a~iste", "~a~isteis";
-    pret_3: "~a~ió", "~a~ieron";
-    fut_1: "~a~iré", "~a~iremos";
-    fut_2: "~a~irás", "~a~iréis";
-    fut_3: "~a~irá", "~a~irán";
-    cond_1: "~a~iría", "~a~iríamos";
-    cond_2: "~a~irías", "~a~iríais";
-    cond_3: _, "~a~irían";
     subj_1: "~a~a", "~a~amos";
     subj_2: "~a~as", "~a~áis";
     subj_3: _, "~a~an";
-    subj_impf_1: "~a~iera", "~a~iéramos";
-    subj_impf_2: "~a~ieras", "~a~ierais";
-    subj_impf_3: _, "~a~ieran";
-    subj_impf_se_1: "~a~iese", "~a~iésemos";
-    subj_impf_se_2: "~a~ieses", "~a~ieseis";
-    subj_impf_se_3: _, "~a~iesen";
-    subj_fut_1: "~a~iere", "~a~iéremos";
-    subj_fut_2: "~a~ieres", "~a~iereis";
-    subj_fut_3: _, "~a~ieren";
     vos: "~a~ís", "~a~ás", "~a~ite";
     imperative: "~á~ete", "~á~ase", "~a~ámonos", "~a~íos", "~á~anse";
     infinitive: "~a~irse";
     gerund: "~a~iéndose";
+    participle_m: "~a~ido", _;
     ),
-    // Fruncir: 19 words (zurcir, uncir, surcir, esparcir, resarcir, balbucir). Like Reducir, except in 30 cells: pres_1 sg, pret_1 sg, pret_2 sg, pret_2 pl, pret_3 sg, pret_3 pl, ….
-    conjugation!("fruncir", 19, "~cir", like Reducir as PRET_AS_PRES;
-    pres_1: "~zo", _;
-    pret_1: "~cí", _;
-    pret_2: "~ciste", "~cisteis";
-    pret_3: "~ció", "~cieron";
-    subj_1: "~za", "~zamos";
-    subj_2: "~zas", "~záis";
-    subj_3: _, "~zan";
-    subj_impf_1: "~ciera", "~ciéramos";
-    subj_impf_2: "~cieras", "~cierais";
-    subj_impf_3: _, "~cieran";
-    subj_impf_se_1: "~ciese", "~ciésemos";
-    subj_impf_se_2: "~cieses", "~cieseis";
-    subj_impf_se_3: _, "~ciesen";
-    subj_fut_1: "~ciere", "~ciéremos";
-    subj_fut_2: "~cieres", "~ciereis";
-    subj_fut_3: _, "~cieren";
-    vos: _, "~zás", _;
-    imperative: _, "~za", "~zamos", _, "~zan";
-    ),
-    // Chuzarse: 19 words (chapuzarse, abruzarse, abuzarse, escagarruzarse, aliruzarse, atapuzarse).
-    conjugation!("chuzarse", 19, "~uzarse";
-    stem participle: "~uzad- like echar";
+    // Chuzarse: 19 words (chapuzarse, abruzarse, abuzarse, escagarruzarse, aliruzarse, atapuzarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("chuzarse", 19, "~uzarse", like Echar;
+    stem verb: "~u- like realizar";
+    stem verb_fut_1_sg: "~uzar- like echar";
     pres_1: "~uzo", "~uzamos";
     pres_2: "~uzas", "~uzáis";
-    pres_3: "~uza", "~uzan";
     impf_1: "~uzaba", "~uzábamos";
-    impf_2: "~uzabas", "~uzabais";
-    impf_3: _, "~uzaban";
-    pret_1: "~ucé", "~uzamos";
-    pret_2: "~uzaste", "~uzasteis";
-    pret_3: "~uzó", "~uzaron";
-    fut_1: "~uzaré", "~uzaremos";
-    fut_2: "~uzarás", "~uzaréis";
-    fut_3: "~uzará", "~uzarán";
-    cond_1: "~uzaría", "~uzaríamos";
-    cond_2: "~uzarías", "~uzaríais";
-    cond_3: _, "~uzarían";
     subj_1: "~uce", "~ucemos";
     subj_2: "~uces", "~ucéis";
     subj_3: _, "~ucen";
-    subj_impf_1: "~uzara", "~uzáramos";
-    subj_impf_2: "~uzaras", "~uzarais";
-    subj_impf_3: _, "~uzaran";
-    subj_impf_se_1: "~uzase", "~uzásemos";
-    subj_impf_se_2: "~uzases", "~uzaseis";
-    subj_impf_se_3: _, "~uzasen";
-    subj_fut_1: "~uzare", "~uzáremos";
-    subj_fut_2: "~uzares", "~uzareis";
-    subj_fut_3: _, "~uzaren";
     vos: "~uzás", "~ucés", "~uzate";
     imperative: "~úzate", "~úcese", "~ucémonos", "~uzaos", "~úcense";
     infinitive: "~uzarse";
     gerund: "~uzándose";
+    participle_m: "~uzado", _;
     ),
     // Resentirse: 19 words (resentirse, arrepentirse, repentirse, divertirse, sentirse, referirse). Like Sentir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("resentirse", 19, "~e~irse", like Sentir;
@@ -2025,353 +1420,208 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~e~irse";
     gerund: "~i~iéndose";
     ),
-    // Calzarse: 18 words (abalanzarse, ensalzarse, esperanzarse, alianzarse, alcanzarse, desalzarse).
-    conjugation!("calzarse", 18, "~a~zarse";
-    stem participle: "~a~zad- like echar";
+    // Fruncir: 18 words (zurcir, uncir, surcir, esparcir, resarcir, fruncir). Like Reducir, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
+    conjugation!("fruncir", 18, "~cir", like Reducir;
+    stem verb: "~c- like conocer";
+    pres_1: "~zo", _;
+    subj_1: "~za", "~zamos";
+    subj_2: "~zas", "~záis";
+    subj_3: _, "~zan";
+    vos: _, "~zás", _;
+    imperative: _, "~za", "~zamos", _, "~zan";
+    ),
+    // Calzarse: 18 words (abalanzarse, ensalzarse, esperanzarse, alianzarse, alcanzarse, desalzarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("calzarse", 18, "~a~zarse", like Incautarse;
+    stem verb: "~a~- like realizar";
+    stem verb_fut_1_sg: "~a~zar- like echar";
     pres_1: "~a~zo", "~a~zamos";
     pres_2: "~a~zas", "~a~záis";
-    pres_3: "~a~za", "~a~zan";
     impf_1: "~a~zaba", "~a~zábamos";
-    impf_2: "~a~zabas", "~a~zabais";
-    impf_3: _, "~a~zaban";
-    pret_1: "~a~cé", "~a~zamos";
-    pret_2: "~a~zaste", "~a~zasteis";
-    pret_3: "~a~zó", "~a~zaron";
-    fut_1: "~a~zaré", "~a~zaremos";
-    fut_2: "~a~zarás", "~a~zaréis";
-    fut_3: "~a~zará", "~a~zarán";
-    cond_1: "~a~zaría", "~a~zaríamos";
-    cond_2: "~a~zarías", "~a~zaríais";
-    cond_3: _, "~a~zarían";
     subj_1: "~a~ce", "~a~cemos";
     subj_2: "~a~ces", "~a~céis";
     subj_3: _, "~a~cen";
-    subj_impf_1: "~a~zara", "~a~záramos";
-    subj_impf_2: "~a~zaras", "~a~zarais";
-    subj_impf_3: _, "~a~zaran";
-    subj_impf_se_1: "~a~zase", "~a~zásemos";
-    subj_impf_se_2: "~a~zases", "~a~zaseis";
-    subj_impf_se_3: _, "~a~zasen";
-    subj_fut_1: "~a~zare", "~a~záremos";
-    subj_fut_2: "~a~zares", "~a~zareis";
-    subj_fut_3: _, "~a~zaren";
     vos: "~a~zás", "~a~cés", "~a~zate";
     imperative: "~á~zate", "~á~cese", "~a~cémonos", "~a~zaos", "~á~cense";
     infinitive: "~a~zarse";
     gerund: "~a~zándose";
+    participle_m: "~a~zado", _;
     ),
-    // Desentenderse: 17 words (desentenderse, autodefenderse, perderse, defenderse, extenderse, sobrentenderse). Like Entremeterse, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Desentenderse: 17 words (desentenderse, autodefenderse, perderse, defenderse, extenderse, sobrentenderse). Like Entremeterse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("desentenderse", 17, "~e~erse", like Entremeterse;
     pres_1: "~ie~o", _;
     pres_2: "~ie~es", _;
-    pres_3: "~ie~e", "~ie~en";
     subj_1: "~ie~a", _;
     subj_2: "~ie~as", _;
     subj_3: _, "~ie~an";
     imperative: "~ié~ete", "~ié~ase", _, _, "~ié~anse";
     ),
-    // Creer: 17 words (peer, creer, leer, veer, seer, roer). Like Meter, except in 21 cells: pret_1 pl, pret_2 sg, pret_2 pl, pret_3 sg, pret_3 pl, subj_impf_1 sg, ….
+    // Creer: 17 words (peer, creer, leer, veer, seer, roer). Like Meter, except in 2 cells: gerund, participle_m sg.
     conjugation!("creer", 17, "~er", like Meter;
-    stem participle: "~íd- like echar";
-    pret_1: _, "~ímos";
-    pret_2: "~íste", "~ísteis";
-    pret_3: "~yó", "~yeron";
-    subj_impf_1: "~yera", "~yéramos";
-    subj_impf_2: "~yeras", "~yerais";
-    subj_impf_3: _, "~yeran";
-    subj_impf_se_1: "~yese", "~yésemos";
-    subj_impf_se_2: "~yeses", "~yeseis";
-    subj_impf_se_3: _, "~yesen";
-    subj_fut_1: "~yere", "~yéremos";
-    subj_fut_2: "~yeres", "~yereis";
-    subj_fut_3: _, "~yeren";
+    stem verb: "~- like creer";
     gerund: "~yendo";
+    participle_m: "~ído", _;
     ),
-    // Traer: 16 words (traer, contraer, atraer, extraer, substraer, abstraer). Like Creer, except in 31 cells: pres_1 sg, pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, pret_3 sg, ….
+    // Traer: 16 words (traer, contraer, atraer, extraer, substraer, abstraer). Like Creer, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("traer", 16, "~er", like Creer;
+    stem verb: "~j- like reducir";
     pres_1: "~igo", _;
-    pret_1: "~je", "~jimos";
-    pret_2: "~jiste", "~jisteis";
-    pret_3: "~jo", "~jeron";
     subj_1: "~iga", "~igamos";
     subj_2: "~igas", "~igáis";
     subj_3: _, "~igan";
-    subj_impf_1: "~jera", "~jéramos";
-    subj_impf_2: "~jeras", "~jerais";
-    subj_impf_3: _, "~jeran";
-    subj_impf_se_1: "~jese", "~jésemos";
-    subj_impf_se_2: "~jeses", "~jeseis";
-    subj_impf_se_3: _, "~jesen";
-    subj_fut_1: "~jere", "~jéremos";
-    subj_fut_2: "~jeres", "~jereis";
-    subj_fut_3: _, "~jeren";
     vos: _, "~igás", _;
     imperative: _, "~iga", "~igamos", _, "~igan";
     ),
-    // Entecarse: 16 words (entecarse, enchuecarse, obcecarse, intersecarse, ahuecarse, deprecarse).
-    conjugation!("entecarse", 16, "~~carse";
-    stem participle: "~~cad- like echar";
+    // Moler: 16 words (llover, doler, morder, promover, soler, mover). Like Sonar, except in 29 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, pret_1 sg, ….
+    conjugation!("moler", 16, "~erˇ", like Sonar;
+    stem verb_fut_1_sg: "~er- like sonar";
+    pres_1: _, "~emosˇ";
+    pres_2: "~esˇ", "~éisˇ";
+    impf_1: "~íaˇ", "~íamosˇ";
+    pret_1: "~íˇ", "~imosˇ";
+    pret_3: "~ióˇ", "~ieronˇ";
+    subj_1: "~aˇ", "~amosˇ";
+    subj_2: "~asˇ", "~áisˇ";
+    subj_3: _, "~anˇ";
+    subj_impf_1: _, "~iéramosˇ";
+    subj_impf_3: "~ieraˇ", _;
+    subj_impf_se_3: "~ieseˇ", _;
+    subj_fut_3: "~iereˇ", _;
+    vos: "~ésˇ", "~ásˇ", "~éˇ";
+    imperative: "~eˇ", "~aˇ", "~amosˇ", "~edˇ", "~anˇ";
+    infinitive: "~erˇ";
+    gerund: "~iendoˇ";
+    participle_m: "~idoˇ", _;
+    ),
+    // Entecarse: 16 words (entecarse, enchuecarse, obcecarse, intersecarse, ahuecarse, deprecarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("entecarse", 16, "~~carse", like Incautarse;
+    stem verb: "~~- like sacar";
+    stem verb_fut_1_sg: "~~car- like echar";
     pres_1: "~~co", "~~camos";
     pres_2: "~~cas", "~~cáis";
-    pres_3: "~~ca", "~~can";
     impf_1: "~~caba", "~~cábamos";
-    impf_2: "~~cabas", "~~cabais";
-    impf_3: _, "~~caban";
-    pret_1: "~~qué", "~~camos";
-    pret_2: "~~caste", "~~casteis";
-    pret_3: "~~có", "~~caron";
-    fut_1: "~~caré", "~~caremos";
-    fut_2: "~~carás", "~~caréis";
-    fut_3: "~~cará", "~~carán";
-    cond_1: "~~caría", "~~caríamos";
-    cond_2: "~~carías", "~~caríais";
-    cond_3: _, "~~carían";
     subj_1: "~~que", "~~quemos";
     subj_2: "~~ques", "~~quéis";
     subj_3: _, "~~quen";
-    subj_impf_1: "~~cara", "~~cáramos";
-    subj_impf_2: "~~caras", "~~carais";
-    subj_impf_3: _, "~~caran";
-    subj_impf_se_1: "~~case", "~~cásemos";
-    subj_impf_se_2: "~~cases", "~~caseis";
-    subj_impf_se_3: _, "~~casen";
-    subj_fut_1: "~~care", "~~cáremos";
-    subj_fut_2: "~~cares", "~~careis";
-    subj_fut_3: _, "~~caren";
     vos: "~~cás", "~~qués", "~~cate";
     imperative: "~écat~", "~équ~se", "~~quémonos", "~~caos", "~équ~nse";
     infinitive: "~~carse";
     gerund: "~~cándose";
+    participle_m: "~~cado", _;
     ),
-    // Aborrascarse: 14 words (aborrascarse, atascarse, rascarse, achubascarse, enfrascarse, emborrascarse).
-    conjugation!("aborrascarse", 14, "~a~carse";
-    stem participle: "~a~cad- like echar";
+    // Aborrascarse: 14 words (aborrascarse, atascarse, rascarse, achubascarse, enfrascarse, emborrascarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("aborrascarse", 14, "~a~carse", like Incautarse;
+    stem verb: "~a~- like sacar";
+    stem verb_fut_1_sg: "~a~car- like echar";
     pres_1: "~a~co", "~a~camos";
     pres_2: "~a~cas", "~a~cáis";
-    pres_3: "~a~ca", "~a~can";
     impf_1: "~a~caba", "~a~cábamos";
-    impf_2: "~a~cabas", "~a~cabais";
-    impf_3: _, "~a~caban";
-    pret_1: "~a~qué", "~a~camos";
-    pret_2: "~a~caste", "~a~casteis";
-    pret_3: "~a~có", "~a~caron";
-    fut_1: "~a~caré", "~a~caremos";
-    fut_2: "~a~carás", "~a~caréis";
-    fut_3: "~a~cará", "~a~carán";
-    cond_1: "~a~caría", "~a~caríamos";
-    cond_2: "~a~carías", "~a~caríais";
-    cond_3: _, "~a~carían";
     subj_1: "~a~que", "~a~quemos";
     subj_2: "~a~ques", "~a~quéis";
     subj_3: _, "~a~quen";
-    subj_impf_1: "~a~cara", "~a~cáramos";
-    subj_impf_2: "~a~caras", "~a~carais";
-    subj_impf_3: _, "~a~caran";
-    subj_impf_se_1: "~a~case", "~a~cásemos";
-    subj_impf_se_2: "~a~cases", "~a~caseis";
-    subj_impf_se_3: _, "~a~casen";
-    subj_fut_1: "~a~care", "~a~cáremos";
-    subj_fut_2: "~a~cares", "~a~careis";
-    subj_fut_3: _, "~a~caren";
     vos: "~a~cás", "~a~qués", "~a~cate";
     imperative: "~á~cate", "~á~quese", "~a~quémonos", "~a~caos", "~á~quense";
     infinitive: "~a~carse";
     gerund: "~a~cándose";
+    participle_m: "~a~cado", _;
     ),
-    // Revolver: 14 words (absolver, revolver, resolver, disolver, volver, solver).
-    conjugation!("revolver", 14, "~o~ver";
-    stem participle: "~ue~t- like echar";
+    // Revolver: 14 words (absolver, revolver, resolver, disolver, volver, solver). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("revolver", 14, "~o~ver", like Incautarse;
+    stem verb: "~o~v- like conocer";
+    stem verb_fut_1_sg: "~o~ver- like echar";
     pres_1: "~ue~vo", "~o~vemos";
     pres_2: "~ue~ves", "~o~véis";
-    pres_3: "~ue~ve", "~ue~ven";
     impf_1: "~o~vía", "~o~víamos";
-    impf_2: "~o~vías", "~o~víais";
-    impf_3: _, "~o~vían";
-    pret_1: "~o~ví", "~o~vimos";
-    pret_2: "~o~viste", "~o~visteis";
-    pret_3: "~o~vió", "~o~vieron";
-    fut_1: "~o~veré", "~o~veremos";
-    fut_2: "~o~verás", "~o~veréis";
-    fut_3: "~o~verá", "~o~verán";
-    cond_1: "~o~vería", "~o~veríamos";
-    cond_2: "~o~verías", "~o~veríais";
-    cond_3: _, "~o~verían";
     subj_1: "~ue~va", "~o~vamos";
     subj_2: "~ue~vas", "~o~váis";
     subj_3: _, "~ue~van";
-    subj_impf_1: "~o~viera", "~o~viéramos";
-    subj_impf_2: "~o~vieras", "~o~vierais";
-    subj_impf_3: _, "~o~vieran";
-    subj_impf_se_1: "~o~viese", "~o~viésemos";
-    subj_impf_se_2: "~o~vieses", "~o~vieseis";
-    subj_impf_se_3: _, "~o~viesen";
-    subj_fut_1: "~o~viere", "~o~viéremos";
-    subj_fut_2: "~o~vieres", "~o~viereis";
-    subj_fut_3: _, "~o~vieren";
     vos: "~o~vés", "~o~vás", "~o~vé";
     imperative: "~ue~ve", "~ue~va", "~o~vamos", "~o~ved", "~ue~van";
     infinitive: "~o~ver";
     gerund: "~o~viendo";
+    participle_m: "~ue~to", _;
     ),
-    // Rozarse: 14 words (apozarse, escozarse, arrebozarse, empozarse, alborozarse, desarrebozarse).
-    conjugation!("rozarse", 14, "~ozarse";
-    stem participle: "~ozad- like echar";
+    // Rozarse: 14 words (apozarse, escozarse, arrebozarse, empozarse, alborozarse, desarrebozarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("rozarse", 14, "~ozarse", like Echar;
+    stem verb: "~o- like realizar";
+    stem verb_fut_1_sg: "~ozar- like echar";
     pres_1: "~ozo", "~ozamos";
     pres_2: "~ozas", "~ozáis";
-    pres_3: "~oza", "~ozan";
     impf_1: "~ozaba", "~ozábamos";
-    impf_2: "~ozabas", "~ozabais";
-    impf_3: _, "~ozaban";
-    pret_1: "~océ", "~ozamos";
-    pret_2: "~ozaste", "~ozasteis";
-    pret_3: "~ozó", "~ozaron";
-    fut_1: "~ozaré", "~ozaremos";
-    fut_2: "~ozarás", "~ozaréis";
-    fut_3: "~ozará", "~ozarán";
-    cond_1: "~ozaría", "~ozaríamos";
-    cond_2: "~ozarías", "~ozaríais";
-    cond_3: _, "~ozarían";
     subj_1: "~oce", "~ocemos";
     subj_2: "~oces", "~océis";
     subj_3: _, "~ocen";
-    subj_impf_1: "~ozara", "~ozáramos";
-    subj_impf_2: "~ozaras", "~ozarais";
-    subj_impf_3: _, "~ozaran";
-    subj_impf_se_1: "~ozase", "~ozásemos";
-    subj_impf_se_2: "~ozases", "~ozaseis";
-    subj_impf_se_3: _, "~ozasen";
-    subj_fut_1: "~ozare", "~ozáremos";
-    subj_fut_2: "~ozares", "~ozareis";
-    subj_fut_3: _, "~ozaren";
     vos: "~ozás", "~océs", "~ozate";
     imperative: "~ózate", "~ócese", "~océmonos", "~ozaos", "~ócense";
     infinitive: "~ozarse";
     gerund: "~ozándose";
+    participle_m: "~ozado", _;
     ),
-    // Vencer: 13 words (coercer, vencer, ejercer, convencer, mecer, mulcer). Like Fruncir, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Vencer: 13 words (coercer, vencer, ejercer, convencer, mecer, mulcer). Like Fruncir, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
     conjugation!("vencer", 13, "~cer", like Fruncir;
+    stem verb_fut_1_sg: "~cer- like echar";
     pres_1: _, "~cemos";
     pres_2: _, "~céis";
-    fut_1: "~ceré", "~ceremos";
-    fut_2: "~cerás", "~ceréis";
-    fut_3: "~cerá", "~cerán";
-    cond_1: "~cería", "~ceríamos";
-    cond_2: "~cerías", "~ceríais";
-    cond_3: _, "~cerían";
     vos: "~cés", _, "~cé";
     imperative: _, _, _, "~ced", _;
     infinitive: "~cer";
     ),
-    // Tener: 13 words (tener, sostener, obtener, detener, mantener, retener).
-    conjugation!("tener", 13, "~ener";
-    stem participle: "~enid- like echar";
+    // Tener: 13 words (tener, sostener, obtener, detener, mantener, retener). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("tener", 13, "~ener", like Echar;
+    stem verb: "~uv- like poner";
+    stem verb_fut_1_sg: "~endr- like echar";
     pres_1: "~engo", "~enemos";
     pres_2: "~ienes", "~enéis";
-    pres_3: "~iene", "~ienen";
     impf_1: "~enía", "~eníamos";
-    impf_2: "~enías", "~eníais";
-    impf_3: _, "~enían";
-    pret_1: "~uve", "~uvimos";
-    pret_2: "~uviste", "~uvisteis";
-    pret_3: "~uvo", "~uvieron";
-    fut_1: "~endré", "~endremos";
-    fut_2: "~endrás", "~endréis";
-    fut_3: "~endrá", "~endrán";
-    cond_1: "~endría", "~endríamos";
-    cond_2: "~endrías", "~endríais";
-    cond_3: _, "~endrían";
     subj_1: "~enga", "~engamos";
     subj_2: "~engas", "~engáis";
     subj_3: _, "~engan";
-    subj_impf_1: "~uviera", "~uviéramos";
-    subj_impf_2: "~uvieras", "~uvierais";
-    subj_impf_3: _, "~uvieran";
-    subj_impf_se_1: "~uviese", "~uviésemos";
-    subj_impf_se_2: "~uvieses", "~uvieseis";
-    subj_impf_se_3: _, "~uviesen";
-    subj_fut_1: "~uviere", "~uviéremos";
-    subj_fut_2: "~uvieres", "~uviereis";
-    subj_fut_3: _, "~uvieren";
     vos: "~enés", "~engás", "~ené";
     imperative: "~én", "~enga", "~engamos", "~ened", "~engan";
     infinitive: "~ener";
     gerund: "~eniendo";
+    participle_m: "~enido", _;
     ),
-    // Ceñir: 13 words (teñir, reñir, ceñir, desteñir, estreñir, astreñir).
-    conjugation!("ceñir", 13, "~eñir";
-    stem participle: "~eñid- like echar";
+    // Ceñir: 13 words (teñir, reñir, ceñir, desteñir, estreñir, astreñir). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("ceñir", 13, "~eñir", like Echar;
+    stem verb_fut_1_sg: "~eñir- like echar";
     pres_1: "~iño", "~eñimos";
     pres_2: "~iñes", "~eñís";
-    pres_3: "~iñe", "~iñen";
     impf_1: "~eñía", "~eñíamos";
-    impf_2: "~eñías", "~eñíais";
-    impf_3: _, "~eñían";
     pret_1: "~eñí", "~eñimos";
-    pret_2: "~eñiste", "~eñisteis";
     pret_3: "~iñó", "~iñeron";
-    fut_1: "~eñiré", "~eñiremos";
-    fut_2: "~eñirás", "~eñiréis";
-    fut_3: "~eñirá", "~eñirán";
-    cond_1: "~eñiría", "~eñiríamos";
-    cond_2: "~eñirías", "~eñiríais";
-    cond_3: _, "~eñirían";
     subj_1: "~iña", "~iñamos";
     subj_2: "~iñas", "~iñáis";
     subj_3: _, "~iñan";
-    subj_impf_1: "~iñera", "~iñéramos";
-    subj_impf_2: "~iñeras", "~iñerais";
-    subj_impf_3: _, "~iñeran";
-    subj_impf_se_1: "~iñese", "~iñésemos";
-    subj_impf_se_2: "~iñeses", "~iñeseis";
-    subj_impf_se_3: _, "~iñesen";
-    subj_fut_1: "~iñere", "~iñéremos";
-    subj_fut_2: "~iñeres", "~iñereis";
-    subj_fut_3: _, "~iñeren";
+    subj_impf_1: _, "~iñéramos";
+    subj_impf_3: "~iñera", _;
+    subj_impf_se_3: "~iñese", _;
+    subj_fut_3: "~iñere", _;
     vos: "~eñís", "~iñás", "~eñí";
     imperative: "~iñe", "~iña", "~iñamos", "~eñid", "~iñan";
     infinitive: "~eñir";
     gerund: "~iñendo";
+    participle_m: "~eñido", _;
     ),
-    // Enfoscarse: 12 words (enfoscarse, afoscarse, coscarse, desemboscarse, enfroscarse, trasroscarse).
-    conjugation!("enfoscarse", 12, "~o~carse";
-    stem participle: "~o~cad- like echar";
+    // Enfoscarse: 12 words (enfoscarse, afoscarse, coscarse, desemboscarse, enfroscarse, trasroscarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("enfoscarse", 12, "~o~carse", like Incautarse;
+    stem verb: "~o~- like sacar";
+    stem verb_fut_1_sg: "~o~car- like echar";
     pres_1: "~o~co", "~o~camos";
     pres_2: "~o~cas", "~o~cáis";
-    pres_3: "~o~ca", "~o~can";
     impf_1: "~o~caba", "~o~cábamos";
-    impf_2: "~o~cabas", "~o~cabais";
-    impf_3: _, "~o~caban";
-    pret_1: "~o~qué", "~o~camos";
-    pret_2: "~o~caste", "~o~casteis";
-    pret_3: "~o~có", "~o~caron";
-    fut_1: "~o~caré", "~o~caremos";
-    fut_2: "~o~carás", "~o~caréis";
-    fut_3: "~o~cará", "~o~carán";
-    cond_1: "~o~caría", "~o~caríamos";
-    cond_2: "~o~carías", "~o~caríais";
-    cond_3: _, "~o~carían";
     subj_1: "~o~que", "~o~quemos";
     subj_2: "~o~ques", "~o~quéis";
     subj_3: _, "~o~quen";
-    subj_impf_1: "~o~cara", "~o~cáramos";
-    subj_impf_2: "~o~caras", "~o~carais";
-    subj_impf_3: _, "~o~caran";
-    subj_impf_se_1: "~o~case", "~o~cásemos";
-    subj_impf_se_2: "~o~cases", "~o~caseis";
-    subj_impf_se_3: _, "~o~casen";
-    subj_fut_1: "~o~care", "~o~cáremos";
-    subj_fut_2: "~o~cares", "~o~careis";
-    subj_fut_3: _, "~o~caren";
     vos: "~o~cás", "~o~qués", "~o~cate";
     imperative: "~ó~cate", "~ó~quese", "~o~quémonos", "~o~caos", "~ó~quense";
     infinitive: "~o~carse";
     gerund: "~o~cándose";
+    participle_m: "~o~cado", _;
     ),
-    // Enraizar: 12 words (enraizar, europeizar, arcaizar, descorreizar, judaizar, raizar). Like Fosilizarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Enraizar: 12 words (enraizar, europeizar, arcaizar, descorreizar, judaizar, raizar). Like Fosilizarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
     conjugation!("enraizar", 12, "~izar", like Fosilizarse;
     pres_1: "~ízo", _;
     pres_2: "~ízas", _;
-    pres_3: "~íza", "~ízan";
     subj_1: "~íce", _;
     subj_2: "~íces", _;
     subj_3: _, "~ícen";
@@ -2380,316 +1630,164 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~izar";
     gerund: "~izando";
     ),
-    // Ahilarse: 12 words (autoaislarse, aislarse, ahitarse, ahilarse, airarse, desaislarse). Like Rilarse, except in 7 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Ahilarse: 12 words (autoaislarse, aislarse, ahitarse, ahilarse, airarse, desaislarse). Like Rilarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
     conjugation!("ahilarse", 12, "~i~arse", like Rilarse;
     pres_1: "~í~o", _;
     pres_2: "~í~as", _;
-    pres_3: "~í~a", "~í~an";
     subj_1: "~í~e", _;
     subj_2: "~í~es", _;
     subj_3: _, "~í~en";
     ),
-    // Armarse: 12 words (abarse, armarse, asmarse, alarse, andarse, asparse).
-    conjugation!("armarse", 12, "a~arse";
-    stem participle: "~ad- like armarse";
+    // Armarse: 12 words (abarse, armarse, asmarse, alarse, andarse, asparse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("armarse", 12, "a~arse", like Echar;
     pres_1: "a~o", "a~amos";
     pres_2: "a~as", "a~áis";
-    pres_3: "a~a", "a~an";
     impf_1: "a~aba", "a~ábamos";
-    impf_2: "a~abas", "a~abais";
-    impf_3: _, "a~aban";
     pret_1: "a~é", "a~amos";
-    pret_2: "a~aste", "a~asteis";
     pret_3: "a~ó", "a~aron";
-    fut_1: "a~aré", "a~aremos";
-    fut_2: "a~arás", "a~aréis";
-    fut_3: "a~ará", "a~arán";
-    cond_1: "a~aría", "a~aríamos";
-    cond_2: "a~arías", "a~aríais";
-    cond_3: _, "a~arían";
+    fut_1: "a~aré", _;
+    cond_3: "a~aría", _;
     subj_1: "a~e", "a~emos";
     subj_2: "a~es", "a~éis";
     subj_3: _, "a~en";
-    subj_impf_1: "a~ara", "a~áramos";
-    subj_impf_2: "a~aras", "a~arais";
-    subj_impf_3: _, "a~aran";
-    subj_impf_se_1: "a~ase", "a~ásemos";
-    subj_impf_se_2: "a~ases", "a~aseis";
-    subj_impf_se_3: _, "a~asen";
-    subj_fut_1: "a~are", "a~áremos";
-    subj_fut_2: "a~ares", "a~areis";
-    subj_fut_3: _, "a~aren";
+    subj_impf_1: _, "a~áramos";
+    subj_impf_3: "a~ara", _;
+    subj_impf_se_3: "a~ase", _;
+    subj_fut_3: "a~are", _;
     vos: "a~ás", "a~és", "a~ate";
     imperative: "á~ate", "á~ese", "a~émonos", "a~aos", "á~ense";
     infinitive: "a~arse";
     gerund: "a~ándose";
+    participle_m: "a~ado", _;
     ),
-    // Hacer: 12 words (hacer, satisfacer, facer, deshacer, rehacer, contrahacer).
-    conjugation!("hacer", 12, "~acer";
-    stem participle: "~ech- like echar";
+    // Hacer: 12 words (hacer, satisfacer, facer, deshacer, rehacer, contrahacer). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("hacer", 12, "~acer", like Echar;
     pres_1: "~ago", "~acemos";
     pres_2: "~aces", "~acéis";
-    pres_3: "~ace", "~acen";
     impf_1: "~acía", "~acíamos";
-    impf_2: "~acías", "~acíais";
-    impf_3: _, "~acían";
     pret_1: "~ice", "~icimos";
-    pret_2: "~iciste", "~icisteis";
     pret_3: "~izo", "~icieron";
-    fut_1: "~aré", "~aremos";
-    fut_2: "~arás", "~aréis";
-    fut_3: "~ará", "~arán";
-    cond_1: "~aría", "~aríamos";
-    cond_2: "~arías", "~aríais";
-    cond_3: _, "~arían";
     subj_1: "~aga", "~agamos";
     subj_2: "~agas", "~agáis";
     subj_3: _, "~agan";
-    subj_impf_1: "~iciera", "~iciéramos";
-    subj_impf_2: "~icieras", "~icierais";
-    subj_impf_3: _, "~icieran";
-    subj_impf_se_1: "~iciese", "~iciésemos";
-    subj_impf_se_2: "~icieses", "~icieseis";
-    subj_impf_se_3: _, "~iciesen";
-    subj_fut_1: "~iciere", "~iciéremos";
-    subj_fut_2: "~icieres", "~iciereis";
-    subj_fut_3: _, "~icieren";
+    subj_impf_1: _, "~iciéramos";
+    subj_impf_3: "~iciera", _;
+    subj_impf_se_3: "~iciese", _;
+    subj_fut_3: "~iciere", _;
     vos: "~acés", "~agás", "~acé";
     imperative: "~az", "~aga", "~agamos", "~aced", "~agan";
     infinitive: "~acer";
     gerund: "~aciendo";
+    participle_m: "~echo", _;
     ),
-    // Empezar: 11 words (empezar, comenzar, tropezar, despezar, enlenzar, entropezar). Like Alzarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
-    conjugation!("empezar", 11, "~~zar", like Alzarse;
-    pres_1: "~i~zo", _;
-    pres_2: "~i~zas", _;
-    pres_3: "~i~za", "~i~zan";
-    subj_1: "~i~ce", _;
-    subj_2: "~i~ces", _;
-    subj_3: _, "~i~cen";
-    vos: _, _, "~~zá";
-    imperative: "~i~za", "~i~ce", "~~cemos", "~~zad", "~i~cen";
-    infinitive: "~~zar";
-    gerund: "~~zando";
-    ),
-    // Escabullirse: 11 words (escabullirse, zambullirse, rebullirse, tullirse, escullirse, descabullirse). Like Musirse, except in 18 cells: pret_3 sg, pret_3 pl, subj_impf_1 sg, subj_impf_1 pl, subj_impf_2 sg, subj_impf_2 pl, ….
+    // Escabullirse: 11 words (escabullirse, zambullirse, rebullirse, tullirse, escullirse, descabullirse). Like Musirse, except in 1 cell: gerund.
     conjugation!("escabullirse", 11, "~u~irse", like Musirse;
-    pret_3: "~u~ó", "~u~eron";
-    subj_impf_1: "~u~era", "~u~éramos";
-    subj_impf_2: "~u~eras", "~u~erais";
-    subj_impf_3: _, "~u~eran";
-    subj_impf_se_1: "~u~ese", "~u~ésemos";
-    subj_impf_se_2: "~u~eses", "~u~eseis";
-    subj_impf_se_3: _, "~u~esen";
-    subj_fut_1: "~u~ere", "~u~éremos";
-    subj_fut_2: "~u~eres", "~u~ereis";
-    subj_fut_3: _, "~u~eren";
+    stem verb: "~u~- like escabullirse";
     gerund: "~u~éndose";
     ),
-    // Apanucarse: 11 words (acurrucarse, acorrucarse, embejucarse, apitucarse, emborucarse, desnucarse).
-    conjugation!("apanucarse", 11, "~ucarse";
-    stem participle: "~ucad- like echar";
+    // Apanucarse: 11 words (acurrucarse, acorrucarse, embejucarse, apitucarse, emborucarse, desnucarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("apanucarse", 11, "~ucarse", like Echar;
+    stem verb: "~u- like sacar";
+    stem verb_fut_1_sg: "~ucar- like echar";
     pres_1: "~uco", "~ucamos";
     pres_2: "~ucas", "~ucáis";
-    pres_3: "~uca", "~ucan";
     impf_1: "~ucaba", "~ucábamos";
-    impf_2: "~ucabas", "~ucabais";
-    impf_3: _, "~ucaban";
-    pret_1: "~uqué", "~ucamos";
-    pret_2: "~ucaste", "~ucasteis";
-    pret_3: "~ucó", "~ucaron";
-    fut_1: "~ucaré", "~ucaremos";
-    fut_2: "~ucarás", "~ucaréis";
-    fut_3: "~ucará", "~ucarán";
-    cond_1: "~ucaría", "~ucaríamos";
-    cond_2: "~ucarías", "~ucaríais";
-    cond_3: _, "~ucarían";
     subj_1: "~uque", "~uquemos";
     subj_2: "~uques", "~uquéis";
     subj_3: _, "~uquen";
-    subj_impf_1: "~ucara", "~ucáramos";
-    subj_impf_2: "~ucaras", "~ucarais";
-    subj_impf_3: _, "~ucaran";
-    subj_impf_se_1: "~ucase", "~ucásemos";
-    subj_impf_se_2: "~ucases", "~ucaseis";
-    subj_impf_se_3: _, "~ucasen";
-    subj_fut_1: "~ucare", "~ucáremos";
-    subj_fut_2: "~ucares", "~ucareis";
-    subj_fut_3: _, "~ucaren";
     vos: "~ucás", "~uqués", "~ucate";
     imperative: "~úcate", "~úquese", "~uquémonos", "~ucaos", "~úquense";
     infinitive: "~ucarse";
     gerund: "~ucándose";
+    participle_m: "~ucado", _;
     ),
-    // Suscribirse: 10 words (autodescribirse, escribirse, adscribirse, inscribirse, subscribirse, suscribirse).
-    conjugation!("suscribirse", 10, "~ibirse";
+    // Suscribirse: 10 words (autodescribirse, escribirse, adscribirse, inscribirse, subscribirse, suscribirse). Like Echar, except in 21 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("suscribirse", 10, "~ibirse", like Echar;
+    stem verb: "~ib- like conocer";
+    stem verb_fut_1_sg: "~ibir- like echar";
     stem participle: "~i- like escribir";
     pres_1: "~ibo", "~ibimos";
     pres_2: "~ibes", "~ibís";
-    pres_3: "~ibe", "~iben";
     impf_1: "~ibía", "~ibíamos";
-    impf_2: "~ibías", "~ibíais";
-    impf_3: _, "~ibían";
-    pret_1: "~ibí", "~ibimos";
-    pret_2: "~ibiste", "~ibisteis";
-    pret_3: "~ibió", "~ibieron";
-    fut_1: "~ibiré", "~ibiremos";
-    fut_2: "~ibirás", "~ibiréis";
-    fut_3: "~ibirá", "~ibirán";
-    cond_1: "~ibiría", "~ibiríamos";
-    cond_2: "~ibirías", "~ibiríais";
-    cond_3: _, "~ibirían";
     subj_1: "~iba", "~ibamos";
     subj_2: "~ibas", "~ibáis";
     subj_3: _, "~iban";
-    subj_impf_1: "~ibiera", "~ibiéramos";
-    subj_impf_2: "~ibieras", "~ibierais";
-    subj_impf_3: _, "~ibieran";
-    subj_impf_se_1: "~ibiese", "~ibiésemos";
-    subj_impf_se_2: "~ibieses", "~ibieseis";
-    subj_impf_se_3: _, "~ibiesen";
-    subj_fut_1: "~ibiere", "~ibiéremos";
-    subj_fut_2: "~ibieres", "~ibiereis";
-    subj_fut_3: _, "~ibieren";
     vos: "~ibís", "~ibás", "~ibite";
     imperative: "~íbete", "~íbase", "~ibámonos", "~ibíos", "~íbanse";
     infinitive: "~ibirse";
     gerund: "~ibiéndose";
     ),
-    // Retraerse: 10 words (contraerse, traerse, atraerse, sustraerse, retrotraerse, retraerse).
-    conjugation!("retraerse", 10, "~aerse";
-    stem participle: "~aíd- like echar";
+    // Retraerse: 10 words (contraerse, traerse, atraerse, sustraerse, retrotraerse, retraerse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("retraerse", 10, "~aerse", like Echar;
+    stem verb: "~aj- like reducir";
+    stem verb_fut_1_sg: "~aer- like echar";
     pres_1: "~aigo", "~aemos";
     pres_2: "~aes", "~aéis";
-    pres_3: "~ae", "~aen";
     impf_1: "~aía", "~aíamos";
-    impf_2: "~aías", "~aíais";
-    impf_3: _, "~aían";
-    pret_1: "~aje", "~ajimos";
-    pret_2: "~ajiste", "~ajisteis";
-    pret_3: "~ajo", "~ajeron";
-    fut_1: "~aeré", "~aeremos";
-    fut_2: "~aerás", "~aeréis";
-    fut_3: "~aerá", "~aerán";
-    cond_1: "~aería", "~aeríamos";
-    cond_2: "~aerías", "~aeríais";
-    cond_3: _, "~aerían";
     subj_1: "~aiga", "~aigamos";
     subj_2: "~aigas", "~aigáis";
     subj_3: _, "~aigan";
-    subj_impf_1: "~ajera", "~ajéramos";
-    subj_impf_2: "~ajeras", "~ajerais";
-    subj_impf_3: _, "~ajeran";
-    subj_impf_se_1: "~ajese", "~ajésemos";
-    subj_impf_se_2: "~ajeses", "~ajeseis";
-    subj_impf_se_3: _, "~ajesen";
-    subj_fut_1: "~ajere", "~ajéremos";
-    subj_fut_2: "~ajeres", "~ajereis";
-    subj_fut_3: _, "~ajeren";
     vos: "~aés", "~aigás", "~aete";
     imperative: "~áete", "~áigase", "~aigámonos", "~aeos", "~áiganse";
     infinitive: "~aerse";
     gerund: "~ayéndose";
+    participle_m: "~aído", _;
     ),
-    // Lucir: 10 words (lucir, relucir, deslucir, enlucir, hendir, traslucir). Like Conocer, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Lucir: 10 words (lucir, relucir, deslucir, enlucir, hendir, traslucir). Like Conocer, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
     conjugation!("lucir", 10, "~~ir", like Conocer;
+    stem verb_fut_1_sg: "~~ir- like echar";
     pres_1: _, "~~imos";
     pres_2: _, "~~ís";
-    fut_1: "~~iré", "~~iremos";
-    fut_2: "~~irás", "~~iréis";
-    fut_3: "~~irá", "~~irán";
-    cond_1: "~~iría", "~~iríamos";
-    cond_2: "~~irías", "~~iríais";
-    cond_3: _, "~~irían";
     vos: "~~ís", _, "~~í";
     imperative: _, _, _, "~~id", _;
     infinitive: "~~ir";
     ),
-    // Enamoriscarse: 9 words (enamoriscarse, ciscarse, ariscarse, enriscarse, apriscarse, arriscarse).
-    conjugation!("enamoriscarse", 9, "~i~carse";
-    stem participle: "~i~cad- like echar";
+    // Enamoriscarse: 9 words (enamoriscarse, ciscarse, ariscarse, enriscarse, apriscarse, arriscarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("enamoriscarse", 9, "~i~carse", like Incautarse;
+    stem verb: "~i~- like sacar";
+    stem verb_fut_1_sg: "~i~car- like echar";
     pres_1: "~i~co", "~i~camos";
     pres_2: "~i~cas", "~i~cáis";
-    pres_3: "~i~ca", "~i~can";
     impf_1: "~i~caba", "~i~cábamos";
-    impf_2: "~i~cabas", "~i~cabais";
-    impf_3: _, "~i~caban";
-    pret_1: "~i~qué", "~i~camos";
-    pret_2: "~i~caste", "~i~casteis";
-    pret_3: "~i~có", "~i~caron";
-    fut_1: "~i~caré", "~i~caremos";
-    fut_2: "~i~carás", "~i~caréis";
-    fut_3: "~i~cará", "~i~carán";
-    cond_1: "~i~caría", "~i~caríamos";
-    cond_2: "~i~carías", "~i~caríais";
-    cond_3: _, "~i~carían";
     subj_1: "~i~que", "~i~quemos";
     subj_2: "~i~ques", "~i~quéis";
     subj_3: _, "~i~quen";
-    subj_impf_1: "~i~cara", "~i~cáramos";
-    subj_impf_2: "~i~caras", "~i~carais";
-    subj_impf_3: _, "~i~caran";
-    subj_impf_se_1: "~i~case", "~i~cásemos";
-    subj_impf_se_2: "~i~cases", "~i~caseis";
-    subj_impf_se_3: _, "~i~casen";
-    subj_fut_1: "~i~care", "~i~cáremos";
-    subj_fut_2: "~i~cares", "~i~careis";
-    subj_fut_3: _, "~i~caren";
     vos: "~i~cás", "~i~qués", "~i~cate";
     imperative: "~í~cate", "~í~quese", "~i~quémonos", "~i~caos", "~í~quense";
     infinitive: "~i~carse";
     gerund: "~i~cándose";
+    participle_m: "~i~cado", _;
     ),
-    // Apuñuscarse: 9 words (apuñuscarse, buscarse, rebuscarse, zurruscarse, enfurruscarse, apeñuscarse).
-    conjugation!("apuñuscarse", 9, "~u~carse";
-    stem participle: "~u~cad- like echar";
+    // Apuñuscarse: 9 words (apuñuscarse, buscarse, rebuscarse, zurruscarse, enfurruscarse, apeñuscarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("apuñuscarse", 9, "~u~carse", like Incautarse;
+    stem verb: "~u~- like sacar";
+    stem verb_fut_1_sg: "~u~car- like echar";
     pres_1: "~u~co", "~u~camos";
     pres_2: "~u~cas", "~u~cáis";
-    pres_3: "~u~ca", "~u~can";
     impf_1: "~u~caba", "~u~cábamos";
-    impf_2: "~u~cabas", "~u~cabais";
-    impf_3: _, "~u~caban";
-    pret_1: "~u~qué", "~u~camos";
-    pret_2: "~u~caste", "~u~casteis";
-    pret_3: "~u~có", "~u~caron";
-    fut_1: "~u~caré", "~u~caremos";
-    fut_2: "~u~carás", "~u~caréis";
-    fut_3: "~u~cará", "~u~carán";
-    cond_1: "~u~caría", "~u~caríamos";
-    cond_2: "~u~carías", "~u~caríais";
-    cond_3: _, "~u~carían";
     subj_1: "~u~que", "~u~quemos";
     subj_2: "~u~ques", "~u~quéis";
     subj_3: _, "~u~quen";
-    subj_impf_1: "~u~cara", "~u~cáramos";
-    subj_impf_2: "~u~caras", "~u~carais";
-    subj_impf_3: _, "~u~caran";
-    subj_impf_se_1: "~u~case", "~u~cásemos";
-    subj_impf_se_2: "~u~cases", "~u~caseis";
-    subj_impf_se_3: _, "~u~casen";
-    subj_fut_1: "~u~care", "~u~cáremos";
-    subj_fut_2: "~u~cares", "~u~careis";
-    subj_fut_3: _, "~u~caren";
     vos: "~u~cás", "~u~qués", "~u~cate";
     imperative: "~ú~cate", "~ú~quese", "~u~quémonos", "~u~caos", "~ú~quense";
     infinitive: "~u~carse";
     gerund: "~u~cándose";
+    participle_m: "~u~cado", _;
     ),
-    // Abrir: 9 words (cubrir, abrir, reabrir, descubrir, encubrir, entreabrir). Like Lucir, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
+    // Abrir: 9 words (cubrir, abrir, reabrir, descubrir, encubrir, entreabrir). Like Lucir, except in 11 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("abrir", 9, "~~ir", like Lucir;
-    stem participle: "~ie~t- like echar";
     pres_1: "~~o", _;
     subj_1: "~~a", "~~amos";
     subj_2: "~~as", "~~áis";
     subj_3: _, "~~an";
     vos: _, "~~ás", _;
     imperative: _, "~~a", "~~amos", _, "~~an";
+    participle_m: "~ie~to", _;
     ),
-    // Trocar: 9 words (trocar, trastrocar, clocar, retrocar, destrocar, aclocar). Like Descocarse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Trocar: 9 words (trocar, trastrocar, clocar, retrocar, destrocar, aclocar). Like Descocarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
     conjugation!("trocar", 9, "~ocar", like Descocarse;
     pres_1: "~ueco", _;
     pres_2: "~uecas", _;
-    pres_3: "~ueca", "~uecan";
     subj_1: "~ueque", _;
     subj_2: "~ueques", _;
     subj_3: _, "~uequen";
@@ -2712,75 +1810,36 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~enerse";
     gerund: "~eniéndose";
     ),
-    // Santiguarse: 9 words (achiguarse, apaciguarse, santiguarse, enmaniguarse, amortiguarse, averiguarse).
-    conjugation!("santiguarse", 9, "~i~uarse";
-    stem participle: "~i~uad- like echar";
+    // Santiguarse: 9 words (achiguarse, apaciguarse, santiguarse, enmaniguarse, amortiguarse, averiguarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("santiguarse", 9, "~i~uarse", like Incautarse;
+    stem verb: "~i~- like fraguar";
+    stem verb_fut_1_sg: "~i~uar- like echar";
     pres_1: "~i~uo", "~i~uamos";
     pres_2: "~i~uas", "~i~uáis";
-    pres_3: "~i~ua", "~i~uan";
     impf_1: "~i~uaba", "~i~uábamos";
-    impf_2: "~i~uabas", "~i~uabais";
-    impf_3: _, "~i~uaban";
-    pret_1: "~i~üé", "~i~uamos";
-    pret_2: "~i~uaste", "~i~uasteis";
-    pret_3: "~i~uó", "~i~uaron";
-    fut_1: "~i~uaré", "~i~uaremos";
-    fut_2: "~i~uarás", "~i~uaréis";
-    fut_3: "~i~uará", "~i~uarán";
-    cond_1: "~i~uaría", "~i~uaríamos";
-    cond_2: "~i~uarías", "~i~uaríais";
-    cond_3: _, "~i~uarían";
     subj_1: "~i~üe", "~i~üemos";
     subj_2: "~i~ües", "~i~üéis";
     subj_3: _, "~i~üen";
-    subj_impf_1: "~i~uara", "~i~uáramos";
-    subj_impf_2: "~i~uaras", "~i~uarais";
-    subj_impf_3: _, "~i~uaran";
-    subj_impf_se_1: "~i~uase", "~i~uásemos";
-    subj_impf_se_2: "~i~uases", "~i~uaseis";
-    subj_impf_se_3: _, "~i~uasen";
-    subj_fut_1: "~i~uare", "~i~uáremos";
-    subj_fut_2: "~i~uares", "~i~uareis";
-    subj_fut_3: _, "~i~uaren";
     vos: "~i~uás", "~i~üés", "~i~uate";
     imperative: "~í~uate", "~í~üese", "~i~üémonos", "~i~uaos", "~í~üense";
     infinitive: "~i~uarse";
     gerund: "~i~uándose";
+    participle_m: "~i~uado", _;
     ),
-    // Refreír: 9 words (reír, freír, sonreír, engreír, desleír, esleír).
-    conjugation!("refreír", 9, "~eír";
-    stem participle: "~eíd- like echar";
+    // Refreír: 9 words (reír, freír, sonreír, engreír, desleír, esleír). Like Curtir, except in 23 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("refreír", 9, "~eír", like Curtir;
+    stem verb_fut_1_sg: "~eir- like echar";
     pres_1: "~ío", "~eímos";
     pres_2: "~íes", "~eís";
-    pres_3: "~íe", "~íen";
     impf_1: "~eía", "~eíamos";
-    impf_2: "~eías", "~eíais";
-    impf_3: _, "~eían";
     pret_1: "~eí", "~eímos";
-    pret_2: "~eíste", "~eísteis";
-    pret_3: "~ió", "~ieron";
-    fut_1: "~eiré", "~eiremos";
-    fut_2: "~eirás", "~eiréis";
-    fut_3: "~eirá", "~eirán";
-    cond_1: "~eiría", "~eiríamos";
-    cond_2: "~eirías", "~eiríais";
-    cond_3: _, "~eirían";
     subj_1: "~ía", "~iamos";
     subj_2: "~ías", "~iáis";
     subj_3: _, "~ían";
-    subj_impf_1: "~iera", "~iéramos";
-    subj_impf_2: "~ieras", "~ierais";
-    subj_impf_3: _, "~ieran";
-    subj_impf_se_1: "~iese", "~iésemos";
-    subj_impf_se_2: "~ieses", "~ieseis";
-    subj_impf_se_3: _, "~iesen";
-    subj_fut_1: "~iere", "~iéremos";
-    subj_fut_2: "~ieres", "~iereis";
-    subj_fut_3: _, "~ieren";
     vos: "~eís", "~iás", "~eí";
     imperative: "~íe", "~ía", "~iamos", "~eíd", "~ían";
     infinitive: "~eír";
-    gerund: "~iendo";
+    participle_m: "~eído", _;
     ),
     // Guiar: 8 words (liar, fiar, criar, guiar, ciar, piar). Like Desviar, except in 7 cells: pres_2 pl, pret_1 sg, pret_3 sg, subj_2 pl, vos ind, vos subj, ….
     conjugation!("guiar", 8, "~iar", like Desviar;
@@ -2790,250 +1849,109 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     subj_2: _, "~ieis";
     vos: "~ias", "~ies", "~ia";
     ),
-    // Reducirse: 8 words (autorreproducirse, autoconducirse, autoproducirse, reducirse, reproducirse, introducirse).
-    conjugation!("reducirse", 8, "~ucirse";
-    stem participle: "~ucid- like echar";
+    // Reducirse: 8 words (autorreproducirse, autoconducirse, autoproducirse, reducirse, reproducirse, introducirse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("reducirse", 8, "~ucirse", like Echar;
+    stem verb: "~uj- like reducir";
+    stem verb_fut_1_sg: "~ucir- like echar";
     pres_1: "~uzco", "~ucimos";
     pres_2: "~uces", "~ucís";
-    pres_3: "~uce", "~ucen";
     impf_1: "~ucía", "~ucíamos";
-    impf_2: "~ucías", "~ucíais";
-    impf_3: _, "~ucían";
-    pret_1: "~uje", "~ujimos";
-    pret_2: "~ujiste", "~ujisteis";
-    pret_3: "~ujo", "~ujeron";
-    fut_1: "~uciré", "~uciremos";
-    fut_2: "~ucirás", "~uciréis";
-    fut_3: "~ucirá", "~ucirán";
-    cond_1: "~uciría", "~uciríamos";
-    cond_2: "~ucirías", "~uciríais";
-    cond_3: _, "~ucirían";
     subj_1: "~uzca", "~uzcamos";
     subj_2: "~uzcas", "~uzcáis";
     subj_3: _, "~uzcan";
-    subj_impf_1: "~ujera", "~ujéramos";
-    subj_impf_2: "~ujeras", "~ujerais";
-    subj_impf_3: _, "~ujeran";
-    subj_impf_se_1: "~ujese", "~ujésemos";
-    subj_impf_se_2: "~ujeses", "~ujeseis";
-    subj_impf_se_3: _, "~ujesen";
-    subj_fut_1: "~ujere", "~ujéremos";
-    subj_fut_2: "~ujeres", "~ujereis";
-    subj_fut_3: _, "~ujeren";
     vos: "~ucís", "~uzcás", "~ucite";
     imperative: "~úcete", "~úzcase", "~uzcámonos", "~ucíos", "~úzcanse";
     infinitive: "~ucirse";
     gerund: "~uciéndose";
+    participle_m: "~ucido", _;
     ),
-    // Desmedirse: 8 words (descomedirse, desmedirse, despedirse, acomedirse, medirse, expedirse).
-    conjugation!("desmedirse", 8, "~edirse";
-    stem participle: "~edid- like echar";
+    // Desmedirse: 8 words (descomedirse, desmedirse, despedirse, acomedirse, medirse, expedirse). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("desmedirse", 8, "~edirse", like Echar;
+    stem verb_fut_1_sg: "~edir- like echar";
     pres_1: "~ido", "~edimos";
     pres_2: "~ides", "~edís";
-    pres_3: "~ide", "~iden";
     impf_1: "~edía", "~edíamos";
-    impf_2: "~edías", "~edíais";
-    impf_3: _, "~edían";
     pret_1: "~edí", "~edimos";
-    pret_2: "~ediste", "~edisteis";
     pret_3: "~idió", "~idieron";
-    fut_1: "~ediré", "~ediremos";
-    fut_2: "~edirás", "~ediréis";
-    fut_3: "~edirá", "~edirán";
-    cond_1: "~ediría", "~ediríamos";
-    cond_2: "~edirías", "~ediríais";
-    cond_3: _, "~edirían";
     subj_1: "~ida", "~idamos";
     subj_2: "~idas", "~idáis";
     subj_3: _, "~idan";
-    subj_impf_1: "~idiera", "~idiéramos";
-    subj_impf_2: "~idieras", "~idierais";
-    subj_impf_3: _, "~idieran";
-    subj_impf_se_1: "~idiese", "~idiésemos";
-    subj_impf_se_2: "~idieses", "~idieseis";
-    subj_impf_se_3: _, "~idiesen";
-    subj_fut_1: "~idiere", "~idiéremos";
-    subj_fut_2: "~idieres", "~idiereis";
-    subj_fut_3: _, "~idieren";
+    subj_impf_1: _, "~idiéramos";
+    subj_impf_3: "~idiera", _;
+    subj_impf_se_3: "~idiese", _;
+    subj_fut_3: "~idiere", _;
     vos: "~edís", "~idás", "~edite";
     imperative: "~ídete", "~ídase", "~idámonos", "~edíos", "~ídanse";
     infinitive: "~edirse";
     gerund: "~idiéndose";
+    participle_m: "~edido", _;
     ),
-    // Creerse: 8 words (caerse, creerse, peerse, proveerse, corroerse, desposeerse).
-    conjugation!("creerse", 8, "~~erse";
-    stem participle: "~~íd- like echar";
-    pres_1: "~~o", "~~emos";
-    pres_2: "~~es", "~~éis";
-    pres_3: "~~e", "~~en";
-    impf_1: "~~ía", "~~íamos";
-    impf_2: "~~ías", "~~íais";
-    impf_3: _, "~~ían";
-    pret_1: "~~í", "~~ímos";
-    pret_2: "~~íste", "~~ísteis";
-    pret_3: "~~yó", "~~yeron";
-    fut_1: "~~eré", "~~eremos";
-    fut_2: "~~erás", "~~eréis";
-    fut_3: "~~erá", "~~erán";
-    cond_1: "~~ería", "~~eríamos";
-    cond_2: "~~erías", "~~eríais";
-    cond_3: _, "~~erían";
-    subj_1: "~~a", "~~amos";
-    subj_2: "~~as", "~~áis";
-    subj_3: _, "~~an";
-    subj_impf_1: "~~yera", "~~yéramos";
-    subj_impf_2: "~~yeras", "~~yerais";
-    subj_impf_3: _, "~~yeran";
-    subj_impf_se_1: "~~yese", "~~yésemos";
-    subj_impf_se_2: "~~yeses", "~~yeseis";
-    subj_impf_se_3: _, "~~yesen";
-    subj_fut_1: "~~yere", "~~yéremos";
-    subj_fut_2: "~~yeres", "~~yereis";
-    subj_fut_3: _, "~~yeren";
-    vos: "~~és", "~~ás", "~~ete";
+    // Creerse: 8 words (caerse, creerse, peerse, proveerse, corroerse, desposeerse). Like Abrir, except in 12 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative tu, imperative usted, ….
+    conjugation!("creerse", 8, "~~erse", like Abrir;
+    stem verb: "~~- like creer";
+    stem verb_fut_1_sg: "~~er- like echar";
+    pres_1: _, "~~emos";
+    pres_2: _, "~~éis";
+    vos: "~~és", _, "~~ete";
     imperative: "~é~te", "~éas~", "~~ámonos", "~~eos", "~éans~";
     infinitive: "~~erse";
     gerund: "~~yéndose";
+    participle_m: "~~ído", _;
     ),
-    // Moler: 7 words (doler, soler, moler, demoler, condoler, remoler).
-    conjugation!("moler", 7, "~oler";
-    stem participle: "~olid- like echar";
-    pres_1: "~uelo", "~olemos";
-    pres_2: "~ueles", "~oléis";
-    pres_3: "~uele", "~uelen";
-    impf_1: "~olía", "~olíamos";
-    impf_2: "~olías", "~olíais";
-    impf_3: _, "~olían";
-    pret_1: "~olí", "~olimos";
-    pret_2: "~oliste", "~olisteis";
-    pret_3: "~olió", "~olieron";
-    fut_1: "~oleré", "~oleremos";
-    fut_2: "~olerás", "~oleréis";
-    fut_3: "~olerá", "~olerán";
-    cond_1: "~olería", "~oleríamos";
-    cond_2: "~olerías", "~oleríais";
-    cond_3: _, "~olerían";
-    subj_1: "~uela", "~olamos";
-    subj_2: "~uelas", "~oláis";
-    subj_3: _, "~uelan";
-    subj_impf_1: "~oliera", "~oliéramos";
-    subj_impf_2: "~olieras", "~olierais";
-    subj_impf_3: _, "~olieran";
-    subj_impf_se_1: "~oliese", "~oliésemos";
-    subj_impf_se_2: "~olieses", "~olieseis";
-    subj_impf_se_3: _, "~oliesen";
-    subj_fut_1: "~oliere", "~oliéremos";
-    subj_fut_2: "~olieres", "~oliereis";
-    subj_fut_3: _, "~olieren";
-    vos: "~olés", "~olás", "~olé";
-    imperative: "~uele", "~uela", "~olamos", "~oled", "~uelan";
-    infinitive: "~oler";
-    gerund: "~oliendo";
+    // Empezar: 7 words (empezar, tropezar, despezar, entropezar, trompezar, desentropezar). Like Alzarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
+    conjugation!("empezar", 7, "~~zar", like Alzarse;
+    pres_1: "~i~zo", _;
+    pres_2: "~i~zas", _;
+    subj_1: "~i~ce", _;
+    subj_2: "~i~ces", _;
+    subj_3: _, "~i~cen";
+    vos: _, _, "~~zá";
+    imperative: "~i~za", "~i~ce", "~~cemos", "~~zad", "~i~cen";
+    infinitive: "~~zar";
+    gerund: "~~zando";
     ),
-    // Regir: 7 words (elegir, corregir, colegir, reelegir, regir, recolegir).
-    conjugation!("regir", 7, "~egir";
-    stem participle: "~egid- like echar";
+    // Regir: 7 words (elegir, corregir, colegir, reelegir, regir, recolegir). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("regir", 7, "~egir", like Echar;
+    stem verb_fut_1_sg: "~egir- like echar";
     pres_1: "~ijo", "~egimos";
     pres_2: "~iges", "~egís";
-    pres_3: "~ige", "~igen";
     impf_1: "~egía", "~egíamos";
-    impf_2: "~egías", "~egíais";
-    impf_3: _, "~egían";
     pret_1: "~egí", "~egimos";
-    pret_2: "~egiste", "~egisteis";
     pret_3: "~igió", "~igieron";
-    fut_1: "~egiré", "~egiremos";
-    fut_2: "~egirás", "~egiréis";
-    fut_3: "~egirá", "~egirán";
-    cond_1: "~egiría", "~egiríamos";
-    cond_2: "~egirías", "~egiríais";
-    cond_3: _, "~egirían";
     subj_1: "~ija", "~ijamos";
     subj_2: "~ijas", "~ijáis";
     subj_3: _, "~ijan";
-    subj_impf_1: "~igiera", "~igiéramos";
-    subj_impf_2: "~igieras", "~igierais";
-    subj_impf_3: _, "~igieran";
-    subj_impf_se_1: "~igiese", "~igiésemos";
-    subj_impf_se_2: "~igieses", "~igieseis";
-    subj_impf_se_3: _, "~igiesen";
-    subj_fut_1: "~igiere", "~igiéremos";
-    subj_fut_2: "~igieres", "~igiereis";
-    subj_fut_3: _, "~igieren";
+    subj_impf_1: _, "~igiéramos";
+    subj_impf_3: "~igiera", _;
+    subj_impf_se_3: "~igiese", _;
+    subj_fut_3: "~igiere", _;
     vos: "~egís", "~ijás", "~egí";
     imperative: "~ige", "~ija", "~ijamos", "~egid", "~ijan";
     infinitive: "~egir";
     gerund: "~igiendo";
+    participle_m: "~egido", _;
     ),
-    // Mover: 7 words (llover, promover, mover, remover, conmover, amover).
-    conjugation!("mover", 7, "~over";
-    stem participle: "~ovid- like echar";
-    pres_1: "~uevo", "~ovemos";
-    pres_2: "~ueves", "~ovéis";
-    pres_3: "~ueve", "~ueven";
-    impf_1: "~ovía", "~ovíamos";
-    impf_2: "~ovías", "~ovíais";
-    impf_3: _, "~ovían";
-    pret_1: "~oví", "~ovimos";
-    pret_2: "~oviste", "~ovisteis";
-    pret_3: "~ovió", "~ovieron";
-    fut_1: "~overé", "~overemos";
-    fut_2: "~overás", "~overéis";
-    fut_3: "~overá", "~overán";
-    cond_1: "~overía", "~overíamos";
-    cond_2: "~overías", "~overíais";
-    cond_3: _, "~overían";
-    subj_1: "~ueva", "~ovamos";
-    subj_2: "~uevas", "~ováis";
-    subj_3: _, "~uevan";
-    subj_impf_1: "~oviera", "~oviéramos";
-    subj_impf_2: "~ovieras", "~ovierais";
-    subj_impf_3: _, "~ovieran";
-    subj_impf_se_1: "~oviese", "~oviésemos";
-    subj_impf_se_2: "~ovieses", "~ovieseis";
-    subj_impf_se_3: _, "~oviesen";
-    subj_fut_1: "~oviere", "~oviéremos";
-    subj_fut_2: "~ovieres", "~oviereis";
-    subj_fut_3: _, "~ovieren";
-    vos: "~ovés", "~ovás", "~ové";
-    imperative: "~ueve", "~ueva", "~ovamos", "~oved", "~uevan";
-    infinitive: "~over";
-    gerund: "~oviendo";
-    ),
-    // Ver: 7 words (ver, ser, prever, entrever, antever, rever). Like Meter, except in 21 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, impf_1 sg, impf_1 pl, ….
+    // Ver: 7 words (ver, ser, prever, entrever, antever, rever). Like Meter, except in 17 cells: pres_1 sg, pres_2 sg, impf_1 sg, impf_1 pl, subj_1 sg, subj_1 pl, ….
     conjugation!("ver", 7, "~er", like Meter;
-    stem participle: "~ist- like echar";
     pres_1: "~eo", _;
     pres_2: "~és", _;
-    pres_3: "~é", "~én";
     impf_1: "~eía", "~eíamos";
-    impf_2: "~eías", "~eíais";
-    impf_3: _, "~eían";
     subj_1: "~ea", "~eamos";
     subj_2: "~eas", "~eáis";
     subj_3: _, "~ean";
     vos: derived, "~eás", derived;
     imperative: "~é", "~ea", "~eamos", _, "~ean";
+    participle_m: "~isto", _;
     ),
-    // Tañer: 7 words (jier, atañer, tañer, empeller, toller, creyer). Like Meter, except in 18 cells: pret_3 sg, pret_3 pl, subj_impf_1 sg, subj_impf_1 pl, subj_impf_2 sg, subj_impf_2 pl, ….
+    // Tañer: 7 words (jier, atañer, tañer, empeller, toller, creyer). Like Meter, except in 1 cell: gerund.
     conjugation!("tañer", 7, "~er", like Meter;
-    pret_3: "~ó", "~eron";
-    subj_impf_1: "~era", "~éramos";
-    subj_impf_2: "~eras", "~erais";
-    subj_impf_3: _, "~eran";
-    subj_impf_se_1: "~ese", "~ésemos";
-    subj_impf_se_2: "~eses", "~eseis";
-    subj_impf_se_3: _, "~esen";
-    subj_fut_1: "~ere", "~éremos";
-    subj_fut_2: "~eres", "~ereis";
-    subj_fut_3: _, "~eren";
+    stem verb: "~- like escabullirse";
     gerund: "~endo";
     ),
-    // Ahumarse: 7 words (ahusarse, ahumarse, aunarse, rehusarse, rehurtarse, sahumarse). Like Emputarse, except in 7 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Ahumarse: 7 words (ahusarse, ahumarse, aunarse, rehusarse, rehurtarse, sahumarse). Like Emputarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
     conjugation!("ahumarse", 7, "~u~arse", like Emputarse;
     pres_1: "~ú~o", _;
     pres_2: "~ú~as", _;
-    pres_3: "~ú~a", "~ú~an";
     subj_1: "~ú~e", _;
     subj_2: "~ú~es", _;
     subj_3: _, "~ú~en";
@@ -3045,26 +1963,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~e~irse";
     gerund: "~i~iéndose";
     ),
-    // Aterirse: 7 words (aterirse, empedernirse, arrecirse, hespirse, denegrirse, sumergirse). Like Entremeterse, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Aterirse: 7 words (aterirse, empedernirse, arrecirse, hespirse, denegrirse, sumergirse). Like Entremeterse, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
     conjugation!("aterirse", 7, "~e~irse", like Entremeterse;
+    stem verb_fut_1_sg: "~e~ir- like echar";
     pres_1: _, "~e~imos";
     pres_2: _, "~e~ís";
-    fut_1: "~e~iré", "~e~iremos";
-    fut_2: "~e~irás", "~e~iréis";
-    fut_3: "~e~irá", "~e~irán";
-    cond_1: "~e~iría", "~e~iríamos";
-    cond_2: "~e~irías", "~e~iríais";
-    cond_3: _, "~e~irían";
     vos: "~e~ís", _, "~e~ite";
     imperative: _, _, _, "~e~íos", _;
     infinitive: "~e~irse";
     ),
-    // Jetiarse: 7 words (mamoniarse, patrasiarse, friquiarse, paniquiarse, jetiarse, penquiarse). Like Meliar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("jetiarse", 7, "~iarse", like Meliar;
-    vos: _, _, "~iate";
-    imperative: "~éate", "~éese", "~iémonos", "~iaos", "~éense";
-    infinitive: "~iarse";
-    gerund: "~iándose";
+    // Jetiarse: 7 words (mamoniarse, patrasiarse, friquiarse, paniquiarse, jetiarse, penquiarse). Like Resfriarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
+    conjugation!("jetiarse", 7, "~iarse", like Resfriarse;
+    pres_1: "~eo", _;
+    pres_2: "~eas", _;
+    subj_1: "~ee", _;
+    subj_2: "~ees", _;
+    subj_3: _, "~een";
+    imperative: "~éate", "~éese", _, _, "~éense";
     ),
     // Deshacerse: 7 words (autosatisfacerse, hacerse, rehacerse, desfacerse, deshacerse, contrahacerse). Like Hacer, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("deshacerse", 7, "~acerse", like Hacer;
@@ -3073,60 +1988,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~acerse";
     gerund: "~aciéndose";
     ),
-    // Relamerse: 7 words (valerse, prevalerse, relamerse, lamerse, precaverse, barrerse). Like Abatirse, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Relamerse: 7 words (valerse, prevalerse, relamerse, lamerse, precaverse, barrerse). Like Abatirse, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
     conjugation!("relamerse", 7, "~a~erse", like Abatirse;
+    stem verb_fut_1_sg: "~a~er- like echar";
     pres_1: _, "~a~emos";
     pres_2: _, "~a~éis";
-    fut_1: "~a~eré", "~a~eremos";
-    fut_2: "~a~erás", "~a~eréis";
-    fut_3: "~a~erá", "~a~erán";
-    cond_1: "~a~ería", "~a~eríamos";
-    cond_2: "~a~erías", "~a~eríais";
-    cond_3: _, "~a~erían";
     vos: "~a~és", _, "~a~ete";
     imperative: _, _, _, "~a~eos", _;
     infinitive: "~a~erse";
     ),
-    // Seguir: 6 words (proseguir, perseguir, seguir, conseguir, subseguir, reseguir).
-    conjugation!("seguir", 6, "~eguir";
-    stem participle: "~eguid- like echar";
-    pres_1: "~igo", "~eguimos";
+    // Seguir: 6 words (proseguir, perseguir, seguir, conseguir, subseguir, reseguir). Like Traer, except in 20 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, pret_1 sg, ….
+    conjugation!("seguir", 6, "~eguir", like Traer;
+    stem verb_fut_1_sg: "~eguir- like echar";
+    pres_1: _, "~eguimos";
     pres_2: "~igues", "~eguís";
-    pres_3: "~igue", "~iguen";
     impf_1: "~eguía", "~eguíamos";
-    impf_2: "~eguías", "~eguíais";
-    impf_3: _, "~eguían";
     pret_1: "~eguí", "~eguimos";
-    pret_2: "~eguiste", "~eguisteis";
     pret_3: "~iguió", "~iguieron";
-    fut_1: "~eguiré", "~eguiremos";
-    fut_2: "~eguirás", "~eguiréis";
-    fut_3: "~eguirá", "~eguirán";
-    cond_1: "~eguiría", "~eguiríamos";
-    cond_2: "~eguirías", "~eguiríais";
-    cond_3: _, "~eguirían";
-    subj_1: "~iga", "~igamos";
-    subj_2: "~igas", "~igáis";
-    subj_3: _, "~igan";
-    subj_impf_1: "~iguiera", "~iguiéramos";
-    subj_impf_2: "~iguieras", "~iguierais";
-    subj_impf_3: _, "~iguieran";
-    subj_impf_se_1: "~iguiese", "~iguiésemos";
-    subj_impf_se_2: "~iguieses", "~iguieseis";
-    subj_impf_se_3: _, "~iguiesen";
-    subj_fut_1: "~iguiere", "~iguiéremos";
-    subj_fut_2: "~iguieres", "~iguiereis";
-    subj_fut_3: _, "~iguieren";
-    vos: "~eguís", "~igás", "~eguí";
-    imperative: "~igue", "~iga", "~igamos", "~eguid", "~igan";
+    subj_impf_1: _, "~iguiéramos";
+    subj_impf_3: "~iguiera", _;
+    subj_impf_se_3: "~iguiese", _;
+    subj_fut_3: "~iguiere", _;
+    vos: "~eguís", _, "~eguí";
+    imperative: "~igue", _, _, "~eguid", _;
     infinitive: "~eguir";
     gerund: "~iguiendo";
+    participle_m: "~eguido", _;
     ),
-    // Agorar: 6 words (degollar, agorar, regoldar, engorar, cogolmar, gorar). Like Volar, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Agorar: 6 words (degollar, agorar, regoldar, engorar, cogolmar, gorar). Like Volar, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("agorar", 6, "~o~ar", like Volar;
     pres_1: "~üe~o", _;
     pres_2: "~üe~as", _;
-    pres_3: "~üe~a", "~üe~an";
     subj_1: "~üe~e", _;
     subj_2: "~üe~es", _;
     subj_3: _, "~üe~en";
@@ -3135,178 +2027,96 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Apajuilar: 6 words (acuclillar, encuclillar, apajuilar, apulismar, aculillar, encuitar). Like Rilarse, except in 0 cells: .
     conjugation!("apajuilar", 6, "~i~ar", like Rilarse;
     ),
-    // Recogerse: 6 words (encogerse, desencogerse, sobrecogerse, recogerse, cogerse, acogerse).
-    conjugation!("recogerse", 6, "~ogerse";
-    stem participle: "~ogid- like echar";
+    // Recogerse: 6 words (encogerse, desencogerse, sobrecogerse, recogerse, cogerse, acogerse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("recogerse", 6, "~ogerse", like Echar;
+    stem verb: "~og- like conocer";
+    stem verb_fut_1_sg: "~oger- like echar";
     pres_1: "~ojo", "~ogemos";
     pres_2: "~oges", "~ogéis";
-    pres_3: "~oge", "~ogen";
     impf_1: "~ogía", "~ogíamos";
-    impf_2: "~ogías", "~ogíais";
-    impf_3: _, "~ogían";
-    pret_1: "~ogí", "~ogimos";
-    pret_2: "~ogiste", "~ogisteis";
-    pret_3: "~ogió", "~ogieron";
-    fut_1: "~ogeré", "~ogeremos";
-    fut_2: "~ogerás", "~ogeréis";
-    fut_3: "~ogerá", "~ogerán";
-    cond_1: "~ogería", "~ogeríamos";
-    cond_2: "~ogerías", "~ogeríais";
-    cond_3: _, "~ogerían";
     subj_1: "~oja", "~ojamos";
     subj_2: "~ojas", "~ojáis";
     subj_3: _, "~ojan";
-    subj_impf_1: "~ogiera", "~ogiéramos";
-    subj_impf_2: "~ogieras", "~ogierais";
-    subj_impf_3: _, "~ogieran";
-    subj_impf_se_1: "~ogiese", "~ogiésemos";
-    subj_impf_se_2: "~ogieses", "~ogieseis";
-    subj_impf_se_3: _, "~ogiesen";
-    subj_fut_1: "~ogiere", "~ogiéremos";
-    subj_fut_2: "~ogieres", "~ogiereis";
-    subj_fut_3: _, "~ogieren";
     vos: "~ogés", "~ojás", "~ogete";
     imperative: "~ógete", "~ójase", "~ojámonos", "~ogeos", "~ójanse";
     infinitive: "~ogerse";
     gerund: "~ogiéndose";
+    participle_m: "~ogido", _;
     ),
-    // Oír: 6 words (oír, embaír, desvaír, desoír, trasoír, entreoír). Like Instruir, except in 16 cells: pres_1 sg, pres_1 pl, pret_1 pl, pret_2 sg, pret_2 pl, subj_1 sg, ….
+    // Oír: 6 words (oír, embaír, desvaír, desoír, trasoír, entreoír). Like Instruir, except in 14 cells: pres_1 sg, pres_1 pl, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, ….
     conjugation!("oír", 6, "~ír", like Instruir;
-    stem participle: "~íd- like echar";
+    stem verb: "~- like creer";
     pres_1: "~igo", "~ímos";
-    pret_1: _, "~ímos";
-    pret_2: "~íste", "~ísteis";
     subj_1: "~iga", "~igamos";
     subj_2: "~igas", "~igáis";
     subj_3: _, "~igan";
     vos: _, "~igás", _;
     imperative: _, "~iga", "~igamos", "~íd", "~igan";
     infinitive: "~ír";
+    participle_m: "~ído", _;
     ),
-    // Desdecir: 6 words (bendecir, maldecir, contradecir, desdecir, predecir, condecir).
-    conjugation!("desdecir", 6, "~ecir";
-    stem participle: "~ich- like echar";
-    pres_1: "~igo", "~ecimos";
+    // Desdecir: 6 words (bendecir, maldecir, contradecir, desdecir, predecir, condecir). Like Traer, except in 24 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, fut_1 sg, ….
+    conjugation!("desdecir", 6, "~ecir", like Traer;
+    stem verb: "~ij- like reducir";
+    pres_1: _, "~ecimos";
     pres_2: "~ices", "~ecís";
-    pres_3: "~ice", "~icen";
     impf_1: "~ecía", "~ecíamos";
-    impf_2: "~ecías", "~ecíais";
-    impf_3: _, "~ecían";
-    pret_1: "~ije", "~ijimos";
-    pret_2: "~ijiste", "~ijisteis";
-    pret_3: "~ijo", "~ijeron";
     fut_1: "~eciré|~iré", "~eciremos|~iremos";
     fut_2: "~ecirás|~irás", "~eciréis|~iréis";
     fut_3: "~ecirá|~irá", "~ecirán|~irán";
     cond_1: "~eciría|~iría", "~eciríamos|~iríamos";
     cond_2: "~ecirías|~irías", "~eciríais|~iríais";
-    cond_3: _, "~ecirían|~irían";
-    subj_1: "~iga", "~igamos";
-    subj_2: "~igas", "~igáis";
-    subj_3: _, "~igan";
-    subj_impf_1: "~ijera", "~ijéramos";
-    subj_impf_2: "~ijeras", "~ijerais";
-    subj_impf_3: _, "~ijeran";
-    subj_impf_se_1: "~ijese", "~ijésemos";
-    subj_impf_se_2: "~ijeses", "~ijeseis";
-    subj_impf_se_3: _, "~ijesen";
-    subj_fut_1: "~ijere", "~ijéremos";
-    subj_fut_2: "~ijeres", "~ijereis";
-    subj_fut_3: _, "~ijeren";
-    vos: "~ecís", "~igás", "~ecí";
-    imperative: "~ice", "~iga", "~igamos", "~ecid", "~igan";
+    cond_3: derived, "~ecirían|~irían";
+    vos: "~ecís", _, "~ecí";
+    imperative: "~ice", _, _, "~ecid", _;
     infinitive: "~ecir";
     gerund: "~iciendo";
+    participle_m: "~icho", _;
     ),
-    // Entredormirse: 6 words (entredormirse, podrirse, adormirse, dormirse, morirse, repodrirse).
-    conjugation!("entredormirse", 6, "~o~irse";
-    stem participle: "~o~id- like echar";
+    // Entredormirse: 6 words (entredormirse, podrirse, adormirse, dormirse, morirse, repodrirse). Like Musirse, except in 19 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("entredormirse", 6, "~o~irse", like Musirse;
+    stem verb_fut_1_sg: "~o~ir- like echar";
     pres_1: "~ue~o", "~o~imos";
     pres_2: "~ue~es", "~o~ís";
-    pres_3: "~ue~e", "~ue~en";
     impf_1: "~o~ía", "~o~íamos";
-    impf_2: "~o~ías", "~o~íais";
-    impf_3: _, "~o~ían";
     pret_1: "~o~í", "~o~imos";
-    pret_2: "~o~iste", "~o~isteis";
-    pret_3: "~u~ió", "~u~ieron";
-    fut_1: "~o~iré", "~o~iremos";
-    fut_2: "~o~irás", "~o~iréis";
-    fut_3: "~o~irá", "~o~irán";
-    cond_1: "~o~iría", "~o~iríamos";
-    cond_2: "~o~irías", "~o~iríais";
-    cond_3: _, "~o~irían";
-    subj_1: "~ue~a", "~u~amos";
-    subj_2: "~ue~as", "~u~áis";
+    subj_1: "~ue~a", _;
+    subj_2: "~ue~as", _;
     subj_3: _, "~ue~an";
-    subj_impf_1: "~u~iera", "~u~iéramos";
-    subj_impf_2: "~u~ieras", "~u~ierais";
-    subj_impf_3: _, "~u~ieran";
-    subj_impf_se_1: "~u~iese", "~u~iésemos";
-    subj_impf_se_2: "~u~ieses", "~u~ieseis";
-    subj_impf_se_3: _, "~u~iesen";
-    subj_fut_1: "~u~iere", "~u~iéremos";
-    subj_fut_2: "~u~ieres", "~u~iereis";
-    subj_fut_3: _, "~u~ieren";
-    vos: "~o~ís", "~u~ás", "~o~ite";
-    imperative: "~ué~ete", "~ué~ase", "~u~ámonos", "~o~íos", "~ué~anse";
+    vos: "~o~ís", _, "~o~ite";
+    imperative: "~ué~ete", "~ué~ase", _, "~o~íos", "~ué~anse";
     infinitive: "~o~irse";
-    gerund: "~u~iéndose";
+    participle_m: "~o~ido", _;
     ),
-    // Tender: 5 words (discerner, cerner, jerver, herver, jerber). Like Conocer, except in 14 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_1 pl, ….
+    // Tender: 5 words (discerner, cerner, jerver, herver, jerber). Like Conocer, except in 12 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, ….
     conjugation!("tender", 5, "~~er", like Conocer;
     pres_1: "~i~o", _;
     pres_2: "~i~es", _;
-    pres_3: "~i~e", "~i~en";
     subj_1: "~i~a", "~~amos";
     subj_2: "~i~as", "~~áis";
     subj_3: _, "~i~an";
     vos: _, "~~ás", _;
     imperative: "~i~e", "~i~a", "~~amos", _, "~i~an";
     ),
-    // Caer: 5 words (caer, raer, recaer, decaer, descaer). Like Creer, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
-    conjugation!("caer", 5, "~er", like Creer;
-    pres_1: "~igo", _;
-    subj_1: "~iga", "~igamos";
-    subj_2: "~igas", "~igáis";
-    subj_3: _, "~igan";
-    vos: _, "~igás", _;
-    imperative: _, "~iga", "~igamos", _, "~igan";
+    // Caer: 5 words (caer, raer, recaer, decaer, descaer). Like Traer, except in 0 cells: .
+    conjugation!("caer", 5, "~er", like Traer;
+    stem verb: "~- like creer";
     ),
-    // Querer: 5 words (querer, malquerer, bienquerer, desquerer, requerer).
-    conjugation!("querer", 5, "~erer";
-    stem participle: "~erid- like echar";
+    // Querer: 5 words (querer, malquerer, bienquerer, desquerer, requerer). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("querer", 5, "~erer", like Echar;
+    stem verb: "~is- like poner";
+    stem verb_fut_1_sg: "~err- like echar";
     pres_1: "~iero", "~eremos";
     pres_2: "~ieres", "~eréis";
-    pres_3: "~iere", "~ieren";
     impf_1: "~ería", "~eríamos";
-    impf_2: "~erías", "~eríais";
-    impf_3: _, "~erían";
-    pret_1: "~ise", "~isimos";
-    pret_2: "~isiste", "~isisteis";
-    pret_3: "~iso", "~isieron";
-    fut_1: "~erré", "~erremos";
-    fut_2: "~errás", "~erréis";
-    fut_3: "~errá", "~errán";
-    cond_1: "~erría", "~erríamos";
-    cond_2: "~errías", "~erríais";
-    cond_3: _, "~errían";
     subj_1: "~iera", "~eramos";
     subj_2: "~ieras", "~eráis";
     subj_3: _, "~ieran";
-    subj_impf_1: "~isiera", "~isiéramos";
-    subj_impf_2: "~isieras", "~isierais";
-    subj_impf_3: _, "~isieran";
-    subj_impf_se_1: "~isiese", "~isiésemos";
-    subj_impf_se_2: "~isieses", "~isieseis";
-    subj_impf_se_3: _, "~isiesen";
-    subj_fut_1: "~isiere", "~isiéremos";
-    subj_fut_2: "~isieres", "~isiereis";
-    subj_fut_3: _, "~isieren";
     vos: "~erés", "~erás", "~eré";
     imperative: "~iere", "~iera", "~eramos", "~ered", "~ieran";
     infinitive: "~erer";
     gerund: "~eriendo";
+    participle_m: "~erido", _;
     ),
     // Huir: 5 words (fuir, huir, fluir, fruir, luir). Like Instruir, except in 4 cells: pres_2 pl, pret_1 sg, vos ind, vos imp.
     conjugation!("huir", 5, "~ir", like Instruir;
@@ -3314,96 +2124,50 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     pret_1: "~i", _;
     vos: "~is", _, "~i";
     ),
-    // Cocer: 5 words (cocer, escocer, recocer, descocer, precocer).
-    conjugation!("cocer", 5, "~ocer";
-    stem participle: "~ocid- like echar";
+    // Cocer: 5 words (cocer, escocer, recocer, descocer, precocer). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("cocer", 5, "~ocer", like Echar;
+    stem verb: "~oc- like conocer";
+    stem verb_fut_1_sg: "~ocer- like echar";
     pres_1: "~uezo", "~ocemos";
     pres_2: "~ueces", "~océis";
-    pres_3: "~uece", "~uecen";
     impf_1: "~ocía", "~ocíamos";
-    impf_2: "~ocías", "~ocíais";
-    impf_3: _, "~ocían";
-    pret_1: "~ocí", "~ocimos";
-    pret_2: "~ociste", "~ocisteis";
-    pret_3: "~oció", "~ocieron";
-    fut_1: "~oceré", "~oceremos";
-    fut_2: "~ocerás", "~oceréis";
-    fut_3: "~ocerá", "~ocerán";
-    cond_1: "~ocería", "~oceríamos";
-    cond_2: "~ocerías", "~oceríais";
-    cond_3: _, "~ocerían";
     subj_1: "~ueza", "~ozamos";
     subj_2: "~uezas", "~ozáis";
     subj_3: _, "~uezan";
-    subj_impf_1: "~ociera", "~ociéramos";
-    subj_impf_2: "~ocieras", "~ocierais";
-    subj_impf_3: _, "~ocieran";
-    subj_impf_se_1: "~ociese", "~ociésemos";
-    subj_impf_se_2: "~ocieses", "~ocieseis";
-    subj_impf_se_3: _, "~ociesen";
-    subj_fut_1: "~ociere", "~ociéremos";
-    subj_fut_2: "~ocieres", "~ociereis";
-    subj_fut_3: _, "~ocieren";
     vos: "~océs", "~ozás", "~océ";
     imperative: "~uece", "~ueza", "~ozamos", "~oced", "~uezan";
     infinitive: "~ocer";
     gerund: "~ociendo";
+    participle_m: "~ocido", _;
     ),
-    // Delinquir: 5 words (delinquir, derelinquir, jaquir, derrelinquir, relinquir).
-    conjugation!("delinquir", 5, "~quir";
-    stem participle: "~quid- like echar";
-    pres_1: "~co", "~quimos";
+    // Delinquir: 5 words (delinquir, derelinquir, jaquir, derrelinquir, relinquir). Like Sacar, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("delinquir", 5, "~quir", like Sacar;
+    stem verb: "~qu- like conocer";
+    stem verb_fut_1_sg: "~quir- like echar";
+    pres_1: _, "~quimos";
     pres_2: "~ques", "~quís";
-    pres_3: "~que", "~quen";
     impf_1: "~quía", "~quíamos";
-    impf_2: "~quías", "~quíais";
-    impf_3: _, "~quían";
-    pret_1: "~quí", "~quimos";
-    pret_2: "~quiste", "~quisteis";
-    pret_3: "~quió", "~quieron";
-    fut_1: "~quiré", "~quiremos";
-    fut_2: "~quirás", "~quiréis";
-    fut_3: "~quirá", "~quirán";
-    cond_1: "~quiría", "~quiríamos";
-    cond_2: "~quirías", "~quiríais";
-    cond_3: _, "~quirían";
     subj_1: "~ca", "~camos";
     subj_2: "~cas", "~cáis";
     subj_3: _, "~can";
-    subj_impf_1: "~quiera", "~quiéramos";
-    subj_impf_2: "~quieras", "~quierais";
-    subj_impf_3: _, "~quieran";
-    subj_impf_se_1: "~quiese", "~quiésemos";
-    subj_impf_se_2: "~quieses", "~quieseis";
-    subj_impf_se_3: _, "~quiesen";
-    subj_fut_1: "~quiere", "~quiéremos";
-    subj_fut_2: "~quieres", "~quiereis";
-    subj_fut_3: _, "~quieren";
     vos: "~quís", "~cás", "~quí";
     imperative: "~que", "~ca", "~camos", "~quid", "~can";
     infinitive: "~quir";
     gerund: "~quiendo";
+    participle_m: "~quido", _;
     ),
-    // Afligirse: 5 words (autoexigirse, afligirse, arrigirse, dirigirse, erigirse). Like Regir, except in 31 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, impf_2 sg, impf_2 pl, ….
+    // Afligirse: 5 words (autoexigirse, afligirse, arrigirse, dirigirse, erigirse). Like Regir, except in 14 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, vos ind, vos imp, ….
     conjugation!("afligirse", 5, "~igirse", like Regir;
-    stem participle: "~igid- like echar";
+    stem verb: "~ig- like conocer";
+    stem verb_fut_1_sg: "~igir- like echar";
     pres_1: _, "~igimos";
     pres_2: _, "~igís";
     impf_1: "~igía", "~igíamos";
-    impf_2: "~igías", "~igíais";
-    impf_3: _, "~igían";
-    pret_1: "~igí", "~igimos";
-    pret_2: "~igiste", "~igisteis";
-    fut_1: "~igiré", "~igiremos";
-    fut_2: "~igirás", "~igiréis";
-    fut_3: "~igirá", "~igirán";
-    cond_1: "~igiría", "~igiríamos";
-    cond_2: "~igirías", "~igiríais";
-    cond_3: _, "~igirían";
     vos: "~igís", _, "~igite";
     imperative: "~ígete", "~íjase", "~ijámonos", "~igíos", "~íjanse";
     infinitive: "~igirse";
     gerund: "~igiéndose";
+    participle_m: "~igido", _;
     ),
     // Reconocerse: 5 words (autoreconocerse, autorreconocerse, conocerse, desconocerse, reconocerse). Like Destoserse, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("reconocerse", 5, "~o~erse", like Destoserse;
@@ -3421,47 +2185,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~eñirse";
     gerund: "~iñéndose";
     ),
-    // Trocarse: 5 words (aclocarse, trocarse, enclocarse, enllocarse, trastrocarse). Like Trocar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("trocarse", 5, "~ocarse", like Trocar;
-    vos: _, _, "~ocate";
-    imperative: "~uécate", "~uéquese", "~oquémonos", "~ocaos", "~uéquense";
-    infinitive: "~ocarse";
-    gerund: "~ocándose";
+    // Trocarse: 5 words (aclocarse, trocarse, enclocarse, enllocarse, trastrocarse). Like Descocarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
+    conjugation!("trocarse", 5, "~ocarse", like Descocarse;
+    pres_1: "~ueco", _;
+    pres_2: "~uecas", _;
+    subj_1: "~ueque", _;
+    subj_2: "~ueques", _;
+    subj_3: _, "~uequen";
+    imperative: "~uécate", "~uéquese", _, _, "~uéquense";
     ),
-    // Revestirse: 5 words (desvestirse, revestirse, sobrevestirse, travestirse, vestirse).
-    conjugation!("revestirse", 5, "~e~tirse";
-    stem participle: "~e~tid- like echar";
+    // Revestirse: 5 words (desvestirse, revestirse, sobrevestirse, travestirse, vestirse). Like Incautarse, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("revestirse", 5, "~e~tirse", like Incautarse;
+    stem verb_fut_1_sg: "~e~tir- like echar";
     pres_1: "~i~to", "~e~timos";
     pres_2: "~i~tes", "~e~tís";
-    pres_3: "~i~te", "~i~ten";
     impf_1: "~e~tía", "~e~tíamos";
-    impf_2: "~e~tías", "~e~tíais";
-    impf_3: _, "~e~tían";
     pret_1: "~e~tí", "~e~timos";
-    pret_2: "~e~tiste", "~e~tisteis";
     pret_3: "~i~tió", "~i~tieron";
-    fut_1: "~e~tiré", "~e~tiremos";
-    fut_2: "~e~tirás", "~e~tiréis";
-    fut_3: "~e~tirá", "~e~tirán";
-    cond_1: "~e~tiría", "~e~tiríamos";
-    cond_2: "~e~tirías", "~e~tiríais";
-    cond_3: _, "~e~tirían";
     subj_1: "~i~ta", "~i~tamos";
     subj_2: "~i~tas", "~i~táis";
     subj_3: _, "~i~tan";
-    subj_impf_1: "~i~tiera", "~i~tiéramos";
-    subj_impf_2: "~i~tieras", "~i~tierais";
-    subj_impf_3: _, "~i~tieran";
-    subj_impf_se_1: "~i~tiese", "~i~tiésemos";
-    subj_impf_se_2: "~i~tieses", "~i~tieseis";
-    subj_impf_se_3: _, "~i~tiesen";
-    subj_fut_1: "~i~tiere", "~i~tiéremos";
-    subj_fut_2: "~i~tieres", "~i~tiereis";
-    subj_fut_3: _, "~i~tieren";
+    subj_impf_1: _, "~i~tiéramos";
+    subj_impf_3: "~i~tiera", _;
+    subj_impf_se_3: "~i~tiese", _;
+    subj_fut_3: "~i~tiere", _;
     vos: "~e~tís", "~i~tás", "~e~tite";
     imperative: "~í~tete", "~í~tase", "~i~támonos", "~e~tíos", "~í~tanse";
     infinitive: "~e~tirse";
     gerund: "~i~tiéndose";
+    participle_m: "~e~tido", _;
     ),
     // Freírse: 5 words (reírse, desleírse, engreírse, sonreírse, freírse). Like Refreír, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("freírse", 5, "~eírse", like Refreír;
@@ -3477,116 +2229,72 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~o~ir";
     gerund: "~u~iendo";
     ),
-    // Salir: 5 words (salir, asir, desasir, sobresalir, resalir). Like Curtir, except in 22 cells: pres_1 sg, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, fut_3 sg, ….
+    // Salir: 5 words (salir, asir, desasir, sobresalir, resalir). Like Curtir, except in 11 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("salir", 5, "~ir", like Curtir;
+    stem verb_fut_1_sg: "~dr- like echar";
     pres_1: "~go", _;
-    fut_1: "~dré", "~dremos";
-    fut_2: "~drás", "~dréis";
-    fut_3: "~drá", "~drán";
-    cond_1: "~dría", "~dríamos";
-    cond_2: "~drías", "~dríais";
-    cond_3: _, "~drían";
     subj_1: "~ga", "~gamos";
     subj_2: "~gas", "~gáis";
     subj_3: _, "~gan";
     vos: _, "~gás", _;
     imperative: "~", "~ga", "~gamos", _, "~gan";
     ),
-    // Decir: 5 words (decir, antedecir, redecir, interdecir, entredecir). Like Desdecir, except in 11 cells: fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, fut_3 sg, fut_3 pl, ….
+    // Decir: 5 words (decir, antedecir, redecir, interdecir, entredecir). Like Desdecir, except in 10 cells: fut_1 pl, fut_2 sg, fut_2 pl, fut_3 sg, fut_3 pl, cond_1 sg, ….
     conjugation!("decir", 5, "~ecir", like Desdecir;
-    fut_1: "~iré", "~iremos";
-    fut_2: "~irás", "~iréis";
-    fut_3: "~irá", "~irán";
-    cond_1: "~iría", "~iríamos";
-    cond_2: "~irías", "~iríais";
-    cond_3: _, "~irían";
+    stem verb_fut_1_sg: "~ir- like echar";
+    fut_1: _, derived;
+    fut_2: derived, derived;
+    fut_3: derived, derived;
+    cond_1: derived, derived;
+    cond_2: derived, derived;
+    cond_3: _, derived;
     ),
-    // Saber: 4 words (saber, caber, haber, resaber).
-    conjugation!("saber", 4, "~aber";
-    stem participle: "~abid- like echar";
+    // Saber: 4 words (saber, caber, haber, resaber). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("saber", 4, "~aber", like Echar;
+    stem verb: "~up- like poner";
+    stem verb_fut_1_sg: "~abr- like echar";
     pres_1: "~é", "~abemos";
     pres_2: "~abes", "~abéis";
-    pres_3: "~abe", "~aben";
     impf_1: "~abía", "~abíamos";
-    impf_2: "~abías", "~abíais";
-    impf_3: _, "~abían";
-    pret_1: "~upe", "~upimos";
-    pret_2: "~upiste", "~upisteis";
-    pret_3: "~upo", "~upieron";
-    fut_1: "~abré", "~abremos";
-    fut_2: "~abrás", "~abréis";
-    fut_3: "~abrá", "~abrán";
-    cond_1: "~abría", "~abríamos";
-    cond_2: "~abrías", "~abríais";
-    cond_3: _, "~abrían";
     subj_1: "~epa", "~epamos";
     subj_2: "~epas", "~epáis";
     subj_3: _, "~epan";
-    subj_impf_1: "~upiera", "~upiéramos";
-    subj_impf_2: "~upieras", "~upierais";
-    subj_impf_3: _, "~upieran";
-    subj_impf_se_1: "~upiese", "~upiésemos";
-    subj_impf_se_2: "~upieses", "~upieseis";
-    subj_impf_se_3: _, "~upiesen";
-    subj_fut_1: "~upiere", "~upiéremos";
-    subj_fut_2: "~upieres", "~upiereis";
-    subj_fut_3: _, "~upieren";
     vos: "~abés", "~epás", "~abé";
     imperative: "~abe", "~epa", "~epamos", "~abed", "~epan";
     infinitive: "~aber";
     gerund: "~abiendo";
+    participle_m: "~abido", _;
     ),
-    // Forzar: 4 words (almorzar, forzar, esforzar, reforzar).
-    conjugation!("forzar", 4, "~o~zar";
-    stem participle: "~o~zad- like echar";
+    // Forzar: 4 words (almorzar, forzar, esforzar, reforzar). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("forzar", 4, "~o~zar", like Incautarse;
+    stem verb: "~o~- like realizar";
+    stem verb_fut_1_sg: "~o~zar- like echar";
     pres_1: "~ue~zo", "~o~zamos";
     pres_2: "~ue~zas", "~o~záis";
-    pres_3: "~ue~za", "~ue~zan";
     impf_1: "~o~zaba", "~o~zábamos";
-    impf_2: "~o~zabas", "~o~zabais";
-    impf_3: _, "~o~zaban";
-    pret_1: "~o~cé", "~o~zamos";
-    pret_2: "~o~zaste", "~o~zasteis";
-    pret_3: "~o~zó", "~o~zaron";
-    fut_1: "~o~zaré", "~o~zaremos";
-    fut_2: "~o~zarás", "~o~zaréis";
-    fut_3: "~o~zará", "~o~zarán";
-    cond_1: "~o~zaría", "~o~zaríamos";
-    cond_2: "~o~zarías", "~o~zaríais";
-    cond_3: _, "~o~zarían";
     subj_1: "~ue~ce", "~o~cemos";
     subj_2: "~ue~ces", "~o~céis";
     subj_3: _, "~ue~cen";
-    subj_impf_1: "~o~zara", "~o~záramos";
-    subj_impf_2: "~o~zaras", "~o~zarais";
-    subj_impf_3: _, "~o~zaran";
-    subj_impf_se_1: "~o~zase", "~o~zásemos";
-    subj_impf_se_2: "~o~zases", "~o~zaseis";
-    subj_impf_se_3: _, "~o~zasen";
-    subj_fut_1: "~o~zare", "~o~záremos";
-    subj_fut_2: "~o~zares", "~o~zareis";
-    subj_fut_3: _, "~o~zaren";
     vos: "~o~zás", "~o~cés", "~o~zá";
     imperative: "~ue~za", "~ue~ce", "~o~cemos", "~o~zad", "~ue~cen";
     infinitive: "~o~zar";
     gerund: "~o~zando";
+    participle_m: "~o~zado", _;
     ),
-    // Adquirir: 4 words (adquirir, inquirir, perquirir, readquirir). Like Lucir, except in 14 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_1 pl, ….
-    conjugation!("adquirir", 4, "~~ir", like Lucir;
+    // Adquirir: 4 words (adquirir, inquirir, perquirir, readquirir). Like Abrir, except in 9 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
+    conjugation!("adquirir", 4, "~~ir", like Abrir;
     pres_1: "~e~o", _;
     pres_2: "~e~es", _;
-    pres_3: "~e~e", "~e~en";
-    subj_1: "~e~a", "~~amos";
-    subj_2: "~e~as", "~~áis";
+    subj_1: "~e~a", _;
+    subj_2: "~e~as", _;
     subj_3: _, "~e~an";
-    vos: _, "~~ás", _;
-    imperative: "~e~e", "~e~a", "~~amos", _, "~e~an";
+    imperative: "~e~e", "~e~a", _, _, "~e~an";
+    participle_m: "~~ido", _;
     ),
-    // Cohibir: 4 words (prohibir, cohibir, rehinchir, desprohibir). Like Desvivirse, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Cohibir: 4 words (prohibir, cohibir, rehinchir, desprohibir). Like Desvivirse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
     conjugation!("cohibir", 4, "~i~ir", like Desvivirse;
     pres_1: "~í~o", _;
     pres_2: "~í~es", _;
-    pres_3: "~í~e", "~í~en";
     subj_1: "~í~a", _;
     subj_2: "~í~as", _;
     subj_3: _, "~í~an";
@@ -3595,67 +2303,38 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~i~ir";
     gerund: "~i~iendo";
     ),
-    // Morir: 4 words (morir, premorir, desmorir, entremorir). Like Dormir, except in 0 cells: .
+    // Morir: 4 words (morir, premorir, desmorir, entremorir). Like Dormir, except in 1 cell: participle_m sg.
     conjugation!("morir", 4, "~o~ir", like Dormir;
-    stem participle: "~ue~t- like echar";
+    participle_m: "~ue~to", _;
     ),
-    // Distinguir: 4 words (distinguir, extinguir, subdistinguir, desextinguir). Like Inmiscuirse, except in 35 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, pret_3 sg, pret_3 pl, ….
-    conjugation!("distinguir", 4, "~uir", like Inmiscuirse;
-    pres_1: "~o", _;
-    pres_2: "~ues", _;
-    pres_3: "~ue", "~uen";
-    pret_3: "~uió", "~uieron";
-    subj_1: "~a", "~amos";
-    subj_2: "~as", "~áis";
-    subj_3: _, "~an";
-    subj_impf_1: "~uiera", "~uiéramos";
-    subj_impf_2: "~uieras", "~uierais";
-    subj_impf_3: _, "~uieran";
-    subj_impf_se_1: "~uiese", "~uiésemos";
-    subj_impf_se_2: "~uieses", "~uieseis";
-    subj_impf_se_3: _, "~uiesen";
-    subj_fut_1: "~uiere", "~uiéremos";
-    subj_fut_2: "~uieres", "~uiereis";
-    subj_fut_3: _, "~uieren";
-    vos: _, "~ás", "~uí";
-    imperative: "~ue", "~a", "~amos", "~uid", "~an";
+    // Distinguir: 4 words (distinguir, extinguir, subdistinguir, desextinguir). Like Curtir, except in 12 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, vos ind, ….
+    conjugation!("distinguir", 4, "~uir", like Curtir;
+    stem verb: "~u- like conocer";
+    stem verb_fut_1_sg: "~uir- like echar";
+    pres_1: _, "~uimos";
+    pres_2: "~ues", "~uís";
+    impf_1: "~uía", "~uíamos";
+    vos: "~uís", _, "~uí";
+    imperative: "~ue", _, _, "~uid", _;
     infinitive: "~uir";
     gerund: "~uiendo";
+    participle_m: "~uido", _;
     ),
-    // Torcer: 4 words (torcer, retorcer, destorcer, contorcer).
-    conjugation!("torcer", 4, "~o~cer";
-    stem participle: "~o~cid- like echar";
-    pres_1: "~ue~zo", "~o~cemos";
+    // Torcer: 4 words (torcer, retorcer, destorcer, contorcer). Like Forzar, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("torcer", 4, "~o~cer", like Forzar;
+    stem verb: "~o~c- like conocer";
+    stem verb_fut_1_sg: "~o~cer- like echar";
+    pres_1: _, "~o~cemos";
     pres_2: "~ue~ces", "~o~céis";
-    pres_3: "~ue~ce", "~ue~cen";
     impf_1: "~o~cía", "~o~cíamos";
-    impf_2: "~o~cías", "~o~cíais";
-    impf_3: _, "~o~cían";
-    pret_1: "~o~cí", "~o~cimos";
-    pret_2: "~o~ciste", "~o~cisteis";
-    pret_3: "~o~ció", "~o~cieron";
-    fut_1: "~o~ceré", "~o~ceremos";
-    fut_2: "~o~cerás", "~o~ceréis";
-    fut_3: "~o~cerá", "~o~cerán";
-    cond_1: "~o~cería", "~o~ceríamos";
-    cond_2: "~o~cerías", "~o~ceríais";
-    cond_3: _, "~o~cerían";
     subj_1: "~ue~za", "~o~zamos";
     subj_2: "~ue~zas", "~o~záis";
     subj_3: _, "~ue~zan";
-    subj_impf_1: "~o~ciera", "~o~ciéramos";
-    subj_impf_2: "~o~cieras", "~o~cierais";
-    subj_impf_3: _, "~o~cieran";
-    subj_impf_se_1: "~o~ciese", "~o~ciésemos";
-    subj_impf_se_2: "~o~cieses", "~o~cieseis";
-    subj_impf_se_3: _, "~o~ciesen";
-    subj_fut_1: "~o~ciere", "~o~ciéremos";
-    subj_fut_2: "~o~cieres", "~o~ciereis";
-    subj_fut_3: _, "~o~cieren";
     vos: "~o~cés", "~o~zás", "~o~cé";
     imperative: "~ue~ce", "~ue~za", "~o~zamos", "~o~ced", "~ue~zan";
     infinitive: "~o~cer";
     gerund: "~o~ciendo";
+    participle_m: "~o~cido", _;
     ),
     // Desforzarse: 4 words (desforzarse, forzarse, esforzarse, reforzarse). Like Forzar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("desforzarse", 4, "~o~zarse", like Forzar;
@@ -3671,47 +2350,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~egirse";
     gerund: "~igiéndose";
     ),
-    // Fraguarse: 4 words (paniaguarse, sobreaguarse, desaguarse, fraguarse).
-    conjugation!("fraguarse", 4, "~a~uarse";
-    stem participle: "~a~uad- like echar";
+    // Fraguarse: 4 words (paniaguarse, sobreaguarse, desaguarse, fraguarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("fraguarse", 4, "~a~uarse", like Incautarse;
+    stem verb: "~a~- like fraguar";
+    stem verb_fut_1_sg: "~a~uar- like echar";
     pres_1: "~a~uo", "~a~uamos";
     pres_2: "~a~uas", "~a~uáis";
-    pres_3: "~a~ua", "~a~uan";
     impf_1: "~a~uaba", "~a~uábamos";
-    impf_2: "~a~uabas", "~a~uabais";
-    impf_3: _, "~a~uaban";
-    pret_1: "~a~üé", "~a~uamos";
-    pret_2: "~a~uaste", "~a~uasteis";
-    pret_3: "~a~uó", "~a~uaron";
-    fut_1: "~a~uaré", "~a~uaremos";
-    fut_2: "~a~uarás", "~a~uaréis";
-    fut_3: "~a~uará", "~a~uarán";
-    cond_1: "~a~uaría", "~a~uaríamos";
-    cond_2: "~a~uarías", "~a~uaríais";
-    cond_3: _, "~a~uarían";
     subj_1: "~a~üe", "~a~üemos";
     subj_2: "~a~ües", "~a~üéis";
     subj_3: _, "~a~üen";
-    subj_impf_1: "~a~uara", "~a~uáramos";
-    subj_impf_2: "~a~uaras", "~a~uarais";
-    subj_impf_3: _, "~a~uaran";
-    subj_impf_se_1: "~a~uase", "~a~uásemos";
-    subj_impf_se_2: "~a~uases", "~a~uaseis";
-    subj_impf_se_3: _, "~a~uasen";
-    subj_fut_1: "~a~uare", "~a~uáremos";
-    subj_fut_2: "~a~uares", "~a~uareis";
-    subj_fut_3: _, "~a~uaren";
     vos: "~a~uás", "~a~üés", "~a~uate";
     imperative: "~á~uate", "~á~üese", "~a~üémonos", "~a~uaos", "~á~üense";
     infinitive: "~a~uarse";
     gerund: "~a~uándose";
+    participle_m: "~a~uado", _;
     ),
-    // Moverse: 4 words (lloverse, conmoverse, removerse, moverse). Like Mover, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("moverse", 4, "~overse", like Mover;
-    vos: _, _, "~ovete";
+    // Moverse: 4 words (lloverse, conmoverse, removerse, moverse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("moverse", 4, "~overse", like Echar;
+    stem verb: "~ov- like conocer";
+    stem verb_fut_1_sg: "~over- like echar";
+    pres_1: "~uevo", "~ovemos";
+    pres_2: "~ueves", "~ovéis";
+    impf_1: "~ovía", "~ovíamos";
+    subj_1: "~ueva", "~ovamos";
+    subj_2: "~uevas", "~ováis";
+    subj_3: _, "~uevan";
+    vos: "~ovés", "~ovás", "~ovete";
     imperative: "~uévete", "~uévase", "~ovámonos", "~oveos", "~uévanse";
     infinitive: "~overse";
     gerund: "~oviéndose";
+    participle_m: "~ovido", _;
     ),
     // Verse: 4 words (reverse, verse, arderse, entreverse). Like Ver, except in 9 cells: vos ind, vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, ….
     conjugation!("verse", 4, "~erse", like Ver;
@@ -3728,40 +2397,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     subj_2: _, "~ieis";
     vos: "~ias", "~ies", _;
     ),
-    // Punzarse: 4 words (anarquizarse, barroquizarse, endulzarse, punzarse).
-    conjugation!("punzarse", 4, "~u~zarse";
-    stem participle: "~u~zad- like echar";
+    // Punzarse: 4 words (anarquizarse, barroquizarse, endulzarse, punzarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("punzarse", 4, "~u~zarse", like Incautarse;
+    stem verb: "~u~- like realizar";
+    stem verb_fut_1_sg: "~u~zar- like echar";
     pres_1: "~u~zo", "~u~zamos";
     pres_2: "~u~zas", "~u~záis";
-    pres_3: "~u~za", "~u~zan";
     impf_1: "~u~zaba", "~u~zábamos";
-    impf_2: "~u~zabas", "~u~zabais";
-    impf_3: _, "~u~zaban";
-    pret_1: "~u~cé", "~u~zamos";
-    pret_2: "~u~zaste", "~u~zasteis";
-    pret_3: "~u~zó", "~u~zaron";
-    fut_1: "~u~zaré", "~u~zaremos";
-    fut_2: "~u~zarás", "~u~zaréis";
-    fut_3: "~u~zará", "~u~zarán";
-    cond_1: "~u~zaría", "~u~zaríamos";
-    cond_2: "~u~zarías", "~u~zaríais";
-    cond_3: _, "~u~zarían";
     subj_1: "~u~ce", "~u~cemos";
     subj_2: "~u~ces", "~u~céis";
     subj_3: _, "~u~cen";
-    subj_impf_1: "~u~zara", "~u~záramos";
-    subj_impf_2: "~u~zaras", "~u~zarais";
-    subj_impf_3: _, "~u~zaran";
-    subj_impf_se_1: "~u~zase", "~u~zásemos";
-    subj_impf_se_2: "~u~zases", "~u~zaseis";
-    subj_impf_se_3: _, "~u~zasen";
-    subj_fut_1: "~u~zare", "~u~záremos";
-    subj_fut_2: "~u~zares", "~u~zareis";
-    subj_fut_3: _, "~u~zaren";
     vos: "~u~zás", "~u~cés", "~u~zate";
     imperative: "~ú~zate", "~ú~cese", "~u~cémonos", "~u~zaos", "~ú~cense";
     infinitive: "~u~zarse";
     gerund: "~u~zándose";
+    participle_m: "~u~zado", _;
     ),
     // Traslucirse: 4 words (traslucirse, translucirse, deslucirse, lucirse). Like Musirse, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("traslucirse", 4, "~u~irse", like Musirse;
@@ -3786,40 +2436,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~e~irse";
     gerund: "~i~iéndose";
     ),
-    // Vencerse: 4 words (remecerse, convencerse, vencerse, desconvencerse).
-    conjugation!("vencerse", 4, "~e~cerse";
-    stem participle: "~e~cid- like echar";
+    // Comenzar: 4 words (comenzar, enlenzar, recomenzar, encomenzar). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("comenzar", 4, "~zarˇ", like Echar;
+    stem verb_fut_1_sg: "~zar- like sonar";
+    pres_1: "~zoˇ", "~zamosˇ";
+    pres_2: "~zasˇ", "~záisˇ";
+    impf_1: "~zabaˇ", "~zábamosˇ";
+    pret_1: "~céˇ", "~zamosˇ";
+    pret_3: "~zóˇ", "~zaronˇ";
+    subj_1: "~ceˇ", "~cemosˇ";
+    subj_2: "~cesˇ", "~céisˇ";
+    subj_3: _, "~cenˇ";
+    subj_impf_1: _, "~záramosˇ";
+    subj_impf_3: "~zaraˇ", _;
+    subj_impf_se_3: "~zaseˇ", _;
+    subj_fut_3: "~zareˇ", _;
+    vos: "~zásˇ", "~césˇ", "~záˇ";
+    imperative: "~zaˇ", "~ceˇ", "~cemosˇ", "~zadˇ", "~cenˇ";
+    infinitive: "~zarˇ";
+    gerund: "~zandoˇ";
+    participle_m: "~zadoˇ", _;
+    ),
+    // Vencerse: 4 words (remecerse, convencerse, vencerse, desconvencerse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("vencerse", 4, "~e~cerse", like Incautarse;
+    stem verb: "~e~c- like conocer";
+    stem verb_fut_1_sg: "~e~cer- like echar";
     pres_1: "~e~zo", "~e~cemos";
     pres_2: "~e~ces", "~e~céis";
-    pres_3: "~e~ce", "~e~cen";
     impf_1: "~e~cía", "~e~cíamos";
-    impf_2: "~e~cías", "~e~cíais";
-    impf_3: _, "~e~cían";
-    pret_1: "~e~cí", "~e~cimos";
-    pret_2: "~e~ciste", "~e~cisteis";
-    pret_3: "~e~ció", "~e~cieron";
-    fut_1: "~e~ceré", "~e~ceremos";
-    fut_2: "~e~cerás", "~e~ceréis";
-    fut_3: "~e~cerá", "~e~cerán";
-    cond_1: "~e~cería", "~e~ceríamos";
-    cond_2: "~e~cerías", "~e~ceríais";
-    cond_3: _, "~e~cerían";
     subj_1: "~e~za", "~e~zamos";
     subj_2: "~e~zas", "~e~záis";
     subj_3: _, "~e~zan";
-    subj_impf_1: "~e~ciera", "~e~ciéramos";
-    subj_impf_2: "~e~cieras", "~e~cierais";
-    subj_impf_3: _, "~e~cieran";
-    subj_impf_se_1: "~e~ciese", "~e~ciésemos";
-    subj_impf_se_2: "~e~cieses", "~e~cieseis";
-    subj_impf_se_3: _, "~e~ciesen";
-    subj_fut_1: "~e~ciere", "~e~ciéremos";
-    subj_fut_2: "~e~cieres", "~e~ciereis";
-    subj_fut_3: _, "~e~cieren";
     vos: "~e~cés", "~e~zás", "~e~cete";
     imperative: "~é~cete", "~é~zase", "~e~zámonos", "~e~ceos", "~é~zanse";
     infinitive: "~e~cerse";
     gerund: "~e~ciéndose";
+    participle_m: "~e~cido", _;
     ),
     // Yacer: 3 words (yacer, subyacer, adyacer). Like Vencer, except in 12 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("yacer", 3, "~cer", like Vencer;
@@ -3831,32 +2483,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     imperative: "~ce|~z", "~zca|~zga|~ga", "~zcamos|~zgamos|~gamos", _, "~zcan|~zgan|~gan";
     negative_imperative: "~zcas|~zgas|~gas", _, _, _, _;
     ),
-    // Argüir: 3 words (argüir, reargüir, redargüir). Like Inmiscuirse, except in 31 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, impf_2 sg, impf_2 pl, ….
+    // Argüir: 3 words (argüir, reargüir, redargüir). Like Inmiscuirse, except in 16 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, pret_1 sg, pret_1 pl, ….
     conjugation!("argüir", 3, "~üir", like Inmiscuirse;
-    stem participle: "~üid- like echar";
+    stem verb_fut_1_sg: "~üir- like echar";
     pres_1: _, "~üimos";
     pres_2: _, "~üís";
     impf_1: "~üía", "~üíamos";
-    impf_2: "~üías", "~üíais";
-    impf_3: _, "~üían";
     pret_1: "~üí", "~üimos";
-    pret_2: "~üiste", "~üisteis";
-    fut_1: "~üiré", "~üiremos";
-    fut_2: "~üirás", "~üiréis";
-    fut_3: "~üirá", "~üirán";
-    cond_1: "~üiría", "~üiríamos";
-    cond_2: "~üirías", "~üiríais";
-    cond_3: _, "~üirían";
     vos: "~üís", _, "~üí";
     imperative: "~uye", "~uya", "~uyamos", "~üid", "~uyan";
     infinitive: "~üir";
     gerund: "~uyendo";
+    participle_m: "~üido", _;
     ),
-    // Jugar: 3 words (jugar, rejugar, sobrejugar). Like Cerrar, except in 15 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, pret_1 sg, subj_1 sg, ….
+    // Jugar: 3 words (jugar, rejugar, sobrejugar). Like Cerrar, except in 13 cells: pres_1 sg, pres_2 sg, pret_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, ….
     conjugation!("jugar", 3, "~~ar", like Cerrar;
     pres_1: "~e~o", _;
     pres_2: "~e~as", _;
-    pres_3: "~e~a", "~e~an";
     pret_1: "~~ué", _;
     subj_1: "~e~ue", "~~uemos";
     subj_2: "~e~ues", "~~uéis";
@@ -3864,40 +2507,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     vos: _, "~~ués", _;
     imperative: "~e~a", "~e~ue", "~~uemos", _, "~e~uen";
     ),
-    // Romper: 3 words (romper, derromper, arromper).
-    conjugation!("romper", 3, "~mper";
-    stem participle: "~t- like echar";
+    // Romper: 3 words (romper, derromper, arromper). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("romper", 3, "~mper", like Echar;
+    stem verb: "~mp- like conocer";
+    stem verb_fut_1_sg: "~mper- like echar";
     pres_1: "~mpo", "~mpemos";
     pres_2: "~mpes", "~mpéis";
-    pres_3: "~mpe", "~mpen";
     impf_1: "~mpía", "~mpíamos";
-    impf_2: "~mpías", "~mpíais";
-    impf_3: _, "~mpían";
-    pret_1: "~mpí", "~mpimos";
-    pret_2: "~mpiste", "~mpisteis";
-    pret_3: "~mpió", "~mpieron";
-    fut_1: "~mperé", "~mperemos";
-    fut_2: "~mperás", "~mperéis";
-    fut_3: "~mperá", "~mperán";
-    cond_1: "~mpería", "~mperíamos";
-    cond_2: "~mperías", "~mperíais";
-    cond_3: _, "~mperían";
     subj_1: "~mpa", "~mpamos";
     subj_2: "~mpas", "~mpáis";
     subj_3: _, "~mpan";
-    subj_impf_1: "~mpiera", "~mpiéramos";
-    subj_impf_2: "~mpieras", "~mpierais";
-    subj_impf_3: _, "~mpieran";
-    subj_impf_se_1: "~mpiese", "~mpiésemos";
-    subj_impf_se_2: "~mpieses", "~mpieseis";
-    subj_impf_se_3: _, "~mpiesen";
-    subj_fut_1: "~mpiere", "~mpiéremos";
-    subj_fut_2: "~mpieres", "~mpiereis";
-    subj_fut_3: _, "~mpieren";
     vos: "~mpés", "~mpás", "~mpé";
     imperative: "~mpe", "~mpa", "~mpamos", "~mped", "~mpan";
     infinitive: "~mper";
     gerund: "~mpiendo";
+    participle_m: "~to", _;
     ),
     // Valer: 3 words (valer, equivaler, prevaler). Like Salir, except in 7 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative tu, imperative vosotros, ….
     conjugation!("valer", 3, "~er", like Salir;
@@ -3913,11 +2537,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Antojar: 3 words (antojar, hopar, ñangotar). Like Acomodarse, except in 0 cells: .
     conjugation!("antojar", 3, "~o~ar", like Acomodarse;
     ),
-    // Enraizarse: 3 words (enraizarse, europeizarse, corporeizarse). Like Fosilizarse, except in 7 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Enraizarse: 3 words (enraizarse, europeizarse, corporeizarse). Like Fosilizarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
     conjugation!("enraizarse", 3, "~izarse", like Fosilizarse;
     pres_1: "~ízo", _;
     pres_2: "~ízas", _;
-    pres_3: "~íza", "~ízan";
     subj_1: "~íce", _;
     subj_2: "~íces", _;
     subj_3: _, "~ícen";
@@ -3937,260 +2560,154 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "~eguirse";
     gerund: "~iguiéndose";
     ),
-    // Azoarse: 3 words (abarloarse, azoarse, barloarse).
-    conjugation!("azoarse", 3, "~oarse";
-    stem participle: "~oad- like echar";
+    // Azoarse: 3 words (abarloarse, azoarse, barloarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("azoarse", 3, "~oarse", like Echar;
+    stem verb: "~o- like echar";
+    stem verb_fut_1_sg: "~oar- like echar";
     pres_1: "~oo", "~oamos";
     pres_2: "~oas", "~oáis";
-    pres_3: "~oa", "~oan";
     impf_1: "~oaba", "~oábamos";
-    impf_2: "~oabas", "~oabais";
-    impf_3: _, "~oaban";
-    pret_1: "~oé", "~oamos";
-    pret_2: "~oaste", "~oasteis";
-    pret_3: "~oó", "~oaron";
-    fut_1: "~oaré", "~oaremos";
-    fut_2: "~oarás", "~oaréis";
-    fut_3: "~oará", "~oarán";
-    cond_1: "~oaría", "~oaríamos";
-    cond_2: "~oarías", "~oaríais";
-    cond_3: _, "~oarían";
     subj_1: "~oe", "~oemos";
     subj_2: "~oes", "~oéis";
     subj_3: _, "~oen";
-    subj_impf_1: "~oara", "~oáramos";
-    subj_impf_2: "~oaras", "~oarais";
-    subj_impf_3: _, "~oaran";
-    subj_impf_se_1: "~oase", "~oásemos";
-    subj_impf_se_2: "~oases", "~oaseis";
-    subj_impf_se_3: _, "~oasen";
-    subj_fut_1: "~oare", "~oáremos";
-    subj_fut_2: "~oares", "~oareis";
-    subj_fut_3: _, "~oaren";
     vos: "~oás", "~oés", "~oate";
     imperative: "~óate", "~óese", "~oémonos", "~oaos", "~óense";
     infinitive: "~oarse";
     gerund: "~oándose";
+    participle_m: "~oado", _;
     ),
-    // Nacerse: 3 words (complacerse, aplacerse, nacerse).
-    conjugation!("nacerse", 3, "~acerse";
-    stem verb: "~- like nacerse";
-    stem participle: "~acid- like echar";
-    pres_1: "~azco", "~acemos";
-    pres_2: "~aces", "~acéis";
-    pres_3: "~ace", "~acen";
-    impf_1: "~acía", "~acíamos";
-    impf_2: "~acías", "~acíais";
-    impf_3: _, "~acían";
-    fut_1: "~aceré", "~aceremos";
-    fut_2: "~acerás", "~aceréis";
-    fut_3: "~acerá", "~acerán";
-    cond_1: "~acería", "~aceríamos";
-    cond_2: "~acerías", "~aceríais";
-    cond_3: _, "~acerían";
+    // Nacerse: 3 words (complacerse, aplacerse, nacerse). Like Deshacerse, except in 20 cells: pres_1 sg, pret_1 sg, pret_1 pl, pret_3 sg, pret_3 pl, subj_1 sg, ….
+    conjugation!("nacerse", 3, "~acerse", like Deshacerse;
+    stem verb_fut_1_sg: "~acer- like echar";
+    pres_1: "~azco", _;
+    pret_1: "~ací", "~acimos";
+    pret_3: "~ació|~ugo", "~acieron|~uguieron";
     subj_1: "~azca", "~azcamos";
     subj_2: "~azcas", "~azcáis";
     subj_3: _, "~azcan";
-    vos: "~acés", "~azcás", "~acete";
-    imperative: "~ácete", "~ázcase", "~azcámonos", "~aceos", "~ázcanse";
-    infinitive: "~acerse";
-    gerund: "~aciéndose";
+    subj_impf_1: _, "~aciéramos";
+    subj_impf_3: "~aciera|~uguiera", _;
+    subj_impf_se_3: "~aciese|~uguiese", _;
+    subj_fut_3: "~aciere|~uguiere", _;
+    vos: _, "~azcás", _;
+    imperative: "~ácete", "~ázcase", "~azcámonos", _, "~ázcanse";
+    participle_m: "~acido", _;
     ),
-    // Trenzarse: 3 words (trenzarse, destrenzarse, homogeneizarse).
-    conjugation!("trenzarse", 3, "~e~zarse";
-    stem participle: "~e~zad- like echar";
-    pres_1: "~e~zo", "~e~zamos";
+    // Trenzarse: 3 words (trenzarse, destrenzarse, homogeneizarse). Like Vencerse, except in 21 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("trenzarse", 3, "~e~zarse", like Vencerse;
+    stem verb: "~e~- like realizar";
+    stem verb_fut_1_sg: "~e~zar- like echar";
+    pres_1: _, "~e~zamos";
     pres_2: "~e~zas", "~e~záis";
-    pres_3: "~e~za", "~e~zan";
     impf_1: "~e~zaba", "~e~zábamos";
-    impf_2: "~e~zabas", "~e~zabais";
-    impf_3: _, "~e~zaban";
-    pret_1: "~e~cé", "~e~zamos";
-    pret_2: "~e~zaste", "~e~zasteis";
-    pret_3: "~e~zó", "~e~zaron";
-    fut_1: "~e~zaré", "~e~zaremos";
-    fut_2: "~e~zarás", "~e~zaréis";
-    fut_3: "~e~zará", "~e~zarán";
-    cond_1: "~e~zaría", "~e~zaríamos";
-    cond_2: "~e~zarías", "~e~zaríais";
-    cond_3: _, "~e~zarían";
     subj_1: "~e~ce", "~e~cemos";
     subj_2: "~e~ces", "~e~céis";
     subj_3: _, "~e~cen";
-    subj_impf_1: "~e~zara", "~e~záramos";
-    subj_impf_2: "~e~zaras", "~e~zarais";
-    subj_impf_3: _, "~e~zaran";
-    subj_impf_se_1: "~e~zase", "~e~zásemos";
-    subj_impf_se_2: "~e~zases", "~e~zaseis";
-    subj_impf_se_3: _, "~e~zasen";
-    subj_fut_1: "~e~zare", "~e~záremos";
-    subj_fut_2: "~e~zares", "~e~zareis";
-    subj_fut_3: _, "~e~zaren";
     vos: "~e~zás", "~e~cés", "~e~zate";
     imperative: "~é~zate", "~é~cese", "~e~cémonos", "~e~zaos", "~é~cense";
     infinitive: "~e~zarse";
     gerund: "~e~zándose";
+    participle_m: "~e~zado", _;
     ),
     // Cubrirse: 3 words (descubrirse, cubrirse, encubrirse).
     conjugation!("cubrirse", 3, "~u~~irse";
-    stem participle: "~u~ie~t- like echar";
+    stem verb: "~u~~- like conocer";
+    stem verb_fut_1_sg: "~u~~ir- like echar";
     pres_1: "~u~~o", "~u~~imos";
     pres_2: "~u~~es", "~u~~ís";
-    pres_3: "~u~~e", "~u~~en";
     impf_1: "~u~~ía", "~u~~íamos";
-    impf_2: "~u~~ías", "~u~~íais";
-    impf_3: _, "~u~~ían";
-    pret_1: "~u~~í", "~u~~imos";
-    pret_2: "~u~~iste", "~u~~isteis";
-    pret_3: "~u~~ió", "~u~~ieron";
-    fut_1: "~u~~iré", "~u~~iremos";
-    fut_2: "~u~~irás", "~u~~iréis";
-    fut_3: "~u~~irá", "~u~~irán";
-    cond_1: "~u~~iría", "~u~~iríamos";
-    cond_2: "~u~~irías", "~u~~iríais";
-    cond_3: _, "~u~~irían";
     subj_1: "~u~~a", "~u~~amos";
     subj_2: "~u~~as", "~u~~áis";
     subj_3: _, "~u~~an";
-    subj_impf_1: "~u~~iera", "~u~~iéramos";
-    subj_impf_2: "~u~~ieras", "~u~~ierais";
-    subj_impf_3: _, "~u~~ieran";
-    subj_impf_se_1: "~u~~iese", "~u~~iésemos";
-    subj_impf_se_2: "~u~~ieses", "~u~~ieseis";
-    subj_impf_se_3: _, "~u~~iesen";
-    subj_fut_1: "~u~~iere", "~u~~iéremos";
-    subj_fut_2: "~u~~ieres", "~u~~iereis";
-    subj_fut_3: _, "~u~~ieren";
     vos: "~u~~ís", "~u~~ás", "~u~~ite";
     imperative: "~ú~~ete", "~ú~~ase", "~u~~ámonos", "~u~~íos", "~ú~~anse";
     infinitive: "~u~~irse";
     gerund: "~u~~iéndose";
+    participle_m: "~u~ie~to", _;
     ),
-    // Derretirse: 3 words (derretirse, competirse, repetirse).
-    conjugation!("derretirse", 3, "~etirse";
-    stem participle: "~etid- like echar";
+    // Derretirse: 3 words (derretirse, competirse, repetirse). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("derretirse", 3, "~etirse", like Echar;
+    stem verb_fut_1_sg: "~etir- like echar";
     pres_1: "~ito", "~etimos";
     pres_2: "~ites", "~etís";
-    pres_3: "~ite", "~iten";
     impf_1: "~etía", "~etíamos";
-    impf_2: "~etías", "~etíais";
-    impf_3: _, "~etían";
     pret_1: "~etí", "~etimos";
-    pret_2: "~etiste", "~etisteis";
     pret_3: "~itió", "~itieron";
-    fut_1: "~etiré", "~etiremos";
-    fut_2: "~etirás", "~etiréis";
-    fut_3: "~etirá", "~etirán";
-    cond_1: "~etiría", "~etiríamos";
-    cond_2: "~etirías", "~etiríais";
-    cond_3: _, "~etirían";
     subj_1: "~ita", "~itamos";
     subj_2: "~itas", "~itáis";
     subj_3: _, "~itan";
-    subj_impf_1: "~itiera", "~itiéramos";
-    subj_impf_2: "~itieras", "~itierais";
-    subj_impf_3: _, "~itieran";
-    subj_impf_se_1: "~itiese", "~itiésemos";
-    subj_impf_se_2: "~itieses", "~itieseis";
-    subj_impf_se_3: _, "~itiesen";
-    subj_fut_1: "~itiere", "~itiéremos";
-    subj_fut_2: "~itieres", "~itiereis";
-    subj_fut_3: _, "~itieren";
+    subj_impf_1: _, "~itiéramos";
+    subj_impf_3: "~itiera", _;
+    subj_impf_se_3: "~itiese", _;
+    subj_fut_3: "~itiere", _;
     vos: "~etís", "~itás", "~etite";
     imperative: "~ítete", "~ítase", "~itámonos", "~etíos", "~ítanse";
     infinitive: "~etirse";
     gerund: "~itiéndose";
+    participle_m: "~etido", _;
     ),
-    // Fingirse: 3 words (refringirse, fingirse, atingirse).
-    conjugation!("fingirse", 3, "~i~girse";
-    stem participle: "~i~gid- like echar";
+    // Fingirse: 3 words (refringirse, fingirse, atingirse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("fingirse", 3, "~i~girse", like Incautarse;
+    stem verb: "~i~g- like conocer";
+    stem verb_fut_1_sg: "~i~gir- like echar";
     pres_1: "~i~jo", "~i~gimos";
     pres_2: "~i~ges", "~i~gís";
-    pres_3: "~i~ge", "~i~gen";
     impf_1: "~i~gía", "~i~gíamos";
-    impf_2: "~i~gías", "~i~gíais";
-    impf_3: _, "~i~gían";
-    pret_1: "~i~gí", "~i~gimos";
-    pret_2: "~i~giste", "~i~gisteis";
-    pret_3: "~i~gió", "~i~gieron";
-    fut_1: "~i~giré", "~i~giremos";
-    fut_2: "~i~girás", "~i~giréis";
-    fut_3: "~i~girá", "~i~girán";
-    cond_1: "~i~giría", "~i~giríamos";
-    cond_2: "~i~girías", "~i~giríais";
-    cond_3: _, "~i~girían";
     subj_1: "~i~ja", "~i~jamos";
     subj_2: "~i~jas", "~i~jáis";
     subj_3: _, "~i~jan";
-    subj_impf_1: "~i~giera", "~i~giéramos";
-    subj_impf_2: "~i~gieras", "~i~gierais";
-    subj_impf_3: _, "~i~gieran";
-    subj_impf_se_1: "~i~giese", "~i~giésemos";
-    subj_impf_se_2: "~i~gieses", "~i~gieseis";
-    subj_impf_se_3: _, "~i~giesen";
-    subj_fut_1: "~i~giere", "~i~giéremos";
-    subj_fut_2: "~i~gieres", "~i~giereis";
-    subj_fut_3: _, "~i~gieren";
     vos: "~i~gís", "~i~jás", "~i~gite";
     imperative: "~í~gete", "~í~jase", "~i~jámonos", "~i~gíos", "~í~janse";
     infinitive: "~i~girse";
     gerund: "~i~giéndose";
+    participle_m: "~i~gido", _;
     ),
-    // Azonzarse: 3 words (azonzarse, desgonzarse, tronzarse). Like Desforzarse, except in 10 cells: pres_1 sg, pres_2 sg, pres_3 sg, pres_3 pl, subj_1 sg, subj_2 sg, ….
+    // Azonzarse: 3 words (azonzarse, desgonzarse, tronzarse). Like Desforzarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("azonzarse", 3, "~o~zarse", like Desforzarse;
     pres_1: "~o~zo", _;
     pres_2: "~o~zas", _;
-    pres_3: "~o~za", "~o~zan";
     subj_1: "~o~ce", _;
     subj_2: "~o~ces", _;
     subj_3: _, "~o~cen";
     imperative: "~ó~zate", "~ó~cese", _, _, "~ó~cense";
     ),
-    // Asirse: 2 words (abrirse, asirse).
-    conjugation!("asirse", 2, "a~irse";
-    stem participle: "~id- like armarse";
+    // Asirse: 2 words (abrirse, asirse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("asirse", 2, "a~irse", like Echar;
     pres_1: "a~go", "a~imos";
     pres_2: "a~es", "a~ís";
-    pres_3: "a~e", "a~en";
     impf_1: "a~ía", "a~íamos";
-    impf_2: "a~ías", "a~íais";
-    impf_3: _, "a~ían";
     pret_1: "a~í", "a~imos";
-    pret_2: "a~iste", "a~isteis";
     pret_3: "a~ió", "a~ieron";
-    fut_1: "a~iré", "a~iremos";
-    fut_2: "a~irás", "a~iréis";
-    fut_3: "a~irá", "a~irán";
-    cond_1: "a~iría", "a~iríamos";
-    cond_2: "a~irías", "a~iríais";
-    cond_3: _, "a~irían";
+    fut_1: "a~iré", _;
+    cond_3: "a~iría", _;
     subj_1: "a~ga", "a~gamos";
     subj_2: "a~gas", "a~gáis";
     subj_3: _, "a~gan";
-    subj_impf_1: "a~iera", "a~iéramos";
-    subj_impf_2: "a~ieras", "a~ierais";
-    subj_impf_3: _, "a~ieran";
-    subj_impf_se_1: "a~iese", "a~iésemos";
-    subj_impf_se_2: "a~ieses", "a~ieseis";
-    subj_impf_se_3: _, "a~iesen";
-    subj_fut_1: "a~iere", "a~iéremos";
-    subj_fut_2: "a~ieres", "a~iereis";
-    subj_fut_3: _, "a~ieren";
+    subj_impf_1: _, "a~iéramos";
+    subj_impf_3: "a~iera", _;
+    subj_impf_se_3: "a~iese", _;
+    subj_fut_3: "a~iere", _;
     vos: "a~ís", "a~gás", "a~ite";
     imperative: "á~ete", "á~gase", "a~gámonos", "a~íos", "á~ganse";
     infinitive: "a~irse";
     gerund: "a~iéndose";
+    participle_m: "a~ido", _;
     ),
-    // Reírse: 1 words (embaírse). Like Creerse, except in 17 cells: pres_1 pl, pres_2 pl, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
+    // Reírse: 1 words (embaírse). Like Creerse, except in 25 cells: pres_1 pl, pres_2 pl, pres_3 sg, pres_3 pl, subj_impf_1 sg, subj_impf_2 sg, ….
     conjugation!("reírse", 1, "~~írse", like Creerse;
+    stem verb_fut_1_sg: "~~ir- like echar";
     pres_1: _, "~~ímos";
     pres_2: _, "~~ís";
-    fut_1: "~~iré", "~~iremos";
-    fut_2: "~~irás", "~~iréis";
-    fut_3: "~~irá", "~~irán";
-    cond_1: "~~iría", "~~iríamos";
-    cond_2: "~~irías", "~~iríais";
-    cond_3: _, "~~irían";
+    pres_3: "~~e", "~~en";
+    subj_impf_1: "~~yera", _;
+    subj_impf_2: "~~yeras", "~~yerais";
+    subj_impf_3: derived, "~~yeran";
+    subj_impf_se_1: "~~yese", "~~yésemos";
+    subj_impf_se_2: "~~yeses", "~~yeseis";
+    subj_impf_se_3: derived, "~~yesen";
+    subj_fut_1: "~~yere", "~~yéremos";
+    subj_fut_2: "~~yeres", "~~yereis";
+    subj_fut_3: derived, "~~yeren";
     vos: "~~ís", _, "~~íte";
     imperative: _, _, _, "~~íos", _;
     infinitive: "~~írse";
@@ -4199,72 +2716,45 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     conjugation!("ir", 1, "ir";
     pres_1: "voy", "vamos";
     pres_2: "vas", "vais";
-    pres_3: "va", "van";
     impf_1: "iba", "íbamos";
-    impf_2: "ibas", "ibais";
-    impf_3: _, "iban";
     pret_1: "fui", "fuimos";
-    pret_2: "fuiste", "fuisteis";
     pret_3: "fue", "fueron";
-    fut_1: "iré", "iremos";
-    fut_2: "irás", "iréis";
-    fut_3: "irá", "irán";
-    cond_1: "iría", "iríamos";
-    cond_2: "irías", "iríais";
-    cond_3: _, "irían";
+    fut_1: "iré", _;
+    cond_3: "iría", _;
     subj_1: "vaya", "vayamos";
     subj_2: "vayas", "vayáis";
     subj_3: _, "vayan";
-    subj_impf_1: "fuera", "fuéramos";
-    subj_impf_2: "fueras", "fuerais";
-    subj_impf_3: _, "fueran";
-    subj_impf_se_1: "fuese", "fuésemos";
-    subj_impf_se_2: "fueses", "fueseis";
-    subj_impf_se_3: _, "fuesen";
-    subj_fut_1: "fuere", "fuéremos";
-    subj_fut_2: "fueres", "fuereis";
-    subj_fut_3: _, "fueren";
+    subj_impf_1: _, "fuéramos";
+    subj_impf_3: "fuera", _;
+    subj_impf_se_3: "fuese", _;
+    subj_fut_3: "fuere", _;
     vos: _, "vayás", "andá";
     imperative: "ve", "vaya", "vamos|vayamos", "id", "vayan";
     infinitive: "ir";
     gerund: "yendo";
-    participle_m: "ido", "idos";
-    participle_f: "ida", "idas";
+    participle_m: "ido", _;
     ),
-    // Ingrirse: 1 words (ingrirse).
-    conjugation!("ingrirse", 1, "i~irse";
-    stem participle: "~id- like ingrirse";
+    // Ingrirse: 1 words (ingrirse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("ingrirse", 1, "i~irse", like Echar;
     pres_1: "i~o", "i~imos";
     pres_2: "i~es", "i~ís";
-    pres_3: "i~e", "i~en";
     impf_1: "i~ía", "i~íamos";
-    impf_2: "i~ías", "i~íais";
-    impf_3: _, "i~ían";
     pret_1: "i~í", "i~imos";
-    pret_2: "i~iste", "i~isteis";
     pret_3: "i~ió", "i~ieron";
-    fut_1: "i~iré", "i~iremos";
-    fut_2: "i~irás", "i~iréis";
-    fut_3: "i~irá", "i~irán";
-    cond_1: "i~iría", "i~iríamos";
-    cond_2: "i~irías", "i~iríais";
-    cond_3: _, "i~irían";
+    fut_1: "i~iré", _;
+    cond_3: "i~iría", _;
     subj_1: "i~a", "i~amos";
     subj_2: "i~as", "i~áis";
     subj_3: _, "i~an";
-    subj_impf_1: "i~iera", "i~iéramos";
-    subj_impf_2: "i~ieras", "i~ierais";
-    subj_impf_3: _, "i~ieran";
-    subj_impf_se_1: "i~iese", "i~iésemos";
-    subj_impf_se_2: "i~ieses", "i~ieseis";
-    subj_impf_se_3: _, "i~iesen";
-    subj_fut_1: "i~iere", "i~iéremos";
-    subj_fut_2: "i~ieres", "i~iereis";
-    subj_fut_3: _, "i~ieren";
+    subj_impf_1: _, "i~iéramos";
+    subj_impf_3: "i~iera", _;
+    subj_impf_se_3: "i~iese", _;
+    subj_fut_3: "i~iere", _;
     vos: "i~ís", "i~ás", "i~ite";
     imperative: "í~ete", "í~ase", "i~ámonos", "i~íos", "í~anse";
     infinitive: "i~irse";
     gerund: "i~iéndose";
+    participle_m: "i~ido", _;
     ),
     // Irse: 1 words (irse). Like Ir, except in 9 cells: vos ind, vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, ….
     conjugation!("irse", 1, "irse", like Ir;
@@ -4273,39 +2763,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     infinitive: "irse";
     gerund: "yéndose";
     ),
-    // Unirse: 1 words (unirse).
-    conjugation!("unirse", 1, "u~irse";
-    stem participle: "~id- like unirse";
+    // Unirse: 1 words (unirse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("unirse", 1, "u~irse", like Echar;
     pres_1: "u~o", "u~imos";
     pres_2: "u~es", "u~ís";
-    pres_3: "u~e", "u~en";
     impf_1: "u~ía", "u~íamos";
-    impf_2: "u~ías", "u~íais";
-    impf_3: _, "u~ían";
     pret_1: "u~í", "u~imos";
-    pret_2: "u~iste", "u~isteis";
     pret_3: "u~ió", "u~ieron";
-    fut_1: "u~iré", "u~iremos";
-    fut_2: "u~irás", "u~iréis";
-    fut_3: "u~irá", "u~irán";
-    cond_1: "u~iría", "u~iríamos";
-    cond_2: "u~irías", "u~iríais";
-    cond_3: _, "u~irían";
+    fut_1: "u~iré", _;
+    cond_3: "u~iría", _;
     subj_1: "u~a", "u~amos";
     subj_2: "u~as", "u~áis";
     subj_3: _, "u~an";
-    subj_impf_1: "u~iera", "u~iéramos";
-    subj_impf_2: "u~ieras", "u~ierais";
-    subj_impf_3: _, "u~ieran";
-    subj_impf_se_1: "u~iese", "u~iésemos";
-    subj_impf_se_2: "u~ieses", "u~ieseis";
-    subj_impf_se_3: _, "u~iesen";
-    subj_fut_1: "u~iere", "u~iéremos";
-    subj_fut_2: "u~ieres", "u~iereis";
-    subj_fut_3: _, "u~ieren";
+    subj_impf_1: _, "u~iéramos";
+    subj_impf_3: "u~iera", _;
+    subj_impf_se_3: "u~iese", _;
+    subj_fut_3: "u~iere", _;
     vos: "u~ís", "u~ás", "u~ite";
     imperative: "ú~ete", "ú~ase", "u~ámonos", "u~íos", "ú~anse";
     infinitive: "u~irse";
     gerund: "u~iéndose";
+    participle_m: "u~ido", _;
     ),
 ];

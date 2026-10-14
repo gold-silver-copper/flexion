@@ -75,6 +75,10 @@ macro_rules! view {
 /// like that it reads (`sg_as_pl`: one value read as another).
 const SG_AS_PL: [u16; 5] = [1, 1, 3, 3, 4];
 
+/// A view: per cell (in the cells' order), the cell of the declension it is
+/// like that it reads (`pl_as_sg`: one value read as another).
+const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -82,26 +86,26 @@ pub enum Declension {
     Gagliardo,
     /// Like `maggiore`: 7,517 words.
     Maggiore,
-    /// Like `lubrico`: 5,290 words.
+    /// Like `lubrico`: 5,291 words.
     Lubrico,
-    /// Like `rossoblu`: 780 words.
+    /// Like `rossoblu`: 732 words.
     Rossoblu,
     /// Like `centrista`: 504 words.
     Centrista,
-    /// Like `carico`: 438 words.
+    /// Like `carico`: 441 words.
     Carico,
     /// Like `riparatore`: 392 words.
     Riparatore,
     /// Like `acconcio`: 132 words.
     Acconcio,
+    /// Like `versipelle`: 48 words.
+    Versipelle,
     /// Like `birbone`: 28 words.
     Birbone,
     /// Like `acre`: 13 words.
     Acre,
     /// Like `ampio`: 13 words.
     Ampio,
-    /// Like `caduco`: 4 words.
-    Caduco,
 }
 
 impl Declension {
@@ -115,10 +119,10 @@ impl Declension {
         Declension::Carico,
         Declension::Riparatore,
         Declension::Acconcio,
+        Declension::Versipelle,
         Declension::Birbone,
         Declension::Acre,
         Declension::Ampio,
-        Declension::Caduco,
     ];
 
     /// Its table.
@@ -148,12 +152,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     stem adjective_f: "~- like maggiore";
     m: "~e", _;
     ),
-    // Lubrico: 5,290 words (eccentrico, sacrifico, magnifico, lesbico, acetico, porco). Like Gagliardo, except in 0 cells: .
-    declension!("lubrico", 5290, "~o", like Gagliardo;
+    // Lubrico: 5,291 words (eccentrico, sacrifico, magnifico, lesbico, acetico, porco). Like Gagliardo, except in 0 cells: .
+    declension!("lubrico", 5291, "~o", like Gagliardo;
     stem adjective_f: "~- like lubrico";
     ),
-    // Rossoblu: 780 words (gratis, wireless, standard, bio, baby, banana).
-    declension!("rossoblu", 780, "~";
+    // Rossoblu: 732 words (gratis, wireless, standard, bio, baby, banana).
+    declension!("rossoblu", 732, "~";
     m: "~", "~";
     f: "~", "~";
     ),
@@ -162,8 +166,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     m: "~a", _;
     f: derived, _;
     ),
-    // Carico: 438 words (largo, ubriaco, bianco, fresco, sago, polacco). Like Lubrico, except in 2 cells: m pl, superlative.
-    declension!("carico", 438, "~o", like Lubrico;
+    // Carico: 441 words (largo, rauco, ubriaco, bianco, fresco, sago). Like Lubrico, except in 2 cells: m pl, superlative.
+    declension!("carico", 441, "~o", like Lubrico;
     m: _, "~hi";
     superlative: "~hissimo";
     ),
@@ -176,6 +180,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     declension!("acconcio", 132, "~io";
     m: "~io", "~i";
     f: "~ia", "~e";
+    ),
+    // Versipelle: 48 words (single, ponte, satellite, cringe, esentasse, antiproiettile). Like Maggiore, except in 0 cells: .
+    declension!("versipelle", 48, "~e", like Maggiore as PL_AS_SG;
     ),
     // Birbone: 28 words (leggere, signore, poltrone, zuccone, chiacchierone, credulone). Like Gagliardo, except in 2 cells: m sg, superlative.
     declension!("birbone", 28, "~e", like Gagliardo;
@@ -193,9 +200,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     m: "~~o", "~~";
     f: "~~a", "~~e";
     superlative: "~l~ssimo";
-    ),
-    // Caduco: 4 words (rauco, caduco, ciuco, glauco). Like Lubrico, except in 1 cell: m pl.
-    declension!("caduco", 4, "~o", like Lubrico;
-    m: _, "~hi";
     ),
 ];

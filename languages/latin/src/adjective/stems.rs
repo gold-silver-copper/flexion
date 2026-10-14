@@ -36,7 +36,7 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 9] = [
+pub(super) static TABLES: [EndingTable<'static>; 10] = [
     // adjective_sg like iacitūrus: 18,995 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
@@ -136,12 +136,19 @@ pub(super) static TABLES: [EndingTable<'static>; 9] = [
         slot: 2,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
     },
-    // comparative like iacitūrus: 25,310 words.
+    // comparative like iacitūrus: 24,974 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 25310,
+        words: 24974,
         slot: 3,
         table: Cow::Borrowed(concat!("~or\t", "~ssimus\t",)),
+    },
+    // comparative like complex: 422 words.
+    EndingTable {
+        name: Cow::Borrowed("complex"),
+        words: 422,
+        slot: 3,
+        table: Cow::Borrowed(concat!("~orˇ\t", "~ssimusˇ\t",)),
     },
     // comparative like miser: 215 words.
     EndingTable {

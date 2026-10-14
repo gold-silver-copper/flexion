@@ -16,13 +16,23 @@ const MIN_WORDS: usize = 2;
 /// The most letters a change reaches past the shared run, at each edge.
 const EDGE: usize = 3;
 
+/// The letters each class letter of the harmony laws stands for (`A`: `a`,
+/// `ä`).
+pub type Classes = [(char, Vec<char>)];
+
+/// The most ways one ending is written in class letters, tried.
+const SPELLINGS: usize = 32;
+
 /// Per cell but the root, the relation telling it from another cell's form.
-/// `forms`: per word, per cell, its usual form's letters.
+/// `forms`: per word, per cell, its usual form's letters. With `laws` (the
+/// grammar's, and their class letters), a change is said through them, as
+/// the grammar makes its forms (see [`flexion::Relation::apply`]).
 pub fn learn<'s>(
     forms: &[Vec<Option<&str>>],
     cells: usize,
     root: usize,
     settings: Settings,
+    laws: Option<(&sound_law::Program<'_>, &Classes)>,
 ) -> Vec<Relation<'s>> {
     // The words with the most forms, to score pairs of cells on.
     let mut sample: Vec<&Vec<Option<&str>>> = forms.iter().collect();
@@ -99,7 +109,7 @@ pub fn learn<'s>(
     let mut out: Vec<Relation<'s>> = parent
         .iter()
         .enumerate()
-        .filter_map(|(c, &s)| edge(forms, s?, c, settings))
+        .filter_map(|(c, &s)| edge(forms, s?, c, settings, laws))
         .chain(copies)
         .collect();
     out.sort_by_key(|r| r.cell);
@@ -148,8 +158,13 @@ fn edge<'s>(
     s: usize,
     c: usize,
     settings: Settings,
+    laws: Option<(&sound_law::Program<'_>, &Classes)>,
 ) -> Option<Relation<'s>> {
     let pairs = changes(forms, s, c);
+    let pairs = match laws {
+        Some((laws, classes)) => through(pairs, laws, classes),
+        None => pairs,
+    };
     let mut seen: std::collections::BTreeMap<&(String, String), usize> = Default::default();
     for (_, ch) in &pairs {
         *seen.entry(ch).or_default() += 1;
@@ -211,6 +226,7 @@ pub fn analogies<'s>(
     relations: &[Relation<'_>],
     root: usize,
     settings: Settings,
+    laws: Option<(&sound_law::Program<'_>, &Classes)>,
 ) -> Vec<Relation<'s>> {
     // The pairs of cells a relation already tells one from the other: an
     // analogy with one of them makes its changes.
@@ -300,7 +316,7 @@ pub fn analogies<'s>(
             let analogy = u16::try_from(a).ok().zip(u16::try_from(b).ok());
             let mut relation = copy(cell, vec![from], analogy);
             if fresh {
-                let Some(e) = edge(forms, a, b, settings) else {
+                let Some(e) = edge(forms, a, b, settings, laws) else {
                     continue;
                 };
                 (relation.changes, relation.change) = (e.changes, e.change);
@@ -358,6 +374,99 @@ fn changes<'f>(
         .filter_map(both)
         .map(|(a, b)| (a, change(a, b)))
         .collect()
+}
+
+/// Each pair's change as the laws can say it: of its own change, that change
+/// with its new ending in class letters (`~ım` → `~Im`), and the source kept
+/// whole with what follows it in class letters (`kitap` → `kitabım`: `~` →
+/// `~Im`, where a law makes `p` `b`), those that make its form (one writing
+/// a class letter through the laws), the one the most pairs can say.
+fn through<'f>(
+    pairs: Vec<(&'f str, (String, String))>,
+    laws: &sound_law::Program<'_>,
+    classes: &Classes,
+) -> Vec<(&'f str, (String, String))> {
+    use flexion::pattern;
+    let told = |a: &str, (old, new): &(String, String)| {
+        let stems = pattern::bind(old, a)?;
+        Some(match new.chars().any(char::is_uppercase) {
+            true => pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems))).0,
+            false => pattern::fill(new, &stems),
+        })
+    };
+    let candidates: Vec<Vec<(String, String)>> = pairs
+        .iter()
+        .map(|(a, ch)| {
+            let Some(b) = pattern::bind(&ch.0, a).map(|stems| pattern::fill(&ch.1, &stems)) else {
+                return Vec::new();
+            };
+            let (old_head, old_tail) = ch.0.split_once('~').unwrap_or(("", ""));
+            let (new_head, new_tail) = ch.1.split_once('~').unwrap_or(("", ""));
+            let mut ways: Vec<(String, String)> = std::iter::once(ch.clone())
+                .chain(
+                    spellings(new_tail, classes)
+                        .into_iter()
+                        .map(|t| (ch.0.clone(), format!("{new_head}~{t}"))),
+                )
+                .collect();
+            let kept = old_tail.chars().count();
+            if !old_tail.is_empty() && new_tail.chars().count() >= kept {
+                let rest: String = new_tail.chars().skip(kept).collect();
+                ways.extend(
+                    spellings(&rest, classes)
+                        .into_iter()
+                        .map(|t| (format!("{old_head}~"), format!("{new_head}~{t}"))),
+                );
+            }
+            ways.retain(|w| told(a, w).as_deref() == Some(b.as_str()));
+            ways.sort();
+            ways.dedup();
+            ways
+        })
+        .collect();
+    let mut support: HashMap<&(String, String), usize> = HashMap::default();
+    for ways in &candidates {
+        for w in ways {
+            *support.entry(w).or_default() += 1;
+        }
+    }
+    let said: Vec<Option<(String, String)>> = candidates
+        .iter()
+        .map(|ways| {
+            ways.iter()
+                .max_by_key(|w| {
+                    let n = support.get(w).copied().unwrap_or(0);
+                    (n, std::cmp::Reverse(w.0.len()), std::cmp::Reverse(*w))
+                })
+                .cloned()
+        })
+        .collect();
+    pairs
+        .into_iter()
+        .zip(said)
+        .map(|((a, own), said)| (a, said.unwrap_or(own)))
+        .collect()
+}
+
+/// The ways `ending` can be written with class letters for some of its
+/// letters (each letter a class letter standing for it, or as it is), the
+/// most class letters first; at most [`SPELLINGS`].
+fn spellings(ending: &str, classes: &Classes) -> Vec<String> {
+    let mut out = vec![String::new()];
+    for c in ending.chars() {
+        let options = classes
+            .iter()
+            .filter(|(_, values)| values.contains(&c))
+            .map(|(class, _)| *class)
+            .chain(std::iter::once(c));
+        let options: Vec<char> = options.collect();
+        out = out
+            .iter()
+            .flat_map(|o| options.iter().map(move |x| format!("{o}{x}")))
+            .take(SPELLINGS)
+            .collect();
+    }
+    out
 }
 
 /// How `a` changes into `b`, as patterns around the letters they share (`~`):
@@ -435,15 +544,62 @@ mod tests {
         .iter()
         .map(|w| w.iter().map(|f| Some(*f)).collect())
         .collect();
-        let relations = learn(&words, 3, 0, Settings::default());
+        let relations = learn(&words, 3, 0, Settings::default(), None);
         let second = relations.iter().find(|r| r.cell == 2).expect("a relation");
         assert_eq!(second.from.as_ref(), [1]);
         assert_eq!(
-            second.apply("portāvī", 2.0).first().map(|f| f.0.as_str()),
+            second
+                .apply("portāvī", 2.0, None)
+                .first()
+                .map(|f| f.0.as_str()),
             Some("portāvistī")
         );
         assert_eq!(change("amāvī", "amāvistī"), ("~ī".into(), "~istī".into()));
         // The augment: before the stem.
         assert_eq!(change("λυομεν", "ελυομεν"), ("~".into(), "ε~".into()));
+    }
+
+    #[test]
+    fn a_change_is_said_through_the_harmony() {
+        // Turkish `-Im` "my": one ending, its vowel the harmony's.
+        let words: Vec<Vec<Option<&str>>> = [
+            ["ev", "evim"],
+            ["el", "elim"],
+            ["kız", "kızım"],
+            ["baş", "başım"],
+            ["göl", "gölüm"],
+            ["söz", "sözüm"],
+            ["okul", "okulum"],
+            ["yol", "yolum"],
+        ]
+        .iter()
+        .map(|w| w.iter().map(|f| Some(*f)).collect())
+        .collect();
+        let map = [
+            ('e', 'i'),
+            ('i', 'i'),
+            ('ı', 'ı'),
+            ('a', 'ı'),
+            ('ö', 'ü'),
+            ('ü', 'ü'),
+        ]
+        .into_iter()
+        .chain([('o', 'u'), ('u', 'u')])
+        .map(|(after, value)| ('I', Some(after), value))
+        .chain([('I', None, 'i')])
+        .collect();
+        let harmony = crate::laws::Change::Harmony {
+            tier: "eiıaöüou".chars().collect(),
+            map,
+        };
+        let laws = crate::laws::compile(&[harmony]).expect("a program");
+        let classes = [('I', "iıüu".chars().collect())];
+        let relations = learn(&words, 2, 0, Settings::default(), Some((&laws, &classes)));
+        let mine = relations.iter().find(|r| r.cell == 1).expect("a relation");
+        assert_eq!(mine.changes.as_ref(), [("~".into(), "~Im".into())]);
+        assert_eq!(
+            mine.told("kitap", 2.0, Some(&laws)).map(|t| t.0),
+            Some("kitapım".to_string())
+        );
     }
 }

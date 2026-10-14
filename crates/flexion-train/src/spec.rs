@@ -121,10 +121,13 @@ pub struct PartOfSpeech {
     /// verb's `participle` group, so a typed `ахнувший` reads as the verb
     /// table writes it, `а́хнувший`.
     pub lemmas_from: Vec<(&'static str, &'static str)>,
-    /// The most words to learn from, the commonest (most senses) first,
-    /// where the dictionary has far more than a grammar needs (Durrett &
-    /// DeNero 2013 fn. 6: the first 6,000 Finnish noun tables did as well
-    /// as all of them). `None`: every word.
+    /// The most words the grammar's structure (its paradigms, relations and
+    /// sound laws, learned form by form) is learned from, the commonest (most
+    /// senses) first, where the dictionary has far more words than that
+    /// needs (Durrett & DeNero 2013 fn. 6: the first 6,000 Finnish noun
+    /// tables did as well as all of them). Every word still takes a paradigm,
+    /// teaches the rules that choose one, and lists what the grammar gets
+    /// wrong. `None`: every word.
     pub max_words: Option<usize>,
 }
 

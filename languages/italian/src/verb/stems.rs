@@ -95,10 +95,10 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 37] = [
-    // verb_pres_1_sg like urgere: 42 words.
+    // verb_pres_1_sg like urgere: 43 words.
     EndingTable {
         name: Cow::Borrowed("urgere"),
-        words: 42,
+        words: 43,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~o\t",
@@ -106,7 +106,7 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~e\t~ono\t",
             "~a\t",
             "~a\t",
-            "~a\t~ano\t",
+            "~a\t\t",
             "~i\t~a\t~ano\t",
             "~a\t~ano\t",
         )),
@@ -122,46 +122,46 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~a\t~ano\t",
             "~i\t",
             "~i\t",
-            "~i\t~ino\t",
+            "~i\t\t",
             "~a\t~i\t~ino\t",
             "~i\t~ino\t",
         )),
     },
-    // verb_pres_1_pl like girare: 6,304 words.
+    // verb_pres_1_pl like girare: 7,026 words.
     EndingTable {
         name: Cow::Borrowed("girare"),
-        words: 6304,
+        words: 7026,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~iamo\t",
             "~iamo\t",
-            "~iate\t",
+            "\t",
             "~iamo\t~ate\t",
             "~iamo\t~ate\t",
         )),
     },
-    // verb_pres_1_pl like tapparsi: 1,468 words.
+    // verb_pres_1_pl like tapparsi: 1,606 words.
     EndingTable {
         name: Cow::Borrowed("tapparsi"),
-        words: 1468,
+        words: 1606,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~iamo\t",
             "~iamo\t",
-            "~iate\t",
+            "\t",
             "~iamoci\t~atevi\t",
             "~iamoci|~iamo\t~atevi|~ate\t",
         )),
     },
-    // verb_pres_1_pl like volgere: 891 words.
+    // verb_pres_1_pl like volgere: 880 words.
     EndingTable {
         name: Cow::Borrowed("volgere"),
-        words: 891,
+        words: 880,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~iamo\t",
             "~iamo\t",
-            "~iate\t",
+            "\t",
             "~iamo\t~ete\t",
             "~iamo\t~ete\t",
         )),
@@ -174,34 +174,41 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~amo\t",
             "~amo\t",
-            "~ate\t",
+            "\t",
             "~amo\t~te\t",
             "~amo\t~te\t",
         )),
     },
-    // verb_pres_1_pl like lanciare: 388 words.
+    // verb_pres_1_pl like noiare: 24 words.
     EndingTable {
-        name: Cow::Borrowed("lanciare"),
-        words: 388,
+        name: Cow::Borrowed("noiare"),
+        words: 24,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~mo\t", "~mo\t", "\t", "~mo\t~te\t", "~mo\t~te\t",)),
+    },
+    // verb_pres_1_pl like traggere: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("traggere"),
+        words: 4,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~mo\t",
-            "~mo\t",
-            "~te\t",
-            "~mo\t~te\t",
-            "~mo\t~te\t",
+            "~ggiamo\t",
+            "~ggiamo\t",
+            "\t",
+            "~ggiamo\t~ete\t",
+            "~ggiamo\t~ete\t",
         )),
     },
-    // verb like girare: 6,314 words.
+    // verb like girare: 7,036 words.
     EndingTable {
         name: Cow::Borrowed("girare"),
-        words: 6314,
+        words: 7036,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ate\t",
             "~erò\t~eremo\t",
-            "~erai\t~erete\t",
-            "~erà\t~eranno\t",
+            "\t\t",
+            "\t~eranno\t",
             "~erei\t~eremmo\t",
             "~eresti\t~ereste\t",
             "~erebbe\t~erebbero\t",
@@ -209,38 +216,21 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~are\t",
         )),
     },
-    // verb like uscire: 1,633 words.
+    // verb like uscire: 1,621 words.
     EndingTable {
         name: Cow::Borrowed("uscire"),
-        words: 1633,
+        words: 1621,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~te\t",
             "~rò\t~remo\t",
-            "~rai\t~rete\t",
-            "~rà\t~ranno\t",
+            "\t\t",
+            "\t~ranno\t",
             "~rei\t~remmo\t",
             "~resti\t~reste\t",
             "~rebbe\t~rebbero\t",
             "~re\t",
             "~re\t",
-        )),
-    },
-    // verb like giocare: 853 words.
-    EndingTable {
-        name: Cow::Borrowed("giocare"),
-        words: 853,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~ate\t",
-            "~herò\t~heremo\t",
-            "~herai\t~herete\t",
-            "~herà\t~heranno\t",
-            "~herei\t~heremmo\t",
-            "~heresti\t~hereste\t",
-            "~herebbe\t~herebbero\t",
-            "~are\t",
-            "~are\t",
         )),
     },
     // verb like incarognirsi: 493 words.
@@ -251,8 +241,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~te\t",
             "~rò\t~remo\t",
-            "~rai\t~rete\t",
-            "~rà\t~ranno\t",
+            "\t\t",
+            "\t~ranno\t",
             "~rei\t~remmo\t",
             "~resti\t~reste\t",
             "~rebbe\t~rebbero\t",
@@ -268,8 +258,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~nete\t",
             "~rrò\t~rremo\t",
-            "~rrai\t~rrete\t",
-            "~rrà\t~rranno\t",
+            "\t\t",
+            "\t~rranno\t",
             "~rrei\t~rremmo\t",
             "~rresti\t~rreste\t",
             "~rrebbe\t~rrebbero\t",
@@ -285,8 +275,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~ete\t",
             "~rò\t~remo\t",
-            "~rai\t~rete\t",
-            "~rà\t~ranno\t",
+            "\t\t",
+            "\t~ranno\t",
             "~rei\t~remmo\t",
             "~resti\t~reste\t",
             "~rebbe\t~rebbero\t",
@@ -302,8 +292,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~nite\t",
             "~rrò\t~rremo\t",
-            "~rrai\t~rrete\t",
-            "~rrà\t~rranno\t",
+            "\t\t",
+            "\t~rranno\t",
             "~rrei\t~rremmo\t",
             "~rresti\t~rreste\t",
             "~rrebbe\t~rrebbero\t",
@@ -319,8 +309,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~cete\t",
             "~rrò\t~rremo\t",
-            "~rrai\t~rrete\t",
-            "~rrà\t~rranno\t",
+            "\t\t",
+            "\t~rranno\t",
             "~rrei\t~rremmo\t",
             "~rresti\t~rreste\t",
             "~rrebbe\t~rrebbero\t",
@@ -336,8 +326,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         table: Cow::Borrowed(concat!(
             "~lete\t",
             "~rrò\t~rremo\t",
-            "~rrai\t~rrete\t",
-            "~rrà\t~rranno\t",
+            "\t\t",
+            "\t~rranno\t",
             "~rrei\t~rremmo\t",
             "~rresti\t~rreste\t",
             "~rrebbe\t~rrebbero\t",
@@ -345,38 +335,38 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~lere\t",
         )),
     },
-    // verb like contrarre: 12 words.
+    // verb like muovere: 11 words.
     EndingTable {
-        name: Cow::Borrowed("contrarre"),
-        words: 12,
+        name: Cow::Borrowed("muovere"),
+        words: 11,
         slot: 2,
         table: Cow::Borrowed(concat!(
-            "~ete\t",
-            "~rrò\t~rremo\t",
-            "~rrai\t~rrete\t",
-            "~rrà\t~rranno\t",
-            "~rrei\t~rremmo\t",
-            "~rresti\t~rreste\t",
-            "~rrebbe\t~rrebbero\t",
-            "~rre\t",
-            "~rre\t",
+            "~teˇ\t",
+            "~ròˇ\t~remoˇ\t",
+            "\t\t",
+            "\t~rannoˇ\t",
+            "~reiˇ\t~remmoˇ\t",
+            "~restiˇ\t~resteˇ\t",
+            "~rebbeˇ\t~rebberoˇ\t",
+            "~reˇ\t",
+            "~reˇ\t",
         )),
     },
-    // verb like vedersi: 4 words.
+    // verb like abbonare: 8 words.
     EndingTable {
-        name: Cow::Borrowed("vedersi"),
-        words: 4,
+        name: Cow::Borrowed("abbonare"),
+        words: 8,
         slot: 2,
         table: Cow::Borrowed(concat!(
-            "~ete\t",
-            "~rò\t~remo\t",
-            "~rai\t~rete\t",
-            "~rà\t~ranno\t",
-            "~rei\t~remmo\t",
-            "~resti\t~reste\t",
-            "~rebbe\t~rebbero\t",
-            "~erti|~ere\t",
-            "~ersi\t",
+            "~ateˇ\t",
+            "~eròˇ\t~eremoˇ\t",
+            "\t\t",
+            "\t~erannoˇ\t",
+            "~ereiˇ\t~eremmoˇ\t",
+            "~erestiˇ\t~eresteˇ\t",
+            "~erebbeˇ\t~erebberoˇ\t",
+            "~areˇ\t",
+            "~areˇ\t",
         )),
     },
     // verb like vivere: 3 words.
@@ -396,15 +386,15 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~ere\t",
         )),
     },
-    // verb_impf like girare: 8,506 words.
+    // verb_impf like girare: 8,484 words.
     EndingTable {
         name: Cow::Borrowed("girare"),
-        words: 8506,
+        words: 8484,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~vo\t~vamo\t",
-            "~vi\t~vate\t",
-            "~va\t~vano\t",
+            "\t~vate\t",
+            "\t~vano\t",
             "~mmo\t",
             "~sti\t~ste\t",
             "~ssi\t~ssimo\t",
@@ -420,8 +410,8 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~ivo\t~ivamo\t",
-            "~ivi\t~ivate\t",
-            "~iva\t~ivano\t",
+            "\t~ivate\t",
+            "\t~ivano\t",
             "~immo\t",
             "~isti\t~iste\t",
             "~issi\t~issimo\t",
@@ -430,13 +420,6 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~endo\t",
         )),
     },
-    // verb_past like girare: 7,512 words.
-    EndingTable {
-        name: Cow::Borrowed("girare"),
-        words: 7512,
-        slot: 4,
-        table: Cow::Borrowed(concat!("~ai\t", "~ò\t~arono\t", "~ato\t",)),
-    },
     // verb_past like uscire: 808 words.
     EndingTable {
         name: Cow::Borrowed("uscire"),
@@ -444,24 +427,24 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~ii\t", "~ì\t~irono\t", "~ito\t",)),
     },
-    // verb_past like ardere: 249 words.
+    // verb_past like ardere: 240 words.
     EndingTable {
         name: Cow::Borrowed("ardere"),
-        words: 249,
+        words: 240,
         slot: 4,
         table: Cow::Borrowed(concat!("~i\t", "~e\t~ero\t", "~o\t",)),
     },
-    // verb_past like volgere: 180 words.
+    // verb_past like volgere: 182 words.
     EndingTable {
         name: Cow::Borrowed("volgere"),
-        words: 180,
+        words: 182,
         slot: 4,
         table: Cow::Borrowed(concat!("~si\t", "~se\t~sero\t", "~to\t",)),
     },
-    // verb_past like essere: 88 words.
+    // verb_past like essere: 85 words.
     EndingTable {
         name: Cow::Borrowed("essere"),
-        words: 88,
+        words: 85,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "~etti|~ei\t",
@@ -469,10 +452,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~uto\t",
         )),
     },
-    // verb_past like reggere: 84 words.
+    // verb_past like reggere: 81 words.
     EndingTable {
         name: Cow::Borrowed("reggere"),
-        words: 84,
+        words: 81,
         slot: 4,
         table: Cow::Borrowed(concat!("~ssi\t", "~sse\t~ssero\t", "~tto\t",)),
     },
@@ -497,10 +480,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~si\t", "~se\t~sero\t", "~tosi\t",)),
     },
-    // verb_past like urgere: 34 words.
+    // verb_past like urgere: 35 words.
     EndingTable {
         name: Cow::Borrowed("urgere"),
-        words: 34,
+        words: 35,
         slot: 4,
         table: Cow::Borrowed(concat!("~i\t", "~e\t~ero\t", "\t",)),
     },
@@ -511,19 +494,19 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~ssi\t", "~sse\t~ssero\t", "~ttosi\t",)),
     },
-    // verb_past like dire: 14 words.
-    EndingTable {
-        name: Cow::Borrowed("dire"),
-        words: 14,
-        slot: 4,
-        table: Cow::Borrowed(concat!("~issi\t", "~isse\t~issero\t", "~etto\t",)),
-    },
     // verb_past like tacere: 12 words.
     EndingTable {
         name: Cow::Borrowed("tacere"),
         words: 12,
         slot: 4,
         table: Cow::Borrowed(concat!("~qui\t", "~que\t~quero\t", "~iuto\t",)),
+    },
+    // verb_past like muovere: 11 words.
+    EndingTable {
+        name: Cow::Borrowed("muovere"),
+        words: 11,
+        slot: 4,
+        table: Cow::Borrowed(concat!("~iˇ\t", "~eˇ\t~eroˇ\t", "~oˇ\t",)),
     },
     // verb_past like fruire: 5 words.
     EndingTable {
@@ -538,6 +521,13 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         words: 3,
         slot: 4,
         table: Cow::Borrowed(concat!("~ii\t", "~ì\t~irono\t", "~to\t",)),
+    },
+    // verb_past like competere: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("competere"),
+        words: 3,
+        slot: 4,
+        table: Cow::Borrowed(concat!("~ei\t", "~é\t~erono\t", "\t",)),
     },
     // participle_pres like girare: 11,635 words.
     EndingTable {

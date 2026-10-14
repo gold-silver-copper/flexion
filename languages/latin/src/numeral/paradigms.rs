@@ -130,27 +130,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`sg_as_pl`: one value read as another).
-const SG_AS_PL: [u16; 36] = [
-    1, 1, 3, 3, 5, 5, 7, 7, 9, 9, 11, 11, 13, 13, 15, 15, 17, 17, 19, 19, 21, 21, 23, 23, 25, 25,
-    27, 27, 29, 29, 31, 31, 33, 33, 35, 35,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_sg`: one value read as another).
-const PL_AS_SG: [u16; 36] = [
-    0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24,
-    26, 26, 28, 28, 30, 30, 32, 32, 34, 34,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`m_as_f`: one value read as another).
-const M_AS_F: [u16; 36] = [
-    2, 3, 2, 3, 4, 5, 8, 9, 8, 9, 10, 11, 14, 15, 14, 15, 16, 17, 20, 21, 20, 21, 22, 23, 26, 27,
-    26, 27, 28, 29, 32, 33, 32, 33, 34, 35,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -222,16 +201,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     gen_m: _, "~um|~ōrum";
     gen_f: _, "~um|~ārum";
     ),
-    // Sescentī: 9 words (ducentī, nōngentī, trecentī, quadringentī, quīngentī, sescentī). Like Singulus, except in 9 cells: nom_f sg, nom_n pl, gen_m sg, gen_f sg, dat_m sg, acc_m sg, ….
-    declension!("sescentī", 9, "~ī", like Singulus as SG_AS_PL;
+    // Sescentī: 9 words (ducentī, nōngentī, trecentī, quadringentī, quīngentī, sescentī). Like Singulus, except in 10 cells: nom_m sg, nom_f sg, nom_n sg, nom_n pl, dat_m sg, acc_f sg, ….
+    declension!("sescentī", 9, "~ī", like Singulus;
+    nom_m: "~ī", _;
     nom_f: derived, _;
-    nom_n: _, "~a";
-    gen_m: derived, _;
-    gen_f: derived, _;
+    nom_n: derived, "~a";
     dat_m: derived, _;
-    acc_m: derived, _;
     acc_f: derived, _;
     acc_n: _, "~a";
+    abl_f: derived, _;
+    voc_m: derived, _;
     voc_n: _, "~a";
     ),
     // Nōnusdecimus: 7 words (octāvusdecimus, quārtusdecimus, quīntusdecimus, sextusdecimus, tertiusdecimus, nōnusdecimus).
@@ -247,17 +226,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     abl_f: "~ā~ā", _;
     voc_m: "~e~e", _;
     ),
-    // Mīlle: 2 words (mīlle, sēsquimīlle). Like Sescentī, except in 12 cells: nom_m sg, nom_m pl, nom_f sg, nom_n sg, gen_m sg, gen_f sg, ….
-    declension!("mīlle", 2, "~", like Sescentī as PL_AS_SG;
+    // Mīlle: 2 words (mīlle, sēsquimīlle). Like Singulus, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, gen_m sg, ….
+    declension!("mīlle", 2, "~", like Singulus;
     nom_m: "~", derived;
-    nom_f: "~", _;
+    nom_f: "~", derived;
     nom_n: "~", _;
-    gen_m: "~", _;
-    gen_f: "~", _;
+    gen_m: "~", derived;
+    gen_f: "~", derived;
     gen_n: "~", _;
-    dat_m: "~", _;
+    dat_m: "~", derived;
     dat_f: "~", _;
-    acc_f: "~", _;
+    acc_m: _, derived;
+    acc_f: "~", derived;
     abl_f: "~", _;
     voc_m: "~", _;
     ),
@@ -286,14 +266,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     abl_f: _, "~ābus";
     voc_n: _, "~o";
     ),
-    // Nūlla: 1 words (nūlla). Like Singulus, except in 9 cells: nom_n sg, gen_m sg, gen_f sg, gen_n sg, dat_m sg, dat_m pl, ….
-    declension!("nūlla", 1, "~a", like Singulus as M_AS_F;
+    // Nūlla: 1 words (nūlla). Like Singulus, except in 14 cells: nom_m sg, nom_m pl, nom_n sg, gen_m sg, gen_m pl, gen_f sg, ….
+    declension!("nūlla", 1, "~a", like Singulus;
+    nom_m: "~a", "~ae";
     nom_n: "~a", _;
-    gen_m: "~ĭus", _;
+    gen_m: "~ĭus", "~ārum";
     gen_f: "~ĭus", _;
     gen_n: "~ĭus", _;
-    dat_m: "~ī", "~īs";
+    dat_m: "~ī", _;
     dat_f: "~ī", _;
+    acc_m: "~am", "~ās";
+    abl_m: "~ā", _;
     abl_n: "~ā", _;
     voc_m: "~a", _;
     ),

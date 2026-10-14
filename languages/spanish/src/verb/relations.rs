@@ -2004,7 +2004,7 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_IMPF_1_SG, from PRET_3_PL.
     relation!(SUBJ_IMPF_1_SG, [PRET_3_PL], [("~on", "~a")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_IMPF_1_PL, from VOS_IMP.
     relation!(SUBJ_IMPF_1_PL, [VOS_IMP], [("he~í", "hi~iéramos"), ("me~te", "mi~éramos"), ("re~te", "ri~éramos"), ("se~te", "si~éramos"), ("se~í", "si~iéramos"), ("ve~te", "vi~éramos"), ("ve~í", "vi~iéramos"), ("~", "~ramos"), ("~a", "~áramos"), ("~abé", "~upiéramos"), ("~acete", "~iciéramos"), ("~acé", "~iciéramos"), ("~ate", "~uviéramos"), ("~ate", "~áramos"), ("~cite", "~jéramos"), ("~cí", "~jéramos"), ("~ebí", "~ibiéramos"), ("~ecite", "~ijéramos"), ("~ecí", "~ijéramos"), ("~edite", "~idiéramos"), ("~edí", "~idiéramos"), ("~egite", "~igiéramos"), ("~eguite", "~iguiéramos"), ("~eguí", "~iguiéramos"), ("~egí", "~igiéramos"), ("~emí", "~imiéramos"), ("~enete", "~uviéramos"), ("~enite", "~iniéramos"), ("~entite", "~intiéramos"), ("~entí", "~intiéramos"), ("~ené", "~uviéramos"), ("~ení", "~iniéramos"), ("~erite", "~iriéramos"), ("~ertite", "~irtiéramos"), ("~ertí", "~irtiéramos"), ("~eré", "~isiéramos"), ("~erí", "~iriéramos"), ("~estite", "~istiéramos"), ("~estí", "~istiéramos"), ("~ete", "~iéramos"), ("~ete", "~jéramos"), ("~ete", "~yéramos"), ("~etite", "~itiéramos"), ("~etí", "~itiéramos"), ("~eí", "~iéramos"), ("~eíte", "~iéramos"), ("~eñite", "~iñéramos"), ("~eñí", "~iñéramos"), ("~i", "~yéramos"), ("~ite", "~yéramos"), ("~ite", "~éramos"), ("~odé", "~udiéramos"), ("~onete", "~usiéramos"), ("~oné", "~usiéramos"), ("~ormí", "~urmiéramos"), ("~orí", "~uriéramos"), ("~te", "~ramos"), ("~te", "~éramos"), ("~á", "~uviéramos"), ("~é", "~iéramos"), ("~é", "~jéramos"), ("~é", "~yéramos"), ("~í", "~iéramos"), ("~í", "~yéramos"), ("~í", "~éramos"), ("~íte", "~yéramos"), ("~üí", "~uyéramos")], rules {
         "" => [7 11681, 13 4065, 59 555, 62 452, 39 287, 57 138, 56 117, 63 67, 64 43, 53 37, 36 28, 31 24, 15 23, 52 22, 61 22, 49 18, 60 16, 34 14, 30 13, 47 13, 11 12, 50 12, 18 11, 8 10, 40 10, 20 9, 26 9, 44 9, 14 8, 38 8, 41 8, 10 7, 24 7, 29 7, 32 7, 19 6, 27 6, 23 5, 35 5, 46 5, 48 5, 16 4, 28 4, 37 4, 43 4, 45 4, 55 4, 3 3, 4 3, 9 3, 21 3, 33 3, 42 3, 65 3, 66 3, 0 2, 1 2, 2 2, 5 2, 6 2, 12 2, 17 2, 22 2, 25 2, 51 2, 54 2, 58 2],
@@ -2244,7 +2244,7 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_IMPF_2_SG, from PRET_3_PL.
     relation!(SUBJ_IMPF_2_SG, [PRET_3_PL], [("~on", "~as")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_IMPF_2_PL, from PRET_3_PL.
     relation!(SUBJ_IMPF_2_PL, [PRET_3_PL], [("~on", "~ais")], rules {
         "" => [0 17917],
@@ -2254,11 +2254,11 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_IMPF_3_PL, from PRET_3_PL.
     relation!(SUBJ_IMPF_3_PL, [PRET_3_PL], [("~on", "~an")], rules {
         "" => [0 17934],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_IMPF_SE_1_SG, from PRET_3_PL.
     relation!(SUBJ_IMPF_SE_1_SG, [PRET_3_PL], [("~ron", "~se")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_IMPF_SE_1_PL, from SUBJ_IMPF_1_PL.
     relation!(SUBJ_IMPF_SE_1_PL, [SUBJ_IMPF_1_PL], [("~ramos", "~semos")], rules {
         "" => [0 17918],
@@ -2266,7 +2266,7 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_IMPF_SE_2_SG, from PRET_3_PL.
     relation!(SUBJ_IMPF_SE_2_SG, [PRET_3_PL], [("~ron", "~ses")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_IMPF_SE_2_PL, from PRET_3_PL.
     relation!(SUBJ_IMPF_SE_2_PL, [PRET_3_PL], [("~ron", "~seis")], rules {
         "" => [0 17917],
@@ -2276,11 +2276,11 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_IMPF_SE_3_PL, from PRET_3_PL.
     relation!(SUBJ_IMPF_SE_3_PL, [PRET_3_PL], [("~ron", "~sen")], rules {
         "" => [0 17934],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_FUT_1_SG, from PRET_3_PL.
     relation!(SUBJ_FUT_1_SG, [PRET_3_PL], [("~on", "~e")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_FUT_1_PL, from SUBJ_IMPF_1_PL.
     relation!(SUBJ_FUT_1_PL, [SUBJ_IMPF_1_PL], [("~amos", "~emos")], rules {
         "" => [0 17918],
@@ -2288,7 +2288,7 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_FUT_2_SG, from PRET_3_PL.
     relation!(SUBJ_FUT_2_SG, [PRET_3_PL], [("~on", "~es")], rules {
         "" => [0 17917],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // SUBJ_FUT_2_PL, from PRET_3_PL.
     relation!(SUBJ_FUT_2_PL, [PRET_3_PL], [("~on", "~eis")], rules {
         "" => [0 17917],
@@ -2298,7 +2298,7 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
     // SUBJ_FUT_3_PL, from PRET_3_PL.
     relation!(SUBJ_FUT_3_PL, [PRET_3_PL], [("~on", "~en")], rules {
         "" => [0 17934],
-    } listed {}, false, None),
+    } listed {}, true, None),
     // VOS_IND, from VOS_IMP.
     relation!(VOS_IND, [VOS_IMP], [("~", "~s"), ("~ate", "~ás"), ("~ete", "~és"), ("~ite", "~ís"), ("~te", "~s")], rules {
         "" => [0 13121, 1 4063, 2 343, 3 239, 4 132],

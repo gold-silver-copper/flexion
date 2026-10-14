@@ -82,10 +82,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`f_as_n`: one value read as another).
-const F_AS_N: [u16; 16] = [0, 2, 2, 3, 4, 6, 6, 7, 8, 10, 10, 11, 12, 14, 14, 15];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -127,9 +123,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
     declension!("sein", 13, "~", like Einer;
     nom: "~", _, "~", _;
     ),
-    // Ihrige: 9 words (eine, derselbe, derjenige, seinige, meinige, deinige). Like Sein, except in 6 cells: nom pl, gen_ m, gen_ f, gen_ pl, dat m, dat pl.
-    declension!("ihrige", 9, "~", like Sein as F_AS_N;
-    nom: _, _, _, "~n";
+    // Ihrige: 9 words (eine, derselbe, derjenige, seinige, meinige, deinige). Like Sein, except in 7 cells: nom f, nom pl, gen_ m, gen_ f, gen_ pl, dat m, ….
+    declension!("ihrige", 9, "~", like Sein;
+    nom: _, "~", _, "~n";
     gen_: "~n", "~n", _, "~n";
     dat: "~n", _, _, "~n";
     ),

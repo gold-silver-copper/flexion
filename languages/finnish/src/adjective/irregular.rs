@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 6 stems, 658 forms.
+/// 6 stems, 646 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aerodynaamisin	1	aerodynaamisimmät	4	aerodynaamisintä	5	aerodynaamisimpiä	10	aerodynaamisimpään
@@ -36,7 +36,7 @@ gurmee	3	gurmeiden	5	gurmeita	7	gurmeissa	10	gurmeehen	11	gurmeihin	25	gurmein	2
 halal	adjective	halal- like abstrakti	adjective_pl	halal- like abstrakti
 halpa	3	halpojen	5	halpoja	7	halvoissa	11	halpoihin	25	halvoin	27	halpoine	29	halvin
 halpis	4	halpista	5	halpiksia	6	halpiksessa	7	halpiksissa
-handsfree	1	handsfreet	4	handsfreetä	10	handsfreehin	11	handsfreeihin
+handsfree	1	handsfreet	4	handsfreetä	7	handsfreeissä	9	handsfreeistä	10	handsfreehin	11	handsfreeihin	13	handsfreeillä	15	handsfreeiltä	19	handsfreeinä	23	handsfreeittä
 hapan	1	happamat	3	happamien	5	happamia	10	happamaan	11	happamiin	27	happamine
 hapanimelä	5	hapanimeliä	7	hapanimelissä
 haram	adjective	haram- like abstrakti	adjective_pl	haram- like abstrakti
@@ -48,10 +48,8 @@ hiljempi	1	hiljemmat	4	hiljempaa	5	hiljempia	10	hiljempaan
 hysteerinen	4	hysteerista	5	hysteerisia	6	hysteerisessa	7	hysteerisissa
 hyvä	28	parempi	29	paras
 hänenlaisensa	4	hänenlaistaan	5	hänenlaisiaan	6	hänenlaisessaan	7	hänenlaisissaan	16	hänenlaiselleen	17	hänenlaisilleen	20	hänenlaisekseen	21	hänenlaisikseen	27	hänenlaisineen
-höttö	10	höttöön
 joltinenkin	8	joltisestakin	9	joltisistakin	14	joltiseltakin	15	joltisiltakin	22	joltisettakin	23	joltisittakin
 jommoinenkin	8	jommoisestakin	9	jommoisistakin	14	jommoiseltakin	15	jommoisiltakin	22	jommoisettakin	23	jommoisittakin
-järkeenkäypä	28	järkeenkäyvämpi
 kade	1	kateet	3	kateiden	5	kateita	10	kateeseen	11	kateisiin	27	kateine
 kahdeksaskymmenes	8	kahdeksannestakymmenennestä	9	kahdeksansistakymmenensistä	14	kahdeksanneltakymmenenneltä	15	kahdeksansiltakymmenensiltä	22	kahdeksannettakymmenennettä	23	kahdeksansittakymmenensittä
 kahdeksastoista	1	kahdeksannettoista	3	kahdeksansientoista	4	kahdeksattatoista	5	kahdeksansiatoista	10	kahdeksanteentoista	11	kahdeksansiintoista	27	kahdeksansinetoista
@@ -80,19 +78,20 @@ kuudeskymmenes	8	kuudennestakymmenennestä	9	kuudensistakymmenensistä	14	kuuden
 kuudestoista	1	kuudennettoista	3	kuudensientoista	4	kuudettatoista	5	kuudensiatoista	10	kuudenteentoista	11	kuudensiintoista	27	kuudensinetoista
 kuusikymmenluku	1	kuusikymmenluvut	18	kuusikymmenlukuna	19	kuusikymmenlukuina
 kylläisempi	1	kylläisemmat	4	kylläisempaa	5	kylläisempia	10	kylläisempaan
+laiminlyöty	10	laiminlyötyyn
 lenko	1	lengot	18	lenkona	19	lenkoina
 liika	6	liiassa
 liikaherkkä	6	liikaherkässä
 liipaisinherkkä	6	liipaisinherkässä
+loppuunmyyty	10	loppuunmyytyyn
 lyhyt	29	lyhin
 lähi-	18	läsnä	28	lähempi	29	lähin
-läppä	7	läpissä	10	läppään	11	läppiin	25	läpin	27	läppine
+läppä	1	läpät
 maataviljelevä	5	maataviljeleviä	7	maataviljelevissä
 makee	3	makeiden	5	makeita	7	makeissa	10	makeehen	11	makeihin	25	makein	27	makeine
 marras	1	martaat	3	martaiden	5	martaita	10	martaaseen	11	martaisiin	27	martaine
 marto	1	marrot
 matta	3	mattojen	5	mattoja	7	matoissa	10	mattaan	11	mattoihin	25	matoin	27	mattoine
-melto	10	meltoon
 mukiinmenevä	5	mukiinmeneviä	7	mukiinmenevissä
 mustankipein	1	mustankipeimmät	4	mustankipeintä	5	mustankipeimpiä	10	mustankipeimpään
 neljäskymmenes	8	neljännestäkymmenennestä	9	neljänsistäkymmenensistä	14	neljänneltäkymmenenneltä	15	neljänsiltäkymmenensiltä	22	neljännettäkymmenennettä	23	neljänsittäkymmenensittä
@@ -114,7 +113,7 @@ pikkusievä	5	pikkusieviä	7	pikkusievissä
 pitkä	28	pidempi	29	pisin
 poismennyt	5	poismenneitä	6	poismenneessä	7	poismenneissä
 polygeneettinen	4	polygeneettista	5	polygeneettisia	6	polygeneettisessa	7	polygeneettisissa
-poppa	3	poppien	5	poppia	7	popissa	10	poppaan	11	poppiin	19	poppina	25	popin	27	poppine	28	popempi
+poppa	1	popat	19	poppina
 pro	10	prohon
 psykoanalyyttinen	4	psykoanalyyttista	5	psykoanalyyttisia	6	psykoanalyyttisessa	7	psykoanalyyttisissa
 pulleva	28	pullevəmpi
@@ -135,7 +134,7 @@ seitsemäskymmenes	8	seitsemännestäkymmenennestä	9	seitsemänsistäkymmenensi
 seitsemästoista	1	seitsemännettoista	3	seitsemänsientoista	4	seitsemättätoista	5	seitsemänsiätoista	10	seitsemänteentoista	11	seitsemänsiintoista	27	seitsemänsinetoista
 seka-	6	seassa	8	seasta	10	sekaan
 sikahalpa	3	sikahalpojen	5	sikahalpoja	7	sikahalvoissa	11	sikahalpoihin	25	sikahalvoin	27	sikahalpoine
-silkka	6	silkassa
+sippi	4	sippiä
 sisä-	6	sisässä	8	sisästä	10	sisään	12	sisällä	14	sisältä	16	sisälle	28	sisempi	29	sisin
 spesifinen	4	spesifista	5	spesifisia	6	spesifisessa	7	spesifisissa
 suhdanneherkkä	6	suhdanneherkässä
@@ -151,9 +150,8 @@ tuliterä	5	tuliteriä	7	tuliterissä
 tunneherkkä	6	tunneherkässä
 turta	1	turrat	18	turtana	19	turtina
 tuulenpieksemä	5	tuulenpieksemiä	7	tuulenpieksemissä
-tylppä	7	tylpissä	10	tylppään	11	tylppiin	25	tylpin	27	tylppine	28	tylpempi
+tylppä	1	tylpät
 tyven	3	tyvenien	4	tyventä	5	tyveniä	10	tyveneen	11	tyveniin
-tönkkä	1	tönkät
 useanlainen	28	useammanlainen	29	useimmanlainen
 vakiotyyppinen	4	vakiotyyppista	5	vakiotyyppisia	6	vakiotyyppisessa	7	vakiotyyppisissa
 valantehnyt	5	valantehneitä	6	valantehneessä	7	valantehneissä

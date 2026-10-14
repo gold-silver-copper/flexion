@@ -1,7 +1,8 @@
 //! Sound laws where a stem meets its ending (`+`), where a form's first
 //! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a
-//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the
-//! nearest letter of a tier before it as written): every form a conjugation builds
+//! `%` copies (`°`), on a class letter an ending writes (harmony, by the
+//! nearest letter of a tier before it as written), or inside a stem that
+//! alternates (`ˇ`, by what follows it): every form a conjugation builds
 //! goes through them, in order, so one conjugation serves words whose stems change
 //! its endings. Each with the words whose forms it gives, and how many of
 //! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).
@@ -276,9 +277,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ἐ‹")]),
     },
-    // χ+σ → +ξ: 12 words (ψῡχω, βρεχω, ἀγχω, λειχω), 0 forms wrong.
+    // ζ+σ → +σ: 13 words (σκᾰνδᾰλῐζω, δειγμᾰτῐζω, γογγῠζω, βλυζω), 0 forms wrong.
     CompiledRule {
         name: B("law7"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ζ+σ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("+σ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ζ+σ")]),
+    },
+    // χ+σ → +ξ: 12 words (ψῡχω, βρεχω, ἀγχω, λειχω), 0 forms wrong.
+    CompiledRule {
+        name: B("law8"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -308,7 +339,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ῥ → ἐρρ: 15 words (ῥεω, ῥηγνῡμῐ, ῥωννῡμῐ, ῥοφεω), 0 forms wrong.
     CompiledRule {
-        name: B("law8"),
+        name: B("law9"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -348,7 +379,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹οἰ → ᾠ: 12 words (οἰφω, οἰκεω, οἰδεω, οἰκοδομεω), 0 forms wrong.
     CompiledRule {
-        name: B("law9"),
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -388,7 +419,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // φ+σ → +ψ: 10 words (οἰφω, ἐρεφω, νῑφω, γλῠφω), 0 forms wrong.
     CompiledRule {
-        name: B("law10"),
+        name: B("law11"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -418,7 +449,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ἁ → ἡ: 10 words (ἁπτω, ἁρπᾰζω, ἁγῐζω, ἁλῐζω), 0 forms wrong.
     CompiledRule {
-        name: B("law11"),
+        name: B("law12"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -463,7 +494,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ὁ → ὡ: 11 words (ὁμοιοω, ὁρῐζω, ὁμολογεω, ὁρμαινω), 0 forms wrong.
     CompiledRule {
-        name: B("law12"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -503,7 +534,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // %ε‹σκ → ἐσκ: 10 words (σκοπεω, σκηπτω, σκευᾰζω, σκεπᾰζω), 0 forms wrong.
     CompiledRule {
-        name: B("law13"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -543,7 +574,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ὑ → ὑ: 9 words (ὑλακτεω, ὑφαινω, ὑμνεω, ὑστερεω), 0 forms wrong.
     CompiledRule {
-        name: B("law14"),
+        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -589,7 +620,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // %ε‹ὀ → ὠ: 6 words (ὀρχεομαι, ὀζω, ὀρεγω, ὀφειλω), 0 forms wrong.
     CompiledRule {
-        name: B("law15"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -629,7 +660,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // κ+σ → +ξ: 6 words (ἑλκω, ἱκω, εἰκω, ἐρῡκω), 0 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law17"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -659,7 +690,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ε → ε: 5 words (εὐδοκεω, εἰσοραω, εἰκαζω, εἰλῠω), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law18"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -699,7 +730,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ἱ → ἱ: 9 words (ἱημῐ, ἱδροω, ἱζω, ἱκνεομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law18"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -745,7 +776,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // %ε‹ὑ → ὑ: 7 words (ὑμνεω, ὑστερεω, ὑβρῐζω, ὑᾰλῐζω), 0 forms wrong.
     CompiledRule {
-        name: B("law19"),
+        name: B("law20"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -791,7 +822,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹ἰ → ἰ: 6 words (ἰσχῡω, ἰσχω, ἰχθῠᾰζομαι, ἰχθῠᾰω), 0 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law21"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -837,7 +868,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // %ε‹ζ → ἐζ: 5 words (ζητεω, ζηλοω, ζῠγοω, ζωγρεω), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law22"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -877,7 +908,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ‹αἰ → ᾐ: 6 words (αἰθω, αἰτεω, αἰσχῡνω, αἰδεομαι), 0 forms wrong.
     CompiledRule {
-        name: B("law22"),
+        name: B("law23"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -917,7 +948,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ%ε‹ζ → ἐζ: 5 words (ζητεω, ζηλοω, ζῠγοω, ζωγρεω), 0 forms wrong.
     CompiledRule {
-        name: B("law23"),
+        name: B("law24"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -957,7 +988,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ%ε‹σκ → ἐσκ: 5 words (σκοπεω, σκευᾰζω, σκεπᾰζω, σκορπῐζω), 0 forms wrong.
     CompiledRule {
-        name: B("law24"),
+        name: B("law25"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -997,7 +1028,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ἐ%ε‹ὑ → ὑ: 5 words (ὑμνεω, ὑστερεω, ὑβρῐζω, ὑᾰλῐζω), 0 forms wrong.
     CompiledRule {
-        name: B("law25"),
+        name: B("law26"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,

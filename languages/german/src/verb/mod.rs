@@ -90,6 +90,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation, u8, crate::Auxiliary> = Gramma
     feature: Some((0, auxiliary::AUXILIARY)),
     compound: Some(compounds::COMPOUND),
     prefixes: Some(prefixes::PREFIXES),
+    heads: None,
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
@@ -100,7 +101,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation, u8, crate::Auxiliary> = Gramma
     smoothing: 2.0,
     sharpness: 1.25,
     trust: flexion::Trust {
-        regular: 0.999068,
+        regular: 0.99845344,
         unsettled: 1.0,
         unattested: 1.0,
     },

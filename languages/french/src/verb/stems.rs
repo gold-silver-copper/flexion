@@ -70,11 +70,11 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 19] = [
-    // verb_pres_sg like passer: 6,453 words.
+pub(super) static TABLES: [EndingTable<'static>; 13] = [
+    // verb_pres_sg like passer: 5,973 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6453,
+        words: 5973,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~s\t", "~\t", "~\t",)),
     },
@@ -104,17 +104,17 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~ois|~ieds\t",
         )),
     },
-    // verb_pl like passer: 7,133 words.
+    // verb_pl like passer: 6,771 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 7133,
+        words: 6771,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ons\t",
             "~ez\t",
             "~ais\t~ions\t",
-            "~ais\t~iez\t",
-            "~ait\t~aient\t",
+            "~ais\t\t",
+            "\t\t",
             "~ions\t",
             "~iez\t",
             "~ons\t~ez\t",
@@ -138,25 +138,25 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~ant\t",
         )),
     },
-    // verb_3 like passer: 7,179 words.
+    // verb_3 like passer: 6,699 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 7179,
+        words: 6699,
         slot: 2,
         table: Cow::Borrowed(concat!("~nt\t", "~\t", "~s\t", "~\t~nt\t",)),
     },
-    // verb_past like passer: 6,385 words.
+    // verb_past like passer: 6,023 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6385,
+        words: 6023,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~ai\t~âmes\t",
             "~as\t~âtes\t",
             "~a\t~èrent\t",
-            "~asse\t~assions\t",
-            "~asses\t~assiez\t",
-            "~ât\t~assent\t",
+            "~asse\t\t",
+            "\t\t",
+            "~ât\t\t",
             "~é\t",
         )),
     },
@@ -169,25 +169,10 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~is\t~îmes\t",
             "~is\t~îtes\t",
             "~it\t~irent\t",
-            "~isse\t~issions\t",
-            "~isses\t~issiez\t",
-            "~ît\t~issent\t",
+            "~isse\t\t",
+            "\t\t",
+            "~ît\t\t",
             "~i\t",
-        )),
-    },
-    // verb_past like amorcer: 124 words.
-    EndingTable {
-        name: Cow::Borrowed("amorcer"),
-        words: 124,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~çai\t~çâmes\t",
-            "~ças\t~çâtes\t",
-            "~ça\t~cèrent\t",
-            "~çasse\t~çassions\t",
-            "~çasses\t~çassiez\t",
-            "~çât\t~çassent\t",
-            "~cé\t",
         )),
     },
     // verb_past like paitre: 101 words.
@@ -199,9 +184,9 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~us\t~ûmes\t",
             "~us\t~ûtes\t",
             "~ut\t~urent\t",
-            "~usse\t~ussions\t",
-            "~usses\t~ussiez\t",
-            "~ût\t~ussent\t",
+            "~usse\t\t",
+            "\t\t",
+            "~ût\t\t",
             "~u\t",
         )),
     },
@@ -214,70 +199,10 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~is\t~îmes\t",
             "~is\t~îtes\t",
             "~it\t~irent\t",
-            "~isse\t~issions\t",
-            "~isses\t~issiez\t",
-            "~ît\t~issent\t",
+            "~isse\t\t",
+            "\t\t",
+            "~ît\t\t",
             "~u\t",
-        )),
-    },
-    // verb_past like réduire: 48 words.
-    EndingTable {
-        name: Cow::Borrowed("réduire"),
-        words: 48,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~sis\t~sîmes\t",
-            "~sis\t~sîtes\t",
-            "~sit\t~sirent\t",
-            "~sisse\t~sissions\t",
-            "~sisses\t~sissiez\t",
-            "~sît\t~sissent\t",
-            "~t\t",
-        )),
-    },
-    // verb_past like remettre: 40 words.
-    EndingTable {
-        name: Cow::Borrowed("remettre"),
-        words: 40,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~is\t~îmes\t",
-            "~is\t~îtes\t",
-            "~it\t~irent\t",
-            "~isse\t~issions\t",
-            "~isses\t~issiez\t",
-            "~ît\t~issent\t",
-            "~is\t",
-        )),
-    },
-    // verb_past like faire: 12 words.
-    EndingTable {
-        name: Cow::Borrowed("faire"),
-        words: 12,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~is\t~îmes\t",
-            "~is\t~îtes\t",
-            "~it\t~irent\t",
-            "~isse\t~issions\t",
-            "~isses\t~issiez\t",
-            "~ît\t~issent\t",
-            "~ait\t",
-        )),
-    },
-    // verb_past like dissoudre: 7 words.
-    EndingTable {
-        name: Cow::Borrowed("dissoudre"),
-        words: 7,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~lus\t~lûmes\t",
-            "~lus\t~lûtes\t",
-            "~lut\t~lurent\t",
-            "~lusse\t~lussions\t",
-            "~lusses\t~lussiez\t",
-            "~lût\t~lussent\t",
-            "~us\t",
         )),
     },
     // verb_past like ouïr: 5 words.
@@ -289,39 +214,24 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~s\t~mes\t",
             "~s\t~tes\t",
             "~t\t~rent\t",
-            "~sse\t~ssions\t",
-            "~sses\t~ssiez\t",
-            "~t\t~ssent\t",
+            "~sse\t\t",
+            "\t\t",
+            "~t\t\t",
             "~\t",
         )),
     },
-    // verb_past like arguër: 1 words.
-    EndingTable {
-        name: Cow::Borrowed("arguër"),
-        words: 1,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~üai\t~üâmes\t",
-            "~üas\t~üâtes\t",
-            "~üa\t~üèrent|~uërent\t",
-            "~üasse\t~üassions\t",
-            "~üasses\t~üassiez\t",
-            "~üât\t~üassent\t",
-            "~üé\t",
-        )),
-    },
-    // verb like passer: 6,947 words.
+    // verb like passer: 6,689 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6947,
+        words: 6689,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "~ai\t~ons\t",
-            "~as\t~ez\t",
-            "~a\t~ont\t",
-            "~ais\t~ions\t",
-            "~ais\t~iez\t",
-            "~ait\t~aient\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "~ais\t\t",
+            "\t\t",
         )),
     },
 ];

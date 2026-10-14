@@ -4,7 +4,9 @@
 //! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
 //! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -142,41 +144,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`m_as_f`: one value read as another).
-const M_AS_F: [u16; 38] = [
-    2, 3, 2, 3, 4, 5, 8, 9, 8, 9, 10, 11, 14, 15, 14, 15, 16, 17, 20, 21, 20, 21, 22, 23, 26, 27,
-    26, 27, 28, 29, 32, 33, 32, 33, 34, 35, 36, 37,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`m_as_n`: one value read as another).
-const M_AS_N: [u16; 38] = [
-    4, 5, 2, 3, 4, 5, 10, 11, 8, 9, 10, 11, 16, 17, 14, 15, 16, 17, 22, 23, 20, 21, 22, 23, 28, 29,
-    26, 27, 28, 29, 34, 35, 32, 33, 34, 35, 36, 37,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`f_as_m`: one value read as another).
-const F_AS_M: [u16; 38] = [
-    0, 1, 0, 1, 4, 5, 6, 7, 6, 7, 10, 11, 12, 13, 12, 13, 16, 17, 18, 19, 18, 19, 22, 23, 24, 25,
-    24, 25, 28, 29, 30, 31, 30, 31, 34, 35, 36, 37,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`f_as_n`: one value read as another).
-const F_AS_N: [u16; 38] = [
-    0, 1, 4, 5, 4, 5, 6, 7, 10, 11, 10, 11, 12, 13, 16, 17, 16, 17, 18, 19, 22, 23, 22, 23, 24, 25,
-    28, 29, 28, 29, 30, 31, 34, 35, 34, 35, 36, 37,
-];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_sg`: one value read as another).
-const PL_AS_SG: [u16; 38] = [
-    0, 0, 2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24,
-    26, 26, 28, 28, 30, 30, 32, 32, 34, 34, 36, 37,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -192,24 +159,18 @@ pub enum Declension {
     Obnoxius,
     /// Like `prior`: 549 words.
     Prior,
+    /// Like `complex`: 219 words.
+    Complex,
     /// Like `miser`: 209 words.
     Miser,
-    /// Like `recēns`: 131 words.
-    Recēns,
-    /// Like `fugāx`: 95 words.
-    Fugāx,
-    /// Like `quadrupēs`: 72 words.
-    Quadrupēs,
-    /// Like `ēlegāns`: 53 words.
-    Ēlegāns,
-    /// Like `iners`: 47 words.
+    /// Like `sōns`: 200 words.
+    Sōns,
+    /// Like `iners`: 39 words.
     Iners,
     /// Like `hȳoīdēs`: 37 words.
     Hȳoīdēs,
     /// Like `āter`: 35 words.
     Āter,
-    /// Like `simplex`: 35 words.
-    Simplex,
     /// Like `subiēns`: 26 words.
     Subiēns,
     /// Like `anceps`: 25 words.
@@ -222,22 +183,18 @@ pub enum Declension {
     Celeber,
     /// Like `adespotos`: 15 words.
     Adespotos,
-    /// Like `sōns`: 14 words.
-    Sōns,
     /// Like `altrīx`: 14 words.
     Altrīx,
     /// Like `dīcticos`: 13 words.
     Dīcticos,
     /// Like `dulcissimus`: 13 words.
     Dulcissimus,
-    /// Like `memor`: 13 words.
-    Memor,
-    /// Like `socors`: 12 words.
-    Socors,
     /// Like `plērusque`: 9 words.
     Plērusque,
     /// Like `dīves`: 9 words.
     Dīves,
+    /// Like `memor`: 8 words.
+    Memor,
     /// Like `pār`: 7 words.
     Pār,
     /// Like `facilis`: 7 words.
@@ -258,6 +215,8 @@ pub enum Declension {
     Noerus,
     /// Like `sphaeroīdēs`: 4 words.
     Sphaeroīdēs,
+    /// Like `socors`: 3 words.
+    Socors,
     /// Like `dexter`: 3 words.
     Dexter,
     /// Like `locuplēs`: 3 words.
@@ -276,6 +235,8 @@ pub enum Declension {
     Cȳanos,
     /// Like `quispiam`: 3 words.
     Quispiam,
+    /// Like `artifex`: 3 words.
+    Artifex,
     /// Like `hecateius`: 2 words.
     Hecateius,
     /// Like `profitens`: 2 words.
@@ -326,36 +287,31 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 71] = [
+    pub const ALL: [Declension; 68] = [
         Declension::Iacitūrus,
         Declension::Dēmittēns,
         Declension::Iactāns,
         Declension::Pinguis,
         Declension::Obnoxius,
         Declension::Prior,
+        Declension::Complex,
         Declension::Miser,
-        Declension::Recēns,
-        Declension::Fugāx,
-        Declension::Quadrupēs,
-        Declension::Ēlegāns,
+        Declension::Sōns,
         Declension::Iners,
         Declension::Hȳoīdēs,
         Declension::Āter,
-        Declension::Simplex,
         Declension::Subiēns,
         Declension::Anceps,
         Declension::Discolor,
         Declension::Amnigena,
         Declension::Celeber,
         Declension::Adespotos,
-        Declension::Sōns,
         Declension::Altrīx,
         Declension::Dīcticos,
         Declension::Dulcissimus,
-        Declension::Memor,
-        Declension::Socors,
         Declension::Plērusque,
         Declension::Dīves,
+        Declension::Memor,
         Declension::Pār,
         Declension::Facilis,
         Declension::Comparticeps,
@@ -366,6 +322,7 @@ impl Declension {
         Declension::Beneficus,
         Declension::Noerus,
         Declension::Sphaeroīdēs,
+        Declension::Socors,
         Declension::Dexter,
         Declension::Locuplēs,
         Declension::Būcolicos,
@@ -375,6 +332,7 @@ impl Declension {
         Declension::Vīgēnus,
         Declension::Cȳanos,
         Declension::Quispiam,
+        Declension::Artifex,
         Declension::Hecateius,
         Declension::Profitens,
         Declension::Marauensis,
@@ -415,7 +373,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     // Iacitūrus: 17,983 words (cōnsēnsus, abditus, servus, apparātus, foetus, acerbātus).
     declension!("iacitūrus", 17983, "~us";
     stem comparative: "~i- like iacitūrus";
@@ -501,59 +459,46 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     voc_m: "~or", _;
     superlative: "~ssimus";
     ),
+    // Complex: 219 words (phoenīx, complex, vetus, simplex, duplex, senex).
+    declension!("complex", 219, "~ˇ";
+    stem comparative: "~i- like complex";
+    nom_m: "~ˇ", "~ēsˇ";
+    nom_f: "~ˇ", "~ēsˇ";
+    nom_n: "~ˇ", "~iaˇ";
+    gen_m: "~isˇ", "~iumˇ";
+    gen_f: "~isˇ", "~iumˇ";
+    dat_m: "~īˇ", "~ibusˇ";
+    dat_f: "~īˇ", _;
+    acc_m: "~emˇ", "~īsˇ|~ēsˇ";
+    acc_f: "~emˇ", "~īsˇ|~ēsˇ";
+    abl_m: "~īˇ|~eˇ", _;
+    abl_f: "~īˇ|~eˇ", _;
+    voc_m: "~ˇ", _;
+    ),
     // Miser: 209 words (līber, līniger, venēnifer, urniger, turriger, tridentiger). Like Iacitūrus, except in 2 cells: nom_m sg, voc_m sg.
     declension!("miser", 209, "~", like Iacitūrus;
     stem comparative: "~- like miser";
     nom_m: "~", _;
     voc_m: "~", _;
     ),
-    // Recēns: 131 words (recēns, clēmēns, battēns, adulēscēns, libēns, lubēns). Like Dēmittēns, except in 4 cells: acc_m pl, acc_f pl, abl_m sg, abl_f sg.
-    declension!("recēns", 131, "~ē~s", like Dēmittēns;
-    acc_m: _, "~e~tīs|~e~tēs";
-    acc_f: _, "~e~tīs|~e~tēs";
-    abl_m: "~e~tī|~e~te", _;
-    abl_f: "~e~tī|~e~te", _;
+    // Sōns: 200 words (sōns, īnfāns, recēns, ignicomāns, clēmēns, battēns).
+    declension!("sōns", 200, "~sˇ";
+    stem comparative: "~ti- like complex";
+    nom_m: "~sˇ", "~tēsˇ";
+    nom_f: "~sˇ", "~tēsˇ";
+    nom_n: "~sˇ", "~tiaˇ";
+    gen_m: "~tisˇ", "~tiumˇ";
+    gen_f: "~tisˇ", "~tiumˇ";
+    dat_m: "~tīˇ", "~tibusˇ";
+    dat_f: "~tīˇ", _;
+    acc_m: "~temˇ", "~tīsˇ|~tēsˇ";
+    acc_f: "~temˇ", "~tīsˇ|~tēsˇ";
+    abl_m: "~tīˇ|~teˇ", _;
+    abl_f: "~tīˇ|~teˇ", _;
+    voc_m: "~sˇ", _;
     ),
-    // Fugāx: 95 words (phoenīx, senex, īnfēlīx, redux, fēlīx, atrōx).
-    declension!("fugāx", 95, "~x";
-    stem comparative: "~ci- like iacitūrus";
-    nom_m: "~x", "~cēs";
-    nom_f: "~x", "~cēs";
-    nom_n: "~x", "~cia";
-    gen_m: "~cis", "~cium";
-    gen_f: "~cis", "~cium";
-    dat_m: "~cī", "~cibus";
-    dat_f: "~cī", _;
-    acc_m: "~cem", "~cīs|~cēs";
-    acc_f: "~cem", "~cīs|~cēs";
-    abl_m: "~cī|~ce", _;
-    abl_f: "~cī|~ce", _;
-    voc_m: "~x", _;
-    ),
-    // Quadrupēs: 72 words (cornipēs, quadrupēs, volucripēs, pūbēs, avipēs, longipēs).
-    declension!("quadrupēs", 72, "~ēs";
-    nom_m: "~ēs", "~edēs";
-    nom_f: "~ēs", "~edēs";
-    nom_n: "~ēs", "~edia";
-    gen_m: "~edis", "~edium";
-    gen_f: "~edis", "~edium";
-    dat_m: "~edī", "~edibus";
-    dat_f: "~edī", _;
-    acc_m: "~edem", "~edīs|~edēs";
-    acc_f: "~edem", "~edīs|~edēs";
-    abl_m: "~edī|~ede", _;
-    abl_f: "~edī|~ede", _;
-    voc_m: "~ēs", _;
-    ),
-    // Ēlegāns: 53 words (īnfāns, ignicomāns, ēlegāns, auricomāns, radiodūrāns, incōnstāns). Like Iactāns, except in 4 cells: acc_m pl, acc_f pl, abl_m sg, abl_f sg.
-    declension!("ēlegāns", 53, "~ā~s", like Iactāns;
-    acc_m: _, "~a~tīs|~a~tēs";
-    acc_f: _, "~a~tīs|~a~tēs";
-    abl_m: "~a~tī|~a~te", _;
-    abl_f: "~a~tī|~a~te", _;
-    ),
-    // Iners: 47 words (dīs, vetus, exos, inops, mās, cōps).
-    declension!("iners", 47, "~s";
+    // Iners: 39 words (dīs, inops, mās, cōps, ēns, teres).
+    declension!("iners", 39, "~s";
     stem comparative: "~ti- like iacitūrus";
     nom_m: "~s", "~tēs";
     nom_f: "~s", "~tēs";
@@ -597,22 +542,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     voc_m: "~e~", _;
     comparative: "~~ior";
     superlative: "~e~rimus";
-    ),
-    // Simplex: 35 words (complex, simplex, duplex, multiplex, triplex, quadruplex).
-    declension!("simplex", 35, "~ex";
-    stem comparative: "~ici- like iacitūrus";
-    nom_m: "~ex", "~icēs";
-    nom_f: "~ex", "~icēs";
-    nom_n: "~ex", "~icia";
-    gen_m: "~icis", "~icium";
-    gen_f: "~icis", "~icium";
-    dat_m: "~icī", "~icibus";
-    dat_f: "~icī", _;
-    acc_m: "~icem", "~icīs|~icēs";
-    acc_f: "~icem", "~icīs|~icēs";
-    abl_m: "~icī|~ice", _;
-    abl_f: "~icī|~ice", _;
-    voc_m: "~ex", _;
     ),
     // Subiēns: 26 words (adiēns, abiēns, exiēns, iniēns, interiēns, obiēns).
     declension!("subiēns", 26, "~iē~s";
@@ -659,10 +588,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     abl_f: "~ō~ī|~ō~e", _;
     voc_m: "~o~", _;
     ),
-    // Amnigena: 18 words (undicola, dracōnigena, indigena, numida, rūricola, terrigena). Like Iacitūrus, except in 5 cells: nom_n sg, dat_m pl, voc_m sg, comparative, superlative.
-    declension!("amnigena", 18, "~a", like Iacitūrus as M_AS_F;
+    // Amnigena: 18 words (undicola, dracōnigena, indigena, numida, rūricola, terrigena). Like Iacitūrus, except in 12 cells: nom_m sg, nom_m pl, nom_n sg, gen_m sg, gen_m pl, dat_m sg, ….
+    declension!("amnigena", 18, "~a", like Iacitūrus;
+    nom_m: "~a", "~ae";
     nom_n: "~a", _;
-    dat_m: _, "~īs";
+    gen_m: "~ae", "~ārum";
+    dat_m: "~ae", _;
+    acc_m: "~am", "~ās";
+    abl_m: "~ā", _;
     voc_m: "~a", _;
     comparative: derived;
     superlative: derived;
@@ -690,37 +623,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     comparative: derived;
     superlative: derived;
     ),
-    // Sōns: 14 words (sōns, īnsōns, latifrōns, nigrifrōns, angustifrōns, flāvifrōns).
-    declension!("sōns", 14, "~ō~s";
-    nom_m: "~ō~s", "~o~tēs";
-    nom_f: "~ō~s", "~o~tēs";
-    nom_n: "~ō~s", "~o~tia";
-    gen_m: "~o~tis", "~o~tium";
-    gen_f: "~o~tis", "~o~tium";
-    dat_m: "~o~tī", "~o~tibus";
-    dat_f: "~o~tī", _;
-    acc_m: "~o~tem", "~o~tīs|~o~tēs";
-    acc_f: "~o~tem", "~o~tīs|~o~tēs";
-    abl_m: "~o~tī|~o~te", _;
-    abl_f: "~o~tī|~o~te", _;
-    voc_m: "~ō~s", _;
-    ),
-    // Altrīx: 14 words (bellātrīx, peccātrīx, cōnservātrīx, victrīx, accelerātrīx, altrīx). Like Fugāx, except in 11 cells: nom_m pl, nom_n sg, gen_n pl, dat_f pl, dat_n pl, acc_f pl, ….
-    declension!("altrīx", 14, "~x", like Fugāx as M_AS_N;
-    nom_m: _, derived;
-    nom_n: derived, _;
+    // Altrīx: 14 words (bellātrīx, peccātrīx, cōnservātrīx, victrīx, accelerātrīx, altrīx).
+    declension!("altrīx", 14, "~x";
+    nom_m: "~x", _;
+    nom_f: "~x", "~cēs";
+    nom_n: _, "~cia";
+    gen_f: "~cis", "~cium";
     gen_n: _, "~cium";
-    dat_f: _, "~cibus";
+    dat_f: "~cī", "~cibus";
     dat_n: _, "~cibus";
-    acc_f: _, "~cēs";
+    acc_f: "~cem", "~cēs";
     abl_f: "~ce|~cī", "~cibus";
     abl_n: _, "~cibus";
-    comparative: derived;
-    superlative: derived;
     ),
-    // Dīcticos: 13 words (azygos, dichotomos, holocaustos, eccentros, synōnymos, chrȳsocarpos). Like Adespotos, except in 1 cell: dat_f pl.
-    declension!("dīcticos", 13, "~os", like Adespotos as F_AS_M;
-    dat_f: _, derived;
+    // Dīcticos: 13 words (azygos, dichotomos, holocaustos, eccentros, synōnymos, chrȳsocarpos). Like Adespotos, except in 9 cells: nom_f sg, nom_f pl, gen_f sg, gen_f pl, dat_f sg, acc_f sg, ….
+    declension!("dīcticos", 13, "~os", like Adespotos;
+    nom_f: "~os", "~ī|~oe";
+    gen_f: "~ī", "~ōrum";
+    dat_f: "~ō", _;
+    acc_f: "~on", "~ōs";
+    abl_f: "~ō", _;
+    voc_f: "~e", _;
     ),
     // Dulcissimus: 13 words (dītissimus, plēnissimus, amārissimus, amantissimus, dulcissimus, parissimus).
     declension!("dulcissimus", 13, "~ssimus";
@@ -738,30 +661,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     voc_m: "~ssime", _;
     comparative: "~or";
     ),
-    // Memor: 13 words (vigil, celer, memor, peritum, inpar, inmemor). Like Pinguis, except in 6 cells: nom_m sg, nom_f sg, nom_n sg, abl_m sg, abl_f sg, voc_m sg.
-    declension!("memor", 13, "~", like Pinguis;
-    nom_m: "~", _;
-    nom_f: "~", _;
-    nom_n: "~", _;
-    abl_m: "~ī|~e", _;
-    abl_f: "~ī|~e", _;
-    voc_m: "~", _;
-    ),
-    // Socors: 12 words (concors, misericors, excors, vēcors, immisericors, inmisericors). Like Iners, except in 16 cells: nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m pl, gen_f sg, ….
-    declension!("socors", 12, "~s", like Iners;
-    stem comparative: "~di- like iacitūrus";
-    nom_m: _, "~dēs";
-    nom_f: _, "~dēs";
-    nom_n: _, "~dia";
-    gen_m: "~dis", "~dium";
-    gen_f: "~dis", "~dium";
-    dat_m: "~dī", "~dibus";
-    dat_f: "~dī", _;
-    acc_m: "~dem", "~dīs|~dēs";
-    acc_f: "~dem", "~dīs|~dēs";
-    abl_m: "~dī|~de", _;
-    abl_f: "~dī|~de", _;
-    ),
     // Plērusque: 9 words (quantuslibet, quantusvīs, plērusque, quantuscumque, tantusdem, quotuscumque).
     declension!("plērusque", 9, "~us~";
     nom_m: "~us~", "~ī~";
@@ -777,10 +676,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     abl_f: "~ā~", _;
     voc_m: "~e~", _;
     ),
-    // Dīves: 9 words (dīves, āles, superstes, caeles, coeles, interstes). Like Hȳoīdēs, except in 18 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m pl, ….
-    declension!("dīves", 9, "~es", like Hȳoīdēs as F_AS_N;
+    // Dīves: 9 words (dīves, āles, superstes, caeles, coeles, interstes). Like Hȳoīdēs, except in 19 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n pl, gen_m sg, ….
+    declension!("dīves", 9, "~es", like Hȳoīdēs;
     nom_m: "~es", "~itēs";
-    nom_f: _, "~itēs";
+    nom_f: "~es", "~itēs";
     nom_n: _, "~ita";
     gen_m: "~itis", "~itum";
     gen_f: "~itis", "~itum";
@@ -791,6 +690,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     abl_m: "~ite", _;
     abl_f: "~ite", _;
     voc_m: "~es", _;
+    ),
+    // Memor: 8 words (vigil, memor, inpar, inmemor, dēgener, immemor). Like Pinguis, except in 6 cells: nom_m sg, nom_f sg, nom_n sg, abl_m sg, abl_f sg, voc_m sg.
+    declension!("memor", 8, "~", like Pinguis;
+    nom_m: "~", _;
+    nom_f: "~", _;
+    nom_n: "~", _;
+    abl_m: "~ī|~e", _;
+    abl_f: "~ī|~e", _;
+    voc_m: "~", _;
     ),
     // Pār: 7 words (pār, impār, dispār, compār, conpār, sēpār).
     declension!("pār", 7, "~ā~";
@@ -849,14 +757,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     acc_m: _, "~~ēs|~~īs";
     acc_f: _, "~~ēs|~~īs";
     ),
-    // Ĭtalis: 5 words (ĭtalis, nīlōtis, memphītis, libystis, sarmatis). Like Altrīx, except in 12 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, gen_f sg, gen_f pl, ….
-    declension!("ĭtalis", 5, "~s", like Altrīx as PL_AS_SG;
-    nom_m: "~s", derived;
+    // Ĭtalis: 5 words (ĭtalis, nīlōtis, memphītis, libystis, sarmatis). Like Altrīx, except in 15 cells: nom_m sg, nom_f sg, nom_f pl, nom_n pl, gen_f sg, gen_f pl, ….
+    declension!("ĭtalis", 5, "~s", like Altrīx;
+    nom_m: "~s", _;
     nom_f: "~s", "~dēs|~des";
+    nom_n: _, derived;
     gen_f: "~dis|~dos", "~dum";
+    gen_n: _, derived;
     dat_f: "~dī", "~dibus";
+    dat_n: _, derived;
     acc_f: "~dem|~da", "~dēs|~das";
     abl_f: "~de", "~dibus";
+    abl_n: _, derived;
     ),
     // Beneficus: 5 words (beneficus, honōrificus, magnificus, malevolus, benevolus). Like Iacitūrus, except in 0 cells: .
     declension!("beneficus", 5, "~us", like Iacitūrus;
@@ -886,6 +798,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     abl_f: "~ī|~e", _;
     voc_m: "~es", _;
     voc_f: "~es", _;
+    ),
+    // Socors: 3 words (acrolepis, monocrēpis, exhērēs). Like Iners, except in 16 cells: nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m pl, gen_f sg, ….
+    declension!("socors", 3, "~s", like Iners;
+    stem comparative: "~di- like iacitūrus";
+    nom_m: _, "~dēs";
+    nom_f: _, "~dēs";
+    nom_n: _, "~dia";
+    gen_m: "~dis", "~dium";
+    gen_f: "~dis", "~dium";
+    dat_m: "~dī", "~dibus";
+    dat_f: "~dī", _;
+    acc_m: "~dem", "~dīs|~dēs";
+    acc_f: "~dem", "~dīs|~dēs";
+    abl_m: "~dī|~de", _;
+    abl_f: "~dī|~de", _;
     ),
     // Dexter: 3 words (dexter, citer, ulter).
     declension!("dexter", 3, "~er";
@@ -985,6 +912,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
     abl_m: "~ī~", _;
     abl_f: "~ī~", _;
     voc_m: "~is~", _;
+    ),
+    // Artifex: 3 words (artifex, bivertex, mordex).
+    declension!("artifex", 3, "~xˇ";
+    stem comparative: "~ci- like complex";
+    nom_m: "~xˇ", "~cēsˇ";
+    nom_f: "~xˇ", "~cēsˇ";
+    nom_n: "~xˇ", "~ciaˇ";
+    gen_m: "~cisˇ", "~ciumˇ";
+    gen_f: "~cisˇ", "~ciumˇ";
+    dat_m: "~cīˇ", "~cibusˇ";
+    dat_f: "~cīˇ", _;
+    acc_m: "~cemˇ", "~cīsˇ|~cēsˇ";
+    acc_f: "~cemˇ", "~cīsˇ|~cēsˇ";
+    abl_m: "~cīˇ|~ceˇ", _;
+    abl_f: "~cīˇ|~ceˇ", _;
+    voc_m: "~xˇ", _;
     ),
     // Hecateius: 2 words (chalybeius, hecateius).
     declension!("hecateius", 2, "~eius";

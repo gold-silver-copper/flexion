@@ -211,31 +211,40 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
     // कतम: 9 words (तक, अन्य, किम्, स्व, त्व, उभ).
     declension!("कतम", 9, "~";
-    nom_m: "~ः", "~ौ", "~े";
-    nom_f: "~ा", "~े", "~ाः";
-    nom_n: _, _, "~ानि";
-    acc_m: "~म्", _, "~ान्";
-    acc_f: "~ाम्", _, _;
-    acc_n: "~त्", _, _;
-    ins_m: "~ेन", "~ाभ्याम्", "~ैः";
-    ins_f: "~या", _, "~ाभिः";
-    dat_m: "~स्मै", _, "~ेभ्यः";
-    dat_f: "~स्यै", _, "~ाभ्यः";
-    abl_m: "~स्मात्", _, _;
-    abl_f: "~स्याः", _, _;
+    nom_m: "~ः", _, "~े";
+    nom_n: _, "~े", "~ानि";
+    acc_m: _, "~ौ", _;
+    acc_f: _, "~े", "~ाः";
+    acc_n: "~त्", "~े", _;
+    ins_m: "~ेन", _, _;
+    ins_f: "~या", "~ाभ्याम्", _;
+    ins_n: _, "~ाभ्याम्", "~ैः";
+    dat_m: "~स्मै", "~ाभ्याम्", _;
+    dat_f: "~स्यै", "~ाभ्याम्", _;
+    dat_n: _, "~ाभ्याम्", "~ेभ्यः";
+    abl_m: "~स्मात्", "~ाभ्याम्", "~ेभ्यः";
+    abl_f: "~स्याः", "~ाभ्याम्", "~ाभ्यः";
+    abl_n: _, "~ाभ्याम्", "~ेभ्यः";
     gen_m: "~स्य", "~योः", "~ेषाम्";
     gen_f: _, _, "~ासाम्";
-    loc_m: "~स्मिन्", _, "~ेषु";
-    loc_f: "~स्याम्", _, "~ासु";
-    voc_m: "~", _, _;
+    loc_m: "~स्मिन्", _, _;
+    loc_f: "~स्याम्", _, _;
+    loc_n: _, _, "~ेषु";
+    voc_m: _, "~ौ", _;
+    voc_f: "~े", "~े", "~ाः";
+    voc_n: "~", "~े", _;
     ),
     // कतर: 4 words (सर्व, कतर, अन्यतर, यतर). Like कतम, except in 2 cells: nom_n pl, ins_m sg.
     declension!("कतर", 4, "~", like कतम;
     nom_n: _, _, "~ाणि";
     ins_m: "~ेण", _, _;
     ),
-    // तद: 2 words (तद्, यद्). Like कतम, except in 1 cell: voc_m sg.
+    // तद: 2 words (तद्, यद्). Like कतम, except in 8 cells: nom_m du, acc_m du, voc_m du, voc_f sg, voc_f du, voc_f pl, ….
     declension!("तद्", 2, "~द्", like कतम;
-    voc_m: derived, _, _;
+    nom_m: _, "~ौ", _;
+    acc_m: _, derived, _;
+    voc_m: _, derived, _;
+    voc_f: derived, derived, derived;
+    voc_n: derived, derived, _;
     ),
 ];

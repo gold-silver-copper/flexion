@@ -47,7 +47,7 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 10345 | 21 | 4 | 266 | 637 | 149 |
+| noun | 10345 | 22 | 5 | 272 | 653 | 149 |
 | adjective | 60 | 4 | 2 | 10 | 27 | 2 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -79,13 +79,13 @@ grammar on the dictionary's own words, typed in full.
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 1065 | 72174 | **96.53%** ± 1.1 | 99.30% | 99.34% | 93.24% | 0.012 | 0.489 | 96.53% |  | 97.83 / 98.21 / 98.37 |  | 96.53% (72174) |  | 93.37% (0.00%) | 100.00% |
-| adjective | 3 | 252 | **40.87%** ± 55.6 | 100.00% | 100.00% | 0.00% | 0.405 | 1.422 | 40.87% |  | 60.24 / 59.76 / 59.26 |  | 40.87% (252) |  | 21.83% (0.00%) | 100.00% |
+| noun | 1065 | 72174 | **96.56%** ± 1.1 | 99.30% | 99.34% | 93.24% | 0.012 | 0.486 | 96.56% |  | 97.83 / 98.16 / 98.27 |  | 96.56% (72174) |  | 93.37% (0.00%) | 100.00% |
+| adjective | 3 | 252 | **52.38%** ± 56.5 | 100.00% | 100.00% | 0.00% | 0.330 | 1.457 | 52.38% |  | 51.81 / 59.76 / 59.26 |  | 52.38% (252) |  | 21.83% (0.00%) | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 6417 | 207692 |
-| adjective | 1338 | 67527 |
+| noun | 5584 | 183430 |
+| adjective | 1227 | 62309 |
 
 ## Data and license
 

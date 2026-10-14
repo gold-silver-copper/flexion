@@ -66,14 +66,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`sg_as_pl`: one value read as another).
-const SG_AS_PL: [u16; 4] = [1, 1, 3, 3];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`f_as_m`: one value read as another).
-const F_AS_M: [u16; 4] = [0, 1, 0, 1];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -115,19 +107,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     // Nullo: 37 words (tanto, uno, nessuno, molto, tutto, questo).
     declension!("nullo", 37, "~o";
     m: "~o", "~i";
-    f: "~a", "~e";
+    f: _, "~e";
     ),
     // Suo: 3 words (so, tuo, suo). Like Nullo, except in 1 cell: m pl.
     declension!("suo", 3, "~o", like Nullo;
     m: _, "~oi";
     ),
-    // Diversi: 3 words (diversi, entrambi, svariati). Like Nullo, except in 2 cells: m pl, f sg.
-    declension!("diversi", 3, "~i", like Nullo as SG_AS_PL;
-    m: _, derived;
-    f: derived, _;
+    // Diversi: 3 words (diversi, entrambi, svariati). Like Nullo, except in 2 cells: m sg, m pl.
+    declension!("diversi", 3, "~i", like Nullo;
+    m: "~i", derived;
     ),
-    // Nessun: 1 words (nessun). Like Diversi, except in 2 cells: m sg, f sg.
-    declension!("nessun", 1, "~", like Diversi as F_AS_M;
+    // Nessun: 1 words (nessun).
+    declension!("nessun", 1, "~";
     m: "~", _;
     f: "~a", _;
     ),

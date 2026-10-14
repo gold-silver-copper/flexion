@@ -204,6 +204,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     feature: None,
     compound: None,
     prefixes: Some(prefixes::PREFIXES),
+    heads: None,
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
@@ -214,8 +215,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 0.5,
     trust: flexion::Trust {
-        regular: 0.9773118,
-        unsettled: 0.9939308,
+        regular: 0.97528225,
+        unsettled: 0.9917448,
         unattested: 1.0,
     },
 };

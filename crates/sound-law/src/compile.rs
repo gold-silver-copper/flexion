@@ -57,6 +57,9 @@ pub enum Matcher<'a> {
     Backreference(usize),
     /// Nothing, where no member begins: `{?!V}`, read ahead.
     NotAhead(Cow<'a, [Cow<'a, str>]>),
+    /// What any of the patterns matches, captures in none: a right context
+    /// with others it may be instead ([`Rule::or_before`](crate::Rule::or_before)).
+    Either(Cow<'a, [Pattern<'a>]>),
 }
 
 /// How many times an atom matches: once, `?`, `*` or `+`.
@@ -149,6 +152,23 @@ pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program<'static>, CompileErr
             rule.name(),
             "right context",
         )?;
+        let mut or_right = Vec::with_capacity(rule.or_right_contexts().len());
+        for source in rule.or_right_contexts() {
+            let mut theirs = captures.clone();
+            or_right.push(parse_pattern(
+                source,
+                &classes,
+                &mut theirs,
+                rule.name(),
+                "right context",
+            )?);
+            if theirs.len() != captures.len() {
+                return Err(CompileError::in_rule(
+                    rule.name(),
+                    "a right context after the first cannot declare captures",
+                ));
+            }
+        }
         let replacement = parse_replacement(rule.replacement(), &captures, &maps, rule.name())?;
 
         let (excluded_left, excluded_right) = match (
@@ -183,16 +203,41 @@ pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program<'static>, CompileErr
             _ => unreachable!("Rule::unless_context always sets both context halves"),
         };
 
-        let required = [&left, &target, &right]
-            .into_iter()
-            .flat_map(|p| p.atoms.iter())
-            .filter(|a| matches!(a.quantifier, Quantifier::One | Quantifier::OneOrMore))
-            .filter_map(|a| match &a.matcher {
-                Matcher::Literal(s) if !s.is_empty() => Some(s.clone()),
-                _ => None,
-            })
-            .collect::<Vec<_>>()
-            .into();
+        // A right context's literals only where every one has them.
+        let literals = |p: &Pattern<'static>| -> Vec<Cow<'static, str>> {
+            p.atoms
+                .iter()
+                .filter(|a| matches!(a.quantifier, Quantifier::One | Quantifier::OneOrMore))
+                .filter_map(|a| match &a.matcher {
+                    Matcher::Literal(s) if !s.is_empty() => Some(s.clone()),
+                    _ => None,
+                })
+                .collect()
+        };
+        let mut required = literals(&left);
+        required.extend(literals(&target));
+        required.extend(
+            literals(&right)
+                .into_iter()
+                .filter(|l| or_right.iter().all(|r| literals(r).contains(l))),
+        );
+        let required = required.into();
+        // Several right contexts: one, matching any of them.
+        let right = if or_right.is_empty() {
+            right
+        } else {
+            let either = std::iter::once(right).chain(or_right).collect::<Vec<_>>();
+            Pattern {
+                atoms: vec![Atom {
+                    matcher: Matcher::Either(either.into()),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                }]
+                .into(),
+                anchored_at_start: false,
+                anchored_at_end: false,
+            }
+        };
         compiled.push(CompiledRule {
             name: Cow::Owned(rule.name().to_owned()),
             required,

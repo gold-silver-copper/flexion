@@ -133,13 +133,6 @@ macro_rules! view {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`pl_as_du`: one value read as another).
-const PL_AS_DU: [u16; 45] = [
-    0, 1, 1, 3, 4, 4, 6, 7, 7, 9, 10, 10, 12, 13, 13, 15, 16, 16, 18, 19, 19, 21, 22, 22, 24, 25,
-    25, 27, 28, 28, 30, 31, 31, 33, 34, 34, 36, 37, 37, 39, 40, 40, 42, 43, 43,
-];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
@@ -192,7 +185,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     nom_m: "~οι", _, "~οι";
     nom_f: _, _, "~αι";
     nom_n: _, _, "~ᾰ";
-    gen_m: _, _, "~ων";
+    gen_f: _, _, "~ων";
+    gen_n: _, _, "~ων";
     dat_f: _, _, "~αις";
     dat_n: _, _, "~οις";
     acc_m: _, _, "~ους";
@@ -208,23 +202,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     acc_m: _, _, "~ᾰς";
     acc_f: _, _, "~ᾰς";
     ),
-    // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 9 cells: nom_m sg, nom_m du, nom_f du, gen_m du, gen_f du, gen_n du, ….
-    declension!("δῠο", 1, "~ο", like Χῑλῐοι as PL_AS_DU;
-    nom_m: "~ο", "~ο", _;
-    nom_f: _, "~ο", _;
+    // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 18 cells: nom_m sg, nom_m du, nom_m pl, nom_f du, nom_f pl, nom_n pl, ….
+    declension!("δῠο", 1, "~ο", like Χῑλῐοι;
+    nom_m: "~ο", "~ο", derived;
+    nom_f: _, "~ο", derived;
+    nom_n: _, _, derived;
     gen_m: _, "~οῑν|~εῑν", _;
-    gen_f: _, "~οῑν|~εῑν", _;
-    gen_n: _, "~οῑν|~εῑν", _;
+    gen_f: _, "~οῑν|~εῑν", derived;
+    gen_n: _, "~οῑν|~εῑν", derived;
     dat_m: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
-    dat_f: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
-    dat_n: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
+    dat_f: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
+    dat_n: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
+    acc_m: _, _, derived;
+    acc_f: _, _, derived;
     ),
-    // Τρεῑς: 1 words (τρεῑς). Like Χῑλῐοι, except in 10 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, dat_m pl, ….
+    // Τρεῑς: 1 words (τρεῑς). Like Χῑλῐοι, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_f pl, gen_n pl, ….
     declension!("τρεῑς", 1, "~εῑς", like Χῑλῐοι;
     nom_m: "~εῑς", _, "~εῑς";
     nom_f: _, _, "~εῑς";
     nom_n: _, _, "~ῐᾰ";
-    gen_m: _, _, "~ῐων";
+    gen_f: _, _, "~ῐων";
+    gen_n: _, _, "~ῐων";
     dat_m: _, _, "~ῐσῐ|~ῐσῐν";
     dat_f: _, _, "~ῐσῐ|~ῐσῐν";
     dat_n: _, _, "~ῐσῐ|~ῐσῐν";
@@ -236,7 +234,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     nom_m: "~ᾰ~ᾰ~ες", _, "~α~α~ες";
     nom_f: _, _, "~α~α~ες";
     nom_n: _, _, "~α~α~ᾰ";
-    gen_m: _, _, "~α~α~ων";
+    gen_f: _, _, "~α~α~ων";
+    gen_n: _, _, "~α~α~ων";
     dat_m: _, _, "~α~α~σι|~α~α~σιν";
     dat_f: _, _, "~α~α~σι|~α~α~σιν";
     dat_n: _, _, "~α~α~σῐ|~α~α~σῐν";
@@ -251,12 +250,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     gen_m: "ἑνος", _, _;
     gen_f: "μῐᾱς", _, _;
     dat_m: "ἑνῐ", _, _;
-    dat_f: "μῐᾳ", _, _;
     acc_m: "ἑνᾰ", _, _;
-    acc_f: "μῐᾰν", _, _;
     voc_m: "εἱς", _, _;
     ),
-    // Δευτερος: 1 words (δευτερος). Like Χῑλῐοι, except in 14 cells: nom_m sg, nom_m du, nom_f sg, nom_f du, nom_n sg, gen_m sg, ….
+    // Δευτερος: 1 words (δευτερος). Like Χῑλῐοι, except in 12 cells: nom_m sg, nom_m du, nom_f sg, nom_f du, nom_n sg, gen_m sg, ….
     declension!("δευτερος", 1, "~ος", like Χῑλῐοι;
     nom_m: "~ος", "~ω", _;
     nom_f: "~ᾱ", "~ᾱ", _;
@@ -264,9 +261,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     gen_m: "~ου", "~οιν", _;
     gen_f: "~ᾱς", "~αιν", _;
     dat_m: "~ῳ", _, _;
-    dat_f: "~ᾳ", _, _;
     acc_m: "~ον", _, _;
-    acc_f: "~ᾱν", _, _;
     voc_m: "~ε", _, _;
     ),
 ];

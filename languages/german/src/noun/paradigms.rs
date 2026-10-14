@@ -6,7 +6,9 @@
 //! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
 //! as the copy laws in `laws.rs` change it. A capital (`N`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
-//! letter before it.
+//! letter before it. A `ˇ` ends
+//! the patterns of a declension whose stems alternate: the laws in `laws.rs`
+//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
 
 use flexion::Paradigm;
 
@@ -85,48 +87,22 @@ macro_rules! feature {
     };
 }
 
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`nom_as_dat`: one value read as another).
-const NOM_AS_DAT: [u16; 8] = [4, 5, 2, 3, 4, 5, 6, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`dat_as_nom`: one value read as another).
-const DAT_AS_NOM: [u16; 8] = [0, 1, 2, 3, 0, 1, 6, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`dat_as_acc`: one value read as another).
-const DAT_AS_ACC: [u16; 8] = [0, 1, 2, 3, 6, 7, 6, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`sg_as_pl`: one value read as another).
-const SG_AS_PL: [u16; 8] = [1, 1, 3, 3, 5, 5, 7, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`nom_as_gen`: one value read as another).
-const NOM_AS_GEN: [u16; 8] = [2, 3, 2, 3, 4, 5, 6, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`dat_as_gen`: one value read as another).
-const DAT_AS_GEN: [u16; 8] = [0, 1, 2, 3, 2, 3, 6, 7];
-
-/// A view: per cell (in the cells' order), the cell of the declension it is
-/// like that it reads (`gen_as_acc`: one value read as another).
-const GEN_AS_ACC: [u16; 8] = [0, 1, 6, 7, 4, 5, 6, 7];
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `platte`: 48,818 words.
+    /// Like `platte`: 30,034 words.
     Platte,
-    /// Like `lager`: 27,681 words.
+    /// Like `lager`: 27,827 words.
     Lager,
-    /// Like `tag`: 16,279 words.
+    /// Like `uhr`: 19,889 words.
+    Uhr,
+    /// Like `tag`: 16,299 words.
     Tag,
-    /// Like `hündin`: 7,319 words.
-    Hündin,
-    /// Like `stein`: 6,219 words.
+    /// Like `ärztin`: 7,285 words.
+    Ärztin,
+    /// Like `stein`: 6,268 words.
     Stein,
-    /// Like `kanon`: 5,519 words.
+    /// Like `kanon`: 5,402 words.
     Kanon,
     /// Like `einsatz`: 4,914 words.
     Einsatz,
@@ -136,51 +112,47 @@ pub enum Declension {
     Fuchs,
     /// Like `blatt`: 1,733 words.
     Blatt,
-    /// Like `action`: 1,302 words.
+    /// Like `action`: 1,296 words.
     Action,
-    /// Like `bild`: 1,163 words.
+    /// Like `bild`: 1,147 words.
     Bild,
     /// Like `korb`: 991 words.
     Korb,
     /// Like `grüner`: 974 words.
     Grüner,
-    /// Like `langohr`: 957 words.
+    /// Like `langohr`: 918 words.
     Langohr,
     /// Like `leuchtkraft`: 877 words.
     Leuchtkraft,
-    /// Like `minderung`: 820 words.
-    Minderung,
-    /// Like `leben`: 803 words.
+    /// Like `leben`: 783 words.
     Leben,
-    /// Like `mark`: 691 words.
+    /// Like `mark`: 695 words.
     Mark,
     /// Like `loch`: 605 words.
     Loch,
+    /// Like `impressum`: 599 words.
+    Impressum,
     /// Like `wurm`: 581 words.
     Wurm,
-    /// Like `zentrum`: 580 words.
-    Zentrum,
-    /// Like `visum`: 512 words.
-    Visum,
-    /// Like `kasten`: 497 words.
+    /// Like `minderung`: 510 words.
+    Minderung,
+    /// Like `kasten`: 498 words.
     Kasten,
     /// Like `linke`: 494 words.
     Linke,
-    /// Like `anhang`: 459 words.
+    /// Like `anhang`: 458 words.
     Anhang,
-    /// Like `zerwürfnis`: 433 words.
+    /// Like `zerwürfnis`: 434 words.
     Zerwürfnis,
     /// Like `kunst`: 430 words.
     Kunst,
-    /// Like `lava`: 427 words.
-    Lava,
-    /// Like `chauvinismus`: 405 words.
-    Chauvinismus,
-    /// Like `ohr`: 405 words.
+    /// Like `ohr`: 404 words.
     Ohr,
-    /// Like `auge`: 362 words.
+    /// Like `auge`: 352 words.
     Auge,
-    /// Like `talmi`: 314 words.
+    /// Like `vakuum`: 336 words.
+    Vakuum,
+    /// Like `talmi`: 274 words.
     Talmi,
     /// Like `mantel`: 266 words.
     Mantel,
@@ -188,60 +160,62 @@ pub enum Declension {
     Zirkus,
     /// Like `name`: 201 words.
     Name,
-    /// Like `kapital`: 184 words.
-    Kapital,
+    /// Like `aroma`: 193 words.
+    Aroma,
     /// Like `boden`: 177 words.
     Boden,
+    /// Like `visum`: 176 words.
+    Visum,
     /// Like `bau`: 176 words.
     Bau,
-    /// Like `klimax`: 159 words.
+    /// Like `klimax`: 160 words.
     Klimax,
+    /// Like `kapital`: 157 words.
+    Kapital,
     /// Like `rammbock`: 143 words.
     Rammbock,
-    /// Like `basis`: 142 words.
-    Basis,
-    /// Like `guß`: 142 words.
-    Guß,
     /// Like `schwung`: 140 words.
     Schwung,
-    /// Like `thema`: 130 words.
-    Thema,
-    /// Like `modus`: 127 words.
-    Modus,
-    /// Like `brösel`: 122 words.
-    Brösel,
-    /// Like `pyxis`: 122 words.
-    Pyxis,
+    /// Like `guß`: 137 words.
+    Guß,
+    /// Like `lava`: 123 words.
+    Lava,
     /// Like `lexikon`: 114 words.
     Lexikon,
+    /// Like `brösel`: 113 words.
+    Brösel,
     /// Like `inneres`: 109 words.
     Inneres,
+    /// Like `pyxis`: 108 words.
+    Pyxis,
     /// Like `start`: 106 words.
     Start,
     /// Like `reichtum`: 105 words.
     Reichtum,
-    /// Like `geschlecht`: 99 words.
+    /// Like `haß`: 104 words.
+    Haß,
+    /// Like `anus`: 103 words.
+    Anus,
+    /// Like `geschlecht`: 98 words.
     Geschlecht,
     /// Like `spital`: 96 words.
     Spital,
-    /// Like `konto`: 92 words.
-    Konto,
     /// Like `vogel`: 91 words.
     Vogel,
     /// Like `heu`: 78 words.
     Heu,
-    /// Like `geschoß`: 77 words.
-    Geschoß,
-    /// Like `billett`: 74 words.
+    /// Like `billett`: 72 words.
     Billett,
+    /// Like `hündin`: 68 words.
+    Hündin,
     /// Like `vorbau`: 58 words.
     Vorbau,
+    /// Like `basis`: 57 words.
+    Basis,
     /// Like `ohrloch`: 54 words.
     Ohrloch,
     /// Like `großmutter`: 51 words.
     Großmutter,
-    /// Like `mythos`: 51 words.
-    Mythos,
     /// Like `saal`: 49 words.
     Saal,
     /// Like `stadion`: 46 words.
@@ -254,20 +228,26 @@ pub enum Declension {
     Michel,
     /// Like `platt`: 40 words.
     Platt,
-    /// Like `ablaß`: 39 words.
-    Ablaß,
+    /// Like `mausoleum`: 39 words.
+    Mausoleum,
+    /// Like `tempo`: 38 words.
+    Tempo,
     /// Like `herr`: 37 words.
     Herr,
-    /// Like `putto`: 37 words.
-    Putto,
+    /// Like `mythos`: 36 words.
+    Mythos,
     /// Like `klerus`: 34 words.
     Klerus,
+    /// Like `modus`: 31 words.
+    Modus,
     /// Like `tochter`: 25 words.
     Tochter,
     /// Like `xerophyt`: 24 words.
     Xerophyt,
     /// Like `quinquagesima`: 23 words.
     Quinquagesima,
+    /// Like `thema`: 21 words.
+    Thema,
     /// Like `not`: 21 words.
     Not,
     /// Like `muß`: 19 words.
@@ -278,6 +258,8 @@ pub enum Declension {
     Vieh,
     /// Like `eiersandwich`: 18 words.
     Eiersandwich,
+    /// Like `ablaß`: 16 words.
+    Ablaß,
     /// Like `eis`: 16 words.
     Eis,
     /// Like `yoni`: 16 words.
@@ -306,36 +288,34 @@ pub enum Declension {
     Genitale,
     /// Like `crash`: 12 words.
     Crash,
+    /// Like `hausgenosse`: 11 words.
+    Hausgenosse,
     /// Like `präsens`: 11 words.
     Präsens,
     /// Like `großbetrieb`: 11 words.
     Großbetrieb,
-    /// Like `wegwarte`: 11 words.
-    Wegwarte,
-    /// Like `hausgenosse`: 10 words.
-    Hausgenosse,
     /// Like `herz`: 10 words.
     Herz,
     /// Like `matrix`: 10 words.
     Matrix,
     /// Like `gondoliere`: 10 words.
     Gondoliere,
-    /// Like `druckbuchstabe`: 10 words.
-    Druckbuchstabe,
     /// Like `vitiligo`: 9 words.
     Vitiligo,
     /// Like `gravamen`: 9 words.
     Gravamen,
+    /// Like `konto`: 8 words.
+    Konto,
     /// Like `triangel`: 8 words.
     Triangel,
+    /// Like `wegwarte`: 8 words.
+    Wegwarte,
+    /// Like `druckbuchstabe`: 8 words.
+    Druckbuchstabe,
     /// Like `zagel`: 8 words.
     Zagel,
-    /// Like `bocher`: 8 words.
-    Bocher,
     /// Like `numerale`: 8 words.
     Numerale,
-    /// Like `ciabatta`: 8 words.
-    Ciabatta,
     /// Like `syndikus`: 8 words.
     Syndikus,
     /// Like `kleinvieh`: 8 words.
@@ -344,6 +324,8 @@ pub enum Declension {
     Kappes,
     /// Like `fiduz`: 8 words.
     Fiduz,
+    /// Like `ciabatta`: 8 words.
+    Ciabatta,
     /// Like `abt`: 8 words.
     Abt,
     /// Like `dressman`: 7 words.
@@ -354,22 +336,24 @@ pub enum Declension {
     Yeoman,
     /// Like `bruderherz`: 7 words.
     Bruderherz,
+    /// Like `zentrum`: 6 words.
+    Zentrum,
     /// Like `siemens`: 6 words.
     Siemens,
-    /// Like `fluor`: 6 words.
-    Fluor,
-    /// Like `straß`: 6 words.
-    Straß,
-    /// Like `equilibrium`: 6 words.
-    Equilibrium,
-    /// Like `manna`: 6 words.
-    Manna,
+    /// Like `bocher`: 6 words.
+    Bocher,
     /// Like `mehrzweck`: 6 words.
     Mehrzweck,
     /// Like `eva`: 6 words.
     Eva,
+    /// Like `manna`: 6 words.
+    Manna,
     /// Like `heros`: 6 words.
     Heros,
+    /// Like `fluor`: 5 words.
+    Fluor,
+    /// Like `häs`: 5 words.
+    Häs,
     /// Like `korpus`: 5 words.
     Korpus,
     /// Like `glottis`: 5 words.
@@ -380,16 +364,16 @@ pub enum Declension {
     Koog,
     /// Like `artemis`: 5 words.
     Artemis,
-    /// Like `zane`: 5 words.
-    Zane,
-    /// Like `griwna`: 5 words.
-    Griwna,
     /// Like `seeklima`: 5 words.
     Seeklima,
+    /// Like `trichobothrium`: 5 words.
+    Trichobothrium,
     /// Like `bütterken`: 5 words.
     Bütterken,
-    /// Like `häs`: 4 words.
-    Häs,
+    /// Like `chauvinismus`: 4 words.
+    Chauvinismus,
+    /// Like `putto`: 4 words.
+    Putto,
     /// Like `rom`: 4 words.
     Rom,
     /// Like `apfel`: 4 words.
@@ -418,6 +402,10 @@ pub enum Declension {
     Emissionsverb,
     /// Like `freie`: 4 words.
     Freie,
+    /// Like `profeß`: 4 words.
+    Profeß,
+    /// Like `kursus`: 4 words.
+    Kursus,
     /// Like `kaktus`: 3 words.
     Kaktus,
     /// Like `seemann`: 3 words.
@@ -432,8 +420,6 @@ pub enum Declension {
     Codex,
     /// Like `önophiler`: 3 words.
     Önophiler,
-    /// Like `kursus`: 3 words.
-    Kursus,
     /// Like `profoss`: 3 words.
     Profoss,
     /// Like `tupperparty`: 3 words.
@@ -464,11 +450,12 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 172] = [
+    pub const ALL: [Declension; 178] = [
         Declension::Platte,
         Declension::Lager,
+        Declension::Uhr,
         Declension::Tag,
-        Declension::Hündin,
+        Declension::Ärztin,
         Declension::Stein,
         Declension::Kanon,
         Declension::Einsatz,
@@ -481,71 +468,74 @@ impl Declension {
         Declension::Grüner,
         Declension::Langohr,
         Declension::Leuchtkraft,
-        Declension::Minderung,
         Declension::Leben,
         Declension::Mark,
         Declension::Loch,
+        Declension::Impressum,
         Declension::Wurm,
-        Declension::Zentrum,
-        Declension::Visum,
+        Declension::Minderung,
         Declension::Kasten,
         Declension::Linke,
         Declension::Anhang,
         Declension::Zerwürfnis,
         Declension::Kunst,
-        Declension::Lava,
-        Declension::Chauvinismus,
         Declension::Ohr,
         Declension::Auge,
+        Declension::Vakuum,
         Declension::Talmi,
         Declension::Mantel,
         Declension::Zirkus,
         Declension::Name,
-        Declension::Kapital,
+        Declension::Aroma,
         Declension::Boden,
+        Declension::Visum,
         Declension::Bau,
         Declension::Klimax,
+        Declension::Kapital,
         Declension::Rammbock,
-        Declension::Basis,
-        Declension::Guß,
         Declension::Schwung,
-        Declension::Thema,
-        Declension::Modus,
-        Declension::Brösel,
-        Declension::Pyxis,
+        Declension::Guß,
+        Declension::Lava,
         Declension::Lexikon,
+        Declension::Brösel,
         Declension::Inneres,
+        Declension::Pyxis,
         Declension::Start,
         Declension::Reichtum,
+        Declension::Haß,
+        Declension::Anus,
         Declension::Geschlecht,
         Declension::Spital,
-        Declension::Konto,
         Declension::Vogel,
         Declension::Heu,
-        Declension::Geschoß,
         Declension::Billett,
+        Declension::Hündin,
         Declension::Vorbau,
+        Declension::Basis,
         Declension::Ohrloch,
         Declension::Großmutter,
-        Declension::Mythos,
         Declension::Saal,
         Declension::Stadion,
         Declension::Causa,
         Declension::Lemma,
         Declension::Michel,
         Declension::Platt,
-        Declension::Ablaß,
+        Declension::Mausoleum,
+        Declension::Tempo,
         Declension::Herr,
-        Declension::Putto,
+        Declension::Mythos,
         Declension::Klerus,
+        Declension::Modus,
         Declension::Tochter,
         Declension::Xerophyt,
         Declension::Quinquagesima,
+        Declension::Thema,
         Declension::Not,
         Declension::Muß,
         Declension::Landsmann,
         Declension::Vieh,
         Declension::Eiersandwich,
+        Declension::Ablaß,
         Declension::Eis,
         Declension::Yoni,
         Declension::Polio,
@@ -560,48 +550,49 @@ impl Declension {
         Declension::Apex,
         Declension::Genitale,
         Declension::Crash,
+        Declension::Hausgenosse,
         Declension::Präsens,
         Declension::Großbetrieb,
-        Declension::Wegwarte,
-        Declension::Hausgenosse,
         Declension::Herz,
         Declension::Matrix,
         Declension::Gondoliere,
-        Declension::Druckbuchstabe,
         Declension::Vitiligo,
         Declension::Gravamen,
+        Declension::Konto,
         Declension::Triangel,
+        Declension::Wegwarte,
+        Declension::Druckbuchstabe,
         Declension::Zagel,
-        Declension::Bocher,
         Declension::Numerale,
-        Declension::Ciabatta,
         Declension::Syndikus,
         Declension::Kleinvieh,
         Declension::Kappes,
         Declension::Fiduz,
+        Declension::Ciabatta,
         Declension::Abt,
         Declension::Dressman,
         Declension::Helix,
         Declension::Yeoman,
         Declension::Bruderherz,
+        Declension::Zentrum,
         Declension::Siemens,
-        Declension::Fluor,
-        Declension::Straß,
-        Declension::Equilibrium,
-        Declension::Manna,
+        Declension::Bocher,
         Declension::Mehrzweck,
         Declension::Eva,
+        Declension::Manna,
         Declension::Heros,
+        Declension::Fluor,
+        Declension::Häs,
         Declension::Korpus,
         Declension::Glottis,
         Declension::Beisaß,
         Declension::Koog,
         Declension::Artemis,
-        Declension::Zane,
-        Declension::Griwna,
         Declension::Seeklima,
+        Declension::Trichobothrium,
         Declension::Bütterken,
-        Declension::Häs,
+        Declension::Chauvinismus,
+        Declension::Putto,
         Declension::Rom,
         Declension::Apfel,
         Declension::Pater,
@@ -616,6 +607,8 @@ impl Declension {
         Declension::Slash,
         Declension::Emissionsverb,
         Declension::Freie,
+        Declension::Profeß,
+        Declension::Kursus,
         Declension::Kaktus,
         Declension::Seemann,
         Declension::Ballsaal,
@@ -623,7 +616,6 @@ impl Declension {
         Declension::Antioxidans,
         Declension::Codex,
         Declension::Önophiler,
-        Declension::Kursus,
         Declension::Profoss,
         Declension::Tupperparty,
         Declension::Soma,
@@ -654,36 +646,42 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
-    // Platte: 48,818 words (eu, uhr, aids, schadenfreude, pr, bestellung).
-    declension!("platte", 48818, "~", [gender: Feminine];
+pub(super) static DECLENSIONS: [Paradigm<'static>; 178] = [
+    // Platte: 30,034 words (eu, aids, schadenfreude, pr, kugelschnecke, kugel).
+    declension!("platte", 30034, "~";
     nom: "~", "~n";
     gen_: "~", _;
     dat: _, "~n";
     ),
-    // Lager: 27,681 words (september, november, dezember, taiwaner, possessivpronomen, papierflieger). Like Platte, except in 2 cells: nom pl, gen_ sg.
-    declension!("lager", 27681, "~", like Platte;
+    // Lager: 27,827 words (september, november, dezember, taiwaner, possessivpronomen, papierflieger). Like Platte, except in 2 cells: nom pl, gen_ sg.
+    declension!("lager", 27827, "~", like Platte;
     nom: _, "~";
     gen_: "~s", _;
     ),
-    // Tag: 16,279 words (samstag, parlament, fisch, schaf, nilpferd, flusspferd). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("tag", 16279, "~", like Platte;
+    // Uhr: 19,889 words (uhr, wv, bestellung, wissenschaft, u-bahn, vl). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("uhr", 19889, "~ˇ", [gender: Feminine], like Platte;
+    nom: "~ˇ", "~nˇ";
+    gen_: "~ˇ", _;
+    dat: _, "~nˇ";
+    ),
+    // Tag: 16,299 words (samstag, parlament, fisch, schaf, nilpferd, flusspferd). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("tag", 16299, "~", like Platte;
     nom: _, "~e";
     gen_: "~es|~s", _;
     dat: _, "~eN";
     ),
-    // Hündin: 7,319 words (ärztin, freundin, ehegattin, gattin, gemahlin, sekretärin). Like Platte, except in 2 cells: nom pl, dat pl.
-    declension!("hündin", 7319, "~", [gender: Feminine], like Platte;
-    nom: _, "~NeN";
-    dat: _, "~NeN";
+    // Ärztin: 7,285 words (ärztin, freundin, ehegattin, gattin, gemahlin, sekretärin). Like Uhr, except in 3 cells: nom pl, dat sg, dat pl.
+    declension!("ärztin", 7285, "~ˇ", [gender: Feminine], like Uhr;
+    nom: _, "~eNˇ";
+    dat: "~ˇ", "~eNˇ";
     ),
-    // Stein: 6,219 words (german, muslim, sonnabend, honig, milan, schicksal). Like Tag, except in 2 cells: gen_ sg, dat sg.
-    declension!("stein", 6219, "~", like Tag;
+    // Stein: 6,268 words (german, muslim, sonnabend, honig, milan, schicksal). Like Tag, except in 2 cells: gen_ sg, dat sg.
+    declension!("stein", 6268, "~", like Tag;
     gen_: "~s", _;
     dat: "~", _;
     ),
-    // Kanon: 5,519 words (ram, am, ufo, mg, pb, moslem). Like Lager, except in 2 cells: nom pl, dat pl.
-    declension!("kanon", 5519, "~", like Lager;
+    // Kanon: 5,402 words (ram, am, ufo, mg, pb, moslem). Like Lager, except in 2 cells: nom pl, dat pl.
+    declension!("kanon", 5402, "~", like Lager;
     nom: _, "~s";
     dat: _, "~s";
     ),
@@ -693,9 +691,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~a~es|~a~s", _;
     dat: _, "~ä~en";
     ),
-    // Pilot: 3,428 words (japanese, chinese, vietnamese, christ, nepalese, togolese). Like Stein, except in 0 cells: .
-    declension!("pilot", 3428, "~", [gender: Masculine], like Stein as NOM_AS_DAT;
+    // Pilot: 3,428 words (japanese, chinese, vietnamese, christ, nepalese, togolese). Like Tag, except in 1 cell: nom pl.
+    declension!("pilot", 3428, "~", [gender: Masculine], like Tag;
     stem noun_sg: "~- like pilot";
+    nom: _, "~eN";
     ),
     // Fuchs: 1,958 words (ehebruch, fuchs, zug, aufzug, turm, fuß). Like Einsatz, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("fuchs", 1958, "~u~", [gender: Masculine], like Einsatz;
@@ -708,12 +707,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     nom: _, "~ä~er";
     dat: _, "~ä~ern";
     ),
-    // Action: 1,302 words (led, dvd, aborigine, prosecco, jodhpur, aam). Like Kanon, except in 1 cell: gen_ sg.
-    declension!("action", 1302, "~", like Kanon as DAT_AS_NOM;
+    // Action: 1,296 words (led, dvd, aborigine, prosecco, jodhpur, aam). Like Kanon, except in 2 cells: gen_ sg, dat sg.
+    declension!("action", 1296, "~", like Kanon;
     gen_: "~", _;
+    dat: "~", _;
     ),
-    // Bild: 1,163 words (zeitgeist, geist, licht, schwert, bild, brett). Like Tag, except in 2 cells: nom pl, dat pl.
-    declension!("bild", 1163, "~", like Tag;
+    // Bild: 1,147 words (zeitgeist, geist, licht, schwert, bild, brett). Like Tag, except in 2 cells: nom pl, dat pl.
+    declension!("bild", 1147, "~", like Tag;
     nom: _, "~er";
     dat: _, "~ern";
     ),
@@ -730,62 +730,58 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: _, "~r";
     dat: _, "~N";
     ),
-    // Langohr: 957 words (administrator, aggressor, agitator, alligator, autor, boson). Like Stein, except in 0 cells: .
-    declension!("langohr", 957, "~", like Stein as NOM_AS_DAT;
+    // Langohr: 918 words (administrator, aggressor, agitator, alligator, autor, boson). Like Stein, except in 1 cell: nom pl.
+    declension!("langohr", 918, "~", like Stein;
+    nom: _, "~eN";
     ),
     // Leuchtkraft: 877 words (maus, stadt, nacht, sau, panzerfaust, bank). Like Einsatz, except in 1 cell: gen_ sg.
     declension!("leuchtkraft", 877, "~a~", [gender: Feminine], like Einsatz;
     gen_: "~a~", _;
     ),
-    // Minderung: 820 words (wv, vl, digitalkamera, diaspora, putzfrau, frau). Like Langohr, except in 1 cell: gen_ sg.
-    declension!("minderung", 820, "~", like Langohr;
-    gen_: "~", _;
-    ),
-    // Leben: 803 words (agb, wermut, eskimo, jura, ampere, anime). Like Lager, except in 1 cell: dat pl.
-    declension!("leben", 803, "~", like Lager;
+    // Leben: 783 words (agb, wermut, eskimo, jura, ampere, anime). Like Lager, except in 1 cell: dat pl.
+    declension!("leben", 783, "~", like Lager;
     dat: _, "~";
     ),
-    // Mark: 691 words (a, f, y, o, x, se). Like Lager, except in 1 cell: gen_ sg.
-    declension!("mark", 691, "~", like Lager as DAT_AS_NOM;
-    gen_: "~", _;
+    // Mark: 695 words (a, f, y, o, x, se). Like Action, except in 2 cells: nom pl, dat pl.
+    declension!("mark", 695, "~", like Action;
+    nom: _, "~";
+    dat: _, "~";
     ),
     // Loch: 605 words (vorhängeschloss, zorn, horn, loch, wort, herrenvolk). Like Korb, except in 2 cells: nom pl, dat pl.
     declension!("loch", 605, "~o~", like Korb;
     nom: _, "~ö~er";
     dat: _, "~ö~ern";
     ),
+    // Impressum: 599 words (impressum, elysium, album, aquarium, atrium, auditorium). Like Ärztin, except in 1 cell: gen_ sg.
+    declension!("impressum", 599, "~ˇ", [gender: Neuter], like Ärztin;
+    gen_: "~sˇ", _;
+    ),
     // Wurm: 581 words (buch, übersetzungswörterbuch, wörterbuch, wurm, gut, knoblauch). Like Fuchs, except in 2 cells: nom pl, dat pl.
     declension!("wurm", 581, "~u~", like Fuchs;
     nom: _, "~ü~er";
     dat: _, "~ü~ern";
     ),
-    // Zentrum: 580 words (impressum, elysium, album, aquarium, atrium, auditorium). Like Langohr, except in 3 cells: nom sg, gen_ sg, dat sg.
-    declension!("zentrum", 580, "~um", [gender: Neuter], like Langohr;
-    nom: "~um", _;
-    gen_: "~ums", _;
-    dat: "~um", _;
+    // Minderung: 510 words (digitalkamera, diaspora, bosna, aba, aurora, balalaika). Like Langohr, except in 1 cell: gen_ sg.
+    declension!("minderung", 510, "~", like Langohr;
+    gen_: "~", _;
     ),
-    // Visum: 512 words (vakuum, laudanum, maximum, minimum, neutrum, optimum). Like Zentrum, except in 2 cells: nom pl, dat pl.
-    declension!("visum", 512, "~um", like Zentrum as DAT_AS_ACC;
-    nom: _, "~a";
-    dat: _, "~a";
-    ),
-    // Kasten: 497 words (garten, baden, laden, kindergarten, schaden, flughafen). Like Einsatz, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("kasten", 497, "~a~", like Einsatz;
+    // Kasten: 498 words (garten, baden, laden, kindergarten, schaden, flughafen). Like Einsatz, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("kasten", 498, "~a~", like Einsatz;
     nom: _, "~ä~";
     gen_: "~a~s", _;
     dat: _, "~ä~";
     ),
-    // Linke: 494 words (arme, deutsche, homosexuelle, variable, obdachlose, alte). Like Grüner, except in 1 cell: dat sg.
-    declension!("linke", 494, "~", [gender: Feminine], like Grüner as SG_AS_PL;
-    dat: derived, _;
+    // Linke: 494 words (arme, deutsche, homosexuelle, variable, obdachlose, alte). Like Lager, except in 3 cells: gen_ sg, gen_ pl, dat pl.
+    declension!("linke", 494, "~", [gender: Feminine], like Lager;
+    gen_: "~r", "~r";
+    dat: _, "~N";
     ),
-    // Anhang: 459 words (gaul, zugzwang, geschäftsablauf, waffenstillstand, eckzahn, stuhlgang). Like Einsatz, except in 1 cell: gen_ sg.
-    declension!("anhang", 459, "~a~", [gender: Masculine], like Einsatz;
+    // Anhang: 458 words (gaul, zugzwang, geschäftsablauf, waffenstillstand, eckzahn, stuhlgang). Like Einsatz, except in 1 cell: gen_ sg.
+    declension!("anhang", 458, "~a~", [gender: Masculine], like Einsatz;
     gen_: "~a~s", _;
     ),
-    // Zerwürfnis: 433 words (verhältnis, as, autobus, omnibus, bus, bambus). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("zerwürfnis", 433, "~", like Platte;
+    // Zerwürfnis: 434 words (verhältnis, as, autobus, omnibus, bus, bambus). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("zerwürfnis", 434, "~", like Platte;
     nom: _, "~se";
     gen_: "~ses", _;
     dat: _, "~seN";
@@ -794,27 +790,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("kunst", 430, "~u~", [gender: Feminine], like Fuchs;
     gen_: "~u~", _;
     ),
-    // Lava: 427 words (lyssa, tara, agenda, algebra, ambrosia, aura). Like Tag, except in 2 cells: nom sg, gen_ sg.
-    declension!("lava", 427, "~a", [gender: Feminine], like Tag as NOM_AS_DAT;
-    nom: "~a", _;
-    gen_: "~a", _;
-    ),
-    // Chauvinismus: 405 words (kapitalismus, analphabetismus, chiasmus, virus, marxismus, kommunismus). Like Langohr, except in 3 cells: nom sg, gen_ sg, dat sg.
-    declension!("chauvinismus", 405, "~us", [gender: Masculine], like Langohr;
-    nom: "~us", _;
-    gen_: "~us", _;
-    dat: "~us", _;
-    ),
-    // Ohr: 405 words (weltschmerz, schmerz, aug, ohr, gör, insekt). Like Tag, except in 1 cell: nom pl.
-    declension!("ohr", 405, "~", like Tag;
+    // Ohr: 404 words (weltschmerz, schmerz, aug, ohr, gör, insekt). Like Tag, except in 1 cell: nom pl.
+    declension!("ohr", 404, "~", like Tag;
     nom: _, "~eN";
     ),
-    // Auge: 362 words (auge, jade, jul, karaoke, satyr, see). Like Platte, except in 1 cell: gen_ sg.
-    declension!("auge", 362, "~", like Platte;
+    // Auge: 352 words (auge, jade, jul, karaoke, satyr, see). Like Platte, except in 1 cell: gen_ sg.
+    declension!("auge", 352, "~", like Platte;
     gen_: "~s", _;
     ),
-    // Talmi: 314 words (yak, zucchini, jogurt, kaugummi, schaumgummi, sellerie). Like Kanon, except in 0 cells: .
-    declension!("talmi", 314, "~", like Kanon as DAT_AS_NOM;
+    // Vakuum: 336 words (vakuum, maximum, minimum, neutrum, optimum, perineum). Like Uhr, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("vakuum", 336, "~ˇ", [gender: Neuter], like Uhr;
+    nom: _, "~aˇ";
+    gen_: "~sˇ", _;
+    dat: _, "~aˇ";
+    ),
+    // Talmi: 274 words (yak, zucchini, jogurt, kaugummi, schaumgummi, sellerie). Like Kanon, except in 1 cell: dat sg.
+    declension!("talmi", 274, "~", like Kanon;
+    dat: "~", _;
     ),
     // Mantel: 266 words (vater, hammer, nagel, erdapfel, handel, schnabel). Like Kasten, except in 1 cell: dat pl.
     declension!("mantel", 266, "~a~", like Kasten;
@@ -824,15 +816,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("zirkus", 201, "~", like Zerwürfnis;
     gen_: "~", _;
     ),
-    // Name: 201 words (eigenname, familienname, name, kurzname, buchstabe, funke). Like Grüner, except in 4 cells: nom pl, gen_ sg, gen_ pl, acc sg.
-    declension!("name", 201, "~", [gender: Masculine], like Grüner as SG_AS_PL;
-    nom: _, "~N";
-    gen_: "~Ns", derived;
+    // Name: 201 words (eigenname, familienname, name, kurzname, buchstabe, funke).
+    declension!("name", 201, "~", [gender: Masculine];
+    nom: "~", "~N";
+    gen_: "~Ns", _;
+    dat: "~N", "~N";
     acc: "~N", _;
     ),
-    // Kapital: 184 words (embryo, material, partizip, filmmaterial, reptil, myzel). Like Hündin, except in 1 cell: gen_ sg.
-    declension!("kapital", 184, "~", like Hündin;
-    gen_: "~s", _;
+    // Aroma: 193 words (aroma, charisma, diorama, dogma, drama, melodrama). Like Uhr, except in 1 cell: gen_ sg.
+    declension!("aroma", 193, "~ˇ", [gender: Neuter], like Uhr;
+    gen_: "~sˇ", _;
     ),
     // Boden: 177 words (boden, fußboden, bogen, backofen, norden, teppichboden). Like Korb, except in 3 cells: nom pl, gen_ sg, dat pl.
     declension!("boden", 177, "~o~", like Korb;
@@ -840,60 +833,62 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~o~s", _;
     dat: _, "~ö~";
     ),
-    // Bau: 176 words (mineral, adverb, fossil, bau, indiz, privileg). Like Hündin, except in 1 cell: gen_ sg.
-    declension!("bau", 176, "~", like Hündin;
-    gen_: "~es|~s", _;
+    // Visum: 176 words (laudanum, einfallsreichtum, konsum, neolithikum, gottesgnadentum, knochenwachstum). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("visum", 176, "~um", like Platte;
+    nom: "~um", "~a";
+    gen_: "~ums", _;
+    dat: _, "~a";
     ),
-    // Klimax: 159 words (april, märz, august, gross, pentagon, sphinx). Like Stein, except in 1 cell: gen_ sg.
-    declension!("klimax", 159, "~", like Stein;
+    // Bau: 176 words (mineral, adverb, fossil, bau, indiz, privileg). Like Tag, except in 2 cells: nom pl, dat pl.
+    declension!("bau", 176, "~", like Tag;
+    nom: _, "~NeN";
+    dat: _, "~NeN";
+    ),
+    // Klimax: 160 words (april, märz, august, gross, pentagon, sphinx). Like Stein, except in 1 cell: gen_ sg.
+    declension!("klimax", 160, "~", like Stein;
     gen_: "~", _;
+    ),
+    // Kapital: 157 words (embryo, material, filmmaterial, reptil, myzel, kapital). Like Bau, except in 1 cell: gen_ sg.
+    declension!("kapital", 157, "~", like Bau;
+    gen_: "~s", _;
     ),
     // Rammbock: 143 words (tenor, bahnhof, erzbischof, herzog, koch, floh). Like Korb, except in 1 cell: gen_ sg.
     declension!("rammbock", 143, "~o~", [gender: Masculine], like Korb;
     gen_: "~o~s", _;
     ),
-    // Basis: 142 words (amaryllis, analysis, basis, galaxis, genesis, praxis). Like Lava, except in 2 cells: nom sg, gen_ sg.
-    declension!("basis", 142, "~is", [gender: Feminine], like Lava;
-    nom: "~is", _;
-    gen_: "~is", _;
-    ),
-    // Guß: 142 words (kuß, schluß, guß, fluß, genuß, abfluß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
-    declension!("guß", 142, "~uß", [gender: Masculine], like Platte;
-    nom: "~uß", "~üsse";
-    gen_: "~usses", _;
-    dat: _, "~üssen";
-    ),
     // Schwung: 140 words (schwung, seehund, fahrstuhl, einspruch, leuchtturm, sonderzug). Like Fuchs, except in 1 cell: gen_ sg.
     declension!("schwung", 140, "~u~", [gender: Masculine], like Fuchs;
     gen_: "~u~s", _;
     ),
-    // Thema: 130 words (aroma, asthma, charisma, diorama, dogma, drama). Like Lava, except in 1 cell: gen_ sg.
-    declension!("thema", 130, "~a", [gender: Neuter], like Lava;
-    gen_: "~as", _;
+    // Guß: 137 words (kuß, schluß, guß, fluß, genuß, abfluß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("guß", 137, "~uß", [gender: Masculine], like Platte;
+    nom: "~uß", "~üsse";
+    gen_: "~usses", _;
+    dat: _, "~üssen";
     ),
-    // Modus: 127 words (venus, anus, hippocampus, incubus, phallus, radius). Like Chauvinismus, except in 2 cells: nom pl, dat pl.
-    declension!("modus", 127, "~us", [gender: Masculine], like Chauvinismus as DAT_AS_ACC;
-    nom: _, "~i";
-    dat: _, "~i";
-    ),
-    // Brösel: 122 words (brösel, semmelbrösel, quadratmikrometer, vesikel, netzfilter, esther). Like Lager, except in 1 cell: dat sg.
-    declension!("brösel", 122, "~", [gender: Feminine], like Lager;
-    dat: "~", _;
-    ),
-    // Pyxis: 122 words (epiglottis, pyxis, apsis, tonsillitis, appendizitis, sinusitis). Like Lager, except in 2 cells: nom pl, dat pl.
-    declension!("pyxis", 122, "~s", like Lager as NOM_AS_GEN;
-    nom: _, "~deN";
-    dat: _, "~deN";
+    // Lava: 123 words (lyssa, lava, pizza, propaganda, sunna, thuja). Like Ohr, except in 2 cells: nom sg, gen_ sg.
+    declension!("lava", 123, "~a", like Ohr;
+    nom: "~a", _;
+    gen_: "~a", _;
     ),
     // Lexikon: 114 words (lexikon, macron, mitochondrion, oxymoron, xenon, periastron). Like Visum, except in 2 cells: nom sg, gen_ sg.
     declension!("lexikon", 114, "~on", [gender: Neuter], like Visum;
     nom: "~on", _;
     gen_: "~ons", _;
     ),
+    // Brösel: 113 words (brösel, semmelbrösel, quadratmikrometer, vesikel, netzfilter, säckel). Like Lager, except in 1 cell: dat sg.
+    declension!("brösel", 113, "~", [gender: Feminine], like Lager;
+    dat: "~", _;
+    ),
     // Inneres: 109 words (adlerjunges, schwanenjunges, junges, neugeborenes, vielfaches, immaterielles). Like Grüner, except in 2 cells: nom sg, acc sg.
     declension!("inneres", 109, "~s", [gender: Neuter], like Grüner;
     nom: "~s", _;
     acc: derived, _;
+    ),
+    // Pyxis: 108 words (epiglottis, pyxis, apsis, tonsillitis, appendizitis, sinusitis). Like Lager, except in 3 cells: nom sg, nom pl, dat pl.
+    declension!("pyxis", 108, "~s", [gender: Feminine], like Lager;
+    nom: "~s", "~deN";
+    dat: _, "~deN";
     ),
     // Start: 106 words (start, blankett, projektstart, sprachtest, kartoffelomelett, eignungstest). Like Tag, except in 3 cells: nom pl, gen_ pl, dat pl.
     declension!("start", 106, "~", like Tag;
@@ -905,19 +900,25 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("reichtum", 105, "~u~", like Wurm;
     gen_: "~u~s", _;
     ),
-    // Geschlecht: 99 words (regiment, ski, geschlecht, schalenwild, schild, abblendlicht). Like Bild, except in 1 cell: gen_ sg.
-    declension!("geschlecht", 99, "~", like Bild;
+    // Haß: 104 words (haß, biß, naß, schiß, riß, imbiß). Like Uhr, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("haß", 104, "~ˇ", like Uhr;
+    nom: _, "~seˇ";
+    gen_: "~sesˇ", _;
+    dat: _, "~seNˇ";
+    ),
+    // Anus: 103 words (anus, hippocampus, incubus, phallus, radius, stimulus). Like Uhr, except in 2 cells: nom pl, dat pl.
+    declension!("anus", 103, "~ˇ", like Uhr;
+    nom: _, "~Nˇ";
+    dat: _, "~Nˇ";
+    ),
+    // Geschlecht: 98 words (regiment, ski, geschlecht, schalenwild, schild, abblendlicht). Like Bild, except in 1 cell: gen_ sg.
+    declension!("geschlecht", 98, "~", like Bild;
     gen_: "~s", _;
     ),
     // Spital: 96 words (fahrrad, geschmack, schwimmbad, unkraut, goalmann, dreirad). Like Blatt, except in 2 cells: gen_ sg, dat sg.
     declension!("spital", 96, "~a~", like Blatt;
     gen_: "~a~s", _;
     dat: "~a~", _;
-    ),
-    // Konto: 92 words (risiko, konto, szenario, saldo, fresko, benutzerkonto). Like Lava, except in 2 cells: nom sg, gen_ sg.
-    declension!("konto", 92, "~o", like Lava;
-    nom: "~o", _;
-    gen_: "~os", _;
     ),
     // Vogel: 91 words (vogel, watvogel, greifvogel, kloster, kanarienvogel, eisvogel). Like Boden, except in 1 cell: dat pl.
     declension!("vogel", 91, "~o~", like Boden;
@@ -927,20 +928,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("heu", 78, "~", like Tag;
     dat: "~", _;
     ),
-    // Geschoß: 77 words (biß, schiß, riß, imbiß, abszeß, beschiß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
-    declension!("geschoß", 77, "~ß", like Platte;
-    nom: "~ß", "~sse";
-    gen_: "~sses", _;
-    dat: _, "~sseN";
-    ),
-    // Billett: 74 words (billet, deck, toast, hungerstreik, börsencrash, nationalpark). Like Kanon, except in 1 cell: gen_ sg.
-    declension!("billett", 74, "~", like Kanon;
+    // Billett: 72 words (billet, deck, toast, hungerstreik, börsencrash, nationalpark). Like Kanon, except in 1 cell: gen_ sg.
+    declension!("billett", 72, "~", like Kanon;
     gen_: "~es|~s", _;
+    ),
+    // Hündin: 68 words (notfallmedizin, nuklearmedizin, adrenodoxin, humanmedizin, sportmedizin, gerichtsmedizin). Like Bau, except in 1 cell: gen_ sg.
+    declension!("hündin", 68, "~", like Bau;
+    gen_: "~", _;
     ),
     // Vorbau: 58 words (mastodon, messebau, altbau, bergbau, vorbau, landbau). Like Lager, except in 2 cells: nom pl, dat pl.
     declension!("vorbau", 58, "~", like Lager;
     nom: _, "~teN";
     dat: _, "~teN";
+    ),
+    // Basis: 57 words (analysis, galaxis, syphilis, skepsis, katharsis, gnosis). Like Ohr, except in 2 cells: nom sg, gen_ sg.
+    declension!("basis", 57, "~is", like Ohr;
+    nom: "~is", _;
+    gen_: "~is", _;
     ),
     // Ohrloch: 54 words (sommerloch, nebelhorn, herrgott, fachwort, affenarschloch, gebirgsdorf). Like Loch, except in 1 cell: gen_ sg.
     declension!("ohrloch", 54, "~o~", like Loch;
@@ -950,10 +954,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("großmutter", 51, "~u~", [gender: Feminine], like Kunst;
     nom: _, "~ü~";
     dat: _, "~ü~n";
-    ),
-    // Mythos: 51 words (chaos, mythos, kosmos, epos, amphiprostylos, pathos). Like Konto, except in 1 cell: nom sg.
-    declension!("mythos", 51, "~os", like Konto;
-    nom: "~os", _;
     ),
     // Saal: 49 words (saal, prunksaal, operationssaal, hörsaal, wartesaal, kursaal). Like Einsatz, except in 2 cells: nom sg, gen_ sg.
     declension!("saal", 49, "~aa~", [gender: Masculine], like Einsatz;
@@ -965,8 +965,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     nom: _, "~e~";
     dat: _, "~e~";
     ),
-    // Causa: 45 words (amygdala, retina, supernova, interferon-gamma, causa, rosazea). Like Klimax, except in 1 cell: dat pl.
-    declension!("causa", 45, "~", [gender: Feminine], like Klimax as DAT_AS_ACC;
+    // Causa: 45 words (amygdala, retina, supernova, interferon-gamma, causa, rosazea). Like Platte, except in 2 cells: nom pl, dat pl.
+    declension!("causa", 45, "~", [gender: Feminine], like Platte;
+    nom: _, "~e";
     dat: _, "~e";
     ),
     // Lemma: 43 words (schema, trauma, klima, lemma, weltklima, analemma). Like Lager, except in 2 cells: nom pl, dat pl.
@@ -982,25 +983,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("platt", 40, "~a~", [gender: Feminine], like Leuchtkraft;
     nom: _, "~ä~eN";
     ),
-    // Ablaß: 39 words (haß, naß, ablaß, paß, judenhaß, anlaß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
-    declension!("ablaß", 39, "~aß", [gender: Masculine], like Platte;
-    nom: "~aß", "~ässe";
-    gen_: "~asses", _;
-    dat: _, "~ässen";
+    // Mausoleum: 39 words (mausoleum, museum, freilichtmuseum, lyzeum, schifffahrtsmuseum, gynoeceum). Like Aroma, except in 1 cell: nom pl.
+    declension!("mausoleum", 39, "~ˇ", [gender: Neuter], like Aroma;
+    nom: _, "~ˇ";
+    ),
+    // Tempo: 38 words (tempo, mafioso, limoncello, paparazzo, scherzo, peperoncino). Like Vakuum, except in 2 cells: nom pl, dat pl.
+    declension!("tempo", 38, "~ˇ", like Vakuum;
+    nom: _, "~iˇ";
+    dat: _, "~iˇ";
     ),
     // Herr: 37 words (herr, lehnsherr, kriegsherr, feldherr, freiherr, schirmherr). Like Pilot, except in 0 cells: .
     declension!("herr", 37, "~", [gender: Masculine], like Pilot;
     stem noun_sg: "~- like herr";
     ),
-    // Putto: 37 words (tempo, mafioso, limoncello, paparazzo, scherzo, peperoncino). Like Modus, except in 2 cells: nom sg, gen_ sg.
-    declension!("putto", 37, "~o", like Modus;
-    nom: "~o", _;
+    // Mythos: 36 words (chaos, kosmos, amphiprostylos, pathos, mikrokosmos, benthos). Like Ohr, except in 2 cells: nom sg, gen_ sg.
+    declension!("mythos", 36, "~os", like Ohr;
+    nom: "~os", _;
     gen_: "~os", _;
     ),
-    // Klerus: 34 words (ikterus, klerus, kernikterus, clerus, aujeszkyvirus, newcastlevirus). Like Modus, except in 2 cells: nom pl, dat pl.
-    declension!("klerus", 34, "~us", like Modus;
-    nom: _, "~Ner";
+    // Klerus: 34 words (ikterus, klerus, kernikterus, clerus, aujeszkyvirus, newcastlevirus). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("klerus", 34, "~us", like Platte;
+    nom: "~us", "~Ner";
+    gen_: "~us", _;
     dat: _, "~iern";
+    ),
+    // Modus: 31 words (venus, tetanus, fundus, flugzeugmodus, wohlfühlmodus, spundus). Like Klerus, except in 2 cells: nom pl, dat pl.
+    declension!("modus", 31, "~us", like Klerus;
+    nom: _, "~i";
+    dat: _, "~i";
     ),
     // Tochter: 25 words (tochter, schwiegertochter, stieftochter, königstochter, ziehtochter, bauerntochter). Like Vogel, except in 1 cell: gen_ sg.
     declension!("tochter", 25, "~o~", [gender: Feminine], like Vogel;
@@ -1014,6 +1024,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("quinquagesima", 23, "~a", [gender: Feminine], like Lava;
     nom: _, "~ä";
     dat: _, "~ä";
+    ),
+    // Thema: 21 words (asthma, halma, magma, smegma, steckhalma, kindchenschema). Like Lava, except in 1 cell: gen_ sg.
+    declension!("thema", 21, "~a", like Lava;
+    gen_: "~as", _;
     ),
     // Not: 21 words (not, hungersnot, schwerenot, atemnot, seenot, zeitnot). Like Korb, except in 1 cell: gen_ sg.
     declension!("not", 21, "~o~", [gender: Feminine], like Korb;
@@ -1041,12 +1055,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~es|~|~s", "~es|~e|~s";
     dat: _, "~s|~es|~en";
     ),
+    // Ablaß: 16 words (ablaß, paß, anlaß, nachlaß, baß, kontrabaß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("ablaß", 16, "~aß", [gender: Masculine], like Platte;
+    nom: "~aß", "~ässe";
+    gen_: "~asses", _;
+    dat: _, "~ässen";
+    ),
     // Eis: 16 words (eis, nein, packeis, kirsch, gelbbleierz, ries). Like Leben, except in 1 cell: gen_ sg.
     declension!("eis", 16, "~", like Leben;
     gen_: "~es", _;
     ),
-    // Yoni: 16 words (yoni, blutspenden, kardinälchen, wurzelballen, ehrwürden, pipchen). Like Lager, except in 0 cells: .
-    declension!("yoni", 16, "~", [gender: Feminine], like Lager as DAT_AS_NOM;
+    // Yoni: 16 words (yoni, blutspenden, kardinälchen, wurzelballen, ehrwürden, pipchen). Like Leben, except in 1 cell: dat sg.
+    declension!("yoni", 16, "~", [gender: Feminine], like Leben;
+    dat: "~", _;
     ),
     // Polio: 15 words (fellatio, ratio, autofellatio, polio, defensio, subdivisio). Like Platte, except in 2 cells: nom pl, dat pl.
     declension!("polio", 15, "~", like Platte;
@@ -1069,22 +1090,24 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~osses", _;
     dat: _, "~össern";
     ),
-    // Aulos: 13 words (prostylos, topos, uroboros, aulos, kantharos, oikos). Like Mythos, except in 2 cells: nom pl, dat pl.
-    declension!("aulos", 13, "~os", [gender: Masculine], like Mythos as DAT_AS_GEN;
+    // Aulos: 13 words (prostylos, topos, uroboros, aulos, kantharos, oikos). Like Mythos, except in 3 cells: nom pl, dat sg, dat pl.
+    declension!("aulos", 13, "~os", [gender: Masculine], like Mythos;
     nom: _, "~oN";
-    dat: _, "~oN";
+    dat: "~os", "~oN";
     ),
     // Faß: 13 words (faß, weinfaß, pulverfaß, tintenfaß, wasserfaß, holzfaß). Like Ablaß, except in 2 cells: nom pl, dat pl.
     declension!("faß", 13, "~aß", [gender: Neuter], like Ablaß;
     nom: _, "~ässer";
     dat: _, "~ässern";
     ),
-    // Glace: 13 words (kabyle, glace, peschmerge, straßenjunge, normanne, paröke). Like Platte, except in 1 cell: gen_ sg.
-    declension!("glace", 13, "~", like Platte as DAT_AS_NOM;
+    // Glace: 13 words (kabyle, glace, peschmerge, straßenjunge, normanne, paröke). Like Platte, except in 2 cells: gen_ sg, dat sg.
+    declension!("glace", 13, "~", like Platte;
     gen_: "~n", _;
+    dat: "~", _;
     ),
-    // Sinto: 13 words (sinto, antipasto, guerrigliero, kyudo, tifoso, fianchetto). Like Putto, except in 1 cell: gen_ sg.
-    declension!("sinto", 13, "~o", like Putto;
+    // Sinto: 13 words (sinto, antipasto, guerrigliero, kyudo, tifoso, fianchetto). Like Modus, except in 2 cells: nom sg, gen_ sg.
+    declension!("sinto", 13, "~o", like Modus;
+    nom: "~o", _;
     gen_: "~o", _;
     ),
     // Chassid: 13 words (sephardi, energieaufnahme, aschkenasi, kibbuz, kubbuz, chassid). Like Platte, except in 2 cells: nom pl, dat pl.
@@ -1108,6 +1131,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("crash", 12, "~", like Miss;
     gen_: "~es", _;
     ),
+    // Hausgenosse: 11 words (ungar, nachbar, tischnachbar, periodennachbar, gruppennachbar, sitznachbar). Like Name, except in 1 cell: gen_ sg.
+    declension!("hausgenosse", 11, "~", [gender: Masculine], like Name;
+    gen_: "~N", _;
+    ),
     // Präsens: 11 words (präsens, deponens, definiens, präteritopräsens, präterito-präsens, rubefaziens). Like Pyxis, except in 2 cells: nom pl, dat pl.
     declension!("präsens", 11, "~s", [gender: Neuter], like Pyxis;
     nom: _, "~tia";
@@ -1117,12 +1144,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("großbetrieb", 11, "~", [gender: Masculine], like Lager;
     nom: _, "~-e";
     dat: _, "~-eN";
-    ),
-    // Wegwarte: 11 words (wegwarte, hitzeglocke, serge, schicksl, aphrodite, purpurfriesel). Like Auge, except in 0 cells: .
-    declension!("wegwarte", 11, "~", [gender: Feminine], like Auge as DAT_AS_NOM;
-    ),
-    // Hausgenosse: 10 words (nachbar, tischnachbar, periodennachbar, gruppennachbar, sitznachbar, banknachbar). Like Name, except in 0 cells: .
-    declension!("hausgenosse", 10, "~", [gender: Masculine], like Name as GEN_AS_ACC;
     ),
     // Herz: 10 words (herz, schwesterherz, sportlerherz, sportherz, athletenherz, spenderherz). Like Pilot, except in 2 cells: gen_ sg, acc sg.
     declension!("herz", 10, "~", [gender: Neuter], like Pilot;
@@ -1140,11 +1161,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     nom: "~e", _;
     gen_: "~e", _;
     ),
-    // Druckbuchstabe: 10 words (kleinbuchstabe, haufe, druckbuchstabe, großdruckbuchstabe, kursivbuchstabe, doppelbuchstabe). Like Linke, except in 2 cells: nom pl, gen_ sg.
-    declension!("druckbuchstabe", 10, "~", [gender: Masculine], like Linke as GEN_AS_ACC;
-    nom: _, "~N";
-    gen_: "~Ns|~n", _;
-    ),
     // Vitiligo: 9 words (vitiligo, vertigo, subordo, infraordo, ich-jetzt-hier-origo, ordo). Like Sinto, except in 2 cells: nom pl, dat pl.
     declension!("vitiligo", 9, "~o", like Sinto;
     nom: _, "~iNes";
@@ -1156,27 +1172,32 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~e~s", _;
     dat: _, "~i~a";
     ),
-    // Triangel: 8 words (trüffel, triangel, meimel, reminiszere, lätare, türstaffel). Like Platte, except in 0 cells: .
-    declension!("triangel", 8, "~", like Platte as DAT_AS_NOM;
+    // Konto: 8 words (belcanto, belkanto, griko, shinto, monetarisierungsrisiko, papiamento). Like Mythos, except in 1 cell: nom sg.
+    declension!("konto", 8, "~o", like Mythos;
+    nom: "~o", _;
+    ),
+    // Triangel: 8 words (trüffel, triangel, meimel, reminiszere, lätare, türstaffel). Like Platte, except in 1 cell: dat sg.
+    declension!("triangel", 8, "~", like Platte;
+    dat: "~", _;
+    ),
+    // Wegwarte: 8 words (wegwarte, hitzeglocke, serge, schicksl, purpurfriesel, korpuskel). Like Auge, except in 1 cell: dat sg.
+    declension!("wegwarte", 8, "~", [gender: Feminine], like Auge;
+    dat: "~", _;
+    ),
+    // Druckbuchstabe: 8 words (kleinbuchstabe, haufe, druckbuchstabe, großdruckbuchstabe, kursivbuchstabe, doppelbuchstabe). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("druckbuchstabe", 8, "~", [gender: Masculine], like Platte;
+    nom: _, "~N";
+    gen_: "~Ns|~n", _;
+    dat: _, "~N";
     ),
     // Zagel: 8 words (gegacker, zagel, gemecker, quargel, röhrenfernseher, anzettel). Like Lager, except in 1 cell: gen_ sg.
     declension!("zagel", 8, "~", like Lager;
     gen_: "~es|~s", _;
     ),
-    // Bocher: 8 words (zaddik, cherub, bocher, pilaw, moschaw, kerub). Like Lager, except in 2 cells: nom pl, dat pl.
-    declension!("bocher", 8, "~", like Lager;
-    nom: _, "~Nm";
-    dat: _, "~Nm";
-    ),
     // Numerale: 8 words (kardinale, ordinale, numerale, pronominale, antifebrile, quale). Like Eis, except in 3 cells: nom sg, nom pl, dat pl.
     declension!("numerale", 8, "~e", [gender: Neuter], like Eis;
     nom: "~e", "~Na";
     dat: _, "~Na";
-    ),
-    // Ciabatta: 8 words (pulcinella, stracciatella, ciabatta, aranciata, viscontessa, pannacotta). Like Lava, except in 2 cells: nom pl, dat pl.
-    declension!("ciabatta", 8, "~a", like Lava;
-    nom: _, "~e";
-    dat: _, "~e";
     ),
     // Syndikus: 8 words (syndikus, kretikus, prokeleusmatikus, spondiakus, askus, medikus). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("syndikus", 8, "~kus", [gender: Masculine], like Platte;
@@ -1197,6 +1218,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     // Fiduz: 8 words (pferdefuhrwerk, fiduz, baustil, kornkreis, garbenbund, pferdewirt). Like Tag, except in 1 cell: dat sg.
     declension!("fiduz", 8, "~", like Tag;
     dat: "~e", _;
+    ),
+    // Ciabatta: 8 words (pulcinella, stracciatella, ciabatta, aranciata, viscontessa, pannacotta). Like Uhr, except in 2 cells: nom pl, dat pl.
+    declension!("ciabatta", 8, "~ˇ", like Uhr;
+    nom: _, "~eˇ";
+    dat: _, "~eˇ";
     ),
     // Abt: 8 words (arzt, abt, angst, arsch, axt, ast). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("abt", 8, "a~", like Platte;
@@ -1222,41 +1248,52 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("bruderherz", 7, "~", [gender: Neuter], like Ohr;
     gen_: "~eNs|~es", _;
     ),
+    // Zentrum: 6 words (serum, antithrombozytenserum, plenum, wahrheitsserum, gegenserum, blutserum). Like Langohr, except in 3 cells: nom sg, gen_ sg, dat sg.
+    declension!("zentrum", 6, "~um", [gender: Neuter], like Langohr;
+    nom: "~um", _;
+    gen_: "~ums", _;
+    dat: "~um", _;
+    ),
     // Siemens: 6 words (siemens, gottseibeiuns, abducens, abduzens, movens, boten-rns). Like Pyxis, except in 2 cells: nom pl, dat pl.
     declension!("siemens", 6, "~s", like Pyxis;
     nom: _, "~zNeN";
     dat: _, "~zNeN";
     ),
-    // Fluor: 6 words (fluor, tremor, liquor, real, odor, pikador). Like Lager, except in 2 cells: nom pl, dat pl.
-    declension!("fluor", 6, "~", like Lager;
-    nom: _, "~es";
-    dat: _, "~es";
-    ),
-    // Straß: 6 words (verdammniß, verdamniß, straß, profeß, erkenntniß, kenntniß). Like Geschoß, except in 1 cell: gen_ sg.
-    declension!("straß", 6, "~ß", like Geschoß;
-    gen_: "~ß", _;
-    ),
-    // Equilibrium: 6 words (equilibrium, trichobothrium, ostium, subphylum, cranium, enklitikum). Like Visum, except in 1 cell: gen_ sg.
-    declension!("equilibrium", 6, "~um", [gender: Neuter], like Visum;
-    gen_: "~um", _;
-    ),
-    // Manna: 6 words (hiragana, manna, galiläa, hyläa, tahina, tramontana). Like Lava, except in 0 cells: .
-    declension!("manna", 6, "~a", like Lava as DAT_AS_NOM;
+    // Bocher: 6 words (zaddik, cherub, bocher, moschaw, kerub, maskil). Like Lager, except in 2 cells: nom pl, dat pl.
+    declension!("bocher", 6, "~", [gender: Masculine], like Lager;
+    nom: _, "~Nm";
+    dat: _, "~Nm";
     ),
     // Mehrzweck: 6 words (verdachtsmoment, häufungspunkt, mehrzweck, nierenfett, erkrankungsbeginn, tragegefühl). Like Tag, except in 1 cell: dat pl.
     declension!("mehrzweck", 6, "~", like Tag;
     dat: _, "~e";
     ),
-    // Eva: 6 words (eva, minerva, dynatron, bürgerheer, laurisilva, repräsentativsystem). Like Stein, except in 0 cells: .
-    declension!("eva", 6, "~", like Stein as DAT_AS_NOM;
+    // Eva: 6 words (eva, minerva, dynatron, bürgerheer, laurisilva, repräsentativsystem). Like Stein, except in 1 cell: dat pl.
+    declension!("eva", 6, "~", like Stein;
+    dat: _, "~e";
+    ),
+    // Manna: 6 words (hiragana, manna, galiläa, hyläa, tahina, tramontana). Like Lava, except in 1 cell: dat sg.
+    declension!("manna", 6, "~a", like Lava;
+    dat: "~a", _;
     ),
     // Heros: 6 words (heros, bezeichnetes, bezeichnendes, taxis, topotaxis, kulturheros). Like Langohr, except in 2 cells: nom sg, dat sg.
     declension!("heros", 6, "~s", like Langohr;
     nom: "~s", _;
     dat: derived, _;
     ),
-    // Korpus: 5 words (tempus, korpus, sprachkorpus, corpus, textkorpus). Like Modus, except in 2 cells: nom pl, dat pl.
-    declension!("korpus", 5, "~us", [gender: Neuter], like Modus;
+    // Fluor: 5 words (tremor, liquor, real, odor, pikador). Like Lager, except in 2 cells: nom pl, dat pl.
+    declension!("fluor", 5, "~", [gender: Masculine], like Lager;
+    nom: _, "~es";
+    dat: _, "~es";
+    ),
+    // Häs: 5 words (os, häß, lälles, häs, narrenhäs). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("häs", 5, "~", like Platte;
+    nom: _, "~er|~";
+    gen_: "~|~es", _;
+    dat: _, "~ern|~";
+    ),
+    // Korpus: 5 words (tempus, korpus, sprachkorpus, corpus, textkorpus). Like Klerus, except in 2 cells: nom pl, dat pl.
+    declension!("korpus", 5, "~us", [gender: Neuter], like Klerus;
     nom: _, "~ora";
     dat: _, "~ora";
     ),
@@ -1265,9 +1302,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     nom: _, "~de~";
     dat: _, "~de~";
     ),
-    // Beisaß: 5 words (prinzeß, bekandtnuß, stewardeß, beisaß, kothsaß). Like Straß, except in 1 cell: nom pl.
-    declension!("beisaß", 5, "~ß", like Straß;
-    nom: _, "~sseN";
+    // Beisaß: 5 words (prinzeß, bekandtnuß, stewardeß, beisaß, kothsaß). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("beisaß", 5, "~ß", like Platte;
+    nom: "~ß", "~sseN";
+    gen_: "~ß", _;
+    dat: _, "~sseN";
     ),
     // Koog: 5 words (koog, hook, schooß, schoos, schooss). Like Korb, except in 2 cells: nom sg, gen_ sg.
     declension!("koog", 5, "~oo~", [gender: Masculine], like Korb;
@@ -1278,19 +1317,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("artemis", 5, "~", like Zirkus;
     dat: "~", _;
     ),
-    // Zane: 5 words (condottiere, kondottiere, bacile, zanne, zane). Like Druckbuchstabe, except in 2 cells: nom sg, gen_ sg.
-    declension!("zane", 5, "~e", like Druckbuchstabe;
-    nom: "~e", _;
-    gen_: "~es", _;
-    ),
-    // Griwna: 5 words (isba, stotinka, papirossa, naliwka, griwna). Like Lava, except in 2 cells: nom pl, dat pl.
-    declension!("griwna", 5, "~a", [gender: Feminine], like Lava;
-    nom: _, "~i";
-    dat: _, "~i";
-    ),
     // Seeklima: 5 words (eisklima, trockenklima, kontinentalklima, seeklima, polarklima). Like Vorbau, except in 1 cell: nom pl.
     declension!("seeklima", 5, "~", [gender: Neuter], like Vorbau;
     nom: _, "~te";
+    ),
+    // Trichobothrium: 5 words (trichobothrium, ostium, subphylum, cranium, enklitikum). Like Vakuum, except in 1 cell: gen_ sg.
+    declension!("trichobothrium", 5, "~ˇ", [gender: Neuter], like Vakuum;
+    gen_: "~ˇ", _;
     ),
     // Bütterken: 5 words (bütterken, döneken, pädken, fietsken, dönneken). Like Platte, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("bütterken", 5, "~n", [gender: Neuter], like Platte;
@@ -1298,11 +1331,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~ns", _;
     dat: _, "~s|~ns|~n";
     ),
-    // Häs: 4 words (os, lälles, häs, narrenhäs). Like Platte, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("häs", 4, "~", like Platte;
-    nom: _, "~er|~";
-    gen_: "~|~es", _;
-    dat: _, "~ern|~";
+    // Chauvinismus: 4 words (trochäus, skarabäus, mythus, ditrochäus). Like Langohr, except in 3 cells: nom sg, gen_ sg, dat sg.
+    declension!("chauvinismus", 4, "~us", [gender: Masculine], like Langohr;
+    nom: "~us", _;
+    gen_: "~us", _;
+    dat: "~us", _;
+    ),
+    // Putto: 4 words (storno, moderato, clavicembalo, mizo). Like Sinto, except in 1 cell: gen_ sg.
+    declension!("putto", 4, "~o", [gender: Neuter], like Sinto;
+    gen_: "~os", _;
     ),
     // Rom: 4 words (rom, artepithet, palliativ, tuber). Like Lager, except in 2 cells: nom pl, dat pl.
     declension!("rom", 4, "~", like Lager;
@@ -1328,8 +1365,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("pharmazeutik", 4, "~", like Rom;
     gen_: "~", _;
     ),
-    // Genus: 4 words (genus, opus, onus, subgenus). Like Modus, except in 2 cells: nom pl, dat pl.
-    declension!("genus", 4, "~us", [gender: Neuter], like Modus;
+    // Genus: 4 words (genus, opus, onus, subgenus). Like Klerus, except in 2 cells: nom pl, dat pl.
+    declension!("genus", 4, "~us", [gender: Neuter], like Klerus;
     nom: _, "~era";
     dat: _, "~era";
     ),
@@ -1371,8 +1408,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("freie", 4, "~", like Hausgenosse;
     acc: derived, _;
     ),
-    // Kaktus: 3 words (kaktus, feigenkaktus, blattkaktus). Like Modus, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("kaktus", 3, "~us", [gender: Masculine], like Modus;
+    // Profeß: 4 words (straß, profeß, erkenntniß, kenntniß). Like Haß, except in 1 cell: gen_ sg.
+    declension!("profeß", 4, "~ˇ", like Haß;
+    gen_: "~ˇ", _;
+    ),
+    // Kursus: 4 words (kursus, dualis, sprachkursus, abendkursus). Like Ärztin, except in 1 cell: nom pl.
+    declension!("kursus", 4, "~ˇ", [gender: Masculine], like Ärztin;
+    nom: _, "~eˇ";
+    ),
+    // Kaktus: 3 words (kaktus, feigenkaktus, blattkaktus). Like Klerus, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("kaktus", 3, "~us", [gender: Masculine], like Klerus;
     nom: _, "~eeN|~usse";
     gen_: "~us|~usses", _;
     dat: _, "~eeN|~ussen";
@@ -1405,11 +1450,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     nom: "~r", _;
     gen_: "~n", _;
     ),
-    // Kursus: 3 words (kursus, sprachkursus, abendkursus). Like Tag, except in 2 cells: nom sg, gen_ sg.
-    declension!("kursus", 3, "~us", [gender: Masculine], like Tag;
-    nom: "~us", _;
-    gen_: "~us", _;
-    ),
     // Profoss: 3 words (steinmetz, sauhirt, profoss). Like Pilot, except in 1 cell: nom pl.
     declension!("profoss", 3, "~", [gender: Masculine], like Pilot;
     nom: _, "~e|~en";
@@ -1427,11 +1467,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     declension!("azymon", 3, "~on", [gender: Neuter], like Lexikon;
     gen_: "~on|~ons", _;
     ),
-    // Fettwulst: 3 words (nachfluchtgrund, scheingeschwulst, fettwulst). Like Fuchs, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("fettwulst", 3, "~u~", like Fuchs as DAT_AS_NOM;
+    // Fettwulst: 3 words (nachfluchtgrund, scheingeschwulst, fettwulst). Like Fuchs, except in 4 cells: nom pl, gen_ sg, dat sg, dat pl.
+    declension!("fettwulst", 3, "~u~", like Fuchs;
     nom: _, "~ü~e|~u~e";
     gen_: "~u~es|~u~|~u~s", _;
-    dat: _, "~ü~en|~u~en";
+    dat: "~u~", "~ü~en|~u~en";
     ),
     // Schängelche: 3 words (schängelche, krebbelche, fylke). Like Platte, except in 2 cells: nom pl, dat pl.
     declension!("schängelche", 3, "~", [gender: Neuter], like Platte;
@@ -1456,10 +1496,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 172] = [
     gen_: "~c~s", _;
     dat: _, "~c~n";
     ),
-    // Mittelbronzezeit: 1 words (mittelbronzezeit). Like Einsatz, except in 3 cells: nom sg, nom pl, gen_ sg.
-    declension!("mittelbronzezeit", 1, "mi~tel~", like Einsatz as DAT_AS_ACC;
+    // Mittelbronzezeit: 1 words (mittelbronzezeit). Like Einsatz, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
+    declension!("mittelbronzezeit", 1, "mi~tel~", like Einsatz;
     nom: "spä~~", derived;
     gen_: "spä~~", _;
+    dat: _, derived;
     ),
     // Insidertipp: 1 words (insidertipp). Like Einsatz, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("insidertipp", 1, "insid~r~", like Einsatz;

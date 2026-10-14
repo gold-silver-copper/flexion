@@ -333,7 +333,7 @@ fn grammar_files(
     };
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads:?},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -374,6 +374,7 @@ fn grammar_files(
             )),
         compound = some(g.compound.is_some(), "compounds::COMPOUND"),
         prefixes = some(g.prefixes.is_some(), "prefixes::PREFIXES"),
+        heads = g.heads,
         accent = some(
             g.accent.is_some(),
             "flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    }"
@@ -414,8 +415,20 @@ fn grammar_files(
             classes.join(", ")
         ),
     };
+    let alternating = g
+        .paradigms
+        .iter()
+        .any(|p| p.lemma.ends_with(flexion::pattern::ALTERNATES));
+    let alternating = if alternating {
+        format!(
+            " A `{}` ends\n//! the patterns of a {one} whose stems alternate: the laws in `laws.rs`\n//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).",
+            flexion::pattern::ALTERNATES
+        )
+    } else {
+        String::new()
+    };
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}{alternating}\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro (a table with no rows needs none).
     if !g.paradigms.is_empty() {
@@ -739,7 +752,7 @@ fn grammar_files(
     // laws.rs
     if let Some(program) = &g.laws {
         let mut l = format!(
-            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written), or inside a stem that\n//! alternates (`ˇ`, by what follows it): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
         );
         for (law, rule) in learned.laws.iter().zip(program.rules()) {
             let _ = writeln!(

@@ -78,7 +78,23 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 5] = [
+pub(super) static TABLES: [EndingTable<'static>; 7] = [
+    // numeral_nom_m_anim like биллион: 61 words.
+    EndingTable {
+        name: Cow::Borrowed("биллион"),
+        words: 61,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~\t",
+            "\t~\t",
+            "~\t~\t",
+            "~|~ы\t~|~ы\t",
+            "\t~\t",
+            "~\t~\t",
+            "~\t~\t",
+            "~|~ы\t~|~ы\t",
+        )),
+    },
     // numeral_nom_m_anim like пятьсот: 5 words.
     EndingTable {
         name: Cow::Borrowed("пятьсот"),
@@ -86,6 +102,15 @@ pub(super) static TABLES: [EndingTable<'static>; 5] = [
         slot: 0,
         table: Cow::Borrowed(concat!(
             "\t~\t", "\t\t", "\t\t", "~\t~\t", "\t\t", "\t\t", "\t\t", "~\t~\t",
+        )),
+    },
+    // numeral_nom_m_anim like пятьдесят: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("пятьдесят"),
+        words: 4,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "~\t~\t",
         )),
     },
     // numeral like пятеро: 7 words.
