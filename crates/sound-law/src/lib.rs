@@ -232,6 +232,7 @@ pub struct Rule<'a> {
     replacement: &'a str,
     left: &'a str,
     right: &'a str,
+    or_right: &'a [&'a str],
     excluded_left: Option<&'a str>,
     excluded_right: Option<&'a str>,
     direction: Direction,
@@ -247,6 +248,7 @@ impl<'a> Rule<'a> {
             replacement,
             left: "",
             right: "",
+            or_right: &[],
             excluded_left: None,
             excluded_right: None,
             direction: Direction::LeftToRight,
@@ -258,6 +260,32 @@ impl<'a> Rule<'a> {
     pub const fn in_context(mut self, left: &'a str, right: &'a str) -> Self {
         self.left = left;
         self.right = right;
+        self
+    }
+
+    /// Let this rule apply before any of `rights` too, where its right
+    /// context isn't there: one rule in several environments, its target
+    /// sought once. They declare no captures.
+    ///
+    /// ```
+    /// use sound_law::{RuleSet, sound_laws};
+    ///
+    /// // A consonant weakens before a closed syllable's ends.
+    /// const LAWS: RuleSet<'static> = sound_laws! {
+    ///     classes {
+    ///         V = ["a", "o", "u"];
+    ///     }
+    ///     rules {
+    ///         weak: "t" => "d" / "{V}" _ "{V}n$" | "{V}ss";
+    ///     }
+    /// };
+    /// assert_eq!(LAWS.apply("katun")?, "kadun");
+    /// assert_eq!(LAWS.apply("katussa")?, "kadussa");
+    /// assert_eq!(LAWS.apply("katua")?, "katua");
+    /// # Ok::<(), sound_law::CompileError>(())
+    /// ```
+    pub const fn or_before(mut self, rights: &'a [&'a str]) -> Self {
+        self.or_right = rights;
         self
     }
 
@@ -314,6 +342,11 @@ impl<'a> Rule<'a> {
     /// The immediately following context pattern, or `""` when unrestricted.
     pub const fn right_context(&self) -> &'a str {
         self.right
+    }
+
+    /// The right contexts it may have instead (see [`Rule::or_before`]).
+    pub const fn or_right_contexts(&self) -> &'a [&'a str] {
+        self.or_right
     }
 
     /// The excluded preceding context, if one was declared.
@@ -447,7 +480,8 @@ impl std::error::Error for CompileError {}
 /// Declare segment classes and ordered sound laws in one expression.
 ///
 /// Every rule has the shape `name: "target" => "replacement";`. Add
-/// `/ "left" _ "right"` before the semicolon to constrain its environment. An
+/// `/ "left" _ "right"` before the semicolon to constrain its environment
+/// (`_ "right" | "other"`: before either). An
 /// empty target denotes insertion at a boundary rather than replacement. Add
 /// `unless "left" _ "right"` to exclude an environment. Rule options `[rtl]`,
 /// `[once]`, or `[rtl, once]` control match selection; `[iterative]` makes a
@@ -476,7 +510,7 @@ macro_rules! sound_laws {
             $(
                 $rule:ident $( [ $( $option:ident ),+ $(,)? ] )?
                 : $target:literal => $replacement:literal
-                $( / $left:literal _ $right:literal )?
+                $( / $left:literal _ $right:literal $( | $or:literal )* )?
                 $( unless $excluded_left:literal _ $excluded_right:literal )? ;
             )*
         }
@@ -506,7 +540,7 @@ macro_rules! sound_laws {
                     $crate::sound_laws!(
                         @options
                         $crate::Rule::new(stringify!($rule), $target, $replacement)
-                            $( .in_context($left, $right) )?
+                            $( .in_context($left, $right).or_before(&[ $( $or ),* ]) )?
                             $( .unless_context($excluded_left, $excluded_right) )?
                         ; $( $( $option ),+ )?
                     )

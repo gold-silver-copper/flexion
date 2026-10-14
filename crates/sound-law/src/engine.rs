@@ -755,7 +755,7 @@ fn may_start(pattern: &Pattern, input: &str, at: usize) -> bool {
     match pattern.atoms.first() {
         Some(atom)
             if matches!(atom.quantifier, Quantifier::One | Quantifier::OneOrMore)
-                && !matches!(atom.matcher, Matcher::Backreference(_)) =>
+                && !matches!(atom.matcher, Matcher::Backreference(_) | Matcher::Either(_)) =>
         {
             unit_ends(&atom.matcher, input, at, &[]).next().is_some()
         }
@@ -801,6 +801,13 @@ fn left(context: &Pattern, input: &str, end: usize, s: &mut Search, next: &mut N
 /// length: its gap can't cross that letter. Any other: the start of the
 /// form.
 fn earliest(context: &Pattern, input: &str, end: usize) -> usize {
+    if context.anchored_at_start {
+        return 0;
+    }
+    // A context of bounded length starts at most that far back.
+    if let Some(longest) = longest(context) {
+        return end.saturating_sub(longest);
+    }
     let [first, gap] = context.atoms.as_ref() else {
         return 0;
     };
@@ -821,6 +828,25 @@ fn earliest(context: &Pattern, input: &str, end: usize) -> usize {
         .find(|&i| input.is_char_boundary(i) && begins(i));
     let longest = on.iter().map(|m| m.len()).max().unwrap_or(0);
     last.map_or(0, |i| (i + 1).saturating_sub(longest))
+}
+
+/// The most bytes a match of `pattern` can span, if it is bounded: no
+/// atom repeats, and none refers back to a capture.
+fn longest(pattern: &Pattern) -> Option<usize> {
+    pattern.atoms.iter().try_fold(0usize, |n, atom| {
+        if matches!(atom.quantifier, Quantifier::ZeroOrMore | Quantifier::OneOrMore) {
+            return None;
+        }
+        let most = match &atom.matcher {
+            Matcher::Literal(l) => l.len(),
+            Matcher::Class(members) => members.iter().map(|m| m.len()).max().unwrap_or(0),
+            Matcher::NotClass(_) | Matcher::Any => char::MAX.len_utf8(),
+            Matcher::WordBoundary | Matcher::NotAhead(_) => 0,
+            Matcher::Either(patterns) => patterns.iter().map(longest).max()??,
+            Matcher::Backreference(_) => return None,
+        };
+        Some(n + most)
+    })
 }
 
 /// Matches of a pattern from `start`, greediest first, each passed on to
@@ -872,6 +898,20 @@ fn atoms(
 
 /// Push the ends `atom` reaches from `at`, each once, greatest first: greedy.
 fn push_ends(atom: &Atom, input: &str, at: usize, s: &mut Search) {
+    // Where any of several patterns ends, the farthest first.
+    if let Matcher::Either(patterns) = &atom.matcher {
+        let mut ends = Vec::new();
+        for p in patterns.iter() {
+            pattern(p, input, at, s, &mut |_, end| {
+                ends.push(end);
+                false
+            });
+        }
+        ends.sort_unstable_by(|a, b| b.cmp(a));
+        ends.dedup();
+        s.ends.extend(ends);
+        return;
+    }
     let base = s.ends.len();
     let (zero, many) = match atom.quantifier {
         Quantifier::One => (false, false),
@@ -938,6 +978,8 @@ fn unit_ends<'m, 'p>(
             &[],
             (!members.iter().any(|m| rest.starts_with(m.as_ref()))).then_some(at),
         ),
+        // Patterns, matched by `push_ends`.
+        Matcher::Either(_) => (&[], None),
     };
     members
         .iter()
