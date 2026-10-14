@@ -414,8 +414,20 @@ fn grammar_files(
             classes.join(", ")
         ),
     };
+    let alternating = g
+        .paradigms
+        .iter()
+        .any(|p| p.lemma.ends_with(flexion::pattern::ALTERNATES));
+    let alternating = if alternating {
+        format!(
+            " A `{}` ends\n//! the patterns of a {one} whose stems alternate: the laws in `laws.rs`\n//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).",
+            flexion::pattern::ALTERNATES
+        )
+    } else {
+        String::new()
+    };
     let mut p = format!(
-        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}\n\nuse flexion::Paradigm;\n\n"
+        "//! The {many}, commonest first, each named after a word that follows it.\n//!\n//! A pattern is the form with `~` where the stem goes: `~а` is the stem and\n//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other\n//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`\n//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),\n//! as the copy laws in `laws.rs` change it.{harmony}{alternating}\n\nuse flexion::Paradigm;\n\n"
     );
     // The table macro (a table with no rows needs none).
     if !g.paradigms.is_empty() {
@@ -739,7 +751,7 @@ fn grammar_files(
     // laws.rs
     if let Some(program) = &g.laws {
         let mut l = format!(
-            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), or on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
+            "//! Sound laws where a stem meets its ending (`+`), where a form's first\n//! literal meets the stem (`‹`: the augment `ἐ‹ἀ → ἠ`), on a letter a\n//! `%` copies (`°`), on a class letter an ending writes (harmony, by the\n//! nearest letter of a tier before it as written), or inside a stem that\n//! alternates (`ˇ`, by what follows it): every form a {one} builds\n//! goes through them, in order, so one {one} serves words whose stems change\n//! its endings. Each with the words whose forms it gives, and how many of\n//! the dictionary's forms it gets wrong (those are listed in `irregular.rs`).\n\nuse flexion::sound_law::compiled::*;\n\nconst RULES: &[CompiledRule<'static>] = &[\n"
         );
         for (law, rule) in learned.laws.iter().zip(program.rules()) {
             let _ = writeln!(

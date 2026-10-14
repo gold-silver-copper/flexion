@@ -43,6 +43,7 @@ pub fn bind_by<'w>(
     word: &'w str,
     same: impl Fn(char, char) -> bool + Copy,
 ) -> Option<Stems<'w>> {
+    let pattern = pattern.strip_suffix(ALTERNATES).unwrap_or(pattern);
     let literals: Vec<&str> = pattern.split('~').collect();
     let (first, rest) = literals.split_first()?;
     let Some((last, middle)) = rest.split_last() else {
@@ -147,10 +148,21 @@ pub const COPIED: char = '°';
 /// the stem's vowel). Never part of a word.
 pub const FRONT: char = '‹';
 
+/// At the end of a pattern, and of the form it builds: the paradigm's stems
+/// alternate, as the sound laws that hold only for such stems change them
+/// (Finnish consonant gradation: `katu`, `kadun`; a rule feature of the
+/// paradigm, Chomsky & Halle 1968 ch. 8). Never part of a word.
+pub const ALTERNATES: char = 'ˇ';
+
+/// After letters a law for alternating stems has written: no other such
+/// law changes them again (they apply at once: Finnish `voitto`, `voiton`,
+/// is not `voidon`). Never part of a word.
+pub const CHANGED: char = '¦';
+
 /// Whether `c` marks a built form (see [`fill_marked`]) rather than being a
 /// letter of it.
 pub fn is_mark(c: char) -> bool {
-    c == BOUNDARY || c == COPIED || c == FRONT
+    c == BOUNDARY || c == COPIED || c == FRONT || c == ALTERNATES || c == CHANGED
 }
 
 /// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
@@ -194,6 +206,7 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
                     out.push(n);
                 }
                 (COPY, None) => {}
+                (ALTERNATES, _) if !marked => {}
                 _ => out.push(c),
             }
         }
@@ -206,7 +219,7 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
 pub fn unmarked(built: &str) -> (String, usize) {
     let word: String = built
         .chars()
-        .filter(|&c| c != COPIED && c != FRONT)
+        .filter(|&c| c != COPIED && c != FRONT && c != ALTERNATES && c != CHANGED)
         .collect();
     let ending = word.find(BOUNDARY).unwrap_or(0);
     (word.replace(BOUNDARY, ""), ending)
@@ -254,6 +267,11 @@ mod tests {
         );
         assert_eq!(fill_marked("ἐ~ον", &["ἀγ"]), "ἐ‹ἀγ+ον");
         assert_eq!(fill_marked("~ον", &["ἀγ"]), "ἀγ+ον");
+        // A paradigm whose stems alternate: marked for the laws only.
+        assert_eq!(bind("~ˇ", "veto"), Some(vec!["veto"]));
+        assert_eq!(fill("~nˇ", &["veto"]), "veton");
+        assert_eq!(fill_marked("~nˇ", &["veto"]), "veto+nˇ");
+        assert_eq!(unmarked("vedo+nˇ"), ("vedon".to_string(), "vedo".len()));
         // Matching letters a lookup reads alike, the stems are the word's.
         let plain = |a: char, b: char| a == b || (a, b) == ('o', 'ō') || (a, b) == ('ō', 'o');
         assert_eq!(bind_by("~tiō", "ratio", plain), Some(vec!["ra"]));

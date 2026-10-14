@@ -67,6 +67,10 @@ fn atom(a: &Atom<'_>) -> String {
         Matcher::WordBoundary => "Matcher::WordBoundary".to_string(),
         Matcher::Backreference(i) => format!("Matcher::Backreference({i})"),
         Matcher::NotAhead(m) => format!("Matcher::NotAhead(B({}))", strings(m)),
+        Matcher::Either(ps) => {
+            let ps: Vec<String> = ps.iter().map(pattern).collect();
+            format!("Matcher::Either(B(&[{}]))", ps.join(", "))
+        }
     };
     format!(
         "Atom {{ matcher: {matcher}, quantifier: Quantifier::{:?}, capture: {:?} }}",
