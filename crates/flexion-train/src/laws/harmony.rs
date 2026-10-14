@@ -398,8 +398,11 @@ pub(super) fn learn<'s>(
             if copies(pool, &tier) {
                 if letters.iter().all(|&c| orthography.is_vowel(c)) {
                     tier.extend(&vowels);
-                    let more: Vec<char> =
-                        vowels.iter().copied().filter(|v| !letters.contains(v)).collect();
+                    let more: Vec<char> = vowels
+                        .iter()
+                        .copied()
+                        .filter(|v| !letters.contains(v))
+                        .collect();
                     letters.extend(more);
                 }
                 map.extend(tier.iter().map(|&t| (Some(t), t)));
@@ -417,9 +420,8 @@ pub(super) fn learn<'s>(
             };
             // Copies are one class whatever a word with no tier letter
             // takes (`-Vn`, `-ssAAn`: few words show it).
-            let copied = |m: &BTreeMap<Option<char>, char>| {
-                m.iter().all(|(t, v)| t.is_none_or(|t| t == *v))
-            };
+            let copied =
+                |m: &BTreeMap<Option<char>, char>| m.iter().all(|(t, v)| t.is_none_or(|t| t == *v));
             let alike = |c: &Class| {
                 let none = !(copied(&c.map) && copied(&map));
                 let triggers = tier.iter().map(|&t| Some(t)).chain(none.then_some(None));
@@ -542,7 +544,9 @@ pub(super) fn learn<'s>(
     order.sort_by_key(|&k| classes.get(k).is_some_and(copy));
     let mut names: Vec<Option<char>> = vec![None; classes.len()];
     for k in order {
-        let Some(class) = classes.get(k) else { continue };
+        let Some(class) = classes.get(k) else {
+            continue;
+        };
         let capitals = class.common.iter().filter_map(|&c| {
             let mut upper = c.to_uppercase();
             match (upper.next(), upper.next()) {
@@ -746,7 +750,10 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
         return None;
     }
     if copy {
-        tier = pools.iter().flat_map(|p| p.letters.iter().copied()).collect();
+        tier = pools
+            .iter()
+            .flat_map(|p| p.letters.iter().copied())
+            .collect();
     }
     // A letter that decides what a letter before it would decide anyway
     // leaves too (`j` of `garaj`, after `a`): the smallest tier that decides

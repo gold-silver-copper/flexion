@@ -213,12 +213,24 @@ impl std::fmt::Display for Law {
                     [one] => one.to_string(),
                     many => format!("[{}]", list(many).replace(", ", "|")),
                 };
-                let or = |s: &str| if s.is_empty() { "∅".to_string() } else { s.to_string() };
+                let or = |s: &str| {
+                    if s.is_empty() {
+                        "∅".to_string()
+                    } else {
+                        s.to_string()
+                    }
+                };
                 let shifts: Vec<String> = shifts
                     .iter()
-                    .map(|(left, from, to)| format!("{} → {} after {}", or(from), or(to), set(left)))
+                    .map(|(left, from, to)| {
+                        format!("{} → {} after {}", or(from), or(to), set(left))
+                    })
                     .collect();
-                write!(f, "{} in alternating stems ({ALTERNATES})", shifts.join("; "))?;
+                write!(
+                    f,
+                    "{} in alternating stems ({ALTERNATES})",
+                    shifts.join("; ")
+                )?;
                 let paths: Vec<String> = after
                     .iter()
                     .map(|p| p.iter().map(|s| set(s)).collect())
@@ -278,7 +290,9 @@ impl Change {
             Change::Inner { shifts, .. } => {
                 built.ends_with(ALTERNATES)
                     && built.split_once(BOUNDARY).is_some_and(|(stem, _)| {
-                        shifts.iter().any(|(_, from, _)| stem.contains(from.as_str()))
+                        shifts
+                            .iter()
+                            .any(|(_, from, _)| stem.contains(from.as_str()))
                     })
             }
             Change::Front { literal, stem, .. } => {
@@ -889,8 +903,7 @@ pub fn learn<'s>(
     // A twin with words is named after the word a paradigm it took the
     // words of was named after (commonest first), else its first word no
     // paradigm is named after.
-    let mut names: crate::HashSet<String> =
-        paradigms.iter().map(|p| p.name.to_string()).collect();
+    let mut names: crate::HashSet<String> = paradigms.iter().map(|p| p.name.to_string()).collect();
     for (p, par) in paradigms.iter_mut().enumerate() {
         if !par.lemma.ends_with(ALTERNATES) {
             continue;
@@ -966,7 +979,11 @@ fn twins<'s>(
     };
     let originals = paradigms.len();
     // Of paradigms of one stem piece: an alternating stem is the word's.
-    let one = |q: usize| paradigms.get(q).is_some_and(|p| pattern::pieces(&p.lemma) == 1);
+    let one = |q: usize| {
+        paradigms
+            .get(q)
+            .is_some_and(|p| pattern::pieces(&p.lemma) == 1)
+    };
     let twins: Vec<Paradigm<'s>> = paradigms.iter().map(marked).collect();
     let mut members: Vec<Vec<usize>> = vec![Vec::new(); originals];
     for (w, &p) in assignment.iter().enumerate() {
@@ -979,7 +996,11 @@ fn twins<'s>(
     // Per paradigm, the twins building its first words' forms, closest
     // first.
     let mut close: Vec<Vec<((usize, usize), usize)>> = vec![Vec::new(); originals];
-    let all: Vec<Paradigm<'s>> = paradigms.iter().cloned().chain(twins.iter().cloned()).collect();
+    let all: Vec<Paradigm<'s>> = paradigms
+        .iter()
+        .cloned()
+        .chain(twins.iter().cloned())
+        .collect();
     for (p, mine) in members.iter().enumerate() {
         let Some(&me) = rank.get(p) else { continue };
         for q in (0..originals).filter(|&q| one(q) && rank.get(q).is_some_and(|r| *r < me)) {
@@ -1167,7 +1188,10 @@ fn greedy(
             for (k, built) in reading.builds.iter().enumerate() {
                 index.entry(window(built)).or_default().push((w, r, k));
                 if built.ends_with(ALTERNATES) {
-                    alternating.entry(stem_end(built)).or_default().push((w, r, k));
+                    alternating
+                        .entry(stem_end(built))
+                        .or_default()
+                        .push((w, r, k));
                 }
             }
         }
@@ -1217,7 +1241,8 @@ fn greedy(
                     };
                     // Not one that changes the same letters after the same
                     // letter, and none inserting.
-                    let clash = |s: &Shift| s.1 == shift.1 && s.0.iter().any(|l| shift.0.contains(l));
+                    let clash =
+                        |s: &Shift| s.1 == shift.1 && s.0.iter().any(|l| shift.0.contains(l));
                     let inserts = |s: &Shift| s.1.is_empty();
                     if theirs.iter().any(|s| clash(s) || inserts(s)) || inserts(shift) {
                         continue;
@@ -1296,7 +1321,10 @@ fn greedy(
                 };
                 index.entry(window(&after)).or_default().push((w, r, k));
                 if after.ends_with(ALTERNATES) {
-                    alternating.entry(stem_end(&after)).or_default().push((w, r, k));
+                    alternating
+                        .entry(stem_end(&after))
+                        .or_default()
+                        .push((w, r, k));
                 }
                 *built = after;
             }
@@ -1468,9 +1496,9 @@ fn try_law(
     let inner = matches!(change, Change::Inner { .. });
     let mut at: Vec<At> = if let Change::Inner { shifts, .. } = change {
         let near = |end: &String| {
-            shifts.iter().any(|(left, from, _)| {
-                left.iter().any(|l| end.contains(&format!("{l}{from}")))
-            })
+            shifts
+                .iter()
+                .any(|(left, from, _)| left.iter().any(|l| end.contains(&format!("{l}{from}"))))
         };
         alternating
             .iter()
@@ -1675,12 +1703,18 @@ fn context(
             continue;
         };
         let letters = |s: &mut dyn Iterator<Item = &char>| -> String {
-            s.filter(|&&c| c != BOUNDARY && c != '$' && c != CHANGED).collect()
+            s.filter(|&&c| c != BOUNDARY && c != '$' && c != CHANGED)
+                .collect()
         };
         let was = letters(&mut seq.iter()) == **want;
         let is = letters(&mut head.iter().chain(&to).chain(rest)) == **want;
         if was != is {
-            let cell = halves.cells.get(w).and_then(|c| c.get(k)).copied().unwrap_or(k);
+            let cell = halves
+                .cells
+                .get(w)
+                .and_then(|c| c.get(k))
+                .copied()
+                .unwrap_or(k);
             examples.push((rest.iter().take(DEPTH).copied().collect(), is, w, cell));
         }
     }
@@ -1694,7 +1728,11 @@ fn context(
         })
         .collect();
     let mut after = Vec::new();
-    flatten(&decide(&places, 0, halves.vowels), &mut Vec::new(), &mut after);
+    flatten(
+        &decide(&places, 0, halves.vowels),
+        &mut Vec::new(),
+        &mut after,
+    );
     (!after.is_empty()).then(|| Change::Inner {
         shifts: shifts.clone(),
         after,
@@ -1824,7 +1862,10 @@ fn decide(places: &[Place<'_>], at: usize, vowels: &[char]) -> Node {
             Node::By(children)
         }
     };
-    let mut letters: Vec<char> = places.iter().filter_map(|p| p.after.get(at).copied()).collect();
+    let mut letters: Vec<char> = places
+        .iter()
+        .filter_map(|p| p.after.get(at).copied())
+        .collect();
     letters.sort_unstable();
     letters.dedup();
     let marks: Vec<char> = letters
@@ -2050,7 +2091,11 @@ fn inners(built: &str, want: &str) -> Vec<Change> {
         return Vec::new();
     };
     let want: Vec<char> = want.chars().collect();
-    let head = letters.iter().zip(&want).take_while(|(a, b)| a == b).count();
+    let head = letters
+        .iter()
+        .zip(&want)
+        .take_while(|(a, b)| a == b)
+        .count();
     let most = letters.len().min(want.len()) - head;
     let tail = letters
         .iter()
@@ -2662,16 +2707,22 @@ mod tests {
                 ("+na$", false),
                 ("+mme$", false),
                 ("+nsa$", false),
-                ("+" , false),
+                ("+", false),
             ] {
-                let rest = if rest == "+" { format!("+{v}n$") } else { rest.to_string() };
+                let rest = if rest == "+" {
+                    format!("+{v}n$")
+                } else {
+                    rest.to_string()
+                };
                 for _ in 0..3 {
                     examples.push((format!("{v}{rest}"), weak));
                 }
             }
         }
-        let seqs: Vec<(Vec<char>, bool)> =
-            examples.iter().map(|(e, y)| (e.chars().collect(), *y)).collect();
+        let seqs: Vec<(Vec<char>, bool)> = examples
+            .iter()
+            .map(|(e, y)| (e.chars().collect(), *y))
+            .collect();
         let seqs: Vec<Place<'_>> = seqs
             .iter()
             .enumerate()
@@ -2713,4 +2764,3 @@ mod tests {
         }
     }
 }
-

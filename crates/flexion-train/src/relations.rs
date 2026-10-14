@@ -379,8 +379,8 @@ fn changes<'f>(
 /// Each pair's change as the laws can say it: of its own change, that change
 /// with its new ending in class letters (`~ım` → `~Im`), and the source kept
 /// whole with what follows it in class letters (`kitap` → `kitabım`: `~` →
-/// `~Im`, where a law makes `p` `b`), those the laws make into its form, the
-/// one the most pairs can say; its own where none.
+/// `~Im`, where a law makes `p` `b`), those that make its form (one writing
+/// a class letter through the laws), the one the most pairs can say.
 fn through<'f>(
     pairs: Vec<(&'f str, (String, String))>,
     laws: &sound_law::Program<'_>,
@@ -389,7 +389,10 @@ fn through<'f>(
     use flexion::pattern;
     let told = |a: &str, (old, new): &(String, String)| {
         let stems = pattern::bind(old, a)?;
-        Some(pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems))).0)
+        Some(match new.chars().any(char::is_uppercase) {
+            true => pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems))).0,
+            false => pattern::fill(new, &stems),
+        })
     };
     let candidates: Vec<Vec<(String, String)>> = pairs
         .iter()

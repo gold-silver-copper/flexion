@@ -118,8 +118,8 @@ impl Relation<'_> {
 
     /// The forms `form` gives (its letters), each with where its change
     /// starts and how likely it is: the change's new ending put where the
-    /// old one was, and `laws` run over the form, as over a paradigm's (a
-    /// class letter it writes, `~Im`, is what the harmony makes it).
+    /// old one was; one that writes a class letter (a capital, `~Im`) is
+    /// run through `laws`, as a paradigm's form is.
     pub fn apply(
         &self,
         form: &str,
@@ -146,7 +146,7 @@ impl Relation<'_> {
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
                 let stems = pattern::bind(old, form)?;
-                let (told, at) = match laws {
+                let (told, at) = match laws.filter(|_| new.chars().any(char::is_uppercase)) {
                     None => (
                         pattern::fill(new, &stems),
                         pattern::ending_start(new, &stems),

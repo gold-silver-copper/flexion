@@ -834,7 +834,10 @@ fn earliest(context: &Pattern, input: &str, end: usize) -> usize {
 /// atom repeats, and none refers back to a capture.
 fn longest(pattern: &Pattern) -> Option<usize> {
     pattern.atoms.iter().try_fold(0usize, |n, atom| {
-        if matches!(atom.quantifier, Quantifier::ZeroOrMore | Quantifier::OneOrMore) {
+        if matches!(
+            atom.quantifier,
+            Quantifier::ZeroOrMore | Quantifier::OneOrMore
+        ) {
             return None;
         }
         let most = match &atom.matcher {
