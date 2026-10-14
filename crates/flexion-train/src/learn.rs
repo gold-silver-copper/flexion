@@ -568,22 +568,11 @@ pub fn learn<'s>(
     // derived; the words then checked again. A word's listed forms are its
     // principal parts: the forms no relation tells from another listed one.
     // The forms told wrong are listed too.
-    let (relations, program, o) = (
-        grammar.relations.clone(),
-        grammar.laws.clone(),
-        grammar.orthography,
-    );
+    let tables = derive(&grammar, &assigned, &prices, settings.smoothing, &slot_of);
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
-        derive(
-            &o,
-            paradigms,
-            &relations,
-            &assigned,
-            &prices,
-            settings.smoothing,
-            program.as_ref(),
-            &slot_of,
-        );
+        for (paradigm, table) in paradigms.iter_mut().zip(tables) {
+            paradigm.table = Cow::Owned(table);
+        }
     }
     let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
     let wrong: Vec<(String, usize, String)> = checked
@@ -2157,30 +2146,32 @@ fn rehome<'s>(
     crate::laws::drop_empty(paradigms, assignment)
 }
 
-/// Each paradigm's cells its relation tells from the paradigm's own form
-/// of a cell of the same stem slot (`slot_of`) with its one change,
-/// derived, where the forms
+/// Each paradigm's table, with the cells its relation tells from the
+/// paradigm's own form of a cell of the same stem slot (`slot_of`) with its
+/// one change derived, where the forms
 /// of its words the relation tells wrong and the pattern right cost fewer
 /// bits listed, less those it tells right and the pattern wrong, than the
 /// pattern stated (Finnish `talossani`: `talossa` and `ni`, for every noun).
 fn derive(
-    orthography: &Orthography<'_>,
-    paradigms: &mut [Paradigm<'_>],
-    relations: &[Relation<'_>],
+    grammar: &Grammar<'_, u16, u16, u8>,
     assigned: &[(&Word, u16)],
     prices: &crate::bits::Prices,
     smoothing: f32,
-    laws: Option<&sound_law::Program<'_>>,
     slot_of: &[Option<u16>],
-) {
+) -> Vec<String> {
+    let (orthography, paradigms, laws) = (
+        &grammar.orthography,
+        &grammar.paradigms,
+        grammar.laws.as_ref(),
+    );
     let mut members: Vec<Vec<&Word>> = vec![Vec::new(); paradigms.len()];
     for &(w, p) in assigned {
         if let Some(m) = members.get_mut(usize::from(p)) {
             m.push(w);
         }
     }
-    let frozen: Vec<Paradigm<'_>> = paradigms.to_vec();
-    for (paradigm, words) in paradigms.iter_mut().zip(&members) {
+    let mut tables = Vec::with_capacity(paradigms.len());
+    for (paradigm, words) in paradigms.iter().zip(&members) {
         let mut cells: Vec<String> = paradigm.table.split('\t').map(str::to_string).collect();
         let stems: Vec<Option<pattern::Stems<'_>>> = words
             .iter()
@@ -2188,7 +2179,8 @@ fn derive(
             .collect();
         // A relation with one change makes every word's form the same way:
         // a held-out word's too (one choosing by ending may not).
-        for r in relations
+        for r in grammar
+            .relations
             .iter()
             .filter(|r| r.analogy.is_none() && r.changes.len() == 1)
         {
@@ -2215,7 +2207,7 @@ fn derive(
                     let (from, form) = (first_form(w, s)?, first_form(w, c)?);
                     let told = r.told(from, smoothing, laws);
                     let built = stems.as_ref().and_then(|stems| {
-                        let built = paradigm.built(&frozen, laws, c, stems);
+                        let built = paradigm.built(paradigms, laws, c, stems);
                         built.into_iter().next().map(|b| b.0)
                     });
                     Some((
@@ -2240,8 +2232,9 @@ fn derive(
                 *slot = DERIVED.to_string();
             }
         }
-        paradigm.table = Cow::Owned(cells.join("\t"));
+        tables.push(cells.join("\t"));
     }
+    tables
 }
 
 /// The share of the words ending in another word (behind at least
