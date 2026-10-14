@@ -571,7 +571,7 @@ pub fn learn<'s>(
     let (relations, program, o) = (
         grammar.relations.clone(),
         grammar.laws.clone(),
-        grammar.orthography.clone(),
+        grammar.orthography,
     );
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         derive(
