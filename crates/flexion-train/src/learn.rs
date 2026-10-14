@@ -27,7 +27,8 @@ pub struct Shape {
     /// on: its group (`present`, `future`), then each feature's value
     /// (`u16::MAX` where its group hasn't the feature).
     pub coordinates: Vec<Vec<u16>>,
-    /// The most words to learn from (see `PartOfSpeech::max_words`).
+    /// The most words to learn the structure from (see
+    /// `PartOfSpeech::max_words`).
     pub max_words: Option<usize>,
     /// Per cell, its name (`gen_pl`), as the crate's constants are named.
     pub names: Vec<String>,
@@ -101,17 +102,6 @@ pub fn learn<'s>(
     lexemes: &[Lexeme],
     settings: Settings,
 ) -> Learned<'s> {
-    // At most so many words, the commonest.
-    let capped: Vec<Lexeme>;
-    let lexemes = match shape.max_words {
-        Some(max) if lexemes.len() > max => {
-            let mut by: Vec<&Lexeme> = lexemes.iter().collect();
-            by.sort_by_key(|l| (std::cmp::Reverse(l.senses), l.source, l.order));
-            capped = by.into_iter().take(max).cloned().collect();
-            capped.as_slice()
-        }
-        _ => lexemes,
-    };
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
     let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
@@ -122,12 +112,34 @@ pub fn learn<'s>(
     let mut by_order: Vec<&Lexeme> = lexemes.iter().collect();
     by_order.sort_by_key(|l| (l.source, l.order));
     let mut seen = crate::HashSet::default();
-    let lexemes: Vec<Lexeme> = by_order
+    let unique: Vec<&Lexeme> = by_order
         .into_iter()
         .filter(|l| seen.insert(key(l)))
-        .cloned()
         .collect();
-    let lexemes = lexemes.as_slice();
+    // The grammar's structure (its paradigms, relations and laws, learned
+    // form by form) is learned from at most so many words, the commonest;
+    // every word then takes a paradigm and lists what the grammar gets
+    // wrong, a word at a time. They come first, the rest after.
+    let sample: crate::HashSet<usize> = match shape.max_words {
+        Some(max) if unique.len() > max => {
+            let mut by: Vec<usize> = (0..unique.len()).collect();
+            by.sort_by_key(|&i| {
+                unique
+                    .get(i)
+                    .map(|l| (std::cmp::Reverse(l.senses), l.source, l.order))
+            });
+            by.into_iter().take(max).collect()
+        }
+        _ => (0..unique.len()).collect(),
+    };
+    let (first, rest): (Vec<usize>, Vec<usize>) =
+        (0..unique.len()).partition(|i| sample.contains(i));
+    let learned_from = first.len();
+    let every: Vec<Lexeme> = first
+        .into_iter()
+        .chain(rest)
+        .filter_map(|i| unique.get(i).map(|&l| l.clone()))
+        .collect();
     // A word is spelled as its table writes it (`ὑποκρῠ́πτω`, where the
     // headword says `ὑποκρύπτω`): its forms carry those marks.
     let letters = |l: &Lexeme| {
@@ -140,7 +152,7 @@ pub fn learn<'s>(
             .filter(|t| orthography.key(t) == orthography.key(&headword))
             .unwrap_or(headword)
     };
-    let words: Vec<Word> = lexemes
+    let everyone: Vec<Word> = every
         .iter()
         .map(|l| Word {
             key: key(l),
@@ -161,6 +173,7 @@ pub fn learn<'s>(
                 .collect(),
         })
         .collect();
+    let (words, rest_words) = everyone.split_at(learned_from.min(everyone.len()));
     // Words written in parts that inflect each part are the grammar of
     // their parts, not paradigms of their own.
     let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
@@ -171,7 +184,7 @@ pub fn learn<'s>(
         .filter(|w| compound(w).is_some_and(|c| c.1 == Compound::Each))
         .map(|w| w.key.as_str())
         .collect();
-    let (all_words, all_lexemes) = (words.as_slice(), lexemes);
+    let all_words = words;
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
     let (prefixes, bases) = prefixes(all_words);
@@ -274,6 +287,21 @@ pub fn learn<'s>(
         program.as_ref(),
     );
     inherent(&words, &assignment, &mut paradigms);
+    // The words the structure wasn't learned from: each takes the paradigm
+    // that builds the most of its forms (none, written in parts that each
+    // inflect).
+    let rest_assignment = fit(&orthography, &paradigms, program.as_ref(), rest_words);
+    let assigned: Vec<(&Word, u16)> = words
+        .iter()
+        .zip(assignment.iter().copied())
+        .chain(
+            rest_words
+                .iter()
+                .zip(&rest_assignment)
+                .filter(|(w, _)| compound(w).is_none_or(|c| c.1 != Compound::Each))
+                .filter_map(|(w, p)| Some((w, (*p)?))),
+        )
+        .collect();
     let mut seen = vec![vec![false; shape.cells]; paradigms.len()];
     for (w, &p) in words.iter().zip(&assignment) {
         for (c, fs) in w.cells.iter().enumerate() {
@@ -284,10 +312,9 @@ pub fn learn<'s>(
     }
     // Read from the word's end to its start (`#lux`, not `pollux`).
     let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
-    let paradigm_examples: Vec<(String, u16)> = words
+    let paradigm_examples: Vec<(String, u16)> = assigned
         .iter()
-        .zip(&assignment)
-        .map(|(w, &p)| (anchored(&w.key), p))
+        .map(|&(w, p)| (anchored(&w.key), p))
         .collect();
     let fits = |word: &str, p: u16| {
         let word = word.strip_prefix(flexion::WORD_END).unwrap_or(word);
@@ -298,9 +325,9 @@ pub fn learn<'s>(
     let mut paradigm_choice = choose::learn(&paradigm_examples, settings, fits);
     // Which rules are productive, judged on the commonest words: in the
     // most dictionaries, with the most senses.
-    let mut by_commonness: Vec<usize> = (0..words.len()).collect();
+    let mut by_commonness: Vec<usize> = (0..assigned.len()).collect();
     by_commonness.sort_by_key(|&i| {
-        words.get(i).map(|w| {
+        assigned.get(i).map(|&(w, _)| {
             (
                 std::cmp::Reverse(w.dictionaries),
                 std::cmp::Reverse(w.senses),
@@ -308,7 +335,7 @@ pub fn learn<'s>(
             )
         })
     });
-    let mut rank = vec![0; words.len()];
+    let mut rank = vec![0; assigned.len()];
     for (r, &i) in by_commonness.iter().enumerate() {
         if let Some(slot) = rank.get_mut(i) {
             *slot = r;
@@ -337,9 +364,9 @@ pub fn learn<'s>(
     // headword leaves off marks its forms have); without marks, those the
     // word's paradigm doesn't write.
     let listed: Vec<&Word> = match &marks {
-        Some(marks) => all_words
+        Some(marks) => everyone
             .iter()
-            .zip(all_lexemes)
+            .zip(&every)
             .filter(|(w, l)| {
                 flexion::restore(&orthography, marks, settings.smoothing, &w.key, &w.key).0
                     != w.letters
@@ -347,17 +374,16 @@ pub fn learn<'s>(
             })
             .map(|(w, _)| w)
             .collect(),
-        None => words
+        None => assigned
             .iter()
-            .zip(&assignment)
-            .filter(|&(w, &p)| {
+            .filter(|&&(w, p)| {
                 let written = paradigms.get(usize::from(p)).and_then(|par| {
                     let stems = par.stems(&orthography, &w.key)?;
                     Some(pattern::fill(&par.lemma, &stems))
                 });
                 w.letters != w.key && written.as_deref() != Some(w.letters.as_str())
             })
-            .map(|(w, _)| w)
+            .map(|&(w, _)| w)
             .collect(),
     };
     let mut spellings: Vec<(Cow<'s, str>, Cow<'s, str>)> = listed
@@ -400,11 +426,11 @@ pub fn learn<'s>(
     };
     // A word the grammar gets wrong is listed in its choices: its paradigm,
     // its stress pattern and stem vowel. Forms still wrong are irregular.
-    let wrong: crate::HashSet<String> = irregular(&grammar, all_lexemes, all_words, |_| true)
+    let wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |_| true)
         .into_iter()
         .map(|(k, _, _)| k)
         .collect();
-    for (w, &p) in words.iter().zip(&assignment) {
+    for &(w, p) in &assigned {
         if !wrong.contains(&w.key) {
             continue;
         }
@@ -423,7 +449,7 @@ pub fn learn<'s>(
     }
     // Words made of others (`hineinlassen`, `диван-кровать`) are checked
     // once the words they are made of have their irregular forms.
-    let made: crate::HashSet<&str> = all_words
+    let made: crate::HashSet<&str> = everyone
         .iter()
         .filter(|w| {
             w.key.contains('-')
@@ -438,7 +464,7 @@ pub fn learn<'s>(
     let made = |w: &Word| made.contains(w.key.as_str());
     // A word's listed forms are its principal parts: the forms no relation
     // tells from another listed one. The forms told wrong are listed too.
-    let checked = misbuilt(&grammar, all_lexemes, all_words, |w| !made(w));
+    let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
     let wrong: Vec<(String, usize, String)> = checked
         .iter()
         .map(|(k, c, f, _)| (k.clone(), *c, f.clone()))
@@ -492,7 +518,7 @@ pub fn learn<'s>(
     // build more of its forms right than they cost.
     // Every word that lists something is checked again once all is listed.
     let mut unsure: crate::HashSet<String> = wrong.iter().map(|(k, _, _)| k.clone()).collect();
-    let candidates = listed_stems(&grammar, all_words, &letters_wrong, &prices);
+    let candidates = listed_stems(&grammar, &everyone, &letters_wrong, &prices);
     // Each word's listing two ways: its forms (those no relation tells from
     // another listed one, then those told wrong), and the stems worth
     // listing for it with the forms still wrong; with the forms listed for
@@ -502,13 +528,13 @@ pub fn learn<'s>(
     // Which relations tell listed words' forms: judged on the forms wrong
     // with every candidate stem listed, the same for both listings.
     grammar.irregular = flexion::Irregular::new(&[], &candidates);
-    let judged = rebuilt(&grammar, all_words, &candidates, wrong.clone());
+    let judged = rebuilt(&grammar, &everyone, &candidates, wrong.clone());
     if let Cow::Owned(relations) = &mut grammar.relations {
         for r in relations.iter_mut() {
-            r.listed = tells_listed(r, &judged, all_words, grammar.smoothing);
+            r.listed = tells_listed(r, &judged, &everyone, grammar.smoothing);
         }
     }
-    let words_of = (all_lexemes, all_words);
+    let words_of = (every.as_slice(), everyone.as_slice());
     let forms_only = listing(&mut grammar, &[], &wrong, words_of, &made, &mut unsure);
     let on_stems = listing(
         &mut grammar,
@@ -570,7 +596,7 @@ pub fn learn<'s>(
             .collect(),
     );
     let stats = Stats {
-        words: all_words.len(),
+        words: everyone.len(),
         paradigms: grammar.paradigms.len(),
         accent_patterns: grammar.accent.as_ref().map_or(0, |a| a.patterns.len()),
         irregular_forms: irregular.len(),
@@ -1941,18 +1967,7 @@ fn rehome<'s>(
         if kept.get(usize::from(*slot)) == Some(&true) {
             continue;
         }
-        let built = |par: &Paradigm<'_>| {
-            let Some(stems) = par.stems(orthography, w.letters) else {
-                return 0;
-            };
-            let forms = w.forms.iter().enumerate();
-            forms
-                .filter(|&(c, f)| {
-                    let built = || par.built(&paradigms, laws, c, &stems);
-                    f.is_some_and(|f| built().first().is_some_and(|(b, _)| b == f))
-                })
-                .count()
-        };
+        let built = |par: &Paradigm<'_>| builds(orthography, &paradigms, laws, par, w);
         let best = paradigms
             .iter()
             .zip(&kept)
@@ -1968,6 +1983,69 @@ fn rehome<'s>(
         }
     }
     crate::laws::drop_empty(paradigms, assignment)
+}
+
+/// How many of `w`'s forms `par` builds right.
+fn builds(
+    orthography: &Orthography<'_>,
+    paradigms: &[Paradigm<'_>],
+    laws: Option<&sound_law::Program<'_>>,
+    par: &Paradigm<'_>,
+    w: &crate::laws::Word<'_>,
+) -> usize {
+    let Some(stems) = par.stems(orthography, w.letters) else {
+        return 0;
+    };
+    w.forms
+        .iter()
+        .enumerate()
+        .filter(|&(c, f)| {
+            let built = || par.built(paradigms, laws, c, &stems);
+            f.is_some_and(|f| built().first().is_some_and(|(b, _)| b == f))
+        })
+        .count()
+}
+
+/// Per word, the paradigm that builds the most of its forms (the first of
+/// those that build as many), if any builds one.
+fn fit(
+    orthography: &Orthography<'_>,
+    paradigms: &[Paradigm<'_>],
+    laws: Option<&sound_law::Program<'_>>,
+    words: &[Word],
+) -> Vec<Option<u16>> {
+    let best = |w: &Word| {
+        let forms: Vec<Option<&str>> = (0..w.cells.len()).map(|c| first_form(w, c)).collect();
+        let w = crate::laws::Word {
+            letters: &w.letters,
+            forms,
+        };
+        paradigms
+            .iter()
+            .enumerate()
+            .map(|(p, par)| {
+                (
+                    builds(orthography, paradigms, laws, par, &w),
+                    std::cmp::Reverse(p),
+                )
+            })
+            .max()
+            .filter(|&(n, _)| n > 0)
+            .and_then(|(_, std::cmp::Reverse(p))| u16::try_from(p).ok())
+    };
+    let best = &best;
+    let chunk = words.len().div_ceil(THREADS).max(1);
+    std::thread::scope(|scope| {
+        let handles: Vec<_> = words
+            .chunks(chunk)
+            .map(|part| scope.spawn(move || part.iter().map(best).collect::<Vec<_>>()))
+            .collect();
+        handles
+            .into_iter()
+            .filter_map(|h| h.join().ok())
+            .flatten()
+            .collect()
+    })
 }
 
 /// A paradigm's name: its commonest word that no sense makes vulgar or

@@ -96,6 +96,36 @@ fn every_language_gives_its_dictionary_forms() {
 }
 
 #[test]
+fn a_word_beyond_the_words_learned_from_still_gives_its_dictionary_forms() {
+    // Learned from the four commonest Finnish nouns only, the grammar still
+    // gives every noun the dictionary has its own forms.
+    let lang = flexion_configs::finnish::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let (part, d) = lang.parts.iter().zip(&data).next().expect("nouns");
+    let mut shape = flexion_train::shape(&lang, part).expect("shape");
+    shape.max_words = Some(4);
+    let learned = learn::learn(
+        script.orthography(),
+        &shape,
+        &d.lexemes,
+        Settings::default(),
+    );
+    let g = &learned.grammar;
+    for l in firsts(&script, &d.lexemes) {
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(want) = forms.first() else { continue };
+            let got = g.best(&l.full, cell, &Known::default());
+            assert!(
+                same_form(&g.orthography, &got, want),
+                "{} cell {cell} is {want}, the grammar says {got}",
+                l.full
+            );
+        }
+    }
+}
+
+#[test]
 fn every_word_has_every_form_with_a_probability_and_a_reason() {
     // Cells the dictionary leaves empty: the grammar must fill them too.
     let mut unattested = 0;
