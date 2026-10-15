@@ -1455,7 +1455,10 @@ fn referrals<'s>(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Relation<'
     for (f, &values) in shape.inherent.iter().enumerate() {
         let mut found: Vec<Relation<'s>> = Vec::new();
         for cell in 0..shape.cells {
-            let to: Option<Vec<u16>> = (0..values)
+            // Per value, the earlier cells (themselves formed by the
+            // paradigm) the cell's form is, for enough of its words, best
+            // first.
+            let fits: Option<Vec<Vec<u16>>> = (0..values)
                 .map(|v| {
                     let with: Vec<&Word> = words
                         .iter()
@@ -1464,8 +1467,7 @@ fn referrals<'s>(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Relation<'
                                 && form(w, cell).is_some()
                         })
                         .collect();
-                    // An earlier cell, itself formed by the paradigm.
-                    let (n, t) = (0..cell)
+                    let mut fit: Vec<(usize, usize)> = (0..cell)
                         .filter(|&t| !found.iter().any(|r| usize::from(r.cell) == t))
                         .map(|t| {
                             let same = with
@@ -1473,13 +1475,30 @@ fn referrals<'s>(words: &[Word], shape: &Shape) -> Option<(usize, Vec<Relation<'
                                 .filter(|w| form(w, t).is_some() && form(w, t) == form(w, cell));
                             (same.count(), t)
                         })
-                        .max_by_key(|&(n, t)| (n, std::cmp::Reverse(t)))?;
-                    #[allow(clippy::cast_precision_loss)]
-                    let share = n as f64 / with.len().max(1) as f64;
-                    (with.len() >= 50 && share >= REFERRAL_SHARE)
-                        .then(|| u16::try_from(t).unwrap_or(u16::MAX))
+                        .filter(|&(n, _)| {
+                            #[allow(clippy::cast_precision_loss)]
+                            let share = n as f64 / with.len().max(1) as f64;
+                            with.len() >= 50 && share >= REFERRAL_SHARE
+                        })
+                        .collect();
+                    fit.sort_by_key(|&(n, t)| (std::cmp::Reverse(n), t));
+                    let fit: Vec<u16> = fit
+                        .into_iter()
+                        .filter_map(|(_, t)| u16::try_from(t).ok())
+                        .collect();
+                    (!fit.is_empty()).then_some(fit)
                 })
                 .collect();
+            // A cell one earlier cell gives for every value needs no feature
+            // (Italian `parli`, the imperative's `lei`, is the subjunctive's
+            // third person whatever the auxiliary).
+            let shared = fits.as_ref().is_some_and(|fits| {
+                fits.first()
+                    .is_some_and(|first| first.iter().any(|t| fits.iter().all(|f| f.contains(t))))
+            });
+            let to: Option<Vec<u16>> = fits
+                .filter(|_| !shared)
+                .and_then(|fits| fits.iter().map(|f| f.first().copied()).collect());
             if let Some(to) = to.filter(|to| to.iter().any(|t| Some(t) != to.first())) {
                 let cell = u16::try_from(cell).unwrap_or(u16::MAX);
                 found.push(crate::relations::copy(cell, to, None));
@@ -3133,5 +3152,48 @@ mod tests {
             .map(|c| reflexive.pattern(&family, c).map(Cow::into_owned))
             .collect();
         assert_eq!(after, before);
+    }
+
+    #[test]
+    fn a_cell_one_other_cell_gives_whatever_the_feature_needs_none() {
+        // Italian: the polite imperative (`parli`) is the subjunctive's
+        // third person for every verb; for verbs with `avere` the first
+        // person is the same too (`parli`), for reflexives with `essere`
+        // not (`mi lavi`, `si lavi`). The auxiliary decides nothing.
+        let mut words = Vec::new();
+        for i in 0..60 {
+            let stem = format!("parl{i}");
+            let mut w = word(
+                &stem,
+                &[
+                    &format!("{stem}i"),
+                    &format!("{stem}i"),
+                    &format!("{stem}i"),
+                ],
+            );
+            w.inherent = vec![0];
+            words.push(w);
+            let mut w = word(
+                &format!("lav{i}"),
+                &[
+                    &format!("mi lav{i}"),
+                    &format!("si lav{i}"),
+                    &format!("si lav{i}"),
+                ],
+            );
+            w.inherent = vec![1];
+            words.push(w);
+        }
+        let shape = Shape {
+            cells: 3,
+            lemma_cell: None,
+            capitalized: false,
+            inherent: vec![2],
+            coordinates: vec![Vec::new(); 3],
+            max_words: None,
+            names: vec![String::new(); 3],
+            marks: None,
+        };
+        assert!(referrals(&words, &shape).is_none());
     }
 }

@@ -1029,11 +1029,22 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         .map(|&c| (c, 1.0))
                         .into_iter()
                         .collect(),
-                    None => choice
-                        .read(key, self.smoothing, |_| true)
-                        .into_iter()
-                        .filter_map(|r| Some((*from.get(r.value.index())?, r.probability)))
-                        .collect(),
+                    None => {
+                        let read: Vec<(u16, f32)> = choice
+                            .read(key, self.smoothing, |_| true)
+                            .into_iter()
+                            .filter_map(|r| Some((*from.get(r.value.index())?, r.probability)))
+                            .collect();
+                        // A choice that knows nothing of the word: every
+                        // cell alike, never no form.
+                        if read.is_empty() {
+                            #[allow(clippy::cast_precision_loss)]
+                            let each = 1.0 / from.len().max(1) as f32;
+                            from.iter().map(|&c| (c, each)).collect()
+                        } else {
+                            read
+                        }
+                    }
                 },
             };
             let relation = self.changing(relation);

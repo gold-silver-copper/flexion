@@ -697,6 +697,33 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 c.worse,
                 c.p
             );
+            // The same apart for the words built on a training word, and the
+            // rest.
+            let keys: flexion_train::HashSet<&str> = train.iter().map(|l| l.key.as_str()).collect();
+            let prefixes: Vec<&str> = g
+                .prefixes
+                .iter()
+                .flat_map(|p| p.prefixes.iter().map(|p| p.letters.as_ref()))
+                .collect();
+            for (label, want) in [("on a training word", true), ("new roots", false)] {
+                let mine: Vec<eval::Outcome> = out
+                    .iter()
+                    .filter(|x| {
+                        test.get(x.word)
+                            .is_some_and(|l| measure::prefixed(&l.key, &keys, &prefixes) == want)
+                    })
+                    .cloned()
+                    .collect();
+                let c = measure::compare(&eval::against_floor(&mine, &floored, |_| true));
+                println!(
+                    "    {label}: grammar {:.2}%, floor {:.2}%, {:+.2} ({:+.2} … {:+.2})",
+                    100.0 * c.b,
+                    100.0 * c.a,
+                    100.0 * (c.b - c.a),
+                    100.0 * c.low,
+                    100.0 * c.high
+                );
+            }
             floor_cells(&out, &floored, &names);
             let (lo, hi) = measure::interval(&eval::by_word(&out));
             let (on, rest) = flexion_train::pipeline::strata(&train, g, &test, &out);
