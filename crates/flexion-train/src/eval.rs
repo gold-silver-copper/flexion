@@ -671,6 +671,8 @@ pub struct Oracle {
     pub best: Vec<usize>,
     pub oracle: usize,
     pub chosen: Option<usize>,
+    /// Per paradigm, how many of the forms it builds.
+    pub built: Vec<usize>,
 }
 
 /// Held-out words and cells scored for [`oracle`], at most: every paradigm
@@ -736,6 +738,7 @@ pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 .readings(&l.full, &known)
                 .first()
                 .map(|r| r.value.index()),
+            built: counts,
         }
     })
 }

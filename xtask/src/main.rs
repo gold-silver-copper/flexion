@@ -1145,29 +1145,75 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
         .filter_map(|x| Some((x, *test.get(x.word)?)))
         .filter(|(x, l)| !x.best.is_empty() && count.get(l.key.as_str()) == Some(&1))
         .collect();
-    let test_examples: Vec<(Example<'_>, Vec<usize>)> = held
+    let test_examples: Vec<(Example<'_>, ceiling::Held<'_>)> = held
         .iter()
-        .map(|(x, l)| (example(o, l), x.best.clone()))
+        .map(|(x, l)| {
+            let held = ceiling::Held {
+                best: &x.best,
+                built: &x.built,
+                forms: x.forms,
+            };
+            (example(o, l), held)
+        })
         .collect();
-    let rules = held
-        .iter()
-        .filter(|(x, _)| x.chosen.is_some_and(|c| x.best.contains(&c)))
-        .count() as f64
-        / held.len().max(1) as f64;
+    let rules = (
+        held.iter()
+            .filter(|(x, _)| x.chosen.is_some_and(|c| x.best.contains(&c)))
+            .count() as f64
+            / held.len().max(1) as f64,
+        held.iter()
+            .filter_map(|(x, _)| x.built.get(x.chosen?))
+            .sum::<usize>() as f64
+            / held.iter().map(|(x, _)| x.forms).sum::<usize>().max(1) as f64,
+    );
+    let pair = |(w, f): (f64, f64)| format!("{:.2}% / {:.2}%", 100.0 * w, 100.0 * f);
     let all = ceiling::score(&train_examples, &test_examples, None);
     let without: Vec<String> = ceiling::CUES
         .iter()
         .map(|&cue| {
             let s = ceiling::score(&train_examples, &test_examples, Some(cue));
-            format!("{cue:?} {:.2}%", 100.0 * s)
+            format!("{cue:?} {}", pair(s))
         })
         .collect();
     println!(
-        "    best paradigm told ({} words): by the rules {:.2}%, by a classifier with every cue {:.2}%; without each: {}",
+        "    best paradigm told ({} words; words / forms): by the rules {}, by a classifier with every cue {}; without each: {}",
         held.len(),
-        100.0 * rules,
-        100.0 * all,
+        pair(rules),
+        pair(all),
         without.join(", ")
+    );
+    // How much of the paradigm choice's probability the readings the
+    // runtime builds keep, by how many it keeps; and a table's time.
+    let readings: Vec<Vec<f32>> = held
+        .iter()
+        .map(|(_, l)| {
+            let r = g.readings(&l.full, &flexion::Known::default());
+            r.iter().map(|r| r.probability).collect()
+        })
+        .collect();
+    let kept: Vec<String> = [4, 8, 16]
+        .iter()
+        .map(|&k| {
+            let mass: f64 = readings
+                .iter()
+                .map(|r| {
+                    let all: f32 = r.iter().sum();
+                    f64::from(r.iter().take(k).sum::<f32>() / all.max(f32::MIN_POSITIVE))
+                })
+                .sum::<f64>()
+                / readings.len().max(1) as f64;
+            format!("{k}: {:.2}%", 100.0 * mass)
+        })
+        .collect();
+    let t = Instant::now();
+    for (_, l) in &held {
+        std::hint::black_box(g.table(&l.lemma, &flexion::Known::default()));
+    }
+    println!(
+        "    the paradigm choice's probability in its likeliest readings: {}; {:.0} µs a table (keeping {})",
+        kept.join(", "),
+        t.elapsed().as_secs_f64() * 1e6 / held.len().max(1) as f64,
+        flexion::READINGS,
     );
 }
 

@@ -22,6 +22,9 @@ const OTHER_VALUES: f32 = 0.05;
 /// Readings of each kind kept when combining them into candidates.
 const KEEP: usize = 4;
 
+/// The paradigm readings a word's table is built from, the likeliest.
+pub const READINGS: usize = 4;
+
 /// What joins the parts of a compound written in parts.
 const JOINER: char = '-';
 
@@ -587,7 +590,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // forms, cell by cell, built once.
         let mut readings: Vec<_> = inflections
             .into_iter()
-            .take(KEEP)
+            .take(READINGS)
             .map(|inf| {
                 let classes = self.accent_classes(&word, &inf, cells);
                 let built = Built {
