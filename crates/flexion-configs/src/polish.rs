@@ -79,7 +79,7 @@ pub fn language() -> Language {
                 name: "noun",
                 doc: "Nouns, and pronouns that decline like nouns (`ja`, `kto`).",
                 wiktionary: vec!["noun", "pron"],
-                templates: vec!["pl-decl-noun*", "pl-mid-decl-noun"],
+                templates: vec!["pl-decl-noun*"],
                 forms: FormSource::Tables,
                 groups: vec![group(
                     "noun",

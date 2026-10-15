@@ -79,7 +79,7 @@ fn cues(e: &Example<'_>, without: Option<Cue>) -> Vec<usize> {
 /// share right on `test`, with every cue but `without`.
 pub fn score(
     train: &[(Example<'_>, usize)],
-    test: &[(Example<'_>, usize)],
+    test: &[(Example<'_>, Vec<usize>)],
     without: Option<Cue>,
 ) -> f64 {
     let mut classes: Vec<usize> = train.iter().map(|(_, p)| *p).collect();
@@ -142,7 +142,7 @@ pub fn score(
                 .enumerate()
                 .max_by(|a, b| a.1.total_cmp(b.1))
                 .and_then(|(i, _)| classes.get(i));
-            best == Some(p)
+            best.is_some_and(|b| p.contains(b))
         })
         .count();
     #[allow(clippy::cast_precision_loss)]
@@ -168,6 +168,9 @@ mod tests {
             .map(|i| (example(i), usize::from(i % 2 == 0)))
             .collect();
         let (train, test) = all.split_at(300);
+        let test: Vec<(Example<'_>, Vec<usize>)> =
+            test.iter().map(|(e, p)| (e.clone(), vec![*p])).collect();
+        let test = test.as_slice();
         assert!(score(train, test, None) > 0.95);
         assert!(score(train, test, Some(Cue::Features)) < 0.7);
     }

@@ -64,11 +64,18 @@ pub struct Learned<'s> {
     pub views: Vec<View>,
     /// Each stage's time and peak memory.
     pub trace: crate::trace::Trace,
+    /// The relations before what the runtime can't read of them went (see
+    /// [`Read`]): for checking that nothing it reads changed.
+    pub unpruned: Vec<Relation<'s>>,
 }
 
 /// Counts for the report.
 #[derive(Debug, Clone, Default)]
 pub struct Stats {
+    /// Words the relations list (their exceptions), over every relation.
+    pub relation_listed: usize,
+    /// Words with an irregular line: forms or stems listed.
+    pub irregular_words: usize,
     pub words: usize,
     pub paradigms: usize,
     pub accent_patterns: usize,
@@ -735,7 +742,30 @@ pub fn learn<'s>(
         );
     }
     trace.mark("stated");
+    // What the runtime can't read of the relations goes.
+    let unpruned = grammar.relations.to_vec();
+    let listed: crate::HashSet<&str> = irregular
+        .iter()
+        .map(|(k, _, _)| k.as_str())
+        .chain(stems.iter().map(|(k, _, _, _)| k.as_str()))
+        .collect();
+    let read = unread(&grammar, &assigned, &listed);
+    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        rename(paradigms, &assigned, &listed);
+    }
+    if let Cow::Owned(relations) = &mut grammar.relations {
+        for r in relations.iter_mut() {
+            read.prune(r);
+        }
+    }
     let stats = Stats {
+        irregular_words: listed.len(),
+        relation_listed: grammar
+            .relations
+            .iter()
+            .filter_map(|r| r.change.as_ref())
+            .map(|c| c.exceptions.len())
+            .sum(),
         words: everyone.len(),
         paradigms: grammar.paradigms.len(),
         accent_patterns: grammar.accent.as_ref().map_or(0, |a| a.patterns.len()),
@@ -753,6 +783,7 @@ pub fn learn<'s>(
         stability,
         views,
         trace,
+        unpruned,
     }
 }
 
@@ -840,6 +871,89 @@ fn untie(grammar: &mut Grammar<'_, u16, u16, u8>, words: &[Word]) {
         .exceptions
         .to_mut()
         .retain(|_| keep.next().unwrap_or(true));
+}
+
+/// What the runtime reads of the relations, per relation (by its cell) whose
+/// changes something reads: the exception keys it can look up.
+/// A relation's changes are read where a paradigm derives its cell (for
+/// any word of it), or where it tells listed words' forms (only theirs:
+/// see [`Grammar::listed_sources`]); a relation by analogy reads another's
+/// (see [`Grammar::changing`]).
+#[derive(Debug, Default)]
+pub struct Read {
+    read: HashMap<u16, crate::HashSet<String>>,
+}
+
+impl Read {
+    /// `r` with what nothing reads of it gone: its changes and rules, if
+    /// nothing reads them; else the exceptions no reader looks up. The
+    /// relation itself stays (that a cell has one is read).
+    pub fn prune(&self, r: &mut Relation<'_>) {
+        match self.read.get(&r.cell) {
+            None => {
+                r.changes = Cow::Owned(Vec::new());
+                r.change = None;
+            }
+            Some(keys) => {
+                if let Some(change) = r.change.as_mut() {
+                    change
+                        .exceptions
+                        .to_mut()
+                        .retain(|(word, _)| keys.contains(word.as_ref()));
+                }
+            }
+        }
+    }
+}
+
+/// What the runtime can read of `grammar`'s relations (see [`Read`]): for a
+/// relation some paradigms derive the cell of, the keys the words assigned
+/// to them (`assigned`) read; for one that tells listed words (`listed`,
+/// their keys), the letters they read.
+fn unread(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    assigned: &[(&Word, u16)],
+    listed: &crate::HashSet<&str>,
+) -> Read {
+    let space = grammar.space();
+    let mut read = Read::default();
+    for r in grammar.relations.iter() {
+        let c = usize::from(r.cell);
+        let deriving: Vec<u16> = (0..grammar.paradigms.len())
+            .filter(|&p| {
+                grammar
+                    .paradigms
+                    .get(p)
+                    .is_some_and(|q| q.pattern_in(&grammar.paradigms, space, c).is_none())
+            })
+            .filter_map(|p| u16::try_from(p).ok())
+            .collect();
+        if deriving.is_empty() {
+            continue;
+        }
+        // The keys the deriving paradigms' words read (their source forms).
+        // A word of another paradigm reading this one second may read a key
+        // that went: its first answer stays (checked by `try`), a later one
+        // may move.
+        let owner = grammar.changing(r).cell;
+        let keys = read.read.entry(owner).or_default();
+        for &(w, _) in assigned.iter().filter(|(_, p)| deriving.contains(p)) {
+            for &from in r.from.iter() {
+                if let Some(f) = first_form(w, usize::from(from)) {
+                    keys.insert(f.to_string());
+                }
+            }
+        }
+    }
+    for key in listed {
+        for (owner, source) in grammar.listed_sources(key) {
+            let Ok(owner) = u16::try_from(owner) else {
+                continue;
+            };
+            read.read.entry(owner).or_default().insert(source);
+        }
+    }
+    read
 }
 
 /// The share of a paradigm's cells another's patterns with an affix added
@@ -2687,10 +2801,21 @@ fn fit(
 /// the first alphabetically), of its plain words (letters only) of at least
 /// three letters if it has any.
 fn name<T: PartialEq>(words: &[Word], chosen: &[T], s: T) -> String {
+    let mine: Vec<&Word> = words
+        .iter()
+        .zip(chosen)
+        .filter(|&(_, c)| *c == s)
+        .map(|(w, _)| w)
+        .collect();
+    commonest(&mine).unwrap_or_default()
+}
+
+/// The commonest of `words` to name a paradigm after (see [`name`]).
+fn commonest(words: &[&Word]) -> Option<String> {
     use std::cmp::Reverse;
     let pick = |plain: bool| {
-        let mine = words.iter().zip(chosen).filter(|&(_, c)| *c == s);
-        mine.map(|(w, _)| w)
+        words
+            .iter()
             .filter(|w| {
                 !plain
                     || (w.letters.chars().count() >= 3
@@ -2708,7 +2833,37 @@ fn name<T: PartialEq>(words: &[Word], chosen: &[T], s: T) -> String {
             })
             .map(|w| w.letters.clone())
     };
-    pick(true).or_else(|| pick(false)).unwrap_or_default()
+    pick(true).or_else(|| pick(false))
+}
+
+/// Each paradigm named after a word the grammar lists forms or stems of
+/// (`listed`, keys) renamed after its commonest word that it builds whole,
+/// if it has one: a paradigm is named after a word that follows it.
+fn rename(
+    paradigms: &mut [Paradigm<'_>],
+    assigned: &[(&Word, u16)],
+    listed: &crate::HashSet<&str>,
+) {
+    let mut members: Vec<Vec<&Word>> = vec![Vec::new(); paradigms.len()];
+    for &(w, p) in assigned {
+        if let Some(m) = members.get_mut(usize::from(p)) {
+            m.push(w);
+        }
+    }
+    for (p, mine) in paradigms.iter_mut().zip(&members) {
+        let named = mine.iter().find(|w| w.letters == p.name.as_ref());
+        if named.is_none_or(|w| !listed.contains(w.key.as_str())) {
+            continue;
+        }
+        let regular: Vec<&Word> = mine
+            .iter()
+            .copied()
+            .filter(|w| !listed.contains(w.key.as_str()))
+            .collect();
+        if let Some(name) = commonest(&regular) {
+            p.name = Cow::Owned(name);
+        }
+    }
 }
 
 /// The last `n` letters of `word`.

@@ -854,6 +854,20 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         cell: usize,
         steps: usize,
     ) -> Option<(String, usize)> {
+        let (relation, source) = self.listed_source(listed, cell, steps)?;
+        relation.told(&source, self.smoothing, self.laws.as_ref())
+    }
+
+    /// The relation (its changes' owner: see [`Grammar::changing`]) that
+    /// tells `cell` of a word whose forms are listed (`listed`), and the
+    /// letters it reads: the listed form of the cell it comes from, or that
+    /// cell's told in turn.
+    fn listed_source(
+        &self,
+        listed: &impl Fn(usize) -> Option<String>,
+        cell: usize,
+        steps: usize,
+    ) -> Option<(&Relation<'a>, String)> {
         let relation = self.relation(cell).filter(|r| r.listed)?;
         let from = relation.source()?;
         let source = match listed(from) {
@@ -863,8 +877,30 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .0
             }
         };
-        self.changing(relation)
-            .told(&source, self.smoothing, self.laws.as_ref())
+        Some((self.changing(relation), source))
+    }
+
+    /// Of a word the grammar lists (looked up as `key`), for each cell no
+    /// form or stem of its line gives: the cell whose relation's changes
+    /// tell it, and the letters that relation reads. What a listed word can
+    /// ask of the relations.
+    pub fn listed_sources(&self, key: &str) -> Vec<(usize, String)> {
+        let Some(line) = self.irregular.line(key) else {
+            return Vec::new();
+        };
+        let have = |c: usize| -> Option<String> {
+            match listed_in(line, u16::try_from(c).ok()?) {
+                Some(form) => Some(self.orthography.read(form).letters),
+                None => self.stem_built(line, c)?.0.into_iter().next().map(|f| f.0),
+            }
+        };
+        (0..self.cells)
+            .filter(|&c| have(c).is_none())
+            .filter_map(|c| {
+                let (relation, source) = self.listed_source(&have, c, self.relations.len())?;
+                Some((usize::from(relation.cell), source))
+            })
+            .collect()
     }
 
     /// The forms (letters, each with where its ending starts) of `cell` for
@@ -972,7 +1008,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The relation whose changes `relation` makes: its own, or, for one by
     /// analogy with no changes of its own, those of the relation it is by
     /// analogy with.
-    fn changing<'r>(&'r self, relation: &'r Relation<'a>) -> &'r Relation<'a> {
+    pub fn changing<'r>(&'r self, relation: &'r Relation<'a>) -> &'r Relation<'a> {
         match relation.analogy {
             Some((a, b)) if a != b && relation.change.is_none() => self
                 .relation(usize::from(b))

@@ -63,7 +63,8 @@ fn invariable(entry: &Entry) -> bool {
 /// The word after `label` in the head line's parenthesis, with notes in
 /// nested parentheses left out (`plural (in most meanings) braccia f or …`
 /// → `braccia`): for the few heads Kaikki doesn't split into forms. Only a
-/// word that starts like the lemma counts (not `plural not attested`).
+/// word that starts like the lemma counts (not `plural not attested`), and
+/// none of the head line's own English notes (`occhiali`: `plural only`).
 fn head_word(entry: &Entry, label: &str) -> Option<String> {
     let expansion = &entry.head_templates.first()?.expansion;
     let (_, inner) = expansion.split_once('(')?;
@@ -86,9 +87,12 @@ fn head_word(entry: &Entry, label: &str) -> Option<String> {
                 .then(|| rest.split_whitespace().next())
                 .flatten()
         })
-        .filter(|w| w.starts_with(first))
+        .filter(|w| w.starts_with(first) && !NOTES.contains(w))
         .map(str::to_string)
 }
+
+/// Words of the head line's English notes, never a form (`plural only`).
+const NOTES: [&str; 4] = ["only", "not", "invariable", "uncountable"];
 
 /// A noun's head line: its plural only. A gendered plural counts only when
 /// there is no plain one (`uovo`, plural `uova` f), since next to a plain

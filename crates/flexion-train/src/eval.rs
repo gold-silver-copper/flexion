@@ -666,9 +666,9 @@ pub struct Oracle {
     pub forms: usize,
     /// Forms whose letters the grammar's first candidate gets right.
     pub grammar: usize,
-    /// The paradigm that builds the most of them, and how many; the grammar's
-    /// likeliest paradigm.
-    pub best: Option<usize>,
+    /// The paradigms that build the most of them (tied, all of them), and
+    /// how many; the grammar's likeliest paradigm.
+    pub best: Vec<usize>,
     pub oracle: usize,
     pub chosen: Option<usize>,
 }
@@ -718,17 +718,14 @@ pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
         let first = |forms: Vec<Vec<String>>| -> Vec<Option<String>> {
             forms.into_iter().map(|f| f.into_iter().next()).collect()
         };
-        let (oracle, best) = (0..grammar.paradigms.len())
-            .map(|p| {
-                (
-                    right(&first(grammar.built_as(&l.full, p))),
-                    std::cmp::Reverse(p),
-                )
-            })
-            .max()
-            .map_or((0, None), |(n, std::cmp::Reverse(p))| {
-                (n, (n > 0).then_some(p))
-            });
+        let counts: Vec<usize> = (0..grammar.paradigms.len())
+            .map(|p| right(&first(grammar.built_as(&l.full, p))))
+            .collect();
+        let oracle = counts.iter().copied().max().unwrap_or(0);
+        // Every paradigm building that many: the best, tied.
+        let best: Vec<usize> = (0..counts.len())
+            .filter(|&p| oracle > 0 && counts.get(p) == Some(&oracle))
+            .collect();
         Oracle {
             word,
             forms,

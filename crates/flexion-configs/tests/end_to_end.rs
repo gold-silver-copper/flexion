@@ -467,3 +467,45 @@ fn a_circumflex_closing_a_diphthong_is_not_vowel_length() {
     let w = o.read("ἀριθμοῦ");
     assert_eq!(o.write(&w.letters, w.stress, w.casing), "ἀριθμοῦ");
 }
+
+#[test]
+fn every_relation_s_changes_have_a_reader() {
+    // A relation's changes are read where a paradigm derives its cell (or
+    // derives a cell by analogy with it), or where it tells a listed word's
+    // form: anything else would be printed for nothing.
+    for lang in flexion_configs::all() {
+        let script = Script::new(&lang.spelling);
+        let data = data(&lang, &script);
+        for (part, learned) in lang.parts.iter().zip(grammars(&lang, &script, &data)) {
+            let g = &learned.grammar;
+            let derives = |cell: usize| {
+                g.paradigms
+                    .iter()
+                    .any(|p| p.pattern_in(&g.paradigms, g.space(), cell).is_none())
+            };
+            let listed: HashSet<&str> = learned
+                .irregular
+                .iter()
+                .map(|(k, _, _)| k.as_str())
+                .collect();
+            let told: HashSet<usize> = listed
+                .iter()
+                .flat_map(|k| g.listed_sources(k))
+                .map(|(cell, _)| cell)
+                .collect();
+            for r in g.relations.iter().filter(|r| !r.changes.is_empty()) {
+                let cell = usize::from(r.cell);
+                let read = g
+                    .relations
+                    .iter()
+                    .any(|q| g.changing(q).cell == r.cell && derives(usize::from(q.cell)))
+                    || told.contains(&cell);
+                assert!(
+                    read,
+                    "{} {}: the relation of cell {cell} has changes nothing reads",
+                    lang.name, part.name
+                );
+            }
+        }
+    }
+}

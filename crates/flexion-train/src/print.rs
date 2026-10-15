@@ -298,6 +298,26 @@ fn kind(part: &PartOfSpeech) -> (&'static str, &'static str, &'static str) {
 
 /// One part of speech's files under `src/<part>/`, and its typed API on
 /// `cells`.
+/// The bytes each of a part of speech's generated files takes, by file
+/// (`rules.rs`, `relations.rs` …), as `build` would print them: what an
+/// experiment's grammar costs in the crate.
+pub fn part_bytes(
+    lang: &Language,
+    spec: &PartOfSpeech,
+    learned: &Learned<'_>,
+) -> Result<Vec<(String, usize)>, String> {
+    let cells = Cells::new(lang, spec)?;
+    let mut out: Vec<(String, usize)> = grammar_files(lang, spec, learned, &cells)
+        .into_iter()
+        .map(|(path, text)| {
+            let file = path.rsplit('/').next().unwrap_or(&path).to_string();
+            (file, text.len())
+        })
+        .collect();
+    out.sort();
+    Ok(out)
+}
+
 fn grammar_files(
     lang: &Language,
     spec: &PartOfSpeech,
