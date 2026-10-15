@@ -18,8 +18,10 @@
 //!   `--diagnose`: how well the paradigms build words apart from how well
 //!   one is chosen, and how much vowel length the letters tell;
 //!   `--without-editions`: learn from the main dump's words only);
-//! - `compare <a> <b>`: two saved `try` runs, paired word by word (or two
-//!   sweeps: every language's, with their time and memory);
+//! - `compare <a> <b>`: two saved `try` runs, paired word by word, in all
+//!   and by word group (`--apart <text>`: the cells whose name has it
+//!   apart from the rest) (or two sweeps: every language's, with their time
+//!   and memory);
 //! - `sweep <dir>`: `try --quick` for every language, one after another,
 //!   each saved in `<dir>` with its time and peak memory (`--only
 //!   a,b`: those languages; `--final`: the READMEs' tenth; `--pool`: small
@@ -42,7 +44,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -64,7 +66,7 @@ fn run() -> Result<(), String> {
     };
     if command == "compare" {
         let b = args.get(2).ok_or(USAGE)?;
-        return outcomes::compare(name.as_ref(), b.as_ref());
+        return outcomes::compare(name.as_ref(), b.as_ref(), flag("--apart").as_deref());
     }
     // Experiments skip the sound-law stage where its input is a run's
     // before (see `flexion_train::stage`); builds and the READMEs' tenth
@@ -854,6 +856,13 @@ fn try_tenth(
             inputs.extend((1..=3).map(eval::Input::Given));
         }
         let ids = outcomes::word_ids(&test);
+        let on = flexion_train::pipeline::on_training(&train, g, &test);
+        let groups = outcomes::groups(&test, &on);
+        let saving = outcomes::Words {
+            ids: &ids,
+            groups: &groups,
+            cells: &names,
+        };
         for input in inputs {
             let out = eval::outcomes(g, &g.orthography, &test, input, &learned.seen, |c| {
                 !is_held(c)
@@ -873,7 +882,7 @@ fn try_tenth(
                 .map(|&(n, r, p)| format!("{:.2}→{:.2} ({n})", p / n as f64, r as f64 / n as f64))
                 .collect();
             println!("    stated → right: {}", bins.join(", "));
-            saved.add(part.name, &outcomes::mode(input), &ids, &out);
+            saved.add(part.name, &outcomes::mode(input), &saving, &out);
         }
         if !held.is_empty() {
             let out = eval::outcomes(
@@ -889,7 +898,7 @@ fn try_tenth(
                 "{}",
                 score_line("held-out cells, from the headword", s.words, &s)
             );
-            saved.add(part.name, "held-cells", &ids, &out);
+            saved.add(part.name, "held-cells", &saving, &out);
         }
         editors::report(lang, part, &learned, &train, &test);
         if o.diagnose {

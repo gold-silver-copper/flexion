@@ -33,10 +33,38 @@ pub fn word_ids(words: &[&Lexeme]) -> Vec<String> {
         .collect()
 }
 
+/// Each scored word's group: its entry's kind (`own`, `form-of`, `alt-of`)
+/// and whether it is a training word's root (`on`) or not (`new`), as
+/// `own/new`.
+pub fn groups(words: &[&Lexeme], on: &[bool]) -> Vec<String> {
+    use flexion_train::extract::Of;
+    words
+        .iter()
+        .zip(on)
+        .map(|(l, &on)| {
+            let of = match l.of {
+                Of::Own => "own",
+                Of::Form => "form-of",
+                Of::Spelling => "alt-of",
+            };
+            format!("{of}/{}", if on { "on" } else { "new" })
+        })
+        .collect()
+}
+
+/// The scored words of a part of speech as saved: their names (see
+/// [`word_ids`]), groups (see [`groups`]), and the cells' names.
+pub struct Words<'a> {
+    pub ids: &'a [String],
+    pub groups: &'a [String],
+    pub cells: &'a [String],
+}
+
 /// The rows of a run, as written: a header, then per form `part of speech,
 /// mode, word, cell, right (1/0), the right answer's place (1 first; `-`
 /// if no candidate), the first candidate's probability, the right
-/// answer's, and its bits`, tab-separated.
+/// answer's, its bits, the word's group and the cell's name`,
+/// tab-separated.
 #[derive(Debug, Default)]
 pub struct Saved {
     text: String,
@@ -53,16 +81,18 @@ pub fn bytes_path(path: &Path) -> std::path::PathBuf {
     std::path::PathBuf::from(name)
 }
 
-const HEADER: &str = "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\n";
+const HEADER: &str = "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\tgroup\tname\n";
 
 impl Saved {
-    pub fn add(&mut self, pos: &str, mode: &str, ids: &[String], outcomes: &[Outcome]) {
+    pub fn add(&mut self, pos: &str, mode: &str, words: &Words<'_>, outcomes: &[Outcome]) {
         for o in outcomes {
-            let word = ids.get(o.word).map_or("?", String::as_str);
+            let word = words.ids.get(o.word).map_or("?", String::as_str);
+            let group = words.groups.get(o.word).map_or("?", String::as_str);
+            let name = words.cells.get(o.cell).map_or("?", String::as_str);
             let rank = o.rank.map_or("-".to_string(), |r| (r + 1).to_string());
             let _ = writeln!(
                 self.text,
-                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}",
+                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}\t{group}\t{name}",
                 o.cell,
                 u8::from(o.right()),
                 o.top,
@@ -88,8 +118,20 @@ impl Saved {
     }
 }
 
-/// `(pos, mode)` → word → cell → right.
-type Run = BTreeMap<(String, String), BTreeMap<String, BTreeMap<usize, bool>>>;
+/// A scored word: its group, if saved (see [`groups`]), and per cell
+/// whether it is right, with the cell's name if saved.
+#[derive(Default)]
+struct Scored {
+    group: Option<String>,
+    cells: BTreeMap<usize, (bool, Option<String>)>,
+}
+
+/// A cell both runs scored: right in the first, right in the second, and
+/// whether it is one of those `--apart` names.
+type Both = (bool, bool, bool);
+
+/// `(pos, mode)` → word → its scored cells.
+type Run = BTreeMap<(String, String), BTreeMap<String, Scored>>;
 
 fn read(path: &Path) -> Result<Run, String> {
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -104,11 +146,14 @@ fn read(path: &Path) -> Result<Run, String> {
         let cell: usize = cell
             .parse()
             .map_err(|_| format!("{}: bad line {line}", path.display()))?;
-        run.entry(((*pos).to_string(), (*mode).to_string()))
+        let scored = run
+            .entry(((*pos).to_string(), (*mode).to_string()))
             .or_default()
             .entry((*word).to_string())
-            .or_default()
-            .insert(cell, *right == "1");
+            .or_default();
+        scored.group = f.get(9).map(|g| (*g).to_string());
+        let name = f.get(10).map(|n| (*n).to_string());
+        scored.cells.insert(cell, (*right == "1", name));
     }
     Ok(run)
 }
@@ -116,16 +161,17 @@ fn read(path: &Path) -> Result<Run, String> {
 /// `cargo xtask compare <a> <b>`: per part of speech and mode, top-1 of
 /// each run on the forms both scored, the paired bootstrap 95% interval of
 /// b − a (resampling words), and the sign test over words.
-pub fn compare(a: &Path, b: &Path) -> Result<(), String> {
+pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
     if a.is_dir() && b.is_dir() {
         return sweeps(a, b);
     }
     compare_bytes(a, b);
     let (ra, rb) = (read(a)?, read(b)?);
     println!(
-        "{:<10} {:<16} {:>6} {:>7} {:>8} {:>8} {:>8} {:>18} {:>11} {:>9}",
+        "{:<10} {:<16} {:<14} {:>6} {:>7} {:>8} {:>8} {:>8} {:>18} {:>11} {:>9}",
         "pos",
         "mode",
+        "group",
         "words",
         "forms",
         "a",
@@ -139,43 +185,75 @@ pub fn compare(a: &Path, b: &Path) -> Result<(), String> {
         let Some(wb) = rb.get(key) else {
             continue;
         };
-        let mut paired = Vec::new();
+        // The words both scored, each with its group and the cells both
+        // scored (the cells named `apart` marked).
+        let mut words: Vec<(String, Vec<Both>)> = Vec::new();
         for (word, ca) in wa {
             let Some(cb) = wb.get(word) else {
                 continue;
             };
-            let mut p = Paired {
-                forms: 0,
-                a: 0,
-                b: 0,
-            };
-            for (cell, &x) in ca {
-                if let Some(&y) = cb.get(cell) {
-                    p.forms += 1;
-                    p.a += usize::from(x);
-                    p.b += usize::from(y);
-                }
+            let group = cb.group.clone().or_else(|| ca.group.clone());
+            let cells: Vec<Both> = (ca.cells.iter())
+                .filter_map(|(cell, (x, na))| {
+                    let (y, nb) = cb.cells.get(cell)?;
+                    let name = nb.as_deref().or(na.as_deref()).unwrap_or("");
+                    Some((*x, *y, apart.is_some_and(|p| name.contains(p))))
+                })
+                .collect();
+            words.push((group.unwrap_or_else(|| "?".into()), cells));
+        }
+        let row = |label: &str, keep: &dyn Fn(&str, bool) -> bool| {
+            let paired: Vec<Paired> = (words.iter())
+                .map(|(g, cells)| {
+                    let mine = cells.iter().filter(|c| keep(g, c.2));
+                    mine.fold(
+                        Paired {
+                            forms: 0,
+                            a: 0,
+                            b: 0,
+                        },
+                        |p, &(x, y, _)| Paired {
+                            forms: p.forms + 1,
+                            a: p.a + usize::from(x),
+                            b: p.b + usize::from(y),
+                        },
+                    )
+                })
+                .filter(|p| p.forms > 0)
+                .collect();
+            if paired.is_empty() {
+                return;
             }
-            if p.forms > 0 {
-                paired.push(p);
+            let c = measure::compare(&paired);
+            println!(
+                "{:<10} {:<16} {:<14} {:>6} {:>7} {:>7.2}% {:>7.2}% {:>+7.2} {:>+8.2} … {:>+6.2} {:>6}/{:<5} {:>9.2e}",
+                key.0,
+                key.1,
+                label,
+                c.words,
+                c.forms,
+                100.0 * c.a,
+                100.0 * c.b,
+                100.0 * (c.b - c.a),
+                100.0 * c.low,
+                100.0 * c.high,
+                c.better,
+                c.worse,
+                c.p
+            );
+        };
+        row("all", &|_, _| true);
+        if let Some(p) = apart {
+            row(&format!("cells {p}"), &|_, a| a);
+            row("other cells", &|_, a| !a);
+        }
+        let groups: std::collections::BTreeSet<&str> =
+            words.iter().map(|(g, _)| g.as_str()).collect();
+        if groups.len() > 1 {
+            for group in groups {
+                row(group, &|g, _| g == group);
             }
         }
-        let c = measure::compare(&paired);
-        println!(
-            "{:<10} {:<16} {:>6} {:>7} {:>7.2}% {:>7.2}% {:>+7.2} {:>+8.2} … {:>+6.2} {:>6}/{:<5} {:>9.2e}",
-            key.0,
-            key.1,
-            c.words,
-            c.forms,
-            100.0 * c.a,
-            100.0 * c.b,
-            100.0 * (c.b - c.a),
-            100.0 * c.low,
-            100.0 * c.high,
-            c.better,
-            c.worse,
-            c.p
-        );
     }
     Ok(())
 }
@@ -210,7 +288,7 @@ fn sweeps(a: &Path, b: &Path) -> Result<(), String> {
             peak_b / peak_a.max(1.0)
         );
         if fa.exists() && fb.exists() {
-            compare(&fa, &fb)?;
+            compare(&fa, &fb, None)?;
         }
     }
     Ok(())

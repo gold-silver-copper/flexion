@@ -207,21 +207,30 @@ pub fn strata<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
     test: &[&Lexeme],
     outcomes: &[eval::Outcome],
 ) -> (Score, Score) {
+    let on = on_training(train, grammar, test);
+    let (built, rest): (Vec<eval::Outcome>, Vec<eval::Outcome>) = outcomes
+        .iter()
+        .cloned()
+        .partition(|o| on.get(o.word).copied().unwrap_or(false));
+    (Score::of(&built), Score::of(&rest))
+}
+
+/// Per held-out word, whether it is a training word's root (behind a
+/// prefix or not; see [`crate::measure::prefixed`]).
+pub fn on_training<P: flexion::Label, A: flexion::Label, F: flexion::Label>(
+    train: &[Lexeme],
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    test: &[&Lexeme],
+) -> Vec<bool> {
     let keys: crate::HashSet<&str> = train.iter().map(|l| l.key.as_str()).collect();
     let prefixes: Vec<&str> = grammar
         .prefixes
         .iter()
         .flat_map(|p| p.prefixes.iter().map(|p| p.letters.as_ref()))
         .collect();
-    let on: Vec<bool> = test
-        .iter()
+    test.iter()
         .map(|l| crate::measure::prefixed(&l.key, &keys, &prefixes))
-        .collect();
-    let (built, rest): (Vec<eval::Outcome>, Vec<eval::Outcome>) = outcomes
-        .iter()
-        .cloned()
-        .partition(|o| on.get(o.word).copied().unwrap_or(false));
-    (Score::of(&built), Score::of(&rest))
+        .collect()
 }
 
 /// The README's report: the grammar's size and how well it does.
