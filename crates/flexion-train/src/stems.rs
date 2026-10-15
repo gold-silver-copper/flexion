@@ -588,27 +588,36 @@ fn recurring(
     }
 }
 
-/// A slot's name: the parts of its first cell's name (`aorist`, `subj`,
-/// `pass`) most of its cells' names have, in order (`aorist_pass`), where
-/// that is no other slot's; else its first cell's name.
-fn slot_name(cells: &[usize], names: &[String], taken: &[String]) -> String {
-    let of = |c: usize| names.get(c).map_or("", String::as_str);
-    let first = cells.first().map_or("", |&c| of(c));
+/// A slot's name: the parts of its cells' names every one of them has and
+/// no other cell has all of (`aorist_pass`), in its first cell's order,
+/// leaving out those every cell of the part of speech has (`noun`); else
+/// `lemma` for the slot of the lemma's cell (`lemma_cell`) and `rest` for
+/// another (Latin nouns: `rēx` on one stem, `rēgis`, `rēgī` … on the rest).
+fn slot_name(
+    cells: &[usize],
+    names: &[String],
+    lemma_cell: Option<usize>,
+    taken: &[String],
+) -> String {
+    let parts =
+        |c: usize| -> Vec<&str> { names.get(c).map_or(Vec::new(), |n| n.split('_').collect()) };
+    let first = cells.first().map_or(Vec::new(), |&c| parts(c));
+    let everywhere = |p: &str| (0..names.len()).all(|c| parts(c).contains(&p));
     let shared: Vec<&str> = first
-        .split('_')
-        .filter(|part| {
-            let having = cells
-                .iter()
-                .filter(|&&c| of(c).split('_').any(|p| p == *part))
-                .count();
-            2 * having > cells.len()
-        })
+        .iter()
+        .copied()
+        .filter(|p| !everywhere(p) && cells.iter().all(|&c| parts(c).contains(p)))
         .collect();
-    let name = shared.join("_");
-    if !name.is_empty() && !taken.contains(&name) {
-        return name;
-    }
-    let mut name = first.to_string();
+    let outside = (0..names.len())
+        .filter(|c| !cells.contains(c))
+        .any(|c| shared.iter().all(|p| parts(c).contains(p)));
+    let mut name = if !shared.is_empty() && !outside {
+        shared.join("_")
+    } else if lemma_cell.is_some_and(|l| cells.contains(&l)) {
+        "lemma".to_string()
+    } else {
+        "rest".to_string()
+    };
     while taken.contains(&name) {
         name.push('_');
     }
@@ -636,6 +645,7 @@ pub fn tables<'s>(
     paradigms: &[flexion::Paradigm<'_>],
     slot_of: &[Option<u16>],
     names: &[String],
+    lemma_cell: Option<usize>,
 ) -> Tables<'s> {
     let count = slot_of
         .iter()
@@ -649,14 +659,18 @@ pub fn tables<'s>(
             list.push(c);
         }
     }
-    // Named biggest first: the commonest name goes to the slot most of
-    // whose cells have it.
+    // Named biggest first.
     let mut taken: Vec<String> = Vec::new();
     let mut named: Vec<String> = vec![String::new(); count];
     let mut by_size: Vec<usize> = (0..count).collect();
     by_size.sort_by_key(|&s| (std::cmp::Reverse(cells.get(s).map_or(0, Vec::len)), s));
     for s in by_size {
-        let name = slot_name(cells.get(s).map_or(&[][..], Vec::as_slice), names, &taken);
+        let name = slot_name(
+            cells.get(s).map_or(&[][..], Vec::as_slice),
+            names,
+            lemma_cell,
+            &taken,
+        );
         taken.push(name.clone());
         if let Some(n) = named.get_mut(s) {
             *n = name;
@@ -750,6 +764,7 @@ pub fn state(
     tables: &[flexion::EndingTable<'_>],
     listed: &HashSet<(u16, String)>,
     prices: &crate::bits::Prices,
+    copies: &crate::HashMap<u16, u16>,
 ) -> Vec<usize> {
     let frozen: Vec<flexion::Paradigm<'_>> = paradigms.to_vec();
     let resolved = |p: usize, cells: &[u16]| -> Vec<Option<std::borrow::Cow<'_, str>>> {
@@ -779,9 +794,29 @@ pub fn state(
             let Some((stem, table)) = flexion::factor(&mine) else {
                 continue;
             };
+            // A table that writes what the paradigm does; where the paradigm
+            // derives a cell as a copy of another of the slot's (Latin: the
+            // ablative plural is the dative plural), the table may write it,
+            // as it writes that other cell.
+            let mine_cells: Vec<&str> = table.split('\t').collect();
+            let agrees = |t: &flexion::EndingTable<'_>| {
+                let theirs: Vec<&str> = t.table.split('\t').collect();
+                theirs.len() == mine_cells.len()
+                    && theirs.iter().zip(&mine_cells).zip(slot.cells.iter()).all(
+                        |((their, mine), cell)| {
+                            their == mine
+                                || (mine.is_empty()
+                                    && copies.get(cell).is_some_and(|from| {
+                                        slot.position(usize::from(*from))
+                                            .and_then(|k| theirs.get(k))
+                                            == Some(their)
+                                    }))
+                        },
+                    )
+            };
             let Some(t) = tables
                 .iter()
-                .position(|t| usize::from(t.slot) == s && t.table == table)
+                .position(|t| usize::from(t.slot) == s && agrees(t))
             else {
                 continue;
             };
@@ -805,6 +840,11 @@ pub fn state(
     let mut used = Vec::new();
     for (t, list) in uses {
         let Some(table) = tables.get(t) else { continue };
+        // A table of the bare stem in every cell says nothing a pattern
+        // doesn't: its cells are written out instead.
+        if table.table.split('\t').all(|e| e == "~") {
+            continue;
+        }
         let free = listed.contains(&(table.slot, table.name.to_string()));
         let cost = crate::bits::ITEM + table.table.split('\t').map(|x| prices.text(x)).sum::<f64>();
         let saved: f64 = list.iter().map(|e| e.3).sum();
@@ -821,7 +861,8 @@ pub fn state(
                 continue;
             };
             // The slot's cells: the table's, but those it leaves to another
-            // cell's form, which say so where the parent has a pattern.
+            // cell's form, which say so (where the table writes them too,
+            // or a paradigm like this one would read the table's).
             let mut cells: Vec<String> = par.table.split('\t').map(str::to_string).collect();
             for (k, &c) in slot.cells.iter().enumerate() {
                 let Some(cell) = cells.get_mut(usize::from(c)) else {
@@ -832,7 +873,12 @@ pub fn state(
                     .as_ref()
                     .and_then(|t| t.get(k))
                     .is_some_and(Option::is_some);
-                *cell = if derived && parent_has {
+                let table_has = table
+                    .table
+                    .split('\t')
+                    .nth(k)
+                    .is_some_and(|e| !e.is_empty());
+                *cell = if derived && (parent_has || table_has) {
                     flexion::DERIVED.to_string()
                 } else {
                     String::new()
@@ -1025,5 +1071,48 @@ mod tests {
         assert!(slots.iter().all(Option::is_some));
         assert_eq!(alternation("λειπ", "λιπ"), ("ε".into(), String::new()));
         assert_eq!(roots(&["γνωσκω", "επιγνωσκω", "ω"]), vec![0, 0, 2]);
+    }
+
+    #[test]
+    fn a_cell_derived_as_a_copy_of_another_takes_the_table_that_writes_both() {
+        // Latin: the ablative plural is a copy of the dative plural. The
+        // consonant-stem table writes both (`~ibus`); a declension deriving
+        // the ablative still states its slot through that table, and keeps
+        // the ablative derived.
+        let slots = [flexion::Slot {
+            name: std::borrow::Cow::Borrowed("rest"),
+            cells: std::borrow::Cow::Borrowed(&[0, 1, 2, 3]),
+        }];
+        let tables = [flexion::EndingTable {
+            name: std::borrow::Cow::Borrowed("ratiō"),
+            words: 100,
+            slot: 0,
+            table: std::borrow::Cow::Borrowed("~ēs\t~is\t~ibus\t~ibus\t"),
+        }];
+        let mut paradigms = vec![flexion::Paradigm {
+            name: std::borrow::Cow::Borrowed("lūx"),
+            words: 10,
+            lemma: std::borrow::Cow::Borrowed("~x"),
+            parent: None,
+            inherent: std::borrow::Cow::Borrowed(&[]),
+            table: std::borrow::Cow::Borrowed("~cēs\t~cis\t~cibus\t=\t"),
+            stems: std::borrow::Cow::Borrowed("\t"),
+            reads: None,
+            affix: None,
+        }];
+        let listed: HashSet<(u16, String)> = [(0, "ratiō".to_string())].into_iter().collect();
+        let copies: crate::HashMap<u16, u16> = [(3, 2)].into_iter().collect();
+        let used = state(
+            &mut paradigms,
+            &slots,
+            &tables,
+            &listed,
+            &crate::bits::Prices::new(26, 4),
+            &copies,
+        );
+        assert_eq!(used, vec![0]);
+        let p = &paradigms[0];
+        assert_eq!(p.stems.as_ref(), format!("~c{}ratiō\t", flexion::LIKE));
+        assert_eq!(p.table.as_ref(), "\t\t\t=\t");
     }
 }

@@ -636,7 +636,7 @@ pub fn learn<'s>(
         }
     }
     trace.mark("derived cells");
-    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names);
+    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names, shape.lemma_cell);
     grammar.slots = Cow::Owned(built.slots);
     grammar.tables = Cow::Owned(built.tables);
     // A word the grammar builds with the wrong letters lists the stems that
@@ -709,6 +709,13 @@ pub fn learn<'s>(
     let all_tables = grammar.tables.to_vec();
     let mut used: Vec<usize> = Vec::new();
     let views = views(shape);
+    // The cells a relation tells as a copy of another cell's form.
+    let copies: HashMap<u16, u16> = grammar
+        .relations
+        .iter()
+        .filter(|r| r.analogy.is_none() && r.change.is_none())
+        .filter_map(|r| Some((r.cell, u16::try_from(r.source()?).ok()?)))
+        .collect();
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         inherit(paradigms, &grammar.relations, &views);
         used = crate::stems::state(
@@ -717,6 +724,7 @@ pub fn learn<'s>(
             &all_tables,
             &listed_tables,
             &prices,
+            &copies,
         );
     }
     grammar.tables = Cow::Owned(
