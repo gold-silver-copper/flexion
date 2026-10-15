@@ -22,7 +22,7 @@ use flexion::Paradigm;
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem determiner_sg: $s0:tt;)?
      $(stem determiner_pl: $s1:tt;)?
      $(m: $c0:tt, $c1:tt;)?
@@ -45,6 +45,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -67,6 +68,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -133,10 +152,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     m: "~", _;
     f: "~e", _;
     ),
-    // Mesdits: 6 words (mesdits, tesdits, sesdits, nosdits, vosdits, leursdits).
-    declension!("mesdits", 6, "~ˇ";
-    m: "~ˇ", "~sˇ";
-    f: "~eˇ", "~esˇ";
+    // Mesdits: 6 words (mesdits, tesdits, sesdits, nosdits, vosdits, leursdits). Like Tes with `ˇ` after each pattern.
+    declension!("mesdits", 6, "~ˇ", like Tes with "ˇ";
     ),
     // Mesdites: 5 words (mesdites, sesdites, nosdites, vosdites, leursdites).
     declension!("mesdites", 5, "~e~";

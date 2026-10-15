@@ -78,43 +78,4 @@ pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
 }];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // numeral like sto: 5 words.
-    EndingTable {
-        name: Cow::Borrowed("sto"),
-        words: 5,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "\t~\t",
-            "~\t\t",
-            "~\t\t",
-            "~\t~\t",
-            "\t~\t",
-            "~u\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~owi\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~\t\t",
-            "~\t\t",
-            "\t\t",
-            "\t~\t",
-            "~\t~\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~iem\t~iem\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-        )),
-    },
-];
+pub(super) static TABLES: [EndingTable<'static>; 0] = [];

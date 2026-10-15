@@ -109,10 +109,10 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 26] = [
-    // verb_pres_1_sg like echar: 10,108 words.
+    // verb_pres_1_sg like echar: 10,106 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
-        words: 10108,
+        words: 10106,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~o\t",
@@ -141,10 +141,10 @@ pub(super) static TABLES: [EndingTable<'static>; 26] = [
             "~ces\t~ce\t~cen\t",
         )),
     },
-    // verb_pres_1_sg like curtir: 796 words.
+    // verb_pres_1_sg like curtir: 802 words.
     EndingTable {
         name: Cow::Borrowed("curtir"),
-        words: 796,
+        words: 802,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~o\t",
@@ -223,10 +223,10 @@ pub(super) static TABLES: [EndingTable<'static>; 26] = [
             "~ando\t",
         )),
     },
-    // verb like echar: 13,630 words.
+    // verb like echar: 13,628 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
-        words: 13630,
+        words: 13628,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~é\t~amos\t",
@@ -263,10 +263,10 @@ pub(super) static TABLES: [EndingTable<'static>; 26] = [
             "~zare\t\t",
         )),
     },
-    // verb like conocer: 1,435 words.
+    // verb like conocer: 1,439 words.
     EndingTable {
         name: Cow::Borrowed("conocer"),
-        words: 1435,
+        words: 1439,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~í\t~imos\t",
@@ -423,17 +423,17 @@ pub(super) static TABLES: [EndingTable<'static>; 26] = [
             "~ere\t\t",
         )),
     },
-    // verb_fut_1_sg like echar: 17,828 words.
+    // verb_fut_1_sg like echar: 17,830 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
-        words: 17828,
+        words: 17830,
         slot: 3,
         table: Cow::Borrowed(concat!("~é\t\t", "\t\t", "\t\t", "\t\t", "\t\t", "~ía\t\t",)),
     },
-    // verb_fut_1_sg like sonar: 123 words.
+    // verb_fut_1_sg like sonar: 121 words.
     EndingTable {
         name: Cow::Borrowed("sonar"),
-        words: 123,
+        words: 121,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~éˇ\t\t",
@@ -457,10 +457,10 @@ pub(super) static TABLES: [EndingTable<'static>; 26] = [
             "~emos\t~éis\t",
         )),
     },
-    // verb_subj_1_pl like conocer: 1,435 words.
+    // verb_subj_1_pl like conocer: 1,439 words.
     EndingTable {
         name: Cow::Borrowed("conocer"),
-        words: 1435,
+        words: 1439,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "~amos\t",

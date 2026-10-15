@@ -4,21 +4,29 @@
 
 use std::borrow::Cow;
 
-/// 15 words.
+/// 23 words.
 pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
-    "binus" => "bīnus",
+    "ducentesimus" => "ducentēsimus",
+    "ducenti" => "ducentī",
+    "ducenus" => "ducēnus",
+    "duo" => "duo",
+    "duodecentesimus" => "duodēcentēsimus",
+    "duodeoctogesimus" => "duodēoctōgēsimus",
     "duoetvicesimus" => "duoetvīcēsimus",
     "infinitesimus" => "īnfīnītēsimus",
+    "millionesimus" => "milliōnēsimus",
     "novenus" => "novēnus",
-    "nulla" => "nūlla",
-    "quaternus" => "quaternus",
+    "octavus" => "octāvus",
+    "octavusdecimus" => "octāvusdecimus",
+    "octonus" => "octōnus",
+    "quadragenus" => "quadrāgēnus",
     "senus" => "sēnus",
-    "septemplus" => "septemplus",
-    "sesquimille" => "sēsquimīlle",
-    "tres" => "trēs",
+    "sescentesimus" => "sescentēsimus",
+    "sescenti" => "sescentī",
+    "sescenus" => "sescēnus",
     "tricensimus" => "trīcēnsimus",
-    "triplus" => "triplus",
+    "tricenus" => "trīcēnus",
+    "undecentesimus" => "ūndēcentēsimus",
     "unetvicesimus" => "ūnetvīcēsimus",
-    "vicensimus" => "vīcēnsimus",
     "vigecuplus" => "vīgecuplus",
 };

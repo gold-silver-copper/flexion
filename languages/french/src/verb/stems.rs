@@ -71,10 +71,10 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 13] = [
-    // verb_pres_sg like passer: 5,973 words.
+    // verb_pres_sg like passer: 5,968 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 5973,
+        words: 5968,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~s\t", "~\t", "~\t",)),
     },
@@ -104,10 +104,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ois|~ieds\t",
         )),
     },
-    // verb_pl like passer: 6,771 words.
+    // verb_pl like passer: 6,766 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6771,
+        words: 6766,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ons\t",
@@ -138,17 +138,17 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ant\t",
         )),
     },
-    // verb_3 like passer: 6,699 words.
+    // verb_3 like passer: 6,694 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6699,
+        words: 6694,
         slot: 2,
         table: Cow::Borrowed(concat!("~nt\t", "~\t", "~s\t", "~\t~nt\t",)),
     },
-    // verb_past like passer: 6,023 words.
+    // verb_past like passer: 6,018 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6023,
+        words: 6018,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~ai\t~âmes\t",

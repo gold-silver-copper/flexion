@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 227 stems, 364 forms.
+/// 224 stems, 364 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abludo	175	ablūsum	177	ablūdendum
@@ -17,21 +17,21 @@ absilio	177	absiliendum
 absum	18	āfuī	20	āfuistī	22	āfuit	170	āfore	176	āfutūrus
 accano	verb_ind_act	accecin- like occurrō
 adblatero	participle_perf_pass	adblaterat- like agitō
-adiuvo	participle_perf_pass	adiūt- like agitō	verb_ind_act	adiū- like caveō
+adiuvo	participle_perf_pass	adiūt- like agitō	verb_ind_act	adiū- like cognōscō
 adluceo	verb_ind_act	adlux- like occurrō
 admordeo	verb_ind_act	admomord- like occurrō	175	admorsus	187	admorsum	188	admorsū
 adolesco	participle_perf_pass	adult- like agitō
 adpetisso	participle_perf_pass	adpetessīt- like agitō
 adsentior	participle_perf_pass	adsēns- like agitō
 adsum	0	adsum	1	adsumus	6	aderam	7	aderāmus	8	aderās	9	aderātis	10	aderat	11	aderant
-advesperascit	verb_ind_act	advesperā- like caveō
+advesperascit	verb_ind_act	advesperā- like cognōscō
 affero	participle_perf_pass	allāt- like agitō	verb_ind_act	attul- like occurrō
 ago	participle_perf_pass	āct- like agitō	verb_ind_act	ēg- like occurrō
 aiio	verb_ind_act	ai- like occurrō	23	aiiērunt	82	aiieret	146	aii	168	aiiere
 aio	3	aitis	20	aistī	22	ait	82	ajeret	168	ajere
 algesco	verb_ind_act	als- like occurrō
 ango	participle_perf_pass	ānct- like agitō	verb_ind_act	ānx- like occurrō
-appetisso	participle_perf_pass	apetessīt- like agitō	verb_ind_act	apetissī- like caveō
+appetisso	participle_perf_pass	apetessīt- like agitō	verb_ind_act	apetissī- like cognōscō
 ardesco	verb_ind_act	ars- like occurrō
 assalio	participle_perf_pass	assalt- like agitō
 assentior	participle_perf_pass	assēns- like agitō
@@ -45,7 +45,7 @@ cado	participle_perf_pass	cās- like labōrō	verb_ind_act	cecid- like occurrō
 caedo	verb_ind_act	cecīd- like occurrō	175	caesus	187	caesum	188	caesū
 cano	verb_ind_act	cecin- like occurrō	175	cantus	187	cantum	188	cantū
 cio	participle_perf_pass	c- like repōnō
-circumlino	verb_ind_act	circumle- like caveō	175	circumlitus	187	circumlitum	188	circumlitū
+circumlino	verb_ind_act	circumle- like cognōscō	175	circumlitus	187	circumlitum	188	circumlitū
 circumsisto	verb_ind_act	circumstet- like occurrō
 coepio	0	coëpiō	12	coëpiam	171	coëpī	175	coëptus	176	coëptūrus
 coest	4	coest	10	coerat	16	coerit	22	cōnfuit	28	cōnfuerat	34	cōnfuerit	76	cōnsit	82	coesset	100	cōnfuisset	154	coestō	168	coesse	169	cōnfuisse	170	cōnfore	174	cōnsēns	176	cōnfutūrus
@@ -55,11 +55,10 @@ cohorresco	verb_ind_act	cohorruī- like occurrō
 colliquesco	18	colliquī	20	colliquistī	22	colliquit
 commingo	participle_perf_pass	commīnct- like agitō
 compatesco	participle_perf_pass	compass- like agitō
-compluit	verb_ind_act	complū- like caveō
+compluit	verb_ind_act	complū- like cognōscō
 concubo	175	concubitum	177	concubandum
 concumbo	175	concubitum	177	concumbendum
 confero	participle_perf_pass	collāt- like agitō	verb_ind_act	contul- like occurrō
-confido	participle_perf_pass	cōnfīs- like agitō
 confit	5	cōnfīunt	16	cōnfīet	17	cōnfīent	76	cōnfīat	77	cōnfīant	82	cōnfieret	83	cōnfierent	154	cōnfītō	168	cōnfierī	174	cōnfīēns	179	cōnfīendī	180	cōnfīendō	181	cōnfīendum	187	cōnfactum	188	cōnfactū
 confiteor	participle_perf_pass	cōnfess- like agitō
 coniveo	verb_ind_act	cōnīx- like occurrō
@@ -71,7 +70,7 @@ consero	participle_perf_pass	cōnsat- like agitō
 cunctor	177	cūnctandum
 decumbo	177	dēcumbendum
 defetiscor	participle_perf_pass	dēfess- like agitō
-delino	verb_ind_act	dēlī- like caveō
+delino	verb_ind_act	dēlī- like cognōscō
 deliquesco	18	dēlicuī	20	dēlicuistī	22	dēlicuit
 demeto	18	dēmessuī	20	dēmessuistī	22	dēmessuit	176	dēmessūrus
 demulceo	participle_perf_pass	dēmulct- like agitō
@@ -79,7 +78,6 @@ deplango	participle_perf_pass	deplānct- like agitō
 deposco	verb_ind_act	dēpoposc- like occurrō
 desino	verb_ind_act	dēsi- like occurrō
 differo	participle_perf_pass	dīlāt- like agitō
-diffido	participle_perf_pass	diffīs- like agitō
 diffugio	participle_perf_pass	diffūgit- like labōrō
 disco	participle_perf_pass	disc- like repōnō
 dispesco	participle_perf_pass	dispest- like agitō
@@ -98,7 +96,7 @@ excio	participle_perf_pass	exc- like repōnō
 exfrico	verb_ind_act	exfrix- like occurrō
 exordior	participle_perf_pass	exōrs- like agitō
 exorior	78	exorīrer	168	exorīrī	187	exortum	188	exortū
-expavesco	verb_ind_act	expā- like caveō
+expavesco	verb_ind_act	expā- like cognōscō
 expergiscor	participle_perf_pass	experrēct- like agitō
 expingo	participle_perf_pass	expict- like agitō
 exposco	verb_ind_act	expoposc- like occurrō
@@ -128,7 +126,7 @@ incesso	participle_perf_pass	incess- like agitō
 indulgeo	participle_perf_pass	indult- like agitō
 infero	participle_perf_pass	illāt- like agitō	verb_ind_act	intul- like occurrō
 infit	16	īnfīet	76	īnfīat	82	īnfieret	154	īnfītō	168	īnfierī	174	īnfīēns	177	īnfīendum
-inlino	participle_perf_pass	ill- like repōnō	verb_ind_act	illē- like caveō
+inlino	participle_perf_pass	ill- like repōnō	verb_ind_act	illē- like cognōscō
 inolesco	participle_perf_pass	inol- like repōnō
 inquam	5	inquiunt	14	inquiēs	16	inquiet	17	inquient	18	inquiī	20	inquistī	22	inquit	74	inquiās	76	inquiat	77	inquiant	146	inque	174	inquiēns
 instinguo	verb_ind_act	īnstinx- like occurrō	175	īnstīnctus	187	īnstīnctum	188	īnstīnctū
@@ -136,7 +134,7 @@ instruo	175	īnstrūctum	177	īnstruendum
 insum	1	īnsumus	3	inestis	6	ineram	12	inerō
 interemo	participle_perf_pass	interēmpt- like agitō	verb_ind_act	interēm- like occurrō
 inunguo	participle_perf_pass	inūnct- like agitō	verb_ind_act	inūnx- like occurrō
-iuvo	participle_perf_pass	iūt- like agitō	verb_ind_act	iū- like caveō
+iuvo	participle_perf_pass	iūt- like agitō	verb_ind_act	iū- like cognōscō
 lacio	18	licuī	20	licuistī	22	licuit	175	lactus	187	lactum	188	lactū
 languesco	verb_ind_act	langü- like occurrō
 licescit	5	licēscunt	17	licēscent	77	licēscant	83	licēscerent
@@ -155,7 +153,7 @@ ningit	verb_ind_act	nīnx- like decet
 ningo	177	ningendum
 ninguit	verb_ind_act	nīnx- like decet
 ninguo	verb_ind_act	ninx- like occurrō
-nivit	verb_ind_act	nī- like caveō
+nivit	verb_ind_act	nī- like cognōscō
 nolo	1	nōlumus	2	nevīs	3	nōltis	4	nevolt	72	nōlim	78	nōllem	146	nōlī	147	nōlīte	152	nōlitō	153	nōlitōte	154	nōlitō
 obhaereo	175	obhaesum	177	obhaerendum
 oblanguesco	18	oblanguī	20	oblanguistī	22	oblanguit
@@ -175,7 +173,6 @@ pello	verb_ind_act	pepul- like occurrō	175	pulsus	187	pulsum	188	pulsū
 pendeo	verb_ind_act	pepend- like occurrō
 pendo	verb_ind_act	pepend- like occurrō
 perfruor	participle_perf_pass	perfruct- like agitō
-pertaedet	participle_perf_pass	pertaes- like agitō
 perurgueo	verb_ind_act	perurs- like occurrō
 pingo	participle_perf_pass	pĭct- like agitō
 pinso	participle_perf_pass	pīns- like agitō
@@ -229,7 +226,7 @@ sedeo	175	sessum	177	sedendum
 sepelio	participle_perf_pass	sepult- like agitō
 sepulto	0	septultō	12	septultābō	18	septultāvī	20	septultāvistī	22	septultāvit	171	septultārī	176	septultātūrus
 sero	participle_perf_pass	sat- like agitō
-sino	verb_ind_act	sī- like caveō
+sino	verb_ind_act	sī- like cognōscō
 sisto	175	status	176	stātūrus	177	sistendus
 specio	verb_ind_act	spex- like occurrō
 spondeo	verb_ind_act	spopond- like occurrō	175	spōnsus	187	spōnsum	188	spōnsū
@@ -256,7 +253,7 @@ unguo	participle_perf_pass	ūnct- like agitō	verb_ind_act	ūnx- like occurrō
 uo	participle_perf_pass	ūt- like agitō
 urgueo	verb_ind_act	urs- like occurrō
 vello	verb_ind_act	vuls- like occurrō
-vesperascit	verb_ind_act	vesperā- like caveō
+vesperascit	verb_ind_act	vesperā- like cognōscō
 vilipendo	participle_perf_pass	pēns- like agitō	verb_ind_act	pepend- like occurrō
 vivesco	verb_ind_act	vīx- like occurrō
 voleo	participle_perf_pass	volūt- like agitō

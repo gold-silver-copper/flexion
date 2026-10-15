@@ -34,10 +34,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // noun_sg like babka: 12,119 words.
+    // noun_sg like babka: 12,206 words.
     EndingTable {
         name: Cow::Borrowed("babka"),
-        words: 12119,
+        words: 12206,
         slot: 0,
         table: Cow::Borrowed(concat!("~a\t", "~ę\t",)),
     },
@@ -76,10 +76,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~eń\t", "~nia\t",)),
     },
-    // noun_pl like obraz: 3,501 words.
+    // noun_pl like obraz: 3,503 words.
     EndingTable {
         name: Cow::Borrowed("obraz"),
-        words: 3501,
+        words: 3503,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~y\t",
@@ -91,10 +91,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~ie\t~y\t",
         )),
     },
-    // noun_pl like linia: 2,442 words.
+    // noun_pl like linia: 2,443 words.
     EndingTable {
         name: Cow::Borrowed("linia"),
-        words: 2442,
+        words: 2443,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",

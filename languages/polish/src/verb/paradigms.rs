@@ -37,7 +37,7 @@ use flexion::Paradigm;
 /// `adverbial_participle` (contemp, ant)
 /// `verbal_noun`
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem infinitive: $s0:tt;)?
      $(stem non_past: $s1:tt;)?
      $(stem m: $s2:tt;)?
@@ -128,6 +128,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s4),)? "\t",
                 $(flexion::cell!($s5),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -153,6 +154,24 @@ macro_rules! view {
     };
 }
 
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// An inherent feature's value, as `(feature, value)` by their places.
 macro_rules! feature {
     (aspect: $v:ident) => {
@@ -165,7 +184,7 @@ macro_rules! feature {
 pub enum Conjugation {
     /// Like `trzymać`: 3,256 words.
     Trzymać,
-    /// Like `googlować`: 1,593 words.
+    /// Like `googlować`: 1,598 words.
     Googlować,
     /// Like `odbudować`: 1,047 words.
     Odbudować,
@@ -177,7 +196,7 @@ pub enum Conjugation {
     Zaklepywać,
     /// Like `ogarnąć`: 392 words.
     Ogarnąć,
-    /// Like `mieć`: 204 words.
+    /// Like `mieć`: 205 words.
     Mieć,
     /// Like `delikatnieć`: 177 words.
     Delikatnieć,
@@ -191,22 +210,22 @@ pub enum Conjugation {
     Odbić,
     /// Like `wystukiwać`: 133 words.
     Wystukiwać,
+    /// Like `zrobić`: 126 words.
+    Zrobić,
     /// Like `zlać`: 122 words.
     Zlać,
     /// Like `złapać`: 115 words.
     Złapać,
     /// Like `zajmować`: 114 words.
     Zajmować,
-    /// Like `zrobić`: 94 words.
-    Zrobić,
-    /// Like `bestwić`: 88 words.
-    Bestwić,
     /// Like `wychodzić`: 84 words.
     Wychodzić,
-    /// Like `czesać`: 74 words.
+    /// Like `czesać`: 72 words.
     Czesać,
     /// Like `zakwitnąć`: 67 words.
     Zakwitnąć,
+    /// Like `bronić`: 65 words.
+    Bronić,
     /// Like `zakwasić`: 65 words.
     Zakwasić,
     /// Like `tracić`: 63 words.
@@ -217,8 +236,6 @@ pub enum Conjugation {
     Podawać,
     /// Like `opłakać`: 55 words.
     Opłakać,
-    /// Like `bronić`: 53 words.
-    Bronić,
     /// Like `zasnąć`: 51 words.
     Zasnąć,
     /// Like `przypuścić`: 50 words.
@@ -227,6 +244,8 @@ pub enum Conjugation {
     Leżeć,
     /// Like `nosić`: 46 words.
     Nosić,
+    /// Like `bestwić`: 44 words.
+    Bestwić,
     /// Like `zabeczeć`: 40 words.
     Zabeczeć,
     /// Like `złożyć`: 39 words.
@@ -293,6 +312,8 @@ pub enum Conjugation {
     Lecieć,
     /// Like `odbyć`: 16 words.
     Odbyć,
+    /// Like `gnieździć`: 16 words.
+    Gnieździć,
     /// Like `znieść`: 16 words.
     Znieść,
     /// Like `zapaść`: 16 words.
@@ -301,8 +322,6 @@ pub enum Conjugation {
     Jechać,
     /// Like `zleźć`: 15 words.
     Zleźć,
-    /// Like `gnieździć`: 15 words.
-    Gnieździć,
     /// Like `dowieźć`: 15 words.
     Dowieźć,
     /// Like `godzić`: 14 words.
@@ -349,6 +368,8 @@ pub enum Conjugation {
     Ucierpieć,
     /// Like `móc`: 9 words.
     Móc,
+    /// Like `porozumieć`: 9 words.
+    Porozumieć,
     /// Like `nakłaść`: 9 words.
     Nakłaść,
     /// Like `widzieć`: 8 words.
@@ -369,8 +390,6 @@ pub enum Conjugation {
     Szklić,
     /// Like `maznąć`: 7 words.
     Maznąć,
-    /// Like `porozumieć`: 7 words.
-    Porozumieć,
     /// Like `dosmażać`: 7 words.
     Dosmażać,
     /// Like `zwiędnąć`: 7 words.
@@ -383,6 +402,8 @@ pub enum Conjugation {
     Uciec,
     /// Like `rozstrzeliwać`: 6 words.
     Rozstrzeliwać,
+    /// Like `solić`: 6 words.
+    Solić,
     /// Like `zapomnieć`: 6 words.
     Zapomnieć,
     /// Like `wziąć`: 5 words.
@@ -411,18 +432,12 @@ pub enum Conjugation {
     Rozlokowywać,
     /// Like `bać`: 4 words.
     Bać,
-    /// Like `solić`: 4 words.
-    Solić,
     /// Like `blednąć`: 4 words.
     Blednąć,
     /// Like `lęgnąć`: 4 words.
     Lęgnąć,
     /// Like `wiskać`: 4 words.
     Wiskać,
-    /// Like `mrozić`: 3 words.
-    Mrozić,
-    /// Like `kazać`: 3 words.
-    Kazać,
     /// Like `odnaleźć`: 3 words.
     Odnaleźć,
     /// Like `brać`: 3 words.
@@ -463,8 +478,6 @@ pub enum Conjugation {
     Bździć,
     /// Like `wykaszleć`: 3 words.
     Wykaszleć,
-    /// Like `rozumieć`: 3 words.
-    Rozumieć,
     /// Like `chlastać`: 3 words.
     Chlastać,
     /// Like `dnieć`: 3 words.
@@ -531,7 +544,7 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 182] = [
+    pub const ALL: [Conjugation; 179] = [
         Conjugation::Trzymać,
         Conjugation::Googlować,
         Conjugation::Odbudować,
@@ -546,24 +559,24 @@ impl Conjugation {
         Conjugation::Zwolnić,
         Conjugation::Odbić,
         Conjugation::Wystukiwać,
+        Conjugation::Zrobić,
         Conjugation::Zlać,
         Conjugation::Złapać,
         Conjugation::Zajmować,
-        Conjugation::Zrobić,
-        Conjugation::Bestwić,
         Conjugation::Wychodzić,
         Conjugation::Czesać,
         Conjugation::Zakwitnąć,
+        Conjugation::Bronić,
         Conjugation::Zakwasić,
         Conjugation::Tracić,
         Conjugation::Łapać,
         Conjugation::Podawać,
         Conjugation::Opłakać,
-        Conjugation::Bronić,
         Conjugation::Zasnąć,
         Conjugation::Przypuścić,
         Conjugation::Leżeć,
         Conjugation::Nosić,
+        Conjugation::Bestwić,
         Conjugation::Zabeczeć,
         Conjugation::Złożyć,
         Conjugation::Przetrzeć,
@@ -597,11 +610,11 @@ impl Conjugation {
         Conjugation::Zlodowacieć,
         Conjugation::Lecieć,
         Conjugation::Odbyć,
+        Conjugation::Gnieździć,
         Conjugation::Znieść,
         Conjugation::Zapaść,
         Conjugation::Jechać,
         Conjugation::Zleźć,
-        Conjugation::Gnieździć,
         Conjugation::Dowieźć,
         Conjugation::Godzić,
         Conjugation::Odpowiedzieć,
@@ -625,6 +638,7 @@ impl Conjugation {
         Conjugation::Mżyć,
         Conjugation::Ucierpieć,
         Conjugation::Móc,
+        Conjugation::Porozumieć,
         Conjugation::Nakłaść,
         Conjugation::Widzieć,
         Conjugation::Cierpieć,
@@ -635,13 +649,13 @@ impl Conjugation {
         Conjugation::Przespać,
         Conjugation::Szklić,
         Conjugation::Maznąć,
-        Conjugation::Porozumieć,
         Conjugation::Dosmażać,
         Conjugation::Zwiędnąć,
         Conjugation::Odebrać,
         Conjugation::Podjąć,
         Conjugation::Uciec,
         Conjugation::Rozstrzeliwać,
+        Conjugation::Solić,
         Conjugation::Zapomnieć,
         Conjugation::Wziąć,
         Conjugation::Osłonić,
@@ -656,12 +670,9 @@ impl Conjugation {
         Conjugation::Doprząść,
         Conjugation::Rozlokowywać,
         Conjugation::Bać,
-        Conjugation::Solić,
         Conjugation::Blednąć,
         Conjugation::Lęgnąć,
         Conjugation::Wiskać,
-        Conjugation::Mrozić,
-        Conjugation::Kazać,
         Conjugation::Odnaleźć,
         Conjugation::Brać,
         Conjugation::Rwać,
@@ -682,7 +693,6 @@ impl Conjugation {
         Conjugation::Wyłgać,
         Conjugation::Bździć,
         Conjugation::Wykaszleć,
-        Conjugation::Rozumieć,
         Conjugation::Chlastać,
         Conjugation::Dnieć,
         Conjugation::Zdogmatyzować,
@@ -731,7 +741,7 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 179] = [
     // Trzymać: 3,256 words (wymagać, śpiewać, guglać, czekać, rozbierać, posiadać).
     conjugation!("trzymać", 3256, "~ć";
     stem infinitive: "~- like trzymać";
@@ -741,19 +751,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~liśmy", _;
     imperative_1: _, "~jmy";
     ),
-    // Googlować: 1,593 words (googlować, mulczować, dziękować, potrzebować, znajdować, notować). Like Trzymać, except in 3 cells: past_1 vir, imperative_1 pl, adverbial_participle ant.
-    conjugation!("googlować", 1593, "~aćˇ", [aspect: Imperfective], like Trzymać;
-    stem infinitive: "~a- like googlować";
-    stem non_past: "~- like googlować";
-    stem m: "~ał- like googlować";
-    stem impersonal: "~an- like googlować";
-    past_1: _, _, _, "~aliśmyˇ", _;
+    // Googlować: 1,598 words (googlować, mulczować, dziękować, potrzebować, znajdować, notować). Like Rwać with `ˇ` after each pattern, except in 2 cells: non_past_1 pl, imperative_1 pl.
+    conjugation!("googlować", 1598, "~aćˇ", [aspect: Imperfective], like Rwać with "ˇ";
+    non_past_1: _, "~emyˇ";
     imperative_1: _, "~myˇ";
-    adverbial_participle: _, derived;
     ),
-    // Odbudować: 1,047 words (odbudować, zamordować, zachorować, opatentować, rozczarować, pocałować). Like Googlować, except in 0 cells: .
-    conjugation!("odbudować", 1047, "~aćˇ", [aspect: Perfective], like Googlować;
-    stem m: "~a- like odbudować";
+    // Odbudować: 1,047 words (odbudować, zamordować, zachorować, opatentować, rozczarować, pocałować). Like Urwać with `ˇ` after each pattern, except in 2 cells: non_past_1 pl, imperative_1 pl.
+    conjugation!("odbudować", 1047, "~aćˇ", [aspect: Perfective], like Urwać with "ˇ";
+    non_past_1: _, "~emyˇ";
+    imperative_1: _, "~myˇ";
     ),
     // Baczyć: 754 words (pieprzyć, ćwiczyć, życzyć, uczyć, łączyć, wyznaczyć). Like Trzymać, except in 2 cells: past_1 vir, imperative_1 pl.
     conjugation!("baczyć", 754, "~yć", like Trzymać;
@@ -790,8 +796,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~ęliśmy", _;
     imperative_1: _, "~ijmy";
     ),
-    // Mieć: 204 words (chcieć, ocipieć, zmądrzeć, stwardnieć, oszaleć, stopnieć). Like Baczyć, except in 4 cells: past_1 vir, imperative_1 pl, impersonal, participle pass.
-    conjugation!("mieć", 204, "~eć", [aspect: Perfective], like Baczyć;
+    // Mieć: 205 words (chcieć, mieć, ocipieć, zmądrzeć, stwardnieć, oszaleć). Like Baczyć, except in 4 cells: past_1 vir, imperative_1 pl, impersonal, participle pass.
+    conjugation!("mieć", 205, "~eć", [aspect: Perfective], like Baczyć;
     stem infinitive: "~- like mieć";
     stem non_past: "~ej- like zaklepywać";
     stem m: "~a- like trzymać";
@@ -823,12 +829,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~ziliśmy", _;
     imperative_1: _, "~źmy";
     ),
-    // Zwolnić: 150 words (wyjaśnić, popełnić, opróżnić, odwzajemnić, uśpić, unicestwić). Like Trzymać, except in 0 cells: .
+    // Zwolnić: 150 words (wyjaśnić, popełnić, opróżnić, odwzajemnić, uśpić, unicestwić). Like Trzymać.
     conjugation!("zwolnić", 150, "~ć", [aspect: Perfective], like Trzymać;
     stem non_past: "~- like postawić";
     stem impersonal: "~- like baczyć";
     ),
-    // Odbić: 136 words (przeżyć, otruć, zabić, odkryć, ukryć, umyć). Like Trzymać, except in 0 cells: .
+    // Odbić: 136 words (przeżyć, otruć, zabić, odkryć, ukryć, umyć). Like Trzymać.
     conjugation!("odbić", 136, "~ć", [aspect: Perfective], like Trzymać;
     stem non_past: "~j- like zaklepywać";
     stem impersonal: "~- like ogarnąć";
@@ -839,6 +845,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem m: "~iwał- like zaklepywać";
     stem impersonal: "~iwan- like trzymać";
     past_1: _, _, _, "~iwaliśmy", _;
+    ),
+    // Zrobić: 126 words (robić, zrobić, zmienić, winić, ranić, utlenić). Like Postawić with `ˇ` after each pattern.
+    conjugation!("zrobić", 126, "~ićˇ", like Postawić with "ˇ";
     ),
     // Zlać: 122 words (napisać, wylać, podpisać, rozwiązać, zaorać, olać). Like Mieć, except in 1 cell: past_1 vir.
     conjugation!("zlać", 122, "~ać", [aspect: Perfective], like Mieć;
@@ -858,25 +867,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem impersonal: "~owan- like trzymać";
     past_1: _, _, _, "~owaliśmy", _;
     ),
-    // Zrobić: 94 words (robić, zrobić, zmienić, ranić, utlenić, odczynić). Like Googlować, except in 4 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 vir.
-    conjugation!("zrobić", 94, "~ićˇ", like Googlować;
-    stem infinitive: "~i- like googlować";
-    stem m: "~i- like odbudować";
-    stem impersonal: "~i- like zrobić";
-    non_past_1: "~ięˇ", "~imyˇ";
-    non_past_3: _, "~iąˇ";
-    past_1: _, _, _, "~iliśmyˇ", _;
-    ),
-    // Bestwić: 88 words (dzwonić, winić, śnić, tęsknić, chronić, cenić). Like Zwolnić, except in 1 cell: adverbial_participle ant.
-    conjugation!("bestwić", 88, "~ć", like Zwolnić;
-    adverbial_participle: _, derived;
-    ),
     // Wychodzić: 84 words (szkodzić, prowadzić, przewodzić, wychodzić, chodzić, podchodzić). Like Przeprowadzić, except in 1 cell: adverbial_participle ant.
     conjugation!("wychodzić", 84, "~zić", [aspect: Imperfective], like Przeprowadzić;
     adverbial_participle: _, derived;
     ),
-    // Czesać: 74 words (pisać, płakać, lizać, karać, szeptać, czesać). Like Zlać, except in 2 cells: imperative_1 pl, adverbial_participle ant.
-    conjugation!("czesać", 74, "~ać", [aspect: Imperfective], like Zlać;
+    // Czesać: 72 words (pisać, płakać, karać, szeptać, czesać, gdakać). Like Zlać, except in 2 cells: imperative_1 pl, adverbial_participle ant.
+    conjugation!("czesać", 72, "~ać", [aspect: Imperfective], like Zlać;
     stem non_past: "~z- like zaklepywać";
     imperative_1: _, "~zmy";
     adverbial_participle: _, derived;
@@ -888,6 +884,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem impersonal: "~nię- like ogarnąć";
     infinitive: "~nąć";
     imperative_1: _, "~nijmy";
+    ),
+    // Bronić: 65 words (dzwonić, zadzwonić, chronić, drażnić, dodzwonić, bronić). Like Trzymać, except in 2 cells: past_1 vir, imperative_1 pl.
+    conjugation!("bronić", 65, "~nić", like Trzymać;
+    stem infinitive: "~ni- like trzymać";
+    stem non_past: "~ni- like postawić";
+    stem m: "~ni- like trzymać";
+    stem impersonal: "~ni- like baczyć";
+    past_1: _, _, _, "~niliśmy", _;
+    imperative_1: _, "~ńmy";
     ),
     // Zakwasić: 65 words (poprosić, przeprosić, wymusić, zaprosić, skosić, zmusić). Like Trzymać, except in 5 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 vir, imperative_1 pl.
     conjugation!("zakwasić", 65, "~sić", [aspect: Perfective], like Trzymać;
@@ -916,28 +921,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     imperative_1: _, "~wajmy";
     adverbial_participle: _, derived;
     ),
-    // Opłakać: 55 words (opłakać, zaplątać, zadeptać, zakłopotać, zatrajkotać, zaterkotać). Like Odbudować, except in 1 cell: imperative_1 pl.
-    conjugation!("opłakać", 55, "~aćˇ", [aspect: Perfective], like Odbudować;
-    stem non_past: "~z- like googlować";
-    imperative_1: _, "~zmyˇ";
+    // Opłakać: 55 words (opłakać, zaplątać, zadeptać, zakłopotać, zatrajkotać, zaterkotać). Like Czesać with `ˇ` after each pattern, except in 1 cell: adverbial_participle ant.
+    conjugation!("opłakać", 55, "~aćˇ", [aspect: Perfective], like Czesać with "ˇ";
+    adverbial_participle: _, "~awszyˇ";
     ),
-    // Bronić: 53 words (zadzwonić, drażnić, dodzwonić, poronić, zabronić, unieśmiertelnić). Like Trzymać, except in 2 cells: past_1 vir, imperative_1 pl.
-    conjugation!("bronić", 53, "~nić", [aspect: Perfective], like Trzymać;
-    stem infinitive: "~ni- like trzymać";
-    stem non_past: "~ni- like postawić";
-    stem m: "~ni- like trzymać";
-    stem impersonal: "~ni- like baczyć";
-    past_1: _, _, _, "~niliśmy", _;
-    imperative_1: _, "~ńmy";
-    ),
-    // Zasnąć: 51 words (zasnąć, usnąć, kisnąć, gasnąć, musnąć, ścisnąć). Like Googlować, except in 5 cells: infinitive, non_past_1 pl, past_1 f, past_1 vir, imperative_1 pl.
-    conjugation!("zasnąć", 51, "~ąćˇ", [aspect: Perfective], like Googlować;
-    stem m: "~ą- like odbudować";
-    stem impersonal: "~ię- like zasnąć";
-    infinitive: "~ąćˇ";
-    non_past_1: _, "~iemyˇ";
-    past_1: _, "~ęłamˇ", _, "~ęliśmyˇ", _;
-    imperative_1: _, "~ijmyˇ";
+    // Zasnąć: 51 words (zasnąć, usnąć, kisnąć, gasnąć, musnąć, ścisnąć). Like Ogarnąć with `ˇ` after each pattern.
+    conjugation!("zasnąć", 51, "~ąćˇ", [aspect: Perfective], like Ogarnąć with "ˇ";
     ),
     // Przypuścić: 50 words (upuścić, spuścić, przypuścić, puścić, opuścić, rozpuścić). Like Trzymać, except in 5 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 vir, imperative_1 pl.
     conjugation!("przypuścić", 50, "~ścić", [aspect: Perfective], like Trzymać;
@@ -959,17 +948,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     conjugation!("nosić", 46, "~sić", [aspect: Imperfective], like Zakwasić;
     adverbial_participle: _, derived;
     ),
-    // Zabeczeć: 40 words (spojrzeć, usłyszeć, zamuczeć, nakrzyczeć, zakwiczeć, popatrzeć). Like Leżeć, except in 0 cells: .
+    // Bestwić: 44 words (śnić, tęsknić, świerzbić, bębnić, czynić, uaktywnić). Like Zwolnić, except in 1 cell: adverbial_participle ant.
+    conjugation!("bestwić", 44, "~ć", like Zwolnić;
+    adverbial_participle: _, derived;
+    ),
+    // Zabeczeć: 40 words (spojrzeć, usłyszeć, zamuczeć, nakrzyczeć, zakwiczeć, popatrzeć). Like Leżeć.
     conjugation!("zabeczeć", 40, "~eć", [aspect: Perfective], like Leżeć;
     stem m: "~a- like trzymać";
     ),
-    // Złożyć: 39 words (tworzyć, otworzyć, złożyć, cudzołożyć, łożyć, założyć). Like Googlować, except in 2 cells: non_past_1 pl, past_1 vir.
-    conjugation!("złożyć", 39, "~yćˇ", like Googlować;
-    stem infinitive: "~y- like googlować";
-    stem m: "~y- like odbudować";
-    stem impersonal: "~- like zrobić";
-    non_past_1: _, "~ymyˇ";
-    past_1: _, _, _, "~yliśmyˇ", _;
+    // Złożyć: 39 words (tworzyć, otworzyć, złożyć, cudzołożyć, łożyć, założyć). Like Baczyć with `ˇ` after each pattern.
+    conjugation!("złożyć", 39, "~yćˇ", like Baczyć with "ˇ";
     ),
     // Przetrzeć: 38 words (umrzeć, zawrzeć, rozpostrzeć, oprzeć, wytrzeć, zetrzeć).
     conjugation!("przetrzeć", 38, "~~zeć", [aspect: Perfective];
@@ -980,12 +968,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, "~a~łam", _, "~a~liśmy", _;
     imperative_1: _, "~~zyjmy";
     ),
-    // Złoić: 37 words (spoić, przystroić, zaniepokoić, wystroić, ustroić, rozstroić). Like Zrobić, except in 3 cells: non_past_1 sg, non_past_3 pl, imperative_1 pl.
-    conjugation!("złoić", 37, "~ićˇ", [aspect: Perfective], like Zrobić;
-    stem impersonal: "~j- like zrobić";
-    non_past_1: "~jęˇ", _;
-    non_past_3: _, "~jąˇ";
-    imperative_1: _, "~jmyˇ";
+    // Złoić: 37 words (spoić, przystroić, zaniepokoić, wystroić, ustroić, rozstroić). Like Rozkleić with `ˇ` after each pattern.
+    conjugation!("złoić", 37, "~ićˇ", [aspect: Perfective], like Rozkleić with "ˇ";
     ),
     // Płynąć: 36 words (płynąć, tonąć, płonąć, ginąć, sunąć, słynąć). Like Zakwitnąć, except in 3 cells: past_1 vir, imperative_1 pl, participle pass.
     conjugation!("płynąć", 36, "~nąć", like Zakwitnąć;
@@ -1042,19 +1026,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem non_past: "~- like ogarnąć";
     imperative_1: _, "~ijmy";
     ),
-    // Wyrosnąć: 27 words (odrosnąć, porosnąć, urosnąć, zarosnąć, dorosnąć, przerosnąć). Like Trzymać, except in 11 cells: infinitive, non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 m, past_1 f, ….
-    conjugation!("wyrosnąć", 27, "~nąćˇ", [aspect: Perfective], like Trzymać;
-    stem impersonal: "~nię- like zasnąć";
-    infinitive: "~nąćˇ";
-    non_past_1: "~nęˇ", "~niemyˇ";
-    non_past_3: _, "~nąˇ";
-    past_1: "~łemˇ", "~łamˇ", _, "~liśmyˇ", _;
-    past_2: "~łeśˇ", _, _, _, _;
-    past_3: "~łˇ", _, _, _, _;
-    imperative_1: _, "~nijmyˇ";
-    adverbial_participle: _, "~łszyˇ";
+    // Wyrosnąć: 27 words (odrosnąć, porosnąć, urosnąć, zarosnąć, dorosnąć, przerosnąć). Like Zakwitnąć with `ˇ` after each pattern.
+    conjugation!("wyrosnąć", 27, "~nąćˇ", [aspect: Perfective], like Zakwitnąć with "ˇ";
     ),
-    // Pogrozić: 25 words (obrazić, pokazić, urazić, wyrazić, przerazić, zagrozić). Like Przeprowadzić, except in 0 cells: .
+    // Pogrozić: 25 words (obrazić, pokazić, urazić, wyrazić, przerazić, zagrozić). Like Przeprowadzić.
     conjugation!("pogrozić", 25, "~zić", [aspect: Perfective], like Przeprowadzić;
     stem non_past: "~- like pogrozić";
     stem impersonal: "~ż- like baczyć";
@@ -1157,7 +1132,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~zaliśmy", _;
     imperative_1: _, "~żmy";
     ),
-    // Przewinąć: 18 words (minąć, zwinąć, popłynąć, pominąć, przepłynąć, ominąć). Like Płynąć, except in 0 cells: .
+    // Przewinąć: 18 words (minąć, zwinąć, popłynąć, pominąć, przepłynąć, ominąć). Like Płynąć.
     conjugation!("przewinąć", 18, "~nąć", [aspect: Perfective], like Płynąć;
     stem impersonal: "~nię- like ogarnąć";
     ),
@@ -1171,7 +1146,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~~aliśmy", _;
     imperative_1: _, "~ie~zmy";
     ),
-    // Zlodowacieć: 18 words (zaśniedzieć, zlodowacieć, zżydzieć, sparcieć, zidiocieć, owrzodzieć). Like Lodowacieć, except in 0 cells: .
+    // Zlodowacieć: 18 words (zaśniedzieć, zlodowacieć, zżydzieć, sparcieć, zidiocieć, owrzodzieć). Like Lodowacieć.
     conjugation!("zlodowacieć", 18, "~~eć", [aspect: Perfective], like Lodowacieć;
     stem m: "~~a- like trzymać";
     ),
@@ -1187,6 +1162,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem non_past: "~ęd- like odbyć";
     stem impersonal: "~y- like ogarnąć";
     imperative_1: _, "~ądźmy";
+    ),
+    // Gnieździć: 16 words (jeździć, przewozić, podwozić, dowozić, gnieździć, rozwozić). Like Kazić with `ˇ` after each pattern.
+    conjugation!("gnieździć", 16, "~zićˇ", [aspect: Imperfective], like Kazić with "ˇ";
     ),
     // Znieść: 16 words (nieść, przynieść, podnieść, wynieść, unieść, wznieść). Like Wygnieść, except in 10 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 m, past_1 f, past_1 vir, ….
     conjugation!("znieść", 16, "~eść", like Wygnieść;
@@ -1227,16 +1205,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, "~azłam", _, "~eźliśmy", _;
     imperative_1: _, "~eźmy";
     ),
-    // Gnieździć: 15 words (jeździć, przewozić, podwozić, dowozić, gnieździć, rozwozić). Like Googlować, except in 5 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 vir, imperative_1 pl.
-    conjugation!("gnieździć", 15, "~zićˇ", [aspect: Imperfective], like Googlować;
-    stem infinitive: "~zi- like googlować";
-    stem m: "~ził- like googlować";
-    stem impersonal: "~ż- like zrobić";
-    non_past_1: "~żęˇ", "~zimyˇ";
-    non_past_3: _, "~żąˇ";
-    past_1: _, _, _, "~ziliśmyˇ", _;
-    imperative_1: _, "~źmyˇ";
-    ),
     // Dowieźć: 15 words (wieźć, przewieźć, podwieźć, dowieźć, przywieźć, rozwieźć). Like Zleźć, except in 7 cells: non_past_1 sg, non_past_3 pl, past_1 m, past_1 f, past_2 m, past_3 m, ….
     conjugation!("dowieźć", 15, "~eźć", like Zleźć;
     stem impersonal: "~ezi- like baczyć";
@@ -1259,9 +1227,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~dzieliśmy", _;
     imperative_1: _, "~dzmy";
     ),
-    // Doić: 14 words (poić, doić, koić, kroić, stroić, goić). Like Złoić, except in 1 cell: adverbial_participle ant.
-    conjugation!("doić", 14, "~ićˇ", [aspect: Imperfective], like Złoić;
-    adverbial_participle: _, derived;
+    // Doić: 14 words (poić, doić, koić, kroić, stroić, goić). Like Kleić with `ˇ` after each pattern.
+    conjugation!("doić", 14, "~ićˇ", [aspect: Imperfective], like Kleić with "ˇ";
     ),
     // Obesłać: 13 words (zesłać, wysłać, przesłać, przysłać, odesłać, podesłać). Like Trzymać, except in 2 cells: past_1 vir, imperative_1 pl.
     conjugation!("obesłać", 13, "~słać", [aspect: Perfective], like Trzymać;
@@ -1320,11 +1287,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     imperative_1: _, "~eczmy";
     adverbial_participle: _, "~ókłszy|~ekłszy";
     ),
-    // Wymodlić: 12 words (pozwolić, zadowolić, dozwolić, wyzwolić, zezwolić, posolić). Like Zrobić, except in 2 cells: non_past_1 sg, non_past_3 pl.
-    conjugation!("wymodlić", 12, "~ićˇ", [aspect: Perfective], like Zrobić;
-    stem impersonal: "~- like zrobić";
-    non_past_1: "~ęˇ", _;
-    non_past_3: _, "~ąˇ";
+    // Wymodlić: 12 words (pozwolić, zadowolić, dozwolić, wyzwolić, zezwolić, posolić). Like Zaokrąglić with `ˇ` after each pattern, except in 1 cell: imperative_1 pl.
+    conjugation!("wymodlić", 12, "~ićˇ", [aspect: Perfective], like Zaokrąglić with "ˇ";
+    imperative_1: _, "~myˇ";
     ),
     // Mdlić: 11 words (brakować, świtać, mdlić, zemdlić, dżdżyć, powodzić). Like Delikatnieć, except in 17 cells: infinitive, non_past_1 sg, non_past_1 pl, non_past_3 pl, past_1 m, past_1 f, ….
     conjugation!("mdlić", 11, "~ć", like Delikatnieć;
@@ -1369,7 +1334,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~~ięliśmy", _;
     imperative_1: _, "~e~nijmy";
     ),
-    // Kraść: 10 words (kraść, podkraść, ukraść, okraść, zakraść, skraść). Like Zapaść, except in 0 cells: .
+    // Kraść: 10 words (kraść, podkraść, ukraść, okraść, zakraść, skraść). Like Zapaść.
     conjugation!("kraść", 10, "~ść", like Zapaść;
     stem impersonal: "~dz- like wygnieść";
     ),
@@ -1380,9 +1345,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem impersonal: "~z- like lecieć";
     past_1: _, _, _, "~zieliśmy", _;
     ),
-    // Przygwoździć: 10 words (ujeździć, zagnieździć, przygwoździć, zajeździć, rozjeździć, zbruździć). Like Gnieździć, except in 0 cells: .
-    conjugation!("przygwoździć", 10, "~zićˇ", [aspect: Perfective], like Gnieździć;
-    stem m: "~zi- like odbudować";
+    // Przygwoździć: 10 words (ujeździć, zagnieździć, przygwoździć, zajeździć, rozjeździć, zbruździć). Like Pogrozić with `ˇ` after each pattern.
+    conjugation!("przygwoździć", 10, "~zićˇ", [aspect: Perfective], like Pogrozić with "ˇ";
     ),
     // Żreć: 10 words (żreć, pożreć, obeżreć, wyżreć, przeżreć, zeżreć). Like Przetrzeć, except in 2 cells: infinitive, imperative_1 pl.
     conjugation!("żreć", 10, "~~eć", like Przetrzeć;
@@ -1413,6 +1377,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_3: "~ógł", _, _, _, _;
     imperative_1: _, "~óżmy";
     adverbial_participle: _, "~ógłszy";
+    ),
+    // Porozumieć: 9 words (rozumieć, umieć, wrzeć, zrozumieć, śmieć, porozumieć). Like Mieć.
+    conjugation!("porozumieć", 9, "~eć", like Mieć;
+    stem non_past: "~e- like trzymać";
     ),
     // Nakłaść: 9 words (iść, kłaść, bóść, nakłaść, przebóść, wniść). Like Kraść, except in 1 cell: imperative_1 pl.
     conjugation!("nakłaść", 9, "~ść", like Kraść;
@@ -1475,10 +1443,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~z~ęliśmy", _;
     imperative_1: _, "~ź~ijmy";
     ),
-    // Porozumieć: 7 words (wrzeć, zrozumieć, śmieć, porozumieć, naumieć, wyrozumieć). Like Mieć, except in 0 cells: .
-    conjugation!("porozumieć", 7, "~eć", like Mieć;
-    stem non_past: "~e- like trzymać";
-    ),
     // Dosmażać: 7 words (popytać, odczołgać, zniesławiać, wybredzać, wyświadczać, dosmażać). Like Trzymać, except in 1 cell: adverbial_participle ant.
     conjugation!("dosmażać", 7, "~ać", like Trzymać;
     adverbial_participle: _, derived;
@@ -1522,6 +1486,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem non_past: "~uj- like zaklepywać";
     imperative_1: _, "~ujmy";
     ),
+    // Solić: 6 words (solić, golić, modlić, wozić, mrozić, niewolić). Like Szklić with `ˇ` after each pattern, except in 1 cell: imperative_1 pl.
+    conjugation!("solić", 6, "~ićˇ", [aspect: Imperfective], like Szklić with "ˇ";
+    imperative_1: _, "~myˇ";
+    ),
     // Zapomnieć: 6 words (zapomnieć, wspomnieć, pachnieć, przypomnieć, pomnieć, wypomnieć). Like Ucierpieć, except in 2 cells: imperative_1 pl, adverbial_participle ant.
     conjugation!("zapomnieć", 6, "~ieć", like Ucierpieć;
     stem non_past: "~- like rzucić";
@@ -1538,7 +1506,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~zięliśmy", _;
     imperative_1: _, "~eźmijmy";
     ),
-    // Osłonić: 5 words (odsłonić, zasłonić, przesłonić, przysłonić, osłonić). Like Bronić, except in 0 cells: .
+    // Osłonić: 5 words (odsłonić, zasłonić, przesłonić, przysłonić, osłonić). Like Bronić.
     conjugation!("osłonić", 5, "~nić", [aspect: Perfective], like Bronić;
     stem impersonal: "~ni- like osłonić";
     ),
@@ -1551,7 +1519,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, "~ęgłam", _, "~ęgliśmy", _;
     imperative_1: _, "~ążmy";
     ),
-    // Wapnieć: 5 words (parszywieć, bałwanieć, zbałwanieć, bezwładnieć, wapnieć). Like Delikatnieć, except in 0 cells: .
+    // Wapnieć: 5 words (parszywieć, bałwanieć, zbałwanieć, bezwładnieć, wapnieć). Like Delikatnieć.
     conjugation!("wapnieć", 5, "~ieć", like Delikatnieć;
     ),
     // Przechrzcić: 5 words (chrzcić, czcić, uczcić, przechrzcić, poczcić). Like Zaokrąglić, except in 2 cells: non_past_1 sg, non_past_3 pl.
@@ -1560,7 +1528,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     non_past_1: "~zę", _;
     non_past_3: _, "~zą";
     ),
-    // Urzec: 5 words (odrzec, orzec, przyrzec, urzec, zarzec). Like Uciec, except in 0 cells: .
+    // Urzec: 5 words (odrzec, orzec, przyrzec, urzec, zarzec). Like Uciec.
     conjugation!("urzec", 5, "~c", [aspect: Perfective], like Uciec;
     stem impersonal: "~cz- like baczyć";
     ),
@@ -1602,7 +1570,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     infinitive: "~ąść";
     past_1: _, "~ędłam", _, "~ędliśmy", _;
     ),
-    // Rozlokowywać: 4 words (powyłamywać, rozlokowywać, odbiurokratyzowywać, naobiecywać). Like Zaklepywać, except in 0 cells: .
+    // Rozlokowywać: 4 words (powyłamywać, rozlokowywać, odbiurokratyzowywać, naobiecywać). Like Zaklepywać.
     conjugation!("rozlokowywać", 4, "~ywać", like Zaklepywać;
     stem m: "~ywa- like trzymać";
     ),
@@ -1612,14 +1580,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     non_past_3: _, "~oją";
     imperative_1: _, "~ójmy";
     ),
-    // Solić: 4 words (solić, golić, modlić, niewolić). Like Wymodlić, except in 1 cell: adverbial_participle ant.
-    conjugation!("solić", 4, "~ićˇ", [aspect: Imperfective], like Wymodlić;
-    adverbial_participle: _, derived;
-    ),
-    // Blednąć: 4 words (rosnąć, blednąć, moknąć, chłodnąć). Like Wyrosnąć, except in 2 cells: participle pass, adverbial_participle ant.
-    conjugation!("blednąć", 4, "~nąćˇ", [aspect: Imperfective], like Wyrosnąć;
-    participle: _, derived;
-    adverbial_participle: _, derived;
+    // Blednąć: 4 words (rosnąć, blednąć, moknąć, chłodnąć). Like Schnąć with `ˇ` after each pattern.
+    conjugation!("blednąć", 4, "~nąćˇ", [aspect: Imperfective], like Schnąć with "ˇ";
     ),
     // Lęgnąć: 4 words (więdnąć, ziębnąć, więznąć, lęgnąć). Like Zwiędnąć, except in 2 cells: participle pass, adverbial_participle ant.
     conjugation!("lęgnąć", 4, "~ę~nąć", [aspect: Imperfective], like Zwiędnąć;
@@ -1634,19 +1596,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     stem impersonal: "~kan- like googlować";
     past_1: _, _, _, "~kaliśmyˇ", _;
     imperative_1: _, "~czmyˇ";
-    ),
-    // Mrozić: 3 words (wozić, mrozić, uwozić). Like Móc, except in 3 cells: past_1 vir, imperative_1 pl, adverbial_participle ant.
-    conjugation!("mrozić", 3, "~ozić", [aspect: Imperfective], like Móc;
-    stem infinitive: "~ozi- like trzymać";
-    stem non_past: "~o- like pogrozić";
-    stem m: "~oził- like zaklepywać";
-    past_1: _, _, _, "~oziliśmy", _;
-    imperative_1: _, "~óźmy";
-    adverbial_participle: _, derived;
-    ),
-    // Kazać: 3 words (wiązać, kazać, mazać). Like Okazać, except in 1 cell: adverbial_participle ant.
-    conjugation!("kazać", 3, "~zać", [aspect: Imperfective], like Okazać;
-    adverbial_participle: _, derived;
     ),
     // Odnaleźć: 3 words (znaleźć, wynaleźć, odnaleźć). Like Dojść, except in 3 cells: infinitive, past_1 f, past_1 vir.
     conjugation!("odnaleźć", 3, "~leźć", [aspect: Perfective], like Dojść;
@@ -1672,7 +1621,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, "~~łłam", _, "~~łliśmy", _;
     imperative_1: _, "~i~lmy";
     ),
-    // Myśleć: 3 words (myśleć, pomyśleć, przemyśleć). Like Zabeczeć, except in 0 cells: .
+    // Myśleć: 3 words (myśleć, pomyśleć, przemyśleć). Like Zabeczeć.
     conjugation!("myśleć", 3, "~eć", like Zabeczeć;
     stem non_past: "~- like rzucić";
     ),
@@ -1692,15 +1641,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     impersonal: "~siano";
     participle: _, derived;
     ),
-    // Więzić: 3 words (więzić, uwięzić, rozgałęzić). Like Pogrozić, except in 0 cells: .
+    // Więzić: 3 words (więzić, uwięzić, rozgałęzić). Like Pogrozić.
     conjugation!("więzić", 3, "~zić", like Pogrozić;
     stem impersonal: "~zi- like baczyć";
     ),
-    // Upomnieć: 3 words (upomnieć, napomnieć, dopomnieć). Like Zapomnieć, except in 0 cells: .
+    // Upomnieć: 3 words (upomnieć, napomnieć, dopomnieć). Like Zapomnieć.
     conjugation!("upomnieć", 3, "~ieć", [aspect: Perfective], like Zapomnieć;
     stem m: "~ia- like trzymać";
     ),
-    // Nakierować: 3 words (nakierować, meblować, umeblować). Like Zajmować, except in 0 cells: .
+    // Nakierować: 3 words (nakierować, meblować, umeblować). Like Zajmować.
     conjugation!("nakierować", 3, "~ać", like Zajmować;
     ),
     // Druzgotać: 3 words (druzgotać, zdruzgotać, kłopotać). Like Googlować, except in 2 cells: past_1 vir, imperative_1 pl.
@@ -1782,29 +1731,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     imperative_1: _, "~ź~zijmy";
     participle: _, derived;
     ),
-    // Wykaszleć: 3 words (kaszleć, odkaszleć, wykaszleć). Like Zabeczeć, except in 0 cells: .
+    // Wykaszleć: 3 words (kaszleć, odkaszleć, wykaszleć). Like Zabeczeć.
     conjugation!("wykaszleć", 3, "~eć", like Zabeczeć;
     stem non_past: "~- like zaklepywać";
     ),
-    // Rozumieć: 3 words (rozumieć, mieć, umieć). Like Wyrosnąć, except in 4 cells: non_past_1 sg, non_past_1 pl, non_past_3 pl, imperative_1 pl.
-    conjugation!("rozumieć", 3, "~ćˇ", [aspect: Imperfective], like Wyrosnąć;
-    stem infinitive: "~- like googlować";
-    stem m: "~- like odbudować";
-    stem impersonal: "~n- like googlować";
-    non_past_1: "~mˇ", "~myˇ";
-    non_past_3: _, "~jąˇ";
-    imperative_1: _, "~jmyˇ";
+    // Chlastać: 3 words (świstać, chłostać, chlastać). Like Czesać with `ˇ` after each pattern.
+    conjugation!("chlastać", 3, "~aćˇ", [aspect: Imperfective], like Czesać with "ˇ";
     ),
-    // Chlastać: 3 words (świstać, chłostać, chlastać). Like Opłakać, except in 1 cell: adverbial_participle ant.
-    conjugation!("chlastać", 3, "~aćˇ", [aspect: Imperfective], like Opłakać;
-    adverbial_participle: _, derived;
+    // Dnieć: 3 words (dnieć, odechcieć, zachcieć). Like Mdlić with `ˇ` after each pattern.
+    conjugation!("dnieć", 3, "~ćˇ", like Mdlić with "ˇ";
     ),
-    // Dnieć: 3 words (dnieć, odechcieć, zachcieć). Like Mdlić, except in 6 cells: infinitive, conditional_1 m, conditional_1 f, conditional_1 n, conditional_1 vir, conditional_1 nvir.
-    conjugation!("dnieć", 3, "~ćˇ", like Mdlić;
-    infinitive: "~ćˇ";
-    conditional_1: "~łobyˇ", "~łobyˇ", "~łobyˇ", "~łobyˇ", "~łobyˇ";
-    ),
-    // Zdogmatyzować: 2 words (zarchaizować, zdogmatyzować). Like Zajmować, except in 0 cells: .
+    // Zdogmatyzować: 2 words (zarchaizować, zdogmatyzować). Like Zajmować.
     conjugation!("zdogmatyzować", 2, "z~ować", like Zajmować;
     ),
     // Popalić: 2 words (zagrabić, popalić). Like Delikatnieć, except in 2 cells: past_1 vir, imperative_1 pl.
@@ -1903,7 +1840,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~e~liśmy", _;
     imperative_1: _, "~e~jmy";
     ),
-    // Spieniężać: 1 words (spieniężać). Like Odgradzać, except in 0 cells: .
+    // Spieniężać: 1 words (spieniężać). Like Odgradzać.
     conjugation!("spieniężać", 1, "~i~ć", like Odgradzać;
     ),
     // Spieniężyć: 1 words (spieniężyć). Like Przetrzeć, except in 2 cells: past_1 vir, imperative_1 pl.
@@ -1915,16 +1852,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~~yliśmy", _;
     imperative_1: _, "~~my";
     ),
-    // Zaadaptować: 1 words (zaadaptować). Like Zajmować, except in 0 cells: .
+    // Zaadaptować: 1 words (zaadaptować). Like Zajmować.
     conjugation!("zaadaptować", 1, "za~ować", like Zajmować;
     ),
-    // Alkoholizować: 1 words (alkoholizować). Like Podszczypywać, except in 0 cells: .
+    // Alkoholizować: 1 words (alkoholizować). Like Podszczypywać.
     conjugation!("alkoholizować", 1, "~izować", like Podszczypywać;
     ),
-    // Anodyzować: 1 words (anodyzować). Like Podszczypywać, except in 0 cells: .
+    // Anodyzować: 1 words (anodyzować). Like Podszczypywać.
     conjugation!("anodyzować", 1, "~yzować", like Podszczypywać;
     ),
-    // Przearfować: 1 words (przearfować). Like Podszczypywać, except in 0 cells: .
+    // Przearfować: 1 words (przearfować). Like Podszczypywać.
     conjugation!("przearfować", 1, "prze~ować", like Podszczypywać;
     ),
     // Denazyfikować: 1 words (denazyfikować). Like Lodowacieć, except in 2 cells: past_1 vir, imperative_1 pl.
@@ -1945,7 +1882,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     past_1: _, _, _, "~i~owaliśmy", _;
     imperative_1: _, "~i~ujmy";
     ),
-    // Zabajerować: 1 words (zabajerować). Like Szydełkować, except in 0 cells: .
+    // Zabajerować: 1 words (zabajerować). Like Szydełkować.
     conjugation!("zabajerować", 1, "~a~ować", like Szydełkować;
     stem m: "~~owa- like trzymać";
     ),
@@ -1982,7 +1919,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     imperative_1: _, "~~i~jmy";
     adverbial_participle: _, derived;
     ),
-    // Podszczypać: 1 words (podszczypać). Like Złapać, except in 0 cells: .
+    // Podszczypać: 1 words (podszczypać). Like Złapać.
     conjugation!("podszczypać", 1, "~ypać", like Złapać;
     ),
     // Melanżować: 1 words (melanżować). Like Omiatać, except in 2 cells: past_1 vir, imperative_1 pl.
@@ -1998,7 +1935,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 182] = [
     conjugation!("rozlatywać", 1, "r~ywać", like Zaklepywać;
     participle: _, derived;
     ),
-    // Liniować: 1 words (liniować). Like Podszczypywać, except in 0 cells: .
+    // Liniować: 1 words (liniować). Like Podszczypywać.
     conjugation!("liniować", 1, "~wać", like Podszczypywać;
     ),
     // Drużbować: 1 words (drużbować). Like Podszczypywać, except in 1 cell: participle pass.

@@ -21,7 +21,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `adjective` (pos, comp, sup)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adjective_pos: $s0:tt;)?
      $(stem adjective: $s1:tt;)?
      $(adjective: $c0:tt, $c1:tt, $c2:tt;)?
@@ -42,6 +42,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -64,6 +65,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -136,10 +155,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
     declension!("open", 58664, "~";
     adjective: "~", "more ~", "most ~";
     ),
-    // Heavy: 1,984 words (craggy, country, early, smiley, baby, cherry).
-    declension!("heavy", 1984, "~ˇ";
-    stem adjective: "~e- like heavy";
-    adjective: "~ˇ", _, _;
+    // Heavy: 1,984 words (craggy, country, early, smiley, baby, cherry). Like Soft with `ˇ` after each pattern.
+    declension!("heavy", 1984, "~ˇ", like Soft with "ˇ";
     ),
     // Soft: 695 words (free, brown, august, minute, abject, able).
     declension!("soft", 695, "~";
@@ -187,7 +204,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
     stem adjective: "~pe- like soft";
     adjective: "~", _, _;
     ),
-    // Thin: 3 words (thin, tan, wan). Like First, except in 0 cells: .
+    // Thin: 3 words (thin, tan, wan). Like First.
     declension!("thin", 3, "~", like First;
     stem adjective: "~ne- like soft";
     ),

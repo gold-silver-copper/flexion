@@ -26,6 +26,7 @@ pub(super) static SLOTS: [Slot<'static>; 12] = [
             SUBORDINATE_SUBJ1_2_PL,
             SUBORDINATE_SUBJ1_3_SG,
             SUBORDINATE_SUBJ1_3_PL,
+            INFINITIVE,
             PARTICIPLE_PRES,
         ]),
     },
@@ -87,21 +88,21 @@ pub(super) static SLOTS: [Slot<'static>; 12] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("infinitive"),
-        cells: Cow::Borrowed(&[INFINITIVE, PARTICIPLE_PAST]),
-    },
-    Slot {
         name: Cow::Borrowed("zu_infinitive"),
         cells: Cow::Borrowed(&[ZU_INFINITIVE]),
+    },
+    Slot {
+        name: Cow::Borrowed("participle_past"),
+        cells: Cow::Borrowed(&[PARTICIPLE_PAST]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 77] = [
-    // verb_pres_1_sg like machen: 3,192 words.
+pub(super) static TABLES: [EndingTable<'static>; 76] = [
+    // verb_pres_1_sg like machen: 3,198 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3192,
+        words: 3198,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -111,6 +112,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~e\t~en\t",
             "~est\t~et\t",
             "~e\t~en\t",
+            "~en\t",
             "~end\t",
         )),
     },
@@ -127,6 +129,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~mache\t~machen\t",
             "~machest\t~machet\t",
             "~mache\t~machen\t",
+            "~machen\t",
             "~machend\t",
         )),
     },
@@ -143,6 +146,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~halte\t~halten\t",
             "~haltest\t~haltet\t",
             "~halte\t~halten\t",
+            "~halten\t",
             "~haltend\t",
         )),
     },
@@ -159,6 +163,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~gehe\t~gehen\t",
             "~gehest\t~gehet\t",
             "~gehe\t~gehen\t",
+            "~gehen\t",
             "~gehend\t",
         )),
     },
@@ -175,6 +180,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~nehme\t~nehmen\t",
             "~nehmest\t~nehmet\t",
             "~nehme\t~nehmen\t",
+            "~nehmen\t",
             "~nehmend\t",
         )),
     },
@@ -191,6 +197,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~lasse\t~lassen\t",
             "~lassest\t~lasset\t",
             "~lasse\t~lassen\t",
+            "~lassen\t",
             "~lassend\t",
         )),
     },
@@ -207,6 +214,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~tue\t~tuen\t",
             "~tuest\t~tuet\t",
             "~tue\t~tuen\t",
+            "~tun\t",
             "~tuend\t",
         )),
     },
@@ -223,6 +231,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~stelle\t~stellen\t",
             "~stellest\t~stellet\t",
             "~stelle\t~stellen\t",
+            "~stellen\t",
             "~stellend\t",
         )),
     },
@@ -239,6 +248,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~komme\t~kommen\t",
             "~kommest\t~kommet\t",
             "~komme\t~kommen\t",
+            "~kommen\t",
             "~kommend\t",
         )),
     },
@@ -255,6 +265,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~e\t~en\t",
             "~est\t~et\t",
             "~e\t~en\t",
+            "~n\t",
             "~nd\t",
         )),
     },
@@ -271,6 +282,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~bleibe\t~bleiben\t",
             "~bleibest\t~bleibet\t",
             "~bleibe\t~bleiben\t",
+            "~bleiben\t",
             "~bleibend\t",
         )),
     },
@@ -287,6 +299,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~habe\t~haben\t",
             "~habest\t~habet\t",
             "~habe\t~haben\t",
+            "~haben\t",
             "~habend\t",
         )),
     },
@@ -303,6 +316,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~liege\t~liegen\t",
             "~liegest\t~lieget\t",
             "~liege\t~liegen\t",
+            "~liegen\t",
             "~liegend\t",
         )),
     },
@@ -319,6 +333,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~fahre\t~fahren\t",
             "~fahrest\t~fahret\t",
             "~fahre\t~fahren\t",
+            "~fahren\t",
             "~fahrend\t",
         )),
     },
@@ -335,6 +350,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~könne\t~können\t",
             "~könnest\t~könnet\t",
             "~könne\t~können\t",
+            "~können\t",
             "~könnend\t",
         )),
     },
@@ -351,6 +367,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~gebe\t~geben\t",
             "~gebest\t~gebet\t",
             "~gebe\t~geben\t",
+            "~geben\t",
             "~gebend\t",
         )),
     },
@@ -367,6 +384,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~stehe\t~stehen\t",
             "~stehest\t~stehet\t",
             "~stehe\t~stehen\t",
+            "~stehen\t",
             "~stehend\t",
         )),
     },
@@ -383,6 +401,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~rede\t~reden\t",
             "~redest\t~redet\t",
             "~rede\t~reden\t",
+            "~reden\t",
             "~redend\t",
         )),
     },
@@ -399,7 +418,25 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~lege\t~legen\t",
             "~legest\t~leget\t",
             "~lege\t~legen\t",
+            "~legen\t",
             "~legend\t",
+        )),
+    },
+    // verb_pres_1_sg like vorfallen: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("vorfallen"),
+        words: 3,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "falle ~\t",
+            "~falle\t~fallen\t",
+            "~fallt\t",
+            "~fallen\t",
+            "~falle\t~fallen\t",
+            "~fallest\t~fallet\t",
+            "~falle\t~fallen\t",
+            "~fallen\t",
+            "~fallend\t",
         )),
     },
     // verb_pres_1_sg like sputen: 1 words.
@@ -415,6 +452,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "mich ~\tun% ~n\t",
             "dich ~st\teuch ~t\t",
             "sich ~\tsich ~n\t",
+            "sich ~n\t",
             "sich ~nd\t",
         )),
     },
@@ -431,6 +469,7 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "ein~e\tein~en\t",
             "ein~est\tein~et\t",
             "ein~e\tein~en\t",
+            "ein~en\t",
             "ein~end\t",
         )),
     },
@@ -447,13 +486,14 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "mich ~e\tuns ~en\t",
             "dich ~est\teuch ~et\t",
             "sich ~e\tsich ~en\t",
+            "sich ~en\t",
             "sich ~end\t",
         )),
     },
-    // verb_pl like machen: 4,357 words.
+    // verb_pl like machen: 4,367 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4357,
+        words: 4367,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
@@ -481,17 +521,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "stellen ~\t",
         )),
     },
-    // verb_pl like gaberln: 7 words.
-    EndingTable {
-        name: Cow::Borrowed("gaberln"),
-        words: 7,
-        slot: 1,
-        table: Cow::Borrowed(concat!("~n\t", "~n\t", "~en\t", "~en\t",)),
-    },
-    // pres_sg like machen: 4,292 words.
+    // pres_sg like machen: 4,302 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4292,
+        words: 4302,
         slot: 2,
         table: Cow::Borrowed(concat!("~st\t", "~t\t", "~st\t", "~t\t",)),
     },
@@ -521,17 +554,17 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "sich ~t\t",
         )),
     },
-    // verb_2_pl like machen: 3,199 words.
+    // verb_2_pl like machen: 3,205 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3199,
+        words: 3205,
         slot: 3,
         table: Cow::Borrowed(concat!("~t\t", "~et\t", "~t\t",)),
     },
-    // verb_2_pl like richten: 313 words.
+    // verb_2_pl like richten: 315 words.
     EndingTable {
         name: Cow::Borrowed("richten"),
-        words: 313,
+        words: 315,
         slot: 3,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
     },
@@ -563,10 +596,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
         slot: 3,
         table: Cow::Borrowed(concat!("~t\t", "~et\t", "\t",)),
     },
-    // verb_pret_sg like machen: 4,366 words.
+    // verb_pret_sg like machen: 4,376 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4366,
+        words: 4376,
         slot: 4,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
@@ -591,10 +624,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~mich\t", "~sich\t",)),
     },
-    // verb_pret_pl like machen: 4,114 words.
+    // verb_pret_pl like machen: 4,125 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4114,
+        words: 4125,
         slot: 5,
         table: Cow::Borrowed(concat!("~n\t", "~st\t", "~n\t", "~n\t", "~n\t",)),
     },
@@ -666,10 +699,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~n sich\t",
         )),
     },
-    // verb_pret_2_pl like machen: 4,133 words.
+    // verb_pret_2_pl like machen: 4,144 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4133,
+        words: 4144,
         slot: 6,
         table: Cow::Borrowed(concat!("~t\t", "~st\t~t\t",)),
     },
@@ -729,17 +762,17 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
         slot: 6,
         table: Cow::Borrowed(concat!("~t euch\t", "~st dich\t~t euch\t",)),
     },
-    // verb_subj1_sg like machen: 3,404 words.
+    // verb_subj1_sg like machen: 3,410 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3404,
+        words: 3410,
         slot: 7,
         table: Cow::Borrowed(concat!("~e\t", "~est\t", "~e\t", "~|~e\t",)),
     },
-    // verb_subj1_sg like sein: 33 words.
+    // verb_subj1_sg like sein: 35 words.
     EndingTable {
         name: Cow::Borrowed("sein"),
-        words: 33,
+        words: 35,
         slot: 7,
         table: Cow::Borrowed(concat!("~\t", "~st\t", "~\t", "~\t",)),
     },
@@ -774,10 +807,10 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "~ dich|~e dich\t",
         )),
     },
-    // subj2_sg like machen: 4,169 words.
+    // subj2_sg like machen: 4,180 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4169,
+        words: 4180,
         slot: 8,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t~n\t", "~st\t~t\t", "~\t~n\t",)),
     },
@@ -807,17 +840,17 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "sich ~\tsich ~n\t",
         )),
     },
-    // subordinate_pret like machen: 4,175 words.
+    // subordinate_pret like machen: 4,186 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4175,
+        words: 4186,
         slot: 9,
         table: Cow::Borrowed(concat!("~\t~n\t", "~st\t~t\t", "~\t~n\t",)),
     },
-    // subordinate_pret like schwingen: 213 words.
+    // subordinate_pret like schwingen: 215 words.
     EndingTable {
         name: Cow::Borrowed("schwingen"),
-        words: 213,
+        words: 215,
         slot: 9,
         table: Cow::Borrowed(concat!("~\t~en\t", "~st\t~t\t", "~\t~en\t",)),
     },
@@ -871,39 +904,32 @@ pub(super) static TABLES: [EndingTable<'static>; 77] = [
             "sich ~\tsich ~n\t",
         )),
     },
-    // infinitive like machen: 3,309 words.
+    // zu_infinitive like machen: 4,343 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3309,
+        words: 4343,
         slot: 10,
-        table: Cow::Borrowed(concat!("\t", "ge~\t",)),
-    },
-    // infinitive like kassieren: 1,195 words.
-    EndingTable {
-        name: Cow::Borrowed("kassieren"),
-        words: 1195,
-        slot: 10,
-        table: Cow::Borrowed(concat!("\t", "~\t",)),
-    },
-    // infinitive like einleuchten: 9 words.
-    EndingTable {
-        name: Cow::Borrowed("einleuchten"),
-        words: 9,
-        slot: 10,
-        table: Cow::Borrowed(concat!("~en\t", "ge~t\t",)),
-    },
-    // zu_infinitive like machen: 4,334 words.
-    EndingTable {
-        name: Cow::Borrowed("machen"),
-        words: 4334,
-        slot: 11,
         table: Cow::Borrowed("zu~\t"),
     },
     // zu_infinitive like versündigen: 2 words.
     EndingTable {
         name: Cow::Borrowed("versündigen"),
         words: 2,
-        slot: 11,
+        slot: 10,
         table: Cow::Borrowed("sich zu ~\t"),
+    },
+    // participle_past like machen: 3,320 words.
+    EndingTable {
+        name: Cow::Borrowed("machen"),
+        words: 3320,
+        slot: 11,
+        table: Cow::Borrowed("ge~\t"),
+    },
+    // participle_past like kassieren: 1,199 words.
+    EndingTable {
+        name: Cow::Borrowed("kassieren"),
+        words: 1199,
+        slot: 11,
+        table: Cow::Borrowed("~\t"),
     },
 ];

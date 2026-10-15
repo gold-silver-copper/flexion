@@ -54,7 +54,7 @@ use flexion::Paradigm;
 /// `participle_m` (sg, pl)
 /// `participle_f` (sg, pl)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem verb_pres_1_sg: $s0:tt;)?
      $(stem verb_pres_1_pl: $s1:tt;)?
      $(stem verb: $s2:tt;)?
@@ -186,6 +186,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s4),)? "\t",
                 $(flexion::cell!($s5),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -211,6 +212,24 @@ macro_rules! view {
     };
 }
 
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
@@ -230,7 +249,7 @@ pub enum Conjugation {
     Emputarse,
     /// Like `regodearse`: 358 words.
     Regodearse,
-    /// Like `conocer`: 332 words.
+    /// Like `conocer`: 330 words.
     Conocer,
     /// Like `curtir`: 328 words.
     Curtir,
@@ -252,7 +271,7 @@ pub enum Conjugation {
     Desviar,
     /// Like `instruir`: 105 words.
     Instruir,
-    /// Like `sonar`: 73 words.
+    /// Like `sonar`: 80 words.
     Sonar,
     /// Like `atravesarse`: 70 words.
     Atravesarse,
@@ -278,8 +297,6 @@ pub enum Conjugation {
     Rendir,
     /// Like `descocarse`: 31 words.
     Descocarse,
-    /// Like `regar`: 30 words.
-    Regar,
     /// Like `desvivirse`: 30 words.
     Desvivirse,
     /// Like `situarse`: 27 words.
@@ -288,6 +305,8 @@ pub enum Conjugation {
     Embazarse,
     /// Like `destoserse`: 27 words.
     Destoserse,
+    /// Like `regar`: 25 words.
+    Regar,
     /// Like `venir`: 24 words.
     Venir,
     /// Like `reducir`: 24 words.
@@ -328,8 +347,6 @@ pub enum Conjugation {
     Creer,
     /// Like `traer`: 16 words.
     Traer,
-    /// Like `moler`: 16 words.
-    Moler,
     /// Like `entecarse`: 16 words.
     Entecarse,
     /// Like `aborrascarse`: 14 words.
@@ -354,6 +371,8 @@ pub enum Conjugation {
     Armarse,
     /// Like `hacer`: 12 words.
     Hacer,
+    /// Like `moler`: 12 words.
+    Moler,
     /// Like `escabullirse`: 11 words.
     Escabullirse,
     /// Like `apanucarse`: 11 words.
@@ -408,10 +427,10 @@ pub enum Conjugation {
     Deshacerse,
     /// Like `relamerse`: 7 words.
     Relamerse,
+    /// Like `mover`: 6 words.
+    Mover,
     /// Like `seguir`: 6 words.
     Seguir,
-    /// Like `agorar`: 6 words.
-    Agorar,
     /// Like `apajuilar`: 6 words.
     Apajuilar,
     /// Like `recogerse`: 6 words.
@@ -452,6 +471,8 @@ pub enum Conjugation {
     Salir,
     /// Like `decir`: 5 words.
     Decir,
+    /// Like `agorar`: 4 words.
+    Agorar,
     /// Like `saber`: 4 words.
     Saber,
     /// Like `forzar`: 4 words.
@@ -540,7 +561,7 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 161] = [
+    pub const ALL: [Conjugation; 162] = [
         Conjugation::Echar,
         Conjugation::Realizar,
         Conjugation::Incautarse,
@@ -573,11 +594,11 @@ impl Conjugation {
         Conjugation::Fraguar,
         Conjugation::Rendir,
         Conjugation::Descocarse,
-        Conjugation::Regar,
         Conjugation::Desvivirse,
         Conjugation::Situarse,
         Conjugation::Embazarse,
         Conjugation::Destoserse,
+        Conjugation::Regar,
         Conjugation::Venir,
         Conjugation::Reducir,
         Conjugation::Escribir,
@@ -598,7 +619,6 @@ impl Conjugation {
         Conjugation::Desentenderse,
         Conjugation::Creer,
         Conjugation::Traer,
-        Conjugation::Moler,
         Conjugation::Entecarse,
         Conjugation::Aborrascarse,
         Conjugation::Revolver,
@@ -611,6 +631,7 @@ impl Conjugation {
         Conjugation::Ahilarse,
         Conjugation::Armarse,
         Conjugation::Hacer,
+        Conjugation::Moler,
         Conjugation::Escabullirse,
         Conjugation::Apanucarse,
         Conjugation::Suscribirse,
@@ -638,8 +659,8 @@ impl Conjugation {
         Conjugation::Jetiarse,
         Conjugation::Deshacerse,
         Conjugation::Relamerse,
+        Conjugation::Mover,
         Conjugation::Seguir,
-        Conjugation::Agorar,
         Conjugation::Apajuilar,
         Conjugation::Recogerse,
         Conjugation::Oír,
@@ -660,6 +681,7 @@ impl Conjugation {
         Conjugation::Dormir,
         Conjugation::Salir,
         Conjugation::Decir,
+        Conjugation::Agorar,
         Conjugation::Saber,
         Conjugation::Forzar,
         Conjugation::Adquirir,
@@ -719,7 +741,7 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 162] = [
     // Echar: 9,691 words (estar, amar, generar, crear, dar, abandonar).
     conjugation!("echar", 9691, "~ar";
     stem verb: "~- like echar";
@@ -848,8 +870,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~~ándose";
     participle_m: "~~ado", _;
     ),
-    // Conocer: 332 words (conocer, tender, placer, perder, encender, nacer). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
-    conjugation!("conocer", 332, "~~er", like Incautarse;
+    // Conocer: 330 words (conocer, tender, placer, perder, encender, nacer). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("conocer", 330, "~~er", like Incautarse;
     stem verb: "~~- like conocer";
     stem verb_fut_1_sg: "~~er- like echar";
     pres_1: "~z~o", "~~emos";
@@ -965,11 +987,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     infinitive: "~~ar";
     gerund: "~~ando";
     ),
-    // Darse: 115 words (acovacharse, abicharse, abrocharse, arreguincharse, reguincharse, emborracharse). Like Echar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("darse", 115, "~arse", like Echar;
+    // Darse: 115 words (acovacharse, abicharse, abrocharse, arreguincharse, reguincharse, emborracharse). Like Echar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("darse", 115, "~arse", like Echar with "", "se" after "enr";
+    pret_3: _, "~aron";
+    subj_1: "~e", _;
+    subj_3: _, "~en";
+    subj_impf_se_3: "~ase", _;
+    subj_fut_3: "~are", _;
     vos: _, _, "~áte";
-    imperative: "~ate", "~ese", "~émonos", "~aos", "~ense";
-    infinitive: "~arse";
+    imperative: "~ate", _, "~émonos", "~aos", _;
     gerund: "~ándose";
     ),
     // Desviar: 109 words (enviar, enfriar, ampliar, aviar, confiar, agriar). Like Curtir, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -1000,26 +1026,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     imperative: "~ye", "~ya", "~yamos", _, "~yan";
     gerund: "~yendo";
     ),
-    // Sonar: 73 words (sonar, soltar, volar, solar, acostar, acordar). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
-    conjugation!("sonar", 73, "~arˇ", like Echar;
-    stem verb_fut_1_sg: "~ar- like sonar";
-    pres_1: "~oˇ", "~amosˇ";
-    pres_2: "~asˇ", "~áisˇ";
-    impf_1: "~abaˇ", "~ábamosˇ";
-    pret_1: "~éˇ", "~amosˇ";
-    pret_3: "~óˇ", "~aronˇ";
-    subj_1: "~eˇ", "~emosˇ";
-    subj_2: "~esˇ", "~éisˇ";
-    subj_3: _, "~enˇ";
-    subj_impf_1: _, "~áramosˇ";
-    subj_impf_3: "~araˇ", _;
-    subj_impf_se_3: "~aseˇ", _;
-    subj_fut_3: "~areˇ", _;
-    vos: "~ásˇ", "~ésˇ", "~áˇ";
-    imperative: "~aˇ", "~eˇ", "~emosˇ", "~adˇ", "~enˇ";
-    infinitive: "~arˇ";
-    gerund: "~andoˇ";
-    participle_m: "~adoˇ", _;
+    // Sonar: 80 words (sonar, volar, solar, acostar, acordar, probar). Like Echar with `ˇ` after each pattern.
+    conjugation!("sonar", 80, "~arˇ", like Echar with "ˇ";
     ),
     // Atravesarse: 70 words (autogobernarse, quebrarse, abnegarse, sentarse, regarse, atravesarse). Like Quejarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("atravesarse", 70, "~e~arse", like Quejarse;
@@ -1105,18 +1113,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~giendo";
     participle_m: "~gido", _;
     ),
-    // Volar: 41 words (encontrar, demostrar, mostrar, poblar, rogar, rodar). Like Desencontrarse, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    // Volar: 41 words (soltar, encontrar, demostrar, soñar, mostrar, colgar). Like Desencontrarse, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
     conjugation!("volar", 41, "~o~ar", like Desencontrarse;
     vos: _, _, "~o~á";
     imperative: "~ue~a", "~ue~e", "~o~emos", "~o~ad", "~ue~en";
     infinitive: "~o~ar";
     gerund: "~o~ando";
     ),
-    // Resfriarse: 40 words (resfriarse, guiarse, confiarse, demasiarse, enfriarse, aliarse). Like Desviar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("resfriarse", 40, "~iarse", like Desviar;
+    // Resfriarse: 40 words (resfriarse, guiarse, confiarse, demasiarse, enfriarse, aliarse). Like Desviar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("resfriarse", 40, "~iarse", like Desviar with "", "se" after "enr";
+    pret_3: _, "~iaron";
+    subj_1: "~íe", _;
+    subj_3: _, "~íen";
+    subj_impf_se_3: "~iase", _;
+    subj_fut_3: "~iare", _;
     vos: _, _, "~iate";
-    imperative: "~íate", "~íese", "~iémonos", "~iaos", "~íense";
-    infinitive: "~iarse";
+    imperative: "~íate", _, "~iémonos", "~iaos", _;
     gerund: "~iándose";
     ),
     // Poner: 37 words (poner, yuxtaponer, imponer, suponer, exponer, posponer). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -1171,15 +1183,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~ocándose";
     participle_m: "~ocado", _;
     ),
-    // Regar: 30 words (negar, colgar, renegar, fregar, regar, segar). Like Sonar, except in 10 cells: pret_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
-    conjugation!("regar", 30, "~arˇ", like Sonar;
-    pret_1: "~uéˇ", _;
-    subj_1: "~ueˇ", "~uemosˇ";
-    subj_2: "~uesˇ", "~uéisˇ";
-    subj_3: _, "~uenˇ";
-    vos: _, "~uésˇ", _;
-    imperative: _, "~ueˇ", "~uemosˇ", _, "~uenˇ";
-    ),
     // Desvivirse: 30 words (desvivirse, autodefinirse, autopercibirse, inhibirse, extinguirse, distinguirse). Like Rendir, except in 14 cells: pres_1 pl, pres_2 pl, impf_1 sg, impf_1 pl, vos ind, vos imp, ….
     conjugation!("desvivirse", 30, "~i~irse", like Rendir;
     stem verb: "~i~- like conocer";
@@ -1193,11 +1196,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~i~iéndose";
     participle_m: "~i~ido", _;
     ),
-    // Situarse: 27 words (autoevaluarse, adecuarse, atenuarse, extenuarse, situarse, insinuarse). Like Situar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("situarse", 27, "~uarse", like Situar;
+    // Situarse: 27 words (autoevaluarse, adecuarse, atenuarse, extenuarse, situarse, insinuarse). Like Situar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("situarse", 27, "~uarse", like Situar with "", "se" after "enr";
+    pret_3: _, "~uaron";
+    subj_1: "~úe", _;
+    subj_3: _, "~úen";
+    subj_impf_se_3: "~uase", _;
+    subj_fut_3: "~uare", _;
     vos: _, _, "~uate";
-    imperative: "~úate", "~úese", "~uémonos", "~uaos", "~úense";
-    infinitive: "~uarse";
+    imperative: "~úate", _, "~uémonos", "~uaos", _;
     gerund: "~uándose";
     ),
     // Embazarse: 27 words (embazarse, abrazarse, acarrazarse, amostazarse, desplazarse, tarazarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -1231,6 +1238,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     infinitive: "~o~erse";
     gerund: "~o~iéndose";
     participle_m: "~o~ido", _;
+    ),
+    // Regar: 25 words (negar, renegar, fregar, regar, segar, sosegar). Like Echar with `ˇ` after each pattern, except in 10 cells: pret_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
+    conjugation!("regar", 25, "~arˇ", like Echar with "ˇ";
+    pret_1: "~uéˇ", _;
+    subj_1: "~ueˇ", "~uemosˇ";
+    subj_2: "~uesˇ", "~uéisˇ";
+    subj_3: _, "~uenˇ";
+    vos: _, "~uésˇ", _;
+    imperative: _, "~ueˇ", "~uemosˇ", _, "~uenˇ";
     ),
     // Venir: 24 words (devenir, venir, intervenir, avenir, revenir, convenir). Like Sentir, except in 11 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
     conjugation!("venir", 24, "~e~ir", like Sentir;
@@ -1309,11 +1325,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     imperative: _, _, _, "~ged", _;
     infinitive: "~ger";
     ),
-    // Descomponerse: 22 words (autoimponerse, ponerse, imponerse, disponerse, exponerse, reponerse). Like Poner, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("descomponerse", 22, "~onerse", like Poner;
+    // Descomponerse: 22 words (autoimponerse, ponerse, imponerse, disponerse, exponerse, reponerse). Like Poner with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("descomponerse", 22, "~onerse", like Poner with "", "se" after "r";
     vos: _, _, "~onete";
     imperative: "~onte", "~óngase", "~ongámonos", "~oneos", "~ónganse";
-    infinitive: "~onerse";
     gerund: "~oniéndose";
     ),
     // Ahijar: 22 words (prohijar, descafeinar, aislar, ahincar, amohinar, cabrahigar). Like Rilarse, except in 13 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
@@ -1413,11 +1428,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~uzándose";
     participle_m: "~uzado", _;
     ),
-    // Resentirse: 19 words (resentirse, arrepentirse, repentirse, divertirse, sentirse, referirse). Like Sentir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("resentirse", 19, "~e~irse", like Sentir;
+    // Resentirse: 19 words (resentirse, arrepentirse, repentirse, divertirse, sentirse, referirse). Like Sentir with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("resentirse", 19, "~e~irse", like Sentir with "", "se" after "r";
     vos: _, _, "~e~ite";
     imperative: "~ié~ete", "~ié~ase", "~i~ámonos", "~e~íos", "~ié~anse";
-    infinitive: "~e~irse";
     gerund: "~i~iéndose";
     ),
     // Fruncir: 18 words (zurcir, uncir, surcir, esparcir, resarcir, fruncir). Like Reducir, except in 10 cells: pres_1 sg, subj_1 sg, subj_1 pl, subj_2 sg, subj_2 pl, subj_3 pl, ….
@@ -1470,27 +1484,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     subj_3: _, "~igan";
     vos: _, "~igás", _;
     imperative: _, "~iga", "~igamos", _, "~igan";
-    ),
-    // Moler: 16 words (llover, doler, morder, promover, soler, mover). Like Sonar, except in 29 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, pret_1 sg, ….
-    conjugation!("moler", 16, "~erˇ", like Sonar;
-    stem verb_fut_1_sg: "~er- like sonar";
-    pres_1: _, "~emosˇ";
-    pres_2: "~esˇ", "~éisˇ";
-    impf_1: "~íaˇ", "~íamosˇ";
-    pret_1: "~íˇ", "~imosˇ";
-    pret_3: "~ióˇ", "~ieronˇ";
-    subj_1: "~aˇ", "~amosˇ";
-    subj_2: "~asˇ", "~áisˇ";
-    subj_3: _, "~anˇ";
-    subj_impf_1: _, "~iéramosˇ";
-    subj_impf_3: "~ieraˇ", _;
-    subj_impf_se_3: "~ieseˇ", _;
-    subj_fut_3: "~iereˇ", _;
-    vos: "~ésˇ", "~ásˇ", "~éˇ";
-    imperative: "~eˇ", "~aˇ", "~amosˇ", "~edˇ", "~anˇ";
-    infinitive: "~erˇ";
-    gerund: "~iendoˇ";
-    participle_m: "~idoˇ", _;
     ),
     // Entecarse: 16 words (entecarse, enchuecarse, obcecarse, intersecarse, ahuecarse, deprecarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("entecarse", 16, "~~carse", like Incautarse;
@@ -1630,13 +1623,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     infinitive: "~izar";
     gerund: "~izando";
     ),
-    // Ahilarse: 12 words (autoaislarse, aislarse, ahitarse, ahilarse, airarse, desaislarse). Like Rilarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
-    conjugation!("ahilarse", 12, "~i~arse", like Rilarse;
-    pres_1: "~í~o", _;
-    pres_2: "~í~as", _;
+    // Ahilarse: 12 words (autoaislarse, aislarse, ahitarse, ahilarse, airarse, desaislarse). Like Ahijar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("ahilarse", 12, "~i~arse", like Ahijar with "", "se" after "enr";
+    pret_3: _, "~i~aron";
     subj_1: "~í~e", _;
-    subj_2: "~í~es", _;
     subj_3: _, "~í~en";
+    subj_impf_se_3: "~i~ase", _;
+    subj_fut_3: "~i~are", _;
+    vos: _, _, "~i~ate";
+    imperative: "~í~ate", _, "~i~émonos", "~i~aos", _;
+    gerund: "~i~ándose";
     ),
     // Armarse: 12 words (abarse, armarse, asmarse, alarse, andarse, asparse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("armarse", 12, "a~arse", like Echar;
@@ -1679,6 +1675,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     infinitive: "~acer";
     gerund: "~aciendo";
     participle_m: "~echo", _;
+    ),
+    // Moler: 12 words (llover, doler, poder, morder, soler, moler). Like Meter with `ˇ` after each pattern.
+    conjugation!("moler", 12, "~erˇ", like Meter with "ˇ";
     ),
     // Escabullirse: 11 words (escabullirse, zambullirse, rebullirse, tullirse, escullirse, descabullirse). Like Musirse, except in 1 cell: gerund.
     conjugation!("escabullirse", 11, "~u~irse", like Musirse;
@@ -1796,18 +1795,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     infinitive: "~ocar";
     gerund: "~ocando";
     ),
-    // Resolverse: 9 words (autodisolverse, resolverse, volverse, devolverse, revolverse, desenvolverse). Like Revolver, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("resolverse", 9, "~o~verse", like Revolver;
+    // Resolverse: 9 words (autodisolverse, resolverse, volverse, devolverse, revolverse, desenvolverse). Like Revolver with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("resolverse", 9, "~o~verse", like Revolver with "", "se" after "r";
     vos: _, _, "~o~vete";
     imperative: "~ué~vete", "~ué~vase", "~o~vámonos", "~o~veos", "~ué~vanse";
-    infinitive: "~o~verse";
     gerund: "~o~viéndose";
     ),
-    // Detenerse: 9 words (abstenerse, contenerse, sostenerse, mantenerse, detenerse, entretenerse). Like Tener, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("detenerse", 9, "~enerse", like Tener;
+    // Detenerse: 9 words (abstenerse, contenerse, sostenerse, mantenerse, detenerse, entretenerse). Like Tener with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("detenerse", 9, "~enerse", like Tener with "", "se" after "r";
     vos: _, _, "~enete";
     imperative: "~ente", "~éngase", "~engámonos", "~eneos", "~énganse";
-    infinitive: "~enerse";
     gerund: "~eniéndose";
     ),
     // Santiguarse: 9 words (achiguarse, apaciguarse, santiguarse, enmaniguarse, amortiguarse, averiguarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -1948,19 +1945,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     stem verb: "~- like escabullirse";
     gerund: "~endo";
     ),
-    // Ahumarse: 7 words (ahusarse, ahumarse, aunarse, rehusarse, rehurtarse, sahumarse). Like Emputarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
-    conjugation!("ahumarse", 7, "~u~arse", like Emputarse;
-    pres_1: "~ú~o", _;
-    pres_2: "~ú~as", _;
+    // Ahumarse: 7 words (ahusarse, ahumarse, aunarse, rehusarse, rehurtarse, sahumarse). Like Aunar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("ahumarse", 7, "~u~arse", like Aunar with "", "se" after "enr";
+    pret_3: _, "~u~aron";
     subj_1: "~ú~e", _;
-    subj_2: "~ú~es", _;
     subj_3: _, "~ú~en";
+    subj_impf_se_3: "~u~ase", _;
+    subj_fut_3: "~u~are", _;
+    vos: _, _, "~u~ate";
+    imperative: "~ú~ate", _, "~u~émonos", "~u~aos", _;
+    gerund: "~u~ándose";
     ),
-    // Venirse: 7 words (venirse, desconvenirse, avenirse, desavenirse, convenirse, prevenirse). Like Venir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("venirse", 7, "~e~irse", like Venir;
+    // Venirse: 7 words (venirse, desconvenirse, avenirse, desavenirse, convenirse, prevenirse). Like Venir with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("venirse", 7, "~e~irse", like Venir with "", "se" after "r";
     vos: _, _, "~e~ite";
     imperative: "~e~te", "~é~gase", "~e~gámonos", "~e~íos", "~é~ganse";
-    infinitive: "~e~irse";
     gerund: "~i~iéndose";
     ),
     // Aterirse: 7 words (aterirse, empedernirse, arrecirse, hespirse, denegrirse, sumergirse). Like Entremeterse, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
@@ -1972,20 +1971,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     imperative: _, _, _, "~e~íos", _;
     infinitive: "~e~irse";
     ),
-    // Jetiarse: 7 words (mamoniarse, patrasiarse, friquiarse, paniquiarse, jetiarse, penquiarse). Like Resfriarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
-    conjugation!("jetiarse", 7, "~iarse", like Resfriarse;
-    pres_1: "~eo", _;
-    pres_2: "~eas", _;
-    subj_1: "~ee", _;
-    subj_2: "~ees", _;
-    subj_3: _, "~een";
-    imperative: "~éate", "~éese", _, _, "~éense";
+    // Jetiarse: 7 words (mamoniarse, patrasiarse, friquiarse, paniquiarse, jetiarse, penquiarse). Like Meliar with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("jetiarse", 7, "~iarse", like Meliar with "", "se" after "r";
+    vos: _, _, "~iate";
+    imperative: "~éate", "~éese", "~iémonos", "~iaos", "~éense";
+    gerund: "~iándose";
     ),
-    // Deshacerse: 7 words (autosatisfacerse, hacerse, rehacerse, desfacerse, deshacerse, contrahacerse). Like Hacer, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("deshacerse", 7, "~acerse", like Hacer;
+    // Deshacerse: 7 words (autosatisfacerse, hacerse, rehacerse, desfacerse, deshacerse, contrahacerse). Like Hacer with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("deshacerse", 7, "~acerse", like Hacer with "", "se" after "r";
     vos: _, _, "~acete";
     imperative: "~azte", "~ágase", "~agámonos", "~aceos", "~áganse";
-    infinitive: "~acerse";
     gerund: "~aciéndose";
     ),
     // Relamerse: 7 words (valerse, prevalerse, relamerse, lamerse, precaverse, barrerse). Like Abatirse, except in 6 cells: pres_1 pl, pres_2 pl, vos ind, vos imp, imperative vosotros, infinitive.
@@ -1996,6 +1991,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     vos: "~a~és", _, "~a~ete";
     imperative: _, _, _, "~a~eos", _;
     infinitive: "~a~erse";
+    ),
+    // Mover: 6 words (promover, mover, remover, conmover, amover, commover). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
+    conjugation!("mover", 6, "~over", like Echar;
+    stem verb: "~ov- like conocer";
+    stem verb_fut_1_sg: "~over- like echar";
+    pres_1: "~uevo", "~ovemos";
+    pres_2: "~ueves", "~ovéis";
+    impf_1: "~ovía", "~ovíamos";
+    subj_1: "~ueva", "~ovamos";
+    subj_2: "~uevas", "~ováis";
+    subj_3: _, "~uevan";
+    vos: "~ovés", "~ovás", "~ové";
+    imperative: "~ueve", "~ueva", "~ovamos", "~oved", "~uevan";
+    infinitive: "~over";
+    gerund: "~oviendo";
+    participle_m: "~ovido", _;
     ),
     // Seguir: 6 words (proseguir, perseguir, seguir, conseguir, subseguir, reseguir). Like Traer, except in 20 cells: pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, pret_1 sg, ….
     conjugation!("seguir", 6, "~eguir", like Traer;
@@ -2015,16 +2026,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~iguiendo";
     participle_m: "~eguido", _;
     ),
-    // Agorar: 6 words (degollar, agorar, regoldar, engorar, cogolmar, gorar). Like Volar, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
-    conjugation!("agorar", 6, "~o~ar", like Volar;
-    pres_1: "~üe~o", _;
-    pres_2: "~üe~as", _;
-    subj_1: "~üe~e", _;
-    subj_2: "~üe~es", _;
-    subj_3: _, "~üe~en";
-    imperative: "~üe~a", "~üe~e", _, _, "~üe~en";
-    ),
-    // Apajuilar: 6 words (acuclillar, encuclillar, apajuilar, apulismar, aculillar, encuitar). Like Rilarse, except in 0 cells: .
+    // Apajuilar: 6 words (acuclillar, encuclillar, apajuilar, apulismar, aculillar, encuitar). Like Rilarse.
     conjugation!("apajuilar", 6, "~i~ar", like Rilarse;
     ),
     // Recogerse: 6 words (encogerse, desencogerse, sobrecogerse, recogerse, cogerse, acogerse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -2098,7 +2100,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     vos: _, "~~ás", _;
     imperative: "~i~e", "~i~a", "~~amos", _, "~i~an";
     ),
-    // Caer: 5 words (caer, raer, recaer, decaer, descaer). Like Traer, except in 0 cells: .
+    // Caer: 5 words (caer, raer, recaer, decaer, descaer). Like Traer.
     conjugation!("caer", 5, "~er", like Traer;
     stem verb: "~- like creer";
     ),
@@ -2178,21 +2180,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     vos: _, "~oz~ás", _;
     imperative: _, "~óz~ase", "~oz~ámonos", _, "~óz~anse";
     ),
-    // Teñirse: 5 words (teñirse, ceñirse, desceñirse, desteñirse, estreñirse). Like Ceñir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("teñirse", 5, "~eñirse", like Ceñir;
+    // Teñirse: 5 words (teñirse, ceñirse, desceñirse, desteñirse, estreñirse). Like Ceñir with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("teñirse", 5, "~eñirse", like Ceñir with "", "se" after "r";
     vos: _, _, "~eñite";
     imperative: "~íñete", "~íñase", "~iñámonos", "~eñíos", "~íñanse";
-    infinitive: "~eñirse";
     gerund: "~iñéndose";
     ),
-    // Trocarse: 5 words (aclocarse, trocarse, enclocarse, enllocarse, trastrocarse). Like Descocarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
-    conjugation!("trocarse", 5, "~ocarse", like Descocarse;
-    pres_1: "~ueco", _;
-    pres_2: "~uecas", _;
-    subj_1: "~ueque", _;
-    subj_2: "~ueques", _;
-    subj_3: _, "~uequen";
-    imperative: "~uécate", "~uéquese", _, _, "~uéquense";
+    // Trocarse: 5 words (aclocarse, trocarse, enclocarse, enllocarse, trastrocarse). Like Trocar with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("trocarse", 5, "~ocarse", like Trocar with "", "se" after "r";
+    vos: _, _, "~ocate";
+    imperative: "~uécate", "~uéquese", "~oquémonos", "~ocaos", "~uéquense";
+    gerund: "~ocándose";
     ),
     // Revestirse: 5 words (desvestirse, revestirse, sobrevestirse, travestirse, vestirse). Like Incautarse, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("revestirse", 5, "~e~tirse", like Incautarse;
@@ -2215,11 +2213,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~i~tiéndose";
     participle_m: "~e~tido", _;
     ),
-    // Freírse: 5 words (reírse, desleírse, engreírse, sonreírse, freírse). Like Refreír, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("freírse", 5, "~eírse", like Refreír;
+    // Freírse: 5 words (reírse, desleírse, engreírse, sonreírse, freírse). Like Refreír with `` after each pattern (`se` after a, n, r), except in 11 cells: impf_1 sg, pret_3 pl, cond_3 sg, subj_1 sg, subj_3 pl, subj_impf_3 sg, ….
+    conjugation!("freírse", 5, "~eírse", like Refreír with "", "se" after "anr";
+    impf_1: "~eía", _;
+    pret_3: _, "~ieron";
+    cond_3: "~eiría", _;
+    subj_1: "~ía", _;
+    subj_3: _, "~ían";
+    subj_impf_3: "~iera", _;
     vos: _, _, "~eíte";
-    imperative: "~íete", "~íase", "~iámonos", "~eíos", "~íanse";
-    infinitive: "~eírse";
+    imperative: "~íete", _, "~iámonos", "~eíos", _;
     gerund: "~iéndose";
     ),
     // Dormir: 5 words (dormir, adormir, maldormir, podrir, repodrir). Like Entredormirse, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
@@ -2248,6 +2251,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     cond_1: derived, derived;
     cond_2: derived, derived;
     cond_3: _, derived;
+    ),
+    // Agorar: 4 words (agorar, engorar, cogolmar, gorar). Like Volar, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
+    conjugation!("agorar", 4, "~o~ar", like Volar;
+    pres_1: "~üe~o", _;
+    pres_2: "~üe~as", _;
+    subj_1: "~üe~e", _;
+    subj_2: "~üe~es", _;
+    subj_3: _, "~üe~en";
+    imperative: "~üe~a", "~üe~e", _, _, "~üe~en";
     ),
     // Saber: 4 words (saber, caber, haber, resaber). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("saber", 4, "~aber", like Echar;
@@ -2336,18 +2348,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~o~ciendo";
     participle_m: "~o~cido", _;
     ),
-    // Desforzarse: 4 words (desforzarse, forzarse, esforzarse, reforzarse). Like Forzar, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("desforzarse", 4, "~o~zarse", like Forzar;
+    // Desforzarse: 4 words (desforzarse, forzarse, esforzarse, reforzarse). Like Forzar with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("desforzarse", 4, "~o~zarse", like Forzar with "", "se" after "r";
     vos: _, _, "~o~zate";
     imperative: "~ué~zate", "~ué~cese", "~o~cémonos", "~o~zaos", "~ué~cense";
-    infinitive: "~o~zarse";
     gerund: "~o~zándose";
     ),
-    // Regirse: 4 words (autocorregirse, autoelegirse, corregirse, regirse). Like Regir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("regirse", 4, "~egirse", like Regir;
+    // Regirse: 4 words (autocorregirse, autoelegirse, corregirse, regirse). Like Regir with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("regirse", 4, "~egirse", like Regir with "", "se" after "r";
     vos: _, _, "~egite";
     imperative: "~ígete", "~íjase", "~ijámonos", "~egíos", "~íjanse";
-    infinitive: "~egirse";
     gerund: "~igiéndose";
     ),
     // Fraguarse: 4 words (paniaguarse, sobreaguarse, desaguarse, fraguarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -2366,36 +2376,29 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~a~uándose";
     participle_m: "~a~uado", _;
     ),
-    // Moverse: 4 words (lloverse, conmoverse, removerse, moverse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
-    conjugation!("moverse", 4, "~overse", like Echar;
-    stem verb: "~ov- like conocer";
-    stem verb_fut_1_sg: "~over- like echar";
-    pres_1: "~uevo", "~ovemos";
-    pres_2: "~ueves", "~ovéis";
-    impf_1: "~ovía", "~ovíamos";
-    subj_1: "~ueva", "~ovamos";
-    subj_2: "~uevas", "~ováis";
-    subj_3: _, "~uevan";
-    vos: "~ovés", "~ovás", "~ovete";
+    // Moverse: 4 words (lloverse, conmoverse, removerse, moverse). Like Mover with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("moverse", 4, "~overse", like Mover with "", "se" after "r";
+    vos: _, _, "~ovete";
     imperative: "~uévete", "~uévase", "~ovámonos", "~oveos", "~uévanse";
-    infinitive: "~overse";
     gerund: "~oviéndose";
-    participle_m: "~ovido", _;
     ),
-    // Verse: 4 words (reverse, verse, arderse, entreverse). Like Ver, except in 9 cells: vos ind, vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, ….
-    conjugation!("verse", 4, "~erse", like Ver;
+    // Verse: 4 words (reverse, verse, arderse, entreverse). Like Ver with `` after each pattern (`se` after r), except in 8 cells: vos ind, vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, ….
+    conjugation!("verse", 4, "~erse", like Ver with "", "se" after "r";
     vos: "~és", _, "~ete";
     imperative: "~ete", "~éase", "~eámonos", "~eos", "~éanse";
-    infinitive: "~erse";
     gerund: "~iéndose";
     ),
-    // Criarse: 4 words (criarse, liarse, triarse, fiarse). Like Resfriarse, except in 6 cells: pres_2 pl, pret_1 sg, pret_3 sg, subj_2 pl, vos ind, vos subj.
-    conjugation!("criarse", 4, "~iarse", like Resfriarse;
-    pres_2: _, "~iais";
+    // Criarse: 4 words (criarse, liarse, triarse, fiarse). Like Guiar with `` after each pattern (`se` after e, n, r), except in 11 cells: pret_1 sg, pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, ….
+    conjugation!("criarse", 4, "~iarse", like Guiar with "", "se" after "enr";
     pret_1: "~ie", _;
-    pret_3: "~io", _;
-    subj_2: _, "~ieis";
-    vos: "~ias", "~ies", _;
+    pret_3: _, "~iaron";
+    subj_1: "~íe", _;
+    subj_3: _, "~íen";
+    subj_impf_se_3: "~iase", _;
+    subj_fut_3: "~iare", _;
+    vos: _, _, "~iate";
+    imperative: "~íate", _, "~iémonos", "~iaos", _;
+    gerund: "~iándose";
     ),
     // Punzarse: 4 words (anarquizarse, barroquizarse, endulzarse, punzarse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("punzarse", 4, "~u~zarse", like Incautarse;
@@ -2422,40 +2425,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     vos: _, "~uz~ás", _;
     imperative: _, "~úz~ase", "~uz~ámonos", _, "~úz~anse";
     ),
-    // Torcerse: 4 words (contorcerse, retorcerse, torcerse, destorcerse). Like Torcer, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("torcerse", 4, "~o~cerse", like Torcer;
+    // Torcerse: 4 words (contorcerse, retorcerse, torcerse, destorcerse). Like Torcer with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("torcerse", 4, "~o~cerse", like Torcer with "", "se" after "r";
     vos: _, _, "~o~cete";
     imperative: "~ué~cete", "~ué~zase", "~o~zámonos", "~o~ceos", "~ué~zanse";
-    infinitive: "~o~cerse";
     gerund: "~o~ciéndose";
     ),
-    // Servirse: 4 words (rendirse, rehenchirse, henchirse, servirse). Like Rendir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("servirse", 4, "~e~irse", like Rendir;
+    // Servirse: 4 words (rendirse, rehenchirse, henchirse, servirse). Like Rendir with `` after each pattern (`se` after a, n, r), except in 11 cells: impf_1 sg, pret_3 pl, cond_3 sg, subj_1 sg, subj_3 pl, subj_impf_3 sg, ….
+    conjugation!("servirse", 4, "~e~irse", like Rendir with "", "se" after "anr";
+    impf_1: "~e~ía", _;
+    pret_3: _, "~i~ieron";
+    cond_3: "~e~iría", _;
+    subj_1: "~i~a", _;
+    subj_3: _, "~i~an";
+    subj_impf_3: "~i~iera", _;
     vos: _, _, "~e~íte";
-    imperative: "~i~ete", "~i~ase", "~i~ámonos", "~e~íos", "~i~anse";
-    infinitive: "~e~irse";
+    imperative: "~i~ete", _, "~i~ámonos", "~e~íos", _;
     gerund: "~i~iéndose";
     ),
-    // Comenzar: 4 words (comenzar, enlenzar, recomenzar, encomenzar). Like Echar, except in 30 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
-    conjugation!("comenzar", 4, "~zarˇ", like Echar;
-    stem verb_fut_1_sg: "~zar- like sonar";
-    pres_1: "~zoˇ", "~zamosˇ";
-    pres_2: "~zasˇ", "~záisˇ";
-    impf_1: "~zabaˇ", "~zábamosˇ";
-    pret_1: "~céˇ", "~zamosˇ";
-    pret_3: "~zóˇ", "~zaronˇ";
-    subj_1: "~ceˇ", "~cemosˇ";
-    subj_2: "~cesˇ", "~céisˇ";
-    subj_3: _, "~cenˇ";
-    subj_impf_1: _, "~záramosˇ";
-    subj_impf_3: "~zaraˇ", _;
-    subj_impf_se_3: "~zaseˇ", _;
-    subj_fut_3: "~zareˇ", _;
-    vos: "~zásˇ", "~césˇ", "~záˇ";
-    imperative: "~zaˇ", "~ceˇ", "~cemosˇ", "~zadˇ", "~cenˇ";
-    infinitive: "~zarˇ";
-    gerund: "~zandoˇ";
-    participle_m: "~zadoˇ", _;
+    // Comenzar: 4 words (comenzar, enlenzar, recomenzar, encomenzar). Like Realizar with `ˇ` after each pattern.
+    conjugation!("comenzar", 4, "~zarˇ", like Realizar with "ˇ";
     ),
     // Vencerse: 4 words (remecerse, convencerse, vencerse, desconvencerse). Like Incautarse, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("vencerse", 4, "~e~cerse", like Incautarse;
@@ -2531,33 +2520,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     imperative: "~e", _, _, "~ed", _;
     infinitive: "~er";
     ),
-    // Apucuyar: 3 words (intrusar, apucuyar, empuyar). Like Emputarse, except in 0 cells: .
+    // Apucuyar: 3 words (intrusar, apucuyar, empuyar). Like Emputarse.
     conjugation!("apucuyar", 3, "~u~ar", like Emputarse;
     ),
-    // Antojar: 3 words (antojar, hopar, ñangotar). Like Acomodarse, except in 0 cells: .
+    // Antojar: 3 words (antojar, hopar, ñangotar). Like Acomodarse.
     conjugation!("antojar", 3, "~o~ar", like Acomodarse;
     ),
-    // Enraizarse: 3 words (enraizarse, europeizarse, corporeizarse). Like Fosilizarse, except in 5 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl.
-    conjugation!("enraizarse", 3, "~izarse", like Fosilizarse;
-    pres_1: "~ízo", _;
-    pres_2: "~ízas", _;
+    // Enraizarse: 3 words (enraizarse, europeizarse, corporeizarse). Like Enraizar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
+    conjugation!("enraizarse", 3, "~izarse", like Enraizar with "", "se" after "enr";
+    pret_3: _, "~izaron";
     subj_1: "~íce", _;
-    subj_2: "~íces", _;
     subj_3: _, "~ícen";
+    subj_impf_se_3: "~izase", _;
+    subj_fut_3: "~izare", _;
+    vos: _, _, "~izate";
+    imperative: "~ízate", _, "~icémonos", "~izaos", _;
+    gerund: "~izándose";
     ),
-    // Escocerse: 3 words (escocerse, recocerse, cocerse). Like Cocer, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("escocerse", 3, "~ocerse", like Cocer;
-    stem participle: "~oc- like escocerse";
+    // Escocerse: 3 words (escocerse, recocerse, cocerse). Like Cocer with `` after each pattern (`se` after r), except in 11 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("escocerse", 3, "~ocerse", like Cocer with "", "se" after "r";
     vos: _, _, "~ocete";
     imperative: "~uécete", "~uézase", "~ozámonos", "~oceos", "~uézanse";
-    infinitive: "~ocerse";
     gerund: "~ociéndose";
+    participle_m: "~ocido|~ocho", "~ocidos|~ochos";
+    participle_f: "~ocida|~ocha", "~ocidas|~ochas";
     ),
-    // Seguirse: 3 words (conseguirse, subseguirse, seguirse). Like Seguir, except in 8 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("seguirse", 3, "~eguirse", like Seguir;
+    // Seguirse: 3 words (conseguirse, subseguirse, seguirse). Like Seguir with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("seguirse", 3, "~eguirse", like Seguir with "", "se" after "r";
     vos: _, _, "~eguite";
     imperative: "~íguete", "~ígase", "~igámonos", "~eguíos", "~íganse";
-    infinitive: "~eguirse";
     gerund: "~iguiéndose";
     ),
     // Azoarse: 3 words (abarloarse, azoarse, barloarse). Like Echar, except in 22 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
@@ -2662,14 +2653,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 161] = [
     gerund: "~i~giéndose";
     participle_m: "~i~gido", _;
     ),
-    // Azonzarse: 3 words (azonzarse, desgonzarse, tronzarse). Like Desforzarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
-    conjugation!("azonzarse", 3, "~o~zarse", like Desforzarse;
+    // Azonzarse: 3 words (azonzarse, desgonzarse, tronzarse). Like Forzar with `` after each pattern (`se` after r), except in 12 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, vos imp, ….
+    conjugation!("azonzarse", 3, "~o~zarse", like Forzar with "", "se" after "r";
     pres_1: "~o~zo", _;
     pres_2: "~o~zas", _;
     subj_1: "~o~ce", _;
     subj_2: "~o~ces", _;
     subj_3: _, "~o~cen";
-    imperative: "~ó~zate", "~ó~cese", _, _, "~ó~cense";
+    vos: _, _, "~o~zate";
+    imperative: "~ó~zate", "~ó~cese", "~o~cémonos", "~o~zaos", "~ó~cense";
+    gerund: "~o~zándose";
     ),
     // Asirse: 2 words (abrirse, asirse). Like Echar, except in 32 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, impf_1 sg, impf_1 pl, ….
     conjugation!("asirse", 2, "a~irse", like Echar;

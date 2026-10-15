@@ -19,7 +19,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem noun_sg: $s0:tt;)?
      $(stem noun_pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
@@ -39,6 +39,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -61,6 +62,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -176,7 +195,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     declension!("lastón", 4740, "~ó~";
     noun: "~ó~", "~o~es";
     ),
-    // Análisis: 1,707 words (fa, gnosis, ime, menos, sms, paraguas). Like Medio, except in 0 cells: .
+    // Análisis: 1,707 words (fa, gnosis, ime, menos, sms, paraguas). Like Medio.
     declension!("análisis", 1707, "~", like Medio as PL_AS_SG;
     ),
     // Almacén: 339 words (japonés, luxemburgués, inglés, francés, ugandés, javanés).
@@ -235,9 +254,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     declension!("barman", 3, "~a~", like Canon;
     noun: _, "~á~s|~á~es";
     ),
-    // Fijodalgo: 3 words (hijodalgo, hijadalgo, fijodalgo).
-    declension!("fijodalgo", 3, "~~";
-    noun: "~~", "~s~";
+    // Fijodalgo: 3 words (hijodalgo, hijadalgo, fijodalgo). Like Medio with `~` after each pattern.
+    declension!("fijodalgo", 3, "~~", like Medio with "~";
     ),
     // Régimen: 3 words (espécimen, régimen, narcorrégimen).
     declension!("régimen", 3, "~é~i~", [noun_gender: Masculine];

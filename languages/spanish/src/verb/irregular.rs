@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 267 stems, 410 forms.
+/// 257 stems, 411 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abeldar	verb_pres_1_sg	abield- like echar
@@ -45,7 +45,6 @@ ascender	verb_pres_1_sg	asciend- like curtir
 asentar	verb_pres_1_sg	asient- like echar
 aserrar	verb_pres_1_sg	asierr- like echar
 asir	verb_fut_1_sg	asir- like echar	57	ase
-asosegar	verb_pres_1_sg	asosieg- like echar
 aspaventar	verb_pres_1_sg	aspavient- like echar
 atender	verb_pres_1_sg	atiend- like curtir
 aterrar	verb_pres_1_sg	atierr- like echar
@@ -72,7 +71,6 @@ cogobernar	verb_pres_1_sg	cogobiern- like echar
 cohibirse	verb_pres_1_sg	cohíb- like freírse
 comenzar	verb_pres_1_sg	comien- like realizar
 compungirse	30	compunja	31	compunjamos	33	compunjáis	57	compúngete	58	compúnjase	61	compúnjanse
-concernir	verb_pres_1_sg	conciern- like curtir
 concertar	verb_pres_1_sg	conciert- like echar
 condolerse	verb_pres_1_sg	conduel- like curtir	57	conduélete	58	conduélase	61	conduélanse
 confesar	verb_pres_1_sg	confies- like echar
@@ -97,7 +95,6 @@ denodar	verb_pres_1_pl	denod- like incautarse	verb_subj_1_pl	denod- like incauta
 dentar	verb_pres_1_sg	dient- like echar
 derrenegar	verb_pres_1_sg	derrenieg- like echar
 desacertar	verb_pres_1_sg	desaciert- like echar
-desalentar	verb_pres_1_sg	desalient- like echar
 desandar	verb	desanduv- like poner
 desasentar	verb_pres_1_sg	desasient- like echar
 desasir	verb_fut_1_sg	desasir- like echar	57	desase
@@ -119,7 +116,6 @@ desmembrar	verb_pres_1_sg	desmiembr- like echar
 desnegar	verb_pres_1_sg	desnieg- like echar
 desnevar	verb_pres_1_sg	desniev- like echar
 desosar	verb_pres_1_sg	deshues- like echar
-desosegar	verb_pres_1_sg	desosieg- like echar
 despedrar	verb_pres_1_sg	despiedr- like echar
 despernar	verb_pres_1_sg	despiern- like echar
 despertar	verb_pres_1_sg	despiert- like echar
@@ -133,7 +129,6 @@ desvaír	verb_pres_1_sg	desvay- like curtir	verb_subj_1_pl	desvay- like conocer	
 desventar	verb_pres_1_sg	desvient- like echar
 desvergonzarse	verb_pres_1_sg	desvergüen- like realizar	57	desvergüénzate	58	desvergüéncese	61	desvergüéncense
 discerner	verb_pres_1_sg	disciern- like curtir
-discernir	verb_pres_1_sg	disciern- like curtir
 disfrezar	verb_pres_1_pl	disfrez- like incautarse	verb_subj_1_pl	disfrec- like incautarse	57	disfrézate	58	disfrécese	61	disfrécense
 dispertar	verb_pres_1_sg	dispiert- like echar
 distender	verb_pres_1_sg	distiend- like curtir
@@ -167,7 +162,6 @@ erguir	verb	irgu- like conocer	verb_pres_1_sg	irg- like curtir	verb_subj_1_pl	ir
 erguirse	16	irguió	30	yerga	31	irgamos	33	irgáis	37	irguiéramos	57	yérguete	68	irguiéndose
 errar	verb_pres_1_sg	yerr- like echar
 errarse	30	yerre	57	yérrate
-escalentar	verb_pres_1_sg	escalient- like echar
 escarmentar	verb_pres_1_sg	escarmient- like echar
 eser	0	só	1	sedemos	2	sees	3	seedes	4	siede	5	seyen	6	era	9	érades	12	fu	13	fuemos	15	fuestes	16	fo	17	foron	18	seré	21	seredes	27	seríades	30	sa	31	samos	33	seades	36	fuera	37	fuéramos	38	fueras	39	fuérades	41	fueran	42	fuese	44	fueses	47	fuesen	48	fuere	50	fueres	51	fuéredes	53	fueren	54	sos	56	seades	57	sé	58	sea	59	seamos	60	seades	61	sean	68	siendo	69	sido
 esparcirse	30	esparza	31	esparzamos	33	esparzáis	57	espárcete
@@ -212,6 +206,7 @@ jier	participle	jiído- like echar	verb_subj_1_pl	jia- like guiar	3	jieis	13	ji�
 jugarse	verb_pres_1_sg	jueg- like echar	57	juégate	58	juéguese	61	juéguense
 kgar	3	kgais	12	kgue	16	kgo	33	kgueis
 lagarear	57	lagaréate	58	lagaréese	59	lagareémonos	61	lagaréense	67	lagarearse	68	lagareándose
+llover	4	llueve
 maldecir	69	maldecido
 maloler	verb_pres_1_sg	malhuel- like curtir
 malpensar	verb_pres_1_sg	malpiens- like echar
@@ -251,7 +246,6 @@ reabrirse	69	reabierto
 reapretar	verb_pres_1_sg	reapriet- like echar
 reasentar	verb_pres_1_sg	reasient- like echar
 reaventar	verb_pres_1_sg	reavient- like echar
-recalentar	verb_pres_1_sg	recalient- like echar
 recentar	verb_pres_1_sg	recient- like echar
 recomendar	verb_pres_1_sg	recomiend- like echar
 recomenzar	verb_pres_1_sg	recomien- like realizar
@@ -321,10 +315,7 @@ tender	verb_pres_1_sg	tiend- like curtir
 tener	57	ten
 tentar	verb_pres_1_sg	tient- like echar
 transcender	verb_pres_1_sg	transciend- like curtir
-transfregar	verb_pres_1_sg	transfrieg- like echar
 trascender	verb_pres_1_sg	trasciend- like curtir
-trasegar	verb_pres_1_sg	trasieg- like echar
-trasfregar	verb_pres_1_sg	trasfrieg- like echar
 trasverter	verb_pres_1_sg	trasviert- like curtir
 travesar	verb_pres_1_sg	travies- like echar
 tropezarse	30	tropiece	57	tropiézate	61	tropiécense

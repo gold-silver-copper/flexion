@@ -40,7 +40,7 @@ use flexion::Paradigm;
 /// `possessive_gen_one` (_1sg, _2sg, _3sg, _1pl, _2pl, _3pl)
 /// `possessive_gen_many` (_1sg, _2sg, _3sg, _1pl, _2pl, _3pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem noun_nom_sg: $s0:tt;)?
      $(stem noun_acc_sg: $s1:tt;)?
      $(nom: $c0:tt, $c1:tt;)?
@@ -159,6 +159,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -181,6 +182,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -289,24 +308,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     possessive_abl_many: _, "~lArIndAn", "~lArIndAn", _, _, "~lArIndAn";
     possessive_gen_many: _, "~lArInIn", "~lArInIn", _, _, "~lArInIn";
     ),
-    // Sav: 2,910 words (pound, ab, abdal, en, in, seven). Like Dalga, except in 0 cells: .
+    // Sav: 2,910 words (pound, ab, abdal, en, in, seven). Like Dalga.
     declension!("sav", 2910, "~", like Dalga;
     stem noun_acc_sg: "~- like sav";
     ),
-    // Ant: 1,717 words (ant, art, bap, şibidak, müzik, kayak).
-    declension!("ant", 1717, "~ˇ";
-    stem noun_acc_sg: "~- like ant";
-    nom: "~ˇ", "~lArˇ";
-    loc: "~tAˇ", _;
-    possessive_nom_one: _, _, _, _, _, "~lArIˇ";
-    possessive_nom_many: _, "~lArInˇ", "~lArIˇ", _, _, "~lArIˇ";
-    possessive_acc_many: _, "~lArInIˇ", "~lArInIˇ", _, _, "~lArInIˇ";
-    possessive_dat_many: _, "~lArInAˇ", "~lArInAˇ", _, _, "~lArInAˇ";
-    possessive_loc_many: _, "~lArIndAˇ", "~lArIndAˇ", _, _, "~lArIndAˇ";
-    possessive_abl_many: _, "~lArIndAnˇ", "~lArIndAnˇ", _, _, "~lArIndAnˇ";
-    possessive_gen_many: _, "~lArInInˇ", "~lArInInˇ", _, _, "~lArInInˇ";
+    // Ant: 1,717 words (ant, art, bap, şibidak, müzik, kayak). Like Makas with `ˇ` after each pattern.
+    declension!("ant", 1717, "~ˇ", like Makas with "ˇ";
     ),
-    // Makas: 755 words (robot, port, bot, bank, but, mars). Like Sav, except in 0 cells: .
+    // Makas: 755 words (robot, port, bot, bank, but, mars). Like Sav.
     declension!("makas", 755, "~", like Sav;
     stem noun_nom_sg: "~- like makas";
     ),
@@ -341,13 +350,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     stem noun_nom_sg: "~ı~- like akıl";
     stem noun_acc_sg: "~~- like sav";
     ),
-    // Göz: 20 words (petrol, spoiler, gol, ampul, ful, rol). Like Yer, except in 0 cells: .
+    // Göz: 20 words (petrol, spoiler, gol, ampul, ful, rol). Like Yer.
     declension!("göz", 20, "~", like Yer;
     stem noun_acc_sg: "~- like göz";
     ),
-    // Ekolog: 17 words (monolog, antropolog, ekolog, klimatolog, arkeolog, katalog). Like Ant, except in 1 cell: loc sg.
-    declension!("ekolog", 17, "~ˇ", like Ant;
-    loc: "~dAˇ", _;
+    // Ekolog: 17 words (monolog, antropolog, ekolog, klimatolog, arkeolog, katalog). Like Sav with `ˇ` after each pattern.
+    declension!("ekolog", 17, "~ˇ", like Sav with "ˇ";
     ),
     // Gönül: 17 words (göğüs, ömür, şükür, zulüm, gönül, özür).
     declension!("gönül", 17, "~ü~";
@@ -369,7 +377,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     stem noun_nom_sg: "~ç- like makas";
     stem noun_acc_sg: "~c- like sav";
     ),
-    // Keyif: 12 words (vakit, akis, beyit, hapis, bahis, nefis). Like Devir, except in 0 cells: .
+    // Keyif: 12 words (vakit, akis, beyit, hapis, bahis, nefis). Like Devir.
     declension!("keyif", 12, "~i~", like Devir;
     stem noun_nom_sg: "~i~- like keyif";
     ),
@@ -397,11 +405,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     possessive_abl_many: _, "~ından", "~ından", _, _, "~ından";
     possessive_gen_many: _, "~ının", "~ının", _, _, "~ının";
     ),
-    // Burun: 5 words (burun, oğul, uğur, boyun, omuz). Like Akıl, except in 0 cells: .
+    // Burun: 5 words (burun, oğul, uğur, boyun, omuz). Like Akıl.
     declension!("burun", 5, "~u~", like Akıl;
     stem noun_nom_sg: "~u~- like akıl";
     ),
-    // Set: 4 words (met, set, ret, cet). Like Kâğıt, except in 0 cells: .
+    // Set: 4 words (met, set, ret, cet). Like Kâğıt.
     declension!("set", 4, "~t", like Kâğıt;
     stem noun_acc_sg: "~dd- like set";
     ),

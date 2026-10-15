@@ -84,10 +84,10 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 37] = [
-    // infinitive like trzymać: 7,398 words.
+    // infinitive like trzymać: 7,358 words.
     EndingTable {
         name: Cow::Borrowed("trzymać"),
-        words: 7398,
+        words: 7358,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ć\t",
@@ -99,10 +99,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "\t\t\t",
         )),
     },
-    // infinitive like googlować: 2,930 words.
+    // infinitive like googlować: 2,967 words.
     EndingTable {
         name: Cow::Borrowed("googlować"),
-        words: 2930,
+        words: 2967,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ćˇ\t",
@@ -114,10 +114,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "\t\t\t",
         )),
     },
-    // infinitive like mieć: 630 words.
+    // infinitive like mieć: 633 words.
     EndingTable {
         name: Cow::Borrowed("mieć"),
-        words: 630,
+        words: 633,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~eć\t",
@@ -174,31 +174,31 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
             "~łaby|~nęłaby\t~łoby|~nęłoby\t~łyby|~nęłyby\t",
         )),
     },
-    // non_past like trzymać: 3,276 words.
+    // non_past like trzymać: 3,278 words.
     EndingTable {
         name: Cow::Borrowed("trzymać"),
-        words: 3276,
+        words: 3278,
         slot: 1,
         table: Cow::Borrowed(concat!("~m\t~my\t", "\t\t", "\t~ją\t", "\t", "\t",)),
     },
-    // non_past like googlować: 2,702 words.
+    // non_past like googlować: 2,707 words.
     EndingTable {
         name: Cow::Borrowed("googlować"),
-        words: 2702,
+        words: 2707,
         slot: 1,
         table: Cow::Borrowed(concat!("~ęˇ\t~emyˇ\t", "\t\t", "\t~ąˇ\t", "\t", "\t",)),
     },
-    // non_past like zaklepywać: 1,838 words.
+    // non_past like zaklepywać: 1,834 words.
     EndingTable {
         name: Cow::Borrowed("zaklepywać"),
-        words: 1838,
+        words: 1834,
         slot: 1,
         table: Cow::Borrowed(concat!("~ę\t~emy\t", "\t\t", "\t~ą\t", "\t", "\t",)),
     },
-    // non_past like postawić: 1,044 words.
+    // non_past like postawić: 1,012 words.
     EndingTable {
         name: Cow::Borrowed("postawić"),
-        words: 1044,
+        words: 1012,
         slot: 1,
         table: Cow::Borrowed(concat!("~ę\t~my\t", "\t\t", "\t~ą\t", "\t", "\t",)),
     },
@@ -237,10 +237,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 1,
         table: Cow::Borrowed(concat!("~ę\t~ziemy\t", "\t\t", "\t~ą\t", "\t", "\t",)),
     },
-    // non_past like pogrozić: 52 words.
+    // non_past like pogrozić: 49 words.
     EndingTable {
         name: Cow::Borrowed("pogrozić"),
-        words: 52,
+        words: 49,
         slot: 1,
         table: Cow::Borrowed(concat!("~żę\t~zimy\t", "\t\t", "\t~żą\t", "\t", "\t",)),
     },
@@ -284,33 +284,33 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 1,
         table: Cow::Borrowed(concat!("za~ę\tza~ymy\t", "\t\t", "\tza~ą\t", "\t", "\t",)),
     },
-    // m like trzymać: 7,023 words.
+    // m like trzymać: 7,038 words.
     EndingTable {
         name: Cow::Borrowed("trzymać"),
-        words: 7023,
+        words: 7038,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~łem\t", "~łeś\t", "~ł\t", "\t", "\t", "\t", "~wszy\t",
         )),
     },
-    // m like googlować: 1,637 words.
+    // m like googlować: 1,645 words.
     EndingTable {
         name: Cow::Borrowed("googlować"),
-        words: 1637,
+        words: 1645,
         slot: 2,
         table: Cow::Borrowed(concat!("~emˇ\t", "~eśˇ\t", "~ˇ\t", "\t", "\t", "\t", "\t",)),
     },
-    // m like zaklepywać: 1,574 words.
+    // m like zaklepywać: 1,522 words.
     EndingTable {
         name: Cow::Borrowed("zaklepywać"),
-        words: 1574,
+        words: 1522,
         slot: 2,
         table: Cow::Borrowed(concat!("~em\t", "~eś\t", "~\t", "\t", "\t", "\t", "\t",)),
     },
-    // m like odbudować: 1,348 words.
+    // m like odbudować: 1,377 words.
     EndingTable {
         name: Cow::Borrowed("odbudować"),
-        words: 1348,
+        words: 1377,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~łemˇ\t",
@@ -350,26 +350,26 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 4,
         table: Cow::Borrowed(concat!("~\t", "\t\t",)),
     },
-    // impersonal like trzymać: 4,632 words.
+    // impersonal like trzymać: 4,627 words.
     EndingTable {
         name: Cow::Borrowed("trzymać"),
-        words: 4632,
+        words: 4627,
         slot: 5,
         table: Cow::Borrowed(concat!("~o\t", "~y\t", "~ie\t",)),
     },
-    // impersonal like baczyć: 2,715 words.
-    EndingTable {
-        name: Cow::Borrowed("baczyć"),
-        words: 2715,
-        slot: 5,
-        table: Cow::Borrowed(concat!("~ono\t", "~ony\t", "~enie\t",)),
-    },
-    // impersonal like googlować: 2,705 words.
+    // impersonal like googlować: 2,707 words.
     EndingTable {
         name: Cow::Borrowed("googlować"),
-        words: 2705,
+        words: 2707,
         slot: 5,
         table: Cow::Borrowed(concat!("~oˇ\t", "~yˇ\t", "~ieˇ\t",)),
+    },
+    // impersonal like baczyć: 2,680 words.
+    EndingTable {
+        name: Cow::Borrowed("baczyć"),
+        words: 2680,
+        slot: 5,
+        table: Cow::Borrowed(concat!("~ono\t", "~ony\t", "~enie\t",)),
     },
     // impersonal like ogarnąć: 923 words.
     EndingTable {
@@ -378,10 +378,10 @@ pub(super) static TABLES: [EndingTable<'static>; 37] = [
         slot: 5,
         table: Cow::Borrowed(concat!("~to\t", "~ty\t", "~cie\t",)),
     },
-    // impersonal like zrobić: 225 words.
+    // impersonal like zrobić: 260 words.
     EndingTable {
         name: Cow::Borrowed("zrobić"),
-        words: 225,
+        words: 260,
         slot: 5,
         table: Cow::Borrowed(concat!("~onoˇ\t", "~onyˇ\t", "~enieˇ\t",)),
     },

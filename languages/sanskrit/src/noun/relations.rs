@@ -4897,8 +4897,8 @@ pub(super) static RELATIONS: [Relation<'static>; 23] = [
         "हस्ती" => 11,
         "हेषः" => 0,
     }, true, None),
-    // VOC_DU, from NOM_DU or ACC_DU or NOM_DU (by gender, in order).
-    relation!(VOC_DU, [NOM_DU, ACC_DU, NOM_DU], [], none, false, None),
+    // VOC_DU, from NOM_DU.
+    relation!(VOC_DU, [NOM_DU], [], none, true, None),
     // VOC_PL, from NOM_PL.
     relation!(VOC_PL, [NOM_PL], [], none, true, None),
 ];

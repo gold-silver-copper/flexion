@@ -9,7 +9,7 @@ use flexion::Placement::*;
 use flexion::{Prefix, Prefixes, Separation};
 use std::borrow::Cow;
 
-/// 28 prefixes and 271 words that go against most with theirs.
+/// 28 prefixes and 269 words that go against most with theirs.
 pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
     prefixes: Cow::Borrowed(&[
         Prefix {
@@ -51,7 +51,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("εγ"),
             separable: 0,
-            inseparable: 10,
+            inseparable: 11,
             words: 16,
         },
         Prefix {
@@ -141,7 +141,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Prefix {
             letters: Cow::Borrowed("προσ"),
             separable: 0,
-            inseparable: 27,
+            inseparable: 28,
             words: 44,
         },
         Prefix {
@@ -253,7 +253,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("εγκαθιστημι"), Separation::Neither),
         (Cow::Borrowed("εγκαλεω"), Separation::Neither),
         (Cow::Borrowed("εγκαταλεγω"), Separation::Neither),
-        (Cow::Borrowed("εγκειμαι"), Separation::Neither),
         (Cow::Borrowed("εισαγω"), Separation::Neither),
         (Cow::Borrowed("εισακουω"), Separation::Neither),
         (Cow::Borrowed("εισαναβαινω"), Separation::Neither),
@@ -404,7 +403,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("προσεχω"), Separation::Neither),
         (Cow::Borrowed("προσηκω"), Separation::Neither),
         (Cow::Borrowed("προσκαλεω"), Separation::Neither),
-        (Cow::Borrowed("προσκειμαι"), Separation::Neither),
         (Cow::Borrowed("προσκυνεω"), Separation::Neither),
         (Cow::Borrowed("προσλαμβανω"), Separation::Neither),
         (Cow::Borrowed("προσμειγνυμι"), Separation::Neither),

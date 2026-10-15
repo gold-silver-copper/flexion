@@ -108,6 +108,7 @@ macro_rules! declension {
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
             )),
+            affix: None,
         }
     };
 }
@@ -142,8 +143,8 @@ pub enum Declension {
     Πισῠρες,
     /// Like `δῠο`: 1 words.
     Δῠο,
-    /// Like `τρεῑς`: 1 words.
-    Τρεῑς,
+    /// Like `τρεις`: 1 words.
+    Τρεις,
     /// Like `δεκᾰτεσσᾰρες`: 1 words.
     Δεκᾰτεσσᾰρες,
     /// Like `εἱς`: 1 words.
@@ -158,7 +159,7 @@ impl Declension {
         Declension::Χῑλῐοι,
         Declension::Πισῠρες,
         Declension::Δῠο,
-        Declension::Τρεῑς,
+        Declension::Τρεις,
         Declension::Δεκᾰτεσσᾰρες,
         Declension::Εἱς,
         Declension::Δευτερος,
@@ -207,27 +208,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     nom_m: "~ο", "~ο", derived;
     nom_f: _, "~ο", derived;
     nom_n: _, _, derived;
-    gen_m: _, "~οῑν|~εῑν", _;
-    gen_f: _, "~οῑν|~εῑν", derived;
-    gen_n: _, "~οῑν|~εῑν", derived;
-    dat_m: _, "~οῑν|~εῑν|~σῐ|~σῐν", _;
-    dat_f: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
-    dat_n: _, "~οῑν|~εῑν|~σῐ|~σῐν", derived;
+    gen_m: _, "~οιν|~ειν", _;
+    gen_f: _, "~οιν|~ειν", derived;
+    gen_n: _, "~οιν|~ειν", derived;
+    dat_m: _, "~οιν|~ειν|~σῐ|~σῐν", _;
+    dat_f: _, "~οιν|~ειν|~σῐ|~σῐν", derived;
+    dat_n: _, "~οιν|~ειν|~σῐ|~σῐν", derived;
     acc_m: _, _, derived;
     acc_f: _, _, derived;
     ),
-    // Τρεῑς: 1 words (τρεῑς). Like Χῑλῐοι, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_f pl, gen_n pl, ….
-    declension!("τρεῑς", 1, "~εῑς", like Χῑλῐοι;
-    nom_m: "~εῑς", _, "~εῑς";
-    nom_f: _, _, "~εῑς";
+    // Τρεις: 1 words (τρεις). Like Χῑλῐοι, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_f pl, gen_n pl, ….
+    declension!("τρεις", 1, "~εις", like Χῑλῐοι;
+    nom_m: "~εις", _, "~εις";
+    nom_f: _, _, "~εις";
     nom_n: _, _, "~ῐᾰ";
     gen_f: _, _, "~ῐων";
     gen_n: _, _, "~ῐων";
     dat_m: _, _, "~ῐσῐ|~ῐσῐν";
     dat_f: _, _, "~ῐσῐ|~ῐσῐν";
     dat_n: _, _, "~ῐσῐ|~ῐσῐν";
-    acc_m: _, _, "~εῑς";
-    acc_f: _, _, "~εῑς";
+    acc_m: _, _, "~εις";
+    acc_f: _, _, "~εις";
     ),
     // Δεκᾰτεσσᾰρες: 1 words (δεκᾰτεσσᾰρες).
     declension!("δεκᾰτεσσᾰρες", 1, "~ᾰ~ᾰ~ες";

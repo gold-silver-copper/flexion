@@ -42,7 +42,7 @@ use flexion::Paradigm;
 /// `prep_n` (anim, inan)
 /// `prep_pl` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem pronoun: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
@@ -129,6 +129,7 @@ macro_rules! declension {
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -151,6 +152,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -313,15 +332,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
     acc_f: "~у", _;
     prep_m: "~ем", _;
     ),
-    // Тот: 2 words (этот, тот). Like Оный, except in 13 cells: nom_m inan, nom_f anim, nom_n anim, nom_pl anim, gen_pl anim, dat_pl inan, ….
-    declension!("тот", 2, "~от", like Оный;
-    nom_m: _, "~от";
-    nom_f: "~а", _;
-    nom_n: "~о", _;
+    // Тот: 2 words (этот, тот). Like Сам with `` after each pattern (`от` after ~), except in 9 cells: nom_pl anim, gen_pl anim, dat_pl inan, acc_f anim, ins_m anim, ins_m inan, ….
+    declension!("тот", 2, "~от", like Сам with "", "от" after "~";
     nom_pl: "~е", _;
     gen_pl: "~ех", _;
     dat_pl: _, "~ем";
-    acc_m: _, "~от";
     acc_f: "~у", _;
     ins_m: "~ем", "~ем";
     ins_n: "~ем", "~ем";

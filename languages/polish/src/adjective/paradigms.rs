@@ -52,7 +52,7 @@ use flexion::Paradigm;
 /// `comparative`
 /// `superlative`
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adjective: $s0:tt;)?
      $(stem adjective_nom_vir_anim: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
@@ -163,6 +163,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -185,6 +186,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -297,8 +316,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     loc_n: "~ym", "~ym";
     comparative: "~iejszy";
     ),
-    // Słaby: 1,412 words (mulczujący, różowy, żółty, dany, chory, stary). Like Wolny, except in 1 cell: comparative.
-    declension!("słaby", 1412, "~y", like Wolny;
+    // Słaby: 1,412 words (mulczujący, różowy, żółty, dany, chory, stary). Like Rad with `` after each pattern (`y` after ~), except in 1 cell: comparative.
+    declension!("słaby", 1412, "~y", like Rad with "", "y" after "~";
     comparative: "~szy";
     ),
     // Lekki: 1,310 words (polski, rosyjski, norweski, ruski, łaciński, morski).
@@ -324,28 +343,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     loc_n: "~~kim", "~~kim";
     comparative: "~ż~zy";
     ),
-    // Party: 1,218 words (party, złoty, hardy, pity, pusty, ciasny). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("party", 1218, "~yˇ", like Wolny;
-    nom_m: _, "~yˇ";
-    nom_f: "~aˇ", _;
-    nom_n: "~eˇ", _;
-    nom_vir: "~iˇ", _;
-    gen_m: "~egoˇ", _;
-    gen_f: "~ejˇ", _;
-    gen_vir: "~ychˇ", _;
-    dat_m: "~emuˇ", _;
-    dat_vir: _, "~ymˇ";
-    dat_nvir: "~ymˇ", "~ymˇ";
-    acc_m: _, "~yˇ";
-    acc_f: _, "~ąˇ";
-    ins_m: "~ymˇ", "~ymˇ";
-    ins_f: "~ąˇ", "~ąˇ";
-    ins_n: "~ymˇ", "~ymˇ";
-    ins_vir: _, "~ymiˇ";
-    ins_nvir: "~ymiˇ", "~ymiˇ";
-    loc_m: "~ymˇ", "~ymˇ";
-    loc_n: "~ymˇ", "~ymˇ";
-    comparative: "~iejszyˇ";
+    // Party: 1,218 words (party, złoty, hardy, pity, pusty, ciasny). Like Wolny with `ˇ` after each pattern.
+    declension!("party", 1218, "~yˇ", like Wolny with "ˇ";
     ),
     // Ciężki: 618 words (słodki, jaki, wszelki, malutki, niderlandzki, niemiecki). Like Słaby, except in 26 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
     declension!("ciężki", 618, "~ki", like Słaby;
@@ -455,23 +454,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     comparative: "~tszy";
     superlative: "naj~tszy";
     ),
-    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli). Like Wolny, except in 18 cells: nom_m inan, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, acc_m inan, ….
-    declension!("soboli", 25, "~i", like Wolny;
-    nom_m: _, "~i";
+    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli). Like Rad with `` after each pattern (`i` after ~), except in 15 cells: gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ins_m anim, ins_m inan, ….
+    declension!("soboli", 25, "~i", like Rad with "", "i" after "~";
     gen_vir: "~ich", _;
     dat_vir: _, "~im";
     dat_nvir: "~im", "~im";
-    acc_m: _, "~i";
     ins_m: "~im", "~im";
     ins_n: "~im", "~im";
     ins_vir: _, "~imi";
     ins_nvir: "~imi", "~imi";
     loc_m: "~im", "~im";
     loc_n: "~im", "~im";
-    comparative: derived;
     ),
-    // Prosty: 23 words (prosty, młody, twardy, częsty, chudy, tłusty). Like Party, except in 1 cell: comparative.
-    declension!("prosty", 23, "~yˇ", like Party;
+    // Prosty: 23 words (prosty, młody, twardy, częsty, chudy, tłusty). Like Wolny with `ˇ` after each pattern, except in 1 cell: comparative.
+    declension!("prosty", 23, "~yˇ", like Wolny with "ˇ";
     comparative: "~szyˇ";
     ),
     // Stały: 19 words (miły, były, dojrzały, stały, doskonały, czuły). Like Mały, except in 1 cell: comparative.
@@ -501,9 +497,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     loc_n: "~nym", "~nym";
     comparative: "~ńszy";
     ),
-    // Zajęczy: 12 words (bosy, łasy, rusy, krasy, kusy, kosy). Like Słaby, except in 2 cells: nom_vir anim, superlative.
-    declension!("zajęczy", 12, "~y", like Słaby;
+    // Zajęczy: 12 words (bosy, łasy, rusy, krasy, kusy, kosy). Like Rad with `` after each pattern (`y` after ~), except in 3 cells: nom_vir anim, comparative, superlative.
+    declension!("zajęczy", 12, "~y", like Rad with "", "y" after "~";
     nom_vir: "~y", _;
+    comparative: "~szy";
     superlative: "naj~szy";
     ),
     // Rad: 8 words (wart, rad, syt, łaskaw, miłościw, kontent). Like Wolny, except in 3 cells: nom_m inan, acc_m inan, comparative.
@@ -512,8 +509,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     acc_m: _, "~";
     comparative: derived;
     ),
-    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Wolny, except in 2 cells: nom_vir anim, comparative.
-    declension!("ostry", 6, "~y", like Wolny;
+    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Rad with `` after each pattern (`y` after ~), except in 2 cells: nom_vir anim, comparative.
+    declension!("ostry", 6, "~y", like Rad with "", "y" after "~";
     nom_vir: "~zy", _;
     comparative: "~zejszy";
     ),

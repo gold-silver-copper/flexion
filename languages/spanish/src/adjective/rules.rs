@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 245 rules and 531 listed words.
+/// 245 rules and 525 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Duro 14448, Natural 6632, Fiel 1150, Entrador 983, Santiagués 551, Tuanis 498, Piola 115, Rapaz 65, Catrín 31, Fácil 28, Verde 14, Aweonao 14, Grandote 11, Tontolaba 9, Loco 3],
@@ -474,7 +474,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#fahrenheit" => Piola,
         "#fancy" => Piola,
         "#fashion" => Tuanis,
-        "#feroz" => Natural,
         "#fetén" => Tuanis,
         "#fiacún" => Rapaz,
         "#fiel" => Fiel,
@@ -738,7 +737,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#supervalle" => Tuanis,
         "#sus" => Tuanis,
         "#súper" => Tuanis,
-        "#talibán" => Entrador,
         "#tao" => Tuanis,
         "#teen" => Piola,
         "#tiktoker" => Piola,
@@ -756,13 +754,10 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#tricapa" => Tuanis,
         "#triplaza" => Tuanis,
         "#triste" => Verde,
-        "#truhan" => Entrador,
         "#tujia" => Natural,
         "#tungús" => Natural,
-        "#undimotriz" => Natural,
         "#unitalla" => Tuanis,
         "#valiente" => Natural,
-        "#veloz" => Natural,
         "#verga" => Tuanis,
         "#viceprimer" => Entrador,
         "#viejoven" => Natural,
@@ -774,7 +769,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#weon" => Entrador,
         "#weón" => Natural,
         "#whitexican" => Piola,
-        "#wn" => Entrador,
         "#wounaan" => Tuanis,
         "#yakuto" => Piola,
         "#yokut" => Piola,

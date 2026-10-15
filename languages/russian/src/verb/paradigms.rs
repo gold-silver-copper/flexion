@@ -28,7 +28,7 @@ use flexion::Paradigm;
 /// `participle` (pres_act, past_act, pres_pass, past_pass)
 /// `gerund` (pres, past)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem infinitive: $s0:tt;)?
      $(stem non_past: $s1:tt;)?
      $(stem past: $s2:tt;)?
@@ -74,6 +74,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -99,6 +100,24 @@ macro_rules! view {
     };
 }
 
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// An inherent feature's value, as `(feature, value)` by their places.
 macro_rules! feature {
     (aspect: $v:ident) => {
@@ -109,7 +128,7 @@ macro_rules! feature {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `играть`: 11,637 words.
+    /// Like `играть`: 11,634 words.
     Играть,
     /// Like `набираться`: 8,293 words.
     Набираться,
@@ -119,21 +138,21 @@ pub enum Conjugation {
     Стыковаться,
     /// Like `ударить`: 1,983 words.
     Ударить,
-    /// Like `палить`: 1,330 words.
+    /// Like `палить`: 1,320 words.
     Палить,
     /// Like `числиться`: 1,171 words.
     Числиться,
-    /// Like `раздуть`: 924 words.
+    /// Like `раздуть`: 927 words.
     Раздуть,
     /// Like `завибрировать`: 879 words.
     Завибрировать,
-    /// Like `рвануть`: 685 words.
+    /// Like `рвануть`: 688 words.
     Рвануть,
-    /// Like `выделить`: 604 words.
+    /// Like `выделить`: 614 words.
     Выделить,
     /// Like `усилиться`: 566 words.
     Усилиться,
-    /// Like `тянуть`: 543 words.
+    /// Like `тянуть`: 540 words.
     Тянуть,
     /// Like `обнажиться`: 501 words.
     Обнажиться,
@@ -163,24 +182,24 @@ pub enum Conjugation {
     Тянуться,
     /// Like `залипнуть`: 203 words.
     Залипнуть,
-    /// Like `стучать`: 192 words.
-    Стучать,
     /// Like `сносить`: 186 words.
     Сносить,
     /// Like `отметить`: 164 words.
     Отметить,
     /// Like `распуститься`: 163 words.
     Распуститься,
+    /// Like `стучать`: 152 words.
+    Стучать,
     /// Like `носиться`: 138 words.
     Носиться,
     /// Like `забросить`: 125 words.
     Забросить,
+    /// Like `засосать`: 121 words.
+    Засосать,
     /// Like `встретиться`: 120 words.
     Встретиться,
     /// Like `оказать`: 119 words.
     Оказать,
-    /// Like `засосать`: 118 words.
-    Засосать,
     /// Like `топтать`: 117 words.
     Топтать,
     /// Like `развеять`: 113 words.
@@ -239,7 +258,7 @@ pub enum Conjugation {
     Стоить,
     /// Like `зевать`: 61 words.
     Зевать,
-    /// Like `обтечь`: 59 words.
+    /// Like `обтечь`: 60 words.
     Обтечь,
     /// Like `возбудить`: 59 words.
     Возбудить,
@@ -271,6 +290,8 @@ pub enum Conjugation {
     Пасть,
     /// Like `отдаваться`: 51 words.
     Отдаваться,
+    /// Like `драть`: 51 words.
+    Драть,
     /// Like `идти`: 51 words.
     Идти,
     /// Like `глядеться`: 48 words.
@@ -283,8 +304,8 @@ pub enum Conjugation {
     Клевать,
     /// Like `снести`: 44 words.
     Снести,
-    /// Like `драть`: 43 words.
-    Драть,
+    /// Like `трещать`: 43 words.
+    Трещать,
     /// Like `колоться`: 42 words.
     Колоться,
     /// Like `топтаться`: 42 words.
@@ -295,12 +316,12 @@ pub enum Conjugation {
     Сдать,
     /// Like `выписать`: 40 words.
     Выписать,
-    /// Like `обволочь`: 40 words.
-    Обволочь,
     /// Like `отобразить`: 39 words.
     Отобразить,
     /// Like `сбиться`: 39 words.
     Сбиться,
+    /// Like `обволочь`: 39 words.
+    Обволочь,
     /// Like `служить`: 37 words.
     Служить,
     /// Like `обратиться`: 37 words.
@@ -547,8 +568,6 @@ pub enum Conjugation {
     Обидеться,
     /// Like `вырваться`: 10 words.
     Вырваться,
-    /// Like `стонать`: 9 words.
-    Стонать,
     /// Like `стереть`: 9 words.
     Стереть,
     /// Like `выспаться`: 9 words.
@@ -565,8 +584,6 @@ pub enum Conjugation {
     Мести,
     /// Like `разойтись`: 9 words.
     Разойтись,
-    /// Like `застлать`: 8 words.
-    Застлать,
     /// Like `выпить`: 8 words.
     Выпить,
     /// Like `разогнать`: 8 words.
@@ -601,6 +618,8 @@ pub enum Conjugation {
     Залгаться,
     /// Like `насытиться`: 7 words.
     Насытиться,
+    /// Like `стонать`: 6 words.
+    Стонать,
     /// Like `достичь`: 6 words.
     Достичь,
     /// Like `разжечь`: 6 words.
@@ -765,8 +784,6 @@ pub enum Conjugation {
     Выгрести,
     /// Like `приобрестись`: 3 words.
     Приобрестись,
-    /// Like `пролежать`: 3 words.
-    Пролежать,
     /// Like `осечься`: 3 words.
     Осечься,
     /// Like `изыти`: 3 words.
@@ -797,7 +814,7 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 342] = [
+    pub const ALL: [Conjugation; 341] = [
         Conjugation::Играть,
         Conjugation::Набираться,
         Conjugation::Вибрировать,
@@ -825,15 +842,15 @@ impl Conjugation {
         Conjugation::Закатиться,
         Conjugation::Тянуться,
         Conjugation::Залипнуть,
-        Conjugation::Стучать,
         Conjugation::Сносить,
         Conjugation::Отметить,
         Conjugation::Распуститься,
+        Conjugation::Стучать,
         Conjugation::Носиться,
         Conjugation::Забросить,
+        Conjugation::Засосать,
         Conjugation::Встретиться,
         Conjugation::Оказать,
-        Conjugation::Засосать,
         Conjugation::Топтать,
         Conjugation::Развеять,
         Conjugation::Возместить,
@@ -879,21 +896,22 @@ impl Conjugation {
         Conjugation::Отказаться,
         Conjugation::Пасть,
         Conjugation::Отдаваться,
+        Conjugation::Драть,
         Conjugation::Идти,
         Conjugation::Глядеться,
         Conjugation::Развести,
         Conjugation::Разбить,
         Conjugation::Клевать,
         Conjugation::Снести,
-        Conjugation::Драть,
+        Conjugation::Трещать,
         Conjugation::Колоться,
         Conjugation::Топтаться,
         Conjugation::Пыхать,
         Conjugation::Сдать,
         Conjugation::Выписать,
-        Conjugation::Обволочь,
         Conjugation::Отобразить,
         Conjugation::Сбиться,
+        Conjugation::Обволочь,
         Conjugation::Служить,
         Conjugation::Обратиться,
         Conjugation::Гореть,
@@ -1017,7 +1035,6 @@ impl Conjugation {
         Conjugation::Жеваться,
         Conjugation::Обидеться,
         Conjugation::Вырваться,
-        Conjugation::Стонать,
         Conjugation::Стереть,
         Conjugation::Выспаться,
         Conjugation::Размять,
@@ -1026,7 +1043,6 @@ impl Conjugation {
         Conjugation::Зажечься,
         Conjugation::Мести,
         Conjugation::Разойтись,
-        Conjugation::Застлать,
         Conjugation::Выпить,
         Conjugation::Разогнать,
         Conjugation::Смяться,
@@ -1044,6 +1060,7 @@ impl Conjugation {
         Conjugation::Закупорить,
         Conjugation::Залгаться,
         Conjugation::Насытиться,
+        Conjugation::Стонать,
         Conjugation::Достичь,
         Conjugation::Разжечь,
         Conjugation::Морщиться,
@@ -1126,7 +1143,6 @@ impl Conjugation {
         Conjugation::Обглодать,
         Conjugation::Выгрести,
         Conjugation::Приобрестись,
-        Conjugation::Пролежать,
         Conjugation::Осечься,
         Conjugation::Изыти,
         Conjugation::Наморщиться,
@@ -1157,23 +1173,17 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
-    // Играть: 11,637 words (знать, играть, презирать, делать, уступать, скучать).
-    conjugation!("играть", 11637, "~ть";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 341] = [
+    // Играть: 11,634 words (знать, играть, презирать, делать, уступать, скучать).
+    conjugation!("играть", 11634, "~ть";
     stem non_past: "~- like играть";
     stem past: "~- like играть";
     infinitive: "~ть";
     ),
-    // Набираться: 8,293 words (отпочковываться, изъясняться, облокачиваться, кончаться, являться, сморкаться).
-    conjugation!("набираться", 8293, "~ть~я";
-    infinitive: "~ть~я";
-    non_past_1: "~ю~ь", "~ем~я";
-    non_past_2: "~ешь~я", "~ете~ь";
-    non_past_3: "~ет~я", "~ют~я";
-    past: "~л~я", "~ла~ь", "~ло~ь", "~ли~ь";
-    imperative: "~й~я", "~йте~ь";
-    participle: "~ющий~я", "~вший~я", _, _;
-    gerund: "~я~ь", "~вши~ь";
+    // Набираться: 8,293 words (отпочковываться, изъясняться, облокачиваться, кончаться, являться, сморкаться). Like Играть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("набираться", 8293, "~ть~я", like Играть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~вши~ь";
     ),
     // Вибрировать: 3,326 words (мульчировать, координировать, использовать, чувствовать, почувствовать, целовать).
     conjugation!("вибрировать", 3326, "~овать";
@@ -1181,16 +1191,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~ова- like играть";
     infinitive: "~овать";
     ),
-    // Стыковаться: 2,209 words (тусоваться, использоваться, чувствоваться, почувствоваться, целоваться, абсорбироваться).
-    conjugation!("стыковаться", 2209, "~овать~я";
-    infinitive: "~овать~я";
-    non_past_1: "~ую~ь", "~уем~я";
-    non_past_2: "~уешь~я", "~уете~ь";
-    non_past_3: "~ует~я", "~уют~я";
-    past: "~овал~я", "~овала~ь", "~овало~ь", "~овали~ь";
-    imperative: "~уй~я", "~уйте~ь";
-    participle: "~ующий~я", "~овавший~я", _, _;
-    gerund: "~уя~ь", "~овавши~ь";
+    // Стыковаться: 2,209 words (тусоваться, использоваться, чувствоваться, почувствоваться, целоваться, абсорбироваться). Like Вибрировать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("стыковаться", 2209, "~овать~я", like Вибрировать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~овавши~ь";
     ),
     // Ударить: 1,983 words (жалить, ужалить, помнить, увеличить, запомнить, значить).
     conjugation!("ударить", 1983, "~ить";
@@ -1203,24 +1207,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~ящий", _, "~имый", _;
     gerund: "~я", _;
     ),
-    // Палить: 1,330 words (говорить, поговорить, изменить, благодарить, винить, отменить). Like Ударить, except in 3 cells: imperative sg, imperative pl, participle past_pass.
-    conjugation!("палить", 1330, "~ить", like Ударить;
+    // Палить: 1,320 words (говорить, поговорить, изменить, благодарить, винить, отменить). Like Ударить, except in 3 cells: imperative sg, imperative pl, participle past_pass.
+    conjugation!("палить", 1320, "~ить", like Ударить;
     imperative: "~и", "~ите";
     participle: _, _, _, "~ённый";
     ),
-    // Числиться: 1,171 words (изъясниться, соединиться, присоединиться, объясниться, валиться, приземлиться).
-    conjugation!("числиться", 1171, "~ить~я";
-    infinitive: "~ить~я";
-    non_past_1: "~ю~ь", "~им~я";
-    non_past_2: "~ишь~я", "~ите~ь";
-    non_past_3: "~ит~я", "~ят~я";
-    past: "~ил~я", "~ила~ь", "~ило~ь", "~или~ь";
-    imperative: "~и~ь", "~ите~ь";
-    participle: "~ящий~я", "~ивший~я", _, _;
-    gerund: "~я~ь", "~ивши~ь";
+    // Числиться: 1,171 words (изъясниться, соединиться, присоединиться, объясниться, валиться, приземлиться). Like Палить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("числиться", 1171, "~ить~я", like Палить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Раздуть: 924 words (деревенеть, взять, одеревенеть, деревянеть, болеть, краснеть). Like Играть, except in 0 cells: .
-    conjugation!("раздуть", 924, "~ть", like Играть;
+    // Раздуть: 927 words (деревенеть, взять, одеревенеть, деревянеть, болеть, краснеть). Like Играть.
+    conjugation!("раздуть", 927, "~ть", like Играть;
     stem past: "~- like раздуть";
     ),
     // Завибрировать: 879 words (завибрировать, фехтовать, действовать, путешествовать, кайфовать, следовать).
@@ -1231,50 +1229,44 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~авшийˇ", _, _;
     gerund: _, "~авˇ|~авшиˇ";
     ),
-    // Рвануть: 685 words (взбзднуть, хохотнуть, блевануть, пугнуть, гнуть, ткнуть).
-    conjugation!("рвануть", 685, "~уть", [aspect: Perfective];
+    // Рвануть: 688 words (взбзднуть, хохотнуть, блевануть, пугнуть, гнуть, ткнуть).
+    conjugation!("рвануть", 688, "~уть", [aspect: Perfective];
     stem non_past: "~- like рвануть";
     stem past: "~у- like раздуть";
     infinitive: "~уть";
     ),
-    // Выделить: 604 words (учить, курить, покурить, кончить, закончить, варить). Like Палить, except in 0 cells: .
-    conjugation!("выделить", 604, "~ить", like Палить;
+    // Выделить: 614 words (учить, курить, покурить, кончить, закончить, варить). Like Палить.
+    conjugation!("выделить", 614, "~ить", like Палить;
     stem past: "~- like ударить";
     ),
-    // Усилиться: 566 words (ссориться, пялиться, ускориться, стариться, состариться, целиться). Like Числиться, except in 3 cells: imperative sg, imperative pl, gerund past.
-    conjugation!("усилиться", 566, "~ить~я", like Числиться;
-    imperative: "~ь~я", "~ьте~ь";
+    // Усилиться: 566 words (ссориться, пялиться, ускориться, стариться, состариться, целиться). Like Ударить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("усилиться", 566, "~ить~я", like Ударить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~ивши~ь|~я~ь";
     ),
-    // Тянуть: 543 words (выковырнуть, прыгнуть, пёрнуть, капнуть, шлёпнуть, взглянуть). Like Рвануть, except in 0 cells: .
-    conjugation!("тянуть", 543, "~уть", [aspect: Perfective], like Рвануть;
+    // Тянуть: 540 words (выковырнуть, прыгнуть, пёрнуть, капнуть, шлёпнуть, взглянуть). Like Рвануть.
+    conjugation!("тянуть", 540, "~уть", [aspect: Perfective], like Рвануть;
     stem non_past: "~- like тянуть";
     ),
-    // Обнажиться: 501 words (учиться, кончиться, страшиться, случиться, научиться, уменьшиться). Like Числиться, except in 4 cells: non_past_1 sg, non_past_3 pl, participle pres_act, gerund pres.
-    conjugation!("обнажиться", 501, "~ить~я", like Числиться;
-    non_past_1: "~у~ь", _;
-    non_past_3: _, "~ат~я";
-    participle: "~ащий~я", _, _, _;
-    gerund: "~а~ь", _;
+    // Обнажиться: 501 words (учиться, кончиться, страшиться, случиться, научиться, уменьшиться). Like Служить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("обнажиться", 501, "~ить~я", like Служить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Любиться: 454 words (появиться, торопиться, стремиться, влюбиться, удивиться, остановиться). Like Числиться, except in 1 cell: non_past_1 sg.
-    conjugation!("любиться", 454, "~ить~я", like Числиться;
-    non_past_1: "~лю~ь", _;
+    // Любиться: 454 words (появиться, торопиться, стремиться, влюбиться, удивиться, остановиться). Like Восстановить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("любиться", 454, "~ить~я", like Восстановить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Обернуться: 392 words (рехнуться, повернуться, проснуться, заткнуться, вернуться, улыбнуться).
-    conjugation!("обернуться", 392, "~уть~я", [aspect: Perfective];
-    infinitive: "~уть~я";
-    non_past_1: "~у~ь", "~ём~я";
-    non_past_2: "~ёшь~я", "~ёте~ь";
-    non_past_3: "~ёт~я", "~ут~я";
-    past: "~ул~я", "~ула~ь", "~уло~ь", "~ули~ь";
-    imperative: "~и~ь", "~ите~ь";
-    participle: "~ущий~я", "~увший~я", _, _;
+    // Обернуться: 392 words (рехнуться, повернуться, проснуться, заткнуться, вернуться, улыбнуться). Like Рвануть with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("обернуться", 392, "~уть~я", [aspect: Perfective], like Рвануть with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
     gerund: _, "~увши~ь";
     ),
-    // Обрушиться: 343 words (увеличиться, размножиться, кочевряжиться, дурачиться, спешиться, мучиться). Like Обнажиться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("обрушиться", 343, "~ить~я", like Обнажиться;
-    imperative: "~ь~я", "~ьте~ь";
+    // Обрушиться: 343 words (увеличиться, размножиться, кочевряжиться, дурачиться, спешиться, мучиться). Like Предназначить with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("обрушиться", 343, "~ить~я", like Предназначить with "~я", "~ь" after "аеиоу";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
     // Восстановить: 330 words (уступить, любить, полюбить, возлюбить, купить, заломить). Like Палить, except in 2 cells: non_past_1 sg, participle past_pass.
     conjugation!("восстановить", 330, "~ить", like Палить;
@@ -1307,9 +1299,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~тящий", "~тивший", "~тимый", "~ченный";
     gerund: "~тя", "~тив|~тивши";
     ),
-    // Расправиться: 296 words (нравиться, понравиться, готовиться, направиться, знакомиться, познакомиться). Like Усилиться, except in 2 cells: non_past_1 sg, gerund past.
-    conjugation!("расправиться", 296, "~ить~я", like Усилиться;
-    non_past_1: "~лю~ь", _;
+    // Расправиться: 296 words (нравиться, понравиться, готовиться, направиться, знакомиться, познакомиться). Like Трафить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("расправиться", 296, "~ить~я", like Трафить with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~ивши~ь";
     ),
     // Представить: 290 words (забавить, восславить, готовить, грабить, заставить, править). Like Ударить, except in 2 cells: non_past_1 sg, participle past_pass.
@@ -1317,45 +1309,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     non_past_1: "~лю", _;
     participle: _, _, _, "~ленный";
     ),
-    // Расходиться: 283 words (находиться, трудиться, садиться, насладиться, разводиться, родиться).
-    conjugation!("расходиться", 283, "~дить~я";
-    infinitive: "~дить~я";
-    non_past_1: "~жу~ь", "~дим~я";
-    non_past_2: "~дишь~я", "~дите~ь";
-    non_past_3: "~дит~я", "~дят~я";
-    past: "~дил~я", "~дила~ь", "~дило~ь", "~дили~ь";
-    imperative: "~ди~ь", "~дите~ь";
-    participle: "~дящий~я", "~дивший~я", _, _;
-    gerund: "~дя~ь", "~дивши~ь";
+    // Расходиться: 283 words (находиться, трудиться, садиться, насладиться, разводиться, родиться). Like Разводить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("расходиться", 283, "~дить~я", like Разводить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~дивши~ь";
     ),
-    // Закатиться: 232 words (облокотиться, расплатиться, катиться, портиться, суетиться, светиться).
-    conjugation!("закатиться", 232, "~тить~я";
-    infinitive: "~тить~я";
-    non_past_1: "~чу~ь", "~тим~я";
-    non_past_2: "~тишь~я", "~тите~ь";
-    non_past_3: "~тит~я", "~тят~я";
-    past: "~тил~я", "~тила~ь", "~тило~ь", "~тили~ь";
-    imperative: "~ти~ь", "~тите~ь";
-    participle: "~тящий~я", "~тивший~я", _, _;
-    gerund: "~тя~ь", "~тивши~ь";
+    // Закатиться: 232 words (облокотиться, расплатиться, катиться, портиться, суетиться, светиться). Like Хватить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("закатиться", 232, "~тить~я", like Хватить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~тивши~ь";
     ),
-    // Тянуться: 230 words (грохнуться, чокнуться, оглянуться, тянуться, потянуться, откликнуться). Like Обернуться, except in 4 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg.
-    conjugation!("тянуться", 230, "~уть~я", [aspect: Perfective], like Обернуться;
-    non_past_1: _, "~ем~я";
-    non_past_2: "~ешь~я", "~ете~ь";
-    non_past_3: "~ет~я", _;
+    // Тянуться: 230 words (грохнуться, чокнуться, оглянуться, тянуться, потянуться, откликнуться). Like Тянуть with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("тянуться", 230, "~уть~я", [aspect: Perfective], like Тянуть with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
+    gerund: _, "~увши~ь";
     ),
     // Залипнуть: 203 words (распухнуть, сдохнуть, замёрзнуть, высохнуть, погибнуть, окрепнуть).
     conjugation!("залипнуть", 203, "~нуть", [aspect: Perfective];
     stem non_past: "~н- like тянуть";
     stem past: "~- like залипнуть";
     infinitive: "~нуть";
-    ),
-    // Стучать: 192 words (держать, кричать, жужжать, мычать, принадлежать, лежать).
-    conjugation!("стучать", 192, "~ать";
-    stem non_past: "~- like стучать";
-    stem past: "~а- like играть";
-    infinitive: "~ать";
     ),
     // Сносить: 186 words (носить, спросить, приносить, гласить, переносить, косить).
     conjugation!("сносить", 186, "~сить";
@@ -1383,6 +1356,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~~тящийся", _, _, _;
     gerund: "~~тясь", _;
     ),
+    // Стучать: 152 words (держать, кричать, жужжать, мычать, лежать, подержать).
+    conjugation!("стучать", 152, "~ать";
+    stem non_past: "~- like стучать";
+    stem past: "~а- like играть";
+    infinitive: "~ать";
+    ),
     // Носиться: 138 words (соотноситься, согласиться, относиться, напроситься, произноситься, доноситься).
     conjugation!("носиться", 138, "~~иться";
     stem past: "~~и- like распуститься";
@@ -1398,20 +1377,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     conjugation!("забросить", 125, "~сить", like Сносить;
     imperative: "~сь", "~сьте";
     ),
-    // Встретиться: 120 words (охотиться, заботиться, встретиться, пятиться, отметиться, позаботиться). Like Закатиться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("встретиться", 120, "~тить~я", like Закатиться;
-    imperative: "~ть~я", "~тьте~ь";
+    // Засосать: 121 words (врать, ебать, ржать, заржать, соврать, рвать). Like Стучать, except in 1 cell: participle pres_pass.
+    conjugation!("засосать", 121, "~ать", like Стучать;
+    stem non_past: "~- like засосать";
+    participle: _, _, derived, _;
+    ),
+    // Встретиться: 120 words (охотиться, заботиться, встретиться, пятиться, отметиться, позаботиться). Like Отметить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("встретиться", 120, "~тить~я", like Отметить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~тивши~ь";
     ),
     // Оказать: 119 words (сказать, рассказать, промазать, показать, связать, резать).
     conjugation!("оказать", 119, "~зать";
     stem non_past: "~ж- like оказать";
     stem past: "~за- like играть";
     infinitive: "~зать";
-    ),
-    // Засосать: 118 words (врать, ебать, ржать, заржать, соврать, рвать). Like Стучать, except in 1 cell: participle pres_pass.
-    conjugation!("засосать", 118, "~ать", like Стучать;
-    stem non_past: "~- like засосать";
-    participle: _, _, derived, _;
     ),
     // Топтать: 117 words (хохотать, захохотать, прятать, спрятать, щекотать, лепетать).
     conjugation!("топтать", 117, "~тать";
@@ -1435,23 +1415,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~стящий", "~стивший", "~стимый", "~щённый";
     gerund: "~стя", "~стив|~стивши";
     ),
-    // Перестроиться: 110 words (беспокоиться, успокоиться, приклеиться, строиться, устроиться, настроиться). Like Числиться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("перестроиться", 110, "~ить~я", like Числиться;
-    imperative: "~й~я", "~йте~ь";
+    // Перестроиться: 110 words (беспокоиться, успокоиться, приклеиться, строиться, устроиться, настроиться). Like Стоить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("перестроиться", 110, "~ить~я", like Стоить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Держаться: 108 words (воздержаться, мчаться, держаться, послышаться, слышаться, содержаться). Like Обнажиться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("держаться", 108, "~ать~я", like Обнажиться;
-    infinitive: "~ать~я";
-    past: "~ал~я", "~ала~ь", "~ало~ь", "~али~ь";
-    participle: _, "~авший~я", _, _;
+    // Держаться: 108 words (воздержаться, мчаться, держаться, послышаться, слышаться, содержаться). Like Стучать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("держаться", 108, "~ать~я", like Стучать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~авши~ь";
     ),
-    // Сорваться: 103 words (ебаться, стебаться, усраться, обосраться, дождаться, заебаться). Like Обернуться, except in 8 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("сорваться", 103, "~ать~я", like Обернуться;
-    infinitive: "~ать~я";
-    past: "~ал~я", "~ала~ь", "~ало~ь|~ало~ь", "~али~ь|~али~ь";
-    participle: _, "~авший~я", _, _;
-    gerund: "~я~ь", "~авши~ь";
+    // Сорваться: 103 words (ебаться, стебаться, усраться, обосраться, дождаться, заебаться). Like Засосать with `~я` after each pattern (`~ь` after а, е, и, у, я), except in 4 cells: past n, past pl, participle past_pass, gerund past.
+    conjugation!("сорваться", 103, "~ать~я", like Засосать with "~я", "~ь" after "аеиуя";
+    past: _, _, "~ало~ь|~ало~ь", "~али~ь|~али~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~авши~ь";
     ),
     // Трафить: 103 words (суесловить, буравить, брасопить, дыбить, шароёбить, стрёмить). Like Представить, except in 2 cells: participle pres_pass, gerund past.
     conjugation!("трафить", 103, "~ить", [aspect: Imperfective], like Представить;
@@ -1475,9 +1453,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~зящий", "~зивший", "~зимый", "~женный";
     gerund: "~зя", "~зив|~зивши";
     ),
-    // Наладиться: 95 words (ладиться, наладиться, отвадиться, сгрудиться, заладиться, повадиться). Like Расходиться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("наладиться", 95, "~дить~я", like Расходиться;
-    imperative: "~дь~я", "~дьте~ь";
+    // Наладиться: 95 words (ладиться, наладиться, отвадиться, сгрудиться, заладиться, повадиться). Like Наладить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("наладиться", 95, "~дить~я", like Наладить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~дивши~ь";
     ),
     // Переброситься: 93 words (выситься, броситься, возвыситься, повыситься, свеситься, наброситься). Like Носиться, except in 2 cells: imperative sg, imperative pl.
     conjugation!("переброситься", 93, "~~иться", like Носиться;
@@ -1502,16 +1481,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     conjugation!("наладить", 83, "~дить", like Разводить;
     imperative: "~дь", "~дьте";
     ),
-    // Выразиться: 81 words (сразиться, возиться, выразиться, выгрузиться, отразиться, грузиться).
-    conjugation!("выразиться", 81, "~зить~я";
-    infinitive: "~зить~я";
-    non_past_1: "~жу~ь", "~зим~я";
-    non_past_2: "~зишь~я", "~зите~ь";
-    non_past_3: "~зит~я", "~зят~я";
-    past: "~зил~я", "~зила~ь", "~зило~ь", "~зили~ь";
-    imperative: "~зи~ь", "~зите~ь";
-    participle: "~зящий~я", "~зивший~я", _, _;
-    gerund: "~зя~ь", "~зивши~ь";
+    // Выразиться: 81 words (сразиться, возиться, выразиться, выгрузиться, отразиться, грузиться). Like Вывозить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("выразиться", 81, "~зить~я", like Вывозить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~зивши~ь";
     ),
     // Стать: 81 words (стать, устать, застрять, перестать, встать, надеть). Like Залипнуть, except in 2 cells: infinitive, participle pres_act.
     conjugation!("стать", 81, "~ть", [aspect: Perfective], like Залипнуть;
@@ -1540,11 +1513,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~ющий", _, "~ваемый", _;
     gerund: "~вая", _;
     ),
-    // Развеяться: 73 words (надеяться, каяться, покаяться, маяться, измаяться, отчаяться). Like Набираться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("развеяться", 73, "~ять~я", like Набираться;
-    infinitive: "~ять~я";
-    past: "~ял~я", "~яла~ь", "~яло~ь", "~яли~ь";
-    participle: _, "~явший~я", _, _;
+    // Развеяться: 73 words (надеяться, каяться, покаяться, маяться, измаяться, отчаяться). Like Развеять with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("развеяться", 73, "~ять~я", like Развеять with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~явши~ь";
     ),
     // Коптить: 72 words (коптить, сплотить, золотить, закоптить, кипятить, вскипятить). Like Хватить, except in 1 cell: participle past_pass.
@@ -1556,11 +1527,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~- like сычевать";
     infinitive: "~евать";
     ),
-    // Стушеваться: 71 words (стушеваться, тушеваться, разбушеваться, зарубцеваться, кольцеваться, вытанцеваться). Like Стыковаться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("стушеваться", 71, "~евать~я", like Стыковаться;
-    infinitive: "~евать~я";
-    past: "~евал~я", "~евала~ь", "~евало~ь", "~евали~ь";
-    participle: _, "~евавший~я", _, _;
+    // Стушеваться: 71 words (стушеваться, тушеваться, разбушеваться, зарубцеваться, кольцеваться, вытанцеваться). Like Сычевать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("стушеваться", 71, "~евать~я", like Сычевать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~евавши~ь";
     ),
     // Забить: 68 words (пить, бить, лить, вить, шить, побить).
@@ -1574,9 +1543,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~ьющий", _, _, _;
     gerund: "~ья", _;
     ),
-    // Сблизиться: 66 words (приблизиться, сконфузиться, близиться, снизиться, сузиться, сблизиться). Like Выразиться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("сблизиться", 66, "~зить~я", like Выразиться;
-    imperative: "~зь~я", "~зьте~ь";
+    // Сблизиться: 66 words (приблизиться, сконфузиться, близиться, снизиться, сузиться, сблизиться). Like Елозить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("сблизиться", 66, "~зить~я", like Елозить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~зивши~ь";
     ),
     // Бухтеть: 65 words (лететь, полететь, взлететь, вертеть, вылететь, прилететь). Like Хватить, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
     conjugation!("бухтеть", 65, "~теть", like Хватить;
@@ -1597,8 +1567,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~е~вший", _, "~ё~нный";
     gerund: _, "~е~в|~е~вши";
     ),
-    // Обтечь: 59 words (печь, испечь, спечь, стечь, течь, развлечь).
-    conjugation!("обтечь", 59, "~ечь";
+    // Обтечь: 60 words (печь, испечь, спечь, стечь, течь, развлечь).
+    conjugation!("обтечь", 60, "~ечь", [aspect: Perfective];
     stem non_past: "~е- like обтечь";
     infinitive: "~ечь";
     past: "~ёк", "~екла", "~екло", "~екли";
@@ -1641,10 +1611,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~ьющий~я", "~ивший~я", _, _;
     gerund: "~ья~ь", "~ивши~ь";
     ),
-    // Сунуться: 57 words (двинуться, прикинуться, кинуться, дотронуться, тронуться, ринуться). Like Тянуться, except in 3 cells: imperative sg, imperative pl, participle pres_act.
-    conjugation!("сунуться", 57, "~уть~я", [aspect: Perfective], like Тянуться;
-    imperative: "~ь~я", "~ьте~ь";
-    participle: derived, _, _, _;
+    // Сунуться: 57 words (двинуться, прикинуться, кинуться, дотронуться, тронуться, ринуться). Like Подкинуть with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("сунуться", 57, "~уть~я", [aspect: Perfective], like Подкинуть with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
+    gerund: _, "~увши~ь";
     ),
     // Колоть: 55 words (полоть, колоть, пороть, выполоть, прополоть, выпороть).
     conjugation!("колоть", 55, "~оть";
@@ -1652,32 +1622,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~о- like раздуть";
     infinitive: "~оть";
     ),
-    // Раскрыться: 55 words (мыться, помыться, скрыться, открыться, умыться, срыться).
-    conjugation!("раскрыться", 55, "~ыть~я";
-    infinitive: "~ыть~я";
-    non_past_1: "~ою~ь", "~оем~я";
-    non_past_2: "~оешь~я", "~оете~ь";
-    non_past_3: "~оет~я", "~оют~я";
-    past: "~ыл~я", "~ыла~ь", "~ыло~ь", "~ыли~ь";
-    imperative: "~ой~я", "~ойте~ь";
-    participle: "~оющий~я", "~ывший~я", _, _;
-    gerund: "~оя~ь", "~ывши~ь";
+    // Раскрыться: 55 words (мыться, помыться, скрыться, открыться, умыться, срыться). Like Открыть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("раскрыться", 55, "~ыть~я", like Открыть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ывши~ь";
     ),
     // Заглохнуть: 54 words (достигнуть, проникнуть, возникнуть, затихнуть, подвергнуть, расторгнуть). Like Залипнуть, except in 1 cell: participle pres_act.
     conjugation!("заглохнуть", 54, "~нуть", [aspect: Perfective], like Залипнуть;
     stem past: "~- like заглохнуть";
     participle: derived, _, _, _;
     ),
-    // Влечься: 53 words (отречься, увлечься, растечься, отвлечься, стечься, влечься).
-    conjugation!("влечься", 53, "~ечь~я";
-    infinitive: "~ечь~я";
-    non_past_1: "~еку~ь", "~ечём~я";
-    non_past_2: "~ечёшь~я", "~ечёте~ь";
-    non_past_3: "~ечёт~я", "~екут~я";
-    past: "~ёк~я", "~екла~ь", "~екло~ь", "~екли~ь";
-    imperative: "~еки~ь", "~еките~ь";
-    participle: "~екущий~я", "~ёкший~я", _, _;
-    gerund: _, "~ёкши~ь";
+    // Влечься: 53 words (отречься, увлечься, растечься, отвлечься, стечься, влечься). Like Обтечь with `~ь` after each pattern (`~я` after й, к, м, т, ь), except in 2 cells: participle pres_pass, participle past_pass.
+    conjugation!("влечься", 53, "~ечь~я", like Обтечь with "~ь", "~я" after "йкмть";
+    participle: _, _, derived, derived;
     ),
     // Чесаться: 53 words (подписаться, записаться, писаться, расписаться, вписаться, описаться).
     conjugation!("чесаться", 53, "~~аться";
@@ -1695,16 +1652,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     non_past_1: "~щу", _;
     participle: _, _, _, "~щенный";
     ),
-    // Отказаться: 52 words (казаться, оказаться, показаться, отказаться, обязаться, высказаться).
-    conjugation!("отказаться", 52, "~зать~я";
-    infinitive: "~зать~я";
-    non_past_1: "~жу~ь", "~жем~я";
-    non_past_2: "~жешь~я", "~жете~ь";
-    non_past_3: "~жет~я", "~жут~я";
-    past: "~зал~я", "~зала~ь", "~зало~ь", "~зали~ь";
-    imperative: "~жи~ь", "~жите~ь";
-    participle: "~жущий~я", "~завший~я", _, _;
-    gerund: "~жа~ь", "~завши~ь";
+    // Отказаться: 52 words (казаться, оказаться, показаться, отказаться, обязаться, высказаться). Like Оказать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("отказаться", 52, "~зать~я", like Оказать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~завши~ь";
     ),
     // Пасть: 52 words (класть, пропасть, напасть, красть, украсть, пасть).
     conjugation!("пасть", 52, "~сть";
@@ -1714,16 +1665,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~вший", _, "~денный";
     gerund: _, "~в|~вши";
     ),
-    // Отдаваться: 51 words (издаваться, оставаться, сдаваться, расставаться, удаваться, раздаваться).
-    conjugation!("отдаваться", 51, "~вать~я", [aspect: Imperfective];
-    infinitive: "~вать~я";
-    non_past_1: "~ю~ь", "~ём~я";
-    non_past_2: "~ёшь~я", "~ёте~ь";
-    non_past_3: "~ёт~я", "~ют~я";
-    past: "~вал~я", "~вала~ь", "~вало~ь", "~вали~ь";
-    imperative: "~вай~я", "~вайте~ь";
-    participle: "~ющий~я", "~вавший~я", _, _;
-    gerund: "~вая~ь", "~вавши~ь";
+    // Отдаваться: 51 words (издаваться, оставаться, сдаваться, расставаться, удаваться, раздаваться). Like Отдавать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle pres_pass, gerund past.
+    conjugation!("отдаваться", 51, "~вать~я", [aspect: Imperfective], like Отдавать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, _;
+    gerund: _, "~вавши~ь";
+    ),
+    // Драть: 51 words (брать, избрать, собрать, удрать, стлать, постлать).
+    conjugation!("драть", 51, "~~ать";
+    stem non_past: "~е~- like пасть";
+    stem past: "~~а- like играть";
+    infinitive: "~~ать";
     ),
     // Идти: 51 words (идти, пасти, спасти, ползти, припасти, упасти). Like Засосать, except in 8 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
     conjugation!("идти", 51, "~ти", like Засосать;
@@ -1733,11 +1684,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~ший", _, "~ённый";
     gerund: _, "~ши";
     ),
-    // Глядеться: 48 words (увидеться, видеться, привидеться, вглядеться, наглядеться, оглядеться). Like Расходиться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("глядеться", 48, "~деть~я", like Расходиться;
-    infinitive: "~деть~я";
-    past: "~дел~я", "~дела~ь", "~дело~ь", "~дели~ь";
-    participle: _, "~девший~я", _, _;
+    // Глядеться: 48 words (увидеться, видеться, привидеться, вглядеться, наглядеться, оглядеться). Like Сидеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("глядеться", 48, "~деть~я", like Сидеть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~девши~ь";
     ),
     // Развести: 48 words (провести, перевести, увести, завести, произвести, извести).
@@ -1769,30 +1718,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~ё~ший", _, "~е~ённый";
     gerund: _, "~е~я|~ё~ши";
     ),
-    // Драть: 43 words (брать, избрать, собрать, удрать, стлать, забрать).
-    conjugation!("драть", 43, "~~ать";
-    stem non_past: "~е~- like пасть";
-    stem past: "~~а- like играть";
-    infinitive: "~~ать";
+    // Трещать: 43 words (принадлежать, бренчать, дребезжать, трещать, верещать, содержать).
+    conjugation!("трещать", 43, "~е~ать";
+    stem non_past: "~е~- like стучать";
+    infinitive: "~е~ать";
+    past: "~е~ал", "~е~ала", "~е~ало", "~е~али";
+    participle: _, "~е~авший", _, "~ё~анный";
+    gerund: _, "~е~ав";
     ),
-    // Колоться: 42 words (бороться, приколоться, расколоться, колоться, напороться, побороться). Like Набираться, except in 9 cells: infinitive, past m, past f, past n, past pl, imperative sg, ….
-    conjugation!("колоться", 42, "~оть~я", like Набираться;
-    infinitive: "~оть~я";
-    past: "~ол~я", "~ола~ь", "~оло~ь", "~оли~ь";
-    imperative: "~и~ь", "~ите~ь";
-    participle: _, "~овший~я", _, _;
+    // Колоться: 42 words (бороться, приколоться, расколоться, колоться, напороться, побороться). Like Колоть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("колоться", 42, "~оть~я", like Колоть with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~овши~ь";
     ),
-    // Топтаться: 42 words (метаться, топтаться, расхохотаться, заметаться, шептаться, потоптаться).
-    conjugation!("топтаться", 42, "~тать~я";
-    infinitive: "~тать~я";
-    non_past_1: "~чу~ь", "~чем~я";
-    non_past_2: "~чешь~я", "~чете~ь";
-    non_past_3: "~чет~я", "~чут~я";
-    past: "~тал~я", "~тала~ь", "~тало~ь", "~тали~ь";
-    imperative: "~чи~ь", "~чите~ь";
-    participle: "~чущий~я", "~тавший~я", _, _;
-    gerund: "~ча~ь", "~тавши~ь";
+    // Топтаться: 42 words (метаться, топтаться, расхохотаться, заметаться, шептаться, потоптаться). Like Топтать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("топтаться", 42, "~тать~я", like Топтать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~тавши~ь";
     ),
     // Пыхать: 42 words (въехать, махать, брехать, объехать, подъехать, пахать).
     conjugation!("пыхать", 42, "~хать";
@@ -1816,8 +1758,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~са- like играть";
     infinitive: "~сать";
     ),
-    // Обволочь: 40 words (мочь, смочь, помочь, сволочь, волочь, приволочь).
-    conjugation!("обволочь", 40, "~чь", [aspect: Perfective];
+    // Отобразить: 39 words (вообразить, отразить, исказить, разить, сразить, водрузить). Like Вывозить, except in 1 cell: participle past_pass.
+    conjugation!("отобразить", 39, "~зить", like Вывозить;
+    participle: _, _, _, "~жённый";
+    ),
+    // Сбиться: 39 words (влиться, сбиться, развиться, взвиться, разбиться, отбиться). Like Разбить with `~я` after each pattern (`~ь` after а, е, и, о, ю), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("сбиться", 39, "~~ить~я", [aspect: Perfective], like Разбить with "~я", "~ь" after "аеиою";
+    participle: _, _, _, derived;
+    gerund: _, "~~ивши~ь";
+    ),
+    // Обволочь: 39 words (мочь, смочь, помочь, сволочь, волочь, приволочь).
+    conjugation!("обволочь", 39, "~чь";
     infinitive: "~чь";
     non_past_1: "~ку", "~чём";
     non_past_2: "~чёшь", "~чёте";
@@ -1827,39 +1778,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~кущий", "~кший", _, "~чённый";
     gerund: _, "~кши";
     ),
-    // Отобразить: 39 words (вообразить, отразить, исказить, разить, сразить, водрузить). Like Вывозить, except in 1 cell: participle past_pass.
-    conjugation!("отобразить", 39, "~зить", like Вывозить;
-    participle: _, _, _, "~жённый";
-    ),
-    // Сбиться: 39 words (влиться, сбиться, развиться, взвиться, разбиться, отбиться).
-    conjugation!("сбиться", 39, "~~ить~я", [aspect: Perfective];
-    infinitive: "~~ить~я";
-    non_past_1: "~о~ью~ь", "~о~ьём~я";
-    non_past_2: "~о~ьёшь~я", "~о~ьёте~ь";
-    non_past_3: "~о~ьёт~я", "~о~ьют~я";
-    past: "~~ил~я", "~~ила~ь", "~~ило~ь", "~~или~ь";
-    imperative: "~~ей~я", "~~ейте~ь";
-    participle: _, "~~ивший~я", _, _;
-    gerund: _, "~~ивши~ь";
-    ),
-    // Служить: 37 words (сообщить, обобщить, приобщить, истощить, разобщить, переборщить). Like Палить, except in 0 cells: .
+    // Служить: 37 words (сообщить, обобщить, приобщить, истощить, разобщить, переборщить). Like Палить.
     conjugation!("служить", 37, "~ить", like Палить;
     stem non_past: "~- like стучать";
     ),
-    // Обратиться: 37 words (превратиться, обратиться, прекратиться, возвратиться, смутиться, возмутиться). Like Закатиться, except in 2 cells: non_past_1 sg, gerund past.
-    conjugation!("обратиться", 37, "~тить~я", [aspect: Perfective], like Закатиться;
-    non_past_1: "~щу~ь", _;
+    // Обратиться: 37 words (превратиться, обратиться, прекратиться, возвратиться, смутиться, возмутиться). Like Защитить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("обратиться", 37, "~тить~я", [aspect: Perfective], like Защитить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~тивши~ь|~тя~ь";
     ),
     // Гореть: 37 words (сгореть, смотреть, гореть, посмотреть, велеть, загореть). Like Прошипеть, except in 1 cell: non_past_1 sg.
     conjugation!("гореть", 37, "~еть", like Прошипеть;
     non_past_1: "~ю", _;
     ),
-    // Загореться: 36 words (рассмотреться, смотреться, загореться, предусмотреться, просмотреться, присмотреться). Like Числиться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("загореться", 36, "~еть~я", like Числиться;
-    infinitive: "~еть~я";
-    past: "~ел~я", "~ела~ь", "~ело~ь", "~ели~ь";
-    participle: _, "~евший~я", _, _;
+    // Загореться: 36 words (рассмотреться, смотреться, загореться, предусмотреться, просмотреться, присмотреться). Like Гореть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle pres_pass, gerund past.
+    conjugation!("загореться", 36, "~еть~я", like Гореть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, _;
     gerund: _, "~евши~ь";
     ),
     // Щипать: 35 words (засыпать, дремать, задремать, сыпать, насыпать, высыпать).
@@ -1873,16 +1807,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~лющий", _, "~аемый", _;
     gerund: "~ля", _;
     ),
-    // Трепаться: 34 words (колебаться, поколебаться, трепаться, истрепаться, заколебаться, затрепаться).
-    conjugation!("трепаться", 34, "~ать~я";
-    infinitive: "~ать~я";
-    non_past_1: "~лю~ь", "~лем~я";
-    non_past_2: "~лешь~я", "~лете~ь";
-    non_past_3: "~лет~я", "~лют~я";
-    past: "~ал~я", "~ала~ь", "~ало~ь", "~али~ь";
-    imperative: "~ли~ь", "~лите~ь";
-    participle: "~лющий~я", "~авший~я", _, _;
-    gerund: "~ля~ь", "~авши~ь";
+    // Трепаться: 34 words (колебаться, поколебаться, трепаться, истрепаться, заколебаться, затрепаться). Like Щипать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("трепаться", 34, "~ать~я", like Щипать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~авши~ь";
     ),
     // Сплести: 34 words (сплести, расплести, подмести, взгнести, помести, смести).
     conjugation!("сплести", 34, "~ести", [aspect: Perfective];
@@ -1904,27 +1832,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     conjugation!("станцевать", 33, "~евать", like Сычевать;
     participle: _, _, _, "~ованный";
     ),
-    // Резаться: 32 words (врезаться, резаться, мазаться, нарезаться, размазаться, измазаться). Like Отказаться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("резаться", 32, "~зать~я", like Отказаться;
+    // Резаться: 32 words (врезаться, резаться, мазаться, нарезаться, размазаться, измазаться). Like Оказать with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 4 cells: imperative sg, imperative pl, participle past_pass, gerund past.
+    conjugation!("резаться", 32, "~зать~я", like Оказать with "~я", "~ь" after "аеиоу";
     imperative: "~жь~я", "~жьте~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~завши~ь";
     ),
-    // Отвоеваться: 32 words (отвоеваться, навоеваться, довоеваться, развоеваться, изгореваться, нагореваться).
-    conjugation!("отвоеваться", 32, "~евать~я";
-    infinitive: "~евать~я";
-    non_past_1: "~юю~ь", "~юем~я";
-    non_past_2: "~юешь~я", "~юете~ь";
-    non_past_3: "~юет~я", "~юют~я";
-    past: "~евал~я", "~евала~ь", "~евало~ь", "~евали~ь";
-    imperative: "~юй~я", "~юйте~ь";
-    participle: "~юющий~я", "~евавший~я", _, _;
-    gerund: "~юя~ь", "~евавши~ь";
+    // Отвоеваться: 32 words (отвоеваться, навоеваться, довоеваться, развоеваться, изгореваться, нагореваться). Like Отвоевать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("отвоеваться", 32, "~евать~я", like Отвоевать with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~евавши~ь";
     ),
-    // Трястись: 31 words (трястись, пастись, сотрястись, спастись, затрястись, стрястись). Like Сорваться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("трястись", 31, "~ти~ь", like Сорваться;
-    infinitive: "~ти~ь";
-    past: "~~я", "~ла~ь", "~ло~ь", "~ли~ь";
-    participle: _, "~ший~я", _, _;
-    gerund: _, "~ши~ь";
+    // Трястись: 31 words (трястись, пастись, сотрястись, спастись, затрястись, стрястись). Like Идти with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle pres_pass, participle past_pass.
+    conjugation!("трястись", 31, "~ти~ь", like Идти with "~ь", "~я" after "~ймть";
+    participle: _, _, derived, derived;
     ),
     // Обыскать: 31 words (искать, полоскать, отыскать, поискать, разыскать, обыскать).
     conjugation!("обыскать", 31, "~скать";
@@ -2006,37 +1927,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     infinitive: "~стеть";
     participle: _, _, _, derived;
     ),
-    // Терпеться: 26 words (терпеться, натерпеться, обтерпеться, притерпеться, раскипеться, расшуметься). Like Загореться, except in 1 cell: non_past_1 sg.
-    conjugation!("терпеться", 26, "~еть~я", like Загореться;
-    non_past_1: "~лю~ь", _;
+    // Терпеться: 26 words (терпеться, натерпеться, обтерпеться, притерпеться, раскипеться, расшуметься). Like Прошипеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle pres_pass, gerund past.
+    conjugation!("терпеться", 26, "~еть~я", like Прошипеть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, _;
+    gerund: _, "~евши~ь";
     ),
-    // Плеваться: 26 words (плеваться, расплеваться, наклеваться, наплеваться, облеваться, обплеваться). Like Отвоеваться, except in 4 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg.
-    conjugation!("плеваться", 26, "~евать~я", like Отвоеваться;
-    non_past_1: _, "~юём~я";
-    non_past_2: "~юёшь~я", "~юёте~ь";
-    non_past_3: "~юёт~я", _;
+    // Плеваться: 26 words (плеваться, расплеваться, наклеваться, наплеваться, облеваться, обплеваться). Like Клевать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("плеваться", 26, "~евать~я", like Клевать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~евавши~ь";
     ),
-    // Стричься: 26 words (напрячься, достичься, стричься, остричься, обстричься, подстричься).
-    conjugation!("стричься", 26, "~чь~я", [aspect: Perfective];
-    infinitive: "~чь~я";
-    non_past_1: "~гу~ь", "~жём~я";
-    non_past_2: "~жёшь~я", "~жёте~ь";
-    non_past_3: "~жёт~я", "~гут~я";
-    past: "~г~я", "~гла~ь", "~гло~ь", "~гли~ь";
-    imperative: "~ги~ь", "~гите~ь";
-    participle: "~гущий~я", "~гший~я", _, _;
-    gerund: _, "~гши~ь";
+    // Стричься: 26 words (напрячься, достичься, стричься, остричься, обстричься, подстричься). Like Постричь with `~ь` after each pattern (`~я` after г, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("стричься", 26, "~чь~я", [aspect: Perfective], like Постричь with "~ь", "~я" after "гймть";
+    participle: _, _, _, derived;
     ),
-    // Упереться: 26 words (запереться, упереться, опереться, простереться, тереться, потереться).
-    conjugation!("упереться", 26, "~е~еть~я";
-    infinitive: "~е~еть~я";
-    non_past_1: "~~у~ь", "~~ём~я";
-    non_past_2: "~~ёшь~я", "~~ёте~ь";
-    non_past_3: "~~ёт~я", "~~ут~я";
-    past: "~ё~~я", "~ё~ла~ь", "~ё~ло~ь", "~ё~ли~ь";
-    imperative: "~~и~ь", "~~ите~ь";
-    participle: "~~ущий~я", "~ё~ший~я", _, _;
-    gerund: _, "~ё~ши~ь";
+    // Упереться: 26 words (запереться, упереться, опереться, простереться, тереться, потереться). Like Тереть with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("упереться", 26, "~е~еть~я", like Тереть with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
     ),
     // Тухнуть: 25 words (исчезнуть, привыкнуть, крепнуть, гибнуть, дрыхнуть, гаснуть). Like Залипнуть, except in 3 cells: past m, participle past_act, gerund past.
     conjugation!("тухнуть", 25, "~нуть", like Залипнуть;
@@ -2050,36 +1957,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~- like прошипеть";
     infinitive: "~ть";
     ),
-    // Разлететься: 24 words (вертеться, разлететься, завертеться, отвертеться, довертеться, навертеться). Like Закатиться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("разлететься", 24, "~теть~я", like Закатиться;
-    infinitive: "~теть~я";
-    past: "~тел~я", "~тела~ь", "~тело~ь", "~тели~ь";
-    participle: _, "~тевший~я", _, _;
+    // Разлететься: 24 words (вертеться, разлететься, завертеться, отвертеться, довертеться, навертеться). Like Бухтеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("разлететься", 24, "~теть~я", like Бухтеть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
     gerund: _, "~тевши~ь";
     ),
-    // Расплыться: 24 words (житься, прижиться, расплыться, ужиться, разжиться, сжиться).
-    conjugation!("расплыться", 24, "~ть~я";
-    infinitive: "~ть~я";
-    non_past_1: "~ву~ь", "~вём~я";
-    non_past_2: "~вёшь~я", "~вёте~ь";
-    non_past_3: "~вёт~я", "~вут~я";
-    past: "~л~я|~л~я", "~ла~ь", "~ло~ь|~ло~ь", "~ли~ь";
-    imperative: "~ви~ь", "~вите~ь";
-    participle: _, "~вший~я", _, _;
+    // Расплыться: 24 words (житься, прижиться, расплыться, ужиться, разжиться, сжиться). Like Дожить with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 3 cells: past pl, participle past_pass, gerund past.
+    conjugation!("расплыться", 24, "~ть~я", like Дожить with "~я", "~ь" after "аеиоу";
+    past: _, _, _, "~ли~ь";
+    participle: _, _, _, derived;
     gerund: _, "~вши~ь";
     ),
-    // Вторгнуться: 24 words (вторгнуться, подвергнуться, проникнуться, слипнуться, выдохнуться, смеркнуться).
-    conjugation!("вторгнуться", 24, "~нуть~я", [aspect: Perfective];
-    infinitive: "~нуть~я";
-    non_past_1: "~ну~ь", "~нем~я";
-    non_past_2: "~нешь~я", "~нете~ь";
-    non_past_3: "~нет~я", "~нут~я";
-    past: "~~я", "~ла~ь", "~ло~ь", "~ли~ь";
-    imperative: "~ни~ь", "~ните~ь";
-    participle: "~нущий~я", "~ший~я", _, _;
-    gerund: _, "~ши~ь";
+    // Вторгнуться: 24 words (вторгнуться, подвергнуться, проникнуться, слипнуться, выдохнуться, смеркнуться). Like Залипнуть with `~ь` after each pattern (`~я` after ~, й, м, т, ь).
+    conjugation!("вторгнуться", 24, "~нуть~я", [aspect: Perfective], like Залипнуть with "~ь", "~я" after "~ймть";
     ),
-    // Проскочить: 23 words (тащить, вытащить, затащить, потащить, притащить, стащить). Like Служить, except in 0 cells: .
+    // Проскочить: 23 words (тащить, вытащить, затащить, потащить, притащить, стащить). Like Служить.
     conjugation!("проскочить", 23, "~ить", [aspect: Perfective], like Служить;
     stem past: "~- like ударить";
     ),
@@ -2105,13 +1997,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~е- like раздуть";
     infinitive: "~еть";
     ),
-    // Отдаться: 21 words (издаться, удаться, сдаться, раздаться, выдаться, даться). Like Расплыться, except in 9 cells: non_past_1 sg, non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, ….
-    conjugation!("отдаться", 21, "~ть~я", [aspect: Perfective], like Расплыться;
-    non_past_1: "~м~я", "~дим~я";
-    non_past_2: "~шь~я", "~дите~ь";
-    non_past_3: "~~тся", "~дут~я";
-    past: _, _, _, "~ли~ь|~ли~ь";
-    imperative: "~й~я", "~йте~ь";
+    // Отдаться: 21 words (издаться, удаться, сдаться, раздаться, выдаться, даться). Like Сдать with `~я` after each pattern (`~ь` after а, е, и), except in 4 cells: non_past_3 sg, past n, participle past_pass, gerund past.
+    conjugation!("отдаться", 21, "~ть~я", [aspect: Perfective], like Сдать with "~я", "~ь" after "аеи";
+    non_past_3: "~~тся", _;
+    past: _, _, "~ло~ь|~ло~ь", _;
+    participle: _, _, _, derived;
+    gerund: _, "~вши~ь";
     ),
     // Дорасти: 21 words (расти, возрасти, порасти, зарасти, нарасти, подрасти).
     conjugation!("дорасти", 21, "~а~ти", [aspect: Perfective];
@@ -2125,12 +2016,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~ы- like раздуть";
     infinitive: "~ыть";
     ),
-    // Унестись: 21 words (произнестись, донестись, отнестись, пронестись, понестись, перенестись). Like Набраться, except in 9 cells: infinitive, past m, past f, past n, past pl, participle pres_act, ….
-    conjugation!("унестись", 21, "~е~ти~ь", [aspect: Perfective], like Набраться;
-    infinitive: "~е~ти~ь";
-    past: "~ё~~я", "~е~ла~ь", "~е~ло~ь", "~е~ли~ь";
-    participle: derived, "~ё~ший~я", _, _;
-    gerund: derived, "~е~я~ь|~ё~ши~ь";
+    // Унестись: 21 words (произнестись, донестись, отнестись, пронестись, понестись, перенестись). Like Снести with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("унестись", 21, "~е~ти~ь", [aspect: Perfective], like Снести with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
     ),
     // Набежать: 20 words (бежать, побежать, избежать, выбежать, убежать, сбежать).
     conjugation!("набежать", 20, "~жать", [aspect: Perfective];
@@ -2142,12 +2030,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     imperative: "~ги", "~гите";
     participle: "~гущий", _, _, _;
     ),
-    // Расстаться: 20 words (остаться, расстаться, одеться, раздеться, переодеться, достаться). Like Вторгнуться, except in 7 cells: infinitive, past m, imperative sg, imperative pl, participle pres_act, participle past_act, ….
-    conjugation!("расстаться", 20, "~ть~я", [aspect: Perfective], like Вторгнуться;
-    infinitive: "~ть~я";
-    past: "~л~я", _, _, _;
-    imperative: "~нь~я", "~ньте~ь";
-    participle: derived, "~вший~я", _, _;
+    // Расстаться: 20 words (остаться, расстаться, одеться, раздеться, переодеться, достаться). Like Стать with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("расстаться", 20, "~ть~я", [aspect: Perfective], like Стать with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
     gerund: _, "~вши~ь";
     ),
     // Грызть: 20 words (грызть, обгрызть, огрызть, догрызть, загрызть, изгрызть). Like Идти, except in 1 cell: infinitive.
@@ -2218,16 +2103,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     past: "~л~я", _, "~ло~ь", "~ли~ь";
     imperative: "~шь~я", "~шьте~ь";
     ),
-    // Потчевать: 18 words (потчевать, выкорчевать, вымежевать, запотчевать, напотчевать, отпотчевать). Like Сычевать, except in 0 cells: .
+    // Потчевать: 18 words (потчевать, выкорчевать, вымежевать, запотчевать, напотчевать, отпотчевать). Like Сычевать.
     conjugation!("потчевать", 18, "~евать", like Сычевать;
     stem past: "~ева- like играть";
     ),
-    // Устояться: 17 words (бояться, состояться, забояться, побояться, устояться, застояться). Like Развеяться, except in 6 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, participle pres_act.
-    conjugation!("устояться", 17, "~ять~я", like Развеяться;
-    non_past_1: _, "~им~я";
-    non_past_2: "~ишь~я", "~ите~ь";
-    non_past_3: "~ит~я", "~ят~я";
-    participle: "~ящий~я", _, _, _;
+    // Устояться: 17 words (бояться, состояться, забояться, побояться, устояться, застояться). Like Стоять with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 1 cell: gerund past.
+    conjugation!("устояться", 17, "~ять~я", like Стоять with "~ь", "~я" after "йлмть";
+    gerund: _, "~явши~ь";
     ),
     // Лезть: 17 words (залезть, лезть, полезть, влезть, слезть, пролезть). Like Грызть, except in 8 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, imperative sg, imperative pl, ….
     conjugation!("лезть", 17, "~ть", like Грызть;
@@ -2250,11 +2132,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~е~авший", derived, "~ё~анный";
     gerund: _, "~е~ав|~е~авши";
     ),
-    // Колыхаться: 17 words (колыхаться, набрехаться, напахаться, отбрехаться, размахаться, выпахаться). Like Чесаться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("колыхаться", 17, "~хать~я", like Чесаться;
-    infinitive: "~хать~я";
-    past: "~хал~я", "~хала~ь", "~хало~ь", "~хали~ь";
-    participle: _, "~хавший~я", _, _;
+    // Колыхаться: 17 words (колыхаться, набрехаться, напахаться, отбрехаться, размахаться, выпахаться). Like Пыхать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("колыхаться", 17, "~хать~я", like Пыхать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~хавши~ь";
     ),
     // Гнать: 17 words (гнать, вызвать, догнать, выгнать, погнать, пригнать).
@@ -2263,9 +2143,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~~а- like играть";
     infinitive: "~~ать";
     ),
-    // Вгрызться: 17 words (вгрызться, нагрызться, отгрызться, погрызться, разлезться, прогрызться). Like Трястись, except in 1 cell: infinitive.
-    conjugation!("вгрызться", 17, "~ть~я", like Трястись;
-    infinitive: "~ть~я";
+    // Вгрызться: 17 words (вгрызться, нагрызться, отгрызться, погрызться, разлезться, прогрызться). Like Грызть with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle pres_pass, participle past_pass.
+    conjugation!("вгрызться", 17, "~ть~я", like Грызть with "~ь", "~я" after "~ймть";
+    participle: _, _, derived, derived;
     ),
     // Постричь: 17 words (пренебречь, стричь, подстричь, остричь, постричь, обстричь).
     conjugation!("постричь", 17, "~чь";
@@ -2297,16 +2177,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~е~авший", _, "~ё~анный";
     gerund: _, "~е~ав|~е~авши";
     ),
-    // Заволочься: 16 words (заволочься, обволочься, взволочься, волочься, вволочься, доволочься).
-    conjugation!("заволочься", 16, "~чь~я";
-    infinitive: "~чь~я";
-    non_past_1: "~ку~ь", "~чём~я";
-    non_past_2: "~чёшь~я", "~чёте~ь";
-    non_past_3: "~чёт~я", "~кут~я";
-    past: "~к~я", "~кла~ь", "~кло~ь", "~кли~ь";
-    imperative: "~ки~ь", "~ките~ь";
-    participle: "~кущий~я", "~кший~я", _, _;
-    gerund: _, "~кши~ь";
+    // Заволочься: 16 words (заволочься, обволочься, взволочься, волочься, вволочься, доволочься). Like Обволочь with `~ь` after each pattern (`~я` after й, к, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("заволочься", 16, "~чь~я", like Обволочь with "~ь", "~я" after "йкмть";
+    participle: _, _, _, derived;
     ),
     // Насесть: 15 words (сесть, засесть, присесть, осесть, подсесть, пересесть).
     conjugation!("насесть", 15, "~есть", [aspect: Perfective];
@@ -2314,11 +2187,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~е- like прошипеть";
     infinitive: "~есть";
     ),
-    // Смеяться: 15 words (смеяться, засмеяться, рассмеяться, посмеяться, досмеяться, надсмеяться). Like Развеяться, except in 4 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg.
-    conjugation!("смеяться", 15, "~ять~я", like Развеяться;
-    non_past_1: _, "~ём~я";
-    non_past_2: "~ёшь~я", "~ёте~ь";
-    non_past_3: "~ёт~я", _;
+    // Смеяться: 15 words (смеяться, засмеяться, рассмеяться, посмеяться, досмеяться, надсмеяться). Like Осмеять with `~я` after each pattern (`~ь` after а, е, и, о, ю), except in 4 cells: participle pres_act, participle past_pass, gerund pres, gerund past.
+    conjugation!("смеяться", 15, "~ять~я", like Осмеять with "~я", "~ь" after "аеиою";
+    participle: "~ющий~я", _, _, derived;
+    gerund: "~я~ь", "~явши~ь";
     ),
     // Помять: 15 words (мять, помять, распять, замять, домять, вымять).
     conjugation!("помять", 15, "~ять";
@@ -2378,16 +2250,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem non_past: "~ч- like оказать";
     participle: _, _, _, derived;
     ),
-    // Молоться: 14 words (вымолоться, молоться, замолоться, измолоться, намолоться, обмолоться).
-    conjugation!("молоться", 14, "~о~оть~я";
-    infinitive: "~о~оть~я";
-    non_past_1: "~е~ю~ь", "~е~ем~я";
-    non_past_2: "~е~ешь~я", "~е~ете~ь";
-    non_past_3: "~е~ет~я", "~е~ют~я";
-    past: "~оло~~я", "~о~ола~ь", "~о~оло~ь", "~о~оли~ь";
-    imperative: "~е~и~ь", "~е~ите~ь";
-    participle: "~е~ющий~я", "~о~овший~я", _, _;
-    gerund: "~е~я~ь", "~о~овши~ь";
+    // Молоться: 14 words (вымолоться, молоться, замолоться, измолоться, намолоться, обмолоться). Like Молоть with `~ь` after each pattern (`~я` after й, м, т, ь), except in 3 cells: past m, participle past_pass, gerund past.
+    conjugation!("молоться", 14, "~о~оть~я", like Молоть with "~ь", "~я" after "ймть";
+    past: "~оло~~я", _, _, _;
+    participle: _, _, _, derived;
+    gerund: _, "~о~овши~ь";
     ),
     // Прожечь: 14 words (жечь, зажечь, выжечь, пожечь, прижечь, прожечь). Like Постричь, except in 5 cells: infinitive, past m, participle past_act, participle past_pass, gerund past.
     conjugation!("прожечь", 14, "~ечь", like Постричь;
@@ -2425,16 +2292,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~окший", _, _;
     gerund: _, "~окши";
     ),
-    // Мяться: 13 words (замяться, мяться, помяться, примяться, вымяться, домяться).
-    conjugation!("мяться", 13, "~ять~я";
-    infinitive: "~ять~я";
-    non_past_1: "~ну~ь", "~нём~я";
-    non_past_2: "~нёшь~я", "~нёте~ь";
-    non_past_3: "~нёт~я", "~нут~я";
-    past: "~ял~я", "~яла~ь", "~яло~ь", "~яли~ь";
-    imperative: "~ни~ь", "~ните~ь";
-    participle: _, "~явший~я", _, _;
-    gerund: _, "~явши~ь";
+    // Мяться: 13 words (замяться, мяться, помяться, примяться, вымяться, домяться). Like Помять with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 4 cells: participle pres_act, participle past_pass, gerund pres, gerund past.
+    conjugation!("мяться", 13, "~ять~я", like Помять with "~ь", "~я" after "йлмть";
+    participle: derived, _, _, derived;
+    gerund: derived, "~явши~ь";
     ),
     // Сплестись: 13 words (поплестись, переплестись, заплестись, сплестись, проплестись, доплестись).
     conjugation!("сплестись", 13, "~е~тись", [aspect: Perfective];
@@ -2451,12 +2312,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     conjugation!("нагореть", 13, "~еть", like Просмотреть;
     gerund: _, "~евши|~ев";
     ),
-    // Тыкаться: 13 words (расплакаться, тыкаться, плакаться, доскакаться, исплакаться, наплакаться). Like Топтаться, except in 9 cells: infinitive, past m, past f, past n, past pl, imperative sg, ….
-    conjugation!("тыкаться", 13, "~кать~я", like Топтаться;
-    infinitive: "~кать~я";
-    past: "~кал~я", "~кала~ь", "~кало~ь", "~кали~ь";
-    imperative: "~чь~я", "~чьте~ь";
-    participle: _, "~кавший~я", _, _;
+    // Тыкаться: 13 words (расплакаться, тыкаться, плакаться, доскакаться, исплакаться, наплакаться). Like Плакать with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("тыкаться", 13, "~кать~я", like Плакать with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
     gerund: _, "~кавши~ь";
     ),
     // Отгрестись: 13 words (сгрестись, выгрестись, выскрестись, прискрестись, доскрестись, заскрестись).
@@ -2501,7 +2359,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~с~а- like играть";
     infinitive: "~с~ать";
     ),
-    // Брить: 12 words (брить, побрить, выбрить, обрить, добрить, забрить). Like Забить, except in 0 cells: .
+    // Брить: 12 words (брить, побрить, выбрить, обрить, добрить, забрить). Like Забить.
     conjugation!("брить", 12, "~ить", like Забить;
     stem non_past: "~е- like играть";
     ),
@@ -2521,30 +2379,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     infinitive: "~нуть";
     participle: "~нущий", _, _, derived;
     ),
-    // Бриться: 12 words (бриться, побриться, перебриться, выбриться, обриться, пробриться).
-    conjugation!("бриться", 12, "~ить~я";
-    infinitive: "~ить~я";
-    non_past_1: "~ею~ь", "~еем~я";
-    non_past_2: "~еешь~я", "~еете~ь";
-    non_past_3: "~еет~я", "~еют~я";
-    past: "~ил~я", "~ила~ь", "~ило~ь", "~или~ь";
-    imperative: "~ей~я", "~ейте~ь";
-    participle: "~еющий~я", "~ивший~я", _, _;
-    gerund: "~ея~ь", "~ивши~ь";
+    // Бриться: 12 words (бриться, побриться, перебриться, выбриться, обриться, пробриться). Like Брить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("бриться", 12, "~ить~я", like Брить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
     // Морщить: 12 words (упорядочить, морщить, выпучить, сморщить, таращить, вытаращить). Like Предназначить, except in 1 cell: imperative sg.
     conjugation!("морщить", 12, "~ить", like Предназначить;
     imperative: "~и|~ь", _;
     ),
-    // Сослаться: 12 words (сослаться, выслаться, дослаться, заслаться, ниспослаться, отослаться).
-    conjugation!("сослаться", 12, "~с~ать~я", [aspect: Perfective];
-    infinitive: "~с~ать~я";
-    non_past_1: "~ш~ю~ь", "~ш~ём~я";
-    non_past_2: "~ш~ёшь~я", "~ш~ёте~ь";
-    non_past_3: "~ш~ёт~я", "~ш~ют~я";
-    past: "~сла~~я", "~с~ала~ь", "~с~ало~ь", "~с~али~ь";
-    imperative: "~ш~и~ь", "~ш~ите~ь";
-    participle: _, "~с~авший~я", _, _;
+    // Сослаться: 12 words (сослаться, выслаться, дослаться, заслаться, ниспослаться, отослаться). Like Отослать with `~ь` after each pattern (`~я` after й, м, т, ь), except in 3 cells: past m, participle past_pass, gerund past.
+    conjugation!("сослаться", 12, "~с~ать~я", [aspect: Perfective], like Отослать with "~ь", "~я" after "ймть";
+    past: "~сла~~я", _, _, _;
+    participle: _, _, _, derived;
     gerund: _, "~с~авши~ь";
     ),
     // Пересидеть: 12 words (просидеть, отсидеть, усидеть, насидеть, пересидеть, засидеть). Like Сидеть, except in 4 cells: participle pres_act, participle pres_pass, participle past_pass, gerund pres.
@@ -2552,39 +2399,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, derived, "~женный";
     gerund: derived, _;
     ),
-    // Спеться: 12 words (петься, спеться, допеться, распеться, напеться, воспеться).
-    conjugation!("спеться", 12, "~еть~я";
-    infinitive: "~еть~я";
-    non_past_1: "~ою~ь", "~оём~я";
-    non_past_2: "~оёшь~я", "~оёте~ь";
-    non_past_3: "~оёт~я", "~оют~я";
-    past: "~ел~я", "~ела~ь", "~ело~ь", "~ели~ь";
-    imperative: "~ой~я", "~ойте~ь";
-    participle: "~оющий~я", "~евший~я", _, _;
-    gerund: "~оя~ь", "~евши~ь";
+    // Спеться: 12 words (петься, спеться, допеться, распеться, напеться, воспеться). Like Перепеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("спеться", 12, "~еть~я", like Перепеть with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~евши~ь";
     ),
-    // Стереться: 12 words (стереться, отпереться, подтереться, втереться, впереться, обтереться).
-    conjugation!("стереться", 12, "~~е~еть~я", [aspect: Perfective];
-    infinitive: "~~е~еть~я";
-    non_past_1: "~о~~у~ь", "~о~~ём~я";
-    non_past_2: "~о~~ёшь~я", "~о~~ёте~ь";
-    non_past_3: "~о~~ёт~я", "~о~~ут~я";
-    past: "~~ё~~я", "~~ё~ла~ь", "~~ё~ло~ь", "~~ё~ли~ь";
-    imperative: "~о~~и~ь", "~о~~ите~ь";
-    participle: _, "~~ё~ший~я", _, _;
+    // Стереться: 12 words (стереться, отпереться, подтереться, втереться, впереться, обтереться). Like Стереть with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("стереться", 12, "~~е~еть~я", [aspect: Perfective], like Стереть with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
     gerund: _, "~~ё~ши~ь";
     ),
-    // Подвигнуться: 12 words (свергнуться, разверзнуться, низвергнуться, подвигнуться, сверзнуться, исторгнуться). Like Вторгнуться, except in 3 cells: past m, participle pres_act, participle past_act.
-    conjugation!("подвигнуться", 12, "~нуть~я", [aspect: Perfective], like Вторгнуться;
+    // Подвигнуться: 12 words (свергнуться, разверзнуться, низвергнуться, подвигнуться, сверзнуться, исторгнуться). Like Залипнуть with `~ь` after each pattern (`~я` after м, т, ь), except in 3 cells: past m, participle pres_act, participle past_act.
+    conjugation!("подвигнуться", 12, "~нуть~я", [aspect: Perfective], like Залипнуть with "~ь", "~я" after "мть";
     past: derived, _, _, _;
     participle: derived, "~нувший~я|~ший~я", _, _;
     ),
-    // Стелиться: 12 words (зиждиться, расстелиться, стелиться, созиждиться, взъемлиться, постелиться). Like Числиться, except in 6 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, participle pres_act.
-    conjugation!("стелиться", 12, "~ить~я", like Числиться;
-    non_past_1: _, "~ем~я";
-    non_past_2: "~ешь~я", "~ете~ь";
-    non_past_3: "~ет~я", "~ют~я";
-    participle: "~ющий~я", _, _, _;
+    // Стелиться: 12 words (зиждиться, расстелиться, стелиться, созиждиться, взъемлиться, постелиться). Like Стелить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("стелиться", 12, "~ить~я", like Стелить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
     // Заспать: 11 words (спать, поспать, проспать, переспать, заспать, отоспать). Like Стучать, except in 5 cells: non_past_1 sg, non_past_3 pl, participle pres_act, participle pres_pass, gerund pres.
     conjugation!("заспать", 11, "~ать", like Стучать;
@@ -2593,22 +2426,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, derived, _;
     gerund: derived, _;
     ),
-    // Ушибиться: 11 words (ошибиться, ушибиться, зашибиться, прошибиться, вышибиться, пришибиться). Like Трястись, except in 5 cells: infinitive, participle pres_act, participle past_act, gerund pres, gerund past.
-    conjugation!("ушибиться", 11, "~ить~я", [aspect: Perfective], like Трястись;
-    infinitive: "~ить~я";
-    participle: derived, "~ивший~я", _, _;
-    gerund: derived, "~ивши~ь";
+    // Ушибиться: 11 words (ошибиться, ушибиться, зашибиться, прошибиться, вышибиться, пришибиться). Like Зашибить with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("ушибиться", 11, "~ить~я", [aspect: Perfective], like Зашибить with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Жаться: 11 words (прижаться, жаться, пожаться, прожаться, ужаться, выжаться).
-    conjugation!("жаться", 11, "~ать~я";
-    infinitive: "~ать~я";
-    non_past_1: "~му~ь", "~мём~я";
-    non_past_2: "~мёшь~я", "~мёте~ь";
-    non_past_3: "~мёт~я", "~мут~я";
-    past: "~ал~я", "~ала~ь", "~ало~ь", "~али~ь";
-    imperative: "~ми~ь", "~мите~ь";
-    participle: "~мущий~я", "~авший~я", _, _;
-    gerund: "~мя~ь", "~авши~ь";
+    // Жаться: 11 words (прижаться, жаться, пожаться, прожаться, ужаться, выжаться). Like Жать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("жаться", 11, "~ать~я", like Жать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~авши~ь";
     ),
     // Пакоститься: 11 words (заневеститься, засовеститься, невеститься, скапуститься, испакоститься, чихвоститься). Like Распуститься, except in 2 cells: imperative sg, imperative pl.
     conjugation!("пакоститься", 11, "~~титься", like Распуститься;
@@ -2639,7 +2465,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     imperative: "~ти~ь", "~тите~ь";
     gerund: _, "~тя~ь";
     ),
-    // Назвать: 10 words (звать, позвать, назвать, призвать, прозвать, созвать). Like Гнать, except in 0 cells: .
+    // Назвать: 10 words (звать, позвать, назвать, призвать, прозвать, созвать). Like Гнать.
     conjugation!("назвать", 10, "~~ать", like Гнать;
     stem non_past: "~о~- like засосать";
     ),
@@ -2650,16 +2476,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     non_past_3: "~ит", "~ят";
     participle: "~ящий", _, derived, derived;
     ),
-    // Беречься: 10 words (беречься, остеречься, поостеречься, постеречься, стеречься, уберечься).
-    conjugation!("беречься", 10, "~ечь~я";
-    infinitive: "~ечь~я";
-    non_past_1: "~егу~ь", "~ежём~я";
-    non_past_2: "~ежёшь~я", "~ежёте~ь";
-    non_past_3: "~ежёт~я", "~егут~я";
-    past: "~ёг~я", "~егла~ь", "~егло~ь", "~егли~ь";
-    imperative: "~еги~ь", "~егите~ь";
-    participle: "~егущий~я", "~ёгший~я", _, _;
-    gerund: _, "~ёгши~ь";
+    // Беречься: 10 words (беречься, остеречься, поостеречься, постеречься, стеречься, уберечься). Like Сберечь with `~ь` after each pattern (`~я` after г, й, м, т, ь), except in 2 cells: participle pres_pass, participle past_pass.
+    conjugation!("беречься", 10, "~ечь~я", like Сберечь with "~ь", "~я" after "гймть";
+    participle: _, _, derived, derived;
     ),
     // Вырвать: 10 words (выебать, вырвать, выждать, высосать, выжрать, выткать). Like Засосать, except in 2 cells: participle pres_act, gerund pres.
     conjugation!("вырвать", 10, "~ать", [aspect: Perfective], like Засосать;
@@ -2675,21 +2494,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~ескавший", _, "~ёсканный";
     gerund: _, "~ескав|~ескавши";
     ),
-    // Забыться: 10 words (забыться, сбыться, добыться, избыться, перезабыться, подзабыться).
-    conjugation!("забыться", 10, "~ыть~я", [aspect: Perfective];
-    infinitive: "~ыть~я";
-    non_past_1: "~уду~ь", "~удем~я";
-    non_past_2: "~удешь~я", "~удете~ь";
-    non_past_3: "~удет~я", "~удут~я";
-    past: "~ыл~я", "~ыла~ь", "~ыло~ь", "~ыли~ь";
-    imperative: "~удь~я", "~удьте~ь";
-    participle: _, "~ывший~я", _, _;
+    // Забыться: 10 words (забыться, сбыться, добыться, избыться, перезабыться, подзабыться). Like Забыть with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("забыться", 10, "~ыть~я", [aspect: Perfective], like Забыть with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
     gerund: _, "~ывши~ь";
     ),
-    // Нестись: 10 words (нестись, везтись, повезтись, свезтись, перевезтись, наебтись). Like Унестись, except in 3 cells: participle pres_act, gerund pres, gerund past.
-    conjugation!("нестись", 10, "~е~ти~ь", like Унестись;
-    participle: "~е~ущий~я", _, _, _;
-    gerund: "~е~я~ь", "~ё~ши~ь";
+    // Нестись: 10 words (нестись, везтись, повезтись, свезтись, перевезтись, наебтись). Like Везти with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle pres_pass, participle past_pass.
+    conjugation!("нестись", 10, "~е~ти~ь", like Везти with "~ь", "~я" after "~ймть";
+    participle: _, _, derived, derived;
     ),
     // Гнаться: 10 words (гнаться, погнаться, угнаться, загнаться, догнаться, пригнаться).
     conjugation!("гнаться", 10, "~~ать~я";
@@ -2729,22 +2541,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     non_past_2: "~уёшь~я", "~уёте~ь";
     non_past_3: "~уёт~я", _;
     ),
-    // Обидеться: 10 words (обидеться, навидеться, разобидеться, изобидеться, завидеться, ненавидеться). Like Глядеться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("обидеться", 10, "~деть~я", like Глядеться;
-    imperative: "~дь~я", "~дьте~ь";
+    // Обидеться: 10 words (обидеться, навидеться, разобидеться, изобидеться, завидеться, ненавидеться). Like Видеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("обидеться", 10, "~деть~я", like Видеть with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~девши~ь";
     ),
-    // Вырваться: 10 words (вырваться, выебаться, высраться, выткаться, закармливаться, высосаться). Like Держаться, except in 7 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, participle pres_act, ….
-    conjugation!("вырваться", 10, "~ать~я", like Держаться;
-    non_past_1: _, "~ем~я";
-    non_past_2: "~ешь~я", "~ете~ь";
-    non_past_3: "~ет~я", "~ут~я";
-    participle: "~ущий~я", _, _, _;
-    gerund: "~ая~ь", _;
-    ),
-    // Стонать: 9 words (стонать, жаждать, застонать, простонать, высрать, возжаждать). Like Вырвать, except in 3 cells: participle pres_act, participle past_pass, gerund pres.
-    conjugation!("стонать", 9, "~ать", like Вырвать;
-    participle: "~ущий", _, _, derived;
-    gerund: "~ая", _;
+    // Вырваться: 10 words (вырваться, выебаться, высраться, выткаться, закармливаться, высосаться). Like Стонать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 1 cell: gerund past.
+    conjugation!("вырваться", 10, "~ать~я", like Стонать with "~ь", "~я" after "йлмть";
+    gerund: _, "~авши~ь";
     ),
     // Стереть: 9 words (стереть, подпереть, спереть, обтереть, втереть, впереть).
     conjugation!("стереть", 9, "~~е~еть", [aspect: Perfective];
@@ -2754,12 +2558,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~~ё~ший", _, "~~ё~тый";
     gerund: _, "~~е~ев|~~ё~ши";
     ),
-    // Выспаться: 9 words (выспаться, отоспаться, доспаться, заспаться, наспаться, проспаться). Like Держаться, except in 4 cells: non_past_1 sg, non_past_3 pl, participle pres_act, gerund pres.
-    conjugation!("выспаться", 9, "~ать~я", [aspect: Perfective], like Держаться;
-    non_past_1: "~лю~ь", _;
-    non_past_3: _, "~ят~я";
-    participle: derived, _, _, _;
-    gerund: derived, _;
+    // Выспаться: 9 words (выспаться, отоспаться, доспаться, заспаться, наспаться, проспаться). Like Заспать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("выспаться", 9, "~ать~я", [aspect: Perfective], like Заспать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~авши~ь";
     ),
     // Размять: 9 words (смять, измять, размять, подмять, вмять, обмять).
     conjugation!("размять", 9, "~~ять", [aspect: Perfective];
@@ -2767,44 +2569,28 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~~я- like раздуть";
     infinitive: "~~ять";
     ),
-    // Толочься: 9 words (толочься, затолочься, потолочься, истолочься, дотолочься, утолочься). Like Заволочься, except in 4 cells: infinitive, past m, participle past_act, gerund past.
-    conjugation!("толочься", 9, "~очь~я", like Заволочься;
-    infinitive: "~очь~я";
-    past: "~ок~я", _, _, _;
-    participle: _, "~окший~я", _, _;
-    gerund: _, "~окши~ь";
+    // Толочься: 9 words (толочься, затолочься, потолочься, истолочься, дотолочься, утолочься). Like Толочь with `~ь` after each pattern (`~я` after й, к, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("толочься", 9, "~очь~я", like Толочь with "~ь", "~я" after "йкмть";
+    participle: _, _, _, derived;
     ),
     // Скрестись: 9 words (скрестись, грестись, огрестись, догрестись, угрестись, погрестись). Like Отгрестись, except in 3 cells: participle pres_act, gerund pres, gerund past.
     conjugation!("скрестись", 9, "~е~тись", like Отгрестись;
     participle: "~ебущий~я", _, _, _;
     gerund: "~ебя~ь", "~ёбши~ь";
     ),
-    // Зажечься: 9 words (зажечься, ожечься, нажечься, жечься, возжечься, пережечься). Like Стричься, except in 4 cells: infinitive, past m, participle past_act, gerund past.
-    conjugation!("зажечься", 9, "~ечь~я", like Стричься;
-    infinitive: "~ечь~я";
-    past: "~ёг~я", _, _, _;
-    participle: _, "~ёгший~я", _, _;
-    gerund: _, "~ёгши~ь";
+    // Зажечься: 9 words (зажечься, ожечься, нажечься, жечься, возжечься, пережечься). Like Прожечь with `~ь` after each pattern (`~я` after г, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("зажечься", 9, "~ечь~я", like Прожечь with "~ь", "~я" after "гймть";
+    participle: _, _, _, derived;
     ),
     // Мести: 9 words (гнести, плести, мести, цвести, расцвести, рассвести). Like Сплести, except in 1 cell: gerund past.
     conjugation!("мести", 9, "~ести", like Сплести;
     stem non_past: "~ет- like засосать";
     gerund: _, "~ётши";
     ),
-    // Разойтись: 9 words (найтись, прийтись, обойтись, пройтись, разойтись, сойтись).
-    conjugation!("разойтись", 9, "~йти~ь", [aspect: Perfective];
-    infinitive: "~йти~ь";
-    non_past_1: "~йду~ь", "~йдём~я";
-    non_past_2: "~йдёшь~я", "~йдёте~ь";
-    non_past_3: "~йдёт~я", "~йдут~я";
-    past: "~шёл~я", "~шла~ь", "~шло~ь", "~шли~ь";
-    imperative: "~йди~ь", "~йдите~ь";
-    participle: _, "~шедший~я", _, _;
+    // Разойтись: 9 words (найтись, прийтись, обойтись, пройтись, разойтись, сойтись). Like Зайти with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("разойтись", 9, "~йти~ь", [aspect: Perfective], like Зайти with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~шедши~ь";
-    ),
-    // Застлать: 8 words (постлать, застлать, устлать, выстлать, достлать, настлать). Like Гнать, except in 0 cells: .
-    conjugation!("застлать", 8, "~~ать", [aspect: Perfective], like Гнать;
-    stem non_past: "~е~- like застлать";
     ),
     // Выпить: 8 words (выпить, вышить, выбить, вылить, подвыпить, вывить). Like Забить, except in 6 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, participle pres_act, gerund pres.
     conjugation!("выпить", 8, "~ить", [aspect: Perfective], like Забить;
@@ -2814,19 +2600,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, _, _;
     gerund: derived, _;
     ),
-    // Разогнать: 8 words (подогнать, обогнать, отогнать, разогнать, согнать, вогнать). Like Разобрать, except in 0 cells: .
+    // Разогнать: 8 words (подогнать, обогнать, отогнать, разогнать, согнать, вогнать). Like Разобрать.
     conjugation!("разогнать", 8, "~о~~ать", [aspect: Perfective], like Разобрать;
     stem non_past: "~~о~- like просмотреть";
     ),
-    // Смяться: 8 words (измяться, смяться, размяться, вмяться, обмяться, подмяться).
-    conjugation!("смяться", 8, "~~ять~я", [aspect: Perfective];
-    infinitive: "~~ять~я";
-    non_past_1: "~о~ну~ь", "~омнё~~я";
-    non_past_2: "~о~нёшь~я", "~о~нёте~ь";
-    non_past_3: "~о~нёт~я", "~о~нут~я";
-    past: "~~ял~я", "~~яла~ь", "~~яло~ь", "~~яли~ь";
-    imperative: "~о~ни~ь", "~о~ните~ь";
-    participle: _, "~~явший~я", _, _;
+    // Смяться: 8 words (измяться, смяться, размяться, вмяться, обмяться, подмяться). Like Размять with `~ь` after each pattern (`~я` after й, л, т, ь), except in 3 cells: non_past_1 pl, participle past_pass, gerund past.
+    conjugation!("смяться", 8, "~~ять~я", [aspect: Perfective], like Размять with "~ь", "~я" after "йлть";
+    non_past_1: _, "~омнё~~я";
+    participle: _, _, _, derived;
     gerund: _, "~~явши~ь";
     ),
     // Осмеять: 8 words (осмеять, засмеять, обсмеять, пересмеять, просмеять, ссять). Like Развеять, except in 7 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, participle pres_act, participle pres_pass, ….
@@ -2850,24 +2631,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~евший~я", _, _;
     gerund: _, "~евши~ь";
     ),
-    // Выпариться: 8 words (закупориться, выпариться, замусориться, умайориться, откупориться, раскупориться). Like Усилиться, except in 4 cells: imperative sg, participle pres_act, gerund pres, gerund past.
-    conjugation!("выпариться", 8, "~ить~я", [aspect: Perfective], like Усилиться;
+    // Выпариться: 8 words (закупориться, выпариться, замусориться, умайориться, откупориться, раскупориться). Like Закупорить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: imperative sg, participle past_pass, gerund past.
+    conjugation!("выпариться", 8, "~ить~я", [aspect: Perfective], like Закупорить with "~ь", "~я" after "йлмть";
     imperative: "~ь~я|~и~ь", _;
-    participle: derived, _, _, _;
-    gerund: derived, "~я~ь|~ивши~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~я~ь|~ивши~ь";
     ),
     // Отсвистеться: 8 words (насвистеться, рассвистеться, пересвистеться, свистеться, высвистеться, досвистеться). Like Распуститься, except in 1 cell: infinitive.
     conjugation!("отсвистеться", 8, "~~теться", like Распуститься;
     stem past: "~~те- like распуститься";
     infinitive: "~~теться";
     ),
-    // Разогнаться: 8 words (отозваться, разогнаться, взогнаться, вогнаться, обозваться, отогнаться). Like Подобраться, except in 9 cells: non_past_1 sg, non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, ….
-    conjugation!("разогнаться", 8, "~о~~ать~я", [aspect: Perfective], like Подобраться;
-    non_past_1: "~~о~ю~ь", "~~о~им~я";
-    non_past_2: "~~о~ишь~я", "~~о~ите~ь";
-    non_past_3: "~~о~ит~я", "~~о~ят~я";
-    past: "~о~~ал~я", _, _, _;
-    imperative: "~~о~и~ь", "~~о~ите~ь";
+    // Разогнаться: 8 words (отозваться, разогнаться, взогнаться, вогнаться, обозваться, отогнаться). Like Разогнать with `~я` after each pattern (`~ь` after а, е, и, ю), except in 4 cells: past n, past pl, participle past_pass, gerund past.
+    conjugation!("разогнаться", 8, "~о~~ать~я", [aspect: Perfective], like Разогнать with "~я", "~ь" after "аеию";
+    past: _, _, "~о~~ало~ь|~о~~ало~ь", "~о~~али~ь|~о~~али~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~о~~авши~ь";
     ),
     // Вести: 8 words (вести, блюсти, брести, соблюсти, грясти, ебсти). Like Пасть, except in 5 cells: infinitive, participle past_act, participle pres_pass, participle past_pass, gerund past.
     conjugation!("вести", 8, "~сти", like Пасть;
@@ -2896,9 +2675,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~е~тавший", _, "~ё~танный";
     gerund: _, "~е~тав|~е~тавши";
     ),
-    // Прятаться: 7 words (прятаться, спрятаться, запрятаться, припрятаться, упрятаться, напрятаться). Like Топтаться, except in 2 cells: imperative sg, imperative pl.
-    conjugation!("прятаться", 7, "~тать~я", like Топтаться;
+    // Прятаться: 7 words (прятаться, спрятаться, запрятаться, припрятаться, упрятаться, напрятаться). Like Топтать with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 4 cells: imperative sg, imperative pl, participle past_pass, gerund past.
+    conjugation!("прятаться", 7, "~тать~я", like Топтать with "~я", "~ь" after "аеиоу";
     imperative: "~чь~я", "~чьте~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~тавши~ь";
     ),
     // Закупорить: 7 words (выверить, закупорить, вызволить, расстопорить, застопорить, заякорить). Like Ударить, except in 4 cells: imperative sg, participle pres_act, participle pres_pass, gerund pres.
     conjugation!("закупорить", 7, "~ить", [aspect: Perfective], like Ударить;
@@ -2913,9 +2694,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, "~гавший~я", _, _;
     gerund: _, "~гавши~ь";
     ),
-    // Насытиться: 7 words (насытиться, пресытиться, пересытиться, похититься, ухититься, сытиться). Like Встретиться, except in 1 cell: non_past_1 sg.
-    conjugation!("насытиться", 7, "~тить~я", like Встретиться;
-    non_past_1: "~щу~ь", _;
+    // Насытиться: 7 words (насытиться, пресытиться, пересытиться, похититься, ухититься, сытиться). Like Насытить with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("насытиться", 7, "~тить~я", like Насытить with "~ь", "~я" after "йлмть";
+    participle: _, _, derived, derived;
+    gerund: _, "~тивши~ь";
+    ),
+    // Стонать: 6 words (жаждать, высрать, возжаждать, страждать, кровожаждать, состраждать). Like Вырвать, except in 3 cells: participle pres_act, participle past_pass, gerund pres.
+    conjugation!("стонать", 6, "~ать", like Вырвать;
+    participle: "~ущий", _, _, derived;
+    gerund: "~ая", _;
     ),
     // Достичь: 6 words (достичь, постичь, настичь, застичь, перестичь, пристичь).
     conjugation!("достичь", 6, "~чь", [aspect: Perfective];
@@ -2931,9 +2718,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~~ёгший", _, "~о~жённый";
     gerund: _, "~~ёгши";
     ),
-    // Морщиться: 6 words (таращиться, морщиться, поморщиться, сморщиться, топорщиться, упорядочиться). Like Обрушиться, except in 1 cell: imperative sg.
-    conjugation!("морщиться", 6, "~ить~я", like Обрушиться;
-    imperative: "~и~ь|~ь~я", _;
+    // Морщиться: 6 words (таращиться, морщиться, поморщиться, сморщиться, топорщиться, упорядочиться). Like Морщить with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 3 cells: participle pres_pass, participle past_pass, gerund past.
+    conjugation!("морщиться", 6, "~ить~я", like Морщить with "~я", "~ь" after "аеиоу";
+    participle: _, _, derived, derived;
+    gerund: _, "~ивши~ь";
     ),
     // Измыслить: 6 words (злоумыслить, умыслить, замыслить, измыслить, вымыслить, обмыслить).
     conjugation!("измыслить", 6, "~с~ить", [aspect: Perfective];
@@ -2951,32 +2739,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     non_past_3: "~ядет~я", "~ядут~я";
     imperative: "~ядь~я", "~ядьте~ь";
     ),
-    // Сжаться: 6 words (сжаться, вжаться, отжаться, обжаться, поджаться, разжаться).
-    conjugation!("сжаться", 6, "~~ать~я", [aspect: Perfective];
-    infinitive: "~~ать~я";
-    non_past_1: "~о~му~ь", "~о~мём~я";
-    non_past_2: "~о~мёшь~я", "~о~мёте~ь";
-    non_past_3: "~о~мёт~я", "~о~мут~я";
-    past: "~~ал~я", "~~ала~ь", "~~ало~ь", "~~али~ь";
-    imperative: "~о~ми~ь", "~о~мите~ь";
-    participle: _, "~~авший~я", _, _;
+    // Сжаться: 6 words (сжаться, вжаться, отжаться, обжаться, поджаться, разжаться). Like Отжать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("сжаться", 6, "~~ать~я", [aspect: Perfective], like Отжать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~~авши~ь";
     ),
-    // Соваться: 6 words (коваться, основаться, соваться, подковаться, вковаться, рассоваться). Like Стыковаться, except in 4 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg.
-    conjugation!("соваться", 6, "~овать~я", like Стыковаться;
-    non_past_1: _, "~уём~я";
-    non_past_2: "~уёшь~я", "~уёте~ь";
-    non_past_3: "~уёт~я", _;
+    // Соваться: 6 words (коваться, основаться, соваться, подковаться, вковаться, рассоваться). Like Сковать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("соваться", 6, "~овать~я", like Сковать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~овавши~ь";
     ),
-    // Разъехаться: 6 words (съехаться, разъехаться, проехаться, поразъехаться, подъехаться, ехаться).
-    conjugation!("разъехаться", 6, "~хать~я";
-    infinitive: "~хать~я";
-    non_past_1: "~ду~ь", "~дем~я";
-    non_past_2: "~дешь~я", "~дете~ь";
-    non_past_3: "~дет~я", "~дут~я";
-    past: "~хал~я", "~хала~ь", "~хало~ь", "~хали~ь";
-    imperative: "~зжай~я", "~зжайте~ь";
-    participle: _, "~хавший~я", _, _;
+    // Разъехаться: 6 words (съехаться, разъехаться, проехаться, поразъехаться, подъехаться, ехаться). Like Поехать with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 1 cell: gerund past.
+    conjugation!("разъехаться", 6, "~хать~я", like Поехать with "~я", "~ь" after "аеиоу";
     gerund: _, "~хавши~ь";
     ),
     // Сыпаться: 6 words (рассыпаться, посыпаться, сыпаться, осыпаться, высыпаться, отсыпаться). Like Трепаться, except in 6 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, imperative sg, imperative pl.
@@ -3031,20 +2805,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~тший", _, "~тенный";
     gerund: _, "~тя";
     ),
-    // Замереть: 6 words (запереть, умереть, помереть, замереть, примереть, позапереть). Like Затереть, except in 0 cells: .
+    // Замереть: 6 words (запереть, умереть, помереть, замереть, примереть, позапереть). Like Затереть.
     conjugation!("замереть", 6, "~е~еть", [aspect: Perfective], like Затереть;
     stem past: "~е~- like замереть";
     ),
-    // Мочься: 6 words (разнемочься, выпрячься, выстричься, мочься, занемочься, перемочься). Like Стричься, except in 5 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, participle pres_act.
-    conjugation!("мочься", 6, "~чь~я", like Стричься;
-    non_past_1: _, "~жем~я";
-    non_past_2: "~жешь~я", "~жете~ь";
-    non_past_3: "~жет~я", _;
-    participle: derived, _, _, _;
+    // Мочься: 6 words (разнемочься, выпрячься, выстричься, мочься, занемочься, перемочься). Like Помочь with `~ь` after each pattern (`~я` after г, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("мочься", 6, "~чь~я", like Помочь with "~ь", "~я" after "гймть";
+    participle: _, _, _, derived;
     ),
-    // Взорать: 6 words (глаголать, проглаголать, обкармливать, разорать, взорать, доорать). Like Вырвать, except in 1 cell: participle past_pass.
+    // Взорать: 6 words (глаголать, проглаголать, обкармливать, разорать, взорать, доорать). Like Вырвать, except in 3 cells: non_past_1 sg, non_past_3 pl, participle past_pass.
     conjugation!("взорать", 6, "~ать", like Вырвать;
-    stem non_past: "~- like застлать";
+    non_past_1: "~ю", _;
+    non_past_3: _, "~ют";
     participle: _, _, _, "~енный";
     ),
     // Висеть: 5 words (висеть, зависеть, повисеть, перевисеть, провисеть). Like Сносить, except in 3 cells: infinitive, participle pres_pass, participle past_pass.
@@ -3053,11 +2825,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     infinitive: "~сеть";
     participle: _, _, derived, derived;
     ),
-    // Выбрать: 5 words (выбрать, выдрать, перевыбрать, повыдрать, повыбрать). Like Застлать, except in 0 cells: .
-    conjugation!("выбрать", 5, "~~ать", [aspect: Perfective], like Застлать;
+    // Выбрать: 5 words (выбрать, выдрать, перевыбрать, повыдрать, повыбрать). Like Драть, except in 3 cells: participle pres_act, participle pres_pass, gerund pres.
+    conjugation!("выбрать", 5, "~~ать", [aspect: Perfective], like Драть;
     stem non_past: "~е~- like заглохнуть";
+    participle: derived, _, derived, _;
+    gerund: derived, _;
     ),
-    // Отжать: 5 words (сжать, обжать, разжать, отжать, вжать). Like Гнать, except in 0 cells: .
+    // Отжать: 5 words (сжать, обжать, разжать, отжать, вжать). Like Гнать.
     conjugation!("отжать", 5, "~~ать", [aspect: Perfective], like Гнать;
     stem non_past: "~о~м- like перевернуть";
     stem past: "~~а- like раздуть";
@@ -3068,11 +2842,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, _, _;
     gerund: derived, _;
     ),
-    // Выставиться: 5 words (понадобиться, осведомиться, выставиться, занадобиться, уведомиться). Like Расправиться, except in 3 cells: imperative sg, participle pres_act, gerund pres.
-    conjugation!("выставиться", 5, "~ить~я", [aspect: Perfective], like Расправиться;
-    imperative: "~и~ь|~ь~я", _;
-    participle: derived, _, _, _;
-    gerund: derived, _;
+    // Выставиться: 5 words (понадобиться, осведомиться, выставиться, занадобиться, уведомиться). Like Выставить with `~я` after each pattern (`~ь` after а, е, и, о, ю), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("выставиться", 5, "~ить~я", [aspect: Perfective], like Выставить with "~я", "~ь" after "аеиою";
+    participle: _, _, _, derived;
+    gerund: _, "~ивши~ь";
     ),
     // Одолеть: 5 words (преодолеть, одолеть, запечатлеть, напечатлеть, отпечатлеть). Like Просмотреть, except in 1 cell: participle past_pass.
     conjugation!("одолеть", 5, "~еть", [aspect: Perfective], like Просмотреть;
@@ -3090,31 +2863,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem past: "~ъя- like раздуть";
     infinitive: "~ъять";
     ),
-    // Выдвинуться: 5 words (высунуться, выдвинуться, грянуться, откашлянуться, самовыдвинуться). Like Сунуться, except in 1 cell: imperative sg.
-    conjugation!("выдвинуться", 5, "~уть~я", [aspect: Perfective], like Сунуться;
+    // Выдвинуться: 5 words (высунуться, выдвинуться, грянуться, откашлянуться, самовыдвинуться). Like Подкинуть with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 3 cells: imperative sg, participle past_pass, gerund past.
+    conjugation!("выдвинуться", 5, "~уть~я", [aspect: Perfective], like Подкинуть with "~я", "~ь" after "аеиоу";
     imperative: "~и~ь", _;
+    participle: _, _, _, derived;
+    gerund: _, "~увши~ь";
     ),
-    // Пробежаться: 5 words (разбежаться, сбежаться, пробежаться, поразбежаться, оббежаться).
-    conjugation!("пробежаться", 5, "~жать~я", [aspect: Perfective];
-    infinitive: "~жать~я";
-    non_past_1: "~гу~ь", "~жим~я";
-    non_past_2: "~жишь~я", "~жите~ь";
-    non_past_3: "~жит~я", "~гут~я";
-    past: "~жал~я", "~жала~ь", "~жало~ь", "~жали~ь";
-    imperative: "~ги~ь", "~гите~ь";
-    participle: _, "~жавший~я", _, _;
+    // Пробежаться: 5 words (разбежаться, сбежаться, пробежаться, поразбежаться, оббежаться). Like Набежать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle pres_act, gerund past.
+    conjugation!("пробежаться", 5, "~жать~я", [aspect: Perfective], like Набежать with "~ь", "~я" after "йлмть";
+    participle: derived, _, _, _;
     gerund: _, "~жавши~ь";
     ),
-    // Обжечься: 5 words (обжечься, разжечься, поджечься, сжечься, изжечься).
-    conjugation!("обжечься", 5, "~~ечь~я", [aspect: Perfective];
-    infinitive: "~~ечь~я";
-    non_past_1: "~о~гу~ь", "~о~жём~я";
-    non_past_2: "~о~жёшь~я", "~о~жёте~ь";
-    non_past_3: "~о~жёт~я", "~о~гут~я";
-    past: "~~ёг~я", "~о~гла~ь", "~о~гло~ь", "~о~гли~ь";
-    imperative: "~о~ги~ь", "~о~гите~ь";
-    participle: _, "~~ёгший~я", _, _;
-    gerund: _, "~~ёгши~ь";
+    // Обжечься: 5 words (обжечься, разжечься, поджечься, сжечься, изжечься). Like Разжечь with `~ь` after each pattern (`~я` after г, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("обжечься", 5, "~~ечь~я", [aspect: Perfective], like Разжечь with "~ь", "~я" after "гймть";
+    participle: _, _, _, derived;
     ),
     // Волгнуть: 5 words (волгнуть, брюзгнуть, горкнуть, грузнуть, осмеркнуть). Like Тухнуть, except in 1 cell: past m.
     conjugation!("волгнуть", 5, "~нуть", like Тухнуть;
@@ -3133,31 +2895,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, _, _;
     gerund: derived, _;
     ),
-    // Трепетаться: 5 words (вострепетаться, трепетаться, оклеветаться, затрепетаться, потрепетаться). Like Плескаться, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
-    conjugation!("трепетаться", 5, "~тать~я", like Плескаться;
-    infinitive: "~тать~я";
-    past: "~тал~я", "~тала~ь", "~тало~ь", "~тали~ь";
-    participle: _, "~тавший~я", _, _;
+    // Трепетаться: 5 words (вострепетаться, трепетаться, оклеветаться, затрепетаться, потрепетаться). Like Трепетать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 1 cell: gerund past.
+    conjugation!("трепетаться", 5, "~тать~я", like Трепетать with "~ь", "~я" after "йлмть";
     gerund: _, "~тавши~ь";
     ),
-    // Ссаться: 5 words (уссаться, обоссаться, ссаться, сцаться, обосцаться). Like Вырваться, except in 7 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, imperative sg, imperative pl, ….
-    conjugation!("ссаться", 5, "~ать~я", like Вырваться;
-    non_past_1: _, "~ым~я";
-    non_past_2: "~ышь~я", "~ыте~ь";
-    non_past_3: "~ыт~я", _;
-    imperative: "~ы~ь", "~ыте~ь";
-    gerund: "~а~ь", _;
+    // Ссаться: 5 words (уссаться, обоссаться, ссаться, сцаться, обосцаться). Like Зассать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 4 cells: participle pres_act, participle past_pass, gerund pres, gerund past.
+    conjugation!("ссаться", 5, "~ать~я", like Зассать with "~ь", "~я" after "йлмть";
+    participle: "~ущий~я", _, _, derived;
+    gerund: "~а~ь", "~авши~ь";
     ),
-    // Срастись: 5 words (разрастись, срастись, зарастись, врастись, растись).
-    conjugation!("срастись", 5, "~а~ти~ь";
-    infinitive: "~а~ти~ь";
-    non_past_1: "~а~ту~ь", "~а~тём~я";
-    non_past_2: "~а~тёшь~я", "~а~тёте~ь";
-    non_past_3: "~а~тёт~я", "~а~тут~я";
-    past: "~о~~я", "~о~ла~ь", "~о~ло~ь", "~о~ли~ь";
-    imperative: "~а~ти~ь", "~а~тите~ь";
-    participle: "~а~тущий~я", "~о~ший~я", _, _;
-    gerund: "~а~тя~ь", "~о~ши~ь";
+    // Срастись: 5 words (разрастись, срастись, зарастись, врастись, растись). Like Дорасти with `~ь` after each pattern (`~я` after ~, й, м, т, ь).
+    conjugation!("срастись", 5, "~а~ти~ь", like Дорасти with "~ь", "~я" after "~ймть";
     ),
     // Вестись: 5 words (вестись, соблюстись, ебстись, блюстись, поебстись). Like Распасться, except in 3 cells: infinitive, participle past_act, gerund past.
     conjugation!("вестись", 5, "~~тись", like Распасться;
@@ -3165,15 +2913,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~дший~я", _, _;
     gerund: _, "~дши~ь";
     ),
-    // Вывиться: 5 words (выбиться, вылиться, выпиться, вывиться, повыбиться). Like Бриться, except in 8 cells: non_past_1 sg, non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, ….
-    conjugation!("вывиться", 5, "~ить~я", [aspect: Perfective], like Бриться;
-    non_past_1: "~ью~ь", "~ьем~я";
-    non_past_2: "~ьешь~я", "~ейте~ь";
-    non_past_3: "~ьет~я", "~ьют~я";
-    participle: derived, _, _, _;
-    gerund: derived, _;
+    // Вывиться: 5 words (выбиться, вылиться, выпиться, вывиться, повыбиться). Like Выпить with `~я` after each pattern (`~ь` after а, е, и, о, ю), except in 3 cells: non_past_2 pl, participle past_pass, gerund past.
+    conjugation!("вывиться", 5, "~ить~я", [aspect: Perfective], like Выпить with "~я", "~ь" after "аеиою";
+    non_past_2: _, "~ейте~ь";
+    participle: _, _, _, derived;
+    gerund: _, "~ивши~ь";
     ),
-    // Выползти: 5 words (вылезти, выползти, повылезти, повыползти, выебти). Like Вынести, except in 0 cells: .
+    // Выползти: 5 words (вылезти, выползти, повылезти, повыползти, выебти). Like Вынести.
     conjugation!("выползти", 5, "~ти", [aspect: Perfective], like Вынести;
     stem past: "~- like грызть";
     ),
@@ -3234,24 +2980,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem non_past: "~ег- like рвануть";
     participle: _, _, derived, derived;
     ),
-    // Улечься: 4 words (улечься, поулечься, разлечься, приулечься).
-    conjugation!("улечься", 4, "~ечься", [aspect: Perfective];
-    infinitive: "~ечься";
-    non_past_1: "~ягусь", "~яжемся";
-    non_past_2: "~яжешься", "~яжетесь";
-    non_past_3: "~яжется", "~ягутся";
-    past: "~ёгся", "~еглась", "~еглось", "~еглись";
-    imperative: "~ягся", "~ягтесь";
-    participle: _, "~ёгшийся", _, _;
-    gerund: _, "~ёгшись";
+    // Улечься: 4 words (улечься, поулечься, разлечься, приулечься). Like Лечь with `ся` after each pattern (`сь` after а, е, и, о, у).
+    conjugation!("улечься", 4, "~ечься", [aspect: Perfective], like Лечь with "ся", "сь" after "аеиоу";
     ),
-    // Вынестись: 4 words (вынестись, вывезтись, вытрястись, отверзтись). Like Трястись, except in 7 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, participle pres_act, gerund pres, ….
-    conjugation!("вынестись", 4, "~ти~ь", [aspect: Perfective], like Трястись;
-    non_past_1: _, "~ем~я";
-    non_past_2: "~ешь~я", "~ете~ь";
-    non_past_3: "~ет~я", _;
-    participle: derived, _, _, _;
-    gerund: derived, "~я~ь";
+    // Вынестись: 4 words (вынестись, вывезтись, вытрястись, отверзтись). Like Вынести with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("вынестись", 4, "~ти~ь", [aspect: Perfective], like Вынести with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
     ),
     // Истереть: 4 words (растереть, распереть, истереть, поистереть).
     conjugation!("истереть", 4, "~с~е~еть", [aspect: Perfective];
@@ -3278,26 +3012,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     stem non_past: "~я- like играть";
     participle: _, _, _, "~ённый";
     ),
-    // Растереться: 4 words (растереться, истереться, поистереться, распереться).
-    conjugation!("растереться", 4, "~с~е~еть~я", [aspect: Perfective];
-    infinitive: "~с~е~еть~я";
-    non_past_1: "~зо~~у~ь", "~зо~~ём~я";
-    non_past_2: "~зо~~ёшь~я", "~зо~~ёте~ь";
-    non_past_3: "~зо~~ёт~я", "~зо~~ут~я";
-    past: "~с~ё~~я", "~с~ё~ла~ь", "~с~ё~ло~ь", "~с~ё~ли~ь";
-    imperative: "~зо~~и~ь", "~зо~~ите~ь";
-    participle: _, "~с~ё~ший~я", _, _;
+    // Растереться: 4 words (растереться, истереться, поистереться, распереться). Like Истереть with `~ь` after each pattern (`~я` after ~, й, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("растереться", 4, "~с~е~еть~я", [aspect: Perfective], like Истереть with "~ь", "~я" after "~ймть";
+    participle: _, _, _, derived;
     gerund: _, "~с~ё~ши~ь";
     ),
-    // Изъяться: 4 words (изъяться, подъяться, разъяться, отъяться).
-    conjugation!("изъяться", 4, "~ъять~я", [aspect: Perfective];
-    infinitive: "~ъять~я";
-    non_past_1: "~ыму~ь", "~ымем~я";
-    non_past_2: "~ымешь~я", "~ымете~ь";
-    non_past_3: "~ымет~я", "~ымут~я";
-    past: "~ъял~я", "~ъяла~ь", "~ъяло~ь", "~ъяли~ь";
-    imperative: "~ыми~ь", "~ымите~ь";
-    participle: _, "~ъявший~я", _, _;
+    // Изъяться: 4 words (изъяться, подъяться, разъяться, отъяться). Like Изъять with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("изъяться", 4, "~ъять~я", [aspect: Perfective], like Изъять with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
     gerund: _, "~ъявши~ь";
     ),
     // Уеть: 4 words (выеть, поеть, заеть, уеть). Like Грести, except in 4 cells: infinitive, participle pres_act, participle pres_pass, gerund pres.
@@ -3325,12 +3047,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: derived, _, derived, derived;
     gerund: derived, _;
     ),
-    // Хотеться: 3 words (хотеться, захотеться, расхотеться). Like Разлететься, except in 4 cells: non_past_2 sg, non_past_3 sg, participle pres_act, gerund pres.
-    conjugation!("хотеться", 3, "~теть~я", like Разлететься;
-    non_past_2: "~чешь~я", _;
-    non_past_3: "~чет~я", _;
-    participle: derived, _, _, _;
-    gerund: derived, _;
+    // Хотеться: 3 words (хотеться, захотеться, расхотеться). Like Хотеть with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 1 cell: gerund past.
+    conjugation!("хотеться", 3, "~теть~я", like Хотеть with "~ь", "~я" after "йлмть";
+    gerund: _, "~тевши~ь";
     ),
     // Вырасти: 3 words (вырасти, повырасти, подвырасти). Like Дорасти, except in 2 cells: participle pres_act, gerund pres.
     conjugation!("вырасти", 3, "~а~ти", [aspect: Perfective], like Дорасти;
@@ -3379,13 +3098,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: "~нущий~я", "~вший~я", _, _;
     gerund: "~ня~ь", "~вши~ь";
     ),
-    // Приняться: 3 words (приняться, восприняться, предприняться). Like Уняться, except in 9 cells: non_past_1 sg, non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, non_past_3 pl, ….
-    conjugation!("приняться", 3, "~нять~я", [aspect: Perfective], like Уняться;
-    non_past_1: "~му~ь", "~мем~я";
-    non_past_2: "~мешь~я", "~мете~ь";
-    non_past_3: "~мет~я", "~мут~я";
-    past: "~нял~я", _, _, _;
-    imperative: "~ми~ь", "~мите~ь";
+    // Приняться: 3 words (приняться, восприняться, предприняться). Like Принять with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("приняться", 3, "~нять~я", [aspect: Perfective], like Принять with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~нявши~ь";
     ),
     // Вывести: 3 words (вывести, выбрести, повывести). Like Выпасть, except in 3 cells: infinitive, participle past_act, gerund past.
     conjugation!("вывести", 3, "~сти", [aspect: Perfective], like Выпасть;
@@ -3393,12 +3109,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~дший", _, _;
     gerund: _, "~дя";
     ),
-    // Выбраться: 3 words (выбраться, выдраться, повыбраться). Like Стлаться, except in 4 cells: non_past_1 sg, non_past_3 pl, participle pres_act, gerund pres.
-    conjugation!("выбраться", 3, "~~ать~я", [aspect: Perfective], like Стлаться;
-    non_past_1: "~е~у~ь", _;
-    non_past_3: _, "~е~ут~я";
-    participle: derived, _, _, _;
-    gerund: derived, _;
+    // Выбраться: 3 words (выбраться, выдраться, повыбраться). Like Выбрать with `~ь` after each pattern (`~я` after й, л, м, т, ь), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("выбраться", 3, "~~ать~я", [aspect: Perfective], like Выбрать with "~ь", "~я" after "йлмть";
+    participle: _, _, _, derived;
+    gerund: _, "~~авши~ь";
     ),
     // Вылезть: 3 words (вылезть, выгрызть, отверзть). Like Лезть, except in 3 cells: imperative sg, participle pres_act, gerund pres.
     conjugation!("вылезть", 3, "~ть", [aspect: Perfective], like Лезть;
@@ -3414,7 +3128,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, _, _, "~о~тённый";
     gerund: _, "~о~тя|~~ётши";
     ),
-    // Обмереть: 3 words (отпереть, обмереть, отмереть). Like Стереть, except in 0 cells: .
+    // Обмереть: 3 words (отпереть, обмереть, отмереть). Like Стереть.
     conjugation!("обмереть", 3, "~~е~еть", [aspect: Perfective], like Стереть;
     stem past: "~~е~- like обмереть";
     ),
@@ -3423,7 +3137,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     imperative: "~дь", "~дьте";
     participle: _, _, _, "~ждённый";
     ),
-    // Отозвать: 3 words (отозвать, обозвать, подозвать). Like Разогнать, except in 0 cells: .
+    // Отозвать: 3 words (отозвать, обозвать, подозвать). Like Разогнать.
     conjugation!("отозвать", 3, "~о~~ать", [aspect: Perfective], like Разогнать;
     stem non_past: "~~о~- like перевернуть";
     ),
@@ -3452,15 +3166,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     conjugation!("приобрестись", 3, "~е~тись", [aspect: Perfective], like Сплестись;
     participle: _, "~етший~я", _, _;
     ),
-    // Пролежать: 3 words (пролежать, отлежать, облежать). Like Взъебать, except in 0 cells: .
-    conjugation!("пролежать", 3, "~е~ать", like Взъебать;
-    stem non_past: "~е~- like стучать";
-    ),
-    // Осечься: 3 words (пересечься, осечься, сечься). Like Влечься, except in 3 cells: past m, participle past_act, gerund past.
-    conjugation!("осечься", 3, "~ечь~я", like Влечься;
-    past: "~ёк~я|~ек~я", _, _, _;
-    participle: _, "~екший~я|~ёкший~я", _, _;
-    gerund: _, "~екши~ь|~ёкши~ь";
+    // Осечься: 3 words (пересечься, осечься, сечься). Like Засечь with `~я` after each pattern (`~ь` after а, е, и, о, у), except in 1 cell: participle past_pass.
+    conjugation!("осечься", 3, "~ечь~я", like Засечь with "~я", "~ь" after "аеиоу";
+    participle: _, _, _, derived;
     ),
     // Изыти: 3 words (снити, изыти, внити). Like Вывести, except in 7 cells: infinitive, past m, past f, past n, past pl, participle past_act, ….
     conjugation!("изыти", 3, "~ти", [aspect: Perfective], like Вывести;
@@ -3468,14 +3176,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     past: "~шел", "~шла", "~шло", "~шли";
     participle: _, "~шедший", _, derived;
     ),
-    // Наморщиться: 3 words (встопорщиться, наморщиться, изморщиться). Like Выпариться, except in 2 cells: non_past_1 sg, gerund past.
-    conjugation!("наморщиться", 3, "~ить~я", [aspect: Perfective], like Выпариться;
+    // Наморщиться: 3 words (встопорщиться, наморщиться, изморщиться). Like Закупорить with `~я` after each pattern (`~ь` after а, е, и, о), except in 4 cells: non_past_1 sg, imperative sg, participle past_pass, gerund past.
+    conjugation!("наморщиться", 3, "~ить~я", [aspect: Perfective], like Закупорить with "~я", "~ь" after "аеио";
     non_past_1: "~у~ь", _;
+    imperative: "~ь~я|~и~ь", _;
+    participle: _, _, _, derived;
     gerund: _, "~ивши~ь";
     ),
-    // Чтиться: 3 words (чтиться, почтиться, узриться). Like Числиться, except in 2 cells: non_past_1 sg, gerund past.
-    conjugation!("чтиться", 3, "~ить~я", like Числиться;
+    // Чтиться: 3 words (чтиться, почтиться, узриться). Like Палить with `~я` after each pattern (`~ь` after а, е, и, о, я), except in 4 cells: non_past_1 sg, participle pres_pass, participle past_pass, gerund past.
+    conjugation!("чтиться", 3, "~ить~я", like Палить with "~я", "~ь" after "аеиоя";
     non_past_1: "~у~ь", _;
+    participle: _, _, derived, derived;
     gerund: _, "~ивши~ь|~я~ь";
     ),
     // Взбресть: 3 words (взбресть, добресть, набресть). Like Развести, except in 3 cells: infinitive, participle past_pass, gerund past.
@@ -3484,12 +3195,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, _, _, derived;
     gerund: _, "~едя";
     ),
-    // Выпечься: 3 words (выволочься, выпечься, высечься). Like Заволочься, except in 5 cells: non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, participle pres_act.
-    conjugation!("выпечься", 3, "~чь~я", [aspect: Perfective], like Заволочься;
-    non_past_1: _, "~чем~я";
-    non_past_2: "~чешь~я", "~чете~ь";
-    non_past_3: "~чет~я", _;
-    participle: derived, _, _, _;
+    // Выпечься: 3 words (выволочься, выпечься, высечься). Like Высечь with `~ь` after each pattern (`~я` after й, к, м, т, ь), except in 1 cell: participle past_pass.
+    conjugation!("выпечься", 3, "~чь~я", [aspect: Perfective], like Высечь with "~ь", "~я" after "йкмть";
+    participle: _, _, _, derived;
     ),
     // Мястись: 3 words (мястись, выплестись, выместись). Like Зачесться, except in 7 cells: infinitive, non_past_1 pl, non_past_2 sg, non_past_2 pl, non_past_3 sg, past m, ….
     conjugation!("мястись", 3, "~~тись", like Зачесться;
@@ -3500,15 +3208,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     past: "~л~я", _, _, _;
     participle: _, "~тший~я", _, _;
     ),
-    // Испиться: 3 words (распиться, расшиться, испиться).
-    conjugation!("испиться", 3, "~с~ить~я", [aspect: Perfective];
-    infinitive: "~с~ить~я";
-    non_past_1: "~зо~ью~ь", "~зо~ьём~я";
-    non_past_2: "~зо~ьёшь~я", "~зо~ьёте~ь";
-    non_past_3: "~зо~ьёт~я", "~зо~ьют~я";
-    past: "~с~ил~я", "~с~ила~ь", "~с~ило~ь", "~с~или~ь";
-    imperative: "~с~ей~я", "~с~ейте~ь";
-    participle: _, "~с~ивший~я", _, _;
+    // Испиться: 3 words (распиться, расшиться, испиться). Like Испить with `~я` after each pattern (`~ь` after а, е, и, о, ю), except in 2 cells: participle past_pass, gerund past.
+    conjugation!("испиться", 3, "~с~ить~я", [aspect: Perfective], like Испить with "~я", "~ь" after "аеиою";
+    participle: _, _, _, derived;
     gerund: _, "~с~ивши~ь";
     ),
     // Измождать: 3 words (измождать, повозвращать, прокажать).
@@ -3527,7 +3229,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 342] = [
     participle: _, "~одивший", _, "~едённый";
     gerund: _, "~одив|~одивши";
     ),
-    // Закодить: 3 words (повыводить, закодить, накодить). Like Высвободить, except in 0 cells: .
+    // Закодить: 3 words (повыводить, закодить, накодить). Like Высвободить.
     conjugation!("закодить", 3, "~дить", [aspect: Perfective], like Высвободить;
     stem past: "~д- like ударить";
     ),

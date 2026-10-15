@@ -46,6 +46,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: None,
         }
     };
 }
@@ -152,7 +153,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     stem adjective_f: "~- like maggiore";
     m: "~e", _;
     ),
-    // Lubrico: 5,291 words (eccentrico, sacrifico, magnifico, lesbico, acetico, porco). Like Gagliardo, except in 0 cells: .
+    // Lubrico: 5,291 words (eccentrico, sacrifico, magnifico, lesbico, acetico, porco). Like Gagliardo.
     declension!("lubrico", 5291, "~o", like Gagliardo;
     stem adjective_f: "~- like lubrico";
     ),
@@ -181,7 +182,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     m: "~io", "~i";
     f: "~ia", "~e";
     ),
-    // Versipelle: 48 words (single, ponte, satellite, cringe, esentasse, antiproiettile). Like Maggiore, except in 0 cells: .
+    // Versipelle: 48 words (single, ponte, satellite, cringe, esentasse, antiproiettile). Like Maggiore.
     declension!("versipelle", 48, "~e", like Maggiore as PL_AS_SG;
     ),
     // Birbone: 28 words (leggere, signore, poltrone, zuccone, chiacchierone, credulone). Like Gagliardo, except in 2 cells: m sg, superlative.

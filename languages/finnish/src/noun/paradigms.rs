@@ -64,7 +64,7 @@ use flexion::Paradigm;
 /// `possessive_com_sg` (_1sg, _2sg, _1pl, _2pl, _3)
 /// `possessive_com_pl` (_1sg, _2sg, _1pl, _2pl, _3)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem sg: $s0:tt;)?
      $(stem noun_nom_pl: $s1:tt;)?
      $(stem pl: $s2:tt;)?
@@ -293,6 +293,7 @@ macro_rules! declension {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -318,16 +319,34 @@ macro_rules! view {
     };
 }
 
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
     /// Like `purkaminen`: 525 words.
     Purkaminen,
-    /// Like `taso`: 497 words.
+    /// Like `taso`: 498 words.
     Taso,
-    /// Like `pato`: 394 words.
+    /// Like `pato`: 411 words.
     Pato,
-    /// Like `tunnus`: 386 words.
+    /// Like `tunnus`: 385 words.
     Tunnus,
     /// Like `pari`: 333 words.
     Pari,
@@ -373,21 +392,19 @@ pub enum Declension {
     Selkä,
     /// Like `kuori`: 43 words.
     Kuori,
-    /// Like `suhde`: 39 words.
+    /// Like `suhde`: 41 words.
     Suhde,
+    /// Like `parvi`: 34 words.
+    Parvi,
     /// Like `tekijä`: 31 words.
     Tekijä,
     /// Like `kivi`: 30 words.
     Kivi,
-    /// Like `parvi`: 29 words.
-    Parvi,
-    /// Like `lehti`: 26 words.
-    Lehti,
     /// Like `tarvas`: 25 words.
     Tarvas,
     /// Like `kausi`: 25 words.
     Kausi,
-    /// Like `osoitin`: 24 words.
+    /// Like `osoitin`: 25 words.
     Osoitin,
     /// Like `kate`: 23 words.
     Kate,
@@ -395,8 +412,8 @@ pub enum Declension {
     Liike,
     /// Like `hmong`: 20 words.
     Hmong,
-    /// Like `peite`: 18 words.
-    Peite,
+    /// Like `äänenvaimennin`: 20 words.
+    Äänenvaimennin,
     /// Like `kytkin`: 18 words.
     Kytkin,
     /// Like `puu`: 17 words.
@@ -407,18 +424,16 @@ pub enum Declension {
     Käsi,
     /// Like `luku`: 17 words.
     Luku,
-    /// Like `keitin`: 15 words.
-    Keitin,
-    /// Like `tuki`: 15 words.
-    Tuki,
+    /// Like `peite`: 16 words.
+    Peite,
+    /// Like `rengas`: 15 words.
+    Rengas,
     /// Like `ruis`: 15 words.
     Ruis,
-    /// Like `rengas`: 14 words.
-    Rengas,
+    /// Like `lehti`: 14 words.
+    Lehti,
     /// Like `sakset`: 14 words.
     Sakset,
-    /// Like `verkko`: 13 words.
-    Verkko,
     /// Like `aika`: 13 words.
     Aika,
     /// Like `kaanon`: 13 words.
@@ -437,22 +452,26 @@ pub enum Declension {
     Hattara,
     /// Like `perintä`: 10 words.
     Perintä,
+    /// Like `väki`: 10 words.
+    Väki,
     /// Like `maa`: 9 words.
     Maa,
     /// Like `työ`: 9 words.
     Työ,
     /// Like `kärki`: 9 words.
     Kärki,
+    /// Like `verkko`: 8 words.
+    Verkko,
     /// Like `kieli`: 8 words.
     Kieli,
     /// Like `jousi`: 8 words.
     Jousi,
     /// Like `hiili`: 8 words.
     Hiili,
+    /// Like `siipi`: 8 words.
+    Siipi,
     /// Like `toimi`: 7 words.
     Toimi,
-    /// Like `kupu`: 6 words.
-    Kupu,
     /// Like `keihäs`: 6 words.
     Keihäs,
     /// Like `kuningatar`: 6 words.
@@ -461,14 +480,8 @@ pub enum Declension {
     Kanapee,
     /// Like `maamerkki`: 6 words.
     Maamerkki,
-    /// Like `muunnin`: 6 words.
-    Muunnin,
-    /// Like `veto`: 6 words.
-    Veto,
     /// Like `värit`: 6 words.
     Värit,
-    /// Like `lippu`: 5 words.
-    Lippu,
     /// Like `koe`: 5 words.
     Koe,
     /// Like `jänne`: 5 words.
@@ -487,6 +500,8 @@ pub enum Declension {
     Lupa,
     /// Like `paikka`: 4 words.
     Paikka,
+    /// Like `kupu`: 4 words.
+    Kupu,
     /// Like `tee`: 4 words.
     Tee,
     /// Like `poika`: 4 words.
@@ -505,6 +520,8 @@ pub enum Declension {
     Käräjät,
     /// Like `vehje`: 4 words.
     Vehje,
+    /// Like `onki`: 4 words.
+    Onki,
     /// Like `piennar`: 4 words.
     Piennar,
     /// Like `leipä`: 3 words.
@@ -535,7 +552,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 105] = [
+    pub const ALL: [Declension; 104] = [
         Declension::Purkaminen,
         Declension::Taso,
         Declension::Pato,
@@ -563,28 +580,26 @@ impl Declension {
         Declension::Selkä,
         Declension::Kuori,
         Declension::Suhde,
+        Declension::Parvi,
         Declension::Tekijä,
         Declension::Kivi,
-        Declension::Parvi,
-        Declension::Lehti,
         Declension::Tarvas,
         Declension::Kausi,
         Declension::Osoitin,
         Declension::Kate,
         Declension::Liike,
         Declension::Hmong,
-        Declension::Peite,
+        Declension::Äänenvaimennin,
         Declension::Kytkin,
         Declension::Puu,
         Declension::Etumies,
         Declension::Käsi,
         Declension::Luku,
-        Declension::Keitin,
-        Declension::Tuki,
-        Declension::Ruis,
+        Declension::Peite,
         Declension::Rengas,
+        Declension::Ruis,
+        Declension::Lehti,
         Declension::Sakset,
-        Declension::Verkko,
         Declension::Aika,
         Declension::Kaanon,
         Declension::Lähde,
@@ -594,22 +609,21 @@ impl Declension {
         Declension::Koi,
         Declension::Hattara,
         Declension::Perintä,
+        Declension::Väki,
         Declension::Maa,
         Declension::Työ,
         Declension::Kärki,
+        Declension::Verkko,
         Declension::Kieli,
         Declension::Jousi,
         Declension::Hiili,
+        Declension::Siipi,
         Declension::Toimi,
-        Declension::Kupu,
         Declension::Keihäs,
         Declension::Kuningatar,
         Declension::Kanapee,
         Declension::Maamerkki,
-        Declension::Muunnin,
-        Declension::Veto,
         Declension::Värit,
-        Declension::Lippu,
         Declension::Koe,
         Declension::Jänne,
         Declension::Khmer,
@@ -619,6 +633,7 @@ impl Declension {
         Declension::Kissanristiäiset,
         Declension::Lupa,
         Declension::Paikka,
+        Declension::Kupu,
         Declension::Tee,
         Declension::Poika,
         Declension::Hopea,
@@ -628,6 +643,7 @@ impl Declension {
         Declension::Takuu,
         Declension::Käräjät,
         Declension::Vehje,
+        Declension::Onki,
         Declension::Piennar,
         Declension::Leipä,
         Declension::Body,
@@ -658,7 +674,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 104] = [
     // Purkaminen: 525 words (nainen, suomalainen, valkoinen, punainen, hevonen, lautanen).
     declension!("purkaminen", 525, "~nen";
     stem pl: "~s- like purkaminen";
@@ -693,8 +709,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~settAVn|~settansa";
     possessive_abe_pl: "~sittAni", _, _, _, "~sittAVn|~sittansa";
     ),
-    // Taso: 497 words (tempo, indigo, sombrero, ajo, dodo, menu). Like Purkaminen, except in 47 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("taso", 497, "~", like Purkaminen;
+    // Taso: 498 words (tempo, indigo, sombrero, ajo, dodo, menu). Like Purkaminen, except in 47 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
+    declension!("taso", 498, "~", like Purkaminen;
     stem sg: "~- like taso";
     stem pl: "~- like taso";
     nom: _, "~t";
@@ -727,47 +743,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~ttAVn|~ttansa";
     possessive_abe_pl: "~ittAni", _, _, _, "~ittAVn|~ittansa";
     ),
-    // Pato: 394 words (pato, itu, satu, postiennakko, otto, veto). Like Taso, except in 58 cells: nom pl, gen_ pl, par pl, ine sg, ine pl, ela sg, ….
-    declension!("pato", 394, "~ˇ", like Taso;
-    stem sg: "~- like pato";
-    nom: _, "~tˇ";
-    gen_: _, "~jenˇ";
-    par: _, "~jAˇ";
-    ine: "~ssAˇ", "~issAˇ";
-    ela: "~stAˇ", "~istAˇ";
-    ill: "~Vnˇ", "~ihinˇ";
-    ade: "~llAˇ", "~illAˇ";
-    abl: "~ltAˇ", "~iltAˇ";
-    all: _, "~illeˇ";
-    ess: "~nAˇ", "~inAˇ";
-    abe: "~ttAˇ", "~ittAˇ";
-    possessive_nom_sg: "~niˇ", _, _, _, "~nsAˇ";
-    possessive_nom_pl: _, "~siˇ", "~mmeˇ", "~nneˇ", _;
-    possessive_gen_sg: _, "~siˇ", "~mmeˇ", "~nneˇ", _;
-    possessive_gen_pl: "~jeniˇ", _, _, _, "~jensAˇ";
-    possessive_par_pl: "~jAniˇ", _, _, _, "~jAVnˇ|~jansaˇ";
-    possessive_ine_sg: _, _, _, _, "~ssAVnˇ|~ssansaˇ";
-    possessive_ine_pl: "~issAniˇ", _, _, _, "~issAVnˇ|~issansaˇ";
-    possessive_ela_sg: _, _, _, _, "~stAVnˇ|~stansaˇ";
-    possessive_ela_pl: "~istAniˇ", _, _, _, "~istAVnˇ|~istansaˇ";
-    possessive_ill_sg: _, _, _, _, "~VnsAˇ";
-    possessive_ill_pl: "~ihiniˇ", _, _, _, "~ihinsAˇ";
-    possessive_ade_sg: _, _, _, _, "~llAVnˇ|~llansaˇ";
-    possessive_ade_pl: "~illAniˇ", _, _, _, "~illAVnˇ|~illansaˇ";
-    possessive_abl_sg: _, _, _, _, "~ltAVnˇ|~ltansaˇ";
-    possessive_abl_pl: "~iltAniˇ", _, _, _, "~iltAVnˇ|~iltansaˇ";
-    possessive_all_sg: _, _, _, _, "~lleenˇ|~llensaˇ";
-    possessive_all_pl: "~illeniˇ", _, _, _, "~illeenˇ|~illensaˇ";
-    possessive_ess_sg: _, _, _, _, "~nAVnˇ|~nansaˇ";
-    possessive_ess_pl: "~inAniˇ", _, _, _, "~inAVnˇ|~inansaˇ";
-    possessive_tra_sg: _, _, _, _, "~kseenˇ|~ksensaˇ";
-    possessive_tra_pl: _, _, _, _, "~ikseenˇ|~iksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~ttAVnˇ|~ttansaˇ";
-    possessive_abe_pl: "~ittAniˇ", _, _, _, "~ittAVnˇ|~ittansaˇ";
-    possessive_com_pl: "~ineniˇ", _, _, _, "~ineenˇ|~inensaˇ";
+    // Pato: 411 words (pato, itu, satu, postiennakko, otto, veto). Like Taso with `ˇ` after each pattern.
+    declension!("pato", 411, "~ˇ", like Taso with "ˇ";
     ),
-    // Tunnus: 386 words (genus, ape, atlas, opus, tytär, bonus).
-    declension!("tunnus", 386, "~~";
+    // Tunnus: 385 words (genus, ape, atlas, opus, tytär, bonus).
+    declension!("tunnus", 385, "~~";
     stem sg: "~~- like tunnus";
     nom: _, "~k~et";
     gen_: _, "~~ten|~k~ien";
@@ -844,53 +824,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_pl: "~eittAni", _, _, _, "~eittAVn|~eittansa";
     possessive_com_pl: "~eineni", _, _, _, "~eineen|~einensa";
     ),
-    // Kaappi: 324 words (kaappi, äiti, sekunti, voltti, täti, turkki). Like Taso, except in 58 cells: nom pl, gen_ pl, par pl, ine sg, ine pl, ela sg, ….
-    declension!("kaappi", 324, "~iˇ", like Taso;
-    stem sg: "~i- like pato";
-    nom: _, "~itˇ";
-    gen_: _, "~ienˇ";
-    par: _, "~ejAˇ";
-    ine: "~issAˇ", "~eissAˇ";
-    ela: "~istAˇ", "~eistAˇ";
-    ill: "~iVnˇ", "~eihinˇ";
-    ade: "~illAˇ", "~eillAˇ";
-    abl: "~iltAˇ", "~eiltAˇ";
-    all: _, "~eilleˇ";
-    ess: "~inAˇ", "~einAˇ";
-    abe: "~ittAˇ", "~eittAˇ";
-    possessive_nom_sg: "~iniˇ", _, _, _, "~insAˇ";
-    possessive_nom_pl: _, "~isiˇ", "~immeˇ", "~inneˇ", _;
-    possessive_gen_sg: _, "~isiˇ", "~immeˇ", "~inneˇ", _;
-    possessive_gen_pl: "~ieniˇ", _, _, _, "~iensAˇ";
-    possessive_par_pl: "~ejAniˇ", _, _, _, "~ejAVnˇ|~ejansaˇ";
-    possessive_ine_sg: _, _, _, _, "~issAVnˇ|~issansaˇ";
-    possessive_ine_pl: "~eissAniˇ", _, _, _, "~eissAVnˇ|~eissansaˇ";
-    possessive_ela_sg: _, _, _, _, "~istAVnˇ|~istansaˇ";
-    possessive_ela_pl: "~eistAniˇ", _, _, _, "~eistAVnˇ|~eistansaˇ";
-    possessive_ill_sg: _, _, _, _, "~iVnsAˇ";
-    possessive_ill_pl: "~eihVniˇ", _, _, _, "~eihinsAˇ";
-    possessive_ade_sg: _, _, _, _, "~illAVnˇ|~illansaˇ";
-    possessive_ade_pl: "~eillAniˇ", _, _, _, "~eillAVnˇ|~eillansaˇ";
-    possessive_abl_sg: _, _, _, _, "~iltAVnˇ|~iltansaˇ";
-    possessive_abl_pl: "~eiltAniˇ", _, _, _, "~eiltAVnˇ|~eiltansaˇ";
-    possessive_all_sg: _, _, _, _, "~illeenˇ|~illensaˇ";
-    possessive_all_pl: "~eilleniˇ", _, _, _, "~eilleenˇ|~eillensaˇ";
-    possessive_ess_sg: _, _, _, _, "~inAVnˇ|~inansaˇ";
-    possessive_ess_pl: "~einAniˇ", _, _, _, "~einAVnˇ|~einansaˇ";
-    possessive_tra_sg: _, _, _, _, "~ikseenˇ|~iksensaˇ";
-    possessive_tra_pl: _, _, _, _, "~eikseenˇ|~eiksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~ittAVnˇ|~ittansaˇ";
-    possessive_abe_pl: "~eittAniˇ", _, _, _, "~eittAVnˇ|~eittansaˇ";
-    possessive_com_pl: "~eineniˇ", _, _, _, "~eineenˇ|~einensaˇ";
+    // Kaappi: 324 words (kaappi, äiti, sekunti, voltti, täti, turkki). Like Pari with `ˇ` after each pattern.
+    declension!("kaappi", 324, "~iˇ", like Pari with "ˇ";
     ),
-    // Osa: 322 words (koira, pula, musta, korva, kuula, kura). Like Taso, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
-    declension!("osa", 322, "~a", like Taso;
-    stem sg: "~a- like osa";
-    stem pl: "~i- like osa";
+    // Osa: 322 words (koira, pula, musta, korva, kuula, kura). Like Taso with `` after each pattern (`a` after ~), except in 36 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("osa", 322, "~a", like Taso with "", "a" after "~";
     nom: _, "~at";
+    gen_: _, "~ien";
+    par: "~aV", "~iA";
     ine: "~assV", _;
     ela: "~astV", _;
-    ill: "~aVn", _;
+    ill: "~aVn", "~iin";
     ade: "~allV", _;
     abl: "~altV", _;
     ess: "~anV", _;
@@ -898,9 +842,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: "~ani", _, _, _, "~ansV";
     possessive_nom_pl: _, "~asi", "~amme", "~anne", _;
     possessive_gen_sg: _, "~asi", "~amme", "~anne", _;
+    possessive_gen_pl: "~ieni", _, _, _, "~iensA";
+    possessive_par_sg: _, _, _, _, "~aVnsV";
+    possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iansa";
     possessive_ine_sg: _, _, _, _, "~assVVn|~assansa";
     possessive_ela_sg: _, _, _, _, "~astVVn|~astansa";
     possessive_ill_sg: _, _, _, _, "~aVnsV";
+    possessive_ill_pl: "~iini", _, _, _, "~iinsA";
     possessive_ade_sg: _, _, _, _, "~allVVn|~allansa";
     possessive_abl_sg: _, _, _, _, "~altVVn|~altansa";
     possessive_all_sg: _, _, _, _, "~alleen|~allensa";
@@ -925,9 +873,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_pl: _, _, _, _, "~oikseen|~oiksensa";
     possessive_abe_pl: "~oittAni", _, _, _, "~oittAVn|~oittansa";
     ),
-    // Ankkuri: 254 words (ämpäri, banaani, mittari, versaali, paperi, moottori). Like Pari, except in 0 cells: .
-    declension!("ankkuri", 254, "~i", like Pari;
-    stem pl: "~- like ankkuri";
+    // Ankkuri: 254 words (ämpäri, banaani, mittari, versaali, paperi, moottori). Like Hmong with `` after each pattern (`i` after ~), except in 18 cells: gen_ pl, par pl, com pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, ….
+    declension!("ankkuri", 254, "~i", like Hmong with "", "i" after "~";
+    gen_: _, "~ien|~eiden|~eitten";
+    par: _, "~eitA|~eja";
+    com: _, derived;
+    possessive_gen_pl: "~ieni|~eideni|~eitteni", "~iesi|~eidesi|~eittesi", "~iemme|~eidemme|~eittemme", "~ienne|~eidenne|~eittenne", "~iensA|~eidensa|~eittensa";
+    possessive_par_pl: "~eitAni|~ejani", "~eitAsi|~ejasi", "~eitAmme|~ejamme", "~eitAnne|~ejanne", "~eitAVn|~ejaan|~eitansa|~ejansa";
+    possessive_ill_sg: derived, derived, derived, derived, _;
+    possessive_ill_pl: "~eihVni", _, _, _, _;
     ),
     // Ykkönen: 208 words (kääntäminen, etiäinen, mehiläinen, ihminen, herhiläinen, pistiäinen). Like Purkaminen, except in 19 cells: possessive_par_sg _3, possessive_par_pl _3, possessive_ine_sg _3, possessive_ine_pl _3, possessive_ela_sg _3, possessive_ela_pl _3, ….
     declension!("ykkönen", 208, "~nen", like Purkaminen;
@@ -951,38 +905,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_pl: _, _, _, _, "~sittAVn|~sittänsä";
     possessive_com_pl: _, _, _, _, "~sineen|~sinensä";
     ),
-    // Pata: 196 words (pata, rata, kita, kappa, markka, virta). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("pata", 196, "~aˇ", like Taso;
-    stem sg: "~a- like pata";
-    stem pl: "~o- like pata";
-    nom: _, "~atˇ";
-    ine: "~assVˇ", "~oissAˇ";
-    ela: "~astVˇ", "~oistAˇ";
-    ill: "~aVnˇ", _;
-    ade: "~allVˇ", "~oillAˇ";
-    abl: "~altVˇ", "~oiltAˇ";
-    all: _, "~oilleˇ";
-    ess: "~anVˇ", _;
-    abe: "~attVˇ", "~oittAˇ";
-    possessive_nom_sg: "~aniˇ", _, _, _, "~ansVˇ";
-    possessive_nom_pl: _, "~asiˇ", "~ammeˇ", "~anneˇ", _;
-    possessive_gen_sg: _, "~asiˇ", "~ammeˇ", "~anneˇ", _;
-    possessive_ine_sg: _, _, _, _, "~assVVnˇ|~assansaˇ";
-    possessive_ine_pl: "~oissAniˇ", _, _, _, "~oissAVnˇ|~oissansaˇ";
-    possessive_ela_sg: _, _, _, _, "~astVVnˇ|~astansaˇ";
-    possessive_ela_pl: "~oistAniˇ", _, _, _, "~oistAVnˇ|~oistansaˇ";
-    possessive_ill_sg: _, _, _, _, "~aVnsVˇ";
-    possessive_ade_sg: _, _, _, _, "~allVVnˇ|~allansaˇ";
-    possessive_ade_pl: "~oillAniˇ", _, _, _, "~oillAVnˇ|~oillansaˇ";
-    possessive_abl_sg: _, _, _, _, "~altVVnˇ|~altansaˇ";
-    possessive_abl_pl: "~oiltAniˇ", _, _, _, "~oiltAVnˇ|~oiltansaˇ";
-    possessive_all_sg: _, _, _, _, "~alleenˇ|~allensaˇ";
-    possessive_all_pl: "~oilleniˇ", _, _, _, "~oilleenˇ|~oillensaˇ";
-    possessive_ess_sg: _, _, _, _, "~anVVnˇ|~anansaˇ";
-    possessive_tra_sg: _, _, _, _, "~akseenˇ|~aksensaˇ";
-    possessive_tra_pl: _, _, _, _, "~oikseenˇ|~oiksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~attVVnˇ|~attansaˇ";
-    possessive_abe_pl: "~oittAniˇ", _, _, _, "~oittAVnˇ|~oittansaˇ";
+    // Pata: 196 words (pata, rata, kita, kappa, markka, virta). Like Sarja with `ˇ` after each pattern.
+    declension!("pata", 196, "~aˇ", like Sarja with "ˇ";
     ),
     // Erä: 170 words (päivä, pitkä, isä, kynä, vihreä, kesä). Like Osa, except in 42 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("erä", 170, "~ä", like Osa;
@@ -1016,7 +940,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~ättVVn|~ättänsä";
     possessive_abe_pl: "~ittäni", _, _, _, "~ittäVn|~ittänsä";
     ),
-    // Nappula: 161 words (tortilla, harmonia, porkkana, ikkuna, gemena, vasara). Like Sarja, except in 0 cells: .
+    // Nappula: 161 words (tortilla, harmonia, porkkana, ikkuna, gemena, vasara). Like Sarja.
     declension!("nappula", 161, "~a", like Sarja;
     stem pl: "~oi- like nappula";
     ),
@@ -1054,10 +978,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~dettAVn|~dettansa";
     possessive_abe_pl: "~ksittAni", _, _, _, "~ksittAVn|~ksittansa";
     ),
-    // Keri: 121 words (keksi, peili, väri, seksi, peli, viini). Like Pari, except in 33 cells: ine sg, ine pl, ela sg, ela pl, ade sg, ade pl, ….
+    // Keri: 121 words (keksi, peili, väri, seksi, peli, viini). Like Pari, except in 35 cells: par sg, ine sg, ine pl, ela sg, ela pl, ade sg, ….
     declension!("keri", 121, "~i", like Pari;
-    stem sg: "~i- like keri";
     stem pl: "~- like keri";
+    par: "~iä", _;
     ine: "~issä", "~eissä";
     ela: "~istä", "~eistä";
     ade: "~illä", "~eillä";
@@ -1065,6 +989,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     ess: "~inä", _;
     abe: "~ittä", "~eittä";
     possessive_nom_sg: _, _, _, _, "~insä";
+    possessive_par_sg: _, _, _, _, "~iäVn|~iänsä";
     possessive_ine_sg: _, _, _, _, "~issäVn|~issänsä";
     possessive_ine_pl: "~eissäni", _, _, _, "~eissäVn|~eissänsä";
     possessive_ela_sg: _, _, _, _, "~istäVn|~istänsä";
@@ -1130,7 +1055,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_sg: _, _, _, _, "~Vkseen|~eksensa";
     possessive_abe_sg: _, _, _, _, "~VttAVn|~ettansa";
     ),
-    // Konversio: 107 words (radio, valtio, tau, video, olio, sikiö). Like Taso, except in 0 cells: .
+    // Konversio: 107 words (radio, valtio, tau, video, olio, sikiö). Like Taso.
     declension!("konversio", 107, "~", like Taso;
     stem sg: "~- like tunnus";
     stem pl: "~- like konversio";
@@ -1155,22 +1080,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~ttAVn|~ttänsä";
     possessive_abe_pl: _, _, _, _, "~ittAVn|~ittänsä";
     ),
-    // Suka: 105 words (suka, lupa, toukka, kulta, kukka, sukka). Like Pata, except in 19 cells: ine pl, ela pl, ade pl, abl pl, all pl, abe pl, ….
-    declension!("suka", 105, "~aˇ", like Pata;
-    stem pl: "~i- like suka";
-    ine: _, "~issAˇ";
-    ela: _, "~istAˇ";
-    ade: _, "~illAˇ";
-    abl: _, "~iltAˇ";
-    all: _, "~illeˇ";
-    abe: _, "~ittAˇ";
-    possessive_ine_pl: "~issAniˇ", _, _, _, "~issAVnˇ|~issansaˇ";
-    possessive_ela_pl: "~istAniˇ", _, _, _, "~istAVnˇ|~istansaˇ";
-    possessive_ade_pl: "~illAniˇ", _, _, _, "~illAVnˇ|~illansaˇ";
-    possessive_abl_pl: "~iltAniˇ", _, _, _, "~iltAVnˇ|~iltansaˇ";
-    possessive_all_pl: "~illeniˇ", _, _, _, "~illeenˇ|~illensaˇ";
-    possessive_tra_pl: _, _, _, _, "~ikseenˇ|~iksensaˇ";
-    possessive_abe_pl: "~ittAniˇ", _, _, _, "~ittAVnˇ|~ittansaˇ";
+    // Suka: 105 words (suka, lupa, toukka, kulta, kukka, sukka). Like Maa with `ˇ` after each pattern, except in 16 cells: gen_ pl, par sg, par pl, ill sg, ill pl, possessive_gen_pl _1sg, ….
+    declension!("suka", 105, "~aˇ", like Maa with "ˇ";
+    gen_: _, "~ienˇ";
+    par: "~aVˇ", "~iAˇ";
+    ill: "~aVnˇ", "~iinˇ";
+    possessive_gen_pl: "~ieniˇ", derived, derived, derived, "~iensAˇ";
+    possessive_par_sg: _, _, _, _, "~aVnsVˇ";
+    possessive_par_pl: "~iAniˇ", _, _, _, "~iAVnˇ|~iansaˇ";
+    possessive_ill_sg: _, _, _, _, "~aVnsVˇ";
+    possessive_ill_pl: "~iiniˇ", _, _, _, "~iinsAˇ";
     ),
     // Piste: 56 words (sine, piste, herne, hie, este, neste). Like Erä, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
     declension!("piste", 56, "~", like Erä;
@@ -1264,51 +1183,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~mettAVn|~mettansa";
     possessive_abe_pl: "~mittAni", _, _, _, "~mittAVn|~mittansa";
     ),
-    // Selkä: 44 words (leipä, kenkä, setä, ikä, itä, kenttä). Like Suka, except in 51 cells: nom pl, par pl, ine sg, ine pl, ela sg, ela pl, ….
-    declension!("selkä", 44, "~äˇ", like Suka;
-    stem sg: "~ä- like pata";
-    nom: _, "~ätˇ";
-    par: _, "~iäˇ";
-    ine: "~ässVˇ", "~issäˇ";
-    ela: "~ästVˇ", "~istäˇ";
-    ill: "~äVnˇ", _;
-    ade: "~ällVˇ", "~illäˇ";
-    abl: "~ältVˇ", "~iltäˇ";
-    ess: "~änVˇ", "~inäˇ";
-    abe: "~ättVˇ", "~ittäˇ";
-    possessive_nom_sg: "~äniˇ", _, _, _, "~änsVˇ";
-    possessive_nom_pl: _, "~äsiˇ", "~ämmeˇ", "~änneˇ", _;
-    possessive_gen_sg: _, "~äsiˇ", "~ämmeˇ", "~änneˇ", _;
-    possessive_gen_pl: _, _, _, _, "~iensäˇ";
-    possessive_par_pl: "~iäniˇ", _, _, _, "~iäVnˇ|~iänsäˇ";
-    possessive_ine_sg: _, _, _, _, "~ässVVnˇ|~ässänsäˇ";
-    possessive_ine_pl: "~issäniˇ", _, _, _, "~issäVnˇ|~issänsäˇ";
-    possessive_ela_sg: _, _, _, _, "~ästVVnˇ|~ästänsäˇ";
-    possessive_ela_pl: "~istäniˇ", _, _, _, "~istäVnˇ|~istänsäˇ";
-    possessive_ill_sg: _, _, _, _, "~äVnsVˇ";
-    possessive_ill_pl: _, _, _, _, "~iinsäˇ";
-    possessive_ade_sg: _, _, _, _, "~ällVVnˇ|~ällänsäˇ";
-    possessive_ade_pl: "~illäniˇ", _, _, _, "~illäVnˇ|~illänsäˇ";
-    possessive_abl_sg: _, _, _, _, "~ältVVnˇ|~ältänsäˇ";
-    possessive_abl_pl: "~iltäniˇ", _, _, _, "~iltäVnˇ|~iltänsäˇ";
-    possessive_all_sg: _, _, _, _, "~älleenˇ|~ällensäˇ";
-    possessive_all_pl: _, _, _, _, "~illeenˇ|~illensäˇ";
-    possessive_ess_sg: _, _, _, _, "~änVVnˇ|~änänsäˇ";
-    possessive_ess_pl: "~inäniˇ", _, _, _, "~inäVnˇ|~inänsäˇ";
-    possessive_tra_sg: _, _, _, _, "~äkseenˇ|~äksensäˇ";
-    possessive_tra_pl: _, _, _, _, "~ikseenˇ|~iksensäˇ";
-    possessive_abe_sg: _, _, _, _, "~ättVVnˇ|~ättänsäˇ";
-    possessive_abe_pl: "~ittäniˇ", _, _, _, "~ittäVnˇ|~ittänsäˇ";
-    possessive_com_pl: _, _, _, _, "~ineenˇ|~inensäˇ";
+    // Selkä: 44 words (leipä, kenkä, setä, ikä, itä, kenttä). Like Erä with `ˇ` after each pattern.
+    declension!("selkä", 44, "~äˇ", like Erä with "ˇ";
     ),
-    // Kuori: 43 words (tuuli, nuori, vuori, kieli, ääni, juuri). Like Osa, except in 33 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
-    declension!("kuori", 43, "~i", like Osa;
-    stem pl: "~- like purkaminen";
-    nom: "~i", "~et";
-    par: "~tA", _;
+    // Kuori: 43 words (tuuli, nuori, vuori, kieli, ääni, juuri). Like Konversio with `` after each pattern (`i` after ~), except in 42 cells: nom pl, gen_ pl, par pl, ine sg, ela sg, ill sg, ….
+    declension!("kuori", 43, "~i", like Konversio with "", "i" after "~";
+    nom: _, "~et";
+    gen_: _, "~ten|~ien";
+    par: _, "~iA";
     ine: "~essA", _;
     ela: "~estA", _;
-    ill: "~eVn", _;
+    ill: "~eVn", "~iin";
     ade: "~ellA", _;
     abl: "~eltA", _;
     ess: "~enA", _;
@@ -1317,10 +1202,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: "~eni", _, _, _, "~ensA";
     possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
     possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
-    possessive_par_sg: _, _, _, _, "~tAVn|~tansa";
+    possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensA|~iensA";
+    possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iansa";
     possessive_ine_sg: _, _, _, _, "~essAVn|~essansa";
     possessive_ela_sg: _, _, _, _, "~estAVn|~estansa";
     possessive_ill_sg: _, _, _, _, "~eVnsA";
+    possessive_ill_pl: "~iini", _, _, _, "~iinsA";
     possessive_ade_sg: _, _, _, _, "~ellAVn|~ellansa";
     possessive_abl_sg: _, _, _, _, "~eltAVn|~eltansa";
     possessive_all_sg: _, _, _, _, "~elleen|~ellensa";
@@ -1329,34 +1216,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~ettAVn|~ettansa";
     possessive_ins_sg: _, "~esi", "~emme", "~enne", "~ensa";
     ),
-    // Suhde: 39 words (sade, aarre, anne, luode, vanne, helle). Like Pato, except in 42 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
-    declension!("suhde", 39, "~ˇ", like Pato;
-    nom: _, "~Vtˇ";
-    gen_: _, "~idenˇ|~ittenˇ";
-    par: "~ttAˇ", "~itAˇ";
-    ine: "~VssAˇ", _;
-    ela: "~VstAˇ", _;
-    ill: "~eseenˇ", "~isVinˇ|~ihinˇ";
-    ade: "~VllAˇ", _;
-    abl: "~VltAˇ", _;
-    ess: "~VnAˇ", _;
-    abe: "~VttAˇ", _;
-    possessive_nom_sg: "~Vniˇ", _, _, _, "~VnsAˇ";
-    possessive_nom_pl: _, "~Vsiˇ", "~Vmmeˇ", "~Vnneˇ", _;
-    possessive_gen_sg: _, "~Vsiˇ", "~Vmmeˇ", "~Vnneˇ", _;
-    possessive_gen_pl: "~ideniˇ|~itteniˇ", "~idesiˇ|~ittesiˇ", "~idemmeˇ|~ittemmeˇ", "~idenneˇ|~ittenneˇ", "~idensAˇ|~ittensaˇ";
-    possessive_par_sg: _, _, _, _, "~ttAVnˇ|~ttansaˇ";
-    possessive_par_pl: "~itAniˇ", _, _, _, "~itAVnˇ|~itansaˇ";
-    possessive_ine_sg: _, _, _, _, "~VssAVnˇ|~essansaˇ";
-    possessive_ela_sg: _, _, _, _, "~VstAVnˇ|~estansaˇ";
-    possessive_ill_sg: _, _, _, _, "~eseensAˇ";
-    possessive_ill_pl: "~isViniˇ|~ihiniˇ", "~isVisiˇ|~ihisiˇ", "~isVimmeˇ|~ihimmeˇ", "~isVinneˇ|~ihinneˇ", "~isVinsAˇ|~ihinsaˇ";
-    possessive_ade_sg: _, _, _, _, "~VllAVnˇ|~ellansaˇ";
-    possessive_abl_sg: _, _, _, _, "~VltAVnˇ|~eltansaˇ";
-    possessive_all_sg: _, _, _, _, "~Vlleenˇ|~ellensaˇ";
-    possessive_ess_sg: _, _, _, _, "~VnAVnˇ|~enansaˇ";
-    possessive_tra_sg: _, _, _, _, "~Vkseenˇ|~eksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~VttAVnˇ|~ettansaˇ";
+    // Suhde: 41 words (sade, aarre, anne, luode, vanne, helle). Like Aste with `ˇ` after each pattern.
+    declension!("suhde", 41, "~ˇ", like Aste with "ˇ";
+    ),
+    // Parvi: 34 words (kuusi, sampi, takatalvi, suvi, sormi, povi). Like Taso with `` after each pattern (`i` after ~), except in 36 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("parvi", 34, "~i", like Taso with "", "i" after "~";
+    nom: _, "~et";
+    gen_: _, "~ien";
+    par: "~eA", "~iA";
+    ine: "~essA", _;
+    ela: "~estA", _;
+    ill: "~eVn", "~iin";
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    ess: "~enA", _;
+    abe: "~ettA", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensA";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_pl: "~ieni", _, _, _, "~iensA";
+    possessive_par_sg: _, _, _, _, "~eAVn|~eansa";
+    possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iansa";
+    possessive_ine_sg: _, _, _, _, "~essAVn|~essansa";
+    possessive_ela_sg: _, _, _, _, "~estAVn|~estansa";
+    possessive_ill_sg: _, _, _, _, "~eVnsA";
+    possessive_ill_pl: "~iini", _, _, _, "~iinsA";
+    possessive_ade_sg: _, _, _, _, "~ellAVn|~ellansa";
+    possessive_abl_sg: _, _, _, _, "~eltAVn|~eltansa";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensa";
+    possessive_ess_sg: _, _, _, _, "~enAVn|~enansa";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensa";
+    possessive_abe_sg: _, _, _, _, "~ettAVn|~ettansa";
     ),
     // Tekijä: 31 words (päärynä, ympyrä, pähkinä, tekijä, kylpylä, näsiä). Like Erä, except in 19 cells: ine pl, ela pl, ade pl, abl pl, all pl, abe pl, ….
     declension!("tekijä", 31, "~ä", like Erä;
@@ -1375,13 +1265,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_pl: _, _, _, _, "~öikseen|~öiksensä";
     possessive_abe_pl: "~öittAni", _, _, _, "~öittAVn|~öittänsä";
     ),
-    // Kivi: 30 words (pilvi, hirvi, kivi, liemi, tyvi, helmi). Like Erä, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
-    declension!("kivi", 30, "~i", like Erä;
-    stem sg: "~- like kivi";
+    // Kivi: 30 words (pilvi, hirvi, kivi, liemi, tyvi, helmi). Like Piste with `` after each pattern (`i` after ~), except in 42 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("kivi", 30, "~i", like Piste with "", "i" after "~";
     nom: _, "~et";
+    gen_: _, "~ien";
+    par: "~eä", "~iä";
     ine: "~essä", _;
     ela: "~estä", _;
-    ill: "~eVn", _;
+    ill: "~eVn", "~iin";
     ade: "~ellä", _;
     abl: "~eltä", _;
     ess: "~enä", _;
@@ -1389,9 +1280,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: "~eni", _, _, _, "~ensä";
     possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
     possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_pl: "~ieni", derived, derived, derived, "~iensä";
+    possessive_par_sg: _, _, _, _, "~eäVn|~eänsä";
+    possessive_par_pl: "~iäni", _, _, _, "~iäVn|~iänsä";
     possessive_ine_sg: _, _, _, _, "~essäVn|~essänsä";
     possessive_ela_sg: _, _, _, _, "~estäVn|~estänsä";
     possessive_ill_sg: _, _, _, _, "~eVnsä";
+    possessive_ill_pl: "~iini", derived, derived, derived, "~iinsä";
     possessive_ade_sg: _, _, _, _, "~elläVn|~ellänsä";
     possessive_abl_sg: _, _, _, _, "~eltäVn|~eltänsä";
     possessive_all_sg: _, _, _, _, "~elleen|~ellensä";
@@ -1399,43 +1294,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_sg: _, _, _, _, "~ekseen|~eksensä";
     possessive_abe_sg: _, _, _, _, "~ettäVn|~ettänsä";
     ),
-    // Parvi: 29 words (kuusi, takatalvi, suvi, sormi, povi, tammi). Like Kuori, except in 10 cells: par sg, ins sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_sg _3, ….
-    declension!("parvi", 29, "~i", like Kuori;
-    stem pl: "~i- like osa";
-    par: "~eA", _;
-    ins: derived, _;
-    possessive_gen_pl: _, derived, derived, derived, _;
-    possessive_par_sg: _, _, _, _, "~eAVn|~eansa";
-    possessive_ins_sg: _, derived, derived, derived, derived;
-    ),
-    // Lehti: 26 words (tähti, siipi, mäki, käki, aamutähti, henki). Like Selkä, except in 28 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
-    declension!("lehti", 26, "~iˇ", like Selkä;
-    nom: "~iˇ", "~etˇ";
-    par: "~eäˇ", _;
-    ine: "~essäˇ", _;
-    ela: "~estäˇ", _;
-    ill: "~eVnˇ", _;
-    ade: "~elläˇ", _;
-    abl: "~eltäˇ", _;
-    ess: "~enäˇ", _;
-    abe: "~ettäˇ", _;
-    possessive_nom_sg: "~eniˇ", _, _, _, "~ensäˇ";
-    possessive_nom_pl: _, "~esiˇ", "~emmeˇ", "~enneˇ", _;
-    possessive_gen_sg: _, "~esiˇ", "~emmeˇ", "~enneˇ", _;
-    possessive_par_sg: _, _, _, _, "~eäVnˇ|~eänsäˇ";
-    possessive_ine_sg: _, _, _, _, "~essäVnˇ|~essänsäˇ";
-    possessive_ela_sg: _, _, _, _, "~estäVnˇ|~estänsäˇ";
-    possessive_ill_sg: _, _, _, _, "~eVnsäˇ";
-    possessive_ade_sg: _, _, _, _, "~elläVnˇ|~ellänsäˇ";
-    possessive_abl_sg: _, _, _, _, "~eltäVnˇ|~eltänsäˇ";
-    possessive_all_sg: _, _, _, _, "~elleenˇ|~ellensäˇ";
-    possessive_ess_sg: _, _, _, _, "~enäVnˇ|~enänsäˇ";
-    possessive_tra_sg: _, _, _, _, "~ekseenˇ|~eksensäˇ";
-    possessive_abe_sg: _, _, _, _, "~ettäVnˇ|~ettänsäˇ";
-    ),
-    // Tarvas: 25 words (taivas, porsas, oinas, ankerias, lounas, patsas). Like Aste, except in 23 cells: ine sg, ela sg, ill sg, ill pl, ade sg, abl sg, ….
-    declension!("tarvas", 25, "~s", like Aste;
-    stem sg: "~s- like tarvas";
+    // Tarvas: 25 words (taivas, porsas, oinas, ankerias, lounas, patsas). Like Aste with `` after each pattern (`s` after ~), except in 25 cells: par sg, ine sg, ela sg, ill sg, ill pl, ade sg, ….
+    declension!("tarvas", 25, "~s", like Aste with "", "s" after "~";
+    par: "~stV", _;
     ine: "~VssV", _;
     ela: "~VstV", _;
     ill: "~VseVn", "~isVin";
@@ -1444,6 +1305,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     ess: "~VnV", _;
     abe: "~VttV", _;
     possessive_nom_sg: _, _, _, _, "~VnsV";
+    possessive_par_sg: _, _, _, _, "~stVVn|~stansa";
     possessive_ine_sg: _, _, _, _, "~VssVVn|~assansa";
     possessive_ela_sg: _, _, _, _, "~VstVVn|~astansa";
     possessive_ill_sg: _, _, _, _, "~VseVnsA";
@@ -1455,35 +1317,33 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_sg: _, _, _, _, "~Vkseen|~aksensa";
     possessive_abe_sg: _, _, _, _, "~VttVVn|~attansa";
     ),
-    // Kausi: 25 words (kynsi, susi, länsi, kausi, vuorokausi, varsi). Like Purkaminen, except in 31 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
-    declension!("kausi", 25, "~si", like Purkaminen;
-    stem pl: "~si- like osa";
-    nom: "~si", "~det";
-    par: "~tTA", _;
-    ine: "~dessA", _;
-    ela: "~destA", _;
-    ill: "~teVn", _;
-    ade: "~dellA", _;
-    abl: "~deltA", _;
-    ess: "~tenA", _;
-    abe: "~dettA", _;
-    possessive_nom_sg: "~teni", _, _, _, "~tensA";
-    possessive_nom_pl: _, "~tesi", "~temme", "~tenne", _;
-    possessive_gen_sg: _, "~tesi", "~temme", "~tenne", _;
-    possessive_gen_pl: _, derived, derived, derived, _;
-    possessive_par_sg: _, _, _, _, "~tTAVn|~ttansa";
-    possessive_ine_sg: _, _, _, _, "~dessAVn|~dessansa";
-    possessive_ela_sg: _, _, _, _, "~destAVn|~destansa";
-    possessive_ill_sg: _, _, _, _, "~teVnsA";
-    possessive_ade_sg: _, _, _, _, "~dellAVn|~dellansa";
-    possessive_abl_sg: _, _, _, _, "~deltAVn|~deltansa";
-    possessive_all_sg: _, _, _, _, "~delleen|~dellensa";
-    possessive_ess_sg: _, _, _, _, "~tenAVn|~tenansa";
-    possessive_tra_sg: _, _, _, _, "~dekseen|~deksensa";
-    possessive_abe_sg: _, _, _, _, "~dettAVn|~dettansa";
+    // Kausi: 25 words (kynsi, susi, länsi, kausi, vuorokausi, varsi). Like Oikeus with `` after each pattern (`i` after s), except in 33 cells: gen_ pl, par pl, ine pl, ela pl, ill pl, ade pl, ….
+    declension!("kausi", 25, "~si", like Oikeus with "", "i" after "s";
+    gen_: _, "~sien";
+    par: _, "~siA";
+    ine: _, "~sissA";
+    ela: _, "~sistA";
+    ill: _, "~siin";
+    ade: _, "~sillA";
+    abl: _, "~siltA";
+    all: _, "~sille";
+    ess: _, "~sinA";
+    abe: _, "~sittA";
+    possessive_gen_pl: "~sieni", _, _, _, "~siensA";
+    possessive_par_pl: "~siAni", _, _, _, "~siAVn|~siansa";
+    possessive_ine_pl: "~sissAni", _, _, _, "~sissAVn|~sissansa";
+    possessive_ela_pl: "~sistAni", _, _, _, "~sistAVn|~sistansa";
+    possessive_ill_pl: "~siini", _, _, _, "~siinsA";
+    possessive_ade_pl: "~sillAni", _, _, _, "~sillAVn|~sillansa";
+    possessive_abl_pl: "~siltAni", _, _, _, "~siltAVn|~siltansa";
+    possessive_all_pl: "~silleni", _, _, _, "~silleen|~sillensa";
+    possessive_ess_pl: "~sinAni", _, _, _, "~sinAVn|~sinansa";
+    possessive_tra_pl: _, _, _, _, "~sikseen|~siksensa";
+    possessive_abe_pl: "~sittAni", _, _, _, "~sittAVn|~sittansa";
+    possessive_com_pl: "~sineni", _, _, _, "~sineen|~sinensa";
     ),
-    // Osoitin: 24 words (ääretön, nimetön, tuntematon, viivoitin, osoitin, soitin). Like Tunnus, except in 61 cells: nom pl, gen_ pl, par pl, ine sg, ine pl, ela sg, ….
-    declension!("osoitin", 24, "~~n", like Tunnus;
+    // Osoitin: 25 words (ääretön, nimetön, tuntematon, viivoitin, osoitin, soitin). Like Tunnus, except in 61 cells: nom pl, gen_ pl, par pl, ine sg, ine pl, ela sg, ….
+    declension!("osoitin", 25, "~~n", like Tunnus;
     stem sg: "~~n- like tunnus";
     nom: _, "~t~met";
     gen_: _, "~t~mVen|~~nten";
@@ -1586,33 +1446,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_ill_sg: "~iVni", "~iVsi", "~iVmme", "~iVnne", _;
     possessive_ill_pl: "~eihini", _, _, _, _;
     ),
-    // Peite: 18 words (jännite, hete, heikkojännite, viite, liite, väite). Like Kate, except in 33 cells: ine sg, ine pl, ela sg, ela pl, ade sg, ade pl, ….
-    declension!("peite", 18, "~~", like Kate;
-    stem sg: "~~- like piste";
-    stem pl: "~t~i- like liike";
-    ine: "~t~essä", "~t~issä";
-    ela: "~t~estä", "~t~istä";
-    ade: "~t~ellä", "~t~illä";
-    abl: "~t~eltä", "~t~iltä";
-    ess: "~t~enä", _;
-    abe: "~t~että", "~t~ittä";
-    possessive_nom_sg: _, _, _, _, "~t~ensä";
-    possessive_ine_sg: _, _, _, _, "~t~essäVn|~t~essänsä";
-    possessive_ine_pl: "~t~issäni", _, _, _, "~t~issäVn|~t~issänsä";
-    possessive_ela_sg: _, _, _, _, "~t~estäVn|~t~estänsä";
-    possessive_ela_pl: "~t~istäni", _, _, _, "~t~istäVn|~t~istänsä";
-    possessive_ill_sg: _, _, _, _, "~t~eseensä";
-    possessive_ade_sg: _, _, _, _, "~t~elläVn|~t~ellänsä";
-    possessive_ade_pl: "~t~illäni", _, _, _, "~t~illäVn|~t~illänsä";
-    possessive_abl_sg: _, _, _, _, "~t~eltäVn|~t~eltänsä";
-    possessive_abl_pl: "~t~iltäni", _, _, _, "~t~iltäVn|~t~iltänsä";
-    possessive_all_sg: _, _, _, _, "~t~elleen|~t~ellensä";
-    possessive_all_pl: _, _, _, _, "~t~illeen|~t~illensä";
-    possessive_ess_sg: _, _, _, _, "~t~enäVn|~t~enänsä";
-    possessive_tra_sg: _, _, _, _, "~t~ekseen|~t~eksensä";
-    possessive_tra_pl: _, _, _, _, "~t~ikseen|~t~iksensä";
-    possessive_abe_sg: _, _, _, _, "~t~ettäVn|~t~ettänsä";
-    possessive_abe_pl: "~t~ittäni", _, _, _, "~t~ittäVn|~t~ittänsä";
+    // Äänenvaimennin: 20 words (äänenvaimennin, kiihdytin, jäähdytin, puhallin, linnunpelätin, heitin). Like Avain with `ˇ` after each pattern.
+    declension!("äänenvaimennin", 20, "~nˇ", like Avain with "ˇ";
     ),
     // Kytkin: 18 words (sydän, elin, eläin, kavioeläin, pistin, koiraeläin). Like Avain, except in 15 cells: possessive_ine_sg _3, possessive_ine_pl _3, possessive_ela_sg _3, possessive_ela_pl _3, possessive_ade_sg _3, possessive_ade_pl _3, ….
     declension!("kytkin", 18, "~n", like Avain;
@@ -1634,11 +1469,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~mettAVn|~mettänsä";
     possessive_abe_pl: _, _, _, _, "~mittAVn|~mittänsä";
     ),
-    // Puu: 17 words (luu, kuu, suu, puu, puolikuu, havupuu). Like Konversio, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
-    declension!("puu", 17, "~u", like Konversio;
-    stem sg: "~u- like tunnus";
-    stem pl: "~i- like puu";
+    // Puu: 17 words (luu, kuu, suu, puu, puolikuu, havupuu). Like Konversio with `` after each pattern (`u` after ~), except in 30 cells: nom pl, par sg, par pl, ine sg, ela sg, ill sg, ….
+    declension!("puu", 17, "~u", like Konversio with "", "u" after "~";
     nom: _, "~ut";
+    par: "~utA", "~itA";
     ine: "~ussA", _;
     ela: "~ustA", _;
     ill: "~uhVn", _;
@@ -1649,6 +1483,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: "~uni", _, _, _, "~unsA";
     possessive_nom_pl: _, "~usi", "~umme", "~unne", _;
     possessive_gen_sg: _, "~usi", "~umme", "~unne", _;
+    possessive_par_sg: _, _, _, _, "~utAVn|~utansa";
+    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itansa";
     possessive_ine_sg: _, _, _, _, "~ussAVn|~ussansa";
     possessive_ela_sg: _, _, _, _, "~ustAVn|~ustansa";
     possessive_ill_sg: _, _, _, _, "~uhVnsA";
@@ -1755,72 +1591,65 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~v~ttAVn|~v~ttansa";
     possessive_abe_pl: "~v~ittAni", _, _, _, "~v~ittAVn|~v~ittansa";
     ),
-    // Keitin: 15 words (kiihdytin, jäähdytin, linnunpelätin, heitin, kehitin, keitin). Like Osoitin, except in 42 cells: par pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
-    declension!("keitin", 15, "~~n", like Osoitin;
-    stem sg: "~~n- like etumies";
-    par: _, "~t~mVä";
-    ine: "~t~messä", "~t~missä";
-    ela: "~t~mestä", "~t~mistä";
-    ade: "~t~mellä", "~t~millä";
-    abl: "~t~meltä", "~t~miltä";
-    ess: "~t~menä", "~t~minä";
-    abe: "~t~mettä", "~t~mittä";
-    possessive_nom_sg: _, _, _, _, "~t~mensä";
-    possessive_gen_pl: _, _, _, _, "~t~mVensä|~~ntensä";
-    possessive_par_pl: "~t~mVäni", _, _, _, "~t~mVäVn|~t~miänsä";
-    possessive_ine_sg: _, _, _, _, "~t~messäVn|~t~messänsä";
-    possessive_ine_pl: "~t~missäni", _, _, _, "~t~missäVn|~t~missänsä";
-    possessive_ela_sg: _, _, _, _, "~t~mestäVn|~t~mestänsä";
-    possessive_ela_pl: "~t~mistäni", _, _, _, "~t~mistäVn|~t~mistänsä";
-    possessive_ill_sg: _, _, _, _, "~t~meVnsä";
-    possessive_ill_pl: _, _, _, _, "~t~miinsä";
-    possessive_ade_sg: _, _, _, _, "~t~melläVn|~t~mellänsä";
-    possessive_ade_pl: "~t~milläni", _, _, _, "~t~milläVn|~t~millänsä";
-    possessive_abl_sg: _, _, _, _, "~t~meltäVn|~t~meltänsä";
-    possessive_abl_pl: "~t~miltäni", _, _, _, "~t~miltäVn|~t~miltänsä";
-    possessive_all_sg: _, _, _, _, "~t~melleen|~t~mellensä";
-    possessive_all_pl: _, _, _, _, "~t~milleen|~t~millensä";
-    possessive_ess_sg: _, _, _, _, "~t~menäVn|~t~menänsä";
-    possessive_ess_pl: "~t~minäni", _, _, _, "~t~minäVn|~t~minänsä";
-    possessive_tra_sg: _, _, _, _, "~t~mekseen|~t~meksensä";
-    possessive_tra_pl: _, _, _, _, "~t~mikseen|~t~miksensä";
-    possessive_abe_sg: _, _, _, _, "~t~mettäVn|~t~mettänsä";
-    possessive_abe_pl: "~t~mittäni", _, _, _, "~t~mittäVn|~t~mittänsä";
-    possessive_com_pl: _, _, _, _, "~t~mineen|~t~minensä";
+    // Peite: 16 words (jännite, hete, heikkojännite, viite, liite, väite). Like Kate, except in 33 cells: ine sg, ine pl, ela sg, ela pl, ade sg, ade pl, ….
+    declension!("peite", 16, "~~", like Kate;
+    stem sg: "~~- like piste";
+    stem pl: "~t~i- like liike";
+    ine: "~t~essä", "~t~issä";
+    ela: "~t~estä", "~t~istä";
+    ade: "~t~ellä", "~t~illä";
+    abl: "~t~eltä", "~t~iltä";
+    ess: "~t~enä", _;
+    abe: "~t~että", "~t~ittä";
+    possessive_nom_sg: _, _, _, _, "~t~ensä";
+    possessive_ine_sg: _, _, _, _, "~t~essäVn|~t~essänsä";
+    possessive_ine_pl: "~t~issäni", _, _, _, "~t~issäVn|~t~issänsä";
+    possessive_ela_sg: _, _, _, _, "~t~estäVn|~t~estänsä";
+    possessive_ela_pl: "~t~istäni", _, _, _, "~t~istäVn|~t~istänsä";
+    possessive_ill_sg: _, _, _, _, "~t~eseensä";
+    possessive_ade_sg: _, _, _, _, "~t~elläVn|~t~ellänsä";
+    possessive_ade_pl: "~t~illäni", _, _, _, "~t~illäVn|~t~illänsä";
+    possessive_abl_sg: _, _, _, _, "~t~eltäVn|~t~eltänsä";
+    possessive_abl_pl: "~t~iltäni", _, _, _, "~t~iltäVn|~t~iltänsä";
+    possessive_all_sg: _, _, _, _, "~t~elleen|~t~ellensä";
+    possessive_all_pl: _, _, _, _, "~t~illeen|~t~illensä";
+    possessive_ess_sg: _, _, _, _, "~t~enäVn|~t~enänsä";
+    possessive_tra_sg: _, _, _, _, "~t~ekseen|~t~eksensä";
+    possessive_tra_pl: _, _, _, _, "~t~ikseen|~t~iksensä";
+    possessive_abe_sg: _, _, _, _, "~t~ettäVn|~t~ettänsä";
+    possessive_abe_pl: "~t~ittäni", _, _, _, "~t~ittäVn|~t~ittänsä";
     ),
-    // Tuki: 15 words (sampi, hauki, noki, korpi, sappi, rupi). Like Suka, except in 28 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
-    declension!("tuki", 15, "~iˇ", like Suka;
-    nom: "~iˇ", "~etˇ";
-    par: "~eAˇ", _;
-    ine: "~essAˇ", _;
-    ela: "~estAˇ", _;
-    ill: "~eVnˇ", _;
-    ade: "~ellAˇ", _;
-    abl: "~eltAˇ", _;
-    ess: "~enAˇ", _;
-    abe: "~ettAˇ", _;
-    possessive_nom_sg: "~eniˇ", _, _, _, "~ensAˇ";
-    possessive_nom_pl: _, "~esiˇ", "~emmeˇ", "~enneˇ", _;
-    possessive_gen_sg: _, "~esiˇ", "~emmeˇ", "~enneˇ", _;
-    possessive_par_sg: _, _, _, _, "~eAVnˇ|~eansaˇ";
-    possessive_ine_sg: _, _, _, _, "~essAVnˇ|~essansaˇ";
-    possessive_ela_sg: _, _, _, _, "~estAVnˇ|~estansaˇ";
-    possessive_ill_sg: _, _, _, _, "~eVnsAˇ";
-    possessive_ade_sg: _, _, _, _, "~ellAVnˇ|~ellansaˇ";
-    possessive_abl_sg: _, _, _, _, "~eltAVnˇ|~eltansaˇ";
-    possessive_all_sg: _, _, _, _, "~elleenˇ|~ellensaˇ";
-    possessive_ess_sg: _, _, _, _, "~enAVnˇ|~enansaˇ";
-    possessive_tra_sg: _, _, _, _, "~ekseenˇ|~eksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~ettAVnˇ|~ettansaˇ";
+    // Rengas: 15 words (kuningas, allas, parras, kangas, rengas, marras). Like Keihäs with `ˇ` after each pattern, except in 21 cells: par sg, possessive_gen_pl _3, possessive_par_sg _3, possessive_par_pl _3, possessive_ine_sg _3, possessive_ine_pl _3, ….
+    declension!("rengas", 15, "~sˇ", like Keihäs with "ˇ";
+    par: "~stVˇ", _;
+    possessive_gen_pl: _, _, _, _, "~idensAˇ|~ittensaˇ";
+    possessive_par_sg: _, _, _, _, "~stVVnˇ|~stansaˇ";
+    possessive_par_pl: _, _, _, _, "~itAVnˇ|~itansaˇ";
+    possessive_ine_sg: _, _, _, _, "~VssVVnˇ|~assansaˇ";
+    possessive_ine_pl: _, _, _, _, "~issAVnˇ|~issansaˇ";
+    possessive_ela_sg: _, _, _, _, "~VstVVnˇ|~astansaˇ";
+    possessive_ela_pl: _, _, _, _, "~istAVnˇ|~istansaˇ";
+    possessive_ade_sg: _, _, _, _, "~VllVVnˇ|~allansaˇ";
+    possessive_ade_pl: _, _, _, _, "~illAVnˇ|~illansaˇ";
+    possessive_abl_sg: _, _, _, _, "~VltVVnˇ|~altansaˇ";
+    possessive_abl_pl: _, _, _, _, "~iltAVnˇ|~iltansaˇ";
+    possessive_all_sg: _, _, _, _, "~Vlleenˇ|~allensaˇ";
+    possessive_all_pl: _, _, _, _, "~illeenˇ|~illensaˇ";
+    possessive_ess_sg: _, _, _, _, "~VnVVnˇ|~anansaˇ";
+    possessive_ess_pl: _, _, _, _, "~inAVnˇ|~inansaˇ";
+    possessive_tra_sg: _, _, _, _, "~Vkseenˇ|~aksensaˇ";
+    possessive_tra_pl: _, _, _, _, "~ikseenˇ|~iksensaˇ";
+    possessive_abe_sg: _, _, _, _, "~VttVVnˇ|~attansaˇ";
+    possessive_abe_pl: _, _, _, _, "~ittAVnˇ|~ittansaˇ";
+    possessive_com_pl: _, _, _, _, "~ineenˇ|~inensaˇ";
     ),
-    // Ruis: 15 words (ies, ruis, asiakas, osterivinokas, ehdokas, sokerijuurikas). Like Tunnus, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
-    declension!("ruis", 15, "~~s", like Tunnus;
-    stem sg: "~~s- like tunnus";
-    stem pl: "~k~i- like ruis";
+    // Ruis: 15 words (ies, ruis, asiakas, osterivinokas, ehdokas, sokerijuurikas). Like Koe with `` after each pattern (`s` after ~), except in 33 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    declension!("ruis", 15, "~~s", like Koe with "", "s" after "~";
     nom: _, "~k~Vt";
+    par: "~~stA", _;
     ine: "~k~VssV", _;
     ela: "~k~VstV", _;
-    ill: "~k~Vseen", _;
+    ill: "~k~Vseen", "~k~isiin";
     ade: "~k~VllV", _;
     abl: "~k~VltV", _;
     ess: "~k~VnV", _;
@@ -1828,9 +1657,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: "~k~Vni", _, _, _, "~k~VnsV";
     possessive_nom_pl: _, "~k~Vsi", "~k~Vmme", "~k~Vnne", _;
     possessive_gen_sg: _, "~k~Vsi", "~k~Vmme", "~k~Vnne", _;
+    possessive_par_sg: _, _, _, _, "~~stAVn|~~stansa";
     possessive_ine_sg: _, _, _, _, "~k~VssVVn|~k~assansa";
     possessive_ela_sg: _, _, _, _, "~k~VstVVn|~k~astansa";
     possessive_ill_sg: _, _, _, _, "~k~VseensA";
+    possessive_ill_pl: "~k~isiini", derived, derived, derived, "~k~isiinsA";
     possessive_ade_sg: _, _, _, _, "~k~VllVVn|~k~allansa";
     possessive_abl_sg: _, _, _, _, "~k~VltVVn|~k~altansa";
     possessive_all_sg: _, _, _, _, "~k~Vlleen|~k~allensa";
@@ -1838,78 +1669,52 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_sg: _, _, _, _, "~k~Vkseen|~k~aksensa";
     possessive_abe_sg: _, _, _, _, "~k~VttVVn|~k~attansa";
     ),
-    // Rengas: 14 words (kuningas, allas, parras, kangas, rengas, marras). Like Suhde, except in 26 cells: nom sg, par sg, ine sg, ela sg, ill sg, ill pl, ….
-    declension!("rengas", 14, "~sˇ", like Suhde;
-    nom: "~sˇ", _;
-    par: "~stVˇ", _;
-    ine: "~VssVˇ", _;
-    ela: "~VstVˇ", _;
-    ill: "~VseVnˇ", "~isVinˇ";
-    ade: "~VllVˇ", _;
-    abl: "~VltVˇ", _;
-    ess: "~VnVˇ", _;
-    abe: "~VttVˇ", _;
-    possessive_nom_sg: _, _, _, _, "~VnsVˇ";
-    possessive_par_sg: _, _, _, _, "~stVVnˇ|~stansaˇ";
-    possessive_ine_sg: _, _, _, _, "~VssVVnˇ|~assansaˇ";
-    possessive_ela_sg: _, _, _, _, "~VstVVnˇ|~astansaˇ";
-    possessive_ill_sg: _, _, _, _, "~VseVnsAˇ";
-    possessive_ill_pl: "~isVVniˇ", derived, derived, derived, "~isVinsAˇ";
-    possessive_ade_sg: _, _, _, _, "~VllVVnˇ|~allansaˇ";
-    possessive_abl_sg: _, _, _, _, "~VltVVnˇ|~altansaˇ";
-    possessive_all_sg: _, _, _, _, "~Vlleenˇ|~allensaˇ";
-    possessive_ess_sg: _, _, _, _, "~VnVVnˇ|~anansaˇ";
-    possessive_tra_sg: _, _, _, _, "~Vkseenˇ|~aksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~VttVVnˇ|~attansaˇ";
+    // Lehti: 14 words (tähti, aamutähti, käärmetähti, lehti, vyyhti, iltatähti). Like Käsi, except in 19 cells: ine pl, ela pl, ade pl, abl pl, all pl, abe pl, ….
+    declension!("lehti", 14, "~ti", like Käsi;
+    stem sg: "~t- like kivi";
+    stem pl: "~ti- like erä";
+    ine: _, "~dissä";
+    ela: _, "~distä";
+    ade: _, "~dillä";
+    abl: _, "~diltä";
+    all: _, "~dille";
+    abe: _, "~dittä";
+    possessive_ine_pl: "~dissäni", _, _, _, "~dissäVn|~dissänsä";
+    possessive_ela_pl: "~distäni", _, _, _, "~distäVn|~distänsä";
+    possessive_ade_pl: "~dilläni", _, _, _, "~dilläVn|~dillänsä";
+    possessive_abl_pl: "~diltäni", _, _, _, "~diltäVn|~diltänsä";
+    possessive_all_pl: "~dilleni", _, _, _, "~dilleen|~dillensä";
+    possessive_tra_pl: _, _, _, _, "~dikseen|~diksensä";
+    possessive_abe_pl: "~dittäni", _, _, _, "~dittäVn|~dittänsä";
     ),
-    // Sakset: 14 words (helmet, sakset, alkeet, lauteet, työvaatteet, revontulet). Like Parvi, except in 26 cells: nom sg, par sg, ine sg, ela sg, ill sg, ade sg, ….
-    declension!("sakset", 14, "~et", like Parvi;
-    nom: "~et", _;
-    par: derived, _;
+    // Sakset: 14 words (helmet, sakset, alkeet, lauteet, työvaatteet, revontulet). Like Taso with `` after each pattern (`et` after ~), except in 38 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("sakset", 14, "~et", like Taso with "", "et" after "~";
+    nom: _, "~et";
+    gen_: _, "~ien";
+    par: derived, "~iA";
     ine: derived, _;
     ela: derived, _;
-    ill: derived, _;
+    ill: derived, "~iin";
     ade: derived, _;
     abl: derived, _;
     ess: derived, _;
     abe: derived, _;
     possessive_nom_sg: derived, _, _, _, derived;
-    possessive_nom_pl: "~eni", _, _, _, "~ensA";
+    possessive_nom_pl: "~eni", "~esi", "~emme", "~enne", "~ensA";
     possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_gen_pl: "~ieni", _, _, _, "~iensA";
     possessive_par_sg: _, _, _, _, derived;
+    possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iansa";
     possessive_ine_sg: _, _, _, _, derived;
     possessive_ela_sg: _, _, _, _, derived;
     possessive_ill_sg: _, _, _, _, derived;
+    possessive_ill_pl: "~iini", _, _, _, "~iinsA";
     possessive_ade_sg: _, _, _, _, derived;
     possessive_abl_sg: _, _, _, _, derived;
     possessive_all_sg: _, _, _, _, derived;
     possessive_ess_sg: _, _, _, _, derived;
     possessive_tra_sg: _, _, _, _, derived;
     possessive_abe_sg: _, _, _, _, derived;
-    ),
-    // Verkko: 13 words (nukke, myrkky, teko, näky, ruoko, hylky). Like Luku, except in 32 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
-    declension!("verkko", 13, "~k~", like Luku;
-    nom: _, "~~t";
-    ine: "~~ssA", "~~issA";
-    ela: "~~stA", "~~istA";
-    ade: "~~llA", "~~illA";
-    abl: "~~ltA", "~~iltA";
-    all: _, "~~ille";
-    abe: "~~ttA", "~~ittA";
-    possessive_ine_sg: _, _, _, _, "~~ssAVn|~~ssansa";
-    possessive_ine_pl: "~~issAni", _, _, _, "~~issAVn|~~issansa";
-    possessive_ela_sg: _, _, _, _, "~~stAVn|~~stansa";
-    possessive_ela_pl: "~~istAni", _, _, _, "~~istAVn|~~istansa";
-    possessive_ade_sg: _, _, _, _, "~~llAVn|~~llansa";
-    possessive_ade_pl: "~~illAni", _, _, _, "~~illAVn|~~illansa";
-    possessive_abl_sg: _, _, _, _, "~~ltAVn|~~ltansa";
-    possessive_abl_pl: "~~iltAni", _, _, _, "~~iltAVn|~~iltansa";
-    possessive_all_sg: _, _, _, _, "~~lleen|~~llensa";
-    possessive_all_pl: "~~illeni", _, _, _, "~~illeen|~~illensa";
-    possessive_tra_sg: _, _, _, _, "~~kseen|~~ksensa";
-    possessive_tra_pl: _, _, _, _, "~~ikseen|~~iksensa";
-    possessive_abe_sg: _, _, _, _, "~~ttAVn|~~ttansa";
-    possessive_abe_pl: "~~ittAni", _, _, _, "~~ittAVn|~~ittansa";
     ),
     // Aika: 13 words (aika, vuodenaika, kesäaika, talviaika, keskiaika, kiertoaika). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("aika", 13, "~ika", like Taso;
@@ -1949,40 +1754,32 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     nom: "~", _;
     possessive_ill_pl: "~eihini", _, _, _, _;
     ),
-    // Lähde: 13 words (side, lähde, toimenpide, räjähde, säde, päivänsäde). Like Selkä, except in 43 cells: nom sg, nom pl, gen_ pl, par sg, par pl, ine sg, ….
-    declension!("lähde", 13, "~ˇ", like Selkä;
-    nom: "~ˇ", "~Vtˇ";
-    gen_: _, "~idenˇ|~ittenˇ";
-    par: "~ttäˇ", "~itäˇ";
-    ine: "~Vssäˇ", _;
-    ela: "~Vstäˇ", _;
-    ill: "~eseenˇ", "~isVinˇ|~ihinˇ";
-    ade: "~Vlläˇ", _;
-    abl: "~Vltäˇ", _;
-    ess: "~Vnäˇ", _;
-    abe: "~Vttäˇ", _;
-    possessive_nom_sg: "~Vniˇ", _, _, _, "~Vnsäˇ";
-    possessive_nom_pl: _, "~Vsiˇ", "~Vmmeˇ", "~Vnneˇ", _;
-    possessive_gen_sg: _, "~Vsiˇ", "~Vmmeˇ", "~Vnneˇ", _;
-    possessive_gen_pl: "~ideniˇ|~itteniˇ", "~idesiˇ|~ittesiˇ", "~idemmeˇ|~ittemmeˇ", "~idenneˇ|~ittenneˇ", "~idensäˇ|~ittensäˇ";
-    possessive_par_sg: _, _, _, _, "~ttäVnˇ|~ttänsäˇ";
-    possessive_par_pl: "~itäniˇ", _, _, _, "~itäVnˇ|~itänsäˇ";
-    possessive_ine_sg: _, _, _, _, "~VssäVnˇ|~essänsäˇ";
-    possessive_ela_sg: _, _, _, _, "~VstäVnˇ|~estänsäˇ";
-    possessive_ill_sg: _, _, _, _, "~eseensäˇ";
-    possessive_ill_pl: "~isViniˇ|~ihiniˇ", "~isVisiˇ|~ihisiˇ", "~isVimmeˇ|~ihimmeˇ", "~isVinneˇ|~ihinneˇ", "~isVinsäˇ|~ihinsäˇ";
-    possessive_ade_sg: _, _, _, _, "~VlläVnˇ|~ellänsäˇ";
-    possessive_abl_sg: _, _, _, _, "~VltäVnˇ|~eltänsäˇ";
-    possessive_all_sg: _, _, _, _, "~Vlleenˇ|~ellensäˇ";
-    possessive_ess_sg: _, _, _, _, "~VnäVnˇ|~enänsäˇ";
-    possessive_tra_sg: _, _, _, _, "~Vkseenˇ|~eksensäˇ";
-    possessive_abe_sg: _, _, _, _, "~VttäVnˇ|~ettänsäˇ";
+    // Lähde: 13 words (side, lähde, toimenpide, räjähde, säde, päivänsäde). Like Piste with `ˇ` after each pattern.
+    declension!("lähde", 13, "~ˇ", like Piste with "ˇ";
     ),
-    // Olot: 13 words (aivot, olut, airut, pikkuaivot, palvelut, farkut). Like Sakset, except in 1 cell: nom sg.
-    declension!("olot", 13, "~t", like Sakset;
-    stem noun_nom_pl: "~- like olot";
-    stem pl: "~- like taso";
-    nom: "~t", _;
+    // Olot: 13 words (aivot, olut, airut, pikkuaivot, palvelut, farkut). Like Taso with `` after each pattern (`t` after ~), except in 25 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("olot", 13, "~t", like Taso with "", "t" after "~";
+    par: derived, _;
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    ess: derived, _;
+    abe: derived, _;
+    possessive_nom_sg: derived, _, _, _, derived;
+    possessive_nom_pl: "~ni", _, _, _, "~nsa";
+    possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_par_sg: _, _, _, _, derived;
+    possessive_ine_sg: _, _, _, _, derived;
+    possessive_ela_sg: _, _, _, _, derived;
+    possessive_ill_sg: _, _, _, _, derived;
+    possessive_ade_sg: _, _, _, _, derived;
+    possessive_abl_sg: _, _, _, _, derived;
+    possessive_all_sg: _, _, _, _, derived;
+    possessive_ess_sg: _, _, _, _, derived;
+    possessive_tra_sg: _, _, _, _, derived;
+    possessive_abe_sg: _, _, _, _, derived;
     ),
     // Siemen: 12 words (siemen, ahven, nivel, paimen, jäsen, höyhen). Like Aste, except in 20 cells: ill sg, possessive_ine_sg _3, possessive_ine_pl _3, possessive_ela_sg _3, possessive_ela_pl _3, possessive_ill_sg _3, ….
     declension!("siemen", 12, "~", like Aste;
@@ -2007,25 +1804,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~VttAVn|~ettänsä";
     possessive_abe_pl: _, _, _, _, "~ittAVn|~ittänsä";
     ),
-    // Pää: 11 words (jää, pää, kyynärpää, luupää, akilleenkantapää, peräpää). Like Erä, except in 21 cells: gen_ sg, par sg, ine pl, ela pl, ill sg, ade pl, ….
-    declension!("pää", 11, "~ä", like Erä;
-    stem pl: "~i- like pää";
-    gen_: "~än", _;
-    par: "~ätV", _;
-    ine: _, "~issA";
-    ela: _, "~istA";
+    // Pää: 11 words (jää, pää, kyynärpää, luupää, akilleenkantapää, peräpää). Like Levy with `` after each pattern (`ä` after ~), except in 38 cells: nom pl, gen_ sg, gen_ pl, par sg, par pl, ine sg, ….
+    declension!("pää", 11, "~ä", like Levy with "", "ä" after "~";
+    nom: _, "~ät";
+    gen_: "~än", "~iden|~itten";
+    par: "~ätV", "~itA";
+    ine: "~ässV", _;
+    ela: "~ästV", _;
     ill: "~ähVn", _;
-    ade: _, "~illA";
-    abl: _, "~iltA";
+    ade: "~ällV", _;
+    abl: "~ältV", _;
     all: "~älle", _;
-    abe: _, "~ittA";
+    ess: "~änV", _;
+    abe: "~ättV", _;
+    possessive_nom_sg: "~äni", _, _, _, "~änsV";
+    possessive_nom_pl: _, "~äsi", "~ämme", "~änne", _;
+    possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
+    possessive_gen_pl: "~ideni|~itteni", "~idesi|~ittesi", "~idemme|~ittemme", "~idenne|~ittenne", "~idensA|~ittensä";
     possessive_par_sg: _, _, _, _, "~ätVVn|~ätänsä";
-    possessive_ine_pl: "~issAni", _, _, _, "~issAVn|~issänsä";
-    possessive_ela_pl: "~istAni", _, _, _, "~istAVn|~istänsä";
+    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itänsä";
+    possessive_ine_sg: _, _, _, _, "~ässVVn|~ässänsä";
+    possessive_ela_sg: _, _, _, _, "~ästVVn|~ästänsä";
     possessive_ill_sg: _, _, _, _, "~ähVnsV";
-    possessive_ade_pl: "~illAni", _, _, _, "~illAVn|~illänsä";
-    possessive_abl_pl: "~iltAni", _, _, _, "~iltAVn|~iltänsä";
-    possessive_abe_pl: "~ittAni", _, _, _, "~ittAVn|~ittänsä";
+    possessive_ade_sg: _, _, _, _, "~ällVVn|~ällänsä";
+    possessive_abl_sg: _, _, _, _, "~ältVVn|~ältänsä";
+    possessive_all_sg: _, _, _, _, "~älleen|~ällensä";
+    possessive_ess_sg: _, _, _, _, "~änVVn|~änänsä";
+    possessive_tra_sg: _, _, _, _, "~äkseen|~äksensä";
+    possessive_abe_sg: _, _, _, _, "~ättVVn|~ättänsä";
     ),
     // Koi: 11 words (tie, thai, pii, vuo, koi, täi). Like Konversio, except in 21 cells: ine pl, ela pl, ill sg, ade pl, abl pl, all pl, ….
     declension!("koi", 11, "~", like Konversio;
@@ -2098,96 +1904,269 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~nAttVVn|~nättänsä";
     possessive_abe_pl: "~nöittAni", _, _, _, "~nöittAVn|~nöittänsä";
     ),
-    // Maa: 9 words (harmaa, maa, autiomaa, erämaa, isänmaa, takamaa). Like Osa, except in 2 cells: ill sg, possessive_ill_sg _3.
-    declension!("maa", 9, "~a", like Osa;
-    stem sg: "~a- like tarvas";
-    stem pl: "~i- like puu";
-    ill: "~ahVn", _;
-    possessive_ill_sg: _, _, _, _, "~ahVnsV";
+    // Väki: 10 words (hauki, noki, mäki, käki, väki, jalkaväki). Like Levy with `` after each pattern (`ki` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("väki", 10, "~ki", like Levy with "", "ki" after "~";
+    nom: _, "~et";
+    gen_: _, "~kien";
+    par: "~keA", "~kiA";
+    ine: "~essA", _;
+    ela: "~estA", _;
+    ill: "~keVn", "~kiin";
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    ess: "~kenA", "~kinA";
+    abe: "~ettA", _;
+    possessive_nom_sg: "~keni", _, _, _, "~kensA";
+    possessive_nom_pl: _, "~kesi", "~kemme", "~kenne", _;
+    possessive_gen_sg: _, "~kesi", "~kemme", "~kenne", _;
+    possessive_gen_pl: "~kieni", _, _, _, "~kiensA";
+    possessive_par_sg: _, _, _, _, "~keAVn|~keänsä";
+    possessive_par_pl: "~kiAni", _, _, _, "~kiAVn|~kiänsä";
+    possessive_ine_sg: _, _, _, _, "~essAVn|~essänsä";
+    possessive_ela_sg: _, _, _, _, "~estAVn|~estänsä";
+    possessive_ill_sg: _, _, _, _, "~keVnsA";
+    possessive_ill_pl: "~kiini", _, _, _, "~kiinsA";
+    possessive_ade_sg: _, _, _, _, "~ellAVn|~ellänsä";
+    possessive_abl_sg: _, _, _, _, "~eltAVn|~eltänsä";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensä";
+    possessive_ess_sg: _, _, _, _, "~kenAVn|~kenänsä";
+    possessive_ess_pl: "~kinAni", _, _, _, "~kinAVn|~kinänsä";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensä";
+    possessive_abe_sg: _, _, _, _, "~ettAVn|~ettänsä";
+    possessive_com_pl: "~kineni", _, _, _, "~kineen|~kinensä";
     ),
-    // Työ: 9 words (vyö, työ, keskiyö, lapsityö, käsityö, päivätyö). Like Verkko, except in 35 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
-    declension!("työ", 9, "~y~", like Verkko;
+    // Maa: 9 words (harmaa, maa, autiomaa, erämaa, isänmaa, takamaa). Like Konversio with `` after each pattern (`a` after ~), except in 30 cells: nom pl, par sg, par pl, ine sg, ela sg, ill sg, ….
+    declension!("maa", 9, "~a", like Konversio with "", "a" after "~";
+    nom: _, "~at";
+    par: "~atV", "~itA";
+    ine: "~assV", _;
+    ela: "~astV", _;
+    ill: "~ahVn", _;
+    ade: "~allV", _;
+    abl: "~altV", _;
+    ess: "~anV", _;
+    abe: "~attV", _;
+    possessive_nom_sg: "~ani", _, _, _, "~ansV";
+    possessive_nom_pl: _, "~asi", "~amme", "~anne", _;
+    possessive_gen_sg: _, "~asi", "~amme", "~anne", _;
+    possessive_par_sg: _, _, _, _, "~atVVn|~atansa";
+    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itansa";
+    possessive_ine_sg: _, _, _, _, "~assVVn|~assansa";
+    possessive_ela_sg: _, _, _, _, "~astVVn|~astansa";
+    possessive_ill_sg: _, _, _, _, "~ahVnsV";
+    possessive_ade_sg: _, _, _, _, "~allVVn|~allansa";
+    possessive_abl_sg: _, _, _, _, "~altVVn|~altansa";
+    possessive_all_sg: _, _, _, _, "~alleen|~allensa";
+    possessive_ess_sg: _, _, _, _, "~anVVn|~anansa";
+    possessive_tra_sg: _, _, _, _, "~akseen|~aksensa";
+    possessive_abe_sg: _, _, _, _, "~attVVn|~attansa";
+    ),
+    // Työ: 9 words (vyö, työ, keskiyö, lapsityö, käsityö, päivätyö). Like Tunnus, except in 47 cells: nom sg, nom pl, par sg, ine sg, ine pl, ela sg, ….
+    declension!("työ", 9, "~y~", like Tunnus;
     stem pl: "~~i- like työ";
     nom: "~y~", "~y~t";
     par: "~y~tä", _;
-    ine: "~y~ssä", _;
-    ela: "~y~stä", _;
+    ine: "~y~ssä", "~~issA";
+    ela: "~y~stä", "~~istA";
     ill: "~y~hön", _;
-    ade: "~y~llä", _;
-    abl: "~y~ltä", _;
+    ade: "~y~llä", "~~illA";
+    abl: "~y~ltä", "~~iltA";
+    all: _, "~~ille";
     ess: "~y~nä", _;
-    abe: "~y~ttä", _;
+    abe: "~y~ttä", "~~ittA";
     possessive_nom_sg: "~y~ni", _, _, _, "~y~nsä";
     possessive_nom_pl: _, "~y~si", "~y~mme", "~y~nne", _;
     possessive_gen_sg: _, "~y~si", "~y~mme", "~y~nne", _;
     possessive_par_sg: _, _, _, _, "~y~tään|~y~tänsä";
     possessive_ine_sg: _, _, _, _, "~y~ssään|~y~ssänsä";
-    possessive_ine_pl: _, _, _, _, "~~issAVn|~~issänsä";
+    possessive_ine_pl: "~~issAni", _, _, _, "~~issAVn|~~issänsä";
     possessive_ela_sg: _, _, _, _, "~y~stään|~y~stänsä";
-    possessive_ela_pl: _, _, _, _, "~~istAVn|~~istänsä";
+    possessive_ela_pl: "~~istAni", _, _, _, "~~istAVn|~~istänsä";
     possessive_ill_sg: _, _, _, _, "~y~hönsä";
     possessive_ade_sg: _, _, _, _, "~y~llään|~y~llänsä";
-    possessive_ade_pl: _, _, _, _, "~~illAVn|~~illänsä";
+    possessive_ade_pl: "~~illAni", _, _, _, "~~illAVn|~~illänsä";
     possessive_abl_sg: _, _, _, _, "~y~ltään|~y~ltänsä";
-    possessive_abl_pl: _, _, _, _, "~~iltAVn|~~iltänsä";
+    possessive_abl_pl: "~~iltAni", _, _, _, "~~iltAVn|~~iltänsä";
     possessive_all_sg: _, _, _, _, "~y~lleen|~y~llensä";
-    possessive_all_pl: _, _, _, _, "~~illeen|~~illensä";
+    possessive_all_pl: "~~illeni", _, _, _, "~~illeen|~~illensä";
     possessive_ess_sg: _, _, _, _, "~y~nään|~y~nänsä";
     possessive_tra_sg: _, _, _, _, "~y~kseen|~y~ksensä";
     possessive_tra_pl: _, _, _, _, "~~ikseen|~~iksensä";
     possessive_abe_sg: _, _, _, _, "~y~ttään|~y~ttänsä";
-    possessive_abe_pl: _, _, _, _, "~~ittAVn|~~ittänsä";
+    possessive_abe_pl: "~~ittAni", _, _, _, "~~ittAVn|~~ittänsä";
     ),
-    // Kärki: 9 words (kurki, jälki, olki, järki, arki, kylki). Like Taso, except in 47 cells: nom sg, nom pl, par sg, ine sg, ine pl, ela sg, ….
-    declension!("kärki", 9, "~ki", like Taso;
-    stem pl: "~ki- like kärki";
-    nom: "~ki", "~jet";
-    par: "~keA", _;
+    // Kärki: 9 words (kurki, jälki, olki, järki, arki, kylki). Like Väki, except in 32 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
+    declension!("kärki", 9, "~ki", like Väki;
+    nom: _, "~jet";
     ine: "~jessA", "~jissA";
     ela: "~jestA", "~jistA";
-    ill: "~keVn", _;
     ade: "~jellA", "~jillA";
     abl: "~jeltA", "~jiltA";
     all: _, "~jille";
-    ess: "~kenA", _;
     abe: "~jettA", "~jittA";
-    possessive_nom_sg: "~keni", _, _, _, "~kensA";
-    possessive_nom_pl: _, "~kesi", "~kemme", "~kenne", _;
-    possessive_gen_sg: _, "~kesi", "~kemme", "~kenne", _;
-    possessive_par_sg: _, _, _, _, "~keAVn|~keänsä";
     possessive_ine_sg: _, _, _, _, "~jessAVn|~jessänsä";
     possessive_ine_pl: "~jissAni", _, _, _, "~jissAVn|~jissänsä";
     possessive_ela_sg: _, _, _, _, "~jestAVn|~jestänsä";
     possessive_ela_pl: "~jistAni", _, _, _, "~jistAVn|~jistänsä";
-    possessive_ill_sg: _, _, _, _, "~keVnsA";
     possessive_ade_sg: _, _, _, _, "~jellAVn|~jellänsä";
     possessive_ade_pl: "~jillAni", _, _, _, "~jillAVn|~jillänsä";
     possessive_abl_sg: _, _, _, _, "~jeltAVn|~jeltänsä";
     possessive_abl_pl: "~jiltAni", _, _, _, "~jiltAVn|~jiltänsä";
     possessive_all_sg: _, _, _, _, "~jelleen|~jellensä";
     possessive_all_pl: "~jilleni", _, _, _, "~jilleen|~jillensä";
-    possessive_ess_sg: _, _, _, _, "~kenAVn|~kenänsä";
     possessive_tra_sg: _, _, _, _, "~jekseen|~jeksensä";
     possessive_tra_pl: _, _, _, _, "~jikseen|~jiksensä";
     possessive_abe_sg: _, _, _, _, "~jettAVn|~jettänsä";
     possessive_abe_pl: "~jittAni", _, _, _, "~jittAVn|~jittänsä";
     ),
-    // Kieli: 8 words (veri, herkkusieni, korvasieni, puhekieli, huhtasieni, satakieli). Like Kivi, except in 2 cells: par sg, possessive_par_sg _3.
-    declension!("kieli", 8, "~i", like Kivi;
-    stem pl: "~- like kieli";
-    par: "~tä", _;
+    // Verkko: 8 words (nukke, teko, ruoko, lieko, keko, unikeko). Like Luku, except in 32 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
+    declension!("verkko", 8, "~k~", like Luku;
+    nom: _, "~~t";
+    ine: "~~ssA", "~~issA";
+    ela: "~~stA", "~~istA";
+    ade: "~~llA", "~~illA";
+    abl: "~~ltA", "~~iltA";
+    all: _, "~~ille";
+    abe: "~~ttA", "~~ittA";
+    possessive_ine_sg: _, _, _, _, "~~ssAVn|~~ssansa";
+    possessive_ine_pl: "~~issAni", _, _, _, "~~issAVn|~~issansa";
+    possessive_ela_sg: _, _, _, _, "~~stAVn|~~stansa";
+    possessive_ela_pl: "~~istAni", _, _, _, "~~istAVn|~~istansa";
+    possessive_ade_sg: _, _, _, _, "~~llAVn|~~llansa";
+    possessive_ade_pl: "~~illAni", _, _, _, "~~illAVn|~~illansa";
+    possessive_abl_sg: _, _, _, _, "~~ltAVn|~~ltansa";
+    possessive_abl_pl: "~~iltAni", _, _, _, "~~iltAVn|~~iltansa";
+    possessive_all_sg: _, _, _, _, "~~lleen|~~llensa";
+    possessive_all_pl: "~~illeni", _, _, _, "~~illeen|~~illensa";
+    possessive_tra_sg: _, _, _, _, "~~kseen|~~ksensa";
+    possessive_tra_pl: _, _, _, _, "~~ikseen|~~iksensa";
+    possessive_abe_sg: _, _, _, _, "~~ttAVn|~~ttansa";
+    possessive_abe_pl: "~~ittAni", _, _, _, "~~ittAVn|~~ittansa";
+    ),
+    // Kieli: 8 words (veri, herkkusieni, korvasieni, puhekieli, huhtasieni, satakieli). Like Piste with `` after each pattern (`i` after ~), except in 42 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("kieli", 8, "~i", like Piste with "", "i" after "~";
+    nom: _, "~et";
+    gen_: _, "~ten|~ien";
+    par: "~tä", "~iä";
+    ine: "~essä", _;
+    ela: "~estä", _;
+    ill: "~eVn", "~iin";
+    ade: "~ellä", _;
+    abl: "~eltä", _;
+    ess: "~enä", _;
+    abe: "~että", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensä";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensä|~iensä";
     possessive_par_sg: _, _, _, _, "~täVn|~tänsä";
+    possessive_par_pl: "~iäni", _, _, _, "~iäVn|~iänsä";
+    possessive_ine_sg: _, _, _, _, "~essäVn|~essänsä";
+    possessive_ela_sg: _, _, _, _, "~estäVn|~estänsä";
+    possessive_ill_sg: _, _, _, _, "~eVnsä";
+    possessive_ill_pl: "~iini", derived, derived, derived, "~iinsä";
+    possessive_ade_sg: _, _, _, _, "~elläVn|~ellänsä";
+    possessive_abl_sg: _, _, _, _, "~eltäVn|~eltänsä";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensä";
+    possessive_ess_sg: _, _, _, _, "~enäVn|~enänsä";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensä";
+    possessive_abe_sg: _, _, _, _, "~ettäVn|~ettänsä";
     ),
-    // Jousi: 8 words (uni, lohi, tuli, tuohi, vuohi, huuli). Like Parvi, except in 8 cells: gen_ pl, par sg, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, ….
-    declension!("jousi", 8, "~i", like Parvi;
-    gen_: _, "~ien|~ten";
-    par: "~tA", _;
-    possessive_gen_pl: "~ieni|~teni", "~iesi|~tesi", "~iemme|~temme", "~ienne|~tenne", "~iensA|~tensA";
+    // Jousi: 8 words (uni, lohi, tuli, tuohi, vuohi, huuli). Like Siemen with `` after each pattern (`i` after ~), except in 36 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("jousi", 8, "~i", like Siemen with "", "i" after "~";
+    nom: _, "~et";
+    ine: "~essA", _;
+    ela: "~estA", _;
+    ill: "~eVn", _;
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    ess: "~enA", _;
+    abe: "~ettA", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensA";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
     possessive_par_sg: _, _, _, _, "~tAVn|~tansa";
+    possessive_par_pl: _, _, _, _, "~iAVn|~iansa";
+    possessive_ine_sg: _, _, _, _, "~essAVn|~essansa";
+    possessive_ine_pl: _, _, _, _, "~issAVn|~issansa";
+    possessive_ela_sg: _, _, _, _, "~estAVn|~estansa";
+    possessive_ela_pl: _, _, _, _, "~istAVn|~istansa";
+    possessive_ill_sg: _, _, _, _, "~eVnsA";
+    possessive_ade_sg: _, _, _, _, "~ellAVn|~ellansa";
+    possessive_ade_pl: _, _, _, _, "~illAVn|~illansa";
+    possessive_abl_sg: _, _, _, _, "~eltAVn|~eltansa";
+    possessive_abl_pl: _, _, _, _, "~iltAVn|~iltansa";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensa";
+    possessive_all_pl: _, _, _, _, "~illeen|~illensa";
+    possessive_ess_sg: _, _, _, _, "~enAVn|~enansa";
+    possessive_ess_pl: _, _, _, _, "~inAVn|~inansa";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensa";
+    possessive_tra_pl: _, _, _, _, "~ikseen|~iksensa";
+    possessive_abe_sg: _, _, _, _, "~ettAVn|~ettansa";
+    possessive_abe_pl: _, _, _, _, "~ittAVn|~ittansa";
+    possessive_com_pl: _, _, _, _, "~ineen|~inensa";
     ),
-    // Hiili: 8 words (hiiri, hiili, kotihiiri, metsähiiri, vaivaishiiri, koivuhiiri). Like Kieli, except in 0 cells: .
-    declension!("hiili", 8, "~i", like Kieli;
-    stem pl: "~- like hiili";
+    // Hiili: 8 words (hiiri, hiili, kotihiiri, metsähiiri, vaivaishiiri, koivuhiiri). Like Piste with `` after each pattern (`i` after ~), except in 42 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("hiili", 8, "~i", like Piste with "", "i" after "~";
+    nom: _, "~et";
+    gen_: _, "~ien|~ten";
+    par: "~tä", "~iä";
+    ine: "~essä", _;
+    ela: "~estä", _;
+    ill: "~eVn", "~iin";
+    ade: "~ellä", _;
+    abl: "~eltä", _;
+    ess: "~enä", _;
+    abe: "~että", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensä";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_pl: "~ieni|~teni", "~iesi|~tesi", "~iemme|~temme", "~ienne|~tenne", "~iensä|~tensä";
+    possessive_par_sg: _, _, _, _, "~täVn|~tänsä";
+    possessive_par_pl: "~iäni", _, _, _, "~iäVn|~iänsä";
+    possessive_ine_sg: _, _, _, _, "~essäVn|~essänsä";
+    possessive_ela_sg: _, _, _, _, "~estäVn|~estänsä";
+    possessive_ill_sg: _, _, _, _, "~eVnsä";
+    possessive_ill_pl: "~iini", derived, derived, derived, "~iinsä";
+    possessive_ade_sg: _, _, _, _, "~elläVn|~ellänsä";
+    possessive_abl_sg: _, _, _, _, "~eltäVn|~eltänsä";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensä";
+    possessive_ess_sg: _, _, _, _, "~enäVn|~enänsä";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensä";
+    possessive_abe_sg: _, _, _, _, "~ettäVn|~ettänsä";
+    ),
+    // Siipi: 8 words (siipi, korpi, kilpi, rupi, läpi, koipi). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
+    declension!("siipi", 8, "~pi", like Taso;
+    stem sg: "~p- like väki";
+    stem pl: "~pi- like väki";
+    nom: _, "~vet";
+    ine: "~vessA", "~vissA";
+    ela: "~vestA", "~vistA";
+    ill: "~peVn", _;
+    ade: "~vellA", "~villA";
+    abl: "~veltA", "~viltA";
+    all: _, "~ville";
+    ess: "~penA", _;
+    abe: "~vettA", "~vittA";
+    possessive_nom_sg: "~peni", _, _, _, "~pensA";
+    possessive_nom_pl: _, "~pesi", "~pemme", "~penne", _;
+    possessive_gen_sg: _, "~pesi", "~pemme", "~penne", _;
+    possessive_ine_sg: _, _, _, _, "~vessAVn|~vessänsä";
+    possessive_ine_pl: "~vissAni", _, _, _, "~vissAVn|~vissänsä";
+    possessive_ela_sg: _, _, _, _, "~vestAVn|~vestänsä";
+    possessive_ela_pl: "~vistAni", _, _, _, "~vistAVn|~vistänsä";
+    possessive_ill_sg: _, _, _, _, "~peVnsA";
+    possessive_ade_sg: _, _, _, _, "~vellAVn|~vellänsä";
+    possessive_ade_pl: "~villAni", _, _, _, "~villAVn|~villänsä";
+    possessive_abl_sg: _, _, _, _, "~veltAVn|~veltänsä";
+    possessive_abl_pl: "~viltAni", _, _, _, "~viltAVn|~viltänsä";
+    possessive_all_sg: _, _, _, _, "~velleen|~vellensä";
+    possessive_all_pl: "~villeni", _, _, _, "~villeen|~villensä";
+    possessive_ess_sg: _, _, _, _, "~penAVn|~penänsä";
+    possessive_tra_sg: _, _, _, _, "~vekseen|~veksensä";
+    possessive_tra_pl: _, _, _, _, "~vikseen|~viksensä";
+    possessive_abe_sg: _, _, _, _, "~vettAVn|~vettänsä";
+    possessive_abe_pl: "~vittAni", _, _, _, "~vittAVn|~vittänsä";
     ),
     // Toimi: 7 words (lumi, luomi, tuomi, toimi, taimi, vastatoimi). Like Avain, except in 18 cells: nom sg, gen_ pl, par sg, par pl, ill pl, possessive_gen_pl _1sg, ….
     declension!("toimi", 7, "~mi", like Avain;
@@ -2200,40 +2179,31 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_par_pl: "~meAni|~miAni", "~meAsi|~miAsi", "~meAmme|~miAmme", "~meAnne|~miAnne", "~miAVn|~miansa";
     possessive_ill_pl: "~miini", _, _, _, "~miinsA";
     ),
-    // Kupu: 6 words (riepu, hepo, virtahepo, käpy, häpy, ropo). Like Luku, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
-    declension!("kupu", 6, "~p~", like Luku;
-    stem sg: "~p~- like taso";
-    stem pl: "~p~- like taso";
-    ill: "~p~Vn", _;
-    ess: "~p~nA", _;
-    possessive_nom_sg: "~p~ni", _, _, _, "~p~nsA";
-    possessive_nom_pl: _, "~p~si", "~p~mme", "~p~nne", _;
-    possessive_gen_sg: _, "~p~si", "~p~mme", "~p~nne", _;
-    possessive_ill_sg: _, _, _, _, "~p~VnsA";
-    possessive_ess_sg: _, _, _, _, "~p~nAVn|~p~nansa";
-    ),
-    // Keihäs: 6 words (kirves, pylväs, keihäs, räystäs, eväs, lähettiläs). Like Tarvas, except in 19 cells: possessive_gen_pl _3, possessive_par_pl _3, possessive_ine_sg _3, possessive_ine_pl _3, possessive_ela_sg _3, possessive_ela_pl _3, ….
-    declension!("keihäs", 6, "~s", like Tarvas;
-    stem sg: "~s- like tykitys";
-    possessive_gen_pl: _, _, _, _, "~idensA|~ittensä";
-    possessive_par_pl: _, _, _, _, "~itAVn|~itänsä";
+    // Keihäs: 6 words (kirves, pylväs, keihäs, räystäs, eväs, lähettiläs). Like Siemen with `` after each pattern (`s` after ~), except in 31 cells: gen_ pl, par sg, par pl, ine sg, ela sg, ill sg, ….
+    declension!("keihäs", 6, "~s", like Siemen with "", "s" after "~";
+    gen_: _, "~iden|~itten";
+    par: "~stA", "~itA";
+    ine: "~VssV", _;
+    ela: "~VstV", _;
+    ill: "~VseVn", "~isVin";
+    ade: "~VllV", _;
+    abl: "~VltV", _;
+    ess: "~VnV", _;
+    abe: "~VttV", _;
+    possessive_nom_sg: _, _, _, _, "~VnsV";
+    possessive_gen_pl: "~ideni|~itteni", "~idesi|~ittesi", "~idemme|~ittemme", "~idenne|~ittenne", "~idensA|~ittensä";
+    possessive_par_sg: _, _, _, _, "~stAVn|~stänsä";
+    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itänsä";
     possessive_ine_sg: _, _, _, _, "~VssVVn|~ässänsä";
-    possessive_ine_pl: _, _, _, _, "~issAVn|~issänsä";
     possessive_ela_sg: _, _, _, _, "~VstVVn|~ästänsä";
-    possessive_ela_pl: _, _, _, _, "~istAVn|~istänsä";
+    possessive_ill_sg: _, _, _, _, "~VseVnsA";
+    possessive_ill_pl: "~isVVni", _, _, _, "~isVinsA";
     possessive_ade_sg: _, _, _, _, "~VllVVn|~ällänsä";
-    possessive_ade_pl: _, _, _, _, "~illAVn|~illänsä";
     possessive_abl_sg: _, _, _, _, "~VltVVn|~ältänsä";
-    possessive_abl_pl: _, _, _, _, "~iltAVn|~iltänsä";
     possessive_all_sg: _, _, _, _, "~Vlleen|~ällensä";
-    possessive_all_pl: _, _, _, _, "~illeen|~illensä";
     possessive_ess_sg: _, _, _, _, "~VnVVn|~änänsä";
-    possessive_ess_pl: _, _, _, _, "~inAVn|~inänsä";
     possessive_tra_sg: _, _, _, _, "~Vkseen|~äksensä";
-    possessive_tra_pl: _, _, _, _, "~ikseen|~iksensä";
     possessive_abe_sg: _, _, _, _, "~VttVVn|~ättänsä";
-    possessive_abe_pl: _, _, _, _, "~ittAVn|~ittänsä";
-    possessive_com_pl: _, _, _, _, "~ineen|~inensä";
     ),
     // Kuningatar: 6 words (kuningatar, ruhtinatar, haltijatar, onnetar, taiteilijatar, kiertotatar). Like Kate, except in 48 cells: gen_ pl, par pl, ine sg, ine pl, ela sg, ela pl, ….
     declension!("kuningatar", 6, "~~", like Kate;
@@ -2265,120 +2235,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~t~ettaan|~t~ettansa";
     possessive_abe_pl: "~t~ittani", _, _, _, "~t~ittaan|~t~ittansa";
     ),
-    // Kanapee: 6 words (glasee, filee, sisäfilee, essee, kanapee, shawnee). Like Parvi, except in 17 cells: gen_ pl, par pl, ill sg, ill pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, ….
-    declension!("kanapee", 6, "~e", like Parvi;
-    stem sg: "~e- like tunnus";
-    gen_: _, "~iden|~itten";
-    par: _, "~itA";
+    // Kanapee: 6 words (glasee, filee, sisäfilee, essee, kanapee, shawnee). Like Aste with `` after each pattern (`e` after ~), except in 33 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    declension!("kanapee", 6, "~e", like Aste with "", "e" after "~";
+    nom: _, "~et";
+    par: "~etA", _;
+    ine: "~essA", _;
+    ela: "~estA", _;
     ill: "~ehVn|~eseen", "~ihin|~isiin";
-    possessive_gen_pl: "~ideni|~itteni", "~idesi|~ittesi", "~idemme|~ittemme", "~idenne|~ittenne", "~idensA|~ittensa";
-    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itansa";
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    ess: "~enA", _;
+    abe: "~ettA", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensA";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_par_sg: _, _, _, _, "~etAVn|~etansa";
+    possessive_ine_sg: _, _, _, _, "~essAVn|~essansa";
+    possessive_ela_sg: _, _, _, _, "~estAVn|~estansa";
     possessive_ill_sg: _, _, _, _, "~ehVnsA|~eseensa";
     possessive_ill_pl: "~esVVni|~ihini|~isVVni", "~esVVsi|~ihisi|~isVVsi", "~esVVmme|~ihimme|~isVVmme", "~esVVnne|~ihinne|~isVVnne", "~ihinsA|~isiinsa";
+    possessive_ade_sg: _, _, _, _, "~ellAVn|~ellansa";
+    possessive_abl_sg: _, _, _, _, "~eltAVn|~eltansa";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensa";
+    possessive_ess_sg: _, _, _, _, "~enAVn|~enansa";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensa";
+    possessive_abe_sg: _, _, _, _, "~ettAVn|~ettansa";
     ),
-    // Maamerkki: 6 words (maamerkki, takapenkki, polttomerkki, jumbojetti, puumerkki, loppumerkki). Like Kaappi, except in 44 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
-    declension!("maamerkki", 6, "~iˇ", like Kaappi;
-    par: "~iäˇ", "~ejäˇ";
-    ine: "~issäˇ", "~eissäˇ";
-    ela: "~istäˇ", "~eistäˇ";
-    ade: "~illäˇ", "~eilläˇ";
-    abl: "~iltäˇ", "~eiltäˇ";
-    ess: "~inäˇ", "~einäˇ";
-    abe: "~ittäˇ", "~eittäˇ";
-    possessive_nom_sg: _, _, _, _, "~insäˇ";
-    possessive_gen_pl: _, _, _, _, "~iensäˇ";
-    possessive_par_sg: _, _, _, _, "~iäVnˇ|~iänsäˇ";
-    possessive_par_pl: "~ejäniˇ", _, _, _, "~ejäVnˇ|~ejänsäˇ";
-    possessive_ine_sg: _, _, _, _, "~issäVnˇ|~issänsäˇ";
-    possessive_ine_pl: "~eissäniˇ", _, _, _, "~eissäVnˇ|~eissänsäˇ";
-    possessive_ela_sg: _, _, _, _, "~istäVnˇ|~istänsäˇ";
-    possessive_ela_pl: "~eistäniˇ", _, _, _, "~eistäVnˇ|~eistänsäˇ";
-    possessive_ill_sg: _, _, _, _, "~iVnsäˇ";
-    possessive_ill_pl: _, _, _, _, "~eihinsäˇ";
-    possessive_ade_sg: _, _, _, _, "~illäVnˇ|~illänsäˇ";
-    possessive_ade_pl: "~eilläniˇ", _, _, _, "~eilläVnˇ|~eillänsäˇ";
-    possessive_abl_sg: _, _, _, _, "~iltäVnˇ|~iltänsäˇ";
-    possessive_abl_pl: "~eiltäniˇ", _, _, _, "~eiltäVnˇ|~eiltänsäˇ";
-    possessive_all_sg: _, _, _, _, "~illeenˇ|~illensäˇ";
-    possessive_all_pl: _, _, _, _, "~eilleenˇ|~eillensäˇ";
-    possessive_ess_sg: _, _, _, _, "~inäVnˇ|~inänsäˇ";
-    possessive_ess_pl: "~einäniˇ", _, _, _, "~einäVnˇ|~einänsäˇ";
-    possessive_tra_sg: _, _, _, _, "~ikseenˇ|~iksensäˇ";
-    possessive_tra_pl: _, _, _, _, "~eikseenˇ|~eiksensäˇ";
-    possessive_abe_sg: _, _, _, _, "~ittäVnˇ|~ittänsäˇ";
-    possessive_abe_pl: "~eittäniˇ", _, _, _, "~eittäVnˇ|~eittänsäˇ";
-    possessive_com_pl: _, _, _, _, "~eineenˇ|~einensäˇ";
+    // Maamerkki: 6 words (maamerkki, takapenkki, polttomerkki, jumbojetti, puumerkki, loppumerkki). Like Keri with `ˇ` after each pattern.
+    declension!("maamerkki", 6, "~iˇ", like Keri with "ˇ";
     ),
-    // Muunnin: 6 words (äänenvaimennin, puhallin, vaimennin, muunnin, käännin, tarkennin). Like Purkaminen, except in 47 cells: nom sg, nom pl, par sg, ine sg, ine pl, ela sg, ….
-    declension!("muunnin", 6, "~nˇ", like Purkaminen;
-    stem pl: "~- like muunnin";
-    nom: "~nˇ", "~metˇ";
-    par: "~ntAˇ", _;
-    ine: "~messAˇ", "~missAˇ";
-    ela: "~mestAˇ", "~mistAˇ";
-    ill: "~meVnˇ", _;
-    ade: "~mellAˇ", "~millAˇ";
-    abl: "~meltAˇ", "~miltAˇ";
-    all: _, "~milleˇ";
-    ess: "~menAˇ", _;
-    abe: "~mettAˇ", "~mittAˇ";
-    possessive_nom_sg: "~meniˇ", _, _, _, "~mensAˇ";
-    possessive_nom_pl: _, "~mesiˇ", "~memmeˇ", "~menneˇ", _;
-    possessive_gen_sg: _, "~mesiˇ", "~memmeˇ", "~menneˇ", _;
-    possessive_par_sg: _, _, _, _, "~ntAVnˇ|~ntansaˇ";
-    possessive_ine_sg: _, _, _, _, "~messAVnˇ|~messansaˇ";
-    possessive_ine_pl: "~missAniˇ", _, _, _, "~missAVnˇ|~missansaˇ";
-    possessive_ela_sg: _, _, _, _, "~mestAVnˇ|~mestansaˇ";
-    possessive_ela_pl: "~mistAniˇ", _, _, _, "~mistAVnˇ|~mistansaˇ";
-    possessive_ill_sg: _, _, _, _, "~meVnsAˇ";
-    possessive_ade_sg: _, _, _, _, "~mellAVnˇ|~mellansaˇ";
-    possessive_ade_pl: "~millAniˇ", _, _, _, "~millAVnˇ|~millansaˇ";
-    possessive_abl_sg: _, _, _, _, "~meltAVnˇ|~meltansaˇ";
-    possessive_abl_pl: "~miltAniˇ", _, _, _, "~miltAVnˇ|~miltansaˇ";
-    possessive_all_sg: _, _, _, _, "~melleenˇ|~mellensaˇ";
-    possessive_all_pl: "~milleniˇ", _, _, _, "~milleenˇ|~millensaˇ";
-    possessive_ess_sg: _, _, _, _, "~menAVnˇ|~menansaˇ";
-    possessive_tra_sg: _, _, _, _, "~mekseenˇ|~meksensaˇ";
-    possessive_tra_pl: _, _, _, _, "~mikseenˇ|~miksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~mettAVnˇ|~mettansaˇ";
-    possessive_abe_pl: "~mittAniˇ", _, _, _, "~mittAVnˇ|~mittansaˇ";
-    ),
-    // Veto: 6 words (vety, lyhty, hyöty, yty, sääty, pääty). Like Luku, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("veto", 6, "~t~", like Luku;
-    stem sg: "~t~- like taso";
-    stem pl: "~t~- like taso";
-    nom: _, "~d~t";
-    ine: "~d~ssA", "~d~issA";
-    ela: "~d~stA", "~d~istA";
-    ill: "~t~Vn", _;
-    ade: "~d~llA", "~d~illA";
-    abl: "~d~ltA", "~d~iltA";
-    all: _, "~d~ille";
-    ess: "~t~nA", _;
-    abe: "~d~ttA", "~d~ittA";
-    possessive_nom_sg: "~t~ni", _, _, _, "~t~nsA";
-    possessive_nom_pl: _, "~t~si", "~t~mme", "~t~nne", _;
-    possessive_gen_sg: _, "~t~si", "~t~mme", "~t~nne", _;
-    possessive_ine_sg: _, _, _, _, "~d~ssAVn|~d~ssansa";
-    possessive_ine_pl: "~d~issAni", _, _, _, "~d~issAVn|~d~issansa";
-    possessive_ela_sg: _, _, _, _, "~d~stAVn|~d~stansa";
-    possessive_ela_pl: "~d~istAni", _, _, _, "~d~istAVn|~d~istansa";
-    possessive_ill_sg: _, _, _, _, "~t~VnsA";
-    possessive_ade_sg: _, _, _, _, "~d~llAVn|~d~llansa";
-    possessive_ade_pl: "~d~illAni", _, _, _, "~d~illAVn|~d~illansa";
-    possessive_abl_sg: _, _, _, _, "~d~ltAVn|~d~ltansa";
-    possessive_abl_pl: "~d~iltAni", _, _, _, "~d~iltAVn|~d~iltansa";
-    possessive_all_sg: _, _, _, _, "~d~lleen|~d~llensa";
-    possessive_all_pl: "~d~illeni", _, _, _, "~d~illeen|~d~illensa";
-    possessive_ess_sg: _, _, _, _, "~t~nAVn|~t~nansa";
-    possessive_tra_sg: _, _, _, _, "~d~kseen|~d~ksensa";
-    possessive_tra_pl: _, _, _, _, "~d~ikseen|~d~iksensa";
-    possessive_abe_sg: _, _, _, _, "~d~ttAVn|~d~ttansa";
-    possessive_abe_pl: "~d~ittAni", _, _, _, "~d~ittAVn|~d~ittansa";
-    ),
-    // Värit: 6 words (lasit, rillit, tanssit, värit, näpit, pihdit). Like Pari, except in 37 cells: nom sg, par sg, ine sg, ela sg, ill sg, ade sg, ….
-    declension!("värit", 6, "~it", like Pari;
-    nom: "~it", _;
+    // Värit: 6 words (lasit, rillit, tanssit, värit, näpit, pihdit). Like Hmong with `` after each pattern (`it` after ~), except in 40 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("värit", 6, "~it", like Hmong with "", "it" after "~";
     par: derived, _;
     ine: derived, _;
     ela: derived, _;
@@ -2387,6 +2274,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     abl: derived, _;
     ess: derived, _;
     abe: derived, _;
+    com: _, derived;
     possessive_nom_sg: derived, _, _, _, derived;
     possessive_nom_pl: "~ini", _, _, _, "~insA";
     possessive_gen_sg: _, derived, derived, derived, _;
@@ -2396,8 +2284,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_ine_pl: _, _, _, _, "~eissAVn|~eissänsä";
     possessive_ela_sg: _, _, _, _, derived;
     possessive_ela_pl: _, _, _, _, "~eistAVn|~eistänsä";
-    possessive_ill_sg: _, _, _, _, derived;
-    possessive_ill_pl: "~eihini", _, _, _, _;
+    possessive_ill_sg: derived, derived, derived, derived, derived;
     possessive_ade_sg: _, _, _, _, derived;
     possessive_ade_pl: _, _, _, _, "~eillAVn|~eillänsä";
     possessive_abl_sg: _, _, _, _, derived;
@@ -2411,18 +2298,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, derived;
     possessive_abe_pl: _, _, _, _, "~eittAVn|~eittänsä";
     possessive_com_pl: _, _, _, _, derived;
-    ),
-    // Lippu: 5 words (ryyppy, hyppy, ryöppy, syrjähyppy, nyppy). Like Verkko, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
-    declension!("lippu", 5, "~p~", like Verkko;
-    stem sg: "~p~- like taso";
-    stem pl: "~p~- like taso";
-    ill: "~p~Vn", _;
-    ess: "~p~nA", _;
-    possessive_nom_sg: "~p~ni", _, _, _, "~p~nsA";
-    possessive_nom_pl: _, "~p~si", "~p~mme", "~p~nne", _;
-    possessive_gen_sg: _, "~p~si", "~p~mme", "~p~nne", _;
-    possessive_ill_sg: _, _, _, _, "~p~VnsA";
-    possessive_ess_sg: _, _, _, _, "~p~nAVn|~p~nansa";
     ),
     // Koe: 5 words (koe, rae, eläinkoe, jae, hajukoe). Like Tunnus, except in 2 cells: ill sg, possessive_ill_sg _3.
     declension!("koe", 5, "~~", like Tunnus;
@@ -2460,8 +2335,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     nom: "~", _;
     possessive_ill_pl: "~eihini", _, _, _, _;
     ),
-    // Taival: 5 words (rove, tarve, taive, kuve, taival). Like Kupu, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("taival", 5, "~v~", like Kupu;
+    // Taival: 5 words (rove, tarve, taive, kuve, taival). Like Tunnus, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
+    declension!("taival", 5, "~v~", like Tunnus;
     stem sg: "~v~- like aste";
     stem pl: "~p~i- like kate";
     nom: _, "~p~et";
@@ -2493,22 +2368,24 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~p~ettAVn|~p~ettansa";
     possessive_abe_pl: "~p~ittAni", _, _, _, "~p~ittAVn|~p~ittansa";
     ),
-    // Syy: 5 words (syy, kyy, tekosyy, peltopyy, menyy). Like Pää, except in 27 cells: nom pl, gen_ sg, ine sg, ela sg, ill sg, ade sg, ….
-    declension!("syy", 5, "~y", like Pää;
-    stem sg: "~y- like tykitys";
+    // Syy: 5 words (syy, kyy, tekosyy, peltopyy, menyy). Like Levy with `` after each pattern (`y` after ~), except in 36 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("syy", 5, "~y", like Levy with "", "y" after "~";
     nom: _, "~yt";
-    gen_: derived, _;
+    gen_: _, "~iden|~itten";
+    par: "~ytA", "~itA";
     ine: "~yssA", _;
     ela: "~ystA", _;
     ill: "~yhVn", _;
     ade: "~yllA", _;
     abl: "~yltA", _;
-    all: derived, _;
     ess: "~ynA", _;
     abe: "~yttA", _;
     possessive_nom_sg: "~yni", _, _, _, "~ynsA";
     possessive_nom_pl: _, "~ysi", "~ymme", "~ynne", _;
     possessive_gen_sg: _, "~ysi", "~ymme", "~ynne", _;
+    possessive_gen_pl: "~ideni|~itteni", "~idesi|~ittesi", "~idemme|~ittemme", "~idenne|~ittenne", "~idensA|~ittensä";
+    possessive_par_sg: _, _, _, _, "~ytAVn|~ytänsä";
+    possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itänsä";
     possessive_ine_sg: _, _, _, _, "~yssAVn|~yssänsä";
     possessive_ela_sg: _, _, _, _, "~ystAVn|~ystänsä";
     possessive_ill_sg: _, _, _, _, "~yhVnsA";
@@ -2556,53 +2433,64 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~ettAVn|~eettaan|~ettansa|~eettansa";
     possessive_abe_pl: "~eVttAni|~ittani|~eVttAni", "~eVttAsi|~ittasi|~eVttAsi", "~eVttAmme|~ittamme|~eVttAmme", "~eVttAnne|~ittanne|~eVttAnne", "~ittAVn|~eittaan|~ittansa|~eittansa";
     ),
-    // Kissanristiäiset: 5 words (päättäjäiset, metsäpäästäiset, myötäjäiset, kädelliset, kissanristiäiset). Like Sakset, except in 16 cells: gen_ pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_gen_pl _3, ….
-    declension!("kissanristiäiset", 5, "~et", like Sakset;
+    // Kissanristiäiset: 5 words (päättäjäiset, metsäpäästäiset, myötäjäiset, kädelliset, kissanristiäiset). Like Siemen with `` after each pattern (`et` after ~), except in 35 cells: nom pl, gen_ pl, par sg, ine sg, ela sg, ill sg, ….
+    declension!("kissanristiäiset", 5, "~et", like Siemen with "", "et" after "~";
+    nom: _, "~et";
     gen_: _, "~ten|~ien";
+    par: derived, _;
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    ess: derived, _;
+    abe: derived, _;
+    possessive_nom_sg: derived, _, _, _, derived;
+    possessive_nom_pl: "~eni", "~esi", "~emme", "~enne", "~ensA";
+    possessive_gen_sg: _, derived, derived, derived, _;
     possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensA|~iensA";
-    possessive_par_pl: _, _, _, _, "~iAVn|~iänsä";
-    possessive_ine_pl: _, _, _, _, "~issAVn|~issänsä";
-    possessive_ela_pl: _, _, _, _, "~istAVn|~istänsä";
-    possessive_ade_pl: _, _, _, _, "~illAVn|~illänsä";
-    possessive_abl_pl: _, _, _, _, "~iltAVn|~iltänsä";
-    possessive_all_pl: _, _, _, _, "~illeen|~illensä";
-    possessive_ess_pl: _, _, _, _, "~inAVn|~inänsä";
-    possessive_tra_pl: _, _, _, _, "~ikseen|~iksensä";
-    possessive_abe_pl: _, _, _, _, "~ittAVn|~ittänsä";
-    possessive_com_pl: _, _, _, _, "~ineen|~inensä";
+    possessive_par_sg: _, _, _, _, derived;
+    possessive_ine_sg: _, _, _, _, derived;
+    possessive_ela_sg: _, _, _, _, derived;
+    possessive_ill_sg: _, _, _, _, derived;
+    possessive_ade_sg: _, _, _, _, derived;
+    possessive_abl_sg: _, _, _, _, derived;
+    possessive_all_sg: _, _, _, _, derived;
+    possessive_ess_sg: _, _, _, _, derived;
+    possessive_tra_sg: _, _, _, _, derived;
+    possessive_abe_sg: _, _, _, _, derived;
     ),
-    // Lupa: 5 words (sopa, salpa, kalpa, soopa, huopa). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("lupa", 5, "~pa", like Taso;
+    // Lupa: 5 words (sopa, salpa, kalpa, soopa, huopa). Like Siipi, except in 32 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("lupa", 5, "~pa", like Siipi;
     stem sg: "~pa- like osa";
     stem pl: "~pi- like osa";
     nom: _, "~vAt";
-    ine: "~vAssV", "~vissA";
-    ela: "~vAstV", "~vistA";
+    ine: "~vAssV", _;
+    ela: "~vAstV", _;
     ill: "~paVn", _;
-    ade: "~vAllV", "~villA";
-    abl: "~vAltV", "~viltA";
-    all: _, "~ville";
+    ade: "~vAllV", _;
+    abl: "~vAltV", _;
     ess: "~panV", _;
-    abe: "~vAttV", "~vittA";
+    abe: "~vAttV", _;
     possessive_nom_sg: "~pani", _, _, _, "~pansV";
     possessive_nom_pl: _, "~pasi", "~pamme", "~panne", _;
     possessive_gen_sg: _, "~pasi", "~pamme", "~panne", _;
     possessive_ine_sg: _, _, _, _, "~vAssVVn|~vassansa";
-    possessive_ine_pl: "~vissAni", _, _, _, "~vissAVn|~vissansa";
+    possessive_ine_pl: _, _, _, _, "~vissAVn|~vissansa";
     possessive_ela_sg: _, _, _, _, "~vAstVVn|~vastansa";
-    possessive_ela_pl: "~vistAni", _, _, _, "~vistAVn|~vistansa";
+    possessive_ela_pl: _, _, _, _, "~vistAVn|~vistansa";
     possessive_ill_sg: _, _, _, _, "~paVnsV";
     possessive_ade_sg: _, _, _, _, "~vAllVVn|~vallansa";
-    possessive_ade_pl: "~villAni", _, _, _, "~villAVn|~villansa";
+    possessive_ade_pl: _, _, _, _, "~villAVn|~villansa";
     possessive_abl_sg: _, _, _, _, "~vAltVVn|~valtansa";
-    possessive_abl_pl: "~viltAni", _, _, _, "~viltAVn|~viltansa";
+    possessive_abl_pl: _, _, _, _, "~viltAVn|~viltansa";
     possessive_all_sg: _, _, _, _, "~vAlleen|~vallensa";
-    possessive_all_pl: "~villeni", _, _, _, "~villeen|~villensa";
+    possessive_all_pl: _, _, _, _, "~villeen|~villensa";
     possessive_ess_sg: _, _, _, _, "~panVVn|~panansa";
     possessive_tra_sg: _, _, _, _, "~vAkseen|~vaksensa";
     possessive_tra_pl: _, _, _, _, "~vikseen|~viksensa";
     possessive_abe_sg: _, _, _, _, "~vAttVVn|~vattansa";
-    possessive_abe_pl: "~vittAni", _, _, _, "~vittAVn|~vittansa";
+    possessive_abe_pl: _, _, _, _, "~vittAVn|~vittansa";
     ),
     // Paikka: 4 words (jalka, taka, nahka, oravannahka). Like Silmukka, except in 14 cells: ins sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_pl _2sg, possessive_par_pl _1pl, ….
     declension!("paikka", 4, "~ka", like Silmukka;
@@ -2613,16 +2501,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_ill_pl: _, derived, derived, derived, _;
     possessive_ins_sg: _, "~kasi", "~kamme", "~kanne", "~kansa";
     ),
-    // Tee: 4 words (tee, gee, lee, kaksoisvee). Like Kivi, except in 14 cells: gen_ pl, par pl, ill sg, ill pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, ….
-    declension!("tee", 4, "~e", like Kivi;
-    stem sg: "~e- like etumies";
-    gen_: _, "~iden|~itten";
-    par: _, "~itä";
+    // Kupu: 4 words (riepu, hepo, virtahepo, ropo). Like Luku, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
+    declension!("kupu", 4, "~p~", like Luku;
+    stem sg: "~p~- like taso";
+    stem pl: "~p~- like taso";
+    ill: "~p~Vn", _;
+    ess: "~p~nA", _;
+    possessive_nom_sg: "~p~ni", _, _, _, "~p~nsA";
+    possessive_nom_pl: _, "~p~si", "~p~mme", "~p~nne", _;
+    possessive_gen_sg: _, "~p~si", "~p~mme", "~p~nne", _;
+    possessive_ill_sg: _, _, _, _, "~p~VnsA";
+    possessive_ess_sg: _, _, _, _, "~p~nAVn|~p~nansa";
+    ),
+    // Tee: 4 words (tee, gee, lee, kaksoisvee). Like Piste with `` after each pattern (`e` after ~), except in 33 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    declension!("tee", 4, "~e", like Piste with "", "e" after "~";
+    nom: _, "~et";
+    par: "~etä", _;
+    ine: "~essä", _;
+    ela: "~estä", _;
     ill: "~ehVn", "~ihin";
-    possessive_gen_pl: "~ideni|~itteni", "~idesi|~ittesi", "~idemme|~ittemme", "~idenne|~ittenne", "~idensä|~ittensä";
-    possessive_par_pl: "~itäni", _, _, _, "~itäVn|~itänsä";
+    ade: "~ellä", _;
+    abl: "~eltä", _;
+    ess: "~enä", _;
+    abe: "~että", _;
+    possessive_nom_sg: "~eni", _, _, _, "~ensä";
+    possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    possessive_par_sg: _, _, _, _, "~etäVn|~etänsä";
+    possessive_ine_sg: _, _, _, _, "~essäVn|~essänsä";
+    possessive_ela_sg: _, _, _, _, "~estäVn|~estänsä";
     possessive_ill_sg: _, _, _, _, "~ehVnsä";
-    possessive_ill_pl: "~ihini", _, _, _, "~ihinsä";
+    possessive_ill_pl: "~ihini", derived, derived, derived, "~ihinsä";
+    possessive_ade_sg: _, _, _, _, "~elläVn|~ellänsä";
+    possessive_abl_sg: _, _, _, _, "~eltäVn|~eltänsä";
+    possessive_all_sg: _, _, _, _, "~elleen|~ellensä";
+    possessive_ess_sg: _, _, _, _, "~enäVn|~enänsä";
+    possessive_tra_sg: _, _, _, _, "~ekseen|~eksensä";
+    possessive_abe_sg: _, _, _, _, "~ettäVn|~ettänsä";
     ),
     // Poika: 4 words (poika, talonpoika, rattopoika, sulhaspoika). Like Aika, except in 32 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
     declension!("poika", 4, "~ika", like Aika;
@@ -2649,29 +2564,75 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_sg: _, _, _, _, "~jAttVVn|~jattansa";
     possessive_abe_pl: "~jittAni", _, _, _, "~jittAVn|~jittansa";
     ),
-    // Hopea: 4 words (valkea, elohopea, hopea, kulovalkea). Like Maa, except in 12 cells: ill sg, ill pl, possessive_par_pl _1sg, possessive_par_pl _2sg, possessive_par_pl _1pl, possessive_par_pl _2pl, ….
-    declension!("hopea", 4, "~a", like Maa;
-    stem sg: "~a- like hopea";
-    ill: "~aVn", "~isVin|~ihin";
+    // Hopea: 4 words (valkea, elohopea, hopea, kulovalkea). Like Aste with `` after each pattern (`a` after ~), except in 35 cells: nom pl, par sg, ine sg, ela sg, ill sg, ade sg, ….
+    declension!("hopea", 4, "~a", like Aste with "", "a" after "~";
+    nom: _, "~at";
+    par: "~aV|~ata", _;
+    ine: "~assV", _;
+    ela: "~astV", _;
+    ill: "~aVn", _;
+    ade: "~allV", _;
+    abl: "~altV", _;
+    ess: "~anV", _;
+    abe: "~attV", _;
+    possessive_nom_sg: "~ani", _, _, _, "~ansV";
+    possessive_nom_pl: _, "~asi", "~amme", "~anne", _;
+    possessive_gen_sg: _, "~asi", "~amme", "~anne", _;
+    possessive_par_sg: _, _, _, _, "~atVVn|~aansa|~atansa";
     possessive_par_pl: "~atVni|~itVni", "~atVsi|~itVsi", "~atVmme|~itVmme", "~atVnne|~itVnne", _;
+    possessive_ine_sg: _, _, _, _, "~assVVn|~assansa";
+    possessive_ela_sg: _, _, _, _, "~astVVn|~astansa";
     possessive_ill_sg: _, _, _, _, "~aVnsV";
-    possessive_ill_pl: "~isVVni|~ihini", "~isVVsi|~ihisi", "~isVVmme|~ihimme", "~isVVnne|~ihinne", "~isVinsA|~ihinsa";
+    possessive_ill_pl: "~isVVni|~ihini", "~isVVsi|~ihisi", "~isVVmme|~ihimme", "~isVVnne|~ihinne", _;
+    possessive_ade_sg: _, _, _, _, "~allVVn|~allansa";
+    possessive_abl_sg: _, _, _, _, "~altVVn|~altansa";
+    possessive_all_sg: _, _, _, _, "~alleen|~allensa";
+    possessive_ess_sg: _, _, _, _, "~anVVn|~anansa";
+    possessive_tra_sg: _, _, _, _, "~akseen|~aksensa";
+    possessive_abe_sg: _, _, _, _, "~attVVn|~attansa";
     ),
-    // Ydin: 4 words (ydin, säädin, vedin, ulosvedin). Like Keitin, except in 8 cells: gen_ pl, ill sg, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, ….
-    declension!("ydin", 4, "~d~n", like Keitin;
+    // Ydin: 4 words (ydin, säädin, vedin, ulosvedin). Like Osoitin, except in 48 cells: gen_ pl, par pl, ine sg, ine pl, ela sg, ela pl, ….
+    declension!("ydin", 4, "~d~n", like Osoitin;
     stem sg: "~d~n- like etumies";
     gen_: _, "~t~mVen|~d~nten";
+    par: _, "~t~mVä";
+    ine: "~t~messä", "~t~missä";
+    ela: "~t~mestä", "~t~mistä";
     ill: "~t~meen", _;
+    ade: "~t~mellä", "~t~millä";
+    abl: "~t~meltä", "~t~miltä";
+    ess: "~t~menä", "~t~minä";
+    abe: "~t~mettä", "~t~mittä";
+    possessive_nom_sg: _, _, _, _, "~t~mensä";
     possessive_gen_pl: "~t~mVeni|~d~nteni", "~t~mVesi|~d~ntesi", "~t~mVemme|~d~ntemme", "~t~mVenne|~d~ntenne", "~t~mVensä|~d~ntensä";
+    possessive_par_pl: "~t~mVäni", _, _, _, "~t~mVäVn|~t~miänsä";
+    possessive_ine_sg: _, _, _, _, "~t~messäVn|~t~messänsä";
+    possessive_ine_pl: "~t~missäni", _, _, _, "~t~missäVn|~t~missänsä";
+    possessive_ela_sg: _, _, _, _, "~t~mestäVn|~t~mestänsä";
+    possessive_ela_pl: "~t~mistäni", _, _, _, "~t~mistäVn|~t~mistänsä";
     possessive_ill_sg: _, _, _, _, "~t~meensä";
+    possessive_ill_pl: _, _, _, _, "~t~miinsä";
+    possessive_ade_sg: _, _, _, _, "~t~melläVn|~t~mellänsä";
+    possessive_ade_pl: "~t~milläni", _, _, _, "~t~milläVn|~t~millänsä";
+    possessive_abl_sg: _, _, _, _, "~t~meltäVn|~t~meltänsä";
+    possessive_abl_pl: "~t~miltäni", _, _, _, "~t~miltäVn|~t~miltänsä";
+    possessive_all_sg: _, _, _, _, "~t~melleen|~t~mellensä";
+    possessive_all_pl: _, _, _, _, "~t~milleen|~t~millensä";
+    possessive_ess_sg: _, _, _, _, "~t~menäVn|~t~menänsä";
+    possessive_ess_pl: "~t~minäni", _, _, _, "~t~minäVn|~t~minänsä";
+    possessive_tra_sg: _, _, _, _, "~t~mekseen|~t~meksensä";
+    possessive_tra_pl: _, _, _, _, "~t~mikseen|~t~miksensä";
+    possessive_abe_sg: _, _, _, _, "~t~mettäVn|~t~mettänsä";
+    possessive_abe_pl: "~t~mittäni", _, _, _, "~t~mittäVn|~t~mittänsä";
+    possessive_com_pl: _, _, _, _, "~t~mineen|~t~minensä";
     ),
-    // Kauris: 4 words (kauris, saalis, ruumis, metsäkauris). Like Aste, except in 25 cells: gen_ pl, par pl, ill sg, ill pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, ….
-    declension!("kauris", 4, "~s", like Aste;
-    stem sg: "~s- like tunnus";
+    // Kauris: 4 words (kauris, saalis, ruumis, metsäkauris). Like Aste with `` after each pattern (`s` after ~), except in 27 cells: gen_ pl, par sg, par pl, ill sg, ill pl, possessive_gen_pl _1sg, ….
+    declension!("kauris", 4, "~s", like Aste with "", "s" after "~";
     gen_: _, "~Vden|~itten";
-    par: _, "~VtA";
+    par: "~stA", "~VtA";
     ill: "~VseVn", "~VsVin";
     possessive_gen_pl: "~Vdeni|~itteni", "~Vdesi|~ittesi", "~Vdemme|~ittemme", "~Vdenne|~ittenne", "~VdensA|~ittensa";
+    possessive_par_sg: _, _, _, _, "~stAVn|~stansa";
     possessive_par_pl: "~VtAni", _, _, _, "~VtAVn|~itansa";
     possessive_ine_sg: _, _, _, _, "~VssAVn|~issansa";
     possessive_ela_sg: _, _, _, _, "~VstAVn|~istansa";
@@ -2703,18 +2664,58 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_tra_pl: "~öikseni|~ikseni", "~öiksesi|~iksesi", "~öiksemme|~iksemme", "~öiksenne|~iksenne", "~öikseen|~ikseen|~öiksensä|~iksensä";
     possessive_abe_pl: "~öittAni|~ittäni", "~öittAsi|~ittäsi", "~öittAmme|~ittämme", "~öittAnne|~ittänne", "~öittAVn|~ittään|~öittänsä|~ittänsä";
     ),
-    // Takuu: 4 words (takuu, paluu, vastuu, makuu). Like Puu, except in 5 cells: ill sg, ill pl, possessive_ill_sg _3, possessive_ill_pl _1sg, possessive_ill_pl _3.
-    declension!("takuu", 4, "~u", like Puu;
+    // Takuu: 4 words (takuu, paluu, vastuu, makuu). Like Aste with `` after each pattern (`u` after ~), except in 33 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    declension!("takuu", 4, "~u", like Aste with "", "u" after "~";
+    nom: _, "~ut";
+    par: "~utA", _;
+    ine: "~ussA", _;
+    ela: "~ustA", _;
     ill: "~useVn", "~isVin";
+    ade: "~ullA", _;
+    abl: "~ultA", _;
+    ess: "~unA", _;
+    abe: "~uttA", _;
+    possessive_nom_sg: "~uni", _, _, _, "~unsA";
+    possessive_nom_pl: _, "~usi", "~umme", "~unne", _;
+    possessive_gen_sg: _, "~usi", "~umme", "~unne", _;
+    possessive_par_sg: _, _, _, _, "~utAVn|~utansa";
+    possessive_ine_sg: _, _, _, _, "~ussAVn|~ussansa";
+    possessive_ela_sg: _, _, _, _, "~ustAVn|~ustansa";
     possessive_ill_sg: _, _, _, _, "~useVnsA";
-    possessive_ill_pl: "~isVVni", _, _, _, "~isVinsA";
+    possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
+    possessive_ade_sg: _, _, _, _, "~ullAVn|~ullansa";
+    possessive_abl_sg: _, _, _, _, "~ultAVn|~ultansa";
+    possessive_all_sg: _, _, _, _, "~ulleen|~ullensa";
+    possessive_ess_sg: _, _, _, _, "~unAVn|~unansa";
+    possessive_tra_sg: _, _, _, _, "~ukseen|~uksensa";
+    possessive_abe_sg: _, _, _, _, "~uttAVn|~uttansa";
     ),
-    // Käräjät: 4 words (myyrät, nisäkkäät, valtiopäivät, käräjät). Like Kissanristiäiset, except in 10 cells: nom sg, nom pl, possessive_nom_pl _1sg, possessive_nom_pl _2sg, possessive_nom_pl _1pl, possessive_nom_pl _2pl, ….
-    declension!("käräjät", 4, "~ät", like Kissanristiäiset;
-    stem pl: "~i- like kärki";
-    nom: "~ät", "~ät";
+    // Käräjät: 4 words (myyrät, nisäkkäät, valtiopäivät, käräjät). Like Siemen with `` after each pattern (`ät` after ~), except in 35 cells: nom pl, gen_ pl, par sg, ine sg, ela sg, ill sg, ….
+    declension!("käräjät", 4, "~ät", like Siemen with "", "ät" after "~";
+    nom: _, "~ät";
+    gen_: _, "~ien";
+    par: derived, _;
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    ess: derived, _;
+    abe: derived, _;
+    possessive_nom_sg: derived, _, _, _, derived;
     possessive_nom_pl: "~Ani", "~Asi", "~Amme", "~Anne", "~AnsV";
-    possessive_gen_pl: _, derived, derived, derived, _;
+    possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_gen_pl: "~ieni", derived, derived, derived, "~iensA";
+    possessive_par_sg: _, _, _, _, derived;
+    possessive_ine_sg: _, _, _, _, derived;
+    possessive_ela_sg: _, _, _, _, derived;
+    possessive_ill_sg: _, _, _, _, derived;
+    possessive_ade_sg: _, _, _, _, derived;
+    possessive_abl_sg: _, _, _, _, derived;
+    possessive_all_sg: _, _, _, _, derived;
+    possessive_ess_sg: _, _, _, _, derived;
+    possessive_tra_sg: _, _, _, _, derived;
+    possessive_abe_sg: _, _, _, _, derived;
     ),
     // Vehje: 4 words (hylje, vehje, sulje, rahje). Like Koe, except in 24 cells: possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_pl _3, possessive_ine_sg _3, possessive_ine_pl _3, ….
     declension!("vehje", 4, "~j~", like Koe;
@@ -2741,45 +2742,38 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_pl: _, _, _, _, derived;
     possessive_com_pl: _, _, _, _, derived;
     ),
-    // Piennar: 4 words (manner, tanner, kinner, piennar).
-    declension!("piennar", 4, "~ˇ";
-    stem pl: "~- like piennar";
-    nom: "~ˇ|~eˇ", "~etˇ|~eetˇ";
-    gen_: "~enˇ|~eenˇ", _;
-    par: "~tAˇ|~ettaˇ", _;
-    ine: "~essAˇ|~eessaˇ", "~issAˇ|~eissaˇ";
-    ela: "~estAˇ|~eestaˇ", "~istAˇ|~eistaˇ";
-    ill: "~eeseenˇ", _;
-    ade: "~ellAˇ|~eellaˇ", "~illAˇ|~eillaˇ";
-    abl: "~eltAˇ|~eeltaˇ", "~iltAˇ|~eiltaˇ";
-    all: "~elleˇ|~eelleˇ", "~illeˇ|~eilleˇ";
-    ess: "~enAˇ|~eenaˇ", _;
-    tra: "~eksiˇ|~eeksiˇ", "~iksiˇ|~eiksiˇ";
-    abe: "~ettAˇ|~eettaˇ", "~ittAˇ|~eittaˇ";
-    ins: _, "~inˇ|~einˇ";
-    possessive_nom_sg: "~eniˇ", _, _, _, "~ensAˇ|~eensaˇ";
-    possessive_nom_pl: "~eeniˇ", "~eesiˇ", "~eemmeˇ", "~eenneˇ", _;
-    possessive_gen_sg: _, "~esiˇ", "~emmeˇ", "~enneˇ", _;
-    possessive_par_sg: _, _, _, _, "~tAVnˇ|~ettaanˇ|~tansaˇ|~ettansaˇ";
-    possessive_ine_sg: _, _, _, _, "~essAVnˇ|~eessaanˇ|~essansaˇ|~eessansaˇ";
-    possessive_ine_pl: "~eVssAniˇ|~issaniˇ|~eVssAniˇ", "~eVssAsiˇ|~issasiˇ|~eVssAsiˇ", "~eVssAmmeˇ|~issammeˇ|~eVssAmmeˇ", "~eVssAnneˇ|~issanneˇ|~eVssAnneˇ", "~issAVnˇ|~eissaanˇ|~issansaˇ|~eissansaˇ";
-    possessive_ela_sg: _, _, _, _, "~estAVnˇ|~eestaanˇ|~estansaˇ|~eestansaˇ";
-    possessive_ela_pl: "~eVstAniˇ|~istaniˇ|~eVstAniˇ", "~eVstAsiˇ|~istasiˇ|~eVstAsiˇ", "~eVstAmmeˇ|~istammeˇ|~eVstAmmeˇ", "~eVstAnneˇ|~istanneˇ|~eVstAnneˇ", "~istAVnˇ|~eistaanˇ|~istansaˇ|~eistansaˇ";
-    possessive_ill_sg: _, _, _, _, "~eeseensaˇ";
-    possessive_ade_sg: _, _, _, _, "~ellAVnˇ|~eellaanˇ|~ellansaˇ|~eellansaˇ";
-    possessive_ade_pl: "~eVllAniˇ|~illaniˇ|~eVllAniˇ", "~eVllAsiˇ|~illasiˇ|~eVllAsiˇ", "~eVllAmmeˇ|~illammeˇ|~eVllAmmeˇ", "~eVllAnneˇ|~illanneˇ|~eVllAnneˇ", "~illAVnˇ|~eillaanˇ|~illansaˇ|~eillansaˇ";
-    possessive_abl_sg: _, _, _, _, "~eltAVnˇ|~eeltaanˇ|~eltansaˇ|~eeltansaˇ";
-    possessive_abl_pl: "~eVltAniˇ|~iltaniˇ|~eVltAniˇ", "~eVltAsiˇ|~iltasiˇ|~eVltAsiˇ", "~eVltAmmeˇ|~iltammeˇ|~eVltAmmeˇ", "~eVltAnneˇ|~iltanneˇ|~eVltAnneˇ", "~iltAVnˇ|~eiltaanˇ|~iltansaˇ|~eiltansaˇ";
-    possessive_all_sg: _, _, _, _, "~elleenˇ|~eelleenˇ|~ellensaˇ|~eellensaˇ";
-    possessive_all_pl: "~eVlleniˇ|~illeniˇ|~eVlleniˇ", "~eVllesiˇ|~illesiˇ|~eVllesiˇ", "~eVllemmeˇ|~illemmeˇ|~eVllemmeˇ", "~eVllenneˇ|~illenneˇ|~eVllenneˇ", "~illeenˇ|~eilleenˇ|~illensaˇ|~eillensaˇ";
-    possessive_ess_sg: _, _, _, _, "~enAVnˇ|~eenaanˇ|~enansaˇ|~eenansaˇ";
-    possessive_tra_sg: _, _, _, _, "~ekseenˇ|~eekseenˇ|~eksensaˇ|~eeksensaˇ";
-    possessive_tra_pl: "~eVkseniˇ|~ikseniˇ|~eVkseniˇ", "~eVksesiˇ|~iksesiˇ|~eVksesiˇ", "~eVksemmeˇ|~iksemmeˇ|~eVksemmeˇ", "~eVksenneˇ|~iksenneˇ|~eVksenneˇ", "~ikseenˇ|~eikseenˇ|~iksensaˇ|~eiksensaˇ";
-    possessive_abe_sg: _, _, _, _, "~ettAVnˇ|~eettaanˇ|~ettansaˇ|~eettansaˇ";
-    possessive_abe_pl: "~eVttAniˇ|~ittaniˇ|~eVttAniˇ", "~eVttAsiˇ|~ittasiˇ|~eVttAsiˇ", "~eVttAmmeˇ|~ittammeˇ|~eVttAmmeˇ", "~eVttAnneˇ|~ittanneˇ|~eVttAnneˇ", "~ittAVnˇ|~eittaanˇ|~ittansaˇ|~eittansaˇ";
+    // Onki: 4 words (henki, onki, kanki, kiertokanki). Like Väki, except in 34 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ade sg, ….
+    declension!("onki", 4, "~ki", like Väki;
+    stem pl: "~ki- like osa";
+    nom: _, "~get";
+    ine: "~gessA", "~gissA";
+    ela: "~gestA", "~gistA";
+    ade: "~gellA", "~gillA";
+    abl: "~geltA", "~giltA";
+    all: _, "~gille";
+    abe: "~gettA", "~gittA";
+    possessive_par_sg: _, _, _, _, "~keAVn|~keansa";
+    possessive_ine_sg: _, _, _, _, "~gessAVn|~gessansa";
+    possessive_ine_pl: "~gissAni", _, _, _, "~gissAVn|~gissansa";
+    possessive_ela_sg: _, _, _, _, "~gestAVn|~gestansa";
+    possessive_ela_pl: "~gistAni", _, _, _, "~gistAVn|~gistansa";
+    possessive_ade_sg: _, _, _, _, "~gellAVn|~gellansa";
+    possessive_ade_pl: "~gillAni", _, _, _, "~gillAVn|~gillansa";
+    possessive_abl_sg: _, _, _, _, "~geltAVn|~geltansa";
+    possessive_abl_pl: "~giltAni", _, _, _, "~giltAVn|~giltansa";
+    possessive_all_sg: _, _, _, _, "~gelleen|~gellensa";
+    possessive_all_pl: "~gilleni", _, _, _, "~gilleen|~gillensa";
+    possessive_ess_sg: _, _, _, _, "~kenAVn|~kenansa";
+    possessive_tra_sg: _, _, _, _, "~gekseen|~geksensa";
+    possessive_tra_pl: _, _, _, _, "~gikseen|~giksensa";
+    possessive_abe_sg: _, _, _, _, "~gettAVn|~gettansa";
+    possessive_abe_pl: "~gittAni", _, _, _, "~gittAVn|~gittansa";
     ),
-    // Leipä: 3 words (syöpä, verisyöpä, sepä). Like Lupa, except in 42 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
-    declension!("leipä", 3, "~pä", like Lupa;
+    // Piennar: 4 words (manner, tanner, kinner, piennar). Like Askel with `ˇ` after each pattern.
+    declension!("piennar", 4, "~ˇ", like Askel with "ˇ";
+    ),
+    // Leipä: 3 words (syöpä, verisyöpä, sepä). Like Siipi, except in 40 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
+    declension!("leipä", 3, "~pä", like Siipi;
     stem sg: "~pä- like osa";
     stem pl: "~pi- like erä";
     nom: _, "~vät";
@@ -2803,10 +2797,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abl_sg: _, _, _, _, "~vältVVn|~vältänsä";
     possessive_abl_pl: "~viltäni", _, _, _, "~viltäVn|~viltänsä";
     possessive_all_sg: _, _, _, _, "~välleen|~vällensä";
-    possessive_all_pl: _, _, _, _, "~villeen|~villensä";
     possessive_ess_sg: _, _, _, _, "~pänVVn|~pänänsä";
     possessive_tra_sg: _, _, _, _, "~väkseen|~väksensä";
-    possessive_tra_pl: _, _, _, _, "~vikseen|~viksensä";
     possessive_abe_sg: _, _, _, _, "~vättVVn|~vättänsä";
     possessive_abe_pl: "~vittäni", _, _, _, "~vittäVn|~vittänsä";
     ),
@@ -2916,21 +2908,29 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_abe_pl: _, _, _, _, "~p~ittAVn|~p~ittänsä";
     possessive_com_pl: _, _, _, _, "~p~ineen|~p~inensä";
     ),
-    // Bokserit: 3 words (polttarit, kroaatit, bokserit). Like Värit, except in 21 cells: gen_ pl, par pl, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, ….
-    declension!("bokserit", 3, "~it", like Värit;
-    gen_: _, "~ien|~eiden|~eitten";
-    par: _, "~eitA|~eja";
-    possessive_gen_pl: "~ieni|~eideni|~eitteni", "~iesi|~eidesi|~eittesi", "~iemme|~eidemme|~eittemme", "~ienne|~eidenne|~eittenne", "~iensA|~eidensa|~eittensa";
-    possessive_par_pl: "~eitAni|~ejani", "~eitAsi|~ejasi", "~eitAmme|~ejamme", "~eitAnne|~ejanne", "~eitAVn|~ejaan|~eitansa|~ejansa";
-    possessive_ine_pl: _, _, _, _, "~eissAVn|~eissansa";
-    possessive_ela_pl: _, _, _, _, "~eistAVn|~eistansa";
-    possessive_ade_pl: _, _, _, _, "~eillAVn|~eillansa";
-    possessive_abl_pl: _, _, _, _, "~eiltAVn|~eiltansa";
-    possessive_all_pl: _, _, _, _, "~eilleen|~eillensa";
-    possessive_ess_pl: _, _, _, _, "~einAVn|~einansa";
-    possessive_tra_pl: _, _, _, _, "~eikseen|~eiksensa";
-    possessive_abe_pl: _, _, _, _, "~eittAVn|~eittansa";
-    possessive_com_pl: _, _, _, _, "~eineen|~einensa";
+    // Bokserit: 3 words (polttarit, kroaatit, bokserit). Like Kaanon with `` after each pattern (`it` after ~), except in 25 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("bokserit", 3, "~it", like Kaanon with "", "it" after "~";
+    par: derived, _;
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    ess: derived, _;
+    abe: derived, _;
+    possessive_nom_sg: derived, _, _, _, derived;
+    possessive_nom_pl: "~ini", _, _, _, "~insA";
+    possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_par_sg: _, _, _, _, derived;
+    possessive_ine_sg: _, _, _, _, derived;
+    possessive_ela_sg: _, _, _, _, derived;
+    possessive_ill_sg: _, _, _, _, derived;
+    possessive_ade_sg: _, _, _, _, derived;
+    possessive_abl_sg: _, _, _, _, derived;
+    possessive_all_sg: _, _, _, _, derived;
+    possessive_ess_sg: _, _, _, _, derived;
+    possessive_tra_sg: _, _, _, _, derived;
+    possessive_abe_sg: _, _, _, _, derived;
     ),
     // Opas: 3 words (opas, lipas, matkaopas). Like Hammas, except in 48 cells: nom pl, par pl, ine sg, ine pl, ela sg, ela pl, ….
     declension!("opas", 3, "~~s", like Hammas;
@@ -2978,10 +2978,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_ill_sg: _, _, _, _, "~p~eensa";
     possessive_ill_pl: "~p~iini", derived, derived, derived, "~p~iinsa";
     ),
-    // Markkinat: 3 words (kakkulat, talvikisat, markkinat). Like Nappula, except in 29 cells: nom sg, par sg, ine sg, ela sg, ill sg, ade sg, ….
-    declension!("markkinat", 3, "~at", like Nappula;
-    stem pl: "~oi- like puu";
-    nom: "~at", _;
+    // Markkinat: 3 words (kakkulat, talvikisat, markkinat). Like Nappula with `` after each pattern (`t` after a), except in 40 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    declension!("markkinat", 3, "~at", like Nappula with "", "t" after "a";
     par: derived, _;
     ine: derived, _;
     ela: derived, _;
@@ -2993,16 +2991,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_nom_sg: derived, _, _, _, derived;
     possessive_nom_pl: "~Ani", "~Asi", "~Amme", "~Anne", "~AnsV";
     possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_gen_pl: _, _, _, _, "~oidensA|~oittensa";
     possessive_par_sg: _, _, _, _, derived;
+    possessive_par_pl: _, _, _, _, "~oitAVn|~oitansa";
     possessive_ine_sg: _, _, _, _, derived;
+    possessive_ine_pl: _, _, _, _, "~oissAVn|~oissansa";
     possessive_ela_sg: _, _, _, _, derived;
+    possessive_ela_pl: _, _, _, _, "~oistAVn|~oistansa";
     possessive_ill_sg: _, _, _, _, derived;
+    possessive_ill_pl: "~oihini", _, _, _, _;
     possessive_ade_sg: _, _, _, _, derived;
+    possessive_ade_pl: _, _, _, _, "~oillAVn|~oillansa";
     possessive_abl_sg: _, _, _, _, derived;
+    possessive_abl_pl: _, _, _, _, "~oiltAVn|~oiltansa";
     possessive_all_sg: _, _, _, _, derived;
+    possessive_all_pl: _, _, _, _, "~oilleen|~oillensa";
     possessive_ess_sg: _, _, _, _, derived;
+    possessive_ess_pl: _, _, _, _, "~oinAVn|~oinansa";
     possessive_tra_sg: _, _, _, _, derived;
+    possessive_tra_pl: _, _, _, _, "~oikseen|~oiksensa";
     possessive_abe_sg: _, _, _, _, derived;
+    possessive_abe_pl: _, _, _, _, "~oittAVn|~oittansa";
+    possessive_com_pl: _, _, _, _, "~oineen|~oinensa";
     ),
     // Ahdin: 3 words (kudin, johdin, ahdin). Like Osoitin, except in 8 cells: gen_ pl, ill sg, possessive_gen_pl _1sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, ….
     declension!("ahdin", 3, "~d~n", like Osoitin;
@@ -3012,9 +3022,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 105] = [
     possessive_gen_pl: "~t~mVeni|~d~nteni", "~t~mVesi|~d~ntesi", "~t~mVemme|~d~ntemme", "~t~mVenne|~d~ntenne", "~t~mVensA|~d~ntensa";
     possessive_ill_sg: _, _, _, _, "~t~meensA";
     ),
-    // Valvojaiset: 3 words (karhunpeijaiset, arpajaiset, valvojaiset). Like Sakset, except in 0 cells: .
-    declension!("valvojaiset", 3, "~et", like Sakset;
-    stem pl: "~- like purkaminen";
+    // Valvojaiset: 3 words (karhunpeijaiset, arpajaiset, valvojaiset). Like Taso with `` after each pattern (`et` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("valvojaiset", 3, "~et", like Taso with "", "et" after "~";
+    nom: _, "~et";
+    gen_: _, "~ten|~ien";
+    par: derived, "~iA";
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, "~iin";
+    ade: derived, _;
+    abl: derived, _;
+    ess: derived, _;
+    abe: derived, _;
+    possessive_nom_sg: derived, _, _, _, derived;
+    possessive_nom_pl: "~eni", "~esi", "~emme", "~enne", "~ensA";
+    possessive_gen_sg: _, derived, derived, derived, _;
+    possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensA|~iensA";
+    possessive_par_sg: _, _, _, _, derived;
+    possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iansa";
+    possessive_ine_sg: _, _, _, _, derived;
+    possessive_ela_sg: _, _, _, _, derived;
+    possessive_ill_sg: _, _, _, _, derived;
+    possessive_ill_pl: "~iini", _, _, _, "~iinsA";
+    possessive_ade_sg: _, _, _, _, derived;
+    possessive_abl_sg: _, _, _, _, derived;
+    possessive_all_sg: _, _, _, _, derived;
+    possessive_ess_sg: _, _, _, _, derived;
+    possessive_tra_sg: _, _, _, _, derived;
+    possessive_abe_sg: _, _, _, _, derived;
     ),
     // Hässäkkä: 3 words (lehdykkä, hässäkkä, räpäkkä). Like Tekijä, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
     declension!("hässäkkä", 3, "~kä", like Tekijä;

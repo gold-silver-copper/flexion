@@ -47,7 +47,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 36] = [
+pub(super) static TABLES: [EndingTable<'static>; 35] = [
     // non_past like играть: 16,343 words.
     EndingTable {
         name: Cow::Borrowed("играть"),
@@ -76,10 +76,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "~яˇ\t",
         )),
     },
-    // non_past like тянуть: 789 words.
+    // non_past like тянуть: 786 words.
     EndingTable {
         name: Cow::Borrowed("тянуть"),
-        words: 789,
+        words: 786,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~у\t~ем\t",
@@ -90,10 +90,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "\t",
         )),
     },
-    // non_past like рвануть: 692 words.
+    // non_past like рвануть: 695 words.
     EndingTable {
         name: Cow::Borrowed("рвануть"),
-        words: 692,
+        words: 695,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~у\t~ём\t",
@@ -146,10 +146,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "~а\t",
         )),
     },
-    // non_past like засосать: 240 words.
+    // non_past like засосать: 243 words.
     EndingTable {
         name: Cow::Borrowed("засосать"),
-        words: 240,
+        words: 243,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~у\t~ём\t",
@@ -174,10 +174,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "\t",
         )),
     },
-    // non_past like пасть: 207 words.
+    // non_past like пасть: 215 words.
     EndingTable {
         name: Cow::Borrowed("пасть"),
-        words: 207,
+        words: 215,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~у\t~ём\t",
@@ -244,10 +244,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "\t",
         )),
     },
-    // non_past like обтечь: 59 words.
+    // non_past like обтечь: 60 words.
     EndingTable {
         name: Cow::Borrowed("обтечь"),
-        words: 59,
+        words: 60,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ку\t~чём\t",
@@ -342,20 +342,6 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "\t",
         )),
     },
-    // non_past like застлать: 14 words.
-    EndingTable {
-        name: Cow::Borrowed("застлать"),
-        words: 14,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ю\t~ем\t",
-            "~ешь\t~ете\t",
-            "~ет\t~ют\t",
-            "~и\t~ите\t",
-            "\t\t",
-            "\t",
-        )),
-    },
     // non_past like отослать: 12 words.
     EndingTable {
         name: Cow::Borrowed("отослать"),
@@ -384,10 +370,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "\t",
         )),
     },
-    // past like играть: 16,073 words.
+    // past like играть: 16,033 words.
     EndingTable {
         name: Cow::Borrowed("играть"),
-        words: 16073,
+        words: 16033,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~л\t~ла\t~ло\t~ли\t",
@@ -395,17 +381,17 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "~в|~вши\t",
         )),
     },
-    // past like раздуть: 2,735 words.
+    // past like раздуть: 2,738 words.
     EndingTable {
         name: Cow::Borrowed("раздуть"),
-        words: 2735,
+        words: 2738,
         slot: 2,
         table: Cow::Borrowed(concat!("~л\t~ла\t~ло\t~ли\t", "~вший\t~тый\t", "~в|~вши\t",)),
     },
-    // past like ударить: 2,727 words.
+    // past like ударить: 2,737 words.
     EndingTable {
         name: Cow::Borrowed("ударить"),
-        words: 2727,
+        words: 2737,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ил\t~ила\t~ило\t~или\t",
@@ -424,10 +410,10 @@ pub(super) static TABLES: [EndingTable<'static>; 36] = [
             "~вшись\t",
         )),
     },
-    // past like прошипеть: 402 words.
+    // past like прошипеть: 399 words.
     EndingTable {
         name: Cow::Borrowed("прошипеть"),
-        words: 402,
+        words: 399,
         slot: 2,
         table: Cow::Borrowed(concat!("~л\t~ла\t~ло\t~ли\t", "~вший\t\t", "~в|~вши\t",)),
     },

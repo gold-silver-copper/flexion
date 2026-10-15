@@ -20,7 +20,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
     },
     Slot {
         name: Cow::Borrowed("noun_nom_du"),
-        cells: Cow::Borrowed(&[NOM_DU, NOM_PL, ACC_SG, ACC_DU, VOC_PL]),
+        cells: Cow::Borrowed(&[NOM_DU, NOM_PL, ACC_SG, ACC_DU, VOC_DU, VOC_PL]),
     },
     Slot {
         name: Cow::Borrowed("noun_acc_pl"),
@@ -177,7 +177,7 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
         name: Cow::Borrowed("योग"),
         words: 2091,
         slot: 1,
-        table: Cow::Borrowed(concat!("~ौ\t~ाः\t", "~म\u{94d}\t~ौ\t", "~ाः\t",)),
+        table: Cow::Borrowed(concat!("~ौ\t~ाः\t", "~म\u{94d}\t~ौ\t", "~ौ\t~ाः\t",)),
     },
     // noun_nom_du like साधन: 1,093 words.
     EndingTable {
@@ -187,7 +187,7 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
         table: Cow::Borrowed(concat!(
             "~\u{947}\t~ानि\t",
             "~म\u{94d}\t~\u{947}\t",
-            "~ानि\t",
+            "~\u{947}\t~ानि\t",
         )),
     },
     // noun_nom_du like कला: 507 words.
@@ -198,7 +198,7 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
         table: Cow::Borrowed(concat!(
             "~\u{947}\t~ाः\t",
             "~ाम\u{94d}\t~\u{947}\t",
-            "~ाः\t",
+            "~\u{947}\t~ाः\t",
         )),
     },
     // noun_nom_du like गति: 396 words.
@@ -206,14 +206,14 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
         name: Cow::Borrowed("गति"),
         words: 396,
         slot: 1,
-        table: Cow::Borrowed(concat!("~ी\t~यः\t", "~िम\u{94d}\t~ी\t", "~यः\t",)),
+        table: Cow::Borrowed(concat!("~ी\t~यः\t", "~िम\u{94d}\t~ी\t", "~ी\t~यः\t",)),
     },
-    // noun_nom_du like दातृ: 325 words.
+    // noun_nom_du like दातृ: 327 words.
     EndingTable {
         name: Cow::Borrowed("दात\u{943}"),
-        words: 325,
+        words: 327,
         slot: 1,
-        table: Cow::Borrowed(concat!("~ौ\t~ः\t", "~म\u{94d}\t~ौ\t", "~ः\t",)),
+        table: Cow::Borrowed(concat!("~ौ\t~ः\t", "~म\u{94d}\t~ौ\t", "~ौ\t~ः\t",)),
     },
     // noun_acc_pl like योग: 2,091 words.
     EndingTable {
@@ -257,10 +257,10 @@ pub(super) static TABLES: [EndingTable<'static>; 19] = [
             "~ायाम\u{94d}\t~योः\t",
         )),
     },
-    // noun_acc_pl like स्वामिन्: 181 words.
+    // noun_acc_pl like स्वामिन्: 183 words.
     EndingTable {
         name: Cow::Borrowed("स\u{94d}वामिन\u{94d}"),
-        words: 181,
+        words: 183,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ः\t",

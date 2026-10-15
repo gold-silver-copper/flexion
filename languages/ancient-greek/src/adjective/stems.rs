@@ -11,17 +11,16 @@ use flexion::{EndingTable, Slot};
 use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
-pub(super) static SLOTS: [Slot<'static>; 4] = [
+pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
         name: Cow::Borrowed("adjective_sg"),
-        cells: Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, ACC_N_SG, VOC_N_SG]),
+        cells: Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, ACC_M_SG, ACC_N_SG, VOC_M_SG, VOC_N_SG]),
     },
     Slot {
         name: Cow::Borrowed("adjective"),
         cells: Cow::Borrowed(&[
             NOM_M_DU,
             NOM_M_PL,
-            NOM_F_PL,
             NOM_N_DU,
             NOM_N_PL,
             GEN_M_SG,
@@ -34,158 +33,72 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
             DAT_M_DU,
             DAT_N_SG,
             DAT_N_DU,
-            ACC_M_SG,
             ACC_M_DU,
             ACC_M_PL,
             ACC_N_DU,
             ACC_N_PL,
             VOC_M_DU,
             VOC_M_PL,
-            VOC_F_PL,
             VOC_N_DU,
             VOC_N_PL,
+            COMPARATIVE,
             SUPERLATIVE,
             ADVERB,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_f_sg"),
-        cells: Cow::Borrowed(&[
-            NOM_F_SG, DAT_M_PL, DAT_F_PL, DAT_N_PL, ACC_F_SG, VOC_M_SG, VOC_F_SG,
-        ]),
-    },
-    Slot {
         name: Cow::Borrowed("adjective_f"),
         cells: Cow::Borrowed(&[
-            NOM_F_DU,
-            GEN_F_SG,
-            GEN_F_DU,
-            GEN_F_PL,
-            DAT_F_SG,
-            DAT_F_DU,
-            ACC_F_DU,
-            ACC_F_PL,
-            VOC_F_DU,
-            COMPARATIVE,
+            NOM_F_SG, NOM_F_DU, NOM_F_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, DAT_M_PL, DAT_F_SG,
+            DAT_F_DU, DAT_F_PL, DAT_N_PL, ACC_F_SG, ACC_F_DU, ACC_F_PL, VOC_F_SG, VOC_F_DU,
+            VOC_F_PL,
         ]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 8] = [
-    // adjective_sg like ἐμπεδος: 3,486 words.
-    EndingTable {
-        name: Cow::Borrowed("ἐμπεδος"),
-        words: 3486,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~ς\t", "~ν\t", "~ν\t", "~ν\t",)),
-    },
-    // adjective_sg like προσηκων: 329 words.
-    EndingTable {
-        name: Cow::Borrowed("προσηκων"),
-        words: 329,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~ων\t", "~ον\t", "~ον\t", "~ον\t",)),
-    },
-    // adjective like μᾰλᾰκος: 719 words.
+pub(super) static TABLES: [EndingTable<'static>; 3] = [
+    // adjective_sg like μᾰλᾰκος: 3,458 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
-        words: 719,
+        words: 3458,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~ος\t", "~ον\t", "~ον\t", "~ον\t", "~ε\t", "~ον\t",)),
+    },
+    // adjective like μᾰλᾰκος: 2,852 words.
+    EndingTable {
+        name: Cow::Borrowed("μᾰλᾰκος"),
+        words: 2852,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ω\t~οι\t",
-            "~αι\t",
             "~ω\t~ᾰ\t",
-            "~οῡ\t~οῑν\t~ων\t",
-            "~οῡ\t~οῑν\t~ων\t",
-            "~ῳ\t~οῑν\t",
-            "~ῳ\t~οῑν\t",
-            "~ον\t~ω\t~ους\t",
+            "~ου\t~οιν\t~ων\t",
+            "~ου\t~οιν\t~ων\t",
+            "~ῳ\t~οιν\t",
+            "~ῳ\t~οιν\t",
+            "~ω\t~ους\t",
             "~ω\t~ᾰ\t",
             "~ω\t~οι\t",
-            "~αι\t",
             "~ω\t~ᾰ\t",
+            "~ωτερος\t",
             "~ωτᾰτος\t",
             "~ως\t",
         )),
     },
-    // adjective like ὁμηλῐξ: 45 words.
-    EndingTable {
-        name: Cow::Borrowed("ὁμηλῐξ"),
-        words: 45,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ε\t~ες\t",
-            "~ες\t",
-            "~ε\t~ᾰ\t",
-            "~ος\t~οιν\t~ων\t",
-            "~ος\t~οιν\t~ων\t",
-            "~ῐ\t~οιν\t",
-            "~ῐ\t~οιν\t",
-            "~ᾰ\t~ε\t~ᾰς\t",
-            "~ε\t~ᾰ\t",
-            "~ε\t~ες\t",
-            "~ες\t",
-            "~ε\t~ᾰ\t",
-            "\t",
-            "~ως\t",
-        )),
-    },
-    // adjective_f_sg like ἀτελης: 286 words.
-    EndingTable {
-        name: Cow::Borrowed("ἀτελης"),
-        words: 286,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~ης\t",
-            "~εσῐ|~εσῐν\t",
-            "~εσῐ|~εσῐν\t",
-            "~εσῐ|~εσῐν\t",
-            "~η\t",
-            "~ες\t",
-            "~ες\t",
-        )),
-    },
-    // adjective_f like μᾰλᾰκος: 688 words.
+    // adjective_f like μᾰλᾰκος: 1,753 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
-        words: 688,
-        slot: 3,
+        words: 1753,
+        slot: 2,
         table: Cow::Borrowed(concat!(
-            "~ᾱ\t",
-            "~ης\t~αῑν\t~ων\t",
-            "~ῃ\t~αῑν\t",
-            "~ᾱ\t~ᾱς\t",
-            "~ᾱ\t",
-            "~ωτερος\t",
-        )),
-    },
-    // adjective_f like ὁμηλῐξ: 55 words.
-    EndingTable {
-        name: Cow::Borrowed("ὁμηλῐξ"),
-        words: 55,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~ε\t",
-            "~ος\t~οιν\t~ων\t",
-            "~ῐ\t~οιν\t",
-            "~ε\t~ᾰς\t",
-            "~ε\t",
-            "\t",
-        )),
-    },
-    // adjective_f like ἡσσων: 20 words.
-    EndingTable {
-        name: Cow::Borrowed("ἡσσων"),
-        words: 20,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~νε\t",
-            "~νος\t~νοιν\t~νων\t",
-            "~νῐ\t~νοιν\t",
-            "~νε\t~νᾰς|~υς\t",
-            "~νε\t",
-            "\t",
+            "~η\t~ᾱ\t~αι\t",
+            "~ης\t~αιν\t~ων\t",
+            "~οις\t",
+            "~ῃ\t~αιν\t~αις\t",
+            "~οις\t",
+            "~ην\t~ᾱ\t~ᾱς\t",
+            "~η\t~ᾱ\t~αι\t",
         )),
     },
 ];

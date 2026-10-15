@@ -21,7 +21,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `verb` (inf, _3sg, past, prp, pp)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem verb: $s0:tt;)?
      $(stem verb_past: $s1:tt;)?
      $(stem verb_prp: $s2:tt;)?
@@ -46,6 +46,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -68,6 +69,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -452,7 +471,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     stem verb: "~y- like settle";
     verb: _, _, "~id", _, _;
     ),
-    // Wear: 28 words (abear, tear, swear, wear, forswear, foreswear). Like Break, except in 0 cells: .
+    // Wear: 28 words (abear, tear, swear, wear, forswear, foreswear). Like Break.
     conjugation!("wear", 28, "~ea~", like Break;
     stem verb_past: "~o~- like wear";
     ),
@@ -555,8 +574,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     stem verb: "~o- like pass";
     verb: _, _, "~iT", "~oing", "~one";
     ),
-    // Slide: 13 words (slide, chide, landslide, rede, betide, slite). Like Settle, except in 1 cell: verb past.
-    conjugation!("slide", 13, "~e", like Settle;
+    // Slide: 13 words (slide, chide, landslide, rede, betide, slite). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
+    conjugation!("slide", 13, "~e", like Pass with "", "e" after "~";
     verb: _, _, "~", _, _;
     ),
     // Weave: 12 words (weave, interweave, reweave, forcleave, unweave, tocleave).
@@ -670,7 +689,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("wake", 6, "~a~e", like Take;
     verb: _, _, "~o~e|~a~ed", _, "~o~en|~a~ed";
     ),
-    // Choose: 6 words (choose, forechoose, rechoose, mischoose, unchoose, prechoose). Like Become, except in 0 cells: .
+    // Choose: 6 words (choose, forechoose, rechoose, mischoose, unchoose, prechoose). Like Become.
     conjugation!("choose", 6, "~o~e", like Become;
     stem verb_past: "~~e- like break";
     ),
@@ -682,8 +701,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("larn", 6, "~", like Burn;
     verb: _, _, _, "~in", _;
     ),
-    // Lose: 5 words (lose, kape, beclepe, unlose, relose). Like Settle, except in 1 cell: verb past.
-    conjugation!("lose", 5, "~e", like Settle;
+    // Lose: 5 words (lose, kape, beclepe, unlose, relose). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
+    conjugation!("lose", 5, "~e", like Pass with "", "e" after "~";
     verb: _, _, "~t", _, _;
     ),
     // Flee: 5 words (flee, shoe, beflee, outflee, arede). Like Settle, except in 2 cells: verb past, verb prp.

@@ -70,7 +70,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ow+ą")]),
     },
-    // ow → uj after [b|c|d|f|g|h|i|j|k|l|m|n|p|r|s|t|u|w|z|ł|ż]; n → ń after [a|e|i|o|t|y]; t → cz after [o|p|ą]; k → cz after [a|u] in alternating stems (ˇ), before +$, +[c|m|ę]: 2,723 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
+    // ow → uj after [b|c|d|f|g|h|i|j|k|l|m|n|p|r|s|t|u|w|z|ł|ż]; n → ń after [a|e|i|o|t|y]; iw → uj after [g|h|k]; t → cz after [o|p|ą]; k → cz after [a|u] in alternating stems (ˇ), before +$, +[c|m|ę]: 2,723 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {
@@ -111,7 +111,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("ow"), B("k"), B("n"), B("t")])),
+                matcher: Matcher::Class(B(&[B("iw"), B("ow"), B("k"), B("n"), B("t")])),
                 quantifier: Quantifier::One,
                 capture: Some(1),
             }]),
@@ -169,6 +169,32 @@ const RULES: &[CompiledRule<'static>] = &[
             capture: 1,
             key: 0,
             entries: B(&[
+                (B("iw"), B("a"), B("iw")),
+                (B("iw"), B("b"), B("iw")),
+                (B("iw"), B("c"), B("iw")),
+                (B("iw"), B("d"), B("iw")),
+                (B("iw"), B("e"), B("iw")),
+                (B("iw"), B("f"), B("iw")),
+                (B("iw"), B("g"), B("uj¦")),
+                (B("iw"), B("h"), B("uj¦")),
+                (B("iw"), B("i"), B("iw")),
+                (B("iw"), B("j"), B("iw")),
+                (B("iw"), B("k"), B("uj¦")),
+                (B("iw"), B("l"), B("iw")),
+                (B("iw"), B("m"), B("iw")),
+                (B("iw"), B("n"), B("iw")),
+                (B("iw"), B("o"), B("iw")),
+                (B("iw"), B("p"), B("iw")),
+                (B("iw"), B("r"), B("iw")),
+                (B("iw"), B("s"), B("iw")),
+                (B("iw"), B("t"), B("iw")),
+                (B("iw"), B("u"), B("iw")),
+                (B("iw"), B("w"), B("iw")),
+                (B("iw"), B("y"), B("iw")),
+                (B("iw"), B("z"), B("iw")),
+                (B("iw"), B("ą"), B("iw")),
+                (B("iw"), B("ł"), B("iw")),
+                (B("iw"), B("ż"), B("iw")),
                 (B("k"), B("a"), B("cz¦")),
                 (B("k"), B("b"), B("k")),
                 (B("k"), B("c"), B("k")),
@@ -470,7 +496,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("l+ie")]),
     },
-    // o → ó after [d|g|k|m|n|p|r|s|w|ł]; ę → ą after [i|l] in alternating stems (ˇ), before +[^a|e|i|o|u|y|ó|ą|ę]$, +[^a|e|i|o|u|y|ó|ą|ę][c|m], +[^a|e|i|o|u|y|ó|ą|ę]ł$, +[^a|e|i|o|u|y|ó|ą|ę]ł.[y|z], [^a|e|i|o|u|y|ó|ą|ę]+$, [^a|e|i|o|u|y|ó|ą|ę]+c..$, [^a|e|i|o|u|y|ó|ą|ę]+m, [^a|e|i|o|u|y|ó|ą|ę]+ł$, [^a|e|i|o|u|y|ó|ą|ę]+ł.[y|z], [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+$, [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+.i[a|e|i|o|u|y|ó|ą|ę], [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+.y: 152 words (robić, poić, doić, zrobić), 0 forms wrong.
+    // o → ó after [d|g|k|m|n|p|r|s|w|ł]; ę → ą after [i|l] in alternating stems (ˇ), before +[^a|e|i|o|u|y|ó|ą|ę]$, +[^a|e|i|o|u|y|ó|ą|ę][c|m], +[^a|e|i|o|u|y|ó|ą|ę]ł$, +[^a|e|i|o|u|y|ó|ą|ę]ł.[y|z], [^a|e|i|o|u|y|ó|ą|ę]+$, [^a|e|i|o|u|y|ó|ą|ę]+c..$, [^a|e|i|o|u|y|ó|ą|ę]+m, [^a|e|i|o|u|y|ó|ą|ę]+ł$, [^a|e|i|o|u|y|ó|ą|ę]+ł.[y|z], [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+$, [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+.i[a|e|i|o|u|y|ó|ą|ę], [^a|e|i|o|u|y|ó|ą|ę][^a|e|i|o|u|y|ó|ą|ę]+.y: 153 words (robić, poić, doić, zrobić), 0 forms wrong.
     CompiledRule {
         name: B("law9"),
         left: Pattern {
@@ -1359,9 +1385,132 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("pi+n")]),
     },
-    // t+z → +cz: 88 words (szeptać, bełkotać, chłeptać, mamrotać), 0 forms wrong.
+    // z → ż after [a|i|o|ą|ę] in alternating stems (ˇ), before +$, +c..$, +[e|m|o|ą|ę]: 47 words (lizać, obrazić, grozić, wiązać), 0 forms wrong.
     CompiledRule {
         name: B("law12"),
+        left: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[B("ą"), B("ę"), B("a"), B("i"), B("o")])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("z")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Either(B(&[
+                    Pattern {
+                        atoms: B(&[Atom {
+                            matcher: Matcher::Literal(B("+ˇ")),
+                            quantifier: Quantifier::One,
+                            capture: None,
+                        }]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[B("c")])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[
+                                    B("‹"),
+                                    B("ˇ"),
+                                    B("¦"),
+                                    B("°"),
+                                    B("+"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                    Pattern {
+                        atoms: B(&[
+                            Atom {
+                                matcher: Matcher::Literal(B("+")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Class(B(&[
+                                    B("ą"),
+                                    B("ę"),
+                                    B("e"),
+                                    B("m"),
+                                    B("o"),
+                                ])),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::NotClass(B(&[B("ˇ")])),
+                                quantifier: Quantifier::ZeroOrMore,
+                                capture: None,
+                            },
+                            Atom {
+                                matcher: Matcher::Literal(B("ˇ")),
+                                quantifier: Quantifier::One,
+                                capture: None,
+                            },
+                        ]),
+                        anchored_at_start: false,
+                        anchored_at_end: true,
+                    },
+                ])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ż¦"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("z")]),
+    },
+    // t+z → +cz: 88 words (szeptać, bełkotać, chłeptać, mamrotać), 0 forms wrong.
+    CompiledRule {
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1391,7 +1540,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [o|a|e|p]+on → +jon: 11 words (czaić, przyzwyczaić, obczaić, raić), 0 forms wrong.
     CompiledRule {
-        name: B("law13"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1431,7 +1580,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // i+y → i+: 5 words (rozbrzmieć, zagrzmieć, zabrzmieć, nabrzmieć), 0 forms wrong.
     CompiledRule {
-        name: B("law14"),
+        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1461,7 +1610,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [s|r]+ej → +z: 40 words (napisać, podpisać, zaorać, przepisać), 11 forms wrong.
     CompiledRule {
-        name: B("law15"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1501,7 +1650,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // s+c → s+zc: 5 words (świstać, chłostać, chlastać, zaświstać), 0 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law17"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1529,9 +1678,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("s+c")]),
     },
-    // e → a after [i|l] in alternating stems (ˇ), before +n.$, +ł, [^a|e|i|o|u|y|ó|ą|ę]+ł: 10 words (rozumieć, mieć, umieć, dnieć), 0 forms wrong.
+    // e → a after [i|l] in alternating stems (ˇ), before +ł, [^a|e|i|o|u|y|ó|ą|ę]+ł: 7 words (dnieć, blednąć, odechcieć, zachcieć), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law18"),
         left: Pattern {
             atoms: B(&[Atom {
                 matcher: Matcher::Class(B(&[B("i"), B("l")])),
@@ -1553,38 +1702,6 @@ const RULES: &[CompiledRule<'static>] = &[
         right: Pattern {
             atoms: B(&[Atom {
                 matcher: Matcher::Either(B(&[
-                    Pattern {
-                        atoms: B(&[
-                            Atom {
-                                matcher: Matcher::Literal(B("+")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Class(B(&[B("n")])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("ˇ")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                        ]),
-                        anchored_at_start: false,
-                        anchored_at_end: true,
-                    },
                     Pattern {
                         atoms: B(&[
                             Atom {
@@ -1674,7 +1791,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // j+i → j+: 12 words (łajać, tajać, krajać, złajać), 0 forms wrong.
     CompiledRule {
-        name: B("law18"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1704,7 +1821,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // un+ij → u+ń: 21 words (usunąć, sunąć, splunąć, runąć), 3 forms wrong.
     CompiledRule {
-        name: B("law19"),
+        name: B("law20"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1734,7 +1851,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ai+j → a+j: 11 words (czaić, przyzwyczaić, obczaić, raić), 0 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law21"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1764,7 +1881,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ai+ą → a+ją: 11 words (czaić, przyzwyczaić, obczaić, raić), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law22"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1794,7 +1911,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // k+z → +cz: 15 words (płakać, gdakać, skakać, krakać), 0 forms wrong.
     CompiledRule {
-        name: B("law22"),
+        name: B("law23"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1824,7 +1941,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // zy+n → zy+t: 12 words (przyszyć, uszyć, doszyć, naszyć), 0 forms wrong.
     CompiledRule {
-        name: B("law23"),
+        name: B("law24"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1854,7 +1971,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // źd+ż → +żdż: 13 words (jeździć, ujeździć, gnieździć, zagnieździć), 0 forms wrong.
     CompiledRule {
-        name: B("law24"),
+        name: B("law25"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1884,7 +2001,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ąz+ej → ą+ż: 12 words (rozwiązać, nawiązać, zobowiązać, powiązać), 0 forms wrong.
     CompiledRule {
-        name: B("law25"),
+        name: B("law26"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1914,7 +2031,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // c+n → +tn: 9 words (przeciąć, naciąć, wyciąć, pociąć), 0 forms wrong.
     CompiledRule {
-        name: B("law26"),
+        name: B("law27"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1944,7 +2061,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [i|z|l]+z → +ej: 7 words (piać, śmiać, siać, wiać), 0 forms wrong.
     CompiledRule {
-        name: B("law27"),
+        name: B("law28"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1984,7 +2101,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // iz+ej → i+ż: 8 words (podlizać, nanizać, polizać, wylizać), 0 forms wrong.
     CompiledRule {
-        name: B("law28"),
+        name: B("law29"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -2014,7 +2131,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ss+z → ss+: 7 words (ssać, wyssać, wessać, przyssać), 0 forms wrong.
     CompiledRule {
-        name: B("law29"),
+        name: B("law30"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -2044,7 +2161,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // [d|z|w|b]+t → +et: 6 words (odciąć, rozciąć, wciąć, obciąć), 0 forms wrong.
     CompiledRule {
-        name: B("law30"),
+        name: B("law31"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -2084,7 +2201,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // y+cz → y+ż: 5 words (strzyc, ostrzyc, podstrzyc, przystrzyc), 0 forms wrong.
     CompiledRule {
-        name: B("law31"),
+        name: B("law32"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -2114,7 +2231,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // y+k → y+g: 5 words (strzyc, ostrzyc, podstrzyc, przystrzyc), 0 forms wrong.
     CompiledRule {
-        name: B("law32"),
+        name: B("law33"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -2141,40 +2258,6 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("y+k")]),
-    },
-    // ni+j → +ń after [a|e|i|o|u|y]: 46 words (dzwonić, winić, chronić, cenić), 0 forms wrong.
-    CompiledRule {
-        name: B("law33"),
-        left: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("a"), B("e"), B("i"), B("o"), B("u"), B("y")])),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ni+j")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("+ń"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ni+j")]),
     },
 ];
 

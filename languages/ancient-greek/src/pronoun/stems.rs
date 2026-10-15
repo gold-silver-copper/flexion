@@ -11,39 +11,30 @@ use flexion::{EndingTable, Slot};
 use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
-pub(super) static SLOTS: [Slot<'static>; 4] = [
+pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
-        name: Cow::Borrowed("pronoun_m_sg"),
+        name: Cow::Borrowed("pronoun_sg"),
         cells: Cow::Borrowed(&[
-            NOM_M_SG, NOM_N_SG, ACC_M_SG, ACC_N_SG, VOC_M_SG, VOC_M_PL, VOC_N_SG,
+            NOM_M_SG, NOM_F_SG, NOM_N_SG, GEN_M_SG, GEN_F_SG, GEN_N_SG, ACC_M_SG, ACC_F_SG,
+            ACC_N_SG, VOC_F_SG,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_du"),
+        name: Cow::Borrowed("pronoun"),
         cells: Cow::Borrowed(&[
-            NOM_M_DU, NOM_F_DU, NOM_N_DU, GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU,
-            GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL, DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_DU,
-            DAT_N_SG, DAT_N_DU, DAT_N_PL, ACC_M_DU, ACC_M_PL, ACC_F_DU, ACC_F_PL, ACC_N_DU,
-            VOC_M_DU, VOC_F_DU, VOC_N_DU,
+            NOM_M_DU, NOM_F_DU, NOM_N_DU, DAT_M_SG, DAT_M_PL, DAT_F_SG, DAT_F_PL, DAT_N_SG,
+            DAT_N_PL, ACC_M_DU, ACC_F_DU, ACC_N_DU, VOC_M_SG, VOC_M_DU, VOC_M_PL, VOC_F_DU,
+            VOC_F_PL, VOC_N_SG, VOC_N_DU,
         ]),
     },
     Slot {
         name: Cow::Borrowed("pronoun_pl"),
-        cells: Cow::Borrowed(&[NOM_M_PL, NOM_F_PL, NOM_N_PL, ACC_N_PL, VOC_F_PL, VOC_N_PL]),
-    },
-    Slot {
-        name: Cow::Borrowed("pronoun_f_sg"),
-        cells: Cow::Borrowed(&[NOM_F_SG, DAT_F_SG, DAT_F_PL, ACC_F_SG, VOC_F_SG]),
+        cells: Cow::Borrowed(&[
+            NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_DU, GEN_M_PL, GEN_F_DU, GEN_F_PL, GEN_N_DU,
+            GEN_N_PL, DAT_M_DU, DAT_F_DU, DAT_N_DU, ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_N_PL,
+        ]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // pronoun_f_sg like οἱος: 11 words.
-    EndingTable {
-        name: Cow::Borrowed("οἱος"),
-        words: 11,
-        slot: 3,
-        table: Cow::Borrowed(concat!("~ᾱ\t", "~ᾳ\t~αις\t", "~ᾱν\t", "\t",)),
-    },
-];
+pub(super) static TABLES: [EndingTable<'static>; 0] = [];

@@ -6,6 +6,7 @@
 pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 pub mod adjective;
+mod marks;
 pub mod noun;
 pub mod numeral;
 mod orthography;

@@ -31,6 +31,7 @@ grammar needs of:
   of the dictionary's words with that ending follow each paradigm, and the words no
   rule gets right, listed;
 - `compounds.rs`: whether a word written in parts inflects each part;
+- `heads.rs`: the words a word ending in one inflects as, its front kept (compounds);
 - `spellings.rs`: the words whose spelling their typed form doesn't show;
 - `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the
   words that put different stems in different cells) and the ending tables paradigms
@@ -46,8 +47,8 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 126530 | 105 | 21 | 4408 | 6691 | 9860 |
-| adjective | 17353 | 81 | 10 | 606 | 1032 | 646 |
+| noun | 126530 | 104 | 22 | 4424 | 6220 | 9415 |
+| adjective | 17353 | 83 | 12 | 610 | 691 | 631 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -61,7 +62,9 @@ learned from the other nine tenths, and asked for every form the dictionary list
 each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
 right; *top-3*: the right answer is among its first three. *Calibration error*: how far
 its stated probabilities are, on average, from how often it is right (0 is perfect).
-The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
+The lemma's own form isn't scored where it is the letters typed (it is the input); where
+it isn't (vowel length the headword doesn't write) it is scored, and also apart (*lemma
+spelling*). After top-1, its 95% interval, resampling words. *Lemma in full*: top-1 typed
 with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
 *Principal parts given*: top-1 of the other forms, given the dictionary's principal
 parts. *Features given*: top-1 from the headword, told the word's inherent features
@@ -73,18 +76,25 @@ forms, typed in full, given that many of the word's forms chosen at random.
 *Seen* and *unseen cells*: top-1 on the cells some training word of the word's
 paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
-shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
-grammar on the dictionary's own words, typed in full.
+shared task's non-neural baseline (letters only), and on the unseen cells. *Against the
+floor*: the grammar's letters right less the floor's, on the same forms, with its 95%
+interval (resampling words). *Any listed form*: top-1 where any of the forms the
+dictionary lists in the cell counts. *Homograph ceiling*: the most any grammar could get
+right, words typed alike getting one answer per cell. *On a training word / new root*:
+top-1 of the held-out words that are a training word with a prefix or a compound's front
+before it, and of the rest. *Attested*: top-1 of the shipped grammar on the dictionary's
+own words, typed in full. The held-out tenth was looked at while the trainer was being
+developed (changes are judged on another tenth since PR #16).
 
-| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 12869 | 1912608 | **97.75%** ± 0.3 | 98.91% | 98.92% | 94.79% | 0.008 | 0.931 | 97.75% |  | 98.69 / 98.74 / 98.84 |  | 97.76% (1912316) | 57.88% (292) | 98.30% (98.97%) | 99.99% |
-| adjective | 1721 | 46116 | **97.64%** ± 0.7 | 99.38% | 99.38% | 94.77% | 0.010 | 0.472 | 97.64% |  | 98.77 / 98.84 / 99.03 |  | 97.64% (46113) | 33.33% (3) | 97.51% (66.67%) | 100.00% |
+| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 12869 | 1899864 | **97.89%** (97.7–98.1) | 99.15% | 99.16% | 95.07% | 0.009 | 0.739 | 97.89% | 99.22% | 98.80 / 98.84 / 98.97 |  | 97.90% (1899576) | 57.29% (288) | 98.29% (98.96%) | -0.40 (-0.60…-0.21) | 98.05% | 99.98% | 98.73% / 96.22% |  | 100.00% |
+| adjective | 1721 | 44395 | **97.45%** (96.9–98.0) | 99.33% | 99.33% | 94.71% | 0.010 | 0.499 | 97.45% |  | 98.64 / 98.70 / 98.87 |  | 97.45% (44392) | 33.33% (3) | 97.41% (66.67%) | +0.04 (-0.62…+0.72) | 97.52% | 100.00% | 99.15% / 96.40% |  | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 25191 | 1140127 |
-| adjective | 9011 | 349101 |
+| noun | 24849 | 1118440 |
+| adjective | 8594 | 337982 |
 
 ## Data and license
 

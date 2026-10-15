@@ -79,7 +79,7 @@ use flexion::Paradigm;
 /// `participle_fut` (act, mid)
 /// `participle_perf` (act, mid)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem present_ind_act_1_sg: $s0:tt;)?
      $(stem present_act: $s1:tt;)?
      $(stem present_2: $s2:tt;)?
@@ -339,6 +339,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s7),)? "\t",
                 $(flexion::cell!($s8),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -361,6 +362,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -733,31 +752,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     conjugation!("रमते", 41, "~ते", like लभते;
     participle_pres: _, "~माण";
     ),
-    // एषयति: 36 words (करिष्यति, गमिष्यति, पास्यति, भविष्यति, तप्स्यति, भरिष्यति). Like आनाश, except in 13 cells: ind_act_3 sg, future_act_1 sg, future_act_1 pl, conditional_mid_1 sg, conditional_mid_3 sg, perfect_act_1 sg, ….
-    conjugation!("एष्यति", 36, "~ति", like आनाश;
-    ind_act_3: "~ति", _, _;
+    // एषयति: 36 words (करिष्यति, गमिष्यति, पास्यति, भविष्यति, तप्स्यति, भरिष्यति). Like अमत with `ि` after each pattern, except in 11 cells: future_act_1 sg, future_act_1 pl, conditional_mid_1 sg, conditional_mid_3 sg, aorist_mid_1 sg, aorist_mid_1 du, ….
+    conjugation!("एष्यति", 36, "~ति", like अमत with "ि";
     future_act_1: "~ामि", _, "~ामः|~ामसि";
     conditional_mid_1: "अ~े", _, _;
     conditional_mid_3: "अ~त", _, _;
-    perfect_act_1: derived, derived, _;
-    perfect_act_2: derived, derived, _;
-    perfect_act_3: derived, _, _;
-    perfect_mid_1: derived, derived, _;
-    participle_perf: derived, _;
+    aorist_mid_1: derived, derived, _;
+    aorist_mid_2: derived, derived, derived;
+    aorist_mid_3: derived, _, derived;
     ),
     // ईरयति: 27 words (बर्हयति, धारयति, रोपयति, कारयति, शोषयति, चोरयति). Like साधयति, except in 1 cell: participle_pres mid.
     conjugation!("ईरयति", 27, "~ति", like साधयति;
     participle_pres: _, "~माA|~ाण";
     ),
-    // आपत: 22 words (अगमत्, अश्रोत्, अभूत्, अवोचत्, अशुचत्, आरत्). Like एषयति, except in 12 cells: future_act_1 sg, future_act_1 pl, conditional_mid_1 sg, conditional_mid_3 sg, aorist_act_3 pl, aorist_mid_1 sg, ….
-    conjugation!("आपत्", 22, "~त्", like एषयति;
-    stem act_sg: "~- like आपत्";
-    future_act_1: derived, _, derived;
-    conditional_mid_1: derived, _, _;
-    conditional_mid_3: derived, _, _;
-    aorist_act_3: _, _, "~न्";
+    // आपत: 22 words (अगमत्, अश्रोत्, अभूत्, अवोचत्, अशुचत्, आरत्). Like अमत with `` after each pattern (`्` after त), except in 11 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
+    conjugation!("आपत्", 22, "~त्", like अमत with "", "्" after "त";
+    aorist_act_1: "~म्", "~ाव", _;
+    aorist_act_2: "~ः", "~तम्", _;
+    aorist_act_3: "~त्", _, "~न्";
     aorist_mid_1: "~े", "~ावहि", _;
-    aorist_mid_2: "~थाः", "~ेथाम्", "~ध्वम्";
+    aorist_mid_2: _, "~ेथाम्", _;
     aorist_mid_3: "~त", _, "~न्त";
     ),
     // इयाज: 21 words (जगाम, ससान, तताप, ततान, ददाह, जजान). Like धरति, except in 72 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
@@ -803,14 +817,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     participle_pres: derived, derived;
     participle_perf: "~्~िवांस्", _;
     ),
-    // अगरहीत: 21 words (अद्राक्षीत्, अताप्सीत्, अहार्षीत्, अश्रौषीत्, अभार्षीत्, अनौत्सीत्). Like आपत, except in 8 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अग्रहीत्", 21, "~ीत्", like आपत;
-    stem present_ind_act_1_sg: "~ीB- like अग्रहीत्";
-    ind_act_3: "~ीत्", _, _;
+    // अगरहीत: 21 words (अद्राक्षीत्, अताप्सीत्, अहार्षीत्, अश्रौषीत्, अभार्षीत्, अनौत्सीत्). Like आनाश with `ीत्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अग्रहीत्", 21, "~ीत्", like आनाश with "ीत्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~ीBम्|~ैBम्", "~ीB्व", _;
     aorist_act_2: "~ीः", "~ीष्टम्", _;
     aorist_act_3: "~ीत्", _, "~ीBुः";
-    aorist_mid_2: _, _, "~ीढ्वम्";
+    aorist_mid_1: "~ीBि", "~ीB्वहि", _;
+    aorist_mid_2: "~ीB्ठाः", "~ीBाथाम्", "~ीढ्वम्";
+    aorist_mid_3: "~ीB्ट", _, "~ीBत";
+    participle_perf: derived, _;
     ),
     // जानाति: 19 words (ददाति, दधाति, जानाति, श्रद्दधाति, गृणाति, जहाति). Like लभते, except in 35 cells: ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, imp_act_1 sg, ….
     conjugation!("जानाति", 19, "~ाति", like लभते;
@@ -872,13 +891,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     imperfect_mid_3: "अ~ुत", _, "अ~्वत";
     participle_pres: "~्वत्", _;
     ),
-    // आजीत: 10 words (अस्वारीत्, आजीत्, अकाषीत्, आञ्चीत्, अलेखीत्, अवेदीत्). Like अगरहीत, except in 5 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_2 du, aorist_act_3 pl, aorist_mid_2 pl.
-    conjugation!("आजीत्", 10, "~ीत्", like अगरहीत;
-    stem present_ind_act_1_sg: "~िB- like अग्रहीत्";
+    // आजीत: 10 words (अस्वारीत्, आजीत्, अकाषीत्, आञ्चीत्, अलेखीत्, अवेदीत्). Like आनाश with `ीत्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("आजीत्", 10, "~ीत्", like आनाश with "ीत्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~िBम्", "~िB्व", _;
-    aorist_act_2: _, "~िष्टम्", _;
-    aorist_act_3: _, _, "~िBुः";
-    aorist_mid_2: _, _, "~िढ्वम्";
+    aorist_act_2: "~ीः", "~िष्टम्", _;
+    aorist_act_3: "~ीत्", _, "~िBुः";
+    aorist_mid_1: "~िBि", "~िB्वहि", _;
+    aorist_mid_2: "~िB्ठाः", "~िBाथाम्", "~िढ्वम्";
+    aorist_mid_3: "~िB्ट", _, "~िBत";
+    participle_perf: derived, _;
     ),
     // आपनोति: 8 words (धृष्णोति, शक्नोति, साध्नोति, आप्नोति, ऋध्नोति, दभ्नोति). Like तनोति, except in 10 cells: ind_act_1 du, ind_act_1 pl, ind_act_3 pl, imp_act_2 sg, imperfect_act_3 pl, imperfect_mid_1 sg, ….
     conjugation!("आप्नोति", 8, "~ोति", like तनोति;
@@ -925,32 +950,34 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     imperfect_mid_3: "अ~्त्त", _, "अ~्दत";
     participle_pres: "~्दत्", "~्दाA";
     ),
-    // नकति: 8 words (रिणक्ति, वक्ति, नेनेक्ति, पृणक्ति, वृणक्ति, भिषक्ति). Like वेतति, except in 19 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, imp_act_1 sg, ….
+    // नकति: 8 words (रिणक्ति, वक्ति, नेनेक्ति, पृणक्ति, वृणक्ति, भिषक्ति). Like वेतति, except in 26 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, imp_act_1 sg, ….
     conjugation!("नक्ति", 8, "~क्ति", like वेतति;
     stem present_2: "~- like नक्ति";
     stem present_ind_act_2_pl: "~क्- like जानाति";
-    stem present_mid: "~ज- like नक्ति";
+    stem present_mid: "~B- like नक्ति";
     stem imperfect_act_1_sg: "~- like नक्ति";
-    stem imperfect: "~- like नक्ति";
-    ind_act_1: "~ज्मि", "~ज्वः", _;
+    ind_act_1: "~B्मि", "~B्वः", _;
     ind_act_2: "~क्Bि", _, _;
-    ind_act_3: "~क्ति", _, "~जन्ति";
-    imp_act_1: "~जाAि", "~जाव", _;
+    ind_act_3: "~क्ति", _, "~Bन्ति";
+    imp_act_1: "~BाAि", "~Bाव", _;
     imp_act_2: "~ग्धि", _, _;
-    opt_act_1: "~ज्याम्", "~ज्याव", _;
-    opt_act_3: _, _, "~ज्युः";
-    subj_act_1: _, _, "~जाम";
-    subj_mid_1: "~जै", "~जावहै", "~जामहै";
-    subj_mid_2: "~जसे", _, "~जध्वे";
-    subj_mid_3: _, _, "~जन्त";
-    participle_pres: "~जत्", _;
+    opt_act_1: "~B्याम्", "~B्याव", _;
+    opt_act_3: _, _, "~B्युः";
+    subj_act_1: _, _, "~Bाम";
+    subj_mid_1: "~Bै", "~Bावहै", "~Bामहै";
+    subj_mid_2: "~Bसे", _, "~Bध्वे";
+    subj_mid_3: _, _, "~Bन्त";
+    imperfect_act_2: "अ~क्", _, _;
+    imperfect_act_3: "अ~क्", _, "अ~BA्";
+    imperfect_mid_1: "अ~जि", "अ~B्वहि", _;
+    imperfect_mid_2: _, "अ~जाथाम्", _;
+    imperfect_mid_3: _, _, "अ~जत";
+    participle_pres: "~Bत्", _;
     ),
-    // चकरष: 8 words (ददर्श, ववर्त, पपर्च, जगर्ध, बबर्ह, आनर्च). Like इयाज, except in 9 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("चकर्ष", 8, "~र्~", like इयाज;
-    ind_act_3: "~र्~", _, _;
-    perfect_act_1: "~र्~", "~ृ~िव", _;
+    // चकरष: 8 words (ददर्श, ववर्त, पपर्च, जगर्ध, बबर्ह, आनर्च). Like आनाश with `र्~` after each pattern, except in 6 cells: perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, participle_perf act.
+    conjugation!("चकर्ष", 8, "~र्~", like आनाश with "र्~";
+    perfect_act_1: _, "~ृ~िव", _;
     perfect_act_2: "~र्~िथ", "~ृ~थुः", _;
-    perfect_act_3: "~र्~", _, _;
     perfect_mid_1: derived, derived, _;
     participle_perf: "~ृ~्वांस्", _;
     ),
@@ -1024,16 +1051,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     perfect_act_3: derived, _, _;
     participle_perf: derived, _;
     ),
-    // ददौ: 6 words (तस्थौ, ददौ, पपौ, दधौ, ररौ, पप्रौ). Like आनाश, except in 4 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_2 sg, perfect_act_3 sg.
-    conjugation!("ददौ", 6, "~ौ", like आनाश;
-    ind_act_3: "~ौ", _, _;
-    perfect_act_1: "~ौ", _, _;
+    // ददौ: 6 words (तस्थौ, ददौ, पपौ, दधौ, ररौ, पप्रौ). Like आनाश with `` after each pattern (`ौ` after ~), except in 1 cell: perfect_act_2 sg.
+    conjugation!("ददौ", 6, "~ौ", like आनाश with "", "ौ" after "~";
     perfect_act_2: "~ाथ|~िथ", _, _;
-    perfect_act_3: "~ौ", _, _;
     ),
-    // ईळे: 5 words (ईळे, जज्ञे, शश्ये, पस्पशे, चके). Like आनाश, except in 7 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("ईळे", 5, "~े", like आनाश;
-    ind_act_3: "~े", _, _;
+    // ईळे: 5 words (ईळे, जज्ञे, शश्ये, पस्पशे, चके). Like आनाश with `` after each pattern (`े` after ~), except in 6 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, participle_perf act.
+    conjugation!("ईळे", 5, "~े", like आनाश with "", "े" after "~";
     perfect_act_1: derived, derived, _;
     perfect_act_2: derived, derived, _;
     perfect_act_3: derived, _, _;
@@ -1065,33 +1088,33 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     imperfect_mid_3: "अ~ङ्क्त", _, "अ~ञ्जत";
     participle_pres: "~ञ्जत्", _;
     ),
-    // जुहाव: 5 words (दुद्राव, शुश्राव, तुष्टाव, सुस्राव, जुहाव). Like आनाश, except in 9 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("जुहाव", 5, "~ाव", like आनाश;
-    ind_act_3: "~ाव", _, _;
+    // जुहाव: 5 words (दुद्राव, शुश्राव, तुष्टाव, सुस्राव, जुहाव). Like आनाश with `ाव` after each pattern, except in 7 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("जुहाव", 5, "~ाव", like आनाश with "ाव";
     perfect_act_1: "~व|~ाव", "~ुव", _;
     perfect_act_2: "~ोथ", "~ुवथुः", _;
-    perfect_act_3: "~ाव", _, _;
     perfect_mid_1: "~ुवे", "~ुवहे", _;
     participle_perf: "~ुवांस्", _;
     ),
-    // इयाय: 5 words (बिभाय, जिगाय, इयाय, जिघाय, निनाय). Like आनाश, except in 9 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("इयाय", 5, "~ाय", like आनाश;
-    ind_act_3: "~ाय", _, _;
+    // इयाय: 5 words (बिभाय, जिगाय, इयाय, जिघाय, निनाय). Like आनाश with `ाय` after each pattern, except in 7 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("इयाय", 5, "~ाय", like आनाश with "ाय";
     perfect_act_1: "~य|~ाय", "~्यिव", _;
     perfect_act_2: "~ेथ|~यिथ", "~्यथुः", _;
-    perfect_act_3: "~ाय", _, _;
     perfect_mid_1: "~्ये", "~्यिवहे", _;
     participle_perf: "~ीवांस्", _;
     ),
-    // अगात: 5 words (अधात्, अस्थात्, अदात्, अगात्, अपात्). Like आपत, except in 13 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
-    conjugation!("अगात्", 5, "~ात्", like आपत;
-    ind_act_3: "~ात्", _, _;
-    aorist_act_1: "~ाम्", _, _;
+    // अगात: 5 words (अधात्, अस्थात्, अदात्, अगात्, अपात्). Like आनाश with `ात्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अगात्", 5, "~ात्", like आनाश with "ात्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_act_1: "~ाम्", "~ाव", _;
     aorist_act_2: "~ाः", "~ातम्", _;
     aorist_act_3: "~ात्", _, "~ुः";
     aorist_mid_1: "~ि", "~िवहि", _;
     aorist_mid_2: "~िथाः", "~ाथाम्", "~िध्वम्";
     aorist_mid_3: "~ित", _, "~त";
+    participle_perf: derived, _;
     ),
     // अनिति: 5 words (रोदिति, अनिति, श्वसिति, उच्छ्वसिति, वपिति). Like जानाति, except in 25 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_3 sg, ind_mid_1 du, ….
     conjugation!("अनिति", 5, "~िति", like जानाति;
@@ -1116,22 +1139,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     imperfect_mid_2: "अ~िथाः", _, "अ~िध्वम्";
     imperfect_mid_3: "अ~ित", _, _;
     ),
-    // असति: 5 words (अस्ति, शास्ति, बभस्ति, हिनस्ति, सस्ति). Like ईळे, except in 22 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 du, ….
-    conjugation!("अस्ति", 5, "~स्ति", like ईळे;
-    stem present_ind_act_2_pl: "~B्- like जानाति";
+    // असति: 5 words (अस्ति, शास्ति, बभस्ति, हिनस्ति, सस्ति). Like आनाश with `स्ति` after each pattern, except in 29 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 du, ….
+    conjugation!("अस्ति", 5, "~स्ति", like आनाश with "स्ति";
     ind_act_1: "~स्मि", "~B्वः", _;
-    ind_act_2: "~स्Bि", "~B्थः", _;
-    ind_act_3: "~स्ति", "~B्तः", "~Bन्ति";
+    ind_act_2: "~स्Bि", "~B्थः", "~B्थ";
+    ind_act_3: _, "~B्तः", "~Bन्ति";
     imp_act_1: "~साAि", "~साव", _;
-    imp_act_2: "~द्Bि", _, _;
+    imp_act_2: "~द्Bि", _, "~B्त";
     opt_act_1: "~B्याम्", "~B्याव", _;
     opt_act_3: _, _, "~B्युः";
     subj_act_1: _, _, "~साम";
     imperfect_act_1: "अ~सम्", _, _;
     imperfect_act_2: "अ~ः", "अ~B्तम्", _;
     imperfect_act_3: "अ~ः", _, "अ~BA्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
     perfect_mid_1: derived, derived, _;
     participle_pres: "~Bत्", _;
+    participle_perf: derived, _;
     ),
     // अवति: 4 words (अवति, अपनह्यति, अपिनह्यति, अर्चयति). Like वहति, except in 74 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ….
     conjugation!("अवति", 4, "अ~ति", like वहति;
@@ -1177,13 +1203,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     participle_pres: "अ~त्", "अ~माA";
     participle_perf: "आ~िवांस्", _;
     ),
-    // अनंसीत: 4 words (अहासीत्, अतांसीत्, अयासीत्, अनंसीत्). Like ईळे, except in 9 cells: ind_act_3 sg, perfect_mid_1 sg, perfect_mid_1 du, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, ….
-    conjugation!("अनंसीत्", 4, "~सीत्", like ईळे;
-    ind_act_3: "~सीत्", _, _;
+    // अनंसीत: 4 words (अहासीत्, अतांसीत्, अयासीत्, अनंसीत्). Like आनाश with `सीत्` after each pattern, except in 14 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अनंसीत्", 4, "~सीत्", like आनाश with "सीत्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
     perfect_mid_1: derived, derived, _;
     aorist_act_1: "~सम्", "~स्व", _;
     aorist_act_2: "~सीः", "~स्तम्", _;
     aorist_act_3: "~सीत्", _, "~सुः";
+    participle_perf: derived, _;
     ),
     // वमति: 4 words (वमति, चमति, नमति, गमति). Like आनाश, except in 36 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 pl, imp_act_1 sg, ….
     conjugation!("वमति", 4, "~मति", like आनाश;
@@ -1217,21 +1246,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     participle_pres: "~मत्", _;
     participle_perf: "~ेमिवांस्", _;
     ),
-    // वृणीते: 4 words (मिमीते, जानीते, जिहीते, वृणीते). Like ईळे, except in 21 cells: ind_act_3 sg, ind_mid_2 sg, ind_mid_2 pl, ind_mid_3 sg, imp_mid_1 sg, imp_mid_3 sg, ….
-    conjugation!("वृणीते", 4, "~ीते", like ईळे;
-    stem present_mid: "~- like जानाति";
-    ind_act_3: "~ीते", _, _;
-    ind_mid_2: "~ीBे", _, "~ीध्वे";
-    ind_mid_3: "~ीते", _, _;
+    // वृणीते: 4 words (मिमीते, जानीते, जिहीते, वृणीते). Like आनाश with `ीते` after each pattern, except in 32 cells: ind_mid_1 sg, ind_mid_1 du, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ind_mid_3 sg, ….
+    conjugation!("वृणीते", 4, "~ीते", like आनाश with "ीते";
+    ind_mid_1: "~े", "~ीवहे", _;
+    ind_mid_2: "~ीBे", "~ाथे", "~ीध्वे";
+    ind_mid_3: "~ीते", _, "~ते";
     imp_mid_1: "~ै", _, _;
     imp_mid_3: "~ीताम्", _, _;
+    opt_mid_1: "~ीय", _, _;
     subj_mid_1: _, "~ावहै", "~ामहै";
     subj_mid_2: "~ासे|~ासै", _, "~ाध्वे|~ाध्वै";
     subj_mid_3: "~ाते|~ातै", _, "~ान्त|~ान्तै";
     imperfect_mid_1: "अ~ि", "अ~ीवहि", _;
     imperfect_mid_2: "अ~ीथाः", "अ~ाथाम्", "अ~ीध्वम्";
     imperfect_mid_3: "अ~ीत", _, "अ~त";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
     perfect_mid_1: derived, derived, _;
+    participle_pres: _, "~ान";
+    participle_perf: derived, _;
     ),
     // रवति: 4 words (द्रवति, चर्वति, तूर्वति, रवति). Like तनोति, except in 53 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("रवति", 4, "~वति", like तनोति;
@@ -1272,12 +1306,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     participle_pres: "~वत्", "~वमाA";
     participle_perf: "दु~ुवांस्", _;
     ),
-    // जगार: 4 words (जहार, दधार, जगार, ममार). Like आनाश, except in 9 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("जगार", 4, "~ार", like आनाश;
-    ind_act_3: "~ार", _, _;
+    // जगार: 4 words (जहार, दधार, जगार, ममार). Like आनाश with `ार` after each pattern, except in 7 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("जगार", 4, "~ार", like आनाश with "ार";
     perfect_act_1: "~र|~ार", "~्रिव", _;
     perfect_act_2: "~र्थ|~रिथ", "~्रथुः", _;
-    perfect_act_3: "~ार", _, _;
     perfect_mid_1: "~्रे", "~्रिवहे", _;
     participle_perf: "~ृवांस्", _;
     ),
@@ -1305,11 +1337,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     perfect_mid_1: derived, derived, _;
     participle_perf: derived, _;
     ),
-    // चकार: 3 words (चकार, बभार, जभार). Like जगार, except in 3 cells: perfect_act_1 du, perfect_act_2 sg, perfect_mid_1 du.
-    conjugation!("चकार", 3, "~ार", like जगार;
-    perfect_act_1: _, "~ृव", _;
-    perfect_act_2: "~र्थ", _, _;
-    perfect_mid_1: _, "~ृवहे", _;
+    // चकार: 3 words (चकार, बभार, जभार). Like आनाश with `ार` after each pattern, except in 7 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("चकार", 3, "~ार", like आनाश with "ार";
+    perfect_act_1: "~र|~ार", "~ृव", _;
+    perfect_act_2: "~र्थ", "~्रथुः", _;
+    perfect_mid_1: "~्रे", "~ृवहे", _;
+    participle_perf: "~ृवांस्", _;
     ),
     // आचरति: 3 words (आचरति, पक्षति, यक्षति). Like आनयति, except in 3 cells: future_act_1 sg, infinitive, gerund.
     conjugation!("आचरति", 3, "~ति", like आनयति;
@@ -1317,9 +1350,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     infinitive: derived;
     gerund: derived;
     ),
-    // ईषटे: 3 words (ईष्टे, चष्टे, प्रचष्टे). Like चकरष, except in 31 cells: ind_act_3 sg, ind_mid_1 sg, ind_mid_1 du, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ….
-    conjugation!("ईष्टे", 3, "~ष~टे", like चकरष;
-    ind_act_3: "~ष~टे", _, _;
+    // ईषटे: 3 words (ईष्टे, चष्टे, प्रचष्टे). Like आनाश with `ष~टे` after each pattern, except in 32 cells: ind_mid_1 sg, ind_mid_1 du, ind_mid_2 sg, ind_mid_2 du, ind_mid_2 pl, ind_mid_3 sg, ….
+    conjugation!("ईष्टे", 3, "~ष~टे", like आनाश with "ष~टे";
     ind_mid_1: "~क~षे", "~क~ष्वहे", _;
     ind_mid_2: "~क~षे", "~क~षाथे", "~ड~ढ्वे";
     ind_mid_3: "~ष~टे", _, "~क~षते";
@@ -1335,6 +1367,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     perfect_act_1: derived, derived, _;
     perfect_act_2: derived, derived, _;
     perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     participle_pres: _, "~क~षाण";
     participle_perf: derived, _;
     ),
@@ -1366,50 +1399,57 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     imperfect_mid_3: "आर्~त", _, "आर्~न्त";
     participle_pres: "ऋ~त्", "ऋ~मान";
     ),
-    // बाधिषयते: 3 words (बाधिष्यते, श्यास्यते, रेक्ष्यते). Like एषयति, except in 3 cells: ind_act_3 sg, future_act_1 sg, future_act_1 pl.
-    conjugation!("बाधिष्यते", 3, "~ते", like एषयति;
-    stem present_ind_act_1_sg: "~- like बाधिष्यते";
-    ind_act_3: "~ते", _, _;
-    future_act_1: derived, _, derived;
+    // बाधिषयते: 3 words (बाधिष्यते, श्यास्यते, रेक्ष्यते). Like अमत with `े` after each pattern, except in 10 cells: future_mid_1 sg, conditional_mid_1 sg, conditional_mid_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, ….
+    conjugation!("बाधिष्यते", 3, "~ते", like अमत with "े";
+    future_mid_1: "~े", _, _;
+    conditional_mid_1: "अ~े", _, _;
+    conditional_mid_3: "अ~त", _, _;
+    aorist_mid_1: derived, derived, _;
+    aorist_mid_2: derived, derived, derived;
+    aorist_mid_3: derived, _, derived;
     ),
-    // अधुकषत: 3 words (अधुक्षत्, अद्रुक्षत्, अरुक्षत्). Like आपत, except in 2 cells: aorist_mid_1 sg, aorist_mid_2 du.
-    conjugation!("अधुक्षत्", 3, "~त्", like आपत;
-    aorist_mid_1: "~ि", _, _;
+    // अधुकषत: 3 words (अधुक्षत्, अद्रुक्षत्, अरुक्षत्). Like अमत with `` after each pattern (`्` after त), except in 11 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
+    conjugation!("अधुक्षत्", 3, "~त्", like अमत with "", "्" after "त";
+    aorist_act_1: "~म्", "~ाव", _;
+    aorist_act_2: "~ः", "~तम्", _;
+    aorist_act_3: "~त्", _, "~न्";
+    aorist_mid_1: "~ि", "~ावहि", _;
     aorist_mid_2: _, "~ाथाम्", _;
+    aorist_mid_3: "~त", _, "~न्त";
     ),
-    // दुदोह: 3 words (दुदोह, दुद्रोह, रुरोह). Like आनाश, except in 14 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
-    conjugation!("दुदोह", 3, "~ोह", like आनाश;
-    ind_act_3: "~ोह", _, _;
-    perfect_act_1: "~ोह", "~ुहिव|~ुह्व", "~ुहिम|~ुह्म";
+    // दुदोह: 3 words (दुदोह, दुद्रोह, रुरोह). Like आनाश with `ोह` after each pattern, except in 11 cells: perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("दुदोह", 3, "~ोह", like आनाश with "ोह";
+    perfect_act_1: _, "~ुहिव|~ुह्व", "~ुहिम|~ुह्म";
     perfect_act_2: "~ोहिथ", "~ुहथुः", _;
-    perfect_act_3: "~ोह", _, _;
     perfect_mid_1: "~ुहे", "~ुहिवहे|~ुह्वहे", "~ुहिमहे|~ुह्महे";
     perfect_mid_2: "~ुहिषे|~ुक्षे", _, "~ुहिध्वे|~ूढ्वे";
     perfect_mid_3: _, _, "~ुहिरे|~ुह्रे";
     participle_perf: "~ुह्वांस्", _;
     ),
-    // वेद: 3 words (वेद, विवेद, चिच्छेद). Like आनाश, except in 14 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
-    conjugation!("वेद", 3, "~ेद", like आनाश;
-    ind_act_3: "~ेद", _, _;
-    perfect_act_1: "~ेद", "~िदिव|~िद्व", "~िदिम|~िद्म";
+    // वेद: 3 words (वेद, विवेद, चिच्छेद). Like आनाश with `ेद` after each pattern, except in 11 cells: perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, perfect_mid_1 sg, perfect_mid_1 du, ….
+    conjugation!("वेद", 3, "~ेद", like आनाश with "ेद";
+    perfect_act_1: _, "~िदिव|~िद्व", "~िदिम|~िद्म";
     perfect_act_2: "~ेदिथ", "~िदथुः", _;
-    perfect_act_3: "~ेद", _, _;
     perfect_mid_1: "~िदे", "~िदिवहे|~िद्वहे", "~िदिमहे|~िद्महे";
     perfect_mid_2: "~िदिषे|~ित्से", _, "~िदिध्वे|~िद्ध्वे";
     perfect_mid_3: _, _, "~िदिरे|~िद्रे";
     participle_perf: "~िद्वांस्", _;
     ),
-    // अचेत: 3 words (अश्रेत्, अचेत्, अहेत्). Like अनंसीत, except in 7 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अचेत्", 3, "~ेत्", like अनंसीत;
-    ind_act_3: "~ेत्", _, _;
+    // अचेत: 3 words (अश्रेत्, अचेत्, अहेत्). Like आनाश with `ेत्` after each pattern, except in 14 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अचेत्", 3, "~ेत्", like आनाश with "ेत्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~यम्", "~ेव", _;
     aorist_act_2: "~ेः", "~ेतम्", _;
     aorist_act_3: "~ेत्", _, "~्यA्";
+    participle_perf: derived, _;
     ),
     // रौति: 3 words (नौति, रौति, तौति). Like आपनोति, except in 5 cells: ind_act_1 sg, ind_act_2 sg, ind_act_3 sg, imperfect_act_2 sg, imperfect_act_3 sg.
     conjugation!("रौति", 3, "~ौति", like आपनोति;
     ind_act_1: "~ौमि", _, _;
-    ind_act_2: "~ौBि", _, _;
+    ind_act_2: "~ौषि", _, _;
     ind_act_3: "~ौति", _, _;
     imperfect_act_2: "अ~ौः", _, _;
     imperfect_act_3: "अ~ौत्", _, _;
@@ -1426,49 +1466,66 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     aorist_mid_2: "अ~ृथाः", "अ~्राथाम्", _;
     aorist_mid_3: "अ~ृत", _, "अ~्रत";
     ),
-    // अगन: 2 words (अगन्, अतन्). Like आपत, except in 11 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अगन्", 2, "~न्", like आपत;
-    ind_act_3: "~न्", _, _;
+    // अगन: 2 words (अगन्, अतन्). Like आनाश with `न्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अगन्", 2, "~न्", like आनाश with "न्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~Aम्", "~न्व", _;
     aorist_act_2: "~न्", "~न्तम्", _;
     aorist_act_3: "~न्", _, "~्नन्";
     aorist_mid_1: "~्Aि", "~न्वहि", _;
-    aorist_mid_2: _, "~्Aाथाम्", _;
-    aorist_mid_3: _, _, "~्Aत";
+    aorist_mid_2: "~थाः", "~्Aाथाम्", "~ध्वम्";
+    aorist_mid_3: "~त", _, "~्Aत";
+    participle_perf: derived, _;
     ),
-    // आरत: 2 words (अजन्त, आर्त). Like ईळे, except in 4 cells: ind_act_3 sg, perfect_mid_1 sg, perfect_mid_1 du, aorist_mid_2 pl.
-    conjugation!("आर्त", 2, "~्त", like ईळे;
-    stem present_ind_act_1_sg: "~- like आर्त";
-    ind_act_3: "~्त", _, _;
-    perfect_mid_1: derived, derived, _;
-    aorist_mid_2: _, _, "~्ध्वम्";
-    ),
-    // अभोक: 2 words (अयोक्, अभोक्). Like आपत, except in 8 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अभोक्", 2, "~ोक्", like आपत;
-    stem present_ind_act_1_sg: "~ु- like अभोक्";
-    ind_act_3: "~ोक्", _, _;
-    aorist_act_1: "~ोजम्", "~ोज्व", _;
-    aorist_act_2: "~ोक्", "~ोक्तम्", _;
-    aorist_act_3: "~ोक्", _, "~ुजA्";
-    aorist_mid_2: _, _, "~ुग्ध्वम्";
-    ),
-    // आनट: 2 words (आनट्, अक्रन्). Like चकरष, except in 13 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, ….
-    conjugation!("आनट्", 2, "~~", like चकरष;
-    ind_act_3: "~~", _, _;
+    // आरत: 2 words (अजन्त, आर्त). Like आनाश with `्त` after each pattern, except in 15 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("आर्त", 2, "~्त", like आनाश with "्त";
     perfect_act_1: derived, derived, _;
     perfect_act_2: derived, derived, _;
     perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_mid_1: "~ि", "~्वहि", _;
+    aorist_mid_2: "~्थाः", "~ाथाम्", "~्ध्वम्";
+    aorist_mid_3: "~्त", _, "~त";
+    participle_perf: derived, _;
+    ),
+    // अभोक: 2 words (अयोक्, अभोक्). Like आनाश with `ोक्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अभोक्", 2, "~ोक्", like आनाश with "ोक्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_act_1: "~ोजम्", "~ोज्व", _;
+    aorist_act_2: "~ोक्", "~ोक्तम्", _;
+    aorist_act_3: "~ोक्", _, "~ुजA्";
+    aorist_mid_1: "~ुजि", "~ुज्वहि", _;
+    aorist_mid_2: "~ुक्थाः", "~ुजाथाम्", "~ुग्ध्वम्";
+    aorist_mid_3: "~ुक्त", _, "~ुजत";
+    participle_perf: derived, _;
+    ),
+    // आनट: 2 words (आनट्, अक्रन्). Like आनाश with `~` after each pattern, except in 14 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("आनट्", 2, "~~", like आनाश with "~";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~~दम्", "~~द्व", _;
     aorist_act_2: "~~", "~~त्तम्", _;
     aorist_act_3: "~~", _, "~द~";
     participle_perf: derived, _;
     ),
-    // अमृत: 1 words (अमृत). Like आरत, except in 8 cells: ind_act_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, aorist_mid_2 du, aorist_mid_2 pl, ….
-    conjugation!("अमृत", 1, "~ृत", like आरत;
-    ind_act_3: "~ृत", _, _;
+    // अमृत: 1 words (अमृत). Like आनाश with `ृत` after each pattern, except in 15 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अमृत", 1, "~ृत", like आनाश with "ृत";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_mid_1: "~्रि", "~ृवहि", _;
     aorist_mid_2: "~ृथाः", "~्राथाम्", "~ृध्वम्";
     aorist_mid_3: "~ृत", _, "~्रत";
+    participle_perf: derived, _;
     ),
     // संतापयति: 1 words (संतापयति). Like इयाज, except in 25 cells: ind_act_2 pl, ind_act_3 sg, imp_act_1 sg, imp_act_1 du, imp_act_2 sg, imp_act_2 pl, ….
     conjugation!("संतापयति", 1, "~ं~ति", like इयाज;
@@ -1494,85 +1551,131 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 66] = [
     perfect_mid_1: "~न्~ांचक्रे", "~न्~ांचकृवहे", _;
     participle_perf: "~न्~ामासिवांस्|~न्~ांचकृवांस्", _;
     ),
-    // अलेकिषयत: 1 words (अलेकिष्यत्). Like ईळे, except in 4 cells: ind_act_3 sg, conditional_act_1 sg, perfect_mid_1 sg, perfect_mid_1 du.
-    conjugation!("अलेकिष्यत्", 1, "~त्", like ईळे;
-    ind_act_3: "~त्", _, _;
+    // अलेकिषयत: 1 words (अलेकिष्यत्). Like अमत with `्` after each pattern, except in 8 cells: conditional_act_1 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, aorist_mid_2 du, aorist_mid_2 pl, ….
+    conjugation!("अलेकिष्यत्", 1, "~त्", like अमत with "्";
     conditional_act_1: "~म्", _, _;
+    aorist_mid_1: derived, derived, _;
+    aorist_mid_2: derived, derived, derived;
+    aorist_mid_3: derived, _, derived;
+    ),
+    // अपराक: 1 words (अप्राक्). Like आनाश with `~राक्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अप्राक्", 1, "~~राक्", like आनाश with "~राक्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
     perfect_mid_1: derived, derived, _;
+    aorist_act_1: "~~राक्षम्", "~~राक्ष्व", _;
+    aorist_act_2: "~~राक्", "~~राक्तम्", _;
+    aorist_act_3: "~~राक्", _, "~~राक्षुः";
+    aorist_mid_1: "~ृक~षि", "~ृक~ष्वहि", _;
+    aorist_mid_2: "~ृक~थाः", "~ृक~षाथाम्", "~ृग~ध्वम्";
+    aorist_mid_3: "~ृक~त", _, "~ृक~षत";
+    participle_perf: derived, _;
     ),
-    // अपराक: 1 words (अप्राक्). Like आनट, except in 2 cells: aorist_act_3 pl, aorist_mid_2 pl.
-    conjugation!("अप्राक्", 1, "~~राक्", like आनट;
-    stem present_ind_act_1_sg: "~ृक~- like अमौक्";
-    stem act_sg: "~~राक्- like अमौक्";
-    aorist_act_3: _, _, "~~राक्षुः";
-    aorist_mid_2: _, _, "~ृग~ध्वम्";
+    // अमौक: 1 words (अमौक्). Like आनाश with `ौक~` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अमौक्", 1, "~ौक~", like आनाश with "ौक~";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_act_1: "~ौक~षम्", "~ौक~ष्व", _;
+    aorist_act_2: "~ौक~", "~ौक~तम्", _;
+    aorist_act_3: "~ौक~", _, "~ौक~षुः";
+    aorist_mid_1: "~ुक~षि", "~ुक~ष्वहि", _;
+    aorist_mid_2: "~ुक~थाः", "~ुक~षाथाम्", "~ुग~ध्वम्";
+    aorist_mid_3: "~ुक~त", _, "~ुक~षत";
+    participle_perf: derived, _;
     ),
-    // अमौक: 1 words (अमौक्). Like आनट, except in 2 cells: aorist_act_3 pl, aorist_mid_2 pl.
-    conjugation!("अमौक्", 1, "~ौक~", like आनट;
-    stem present_ind_act_1_sg: "~ुक~- like अमौक्";
-    stem act_sg: "~ौक~- like अमौक्";
-    aorist_act_3: _, _, "~ौक~षुः";
-    aorist_mid_2: _, _, "~ुग~ध्वम्";
-    ),
-    // अमोक: 1 words (अमोक्). Like अभोक, except in 7 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_3 pl, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 du, ….
-    conjugation!("अमोक्", 1, "~ोक्", like अभोक;
+    // अमोक: 1 words (अमोक्). Like आनाश with `ोक्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अमोक्", 1, "~ोक्", like आनाश with "ोक्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~ोचम्", "~ोच्व", _;
-    aorist_act_3: _, _, "~ुचA्";
+    aorist_act_2: "~ोक्", "~ोक्तम्", _;
+    aorist_act_3: "~ोक्", _, "~ुचA्";
     aorist_mid_1: "~ुचि", "~ुच्वहि", _;
-    aorist_mid_2: _, "~ुचाथाम्", _;
-    aorist_mid_3: _, _, "~ुचत";
+    aorist_mid_2: "~ुक्थाः", "~ुचाथाम्", "~ुग्ध्वम्";
+    aorist_mid_3: "~ुक्त", _, "~ुचत";
+    participle_perf: derived, _;
     ),
-    // अमत: 1 words (अमत). Like आरत, except in 8 cells: ind_act_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, aorist_mid_2 du, aorist_mid_2 pl, ….
-    conjugation!("अमत", 1, "~त", like आरत;
-    ind_act_3: "~त", _, _;
+    // अमत: 1 words (अमत). Like आनाश with `त` after each pattern, except in 15 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अमत", 1, "~त", like आनाश with "त";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_mid_1: "~्नि", "~न्वहि", _;
     aorist_mid_2: "~थाः", "~्नाथाम्", "~ध्वम्";
     aorist_mid_3: "~त", _, "~्नत";
+    participle_perf: derived, _;
     ),
-    // अवरक: 1 words (अवर्क्). Like आपत, except in 8 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अवर्क्", 1, "~र्क्", like आपत;
-    stem present_ind_act_1_sg: "~ृ- like अभोक्";
-    ind_act_3: "~र्क्", _, _;
+    // अवरक: 1 words (अवर्क्). Like असवार with `क्` after each pattern, except in 13 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
+    conjugation!("अवर्क्", 1, "~र्क्", like असवार with "क्";
     aorist_act_1: "~र्जम्", "~र्ज्व", _;
     aorist_act_2: "~र्क्", "~र्क्तम्", _;
     aorist_act_3: "~र्क्|~ृक्", _, "~ृजन्";
-    aorist_mid_2: _, _, "~ृग्ध्वम्";
+    aorist_mid_1: "~ृजि", "~ृज्वहि", _;
+    aorist_mid_2: "~ृक्थाः", "~ृजाथाम्", "~ृग्ध्वम्";
+    aorist_mid_3: "~ृक्त", _, "~ृजत";
     ),
-    // असवार: 1 words (अस्वार्). Like अनंसीत, except in 7 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
-    conjugation!("अस्वार्", 1, "~र्", like अनंसीत;
-    ind_act_3: "~र्", _, _;
+    // असवार: 1 words (अस्वार्). Like आनाश with `र्` after each pattern, except in 14 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अस्वार्", 1, "~र्", like आनाश with "र्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~र्षम्", "~र्ष्व", _;
     aorist_act_2: "~ः", "~र्ष्टम्", _;
     aorist_act_3: "~ः", _, "~र्षुः";
+    participle_perf: derived, _;
     ),
-    // अदरक: 1 words (अदर्क्). Like आनट, except in 8 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_1 pl, aorist_act_2 sg, aorist_act_2 du, ….
-    conjugation!("अदर्क्", 1, "~र~क्", like आनट;
-    ind_act_3: "~र~क्", _, _;
+    // अदरक: 1 words (अदर्क्). Like आनाश with `र~क्` after each pattern, except in 15 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अदर्क्", 1, "~र~क्", like आनाश with "र~क्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_act_1: "~र~शम्", "~र~श्व", "~र~श्म|~ृश~म";
     aorist_act_2: "~र~क्", "~र~ष्टम्", _;
     aorist_act_3: "~र~क्", _, "~ृशन~|~र~शुः";
+    participle_perf: derived, _;
     ),
-    // अजनिषट: 1 words (अजनिष्ट). Like आरत, except in 2 cells: ind_act_3 sg, aorist_mid_2 pl.
-    conjugation!("अजनिष्ट", 1, "~ष्ट", like आरत;
-    stem present_ind_act_1_sg: "~- like अजनिष्ट";
-    ind_act_3: "~ष्ट", _, _;
-    aorist_mid_2: _, _, "~ढ्वम्";
+    // अजनिषट: 1 words (अजनिष्ट). Like आनाश with `ष्ट` after each pattern, except in 15 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अजनिष्ट", 1, "~ष्ट", like आनाश with "ष्ट";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_mid_1: "~Bि", "~B्वहि", _;
+    aorist_mid_2: "~B्ठाः", "~Bाथाम्", "~ढ्वम्";
+    aorist_mid_3: "~ष्ट", _, "~Bत";
+    participle_perf: derived, _;
     ),
-    // अपतत: 1 words (अपत्त). Like आरत, except in 10 cells: ind_act_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_1 pl, aorist_mid_2 sg, aorist_mid_2 du, ….
-    conjugation!("अपत्त", 1, "~त्त", like आरत;
-    ind_act_3: "~त्त", _, _;
+    // अपतत: 1 words (अपत्त). Like आनाश with `त्त` after each pattern, except in 17 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अपत्त", 1, "~त्त", like आनाश with "त्त";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
     aorist_mid_1: "~दि|~त्सि", "~द्वहि|~त्स्वहि", "~द्महि|~त्स्महि";
     aorist_mid_2: "~त्थाः", "~दाथाम्|~त्साथाम्", "~द्ध्वम्";
     aorist_mid_3: "~त्त", "~दाताम्|~त्साताम्", "~दत|~त्सत";
+    participle_perf: derived, _;
     ),
-    // अजुषत: 1 words (अजुषत्). Like अनंसीत, except in 13 cells: ind_act_3 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
-    conjugation!("अजुषत्", 1, "~षत्", like अनंसीत;
-    ind_act_3: "~षत्", _, _;
-    aorist_act_1: _, "~साव", _;
+    // अजुषत: 1 words (अजुषत्). Like आनाश with `षत्` after each pattern, except in 21 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 du, perfect_act_3 sg, perfect_mid_1 sg, ….
+    conjugation!("अजुषत्", 1, "~षत्", like आनाश with "षत्";
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, derived, _;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    aorist_act_1: "~सम्", "~साव", _;
     aorist_act_2: "~सः", "~सतम्", _;
     aorist_act_3: "~सत्", _, "~सन्";
     aorist_mid_1: "~से", "~सावहि", _;
     aorist_mid_2: "~सथाः", "~सेथाम्", "~सध्वम्";
     aorist_mid_3: "~सत", _, "~सन्त";
+    participle_perf: derived, _;
     ),
 ];

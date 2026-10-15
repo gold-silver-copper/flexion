@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 54 stems, 592 forms.
+/// 54 stems, 593 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aktywować	2	aktywujemy	38	aktywujmy
@@ -26,6 +26,7 @@ chrzęsnąć	2	chrzęśniemy	38	chrzęśnijmy	43	chrzęśnięto	48	chrzęśnięc
 chrzęścieć	1	chrzęszczę	48	chrzęszczenie
 ciąć	2	tniemy	38	tnijmy
 czeznąć	2	czeźniemy	7	czeznąłem	10	czeźliśmy	38	czeźnijmy	48	czeźnięcie
+czynić	38	czyńmy
 demotywować	2	demotywujemy
 dezaktywować	2	dezaktywujemy
 dorozumieć	38	dorozummy

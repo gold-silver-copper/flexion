@@ -23,20 +23,20 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 9] = [
-    // noun_sg like ärztin: 10,041 words.
-    EndingTable {
-        name: Cow::Borrowed("ärztin"),
-        words: 10041,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
-    },
-    // noun_sg like pilot: 3,431 words.
+pub(super) static TABLES: [EndingTable<'static>; 7] = [
+    // noun_sg like pilot: 2,164 words.
     EndingTable {
         name: Cow::Borrowed("pilot"),
-        words: 3431,
+        words: 2164,
         slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~eN\t", "~en\t", "~en\t",)),
+        table: Cow::Borrowed(concat!("~\t", "~en\t", "~en\t", "~en\t",)),
+    },
+    // noun_sg like hausgenosse: 1,310 words.
+    EndingTable {
+        name: Cow::Borrowed("hausgenosse"),
+        words: 1310,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~\t", "~n\t", "~n\t", "~n\t",)),
     },
     // noun_sg like grüner: 974 words.
     EndingTable {
@@ -45,38 +45,24 @@ pub(super) static TABLES: [EndingTable<'static>; 9] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~r\t", "~n\t", "~m\t", "~n\t",)),
     },
-    // noun_sg like herr: 37 words.
-    EndingTable {
-        name: Cow::Borrowed("herr"),
-        words: 37,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~n|~en\t", "~n|~en\t", "~n|~en\t",)),
-    },
-    // noun_sg like xerophyt: 24 words.
-    EndingTable {
-        name: Cow::Borrowed("xerophyt"),
-        words: 24,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~eN\t", "\t", "~\t",)),
-    },
     // noun_sg like freie: 4 words.
     EndingTable {
         name: Cow::Borrowed("freie"),
         words: 4,
         slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~N\t", "~N\t", "~\t",)),
+        table: Cow::Borrowed(concat!("~\t", "~n\t", "~n\t", "~\t",)),
     },
-    // noun_pl like platte: 75,296 words.
+    // noun_pl like platte: 75,640 words.
     EndingTable {
         name: Cow::Borrowed("platte"),
-        words: 75296,
+        words: 75640,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // noun_pl like lager: 43,067 words.
+    // noun_pl like lager: 66,309 words.
     EndingTable {
         name: Cow::Borrowed("lager"),
-        words: 43067,
+        words: 66309,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~n\t", "~\t",)),
     },

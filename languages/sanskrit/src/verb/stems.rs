@@ -790,7 +790,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
         words: 8,
         slot: 7,
         table: Cow::Borrowed(concat!(
-            "अ~जम\u{94d}\t",
+            "अ~Bम\u{94d}\t",
             "अ~क\u{94d}तम\u{94d}\t\t",
             "\t",
             "अ~क\u{94d}थाः\tअ~ग\u{94d}ध\u{94d}वम\u{94d}\t",
@@ -833,20 +833,6 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\tअ~न\u{94d}त\t",
         )),
     },
-    // imperfect like नक्ति: 8 words.
-    EndingTable {
-        name: Cow::Borrowed("नक\u{94d}ति"),
-        words: 8,
-        slot: 8,
-        table: Cow::Borrowed(concat!(
-            "\t\t",
-            "अ~क\u{94d}\t",
-            "अ~क\u{94d}\tअ~जA\u{94d}\t",
-            "अ~जि\tअ~ज\u{94d}वहि\t\t",
-            "अ~जाथाम\u{94d}\t",
-            "\tअ~जत\t",
-        )),
-    },
     // imperfect like आनयति: 7 words.
     EndingTable {
         name: Cow::Borrowed("आनयति"),
@@ -887,6 +873,20 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "अ~\u{947}\tअ~ावहि\t\t",
             "अ~\u{947}थाम\u{94d}\t",
             "\tअ~न\u{94d}त\t",
+        )),
+    },
+    // imperfect like ईष्टे: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("ईष\u{94d}ट\u{947}"),
+        words: 3,
+        slot: 8,
+        table: Cow::Borrowed(concat!(
+            "\t\t",
+            "\t",
+            "\t\t",
+            "अ~ि\tअ~\u{94d}वहि\t\t",
+            "अ~ाथाम\u{94d}\t",
+            "\tअ~त\t",
         )),
     },
 ];

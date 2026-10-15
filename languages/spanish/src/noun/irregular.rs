@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 76 forms.
+/// 0 stems, 74 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"acromion	1	acrómiones
@@ -49,8 +49,6 @@ jersey	1	jerséis
 locus	1	loci
 lord	1	lores
 mambí	1	mambises
-megacolon	1	megacólones
-mesocolon	1	mesocólones
 milord	1	milores
 mitin	1	mítines
 mitzvá	1	mitzvot

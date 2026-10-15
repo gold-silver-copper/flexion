@@ -1925,7 +1925,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
     // SUBJ_IMPF_2_SG, from SUBJ_IMPF_1_SG.
     relation!(SUBJ_IMPF_2_SG, [SUBJ_IMPF_1_SG], [], none, true, None),
     // SUBJ_IMPF_2_PL, from PAST_2_PL.
-    relation!(SUBJ_IMPF_2_PL, [PAST_2_PL], [], none, true, None),
+    relation!(SUBJ_IMPF_2_PL, [PAST_2_PL], [], none, false, None),
     // SUBJ_IMPF_3_SG, from PAST_2_SG.
     relation!(SUBJ_IMPF_3_SG, [PAST_2_SG], [("~i", "~e"), ("~ti", "~se")], rules {
         "" => [1 11558, 0 13],
@@ -1941,7 +1941,7 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "iacesti" => 2,
         "potesti" => 1,
         "potesti" => 2,
-    }, true, None),
+    }, false, None),
     // IMPERATIVE_TU, from PRES_3_SG.
     relation!(IMPERATIVE_TU, [PRES_3_SG], [("~", "~"), ("~", "~i"), ("~", "~ti"), ("~", "~tti"), ("~ce", "~'"), ("~e", "~"), ("~e", "~i"), ("~e", "~iti"), ("~e", "~ti"), ("~uole", "~ogli"), ("~à", "~ai"), ("~à", "~appi"), ("~à", "~atti")], rules {
         "" => [0 7514, 2 1741, 6 1726, 7 516, 10 23, 5 22, 12 14, 8 11, 1 6, 9 4, 3 3, 11 3, 4 2],
@@ -6390,15 +6390,8 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "zza" => 0,
         "zza" => 2,
     }, true, None),
-    // IMPERATIVE_LEI, from SUBJ_1_SG or SUBJ_3_SG (by auxiliary, in order).
-    relation!(
-        IMPERATIVE_LEI,
-        [SUBJ_1_SG, SUBJ_3_SG],
-        [],
-        none,
-        false,
-        None
-    ),
+    // IMPERATIVE_LEI, from SUBJ_1_SG.
+    relation!(IMPERATIVE_LEI, [SUBJ_1_SG], [], none, true, None),
     // IMPERATIVE_NOI, from SUBJ_2_PL.
     relation!(IMPERATIVE_NOI, [SUBJ_2_PL], [("~te", "~mo"), ("~te", "~moci")], rules {
         "" => [0 9309, 1 2290],
@@ -10853,15 +10846,8 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "e" => [0 9316],
         "i" => [1 2292],
     } listed {}, true, None),
-    // NEGATIVE_IMPERATIVE_LEI, from SUBJ_1_SG or SUBJ_3_SG (by auxiliary, in order).
-    relation!(
-        NEGATIVE_IMPERATIVE_LEI,
-        [SUBJ_1_SG, SUBJ_3_SG],
-        [],
-        none,
-        false,
-        None
-    ),
+    // NEGATIVE_IMPERATIVE_LEI, from SUBJ_1_SG.
+    relation!(NEGATIVE_IMPERATIVE_LEI, [SUBJ_1_SG], [], none, true, None),
     // NEGATIVE_IMPERATIVE_NOI, from IMPERATIVE_NOI.
     relation!(
         NEGATIVE_IMPERATIVE_NOI,
@@ -10880,15 +10866,8 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         true,
         None
     ),
-    // NEGATIVE_IMPERATIVE_LORO, from IMPERATIVE_LORO or SUBJ_3_PL (by auxiliary, in order).
-    relation!(
-        NEGATIVE_IMPERATIVE_LORO,
-        [IMPERATIVE_LORO, SUBJ_3_PL],
-        [],
-        none,
-        false,
-        None
-    ),
+    // NEGATIVE_IMPERATIVE_LORO, from SUBJ_3_PL.
+    relation!(NEGATIVE_IMPERATIVE_LORO, [SUBJ_3_PL], [], none, true, None),
     // GERUND, from IMPERATIVE_VOI.
     relation!(GERUND, [IMPERATIVE_VOI], [("~bbiate", "~vendo"), ("~gliate", "~lendo"), ("~ite", "~endo"), ("~itevi", "~endosi"), ("~piate", "~endo"), ("~te", "~cendo"), ("~te", "~endo"), ("~te", "~ndo"), ("~tevi", "~cendosi"), ("~tevi", "~endosi"), ("~tevi", "~ndosi")], rules {
         "" => [7 8410, 10 2017, 2 845, 3 245, 5 39, 8 22, 6 9, 9 5, 1 4, 4 4, 0 2],

@@ -190,7 +190,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+ы")]),
     },
-    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 82 words (ночь, помочь, печь, речь), 6 forms wrong.
+    // [щ|ц|ч|ш|ж|к|г|х]+ям → +ам: 84 words (ночь, помочь, печь, рожь), 6 forms wrong.
     CompiledRule {
         name: B("law6"),
         left: Pattern {
@@ -437,7 +437,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ч+ог")]),
     },
-    // ж+я → ж+а: 20 words (вожжи, дрожжи, дрожь, упряжь), 0 forms wrong.
+    // ж+я → ж+а: 22 words (рожь, ложь, вожжи, дрожжи), 0 forms wrong.
     CompiledRule {
         name: B("law13"),
         left: Pattern {
