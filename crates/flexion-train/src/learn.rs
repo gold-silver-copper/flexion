@@ -1318,7 +1318,9 @@ const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
 /// more than the start of a word.
 ///
 /// A word separates a prefix when a form of it puts the prefix after the
-/// rest, as a word of its own (`räuchre aus`). It keeps one in front when
+/// rest, as a word of its own, the rest without it (`räuchre aus`; not
+/// Latin `sitītus sit`, `sitiō`'s perfect subjunctive, whose auxiliary
+/// only spells the word's start). It keeps one in front when
 /// every form begins with it and the rest is a word whose forms, with what
 /// the cell's inseparable prefixes take off (the participle's `ge`), are the
 /// rest of its forms (`verhindern`, `hindern`); the cells' drops are learned
@@ -1333,9 +1335,12 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     let mut separable: HashMap<&str, &str> = HashMap::default();
     for w in words {
         let prefix = w.cells.iter().filter_map(|fs| fs.first()).find_map(|f| {
-            let (_, tail) = f.letters.rsplit_once(' ')?;
-            (!tail.is_empty() && w.letters.starts_with(tail) && w.letters.len() > tail.len())
-                .then_some(tail)
+            let (head, tail) = f.letters.rsplit_once(' ')?;
+            (!tail.is_empty()
+                && w.letters.starts_with(tail)
+                && w.letters.len() > tail.len()
+                && !head.starts_with(tail))
+            .then_some(tail)
         });
         if let Some(p) = prefix {
             separable.insert(w.key.as_str(), p);
@@ -3358,6 +3363,39 @@ mod tests {
                 })
                 .collect(),
         }
+    }
+
+    #[test]
+    fn an_auxiliary_that_spells_the_word_s_start_is_no_separated_prefix() {
+        // German `ausräuchern`, `räuchre aus`: the prefix after the rest,
+        // the rest without it. Latin `summoveō`, `summōtus sum`: the
+        // auxiliary only spells the word's start, which the participle
+        // still has.
+        let rests = ["räuchern", "machen", "laufen", "gehen", "sehen", "fallen"];
+        let german: Vec<Word> = rests
+            .iter()
+            .flat_map(|r| {
+                let stem = r.trim_end_matches("en").trim_end_matches('n');
+                [
+                    word(
+                        &format!("aus{r}"),
+                        &[&format!("aus{r}"), &format!("{stem}e aus")],
+                    ),
+                    word(r, &[r, &format!("{stem}e")]),
+                ]
+            })
+            .collect();
+        assert!(prefixes(&german).0.is_some());
+        let latin: Vec<Word> = ["moveo", "muto", "murmuro", "mitto", "mergo", "mano"]
+            .iter()
+            .map(|r| {
+                word(
+                    &format!("sum{r}"),
+                    &[&format!("sum{r}"), &format!("sum{r}tus sum")],
+                )
+            })
+            .collect();
+        assert!(prefixes(&latin).0.is_none());
     }
 
     #[test]
