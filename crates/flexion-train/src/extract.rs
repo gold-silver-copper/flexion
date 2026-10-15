@@ -156,8 +156,9 @@ pub fn extract(
 const FOREIGN: f64 = 0.02;
 
 /// Entries whose table is another word's: none of the forms in its
-/// lemma's cell has the headword's letters (Polish `zaklepywać` with
-/// `zaklepywywać`'s table). Where they are fewer than [`FOREIGN`] of a part
+/// lemma's cell has the headword's letters, whatever marks either writes
+/// (Polish `zaklepywać` with `zaklepywywać`'s table; not Latin `homo` with
+/// `homō̆`, its length unsure). Where they are fewer than [`FOREIGN`] of a part
 /// of speech's entries they are noise and go; else a convention, and they
 /// stay. Each one is printed either way.
 pub fn foreign(
@@ -165,7 +166,11 @@ pub fn foreign(
     spelling: &Orthography<'_>,
     data: &mut [PosData],
 ) -> Result<(), String> {
-    let key = |s: &str| spelling.key(&spelling.read(s).letters);
+    let key = |s: &str| -> String {
+        use unicode_normalization::{UnicodeNormalization, char::is_combining_mark};
+        let key = spelling.key(&spelling.read(s).letters);
+        key.nfd().filter(|&c| !is_combining_mark(c)).collect()
+    };
     for (part, d) in lang.parts.iter().zip(data.iter_mut()) {
         let Some(lemma_cell) = crate::shape(lang, part)?.lemma_cell else {
             continue;
