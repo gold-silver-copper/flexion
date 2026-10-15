@@ -166,7 +166,8 @@ pub(super) fn learn<'s>(
         .map(|p| {
             (0..cells)
                 .map(|c| {
-                    let v = pattern::variants(p.pattern(&paradigms, c)?).next()?;
+                    let pat = p.pattern(&paradigms, c)?;
+                    let v = pattern::variants(&pat).next()?;
                     let (head, end) = v.rsplit_once('~')?;
                     Some((head.to_string(), end.chars().collect()))
                 })

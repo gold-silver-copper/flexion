@@ -712,6 +712,18 @@ pub fn learn<'s>(
             .map(|(_, t)| t)
             .collect(),
     );
+    // Paradigms that are others with something added after every pattern
+    // (Russian reflexives: `~я`, `~ь` after a vowel) are stated so.
+    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        let space = (grammar.slots.to_vec(), grammar.tables.to_vec());
+        layers(
+            paradigms,
+            flexion::Space {
+                slots: &space.0,
+                tables: &space.1,
+            },
+        );
+    }
     trace.mark("stated");
     let stats = Stats {
         words: everyone.len(),
@@ -770,6 +782,158 @@ pub fn language_marks<'l>(
         words.iter().map(|(k, l)| (k.as_str(), l.as_str())),
         settings,
     )
+}
+
+/// The share of a paradigm's cells another's patterns with an affix added
+/// must give, for it to be stated as that one with the affix (see
+/// [`layers`]).
+const LAYERED: f64 = 0.75;
+
+/// Each paradigm whose patterns are, in at least [`LAYERED`] of its cells,
+/// another's with the same thing added after each (or one of two things,
+/// by the letter that pattern ends in: Russian reflexives add `~я`, `~ь`
+/// after a vowel), stated as like that one with it (a [`flexion::Affix`]),
+/// writing only the cells it doesn't give. Every pattern stays as it was.
+fn layers(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
+    let cells = |p: &Paradigm<'_>, family: &[Paradigm<'_>]| -> Vec<Option<String>> {
+        (0..p.table.split('\t').count().saturating_sub(1))
+            .map(|c| p.pattern_in(family, space, c).map(Cow::into_owned))
+            .collect()
+    };
+    for child in 0..paradigms.len() {
+        let family = paradigms.to_vec();
+        let Some(me) = family.get(child) else {
+            continue;
+        };
+        if me.reads.is_some() || me.affix.is_some() {
+            continue;
+        }
+        let mine = cells(me, &family);
+        let ancestors = |mut q: usize| {
+            let mut line = vec![q];
+            while let Some(up) = family.get(q).and_then(|p| p.parent) {
+                q = usize::from(up);
+                if line.contains(&q) {
+                    break;
+                }
+                line.push(q);
+            }
+            line
+        };
+        let mut best: Option<(usize, usize, flexion::Affix<'static>)> = None;
+        for (q, them) in family.iter().enumerate() {
+            let Some(added) = me.lemma.strip_prefix(them.lemma.as_ref()) else {
+                continue;
+            };
+            if q == child
+                || added.is_empty()
+                || them.affix.is_some()
+                || ancestors(q).contains(&child)
+            {
+                continue;
+            }
+            let theirs = cells(them, &family);
+            // Per alternative of each cell: the letter their pattern ends in
+            // and what mine adds.
+            let mut seen: Vec<(char, String)> = Vec::new();
+            for (m, t) in mine.iter().zip(&theirs) {
+                let (Some(m), Some(t)) = (m, t) else { continue };
+                let (ms, ts): (Vec<&str>, Vec<&str>) =
+                    (m.split('|').collect(), t.split('|').collect());
+                if ms.len() != ts.len() {
+                    continue;
+                }
+                for (m, t) in ms.iter().zip(&ts) {
+                    if let (Some(end), Some(more)) = (t.chars().next_back(), m.strip_prefix(t)) {
+                        seen.push((end, more.to_string()));
+                    }
+                }
+            }
+            let mut counts: BTreeMap<&str, usize> = BTreeMap::new();
+            for (_, more) in &seen {
+                *counts.entry(more.as_str()).or_default() += 1;
+            }
+            let mut by: Vec<(&str, usize)> = counts.into_iter().collect();
+            by.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+            // The letters each of the two commonest follows; the one after
+            // fewer letters is said by them (`~ь` after a vowel).
+            let after = |more: &str| -> Vec<char> {
+                let mut letters: Vec<char> = seen
+                    .iter()
+                    .filter(|(_, m)| m == more)
+                    .map(|(end, _)| *end)
+                    .collect();
+                letters.sort_unstable();
+                letters.dedup();
+                letters
+            };
+            let (pattern, other, letters) = match (by.first(), by.get(1)) {
+                (Some(&(a, _)), Some(&(b, _))) if after(b).len() <= after(a).len() => {
+                    (a, b, after(b))
+                }
+                (Some(&(a, _)), Some(&(b, _))) => (b, a, after(a)),
+                (Some(&(a, _)), None) => (a, a, Vec::new()),
+                (None, _) => continue,
+            };
+            let affix = flexion::Affix {
+                pattern: Cow::Owned(pattern.to_string()),
+                other: Cow::Owned(other.to_string()),
+                letters: Cow::Owned(letters.into_iter().collect()),
+            };
+            // The lemma too is theirs with the affix.
+            if affix.after(&them.lemma) != me.lemma {
+                continue;
+            }
+            let given = mine
+                .iter()
+                .zip(&theirs)
+                .filter(|(m, t)| match (m, t) {
+                    (Some(m), Some(t)) => affix.after(t) == *m,
+                    (None, None) => true,
+                    _ => false,
+                })
+                .count();
+            if best.as_ref().is_none_or(|b| given > b.1) {
+                best = Some((q, given, affix));
+            }
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let Some((q, _, affix)) = best.filter(|b| b.1 as f64 >= LAYERED * mine.len() as f64) else {
+            continue;
+        };
+        let theirs = family.get(q).map(|p| cells(p, &family)).unwrap_or_default();
+        let table: String = mine
+            .iter()
+            .zip(&theirs)
+            .map(|(m, t)| {
+                let given = match (m, t) {
+                    (Some(m), Some(t)) => affix.after(t) == *m,
+                    (None, None) => true,
+                    _ => false,
+                };
+                let cell = match m {
+                    _ if given => "",
+                    Some(m) => m.as_str(),
+                    None => DERIVED,
+                };
+                format!("{cell}\t")
+            })
+            .collect();
+        let old = paradigms.get(child).cloned();
+        let slots = me.stems.split('\t').count().saturating_sub(1);
+        if let Some(p) = paradigms.get_mut(child) {
+            p.parent = u16::try_from(q).ok();
+            p.table = Cow::Owned(table);
+            p.stems = Cow::Owned("\t".repeat(slots));
+            p.affix = Some(affix);
+        }
+        // Every pattern as it was, else as it was.
+        let family = paradigms.to_vec();
+        let same = family.get(child).is_some_and(|p| cells(p, &family) == mine);
+        if let (false, Some(old), Some(p)) = (same, old, paradigms.get_mut(child)) {
+            *p = old;
+        }
+    }
 }
 
 /// How a word written in parts inflects, keyed by its first part: each
@@ -1750,6 +1914,7 @@ fn paradigms<'s>(
             table: Cow::Owned(table),
             stems: Cow::Borrowed(""),
             reads: None,
+            affix: None,
         })
     });
     let id = |c: usize| order.iter().position(|e| e.0 == c);
@@ -2920,5 +3085,53 @@ mod tests {
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])
         );
+    }
+
+    #[test]
+    fn a_paradigm_that_is_another_with_an_ending_added_says_so() {
+        // Russian reflexives: the plain verb's every pattern with `~я`
+        // after it, `~ь` after a vowel (the stem's last piece their `с`).
+        let paradigm = |name: &str, lemma: &str, cells: &[&str]| Paradigm {
+            name: Cow::Owned(name.to_string()),
+            words: 10,
+            lemma: Cow::Owned(lemma.to_string()),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Owned(cells.iter().map(|c| format!("{c}\t")).collect()),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let mut family = vec![
+            paradigm("играть", "~ть", &["~ть", "~ю", "~ешь", "~л", "~ла"]),
+            paradigm(
+                "набираться",
+                "~ть~я",
+                &["~ть~я", "~ю~ь", "~ешь~я", "~л~я", "~ла~ь"],
+            ),
+        ];
+        let before: Vec<Option<String>> = (0..5)
+            .map(|c| family[1].pattern(&family, c).map(Cow::into_owned))
+            .collect();
+        layers(&mut family, flexion::Space::default());
+        let reflexive = &family[1];
+        assert_eq!(reflexive.parent, Some(0));
+        assert_eq!(
+            reflexive.affix.as_ref().map(|a| (
+                a.pattern.as_ref(),
+                a.other.as_ref(),
+                a.letters.as_ref()
+            )),
+            Some(("~я", "~ь", "аю"))
+        );
+        assert!(
+            reflexive.table.split('\t').all(str::is_empty),
+            "{}",
+            reflexive.table
+        );
+        let after: Vec<Option<String>> = (0..5)
+            .map(|c| reflexive.pattern(&family, c).map(Cow::into_owned))
+            .collect();
+        assert_eq!(after, before);
     }
 }

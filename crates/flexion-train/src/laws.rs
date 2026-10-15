@@ -975,6 +975,7 @@ fn twins<'s>(
             table: Cow::Owned(table.join("\t")),
             stems: Cow::Owned(p.stems.to_string()),
             reads: None,
+            affix: None,
         }
     };
     let originals = paradigms.len();
@@ -1142,10 +1143,10 @@ fn reading(
         .filter(|(_, f)| f.is_some())
         .map(|(cell, _)| {
             par.pattern(paradigms, cell)
-                .and_then(|pat| pattern::variants(pat).next())
-                .map(|v| {
+                .and_then(|pat| {
+                    let v = pattern::variants(&pat).next()?;
                     let built = pattern::fill_marked(v, &stems);
-                    pre.map_or_else(|| built.clone(), |p| p.apply(&built))
+                    Some(pre.map_or_else(|| built.clone(), |p| p.apply(&built)))
                 })
                 .unwrap_or_default()
         })
@@ -1951,17 +1952,21 @@ fn neighbours(
     cells: usize,
     rank: impl Fn(usize) -> (usize, usize),
 ) -> Vec<Vec<usize>> {
-    let tables: Vec<Vec<&str>> = paradigms
+    let owned: Vec<Vec<String>> = paradigms
         .iter()
         .map(|p| {
             (0..cells)
                 .map(|c| {
                     p.pattern(paradigms, c)
-                        .and_then(|p| pattern::variants(p).next())
-                        .unwrap_or("")
+                        .and_then(|p| pattern::variants(&p).next().map(str::to_string))
+                        .unwrap_or_default()
                 })
                 .collect()
         })
+        .collect();
+    let tables: Vec<Vec<&str>> = owned
+        .iter()
+        .map(|t| t.iter().map(String::as_str).collect())
         .collect();
     (0..paradigms.len())
         .map(|q| {

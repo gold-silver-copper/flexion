@@ -524,6 +524,25 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             st.irregular_forms,
         );
         println!("  stages: {}", learned.trace.line());
+        let affixed: Vec<String> = g
+            .paradigms
+            .iter()
+            .filter_map(|p| {
+                let a = p.affix.as_ref()?;
+                let q = g.paradigms.get(usize::from(p.parent?))?;
+                Some(format!(
+                    "{} = {} + {}/{}",
+                    p.name, q.name, a.pattern, a.other
+                ))
+            })
+            .collect();
+        if !affixed.is_empty() {
+            println!(
+                "  paradigms with an affix: {} ({})",
+                affixed.len(),
+                abbreviate(&affixed.iter().map(String::as_str).collect::<Vec<_>>(), 6)
+            );
+        }
         println!(
             "  stem slots {}, ending tables {}, listed stems {}",
             g.slots.len(),

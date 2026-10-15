@@ -15,7 +15,7 @@ pub use grammar::{
     Prefixes, Separation, Trust, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{DERIVED, Form, Paradigm, Relation, Space};
+pub use paradigm::{Affix, DERIVED, Form, Paradigm, Relation, Space};
 pub use sound_law;
 pub use stems::{EndingTable, LIKE, Slot, compose, factor};
 pub use stress::{

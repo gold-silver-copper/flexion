@@ -504,10 +504,26 @@ fn grammar_files(
         let stems: String = (0..g.slots.len())
             .map(|i| format!("                $(flexion::cell!($s{i}),)? \"\\t\",\n"))
             .collect();
+        // What a {one} adds after the patterns of the one it is like.
+        let affixed = g.paradigms.iter().any(|p| p.affix.is_some());
+        let (with, affix) = if affixed {
+            (
+                " $(with $affix:literal $(, $other:literal after $letters:literal)?)?",
+                "affix!($($($affix $(, $other, $letters)?)?)?)",
+            )
+        } else {
+            ("", "None")
+        };
         let _ = writeln!(
             p,
-            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
+            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?{with})?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n            affix: {affix},\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
         );
+        if affixed {
+            let _ = writeln!(
+                p,
+                "/// What a {one} adds after each pattern of the one it is like (`with \"~я\", \"~ь\"\n/// after \"аеиоуыэюя\"`: `~я`, or `~ь` where that pattern ends in a vowel).\nmacro_rules! affix {{\n    () => {{\n        None\n    }};\n    ($affix:literal) => {{\n        affix!($affix, $affix, \"\")\n    }};\n    ($affix:literal, $other:literal, $letters:literal) => {{\n        Some(flexion::Affix {{\n            pattern: ::std::borrow::Cow::Borrowed($affix),\n            other: ::std::borrow::Cow::Borrowed($other),\n            letters: ::std::borrow::Cow::Borrowed($letters),\n        }})\n    }};\n}}\n"
+            );
+        }
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
             let _ = writeln!(
                 p,
@@ -596,8 +612,27 @@ fn grammar_files(
             let more = if own.len() > 6 { ", …" } else { "" };
             let named: Vec<&str> = own.iter().take(6).map(String::as_str).collect();
             let cells = if own.len() == 1 { "cell" } else { "cells" };
+            let with = par.affix.as_ref().map_or(String::new(), |a| {
+                if a.other == a.pattern {
+                    format!(" with `{}` after each pattern", a.pattern)
+                } else {
+                    format!(
+                        " with `{}` after each pattern (`{}` after {})",
+                        a.pattern,
+                        a.other,
+                        a.letters
+                            .chars()
+                            .map(String::from)
+                            .collect::<Vec<_>>()
+                            .join(", ")
+                    )
+                }
+            });
+            if own.is_empty() {
+                return format!(" Like {q}{with}.");
+            }
             format!(
-                " Like {q}, except in {} {cells}: {}{more}.",
+                " Like {q}{with}, except in {} {cells}: {}{more}.",
                 own.len(),
                 named.join(", ")
             )
@@ -638,7 +673,19 @@ fn grammar_files(
                     .as_ref()
                     .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
                     .map_or(String::new(), |v| format!(" as {}", const_name(&v.0)));
-                format!(", like {q}{view}")
+                let with = par.affix.as_ref().map_or(String::new(), |a| {
+                    if a.other == a.pattern {
+                        format!(" with {}", Lit(&a.pattern))
+                    } else {
+                        format!(
+                            " with {}, {} after {}",
+                            Lit(&a.pattern),
+                            Lit(&a.other),
+                            Lit(&a.letters)
+                        )
+                    }
+                });
+                format!(", like {q}{view}{with}")
             })
         );
         // The slots it states with a stem and an ending table.

@@ -680,8 +680,9 @@ pub fn tables<'s>(
     for p in paradigms {
         let mut mine = Vec::with_capacity(count);
         for (s, list) in cells.iter().enumerate() {
-            let patterns: Vec<Option<&str>> =
+            let patterns: Vec<Option<std::borrow::Cow<'_, str>>> =
                 list.iter().map(|&c| p.pattern(paradigms, c)).collect();
+            let patterns: Vec<Option<&str>> = patterns.iter().map(Option::as_deref).collect();
             let factored = flexion::factor(&patterns);
             let entry = factored.and_then(|(stem, table)| {
                 let tables = found.get_mut(s)?;
@@ -751,7 +752,7 @@ pub fn state(
     prices: &crate::bits::Prices,
 ) -> Vec<usize> {
     let frozen: Vec<flexion::Paradigm<'_>> = paradigms.to_vec();
-    let resolved = |p: usize, cells: &[u16]| -> Vec<Option<&str>> {
+    let resolved = |p: usize, cells: &[u16]| -> Vec<Option<std::borrow::Cow<'_, str>>> {
         let Some(par) = frozen.get(p) else {
             return Vec::new();
         };
@@ -774,6 +775,7 @@ pub fn state(
             {
                 continue;
             }
+            let mine: Vec<Option<&str>> = mine.iter().map(Option::as_deref).collect();
             let Some((stem, table)) = flexion::factor(&mine) else {
                 continue;
             };
