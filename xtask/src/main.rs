@@ -423,11 +423,23 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     let mut saved = outcomes::Saved::default();
+    // The language's marks model, from every part of speech's training
+    // words (and those less the dev tenth, for the sharpness).
+    let trained = |l: &Lexeme| eval::bucket(&l.key) != fold && measure::kept(&l.key, o.share);
+    let marks = |keep: &dyn Fn(&Lexeme) -> bool| {
+        flexion_train::marks(lang, &script.orthography(), &data, keep, settings)
+    };
+    let train_marks = marks(&trained)?;
+    let fit_marks = if o.quick {
+        None
+    } else {
+        marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
+    };
     for (part, d) in lang.parts.iter().zip(&data) {
         if only.is_some_and(|o| o != part.name) {
             continue;
         }
-        let shape = flexion_train::shape(lang, part)?;
+        let mut shape = flexion_train::shape(lang, part)?;
         let names = cell_names(lang, part)?;
         let mut train = training(d, o, shape.lemma_cell);
         if o.share < 100 || o.thin > 0 {
@@ -476,6 +488,10 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 .iter()
                 .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
+            let shape = learn::Shape {
+                marks: fit_marks.clone(),
+                ..shape.clone()
+            };
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
             eval::fit_sharpness(&g, &g.orthography, &dev)
         };
@@ -485,6 +501,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
+        shape.marks = train_marks.clone();
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
         learned.grammar.sharpness = sharpness;
         learned.grammar.trust = trust;
@@ -601,8 +618,24 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 .unwrap_or("-"),
             by.join(" ")
         );
-        if let Some(least) = g.heads {
-            println!("  words inflect their last part: of at least {least} letters");
+        if !g.heads.is_empty() {
+            println!(
+                "  words inflect their last part: {}; and {} words alone ({})",
+                g.heads
+                    .least
+                    .map_or("none by its length".to_string(), |l| format!(
+                        "of at least {l} letters"
+                    )),
+                g.heads.words.len(),
+                abbreviate(
+                    &g.heads
+                        .words
+                        .iter()
+                        .map(AsRef::as_ref)
+                        .collect::<Vec<&str>>(),
+                    12
+                )
+            );
         }
         if let Some(a) = &g.accent {
             println!(
@@ -1013,13 +1046,11 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         lang.parts.get(pi).ok_or("part")?,
         data.get(pi).ok_or("data")?,
     );
-    let shape = flexion_train::shape(lang, part)?;
-    let lexemes: Vec<Lexeme> = d
-        .lexemes
-        .iter()
-        .filter(|l| !holdout || eval::bucket(&l.key) != eval::TEST)
-        .cloned()
-        .collect();
+    let mut shape = flexion_train::shape(lang, part)?;
+    let kept = |l: &Lexeme| !holdout || eval::bucket(&l.key) != eval::TEST;
+    let settings = choose::Settings::default();
+    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
+    let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
     let learned = learn::learn(
         script.orthography(),
         &shape,
@@ -1175,6 +1206,9 @@ fn readme(lang: &Language) -> Result<(), String> {
         .flatten()
         .filter_map(|f| f.file_name().into_string().ok())
         .collect();
+    if src.join("marks.rs").exists() {
+        files.push("marks.rs".to_string());
+    }
     files.sort();
     files.dedup();
     let text = flexion_train::print::readme(lang, &format!("{report}\n"), &files);

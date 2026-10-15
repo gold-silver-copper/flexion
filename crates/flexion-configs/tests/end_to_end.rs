@@ -41,13 +41,23 @@ fn data(lang: &Language, script: &Script) -> Vec<PosData> {
     data
 }
 
-/// Every part of speech's grammar, learned from all its words.
+/// Every part of speech's grammar, learned from all its words (with the
+/// language's marks model, learned once).
 fn grammars<'s>(lang: &Language, script: &'s Script, data: &[PosData]) -> Vec<Learned<'s>> {
+    let marks = flexion_train::marks(
+        lang,
+        &script.orthography(),
+        data,
+        |_| true,
+        Settings::default(),
+    )
+    .expect("marks");
     lang.parts
         .iter()
         .zip(data)
         .map(|(part, d)| {
-            let shape = flexion_train::shape(lang, part).expect("shape");
+            let mut shape = flexion_train::shape(lang, part).expect("shape");
+            shape.marks = marks.clone();
             learn::learn(
                 script.orthography(),
                 &shape,

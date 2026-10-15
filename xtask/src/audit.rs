@@ -44,8 +44,15 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
         .find(|(p, _)| p.name == o.pos)
         .ok_or("no such part of speech")?;
     let names = crate::cell_names(lang, part)?;
-    let shape = flexion_train::shape(lang, part)?;
+    let mut shape = flexion_train::shape(lang, part)?;
     let script = script::Script::new(&lang.spelling);
+    shape.marks = flexion_train::marks(
+        lang,
+        &script.orthography(),
+        data,
+        |l: &Lexeme| eval::bucket(&l.key) != o.fold,
+        choose::Settings::default(),
+    )?;
     let train: Vec<Lexeme> = d
         .lexemes
         .iter()

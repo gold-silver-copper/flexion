@@ -75,6 +75,32 @@ pub mod trace;
 
 use spec::{Language, PartOfSpeech};
 
+/// The language's marks model (see [`learn::language_marks`]), from the
+/// words of every part of speech `keep` keeps (those trained on).
+pub fn marks(
+    lang: &Language,
+    orthography: &flexion::Orthography<'_>,
+    data: &[extract::PosData],
+    keep: impl Fn(&extract::Lexeme) -> bool,
+    settings: choose::Settings,
+) -> Result<Option<flexion::Choice<'static, char>>, String> {
+    let mut words = Vec::new();
+    for (part, d) in lang.parts.iter().zip(data) {
+        let lemma_cell = shape(lang, part)?.lemma_cell;
+        words.extend(
+            d.lexemes
+                .iter()
+                .filter(|l| keep(l))
+                .map(|l| (lemma_cell, l)),
+        );
+    }
+    Ok(learn::language_marks(
+        orthography,
+        words.into_iter(),
+        settings,
+    ))
+}
+
 /// The cells of a part of speech's principal parts after its lemma.
 pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String> {
     let cells = cells::Cells::new(lang, part)?;
@@ -127,6 +153,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         lemma_cell,
         capitalized: part.capitalized,
         max_words: part.max_words,
+        marks: None,
         inherent: part
             .inherent
             .iter()

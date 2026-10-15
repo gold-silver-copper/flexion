@@ -32,6 +32,9 @@ pub fn files(
     if let Some(extra) = lang.extra {
         out.push(("src/extra.rs".to_string(), extra.to_string()));
     }
+    if let Some(marks) = marks_of(parts)? {
+        out.push(("src/marks.rs".to_string(), marks_file(marks)));
+    }
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
         out.extend(grammar_files(lang, part.spec, part.learned, &cells));
@@ -40,10 +43,39 @@ pub fn files(
         .iter()
         .filter_map(|(path, _)| Some(path.strip_prefix("src/")?.split_once('/')?.1.to_string()))
         .collect();
+    if out.iter().any(|(path, _)| path == "src/marks.rs") {
+        grammar.push("marks.rs".to_string());
+    }
     grammar.sort();
     grammar.dedup();
     out.push(("README.md".to_string(), readme(lang, report, &grammar)));
     Ok(out)
+}
+
+/// The language's marks model: one for every part of speech (see
+/// [`crate::learn::language_marks`]), or none.
+fn marks_of<'a, 's>(
+    parts: &[Part<'a, 's>],
+) -> Result<Option<&'a flexion::Choice<'s, char>>, String> {
+    let mut all = parts
+        .iter()
+        .filter_map(|p| p.learned.grammar.marks.as_ref());
+    let Some(first) = all.next() else {
+        return Ok(None);
+    };
+    if all.any(|m| m != first) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
+        return Err("the parts of speech have different marks: learn them once for the language (`flexion_train::marks`)".into());
+    }
+    Ok(Some(first))
+}
+
+/// `src/marks.rs`: how a letter typed without its mark is written.
+fn marks_file(marks: &flexion::Choice<'_, char>) -> String {
+    format!(
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter and the letters after it\n//! (`#` is the word's start or end): the longest one that matches decides\n//! (`tatio#` → `ā`, as in `-ātiō`; `#de` → `ē`, as in `dē-`; `ae` → `e`, a\n//! diphthong), giving each way of writing the letter with how many of the\n//! dictionary's letters in that place, in words of every part of speech, are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n",
+        thousands(marks.rules.len()),
+        choice_macro("starts", marks, |c| format!("{c:?}"))
+    )
 }
 
 /// Write the crate into `dir`, replacing its `src/`.
@@ -308,7 +340,7 @@ fn grammar_files(
         (!g.relations.is_empty(), "mod relations"),
         (g.compound.is_some(), "mod compounds"),
         (g.prefixes.is_some(), "mod prefixes"),
-        (g.marks.is_some(), "mod marks"),
+        (!g.heads.words.is_empty(), "mod heads"),
         (true, "mod irregular"),
         (!g.slots.is_empty(), "mod stems"),
         (g.laws.is_some(), "mod laws"),
@@ -331,9 +363,18 @@ fn grammar_files(
             "None".into()
         }
     };
+    let heads = format!(
+        "flexion::Heads {{ least: {:?}, words: Cow::Borrowed({}) }}",
+        g.heads.least,
+        if g.heads.words.is_empty() {
+            "&[]"
+        } else {
+            "heads::HEADS"
+        }
+    );
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads:?},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -374,13 +415,13 @@ fn grammar_files(
             )),
         compound = some(g.compound.is_some(), "compounds::COMPOUND"),
         prefixes = some(g.prefixes.is_some(), "prefixes::PREFIXES"),
-        heads = g.heads,
+        heads = heads,
         accent = some(
             g.accent.is_some(),
             "flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    }"
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
-        marks = some(g.marks.is_some(), "marks::MARKS"),
+        marks = some(g.marks.is_some(), "crate::marks::MARKS"),
     );
     m.push_str(&api_code(
         spec,
@@ -728,14 +769,20 @@ fn grammar_files(
         files.push((format!("{dir}/compounds.rs"), r));
     }
 
-    // marks.rs
-    if let Some(marks) = &g.marks {
-        let r = format!(
-            "//! How a letter typed without its mark is written. Each rule reads the letter\n//! before it, the letter and the letters after it (`#` is the word's start or\n//! end): the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`;\n//! `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong), giving each way of writing\n//! the letter with how many of the dictionary's letters in that place are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
-            thousands(marks.rules.len()),
-            choice_macro("starts", marks, |c| format!("{c:?}"))
+    // heads.rs
+    if !g.heads.words.is_empty() {
+        let mut r = format!(
+            "//! Words a word ending in one inflects as, its front kept (Italian\n//! `soddisfare` as `fare`): those whose own compounds in the dictionary do{}.\n\nuse std::borrow::Cow;\n\n/// {} words.\npub(super) static HEADS: &[Cow<'static, str>] = flexion::words![\n",
+            g.heads.least.map_or(String::new(), |l| format!(
+                ", shorter than the {l} letters from which every listed word is one"
+            )),
+            thousands(g.heads.words.len()),
         );
-        files.push((format!("{dir}/marks.rs"), r));
+        for w in g.heads.words.iter() {
+            let _ = writeln!(r, "    {w:?},");
+        }
+        r.push_str("];\n");
+        files.push((format!("{dir}/heads.rs"), r));
     }
 
     // spellings.rs
@@ -934,6 +981,9 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
         s.push_str("mod extra;\npub use extra::*;\n");
     }
     s.push_str("mod orthography;\n");
+    if marks_of(parts)?.is_some() {
+        s.push_str("mod marks;\n");
+    }
     for part in parts {
         let _ = writeln!(s, "pub mod {};", part.spec.name);
     }
@@ -1579,6 +1629,10 @@ pub fn readme(lang: &Language, report: &str, files: &[String]) -> String {
         (
             "compounds.rs",
             "whether a word written in parts inflects each part",
+        ),
+        (
+            "heads.rs",
+            "the words a word ending in one inflects as, its front kept (compounds)",
         ),
         (
             "marks.rs",

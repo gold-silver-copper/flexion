@@ -324,6 +324,33 @@ pub struct Known<'q> {
     pub full: bool,
 }
 
+/// Which listed words a word ending in one inflects as (compounds, Finnish
+/// `aavameri` as `meri`): every one of at least `least` letters, where the
+/// language's compounds do; and those `words`, whose own compounds do.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Heads<'a> {
+    pub least: Option<u8>,
+    /// Sorted.
+    pub words: Cow<'a, [Cow<'a, str>]>,
+}
+
+impl Heads<'_> {
+    /// No word inflects as a word it ends in.
+    pub fn is_empty(&self) -> bool {
+        self.least.is_none() && self.words.is_empty()
+    }
+
+    /// Whether a word ending in `head` (a listed word) inflects as it.
+    pub fn inflects(&self, head: &str) -> bool {
+        self.least
+            .is_some_and(|least| head.chars().count() >= usize::from(least))
+            || self
+                .words
+                .binary_search_by(|w| w.as_ref().cmp(head))
+                .is_ok()
+    }
+}
+
 /// The inflection of one part of speech, as learned from the dictionary.
 #[derive(Debug, Clone)]
 pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
@@ -348,9 +375,9 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     pub feature: Option<(u8, Choice<'a, F>)>,
     /// Prefixes words inflect behind, where the part of speech has them.
     pub prefixes: Option<Prefixes<'a>>,
-    /// Where words inflect their last part (compounds): the fewest letters
-    /// that part has (see [`Grammar::head`]).
-    pub heads: Option<u8>,
+    /// Where words inflect their last part (compounds; see
+    /// [`Grammar::head`]).
+    pub heads: Heads<'a>,
     /// Which words written in parts inflect each part, read off the first
     /// part (`диван` of `диван-кровать`).
     pub compound: Option<Choice<'a, Compound>>,
@@ -453,7 +480,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // full: the dictionary's headword may leave off marks its forms
         // have), or as its letters say.
         let mut spelled = 1.0;
-        let mut otherwise = None;
+        let mut otherwise = Vec::new();
         match (self.spelling(&word.letters, &key), &self.marks) {
             (Some(letters), _) => word.letters = letters.to_string(),
             (None, Some(marks)) if !known.full => {
@@ -736,8 +763,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             out.retain(|c| c.probability > 0.0);
             lists.push(out);
         }
-        // The word spelled the next likeliest way, as likely as that is.
-        if let Some((letters, p)) = otherwise {
+        // The word spelled the next likeliest ways, as likely as each is.
+        for (letters, p) in otherwise {
             let typed = self.orthography.write(&letters, word.stress, casing);
             let full = Known {
                 full: true,
@@ -1108,14 +1135,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// The listed word a word the grammar doesn't list ends in (its head;
-    /// where words inflect their last part, see [`Grammar::heads`]), the
-    /// longest, behind at least [`FRONT_LETTERS`] letters: the letters
-    /// before it and its letters (`letters` the word's, `key` how it is
-    /// looked up). None for a word a prefix splits (see [`Prefixes`]): the
-    /// prefix decides where its letters go.
+    /// one whose compounds inflect as it, see [`Heads`]), the longest,
+    /// behind at least [`FRONT_LETTERS`] letters: the letters before it and
+    /// its letters (`letters` the word's, `key` how it is looked up). None
+    /// for a word a prefix splits (see [`Prefixes`]): the prefix decides
+    /// where its letters go.
     pub fn head<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
-        let least = usize::from(self.heads?);
-        if self.lists(key)
+        if self.heads.is_empty()
+            || self.lists(key)
             || self
                 .prefixes
                 .as_ref()
@@ -1125,11 +1152,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             return None;
         }
         let n = key.chars().count();
-        let at = (FRONT_LETTERS..=n.checked_sub(least)?).find(|&i| {
+        let at = (FRONT_LETTERS..n).find(|&i| {
             key.char_indices()
                 .nth(i)
                 .and_then(|(b, _)| key.get(b..))
-                .is_some_and(|head| self.lists(head))
+                .is_some_and(|head| self.heads.inflects(head) && self.lists(head))
         })?;
         let (b, _) = letters.char_indices().nth(at)?;
         Some(letters.split_at(b))
@@ -1344,24 +1371,26 @@ pub fn restore(
     restorations(orthography, marks, smoothing, letters, key).0
 }
 
-/// How likely the next likeliest spelling must be, against the likeliest,
-/// to be read too (lower than a tenth: Latin top-3 +1 to +1.2 points).
+/// How likely another spelling must be, against the likeliest, to be read
+/// too (lower than a tenth: Latin top-3 +1 to +1.2 points).
 const SECOND_SPELLING: f32 = 0.03;
 
-/// The likeliest spelling (see [`restore`]), and the next likeliest, the
-/// letter it is least sure of written otherwise, if that is at least
-/// [`SECOND_SPELLING`] as likely.
+/// Spellings kept while reading a word's letters, and read at most (the
+/// likeliest and two more).
+const SPELLINGS: usize = 3;
+
+/// The likeliest spelling (see [`restore`]), and the next likeliest ones,
+/// each at least [`SECOND_SPELLING`] as likely: the [`SPELLINGS`] likeliest
+/// over every letter's marks at once (a beam), so that a word unsure of two
+/// letters is read with either written otherwise.
 fn restorations(
     o: &Orthography<'_>,
     marks: &Choice<'_, char>,
     smoothing: f32,
     letters: &str,
     key: &str,
-) -> ((String, f32), Option<(String, f32)>) {
-    let mut p = 1.0;
-    let mut out: Vec<char> = Vec::with_capacity(letters.len());
-    // The letter least sure of: where, what else, and how much less likely.
-    let mut doubt: Option<(usize, char, f32)> = None;
+) -> ((String, f32), Vec<(String, f32)>) {
+    let mut beam: Vec<(String, f32)> = vec![(String::with_capacity(letters.len()), 1.0)];
     let mut before = WORD_END;
     for ((i, k), c) in key.char_indices().zip(letters.chars()) {
         let readings = if c == k && o.folded.iter().any(|e| e.1 == c) {
@@ -1371,29 +1400,32 @@ fn restorations(
             Vec::new()
         };
         before = k;
-        let [first, rest @ ..] = readings.as_slice() else {
-            out.push(c);
-            continue;
-        };
-        if let Some(second) = rest.first()
-            && first.probability > 0.0
-        {
-            let ratio = second.probability / first.probability;
-            if doubt.is_none_or(|d| ratio > d.2) {
-                doubt = Some((out.len(), second.value, ratio));
+        if readings.is_empty() {
+            for (s, _) in &mut beam {
+                s.push(c);
             }
+            continue;
         }
-        out.push(first.value);
-        p *= first.probability;
+        let mut next: Vec<(String, f32)> = beam
+            .iter()
+            .flat_map(|(s, p)| {
+                readings.iter().map(move |r| {
+                    let mut s = s.clone();
+                    s.push(r.value);
+                    (s, p * r.probability)
+                })
+            })
+            .collect();
+        next.sort_by(|a, b| b.1.total_cmp(&a.1));
+        next.truncate(SPELLINGS);
+        beam = next;
     }
-    let other = doubt
-        .filter(|d| d.2 >= SECOND_SPELLING)
-        .map(|(at, other, ratio)| {
-            let alt = out.iter().enumerate();
-            let alt = alt.map(|(i, &c)| if i == at { other } else { c });
-            (alt.collect(), p * ratio)
-        });
-    ((out.into_iter().collect(), p), other)
+    let mut beam = beam.into_iter();
+    let first = beam.next().unwrap_or_default();
+    let others = beam
+        .filter(|(_, p)| first.1 > 0.0 && p / first.1 >= SECOND_SPELLING)
+        .collect();
+    (first, others)
 }
 
 /// A form the dictionary lists.

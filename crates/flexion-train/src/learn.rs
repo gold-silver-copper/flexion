@@ -32,6 +32,10 @@ pub struct Shape {
     pub max_words: Option<usize>,
     /// Per cell, its name (`gen_pl`), as the crate's constants are named.
     pub names: Vec<String>,
+    /// How a letter typed without its mark is written, learned once for the
+    /// language from every part of speech's words (see [`language_marks`]);
+    /// none: learned from this part's alone.
+    pub marks: Option<flexion::Choice<'static, char>>,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -143,18 +147,7 @@ pub fn learn<'s>(
         .chain(rest)
         .filter_map(|i| unique.get(i).map(|&l| l.clone()))
         .collect();
-    // A word is spelled as its table writes it (`ὑποκρῠ́πτω`, where the
-    // headword says `ὑποκρύπτω`): its forms carry those marks.
-    let letters = |l: &Lexeme| {
-        let headword = orthography.read(&l.full).letters;
-        shape
-            .lemma_cell
-            .and_then(|c| l.cells.get(c))
-            .and_then(|fs| fs.first())
-            .map(|f| orthography.read(f).letters)
-            .filter(|t| orthography.key(t) == orthography.key(&headword))
-            .unwrap_or(headword)
-    };
+    let letters = |l: &Lexeme| spelled(&orthography, shape.lemma_cell, l);
     let everyone: Vec<Word> = every
         .iter()
         .map(|l| Word {
@@ -399,7 +392,33 @@ pub fn learn<'s>(
         .unzip();
     let stress_labels = stress_labels.unwrap_or_default();
     // How a letter typed without its mark is written, by what follows it.
-    let marks = marks(&orthography, &words, settings);
+    let marks: Option<flexion::Choice<'s, char>> = match &shape.marks {
+        Some(marks) => Some(flexion::Choice {
+            side: marks.side,
+            rules: Cow::Owned(
+                marks
+                    .rules
+                    .iter()
+                    .map(|r| flexion::Rule {
+                        ending: Cow::Owned(r.ending.to_string()),
+                        counts: Cow::Owned(r.counts.to_vec()),
+                        regular: r.regular,
+                    })
+                    .collect(),
+            ),
+            exceptions: Cow::Owned(
+                marks
+                    .exceptions
+                    .iter()
+                    .map(|(w, l)| (Cow::Owned(w.to_string()), *l))
+                    .collect(),
+            ),
+        }),
+        None => {
+            let spelled = words.iter().map(|w| (w.key.as_str(), w.letters.as_str()));
+            marks(&orthography, spelled, settings)
+        }
+    };
     // Spellings a key doesn't show, listed: those the marks don't give (of
     // every word, those inflecting behind a prefix too, and those whose
     // headword leaves off marks its forms have); without marks, those the
@@ -455,7 +474,7 @@ pub fn learn<'s>(
             .zip(feature_choice),
         compound: compound_choice,
         prefixes,
-        heads: None,
+        heads: flexion::Heads::default(),
         accent,
         laws: program,
         spellings: Cow::Owned(spellings),
@@ -480,18 +499,15 @@ pub fn learn<'s>(
     let compounds: crate::HashSet<&str> = everyone
         .iter()
         .filter(|w| {
-            let Some(least) = grammar.heads.map(usize::from) else {
-                return false;
-            };
             let n = w.key.chars().count();
-            (flexion::FRONT_LETTERS..=n.saturating_sub(least))
+            (flexion::FRONT_LETTERS..n)
                 .filter_map(|i| {
                     w.key
                         .char_indices()
                         .nth(i)
                         .and_then(|(b, _)| w.key.get(b..))
                 })
-                .any(|h| keys.contains(h))
+                .any(|h| keys.contains(h) && grammar.heads.inflects(h))
         })
         .map(|w| w.key.as_str())
         .collect();
@@ -716,6 +732,44 @@ pub fn learn<'s>(
         views,
         trace,
     }
+}
+
+/// A word as its table writes it (`ὑποκρῠ́πτω`, where the headword says
+/// `ὑποκρύπτω`): its forms carry those marks. `lemma_cell`: its part of
+/// speech's.
+fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme) -> String {
+    let headword = orthography.read(&l.full).letters;
+    lemma_cell
+        .and_then(|c| l.cells.get(c))
+        .and_then(|fs| fs.first())
+        .map(|f| orthography.read(f).letters)
+        .filter(|t| orthography.key(t) == orthography.key(&headword))
+        .unwrap_or(headword)
+}
+
+/// How a letter typed without its mark is written (vowel length), learned
+/// once for a language from every part of speech's words (each part's
+/// lexemes with its lemma cell): a root's length shown in one part of
+/// speech's word (`iūdicō`) tells it in another's (`iūdex`). None where
+/// no word writes a mark its key doesn't.
+pub fn language_marks<'l>(
+    orthography: &Orthography<'_>,
+    words: impl Iterator<Item = (Option<usize>, &'l Lexeme)>,
+    settings: Settings,
+) -> Option<flexion::Choice<'static, char>> {
+    let mut seen = crate::HashSet::default();
+    let words: Vec<(String, String)> = words
+        .map(|(lemma_cell, l)| {
+            let letters = spelled(orthography, lemma_cell, l);
+            (orthography.key(&letters), letters)
+        })
+        .filter(|w| seen.insert(w.clone()))
+        .collect();
+    marks(
+        orthography,
+        words.iter().map(|(k, l)| (k.as_str(), l.as_str())),
+        settings,
+    )
 }
 
 /// How a word written in parts inflects, keyed by its first part: each
@@ -1196,19 +1250,19 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
 /// [`flexion::Grammar::marks`]): learned from every letter of the words that
 /// a mark could stand on, by the letter before it and the letters from it
 /// on. `None` where no word writes such a mark.
-fn marks<'a>(
+fn marks<'a, 'w>(
     orthography: &Orthography<'_>,
-    words: &[Word],
+    words: impl Iterator<Item = (&'w str, &'w str)>,
     settings: Settings,
 ) -> Option<flexion::Choice<'a, char>> {
     let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
-    for w in words {
+    for (key, letters) in words {
         let mut before = flexion::WORD_END;
-        for ((i, k), l) in w.key.char_indices().zip(w.letters.chars()) {
+        for ((i, k), l) in key.char_indices().zip(letters.chars()) {
             if markable(k)
-                && let Some(rest) = w.key.get(i..)
+                && let Some(rest) = key.get(i..)
             {
                 marked |= l != k;
                 examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
@@ -2247,17 +2301,23 @@ const HEAD_SHARE: f64 = 0.9;
 const HEAD_WORDS: usize = 20;
 /// The most letters a last part is required to have.
 const HEAD_MOST: usize = 8;
+/// The fewest words ending in a word, for it alone to be a head (see
+/// [`heads`]).
+const HEAD_OWN: usize = 2;
 
-/// Whether words inflect their last part (compounds, Finnish `aavameri` as
-/// `meri`): the fewest letters it must have for [`HEAD_SHARE`] of the words
-/// ending in a word that long, of those `irregular` accepts, to have that
-/// word's forms, their front kept, in every cell both have; none if no
-/// length does.
-fn heads(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> Option<u8> {
+/// Which words a word ending in one inflects as (compounds, Finnish
+/// `aavameri` as `meri`), of those `irregular` accepts: every one of at
+/// least so many letters, the fewest for which [`HEAD_SHARE`] of the words
+/// ending in a word that long have that word's forms, their front kept,
+/// in every cell both have (none if no length does); and, of the shorter
+/// ones (or all, where no length does), each word that [`HEAD_SHARE`] of
+/// the words ending in it, at least [`HEAD_OWN`], inflect as (Italian
+/// `fare`: `disfare`, `soddisfare`).
+fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
-    // Per word ending in another: the longest such's letters, and whether
-    // the word inflects as it.
-    let found: Vec<(usize, bool)> = words
+    // Per word ending in another: the longest such, its letters, and
+    // whether the word inflects as it.
+    let found: Vec<(&str, usize, bool)> = words
         .iter()
         .filter(|w| !w.key.contains('-'))
         .filter_map(|w| {
@@ -2276,13 +2336,13 @@ fn heads(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> Opti
             let same = pairs
                 .iter()
                 .all(|(mine, theirs)| mine.strip_prefix(front.as_str()) == Some(*theirs));
-            (!pairs.is_empty()).then_some((n - at, same))
+            (!pairs.is_empty()).then_some((head.key.as_str(), n - at, same))
         })
         .collect();
     // Per length of the last part (the longest counted together), the words
     // and those that inflect as it.
     let mut by_length = [(0usize, 0usize); HEAD_MOST + 1];
-    for &(letters, same) in &found {
+    for &(_, letters, same) in &found {
         if let Some(slot) = by_length.get_mut(letters.min(HEAD_MOST)) {
             *slot = (slot.0 + 1, slot.1 + usize::from(same));
         }
@@ -2292,7 +2352,7 @@ fn heads(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> Opti
     let holds = |&(n, same): &(usize, usize)| same as f64 >= HEAD_SHARE * n as f64;
     // The shortest length from which on every length's words do (those of
     // a length too few to judge, with the next).
-    (1..=HEAD_MOST)
+    let least = (1..=HEAD_MOST)
         .find(|&least| {
             let mut pool = (0, 0);
             let mut all = 0;
@@ -2308,7 +2368,24 @@ fn heads(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> Opti
             }
             all >= HEAD_WORDS && holds(&pool)
         })
-        .and_then(|least| u8::try_from(least).ok())
+        .and_then(|least| u8::try_from(least).ok());
+    // The shorter heads, each by its own words.
+    let mut by_head: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
+    for &(head, letters, same) in &found {
+        if least.is_none_or(|least| letters < usize::from(least)) {
+            let slot = by_head.entry(head).or_default();
+            *slot = (slot.0 + 1, slot.1 + usize::from(same));
+        }
+    }
+    let words: Vec<Cow<'a, str>> = by_head
+        .into_iter()
+        .filter(|(_, counts)| counts.0 >= HEAD_OWN && holds(counts))
+        .map(|(head, _)| Cow::Owned(head.to_string()))
+        .collect();
+    flexion::Heads {
+        least,
+        words: Cow::Owned(words),
+    }
 }
 
 /// How many of `w`'s forms `par` builds right.
@@ -2816,7 +2893,7 @@ mod tests {
                 ],
             ));
         }
-        assert_eq!(heads(&words, 3, &|_| true), Some(1));
+        assert_eq!(heads(&words, 3, &|_| true).least, Some(1));
         // Words that only happen to end in another: no last part.
         let mut words: Vec<Word> = vec![word("meri", &["meri", "meren", "merta"])];
         for front in [
@@ -2830,6 +2907,18 @@ mod tests {
                 ));
             }
         }
-        assert_eq!(heads(&words, 3, &|_| true), None);
+        assert!(heads(&words, 3, &|_| true).is_empty());
+        // Among them, a word whose own compounds inflect as it (Italian
+        // `fare`): it alone is a head.
+        words.push(word("fare", &["fare", "faccio", "fatto"]));
+        for front in ["dis", "sopra", "contra"] {
+            let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
+            words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
+        }
+        let found = heads(&words, 3, &|_| true);
+        assert_eq!(
+            (found.least, found.words.to_vec()),
+            (None, vec![Cow::from("fare")])
+        );
     }
 }

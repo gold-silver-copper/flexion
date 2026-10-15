@@ -62,6 +62,15 @@ pub fn build<'s>(
     let orthography = script.orthography();
     let mut grammars = Vec::new();
     let mut measured = Vec::new();
+    // The language's marks model, learned from the same words as each
+    // grammar: the training tenths less the dev tenth, the training
+    // tenths, every word.
+    let marks =
+        |keep: &dyn Fn(&Lexeme) -> bool| crate::marks(lang, &orthography, data, keep, settings);
+    let bucket = |l: &Lexeme| eval::bucket(&l.key);
+    let fit_marks = marks(&|l| bucket(l) != eval::TEST && bucket(l) != eval::DEV)?;
+    let train_marks = marks(&|l| bucket(l) != eval::TEST)?;
+    let all_marks = marks(&|_| true)?;
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let parts = crate::parts(lang, part)?;
@@ -80,14 +89,20 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let learned = |lexemes: &[Lexeme]| learn::learn(orthography, &shape, lexemes, settings);
+        let learned = |lexemes: &[Lexeme], marks: &Option<flexion::Choice<'static, char>>| {
+            let shape = learn::Shape {
+                marks: marks.clone(),
+                ..shape.clone()
+            };
+            learn::learn(orthography, &shape, lexemes, settings)
+        };
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let fitted = learned(&fit);
+        let fitted = learned(&fit, &fit_marks);
         let at = std::time::Instant::now();
         let (sharpness, trust) = eval::fit_sharpness(&fitted.grammar, &orthography, &dev);
         let sharpening = at.elapsed().as_secs_f64();
-        let mut scored = learned(&train);
+        let mut scored = learned(&train, &train_marks);
         scored.grammar.sharpness = sharpness;
         scored.grammar.trust = trust;
         let g = &scored.grammar;
@@ -119,7 +134,7 @@ pub fn build<'s>(
         let ceiling = eval::ceiling(&orthography, &test, &outcomes);
         let (on_training, new_root) = strata(&train, g, &test, &outcomes);
         let scoring = at.elapsed().as_secs_f64() - sharpening - scored.trace.total().0;
-        let mut shipped = learned(&d.lexemes);
+        let mut shipped = learned(&d.lexemes, &all_marks);
         shipped.grammar.sharpness = sharpness;
         shipped.grammar.trust = trust;
         // Attested: an even sample of the dictionary's own words (of
