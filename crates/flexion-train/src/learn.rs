@@ -55,6 +55,8 @@ pub struct Learned<'s> {
     pub stability: f64,
     /// The views paradigms may read their parents through (see [`View`]).
     pub views: Vec<View>,
+    /// Each stage's time and peak memory.
+    pub trace: crate::trace::Trace,
 }
 
 /// Counts for the report.
@@ -102,6 +104,7 @@ pub fn learn<'s>(
     lexemes: &[Lexeme],
     settings: Settings,
 ) -> Learned<'s> {
+    let mut trace = crate::trace::Trace::default();
     // One entry per word: the first the dictionaries give (the main
     // dictionary's, in its order).
     let key = |l: &Lexeme| orthography.key(&orthography.read(&l.full).letters);
@@ -174,6 +177,7 @@ pub fn learn<'s>(
         })
         .collect();
     let (words, rest_words) = everyone.split_at(learned_from.min(everyone.len()));
+    trace.mark("words");
     // Words written in parts that inflect each part are the grammar of
     // their parts, not paradigms of their own.
     let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
@@ -249,7 +253,9 @@ pub fn learn<'s>(
         .iter()
         .map(|w| (0..shape.cells).map(|c| first_form(w, c)).collect())
         .collect();
+    trace.mark("analyses");
     let (paradigms, assignment) = paradigms(&words, &analyses, shape);
+    trace.mark("paradigms");
     // Paradigms that differ only by a change where stem meets ending are
     // one paradigm and a sound law.
     let law_words: Vec<crate::laws::Word<'_>> = words
@@ -275,6 +281,7 @@ pub fn learn<'s>(
         program.as_ref(),
     );
     inherent(&words, &assignment, &mut paradigms);
+    trace.mark("laws");
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their
     // cells' place.
@@ -311,10 +318,12 @@ pub fn learn<'s>(
     );
     relations.extend(told);
     relations.sort_by_key(|r| r.cell);
+    trace.mark("relations");
     // The words the structure wasn't learned from: each takes the paradigm
     // that builds the most of its forms (none, written in parts that each
     // inflect).
     let rest_assignment = fit(&orthography, &paradigms, program.as_ref(), rest_words);
+    trace.mark("fit");
     let assigned: Vec<(&Word, u16)> = words
         .iter()
         .zip(assignment.iter().copied())
@@ -373,6 +382,7 @@ pub fn learn<'s>(
         }
     }
     let stability = choose::judge(&mut paradigm_choice, &paradigm_examples, &rank);
+    trace.mark("choice");
     let (accent, stress_labels) = (!orthography.stress_marks.is_empty())
         .then(|| {
             let laws = program.as_ref();
@@ -430,6 +440,7 @@ pub fn learn<'s>(
             m.push(w.letters.clone());
         }
     }
+    trace.mark("accent and marks");
     let mut grammar = Grammar {
         orthography,
         cells: shape.cells,
@@ -528,6 +539,7 @@ pub fn learn<'s>(
             tidy(&mut a.class);
         }
     }
+    trace.mark("heads and exceptions");
     let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
     // The stem slots: learned from the words' own analyses, and the forms
     // the grammar builds with the wrong letters.
@@ -564,6 +576,7 @@ pub fn learn<'s>(
         })
         .collect();
     let slot_of = crate::stems::slots(&evidence, shape.cells, grammar.laws.as_ref(), &prices);
+    trace.mark("stem slots");
     // Cells a one-change relation tells from a cell of their stem slot,
     // derived; the words then checked again. A word's listed forms are its
     // principal parts: the forms no relation tells from another listed one.
@@ -590,6 +603,7 @@ pub fn learn<'s>(
             }
         }
     }
+    trace.mark("derived cells");
     let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names);
     grammar.slots = Cow::Owned(built.slots);
     grammar.tables = Cow::Owned(built.tables);
@@ -648,6 +662,7 @@ pub fn learn<'s>(
     );
     let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
     let (irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound);
+    trace.mark("listing");
     // The ending tables listed stems are built with; paradigms stated
     // through stem slots where that pays; the tables either uses are the
     // grammar's.
@@ -681,6 +696,7 @@ pub fn learn<'s>(
             .map(|(_, t)| t)
             .collect(),
     );
+    trace.mark("stated");
     let stats = Stats {
         words: everyone.len(),
         paradigms: grammar.paradigms.len(),
@@ -698,6 +714,7 @@ pub fn learn<'s>(
         stats,
         stability,
         views,
+        trace,
     }
 }
 
@@ -1740,47 +1757,32 @@ fn listed_stems(
         .iter()
         .filter_map(|w| Some((w, letters.get(w.key.as_str())?)))
         .collect();
-    let chunk = mine.len().div_ceil(THREADS).max(1);
-    let mut out: Vec<flexion::ListedStem> = std::thread::scope(|scope| {
-        let handles: Vec<_> = mine
-            .chunks(chunk)
-            .map(|part| {
-                scope.spawn(move || {
-                    let mut out = Vec::new();
-                    for &(w, flags) in part {
-                        let word = crate::stems::Wrong {
-                            key: &w.key,
-                            cells: (0..w.cells.len())
-                                .map(|c| {
-                                    let f = first_form(w, c)?;
-                                    Some((f, flags.get(c).copied().unwrap_or(false)))
-                                })
-                                .collect(),
-                        };
-                        for (s, stem, t) in crate::stems::listed(grammar, &word, prices) {
-                            let (Some(slot), Some(table)) =
-                                (grammar.slots.get(s), grammar.tables.get(t))
-                            else {
-                                continue;
-                            };
-                            out.push((
-                                w.key.clone(),
-                                slot.name.to_string(),
-                                stem,
-                                table.name.to_string(),
-                            ));
-                        }
-                    }
-                    out
+    let mut out: Vec<flexion::ListedStem> = crate::par::map(&mine, |&(w, flags)| {
+        let word = crate::stems::Wrong {
+            key: &w.key,
+            cells: (0..w.cells.len())
+                .map(|c| {
+                    let f = first_form(w, c)?;
+                    Some((f, flags.get(c).copied().unwrap_or(false)))
                 })
-            })
-            .collect();
-        handles
+                .collect(),
+        };
+        crate::stems::listed(grammar, &word, prices)
             .into_iter()
-            .filter_map(|h| h.join().ok())
-            .flatten()
-            .collect()
-    });
+            .filter_map(|(s, stem, t)| {
+                let (slot, table) = (grammar.slots.get(s)?, grammar.tables.get(t)?);
+                Some((
+                    w.key.clone(),
+                    slot.name.to_string(),
+                    stem,
+                    table.name.to_string(),
+                ))
+            })
+            .collect::<Vec<_>>()
+    })
+    .into_iter()
+    .flatten()
+    .collect();
     out.sort();
     out
 }
@@ -2357,19 +2359,7 @@ fn fit(
             .filter(|&(n, _)| n > 0)
             .and_then(|(_, std::cmp::Reverse(p))| u16::try_from(p).ok())
     };
-    let best = &best;
-    let chunk = words.len().div_ceil(THREADS).max(1);
-    std::thread::scope(|scope| {
-        let handles: Vec<_> = words
-            .chunks(chunk)
-            .map(|part| scope.spawn(move || part.iter().map(best).collect::<Vec<_>>()))
-            .collect();
-        handles
-            .into_iter()
-            .filter_map(|h| h.join().ok())
-            .flatten()
-            .collect()
-    })
+    crate::par::map(words, best)
 }
 
 /// A paradigm's name: its commonest word that no sense makes vulgar or
@@ -2761,32 +2751,14 @@ fn misbuilt(
         }
         out
     };
-    let wrong = &wrong;
     let mine: Vec<(&Lexeme, &Word)> = lexemes.iter().zip(words).filter(|e| only(e.1)).collect();
-    let chunk = mine.len().div_ceil(THREADS).max(1);
-    let mut out: Vec<(String, usize, String, bool)> = std::thread::scope(|scope| {
-        let handles: Vec<_> = mine
-            .chunks(chunk)
-            .map(|part| {
-                scope.spawn(move || {
-                    part.iter()
-                        .flat_map(|&(l, w)| wrong(l, w))
-                        .collect::<Vec<_>>()
-                })
-            })
-            .collect();
-        handles
-            .into_iter()
-            .filter_map(|h| h.join().ok())
-            .flatten()
-            .collect()
-    });
+    let mut out: Vec<(String, usize, String, bool)> = crate::par::map(&mine, |&(l, w)| wrong(l, w))
+        .into_iter()
+        .flatten()
+        .collect();
     out.sort();
     out
 }
-
-/// Threads the learner uses at most.
-const THREADS: usize = 8;
 
 #[cfg(test)]
 mod tests {

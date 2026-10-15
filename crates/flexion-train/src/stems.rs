@@ -27,9 +27,6 @@ const MIN_ROOTS: usize = 2;
 /// different slots.
 const MIN_ALTERNATIONS: usize = 2;
 
-/// Threads the slot learner uses at most.
-const THREADS: usize = 8;
-
 /// The fewest letters a word's key has for it to be another word's root.
 const ROOT_LETTERS: usize = 3;
 
@@ -317,25 +314,7 @@ pub fn slots(
         .collect();
     let reading = Reading { endings, laws };
     // Each word's cells grouped by stem.
-    let chunk = words.len().div_ceil(THREADS).max(1);
-    let reading = &reading;
-    let partitions: Vec<Vec<Group<'_>>> = std::thread::scope(|scope| {
-        let handles: Vec<_> = words
-            .chunks(chunk)
-            .map(|part| {
-                scope.spawn(move || {
-                    part.iter()
-                        .map(|w| partition(w, reading))
-                        .collect::<Vec<_>>()
-                })
-            })
-            .collect();
-        handles
-            .into_iter()
-            .filter_map(|h| h.join().ok())
-            .flatten()
-            .collect()
-    });
+    let partitions: Vec<Vec<Group<'_>>> = crate::par::map(words, |w| partition(w, &reading));
     let support = recurring(words, &partitions, cells);
     // The cells slots are learned for: those enough roots have.
     let live: Vec<usize> = (0..cells)

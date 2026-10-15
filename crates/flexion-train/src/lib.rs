@@ -62,6 +62,7 @@ pub mod kaikki;
 pub mod laws;
 pub mod learn;
 pub mod measure;
+pub mod par;
 pub mod pipeline;
 pub mod print;
 pub mod relations;
@@ -69,6 +70,7 @@ pub mod script;
 pub mod skeleton;
 pub mod spec;
 pub mod stems;
+pub mod trace;
 
 use spec::{Language, PartOfSpeech};
 

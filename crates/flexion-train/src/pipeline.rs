@@ -83,7 +83,10 @@ pub fn build<'s>(
         let learned = |lexemes: &[Lexeme]| learn::learn(orthography, &shape, lexemes, settings);
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
-        let (sharpness, trust) = eval::fit_sharpness(&learned(&fit).grammar, &orthography, &dev);
+        let fitted = learned(&fit);
+        let at = std::time::Instant::now();
+        let (sharpness, trust) = eval::fit_sharpness(&fitted.grammar, &orthography, &dev);
+        let sharpening = at.elapsed().as_secs_f64();
         let mut scored = learned(&train);
         scored.grammar.sharpness = sharpness;
         scored.grammar.trust = trust;
@@ -115,6 +118,7 @@ pub fn build<'s>(
             crate::measure::compare(&eval::against_floor(&outcomes, &floored, |_| true));
         let ceiling = eval::ceiling(&orthography, &test, &outcomes);
         let (on_training, new_root) = strata(&train, g, &test, &outcomes);
+        let scoring = at.elapsed().as_secs_f64() - sharpening - scored.trace.total().0;
         let mut shipped = learned(&d.lexemes);
         shipped.grammar.sharpness = sharpness;
         shipped.grammar.trust = trust;
@@ -143,6 +147,18 @@ pub fn build<'s>(
             100.0 * headword.accuracy(),
             100.0 * full.accuracy()
         );
+        let took = |l: &Learned<'_>| {
+            let (secs, peak) = l.trace.total();
+            format!("{secs:.0}s, peak {} MB", peak.unwrap_or(0))
+        };
+        eprintln!(
+            "  time: learned on eight tenths {}, sharpness {sharpening:.0}s, on nine tenths {}, scored (with the floor) {:.0}s, on every word {}",
+            took(&fitted),
+            took(&scored),
+            scoring,
+            took(&shipped)
+        );
+        eprintln!("  stages: {}", shipped.trace.line());
         measured.push(Measured {
             name: part.name.to_string(),
             sharpness,

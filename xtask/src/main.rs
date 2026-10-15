@@ -15,7 +15,11 @@
 //!   score them; `--train-share 25|50|100`: train on that share of the
 //!   words; `--drop-cells 50`: take that share of each training table's
 //!   cells out);
-//! - `compare <a> <b>`: two saved `try` runs, paired word by word;
+//! - `compare <a> <b>`: two saved `try` runs, paired word by word (or two
+//!   sweeps: every language's, with their time and memory);
+//! - `sweep <dir>`: `try --quick` for every language, one after another,
+//!   each saved in `<dir>` with its time and peak memory (`--only
+//!   a,b`: those languages; `--final`: the READMEs' tenth);
 //! - `audit`: a sample of wrong answers with their kind (`--cells
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
@@ -57,6 +61,15 @@ fn run() -> Result<(), String> {
     if command == "compare" {
         let b = args.get(2).ok_or(USAGE)?;
         return outcomes::compare(name.as_ref(), b.as_ref());
+    }
+    if command == "sweep" {
+        let only = flag("--only");
+        let only: Option<Vec<&str>> = only.as_deref().map(|o| o.split(',').collect());
+        return sweep(
+            name.as_ref(),
+            only.as_deref(),
+            args.iter().any(|a| a == "--final"),
+        );
     }
     let lang = flexion_configs::by_name(name).ok_or(format!("no language {name}"))?;
     let percent = |f: &str, default: u8| {
@@ -488,6 +501,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             st.accent_patterns,
             st.irregular_forms,
         );
+        println!("  stages: {}", learned.trace.line());
         println!(
             "  stem slots {}, ending tables {}, listed stems {}",
             g.slots.len(),
@@ -799,6 +813,66 @@ fn floor_cells(out: &[eval::Outcome], floored: &[eval::FloorOutcome], names: &[S
             c.forms
         );
     }
+}
+
+/// How long a quick `try` of each language took, in minutes, when last
+/// measured (PR #16): for the estimate a sweep prints before it starts.
+const MINUTES: &[(&str, f64)] = &[
+    ("finnish", 15.0),
+    ("german", 13.0),
+    ("russian", 10.0),
+    ("polish", 6.0),
+    ("ancient-greek", 6.0),
+    ("latin", 4.0),
+    ("turkish", 2.0),
+    ("spanish", 2.0),
+    ("italian", 2.0),
+    ("english", 1.5),
+    ("french", 0.5),
+    ("sanskrit", 0.5),
+];
+
+/// `cargo xtask sweep <dir>`: a quick `try` of every language (or those
+/// `only` names), one after another, each run's outcomes saved in `dir` as
+/// `<language>.tsv` and its seconds and peak memory in `dir/summary.tsv`;
+/// on the READMEs' tenth when `last`.
+fn sweep(dir: &std::path::Path, only: Option<&[&str]>, last: bool) -> Result<(), String> {
+    let langs: Vec<Language> = flexion_configs::all()
+        .into_iter()
+        .filter(|l| only.is_none_or(|o| o.contains(&l.name)))
+        .collect();
+    let minutes: f64 = langs
+        .iter()
+        .map(|l| MINUTES.iter().find(|m| m.0 == l.name).map_or(5.0, |m| m.1))
+        .sum();
+    eprintln!(
+        "sweeping {} languages, about {minutes:.0} minutes",
+        langs.len()
+    );
+    std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
+    let mut summary = String::from(
+        "language	seconds	peak MB
+",
+    );
+    for lang in &langs {
+        let options = TryOptions {
+            quick: true,
+            fold: if last { eval::TEST } else { eval::DEVELOP },
+            save: Some(dir.join(format!("{}.tsv", lang.name))),
+            share: 100,
+            ..TryOptions::default()
+        };
+        flexion_train::trace::reset_peak();
+        let t = Instant::now();
+        try_language(lang, None, &options)?;
+        let secs = t.elapsed().as_secs_f64();
+        let peak = flexion_train::trace::peak_mb().unwrap_or(0);
+        eprintln!("{}: {secs:.0}s, peak {peak} MB", lang.name);
+        summary.push_str(&format!("{}\t{secs:.0}\t{peak}\n", lang.name));
+        let path = dir.join("summary.tsv");
+        std::fs::write(&path, &summary).map_err(|e| format!("{}: {e}", path.display()))?;
+    }
+    Ok(())
 }
 
 /// Each cell's name: its group and its values' short names (`present 1 sg`).
