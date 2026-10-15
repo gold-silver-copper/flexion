@@ -767,3 +767,18 @@ pub fn ties<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     });
     (tied.iter().filter(|&&t| t).count(), listed.len())
 }
+
+/// The outcomes whose right answer the dictionary writes as a phrase (with
+/// a space: the Latin perfect passive, `amātus sum`).
+pub fn phrases(outcomes: &[Outcome], lexemes: &[&Lexeme]) -> Vec<Outcome> {
+    outcomes
+        .iter()
+        .filter(|o| {
+            lexemes
+                .get(o.word)
+                .and_then(|l| l.cells.get(o.cell)?.first())
+                .is_some_and(|f| f.contains(' '))
+        })
+        .cloned()
+        .collect()
+}

@@ -382,8 +382,12 @@ impl Hooks for GreekHooks {
         greek_word(lemma)
     }
 
-    fn form_ok(&self, _pos: &str, _lemma: &str, form: &str) -> bool {
+    /// A word; or, of a verb, a phrase of two: the perfect middle-passive's
+    /// subjunctive and optative are the participle and `εἰμί` (`λελυμένος
+    /// ὦ`, `λελυμένος εἴην`; Smyth §§ 599, 696).
+    fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
         greek_word(form)
+            || (pos == "verb" && form.split(' ').count() == 2 && form.split(' ').all(greek_word))
     }
 
     /// Every table starts with a `table-tags` form naming its dialect and,

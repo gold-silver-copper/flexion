@@ -48,6 +48,9 @@ pub struct Measured {
     /// another word's form, another word's spelling (see
     /// [`crate::extract::Of`]).
     pub by_entry: [Score; 3],
+    /// From the headword, the forms the dictionary writes as phrases (the
+    /// Latin perfect passive, `amātus sum`).
+    pub phrases: Score,
     /// The share of the dictionary's words the shipped grammar lists a form
     /// or a stem of (an irregular line).
     pub irregular_share: f64,
@@ -148,6 +151,7 @@ pub fn build<'s>(
                 .collect();
             Score::of(&mine)
         });
+        let phrases = Score::of(&eval::phrases(&outcomes, &test));
         #[allow(clippy::cast_precision_loss)]
         let irregular_share =
             shipped.stats.irregular_words as f64 / shipped.stats.words.max(1) as f64;
@@ -187,6 +191,7 @@ pub fn build<'s>(
             on_training,
             new_root,
             by_entry,
+            phrases,
             irregular_share,
         });
         grammars.push(shipped);
@@ -270,12 +275,13 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          top-1 of the held-out words that are a training word with a prefix or a compound's front\n\
          before it, and of the rest. *Own / form-of / alt-of*: top-1 of the held-out entries that\n\
          are words of their own, another word's form (a participle, a comparative) and another\n\
-         word's spelling, with their number of words. *Irregular lines*: the share of the\n\
+         word's spelling, with their number of words. *Phrases*: top-1 on the forms the dictionary\n\
+         writes as phrases (the Latin perfect passive, `amātus sum`). *Irregular lines*: the share of the\n\
          dictionary's words the grammar lists a form or a stem of. The held-out tenth was looked at while the trainer was being\n\
          developed (changes are judged on another tenth since PR #16).\n\n",
     );
     s.push_str(
-        "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | irregular lines |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+        "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     // `right` of `forms`, as a percentage with the count of forms.
     let share = |(forms, right): (usize, usize)| {
@@ -308,7 +314,7 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
         let f = &m.against_floor;
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ({:.1}–{:.1}) | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:+.2} ({:+.2}…{:+.2}) | {:.2}% | {:.2}% | {:.2}% / {:.2}% | {} | {} | {:.2}% |",
+            "| {} | {} | {} | **{:.2}%** ({:.1}–{:.1}) | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:+.2} ({:+.2}…{:+.2}) | {:.2}% | {:.2}% | {:.2}% / {:.2}% | {} | {} | {} | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
@@ -345,6 +351,7 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
                 })
                 .collect::<Vec<_>>()
                 .join(" / "),
+            share((m.phrases.forms, m.phrases.right)),
             100.0 * m.irregular_share,
         );
     }

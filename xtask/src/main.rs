@@ -787,6 +787,14 @@ fn try_tenth(
             floor_cells(&out, &floored, &names);
             let (lo, hi) = measure::interval(&eval::by_word(&out));
             let (on, rest) = flexion_train::pipeline::strata(&train, g, &test, &out);
+            let phrases = eval::Score::of(&eval::phrases(&out, &test));
+            if phrases.forms > 0 {
+                println!(
+                    "  phrases (the dictionary writes with a space): top-1 {:.2}% of {} forms",
+                    100.0 * phrases.accuracy(),
+                    phrases.forms
+                );
+            }
             println!(
                 "  top-1 {:.2}% ({:.2} … {:.2}); any listed form {:.2}%; homograph ceiling {:.2}%; lemma spelling {:.2}% ({}); on a training word {:.2}% ({} words), new root {:.2}% ({} words)",
                 100.0 * s.accuracy(),
