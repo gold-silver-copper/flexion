@@ -1017,6 +1017,71 @@ mod tests {
     }
 
     #[test]
+    fn a_cell_s_other_spelling_takes_the_class_letter_too() {
+        // Finnish allative with a possessive suffix, written two ways
+        // (`talolleen` or `talollensa`): back and front words' paradigms
+        // differ only in the second spelling's last letter. The inessive
+        // `-ssA` makes the class; with its letter in that spelling too, they
+        // are one paradigm.
+        let orthography = Orthography {
+            lowercase: true,
+            vowels: "aeiouyäö",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+        };
+        let consonants = ["k", "t", "p", "m", "s", "n", "h", "v", "l", "r"];
+        // Fewer front words than back, as in Finnish: the tier is the back
+        // vowels, the front value where there is none (the tier keeps the
+        // commoner letters).
+        let mut lexicon: Vec<(String, [String; 3], u16)> = Vec::new();
+        for (i, c) in consonants.iter().enumerate() {
+            for d in consonants {
+                let front: &[char] = if i % 2 == 0 { &['ä', 'ö'] } else { &[] };
+                for (vowels, a, p) in [(&['a', 'o', 'u'][..], 'a', 0), (front, 'ä', 1)] {
+                    for &v in vowels {
+                        let word = format!("{c}{v}{d}{v}");
+                        let forms = [word.clone(), format!("{word}ss{a}"), format!("{word}lleen")];
+                        lexicon.push((word, forms, p));
+                    }
+                }
+            }
+        }
+        let words: Vec<Word<'_>> = lexicon
+            .iter()
+            .map(|(w, forms, _)| Word {
+                letters: w,
+                forms: forms.iter().map(|f| Some(f.as_str())).collect(),
+            })
+            .collect();
+        let paradigm = |name: &'static str, table: &'static str| Paradigm {
+            name: Cow::Borrowed(name),
+            words: 0,
+            lemma: Cow::Borrowed("~"),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Borrowed(table),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let paradigms = vec![
+            paradigm("talo", "~\t~ssa\t~lleen|~llensa\t"),
+            paradigm("kylä", "~\t~ssä\t~lleen|~llensä\t"),
+        ];
+        let assignment: Vec<u16> = lexicon.iter().map(|w| w.2).collect();
+        let (laws, paradigms, assignment) = learn(&orthography, &words, paradigms, assignment);
+        assert!(!laws.is_empty());
+        let tables: Vec<&str> = paradigms.iter().map(|p| p.table.as_ref()).collect();
+        assert_eq!(tables, ["~\t~ssA\t~lleen|~llensA\t"]);
+        assert!(assignment.iter().all(|&a| a == 0));
+    }
+
+    #[test]
     fn a_copy_of_the_vowel_before_is_a_law_however_near() {
         // The Finnish illative `-Vn`: `taloon`, `kylään`, `katuun`; the
         // vowel copied is just before the class letter, as a law at the
