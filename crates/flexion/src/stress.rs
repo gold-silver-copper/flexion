@@ -313,7 +313,8 @@ pub fn position(orthography: &Orthography<'_>, letters: &str, stress: Stress) ->
 
 /// The accent of a form, `letters`, whose ending starts at byte `ending`
 /// and says `finals`, placed by `place`; `stem` is the position (see
-/// [`position`]) the lemma accents.
+/// [`position`]) the lemma accents. None on a phrase: its words write their
+/// own (see [`Orthography::read`]).
 pub fn place(
     orthography: &Orthography<'_>,
     letters: &str,
@@ -322,6 +323,9 @@ pub fn place(
     place: Place,
     stem: usize,
 ) -> Option<Stress> {
+    if letters.contains(' ') {
+        return None;
+    }
     match &orthography.prosody {
         Some(p) => {
             let syllables = p.syllables(orthography, letters, finals.long);
@@ -427,6 +431,26 @@ mod tests {
         );
         // A breathing on `ᾰ`, which no character writes: `ἀ`.
         assert_eq!(GREEK.read("ᾰ\u{313}να").letters, "\u{1F00}να");
+    }
+
+    #[test]
+    fn a_phrase_keeps_each_word_s_accent() {
+        // The perfect middle subjunctive, `λελυμένος ὦ`: the participle's
+        // accent and the auxiliary's are their own; no rule places one.
+        let phrase = GREEK.read("λελυμένος ὦ");
+        assert_eq!(phrase.stress, None);
+        assert_eq!(
+            GREEK.write(&phrase.letters, phrase.stress, phrase.casing),
+            "λελυμένος ὦ"
+        );
+        let finals = Finals {
+            circumflex: true,
+            long: false,
+        };
+        assert_eq!(
+            place(&GREEK, &phrase.letters, 6, finals, Place::Last, 0),
+            None
+        );
     }
 
     #[test]

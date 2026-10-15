@@ -119,10 +119,24 @@ impl Orthography<'_> {
     /// Read a typed word, however its letters and marks are composed (it is
     /// read in Unicode's composed form, NFC): stress marks become
     /// [`Written::stress`], letters are lowercased where the language folds
-    /// case.
+    /// case. A phrase (Greek `λελυμένος ὦ`) keeps its words' marks as
+    /// written: each word's accent is its own (the participle's on `-μέν-`,
+    /// the auxiliary's), none a rule places.
     pub fn read(&self, word: &str) -> Written {
         let word: &str = &self.composed(word);
         let casing = casing(word);
+        if word.contains(' ') {
+            let letters = word
+                .chars()
+                .filter(|&c| !self.dropped.contains(c))
+                .map(|c| if self.lowercase { lower(c) } else { c })
+                .collect();
+            return Written {
+                letters,
+                stress: None,
+                casing,
+            };
+        }
         // The word's stress is its last stress mark (a compound's head,
         // `мастер-цили́ндр`); marks before it are dropped.
         let is_mark = |c: char| self.stress_marks.contains(c);

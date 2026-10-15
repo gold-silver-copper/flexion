@@ -96,6 +96,9 @@ struct Word {
     dictionaries: u8,
     /// A sense of it is vulgar or offensive.
     vulgar: bool,
+    /// The dictionary has it (not the rest of a word behind a prefix, Latin
+    /// `imō` of `redimō`).
+    entry: bool,
     /// Per inherent feature, its value (`u8::MAX` if the dictionary doesn't
     /// say).
     inherent: Vec<u8>,
@@ -165,6 +168,7 @@ pub fn learn<'s>(
             letters: letters(l),
             senses: l.senses,
             vulgar: l.vulgar,
+            entry: true,
             dictionaries: dictionaries
                 .get(&key(l))
                 .map_or(1, |s| u8::try_from(s.len()).unwrap_or(1)),
@@ -1510,6 +1514,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         let mut base = w.clone();
         base.letters = w.letters.chars().skip(n).collect();
         base.key = rest_key;
+        base.entry = false;
         // Its forms without the prefix; a cell with one that isn't, none.
         for (c, forms) in base.cells.iter_mut().enumerate() {
             let rests: Option<Vec<String>> = forms
@@ -2919,6 +2924,7 @@ fn commonest(words: &[&Word]) -> Option<String> {
                 let length = Reverse(w.letters.chars().count());
                 (
                     !w.vulgar,
+                    w.entry,
                     w.dictionaries,
                     w.senses,
                     length,
@@ -3339,6 +3345,7 @@ mod tests {
             senses: 1,
             dictionaries: 1,
             vulgar: false,
+            entry: true,
             inherent: Vec::new(),
             cells: forms
                 .iter()
