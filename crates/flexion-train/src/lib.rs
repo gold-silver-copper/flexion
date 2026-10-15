@@ -91,7 +91,7 @@ pub fn marks(
             d.lexemes
                 .iter()
                 .filter(|l| keep(l))
-                .map(|l| (lemma_cell, l)),
+                .map(|l| (lemma_cell, part.name, l)),
         );
     }
     Ok(learn::language_marks(
@@ -154,6 +154,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         capitalized: part.capitalized,
         max_words: part.max_words,
         marks: None,
+        part: part.name.to_string(),
         inherent: part
             .inherent
             .iter()

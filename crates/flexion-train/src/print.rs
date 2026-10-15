@@ -59,7 +59,7 @@ fn marks_of<'a, 's>(
 ) -> Result<Option<&'a flexion::Choice<'s, char>>, String> {
     let mut all = parts
         .iter()
-        .filter_map(|p| p.learned.grammar.marks.as_ref());
+        .filter_map(|p| p.learned.grammar.marks.as_ref().map(|m| &m.rules));
     let Some(first) = all.next() else {
         return Ok(None);
     };
@@ -72,7 +72,7 @@ fn marks_of<'a, 's>(
 /// `src/marks.rs`: how a letter typed without its mark is written.
 fn marks_file(marks: &flexion::Choice<'_, char>) -> String {
     format!(
-        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter and the letters after it\n//! (`#` is the word's start or end): the longest one that matches decides\n//! (`tatio#` → `ā`, as in `-ātiō`; `#de` → `ē`, as in `dē-`; `ae` → `e`, a\n//! diphthong), giving each way of writing the letter with how many of the\n//! dictionary's letters in that place, in words of every part of speech, are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n",
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`; `#de`\n//! → `ē`, as in `dē-`; `ae` → `e`, a diphthong; `eni#numeral` → `ē`, as in\n//! `quīngēnī`), giving each way of writing the letter with how many of the\n//! dictionary's letters in that place are written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n",
         thousands(marks.rules.len()),
         choice_macro("starts", marks, |c| format!("{c:?}"))
     )
@@ -421,7 +421,10 @@ fn grammar_files(
             "flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    }"
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
-        marks = some(g.marks.is_some(), "crate::marks::MARKS"),
+        marks = g.marks.as_ref().map_or("None".to_string(), |m| format!(
+            "Some(flexion::Marks {{ rules: crate::marks::MARKS, part: Cow::Borrowed({:?}) }})",
+            m.part
+        )),
     );
     m.push_str(&api_code(
         spec,

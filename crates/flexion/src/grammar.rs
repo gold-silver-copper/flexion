@@ -351,6 +351,19 @@ impl Heads<'_> {
     }
 }
 
+/// How a letter typed without its mark is written: rules on the letter
+/// before it, it, the letters after it and, after the word's end, the part
+/// of speech's name (rules on the beginning of that, the word's ends written
+/// [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`; `#de` → `ē`, as in
+/// `dē-`; `ae` → `e`, a diphthong; `eni#numeral` → `ē`, as in `quīngēnī`,
+/// where adjectives in `-genus` have `e`). One language's rules serve every
+/// part of speech, each read with its `part`.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Marks<'a> {
+    pub rules: Choice<'a, char>,
+    pub part: Cow<'a, str>,
+}
+
 /// The inflection of one part of speech, as learned from the dictionary.
 #[derive(Debug, Clone)]
 pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
@@ -389,12 +402,9 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// them: `(key, letters)`, sorted. A caller who types `fox` means `fōx`;
     /// marks a paradigm writes (the `ō` of `ratiō`) aren't listed.
     pub spellings: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
-    /// How a letter typed without its mark is written, by the letter before
-    /// it, it and the letters after it (rules on the beginning of that, the
-    /// word's ends written [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`;
-    /// `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong): the spelling of a
-    /// word that isn't listed.
-    pub marks: Option<Choice<'a, char>>,
+    /// How a letter typed without its mark is written (see [`Marks`]): the
+    /// spelling of a word that isn't listed.
+    pub marks: Option<Marks<'a>>,
     /// The stem slots: the cells words build on one stem each.
     pub slots: Cow<'a, [Slot<'a>]>,
     /// The ending tables slots' cells are built with, on a listed stem.
@@ -1377,7 +1387,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 /// likely it is.
 pub fn restore(
     orthography: &Orthography<'_>,
-    marks: &Choice<'_, char>,
+    marks: &Marks<'_>,
     smoothing: f32,
     letters: &str,
     key: &str,
@@ -1399,7 +1409,7 @@ const SPELLINGS: usize = 3;
 /// letters is read with either written otherwise.
 fn restorations(
     o: &Orthography<'_>,
-    marks: &Choice<'_, char>,
+    marks: &Marks<'_>,
     smoothing: f32,
     letters: &str,
     key: &str,
@@ -1408,8 +1418,9 @@ fn restorations(
     let mut before = WORD_END;
     for ((i, k), c) in key.char_indices().zip(letters.chars()) {
         let readings = if c == k && o.folded.iter().any(|e| e.1 == c) {
-            let around = format!("{before}{}{WORD_END}", key.get(i..).unwrap_or(""));
-            marks.read(&around, smoothing, |m| o.fold(m) == c)
+            let rest = key.get(i..).unwrap_or("");
+            let around = format!("{before}{rest}{WORD_END}{}", marks.part);
+            marks.rules.read(&around, smoothing, |m| o.fold(m) == c)
         } else {
             Vec::new()
         };

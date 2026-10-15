@@ -36,6 +36,9 @@ pub struct Shape {
     /// language from every part of speech's words (see [`language_marks`]);
     /// none: learned from this part's alone.
     pub marks: Option<flexion::Choice<'static, char>>,
+    /// The part of speech's name, as the marks read it (see
+    /// [`flexion::Marks`]).
+    pub part: String,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -392,7 +395,7 @@ pub fn learn<'s>(
         .unzip();
     let stress_labels = stress_labels.unwrap_or_default();
     // How a letter typed without its mark is written, by what follows it.
-    let marks: Option<flexion::Choice<'s, char>> = match &shape.marks {
+    let rules: Option<flexion::Choice<'s, char>> = match &shape.marks {
         Some(marks) => Some(flexion::Choice {
             side: marks.side,
             rules: Cow::Owned(
@@ -415,10 +418,16 @@ pub fn learn<'s>(
             ),
         }),
         None => {
-            let spelled = words.iter().map(|w| (w.key.as_str(), w.letters.as_str()));
+            let spelled = words
+                .iter()
+                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
             marks(&orthography, spelled, settings)
         }
     };
+    let marks = rules.map(|rules| flexion::Marks {
+        rules,
+        part: Cow::Owned(shape.part.clone()),
+    });
     // Spellings a key doesn't show, listed: those the marks don't give (of
     // every word, those inflecting behind a prefix too, and those whose
     // headword leaves off marks its forms have); without marks, those the
@@ -767,20 +776,20 @@ fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme)
 /// no word writes a mark its key doesn't.
 pub fn language_marks<'l>(
     orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (Option<usize>, &'l Lexeme)>,
+    words: impl Iterator<Item = (Option<usize>, &'l str, &'l Lexeme)>,
     settings: Settings,
 ) -> Option<flexion::Choice<'static, char>> {
     let mut seen = crate::HashSet::default();
-    let words: Vec<(String, String)> = words
-        .map(|(lemma_cell, l)| {
+    let words: Vec<(String, String, &str)> = words
+        .map(|(lemma_cell, part, l)| {
             let letters = spelled(orthography, lemma_cell, l);
-            (orthography.key(&letters), letters)
+            (orthography.key(&letters), letters, part)
         })
         .filter(|w| seen.insert(w.clone()))
         .collect();
     marks(
         orthography,
-        words.iter().map(|(k, l)| (k.as_str(), l.as_str())),
+        words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
         settings,
     )
 }
@@ -1465,20 +1474,20 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
 /// on. `None` where no word writes such a mark.
 fn marks<'a, 'w>(
     orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (&'w str, &'w str)>,
+    words: impl Iterator<Item = (&'w str, &'w str, &'w str)>,
     settings: Settings,
 ) -> Option<flexion::Choice<'a, char>> {
     let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
-    for (key, letters) in words {
+    for (key, letters, part) in words {
         let mut before = flexion::WORD_END;
         for ((i, k), l) in key.char_indices().zip(letters.chars()) {
             if markable(k)
                 && let Some(rest) = key.get(i..)
             {
                 marked |= l != k;
-                examples.push((format!("{before}{rest}{}", flexion::WORD_END), l));
+                examples.push((format!("{before}{rest}{}{part}", flexion::WORD_END), l));
             }
             before = k;
         }
@@ -3242,6 +3251,7 @@ mod tests {
             max_words: None,
             names: vec![String::new(); 3],
             marks: None,
+            part: "verb".to_string(),
         };
         assert!(referrals(&words, &shape).is_none());
     }
@@ -3325,5 +3335,50 @@ mod tests {
             grammar.paradigm.exceptions.to_vec(),
             vec![(anchored("lis"), 3), (anchored("noga"), 2)]
         );
+    }
+
+    #[test]
+    fn a_mark_the_letters_leave_open_is_told_by_the_part_of_speech() {
+        // Latin adjectives in `-genus` ("born") have a short `e`, the
+        // distributive numerals in `-gēnus` a long one: the same letters,
+        // told apart by the part of speech alone.
+        let orthography = Orthography {
+            lowercase: true,
+            vowels: "aeiouē",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[('ē', 'e')],
+            prosody: None,
+        };
+        let mut words: Vec<(String, String, &str)> = Vec::new();
+        for front in [
+            "indi", "terri", "capri", "nubi", "ali", "primi", "uni", "multi",
+        ] {
+            let key = format!("{front}genus");
+            words.push((key.clone(), key, "adjective"));
+        }
+        for front in [
+            "quin", "septin", "non", "octin", "quadrin", "tre", "du", "ses",
+        ] {
+            words.push((format!("{front}genus"), format!("{front}gēnus"), "numeral"));
+        }
+        let rules = marks(
+            &orthography,
+            words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
+            Settings::default(),
+        )
+        .expect("marks");
+        let spell = |word: &str, part: &str| {
+            let marks = flexion::Marks {
+                rules: rules.clone(),
+                part: Cow::Owned(part.to_string()),
+            };
+            flexion::restore(&orthography, &marks, 1.0, word, word).0
+        };
+        assert_eq!(spell("sescentigenus", "numeral"), "sescentigēnus");
+        assert_eq!(spell("sescentigenus", "adjective"), "sescentigenus");
     }
 }
