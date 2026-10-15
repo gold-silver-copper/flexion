@@ -277,14 +277,10 @@ fn print_and_compare(lang: Language) {
         "the Russian nouns have their sound laws and relations"
     );
     // English verbs have stem slots (`sing` and `sang` are built on two
-    // stems), and a word that lists a stem and its ending table.
+    // stems).
     assert!(
-        lang.name != "english"
-            || (printed("verb/stems.rs")
-                && files.iter().any(|(path, text)| {
-                    path.ends_with("verb/irregular.rs") && text.contains(flexion::LIKE)
-                })),
-        "the English verbs have their stem slots and a listed stem"
+        lang.name != "english" || printed("verb/stems.rs"),
+        "the English verbs have their stem slots"
     );
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");

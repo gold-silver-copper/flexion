@@ -17,6 +17,29 @@ pub use grammar::{
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Affix, DERIVED, Form, Paradigm, Relation, Space};
 pub use sound_law;
+#[doc(hidden)]
+pub use sound_law_macros::compiled as __compiled_laws;
+
+/// Sound laws in `sound_law`'s notation (the body
+/// [`sound_law::sound_laws!`] reads), compiled when the crate that writes
+/// them is built: a `sound_law::Program` constant. A law that doesn't
+/// compile is a compile error.
+///
+/// ```
+/// const LAWS: flexion::sound_law::Program<'static> = flexion::laws! {
+///     classes {}
+///     rules {
+///         law0: "к+ы" => "к+и";
+///     }
+/// };
+/// assert_eq!(LAWS.apply("рук+ы"), "рук+и");
+/// ```
+#[macro_export]
+macro_rules! laws {
+    ($($body:tt)*) => {
+        $crate::__compiled_laws!($crate::sound_law; $($body)*)
+    };
+}
 pub use stems::{EndingTable, LIKE, Slot, compose, factor};
 pub use stress::{
     Accent, AccentPattern, Finals, Place, Prosody, StressClass, Syllable, place as stress_place,

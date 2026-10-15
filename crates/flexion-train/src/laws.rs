@@ -242,7 +242,10 @@ impl std::fmt::Display for Law {
             }
             // A copy as the pattern writes it: `%ε‹ἀ → ἠ`.
             Change::Front {
-                literal, stem, to, ..
+                literal,
+                stem,
+                to,
+                plain,
             } => {
                 let mut copy = false;
                 for c in literal.chars() {
@@ -255,7 +258,12 @@ impl std::fmt::Display for Law {
                         _ => write!(f, "{c}")?,
                     }
                 }
-                write!(f, "{FRONT}{stem} → {to}")
+                write!(f, "{FRONT}{stem} → {to}")?;
+                let more: Vec<String> = plain.iter().map(|(c, p)| format!("{c} → {p}")).collect();
+                if !more.is_empty() {
+                    write!(f, " ({})", more.join(", "))?;
+                }
+                Ok(())
             }
         }
     }
@@ -521,9 +529,9 @@ struct Stated {
     or: Vec<String>,
 }
 
-/// The laws compiled, in order.
-pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
-    let texts: Vec<(String, Stated)> = changes
+/// Each law as `sound-law` states it, named `law0`, `law1`, ….
+fn stated(changes: &[Change]) -> Vec<(String, Stated)> {
+    changes
         .iter()
         .enumerate()
         .map(|(i, c)| {
@@ -531,7 +539,88 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
             let stated = c.rule(&name);
             (name, stated)
         })
-        .collect();
+        .collect()
+}
+
+/// The laws in `sound-law`'s notation (what `sound_law::sound_laws!` and
+/// `flexion::laws!` read), in order: the correspondence maps, the agreement
+/// maps, and a rule line per law (`law0: "к+ы" => "к+и";`).
+pub struct Notation {
+    pub maps: Vec<String>,
+    pub agreements: Vec<String>,
+    pub rules: Vec<String>,
+}
+
+/// `s` as a Rust string literal: quotes and backslashes escaped, every
+/// letter and mark as it is.
+fn literal(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('"');
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\t' => out.push_str("\\t"),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
+/// The laws written in `sound-law`'s notation (see [`Notation`]): what
+/// [`compile`] compiles.
+pub fn notation(changes: &[Change]) -> Notation {
+    let mut out = Notation {
+        maps: Vec::new(),
+        agreements: Vec::new(),
+        rules: Vec::new(),
+    };
+    for (name, s) in stated(changes) {
+        if !s.map.is_empty() {
+            let entries: Vec<String> = s
+                .map
+                .iter()
+                .map(|(a, b)| format!("{} => {}", literal(a), literal(b)))
+                .collect();
+            out.maps.push(format!("{name} = [{}];", entries.join(", ")));
+        } else if !s.agree.is_empty() {
+            let entries: Vec<String> = s
+                .agree
+                .iter()
+                .map(|(a, k, b)| format!("({}, {}) => {}", literal(a), literal(k), literal(b)))
+                .collect();
+            out.agreements
+                .push(format!("{name} = [{}];", entries.join(", ")));
+        }
+        let mut line = name.clone();
+        if s.iterative {
+            line.push_str("[iterative]");
+        }
+        line.push_str(&format!(": {} => {}", literal(&s.target), literal(&s.to)));
+        if !s.before.is_empty() || !s.after.is_empty() || !s.or.is_empty() {
+            line.push_str(&format!(
+                " / {} _ {}",
+                literal(&s.before),
+                literal(&s.after)
+            ));
+            for or in &s.or {
+                line.push_str(&format!(" | {}", literal(or)));
+            }
+        }
+        if !s.stop.is_empty() {
+            line.push_str(&format!(" unless \"\" _ {}", literal(&s.stop)));
+        }
+        line.push(';');
+        out.rules.push(line);
+    }
+    out
+}
+
+/// The laws compiled, in order.
+pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
+    let texts = stated(changes);
     let pairs: Vec<Vec<(&str, &str)>> = texts
         .iter()
         .map(|(_, s)| {
@@ -925,7 +1014,154 @@ pub fn learn<'s>(
             par.name = Cow::Owned(name.to_string());
         }
     }
+    // Laws that are one law, stated once: those that differ only in the
+    // stem letters they follow (Russian `ы → и` after `к`, `г`, `х`, `ш`,
+    // `ч`, `ж`, `щ`), or the letter a front literal meets (the Greek
+    // augment, one lengthening).
+    let merged = merge(&laws);
+    let (laws, program) = if merged.len() < laws.len() {
+        let changes: Vec<Change> = merged.iter().map(|l| l.change.clone()).collect();
+        let program = compile(&changes).or(program);
+        (merged, program)
+    } else {
+        (laws, program)
+    };
     (laws, program, paradigms, assignment)
+}
+
+/// `laws` with those that are one law stated once (see [`learn`]): an edge
+/// law takes in a later one with every field but its stem letters the same,
+/// and a front law a later one with the same literal and one letter, where
+/// every law between them is an edge law that neither reads nor writes
+/// what they do. Laws apart from those don't meet the same letters, so the
+/// laws give what they gave.
+fn merge(laws: &[Law]) -> Vec<Law> {
+    let mut out: Vec<Law> = Vec::with_capacity(laws.len());
+    let mut taken = vec![false; laws.len()];
+    for (i, law) in laws.iter().enumerate() {
+        if taken.get(i) == Some(&true) {
+            continue;
+        }
+        let mut law = law.clone();
+        for (j, later) in laws.iter().enumerate().skip(i + 1) {
+            if taken.get(j) == Some(&true) {
+                continue;
+            }
+            let between = laws.get(i + 1..j).unwrap_or(&[]);
+            if let Some(change) = joined(&law.change, &later.change, between) {
+                law.change = change;
+                law.words += later.words;
+                law.breaks += later.breaks;
+                for e in &later.examples {
+                    if law.examples.len() < 4 && !law.examples.contains(e) {
+                        law.examples.push(e.clone());
+                    }
+                }
+                if let Some(t) = taken.get_mut(j) {
+                    *t = true;
+                }
+            } else if !apart(&law.change, &later.change) {
+                // A law that meets the same letters: nothing after it joins.
+                break;
+            }
+        }
+        out.push(law);
+    }
+    out
+}
+
+/// `a` and `b` as one law, if they are one but for their stem letters (an
+/// edge) or their one letter (a front), and every law in `between` is apart
+/// from them.
+fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
+    if !between.iter().all(|l| apart(a, &l.change)) {
+        return None;
+    }
+    match (a, b) {
+        (
+            Change::Edge {
+                stem,
+                ending,
+                to,
+                keep,
+                earlier,
+                left,
+                right,
+            },
+            Change::Edge {
+                stem: other,
+                ending: e2,
+                to: t2,
+                keep: k2,
+                earlier: r2,
+                left: l2,
+                right: g2,
+            },
+        ) if (ending, to, keep, earlier, left, right) == (e2, t2, k2, r2, l2, g2) => {
+            let mut stem = stem.clone();
+            stem.extend(
+                other
+                    .iter()
+                    .filter(|s| !stem.contains(s))
+                    .cloned()
+                    .collect::<Vec<_>>(),
+            );
+            Some(Change::Edge {
+                stem,
+                ending: ending.clone(),
+                to: to.clone(),
+                keep: *keep,
+                earlier: earlier.clone(),
+                left: left.clone(),
+                right: right.clone(),
+            })
+        }
+        (
+            Change::Front {
+                literal,
+                stem,
+                to,
+                plain,
+            },
+            Change::Front {
+                literal: l2,
+                stem: s2,
+                to: t2,
+                plain: p2,
+            },
+        ) if literal == l2 && p2.is_empty() => {
+            let mut letters = s2.chars();
+            let (Some(letter), None) = (letters.next(), letters.next()) else {
+                return None;
+            };
+            if stem.chars().eq(std::iter::once(letter)) || plain.iter().any(|(c, _)| *c == letter) {
+                return None;
+            }
+            let mut plain = plain.clone();
+            plain.push((letter, t2.clone()));
+            Some(Change::Front {
+                literal: literal.clone(),
+                stem: stem.clone(),
+                to: to.clone(),
+                plain,
+            })
+        }
+        _ => None,
+    }
+}
+
+/// Whether law `other` can't meet what `law` reads or writes: an edge law
+/// of another ending, whose replacement doesn't write `law`'s ending,
+/// beside an edge law; any edge law beside a front law (they meet the
+/// stem's two ends).
+fn apart(law: &Change, other: &Change) -> bool {
+    match (law, other) {
+        (Change::Edge { ending, .. }, Change::Edge { ending: e2, to, .. }) => {
+            ending != e2 && !to.contains(ending.as_str())
+        }
+        (Change::Front { .. }, Change::Edge { .. }) => true,
+        _ => false,
+    }
 }
 
 /// A twin (see [`twins`]): its place, the paradigm it is a twin of, and
@@ -2764,5 +3000,44 @@ mod tests {
             let built_now = program.apply(built);
             assert_eq!(pattern::unmarked(&built_now).0, after, "{law:?} on {built}");
         }
+    }
+
+    #[test]
+    fn laws_that_differ_only_in_the_stem_letter_are_one_law() {
+        // Russian: `ы → и` after `к`, after `г`, …: one law. A law between
+        // them of another ending doesn't stop that; one writing `ы` does.
+        let edge = |stem: &str, ending: &str, to: &str| Law {
+            change: Change::Edge {
+                stem: vec![stem.to_string()],
+                ending: ending.to_string(),
+                to: to.to_string(),
+                keep: true,
+                earlier: Vec::new(),
+                left: Vec::new(),
+                right: Vec::new(),
+            },
+            words: 10,
+            examples: vec![stem.to_string()],
+            breaks: 0,
+        };
+        let stems = |law: &Law| match &law.change {
+            Change::Edge { stem, .. } => stem.clone(),
+            _ => Vec::new(),
+        };
+        let laws = [
+            edge("к", "ы", "и"),
+            edge("ц", "о", "е"),
+            edge("г", "ы", "и"),
+        ];
+        let merged = merge(&laws);
+        assert_eq!(merged.len(), 2);
+        assert_eq!(stems(&merged[0]), vec!["к", "г"]);
+        assert_eq!(merged[0].words, 20);
+        let laws = [
+            edge("к", "ы", "и"),
+            edge("б", "и", "ы"),
+            edge("г", "ы", "и"),
+        ];
+        assert_eq!(merge(&laws).len(), 3);
     }
 }

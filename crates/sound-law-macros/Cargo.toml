@@ -1,0 +1,18 @@
+[package]
+name = "sound-law-macros"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Sound laws written in sound-law's notation, compiled when the crate that writes them is built"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+sound-law.workspace = true
+
+[lints]
+workspace = true
