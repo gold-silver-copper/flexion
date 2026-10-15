@@ -31,7 +31,8 @@
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
 //! - `inspect`: a word's readings and forms (`--word a,b`; `--parts`: typed in full
-//!   with the dictionary's principal parts given), and a sample of irregular forms.
+//!   with the dictionary's principal parts given; `--holdout`: learned without the
+//!   tenth `try` scores), and a sample of irregular forms.
 
 mod audit;
 mod bench;
@@ -179,7 +180,7 @@ fn run() -> Result<(), String> {
             &lang,
             flag("--pos").as_deref().unwrap_or("noun"),
             flag("--word").as_deref(),
-            args.iter().any(|a| a == "--holdout"),
+            args.iter().any(|a| a == "--holdout").then_some(fold),
             args.iter().any(|a| a == "--parts"),
         ),
         _ => Err(USAGE.into()),
@@ -1511,7 +1512,7 @@ fn inspect(
     lang: &Language,
     pos: &str,
     word: Option<&str>,
-    holdout: bool,
+    holdout: Option<u64>,
     given: bool,
 ) -> Result<(), String> {
     let data = load(lang)?;
@@ -1526,7 +1527,7 @@ fn inspect(
         data.get(pi).ok_or("data")?,
     );
     let mut shape = flexion_train::shape(lang, part)?;
-    let kept = |l: &Lexeme| !holdout || eval::bucket(&l.key) != eval::TEST;
+    let kept = |l: &Lexeme| holdout.is_none_or(|fold| eval::bucket(&l.key) != fold);
     let settings = choose::Settings::default();
     shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
     let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
@@ -1610,13 +1611,22 @@ fn inspect(
                 }
             }
             let names = cell_names(lang, part)?;
+            // Given its principal parts, the whole table as `try` scores it.
+            let table = if given {
+                g.table(typed, &known)
+            } else {
+                Vec::new()
+            };
             for cell in 0..g.cells {
-                let c: Vec<String> = bare
-                    .candidates(typed, cell, &known)
-                    .iter()
-                    .take(3)
-                    .map(ToString::to_string)
-                    .collect();
+                let c: Vec<String> = match table.get(cell) {
+                    Some(forms) => forms.iter().take(3).map(ToString::to_string).collect(),
+                    None => bare
+                        .candidates(typed, cell, &known)
+                        .iter()
+                        .take(3)
+                        .map(ToString::to_string)
+                        .collect(),
+                };
                 let name = names.get(cell).map_or("", String::as_str);
                 println!("cell {cell} ({name}): {}", c.join(" | "));
             }
