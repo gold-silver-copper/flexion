@@ -902,7 +902,7 @@ fn try_tenth(
         }
         editors::report(lang, part, &learned, &train, &test);
         if o.diagnose {
-            diagnose(&learned, &train, &test);
+            diagnose(&learned, &train, &test, settings);
         }
         if o.errors > 0 {
             let mut shown = 0;
@@ -1110,7 +1110,12 @@ fn sweep(
 /// paradigm choice lists though its rules give a paradigm that builds them
 /// alike; and how well a classifier with many more cues than the rules
 /// tells the best paradigm, with each kind of cue left out.
-fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
+fn diagnose(
+    learned: &learn::Learned<'_>,
+    train: &[Lexeme],
+    test: &[&Lexeme],
+    settings: choose::Settings,
+) {
     use flexion_train::ceiling::{self, Example};
     let g = &learned.grammar;
     let o = &g.orthography;
@@ -1202,6 +1207,7 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
         pair(all),
         without.join(", ")
     );
+    per_slot(g, &labelled, &held, settings);
     // How much of the paradigm choice's probability the readings the
     // runtime builds keep, by how many it keeps; and a table's time.
     let readings: Vec<Vec<f32>> = held
@@ -1234,6 +1240,112 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
         kept.join(", "),
         t.elapsed().as_secs_f64() * 1e6 / held.len().max(1) as f64,
         flexion::READINGS,
+    );
+}
+
+/// Whether choosing each stem slot's endings apart (Polish `Ciąg` and
+/// `Język`, products of a singular and a plural choice) would build more
+/// forms: per slot, each paradigm's patterns in the slot's cells are its
+/// class there; the trainer's rules learned per slot on the training words'
+/// classes, each word's slots told apart and built as a paradigm of each
+/// class builds them (cells in no slot as its paradigm's), against the
+/// rules choosing whole paradigms, on the forms of the held-out words.
+fn per_slot(
+    g: &flexion::Grammar<'_, u16, u16, u8>,
+    labelled: &[(&Lexeme, usize)],
+    held: &[(&eval::Oracle, &Lexeme)],
+    settings: choose::Settings,
+) {
+    let o = &g.orthography;
+    let slots: Vec<Vec<usize>> = (g.slots.iter())
+        .map(|s| s.cells.iter().map(|&c| usize::from(c)).collect())
+        .collect();
+    if slots.len() < 2 {
+        return;
+    }
+    // Per slot: each paradigm's class, and per class the paradigm that
+    // first has it.
+    let mut class_of: Vec<Vec<u16>> = Vec::new();
+    let mut shown_by: Vec<Vec<usize>> = Vec::new();
+    for cells in &slots {
+        let mut seen: Vec<Vec<Option<String>>> = Vec::new();
+        let mut by: Vec<usize> = Vec::new();
+        let classes = (0..g.paradigms.len())
+            .map(|p| {
+                let mine: Vec<Option<String>> = (cells.iter())
+                    .map(|&c| {
+                        g.paradigms
+                            .get(p)?
+                            .pattern(&g.paradigms, c)
+                            .map(|x| x.to_string())
+                    })
+                    .collect();
+                let at = seen.iter().position(|s| *s == mine).unwrap_or_else(|| {
+                    seen.push(mine);
+                    by.push(p);
+                    seen.len() - 1
+                });
+                u16::try_from(at).unwrap_or(u16::MAX)
+            })
+            .collect();
+        class_of.push(classes);
+        shown_by.push(by);
+    }
+    let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
+    let choices: Vec<flexion::Choice<'_, u16>> = class_of
+        .iter()
+        .map(|classes| {
+            let examples: Vec<(String, u16)> = labelled
+                .iter()
+                .filter_map(|&(l, p)| Some((anchored(&l.key), *classes.get(p)?)))
+                .collect();
+            choose::learn(&examples, settings, |_, _| true)
+        })
+        .collect();
+    let in_slot: Vec<bool> = (0..g.cells)
+        .map(|c| slots.iter().any(|s| s.contains(&c)))
+        .collect();
+    let (mut whole, mut apart, mut forms) = (0, 0, 0);
+    for (x, l) in held {
+        let wanted: Vec<Option<String>> = (l.cells.iter().enumerate())
+            .map(|(cell, fs)| {
+                let want = fs.first()?;
+                (!eval::typed_back(o, g.lemma_cell, cell, want, &l.full))
+                    .then(|| o.read(want).letters)
+            })
+            .collect();
+        let right = |p: usize, cells: &dyn Fn(usize) -> bool| -> usize {
+            let built = g.built_as(&l.full, p);
+            (wanted.iter().zip(&built).enumerate())
+                .filter(|(c, (w, b))| {
+                    cells(*c) && w.is_some() && b.first().map(|f| o.read(f).letters) == **w
+                })
+                .count()
+        };
+        let Some(chosen) = x.chosen else { continue };
+        forms += x.forms;
+        whole += x.built.get(chosen).copied().unwrap_or(0);
+        apart += right(chosen, &|c| !in_slot.get(c).copied().unwrap_or(false));
+        for ((cells, choice), by) in slots.iter().zip(&choices).zip(&shown_by) {
+            let class = choice.read(&anchored(&l.key), g.smoothing, |_| true);
+            let p = class
+                .first()
+                .and_then(|r| by.get(usize::from(r.value)))
+                .copied()
+                .unwrap_or(chosen);
+            apart += right(p, &|c| cells.contains(&c));
+        }
+    }
+    let share = |n: usize| 100.0 * n as f64 / forms.max(1) as f64;
+    let classes: Vec<String> = (slots.iter().zip(&shown_by))
+        .map(|(s, by)| format!("{} cells, {} classes", s.len(), by.len()))
+        .collect();
+    println!(
+        "    each slot chosen apart ({}; {} paradigms): forms right {:.2}%, the paradigms chosen whole {:.2}%",
+        classes.join("; "),
+        g.paradigms.len(),
+        share(apart),
+        share(whole),
     );
 }
 
