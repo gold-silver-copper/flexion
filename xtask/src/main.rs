@@ -14,7 +14,10 @@
 //!   `--hold-cells auto|<cells>`: hold those cells out of training and
 //!   score them; `--train-share 25|50|100`: train on that share of the
 //!   words; `--drop-cells 50`: take that share of each training table's
-//!   cells out);
+//!   cells out; `--pool`: small parts of speech on four tenths;
+//!   `--diagnose`: how well the paradigms build words apart from how well
+//!   one is chosen, and how much vowel length the letters tell;
+//!   `--without-editions`: learn from the main dump's words only);
 //! - `compare <a> <b>`: two saved `try` runs, paired word by word (or two
 //!   sweeps: every language's, with their time and memory);
 //! - `sweep <dir>`: `try --quick` for every language, one after another,
@@ -39,7 +42,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
 
 fn main() {
     if let Err(e) = run() {
@@ -131,6 +134,7 @@ fn run() -> Result<(), String> {
                 thin: percent("--drop-cells", 0)?,
                 diagnose: args.iter().any(|a| a == "--diagnose"),
                 pool: args.iter().any(|a| a == "--pool"),
+                main_only: args.iter().any(|a| a == "--without-editions"),
             };
             try_language(&lang, flag("--pos").as_deref(), &options)
         }
@@ -321,6 +325,8 @@ struct TryOptions {
     /// Score a part of speech with fewer than [`POOLED`] words on the
     /// tenths [`POOL`] together (see [`try_language`]).
     pool: bool,
+    /// Learn from the main dump's words only, not other editions'.
+    main_only: bool,
 }
 
 /// A part of speech with fewer words is scored on several development
@@ -338,6 +344,7 @@ fn training(d: &PosData, o: &TryOptions, lemma_cell: Option<usize>) -> Vec<Lexem
     d.lexemes
         .iter()
         .filter(|l| eval::bucket(&l.key) != o.fold && measure::kept(&l.key, o.share))
+        .filter(|l| !o.main_only || l.source == 0)
         .cloned()
         .map(|mut l| {
             if o.thin > 0 {
@@ -479,7 +486,11 @@ fn try_tenth(
     let script = script::Script::new(&lang.spelling);
     // The language's marks model, from every part of speech's training
     // words (and those less the dev tenth, for the sharpness).
-    let trained = |l: &Lexeme| eval::bucket(&l.key) != fold && measure::kept(&l.key, o.share);
+    let trained = |l: &Lexeme| {
+        eval::bucket(&l.key) != fold
+            && measure::kept(&l.key, o.share)
+            && (!o.main_only || l.source == 0)
+    };
     let marks = |keep: &dyn Fn(&Lexeme) -> bool| {
         flexion_train::marks(lang, &script.orthography(), data, keep, settings)
     };
@@ -1397,67 +1408,72 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         choose::Settings::default(),
     );
     let g = &learned.grammar;
-    if let Some(word) = word {
-        let bare = flexion::Grammar {
-            irregular: flexion::Irregular::default(),
-            ..g.clone()
-        };
-        let key = script
-            .orthography()
-            .key(&script.orthography().read(word).letters);
-        let listed: Vec<String> = d
-            .lexemes
-            .iter()
-            .filter(|l| l.key == key)
-            .map(|l| format!("{:?}", l.cells))
-            .collect();
-        println!("dictionary: {listed:?}");
-        println!(
-            "paradigm readings: {:?}",
-            g.paradigm
-                .read(&key, 2.0, |_| true)
+    if let Some(words) = word {
+        for word in words.split(',') {
+            println!("{word}");
+            let bare = flexion::Grammar {
+                irregular: flexion::Irregular::default(),
+                ..g.clone()
+            };
+            let key = script
+                .orthography()
+                .key(&script.orthography().read(word).letters);
+            let listed: Vec<String> = d
+                .lexemes
                 .iter()
-                .take(3)
-                .map(|r| (
-                    g.paradigms
-                        .get(usize::from(r.value))
-                        .map(|p| p.name.to_string()),
-                    r.probability
-                ))
-                .collect::<Vec<_>>()
-        );
-        if let Some(a) = &g.accent {
-            for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
-                let class = a.class_of(r.value);
-                let places: String = class
-                    .and_then(|c| a.pattern_of(c))
-                    .map(|p| {
-                        p.places
-                            .split('\t')
-                            .filter_map(|x| x.parse().ok())
-                            .map(place_letter)
-                            .collect()
-                    })
-                    .unwrap_or_default();
-                println!(
-                    "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
-                    r.value,
-                    class.map(|c| c.vowel),
-                    r.probability,
-                    r.rule.map_or("", |x| x.ending.as_ref()),
-                    r.rule
-                        .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
-                );
-            }
-        }
-        for cell in 0..g.cells {
-            let c: Vec<String> = bare
-                .candidates(word, cell, &flexion::Known::default())
-                .iter()
-                .take(3)
-                .map(ToString::to_string)
+                .filter(|l| l.key == key)
+                .map(|l| format!("{:?}", l.cells))
                 .collect();
-            println!("cell {cell}: {}", c.join(" | "));
+            println!("dictionary: {listed:?}");
+            println!(
+                "paradigm readings: {:?}",
+                g.paradigm
+                    .read(&key, 2.0, |_| true)
+                    .iter()
+                    .take(3)
+                    .map(|r| (
+                        g.paradigms
+                            .get(usize::from(r.value))
+                            .map(|p| p.name.to_string()),
+                        r.probability
+                    ))
+                    .collect::<Vec<_>>()
+            );
+            if let Some(a) = &g.accent {
+                for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
+                    let class = a.class_of(r.value);
+                    let places: String = class
+                        .and_then(|c| a.pattern_of(c))
+                        .map(|p| {
+                            p.places
+                                .split('\t')
+                                .filter_map(|x| x.parse().ok())
+                                .map(place_letter)
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    println!(
+                        "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
+                        r.value,
+                        class.map(|c| c.vowel),
+                        r.probability,
+                        r.rule.map_or("", |x| x.ending.as_ref()),
+                        r.rule
+                            .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
+                    );
+                }
+            }
+            let names = cell_names(lang, part)?;
+            for cell in 0..g.cells {
+                let c: Vec<String> = bare
+                    .candidates(word, cell, &flexion::Known::default())
+                    .iter()
+                    .take(3)
+                    .map(ToString::to_string)
+                    .collect();
+                let name = names.get(cell).map_or("", String::as_str);
+                println!("cell {cell} ({name}): {}", c.join(" | "));
+            }
         }
         return Ok(());
     }
