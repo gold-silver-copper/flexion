@@ -711,6 +711,7 @@ pub fn learn<'s>(
     words: &[Word<'_>],
     paradigms: Vec<Paradigm<'s>>,
     assignment: Vec<u16>,
+    trace: &mut crate::trace::Trace,
 ) -> (
     Vec<Law>,
     Option<Program<'static>>,
@@ -720,6 +721,7 @@ pub fn learn<'s>(
     // Harmony first: the other laws see its class letters filled.
     let (harmony, paradigms, assignment) =
         harmony::learn(orthography, words, paradigms, assignment);
+    trace.mark("laws: harmony");
     let filled: Vec<Change> = harmony.iter().map(|l| l.change.clone()).collect();
     let pre = (!filled.is_empty()).then(|| compile(&filled)).flatten();
     let pre = pre.as_ref();
@@ -740,6 +742,7 @@ pub fn learn<'s>(
     });
     let originals = paradigms.len();
     let (paradigms, twins) = twins(orthography, words, paradigms, &assignment, pre, &rank);
+    trace.mark("laws: twins");
     for (twin, of, _) in &twins {
         rank.push(rank.get(*of).copied().unwrap_or((usize::MAX, *twin)));
     }
@@ -789,6 +792,7 @@ pub fn learn<'s>(
                 .collect()
         })
         .collect();
+    trace.mark("laws: readings");
     // Every change that would let a word's paradigm (where a change explains
     // the form), or a more general one (all its forms), build a form it has,
     // with the words it would do that for.
@@ -850,6 +854,7 @@ pub fn learn<'s>(
         })
         .collect();
     let held: Vec<bool> = words.iter().map(|w| held_out(w.letters)).collect();
+    trace.mark("laws: candidates");
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -917,6 +922,7 @@ pub fn learn<'s>(
     // A law grown context must pay in the end too, with the words where
     // they settled: dropped where the grammar builds as many forms without
     // it.
+    trace.mark("laws: greedy");
     let (mut program, mut assignment, mut total) = settle(&laws);
     let grown: Vec<Change> = laws
         .iter()
@@ -937,6 +943,7 @@ pub fn learn<'s>(
     // A law inside alternating stems pays in bits (see `crate::bits`): the
     // grammar is shorter with it, its paradigms that have words, its laws
     // and the forms it gets wrong (listed) counted, than without it.
+    trace.mark("laws: settle");
     let alphabet: crate::HashSet<char> = forms.iter().flatten().flat_map(|f| f.chars()).collect();
     let prices = crate::bits::Prices::new(alphabet.len(), cells);
     let all: usize = forms.iter().map(Vec::len).sum();
@@ -988,6 +995,7 @@ pub fn learn<'s>(
         .take(originals)
         .map(|p| p.name.to_string())
         .collect();
+    trace.mark("laws: alternating");
     let (mut paradigms, assignment) = drop_empty(paradigms, assignment);
     // A twin with words is named after the word a paradigm it took the
     // words of was named after (commonest first), else its first word no

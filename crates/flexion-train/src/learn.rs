@@ -275,7 +275,7 @@ pub fn learn<'s>(
         })
         .collect();
     let (laws, program, paradigms, assignment) =
-        crate::laws::learn(&orthography, &law_words, paradigms, assignment);
+        crate::laws::learn(&orthography, &law_words, paradigms, assignment, &mut trace);
     let (mut paradigms, assignment) = rehome(
         &orthography,
         &law_words,
@@ -284,7 +284,7 @@ pub fn learn<'s>(
         program.as_ref(),
     );
     inherent(&words, &assignment, &mut paradigms);
-    trace.mark("laws");
+    trace.mark("rehome and inherent");
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their
     // cells' place.
