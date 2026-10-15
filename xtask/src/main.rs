@@ -69,6 +69,7 @@ fn run() -> Result<(), String> {
             name.as_ref(),
             only.as_deref(),
             args.iter().any(|a| a == "--final"),
+            args.iter().any(|a| a == "--diagnose"),
         );
     }
     let lang = flexion_configs::by_name(name).ok_or(format!("no language {name}"))?;
@@ -120,6 +121,7 @@ fn run() -> Result<(), String> {
                 hold: flag("--hold-cells"),
                 share: percent("--train-share", 100)?,
                 thin: percent("--drop-cells", 0)?,
+                diagnose: args.iter().any(|a| a == "--diagnose"),
             };
             try_language(&lang, flag("--pos").as_deref(), &options)
         }
@@ -304,6 +306,9 @@ struct TryOptions {
     share: u8,
     /// Percent of each training table's cells taken out.
     thin: u8,
+    /// Also the diagnostics of how well the paradigms build words apart
+    /// from how well one is chosen (see [`diagnose`]).
+    diagnose: bool,
 }
 
 /// The training words of a part of speech for a `try`: every word outside
@@ -711,6 +716,9 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             saved.add(part.name, "held-cells", &ids, &out);
         }
         editors::report(lang, part, &learned, &train, &test);
+        if o.diagnose {
+            diagnose(&learned, &train, &test);
+        }
         if o.errors > 0 {
             let mut shown = 0;
             'words: for l in test.iter().step_by(7) {
@@ -836,7 +844,12 @@ const MINUTES: &[(&str, f64)] = &[
 /// `only` names), one after another, each run's outcomes saved in `dir` as
 /// `<language>.tsv` and its seconds and peak memory in `dir/summary.tsv`;
 /// on the READMEs' tenth when `last`.
-fn sweep(dir: &std::path::Path, only: Option<&[&str]>, last: bool) -> Result<(), String> {
+fn sweep(
+    dir: &std::path::Path,
+    only: Option<&[&str]>,
+    last: bool,
+    diagnose: bool,
+) -> Result<(), String> {
     let langs: Vec<Language> = flexion_configs::all()
         .into_iter()
         .filter(|l| only.is_none_or(|o| o.contains(&l.name)))
@@ -860,6 +873,7 @@ fn sweep(dir: &std::path::Path, only: Option<&[&str]>, last: bool) -> Result<(),
             fold: if last { eval::TEST } else { eval::DEVELOP },
             save: Some(dir.join(format!("{}.tsv", lang.name))),
             share: 100,
+            diagnose,
             ..TryOptions::default()
         };
         flexion_train::trace::reset_peak();
@@ -873,6 +887,90 @@ fn sweep(dir: &std::path::Path, only: Option<&[&str]>, last: bool) -> Result<(),
         std::fs::write(&path, &summary).map_err(|e| format!("{}: {e}", path.display()))?;
     }
     Ok(())
+}
+
+/// How well the paradigms build words apart from how well the grammar
+/// chooses one: each held-out word against the paradigm that builds the
+/// most of its forms (an oracle, reading the answers); the words the
+/// paradigm choice lists though its rules give a paradigm that builds them
+/// alike; and how well a classifier with many more cues than the rules
+/// tells the best paradigm, with each kind of cue left out.
+fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
+    use flexion_train::ceiling::{self, Example};
+    let g = &learned.grammar;
+    let o = &g.orthography;
+    let oracle = eval::oracle(g, test);
+    let sum = |f: &dyn Fn(&eval::Oracle) -> usize| oracle.iter().map(f).sum::<usize>();
+    let forms = sum(&|x| x.forms).max(1) as f64;
+    let chosen_best = oracle
+        .iter()
+        .filter(|x| x.best.is_some() && x.chosen == x.best)
+        .count();
+    println!(
+        "  diagnosis ({} held-out words, typed in full, letters): the grammar {:.2}%, the paradigm building the most {:.2}%; the grammar's paradigm is that one for {:.2}% of words",
+        oracle.len(),
+        100.0 * sum(&|x| x.grammar) as f64 / forms,
+        100.0 * sum(&|x| x.oracle) as f64 / forms,
+        100.0 * chosen_best as f64 / oracle.len().max(1) as f64,
+    );
+    let (tied, listed) = eval::ties(g);
+    println!(
+        "    words the choice lists whose rules' paradigm builds them alike: {tied} of {listed}"
+    );
+    // The classifier: learned on the training words with the paradigms the
+    // grammar gives them, scored on the held-out words' best paradigms (of
+    // words typed alike, none).
+    let known = flexion::Known {
+        full: true,
+        ..flexion::Known::default()
+    };
+    let mut seen = std::collections::HashSet::new();
+    let step = train.len().div_ceil(40_000).max(1);
+    let labelled: Vec<(&Lexeme, usize)> = train
+        .iter()
+        .filter(|l| l.source == 0 && seen.insert(l.key.clone()))
+        .step_by(step)
+        .filter_map(|l| Some((l, usize::from(g.readings(&l.full, &known).first()?.value))))
+        .collect();
+    fn example<'l>(o: &flexion::Orthography<'_>, l: &'l Lexeme) -> Example<'l> {
+        Example {
+            key: &l.key,
+            vowels: o.vowel_count(&l.key),
+            inherent: &l.inherent,
+        }
+    }
+    let train_examples: Vec<(Example<'_>, usize)> =
+        labelled.iter().map(|&(l, p)| (example(o, l), p)).collect();
+    let mut count: std::collections::HashMap<&str, usize> = std::collections::HashMap::new();
+    for l in test {
+        *count.entry(l.key.as_str()).or_default() += 1;
+    }
+    let held: Vec<(&eval::Oracle, &Lexeme)> = oracle
+        .iter()
+        .filter_map(|x| Some((x, *test.get(x.word)?)))
+        .filter(|(x, l)| x.best.is_some() && count.get(l.key.as_str()) == Some(&1))
+        .collect();
+    let test_examples: Vec<(Example<'_>, usize)> = held
+        .iter()
+        .filter_map(|(x, l)| Some((example(o, l), x.best?)))
+        .collect();
+    let rules =
+        held.iter().filter(|(x, _)| x.chosen == x.best).count() as f64 / held.len().max(1) as f64;
+    let all = ceiling::score(&train_examples, &test_examples, None);
+    let without: Vec<String> = ceiling::CUES
+        .iter()
+        .map(|&cue| {
+            let s = ceiling::score(&train_examples, &test_examples, Some(cue));
+            format!("{cue:?} {:.2}%", 100.0 * s)
+        })
+        .collect();
+    println!(
+        "    best paradigm told ({} words): by the rules {:.2}%, by a classifier with every cue {:.2}%; without each: {}",
+        held.len(),
+        100.0 * rules,
+        100.0 * all,
+        without.join(", ")
+    );
 }
 
 /// Each cell's name: its group and its values' short names (`present 1 sg`).

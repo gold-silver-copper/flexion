@@ -121,7 +121,9 @@ fn part(
             },
         ],
         lemma: Some((name, vec!["Nominative", "Singular"])),
-        citation: vec![],
+        // A dictionary's principal part: the accusative (`kitabı`, its
+        // stem's last consonant and vowel).
+        citation: vec![(name, vec!["Accusative", "Singular"])],
         inherent: vec![],
         capitalized: false,
         lemmas_from: vec![],

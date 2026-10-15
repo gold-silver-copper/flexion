@@ -54,6 +54,7 @@ pub fn reseed(seed: u64) {
 
 pub mod baseline;
 pub mod bits;
+pub mod ceiling;
 pub mod cells;
 pub mod choose;
 pub mod eval;

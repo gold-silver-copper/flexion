@@ -1036,6 +1036,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         out
     }
 
+    /// The letters of each cell's likeliest form `lemma` (typed in full)
+    /// would have if it took paradigm `paradigm`, accent aside; none where
+    /// the paradigm doesn't fit it. For measuring how well paradigms build
+    /// words apart from how well the grammar chooses one.
+    pub fn built_as(&self, lemma: &str, paradigm: usize) -> Vec<Option<String>> {
+        let letters = self.orthography.read(lemma).letters;
+        let key = self.orthography.key(&letters);
+        let Some((p, stems)) = self
+            .paradigms
+            .get(paradigm)
+            .and_then(|p| Some((p, p.stems(&self.orthography, &letters)?)))
+        else {
+            return vec![None; self.cells];
+        };
+        let mut built = Built::default();
+        (0..self.cells)
+            .map(|cell| {
+                let forms = self.build(p, &stems, &key, &[], cell, &mut built);
+                Some(forms.first()?.0.first()?.0.clone())
+            })
+            .collect()
+    }
+
     /// The paradigms `lemma` can follow, likeliest first, each with how
     /// sure and why, given what the caller knows.
     pub fn readings(&self, lemma: &str, known: &Known<'_>) -> Vec<Reading<'_, 'a, P>> {

@@ -72,7 +72,14 @@ pub fn language() -> Language {
                     },
                 ],
                 lemma: Some(("noun", vec!["Nominative", "Singular"])),
-                citation: vec![],
+                // A dictionary's principal parts (Kotus): the genitive, the
+                // partitive singular and plural, the illative singular.
+                citation: vec![
+                    ("noun", vec!["Genitive", "Singular"]),
+                    ("noun", vec!["Partitive", "Singular"]),
+                    ("noun", vec!["Partitive", "Plural"]),
+                    ("noun", vec!["Illative", "Singular"]),
+                ],
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],

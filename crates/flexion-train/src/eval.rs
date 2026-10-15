@@ -654,3 +654,110 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
 /// The fewest held-out forms whose first answer has a status for that
 /// status's trust to be fitted.
 pub const TRUSTED: usize = 100;
+
+/// One held-out word typed in full, against the paradigm that builds the
+/// most of its forms (the oracle: it reads the answers, so it is a
+/// diagnostic, never a grammar's).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Oracle {
+    /// The word's place among those scored.
+    pub word: usize,
+    /// Forms scored (the lemma's aside where it is what was typed).
+    pub forms: usize,
+    /// Forms whose letters the grammar's first candidate gets right.
+    pub grammar: usize,
+    /// The paradigm that builds the most of them, and how many; the grammar's
+    /// likeliest paradigm.
+    pub best: Option<usize>,
+    pub oracle: usize,
+    pub chosen: Option<usize>,
+}
+
+/// Held-out words scored for [`oracle`], at most: every paradigm is tried
+/// on each.
+pub const ORACLE_WORDS: usize = 1000;
+
+/// [`Oracle`] of an even sample of `lexemes` (at most [`ORACLE_WORDS`]),
+/// typed in full: letters only, as the floor.
+pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    lexemes: &[&Lexeme],
+) -> Vec<Oracle> {
+    let o = &grammar.orthography;
+    let step = lexemes.len().div_ceil(ORACLE_WORDS).max(1);
+    let sample: Vec<(usize, &Lexeme)> = lexemes.iter().copied().enumerate().step_by(step).collect();
+    let known = flexion::Known {
+        full: true,
+        ..flexion::Known::default()
+    };
+    crate::par::map(&sample, |&(word, l)| {
+        let wanted: Vec<Option<String>> = l
+            .cells
+            .iter()
+            .enumerate()
+            .map(|(cell, forms)| {
+                let want = forms.first()?;
+                (!typed_back(o, grammar.lemma_cell, cell, want, &l.full))
+                    .then(|| o.read(want).letters)
+            })
+            .collect();
+        let forms = wanted.iter().flatten().count();
+        let right = |built: &[Option<String>]| {
+            wanted
+                .iter()
+                .zip(built)
+                .filter(|(w, b)| w.is_some() && w == b)
+                .count()
+        };
+        let table: Vec<Option<String>> = grammar
+            .table(&l.full, &known)
+            .iter()
+            .map(|c| c.first().map(|c| o.read(&c.form).letters))
+            .collect();
+        let (oracle, best) = (0..grammar.paradigms.len())
+            .map(|p| (right(&grammar.built_as(&l.full, p)), std::cmp::Reverse(p)))
+            .max()
+            .map_or((0, None), |(n, std::cmp::Reverse(p))| {
+                (n, (n > 0).then_some(p))
+            });
+        Oracle {
+            word,
+            forms,
+            grammar: right(&table),
+            best,
+            oracle,
+            chosen: grammar
+                .readings(&l.full, &known)
+                .first()
+                .map(|r| r.value.index()),
+        }
+    })
+}
+
+/// Of the words the paradigm choice lists (its exceptions), those the rules
+/// alone give a paradigm that builds every one of the word's cells as the
+/// listed one does: listed for nothing. `(tied, listed)`.
+pub fn ties<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+) -> (usize, usize) {
+    let mut rules = grammar.paradigm.clone();
+    rules.exceptions = std::borrow::Cow::Borrowed(&[]);
+    let listed: Vec<(&str, usize)> = grammar
+        .paradigm
+        .exceptions
+        .iter()
+        .map(|(w, p)| (w.trim_start_matches(flexion::WORD_END), p.index()))
+        .collect();
+    let tied = crate::par::map(&listed, |&(key, p)| {
+        let ruled = rules
+            .read(
+                &format!("{}{key}", flexion::WORD_END),
+                grammar.smoothing,
+                |_| true,
+            )
+            .first()
+            .map(|r| r.value.index());
+        ruled.is_some_and(|q| q != p && grammar.built_as(key, q) == grammar.built_as(key, p))
+    });
+    (tied.iter().filter(|&&t| t).count(), listed.len())
+}
