@@ -715,8 +715,16 @@ pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
             .iter()
             .map(|c| c.first().map(|c| o.read(&c.form).letters))
             .collect();
+        let first = |forms: Vec<Vec<String>>| -> Vec<Option<String>> {
+            forms.into_iter().map(|f| f.into_iter().next()).collect()
+        };
         let (oracle, best) = (0..grammar.paradigms.len())
-            .map(|p| (right(&grammar.built_as(&l.full, p)), std::cmp::Reverse(p)))
+            .map(|p| {
+                (
+                    right(&first(grammar.built_as(&l.full, p))),
+                    std::cmp::Reverse(p),
+                )
+            })
             .max()
             .map_or((0, None), |(n, std::cmp::Reverse(p))| {
                 (n, (n > 0).then_some(p))

@@ -678,6 +678,7 @@ pub fn learn<'s>(
     );
     let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
     let (irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound);
+    untie(&mut grammar, &everyone);
     trace.mark("listing");
     // The ending tables listed stems are built with; paradigms stated
     // through stem slots where that pays; the tables either uses are the
@@ -782,6 +783,54 @@ pub fn language_marks<'l>(
         words.iter().map(|(k, l)| (k.as_str(), l.as_str())),
         settings,
     )
+}
+
+/// The words the paradigm choice lists though the paradigm its rules alone
+/// give builds every one of their cells as the listed one does (unattested
+/// ones too), unlisted: they were listed for nothing. Not where a
+/// paradigm's accent classes could tell the two apart, nor a word others
+/// inflect as (see [`flexion::Heads`]).
+fn untie(grammar: &mut Grammar<'_, u16, u16, u8>, words: &[Word]) {
+    if grammar.accent.is_some() {
+        return;
+    }
+    let letters: HashMap<&str, &str> = words
+        .iter()
+        .map(|w| (w.key.as_str(), w.letters.as_str()))
+        .collect();
+    let mut rules = grammar.paradigm.clone();
+    rules.exceptions = Cow::Borrowed(&[]);
+    let listed: Vec<(String, u16)> = grammar
+        .paradigm
+        .exceptions
+        .iter()
+        .map(|(w, p)| (w.to_string(), *p))
+        .collect();
+    let g = &*grammar;
+    let tied: Vec<bool> = crate::par::map(&listed, |(anchored, p)| {
+        let key = anchored.trim_start_matches(flexion::WORD_END);
+        // A word listed with one paradigm only (homographs list more), and
+        // not one others inflect as (their last part: it must stay listed).
+        if listed.iter().filter(|(w, _)| w == anchored).count() > 1 || g.heads.inflects(key) {
+            return false;
+        }
+        let Some(&word) = letters.get(key) else {
+            return false;
+        };
+        let ruled = rules
+            .read(anchored, g.smoothing, |_| true)
+            .first()
+            .map(|r| r.value);
+        ruled.is_some_and(|q| {
+            q != *p && g.built_as(word, usize::from(q)) == g.built_as(word, usize::from(*p))
+        })
+    });
+    let mut keep = tied.into_iter().map(|t| !t);
+    grammar
+        .paradigm
+        .exceptions
+        .to_mut()
+        .retain(|_| keep.next().unwrap_or(true));
 }
 
 /// The share of a paradigm's cells another's patterns with an affix added
@@ -3195,5 +3244,86 @@ mod tests {
             marks: None,
         };
         assert!(referrals(&words, &shape).is_none());
+    }
+
+    #[test]
+    fn a_word_its_rules_build_alike_is_not_listed() {
+        // Two paradigms that build `kot` alike in every cell; `kot` listed
+        // with the second, the rules giving the first: it was listed for
+        // nothing. `noga` is listed for its other form, `lis` for a second
+        // form of its plural.
+        let paradigm = |name: &str, cells: &[&str]| Paradigm {
+            name: Cow::Owned(name.to_string()),
+            words: 10,
+            lemma: Cow::Borrowed("~"),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Owned(cells.iter().map(|c| format!("{c}\t")).collect()),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let orthography = Orthography {
+            lowercase: true,
+            vowels: "aeiou",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+        };
+        let anchored = |w: &str| Cow::Owned(format!("{}{w}", flexion::WORD_END));
+        let mut grammar = Grammar {
+            orthography,
+            cells: 2,
+            lemma_cell: Some(0),
+            capitalized: false,
+            paradigms: Cow::Owned(vec![
+                paradigm("one", &["~", "~y"]),
+                paradigm("two", &["~", "~y"]),
+                paradigm("three", &["~", "~e"]),
+                paradigm("four", &["~", "~y|~i"]),
+            ]),
+            paradigm: flexion::Choice {
+                side: flexion::Side::End,
+                rules: Cow::Owned(vec![flexion::Rule {
+                    ending: Cow::Borrowed(""),
+                    counts: Cow::Owned(vec![(0, 10)]),
+                    regular: true,
+                }]),
+                exceptions: Cow::Owned(vec![
+                    (anchored("kot"), 1),
+                    (anchored("lis"), 3),
+                    (anchored("noga"), 2),
+                ]),
+            },
+            relations: Cow::Borrowed(&[]),
+            feature: None,
+            compound: None,
+            prefixes: None,
+            heads: flexion::Heads::default(),
+            accent: None,
+            laws: None,
+            spellings: Cow::Borrowed(&[]),
+            marks: None,
+            slots: Cow::Borrowed(&[]),
+            tables: Cow::Borrowed(&[]),
+            irregular: flexion::Irregular::default(),
+            smoothing: 1.0,
+            sharpness: 1.0,
+            trust: flexion::Trust::FULL,
+        };
+        let words = [
+            word("kot", &["kot", "koty"]),
+            word("lis", &["lis", "lisy"]),
+            word("noga", &["noga", "nogae"]),
+        ];
+        untie(&mut grammar, &words);
+        assert_eq!(
+            grammar.paradigm.exceptions.to_vec(),
+            vec![(anchored("lis"), 3), (anchored("noga"), 2)]
+        );
     }
 }

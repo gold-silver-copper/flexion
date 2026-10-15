@@ -271,7 +271,10 @@ it describes (`crates/flexion-train/src/bits.rs`).
   shares the most cells with: it writes only the cells that differ (`_` for the rest). It
   may be like it through a *view*: one feature's value read as another (a Latin deponent
   is like `agitō` with its active cells read as the passive ones: `like Agitō as
-  ACT_AS_PASS`). A paradigm of more than one word is kept where it costs fewer bits than
+  ACT_AS_PASS`), or with something added after every pattern it reads there (an
+  *affix*: a Russian reflexive is its plain verb with `~я`, `~ь` after a vowel, the stem's
+  last piece their `с`: `like Играть with "~я", "~ь" after "аеиоуыэюя"`). A paradigm of
+  more than one word is kept where it costs fewer bits than
   listing the forms the next paradigm doesn't build; a word whose table only another
   paradigm nearly builds is listed there. A cell whose form is another cell's for nearly
   every word is that cell's, stated once (Greek middle = passive outside the aorist and
@@ -317,7 +320,9 @@ it describes (`crates/flexion-train/src/bits.rs`).
   is `talossa` and `-ni`, for every noun). Where a feature of the word decides which
   cell (Russian: the accusative is the genitive of animate nouns, the nominative of
   inanimate ones), the relation is by that feature, and the feature is a choice of its
-  own. A paradigm takes the cells none of its words has from its relations (`derived`),
+  own; where one cell gives the form whatever the feature is, the feature has no say
+  (Italian `parli`, the polite imperative, is the subjunctive's third person for every
+  verb). A paradigm takes the cells none of its words has from its relations (`derived`),
   and a word whose forms are listed lists only its principal parts: its other forms are
   told from them, where that does as well as its paradigm. A cell too few words have is
   told by analogy: from the cell that differs from it as another pair of cells does,
@@ -335,15 +340,16 @@ it describes (`crates/flexion-train/src/bits.rs`).
   meets it: on the 250, 500, 1,000 and 2,000 commonest words (in the most dictionaries,
   with the most senses) that have its ending; a rule with few enough exceptions there is
   productive (`regular`, printed on the rule); otherwise speakers vary (`unsettled`).
-- **Compounds and prefixes.** A word written in parts inflects its last part or each part
-  (Russian `диван-кровать`). Where nine in ten of the dictionary's words ending in an
-  irregular word inflect as it (at every length of that word from some length on, which
-  is learned: Finnish five letters, none in English or Russian), a word the grammar
-  doesn't list takes the listing of the listed word it ends in, its front kept: Finnish
-  `aavameri` inflects as `meri`, and its forms aren't listed. German verbs inflect
-  behind their prefixes: separable ones go where the form puts them (`fing an`),
-  inseparable ones stay in front and take off the participle's `ge-` (`verhindert`).
-  The prefixes, and what the participle drops, are learned.
+- **Compounds and prefixes.** A word written in parts inflects its last part or each
+  part (Russian `диван-кровать`). A word the grammar doesn't list that ends in a listed
+  word takes that word's listing, its front kept (Finnish `aavameri` inflects as `meri`,
+  and its forms aren't listed): every listed word from some length on, where nine in ten
+  of the dictionary's words ending in an irregular word that long inflect as it (Finnish
+  five letters; none in English, Russian or German), and, of the shorter ones, each word
+  whose own compounds do (`heads.rs`: Italian `fare` for `soddisfare`, German `Arzt`).
+  German verbs inflect behind their prefixes: separable ones go where the form puts them
+  (`fing an`), inseparable ones stay in front and take off the participle's `ge-`
+  (`verhindert`). The prefixes, and what the participle drops, are learned.
 - **Accent.** Where a language writes it (Ancient Greek), each cell has a rule placing the
   accent (where the lemma has it, on the ending, as far back as allowed, or on the word's
   last or next-to-last syllable) and the law
@@ -351,10 +357,14 @@ it describes (`crates/flexion-train/src/bits.rs`).
   endings take the circumflex, and where a final `-οι` counts long (the optative), are
   learned.
 - **Spelling.** Words are read in Unicode's composed form (NFC), so a letter typed with
-  its marks in any order is the same letter. A word is found however it is typed: without vowel length (`rosa`,
-  `λυω`), without `ё`. Rules on the letters around each vowel restore the marks (`-ātiō`,
-  `dē-`), the dictionary's words that they don't spell are listed, and the answer's
-  probability says how much of the spelling was a guess.
+  its marks in any order is the same letter. A word is found however it is typed:
+  without vowel length (`rosa`, `λυω`), without `ё`. Rules on the letters around each
+  vowel restore the marks (`-ātiō`, `dē-`), learned once for the language from every
+  part of speech's words (`marks.rs`: a root's length shown in a verb tells it in its
+  noun), and the three likeliest spellings are read, over every vowel at once; the
+  dictionary's words that the rules don't spell are listed, and the answer's probability
+  says how much of the spelling was a guess. A circumflex is vowel length on a single
+  vowel (`σῦς`), not on a diphthong's second letter (`ἀριθμοῦ`).
 - **Irregular forms.** Whatever no rule gives is listed, as the dictionary writes it.
 - **Calibration.** Probabilities are sharpened by one power per part of speech, fitted on
   a tenth of the words the grammar didn't learn from, typed as their headwords; an answer
