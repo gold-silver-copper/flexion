@@ -2553,8 +2553,8 @@ const HEAD_OWN: usize = 2;
 /// ending in a word that long have that word's forms, their front kept,
 /// in every cell both have (none if no length does); and, of the shorter
 /// ones (or all, where no length does), each word that [`HEAD_SHARE`] of
-/// the words ending in it, at least [`HEAD_OWN`], inflect as (Italian
-/// `fare`: `disfare`, `soddisfare`).
+/// the words ending in it, at least [`HEAD_OWN`], inflect as (German
+/// `Schein`: `Fahrschein`, `Führerschein`).
 fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
     // Per word ending in another: the longest such, its letters, and

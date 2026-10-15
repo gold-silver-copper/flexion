@@ -524,7 +524,7 @@ fn grammar_files(
         if affixed {
             let _ = writeln!(
                 p,
-                "/// What a {one} adds after each pattern of the one it is like (`with \"~я\", \"~ь\"\n/// after \"аеиоуыэюя\"`: `~я`, or `~ь` where that pattern ends in a vowel).\nmacro_rules! affix {{\n    () => {{\n        None\n    }};\n    ($affix:literal) => {{\n        affix!($affix, $affix, \"\")\n    }};\n    ($affix:literal, $other:literal, $letters:literal) => {{\n        Some(flexion::Affix {{\n            pattern: ::std::borrow::Cow::Borrowed($affix),\n            other: ::std::borrow::Cow::Borrowed($other),\n            letters: ::std::borrow::Cow::Borrowed($letters),\n        }})\n    }};\n}}\n"
+                "/// What a {one} adds after each pattern of the one it is like (`with \"~ь\", \"~я\"\n/// after \"йлмть\"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).\nmacro_rules! affix {{\n    () => {{\n        None\n    }};\n    ($affix:literal) => {{\n        affix!($affix, $affix, \"\")\n    }};\n    ($affix:literal, $other:literal, $letters:literal) => {{\n        Some(flexion::Affix {{\n            pattern: ::std::borrow::Cow::Borrowed($affix),\n            other: ::std::borrow::Cow::Borrowed($other),\n            letters: ::std::borrow::Cow::Borrowed($letters),\n        }})\n    }};\n}}\n"
             );
         }
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
@@ -822,7 +822,7 @@ fn grammar_files(
     // heads.rs
     if !g.heads.words.is_empty() {
         let mut r = format!(
-            "//! Words a word ending in one inflects as, its front kept (Italian\n//! `soddisfare` as `fare`): those whose own compounds in the dictionary do{}.\n\nuse std::borrow::Cow;\n\n/// {} words.\npub(super) static HEADS: &[Cow<'static, str>] = flexion::words![\n",
+            "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): those whose own compounds in the dictionary do{}.\n\nuse std::borrow::Cow;\n\n/// {} words.\npub(super) static HEADS: &[Cow<'static, str>] = flexion::words![\n",
             g.heads.least.map_or(String::new(), |l| format!(
                 ", shorter than the {l} letters from which every listed word is one"
             )),
