@@ -886,40 +886,55 @@ pub fn learn<'s>(
     let mut laws: Vec<Law> = harmony.into_iter().chain(kept).collect();
     plain(orthography, &mut laws);
     // A word stays where it was unless, under the laws kept, the paradigm
-    // it moved to builds its forms as well.
-    let right = |program: Option<&Program<'_>>, p: u16, w: &Word<'_>| {
-        reading(orthography, &paradigms, usize::from(p), w, None).map_or(0, |r| {
-            let built = |b: &String| program.map_or_else(|| b.clone(), |p| p.apply(b));
-            let forms = w.forms.iter().flatten();
-            r.builds
-                .iter()
-                .zip(forms)
-                .filter(|(b, f)| same(&built(b), f))
-                .count()
-        })
-    };
+    // it moved to builds its forms as well. Its builds in each, made once:
+    // only the laws change.
+    let [plain, last] = &moved;
+    let tried: Vec<[u16; 3]> = (assignment.iter().zip(plain.iter().zip(last)))
+        .map(|(&was, (&mid, &now))| [was, mid, now])
+        .collect();
+    let builds: Vec<Vec<(u16, Option<Vec<String>>)>> =
+        crate::par::map(&tried.iter().zip(words).collect::<Vec<_>>(), |&(ps, w)| {
+            let mut out: Vec<(u16, Option<Vec<String>>)> = Vec::new();
+            for &p in ps {
+                if !out.iter().any(|(q, _)| *q == p) {
+                    let r = reading(orthography, &paradigms, usize::from(p), w, None);
+                    out.push((p, r.map(|r| r.builds)));
+                }
+            }
+            out
+        });
     let settle = |laws: &[Law]| {
         let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
         let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
-        // Where the laws last moved it, else where the plain laws did.
-        let [plain, last] = &moved;
-        let assignment: Vec<u16> = assignment
-            .iter()
-            .zip(plain.iter().zip(last))
-            .zip(words)
-            .map(|((&was, (&mid, &now)), w)| {
-                let right = |p| right(program.as_ref(), p, w);
-                [now, mid]
-                    .into_iter()
-                    .find(|&p| p != was && right(p) >= right(was))
-                    .unwrap_or(was)
-            })
-            .collect();
-        let total: usize = assignment
-            .iter()
-            .zip(words)
-            .map(|(&p, w)| right(program.as_ref(), p, w))
-            .sum();
+        let at: Vec<usize> = (0..words.len()).collect();
+        let settled: Vec<(u16, usize)> = crate::par::map(&at, |&i| {
+            let (Some(&[was, mid, now]), Some(builds), Some(w)) =
+                (tried.get(i), builds.get(i), words.get(i))
+            else {
+                return (0, 0);
+            };
+            let right = |p: u16| {
+                let built = |b: &String| program.as_ref().map_or_else(|| b.clone(), |p| p.apply(b));
+                let Some((_, Some(builds))) = builds.iter().find(|(q, _)| *q == p) else {
+                    return 0;
+                };
+                let forms = w.forms.iter().flatten();
+                builds
+                    .iter()
+                    .zip(forms)
+                    .filter(|(b, f)| same(&built(b), f))
+                    .count()
+            };
+            let mine = right(was);
+            [now, mid]
+                .into_iter()
+                .filter(|&p| p != was)
+                .map(|p| (p, right(p)))
+                .find(|&(_, r)| r >= mine)
+                .unwrap_or((was, mine))
+        });
+        let assignment: Vec<u16> = settled.iter().map(|s| s.0).collect();
+        let total: usize = settled.iter().map(|s| s.1).sum();
         (program, assignment, total)
     };
     // A law grown context must pay in the end too, with the words where
