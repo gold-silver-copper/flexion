@@ -7,16 +7,16 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 12 rules and 16 listed words.
+/// 12 rules and 17 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Dwieście 9, Pięćdziesiąt 5, Sto 5, Pięć 3, Pięćset 3, Dwa 2, Tyle 2, Obydwa 2, Trzydzieści 2, Dwanaście 1, Cztery 1, Siedem 1, Dwadzieścia 1, Siedemset 1, Osiemset 1, Pińcet 1],
+        "" => [Dwieście 9, Sto 6, Pięćdziesiąt 5, Pięć 3, Pięćset 3, Dwa 2, Tyle 2, Obydwa 2, Trzydzieści 2, Dwanaście 1, Cztery 1, Siedem 1, Dwadzieścia 1, Siedemset 1, Osiemset 1],
         "a" => [Dwa 2, Obydwa 2, Dwadzieścia 1] regular,
         "e" => [Dwieście 9, Tyle 2, Dwanaście 1] regular,
         "ie" => [Dwieście 9, Dwanaście 1] regular,
         "le" => [Tyle 2] regular,
         "i" => [Trzydzieści 2] regular,
-        "t" => [Pięćdziesiąt 5, Pięćset 3, Siedemset 1, Osiemset 1, Pińcet 1],
+        "t" => [Pięćdziesiąt 5, Pięćset 3, Sto 1, Siedemset 1, Osiemset 1],
         "ćset" => [Pięćset 3] regular,
         "ąt" => [Pięćdziesiąt 5] regular,
         "iąt" => [Pięćdziesiąt 5] regular,
@@ -34,10 +34,11 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#obydwa" => Obydwa,
         "#osiem" => Sto,
         "#osiemset" => Osiemset,
-        "#pińcet" => Pińcet,
+        "#pińcet" => Sto,
         "#siedem" => Siedem,
         "#siedemset" => Siedemset,
         "#sto" => Sto,
+        "#szereg" => Sto,
         "#trzysta" => Obydwa,
         "#wtóry" => Sto,
     }

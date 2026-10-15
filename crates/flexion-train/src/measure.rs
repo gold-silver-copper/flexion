@@ -234,21 +234,23 @@ pub fn default_probe(
     Some((held, vec![witness]))
 }
 
-/// Whether a word (its key) is built on a training word by a prefix: it is
-/// some training word's key with letters in front, either one of the
-/// grammar's learned `prefixes` (the rest at least two letters), or at
-/// least two letters before a training word of at least four.
+/// Whether a word (its key) is built on a training word: it is some
+/// training word's key with letters in front, either one of the grammar's
+/// learned `prefixes` (the rest at least two letters), or at least
+/// [`flexion::FRONT_LETTERS`] letters (a compound's front) before a
+/// training word of at least four.
 pub fn prefixed(key: &str, training: &crate::HashSet<&str>, prefixes: &[&str]) -> bool {
     key.char_indices().skip(1).any(|(i, _)| {
         let (front, rest) = key.split_at(i);
         let (nf, nr) = (front.chars().count(), rest.chars().count());
-        training.contains(rest) && ((prefixes.contains(&front) && nr >= 2) || (nf >= 2 && nr >= 4))
+        training.contains(rest)
+            && ((prefixes.contains(&front) && nr >= 2) || (nf >= flexion::FRONT_LETTERS && nr >= 4))
     })
 }
 
 /// One word's result in two runs: forms right in run a and in run b, of the
 /// same forms.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Paired {
     pub forms: usize,
     pub a: usize,
@@ -336,6 +338,21 @@ pub fn compare(words: &[Paired]) -> Comparison {
         worse,
         p: sign_test(better, worse),
     }
+}
+
+/// The 95% interval of one run's top-1, resampling words as [`compare`]
+/// does: `words` is `(forms, right)` per word.
+pub fn interval(words: &[(usize, usize)]) -> (f64, f64) {
+    let paired: Vec<Paired> = words
+        .iter()
+        .map(|&(forms, right)| Paired {
+            forms,
+            a: 0,
+            b: right,
+        })
+        .collect();
+    let c = compare(&paired);
+    (c.low, c.high)
 }
 
 /// The two-sided exact sign test: the chance of a split at least as uneven
@@ -517,7 +534,6 @@ mod tests {
                 key: format!("{root}o"),
                 cells: cells.iter().map(|f| vec![f.clone()]).collect(),
                 inherent: Vec::new(),
-                weight: 1.0,
                 order: i,
                 senses: 1,
                 source: 0,
@@ -569,9 +585,11 @@ mod tests {
     #[test]
     fn a_word_on_a_training_word_with_a_prefix_is_found() {
         let training: crate::HashSet<&str> = ["happy", "duco", "ago"].into_iter().collect();
-        assert!(prefixed("unhappy", &training, &[]));
+        assert!(prefixed("overhappy", &training, &[]));
         assert!(prefixed("adduco", &training, &["ad"]));
-        // Too short to tell from a chance ending.
+        // Too short to tell from a chance ending: two letters in front, or
+        // a word of three.
+        assert!(!prefixed("unhappy", &training, &[]));
         assert!(!prefixed("drago", &training, &[]));
         assert!(!prefixed("happy", &training, &[]));
     }

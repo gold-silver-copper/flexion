@@ -5,7 +5,6 @@
 
 pub mod accent;
 mod irregular;
-mod marks;
 mod paradigms;
 mod relations;
 mod rules;
@@ -79,7 +78,10 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     feature: None,
     compound: None,
     prefixes: None,
-    heads: None,
+    heads: flexion::Heads {
+        least: None,
+        words: Cow::Borrowed(&[]),
+    },
     accent: Some(flexion::Accent {
         patterns: Cow::Borrowed(&accent::PATTERNS),
         classes: Cow::Borrowed(&accent::CLASSES),
@@ -89,12 +91,15 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     }),
     laws: None,
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    marks: Some(marks::MARKS),
+    marks: Some(flexion::Marks {
+        rules: crate::marks::MARKS,
+        part: Cow::Borrowed("numeral"),
+    }),
     slots: Cow::Borrowed(&stems::SLOTS),
     tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 3.5,
+    sharpness: 4.0,
     trust: flexion::Trust {
         regular: 1.0,
         unsettled: 1.0,

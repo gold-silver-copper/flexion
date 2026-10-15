@@ -36,7 +36,7 @@ macro_rules! relation {
     };
 }
 
-pub(super) static RELATIONS: [Relation<'static>; 54] = [
+pub(super) static RELATIONS: [Relation<'static>; 53] = [
     // PRES_1_SG, from PRES_1_PL.
     relation!(PRES_1_SG, [PRES_1_PL], [("kö~en hinüber", "ka~ hinüber"), ("tun~", "tue~"), ("~eln", "~le"), ("~ern", "~re"), ("~n", "~"), ("~n", "~e"), ("~n acht", "~ acht"), ("~n aneinander", "~ aneinander"), ("~n bekannt", "~ bekannt"), ("~n bloß", "~ bloß"), ("~n breit", "~ breit"), ("~n dagegen", "~ dagegen"), ("~n dahinter", "~ dahinter"), ("~n darüber", "~ darüber"), ("~n dicht", "~ dicht"), ("~n dran", "~ dran"), ("~n entlang", "~ entlang"), ("~n falsch", "~ falsch"), ("~n fremd", "~ fremd"), ("~n gegenüber", "~ gegenüber"), ("~n gering", "~ gering"), ("~n groß", "~ groß"), ("~n hier", "~ hier"), ("~n hierher", "~ hierher"), ("~n lang", "~ lang"), ("~n lieb", "~ lieb"), ("~n liegen", "~ liegen"), ("~n mass", "~ mass"), ("~n maß", "~ maß"), ("~n richtig", "~ richtig"), ("~n satt", "~ satt"), ("~n schlapp", "~ schlapp"), ("~n schlecht", "~ schlecht"), ("~n selig", "~ selig"), ("~n sicher", "~ sicher"), ("~n sitzen", "~ sitzen"), ("~n stehen", "~ stehen"), ("~n teil", "~ teil"), ("~n theil", "~ theil"), ("~n uns", "~ mich"), ("~n vorüber", "~ vorüber"), ("~n wieder auf", "~ wieder auf"), ("~n zufrieden", "~ zufrieden"), ("~n zugute", "~ zugute")], rules {
         "" => [4 3437, 2 469, 3 376, 1 8, 5 7, 0 2, 6 2, 7 2, 8 2, 9 2, 10 2, 11 2, 12 2, 13 2, 14 2, 15 2, 16 2, 17 2, 18 2, 19 2, 20 2, 21 2, 22 2, 23 2, 24 2, 25 2, 26 2, 27 2, 28 2, 29 2, 30 2, 31 2, 32 2, 33 2, 34 2, 35 2, 36 2, 37 2, 38 2, 39 2, 40 2, 41 2, 42 2, 43 2],
@@ -91,7 +91,7 @@ pub(super) static RELATIONS: [Relation<'static>; 54] = [
         "hinüberkönnen" => 0,
         "maßhalten" => 1,
         "maßnehmen" => 1,
-    }, false, None),
+    }, true, None),
     // PRES_2_SG, from PRES_2_PL.
     relation!(PRES_2_SG, [PRES_2_PL], [("fa~t", "fä~st"), ("hab~", "has~"), ("kö~t hinüber", "ka~st hinüber"), ("la~", "lä~"), ("me~", "mi~"), ("tu~", "tus~"), ("we~t", "wi~st"), ("~", "~"), ("~aft", "~äfst"), ("~agt", "~ägst"), ("~altet", "~ältst"), ("~atet", "~ätst"), ("~ebt", "~ibst"), ("~echt", "~ichst"), ("~echtet", "~ichtst"), ("~efft", "~iffst"), ("~ehlt", "~iehlst"), ("~ehmt", "~immst"), ("~ellt", "~illst"), ("~elzt", "~ilzt"), ("~t", "~st"), ("~t bloß", "~st bloß"), ("~t dran", "~st dran"), ("~t euch", "~st dich"), ("~t falsch", "~st falsch"), ("~t fremd", "~st fremd"), ("~t gegenüber", "~st gegenüber"), ("~t groß", "~st groß"), ("~t hierher", "~st hierher"), ("~t lang", "~st lang"), ("~t richtig", "~st richtig"), ("~t schlapp", "~st schlapp"), ("~t schlecht", "~st schlecht"), ("~t sicher", "~st sicher"), ("~t tief", "~st tief"), ("~t wieder auf", "~st wieder auf")], rules {
         "" => [20 3851, 7 360, 3 11, 5 8, 1 6, 12 6, 0 3, 4 3, 9 3, 11 3, 13 3, 14 3, 2 2, 6 2, 8 2, 10 2, 15 2, 16 2, 17 2, 18 2, 19 2, 21 2, 22 2, 23 2, 24 2, 25 2, 26 2, 27 2, 28 2, 29 2, 30 2, 31 2, 32 2, 33 2, 34 2, 35 2],
@@ -669,7 +669,7 @@ pub(super) static RELATIONS: [Relation<'static>; 54] = [
         "maßnehmen" => 1,
         "thun" => 3,
         "tun" => 3,
-    }, false, None),
+    }, true, None),
     // SUBJ1_1_PL, from PRES_1_PL.
     relation!(SUBJ1_1_PL, [PRES_1_PL], [], none, false, None),
     // SUBJ1_2_SG, from SUBJ1_1_SG.
@@ -1356,15 +1356,6 @@ pub(super) static RELATIONS: [Relation<'static>; 54] = [
     }, false, None),
     // IMPERATIVE_PL, from PRES_2_PL.
     relation!(IMPERATIVE_PL, [PRES_2_PL], [], none, true, None),
-    // INFINITIVE, from SUBORDINATE_PRES_3_PL or SUBORDINATE_PRES_1_PL (by auxiliary, in order).
-    relation!(
-        INFINITIVE,
-        [SUBORDINATE_PRES_3_PL, SUBORDINATE_PRES_1_PL],
-        [],
-        none,
-        false,
-        None
-    ),
     // ZU_INFINITIVE, from PRES_1_PL.
     relation!(ZU_INFINITIVE, [PRES_1_PL], [("kö~nen hinüber", "hi~überzukönnen"), ("~", "zu ~"), ("~", "zu~")], rules {
         "" => [2 1060, 1 10, 0 2],

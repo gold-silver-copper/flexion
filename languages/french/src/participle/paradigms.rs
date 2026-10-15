@@ -41,6 +41,7 @@ macro_rules! declension {
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
             )),
+            affix: None,
         }
     };
 }
@@ -124,7 +125,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
     declension!("mis", 44, "~", like Aveindzu;
     m: _, "~";
     ),
-    // Été: 22 words (été, lui, pu, agi, bondi, nui). Like Mis, except in 0 cells: .
+    // Été: 22 words (été, lui, pu, agi, bondi, nui). Like Mis.
     declension!("été", 22, "~", like Mis as F_AS_M;
     ),
     // Crû: 4 words (dû, crû, mû, redû).

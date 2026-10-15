@@ -19,7 +19,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem noun_sg: $s0:tt;)?
      $(stem noun_pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
@@ -39,6 +39,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -61,6 +62,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -195,7 +214,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("testimonio", 3698, "~o", [noun_gender: Masculine], like Mano;
     noun: _, "~";
     ),
-    // Programma: 2,282 words (abada, comma, plasma, miasma, papa, poeta). Like Mercatanzia, except in 0 cells: .
+    // Programma: 2,282 words (abada, comma, plasma, miasma, papa, poeta). Like Mercatanzia.
     declension!("programma", 2282, "~a", like Mercatanzia;
     stem noun_pl: "~- like programma";
     ),
@@ -207,21 +226,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("banco", 746, "~o", [noun_gender: Masculine], like Mano;
     noun: _, "~hi";
     ),
-    // Traccia: 290 words (faccia, pioggia, pronuncia, fascia, lancia, goccia). Like Mercatanzia, except in 1 cell: noun sg.
-    declension!("traccia", 290, "~ia", [noun_gender: Feminine], like Mercatanzia;
-    noun: "~ia", _;
+    // Traccia: 290 words (faccia, pioggia, pronuncia, fascia, lancia, goccia). Like Capsa with `` after each pattern (`ia` after ~).
+    declension!("traccia", 290, "~ia", [noun_gender: Feminine], like Capsa with "", "ia" after "~";
     ),
-    // Capolista: 86 words (capotavola, capobranco, caporeparto, capolinea, bagnoschiuma, capogruppo).
-    declension!("capolista", 86, "~o~";
-    noun: "~o~", "~i~";
+    // Capolista: 86 words (capotavola, capobranco, caporeparto, capolinea, bagnoschiuma, capogruppo). Like Mano with `~` after each pattern.
+    declension!("capolista", 86, "~o~", like Mano with "~";
     ),
     // Gerarca: 35 words (transfuga, auriga, collega, monarca, tetrarca, gerarca). Like Mercatanzia, except in 1 cell: noun pl.
     declension!("gerarca", 35, "~a", like Mercatanzia;
     noun: _, "~hi";
     ),
-    // Mezzaluna: 34 words (terracotta, belladonna, capasanta, mezzaluna, primadonna, terraferma).
-    declension!("mezzaluna", 34, "~a~a", [noun_gender: Feminine];
-    noun: "~a~a", "~e~e";
+    // Mezzaluna: 34 words (terracotta, belladonna, capasanta, mezzaluna, primadonna, terraferma). Like Mercatanzia with `~a` after each pattern (`~e` after e).
+    declension!("mezzaluna", 34, "~a~a", [noun_gender: Feminine], like Mercatanzia with "~a", "~e" after "e";
     ),
     // Spoiler: 32 words (boy, croissant, fan, magazine, yard, manager). Like Autorità, except in 1 cell: noun pl.
     declension!("spoiler", 32, "~", like Autorità;
@@ -231,52 +247,45 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("braccio", 22, "~o", [noun_gender: Masculine], like Mano;
     noun: _, "~a";
     ),
-    // Bassofondo: 14 words (altoforno, bassofondo, camposanto, caposaldo, caposcarico, collotorto).
-    declension!("bassofondo", 14, "~o~o", [noun_gender: Masculine];
-    noun: "~o~o", "~i~i";
+    // Bassofondo: 14 words (altoforno, bassofondo, camposanto, caposaldo, caposcarico, collotorto). Like Mano with `~i` after each pattern (`~o` after o).
+    declension!("bassofondo", 14, "~o~o", [noun_gender: Masculine], like Mano with "~i", "~o" after "o";
     ),
     // Uomo: 13 words (homo, uomo, galantuomo, gentiluomo, superuomo, nobiluomo). Like Mano, except in 1 cell: noun pl.
     declension!("uomo", 13, "~o", [noun_gender: Masculine], like Mano;
     noun: _, "~ini";
     ),
-    // Acquaforte: 10 words (mezzanotte, malafede, cassaforte, mezzanave, acquaforte, piazzaforte).
-    declension!("acquaforte", 10, "~a~e";
-    noun: "~a~e", "~e~i";
+    // Acquaforte: 10 words (mezzanotte, malafede, cassaforte, mezzanave, acquaforte, piazzaforte). Like Mercatanzia with `~e` after each pattern (`~i` after e).
+    declension!("acquaforte", 10, "~a~e", like Mercatanzia with "~e", "~i" after "e";
     ),
     // Superficie: 8 words (moglie, superficie, effigie, aviosuperficie, ipersuperficie, isosuperficie). Like Lume, except in 1 cell: noun pl.
     declension!("superficie", 8, "~e", [noun_gender: Feminine], like Lume;
     noun: _, "~";
     ),
-    // Mezzasega: 8 words (cappalunga, cassapanca, cartasuga, gambasecca, mezzasega, mezzatacca). Like Mezzaluna, except in 1 cell: noun pl.
-    declension!("mezzasega", 8, "~a~a", [noun_gender: Feminine], like Mezzaluna;
-    noun: _, "~e~he";
+    // Mezzasega: 8 words (cappalunga, cassapanca, cartasuga, gambasecca, mezzasega, mezzatacca). Like Mercatanzia with `~a` after each pattern (`~he` after e).
+    declension!("mezzasega", 8, "~a~a", [noun_gender: Feminine], like Mercatanzia with "~a", "~he" after "e";
     ),
-    // Bimbaminkia: 6 words (cartacarbone, scuolaguida, spinacristi, zappacavallo, bimbaminkia, mostramercato).
-    declension!("bimbaminkia", 6, "~a~", [noun_gender: Feminine];
-    noun: "~a~", "~e~";
+    // Bimbaminkia: 6 words (cartacarbone, scuolaguida, spinacristi, zappacavallo, bimbaminkia, mostramercato). Like Mercatanzia with `~` after each pattern.
+    declension!("bimbaminkia", 6, "~a~", [noun_gender: Feminine], like Mercatanzia with "~";
     ),
     // Capoccia: 4 words (maracaia, capoccia, correggia, porteria). Like Mercatanzia, except in 1 cell: noun pl.
     declension!("capoccia", 4, "~a", like Mercatanzia;
     noun: _, "~";
     ),
-    // Heroon: 4 words (rhyton, heroon, megaron, abaton). Like Braccio, except in 1 cell: noun sg.
-    declension!("heroon", 4, "~on", [noun_gender: Masculine], like Braccio;
-    noun: "~on", _;
+    // Heroon: 4 words (rhyton, heroon, megaron, abaton). Like Testimonio with `a` after each pattern (`n` after o).
+    declension!("heroon", 4, "~on", [noun_gender: Masculine], like Testimonio with "a", "n" after "o";
     ),
     // Capsa: 3 words (tabula, fabula, capsa). Like Mercatanzia, except in 1 cell: noun sg.
     declension!("capsa", 3, "~", [noun_gender: Feminine], like Mercatanzia;
     noun: "~", _;
     ),
-    // Gattomammone: 3 words (gattomammone, capocarceriere, capotimoniere). Like Bassofondo, except in 1 cell: noun sg.
-    declension!("gattomammone", 3, "~o~e", [noun_gender: Masculine], like Bassofondo;
-    noun: "~o~e", _;
+    // Gattomammone: 3 words (gattomammone, capocarceriere, capotimoniere). Like Mano with `~e` after each pattern (`~i` after i).
+    declension!("gattomammone", 3, "~o~e", [noun_gender: Masculine], like Mano with "~e", "~i" after "i";
     ),
     // Capofficina: 3 words (capofficina, decanapulazione, vetrofusione). Like Capolista, except in 1 cell: noun sg.
     declension!("capofficina", 3, "~~", like Capolista;
     noun: "~~", _;
     ),
-    // Doppiosenso: 3 words (doppiovetro, occhiogrosso, doppiosenso). Like Bassofondo, except in 1 cell: noun pl.
-    declension!("doppiosenso", 3, "~o~o", [noun_gender: Masculine], like Bassofondo;
-    noun: _, "~~i";
+    // Doppiosenso: 3 words (doppiovetro, occhiogrosso, doppiosenso). Like Testimonio with `~i` after each pattern (`~o` after o).
+    declension!("doppiosenso", 3, "~o~o", [noun_gender: Masculine], like Testimonio with "~i", "~o" after "o";
     ),
 ];

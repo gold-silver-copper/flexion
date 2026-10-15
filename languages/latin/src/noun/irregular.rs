@@ -8,19 +8,15 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 90 stems, 259 forms.
+/// 95 stems, 234 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abaddir	noun_pl	abaddīr- like ratiō
 accidens	noun_pl	accident- like commūne	6	accidēns
 aclys	2	āclydis
-acoros	10	acore
-acorus	10	acore
 adelphos	3	adelphōn
 adelphotheos	3	adelphotheōn
 ador	noun_pl	adŏ- like ōs	6	ador
-aecor	noun_pl	aec- like corpus	6	aecor
-aequor	noun_pl	aequ- like corpus	6	aequor
 aetas	7	aetātīs
 aevom	noun_pl	aev- like iugum	6	aevom
 aivom	noun_pl	aiv- like iugum	6	aivom
@@ -29,19 +25,23 @@ allevator	noun_pl	absolūtōr- like ratiō	noun_sg	absolūtor- like lingua
 amazon	1	amāzones
 anagignoscomena	3	anagignōscomenōn
 anas	noun_pl	anit- like ratiō
+apodixis	4	apodīxī	8	apodīxī
 apsis	noun_pl	apsīd- like ratiō
 arabs	11	arabes
-arbos	1	arborēs	3	arborum	5	arboribus	8	arbore
+arbos	noun_pl	arbor- like ratiō
 architecton	6	architectona	7	architectonās
+arixus	10	arixe
 atriplex	noun_pl	ātriplic- like vās	6	ātriplex
 auceps	noun_pl	aucup- like ratiō
+axis	4	axī
 balneolum	1	balneolae	3	balneolārum
 balneum	1	balneae	3	balneārum
 basileus	10	basileu
 bos	noun_pl	bov- like ratiō	3	boum	5	bōbus	9	bōbus
 bucellarius	noun_pl	buccellāri- like bannus	noun_sg	buccellāri- like bannus
+buxus	10	buxe
 caelum	noun_pl	cael- like bannus
-calcostegis	0	calcostegos	1	calcostegī	3	calcostegōrum	8	calcostegō	10	calcostege
+calcostegis	0	calcostegos	1	calcostegī	3	calcostegōrum	4	calcostegō	8	calcostegō	10	calcostege
 callipygia	6	callipȳgian
 canterius	noun_pl	canthēri- like bannus	noun_sg	canthēri- like bannus
 caro	noun_pl	carn- like ratiō
@@ -51,41 +51,33 @@ cetos	1	cētē	3	cētōn	6	cētos	10	cētos
 chamaepitys	2	chamaepityos	6	chamaepityn	10	chamaepity
 chaos	6	chaos	10	chaos
 chelys	8	chelye
-chorus	10	chore
 chrysophrys	6	chrȳsophryn
-cistophorus	10	cistophore
 cliens	7	clientīs
 comprecatio	noun_pl	comprecatiōn- like ratiō
 coniunx	noun_pl	coniug- like ratiō
 coniux	noun_sg	coniŭx- like lingua
 cor	noun_pl	cord- like vās	3	cordium	6	cor
-coris	1	corēs	8	core
 corybas	10	corybā
-cumspolium	0	āfricia	1	āfriciae	3	āfriciārum	5	āfriciīs	8	āfriciā	10	āfricia
+cumspolium	0	āfricia	1	āfriciae	3	āfriciārum	4	āfriciae	5	āfriciīs	8	āfriciā	10	āfricia
 cyphi	noun_pl	cȳph- like commūne	6	cȳphi
 daphnon	2	daphnōnis
-deidecus	1	deidecorēs	6	deidecorem
-demeter	0	dēmētēr	4	dēmētri	6	dēmētra
+deidecus	noun_pl	deidecor- like ratiō
+demeter	noun_pl	dēmētr- like aegis	0	dēmētēr	4	dēmētri
 desuetudo	noun_pl	dēsuētūdin- like fīnis
-deus	1	dī	2	deī	4	deō	5	dīs	7	deōs	10	deus
+deus	1	dī	5	dīs	7	deōs	10	deus
 dioecesis	3	dioecēseōn
-ebor	noun_pl	eb- like corpus	6	ebor
 ebur	noun_pl	eb- like corpus	6	ebur
 echo	2	ēchūs
 ecus	noun_pl	equ- like bannus	6	ecum	10	eque
 elixir	3	elixirium
-elleborus	10	ellebore
 enomotarcha	3	enōmotarchūm
 ens	noun_pl	ent- like commūne	6	ēns
-epar	1	ēpata	3	ēpatum	5	ēpatibus	8	ēpate
-eriophoros	10	eriophore
+epar	noun_pl	ēpa- like lēmma	6	ēpar
 ethos	1	ēthea	2	ētheos	5	ēthesi
 extispex	noun_pl	extispic- like fīnis
 fames	8	famē
 femur	noun_pl	femin- like vās	6	femur
 fides	4	fidĕī
-foris	1	forēs	8	fore
-forus	10	fore
 fruns	noun_pl	frund- like fīnis
 gausape	1	gausapa	3	gausapōrum	5	gausapīs
 gigas	1	gigantes	6	giganta
@@ -95,8 +87,7 @@ grus	noun_pl	gru- like ratiō
 gryps	1	grȳpĕs
 halos	4	halō	6	halō
 hapsis	noun_pl	hapsīd- like ratiō
-helleborus	10	hellebore
-hepar	1	hēpata	3	hēpatum	5	hēpatibus	8	hēpate
+hepar	noun_pl	hēpa- like lēmma	6	hēpar
 herois	1	hērōidĕs
 heros	1	hērōĕs	6	hērōa
 hiemps	noun_pl	hiem- like ratiō
@@ -105,9 +96,8 @@ hippomanes	noun_pl	hippoman- like ratiō
 homŏ	noun_pl	homin- like ratiō
 hydrodendrum	0	hydrodendron	6	hydrodendron	10	hydrodendron
 hydromel	3	hydromellum
-hydromeli	noun_pl	hydromelit- like vās	6	hydromeli
 hymen	noun_sg	hymēn- like lingua
-hæmachates	1	hæmachātæ	7	hæmachātās
+hæmachates	1	hæmachātæ	4	hæmachātæ	7	hæmachātās
 idus	3	īduum	5	īdibus
 iecur	noun_pl	iecin- like corpus	6	iecur
 iocur	noun_pl	iocine- like ōs	6	iocur
@@ -119,14 +109,13 @@ lacte	noun_pl	lact- like hospitālia
 laestrygon	1	laestrȳgones	6	laestrȳgona	10	laestrȳgon
 lendis	noun_pl	lendin- like ratiō
 lentigo	noun_pl	lentigin- like ratiō
-lepus	1	leporēs	6	leporem
-lexis	7	lexīs
+lepus	noun_pl	lepor- like ratiō
+lexis	1	lexēs
 libanochrus	0	libanochrūs
 limo	noun_pl	lĭmŏn- like ratiō	noun_sg	lĭmon- like lingua
-litotes	1	lītotētes
+litotes	noun_pl	lītotēt- like aegis
 lucuns	noun_pl	lucunt- like ratiō
 lĭmon	noun_pl	lĭmŏn- like ratiō
-marmor	noun_pl	marm- like corpus	6	marmor
 mas	noun_pl	mar- like fīnis
 microgaster	noun_sg	mīcrogastēr- like lingua
 mille	noun_pl	mīli- like hospitālia
@@ -138,68 +127,71 @@ mugil	noun_pl	mūgil- like fīnis
 nix	noun_pl	niv- like fīnis
 nox	noun_pl	noct- like fīnis
 obses	noun_pl	obsid- like ratiō
+onopyxos	10	onopyxe
 onyx	1	onychĕs
-ostrys	1	ostryes	3	ostryum	5	ostryibus	6	ostrȳn	8	ostrye
+orexis	4	orexī
+ostrys	noun_pl	ostry- like aegis	6	ostrȳn
 oxydendrum	0	oxydendron	6	oxydendron	10	oxydendron
 panerastos	noun_pl	panerastōt- like ratiō
 par	noun_pl	par- like fīnis
+paradoxus	10	paradoxe
+parallaxis	4	parallaxī	8	parallaxī
 pascha	3	paschārum	6	pascha
 patriarcha	3	patriarchūm
 paxi	7	paxūs
 pecŭ	noun_pl	pecu- like hospitālia
-perionyx	1	perionyches	6	perionycha
+perionyx	noun_pl	perionych- like aegis
 phalanx	1	phalangĕs
-phosphorus	10	phōsphore
 plebes	4	plēbeī	8	plēbē
 pleraque	3	plērōrumque	5	plērīsque
 plerique	3	plērōrumque	5	plērīsque	7	plērōsque
-plerunque	1	plēraque	3	plērōrunque	5	plērīsque	6	plērunque	8	plērōque
+plerunque	1	plēraque	3	plērōrunque	4	plērōque	5	plērīsque	6	plērunque	8	plērōque
 pnigeus	2	pnigeōs	6	pnigeā
 pollis	noun_pl	pollin- like ratiō
 ponto	noun_pl	pontōn- like fīnis
 poppyzon	6	poppyzonta
 porrum	noun_pl	porr- like bannus
-porus	10	pore
 praeceps	noun_pl	praecipit- like commūne	6	praeceps
 praeses	noun_pl	praesid- like ratiō
-proagorus	10	proāgore
 problema	3	problēmatōrum	5	problēmatīs
 python	2	pȳthōnos	6	pȳthōna
 quadruplex	noun_pl	quadruplic- like vās	6	quadruplex
 quantulumcumque	1	quantulacumque	2	quantulīcumque	3	quantulōrumcumque	4	quantulōcumque	5	quantulīscumque	6	quantulumcumque	8	quantulōcumque
+refluxus	10	reflūxe
 remex	noun_pl	rēmig- like ratiō
 res	4	reī
 respublica	3	rērumpūblicārum	4	reīpūblicae	5	rēbuspūblicīs	6	rempūblicam	8	rēpūblicā
+rhexis	4	rhēxī
 rhinoceros	1	rhīnocerōtēs
 rhus	noun_pl	rho- like ratiō	1	rhoĕs	6	rhūn
+rixis	4	rīxī
 robur	noun_pl	rōb- like corpus	6	rōbur
 rosmarinus	1	rōrēsmarīnī	2	rōrismarīnī	3	rōrummarīnōrum	4	rōrīmarīnō	5	rōribusmarīnīs	6	rōremmarīnum	8	rōremarīnō
-rumis	1	rumīs	2	rumis	4	rumī
+rumis	1	rumīs
+ryxis	4	rȳxī
 sanguĭs	noun_pl	sanguin- like ratiō
-sardonyx	1	sardonychĕs	6	sardonycha
-sarisophoros	10	sarīsophore
+sardonyx	noun_pl	sardonych- like aegis	1	sardonychĕs	11	sardonychĕs
 scazon	6	scazonta
-semaphorus	10	sēmaphore
 semimas	noun_pl	sēmimar- like ratiō
 semis	noun_pl	sēmiss- like ratiō
 senex	noun_pl	sen- like ratiō
 servos	6	servom
 sesquimille	noun_pl	sēsquimīli- like hospitālia
 siser	6	siser
-spadix	1	spādīcĕs
+spadix	1	spādīcĕs	2	spādīcis
 species	3	fōrmārum	5	fōrmīs
 spes	4	speī
 stadii	3	stadium
 supellĕx	noun_pl	supellĕctil- like ratiō
 sus	noun_pl	su- like ratiō
-sycomorus	10	sycomore
+synaxis	4	synaxī	8	synaxī
+syntaxis	4	syntaxī	8	syntaxī
+taxus	10	taxe
 thauma	3	thaumatōn	4	thaumati	6	thauma	8	thaumati
 thius	10	thī
-thorus	10	thore
 thorăx	noun_pl	thōrāc- like ratiō
 tibicinium	noun_pl	tībīcĭnĭ- like iugum	noun_sg	tībīcĭnĭum- like lingua
 tius	10	tī
-torus	10	tore
 tribrachys	3	tribrachyōn	5	tribrachibus	7	tribrachȳs	8	tribrachye
 trisaeclisenex	noun_pl	trisaeclisen- like ratiō
 triton	2	trītōnis
@@ -215,7 +207,7 @@ virus	1	vīra
 vis	4	vī	8	vī
 volucris	3	volucrum
 waldus	1	walda
-zoophorus	10	zōophore
+xerxes	0	xerxēs	8	xerxē	10	xerxē
 "#,
     ),
 };

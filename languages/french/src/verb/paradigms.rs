@@ -44,7 +44,7 @@ use flexion::Paradigm;
 /// `infinitive`
 /// `participle` (pres, past)
 macro_rules! conjugation {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem verb_pres_sg: $s0:tt;)?
      $(stem verb_pl: $s1:tt;)?
      $(stem verb_3: $s2:tt;)?
@@ -141,6 +141,7 @@ macro_rules! conjugation {
                 $(flexion::cell!($s4),)? "\t",
                 $(flexion::cell!($s5),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -166,12 +167,30 @@ macro_rules! view {
     };
 }
 
+/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
     /// Like `passer`: 5,867 words.
     Passer,
-    /// Like `badger`: 486 words.
+    /// Like `badger`: 491 words.
     Badger,
     /// Like `établir`: 326 words.
     Établir,
@@ -189,10 +208,10 @@ pub enum Conjugation {
     Tenir,
     /// Like `poindre`: 30 words.
     Poindre,
-    /// Like `récupérer`: 21 words.
-    Récupérer,
     /// Like `remettre`: 18 words.
     Remettre,
+    /// Like `récupérer`: 16 words.
+    Récupérer,
     /// Like `connaître`: 15 words.
     Connaître,
     /// Like `paitre`: 15 words.
@@ -296,8 +315,8 @@ impl Conjugation {
         Conjugation::Jeter,
         Conjugation::Tenir,
         Conjugation::Poindre,
-        Conjugation::Récupérer,
         Conjugation::Remettre,
+        Conjugation::Récupérer,
         Conjugation::Connaître,
         Conjugation::Paitre,
         Conjugation::Confire,
@@ -373,23 +392,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~er";
     participle: "~ant", _;
     ),
-    // Badger: 486 words (badger, voyager, lever, pécher, accélérer, manager).
-    conjugation!("badger", 486, "~erˇ";
-    pres_1: "~eˇ", "~onsˇ";
-    pres_2: "~esˇ", "~ezˇ";
-    pres_3: "~eˇ", "~entˇ";
-    impf_1: "~aisˇ", "~ionsˇ";
-    past_1: "~aiˇ", "~âmesˇ";
-    past_2: "~asˇ", "~âtesˇ";
-    past_3: "~aˇ", "~èrentˇ";
-    fut_1: "~eraiˇ", "~eronsˇ";
-    cond_2: "~eraisˇ", _;
-    subj_1: "~eˇ", _;
-    subj_2: "~esˇ", "~iezˇ";
-    subj_impf_1: "~asseˇ", _;
-    subj_impf_3: "~âtˇ", _;
-    infinitive: "~erˇ";
-    participle: "~antˇ", "~éˇ";
+    // Badger: 491 words (badger, voyager, lever, pécher, accélérer, manager). Like Passer with `ˇ` after each pattern.
+    conjugation!("badger", 491, "~erˇ", like Passer with "ˇ";
     ),
     // Établir: 326 words (pleuvoir, avoir, polir, abolir, tapir, approfondir).
     conjugation!("établir", 326, "~ir";
@@ -511,8 +515,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~~dre";
     participle: "~g~ant", "~~t";
     ),
-    // Récupérer: 21 words (persévérer, célébrer, aérer, zébrer, décérébrer, déféquer).
-    conjugation!("récupérer", 21, "~é~er";
+    // Remettre: 18 words (remettre, mettre, émettre, promettre, permettre, commettre). Like Établir, except in 14 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pres_3 sg, pres_3 pl, ….
+    conjugation!("remettre", 18, "~ettre", like Établir;
+    stem verb: "~ettr- like passer";
+    pres_1: "~ets", "~ettons";
+    pres_2: "~ets", "~ettez";
+    pres_3: "~et", "~ettent";
+    impf_1: "~ettais", "~ettions";
+    subj_1: "~ette", _;
+    subj_2: "~ettes", "~ettiez";
+    infinitive: "~ettre";
+    participle: "~ettant", "~is";
+    ),
+    // Récupérer: 16 words (persévérer, célébrer, aérer, zébrer, décérébrer, révéler).
+    conjugation!("récupérer", 16, "~é~er";
     stem verb_past: "~é~- like passer";
     pres_1: "~è~e", "~é~ons";
     pres_2: "~è~es", "~é~ez";
@@ -528,18 +544,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     subj_2: "~è~es", "~é~iez";
     infinitive: "~é~er";
     participle: "~é~ant", _;
-    ),
-    // Remettre: 18 words (remettre, mettre, émettre, promettre, permettre, commettre). Like Établir, except in 14 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pres_3 sg, pres_3 pl, ….
-    conjugation!("remettre", 18, "~ettre", like Établir;
-    stem verb: "~ettr- like passer";
-    pres_1: "~ets", "~ettons";
-    pres_2: "~ets", "~ettez";
-    pres_3: "~et", "~ettent";
-    impf_1: "~ettais", "~ettions";
-    subj_1: "~ette", _;
-    subj_2: "~ettes", "~ettiez";
-    infinitive: "~ettre";
-    participle: "~ettant", "~is";
     ),
     // Connaître: 15 words (naître, renaître, connaître, reconnaître, paraître, disparaître). Like Rendre, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pres_3 sg, pres_3 pl, ….
     conjugation!("connaître", 15, "~aître", like Rendre;
@@ -560,15 +564,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     pres_3: "~ait", _;
     infinitive: "~aitre";
     ),
-    // Confire: 15 words (dire, contredire, redire, suffire, interdire, maudire). Like Établir, except in 11 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
-    conjugation!("confire", 15, "~ire", like Établir;
+    // Confire: 15 words (dire, contredire, redire, suffire, interdire, maudire). Like Établir with `` after each pattern (`e` after r), except in 10 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("confire", 15, "~ire", like Établir with "", "e" after "r";
     pres_1: _, "~isons";
     pres_2: _, "~isez";
     pres_3: _, "~isent";
     impf_1: "~isais", "~isions";
     subj_1: "~ise", _;
     subj_2: "~ises", "~isiez";
-    infinitive: "~ire";
     participle: "~isant", "~it";
     ),
     // Faire: 12 words (faire, refaire, contrefaire, défaire, satisfaire, parfaire). Like Établir, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pres_3 sg, pres_3 pl, ….
@@ -584,13 +587,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~aire";
     participle: "~aisant", "~ait";
     ),
-    // Soustraire: 12 words (traire, distraire, soustraire, abstraire, extraire, frire). Like Appuyer, except in 5 cells: pres_1 sg, pres_2 sg, pres_3 sg, infinitive, participle past.
-    conjugation!("soustraire", 12, "~ire", like Appuyer;
-    stem verb: "~ir- like passer";
-    pres_1: "~is", _;
-    pres_2: "~is", _;
-    pres_3: "~it", _;
-    infinitive: "~ire";
+    // Soustraire: 12 words (traire, distraire, soustraire, abstraire, extraire, frire). Like Fuir with `` after each pattern (`e` after r), except in 9 cells: past_1 sg, past_1 pl, past_2 sg, past_2 pl, past_3 sg, past_3 pl, ….
+    conjugation!("soustraire", 12, "~ire", like Fuir with "", "e" after "r";
+    past_1: "~yai", "~yâmes";
+    past_2: "~yas", "~yâtes";
+    past_3: "~ya", "~yèrent";
+    subj_impf_1: "~yasse", _;
+    subj_impf_3: "~yât", _;
     participle: _, "~it";
     ),
     // Prendre: 12 words (prendre, comprendre, apprendre, surprendre, reprendre, entreprendre). Like Remettre, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pres_3 sg, pres_3 pl, ….
@@ -765,7 +768,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~loir";
     participle: "~lant", _;
     ),
-    // Pourvoir: 5 words (choir, pourvoir, déchoir, dépourvoir, échoir). Like Prévoir, except in 0 cells: .
+    // Pourvoir: 5 words (choir, pourvoir, déchoir, dépourvoir, échoir). Like Prévoir.
     conjugation!("pourvoir", 5, "~oir", like Prévoir;
     stem verb_past: "~- like paitre";
     stem verb: "~oir- like passer";
@@ -814,7 +817,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~mir";
     participle: "~mant", _;
     ),
-    // Lire: 4 words (lire, relire, élire, réélire). Like Confire, except in 0 cells: .
+    // Lire: 4 words (lire, relire, élire, réélire). Like Confire.
     conjugation!("lire", 4, "~ire", like Confire;
     stem verb_past: "~- like paitre";
     ),
@@ -911,15 +914,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     infinitive: "~eoir";
     participle: "~oyant|~eyant", "~is";
     ),
-    // Emboire: 3 words (boire, reboire, emboire). Like Pourvoir, except in 10 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
-    conjugation!("emboire", 3, "~oire", like Pourvoir;
+    // Emboire: 3 words (boire, reboire, emboire). Like Pourvoir with `` after each pattern (`e` after r), except in 9 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
+    conjugation!("emboire", 3, "~oire", like Pourvoir with "", "e" after "r";
     pres_1: _, "~uvons";
     pres_2: _, "~uvez";
     pres_3: _, "~oivent";
     impf_1: "~uvais", "~uvions";
     subj_1: "~oive", _;
     subj_2: "~oives", "~uviez";
-    infinitive: "~oire";
     participle: "~uvant", _;
     ),
     // Survivre: 3 words (vivre, survivre, revivre). Like Établir, except in 10 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
@@ -963,9 +965,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     stem verb: "~vr- like passer";
     infinitive: "~vre";
     ),
-    // Croire: 3 words (croire, recroire, mécroire). Like Pourvoir, except in 1 cell: infinitive.
-    conjugation!("croire", 3, "~oire", like Pourvoir;
-    infinitive: "~oire";
+    // Croire: 3 words (croire, recroire, mécroire). Like Pourvoir with `` after each pattern (`e` after r).
+    conjugation!("croire", 3, "~oire", like Pourvoir with "", "e" after "r";
     ),
     // Recoudre: 3 words (coudre, recoudre, découdre). Like Réduire, except in 4 cells: pres_1 sg, pres_2 sg, pres_3 sg, infinitive.
     conjugation!("recoudre", 3, "~dre", like Réduire;

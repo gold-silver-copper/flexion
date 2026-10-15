@@ -40,6 +40,41 @@ pub struct Paradigm<'a> {
     /// (a deponent's active cells read as its parent's passive ones), by the
     /// cells' order; `None`: each the same cell.
     pub reads: Option<Cow<'a, [u16]>>,
+    /// What it adds after each of its parent's patterns (Russian reflexives:
+    /// `~я`, `~ь` after a vowel, the stem's last piece their `с`).
+    pub affix: Option<Affix<'a>>,
+}
+
+/// What a paradigm adds after each of its parent's patterns: `pattern`, or
+/// `other` where the parent's pattern ends in one of `letters`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Affix<'a> {
+    pub pattern: Cow<'a, str>,
+    pub other: Cow<'a, str>,
+    pub letters: Cow<'a, str>,
+}
+
+impl Affix<'_> {
+    /// `pattern` (its alternatives each) with the affix added.
+    pub fn after(&self, pattern: &str) -> String {
+        pattern
+            .split('|')
+            .map(|p| {
+                let other = p
+                    .chars()
+                    .next_back()
+                    .is_some_and(|c| self.letters.contains(c));
+                format!("{p}{}", if other { &self.other } else { &self.pattern })
+            })
+            .collect::<Vec<_>>()
+            .join("|")
+    }
+}
+
+/// `pattern`, with the affixes met on the way up to it (innermost first)
+/// added.
+fn affixed<'s>(pattern: Cow<'s, str>, affixes: &[&Affix<'_>]) -> Cow<'s, str> {
+    affixes.iter().fold(pattern, |p, a| Cow::Owned(a.after(&p)))
 }
 
 /// A part of speech's stem slots and ending tables, which paradigms state
@@ -214,16 +249,20 @@ impl<'a> Paradigm<'a> {
     /// parents' write it (`family`: its part of speech's paradigms), without
     /// what they state through stem slots (see [`Paradigm::pattern_in`]);
     /// `None` for a derived cell (and one no paradigm up the line writes).
-    pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<&'s str> {
+    pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Cow<'s, str>> {
         let (mut p, mut cell) = (self, cell);
+        let mut affixes: Vec<&Affix<'_>> = Vec::new();
         // Parents come before their children, so this ends.
         for _ in 0..=family.len() {
             match p.own(cell) {
-                Some(Form::Pattern(pattern)) => return Some(pattern),
+                Some(Form::Pattern(pattern)) => {
+                    return Some(affixed(Cow::Borrowed(pattern), &affixes));
+                }
                 Some(Form::Derived) => return None,
                 None => {}
             }
             cell = p.read(cell);
+            affixes.splice(0..0, p.affix.as_ref());
             p = family.get(usize::from(p.parent?))?;
         }
         None
@@ -248,17 +287,21 @@ impl<'a> Paradigm<'a> {
         cell: usize,
     ) -> Option<Cow<'s, str>> {
         let (mut p, mut cell) = (self, cell);
+        let mut affixes: Vec<&Affix<'_>> = Vec::new();
         // Parents come before their children, so this ends.
         for _ in 0..=family.len() {
             match p.own(cell) {
-                Some(Form::Pattern(pattern)) => return Some(Cow::Borrowed(pattern)),
+                Some(Form::Pattern(pattern)) => {
+                    return Some(affixed(Cow::Borrowed(pattern), &affixes));
+                }
                 Some(Form::Derived) => return None,
                 None => {}
             }
             if let Some(pattern) = p.stated(space, cell) {
-                return Some(Cow::Owned(pattern));
+                return Some(affixed(Cow::Owned(pattern), &affixes));
             }
             cell = p.read(cell);
+            affixes.splice(0..0, p.affix.as_ref());
             p = family.get(usize::from(p.parent?))?;
         }
         None

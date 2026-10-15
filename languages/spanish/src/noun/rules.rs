@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 288 rules and 741 listed words.
+/// 288 rules and 739 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Medio 46334, Flor 6068, Lastón 4740, Análisis 1707, Almacén 339, Comodín 337, Matriz 288, Bacán 273, Canon 46, Betún 38, Desorden 27, Mitin 18, Volumen 17, Germen 8, Psi 7, Lobby 5, Copín 4, Barman 3, Fijodalgo 3, Régimen 3, Clac 3],
@@ -696,12 +696,10 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#mci" => Análisis,
         "#mclaren" => Canon,
         "#medley" => Medio,
-        "#megacolon" => Desorden,
         "#men" => Análisis,
         "#mendé" => Análisis,
         "#merchandiser" => Medio,
         "#mes" => Flor,
-        "#mesocolon" => Desorden,
         "#mi" => Psi,
         "#miao" => Análisis,
         "#microbus" => Flor,

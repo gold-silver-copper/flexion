@@ -21,7 +21,7 @@ use flexion::Paradigm;
 /// `f` (sg, pl)
 /// `before_vowel`
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adjective_m: $s0:tt;)?
      $(stem adjective_f: $s1:tt;)?
      $(m: $c0:tt, $c1:tt;)?
@@ -46,6 +46,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -71,6 +72,24 @@ macro_rules! view {
     };
 }
 
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// A view: per cell (in the cells' order), the cell of the declension it is
 /// like that it reads (`pl_as_sg`: one value read as another).
 const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
@@ -78,7 +97,7 @@ const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `sauvage`: 9,035 words.
+    /// Like `sauvage`: 9,033 words.
     Sauvage,
     /// Like `fini`: 4,603 words.
     Fini,
@@ -92,7 +111,7 @@ pub enum Declension {
     Vif,
     /// Like `gentil`: 367 words.
     Gentil,
-    /// Like `dar`: 234 words.
+    /// Like `dar`: 236 words.
     Dar,
     /// Like `régulier`: 222 words.
     Régulier,
@@ -158,23 +177,22 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
-    // Sauvage: 9,035 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
-    declension!("sauvage", 9035, "~";
+    // Sauvage: 9,033 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
+    declension!("sauvage", 9033, "~";
     stem adjective_m: "~- like sauvage";
     stem adjective_f: "~- like sauvage";
     ),
-    // Fini: 4,603 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Sauvage, except in 0 cells: .
+    // Fini: 4,603 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Sauvage.
     declension!("fini", 4603, "~", like Sauvage;
     stem adjective_f: "~e- like sauvage";
     ),
-    // Bon: 1,295 words (chien, sot, moron, con, tien, mien). Like Sauvage, except in 0 cells: .
+    // Bon: 1,295 words (chien, sot, moron, con, tien, mien). Like Sauvage.
     declension!("bon", 1295, "~", like Sauvage;
     stem adjective_f: "~ne- like sauvage";
     ),
-    // Trivial: 888 words (adjectival, abbatial, abdominal, abnormal, abyssal, plural).
-    declension!("trivial", 888, "~l";
-    stem adjective_f: "~le- like sauvage";
-    m: "~l", "~ux";
+    // Trivial: 888 words (adjectival, abbatial, abdominal, abnormal, abyssal, plural). Like Gentil with `` after each pattern (`l` after ~), except in 1 cell: m pl.
+    declension!("trivial", 888, "~l", like Gentil with "", "l" after "~";
+    m: _, "~ux";
     ),
     // Chaleureux: 583 words (gueux, heureux, paresseux, nuageux, douteux, merdeux).
     declension!("chaleureux", 583, "~x";
@@ -186,12 +204,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     stem adjective_m: "~f- like sauvage";
     stem adjective_f: "~ve- like sauvage";
     ),
-    // Gentil: 367 words (duel, cruel, éventuel, pluriel, mortel, gentil). Like Sauvage, except in 0 cells: .
+    // Gentil: 367 words (duel, cruel, éventuel, pluriel, mortel, gentil). Like Sauvage.
     declension!("gentil", 367, "~", like Sauvage;
     stem adjective_f: "~le- like sauvage";
     ),
-    // Dar: 234 words (orange, bio, poison, dar, nickel, cool). Like Sauvage, except in 1 cell: before_vowel.
-    declension!("dar", 234, "~", like Sauvage as PL_AS_SG;
+    // Dar: 236 words (orange, bio, poison, dar, nickel, cool). Like Sauvage, except in 1 cell: before_vowel.
+    declension!("dar", 236, "~", like Sauvage as PL_AS_SG;
     before_vowel: derived;
     ),
     // Régulier: 222 words (secret, quiet, fier, premier, cher, léger).
@@ -204,7 +222,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     stem adjective_m: "~eu~- like sauvage";
     stem adjective_f: "~~ice- like sauvage";
     ),
-    // Rageur: 143 words (poseur, bricoleur, joueur, voyageur, voleur, songeur). Like Chaleureux, except in 0 cells: .
+    // Rageur: 143 words (poseur, bricoleur, joueur, voyageur, voleur, songeur). Like Chaleureux.
     declension!("rageur", 143, "~r", like Chaleureux;
     stem adjective_m: "~r- like sauvage";
     ),
@@ -219,15 +237,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     m: _, "~x";
     f: _, "~x";
     ),
-    // Long: 3 words (long, oblong, barlong). Like Sauvage, except in 0 cells: .
+    // Long: 3 words (long, oblong, barlong). Like Sauvage.
     declension!("long", 3, "~", like Sauvage;
     stem adjective_f: "~ue- like sauvage";
     ),
-    // Franc: 3 words (franc, blanc, antiblanc). Like Sauvage, except in 0 cells: .
+    // Franc: 3 words (franc, blanc, antiblanc). Like Sauvage.
     declension!("franc", 3, "~", like Sauvage;
     stem adjective_f: "~he- like sauvage";
     ),
-    // Faux: 3 words (faux, roux, archifaux). Like Chaleureux, except in 0 cells: .
+    // Faux: 3 words (faux, roux, archifaux). Like Chaleureux.
     declension!("faux", 3, "~x", like Chaleureux;
     stem adjective_f: "~sse- like sauvage";
     ),

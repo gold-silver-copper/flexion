@@ -36,7 +36,7 @@ use flexion::Paradigm;
 /// `voc_f` (sg, pl)
 /// `voc_n` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem pronoun_m_sg: $s0:tt;)?
      $(stem pronoun_m: $s1:tt;)?
      $(stem pronoun_f: $s2:tt;)?
@@ -119,6 +119,7 @@ macro_rules! declension {
                 $(flexion::cell!($s6),)? "\t",
                 $(flexion::cell!($s7),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -141,6 +142,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -309,21 +328,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     acc_n: "~ud", _;
     voc_m: derived, _;
     ),
-    // Utervīs: 4 words (uterque, utervīs, utercumque, uterlibet).
-    declension!("utervīs", 4, "~e~~";
-    stem pronoun_m_sg: "~e~~- like uter";
-    nom_m: _, "~~ī~";
-    nom_f: "~~a~", "~~ae~";
-    nom_n: "~~um~", "~~a~";
-    gen_m: "~~ĭus~", "~~ōrum~";
-    gen_f: "~~ĭus~", "~~ārum~";
-    dat_m: "~~ī~", "~~īs~";
+    // Utervīs: 4 words (uterque, utervīs, utercumque, uterlibet). Like Uter with `~` after each pattern, except in 4 cells: gen_m sg, gen_f sg, dat_m sg, dat_f sg.
+    declension!("utervīs", 4, "~e~~", like Uter with "~";
+    gen_m: "~~ĭus~", _;
+    gen_f: "~~ĭus~", _;
+    dat_m: "~~ī~", _;
     dat_f: "~~ī~", _;
-    acc_m: "~~um~", "~~ōs~";
-    acc_f: "~~am~", "~~ās~";
-    acc_n: "~~um~", _;
-    abl_m: "~~ō~", _;
-    abl_f: "~~ā~", _;
     ),
     // Alius: 3 words (alius, ūllus, nūllus). Like Suus, except in 4 cells: gen_m sg, gen_f sg, dat_m sg, dat_f sg.
     declension!("alius", 3, "~us", like Suus;

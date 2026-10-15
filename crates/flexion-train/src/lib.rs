@@ -1,15 +1,60 @@
 //! Learn a language's inflection grammar from Wiktionary (Kaikki dumps), and
 //! write it as a Rust crate.
 
-/// Hash maps and sets with a fixed hasher: the same input fills them in the
-/// same order, so the trainer writes the same crate byte for byte.
+use std::sync::atomic::{AtomicU64, Ordering};
+
+/// Hash maps and sets with a fixed hasher of this crate's own ([`Fnv`]): no
+/// toolchain changes it, and nothing the trainer writes may depend on the
+/// order it fills them in (a test reseeds it and prints the same crate).
 pub type HashMap<K, V> = std::collections::HashMap<K, V, Fixed>;
 pub type HashSet<K> = std::collections::HashSet<K, Fixed>;
 /// See [`HashMap`].
-pub type Fixed = std::hash::BuildHasherDefault<std::collections::hash_map::DefaultHasher>;
+pub type Fixed = std::hash::BuildHasherDefault<Fnv>;
+
+/// FNV-1a over the bytes hashed, from [`SEED`], its result mixed (Murmur3's
+/// finalizer) so that every bit of it counts.
+#[derive(Debug, Clone, Copy)]
+pub struct Fnv(u64);
+
+/// Where every [`Fnv`] starts: FNV's offset basis, unless a test reseeds it
+/// (see [`reseed`]).
+static SEED: AtomicU64 = AtomicU64::new(0xcbf2_9ce4_8422_2325);
+
+impl Default for Fnv {
+    fn default() -> Fnv {
+        Fnv(SEED.load(Ordering::Relaxed))
+    }
+}
+
+impl std::hash::Hasher for Fnv {
+    fn finish(&self) -> u64 {
+        let mut h = self.0;
+        h ^= h >> 33;
+        h = h.wrapping_mul(0xff51_afd7_ed55_8ccd);
+        h ^= h >> 33;
+        h = h.wrapping_mul(0xc4ce_b9fe_1a85_ec53);
+        h ^ (h >> 33)
+    }
+
+    fn write(&mut self, bytes: &[u8]) {
+        for &b in bytes {
+            self.0 ^= u64::from(b);
+            self.0 = self.0.wrapping_mul(0x0100_0000_01b3);
+        }
+    }
+}
+
+/// Start every [`Fnv`] made from now on from `seed`: for the test that the
+/// trainer's output doesn't depend on the order its hash maps are filled
+/// in. Nothing else calls it.
+#[doc(hidden)]
+pub fn reseed(seed: u64) {
+    SEED.store(seed, Ordering::Relaxed);
+}
 
 pub mod baseline;
 pub mod bits;
+pub mod ceiling;
 pub mod cells;
 pub mod choose;
 pub mod eval;
@@ -18,6 +63,7 @@ pub mod kaikki;
 pub mod laws;
 pub mod learn;
 pub mod measure;
+pub mod par;
 pub mod pipeline;
 pub mod print;
 pub mod relations;
@@ -25,8 +71,35 @@ pub mod script;
 pub mod skeleton;
 pub mod spec;
 pub mod stems;
+pub mod trace;
 
 use spec::{Language, PartOfSpeech};
+
+/// The language's marks model (see [`learn::language_marks`]), from the
+/// words of every part of speech `keep` keeps (those trained on).
+pub fn marks(
+    lang: &Language,
+    orthography: &flexion::Orthography<'_>,
+    data: &[extract::PosData],
+    keep: impl Fn(&extract::Lexeme) -> bool,
+    settings: choose::Settings,
+) -> Result<Option<flexion::Choice<'static, char>>, String> {
+    let mut words = Vec::new();
+    for (part, d) in lang.parts.iter().zip(data) {
+        let lemma_cell = shape(lang, part)?.lemma_cell;
+        words.extend(
+            d.lexemes
+                .iter()
+                .filter(|l| keep(l))
+                .map(|l| (lemma_cell, part.name, l)),
+        );
+    }
+    Ok(learn::language_marks(
+        orthography,
+        words.into_iter(),
+        settings,
+    ))
+}
 
 /// The cells of a part of speech's principal parts after its lemma.
 pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String> {
@@ -80,6 +153,8 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         lemma_cell,
         capitalized: part.capitalized,
         max_words: part.max_words,
+        marks: None,
+        part: part.name.to_string(),
         inherent: part
             .inherent
             .iter()

@@ -24,7 +24,7 @@ use flexion::Paradigm;
 /// `superlative`
 /// `before_noun`
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adjective_sg: $s0:tt;)?
      $(stem adjective_pl: $s1:tt;)?
      $(stem superlative: $s2:tt;)?
@@ -53,6 +53,7 @@ macro_rules! declension {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -75,6 +76,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -180,10 +199,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     m: "~", "~es";
     superlative: derived;
     ),
-    // Santiagués: 551 words (chingón, catalán, japonés, luxemburgués, inglés, francés).
-    declension!("santiagués", 551, "~ˇ";
-    m: "~ˇ", "~esˇ";
-    f: "~aˇ", "~asˇ";
+    // Santiagués: 551 words (chingón, catalán, japonés, luxemburgués, inglés, francés). Like Entrador with `ˇ` after each pattern.
+    declension!("santiagués", 551, "~ˇ", like Entrador with "ˇ";
     ),
     // Tuanis: 498 words (gratis, acid, tao, bio, beige, magenta). Like Natural, except in 1 cell: before_noun.
     declension!("tuanis", 498, "~", like Natural as PL_AS_SG;
@@ -210,18 +227,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     stem adjective_pl: "~á~es- like natural";
     superlative: "~a~ísimo";
     ),
-    // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural, except in 0 cells: .
-    declension!("verde", 14, "~e", like Natural;
-    stem adjective_sg: "~e- like natural";
+    // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural with `` after each pattern (`e` after ~).
+    declension!("verde", 14, "~e", like Natural with "", "e" after "~";
     ),
     // Aweonao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
     declension!("aweonao", 14, "~ao";
     m: "~ao", "~aos";
     f: "~á", "~ás";
     ),
-    // Grandote: 11 words (grandote, cerote, chilote, regordete, franchute, hugonote). Like Entrador, except in 1 cell: m sg.
-    declension!("grandote", 11, "~e", like Entrador;
-    m: "~e", _;
+    // Grandote: 11 words (grandote, cerote, chilote, regordete, franchute, hugonote). Like Entrador with `` after each pattern (`e` after ~).
+    declension!("grandote", 11, "~e", like Entrador with "", "e" after "~";
     ),
     // Tontolaba: 9 words (ambos, tropecientos, entrambos, tontolaba, cuchucientos, sopotocientos).
     declension!("tontolaba", 9, "~o~";

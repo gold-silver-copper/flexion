@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 156 rules and 259 listed words.
+/// 156 rules and 258 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [Wolny 8195, Słaby 1412, Lekki 1310, Party 1218, Ciężki 618, Odpowiedni 238, Drugi 49, Mały 30, Otwarty 29, Soboli 25, Prosty 23, Stały 19, Herbaciany 14, Zajęczy 12, Rad 8, Ostry 6, Zwięzły 6, Uczulony 5, Wązki 4, Żyzny 3],
@@ -343,7 +343,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#suchy" => Słaby,
         "#surowy" => Słaby,
         "#suty" => Słaby,
-        "#syty" => Słaby,
         "#szalony" => Uczulony,
         "#szczodry" => Ostry,
         "#szczupły" => Słaby,

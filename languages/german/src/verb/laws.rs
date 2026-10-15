@@ -10,7 +10,7 @@
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // [s|z|ß|x]+s → +: 321 words (pflanzen, aasen, pissen, boxen), 25 forms wrong.
+    // [s|z|ß|x]+s → +: 321 words (pflanzen, aasen, pissen, boxen), 26 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -50,7 +50,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+s")]),
     },
-    // t+t → t+et: 256 words (listen, bitten, rotten, arbeiten), 175 forms wrong.
+    // t+t → t+et: 257 words (listen, bitten, rotten, arbeiten), 178 forms wrong.
     CompiledRule {
         name: B("law1"),
         left: Pattern {
@@ -80,7 +80,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("t+t")]),
     },
-    // d+t → d+et: 99 words (landen, baden, laden, reden), 77 forms wrong.
+    // d+t → d+et: 99 words (landen, baden, laden, reden), 78 forms wrong.
     CompiledRule {
         name: B("law2"),
         left: Pattern {

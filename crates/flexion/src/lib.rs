@@ -11,11 +11,11 @@ mod stress;
 
 pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
 pub use grammar::{
-    Compound, FRONT_LETTERS, Grammar, Irregular, Known, ListedStem, Placement, Prefix, Prefixes,
-    Separation, Trust, WORD_END, restore, sharpen,
+    Compound, FRONT_LETTERS, Grammar, Heads, Irregular, Known, ListedStem, Marks, Placement,
+    Prefix, Prefixes, Separation, Trust, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
-pub use paradigm::{DERIVED, Form, Paradigm, Relation, Space};
+pub use paradigm::{Affix, DERIVED, Form, Paradigm, Relation, Space};
 pub use sound_law;
 pub use stems::{EndingTable, LIKE, Slot, compose, factor};
 pub use stress::{
@@ -212,6 +212,14 @@ macro_rules! changes {
 macro_rules! spellings {
     ( $( $key:literal => $letters:literal ),* $(,)? ) => {
         &[ $( (::std::borrow::Cow::Borrowed($key), ::std::borrow::Cow::Borrowed($letters)) ),* ]
+    };
+}
+
+/// A list of words, as `Heads::words` keeps them.
+#[macro_export]
+macro_rules! words {
+    ( $( $word:literal ),* $(,)? ) => {
+        &[ $( ::std::borrow::Cow::Borrowed($word) ),* ]
     };
 }
 

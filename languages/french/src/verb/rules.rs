@@ -7,10 +7,10 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 292 rules and 149 listed words.
+/// 292 rules and 148 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
-        "" => [Passer 5867, Badger 486, Établir 326, Rendre 60, Appuyer 59, Réduire 48, Appeler 41, Jeter 35, Tenir 31, Poindre 30, Récupérer 21, Remettre 18, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Dissoudre 7, Éclore 6, Requérir 6, Resver 6, Mouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Rompre 5, Inclure 5, Havoir 5, Endormir 4, Lire 4, Taire 4, Vouloir 4, Moudre 4, Ouïr 4, Croitre 4, Asseoir 4, Emboire 3, Survivre 3, Servir 3, Fuir 3, Poursuivre 3, Croire 3, Recoudre 3, Bouillir 3, Luire 3, Devoir 3, Haïr 1, Arguër 1],
+        "" => [Passer 5867, Badger 491, Établir 326, Rendre 60, Appuyer 59, Réduire 48, Appeler 41, Jeter 35, Tenir 31, Poindre 30, Remettre 18, Récupérer 16, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Dissoudre 7, Éclore 6, Requérir 6, Resver 6, Mouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Rompre 5, Inclure 5, Havoir 5, Endormir 4, Lire 4, Taire 4, Vouloir 4, Moudre 4, Ouïr 4, Croitre 4, Asseoir 4, Emboire 3, Survivre 3, Servir 3, Fuir 3, Poursuivre 3, Croire 3, Recoudre 3, Bouillir 3, Luire 3, Devoir 3, Haïr 1, Arguër 1],
         "e" => [Rendre 60, Réduire 48, Poindre 30, Remettre 18, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Dissoudre 7, Éclore 6, Rompre 5, Inclure 5, Lire 4, Taire 4, Moudre 4, Croitre 4, Emboire 3, Survivre 3, Poursuivre 3, Croire 3, Recoudre 3, Luire 3],
         "cre" => [Rendre 2],
         "dre" => [Rendre 50, Poindre 30, Prendre 12, Dissoudre 7, Moudre 4, Recoudre 3],
@@ -71,8 +71,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "vre" => [Survivre 3, Poursuivre 3] regular,
         "uivre" => [Poursuivre 3] regular,
         "vivre" => [Survivre 3] regular,
-        "r" => [Passer 5867, Badger 486, Établir 326, Appuyer 59, Appeler 41, Jeter 35, Tenir 31, Récupérer 21, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Requérir 6, Resver 6, Mouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Havoir 5, Endormir 4, Vouloir 4, Ouïr 4, Asseoir 4, Servir 3, Fuir 3, Bouillir 3, Devoir 3, Haïr 1, Arguër 1],
-        "er" => [Passer 5867, Badger 486, Appuyer 59, Appeler 41, Jeter 35, Récupérer 21, Resver 6] regular,
+        "r" => [Passer 5867, Badger 491, Établir 326, Appuyer 59, Appeler 41, Jeter 35, Tenir 31, Récupérer 16, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Requérir 6, Resver 6, Mouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Havoir 5, Endormir 4, Vouloir 4, Ouïr 4, Asseoir 4, Servir 3, Fuir 3, Bouillir 3, Devoir 3, Haïr 1, Arguër 1],
+        "er" => [Passer 5867, Badger 491, Appuyer 59, Appeler 41, Jeter 35, Récupérer 16, Resver 6] regular,
         "ber" => [Passer 61] regular,
         "cer" => [Passer 122, Badger 2] regular,
         "ecer" => [Badger 2, Passer 1] regular,
@@ -194,7 +194,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "réter" => [Badger 12] regular,
         "êter" => [Passer 11] regular,
         "ûter" => [Passer 12] regular,
-        "uer" => [Passer 388, Badger 10, Récupérer 5] regular,
+        "uer" => [Passer 388, Badger 15] regular,
         "guer" => [Passer 76, Badger 10] regular,
         "aguer" => [Passer 14] regular,
         "iguer" => [Passer 11] regular,
@@ -204,10 +204,10 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "léguer" => [Badger 6] regular,
         "luer" => [Passer 24] regular,
         "ouer" => [Passer 47] regular,
-        "quer" => [Passer 184, Récupérer 5] regular,
+        "aquer" => [Passer 26] regular,
         "iquer" => [Passer 69] regular,
         "oquer" => [Passer 35] regular,
-        "équer" => [Récupérer 5] regular,
+        "équer" => [Badger 5] regular,
         "tuer" => [Passer 24] regular,
         "aver" => [Passer 25] regular,
         "ever" => [Badger 12] regular,
@@ -306,7 +306,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     listed {
         "#abêtir" => Établir,
         "#accroître" => Rendre,
-        "#affener" => Passer,
         "#affermir" => Établir,
         "#ahurir" => Établir,
         "#alentir" => Établir,

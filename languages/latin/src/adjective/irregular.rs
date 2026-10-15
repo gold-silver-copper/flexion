@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 87 stems, 205 forms.
+/// 92 stems, 200 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"ales	24	ālitī
@@ -23,7 +23,7 @@ bonus	comparative	meli- like iacitūrus	37	optimus
 caelebs	adjective_pl	caelib- like hȳoīdēs
 capenas	7	capēnātum	9	capēnātum
 carcerarius	30	carcerārī
-celer	2	celeris	4	celere	19	celerēs	37	celerrimus
+celer	19	celerēs
 cisgener	5	cisgenera
 coelebs	adjective_pl	coelib- like hȳoīdēs
 coeles	adjective_pl	coelit- like pinguis
@@ -37,7 +37,6 @@ cornipes	5	cornipeda	7	cornipedum	9	cornipedum
 cothurnatus	36	cothurnātius
 culpabilis	36	culpabilius
 defessus	comparative	defessi- like iacitūrus
-deprans	adjective_pl	dēprand- like pinguis
 deses	adjective_pl	dēsid- like pinguis
 deterior	comparative	dēter- like miser
 deterrimus	comparative	dēt- like dexter
@@ -51,6 +50,7 @@ esculentus	comparative	esculenti- like iacitūrus
 exlex	adjective_pl	exlēg- like pinguis
 exos	adjective_pl	exoss- like pinguis
 exter	37	extrēmus
+falsiparens	adjective_n_sg	falsiparēns- like iacitūrus	adjective_pl	falsiparent- like pinguis	adjective_sg	falsiparēns- like dēmittēns
 favorabilis	36	favōrābilius
 ferinus	37	ferinīssimus
 flŭxus	comparative	flŭxi- like iacitūrus
@@ -86,9 +86,9 @@ microlepis	adjective_pl	microlepid- like pinguis
 multus	comparative	plū- like miser	36	plūs
 munitus	36	mūnitior
 necessarius	comparative	necessari- like iacitūrus
-nefrens	adjective_pl	nefrend- like pinguis
 neuter	6	neutrĭus
 octuplex	19	octuplicēs
+omniparens	adjective_n_sg	omniparēns- like iacitūrus	adjective_pl	omniparent- like pinguis	adjective_sg	omniparēns- like dēmittēns
 omnipotens	comparative	omnipotēnti- like iacitūrus
 oportunus	36	oportunior
 orthodoxus	comparative	orthodoxi- like iacitūrus
@@ -96,7 +96,6 @@ parissumus	comparative	pari- like iacitūrus
 particeps	24	participe
 parvus	comparative	min- like iacitūrus	37	minimus
 pauperus	0	pauper
-perceler	2	perceleris	4	percelere
 peritum	adjective_pl	perit- like iacitūrus	adjective_sg	perit- like iacitūrus
 pernox	3	pernoctēs	5	pernoctia	6	pernoctis	9	pernoctium	13	pernoctibus	20	pernoctem	24	pernocte
 pervetus	adjective_pl	perveter- like hȳoīdēs
@@ -104,6 +103,7 @@ phoenix	adjective_pl	phoenīc- like hȳoīdēs
 planus	comparative	plani- like iacitūrus
 plus	5	plūra	19	plūrēs
 posterus	37	postrēmus
+primor	adjective_pl	prīmōr- like pinguis
 primoris	0	prīmor
 prior	37	prīmus
 prolixus	comparative	prōlixi- like iacitūrus

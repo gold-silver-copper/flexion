@@ -99,8 +99,8 @@ macro_rules! like {
 
 /// The accent patterns, commonest first.
 pub static PATTERNS: [AccentPattern<'static>; 4] = [
-    // 0, `ὁδε`: 40 words.
-    pattern!("ὁδε", 40;
+    // 0, `ὁδε`: 42 words.
+    pattern!("ὁδε", 42;
     nom_m: Stem, Stem, Stem;
     nom_f: Stem, Stem, Stem;
     nom_n: Stem, Stem, Stem;
@@ -117,8 +117,8 @@ pub static PATTERNS: [AccentPattern<'static>; 4] = [
     voc_f: Stem, Stem, Stem;
     voc_n: Stem, Stem, Stem;
     ),
-    // 1, `μηδεις`: 11 words. Like 0 (`ὁδε`), except in 9 cells.
-    pattern!("μηδεις", 11, like 0;
+    // 1, `ἑαυτου`: 9 words. Like 0 (`ὁδε`), except in 9 cells.
+    pattern!("ἑαυτου", 9, like 0;
     gen_m: Last, _, _;
     gen_f: Ending, _, _;
     gen_n: Last, _, _;
@@ -133,8 +133,8 @@ pub static PATTERNS: [AccentPattern<'static>; 4] = [
     pattern!("αὐτος", 3, like 0;
     gen_f: _, _, Stem;
     ),
-    // 3, `σαυτοῡ`: 3 words. Like 1 (`μηδεις`), except in 3 cells.
-    pattern!("σαυτοῡ", 3, like 1;
+    // 3, `σαυτου`: 3 words. Like 1 (`ἑαυτου`), except in 3 cells.
+    pattern!("σαυτου", 3, like 1;
     gen_n: Stem, _, _;
     dat_n: Stem, _, _;
     acc_n: Stem, _, _;
@@ -148,18 +148,18 @@ pub enum AccentClass {
     Ὁδε,
     /// Pattern `ὁδε`, the stem accented on its syllable 3 from the end: 9 words.
     Ὁποτερος,
-    /// Pattern `μηδεις`, never on the stem: 8 words.
-    Ἑαυτοῡ,
-    /// Pattern `ὁδε`, never on the stem: 5 words.
-    Σφεῑς,
-    /// Pattern `ὁδε`, the stem accented on the lemma's last syllable: 4 words.
-    Ἐγω,
-    /// Pattern `μηδεις`, the stem accented on the lemma's last syllable: 3 words.
+    /// Pattern `ἑαυτου`, never on the stem: 8 words.
+    Ἑαυτου,
+    /// Pattern `ὁδε`, the stem accented on the lemma's last syllable: 6 words.
     Μηδεις,
+    /// Pattern `ὁδε`, never on the stem: 5 words.
+    Σφεις,
     /// Pattern `αὐτος`, the stem accented on the lemma's last syllable: 3 words.
     Αὐτος,
-    /// Pattern `σαυτοῡ`, never on the stem: 3 words.
-    Σαυτοῡ,
+    /// Pattern `σαυτου`, never on the stem: 3 words.
+    Σαυτου,
+    /// Pattern `ἑαυτου`, the stem accented on the lemma's last syllable: 1 words.
+    Πᾱς,
 }
 
 impl AccentClass {
@@ -167,12 +167,12 @@ impl AccentClass {
     pub const ALL: [AccentClass; 8] = [
         AccentClass::Ὁδε,
         AccentClass::Ὁποτερος,
-        AccentClass::Ἑαυτοῡ,
-        AccentClass::Σφεῑς,
-        AccentClass::Ἐγω,
+        AccentClass::Ἑαυτου,
         AccentClass::Μηδεις,
+        AccentClass::Σφεις,
         AccentClass::Αὐτος,
-        AccentClass::Σαυτοῡ,
+        AccentClass::Σαυτου,
+        AccentClass::Πᾱς,
     ];
 }
 
@@ -200,28 +200,22 @@ pub static CLASSES: [StressClass<'static>; 8] = [
         words: 9,
     },
     StressClass {
-        name: Cow::Borrowed("ἑαυτοῡ"),
-        pattern: 1, // μηδεις
+        name: Cow::Borrowed("ἑαυτου"),
+        pattern: 1, // ἑαυτου
         vowel: None,
         words: 8,
     },
     StressClass {
-        name: Cow::Borrowed("σφεῑς"),
+        name: Cow::Borrowed("μηδεις"),
+        pattern: 0, // ὁδε
+        vowel: Some(0),
+        words: 6,
+    },
+    StressClass {
+        name: Cow::Borrowed("σφεις"),
         pattern: 0, // ὁδε
         vowel: None,
         words: 5,
-    },
-    StressClass {
-        name: Cow::Borrowed("ἐγω"),
-        pattern: 0, // ὁδε
-        vowel: Some(0),
-        words: 4,
-    },
-    StressClass {
-        name: Cow::Borrowed("μηδεις"),
-        pattern: 1, // μηδεις
-        vowel: Some(0),
-        words: 3,
     },
     StressClass {
         name: Cow::Borrowed("αὐτος"),
@@ -230,10 +224,16 @@ pub static CLASSES: [StressClass<'static>; 8] = [
         words: 3,
     },
     StressClass {
-        name: Cow::Borrowed("σαυτοῡ"),
-        pattern: 3, // σαυτοῡ
+        name: Cow::Borrowed("σαυτου"),
+        pattern: 3, // σαυτου
         vowel: None,
         words: 3,
+    },
+    StressClass {
+        name: Cow::Borrowed("πᾱς"),
+        pattern: 1, // ἑαυτου
+        vowel: Some(0),
+        words: 1,
     },
 ];
 
@@ -242,76 +242,77 @@ use AccentClass::*;
 /// Which class a word is of: 5 rules and 39 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
-        "" => [Ὁδε 22, Ὁποτερος 9, Ἑαυτοῡ 8, Σφεῑς 5, Ἐγω 4, Μηδεις 3, Αὐτος 3, Σαυτοῡ 3],
-        "σ" => [Ὁδε 16, Ὁποτερος 9, Σφεῑς 3, Μηδεις 3, Αὐτος 3, Ἐγω 1],
-        "ισ" => [Σφεῑς 3, Μηδεις 2, Ὁδε 1],
+        "" => [Ὁδε 22, Ὁποτερος 9, Ἑαυτου 8, Μηδεις 6, Σφεις 5, Αὐτος 3, Σαυτου 3, Πᾱς 1],
+        "ισ" => [Σφεις 3, Μηδεις 2, Ὁδε 1],
+        "οσ" => [Ὁδε 14, Ὁποτερος 9, Αὐτος 3, Μηδεις 1],
         "ροσ" => [Ὁποτερος 6],
-        "υ" => [Ἑαυτοῡ 7, Σαυτοῡ 3, Ἐγω 1],
+        "υ" => [Ἑαυτου 7, Σαυτου 3, Μηδεις 1],
     }
     listed {
         "αλληλων" => Ὁδε,
         "απασ" => Ὁδε,
         "αυτοσ" => Αὐτος,
         "αυτοτατοσ" => Ὁποτερος,
-        "αυτου" => Ἑαυτοῡ,
-        "εαυτου" => Ἑαυτοῡ,
-        "εγω" => Ἐγω,
+        "αυτου" => Ἑαυτου,
+        "εαυτου" => Ἑαυτου,
+        "εγω" => Μηδεις,
         "εκαστοσ" => Ὁποτερος,
         "εκεινοσ" => Ὁδε,
-        "εμαυτου" => Ἑαυτοῡ,
-        "εμεωυτου" => Ἑαυτοῡ,
-        "εμωυτου" => Ἑαυτοῡ,
+        "εμαυτου" => Ἑαυτου,
+        "εμεωυτου" => Ἑαυτου,
+        "εμωυτου" => Ἑαυτου,
         "εοσ" => Αὐτος,
-        "εωυτου" => Ἑαυτοῡ,
-        "ημεισ" => Σφεῑς,
-        "ι" => Ἐγω,
+        "εωυτου" => Ἑαυτου,
+        "ημεισ" => Σφεις,
+        "ι" => Μηδεις,
         "μηδεισ" => Μηδεις,
-        "νω" => Σφεῑς,
-        "ο" => Ἑαυτοῡ,
+        "νω" => Σφεις,
+        "ο" => Ἑαυτου,
         "οδε" => Ὁδε,
-        "οσ" => Ἐγω,
+        "οσ" => Μηδεις,
         "οσαπλασιοσ" => Ὁποτερος,
         "οσαπλασιων" => Ὁδε,
         "οσπερ" => Ὁδε,
         "οστισ" => Ὁδε,
-        "ου" => Ἑαυτοῡ,
+        "ου" => Ἑαυτου,
         "ουδεισ" => Μηδεις,
         "ουτοσ" => Ὁδε,
-        "πασ" => Μηδεις,
-        "σαυτου" => Σαυτοῡ,
-        "σεαυτου" => Σαυτοῡ,
-        "σεωυτου" => Σαυτοῡ,
-        "συ" => Ἐγω,
-        "σφεισ" => Σφεῑς,
-        "σφω" => Σφεῑς,
+        "πασ" => Πᾱς,
+        "σαυτου" => Σαυτου,
+        "σεαυτου" => Σαυτου,
+        "σεωυτου" => Σαυτου,
+        "συ" => Μηδεις,
+        "σφεισ" => Σφεις,
+        "σφω" => Σφεις,
         "ταυτοσ" => Αὐτος,
         "τοιουτοσ" => Ὁδε,
         "τοσουτοσ" => Ὁδε,
-        "υμεισ" => Σφεῑς,
+        "υμεισ" => Σφεις,
     }
 };
 
 /// Per declension, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 21] = [
-    Cow::Borrowed(&[]), // Ὁσος
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 19] = [
     Cow::Borrowed(&[]), // Οἱος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Ὁσος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Αὑτου
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
     ]), // Αὐτος
     Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-    ]), // Αὑτοῡ
-    Cow::Borrowed(&[]), // Τοῑος
-    Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Σφω
-    Cow::Borrowed(&[
         NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, DAT_M_PL, DAT_F_PL, DAT_N_PL,
         ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_M_PL, VOC_F_PL, VOC_N_PL,
-    ]), // Σφεῑς
-    Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG, DAT_M_SG, DAT_F_SG, DAT_N_SG]), // Ἐμαυτοῡ
-    Cow::Borrowed(&[GEN_F_SG, GEN_F_PL, DAT_F_SG]), // Μηδεις
+    ]), // Σφεις
+    Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Σφω
+    Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG, DAT_M_SG, DAT_F_SG, DAT_N_SG]), // Ἐμαυτου
     Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, GEN_F_PL, ACC_N_SG, VOC_M_SG, VOC_N_SG]), // Ἁπᾱς
     Cow::Borrowed(&[]), // Ὁδε
     Cow::Borrowed(&[]), // Ὁστῐς
@@ -329,7 +330,7 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 21] = [
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-    ]), // Ἑαυτοῡ
+    ]), // Ἑαυτου
     Cow::Borrowed(&[]), // Ἀλληλων
     Cow::Borrowed(&[]), // Ἐνῐοι
     Cow::Borrowed(&[]), // Ὁσᾰπλᾰσῐων

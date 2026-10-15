@@ -5,10 +5,14 @@
 use crate::extract::Lexeme;
 use flexion::Label;
 
-/// The tenth scored and never trained on (by default; see [`dev_of`]).
+/// The tenth the READMEs report: scored once per build, never trained on,
+/// and never what a change is judged on (see [`DEVELOP`]).
 pub const TEST: u64 = 0;
-/// The tenth settings are chosen on (by default).
+/// The tenth the sharpness is fitted on when [`TEST`] is scored.
 pub const DEV: u64 = 1;
+/// The tenth a change is judged on (`try` scores it unless told otherwise;
+/// its sharpness is fitted on [`dev_of`] it).
+pub const DEVELOP: u64 = 2;
 
 /// The tenth settings are chosen on when tenth `test` is scored: the next.
 pub fn dev_of(test: u64) -> u64 {
@@ -61,6 +65,11 @@ pub struct Score {
     /// one) has some training word's form in, and on the others.
     pub seen: (usize, usize),
     pub unseen: (usize, usize),
+    /// `(forms, right)` on the lemma's cell, where its form isn't the
+    /// letters typed (vowel length the headword doesn't write).
+    pub lemma: (usize, usize),
+    /// Top candidate is one of the forms the dictionary lists, any of them.
+    pub any: usize,
     /// The right answer among the candidates at all, at any place.
     pub among: usize,
     /// Summed over forms: −log₂ of the probability the grammar gives the
@@ -90,6 +99,11 @@ pub struct Outcome {
     pub letters: bool,
     /// The cell is one the word's likeliest paradigm has training forms in.
     pub seen: bool,
+    /// The cell is the lemma's (and its form isn't the letters typed).
+    pub lemma: bool,
+    /// The first candidate writes one of the forms the dictionary lists in
+    /// the cell, not only its first.
+    pub any: bool,
     /// −log₂ [`Outcome::probability`], at most the right answer's listing
     /// cost: [`LETTER_BITS`] per letter and one more for its end. A form no
     /// candidate writes costs its listing.
@@ -129,6 +143,12 @@ impl Score {
         ratio(self.among, self.forms)
     }
 
+    /// The share of forms whose top candidate is any form the dictionary
+    /// lists in the cell.
+    pub fn any_accuracy(&self) -> f64 {
+        ratio(self.any, self.forms)
+    }
+
     /// The share of words with every scored form right.
     pub fn whole_words(&self) -> f64 {
         ratio(self.whole, self.words)
@@ -160,6 +180,11 @@ impl Score {
             let split = if o.seen { &mut s.seen } else { &mut s.unseen };
             split.0 += 1;
             split.1 += usize::from(right);
+            if o.lemma {
+                s.lemma.0 += 1;
+                s.lemma.1 += usize::from(right);
+            }
+            s.any += usize::from(o.any);
             s.bits += o.bits;
             s.calibrate(f64::from(o.top), right);
             word = match word {
@@ -250,20 +275,6 @@ pub fn score<P: Label, A: Label, F: Label>(
     ))
 }
 
-/// The held-out bits of `lexemes` under `grammar`, typed as `input`: summed
-/// over every form the dictionary lists, −log₂ of the probability of the
-/// right answer, at most its listing cost (see [`Outcome::bits`]).
-pub fn held_out_bits<P: Label, A: Label, F: Label>(
-    grammar: &flexion::Grammar<'_, P, A, F>,
-    lexemes: &[&Lexeme],
-    input: Input<'_>,
-) -> f64 {
-    outcomes(grammar, &grammar.orthography, lexemes, input, &[], |_| true)
-        .iter()
-        .map(|o| o.bits)
-        .sum()
-}
-
 /// The cells given for `k` forms given ([`Input::Given`]): `k` of the
 /// cells `l` has forms in (the lemma's aside), those with the lowest hash
 /// of the word and the cell. None when the word has no more than `k` such
@@ -293,10 +304,24 @@ pub fn hash(s: &str) -> u64 {
     h
 }
 
+/// Whether the form `want` of cell `cell` is what was typed (`typed`): the
+/// lemma's cell, the same letters. Its answer is the input itself, so it
+/// isn't scored, by the grammar or the floor.
+pub fn typed_back(
+    orthography: &flexion::Orthography<'_>,
+    lemma_cell: Option<usize>,
+    cell: usize,
+    want: &str,
+    typed: &str,
+) -> bool {
+    lemma_cell == Some(cell) && orthography.read(want).letters == orthography.read(typed).letters
+}
+
 /// Every scored form of `lexemes` (held out) in the cells `scored` accepts,
-/// against the dictionary's first form, typed as `input`, word by word.
-/// `seen`: per paradigm, the cells its training words have forms in (empty:
-/// every cell counts as seen).
+/// against the dictionary's first form, typed as `input`, word by word; the
+/// lemma's cell only where its form isn't what was typed (see
+/// [`typed_back`]). `seen`: per paradigm, the cells its training words have
+/// forms in (empty: every cell counts as seen).
 pub fn outcomes<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
@@ -341,10 +366,11 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
             .and_then(|r| seen.get(r.value.index()));
         let table = grammar.table(&typed, &known);
         for (cell, forms) in l.cells.iter().enumerate() {
-            let Some(want) = forms
-                .first()
-                .filter(|_| !parts.contains(&cell) && scored(cell))
-            else {
+            let Some(want) = forms.first().filter(|want| {
+                !parts.contains(&cell)
+                    && scored(cell)
+                    && !typed_back(orthography, grammar.lemma_cell, cell, want, &typed)
+            }) else {
                 continue;
             };
             let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
@@ -370,6 +396,9 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
                 probability,
                 letters: first.is_some_and(|c| letters(&c.form) == letters(want)),
                 seen: has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)),
+                lemma: grammar.lemma_cell == Some(cell),
+                any: first
+                    .is_some_and(|c| forms.iter().any(|f| same_form(orthography, &c.form, f))),
                 bits,
             });
         }
@@ -377,22 +406,31 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
     out
 }
 
-/// The share of `test`'s forms (typed as their headwords) the shared task's
-/// non-neural baseline gets right (see [`crate::baseline`]), learned from
-/// `train`'s headwords and forms, and the share of those in `unseen` cells
-/// (see [`Score::unseen`]). Letters only: stress and accents aside.
+/// One held-out form the floor was asked for: the word (its place among
+/// those scored), the cell, and whether the floor wrote its letters.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FloorOutcome {
+    pub word: usize,
+    pub cell: usize,
+    pub right: bool,
+}
+
+/// Each form of `test` (typed as their headwords) the shared task's
+/// non-neural baseline (see [`crate::baseline`]) is asked for, learned from
+/// `train`'s headwords and forms, and whether it is right: the cells
+/// [`outcomes`] scores from the headword. Letters only: stress and accents
+/// aside.
 pub fn floor(
     orthography: &flexion::Orthography<'_>,
     train: &[&Lexeme],
     test: &[&Lexeme],
-    unseen: impl Fn(&Lexeme, usize) -> bool,
-) -> (f64, f64) {
+    lemma_cell: Option<usize>,
+) -> Vec<FloorOutcome> {
     let letters = |s: &str| orthography.read(s).letters;
     let lemmas: Vec<String> = train.iter().map(|l| letters(&l.lemma)).collect();
     let tests: Vec<String> = test.iter().map(|l| letters(&l.lemma)).collect();
     let cells = train.iter().chain(test).map(|l| l.cells.len()).max();
-    // `(forms, right)` of all, and of the unseen cells.
-    let (mut all, mut unseen_cells) = ((0, 0), (0, 0));
+    let mut out = Vec::new();
     // A cell at a time: its rules alone are small.
     for cell in 0..cells.unwrap_or(0) {
         let forms: Vec<(&str, String)> = train
@@ -402,34 +440,120 @@ pub fn floor(
             .collect();
         let baseline =
             crate::baseline::Baseline::learn(forms.iter().map(|(l, f)| (*l, f.as_str())));
-        for (l, lemma) in test.iter().zip(&tests) {
-            let Some(want) = l.cells.get(cell).and_then(|forms| forms.first()) else {
+        for (word, (l, lemma)) in test.iter().zip(&tests).enumerate() {
+            let Some(want) = l
+                .cells
+                .get(cell)
+                .and_then(|forms| forms.first())
+                .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))
+            else {
                 continue;
             };
-            let ok = usize::from(baseline.inflect(lemma) == letters(want));
-            all = (all.0 + 1, all.1 + ok);
-            if unseen(l, cell) {
-                unseen_cells = (unseen_cells.0 + 1, unseen_cells.1 + ok);
-            }
+            out.push(FloorOutcome {
+                word,
+                cell,
+                right: baseline.inflect(lemma) == letters(want),
+            });
         }
     }
-    (ratio(all.1, all.0), ratio(unseen_cells.1, unseen_cells.0))
+    out.sort_unstable_by_key(|o| (o.word, o.cell));
+    out
 }
 
-/// Whether cell `cell` of `l` (typed as its headword) is one its likeliest
-/// paradigm's training words have no form in (`seen`: per paradigm, those
-/// they have).
-pub fn unseen<P: Label, A: Label, F: Label>(
-    grammar: &flexion::Grammar<'_, P, A, F>,
-    seen: &[Vec<bool>],
-    l: &Lexeme,
-    cell: usize,
-) -> bool {
-    grammar
-        .readings(&l.lemma, &flexion::Known::default())
-        .first()
-        .and_then(|r| seen.get(r.value.index()))
-        .is_some_and(|h| !h.get(cell).copied().unwrap_or(false))
+/// The grammar (its top candidate's letters, as the floor is scored) and
+/// the floor paired word by word on the forms both were asked for, of the
+/// cells `cell` accepts: `a` the floor's right forms, `b` the grammar's.
+pub fn against_floor(
+    outcomes: &[Outcome],
+    floor: &[FloorOutcome],
+    cell: impl Fn(usize) -> bool,
+) -> Vec<crate::measure::Paired> {
+    let floor: crate::HashMap<(usize, usize), bool> =
+        floor.iter().map(|f| ((f.word, f.cell), f.right)).collect();
+    let mut words: Vec<crate::measure::Paired> = Vec::new();
+    let mut last = None;
+    for o in outcomes.iter().filter(|o| cell(o.cell)) {
+        let Some(&right) = floor.get(&(o.word, o.cell)) else {
+            continue;
+        };
+        if last != Some(o.word) {
+            words.push(crate::measure::Paired::default());
+            last = Some(o.word);
+        }
+        if let Some(w) = words.last_mut() {
+            w.forms += 1;
+            w.a += usize::from(right);
+            w.b += usize::from(o.letters);
+        }
+    }
+    words
+}
+
+/// The share of `outcomes`' forms the floor gets right, of all and of the
+/// cells the grammar's paradigm has no training form in.
+pub fn floor_shares(outcomes: &[Outcome], floor: &[FloorOutcome]) -> (f64, f64) {
+    let unseen: crate::HashSet<(usize, usize)> = outcomes
+        .iter()
+        .filter(|o| !o.seen)
+        .map(|o| (o.word, o.cell))
+        .collect();
+    let (mut all, mut off) = ((0, 0), (0, 0));
+    for f in floor {
+        all = (all.0 + 1, all.1 + usize::from(f.right));
+        if unseen.contains(&(f.word, f.cell)) {
+            off = (off.0 + 1, off.1 + usize::from(f.right));
+        }
+    }
+    (ratio(all.1, all.0), ratio(off.1, off.0))
+}
+
+/// The share of `outcomes`' forms any grammar could get right: words typed
+/// alike (homographs) get one answer per cell, so of each typed word's
+/// forms in a cell, only the commonest can be.
+pub fn ceiling(
+    orthography: &flexion::Orthography<'_>,
+    lexemes: &[&Lexeme],
+    outcomes: &[Outcome],
+) -> f64 {
+    let mut counts: crate::HashMap<(String, usize), crate::HashMap<String, usize>> =
+        crate::HashMap::default();
+    for o in outcomes {
+        let Some(l) = lexemes.get(o.word) else {
+            continue;
+        };
+        let Some(want) = l.cells.get(o.cell).and_then(|f| f.first()) else {
+            continue;
+        };
+        let read = orthography.read(want);
+        let typed = orthography.read(&l.lemma).letters;
+        *counts
+            .entry((typed, o.cell))
+            .or_default()
+            .entry(format!("{}\u{1f}{:?}", read.letters, read.stress))
+            .or_default() += 1;
+    }
+    let best: usize = counts
+        .values()
+        .map(|forms| forms.values().copied().max().unwrap_or(0))
+        .sum();
+    ratio(best, outcomes.len())
+}
+
+/// Per word, `(forms, right)` of `outcomes` (in word order).
+pub fn by_word(outcomes: &[Outcome]) -> Vec<(usize, usize)> {
+    let mut words: Vec<(usize, usize)> = Vec::new();
+    let mut last = None;
+    for o in outcomes {
+        if last != Some(o.word) {
+            words.push((0, 0));
+            last = Some(o.word);
+        }
+        if let Some(w) = words.last_mut() {
+            w.0 += 1;
+            w.1 += usize::from(o.right());
+        }
+    }
+    words
 }
 
 /// The sharpness and the trust (see [`flexion::Grammar::sharpness`],
@@ -530,3 +654,119 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
 /// The fewest held-out forms whose first answer has a status for that
 /// status's trust to be fitted.
 pub const TRUSTED: usize = 100;
+
+/// One held-out word typed in full, against the paradigm that builds the
+/// most of its forms (the oracle: it reads the answers, so it is a
+/// diagnostic, never a grammar's).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Oracle {
+    /// The word's place among those scored.
+    pub word: usize,
+    /// Forms scored (the lemma's aside where it is what was typed).
+    pub forms: usize,
+    /// Forms whose letters the grammar's first candidate gets right.
+    pub grammar: usize,
+    /// The paradigm that builds the most of them, and how many; the grammar's
+    /// likeliest paradigm.
+    pub best: Option<usize>,
+    pub oracle: usize,
+    pub chosen: Option<usize>,
+}
+
+/// Held-out words and cells scored for [`oracle`], at most: every paradigm
+/// is tried on each word (at most 1,000 words).
+pub const ORACLE_CELLS: usize = 100_000;
+
+/// [`Oracle`] of an even sample of `lexemes` (at most [`ORACLE_CELLS`] of
+/// words and cells), typed in full: letters only, as the floor.
+pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    lexemes: &[&Lexeme],
+) -> Vec<Oracle> {
+    let o = &grammar.orthography;
+    let words = (ORACLE_CELLS / grammar.cells.max(1)).clamp(1, 1000);
+    let step = lexemes.len().div_ceil(words).max(1);
+    let sample: Vec<(usize, &Lexeme)> = lexemes.iter().copied().enumerate().step_by(step).collect();
+    let known = flexion::Known {
+        full: true,
+        ..flexion::Known::default()
+    };
+    crate::par::map(&sample, |&(word, l)| {
+        let wanted: Vec<Option<String>> = l
+            .cells
+            .iter()
+            .enumerate()
+            .map(|(cell, forms)| {
+                let want = forms.first()?;
+                (!typed_back(o, grammar.lemma_cell, cell, want, &l.full))
+                    .then(|| o.read(want).letters)
+            })
+            .collect();
+        let forms = wanted.iter().flatten().count();
+        let right = |built: &[Option<String>]| {
+            wanted
+                .iter()
+                .zip(built)
+                .filter(|(w, b)| w.is_some() && w == b)
+                .count()
+        };
+        let table: Vec<Option<String>> = grammar
+            .table(&l.full, &known)
+            .iter()
+            .map(|c| c.first().map(|c| o.read(&c.form).letters))
+            .collect();
+        let first = |forms: Vec<Vec<String>>| -> Vec<Option<String>> {
+            forms.into_iter().map(|f| f.into_iter().next()).collect()
+        };
+        let (oracle, best) = (0..grammar.paradigms.len())
+            .map(|p| {
+                (
+                    right(&first(grammar.built_as(&l.full, p))),
+                    std::cmp::Reverse(p),
+                )
+            })
+            .max()
+            .map_or((0, None), |(n, std::cmp::Reverse(p))| {
+                (n, (n > 0).then_some(p))
+            });
+        Oracle {
+            word,
+            forms,
+            grammar: right(&table),
+            best,
+            oracle,
+            chosen: grammar
+                .readings(&l.full, &known)
+                .first()
+                .map(|r| r.value.index()),
+        }
+    })
+}
+
+/// Of the words the paradigm choice lists (its exceptions), those the rules
+/// alone give a paradigm that builds every one of the word's cells as the
+/// listed one does: listed for nothing. `(tied, listed)`.
+pub fn ties<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+) -> (usize, usize) {
+    let mut rules = grammar.paradigm.clone();
+    rules.exceptions = std::borrow::Cow::Borrowed(&[]);
+    let listed: Vec<(&str, usize)> = grammar
+        .paradigm
+        .exceptions
+        .iter()
+        .map(|(w, p)| (w.trim_start_matches(flexion::WORD_END), p.index()))
+        .collect();
+    let tied = crate::par::map(&listed, |&(key, p)| {
+        let ruled = rules
+            .read(
+                &format!("{}{key}", flexion::WORD_END),
+                grammar.smoothing,
+                |_| true,
+            )
+            .first()
+            .map(|r| r.value.index());
+        ruled.is_some_and(|q| q != p && grammar.built_as(key, q) == grammar.built_as(key, p))
+    });
+    (tied.iter().filter(|&&t| t).count(), listed.len())
+}

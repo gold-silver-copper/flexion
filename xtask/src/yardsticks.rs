@@ -228,16 +228,17 @@ pub fn sigmorphon(lang: &Language, data: &[PosData], file: &Path) -> Result<(), 
             .filter(|l| !lemmas.contains(&l.key))
             .cloned()
             .collect();
-        for (name, lexemes) in [
-            ("shipped", &d.lexemes),
-            ("without the test lemmas", &without),
+        for (name, lexemes, held) in [
+            ("shipped", &d.lexemes, false),
+            ("without the test lemmas", &without, true),
         ] {
-            let learned = learn::learn(
-                script.orthography(),
-                &shape,
-                lexemes,
-                choose::Settings::default(),
-            );
+            let settings = choose::Settings::default();
+            let keep = |l: &Lexeme| !held || !lemmas.contains(&l.key);
+            let shape = learn::Shape {
+                marks: flexion_train::marks(lang, &script.orthography(), data, keep, settings)?,
+                ..shape.clone()
+            };
+            let learned = learn::learn(script.orthography(), &shape, lexemes, settings);
             let g = &learned.grammar;
             let o = &g.orthography;
             let (mut exact, mut letters, mut length, mut plain) = (0usize, 0usize, 0usize, 0usize);
@@ -343,13 +344,10 @@ pub fn nonce(lang: &Language, data: &[PosData], file: &Path) -> Result<(), Strin
         .next()
         .ok_or("no past cell")?;
     let script = script::Script::new(&lang.spelling);
-    let shape = flexion_train::shape(lang, part)?;
-    let learned = learn::learn(
-        script.orthography(),
-        &shape,
-        &d.lexemes,
-        choose::Settings::default(),
-    );
+    let mut shape = flexion_train::shape(lang, part)?;
+    let settings = choose::Settings::default();
+    shape.marks = flexion_train::marks(lang, &script.orthography(), data, |_| true, settings)?;
+    let learned = learn::learn(script.orthography(), &shape, &d.lexemes, settings);
     let g = &learned.grammar;
     // (regular, ours, production, rating)
     let mut points: Vec<(bool, f64, f64, f64)> = Vec::new();

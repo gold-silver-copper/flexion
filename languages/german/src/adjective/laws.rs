@@ -791,6 +791,49 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("w+s")]),
     },
+    // lt+s → lt+es after [a|h|i|l|o|u|ä|‹]: 20 words (kalt, alt, gewillt, okkult), 0 forms wrong.
+    CompiledRule {
+        name: B("law25"),
+        left: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Class(B(&[
+                    B("‹"),
+                    B("ä"),
+                    B("a"),
+                    B("h"),
+                    B("i"),
+                    B("l"),
+                    B("o"),
+                    B("u"),
+                ])),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("lt+s")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("lt+es"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("lt+s")]),
+    },
 ];
 
 /// The laws, in order.

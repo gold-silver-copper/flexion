@@ -19,7 +19,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem noun_sg: $s0:tt;)?
      $(stem noun_pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
@@ -39,6 +39,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -61,6 +62,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -150,7 +169,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     declension!("trait", 40525, "~";
     noun: "~", "~s";
     ),
-    // Bois: 1,576 words (fa, abraxas, faq, ce, os, bm). Like Trait, except in 0 cells: .
+    // Bois: 1,576 words (fa, abraxas, faq, ce, os, bm). Like Trait.
     declension!("bois", 1576, "~", like Trait as PL_AS_SG;
     ),
     // Marteau: 324 words (ypréau, taureau, gâteau, jeu, dieu, bureau). Like Trait, except in 1 cell: noun pl.
@@ -169,9 +188,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     declension!("superwoman", 12, "~a~";
     noun: "~a~", "~e~|~a~s";
     ),
-    // Bonhomme: 11 words (bonhomme, arrière-grand-mère, gentilhomme, arrière-petit-enfant, arrière-grand-parent, arrière-petite-fille).
-    declension!("bonhomme", 11, "~~";
-    noun: "~~", "~s~s";
+    // Bonhomme: 11 words (bonhomme, arrière-grand-mère, gentilhomme, arrière-petit-enfant, arrière-grand-parent, arrière-petite-fille). Like Trait with `~` after each pattern (`~s` after s).
+    declension!("bonhomme", 11, "~~", like Trait with "~", "~s" after "s";
     ),
     // Émail: 9 words (bail, émail, travail, ventail, corail, vitrail). Like Journal, except in 1 cell: noun sg.
     declension!("émail", 9, "~il", [noun_gender: Masculine], like Journal;

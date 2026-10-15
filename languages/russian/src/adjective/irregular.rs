@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 140 forms.
+/// 0 stems, 139 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"бескрайний	48	бескраен
@@ -24,7 +24,6 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 господний	48	господень
 далёкий	51	далеки
 древлий	48	древлен
-душевнобольной	48	душевноболен
 ейный	51	еины
 жёсткий	50	жёстко
 затыловочный	1	затыловоченый	28	затыловоченое	29	затыловоченое	48	затыловочн

@@ -258,6 +258,7 @@ macro_rules! declension {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: None,
         }
     };
 }
@@ -286,17 +287,17 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `veraltet`: 12,225 words.
+    /// Like `veraltet`: 12,242 words.
     Veraltet,
-    /// Like `glatt`: 1,862 words.
+    /// Like `glatt`: 1,845 words.
     Glatt,
     /// Like `überfinanziert`: 439 words.
     Überfinanziert,
     /// Like `edel`: 102 words.
     Edel,
-    /// Like `scharf`: 50 words.
+    /// Like `scharf`: 52 words.
     Scharf,
-    /// Like `schwarz`: 33 words.
+    /// Like `schwarz`: 31 words.
     Schwarz,
     /// Like `träge`: 24 words.
     Träge,
@@ -378,8 +379,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
-    // Veraltet: 12,225 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
-    declension!("veraltet", 12225, "~";
+    // Veraltet: 12,242 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
+    declension!("veraltet", 12242, "~";
     stem superlative: "~ste- like veraltet";
     strong_nom: _, "~e", _, _;
     strong_gen: _, "~er", "~en", "~er";
@@ -407,8 +408,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     comparative_mixed_acc: "~eren", "~ere", "~eres", "~eren";
     predicative: "~", "~er", _;
     ),
-    // Glatt: 1,862 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet, except in 0 cells: .
-    declension!("glatt", 1862, "~", like Veraltet;
+    // Glatt: 1,845 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet.
+    declension!("glatt", 1845, "~", like Veraltet;
     stem superlative: "~este- like veraltet";
     ),
     // Überfinanziert: 439 words (gelaufen, gegessen, getrunken, gesprochen, gekommen, geboren). Like Veraltet, except in 51 cells: superlative_strong_nom m, superlative_strong_nom f, superlative_strong_nom n, superlative_strong_nom pl, superlative_strong_gen m, superlative_strong_gen f, ….
@@ -456,8 +457,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     comparative_mixed_acc: "~~eren", "~~ere", "~~eres", "~~eren";
     predicative: "~e~", "~~er", _;
     ),
-    // Scharf: 50 words (warm, schwarz, stark, lang, scharf, schwach).
-    declension!("scharf", 50, "~a~";
+    // Scharf: 52 words (warm, kalt, schwarz, stark, lang, scharf).
+    declension!("scharf", 52, "~a~";
     stem superlative: "~ä~ste- like veraltet";
     strong_nom: _, "~a~e", _, _;
     strong_gen: _, "~a~er", "~a~en", "~a~er";
@@ -485,8 +486,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     comparative_mixed_acc: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~eren";
     predicative: "~a~", "~ä~er", _;
     ),
-    // Schwarz: 33 words (hart, kalt, galt, uralt, pechschwarz, steinalt). Like Scharf, except in 0 cells: .
-    declension!("schwarz", 33, "~a~", like Scharf;
+    // Schwarz: 31 words (hart, galt, uralt, pechschwarz, steinalt, bitterkalt). Like Scharf.
+    declension!("schwarz", 31, "~a~", like Scharf;
     stem superlative: "~ä~este- like veraltet";
     ),
     // Träge: 24 words (beige, broke, malle, fake, knorke, äußere).
@@ -518,7 +519,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     comparative_mixed_acc: "~~ren", "~~re", "~~res", "~~ren";
     predicative: "~~", "~~r", _;
     ),
-    // Zeitnah: 11 words (nah, bodennah, oberflächennah, verbrauchernah, regierungsnah, berlinnah). Like Scharf, except in 0 cells: .
+    // Zeitnah: 11 words (nah, bodennah, oberflächennah, verbrauchernah, regierungsnah, berlinnah). Like Scharf.
     declension!("zeitnah", 11, "~a~", like Scharf;
     stem superlative: "~äc~ste- like veraltet";
     ),
@@ -580,7 +581,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     comparative_mixed_acc: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
     predicative: "~u~", "~ü~er", _;
     ),
-    // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug). Like Kurz, except in 0 cells: .
+    // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug). Like Kurz.
     declension!("dumm", 9, "~u~", like Kurz;
     stem superlative: "~ü~ste- like veraltet";
     ),
@@ -618,11 +619,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     superlative_strong_dat: "~st~m", _, _, _;
     predicative: "~~r", _, _;
     ),
-    // Rot: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth). Like Groß, except in 0 cells: .
+    // Rot: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth). Like Groß.
     declension!("rot", 7, "~o~", like Groß;
     stem superlative: "~ö~este- like veraltet";
     ),
-    // Grob: 7 words (grob, fromm, aerob, anaerob, lammfromm, storr). Like Groß, except in 0 cells: .
+    // Grob: 7 words (grob, fromm, aerob, anaerob, lammfromm, storr). Like Groß.
     declension!("grob", 7, "~o~", like Groß;
     stem superlative: "~ö~ste- like veraltet";
     ),

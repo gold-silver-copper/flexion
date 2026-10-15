@@ -5,7 +5,6 @@
 
 mod irregular;
 mod laws;
-mod marks;
 mod paradigms;
 mod relations;
 mod rules;
@@ -48,19 +47,25 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     feature: None,
     compound: None,
     prefixes: None,
-    heads: None,
+    heads: flexion::Heads {
+        least: None,
+        words: Cow::Borrowed(&[]),
+    },
     accent: None,
     laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
-    marks: Some(marks::MARKS),
+    marks: Some(flexion::Marks {
+        rules: crate::marks::MARKS,
+        part: Cow::Borrowed("noun"),
+    }),
     slots: Cow::Borrowed(&stems::SLOTS),
     tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
     sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.99719477,
-        unsettled: 1.0,
+        regular: 0.96310246,
+        unsettled: 0.92125314,
         unattested: 1.0,
     },
 };

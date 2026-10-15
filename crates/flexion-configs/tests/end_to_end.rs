@@ -41,13 +41,23 @@ fn data(lang: &Language, script: &Script) -> Vec<PosData> {
     data
 }
 
-/// Every part of speech's grammar, learned from all its words.
+/// Every part of speech's grammar, learned from all its words (with the
+/// language's marks model, learned once).
 fn grammars<'s>(lang: &Language, script: &'s Script, data: &[PosData]) -> Vec<Learned<'s>> {
+    let marks = flexion_train::marks(
+        lang,
+        &script.orthography(),
+        data,
+        |_| true,
+        Settings::default(),
+    )
+    .expect("marks");
     lang.parts
         .iter()
         .zip(data)
         .map(|(part, d)| {
-            let shape = flexion_train::shape(lang, part).expect("shape");
+            let mut shape = flexion_train::shape(lang, part).expect("shape");
+            shape.marks = marks.clone();
             learn::learn(
                 script.orthography(),
                 &shape,
@@ -396,19 +406,64 @@ fn print_and_compare(lang: Language) {
 }
 
 #[test]
-fn the_same_entries_print_the_same_crate() {
-    let print = || {
-        let lang = flexion_configs::russian::language();
+fn the_same_entries_print_the_same_crate_whatever_order_the_hash_maps_take() {
+    // The trainer's hash maps are filled in another order under another
+    // seed: nothing it writes may depend on that order.
+    let print = |lang: &Language, seed| {
+        flexion_train::reseed(seed);
         let script = Script::new(&lang.spelling);
-        let data = data(&lang, &script);
-        let learned = grammars(&lang, &script, &data);
+        let data = data(lang, &script);
+        let learned = grammars(lang, &script, &data);
         let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
             .parts
             .iter()
             .zip(&learned)
             .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
             .collect();
-        flexion_train::print::files(&lang, &script, &parts, "").expect("printed")
+        flexion_train::print::files(lang, &script, &parts, "").expect("printed")
     };
-    assert!(print() == print(), "two runs printed different crates");
+    for lang in [
+        flexion_configs::russian::language(),
+        flexion_configs::finnish::language(),
+    ] {
+        let a = print(&lang, 0xcbf2_9ce4_8422_2325);
+        let b = print(&lang, 0x9e37_79b9_7f4a_7c15);
+        for ((path, x), (_, y)) in a.iter().zip(&b) {
+            assert!(
+                x == y,
+                "{}: {path} differs under another hash seed",
+                lang.name
+            );
+        }
+    }
+}
+
+#[test]
+fn the_lemma_s_own_form_is_scored_only_where_it_is_not_what_was_typed() {
+    // Typed as its headword, `rex`, the lemma's cell asks for `rēx`: vowel
+    // length the headword doesn't write, a real answer. Typed `rēx`, the
+    // cell's answer is the input itself. Other cells always count.
+    let lang = flexion_configs::latin::language();
+    let script = Script::new(&lang.spelling);
+    let o = script.orthography();
+    let typed_back =
+        |cell, want, typed| flexion_train::eval::typed_back(&o, Some(0), cell, want, typed);
+    assert!(!typed_back(0, "rēx", "rex"));
+    assert!(typed_back(0, "rēx", "rēx"));
+    assert!(!typed_back(1, "rēx", "rēx"));
+}
+
+#[test]
+fn a_circumflex_closing_a_diphthong_is_not_vowel_length() {
+    // `ῦ` alone is a long `ῡ` (`σῦς`), but in `ἀριθμοῦ` it is the
+    // diphthong `ου`'s: the same letters as `ἀριθμός`'s stem and ending.
+    // A diaeresis parts the two vowels: `ῧ` closes no diphthong.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let o = script.orthography();
+    assert_eq!(o.read("ἀριθμοῦ").letters, "ἀριθμου");
+    assert_eq!(o.read("σῦς").letters, "σῡς");
+    assert_eq!(o.read("προῧπτος").letters, "προϋπτος");
+    let w = o.read("ἀριθμοῦ");
+    assert_eq!(o.write(&w.letters, w.stress, w.casing), "ἀριθμοῦ");
 }

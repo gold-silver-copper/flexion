@@ -27,7 +27,14 @@ pub fn run(
         if pos.is_some_and(|p| p != part.name) {
             continue;
         }
-        let shape = flexion_train::shape(lang, part)?;
+        let mut shape = flexion_train::shape(lang, part)?;
+        shape.marks = flexion_train::marks(
+            lang,
+            &script.orthography(),
+            data,
+            |l: &Lexeme| eval::bucket(&l.key) != eval::TEST,
+            choose::Settings::default(),
+        )?;
         let train: Vec<Lexeme> = d
             .lexemes
             .iter()

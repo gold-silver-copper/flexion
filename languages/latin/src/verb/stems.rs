@@ -631,6 +631,30 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "\t",
         )),
     },
+    // verb_ind_act like cognōscō: 15 words.
+    EndingTable {
+        name: Cow::Borrowed("cognōscō"),
+        words: 15,
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "~vī\t~vimus|~mus\t",
+            "~vistī|~stī\t~vistis|~stis\t",
+            "~vit|~t\t~vērunt|~runt|~vēre\t",
+            "~veram|~ram\t~verāmus|~rāmus\t",
+            "~verās|~rās\t~verātis|~rātis\t",
+            "~verat|~rat\t~verant|~rant\t",
+            "~verō|~rō\t~verimus|~rimus\t",
+            "~veris|~ris\t~veritis|~ritis\t",
+            "~verit|~rit\t~verint|~rint\t",
+            "~verim|~rim\t~verīmus|~rīmus\t",
+            "~verīs|~rīs\t~verītis|~rītis\t",
+            "~verit|~rit\t~verint|~rint\t",
+            "~vissem|~ssem\t~vissēmus|~ssēmus\t",
+            "~vissēs|~ssēs\t~vissētis|~ssētis\t",
+            "~visset|~sset\t~vissent|~ssent\t",
+            "~visse|~sse\t",
+        )),
+    },
     // verb_ind_act like decet: 11 words.
     EndingTable {
         name: Cow::Borrowed("decet"),
@@ -653,30 +677,6 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "\t\t",
             "~isset\t~issent\t",
             "~isse\t",
-        )),
-    },
-    // verb_ind_act like caveō: 8 words.
-    EndingTable {
-        name: Cow::Borrowed("caveō"),
-        words: 8,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~vī\t~vimus|~mus\t",
-            "~vistī|~stī\t~vistis|~stis\t",
-            "~vit|~t\t~vērunt|~runt|~vēre\t",
-            "~veram|~ram\t~verāmus|~rāmus\t",
-            "~verās|~rās\t~verātis|~rātis\t",
-            "~verat|~rat\t~verant|~rant\t",
-            "~verō|~rō\t~verimus|~rimus\t",
-            "~veris|~ris\t~veritis|~ritis\t",
-            "~verit|~rit\t~verint|~rint\t",
-            "~verim|~rim\t~verīmus|~rīmus\t",
-            "~verīs|~rīs\t~verītis|~rītis\t",
-            "~verit|~rit\t~verint|~rint\t",
-            "~vissem|~ssem\t~vissēmus|~ssēmus\t",
-            "~vissēs|~ssēs\t~vissētis|~ssētis\t",
-            "~visset|~sset\t~vissent|~ssent\t",
-            "~visse|~sse\t",
         )),
     },
     // verb_ind_act like occurrō: 5 words.
@@ -703,10 +703,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "~isse\t",
         )),
     },
-    // participle_perf_pass like agitō: 5,160 words.
+    // participle_perf_pass like agitō: 5,167 words.
     EndingTable {
         name: Cow::Borrowed("agitō"),
-        words: 5160,
+        words: 5167,
         slot: 3,
         table: Cow::Borrowed(concat!("~us\t~ūrus\t", "~um\t~ū\t",)),
     },
@@ -724,10 +724,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
         slot: 3,
         table: Cow::Borrowed(concat!("~um\t~ūrus\t", "~um\t~ū\t",)),
     },
-    // participle_perf_pass like dēpendō: 70 words.
+    // participle_perf_pass like dēpendō: 63 words.
     EndingTable {
         name: Cow::Borrowed("dēpendō"),
-        words: 70,
+        words: 63,
         slot: 3,
         table: Cow::Borrowed(concat!("~usˇ\t~ūrusˇ\t", "~umˇ\t~ūˇ\t",)),
     },

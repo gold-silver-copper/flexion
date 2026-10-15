@@ -32,6 +32,9 @@ pub fn files(
     if let Some(extra) = lang.extra {
         out.push(("src/extra.rs".to_string(), extra.to_string()));
     }
+    if let Some(marks) = marks_of(parts)? {
+        out.push(("src/marks.rs".to_string(), marks_file(marks)));
+    }
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
         out.extend(grammar_files(lang, part.spec, part.learned, &cells));
@@ -40,10 +43,39 @@ pub fn files(
         .iter()
         .filter_map(|(path, _)| Some(path.strip_prefix("src/")?.split_once('/')?.1.to_string()))
         .collect();
+    if out.iter().any(|(path, _)| path == "src/marks.rs") {
+        grammar.push("marks.rs".to_string());
+    }
     grammar.sort();
     grammar.dedup();
     out.push(("README.md".to_string(), readme(lang, report, &grammar)));
     Ok(out)
+}
+
+/// The language's marks model: one for every part of speech (see
+/// [`crate::learn::language_marks`]), or none.
+fn marks_of<'a, 's>(
+    parts: &[Part<'a, 's>],
+) -> Result<Option<&'a flexion::Choice<'s, char>>, String> {
+    let mut all = parts
+        .iter()
+        .filter_map(|p| p.learned.grammar.marks.as_ref().map(|m| &m.rules));
+    let Some(first) = all.next() else {
+        return Ok(None);
+    };
+    if all.any(|m| m != first) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
+        return Err("the parts of speech have different marks: learn them once for the language (`flexion_train::marks`)".into());
+    }
+    Ok(Some(first))
+}
+
+/// `src/marks.rs`: how a letter typed without its mark is written.
+fn marks_file(marks: &flexion::Choice<'_, char>) -> String {
+    format!(
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`; `#de`\n//! → `ē`, as in `dē-`; `ae` → `e`, a diphthong; `eni#numeral` → `ē`, as in\n//! `quīngēnī`), giving each way of writing the letter with how many of the\n//! dictionary's letters in that place are written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n",
+        thousands(marks.rules.len()),
+        choice_macro("starts", marks, |c| format!("{c:?}"))
+    )
 }
 
 /// Write the crate into `dir`, replacing its `src/`.
@@ -308,7 +340,7 @@ fn grammar_files(
         (!g.relations.is_empty(), "mod relations"),
         (g.compound.is_some(), "mod compounds"),
         (g.prefixes.is_some(), "mod prefixes"),
-        (g.marks.is_some(), "mod marks"),
+        (!g.heads.words.is_empty(), "mod heads"),
         (true, "mod irregular"),
         (!g.slots.is_empty(), "mod stems"),
         (g.laws.is_some(), "mod laws"),
@@ -331,9 +363,18 @@ fn grammar_files(
             "None".into()
         }
     };
+    let heads = format!(
+        "flexion::Heads {{ least: {:?}, words: Cow::Borrowed({}) }}",
+        g.heads.least,
+        if g.heads.words.is_empty() {
+            "&[]"
+        } else {
+            "heads::HEADS"
+        }
+    );
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads:?},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -374,13 +415,16 @@ fn grammar_files(
             )),
         compound = some(g.compound.is_some(), "compounds::COMPOUND"),
         prefixes = some(g.prefixes.is_some(), "prefixes::PREFIXES"),
-        heads = g.heads,
+        heads = heads,
         accent = some(
             g.accent.is_some(),
             "flexion::Accent {\n        patterns: Cow::Borrowed(&accent::PATTERNS),\n        classes: Cow::Borrowed(&accent::CLASSES),\n        class: accent::CLASS,\n        circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),\n        long_finals: Cow::Borrowed(&accent::LONG_FINALS),\n    }"
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
-        marks = some(g.marks.is_some(), "marks::MARKS"),
+        marks = g.marks.as_ref().map_or("None".to_string(), |m| format!(
+            "Some(flexion::Marks {{ rules: crate::marks::MARKS, part: Cow::Borrowed({:?}) }})",
+            m.part
+        )),
     );
     m.push_str(&api_code(
         spec,
@@ -463,10 +507,26 @@ fn grammar_files(
         let stems: String = (0..g.slots.len())
             .map(|i| format!("                $(flexion::cell!($s{i}),)? \"\\t\",\n"))
             .collect();
+        // What a {one} adds after the patterns of the one it is like.
+        let affixed = g.paradigms.iter().any(|p| p.affix.is_some());
+        let (with, affix) = if affixed {
+            (
+                " $(with $affix:literal $(, $other:literal after $letters:literal)?)?",
+                "affix!($($($affix $(, $other, $letters)?)?)?)",
+            )
+        } else {
+            ("", "None")
+        };
         let _ = writeln!(
             p,
-            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?)?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
+            "macro_rules! {one} {{\n    ($name:literal, $words:literal, $lemma:literal{features} $(, like $parent:ident $(as $view:ident)?{with})?;\n{stem_rows}{rows}    ) => {{\n        Paradigm {{\n            name: ::std::borrow::Cow::Borrowed($name),\n            words: $words,\n            lemma: ::std::borrow::Cow::Borrowed($lemma),\n            parent: like!($($parent)?),\n            reads: view!($($($view)?)?),\n            inherent: ::std::borrow::Cow::Borrowed(&[{values}]),\n            table: ::std::borrow::Cow::Borrowed(concat!(\n{table}            )),\n            stems: ::std::borrow::Cow::Borrowed(concat!(\n{stems}            )),\n            affix: {affix},\n        }}\n    }};\n}}\n\n/// The {one} a {one} is like, by its name.\nmacro_rules! like {{\n    () => {{\n        None\n    }};\n    ($parent:ident) => {{\n        Some({ty}::$parent as u16)\n    }};\n}}\n\n/// The cells a {one} reads in the one it is like, by the view's name (see\n/// the views below); none: the same cells.\nmacro_rules! view {{\n    () => {{\n        None\n    }};\n    ($view:ident) => {{\n        Some(::std::borrow::Cow::Borrowed(&$view))\n    }};\n}}\n"
         );
+        if affixed {
+            let _ = writeln!(
+                p,
+                "/// What a {one} adds after each pattern of the one it is like (`with \"~ь\", \"~я\"\n/// after \"йлмть\"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).\nmacro_rules! affix {{\n    () => {{\n        None\n    }};\n    ($affix:literal) => {{\n        affix!($affix, $affix, \"\")\n    }};\n    ($affix:literal, $other:literal, $letters:literal) => {{\n        Some(flexion::Affix {{\n            pattern: ::std::borrow::Cow::Borrowed($affix),\n            other: ::std::borrow::Cow::Borrowed($other),\n            letters: ::std::borrow::Cow::Borrowed($letters),\n        }})\n    }};\n}}\n"
+            );
+        }
         if g.paradigms.iter().any(|p| !p.inherent.is_empty()) {
             let _ = writeln!(
                 p,
@@ -555,8 +615,27 @@ fn grammar_files(
             let more = if own.len() > 6 { ", …" } else { "" };
             let named: Vec<&str> = own.iter().take(6).map(String::as_str).collect();
             let cells = if own.len() == 1 { "cell" } else { "cells" };
+            let with = par.affix.as_ref().map_or(String::new(), |a| {
+                if a.other == a.pattern {
+                    format!(" with `{}` after each pattern", a.pattern)
+                } else {
+                    format!(
+                        " with `{}` after each pattern (`{}` after {})",
+                        a.pattern,
+                        a.other,
+                        a.letters
+                            .chars()
+                            .map(String::from)
+                            .collect::<Vec<_>>()
+                            .join(", ")
+                    )
+                }
+            });
+            if own.is_empty() {
+                return format!(" Like {q}{with}.");
+            }
             format!(
-                " Like {q}, except in {} {cells}: {}{more}.",
+                " Like {q}{with}, except in {} {cells}: {}{more}.",
                 own.len(),
                 named.join(", ")
             )
@@ -597,7 +676,19 @@ fn grammar_files(
                     .as_ref()
                     .and_then(|r| learned.views.iter().find(|v| v.1.as_slice() == r.as_ref()))
                     .map_or(String::new(), |v| format!(" as {}", const_name(&v.0)));
-                format!(", like {q}{view}")
+                let with = par.affix.as_ref().map_or(String::new(), |a| {
+                    if a.other == a.pattern {
+                        format!(" with {}", Lit(&a.pattern))
+                    } else {
+                        format!(
+                            " with {}, {} after {}",
+                            Lit(&a.pattern),
+                            Lit(&a.other),
+                            Lit(&a.letters)
+                        )
+                    }
+                });
+                format!(", like {q}{view}{with}")
             })
         );
         // The slots it states with a stem and an ending table.
@@ -728,14 +819,20 @@ fn grammar_files(
         files.push((format!("{dir}/compounds.rs"), r));
     }
 
-    // marks.rs
-    if let Some(marks) = &g.marks {
-        let r = format!(
-            "//! How a letter typed without its mark is written. Each rule reads the letter\n//! before it, the letter and the letters after it (`#` is the word's start or\n//! end): the longest one that matches decides (`tatio#` → `ā`, as in `-ātiō`;\n//! `#de` → `ē`, as in `dē-`; `ae` → `e`, a diphthong), giving each way of writing\n//! the letter with how many of the dictionary's letters in that place are\n//! written so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(super) const MARKS: Choice<'static, char> = {}}};\n",
-            thousands(marks.rules.len()),
-            choice_macro("starts", marks, |c| format!("{c:?}"))
+    // heads.rs
+    if !g.heads.words.is_empty() {
+        let mut r = format!(
+            "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): those whose own compounds in the dictionary do{}.\n\nuse std::borrow::Cow;\n\n/// {} words.\npub(super) static HEADS: &[Cow<'static, str>] = flexion::words![\n",
+            g.heads.least.map_or(String::new(), |l| format!(
+                ", shorter than the {l} letters from which every listed word is one"
+            )),
+            thousands(g.heads.words.len()),
         );
-        files.push((format!("{dir}/marks.rs"), r));
+        for w in g.heads.words.iter() {
+            let _ = writeln!(r, "    {w:?},");
+        }
+        r.push_str("];\n");
+        files.push((format!("{dir}/heads.rs"), r));
     }
 
     // spellings.rs
@@ -934,6 +1031,9 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
         s.push_str("mod extra;\npub use extra::*;\n");
     }
     s.push_str("mod orthography;\n");
+    if marks_of(parts)?.is_some() {
+        s.push_str("mod marks;\n");
+    }
     for part in parts {
         let _ = writeln!(s, "pub mod {};", part.spec.name);
     }
@@ -1579,6 +1679,10 @@ pub fn readme(lang: &Language, report: &str, files: &[String]) -> String {
         (
             "compounds.rs",
             "whether a word written in parts inflects each part",
+        ),
+        (
+            "heads.rs",
+            "the words a word ending in one inflects as, its front kept (compounds)",
         ),
         (
             "marks.rs",

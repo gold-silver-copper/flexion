@@ -10,18 +10,18 @@
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // I → ı after a; i after e, i; u after o, u; ü after none; E → a after a, o, u; e after e, i, none (the nearest of a, e, i, o, u before it, as written): 55 words (sik, bay, alp, fino), 0 forms wrong.
+    // I → ı after a; i after e, i; u after o; ü after ü, none; E → a after a, o; e after e, i, ü, none (the nearest of a, e, i, o, ü before it, as written): 55 words (sik, bay, alp, fino), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
             atoms: B(&[
                 Atom {
-                    matcher: Matcher::Class(B(&[B("a"), B("e"), B("i"), B("o"), B("u")])),
+                    matcher: Matcher::Class(B(&[B("ü"), B("a"), B("e"), B("i"), B("o")])),
                     quantifier: Quantifier::Optional,
                     capture: Some(0),
                 },
                 Atom {
-                    matcher: Matcher::NotClass(B(&[B("a"), B("e"), B("i"), B("o"), B("u")])),
+                    matcher: Matcher::NotClass(B(&[B("ü"), B("a"), B("e"), B("i"), B("o")])),
                     quantifier: Quantifier::ZeroOrMore,
                     capture: Some(1),
                 },
@@ -53,13 +53,13 @@ const RULES: &[CompiledRule<'static>] = &[
                 (B("I"), B("e"), B("i")),
                 (B("I"), B("i"), B("i")),
                 (B("I"), B("o"), B("u")),
-                (B("I"), B("u"), B("u")),
+                (B("I"), B("ü"), B("ü")),
                 (B("I"), B(""), B("ü")),
                 (B("E"), B("a"), B("a")),
                 (B("E"), B("e"), B("e")),
                 (B("E"), B("i"), B("e")),
                 (B("E"), B("o"), B("a")),
-                (B("E"), B("u"), B("a")),
+                (B("E"), B("ü"), B("e")),
                 (B("E"), B(""), B("e")),
             ]),
         }]),

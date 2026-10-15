@@ -54,6 +54,7 @@ grammar needs of:
   of the dictionary's words with that ending follow each paradigm, and the words no
   rule gets right, listed;
 - `compounds.rs`: whether a word written in parts inflects each part;
+- `heads.rs`: the words a word ending in one inflects as, its front kept (compounds);
 - `spellings.rs`: the words whose spelling their typed form doesn't show;
 - `stems.rs`: the stem slots (the cells a word builds on one stem, learned from the
   words that put different stems in different cells) and the ending tables paradigms
@@ -71,9 +72,9 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms |
 |---|---:|---:|---:|---:|---:|---:|
-| noun | 108894 | 205 | 17 | 1910 | 4604 | 1649 |
-| adjective | 67695 | 50 | 4 | 463 | 1546 | 140 |
-| verb | 46911 | 342 | 63 | 2774 | 5539 | 613 |
+| noun | 108894 | 204 | 17 | 1909 | 4527 | 1649 |
+| adjective | 67695 | 50 | 4 | 463 | 1545 | 139 |
+| verb | 46911 | 341 | 64 | 2771 | 4858 | 607 |
 | pronoun | 42 | 10 | 0 | 10 | 13 | 373 |
 | numeral | 77 | 4 | 4 | 11 | 19 | 85 |
 
@@ -89,7 +90,9 @@ learned from the other nine tenths, and asked for every form the dictionary list
 each held-out word, typed as the dictionary's headword. *Top-1*: its first answer is
 right; *top-3*: the right answer is among its first three. *Calibration error*: how far
 its stated probabilities are, on average, from how often it is right (0 is perfect).
-The margin after top-1 is a 95% interval, counting words. *Lemma in full*: top-1 typed
+The lemma's own form isn't scored where it is the letters typed (it is the input); where
+it isn't (vowel length the headword doesn't write) it is scored, and also apart (*lemma
+spelling*). After top-1, its 95% interval, resampling words. *Lemma in full*: top-1 typed
 with every mark the dictionary's table writes, and said to be so (`spelled_in_full`).
 *Principal parts given*: top-1 of the other forms, given the dictionary's principal
 parts. *Features given*: top-1 from the headword, told the word's inherent features
@@ -101,24 +104,31 @@ forms, typed in full, given that many of the word's forms chosen at random.
 *Seen* and *unseen cells*: top-1 on the cells some training word of the word's
 paradigm has a form in, and on the others, derived
 from other cells (with the number of forms). *Floor*: the CoNLL–SIGMORPHON 2017
-shared task's non-neural baseline (letters only), and on the unseen cells. *Attested*: top-1 of the shipped
-grammar on the dictionary's own words, typed in full.
+shared task's non-neural baseline (letters only), and on the unseen cells. *Against the
+floor*: the grammar's letters right less the floor's, on the same forms, with its 95%
+interval (resampling words). *Any listed form*: top-1 where any of the forms the
+dictionary lists in the cell counts. *Homograph ceiling*: the most any grammar could get
+right, words typed alike getting one answer per cell. *On a training word / new root*:
+top-1 of the held-out words that are a training word with a prefix or a compound's front
+before it, and of the rest. *Attested*: top-1 of the shipped grammar on the dictionary's
+own words, typed in full. The held-out tenth was looked at while the trainer was being
+developed (changes are judged on another tenth since PR #16).
 
-| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2611 | 30201 | **95.10%** ± 0.8 | 99.45% | 99.56% | 77.98% | 0.006 | 0.369 | 95.10% | 96.20% | 96.35 / 96.47 / 96.63 | 97.53% | 95.10% (30193) | 100.00% (8) | 94.72% (87.50%) | 100.00% |
-| adjective | 3466 | 171225 | **99.75%** ± 0.2 | 99.99% | 99.99% | 98.04% | 0.003 | 0.014 | 99.75% |  | 99.82 / 99.85 / 99.85 |  | 99.76% (171213) | 0.00% (12) | 99.78% (91.67%) | 100.00% |
-| verb | 1304 | 21858 | **96.02%** ± 1.1 | 99.44% | 99.46% | 86.73% | 0.005 | 0.388 | 96.02% | 98.95% | 96.84 / 97.31 / 98.09 | 95.75% | 96.04% (21821) | 83.78% (37) | 96.17% (54.05%) | 100.00% |
-| pronoun | 4 | 192 | **55.21%** ± 48.7 | 97.92% | 97.92% | 50.00% | 0.284 | 1.462 | 55.21% |  | 95.74 / 95.65 / 95.56 |  | 55.21% (192) |  | 55.21% (0.00%) | 100.00% |
-| numeral | 4 | 156 | **94.23%** ± 22.8 | 94.23% | 94.23% | 75.00% | 0.005 | 2.157 | 94.23% |  | 94.08 / 93.92 / 93.75 |  | 94.23% (156) |  | 100.00% (0.00%) | 100.00% |
+| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | attested |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 2611 | 27635 | **94.64%** (94.0–95.2) | 99.40% | 99.52% | 77.98% | 0.007 | 0.403 | 94.64% | 95.81% | 95.98 / 96.06 / 96.20 | 97.30% | 94.64% (27628) | 100.00% (7) | 94.24% (85.71%) | +0.41 (-0.06…+0.91) | 94.99% | 99.82% | 97.06% / 93.82% |  | 100.00% |
+| adjective | 3466 | 167759 | **99.75%** (99.6–99.9) | 99.99% | 99.99% | 98.04% | 0.003 | 0.014 | 99.75% |  | 99.82 / 99.85 / 99.84 |  | 99.76% (167747) | 0.00% (12) | 99.77% (91.67%) | -0.02 (-0.14…+0.08) | 99.75% | 99.94% | 99.71% / 99.77% |  | 100.00% |
+| verb | 1304 | 20554 | **95.76%** (95.0–96.4) | 99.40% | 99.43% | 86.73% | 0.006 | 0.411 | 95.76% | 98.88% | 96.62 / 97.12 / 97.94 | 95.49% | 95.78% (20517) | 83.78% (37) | 95.92% (54.05%) | -0.16 (-0.70…+0.39) | 95.89% | 99.49% | 95.84% / 95.72% |  | 100.00% |
+| pronoun | 4 | 188 | **54.26%** (8.5–100.0) | 97.87% | 97.87% | 50.00% | 0.290 | 1.493 | 54.26% |  | 95.65 / 95.56 / 95.45 |  | 54.26% (188) |  | 54.26% (0.00%) | +0.00 (+0.00…+0.00) | 54.26% | 100.00% | 0.00% / 54.26% |  | 100.00% |
+| numeral | 4 | 153 | **94.12%** (67.5–100.0) | 94.12% | 94.12% | 75.00% | 0.006 | 2.198 | 94.12% |  | 93.96 / 93.79 / 93.62 |  | 94.12% (153) |  | 100.00% (0.00%) | -5.88 (-32.53…+0.00) | 94.12% | 100.00% | 100.00% / 91.51% |  | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 40239 | 1602717 |
-| adjective | 5783 | 283316 |
-| verb | 18284 | 999192 |
-| pronoun | 937 | 42925 |
-| numeral | 914 | 39277 |
+| noun | 40163 | 1599865 |
+| adjective | 5785 | 283830 |
+| verb | 17303 | 952035 |
+| pronoun | 952 | 43672 |
+| numeral | 915 | 39355 |
 
 ## Data and license
 

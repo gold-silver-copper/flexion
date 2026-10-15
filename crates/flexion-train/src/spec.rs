@@ -221,11 +221,6 @@ pub struct TagPolicy {
     pub exclude: Vec<&'static str>,
     /// Real but nonstandard forms (dialectal, rare…): never trained on.
     pub soft: Vec<&'static str>,
-    /// Sense tags that, when every sense of an entry has one (or a soft or
-    /// excluded tag), make the entry a register variant: it trains with
-    /// `soft_entry_weight` instead of 1.
-    pub soft_sense: Vec<&'static str>,
-    pub soft_entry_weight: f64,
     /// Tags of bookkeeping forms that are never cell forms.
     pub meta: Vec<&'static str>,
     /// Form strings that mean "no form" or "unknown".
@@ -242,8 +237,6 @@ impl Default for TagPolicy {
                 "error-unrecognized-form",
             ],
             soft: vec![],
-            soft_sense: vec![],
-            soft_entry_weight: 0.25,
             meta: vec![
                 "table-tags",
                 "inflection-template",

@@ -90,7 +90,10 @@ pub fn language() -> Language {
                     &["weak", "mixed"],
                 )],
                 lemma: Some(("noun", vec!["Nominative", "Singular"])),
-                citation: vec![("noun", vec!["Nominative", "Plural"])],
+                citation: vec![
+                    ("noun", vec!["Genitive", "Singular"]),
+                    ("noun", vec!["Nominative", "Plural"]),
+                ],
                 inherent: vec!["Gender"],
                 capitalized: true,
                 lemmas_from: vec![],

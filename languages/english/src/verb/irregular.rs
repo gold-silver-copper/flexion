@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 250 stems, 202 forms.
+/// 242 stems, 202 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abegge	verb_past	abought- like settle
@@ -73,7 +73,6 @@ coextend	verb	coextend- like settle
 coextract	verb	coextract- like settle
 commixt	verb	commixt- like settle
 complexion	verb	complexion- like settle
-context	verb	context- like settle
 coom	2	came
 cotch	verb_past	caught- like settle
 cozen	verb	cozen- like settle
@@ -194,7 +193,6 @@ goozer	verb	goozer- like settle
 got	2	had
 growe	2	grewe	4	growne
 gunzel	verb	gunzel- like settle
-gunzip	verb	gunzip- like settle
 gzip	verb	gzip- like settle
 haffta	verb_past	hadda- like settle	1	hasta
 hafta	verb_past	hadda- like settle	1	hasta
@@ -244,8 +242,6 @@ maye	2	mighte
 mezzotint	verb	mezzotint- like settle
 mezzotinto	verb	mezzotinto- like settle
 misbid	4	misbidden
-mistext	verb	mistext- like settle
-miszip	verb	miszip- like settle
 moonrun	4	moonran
 mote	verb_past	must- like settle
 muzak	verb	muzak- like settle
@@ -262,9 +258,7 @@ pixel	verb	pixel- like settle
 pixelfuck	verb	pixelfuck- like settle
 ponzi	3	ponzying
 precum	2	precame
-pretext	verb	pretext- like settle
 pretzel	verb	pretzel- like settle
-prooftext	verb	prooftext- like settle
 puzzivant	verb	puzzivant- like settle
 queazen	verb	queazen- like settle
 radge	3	radgin
@@ -315,7 +309,6 @@ steale	verb_past	stole- like break
 sticke	verb_past	stuck- like settle
 strikethrough	verb_past	struckthrough- like settle	1	strikesthrough
 stryde	verb_past	strode- like settle
-subtext	verb	subtext- like settle
 superexalt	verb	superexalt- like settle
 surbeat	4	surbeaten
 suxor	verb	suxor- like settle
@@ -345,7 +338,6 @@ underly	verb_past	underla- like lie
 underlye	verb_past	underla- like lie
 unexport	verb	unexport- like settle
 unextinct	verb	unextinct- like settle
-ungzip	verb	ungzip- like settle
 unlade	4	unladen
 untread	4	untrod
 unvizard	verb	unvizard- like settle

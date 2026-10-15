@@ -288,18 +288,6 @@ pub fn language() -> Language {
                 "iterative",
                 "alternative",
             ],
-            // Entries for other dialects' words, and alternative forms of a
-            // word with its own entry (the Aeolic article `ὀ` beside `ὁ`),
-            // train with less weight. A `rare` sense isn't a rare word.
-            soft_sense: vec![
-                "alt-of",
-                "Cretan",
-                "Lesbian",
-                "Thessalian",
-                "Elean",
-                "Arcadian",
-                "Cypriot",
-            ],
             ..TagPolicy::default()
         },
         hooks: Box::new(GreekHooks),

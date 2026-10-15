@@ -10,7 +10,7 @@
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // ι+ωτ → ι+οτ: 62 words (ὁμοιος, βῐαιος, δῐκαιος, μᾰταιος), 0 forms wrong.
+    // ι+ωτ → ι+οτ: 148 words (ἀρχαιος, ὁμοιος, ῥωμαιος, βῐαιος), 0 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -40,188 +40,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ι+ωτ")]),
     },
-    // ι → ῑ after [α|ε]; υ → ῡ after [ε|ο] in alternating stems (ˇ), before +ο.$, .+[ο|ᾰ].$, ..+ο.$: 91 words (μειων, θειων, μειζων, πλειων), 0 forms wrong.
+    // ητ+ωτ → ητ+οτ: 45 words (ἀνᾰπολογητος, ἀγᾰπητος, ἀπροσδοκητος, ἀγεωμετρητος), 0 forms wrong.
     CompiledRule {
         name: B("law1"),
-        left: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("α"), B("ε"), B("ο")])),
-                quantifier: Quantifier::One,
-                capture: Some(0),
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("ι"), B("υ")])),
-                quantifier: Quantifier::One,
-                capture: Some(1),
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Either(B(&[
-                    Pattern {
-                        atoms: B(&[
-                            Atom {
-                                matcher: Matcher::Literal(B("+")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Class(B(&[B("ο")])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("ˇ")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                        ]),
-                        anchored_at_start: false,
-                        anchored_at_end: true,
-                    },
-                    Pattern {
-                        atoms: B(&[
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("+")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Class(B(&[B("ᾰ"), B("ο")])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("ˇ")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                        ]),
-                        anchored_at_start: false,
-                        anchored_at_end: true,
-                    },
-                    Pattern {
-                        atoms: B(&[
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("+")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Class(B(&[B("ο")])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::NotClass(B(&[
-                                    B("‹"),
-                                    B("ˇ"),
-                                    B("¦"),
-                                    B("°"),
-                                    B("+"),
-                                ])),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                            Atom {
-                                matcher: Matcher::Literal(B("ˇ")),
-                                quantifier: Quantifier::One,
-                                capture: None,
-                            },
-                        ]),
-                        anchored_at_start: false,
-                        anchored_at_end: true,
-                    },
-                ])),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::AgreeingCapture {
-            capture: 1,
-            key: 0,
-            entries: B(&[
-                (B("ι"), B("α"), B("ῑ¦")),
-                (B("ι"), B("ε"), B("ῑ¦")),
-                (B("ι"), B("ο"), B("ι")),
-                (B("υ"), B("α"), B("υ")),
-                (B("υ"), B("ε"), B("ῡ¦")),
-                (B("υ"), B("ο"), B("ῡ¦")),
-            ]),
-        }]),
-        capture_count: 2,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("+"), B("ˇ")]),
-    },
-    // ητ+ωτ → ητ+οτ: 43 words (ἀνᾰπολογητος, ἀγᾰπητος, ἀπροσδοκητος, ἀγεωμετρητος), 0 forms wrong.
-    CompiledRule {
-        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -249,9 +70,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ητ+ωτ")]),
     },
-    // κτ+ωτ → κτ+οτ: 41 words (ἡδονοπληκτος, ἀποπληκτος, σφῐγκτος, ἀνοικτος), 0 forms wrong.
+    // κτ+ωτ → κτ+οτ: 42 words (ἡδονοπληκτος, ἀποπληκτος, σφῐγκτος, ἀνοικτος), 0 forms wrong.
     CompiledRule {
-        name: B("law3"),
+        name: B("law2"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -279,9 +100,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("κτ+ωτ")]),
     },
-    // ικ+ωτ → ικ+οτ: 36 words (πνευματικος, ἀρκτικος, γραικος, μηχανικος), 0 forms wrong.
+    // ικ+ωτ → ικ+οτ: 37 words (πνευματικος, ἀρκτικος, γραικος, μηχανικος), 0 forms wrong.
     CompiledRule {
-        name: B("law4"),
+        name: B("law3"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -309,9 +130,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ικ+ωτ")]),
     },
-    // πτ+ωτ → πτ+οτ: 32 words (κρῠπτος, ἀκᾰτᾰληπτος, δῠσπεπτος, ὀπτος), 0 forms wrong.
+    // πτ+ωτ → πτ+οτ: 33 words (κρῠπτος, ἀκᾰτᾰληπτος, δῠσπεπτος, ὀπτος), 0 forms wrong.
     CompiledRule {
-        name: B("law5"),
+        name: B("law4"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -339,99 +160,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("πτ+ωτ")]),
     },
-    // ωδ+εῑ → ωδ+ει: 33 words (δηλητηρῐωδης, νεοδᾱμωδης, δημωδης, ἐργωδης), 0 forms wrong.
+    // ηρ+ωτ → ηρ+οτ: 31 words (ξηρος, πονηρος, τολμηρος, σκληρος), 0 forms wrong.
+    CompiledRule {
+        name: B("law5"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ηρ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ηρ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ηρ+ωτ")]),
+    },
+    // ιν+ωτ → ιν+οτ: 24 words (σκοτεινος, κοινος, πετεινος, δεινος), 0 forms wrong.
     CompiledRule {
         name: B("law6"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ωδ+εῑ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ωδ+ει"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ωδ+εῑ")]),
-    },
-    // ωδ+οῡ → ωδ+ου: 33 words (δηλητηρῐωδης, νεοδᾱμωδης, δημωδης, ἐργωδης), 2 forms wrong.
-    CompiledRule {
-        name: B("law7"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ωδ+οῡ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ωδ+ου"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ωδ+οῡ")]),
-    },
-    // ωδ+οῑ → ωδ+οι: 32 words (δηλητηρῐωδης, νεοδᾱμωδης, δημωδης, ἐργωδης), 6 forms wrong.
-    CompiledRule {
-        name: B("law8"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ωδ+οῑ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ωδ+οι"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ωδ+οῑ")]),
-    },
-    // ιν+ωτ → ιν+οτ: 23 words (σκοτεινος, κοινος, πετεινος, δεινος), 0 forms wrong.
-    CompiledRule {
-        name: B("law9"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -459,9 +220,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ιν+ωτ")]),
     },
-    // ωτ+ωτ → ωτ+οτ: 20 words (ἀτελειωτος, ἀγνωτος, πτερωτος, πτωτος), 0 forms wrong.
+    // ωτ+ωτ → ωτ+οτ: 21 words (ἀτελειωτος, ἀγνωτος, πτερωτος, πτωτος), 0 forms wrong.
     CompiledRule {
-        name: B("law10"),
+        name: B("law7"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -489,39 +250,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ωτ+ωτ")]),
     },
-    // ερ+οτ → ερ+ωτ: 19 words (στᾰθερος, φοβερος, φᾰνερος, θολερος), 0 forms wrong.
-    CompiledRule {
-        name: B("law11"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ερ+οτ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ερ+ωτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ερ+οτ")]),
-    },
     // ηλ+ωτ → ηλ+οτ: 18 words (κιβδηλος, πᾰρᾰλληλος, δηλος, χᾰμηλος), 0 forms wrong.
     CompiledRule {
-        name: B("law12"),
+        name: B("law8"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -549,9 +280,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ηλ+ωτ")]),
     },
-    // ϊν+αῑ → ϊν+αι: 17 words (στυππεϊνος, πτελεϊνος, θρυϊνος, ἐλᾱϊνος), 0 forms wrong.
+    // ργ+ωτ → ργ+οτ: 16 words (πᾰνουργος, ληθᾱργος, σῠνεργος, γεωργος), 0 forms wrong.
     CompiledRule {
-        name: B("law13"),
+        name: B("law9"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -559,7 +290,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ϊν+αῑ")),
+                matcher: Matcher::Literal(B("ργ+ωτ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -573,15 +304,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ϊν+αι"))]),
+        replacement: B(&[ReplacementPart::Literal(B("ργ+οτ"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ϊν+αῑ")]),
+        required: B(&[B("ργ+ωτ")]),
     },
-    // ϊν+οῑ → ϊν+οι: 17 words (στυππεϊνος, πτελεϊνος, θρυϊνος, ἐλᾱϊνος), 0 forms wrong.
+    // υρ+ωτ → υρ+οτ: 16 words (ἀμαυρος, μαυρος, ἐπικουρος, ὀχυρος), 0 forms wrong.
     CompiledRule {
-        name: B("law14"),
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -589,7 +320,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ϊν+οῑ")),
+                matcher: Matcher::Literal(B("υρ+ωτ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -603,45 +334,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ϊν+οι"))]),
+        replacement: B(&[ReplacementPart::Literal(B("υρ+οτ"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ϊν+οῑ")]),
+        required: B(&[B("υρ+ωτ")]),
     },
-    // ϊν+οῡ → ϊν+ου: 17 words (στυππεϊνος, πτελεϊνος, θρυϊνος, ἐλᾱϊνος), 0 forms wrong.
+    // ων+ωτ → ων+οτ: 16 words (κορωνος, ἀντιφωνος, σῠμφωνος, ἀφωνος), 0 forms wrong.
     CompiledRule {
-        name: B("law15"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ϊν+οῡ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ϊν+ου"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ϊν+οῡ")]),
-    },
-    // ων+ωτ → ων+οτ: 15 words (κορωνος, ἀντιφωνος, σῠμφωνος, ἀφωνος), 0 forms wrong.
-    CompiledRule {
-        name: B("law16"),
+        name: B("law11"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -671,7 +372,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // δν+ωτ → δν+οτ: 14 words (μᾰκεδνος, ἀϊδνος, ἀκιδνος, σπῐδνος), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
+        name: B("law12"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -699,39 +400,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("δν+ωτ")]),
     },
-    // ργ+ωτ → ργ+οτ: 7 words (ληθᾱργος, ἀργος, γοργος, μᾰργος), 0 forms wrong.
+    // ωρ+ωτ → ωρ+οτ: 14 words (χλωρος, μωρος, μετεωρος, τᾰλαιπωρος), 0 forms wrong.
     CompiledRule {
-        name: B("law18"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ργ+ωτ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ργ+οτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ργ+ωτ")]),
-    },
-    // ωρ+ωτ → ωρ+οτ: 8 words (μετεωρος, τᾰλαιπωρος, ζειδωρος, πελωρος), 0 forms wrong.
-    CompiledRule {
-        name: B("law19"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -759,9 +430,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ωρ+ωτ")]),
     },
-    // δρ+ωτ → δρ+οτ: 7 words (ἀνᾰνδρος, σῠνεδρος, βᾰθῠδενδρος, τετρᾰεδρος), 0 forms wrong.
+    // δρ+ωτ → δρ+οτ: 12 words (ἀνᾰνδρος, χονδρος, ἁδρος, σῠνεδρος), 0 forms wrong.
     CompiledRule {
-        name: B("law20"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -789,9 +460,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("δρ+ωτ")]),
     },
+    // κρ+ωτ → κρ+οτ: 12 words (μῑκρος, νεκρος, μᾰκρος, ἀκρος), 0 forms wrong.
+    CompiledRule {
+        name: B("law15"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("κρ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("κρ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("κρ+ωτ")]),
+    },
     // ου+δ → ο+δ: 8 words (τετρᾰπους, ὀκτωπους, τρῐπους, ὀκτᾰπους), 0 forms wrong.
     CompiledRule {
-        name: B("law21"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -821,7 +522,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ου+σ → ο+σ: 8 words (τετρᾰπους, ὀκτωπους, τρῐπους, ὀκτᾰπους), 0 forms wrong.
     CompiledRule {
-        name: B("law22"),
+        name: B("law17"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -849,9 +550,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ου+σ")]),
     },
+    // υλ+ωτ → υλ+οτ: 11 words (δουλος, φαυλος, σαυλος, ἀγραυλος), 0 forms wrong.
+    CompiledRule {
+        name: B("law18"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("υλ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("υλ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("υλ+ωτ")]),
+    },
     // λλ+ωτ → λλ+οτ: 10 words (ἀφυλλος, πλατυφυλλος, πεντᾰφῠλλος, κῠλλος), 0 forms wrong.
     CompiledRule {
-        name: B("law23"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -881,7 +612,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ρτ+ωτ → ρτ+οτ: 10 words (ἀκᾰθᾰρτος, ἐπῐχᾰρτος, κῠρτος, κᾰρτος), 0 forms wrong.
     CompiledRule {
-        name: B("law24"),
+        name: B("law20"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -909,9 +640,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ρτ+ωτ")]),
     },
-    // ῠρ+οτ → ῠρ+ωτ: 10 words (γλᾰφῠρος, ψᾰθῠρος, κᾰπῠρος, βδελῠρος), 0 forms wrong.
+    // σσ+ωτ → σσ+οτ: 10 words (ἀβυσσος, λισσος, δῐσσος, περῐσσος), 0 forms wrong.
     CompiledRule {
-        name: B("law25"),
+        name: B("law21"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -919,7 +650,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ῠρ+οτ")),
+                matcher: Matcher::Literal(B("σσ+ωτ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -933,15 +664,15 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ῠρ+ωτ"))]),
+        replacement: B(&[ReplacementPart::Literal(B("σσ+οτ"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("ῠρ+οτ")]),
+        required: B(&[B("σσ+ωτ")]),
     },
     // υτ+ωτ → υτ+οτ: 9 words (καυτος, ἀτῠρᾰννευτος, βουλευτος, ζᾰπλουτος), 0 forms wrong.
     CompiledRule {
-        name: B("law26"),
+        name: B("law22"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -969,9 +700,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("υτ+ωτ")]),
     },
-    // ωπ+ωτ → ωπ+οτ: 7 words (μῑσᾰνθρωπος, εὐρῠμετωπος, ἱπποπροσωπος, ἱερᾱκοπροσωπος), 0 forms wrong.
+    // ωπ+ωτ → ωπ+οτ: 9 words (μῑσᾰνθρωπος, εὐρῠμετωπος, ἱπποπροσωπος, ἱερᾱκοπροσωπος), 0 forms wrong.
     CompiledRule {
-        name: B("law27"),
+        name: B("law23"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1001,7 +732,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ῡμ+ωτ → ῡμ+οτ: 9 words (δῠσθῡμος, μεγαθῡμος, ὑπερθῡμος, προθῡμος), 0 forms wrong.
     CompiledRule {
-        name: B("law28"),
+        name: B("law24"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1031,7 +762,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ημ+ωτ → ημ+οτ: 8 words (πολῠσημος, ἐνδημος, εὐφημος, ἐρημος), 0 forms wrong.
     CompiledRule {
-        name: B("law29"),
+        name: B("law25"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1059,9 +790,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ημ+ωτ")]),
     },
-    // ην+ωτ → ην+οτ: 5 words (σκᾰληνος, ὑψῐκᾰρηνος, περγᾰμηνος, πτηνος), 0 forms wrong.
+    // ην+ωτ → ην+οτ: 8 words (γᾰληνος, σκᾰληνος, ὑψῐκᾰρηνος, περγᾰμηνος), 0 forms wrong.
     CompiledRule {
-        name: B("law30"),
+        name: B("law26"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1089,9 +820,69 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ην+ωτ")]),
     },
+    // θρ+ωτ → θρ+οτ: 8 words (ἐρῠθρος, ἀνᾰρθρος, νωθρος, σαθρος), 0 forms wrong.
+    CompiledRule {
+        name: B("law27"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("θρ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("θρ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("θρ+ωτ")]),
+    },
+    // ιρ+ωτ → ιρ+οτ: 8 words (πᾰρᾰκαιρος, ἀπειρος, ἐμπειρος, ἑξηκονταμοιρος), 0 forms wrong.
+    CompiledRule {
+        name: B("law28"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ιρ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ιρ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ιρ+ωτ")]),
+    },
     // μν+ωτ → μν+οτ: 8 words (γῠμνος, σεμνος, εὐπρῠμνος, ἐρεμνος), 0 forms wrong.
     CompiledRule {
-        name: B("law31"),
+        name: B("law29"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1121,7 +912,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ντ+ωτ → ντ+οτ: 8 words (κοντος, ἀμῐᾰντος, ἀτᾰλᾰντος, ἀχρᾰντος), 0 forms wrong.
     CompiledRule {
-        name: B("law32"),
+        name: B("law30"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1151,7 +942,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // πν+ωτ → πν+οτ: 8 words (κραιπνος, ἀκᾰπνος, τερπνος, στιλπνος), 0 forms wrong.
     CompiledRule {
-        name: B("law33"),
+        name: B("law31"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1179,9 +970,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("πν+ωτ")]),
     },
-    // τρ+ωτ → τρ+οτ: 6 words (ἑξᾰμετρος, τετρᾰμετρος, σῠμμετρος, ἐκκεντρος), 0 forms wrong.
+    // τρ+ωτ → τρ+οτ: 8 words (ἀλῑτρος, ἑξᾰμετρος, οἰκτρος, τετρᾰμετρος), 0 forms wrong.
     CompiledRule {
-        name: B("law34"),
+        name: B("law32"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1209,39 +1000,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("τρ+ωτ")]),
     },
-    // υλ+ωτ → υλ+οτ: 8 words (ἀγραυλος, τραυλος, στρογγῠλοκαυλος, ἀδουλος), 0 forms wrong.
-    CompiledRule {
-        name: B("law35"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("υλ+ωτ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("υλ+οτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("υλ+ωτ")]),
-    },
     // ιμ+ωτ → ιμ+οτ: 7 words (ἀλυδοιμος, ἑτοιμος, σῠνομαιμος, ἐγρεκῠδοιμος), 0 forms wrong.
     CompiledRule {
-        name: B("law36"),
+        name: B("law33"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1269,39 +1030,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ιμ+ωτ")]),
     },
-    // ιρ+ωτ → ιρ+οτ: 7 words (πᾰρᾰκαιρος, ἀπειρος, ἐμπειρος, ἑξηκονταμοιρος), 0 forms wrong.
-    CompiledRule {
-        name: B("law37"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("ιρ+ωτ")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("ιρ+οτ"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("ιρ+ωτ")]),
-    },
     // γγ+ωτ → γγ+οτ: 6 words (στρᾰγγος, τρῐφθογγος, λῐγῠφθογγος, γλῠκῠφθογγος), 0 forms wrong.
     CompiledRule {
-        name: B("law38"),
+        name: B("law34"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1329,9 +1060,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("γγ+ωτ")]),
     },
+    // πρ+ωτ → πρ+οτ: 6 words (λεπρος, λᾰμπρος, σᾰπρος, λῡπρος), 0 forms wrong.
+    CompiledRule {
+        name: B("law35"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("πρ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("πρ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("πρ+ωτ")]),
+    },
     // ρφ+ωτ → ρφ+οτ: 6 words (ἀμορφος, τετρᾰμορφος, δῐμορφος, εὐμορφος), 0 forms wrong.
     CompiledRule {
-        name: B("law39"),
+        name: B("law36"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1358,6 +1119,96 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("ρφ+ωτ")]),
+    },
+    // υκ+ωτ → υκ+οτ: 6 words (λευκος, γλαυκος, ξᾰνθολευκος, βαυκος), 0 forms wrong.
+    CompiledRule {
+        name: B("law37"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("υκ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("υκ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("υκ+ωτ")]),
+    },
+    // ωγ+ωτ → ωγ+οτ: 6 words (ἀγωγος, προσᾰγωγος, ὁπλῑτᾰγωγος, σῠνᾰγωγος), 0 forms wrong.
+    CompiledRule {
+        name: B("law38"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ωγ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ωγ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ωγ+ωτ")]),
+    },
+    // ῡσ+ωτ → ῡσ+οτ: 6 words (ῥῡσος, πολῠχρῡσος, ψευδοχρῡσος, ὁλοχρῡσος), 0 forms wrong.
+    CompiledRule {
+        name: B("law39"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ῡσ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ῡσ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ῡσ+ωτ")]),
     },
     // ιτ+ωτ → ιτ+οτ: 5 words (κλειτος, ναυσῐκλειτος, ἁβροδῐαιτος, ἰσοδῐαιτος), 0 forms wrong.
     CompiledRule {
@@ -1449,7 +1300,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("μβ+ωτ")]),
     },
-    // υκ+ωτ → υκ+οτ: 5 words (λευκος, γλαυκος, ξᾰνθολευκος, βαυκος), 0 forms wrong.
+    // νδ+ωτ → νδ+οτ: 5 words (ὑποσπονδος, μῠνδος, χᾰνδος, ἀσπονδος), 0 forms wrong.
     CompiledRule {
         name: B("law43"),
         left: Pattern {
@@ -1459,7 +1310,7 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         target: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("υκ+ωτ")),
+                matcher: Matcher::Literal(B("νδ+ωτ")),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -1473,11 +1324,11 @@ const RULES: &[CompiledRule<'static>] = &[
         },
         excluded_left: None,
         excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("υκ+οτ"))]),
+        replacement: B(&[ReplacementPart::Literal(B("νδ+οτ"))]),
         capture_count: 0,
         direction: Direction::LeftToRight,
         application: Application::All,
-        required: B(&[B("υκ+ωτ")]),
+        required: B(&[B("νδ+ωτ")]),
     },
     // χν+ωτ → χν+οτ: 5 words (σῠχνος, ἰσχνος, κᾰκοτεχνος, ἀτεχνος), 0 forms wrong.
     CompiledRule {
@@ -1509,9 +1360,39 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("χν+ωτ")]),
     },
-    // ᾱτ+ωτ → ᾱτ+οτ: 5 words (ἀορᾱτος, ἀκρᾱτος, δημῐοπρᾱτος, ἀρᾱτος), 0 forms wrong.
+    // ωλ+ωτ → ωλ+οτ: 5 words (ἁμαρτωλος, χωλος, αἰολοπωλος, ἑωλος), 0 forms wrong.
     CompiledRule {
         name: B("law45"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("ωλ+ωτ")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("ωλ+οτ"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("ωλ+ωτ")]),
+    },
+    // ᾱτ+ωτ → ᾱτ+οτ: 5 words (ἀορᾱτος, ἀκρᾱτος, δημῐοπρᾱτος, ἀρᾱτος), 0 forms wrong.
+    CompiledRule {
+        name: B("law46"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1541,7 +1422,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ῡλ+ωτ → ῡλ+οτ: 5 words (ἀσῡλος, ἀλλοφῡλος, κᾰκοχῡλος, προστῡλος), 0 forms wrong.
     CompiledRule {
-        name: B("law46"),
+        name: B("law47"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -1571,7 +1452,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ῡχ+ωτ → ῡχ+οτ: 5 words (εὐψῡχος, μῑκροψῡχος, μεγᾰλοψῡχος, ἐλευθεροψῡχος), 0 forms wrong.
     CompiledRule {
-        name: B("law47"),
+        name: B("law48"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,

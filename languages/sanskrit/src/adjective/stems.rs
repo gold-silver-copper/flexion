@@ -91,7 +91,7 @@ pub(super) static TABLES: [EndingTable<'static>; 3] = [
             "~जः\t~ग\u{94d}भ\u{94d}याम\u{94d}\t~ग\u{94d}भ\u{94d}यः\t",
             "~ग\u{94d}भ\u{94d}याम\u{94d}\t~ग\u{94d}भ\u{94d}यः\t",
             "~जः\t~जोः\t",
-            "~जि\t~जोः\t~क\u{94d}ष\u{941}\t",
+            "~जC\t~जोः\t~क\u{94d}ष\u{941}\t",
             "~क\u{94d}ष\u{941}\t",
             "~क\u{94d}\t~जौ\t~जः\t",
             "~क\u{94d}\t~ञ\u{94d}जि\t",
@@ -99,10 +99,10 @@ pub(super) static TABLES: [EndingTable<'static>; 3] = [
             "\t",
         )),
     },
-    // adjective_f like मूढ: 273 words.
+    // adjective_f like मूढ: 235 words.
     EndingTable {
         name: Cow::Borrowed("म\u{942}ढ"),
-        words: 273,
+        words: 235,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ी\t~\u{94d}यौ\t~\u{94d}यः\t",
@@ -112,7 +112,7 @@ pub(super) static TABLES: [EndingTable<'static>; 3] = [
             "~\u{94d}याः\t~ीभ\u{94d}याम\u{94d}\t~ीभ\u{94d}यः\t",
             "~\u{94d}याः\t\t~ीAाम\u{94d}\t",
             "~\u{94d}याम\u{94d}\t~\u{94d}योः\t~ीष\u{941}\t",
-            "~ि\t~\u{94d}यौ\t~\u{94d}यः\t",
+            "~C\t~\u{94d}यौ\t~\u{94d}यः\t",
         )),
     },
     // adjective_n like भाविन्: 196 words.

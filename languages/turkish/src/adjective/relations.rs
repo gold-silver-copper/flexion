@@ -43,7 +43,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
     } listed {}, true, None),
     // ACC_SG, from NOM_SG.
     relation!(ACC_SG, [NOM_SG], [("~", "~I"), ("~", "~yI"), ("~k", "~ğI")], rules {
-        "" => [0 28, 1 24, 2 6],
+        "" => [0 27, 1 24, 2 6],
         "i" => [1 8],
         "k" => [2 6, 0 1],
         "l" => [0 11],
@@ -166,10 +166,10 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
     }, true, None),
     // ADJECTIVE_POSSESSIVE_NOM_ONE_1PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1SG.
     relation!(ADJECTIVE_POSSESSIVE_NOM_ONE_1PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1SG], [("~", "~Iz")], rules {
-        "" => [0 48],
+        "" => [0 47],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_NOM_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_NOM_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIz"), ("~muz", "~nIz"), ("~müz", "~nIz"), ("~mız", "~nIz")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_NOM_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIz"), ("~muz", "~nuz"), ("~müz", "~nIz"), ("~mız", "~nIz")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -229,7 +229,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 48],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_ACC_ONE_2SG, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_2SG, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nI"), ("~muz", "~nI"), ("~müz", "~nI"), ("~mız", "~nI")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_2SG, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nI"), ("~muz", "~nu"), ("~müz", "~nI"), ("~mız", "~nI")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -238,27 +238,24 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_ACC_ONE_3SG, from ACC_SG.
     relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_3SG, [ACC_SG], [("~", "~nI"), ("~yi", "~sInI"), ("~yu", "~sInI"), ("~yü", "~sInI"), ("~yı", "~sInI")], rules {
-        "" => [0 26, 4 10, 1 7, 2 3, 3 2],
+        "" => [0 25, 4 10, 1 7, 2 3, 3 2],
         "i" => [0 12, 1 7],
         "yi" => [1 7],
-        "u" => [2 3, 0 2],
+        "u" => [2 3, 0 1],
         "ü" => [3 2, 0 1],
         "ı" => [0 11, 4 10],
         "yı" => [4 10, 0 1],
     } listed {
-        "apocuyu" => 2,
-        "finoyu" => 2,
         "hüzünlüyü" => 3,
         "kurmayı" => 0,
-        "maçoyu" => 2,
         "yüzüncüyü" => 3,
     }, true, None),
     // ADJECTIVE_POSSESSIVE_ACC_ONE_1PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
     relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_1PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~", "~I")], rules {
-        "" => [0 48],
+        "" => [0 47],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_ACC_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzI"), ("~muz", "~nIzI"), ("~müz", "~nIzI"), ("~mız", "~nIzI")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzI"), ("~muz", "~nuzu"), ("~müz", "~nIzI"), ("~mız", "~nIzI")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -333,7 +330,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 48],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_DAT_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_DAT_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzE"), ("~muz", "~nIzE"), ("~müz", "~nIzE"), ("~mız", "~nIzE")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_DAT_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzE"), ("~muz", "~nuzE"), ("~müz", "~nIzE"), ("~mız", "~nIzE")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -410,7 +407,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 48],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_LOC_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_LOC_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzdE"), ("~muz", "~nIzdE"), ("~müz", "~nIzdE"), ("~mız", "~nIzdE")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_LOC_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzdE"), ("~muz", "~nuzdE"), ("~müz", "~nIzdE"), ("~mız", "~nIzdE")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -487,7 +484,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 48],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_ABL_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_ABL_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzdEn"), ("~muz", "~nIzdEn"), ("~müz", "~nIzdEn"), ("~mız", "~nIzdEn")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_ABL_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzdEn"), ("~muz", "~nuzdEn"), ("~müz", "~nIzdEn"), ("~mız", "~nIzdEn")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -542,7 +539,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 48],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_GEN_ONE_2SG, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_GEN_ONE_2SG, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIn"), ("~muz", "~nIn"), ("~müz", "~nIn"), ("~mız", "~nIn")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_GEN_ONE_2SG, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIn"), ("~muz", "~nun"), ("~müz", "~nIn"), ("~mız", "~nIn")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],
@@ -555,10 +552,10 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_GEN_ONE_1PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
     relation!(ADJECTIVE_POSSESSIVE_GEN_ONE_1PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~", "~In")], rules {
-        "" => [0 48],
+        "" => [0 47],
     } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_GEN_ONE_2PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
-    relation!(ADJECTIVE_POSSESSIVE_GEN_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzIn"), ("~muz", "~nIzIn"), ("~müz", "~nIzIn"), ("~mız", "~nIzIn")], rules {
+    relation!(ADJECTIVE_POSSESSIVE_GEN_ONE_2PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~miz", "~nIzIn"), ("~muz", "~nuzun"), ("~müz", "~nIzIn"), ("~mız", "~nIzIn")], rules {
         "" => [3 21, 0 19, 1 5, 2 3],
         "iz" => [0 19],
         "uz" => [1 5],

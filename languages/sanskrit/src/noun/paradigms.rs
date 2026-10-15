@@ -77,6 +77,7 @@ macro_rules! declension {
                 $(flexion::cell!($s1),)? "\t",
                 $(flexion::cell!($s2),)? "\t",
             )),
+            affix: None,
         }
     };
 }
@@ -126,7 +127,7 @@ pub enum Declension {
     संधि,
     /// Like `केतु`: 128 words.
     केतु,
-    /// Like `अप्सस्`: 103 words.
+    /// Like `अप्सस्`: 104 words.
     अपसस,
     /// Like `दातृ`: 56 words.
     दातृ,
@@ -152,12 +153,12 @@ pub enum Declension {
     जयोतिस,
     /// Like `धी`: 10 words.
     धी,
+    /// Like `चन्द्रमस्`: 10 words.
+    चनदरमस,
     /// Like `त्वच्`: 9 words.
     तवच,
     /// Like `स्पृध्`: 8 words.
     सपृध,
-    /// Like `चन्द्रमस्`: 8 words.
-    चनदरमस,
     /// Like `आत्मन्`: 8 words.
     आतमन,
     /// Like `द्रुह्`: 8 words.
@@ -204,8 +205,6 @@ pub enum Declension {
     लकषमी,
     /// Like `विराज्`: 3 words.
     विराज,
-    /// Like `उषस्`: 3 words.
-    उषस,
     /// Like `आक्रमण`: 1 words.
     आकरमण,
     /// Like `आस्थान`: 1 words.
@@ -228,7 +227,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 56] = [
+    pub const ALL: [Declension; 55] = [
         Declension::योग,
         Declension::साधन,
         Declension::कला,
@@ -249,9 +248,9 @@ impl Declension {
         Declension::युज,
         Declension::जयोतिस,
         Declension::धी,
+        Declension::चनदरमस,
         Declension::तवच,
         Declension::सपृध,
-        Declension::चनदरमस,
         Declension::आतमन,
         Declension::दरुह,
         Declension::गोपा,
@@ -275,7 +274,6 @@ impl Declension {
         Declension::मधुलिह,
         Declension::लकषमी,
         Declension::विराज,
-        Declension::उषस,
         Declension::आकरमण,
         Declension::आसथान,
         Declension::कणठय,
@@ -302,7 +300,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     // योग: 2,089 words (क, ङ, ज, ञ, ट, ण).
     declension!("योग", 2089, "~", [gender: Masculine];
     nom: "~ः", "~ौ", "~ाः";
@@ -372,8 +370,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     loc: "~ौ", _, "~ुषु";
     voc: "~ो", _, _;
     ),
-    // अपसस: 103 words (मनस्, शिरस्, अयस्, आस्, पसस्, नभस्).
-    declension!("अप्सस्", 103, "~स्", [gender: Neuter];
+    // अपसस: 104 words (मनस्, शिरस्, अयस्, आस्, पसस्, नभस्).
+    declension!("अप्सस्", 104, "~स्", [gender: Neuter];
     nom: "~ः", "~सी", "~ांसि";
     acc: "~ः", _, "~ांसि";
     ins: "~सा", "~ोभ्याम्", "~ोभिः";
@@ -505,6 +503,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     loc: "~ियि", _, "~ीषु";
     voc: "~ीः", _, _;
     ),
+    // चनदरमस: 10 words (ऊधस्, उषस्, श्रेयस्, मास्, अप्सरस्, पुंस्). Like अपसस, except in 5 cells: nom sg, nom du, nom pl, acc sg, acc pl.
+    declension!("चन्द्रमस्", 10, "~स्", like अपसस;
+    nom: "~ाः", "~सौ", "~सः";
+    acc: "~सम्", _, "~सः";
+    ),
     // तवच: 9 words (त्वच्, ऋच्, रुच्, शुच्, मुच्, स्फिच्). Like युज, except in 11 cells: nom du, nom pl, acc sg, acc pl, ins sg, dat sg, ….
     declension!("त्वच्", 9, "~च्", like युज;
     nom: _, "~चौ", "~चः";
@@ -524,11 +527,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     abl: "~धः", _, _;
     gen_: "~धः", "~धोः", "~धाम्";
     loc: "~धि", _, _;
-    ),
-    // चनदरमस: 8 words (ऊधस्, श्रेयस्, अप्सरस्, पुंस्, चन्द्रमस्, विद्वांस्). Like अपसस, except in 5 cells: nom sg, nom du, nom pl, acc sg, acc pl.
-    declension!("चन्द्रमस्", 8, "~स्", like अपसस;
-    nom: "~ाः", "~सौ", "~सः";
-    acc: "~सम्", _, "~सः";
     ),
     // आतमन: 8 words (अथर्वन्, पर्वन्, वन्, धन्वन्, अध्वन्, भुर्वन्). Like मूरधन, except in 8 cells: acc pl, ins sg, dat sg, abl sg, gen_ sg, gen_ du, ….
     declension!("आत्मन्", 8, "~न्", like मूरधन;
@@ -719,13 +717,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     loc: _, _, "~ट्सु";
     voc: "~ट्", _, _;
     ),
-    // उषस: 3 words (उषस्, भास्, मास्). Like अपसस, except in 5 cells: nom pl, acc pl, ins du, ins pl, dat pl.
-    declension!("उषस्", 3, "~स्", like अपसस;
-    nom: _, _, "~ंसि";
-    acc: _, _, "~ंसि";
-    ins: _, "~द्भ्याम्", "~द्भिः";
-    dat: _, _, "~द्भ्यः";
-    ),
     // आकरमण: 1 words (आक्रमण).
     declension!("आक्रमण", 1, "आ~";
     nom: "अति~म्", "अति~े", "अति~ानि";
@@ -754,7 +745,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 56] = [
     acc: "~ांसम्", _, _;
     voc: "~न्", _, _;
     ),
-    // परबनध: 1 words (प्रबन्ध). Like योग, except in 0 cells: .
+    // परबनध: 1 words (प्रबन्ध). Like योग.
     declension!("प्रबन्ध", 1, "प्र~", like योग;
     ),
     // असंखयेय: 1 words (असंख्येय).

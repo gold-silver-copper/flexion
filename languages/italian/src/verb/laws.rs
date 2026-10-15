@@ -10,7 +10,7 @@
 use flexion::sound_law::compiled::*;
 
 const RULES: &[CompiledRule<'static>] = &[
-    // i+i → i+: 1,613 words (odiare, mangiare, studiare, lasciare), 192 forms wrong.
+    // i+i → i+: 1,614 words (odiare, mangiare, studiare, lasciare), 288 forms wrong.
     CompiledRule {
         name: B("law0"),
         left: Pattern {
@@ -190,7 +190,7 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("g+in")]),
     },
-    // [d|g|v|r|m|l|t|n]+gg → +: 10 words (valere, contravvalere, disvalere, equivalere), 0 forms wrong.
+    // [d|g|v|r|m|t|l|n]+gg → +: 14 words (valere, vivere, sfriggere, contravvalere), 0 forms wrong.
     CompiledRule {
         name: B("law6"),
         left: Pattern {
@@ -207,8 +207,8 @@ const RULES: &[CompiledRule<'static>] = &[
                         B("v"),
                         B("r"),
                         B("m"),
-                        B("l"),
                         B("t"),
+                        B("l"),
                         B("n"),
                     ])),
                     quantifier: Quantifier::One,
@@ -239,9 +239,69 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("+gg")]),
     },
-    // eg+i → eg+hi: 55 words (pregare, piegare, negare, segare), 0 forms wrong.
+    // g+r → g+er: 14 words (tangere, convergere, contingere, mingere), 0 forms wrong.
     CompiledRule {
         name: B("law7"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("g+r")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("g+er"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("g+r")]),
+    },
+    // g+d → +s: 7 words (convergere, mingere, fungere, defungere), 0 forms wrong.
+    CompiledRule {
+        name: B("law8"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("g+d")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("+s"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("g+d")]),
+    },
+    // eg+i → eg+hi: 55 words (pregare, piegare, negare, segare), 0 forms wrong.
+    CompiledRule {
+        name: B("law9"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -269,9 +329,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("eg+i")]),
     },
-    // g+s → +ss: 11 words (affiggere, crocefiggere, crocifiggere, crucifiggere), 0 forms wrong.
+    // g+s → +ss: 10 words (affiggere, crocefiggere, crocifiggere, crucifiggere), 0 forms wrong.
     CompiledRule {
-        name: B("law8"),
+        name: B("law10"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -301,7 +361,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // og+e → og+he: 40 words (rogare, interrogare, affogare, derogare), 12 forms wrong.
     CompiledRule {
-        name: B("law9"),
+        name: B("law11"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -331,7 +391,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // og+i → og+hi: 40 words (rogare, interrogare, affogare, derogare), 0 forms wrong.
     CompiledRule {
-        name: B("law10"),
+        name: B("law12"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -361,7 +421,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ec+e → ec+he after a vowel earlier in the stem: 21 words (defecare, deprecare, arrecare, accecare), 12 forms wrong.
     CompiledRule {
-        name: B("law11"),
+        name: B("law13"),
         left: Pattern {
             atoms: B(&[
                 Atom {
@@ -402,7 +462,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ec+i → ec+hi: 26 words (defecare, deprecare, arrecare, accecare), 1 forms wrong.
     CompiledRule {
-        name: B("law12"),
+        name: B("law14"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -430,9 +490,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ec+i")]),
     },
-    // [l|n]+ss → +s: 7 words (valere, contravvalere, disvalere, equivalere), 0 forms wrong.
+    // [l|n]+ss → +s: 8 words (valere, volvere, contravvalere, disvalere), 0 forms wrong.
     CompiledRule {
-        name: B("law13"),
+        name: B("law15"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -472,7 +532,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // on+s → +us: 20 words (fondere, confondere, circonfondere, diffondere), 0 forms wrong.
     CompiledRule {
-        name: B("law14"),
+        name: B("law16"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -502,7 +562,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // ug+i → ug+hi: 19 words (asciugare, coniugare, coniugarsi, asciugarsi), 0 forms wrong.
     CompiledRule {
-        name: B("law15"),
+        name: B("law17"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -532,7 +592,7 @@ const RULES: &[CompiledRule<'static>] = &[
     },
     // uo+s → +os: 9 words (muovere, percuotere, scuotere, commuovere), 0 forms wrong.
     CompiledRule {
-        name: B("law16"),
+        name: B("law18"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -560,39 +620,9 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("uo+s")]),
     },
-    // al+r → a+r: 6 words (valere, contravvalere, disvalere, equivalere), 0 forms wrong.
+    // gl+en → gl+ien: 6 words (inorgoglire, inorgoglirsi, incanaglirsi, orgoglire), 0 forms wrong.
     CompiledRule {
-        name: B("law17"),
-        left: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        target: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Literal(B("al+r")),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        right: Pattern {
-            atoms: B(&[]),
-            anchored_at_start: false,
-            anchored_at_end: false,
-        },
-        excluded_left: None,
-        excluded_right: None,
-        replacement: B(&[ReplacementPart::Literal(B("a+r"))]),
-        capture_count: 0,
-        direction: Direction::LeftToRight,
-        application: Application::All,
-        required: B(&[B("al+r")]),
-    },
-    // gl+en → gl+ien: 5 words (inorgoglire, inorgoglirsi, incanaglirsi, orgoglire), 0 forms wrong.
-    CompiledRule {
-        name: B("law18"),
+        name: B("law19"),
         left: Pattern {
             atoms: B(&[]),
             anchored_at_start: false,
@@ -619,6 +649,36 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("gl+en")]),
+    },
+    // al+r → a+r: 6 words (valere, contravvalere, disvalere, equivalere), 0 forms wrong.
+    CompiledRule {
+        name: B("law20"),
+        left: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("al+r")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("a+r"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("al+r")]),
     },
 ];
 

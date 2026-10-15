@@ -21,7 +21,7 @@ use flexion::Paradigm;
 /// no other, derived):
 /// `adverb` (pos, comp, sup)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adverb: $s0:tt;)?
      $(adverb: $c0:tt, $c1:tt, $c2:tt;)?
     ) => {
@@ -40,6 +40,7 @@ macro_rules! declension {
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -62,6 +63,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -107,9 +126,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     declension!("handsomely", 12455, "~";
     adverb: "~", "more ~", "most ~";
     ),
-    // Sharply: 87 words (early, silly, quickly, slowly, goodly, easy).
-    declension!("sharply", 87, "~ˇ";
-    adverb: "~ˇ", "~erˇ", "~estˇ";
+    // Sharply: 87 words (early, silly, quickly, slowly, goodly, easy). Like Low with `ˇ` after each pattern.
+    declension!("sharply", 87, "~ˇ", like Low with "ˇ";
     ),
     // Down: 41 words (north, east, south, west, northeast, northwest).
     declension!("down", 41, "~";

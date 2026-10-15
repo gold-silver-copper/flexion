@@ -30,87 +30,91 @@ trainer or the runtime: [English](languages/english), [Russian](languages/russia
 ## How well it does
 
 Held-out words: a tenth of each part of speech (by a hash of the word) that the grammar
-was not learned from, asked for every form the dictionary lists. *Top-1 from the
-headword*: the word typed as the dictionary's headword (Latin `rosa`, Greek `λύω`, no
-vowel length), with a 95% margin. *Lemma in full*: typed with every mark the tables
+was not learned from, asked for every form the dictionary lists; the lemma's own form only
+where it isn't what was typed (Latin `rex` asks for `rēx`). *Top-1 from the headword*: the
+word typed as the dictionary's headword (Latin `rosa`, Greek `λύω`, no vowel length), with
+its 95% interval (resampling words). *Lemma in full*: typed with every mark the tables
 write. *Principal parts given*: the dictionary's principal parts given too. *Features
 given*: the word's gender (Russian: and animacy; verbs: aspect) given, as `.gender(…)`
-gives it. *Seen* and *unseen cells*: the cells some training word of the word's paradigm
-has, and the others (told from other cells), with their number of forms. *Floor*: the
-exact non-neural baseline of the CoNLL–SIGMORPHON 2017 shared task. *Baseline*: the
-version of these crates before PR #10 (a model, not a grammar), from the bare lemma.
-*Attested*: the shipped grammar on the dictionary's own words.
+gives it. *Floor*: the exact non-neural baseline of the CoNLL–SIGMORPHON 2017 shared task
+(letters only). *Against the floor*: the grammar's letters right less the floor's, word
+by word on the same forms, with its 95% interval. *On a training word / new root*: top-1
+of the held-out words that are a training word with a prefix or a compound's front, and of
+the rest. *Any listed form*: top-1 where any form the dictionary lists in the cell counts.
+*Homograph ceiling*: the most any grammar could get right (words typed alike get one
+answer per cell). *Lemma spelling*: top-1 on the lemma's form where it isn't what was
+typed. *Attested*: the shipped grammar on the dictionary's own words. This tenth was looked
+at while the trainer was developed, up to PR #15; since PR #16 changes are judged on
+another (`cargo xtask try` scores tenth 2, `--final` this one).
 
-| language | part of speech | top-1 from the headword | lemma in full | principal parts given | features given | seen cells | unseen cells | floor | baseline | attested | calibration error |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| english | noun | **98.58%** ± 0.2 | 98.58% | 100.00% |  | 98.58% (47466) |  | 98.39% | 97.14% | 100.00% | 0.001 |
-| english | verb | **97.74%** ± 0.5 | 97.74% | 99.69% |  | 97.74% (20745) |  | 98.24% | 97.91% | 100.00% | 0.005 |
-| english | adjective | **96.90%** ± 0.4 | 96.90% | 100.00% |  | 96.90% (18715) |  | 95.02% | 96.69% | 100.00% | 0.003 |
-| english | adverb | **99.34%** ± 0.5 | 99.34% | 100.00% |  | 99.34% (3621) |  | 98.90% |  | 100.00% | 0.002 |
-| russian | noun | **95.10%** ± 0.8 | 95.10% | 96.20% | 97.53% | 95.10% (30193) | 100.00% (8) | 94.72% | 84.48% | 100.00% | 0.006 |
-| russian | adjective | **99.75%** ± 0.2 | 99.75% |  |  | 99.76% (171213) | 0.00% (12) | 99.78% | 96.60% | 100.00% | 0.003 |
-| russian | verb | **96.02%** ± 1.1 | 96.02% | 98.95% | 95.75% | 96.04% (21821) | 83.78% (37) | 96.17% | 92.37% | 100.00% | 0.005 |
-| latin | noun | **66.36%** ± 2.3 | 93.37% | 98.73% | 67.17% | 66.38% (18401) | 0.00% (6) | 59.45% | 68.91% | 100.00% | 0.033 |
-| latin | adjective | **82.53%** ± 1.4 | 99.28% | 99.51% |  | 82.53% (102281) | 0.00% (1) | 71.85% | 87.22% | 100.00% | 0.025 |
-| latin | verb | **70.47%** ± 3.6 | 85.25% | 98.56% |  | 70.44% (60850) | 87.60% (121) | 65.34% | 75.18% | 100.00% | 0.034 |
-| ancient-greek | noun | **67.48%** ± 3.2 | 85.52% | 94.06% | 68.19% | 67.48% (11700) |  | 49.22% | 57.82% | 99.92% | 0.061 |
-| ancient-greek | adjective | **72.28%** ± 4.0 | 86.14% | 94.63% |  | 72.30% (22426) | 40.00% (10) | 50.81% | 63.66% | 99.94% | 0.059 |
-| ancient-greek | verb | **66.60%** ± 5.8 | 75.74% | 80.78% |  | 66.96% (63800) | 10.40% (404) | 46.07% | 54.26% | 100.00% | 0.082 |
-| sanskrit | noun | **92.10%** ± 2.2 | 92.10% |  | 97.30% | 92.10% (13801) |  | 91.70% | 93.55% | 100.00% | 0.015 |
-| sanskrit | adjective | **92.00%** ± 3.9 | 92.00% |  |  | 92.06% (13447) | 11.11% (9) | 89.95% | 91.21% | 100.00% | 0.022 |
-| sanskrit | verb | **90.05%** ± 6.3 | 90.05% | 90.13% |  | 90.45% (6953) | 80.28% (284) | 90.01% | 90.13% | 100.00% | 0.054 |
-| polish | noun | **93.90%** ± 0.7 | 93.90% | 96.10% | 96.48% | 93.91% (48466) | 62.50% (16) | 93.78% |  | 100.00% | 0.004 |
-| polish | adjective | **99.92%** ± 0.1 | 99.92% |  |  | 99.92% (83790) |  | 99.99% |  | 100.00% | 0.000 |
-| polish | verb | **96.71%** ± 1.0 | 96.71% | 97.92% | 96.76% | 96.72% (55046) | 94.70% (151) | 96.84% |  | 100.00% | 0.009 |
-| german | noun | **93.94%** ± 0.6 | 93.94% | 98.53% | 93.96% | 93.94% (46353) |  | 94.71% |  | 100.00% | 0.004 |
-| german | adjective | **98.77%** ± 0.6 | 98.77% | 99.86% |  | 98.77% (126633) |  | 99.01% |  | 100.00% | 0.003 |
-| german | verb | **95.18%** ± 1.3 | 95.18% | 95.88% | 95.20% | 95.18% (51549) | 100.00% (50) | 73.53% |  | 100.00% | 0.013 |
-| spanish | noun | **99.31%** ± 0.2 | 99.31% |  | 99.31% | 99.31% (12164) |  | 99.31% |  | 100.00% | 0.002 |
-| spanish | adjective | **98.66%** ± 0.5 | 98.66% | 99.83% |  | 98.66% (9619) |  | 98.93% |  | 100.00% | 0.003 |
-| spanish | verb | **98.91%** ± 0.7 | 98.91% | 99.70% |  | 98.91% (67865) |  | 99.20% |  | 100.00% | 0.003 |
-| french | noun | **98.78%** ± 0.3 | 98.78% |  | 98.78% | 98.78% (8636) |  | 98.51% |  | 100.00% | 0.003 |
-| french | adjective | **98.12%** ± 0.6 | 98.12% | 99.97% |  | 98.15% (7354) | 0.00% (2) | 98.29% |  | 100.00% | 0.006 |
-| french | verb | **98.73%** ± 0.8 | 98.73% | 99.49% |  | 98.73% (35550) |  | 99.30% |  | 100.00% | 0.004 |
-| french | participle | **99.88%** ± 0.3 | 99.88% |  |  | 99.88% (2508) |  | 99.64% |  | 100.00% | 0.004 |
-| italian | noun | **97.91%** ± 0.4 | 97.91% |  | 98.19% | 97.91% (12784) |  | 97.54% |  | 100.00% | 0.003 |
-| italian | adjective | **98.84%** ± 0.4 | 98.84% | 99.87% |  | 98.84% (10530) | 100.00% (5) | 98.84% |  | 100.00% | 0.007 |
-| italian | verb | **97.61%** ± 0.8 | 97.61% | 98.60% | 99.07% | 97.61% (71585) | 100.00% (1) | 99.24% |  | 100.00% | 0.022 |
-| italian | participle | **100.00%** ± 0.0 | 100.00% |  |  | 100.00% (3284) |  | 100.00% |  | 100.00% | 0.000 |
-| finnish | noun | **97.75%** ± 0.3 | 97.75% |  |  | 97.76% (1912316) | 57.88% (292) | 98.30% |  | 99.99% | 0.008 |
-| finnish | adjective | **97.64%** ± 0.7 | 97.64% |  |  | 97.64% (46113) | 33.33% (3) | 97.51% |  | 100.00% | 0.010 |
-| turkish | noun | **96.56%** ± 1.1 | 96.56% |  |  | 96.56% (72174) |  | 93.37% |  | 100.00% | 0.012 |
+| language | part of speech | top-1 from the headword | lemma in full | principal parts given | features given | floor | against the floor | on a training word / new root | any listed form | homograph ceiling | lemma spelling | attested | calibration error |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| english | noun | **97.17%** (97.0–97.4) | 97.17% |  |  | 96.77% | +0.40 (+0.24…+0.56) | 98.68% / 95.73% | 97.97% | 99.88% | 0.00% (1) | 100.00% | 0.003 |
+| english | verb | **97.17%** (96.8–97.6) | 97.17% | 99.54% |  | 97.79% | -0.62 (-0.93…-0.33) | 98.92% / 96.23% | 97.61% | 99.86% |  | 100.00% | 0.006 |
+| english | adjective | **95.35%** (94.8–95.9) | 95.35% |  |  | 92.53% | +2.82 (+2.39…+3.25) | 99.05% / 93.61% | 96.30% | 99.94% |  | 100.00% | 0.005 |
+| english | adverb | **99.01%** (98.4–99.5) | 99.01% |  |  | 98.34% | +0.66 (+0.25…+1.16) | 100.00% / 98.67% | 99.59% | 100.00% |  | 100.00% | 0.005 |
+| russian | noun | **94.64%** (94.0–95.2) | 94.64% | 95.81% | 97.30% | 94.24% | +0.41 (-0.06…+0.91) | 97.06% / 93.82% | 94.99% | 99.82% |  | 100.00% | 0.007 |
+| russian | adjective | **99.75%** (99.6–99.9) | 99.75% |  |  | 99.77% | -0.02 (-0.14…+0.08) | 99.71% / 99.77% | 99.75% | 99.94% |  | 100.00% | 0.003 |
+| russian | verb | **95.76%** (95.0–96.4) | 95.76% | 98.88% | 95.49% | 95.92% | -0.16 (-0.70…+0.39) | 95.84% / 95.72% | 95.89% | 99.49% |  | 100.00% | 0.006 |
+| latin | noun | **68.69%** (66.4–70.9) | 92.93% | 98.69% | 69.57% | 58.82% | +9.87 (+7.17…+12.54) | 75.91% / 66.47% | 68.74% | 99.46% | 68.09% (984) | 100.00% | 0.019 |
+| latin | adjective | **84.05%** (82.8–85.3) | 99.23% | 99.47% |  | 71.72% | +12.32 (+10.56…+14.12) | 87.26% / 82.03% | 84.14% | 99.60% | 82.98% (2151) | 99.91% | 0.023 |
+| latin | verb | **77.28%** (74.2–80.5) | 85.66% | 98.55% |  | 65.32% | +11.96 (+7.95…+16.09) | 86.26% / 73.46% | 77.42% | 98.45% | 88.85% (592) | 100.00% | 0.044 |
+| ancient-greek | noun | **71.16%** (68.2–74.1) | 88.25% | 95.20% | 72.06% | 51.16% | +23.86 (+19.97…+27.52) | 77.49% / 69.68% | 71.18% | 99.55% | 75.47% (587) | 99.73% | 0.055 |
+| ancient-greek | adjective | **77.17%** (73.7–80.4) | 90.10% | 97.49% |  | 52.29% | +25.98 (+21.47…+30.48) | 80.30% / 76.57% | 77.37% | 99.17% | 82.84% (303) | 99.93% | 0.044 |
+| ancient-greek | verb | **65.28%** (60.5–70.1) | 76.10% | 80.89% |  | 46.03% | +20.69 (+14.70…+26.51) | 73.19% / 60.67% | 65.52% | 99.90% | 77.50% (160) | 100.00% | 0.071 |
+| sanskrit | noun | **92.10%** (90.8–93.4) | 92.10% |  | 97.30% | 91.70% | +0.40 (-0.73…+1.48) | 94.30% / 92.03% | 92.65% | 97.83% |  | 100.00% | 0.015 |
+| sanskrit | adjective | **91.91%** (89.6–94.0) | 91.91% |  |  | 89.95% | +1.96 (+0.32…+3.76) | 83.33% / 92.30% | 91.94% | 100.00% |  | 100.00% | 0.020 |
+| sanskrit | verb | **89.97%** (85.4–94.1) | 89.97% | 90.05% |  | 89.93% | +0.04 (-2.21…+2.14) | 95.65% / 89.43% | 90.48% | 100.00% | 100.00% (2) | 100.00% | 0.060 |
+| polish | noun | **93.37%** (92.9–93.9) | 93.37% | 95.71% | 96.17% | 93.23% | +0.13 (-0.24…+0.47) | 95.06% / 93.04% | 93.65% | 99.23% | 0.00% (5) | 100.00% | 0.004 |
+| polish | adjective | **99.92%** (99.9–99.9) | 99.92% |  |  | 99.99% | -0.07 (-0.09…-0.04) | 99.94% / 99.91% | 99.92% | 100.00% |  | 100.00% | 0.001 |
+| polish | verb | **96.62%** (95.8–97.4) | 96.62% | 97.88% | 96.67% | 96.78% | -0.16 (-0.73…+0.45) | 95.22% / 96.93% | 96.90% | 99.77% | 0.00% (7) | 100.00% | 0.012 |
+| german | noun | **93.63%** (93.2–94.1) | 93.63% | 99.79% | 94.05% | 93.88% | -0.25 (-0.58…+0.08) | 96.70% / 89.92% | 94.43% | 99.69% |  | 100.00% | 0.007 |
+| german | adjective | **98.76%** (98.2–99.3) | 98.76% | 99.86% |  | 99.00% | -0.24 (-0.74…+0.25) | 98.59% / 98.83% | 99.03% | 100.00% | 0.00% (28) | 100.00% | 0.003 |
+| german | verb | **95.07%** (94.1–96.0) | 95.07% | 95.78% | 95.18% | 73.03% | +22.04 (+20.29…+23.86) | 95.91% / 94.14% | 95.17% | 99.26% | 0.00% (1) | 100.00% | 0.013 |
+| spanish | noun | **98.62%** (98.3–98.9) | 98.62% |  | 98.62% | 98.62% | +0.00 (-0.20…+0.20) | 99.85% / 98.05% | 98.83% | 99.98% |  | 100.00% | 0.003 |
+| spanish | adjective | **98.21%** (97.8–98.7) | 98.21% | 99.67% |  | 98.57% | -0.36 (-0.68…-0.04) | 99.68% / 97.70% | 98.32% | 100.00% |  | 100.00% | 0.005 |
+| spanish | verb | **98.96%** (98.6–99.3) | 98.96% | 99.72% |  | 99.19% | -0.23 (-0.51…+0.01) | 99.28% / 98.75% | 98.98% | 99.98% | 0.00% (2) | 100.00% | 0.004 |
+| french | noun | **97.57%** (97.1–98.0) | 97.57% |  | 97.57% | 97.01% | +0.56 (+0.21…+0.88) | 96.88% / 97.82% | 97.96% | 99.88% |  | 100.00% | 0.004 |
+| french | adjective | **97.50%** (96.9–98.1) | 97.50% | 99.95% |  | 97.72% | -0.22 (-0.65…+0.24) | 98.85% / 97.12% | 97.57% | 100.00% |  | 100.00% | 0.009 |
+| french | verb | **98.70%** (98.1–99.3) | 98.70% | 99.48% |  | 99.28% | -0.59 (-1.06…-0.22) | 99.63% / 98.40% | 98.84% | 100.00% |  | 100.00% | 0.004 |
+| french | participle | **99.84%** (99.5–100.0) | 99.84% |  |  | 99.52% | +0.32 (-0.32…+0.96) | 100.00% / 99.80% | 99.84% | 100.00% |  | 100.00% | 0.005 |
+| italian | noun | **95.82%** (95.3–96.3) | 95.82% |  | 96.39% | 95.09% | +0.74 (+0.31…+1.16) | 95.91% / 95.76% | 95.96% | 99.77% |  | 100.00% | 0.003 |
+| italian | adjective | **98.46%** (98.1–98.8) | 98.46% | 99.78% |  | 98.46% | +0.00 (-0.29…+0.30) | 99.36% / 97.96% | 98.49% | 100.00% |  | 100.00% | 0.010 |
+| italian | verb | **99.05%** (98.7–99.4) | 99.05% | 99.56% | 99.05% | 99.22% | -0.17 (-0.48…+0.13) | 98.93% / 99.12% | 99.12% | 99.96% |  | 100.00% | 0.005 |
+| italian | participle | **100.00%** (100.0–100.0) | 100.00% |  |  | 100.00% | +0.00 (+0.00…+0.00) | 100.00% / 100.00% | 100.00% | 100.00% |  | 100.00% | 0.000 |
+| finnish | noun | **97.89%** (97.7–98.1) | 97.89% | 99.22% |  | 98.29% | -0.40 (-0.60…-0.21) | 98.73% / 96.22% | 98.05% | 99.98% |  | 100.00% | 0.009 |
+| finnish | adjective | **97.45%** (96.9–98.0) | 97.45% |  |  | 97.41% | +0.04 (-0.62…+0.72) | 99.15% / 96.40% | 97.52% | 100.00% |  | 100.00% | 0.010 |
+| turkish | noun | **96.51%** (95.5–97.4) | 96.51% | 99.52% |  | 93.27% | +3.23 (+2.30…+4.24) | 97.63% / 96.39% | 96.55% | 99.88% |  | 100.00% | 0.012 |
 
-Where the grammar is below the baseline or the floor, and why:
+Where the grammar is weak or below the floor, and why:
 
 - **Latin, from the headword.** A headword doesn't write vowel length (`fox` for `fōx`);
   the grammar restores it by rules on the letters around each vowel (`-ātiō`, `dē-`, a
-  diphthong), and offers the second likeliest spelling too (top-3: nouns 86.5%, verbs
-  91.6%), but a stem's own lengths are lexical: `iūdex`, `bōlus` and `grūs` come back as
-  `iudex`, `bolus`, `grus`. Typed in full the same grammars reach 93.4% (nouns), 99.3%
-  (adjectives), 85.3% (verbs), and with the principal parts 98.6–99.5%. Over all ten tenths
-  the verbs scored 71.8% ± 0.9 from the headword and 97.8% ± 0.3 with principal parts
-  (PR #12's grammar; one tenth now: 70.5% and 98.6%).
-- **Ancient Greek verbs.** The augment (a law where the form's first letters meet the
-  stem: `ἐ‹ἀ → ἠ`), the perfect's reduplication (a copied letter, `%ε~κα`) and the augment
-  behind a preverb (`ἀπο + ἐ → ἀπε`) are learned now, and the accent can sit on a fixed
-  syllable from the word's end (`λυθῇς`, `λελυμένος`). What's left is mostly stems: a verb's
-  aorist or perfect stem (`ἀγγέλλω` → `ἠγγέλθην`) follows from no ending, so a new verb's
-  is a guess; known verbs list it with the ending table it takes, and a principal part
-  given fixes its stem (80.9% with them, 74.4% before stems were learned).
+  diphthong), learned from every part of speech's words and reading which part a word is
+  (`quīngēnī`, a numeral; `indigenus`, an adjective), and reads the three likeliest
+  spellings. On the development tenth that gave nouns +3.8 points, adjectives +2.1, verbs
+  +8.6. But a stem's own lengths are lexical: `iūdex`, `bōlus` and `grūs` come back as
+  `iudex`, `bolus`, `grus`. Typed in full the same grammars reach 92.9% (nouns), 99.2%
+  (adjectives), 85.7% (verbs), and with the principal parts 98.5–99.5%.
+- **Ancient Greek.** A circumflex on a diphthong's second letter (`ἀριθμοῦ`) was read as
+  vowel length, which split declensions in two; read as the diphthong's, nouns went from
+  133 to 87 declensions and +3.8 points, adjectives +3.1 (development tenth). The augment
+  (a law where the form's first letters meet the stem: `ἐ‹ἀ → ἠ`), the perfect's
+  reduplication (`%ε~κα`) and the augment behind a preverb (`ἀπο + ἐ → ἀπε`) are laws.
+  What's left in the verbs is mostly stems: a verb's aorist or perfect stem (`ἀγγέλλω` →
+  `ἠγγέλθην`) follows from no ending, so a new verb's is a guess; known verbs list it with
+  the ending table it takes, and a principal part given fixes its stem (80.9%).
 - **Sanskrit.** The `n` → `ṇ` rule is a law (`तर्काणाम्`), and a noun's gender, given,
-  takes it from 92.1% to 97.3%. The verbs are small (a tenth is ~300 words): over all ten
-  tenths they score 87.8% ± 1.6, the tenths ranging from 84.5% to 91.3%. Few full perfect
-  tables leave the reduplicated perfect unlearned.
-- **Finnish nouns** (97.75% against the floor's 98.30%). Their structure is learned
-  from the 6,000 commonest, and every one of the dictionary's ~114,000 nouns is fitted
-  to it, so the dictionary's own nouns come back as written (99.99% of their forms). A
-  new word inflects as the dictionary word it ends in, where it ends in one (`aavameri`
-  as `meri`): held-out words that do score 98.6%, the rest 96.0%.
-- **Italian verbs** (97.6% against the floor's 99.2%), and by less than a point Spanish
-  and French verbs, German nouns and Polish verbs, are below the floor: not looked into
-  yet.
-- **Russian** has no stress any more (stripped from input, never written), so its
-  numbers aren't comparable with the baseline's, which placed stress.
+  takes it from 92.1% to 97.3%. The verbs are small (a tenth is ~300 words).
+- **Below the floor, beyond chance**: English verbs (−0.62), French verbs (−0.59),
+  Finnish nouns (−0.40), Spanish adjectives (−0.36), Polish adjectives (−0.07); not looked
+  into yet. Italian verbs were 1.6 points below: the polite imperative (`parli`) was split
+  by the verb's auxiliary between two cells that are the same form, and the auxiliary,
+  never decided from the headword, left it empty. The split is gone (99.05%, the floor's
+  99.22% within chance). German nouns (−0.25, within chance) lose the plural cells: of 200
+  wrong plurals, two in three are the plural class chosen wrong (a loanword's `-s`,
+  `-ismus` → `-ismen`), one in fourteen umlaut.
+- **Russian** has no stress any more (stripped from input, never written).
 
 ## The generated code
 
@@ -236,22 +240,22 @@ the grammars of PR #14), on words the grammar was learned from and on held-out w
 
 | crate | source MB | build seconds | peak MB | `.rlib` MB | one call, nouns | one call, verbs |
 |---|---:|---:|---:|---:|---:|---:|
-| english | 0.9 | 3 | 559 | 46 | 9 / 9 µs | 10 / 10 µs |
-| russian | 3.0 | 7 | 927 | 75 | 16 / 17 µs | 36 / 38 µs |
-| latin | 2.0 | 5 | 821 | 66 | 21 / 23 µs | 32 / 40 µs |
-| ancient-greek | 4.6 | 5 | 875 | 78 | 44 / 81 µs | 52 / 146 µs |
-| sanskrit | 0.9 | 2 | 496 | 41 | 5 / 7 µs | 19 / 25 µs |
-| polish | 1.8 | 5 | 757 | 61 | 13 / 25 µs | 13 / 17 µs |
-| german | 2.9 | 11 | 1213 | 72 | 12 / 22 µs | 16 / 24 µs |
-| spanish | 1.7 | 6 | 989 | 47 | 4 / 4 µs | 9 / 12 µs |
-| french | 0.4 | 1 | 450 | 45 | 4 / 4 µs | 6 / 6 µs |
-| italian | 1.3 | 3 | 604 | 53 | 4 / 4 µs | 6 / 11 µs |
-| finnish | 1.6 | 3 | 638 | 34 | 16 / 16 µs | adjectives 10 / 11 µs |
-| turkish | 0.3 | 1 | 335 | 22 | 8 / 9 µs | adjectives 5 / 5 µs |
+| english | 0.9 | 3 | 566 | 46 | 9 / 9 µs | 10 / 10 µs |
+| russian | 3.0 | 7 | 922 | 75 | 16 / 17 µs | 36 / 38 µs |
+| latin | 1.9 | 6 | 816 | 70 | 21 / 23 µs | 32 / 40 µs |
+| ancient-greek | 4.2 | 4 | 818 | 77 | 44 / 81 µs | 52 / 146 µs |
+| sanskrit | 0.9 | 2 | 485 | 41 | 5 / 7 µs | 19 / 25 µs |
+| polish | 1.7 | 4 | 755 | 61 | 13 / 25 µs | 13 / 17 µs |
+| german | 2.5 | 9 | 1198 | 62 | 12 / 22 µs | 16 / 24 µs |
+| spanish | 1.7 | 6 | 1135 | 47 | 4 / 4 µs | 9 / 12 µs |
+| french | 0.4 | 1 | 464 | 45 | 4 / 4 µs | 6 / 6 µs |
+| italian | 0.9 | 3 | 563 | 50 | 4 / 4 µs | 6 / 11 µs |
+| finnish | 1.6 | 4 | 582 | 34 | 16 / 16 µs | adjectives 10 / 11 µs |
+| turkish | 0.3 | 1 | 334 | 22 | 8 / 9 µs | adjectives 5 / 5 µs |
 
-Ancient Greek's verbs, 624 cells each, are most of its size: their paradigms (1.0 MB,
-293 conjugations) and their irregular forms (1.0 MB: 1,836 listed stems with the ending
-table each builds on, and 32,991 forms no stem and table give). Nothing is computed
+Ancient Greek's verbs, 624 cells each, are most of its size: their paradigms (0.9 MB,
+287 conjugations) and their irregular forms (1.0 MB: 1,860 listed stems with the ending
+table each builds on, and 33,311 forms no stem and table give). Nothing is computed
 before the first answer, and the same entries always give the same crate, byte for byte.
 
 ## How the grammar is learned
@@ -271,7 +275,10 @@ it describes (`crates/flexion-train/src/bits.rs`).
   shares the most cells with: it writes only the cells that differ (`_` for the rest). It
   may be like it through a *view*: one feature's value read as another (a Latin deponent
   is like `agitō` with its active cells read as the passive ones: `like Agitō as
-  ACT_AS_PASS`). A paradigm of more than one word is kept where it costs fewer bits than
+  ACT_AS_PASS`), or with something added after every pattern it reads there (an
+  *affix*: a Russian reflexive is its plain verb with `~я`, `~ь` after a vowel, the stem's
+  last piece their `с`: `like Играть with "~ь", "~я" after "йлмть"`). A paradigm of
+  more than one word is kept where it costs fewer bits than
   listing the forms the next paradigm doesn't build; a word whose table only another
   paradigm nearly builds is listed there. A cell whose form is another cell's for nearly
   every word is that cell's, stated once (Greek middle = passive outside the aorist and
@@ -317,7 +324,9 @@ it describes (`crates/flexion-train/src/bits.rs`).
   is `talossa` and `-ni`, for every noun). Where a feature of the word decides which
   cell (Russian: the accusative is the genitive of animate nouns, the nominative of
   inanimate ones), the relation is by that feature, and the feature is a choice of its
-  own. A paradigm takes the cells none of its words has from its relations (`derived`),
+  own; where one cell gives the form whatever the feature is, the feature has no say
+  (Italian `parli`, the polite imperative, is the subjunctive's third person for every
+  verb). A paradigm takes the cells none of its words has from its relations (`derived`),
   and a word whose forms are listed lists only its principal parts: its other forms are
   told from them, where that does as well as its paradigm. A cell too few words have is
   told by analogy: from the cell that differs from it as another pair of cells does,
@@ -335,15 +344,17 @@ it describes (`crates/flexion-train/src/bits.rs`).
   meets it: on the 250, 500, 1,000 and 2,000 commonest words (in the most dictionaries,
   with the most senses) that have its ending; a rule with few enough exceptions there is
   productive (`regular`, printed on the rule); otherwise speakers vary (`unsettled`).
-- **Compounds and prefixes.** A word written in parts inflects its last part or each part
-  (Russian `диван-кровать`). Where nine in ten of the dictionary's words ending in an
-  irregular word inflect as it (at every length of that word from some length on, which
-  is learned: Finnish five letters, none in English or Russian), a word the grammar
-  doesn't list takes the listing of the listed word it ends in, its front kept: Finnish
-  `aavameri` inflects as `meri`, and its forms aren't listed. German verbs inflect
-  behind their prefixes: separable ones go where the form puts them (`fing an`),
-  inseparable ones stay in front and take off the participle's `ge-` (`verhindert`).
-  The prefixes, and what the participle drops, are learned.
+- **Compounds and prefixes.** A word written in parts inflects its last part or each
+  part (Russian `диван-кровать`). A word the grammar doesn't list that ends in a listed
+  word takes that word's listing, its front kept (Finnish `aavameri` inflects as `meri`,
+  and its forms aren't listed): every listed word from some length on, where nine in ten
+  of the dictionary's words ending in an irregular word that long inflect as it (Finnish
+  five letters; none in English, Russian or German), and, of the shorter ones, each word
+  whose own compounds do (`heads.rs`: German `Schein` for `Fahrschein`, `Wein` for
+  `Schaumwein`). German verbs inflect behind their prefixes: separable ones go where the
+  form puts them (`fing an`), inseparable ones stay in front and take off the
+  participle's `ge-` (`verhindert`). The prefixes, and what the participle drops, are
+  learned.
 - **Accent.** Where a language writes it (Ancient Greek), each cell has a rule placing the
   accent (where the lemma has it, on the ending, as far back as allowed, or on the word's
   last or next-to-last syllable) and the law
@@ -351,10 +362,14 @@ it describes (`crates/flexion-train/src/bits.rs`).
   endings take the circumflex, and where a final `-οι` counts long (the optative), are
   learned.
 - **Spelling.** Words are read in Unicode's composed form (NFC), so a letter typed with
-  its marks in any order is the same letter. A word is found however it is typed: without vowel length (`rosa`,
-  `λυω`), without `ё`. Rules on the letters around each vowel restore the marks (`-ātiō`,
-  `dē-`), the dictionary's words that they don't spell are listed, and the answer's
-  probability says how much of the spelling was a guess.
+  its marks in any order is the same letter. A word is found however it is typed:
+  without vowel length (`rosa`, `λυω`), without `ё`. Rules on the letters around each
+  vowel restore the marks (`-ātiō`, `dē-`), learned once for the language from every
+  part of speech's words (`marks.rs`: a root's length shown in a verb tells it in its
+  noun), and the three likeliest spellings are read, over every vowel at once; the
+  dictionary's words that the rules don't spell are listed, and the answer's probability
+  says how much of the spelling was a guess. A circumflex is vowel length on a single
+  vowel (`σῦς`), not on a diphthong's second letter (`ἀριθμοῦ`).
 - **Irregular forms.** Whatever no rule gives is listed, as the dictionary writes it.
 - **Calibration.** Probabilities are sharpened by one power per part of speech, fitted on
   a tenth of the words the grammar didn't learn from, typed as their headwords; an answer

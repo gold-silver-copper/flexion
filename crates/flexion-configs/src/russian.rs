@@ -262,7 +262,6 @@ pub fn language() -> Language {
                 "pronunciation-spelling",
                 "obsolete",
             ],
-            soft_sense: vec!["vulgar", "derogatory", "offensive"],
             ..TagPolicy::default()
         },
         hooks: Box::new(RussianHooks),

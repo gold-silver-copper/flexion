@@ -1938,12 +1938,12 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("сы+ч")]),
     },
-    // ел+ё → ел+е after [р|т|ц] before [м|н|ш]: 22 words (выстрелить, подстрелить, стлать, постлать), 1 forms wrong.
+    // ел+ё → ел+е after [т|щ]: 12 words (стлать, постлать, застлать, устлать), 0 forms wrong.
     CompiledRule {
         name: B("law61"),
         left: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("р"), B("т"), B("ц")])),
+                matcher: Matcher::Class(B(&[B("т"), B("щ")])),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -1960,11 +1960,7 @@ const RULES: &[CompiledRule<'static>] = &[
             anchored_at_end: false,
         },
         right: Pattern {
-            atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[B("м"), B("н"), B("ш")])),
-                quantifier: Quantifier::One,
-                capture: None,
-            }]),
+            atoms: B(&[]),
             anchored_at_start: false,
             anchored_at_end: false,
         },
@@ -1976,20 +1972,12 @@ const RULES: &[CompiledRule<'static>] = &[
         application: Application::All,
         required: B(&[B("ел+ё")]),
     },
-    // ел+у → ел+ю after [б|д|п|р|с|т|щ]: 15 words (стлать, постлать, застлать, устлать), 0 forms wrong.
+    // ел+у → ел+ю after [б|п|р|т|щ]: 15 words (стлать, постлать, застлать, устлать), 0 forms wrong.
     CompiledRule {
         name: B("law62"),
         left: Pattern {
             atoms: B(&[Atom {
-                matcher: Matcher::Class(B(&[
-                    B("б"),
-                    B("д"),
-                    B("п"),
-                    B("р"),
-                    B("с"),
-                    B("т"),
-                    B("щ"),
-                ])),
+                matcher: Matcher::Class(B(&[B("б"), B("п"), B("р"), B("т"), B("щ")])),
                 quantifier: Quantifier::One,
                 capture: None,
             }]),
@@ -2017,6 +2005,47 @@ const RULES: &[CompiledRule<'static>] = &[
         direction: Direction::LeftToRight,
         application: Application::All,
         required: B(&[B("ел+у")]),
+    },
+    // он+ё → он+е after [а|о|с]т: 6 words (стонать, застонать, простонать, потонуть), 0 forms wrong.
+    CompiledRule {
+        name: B("law63"),
+        left: Pattern {
+            atoms: B(&[
+                Atom {
+                    matcher: Matcher::Class(B(&[B("а"), B("о"), B("с")])),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+                Atom {
+                    matcher: Matcher::Class(B(&[B("т")])),
+                    quantifier: Quantifier::One,
+                    capture: None,
+                },
+            ]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        target: Pattern {
+            atoms: B(&[Atom {
+                matcher: Matcher::Literal(B("он+ё")),
+                quantifier: Quantifier::One,
+                capture: None,
+            }]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        right: Pattern {
+            atoms: B(&[]),
+            anchored_at_start: false,
+            anchored_at_end: false,
+        },
+        excluded_left: None,
+        excluded_right: None,
+        replacement: B(&[ReplacementPart::Literal(B("он+е"))]),
+        capture_count: 0,
+        direction: Direction::LeftToRight,
+        application: Application::All,
+        required: B(&[B("он+ё")]),
     },
 ];
 

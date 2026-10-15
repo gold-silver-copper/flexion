@@ -96,6 +96,9 @@ fn read(path: &Path) -> Result<Run, String> {
 /// each run on the forms both scored, the paired bootstrap 95% interval of
 /// b − a (resampling words), and the sign test over words.
 pub fn compare(a: &Path, b: &Path) -> Result<(), String> {
+    if a.is_dir() && b.is_dir() {
+        return sweeps(a, b);
+    }
     let (ra, rb) = (read(a)?, read(b)?);
     println!(
         "{:<10} {:<16} {:>6} {:>7} {:>8} {:>8} {:>8} {:>18} {:>11} {:>9}",
@@ -151,6 +154,42 @@ pub fn compare(a: &Path, b: &Path) -> Result<(), String> {
             c.worse,
             c.p
         );
+    }
+    Ok(())
+}
+
+/// Two sweeps (`cargo xtask sweep`): every language both have, compared as
+/// two runs are, then each language's time and peak memory in b against a.
+fn sweeps(a: &Path, b: &Path) -> Result<(), String> {
+    let summary = |dir: &Path| -> BTreeMap<String, (f64, f64)> {
+        std::fs::read_to_string(dir.join("summary.tsv"))
+            .unwrap_or_default()
+            .lines()
+            .skip(1)
+            .filter_map(|l| {
+                let f: Vec<&str> = l.split('\t').collect();
+                Some((
+                    (*f.first()?).to_string(),
+                    (f.get(1)?.parse().ok()?, f.get(2)?.parse().ok()?),
+                ))
+            })
+            .collect()
+    };
+    let (sa, sb) = (summary(a), summary(b));
+    for (lang, &(secs_a, peak_a)) in &sa {
+        let file = format!("{lang}.tsv");
+        let (fa, fb) = (a.join(&file), b.join(&file));
+        let Some(&(secs_b, peak_b)) = sb.get(lang) else {
+            continue;
+        };
+        println!(
+            "\n{lang}: time {secs_a:.0}s → {secs_b:.0}s (×{:.2}), peak {peak_a:.0} → {peak_b:.0} MB (×{:.2})",
+            secs_b / secs_a.max(1.0),
+            peak_b / peak_a.max(1.0)
+        );
+        if fa.exists() && fb.exists() {
+            compare(&fa, &fb)?;
+        }
     }
     Ok(())
 }

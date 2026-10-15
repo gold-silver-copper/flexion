@@ -10,7 +10,7 @@ use flexion::Choice;
 /// 4 rules and 5 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Χῑλῐοι 11, Πισῠρες 3, Δῠο 1, Τρεῑς 1, Δεκᾰτεσσᾰρες 1, Εἱς 1, Δευτερος 1],
+        "" => [Χῑλῐοι 11, Πισῠρες 3, Δῠο 1, Τρεις 1, Δεκᾰτεσσᾰρες 1, Εἱς 1, Δευτερος 1],
         "ι" => [Χῑλῐοι 11] regular,
         "οι" => [Χῑλῐοι 11] regular,
         "εσ" => [Πισῠρες 3, Δεκᾰτεσσᾰρες 1] regular,
@@ -20,6 +20,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#δυο" => Δῠο,
         "#εισ" => Εἱς,
         "#πισυρεσ" => Πισῠρες,
-        "#τρεισ" => Τρεῑς,
+        "#τρεισ" => Τρεις,
     }
 };

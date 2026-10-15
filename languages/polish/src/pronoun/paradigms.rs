@@ -48,7 +48,7 @@ use flexion::Paradigm;
 /// `loc_vir` (anim, inan)
 /// `loc_nvir` (anim, inan)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem pronoun_nom_m: $s0:tt;)?
      $(stem pronoun_anim: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
@@ -155,6 +155,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -177,6 +178,24 @@ macro_rules! view {
     };
     ($view:ident) => {
         Some(::std::borrow::Cow::Borrowed(&$view))
+    };
+}
+
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
     };
 }
 
@@ -239,15 +258,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~ą", _;
     ins_vir: "~ymi", _;
     ),
-    // Każdy: 6 words (który, każdy, niektóry, owy, takowy, poniektóry). Like Ów, except in 2 cells: nom_n anim, nom_vir anim.
-    declension!("każdy", 6, "~y", like Ów;
-    stem pronoun_nom_m: "~y- like ów";
+    // Każdy: 6 words (który, każdy, niektóry, owy, takowy, poniektóry). Like Ów with `` after each pattern (`y` after ~), except in 2 cells: nom_n anim, nom_vir anim.
+    declension!("każdy", 6, "~y", like Ów with "", "y" after "~";
     nom_n: "~e", _;
     nom_vir: "~zy", _;
     ),
-    // Taki: 3 words (taki, sraki, każdziutki). Like Ów, except in 11 cells: nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, ….
-    declension!("taki", 3, "~ki", like Ów;
-    stem pronoun_nom_m: "~ki- like ów";
+    // Taki: 3 words (taki, sraki, każdziutki). Like Ów with `ki` after each pattern, except in 11 cells: nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, ….
+    declension!("taki", 3, "~ki", like Ów with "ki";
     nom_f: "~ka", _;
     nom_n: "~kie", _;
     nom_vir: "~cy", _;
@@ -260,11 +277,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~ką", _;
     ins_vir: "~kimi", _;
     ),
-    // Mój: 3 words (mój, twój, swój). Like Ów, except in 11 cells: nom_f anim, nom_n anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, ….
-    declension!("mój", 3, "~ój", like Ów;
-    stem pronoun_nom_m: "~ój- like ów";
+    // Mój: 3 words (mój, twój, swój). Like Ów with `ój` after each pattern (`je` after o), except in 10 cells: nom_f anim, nom_vir anim, nom_nvir anim, gen_m anim, gen_f anim, gen_vir anim, ….
+    declension!("mój", 3, "~ój", like Ów with "ój", "je" after "o";
     nom_f: "~oja", _;
-    nom_n: "~oje", _;
     nom_vir: "~oi", _;
     nom_nvir: "~oje", _;
     gen_m: "~ojego", _;
@@ -275,9 +290,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_f: "~oją", _;
     ins_vir: "~oimi", _;
     ),
-    // Ile: 1 words (ile). Like Ów, except in 14 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("ile", 1, "~e", like Ów;
-    nom_m: _, "~e";
+    // Ile: 1 words (ile). Like Ów with `` after each pattern (`e` after ~), except in 13 cells: nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, gen_vir anim, ….
+    declension!("ile", 1, "~e", like Ów with "", "e" after "~";
     nom_f: derived, _;
     nom_n: derived, _;
     nom_vir: "~u", _;
@@ -291,11 +305,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
     acc_vir: "~u", "~u";
     ins_vir: derived, _;
     ),
-    // Ilekolwiek: 1 words (ilekolwiek).
-    declension!("ilekolwiek", 1, "~e~";
-    nom_m: _, "~e~";
+    // Ilekolwiek: 1 words (ilekolwiek). Like Ów with `e~` after each pattern (`~` after e), except in 13 cells: nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, gen_vir anim, ….
+    declension!("ilekolwiek", 1, "~e~", like Ów with "e~", "~" after "e";
+    nom_f: derived, _;
+    nom_n: derived, _;
     nom_vir: "~u~", _;
-    nom_nvir: "~e~", _;
+    gen_m: derived, _;
+    gen_f: derived, _;
+    gen_vir: derived, _;
+    dat_m: derived, _;
+    dat_vir: derived, _;
+    acc_m: _, derived;
+    acc_f: derived, _;
     acc_vir: "~u~", "~u~";
+    ins_vir: derived, _;
     ),
 ];

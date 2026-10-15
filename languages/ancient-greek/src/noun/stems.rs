@@ -27,33 +27,19 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // noun_sg like μορῐον: 4,593 words.
+    // noun_sg like σημειον: 4,588 words.
     EndingTable {
-        name: Cow::Borrowed("μορῐον"),
-        words: 4593,
+        name: Cow::Borrowed("σημειον"),
+        words: 4588,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // noun_sg like τρᾰγος: 1,803 words.
-    EndingTable {
-        name: Cow::Borrowed("τρᾰγος"),
-        words: 1803,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~ος\t", "~ε\t",)),
-    },
-    // noun_sg like δῐαιρεσῐς: 981 words.
+    // noun_sg like δῐαιρεσῐς: 1,070 words.
     EndingTable {
         name: Cow::Borrowed("δῐαιρεσῐς"),
-        words: 981,
+        words: 1070,
         slot: 0,
         table: Cow::Borrowed(concat!("~ς\t", "~\t",)),
-    },
-    // noun_sg like ἰδῐωτης: 350 words.
-    EndingTable {
-        name: Cow::Borrowed("ἰδῐωτης"),
-        words: 350,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~ης\t", "~ᾰ\t",)),
     },
     // noun_sg like ἱερον: 2 words.
     EndingTable {
@@ -62,10 +48,23 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
         slot: 0,
         table: Cow::Borrowed(concat!("ῐ\u{314}~\t", "ῐ\u{314}~\t",)),
     },
-    // noun like κορᾰξ: 203 words.
+    // noun like θεμᾰ: 448 words.
+    EndingTable {
+        name: Cow::Borrowed("θεμᾰ"),
+        words: 448,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~τε\t~τᾰ\t",
+            "~τος\t~τοιν\t~των\t",
+            "~τῐ\t~τοιν\t~σῐ|~σῐν\t",
+            "~\t~τε\t~τᾰ\t",
+            "~τε\t~τᾰ\t",
+        )),
+    },
+    // noun like κορᾰξ: 225 words.
     EndingTable {
         name: Cow::Borrowed("κορᾰξ"),
-        words: 203,
+        words: 225,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~κε\t~κες\t",
@@ -75,10 +74,23 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~κε\t~κες\t",
         )),
     },
-    // noun like χᾰρᾰκτηρ: 115 words.
+    // noun like αἰων: 189 words.
+    EndingTable {
+        name: Cow::Borrowed("αἰων"),
+        words: 189,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~νε\t~νες\t",
+            "~νος\t~νοιν\t~νων\t",
+            "~νῐ\t~νοιν\t~σῐ|~σῐν\t",
+            "~νᾰ\t~νε\t~νᾰς\t",
+            "~νε\t~νες\t",
+        )),
+    },
+    // noun like χᾰρᾰκτηρ: 124 words.
     EndingTable {
         name: Cow::Borrowed("χᾰρᾰκτηρ"),
-        words: 115,
+        words: 124,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ε\t~ες\t",

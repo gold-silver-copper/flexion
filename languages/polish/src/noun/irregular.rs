@@ -8,7 +8,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 128 stems, 965 forms.
+/// 127 stems, 957 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aaron	10	aaronem
@@ -94,6 +94,7 @@ braniec	7	brańców
 brataniec	7	bratańców
 brew	noun_pl	brwi- like regaty
 brizol	2	brizoli
+brosma	3	brosm
 bryzelija	2	bryzelijej
 brzuchacz	7	brzuchaczy
 brązownik	7	brązowników
@@ -105,7 +106,7 @@ burczymucha	3	burczymuchów	7	burczymuchów
 byl	8	bylim
 bóg	4	bogu	7	bogów	8	bogiem	12	boże
 bękart	7	bękartów
-błazen	noun_pl	błazn- like patron
+błazen	noun_pl	błaźnie- like live
 błąkacz	7	błąkaczy
 cannolo	1	cannoli	3	cannoli	5	cannoli	7	cannoli
 casanova	1	casanovie
@@ -176,7 +177,7 @@ eksmąż	noun_pl	eksmęż- like król
 endemit	6	endemitu
 eunuch	7	eunuchów
 europoseł	10	europośle	12	europośle
-ewanjelista	7	ewanjelisty
+ewanjelista	1	ewanjelistowie	7	ewanjelisty
 ezt	noun_pl	ezt- like live
 faksymile	3	faksymiliów
 familija	3	familijej	10	familijej
@@ -313,7 +314,6 @@ monobrew	noun_pl	monobrwi- like regaty
 monopolowy	7	monopolowych
 morga	3	mórg
 mosiek	1	mośkowie
-moszna	4	mosznie	10	mosznie
 mowa-trawa	7	mów-traw
 mrówkolew	4	mrówkolwu	6	mrówkolwa
 mufti	1	muftiowie
@@ -377,7 +377,6 @@ onu	2	jenu	4	wu	6	nu	8	num	10	num
 ony	3	ich	5	im	7	ni
 opowiedacz	9	opowiedaczem
 orzeł	4	orłu
-oset	noun_pl	os- like grunt
 osiec	6	ośca
 osieł	noun_pl	os- like konował	4	osłu
 osioł	noun_pl	osł- like lis	4	osłu	6	osła
@@ -545,7 +544,6 @@ sobak	12	sobak
 soból	noun_pl	sobol- like byl
 solidaruch	7	solidaruchów
 sor	10	sor-ze	12	sor-ze
-sosna	4	sośnie	10	sośnie
 spawacz	7	spawaczy
 sponsor	7	sponsorów
 sprawnik	7	sprawników
@@ -555,6 +553,7 @@ sprzątacz	7	sprzątaczy
 spłacheć	3	spłachciów
 stacz	7	staczy
 starolas	noun_pl	starolesie- like live
+starosta	1	starostowie
 staruch	7	staruchów
 starzec	12	starcze
 statua	1	statuy	7	statuy
@@ -647,7 +646,6 @@ wiceprezes	7	wiceprezesów
 wici	3	wici
 wierzeje	3	wierzei
 wieś	noun_pl	wsi- like przestrzeń	7	wsie
-wiosna	4	wiośnie	10	wiośnie
 więzień	noun_pl	więźni- like król	noun_sg	więź- like uczeń	7	więźniów
 wnuczek	7	wnuczków
 woj	6	woj	7	wojowie
@@ -668,7 +666,6 @@ wykidajło	4	wykidajle	6	wykidajłę	8	wykidajłą
 wykolejeniec	7	wykolejeńców
 wymijacz	7	wymijaczy
 wyzyskiwacz	7	wyzyskiwaczy
-wóda	1	wódy	2	wódy	4	wódzie	7	wódy	10	wódzie
 wół	6	wołu
 wąsacz	7	wąsaczy
 wąż	noun_pl	węż- like gospodarz

@@ -264,7 +264,7 @@ pub static CLASSES: [StressClass<'static>; 10] = [
 
 use AccentClass::*;
 
-/// Which class a word is of: 108 rules and 1,116 listed words.
+/// Which class a word is of: 108 rules and 1,107 listed words.
 pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
     rules {
         "" => [Τελειος 2050, Ψῑλος 1293, Ἰσος 502, Θηλῠς 434, Τρᾱχῠς 360, Κᾰκοηθης 34, Ἡδῑων 13, Ἡμῐσῠς 2, Τῑμῐωτερος 2, Σημερῐνος 1],
@@ -394,7 +394,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αγνοσ" => Ψῑλος,
         "αγνοων" => Τρᾱχῠς,
         "αγνωσ" => Ψῑλος,
-        "αγραμματοσ" => Τελειος,
         "αγριελαιοσ" => Τελειος,
         "αγρονομοσ" => Ἰσος,
         "αδαμασ" => Ἰσος,
@@ -407,7 +406,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αδινοσ" => Ψῑλος,
         "αδοροσ" => Τελειος,
         "αδροσ" => Ψῑλος,
-        "αδυτοσ" => Τελειος,
         "αειζωοσ" => Τελειος,
         "αειζωσ" => Τελειος,
         "αειμακαριστοσ" => Τελειος,
@@ -417,7 +415,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αζωοσ" => Τελειος,
         "αηθησ" => Κᾰκοηθης,
         "αθροοσ" => Ἰσος,
-        "αθωοσ" => Ἰσος,
         "αιγοκερωσ" => Τελειος,
         "αιδοιοσ" => Ἰσος,
         "αιζηοσ" => Ψῑλος,
@@ -437,16 +434,11 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αιτητοσ" => Ψῑλος,
         "ακακοσ" => Τελειος,
         "ακαματοσ" => Τελειος,
-        "ακαπνοσ" => Τελειος,
         "ακιδωτοσ" => Ψῑλος,
         "ακιροσ" => Ψῑλος,
         "ακμηνοσ" => Τελειος,
         "ακμων" => Ἰσος,
-        "ακολουθοσ" => Τελειος,
         "ακρατοσ" => Τελειος,
-        "ακριθοσ" => Τελειος,
-        "ακριτομυθοσ" => Τελειος,
-        "ακρολιθοσ" => Τελειος,
         "ακροσ" => Ἰσος,
         "ακτημων" => Ἰσος,
         "ακων" => Θηλῠς,
@@ -465,6 +457,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αλλοιοσ" => Ἰσος,
         "αλλοσ" => Ἰσος,
         "αλμυροσ" => Ψῑλος,
+        "αλογιστοσ" => Τελειος,
         "αμαλοσ" => Ψῑλος,
         "αμαρτωλοσ" => Ψῑλος,
         "αμαρτων" => Τρᾱχῠς,
@@ -472,6 +465,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αμβλυωποσ" => Ψῑλος,
         "αμεθυστιζων" => Κᾰκοηθης,
         "αμεινων" => Ἡδῑων,
+        "αμεριστοσ" => Τελειος,
         "αμηχανοσ" => Τελειος,
         "αμορβοσ" => Ψῑλος,
         "αμυδροσ" => Ψῑλος,
@@ -480,12 +474,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αμφηκησ" => Κᾰκοηθης,
         "αμφιβιοσ" => Τελειος,
         "αμφιβραχυσ" => Ἡμῐσῠς,
-        "αμφικυπελλοσ" => Τελειος,
         "αναιμων" => Κᾰκοηθης,
         "αναιξασ" => Θηλῠς,
-        "ανακολουθοσ" => Τελειος,
         "ανακρινων" => Τρᾱχῠς,
         "αναλκισ" => Τελειος,
+        "αναμφηριστοσ" => Τελειος,
+        "αναπαιστοσ" => Τελειος,
         "ανασχων" => Τρᾱχῠς,
         "ανδρειοσ" => Ἰσος,
         "ανδροφονοσ" => Ἰσος,
@@ -501,11 +495,13 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αντιπολεμων" => Τρᾱχῠς,
         "αντισχων" => Τρᾱχῠς,
         "αξεινοσ" => Τελειος,
+        "αξιοπιστοσ" => Τελειος,
         "αξιοχρεωσ" => Τελειος,
         "αξιων" => Τρᾱχῠς,
         "αξυμφοροσ" => Τελειος,
         "αοιδοσ" => Ψῑλος,
         "αορατοσ" => Τελειος,
+        "αοριστοσ" => Τελειος,
         "απαλλαξειων" => Θηλῠς,
         "απαλοσ" => Ψῑλος,
         "απαξιων" => Τρᾱχῠς,
@@ -513,13 +509,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "απατρισ" => Τελειος,
         "απερων" => Τρᾱχῠς,
         "απημων" => Ἰσος,
+        "απιστοσ" => Τελειος,
         "απιων" => Τρᾱχῠς,
         "απλοοσ" => Ἰσος,
         "απλουσ" => Ψῑλος,
-        "αποβαλων" => Τρᾱχῠς,
         "απογειοσ" => Τελειος,
         "αποθανων" => Τρᾱχῠς,
-        "απολυτοσ" => Τελειος,
         "αποροσ" => Τελειος,
         "αποστερων" => Τρᾱχῠς,
         "αποτροπαιοσ" => Τελειος,
@@ -532,9 +527,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "αργειοσ" => Ἰσος,
         "αργοσ" => Ψῑλος,
         "αργυρεοσ" => Τελειος,
-        "αργυροριζοσ" => Τελειος,
         "αργυρουσ" => Ψῑλος,
-        "αρειοσ" => Τελειος,
+        "αργωοσ" => Ἰσος,
         "αρειων" => Ἡδῑων,
         "αρεσκων" => Θηλῠς,
         "αριστεροσ" => Ψῑλος,
@@ -555,8 +549,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ασυμφοροσ" => Τελειος,
         "ασφοδελοσ" => Ψῑλος,
         "ασχημων" => Ἰσος,
-        "ατεραμνοσ" => Τελειος,
-        "ατεχνοσ" => Τελειος,
         "ατηροσ" => Τελειος,
         "ατοσ" => Ἰσος,
         "αυδων" => Τρᾱχῠς,
@@ -600,18 +592,17 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "βοηθοοσ" => Ἰσος,
         "βοηθοσ" => Ψῑλος,
         "βοινοσ" => Τελειος,
-        "βορειοσ" => Τελειος,
         "βοτηρ" => Ψῑλος,
         "βουλευτοσ" => Ψῑλος,
         "βουτροφοσ" => Ἰσος,
         "βοων" => Τρᾱχῠς,
         "βραχιων" => Ἰσος,
-        "βρισαρματοσ" => Τελειος,
         "βροτολοιγοσ" => Ψῑλος,
         "βυβοσ" => Ψῑλος,
         "βωλοκοποσ" => Ἰσος,
         "γαμψοσ" => Ψῑλος,
         "γαστριμαργοσ" => Τελειος,
+        "γαυροσ" => Ἰσος,
         "γαυσοσ" => Ψῑλος,
         "γεγωνοσ" => Ψῑλος,
         "γελοιοσ" => Ἰσος,
@@ -628,6 +619,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "γλισχροσ" => Ἰσος,
         "γλοιοσ" => Ψῑλος,
         "γλυκεροσ" => Ψῑλος,
+        "γλυκυπικροσ" => Τελειος,
         "γλυκυφθογγοσ" => Τελειος,
         "γλυπτοσ" => Ψῑλος,
         "γλωσσοποιοσ" => Ψῑλος,
@@ -646,7 +638,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "δαιδαλεοσ" => Τελειος,
         "δαιφρων" => Κᾰκοηθης,
         "δαρτοσ" => Ψῑλος,
-        "δασυμαλλοσ" => Τελειος,
         "δαφοινοσ" => Ψῑλος,
         "δεδεμενοσ" => Ἰσος,
         "δεδομενοσ" => Ἰσος,
@@ -668,7 +659,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "διαλελυμενοσ" => Ἰσος,
         "διαλυτοσ" => Ψῑλος,
         "διαρροικοσ" => Ψῑλος,
-        "διασπροσ" => Τελειος,
         "διαφανων" => Τρᾱχῠς,
         "διαφερων" => Θηλῠς,
         "διαφοροσ" => Τελειος,
@@ -702,11 +692,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "δρυινοσ" => Τελειος,
         "δρων" => Τρᾱχῠς,
         "δυνατοσ" => Ψῑλος,
-        "δυσκελαδοσ" => Τελειος,
         "δυσφοροσ" => Τελειος,
         "εαρινοσ" => Ψῑλος,
         "εβδομηκοντακαιεκατονταπλασιων" => Κᾰκοηθης,
-        "εγκυοσ" => Τελειος,
         "εγρεμαχησ" => Κᾰκοηθης,
         "εγρηγοροσ" => Τελειος,
         "εθελων" => Θηλῠς,
@@ -714,10 +702,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ειπον" => Τρᾱχῠς,
         "ειπων" => Τρᾱχῠς,
         "εκαεργοσ" => Τελειος,
+        "εκγεγαωσ" => Τρᾱχῠς,
         "εκδικοσ" => Τελειος,
         "εκλεκτοσ" => Ψῑλος,
         "εκλιπων" => Τρᾱχῠς,
-        "εκλυτοσ" => Τελειος,
         "εκτοσ" => Ἰσος,
         "εκων" => Τρᾱχῠς,
         "ελασσων" => Ἡδῑων,
@@ -729,8 +717,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ελεημων" => Κᾰκοηθης,
         "ελευθερων" => Τρᾱχῠς,
         "ελκων" => Θηλῠς,
+        "ελων" => Τρᾱχῠς,
         "εμμενετοσ" => Ψῑλος,
         "εμοσ" => Ψῑλος,
+        "εμποδιοσ" => Τελειος,
         "εμων" => Τρᾱχῠς,
         "εναισιμοσ" => Τελειος,
         "εναντιβιοσ" => Τελειος,
@@ -751,8 +741,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "επαισσων" => Θηλῠς,
         "επαναχωρων" => Τρᾱχῠς,
         "επανιων" => Τρᾱχῠς,
+        "επεισοδιοσ" => Τελειος,
         "επηλυσ" => Τελειος,
         "επιγειοσ" => Τελειος,
+        "επικουροσ" => Τελειος,
         "επιλησμων" => Κᾰκοηθης,
         "επιορκοσ" => Τελειος,
         "επιπαριων" => Τρᾱχῠς,
@@ -767,6 +759,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εργαζομενοσ" => Τελειος,
         "ερεμνοσ" => Ψῑλος,
         "ερημοσ" => Ἰσος,
+        "ερυθροκαρδιοσ" => Τελειος,
         "ερυθροσ" => Ψῑλος,
         "ερων" => Τρᾱχῠς,
         "ερωτων" => Τρᾱχῠς,
@@ -785,14 +778,15 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ευμεγεθησ" => Κᾰκοηθης,
         "ευξεινοσ" => Τελειος,
         "ευποροσ" => Τελειος,
-        "ευπρυμνοσ" => Τελειος,
         "ευρυποροσ" => Τελειος,
         "ευρωεισ" => Θηλῠς,
         "ευρων" => Τρᾱχῠς,
         "ευσ" => Ψῑλος,
         "ευτειχεοσ" => Τελειος,
+        "ευφορβοσ" => Τελειος,
         "ευφοροσ" => Τελειος,
         "ευχαρισ" => Τελειος,
+        "ευχαριστοσ" => Τελειος,
         "εφθαρμενοσ" => Ἰσος,
         "εφθοσ" => Ψῑλος,
         "εφορμων" => Τρᾱχῠς,
@@ -801,7 +795,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "εχθιων" => Ἡδῑων,
         "εχθροσ" => Ψῑλος,
         "εχυροσ" => Ψῑλος,
-        "ζαπλουτοσ" => Τελειος,
+        "ζαπυροσ" => Τελειος,
         "ζεστοσ" => Ψῑλος,
         "ζουγλοσ" => Ψῑλος,
         "ζυγωτοσ" => Ψῑλος,
@@ -860,8 +854,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ιλεωσ" => Τελειος,
         "ιμερτοσ" => Ψῑλος,
         "ιοσ" => Ψῑλος,
-        "ιπποκελευθοσ" => Τελειος,
-        "ιπποκρημνοσ" => Τελειος,
+        "ιππουροσ" => Τελειος,
         "ισηλικοσ" => Τελειος,
         "ισημερινοσ" => Ψῑλος,
         "ισοδαιμων" => Κᾰκοηθης,
@@ -881,7 +874,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κακοηθησ" => Κᾰκοηθης,
         "κακομηχανοσ" => Τελειος,
         "κακοσ" => Ψῑλος,
-        "κακοτεχνοσ" => Τελειος,
         "καλλιθριξ" => Ἰσος,
         "καλλιπυγοσ" => Τελειος,
         "καλλιων" => Ἡδῑων,
@@ -898,7 +890,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καρτεροσ" => Ψῑλος,
         "καρτοσ" => Ψῑλος,
         "καρχαροσ" => Τελειος,
-        "καταβαλων" => Τρᾱχῠς,
         "καταβατοσ" => Ψῑλος,
         "καταθνητοσ" => Ψῑλος,
         "κατακεχυμενοσ" => Ἰσος,
@@ -907,7 +898,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "καταφυγων" => Τρᾱχῠς,
         "κατηγορων" => Τρᾱχῠς,
         "κατιδων" => Τρᾱχῠς,
-        "κατισχνοσ" => Τελειος,
         "κατιων" => Τρᾱχῠς,
         "καυστοσ" => Ψῑλος,
         "καυτοσ" => Ψῑλος,
@@ -940,6 +930,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κοινοσ" => Ψῑλος,
         "κολοβοσ" => Ψῑλος,
         "κολοσ" => Ἰσος,
+        "κολουροσ" => Τελειος,
         "κομοων" => Θηλῠς,
         "κομψοσ" => Ψῑλος,
         "κονιων" => Θηλῠς,
@@ -955,7 +946,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κραναοσ" => Ψῑλος,
         "κραταιοσ" => Ψῑλος,
         "κρατων" => Τρᾱχῠς,
-        "κραυροσ" => Ἰσος,
         "κριτοσ" => Ψῑλος,
         "κρουστοσ" => Ψῑλος,
         "κρυεροσ" => Ψῑλος,
@@ -968,6 +958,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "κυμινοπριστοκαρδαμογλυφοσ" => Ἰσος,
         "κυρτοσ" => Ψῑλος,
         "κυφοσ" => Ψῑλος,
+        "κωοσ" => Ἰσος,
         "κωφοσ" => Ψῑλος,
         "λαβροσ" => Ἰσος,
         "λαγνοσ" => Ἰσος,
@@ -981,6 +972,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "λαρινοσ" => Ψῑλος,
         "λατινοσ" => Ἰσος,
         "λατρευτοσ" => Ψῑλος,
+        "λαυροσ" => Ἰσος,
         "λειβων" => Θηλῠς,
         "λελυμενοσ" => Ἰσος,
         "λεπροσ" => Ψῑλος,
@@ -1009,7 +1001,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "λυπροσ" => Ψῑλος,
         "λυτοσ" => Ψῑλος,
         "λυτρωτοσ" => Ψῑλος,
+        "μακροουροσ" => Τελειος,
         "μακροσ" => Ψῑλος,
+        "μακων" => Τρᾱχῠς,
         "μαλακοστρακοσ" => Τελειος,
         "μαντειοσ" => Ἰσος,
         "μαρμαρεοσ" => Τελειος,
@@ -1022,10 +1016,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μειων" => Ἰσος,
         "μελανθριξ" => Ψῑλος,
         "μελεοσ" => Τελειος,
-        "μελιπτορθοσ" => Τελειος,
         "μελισσοκομοσ" => Ἰσος,
         "μελιφρων" => Κᾰκοηθης,
         "μελων" => Θηλῠς,
+        "μεμαωσ" => Τρᾱχῠς,
         "μεριστοσ" => Ψῑλος,
         "μεσοσ" => Ἰσος,
         "μεστοσ" => Ψῑλος,
@@ -1040,10 +1034,10 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "μνημων" => Ἰσος,
         "μνησιπημων" => Κᾰκοηθης,
         "μνηστοσ" => Ψῑλος,
+        "μολων" => Τρᾱχῠς,
         "μοναχοσ" => Ψῑλος,
         "μονοκερωσ" => Τελειος,
         "μονομαχοσ" => Ἰσος,
-        "μονοουσιοσ" => Τελειος,
         "μορτοσ" => Ψῑλος,
         "μυζων" => Τρᾱχῠς,
         "μυθολογοσ" => Ἰσος,
@@ -1062,7 +1056,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "νεκταρεοσ" => Τελειος,
         "νεκυσ" => Ἰσος,
         "νεμεσητοσ" => Ψῑλος,
-        "νεοφυτοσ" => Τελειος,
         "νεωτεροποιοσ" => Ψῑλος,
         "νηκτοσ" => Ψῑλος,
         "νικων" => Τρᾱχῠς,
@@ -1086,11 +1079,12 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ξυμφοροσ" => Τελειος,
         "ξυναγαγων" => Τρᾱχῠς,
         "ξυναφεστωσ" => Ψῑλος,
+        "ξυνελων" => Τρᾱχῠς,
         "ξυνετοσ" => Ψῑλος,
         "ξυνηθησ" => Κᾰκοηθης,
         "ξυστοσ" => Ψῑλος,
+        "οδιοσ" => Τελειος,
         "οδυνηφατοσ" => Τελειος,
-        "οιζυοσ" => Τελειος,
         "οιζυροσ" => Ψῑλος,
         "οικειοσ" => Ἰσος,
         "οικειων" => Θηλῠς,
@@ -1100,6 +1094,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "οιοσ" => Ἰσος,
         "οκρισ" => Ψῑλος,
         "ολβιοσ" => Τελειος,
+        "ολιγοπιστοσ" => Τελειος,
         "ολοκληροσ" => Τελειος,
         "ολοοσ" => Ψῑλος,
         "ολοσ" => Ἰσος,
@@ -1107,7 +1102,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ομοιοσ" => Τελειος,
         "ομοροσ" => Τελειος,
         "ομοσ" => Ψῑλος,
-        "ονειρειοσ" => Τελειος,
         "ονημενοσ" => Τελειος,
         "ονομαστοσ" => Ψῑλος,
         "οπτοσ" => Ψῑλος,
@@ -1120,7 +1114,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "οριστοσ" => Ψῑλος,
         "ορμων" => Τρᾱχῠς,
         "ορυκτοσ" => Ψῑλος,
-        "ορφνοσ" => Ψῑλος,
         "ορων" => Τρᾱχῠς,
         "οσμητοσ" => Ψῑλος,
         "ουρανοσκοποσ" => Ἰσος,
@@ -1128,11 +1121,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "οχυροσ" => Ψῑλος,
         "παιδοφονοσ" => Ἰσος,
         "παλαιοσ" => Ψῑλος,
-        "παλιρροχθοσ" => Τελειος,
         "παλτοσ" => Ψῑλος,
         "παμμαχοσ" => Ἰσος,
         "παμμεγεθησ" => Κᾰκοηθης,
-        "πανημεριοσ" => Τελειος,
         "παρατυχων" => Τρᾱχῠς,
         "παρειπων" => Τρᾱχῠς,
         "παρθενοσ" => Ἰσος,
@@ -1141,8 +1132,8 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "παρομοιοσ" => Τελειος,
         "παρων" => Τρᾱχῠς,
         "παστοσ" => Ψῑλος,
+        "πατρωοσ" => Ἰσος,
         "παυον" => Θηλῠς,
-        "παυροσ" => Ἰσος,
         "παχιων" => Ἡδῑων,
         "πεζοσ" => Ψῑλος,
         "πειθοσ" => Ψῑλος,
@@ -1159,6 +1150,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "πεπτοσ" => Ψῑλος,
         "πεπων" => Ἰσος,
         "περιιων" => Τρᾱχῠς,
+        "περικαρδιοσ" => Τελειος,
         "περιορων" => Τρᾱχῠς,
         "περισκοπων" => Τρᾱχῠς,
         "περισσοσ" => Ψῑλος,
@@ -1201,7 +1193,9 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "πολιοσ" => Ψῑλος,
         "πολυδειρασ" => Ψῑλος,
         "πολυιχθυσ" => Τελειος,
+        "πολυκλειτοσ" => Τελειος,
         "πολυμηχανοσ" => Τελειος,
+        "πολυπικροσ" => Τελειος,
         "πολυπλοκοσ" => Τελειος,
         "πολυπραγμων" => Κᾰκοηθης,
         "πολυσ" => Ψῑλος,
@@ -1216,8 +1210,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "προιδων" => Τρᾱχῠς,
         "προιων" => Τρᾱχῠς,
         "προνοων" => Τρᾱχῠς,
-        "προοδοσ" => Τελειος,
-        "προσβαλων" => Τρᾱχῠς,
         "προσηκων" => Θηλῠς,
         "προσιων" => Τρᾱχῠς,
         "προσοικων" => Τρᾱχῠς,
@@ -1275,6 +1267,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "σκαιοσ" => Ψῑλος,
         "σκαμβοσ" => Ψῑλος,
         "σκαπτοσ" => Ψῑλος,
+        "σκαυροσ" => Ἰσος,
         "σκελετοσ" => Ψῑλος,
         "σκιεροσ" => Ψῑλος,
         "σκιμβοσ" => Ψῑλος,
@@ -1305,9 +1298,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "στρατηγων" => Τρᾱχῠς,
         "στρεβλοσ" => Ψῑλος,
         "στρεπτοσ" => Ψῑλος,
-        "στριφνοσ" => Ψῑλος,
         "στρογγυλοσ" => Ἰσος,
-        "στρυφνοσ" => Ψῑλος,
         "στρωτοσ" => Ψῑλος,
         "στυγνοσ" => Ψῑλος,
         "στυμνοσ" => Ψῑλος,
@@ -1347,7 +1338,6 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "τελευτων" => Τρᾱχῠς,
         "τερην" => Θηλῠς,
         "τερπνοσ" => Ψῑλος,
-        "τετραγραμματοσ" => Τελειος,
         "τετρυμενοσ" => Ἰσος,
         "τεχναστοσ" => Ψῑλος,
         "τεχνητοσ" => Ψῑλος,
@@ -1390,12 +1380,13 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "υπαρχον" => Ψῑλος,
         "υπειπων" => Τρᾱχῠς,
         "υπερφρων" => Κᾰκοηθης,
+        "υπερωοσ" => Ἰσος,
         "υπηοιοσ" => Ἰσος,
         "υποβαρβαροσ" => Τελειος,
         "υπογειοσ" => Τελειος,
+        "υποπυροσ" => Τελειος,
         "υποστεγοσ" => Τελειος,
         "υπουργων" => Τρᾱχῠς,
-        "υψηλοκρημνοσ" => Τελειος,
         "υψηλοσ" => Ψῑλος,
         "υψιζυγοσ" => Τελειος,
         "υψικαρηνοσ" => Τελειος,
@@ -1415,16 +1406,15 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "φειδοσ" => Ψῑλος,
         "φειδωλοσ" => Ψῑλος,
         "φερασπισ" => Τελειος,
-        "φεριστοσ" => Τελειος,
         "φερων" => Θηλῠς,
         "φηλοσ" => Ἰσος,
         "φθαρτοσ" => Ψῑλος,
         "φθεγκτοσ" => Ψῑλος,
         "φθινοπωρινοσ" => Ψῑλος,
         "φθινυθων" => Θηλῠς,
+        "φιλαργυροσ" => Τελειος,
         "φιλημων" => Ἰσος,
         "φιλοβαρβαροσ" => Τελειος,
-        "φιλομυθοσ" => Τελειος,
         "φιλοσ" => Ἰσος,
         "φιλοστοργοσ" => Τελειος,
         "φιλωδοσ" => Ψῑλος,
@@ -1481,6 +1471,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
         "ψευδολογοσ" => Ἰσος,
         "ψηλαφητοσ" => Ψῑλος,
         "ψησασ" => Τρᾱχῠς,
+        "ψιθυροσ" => Τελειος,
         "ψιλοσ" => Ψῑλος,
         "ψοιθοσ" => Ψῑλος,
         "ψυδροσ" => Ψῑλος,
@@ -1498,86 +1489,70 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 
 /// Per declension, the cells whose ending takes the circumflex when accented on
 /// its last syllable (`θεοῦ`).
-pub static CIRCUMFLEX: [Cow<'static, [u16]>; 72] = [
-    Cow::Borrowed(&[]), // Ἐμπεδος
-    Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_F_SG, GEN_F_DU, GEN_N_SG, GEN_N_DU, DAT_M_SG, DAT_M_DU, DAT_F_SG,
-        DAT_F_DU, DAT_N_SG, DAT_N_DU,
-    ]), // Ἐσχᾰτος
+pub static CIRCUMFLEX: [Cow<'static, [u16]>; 57] = [
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
         ADVERB,
     ]), // Μᾰλᾰκος
     Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+        ADVERB,
+    ]), // Ἐμπεδος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+        ADVERB,
+    ]), // Τελειος
+    Cow::Borrowed(&[GEN_F_PL]), // Προσηκων
+    Cow::Borrowed(&[
         NOM_M_DU, NOM_M_PL, NOM_F_DU, NOM_F_PL, NOM_N_DU, NOM_N_PL, GEN_M_SG, GEN_M_DU, GEN_M_PL,
         GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL, DAT_M_SG, DAT_M_DU, DAT_F_SG,
         DAT_F_DU, DAT_N_SG, DAT_N_DU, ACC_M_SG, ACC_M_DU, ACC_M_PL, ACC_F_SG, ACC_F_DU, ACC_F_PL,
         ACC_N_DU, ACC_N_PL, VOC_M_DU, VOC_M_PL, VOC_F_DU, VOC_F_PL, VOC_N_DU, VOC_N_PL, ADVERB,
     ]), // Ἀτελης
-    Cow::Borrowed(&[]), // Τελειος
-    Cow::Borrowed(&[GEN_F_PL]), // Προσηκων
-    Cow::Borrowed(&[GEN_F_PL]), // Ἀσημος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
         ADVERB,
     ]), // Ψῑλος
     Cow::Borrowed(&[GEN_F_PL]), // Προπᾱς
-    Cow::Borrowed(&[]), // Ὑστερος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+        ADVERB,
+    ]), // Ἀσημος
+    Cow::Borrowed(&[]),         // Ὑστερος
+    Cow::Borrowed(&[]),         // Ἀρῐστος
+    Cow::Borrowed(&[GEN_F_PL]), // Πληγεις
+    Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, GEN_F_PL, ACC_N_SG, VOC_M_SG, VOC_N_SG]), // Ἀρκων
+    Cow::Borrowed(&[GEN_F_PL]), // Εἰκως
+    Cow::Borrowed(&[]),         // Μνημων
+    Cow::Borrowed(&[GEN_F_PL]), // Φωνηεις
+    Cow::Borrowed(&[GEN_F_PL]), // Ζων
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
         ADVERB,
     ]), // Λᾰμπρος
-    Cow::Borrowed(&[]), // Ἀρῐστος
-    Cow::Borrowed(&[GEN_F_PL]), // Πληγεις
-    Cow::Borrowed(&[GEN_F_PL]), // Ἰων
-    Cow::Borrowed(&[]), // Οἰκεῑος
-    Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, GEN_F_PL, ACC_N_SG, VOC_M_SG, VOC_N_SG]), // Ἀρκων
-    Cow::Borrowed(&[GEN_F_PL]), // Βαινων
-    Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-        ADVERB,
-    ]), // Μαυρος
-    Cow::Borrowed(&[GEN_F_PL]), // Εἰκως
-    Cow::Borrowed(&[]), // Μνημων
-    Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-        ADVERB,
-    ]), // Φᾰνερος
-    Cow::Borrowed(&[GEN_F_PL]), // Φωνηεις
-    Cow::Borrowed(&[GEN_F_PL]), // Ζων
-    Cow::Borrowed(&[GEN_F_PL]), // Δειξᾱς
+    Cow::Borrowed(&[]),         // Πλειων
     Cow::Borrowed(&[
         NOM_M_DU, NOM_M_PL, NOM_N_DU, GEN_M_SG, GEN_M_PL, GEN_F_SG, GEN_F_PL, GEN_N_SG, GEN_N_PL,
         DAT_M_SG, DAT_M_PL, DAT_F_SG, DAT_F_PL, DAT_N_SG, DAT_N_PL, ACC_M_DU, ACC_M_PL, ACC_N_DU,
         VOC_M_DU, VOC_M_PL, VOC_N_DU,
     ]), // Τρᾱχῠς
-    Cow::Borrowed(&[]), // Ἡσσων
-    Cow::Borrowed(&[]), // Κᾰκοηθης
-    Cow::Borrowed(&[]), // Ἐρημος
-    Cow::Borrowed(&[GEN_F_PL]), // Δῐκαιος
-    Cow::Borrowed(&[]), // Φαῡλος
-    Cow::Borrowed(&[]), // Γαῡρος
-    Cow::Borrowed(&[]), // Τρῐπους
+    Cow::Borrowed(&[]),         // Τρῐπους
     Cow::Borrowed(&[
         GEN_M_DU, GEN_M_PL, GEN_F_DU, GEN_F_PL, GEN_N_DU, GEN_N_PL, DAT_M_DU, DAT_F_DU, DAT_N_DU,
         ADVERB,
     ]), // Ὁμηλῐξ
     Cow::Borrowed(&[
-        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
-        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
-        ADVERB,
-    ]), // Κολοβος
-    Cow::Borrowed(&[
         NOM_M_SG, NOM_M_PL, NOM_F_SG, NOM_N_SG, NOM_N_PL, ACC_M_SG, ACC_M_PL, ACC_N_SG, ACC_N_PL,
         VOC_M_PL, VOC_F_SG, VOC_N_SG, VOC_N_PL,
     ]), // Ἀξῐοχρεως
     Cow::Borrowed(&[GEN_F_PL]), // Πενης
-    Cow::Borrowed(&[]), // Ἀπᾰτωρ
+    Cow::Borrowed(&[]),         // Ἀπᾰτωρ
     Cow::Borrowed(&[GEN_F_PL]), // Φῡς
     Cow::Borrowed(&[
         NOM_M_SG, NOM_M_DU, NOM_M_PL, NOM_F_SG, NOM_F_DU, NOM_F_PL, NOM_N_SG, NOM_N_DU, NOM_N_PL,
@@ -1586,51 +1561,55 @@ pub static CIRCUMFLEX: [Cow<'static, [u16]>; 72] = [
         ACC_M_SG, ACC_M_DU, ACC_M_PL, ACC_F_SG, ACC_F_DU, ACC_F_PL, ACC_N_SG, ACC_N_DU, ACC_N_PL,
         VOC_M_SG, VOC_M_DU, VOC_M_PL, VOC_F_SG, VOC_F_DU, VOC_F_PL, VOC_N_SG, VOC_N_DU, VOC_N_PL,
         ADVERB,
-    ]), // Ἁπλοῡς
-    Cow::Borrowed(&[]), // Εὐελπῐς
-    Cow::Borrowed(&[]), // Χειρων
-    Cow::Borrowed(&[]), // Βοτηρ
-    Cow::Borrowed(&[]), // Κοῑλος
-    Cow::Borrowed(&[]), // Αἰθοψ
-    Cow::Borrowed(&[]), // Νομᾰς
+    ]), // Ἁπλους
+    Cow::Borrowed(&[]),         // Εὐελπῐς
+    Cow::Borrowed(&[]),         // Βοτηρ
+    Cow::Borrowed(&[]),         // Αἰθοψ
+    Cow::Borrowed(&[]),         // Νομᾰς
+    Cow::Borrowed(&[]),         // Πλειστος
     Cow::Borrowed(&[GEN_F_PL]), // Μελᾱς
-    Cow::Borrowed(&[GEN_F_PL]), // Θηλῠς
-    Cow::Borrowed(&[]), // Μωλῠς
-    Cow::Borrowed(&[GEN_F_PL]), // Δους
-    Cow::Borrowed(&[GEN_F_PL]), // Πεπτεως
-    Cow::Borrowed(&[]), // Ἀπους
-    Cow::Borrowed(&[]), // Πρωτος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
     ]), // Βαιος
-    Cow::Borrowed(&[]), // Δῐᾱνταῑος
-    Cow::Borrowed(&[]), // Ἀντῐπαις
-    Cow::Borrowed(&[]), // Τοιοσδε
-    Cow::Borrowed(&[]), // Μωνῠξ
-    Cow::Borrowed(&[]), // Νηποινος
+    Cow::Borrowed(&[GEN_F_PL]), // Θηλῠς
+    Cow::Borrowed(&[]),         // Μωλῠς
+    Cow::Borrowed(&[GEN_F_PL]), // Δους
+    Cow::Borrowed(&[]),         // Ἀπους
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Δεξῐος
+    Cow::Borrowed(&[
+        GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
+        DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
+    ]), // Ἀλλος
+    Cow::Borrowed(&[]),         // Ἀντῐπαις
+    Cow::Borrowed(&[]),         // Τοιοσδε
+    Cow::Borrowed(&[]),         // Μωνῠξ
+    Cow::Borrowed(&[]),         // Νηποινος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
         ADVERB,
     ]), // Ἱερος
-    Cow::Borrowed(&[]), // Ὁλοκληρος
+    Cow::Borrowed(&[]),         // Ὁλοκληρος
     Cow::Borrowed(&[
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
         DAT_M_SG, DAT_M_DU, DAT_M_PL, DAT_F_SG, DAT_F_DU, DAT_F_PL, DAT_N_SG, DAT_N_DU, DAT_N_PL,
         ADVERB,
     ]), // Δνοφερος
-    Cow::Borrowed(&[]), // Γενομενω
-    Cow::Borrowed(&[]), // Γενομενοιν
-    Cow::Borrowed(&[]), // Γενομεναιν
-    Cow::Borrowed(&[]), // Μελᾰνθρῐξ
-    Cow::Borrowed(&[]), // Ὑπαρχομενη
-    Cow::Borrowed(&[]), // Ὑπαρχον
-    Cow::Borrowed(&[]), // Ὑπαρχομενον
+    Cow::Borrowed(&[]),         // Γενομενω
+    Cow::Borrowed(&[]),         // Γενομενοιν
+    Cow::Borrowed(&[]),         // Γενομεναιν
+    Cow::Borrowed(&[]),         // Μελᾰνθρῐξ
+    Cow::Borrowed(&[]),         // Ὑπαρχομενη
+    Cow::Borrowed(&[]),         // Ὑπαρχον
+    Cow::Borrowed(&[]),         // Ὑπαρχομενον
     Cow::Borrowed(&[GEN_F_PL]), // Ψησας
-    Cow::Borrowed(&[]), // Χερηα
-    Cow::Borrowed(&[]), // Ἀτηρος
-    Cow::Borrowed(&[]), // Ἀειμακαριστος
+    Cow::Borrowed(&[]),         // Χερηα
+    Cow::Borrowed(&[]),         // Ἀτηρος
+    Cow::Borrowed(&[]),         // Ἀειμακαριστος
 ];
 
 /// The cells whose final `-αι`, `-οι` counts as long.

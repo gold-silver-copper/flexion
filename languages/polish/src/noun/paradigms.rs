@@ -27,7 +27,7 @@ use flexion::Paradigm;
 /// `loc` (sg, pl)
 /// `voc` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem noun_sg: $s0:tt;)?
      $(stem noun_pl: $s1:tt;)?
      $(nom: $c0:tt, $c1:tt;)?
@@ -65,6 +65,7 @@ macro_rules! declension {
                 $(flexion::cell!($s0),)? "\t",
                 $(flexion::cell!($s1),)? "\t",
             )),
+            affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
     };
 }
@@ -90,6 +91,24 @@ macro_rules! view {
     };
 }
 
+/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
+/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+macro_rules! affix {
+    () => {
+        None
+    };
+    ($affix:literal) => {
+        affix!($affix, $affix, "")
+    };
+    ($affix:literal, $other:literal, $letters:literal) => {
+        Some(flexion::Affix {
+            pattern: ::std::borrow::Cow::Borrowed($affix),
+            other: ::std::borrow::Cow::Borrowed($other),
+            letters: ::std::borrow::Cow::Borrowed($letters),
+        })
+    };
+}
+
 /// An inherent feature's value, as `(feature, value)` by their places.
 macro_rules! feature {
     (gender: $v:ident) => {
@@ -104,11 +123,11 @@ pub enum Declension {
     Babka,
     /// Like `założenie`: 4,185 words.
     Założenie,
-    /// Like `obraz`: 3,403 words.
+    /// Like `obraz`: 3,405 words.
     Obraz,
-    /// Like `linia`: 2,442 words.
+    /// Like `linia`: 2,443 words.
     Linia,
-    /// Like `baba`: 2,404 words.
+    /// Like `baba`: 2,403 words.
     Baba,
     /// Like `sieć`: 1,507 words.
     Sieć,
@@ -132,11 +151,11 @@ pub enum Declension {
     Życie,
     /// Like `baran`: 547 words.
     Baran,
-    /// Like `figura`: 481 words.
+    /// Like `figura`: 523 words.
     Figura,
     /// Like `bąk`: 448 words.
     Bąk,
-    /// Like `telefonista`: 435 words.
+    /// Like `telefonista`: 437 words.
     Telefonista,
     /// Like `dyrektor`: 393 words.
     Dyrektor,
@@ -208,10 +227,10 @@ pub enum Declension {
     Głowa,
     /// Like `gody`: 92 words.
     Gody,
-    /// Like `brosma`: 91 words.
-    Brosma,
     /// Like `wybór`: 90 words.
     Wybór,
+    /// Like `blizna`: 88 words.
+    Blizna,
     /// Like `kąt`: 84 words.
     Kąt,
     /// Like `strateg`: 83 words.
@@ -248,22 +267,18 @@ pub enum Declension {
     Baszta,
     /// Like `stosunki`: 46 words.
     Stosunki,
-    /// Like `tępogłów`: 45 words.
-    Tępogłów,
     /// Like `złe`: 43 words.
     Złe,
     /// Like `preliminaria`: 43 words.
     Preliminaria,
     /// Like `cóż`: 43 words.
     Cóż,
-    /// Like `kurwa`: 41 words.
-    Kurwa,
     /// Like `król`: 40 words.
     Król,
     /// Like `serce`: 39 words.
     Serce,
-    /// Like `krosta`: 38 words.
-    Krosta,
+    /// Like `kurwa`: 39 words.
+    Kurwa,
     /// Like `pokój`: 38 words.
     Pokój,
     /// Like `nadzieja`: 37 words.
@@ -278,6 +293,8 @@ pub enum Declension {
     Byk,
     /// Like `kufer`: 34 words.
     Kufer,
+    /// Like `tępogłów`: 33 words.
+    Tępogłów,
     /// Like `szyja`: 32 words.
     Szyja,
     /// Like `brzuch`: 32 words.
@@ -324,14 +341,14 @@ pub enum Declension {
     Rezonans,
     /// Like `konował`: 19 words.
     Konował,
+    /// Like `łajza`: 19 words.
+    Łajza,
     /// Like `rozgrywający`: 18 words.
     Rozgrywający,
     /// Like `piętro`: 18 words.
     Piętro,
     /// Like `rzeź`: 18 words.
     Rzeź,
-    /// Like `łajza`: 18 words.
-    Łajza,
     /// Like `luty`: 17 words.
     Luty,
     /// Like `hycel`: 17 words.
@@ -344,8 +361,6 @@ pub enum Declension {
     Szefowa,
     /// Like `oskarżony`: 15 words.
     Oskarżony,
-    /// Like `zjazd`: 15 words.
-    Zjazd,
     /// Like `krew`: 15 words.
     Krew,
     /// Like `ubogi`: 15 words.
@@ -374,6 +389,8 @@ pub enum Declension {
     Dynia,
     /// Like `odpowiedź`: 13 words.
     Odpowiedź,
+    /// Like `zjazd`: 13 words.
+    Zjazd,
     /// Like `mamusia`: 13 words.
     Mamusia,
     /// Like `usta`: 13 words.
@@ -382,6 +399,8 @@ pub enum Declension {
     Minister,
     /// Like `grodza`: 12 words.
     Grodza,
+    /// Like `bóbr`: 12 words.
+    Bóbr,
     /// Like `chorąży`: 12 words.
     Chorąży,
     /// Like `kiła`: 11 words.
@@ -502,8 +521,6 @@ pub enum Declension {
     Satelita,
     /// Like `ankier`: 6 words.
     Ankier,
-    /// Like `pizda`: 6 words.
-    Pizda,
     /// Like `hasło`: 6 words.
     Hasło,
     /// Like `modrzew`: 6 words.
@@ -514,8 +531,6 @@ pub enum Declension {
     Łeb,
     /// Like `gap`: 6 words.
     Gap,
-    /// Like `kolorysta`: 5 words.
-    Kolorysta,
     /// Like `ogar`: 5 words.
     Ogar,
     /// Like `stary`: 5 words.
@@ -540,6 +555,8 @@ pub enum Declension {
     Męczybuła,
     /// Like `sztuciec`: 5 words.
     Sztuciec,
+    /// Like `pizda`: 5 words.
+    Pizda,
     /// Like `poltergeist`: 5 words.
     Poltergeist,
     /// Like `brzdąc`: 5 words.
@@ -548,8 +565,6 @@ pub enum Declension {
     Wór,
     /// Like `kozodój`: 5 words.
     Kozodój,
-    /// Like `miara`: 5 words.
-    Miara,
     /// Like `igrzec`: 5 words.
     Igrzec,
     /// Like `brzusiec`: 5 words.
@@ -562,6 +577,8 @@ pub enum Declension {
     Czech,
     /// Like `xbox`: 4 words.
     Xbox,
+    /// Like `pismo`: 4 words.
+    Pismo,
     /// Like `krzesany`: 4 words.
     Krzesany,
     /// Like `tragi`: 4 words.
@@ -620,8 +637,6 @@ pub enum Declension {
     Adinwencyja,
     /// Like `toinowate`: 4 words.
     Toinowate,
-    /// Like `pismo`: 4 words.
-    Pismo,
     /// Like `twist`: 4 words.
     Twist,
     /// Like `mms`: 4 words.
@@ -638,6 +653,8 @@ pub enum Declension {
     Fotel,
     /// Like `akonto`: 3 words.
     Akonto,
+    /// Like `sosna`: 3 words.
+    Sosna,
     /// Like `świat`: 3 words.
     Świat,
     /// Like `miesiąc`: 3 words.
@@ -664,10 +681,10 @@ pub enum Declension {
     Wrzesień,
     /// Like `chłop`: 3 words.
     Chłop,
-    /// Like `starosta`: 3 words.
-    Starosta,
     /// Like `dłoń`: 3 words.
     Dłoń,
+    /// Like `jazda`: 3 words.
+    Jazda,
     /// Like `przedwieć`: 3 words.
     Przedwieć,
     /// Like `kudły`: 3 words.
@@ -676,6 +693,8 @@ pub enum Declension {
     Dziecko,
     /// Like `woźnica`: 3 words.
     Woźnica,
+    /// Like `miara`: 3 words.
+    Miara,
     /// Like `dola`: 3 words.
     Dola,
     /// Like `książę`: 3 words.
@@ -716,6 +735,8 @@ pub enum Declension {
     Annotacyja,
     /// Like `akcesyja`: 3 words.
     Akcesyja,
+    /// Like `przyroda`: 3 words.
+    Przyroda,
     /// Like `jaź`: 3 words.
     Jaź,
     /// Like `cyboryjum`: 1 words.
@@ -754,7 +775,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 325] = [
+    pub const ALL: [Declension; 326] = [
         Declension::Babka,
         Declension::Założenie,
         Declension::Obraz,
@@ -809,8 +830,8 @@ impl Declension {
         Declension::Abdest,
         Declension::Głowa,
         Declension::Gody,
-        Declension::Brosma,
         Declension::Wybór,
+        Declension::Blizna,
         Declension::Kąt,
         Declension::Strateg,
         Declension::Pytel,
@@ -829,14 +850,12 @@ impl Declension {
         Declension::Grzebień,
         Declension::Baszta,
         Declension::Stosunki,
-        Declension::Tępogłów,
         Declension::Złe,
         Declension::Preliminaria,
         Declension::Cóż,
-        Declension::Kurwa,
         Declension::Król,
         Declension::Serce,
-        Declension::Krosta,
+        Declension::Kurwa,
         Declension::Pokój,
         Declension::Nadzieja,
         Declension::Koń,
@@ -844,6 +863,7 @@ impl Declension {
         Declension::Postać,
         Declension::Byk,
         Declension::Kufer,
+        Declension::Tępogłów,
         Declension::Szyja,
         Declension::Brzuch,
         Declension::Błoto,
@@ -867,17 +887,16 @@ impl Declension {
         Declension::Barłóg,
         Declension::Rezonans,
         Declension::Konował,
+        Declension::Łajza,
         Declension::Rozgrywający,
         Declension::Piętro,
         Declension::Rzeź,
-        Declension::Łajza,
         Declension::Luty,
         Declension::Hycel,
         Declension::Gazda,
         Declension::Okno,
         Declension::Szefowa,
         Declension::Oskarżony,
-        Declension::Zjazd,
         Declension::Krew,
         Declension::Ubogi,
         Declension::Noga,
@@ -892,10 +911,12 @@ impl Declension {
         Declension::Ramię,
         Declension::Dynia,
         Declension::Odpowiedź,
+        Declension::Zjazd,
         Declension::Mamusia,
         Declension::Usta,
         Declension::Minister,
         Declension::Grodza,
+        Declension::Bóbr,
         Declension::Chorąży,
         Declension::Kiła,
         Declension::Nożyce,
@@ -956,13 +977,11 @@ impl Declension {
         Declension::Bodziec,
         Declension::Satelita,
         Declension::Ankier,
-        Declension::Pizda,
         Declension::Hasło,
         Declension::Modrzew,
         Declension::Peso,
         Declension::Łeb,
         Declension::Gap,
-        Declension::Kolorysta,
         Declension::Ogar,
         Declension::Stary,
         Declension::Jaśniepani,
@@ -975,17 +994,18 @@ impl Declension {
         Declension::Mrzygłód,
         Declension::Męczybuła,
         Declension::Sztuciec,
+        Declension::Pizda,
         Declension::Poltergeist,
         Declension::Brzdąc,
         Declension::Wór,
         Declension::Kozodój,
-        Declension::Miara,
         Declension::Igrzec,
         Declension::Brzusiec,
         Declension::Suseł,
         Declension::Łabędź,
         Declension::Czech,
         Declension::Xbox,
+        Declension::Pismo,
         Declension::Krzesany,
         Declension::Tragi,
         Declension::Pierś,
@@ -1015,7 +1035,6 @@ impl Declension {
         Declension::Amonicyja,
         Declension::Adinwencyja,
         Declension::Toinowate,
-        Declension::Pismo,
         Declension::Twist,
         Declension::Mms,
         Declension::Like,
@@ -1024,6 +1043,7 @@ impl Declension {
         Declension::Bania,
         Declension::Fotel,
         Declension::Akonto,
+        Declension::Sosna,
         Declension::Świat,
         Declension::Miesiąc,
         Declension::Brat,
@@ -1037,12 +1057,13 @@ impl Declension {
         Declension::Ciało,
         Declension::Wrzesień,
         Declension::Chłop,
-        Declension::Starosta,
         Declension::Dłoń,
+        Declension::Jazda,
         Declension::Przedwieć,
         Declension::Kudły,
         Declension::Dziecko,
         Declension::Woźnica,
+        Declension::Miara,
         Declension::Dola,
         Declension::Książę,
         Declension::Mamcia,
@@ -1063,6 +1084,7 @@ impl Declension {
         Declension::Abszejt,
         Declension::Annotacyja,
         Declension::Akcesyja,
+        Declension::Przyroda,
         Declension::Jaź,
         Declension::Cyboryjum,
         Declension::Przepowiedanie,
@@ -1097,7 +1119,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 326] = [
     // Babka: 4,286 words (matka, dziewczynka, mrówka, kaczka, matematyka, dziwka).
     declension!("babka", 4286, "~ka", [gender: Feminine];
     stem noun_sg: "~k- like babka";
@@ -1118,8 +1140,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~niu", "~niach";
     voc: "~nie", _;
     ),
-    // Obraz: 3,403 words (gratis, barter, swap, abandon, abdomen, on).
-    declension!("obraz", 3403, "~", [gender: MasculineInanimate];
+    // Obraz: 3,405 words (gratis, barter, swap, abandon, abdomen, on).
+    declension!("obraz", 3405, "~", [gender: MasculineInanimate];
     stem noun_sg: "~- like założenie";
     nom: _, "~y";
     gen_: "~u", "~ów";
@@ -1128,8 +1150,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ie", "~ach";
     voc: "~ie", _;
     ),
-    // Linia: 2,442 words (aria, koala, impala, sepia, tortilla, familia).
-    declension!("linia", 2442, "~a", [gender: Feminine];
+    // Linia: 2,443 words (aria, koala, impala, sepia, tortilla, familia).
+    declension!("linia", 2443, "~a", [gender: Feminine];
     stem noun_sg: "~- like babka";
     nom: _, "~e";
     gen_: "~i", "~i";
@@ -1138,8 +1160,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~i", "~ach";
     voc: "~o", _;
     ),
-    // Baba: 2,404 words (henna, tuba, zebra, lama, pupa, salsa). Like Linia, except in 5 cells: nom pl, gen_ sg, gen_ pl, dat sg, loc sg.
-    declension!("baba", 2404, "~a", [gender: Feminine], like Linia;
+    // Baba: 2,403 words (henna, tuba, zebra, lama, pupa, salsa). Like Linia, except in 5 cells: nom pl, gen_ sg, gen_ pl, dat sg, loc sg.
+    declension!("baba", 2403, "~a", [gender: Feminine], like Linia;
     nom: _, "~y";
     gen_: "~y", "~";
     dat: "~ie", _;
@@ -1233,24 +1255,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     stem noun_sg: "~- like gospodarz";
     gen_: "~a", _;
     ),
-    // Figura: 481 words (arietta, kobieta, herbata, podłoga, rata, manga). Like Baba, except in 2 cells: dat sg, loc sg.
-    declension!("figura", 481, "~a", [gender: Feminine], like Baba;
+    // Figura: 523 words (arietta, kobieta, herbata, podłoga, rata, manga). Like Baba, except in 2 cells: dat sg, loc sg.
+    declension!("figura", 523, "~a", [gender: Feminine], like Baba;
     dat: "~ze", _;
     loc: "~ze", _;
     ),
-    // Bąk: 448 words (drink, fag, york, wack, blog, frank). Like Język, except in 0 cells: .
+    // Bąk: 448 words (drink, fag, york, wack, blog, frank). Like Język.
     declension!("bąk", 448, "~", like Język;
     stem noun_sg: "~- like gospodarz";
     ),
-    // Telefonista: 435 words (telefonista, barista, homoseksualista, organista, pianista, turysta).
-    declension!("telefonista", 435, "~taˇ", [gender: MasculinePersonal];
-    nom: "~taˇ", "~ciˇ";
-    gen_: "~tyˇ", "~tówˇ";
-    dat: "~cieˇ", "~tomˇ";
-    acc: "~tęˇ", _;
-    ins: "~tąˇ", "~tamiˇ";
-    loc: "~cieˇ", "~tachˇ";
-    voc: "~toˇ", _;
+    // Telefonista: 437 words (telefonista, barista, homoseksualista, organista, pianista, turysta). Like Neofita with `ˇ` after each pattern.
+    declension!("telefonista", 437, "~taˇ", [gender: MasculinePersonal], like Neofita with "ˇ";
     ),
     // Dyrektor: 393 words (writer, matador, premier, operator, translator, puer). Like Baran, except in 3 cells: nom pl, loc sg, voc sg.
     declension!("dyrektor", 393, "~", [gender: MasculinePersonal], like Baran;
@@ -1306,9 +1321,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("panel", 208, "~", [gender: MasculineInanimate], like Klucz;
     gen_: "~u", "~i";
     ),
-    // Powietrze: 207 words (image, college, beagle, cache, quiche, upgrade). Like Gospodarz, except in 3 cells: nom pl, dat sg, voc sg.
-    declension!("powietrze", 207, "~e", like Gospodarz;
-    stem noun_sg: "~e- like założenie";
+    // Powietrze: 207 words (image, college, beagle, cache, quiche, upgrade). Like Klucz with `` after each pattern (`e` after ~), except in 3 cells: nom pl, dat sg, voc sg.
+    declension!("powietrze", 207, "~e", like Klucz with "", "e" after "~";
     nom: _, "~a";
     dat: "~u", _;
     voc: "~e", _;
@@ -1446,14 +1460,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("jaźwiec", 95, "~ie~", [gender: MasculineAnimate], like Garniec;
     acc: "~~a", "~~e";
     ),
-    // Abdest: 94 words (abdest, most, list, test, manifest, zeitgeist). Like Telefonista, except in 5 cells: nom pl, gen_ sg, dat sg, ins sg, voc sg.
-    declension!("abdest", 94, "~tˇ", [gender: MasculineInanimate], like Telefonista;
-    stem noun_sg: "~tˇ- like założenie";
-    nom: _, "~tyˇ";
-    gen_: "~tuˇ", _;
-    dat: "~towiˇ", _;
-    ins: "~temˇ", _;
-    voc: "~cieˇ", _;
+    // Abdest: 94 words (abdest, most, list, test, manifest, zeitgeist). Like Grunt with `ˇ` after each pattern.
+    declension!("abdest", 94, "~tˇ", [gender: MasculineInanimate], like Grunt with "ˇ";
     ),
     // Głowa: 93 words (krowa, siostra, woda, koza, brzoza, środa).
     declension!("głowa", 93, "~o~a", [gender: Feminine];
@@ -1465,18 +1473,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~o~ie", "~o~ach";
     voc: "~o~o", _;
     ),
-    // Gody: 92 words (ony, derby, alimenty, szachy, okulary, plecy). Like Chłopiec, except in 0 cells: .
+    // Gody: 92 words (ony, derby, alimenty, szachy, okulary, plecy). Like Chłopiec.
     declension!("gody", 92, "~~y", like Chłopiec;
-    ),
-    // Brosma: 91 words (brosma, przyroda, trucizna, polszczyzna, płaszczyzna, zgoda).
-    declension!("brosma", 91, "~aˇ", [gender: Feminine];
-    nom: "~aˇ", "~yˇ";
-    gen_: "~yˇ", "~ˇ";
-    dat: "~ieˇ", "~omˇ";
-    acc: "~ęˇ", _;
-    ins: "~ąˇ", "~amiˇ";
-    loc: "~ieˇ", "~achˇ";
-    voc: "~oˇ", _;
     ),
     // Wybór: 90 words (mór, sól, wieczór, bór, lód, roztwór).
     declension!("wybór", 90, "~ó~", [gender: MasculineInanimate];
@@ -1487,6 +1485,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: "~o~em", "~o~ami";
     loc: "~o~ze", "~o~ach";
     voc: "~o~ze", _;
+    ),
+    // Blizna: 88 words (mężczyzna, trucizna, polszczyzna, płaszczyzna, staropolszczyzna, babizna).
+    declension!("blizna", 88, "~z~a", [gender: Feminine];
+    stem noun_sg: "~z~- like babka";
+    nom: _, "~z~y";
+    gen_: "~z~y", "~z~";
+    dat: "~ź~ie", "~z~om";
+    ins: "~z~ą", "~z~ami";
+    loc: "~ź~ie", "~z~ach";
+    voc: "~z~o", _;
     ),
     // Kąt: 84 words (robot, fart, but, grapefruit, bat, bet). Like Grunt, except in 1 cell: gen_ sg.
     declension!("kąt", 84, "~t", like Grunt;
@@ -1546,7 +1554,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~o~zie", _;
     voc: "~o~zie", _;
     ),
-    // Dudy: 58 words (my, nary, mary, wy, imieniny, urodziny). Like Baba, except in 0 cells: .
+    // Dudy: 58 words (my, nary, mary, wy, imieniny, urodziny). Like Baba.
     declension!("dudy", 58, "~y", [gender: Feminine], like Baba;
     ),
     // Koniec: 57 words (koniec, taniec, kaganiec, trawieniec, karbieniec, pszeniec). Like Wybraniec, except in 3 cells: nom pl, acc sg, voc sg.
@@ -1559,7 +1567,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("piec", 56, "~", [gender: MasculineInanimate], like Klucz;
     gen_: _, "~ów";
     ),
-    // Sanki: 51 words (nożyczki, sanki, słuchawki, spodenki, kajdanki, rzutki). Like Babka, except in 0 cells: .
+    // Sanki: 51 words (nożyczki, sanki, słuchawki, spodenki, kajdanki, rzutki). Like Babka.
     declension!("sanki", 51, "~ki", [gender: Feminine], like Babka;
     ),
     // Przestrzeń: 50 words (broń, jesień, zieleń, otchłań, czerń, czerwień). Like Ksieni, except in 1 cell: gen_ pl.
@@ -1595,11 +1603,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: derived, _;
     voc: derived, _;
     ),
-    // Tępogłów: 45 words (bóbr, sokół, potwór, myszołów, rybołów, szablodziób). Like Obóz, except in 2 cells: gen_ sg, acc sg.
-    declension!("tępogłów", 45, "~ó~", like Obóz;
-    gen_: "~o~a", _;
-    acc: "~o~a", _;
-    ),
     // Złe: 43 words (dobre, dane, złe, wolne, bykowe, wychodne). Like Woźny, except in 2 cells: nom pl, voc sg.
     declension!("złe", 43, "~e", [gender: Neuter], like Woźny;
     stem noun_sg: "~e- like założenie";
@@ -1620,15 +1623,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~m", "~ch";
     voc: "~", _;
     ),
-    // Kurwa: 41 words (kurwa, wiosna, sarna, pochwa, bitwa, podeszwa). Like Oko, except in 5 cells: nom pl, gen_ sg, dat sg, ins sg, loc sg.
-    declension!("kurwa", 41, "~~a", [gender: Feminine], like Oko;
-    stem noun_sg: "~~- like babka";
-    nom: _, "~~y";
-    gen_: "~~y", _;
-    dat: "~~ie", _;
-    ins: "~~ą", _;
-    loc: "~~ie", _;
-    ),
     // Król: 40 words (crush, syn, squash, eunuch, coach, belg). Like Chuj, except in 1 cell: nom pl.
     declension!("król", 40, "~", [gender: MasculinePersonal], like Chuj;
     nom: _, "~owie";
@@ -1637,15 +1631,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("serce", 39, "~e", like Powietrze;
     gen_: _, "~";
     ),
-    // Krosta: 38 words (pasta, lista, fiesta, protista, posta, glista).
-    declension!("krosta", 38, "~sta";
-    stem noun_sg: "~st- like babka";
-    nom: _, "~sty";
-    gen_: "~sty", "~st";
-    dat: "~ście", "~stom";
-    ins: "~stą", "~stami";
-    loc: "~ście", "~stach";
-    voc: "~sto", _;
+    // Kurwa: 39 words (kurwa, sarna, pochwa, bitwa, podeszwa, wojna). Like Oko, except in 5 cells: nom pl, gen_ sg, dat sg, ins sg, loc sg.
+    declension!("kurwa", 39, "~~a", [gender: Feminine], like Oko;
+    stem noun_sg: "~~- like babka";
+    nom: _, "~~y";
+    gen_: "~~y", _;
+    dat: "~~ie", _;
+    ins: "~~ą", _;
+    loc: "~~ie", _;
     ),
     // Pokój: 38 words (napój, pokój, obój, spokój, kolcowój, przekrój).
     declension!("pokój", 38, "~ój", [gender: MasculineInanimate];
@@ -1688,6 +1681,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("kufer", 34, "~e~", like Chłopiec;
     stem noun_sg: "~e~- like założenie";
     loc: "~~ze", _;
+    ),
+    // Tępogłów: 33 words (bóbr, sokół, myszołów, rybołów, szablodziób, mól). Like Obóz, except in 2 cells: gen_ sg, acc sg.
+    declension!("tępogłów", 33, "~ó~", like Obóz;
+    gen_: "~o~a", _;
+    acc: "~o~a", _;
     ),
     // Szyja: 32 words (aleja, baja, faja, szyja, żmija, leluja). Like Nadzieja, except in 1 cell: gen_ pl.
     declension!("szyja", 32, "~ja", [gender: Feminine], like Nadzieja;
@@ -1814,6 +1812,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("konował", 19, "~ł", like Generał;
     nom: _, "~ły";
     ),
+    // Łajza: 19 words (abuna, dewa, budda, satrapa, asura, nomada). Like Mazepa, except in 1 cell: nom pl.
+    declension!("łajza", 19, "~a", [gender: MasculinePersonal], like Mazepa;
+    nom: _, "~owie|~y";
+    ),
     // Rozgrywający: 18 words (przewodniczący, budowniczy, służący, potrzebujący, wierzący, początkujący). Like Woźny, except in 1 cell: nom pl.
     declension!("rozgrywający", 18, "~y", [gender: MasculinePersonal], like Woźny;
     nom: _, "~y";
@@ -1832,10 +1834,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: "~zią", "~ziami";
     loc: "~zi", "~ziach";
     voc: "~zi", _;
-    ),
-    // Łajza: 18 words (abuna, dewa, budda, satrapa, asura, nomada). Like Mazepa, except in 1 cell: nom pl.
-    declension!("łajza", 18, "~a", [gender: MasculinePersonal], like Mazepa;
-    nom: _, "~owie|~y";
     ),
     // Luty: 17 words (prosty, dobry, pierwszy, luty, wewnętrzny, czwarty). Like Woźny, except in 2 cells: nom pl, acc sg.
     declension!("luty", 17, "~y", [gender: MasculineInanimate], like Woźny;
@@ -1868,16 +1866,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: "~o~ym", "~o~ymi";
     loc: "~o~ym", "~o~ych";
     voc: "~o~y", _;
-    ),
-    // Zjazd: 15 words (zajazd, pojazd, wjazd, zjazd, podjazd, najazd).
-    declension!("zjazd", 15, "~ˇ", [gender: MasculineInanimate];
-    stem noun_sg: "~ˇ- like założenie";
-    nom: _, "~yˇ";
-    gen_: "~uˇ", "~ówˇ";
-    dat: "~owiˇ", "~omˇ";
-    ins: "~emˇ", "~amiˇ";
-    loc: "~zieˇ", "~achˇ";
-    voc: "~zieˇ", _;
     ),
     // Krew: 15 words (brew, krew, marchew, jątrew, kotew, konew).
     declension!("krew", 15, "~e~", [gender: Feminine];
@@ -1918,9 +1906,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~w~", "~w~ach";
     voc: "~w~", _;
     ),
-    // Żigolo: 14 words (apollo, kolo, gigolo, gogo, prezio, syncio). Like Król, except in 1 cell: nom sg.
-    declension!("żigolo", 14, "~o", [gender: MasculinePersonal], like Król;
-    nom: "~o", _;
+    // Żigolo: 14 words (apollo, kolo, gigolo, gogo, prezio, syncio). Like Król with `` after each pattern (`o` after ~).
+    declension!("żigolo", 14, "~o", [gender: MasculinePersonal], like Król with "", "o" after "~";
     ),
     // Gps: 14 words (led, gps, vhs, suv, vat, af).
     declension!("gps", 14, "~", [gender: MasculineInanimate];
@@ -1942,10 +1929,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~kim", "~kich";
     voc: "~ki", _;
     ),
-    // Studio: 13 words (radio, trio, adagio, studio, patio, polio). Like Drzewo, except in 2 cells: gen_ pl, loc sg.
-    declension!("studio", 13, "~o", [gender: Neuter], like Drzewo;
-    gen_: _, "~ów";
-    loc: "~u", _;
+    // Studio: 13 words (radio, trio, adagio, studio, patio, polio). Like Piec with `` after each pattern (`o` after ~), except in 3 cells: nom pl, dat sg, voc sg.
+    declension!("studio", 13, "~o", [gender: Neuter], like Piec with "", "o" after "~";
+    nom: _, "~a";
+    dat: "~u", _;
+    voc: "~o", _;
     ),
     // Mały: 13 words (złoty, zielony, mały, gniady, strzemienny, schabowy). Like Woźny, except in 2 cells: nom pl, acc pl.
     declension!("mały", 13, "~y", like Woźny;
@@ -1975,6 +1963,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("odpowiedź", 13, "~ź", [gender: Feminine], like Rzeź;
     nom: _, "~zi";
     ),
+    // Zjazd: 13 words (zajazd, pojazd, wjazd, zjazd, podjazd, najazd).
+    declension!("zjazd", 13, "~az~", [gender: MasculineInanimate];
+    stem noun_sg: "~az~- like założenie";
+    nom: _, "~az~y";
+    gen_: "~az~u", "~az~ów";
+    dat: "~az~owi", "~az~om";
+    ins: "~az~em", "~az~ami";
+    loc: "~eź~zie", "~az~ach";
+    voc: "~eź~zie", _;
+    ),
     // Mamusia: 13 words (mamusia, córusia, szwaczusia, wnusia, kaczusia, żartownisia). Like Łoś, except in 5 cells: gen_ sg, gen_ pl, dat sg, ins sg, loc sg.
     declension!("mamusia", 13, "~sia", [gender: Feminine], like Łoś;
     stem noun_sg: "~si- like babka";
@@ -1993,9 +1991,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     nom: _, "~~owie|~~zy";
     acc: "~~a", _;
     ),
-    // Grodza: 12 words (pomarańcza, szarańcza, olsza, msza, mysza, wieczerza). Like Różnica, except in 1 cell: gen_ pl.
-    declension!("grodza", 12, "~a", [gender: Feminine], like Różnica;
-    gen_: _, "~y";
+    // Grodza: 12 words (pomarańcza, szarańcza, olsza, msza, mysza, wieczerza). Like Moc with `` after each pattern (`a` after ~), except in 2 cells: acc sg, voc sg.
+    declension!("grodza", 12, "~a", [gender: Feminine], like Moc with "", "a" after "~";
+    acc: "~ę", _;
+    voc: "~o", _;
+    ),
+    // Bóbr: 12 words (potwór, stwór, upiór, białopiór, głodomór, wypiór). Like Wybór, except in 2 cells: gen_ sg, acc sg.
+    declension!("bóbr", 12, "~ó~", like Wybór;
+    gen_: "~o~a", _;
+    acc: "~o~a", _;
     ),
     // Chorąży: 12 words (motorniczy, krojczy, łowczy, leśniczy, podchorąży, chorąży). Like Woźny, except in 1 cell: nom pl.
     declension!("chorąży", 12, "~y", [gender: MasculinePersonal], like Woźny;
@@ -2044,10 +2048,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ę~u", _;
     voc: "~ę~u", _;
     ),
-    // Live: 10 words (house, live, online, hype, deadline, pro-life).
-    declension!("live", 10, "~~", [gender: MasculineInanimate];
-    stem noun_sg: "~~- like założenie";
-    stem noun_pl: "~i~- like live";
+    // Live: 10 words (house, live, online, hype, deadline, pro-life). Like Aaron with `~` after each pattern, except in 3 cells: acc sg, loc sg, voc sg.
+    declension!("live", 10, "~~", [gender: MasculineInanimate], like Aaron with "~";
+    acc: "~~", _;
+    loc: "~i~", _;
+    voc: "~i~", _;
     ),
     // Żółw: 10 words (paw, drop, karp, żółw, żuraw, czerw).
     declension!("żółw", 10, "~";
@@ -2109,9 +2114,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("gnat", 9, "~t", like Funt;
     acc: _, "~ty";
     ),
-    // Hardcore: 9 words (software, hardware, abandonware, hardcore, freeware, manicure). Like Live, except in 0 cells: .
-    declension!("hardcore", 9, "~~", [gender: MasculineInanimate], like Live;
-    stem noun_pl: "~z~- like live";
+    // Hardcore: 9 words (software, hardware, abandonware, hardcore, freeware, manicure). Like Aaron with `~` after each pattern, except in 3 cells: acc sg, loc sg, voc sg.
+    declension!("hardcore", 9, "~~", [gender: MasculineInanimate], like Aaron with "~";
+    acc: "~~", _;
+    loc: "~z~", _;
+    voc: "~z~", _;
     ),
     // Arbiter: 9 words (arbiter, magister, holender, fater, filister, belfer). Like Minister, except in 1 cell: nom pl.
     declension!("arbiter", 9, "~e~", [gender: MasculinePersonal], like Minister;
@@ -2151,7 +2158,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ocie", "~otach";
     voc: "~ocie", _;
     ),
-    // Soczeń: 9 words (styczeń, ostrożeń, bezdeń, toczeń, sworzeń, tłuczeń). Like Grzebień, except in 0 cells: .
+    // Soczeń: 9 words (styczeń, ostrożeń, bezdeń, toczeń, sworzeń, tłuczeń). Like Grzebień.
     declension!("soczeń", 9, "~eń", like Grzebień;
     stem noun_sg: "~eń- like założenie";
     ),
@@ -2167,7 +2174,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("jeniec", 9, "~nie~", like Wybraniec;
     voc: "~ń~u|~ń~ze", _;
     ),
-    // Śmieć: 9 words (liść, kić, śmieć, rupieć, nibyliść, papuć). Like Kapeć, except in 0 cells: .
+    // Śmieć: 9 words (liść, kić, śmieć, rupieć, nibyliść, papuć). Like Kapeć.
     declension!("śmieć", 9, "~ć", [gender: MasculineInanimate], like Kapeć;
     stem noun_sg: "~ć- like założenie";
     ),
@@ -2226,7 +2233,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("finanse", 8, "~e", [gender: MasculineInanimate], like Peryferie;
     gen_: _, "~ów";
     ),
-    // Czecheł: 8 words (węzeł, supeł, kubeł, czecheł, gruzeł, hydrowęzeł). Like Konował, except in 0 cells: .
+    // Czecheł: 8 words (węzeł, supeł, kubeł, czecheł, gruzeł, hydrowęzeł). Like Konował.
     declension!("czecheł", 8, "~eł", [gender: MasculineInanimate], like Konował;
     stem noun_sg: "~eł- like założenie";
     ),
@@ -2257,9 +2264,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     dat: "~zie", _;
     loc: "~zie", _;
     ),
-    // Ojczysko: 7 words (kolugo, kogucisko, aktorzysko, pijaczysko, bidaczysko, biedaczysko). Like Stanowisko, except in 1 cell: gen_ pl.
-    declension!("ojczysko", 7, "~o", like Stanowisko;
-    gen_: _, "~ów";
+    // Ojczysko: 7 words (kolugo, kogucisko, aktorzysko, pijaczysko, bidaczysko, biedaczysko). Like Język with `` after each pattern (`o` after ~), except in 3 cells: nom pl, dat sg, voc sg.
+    declension!("ojczysko", 7, "~o", like Język with "", "o" after "~";
+    nom: _, "~a";
+    dat: "~u", _;
+    voc: "~o", _;
     ),
     // Gość: 7 words (gość, cieć, kmieć, turkuć, boć, berbeć). Like Śmieć, except in 1 cell: acc sg.
     declension!("gość", 7, "~ć", like Śmieć;
@@ -2288,13 +2297,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ksie", "~ksach";
     voc: "~ksie", _;
     ),
-    // Szpenio: 6 words (facio, piesio, pysio, pedzio, szpenio, dziadulo). Like Chuj, except in 1 cell: nom sg.
-    declension!("szpenio", 6, "~o", like Chuj;
-    nom: "~o", _;
+    // Szpenio: 6 words (facio, piesio, pysio, pedzio, szpenio, dziadulo). Like Chuj with `` after each pattern (`o` after ~).
+    declension!("szpenio", 6, "~o", like Chuj with "", "o" after "~";
     ),
-    // Kapo: 6 words (maestro, kapo, tato, romeo, bambo, wykidajło). Like Patron, except in 2 cells: nom sg, voc sg.
-    declension!("kapo", 6, "~o", [gender: MasculinePersonal], like Patron;
-    nom: "~o", _;
+    // Kapo: 6 words (maestro, kapo, tato, romeo, bambo, wykidajło). Like Patron with `` after each pattern (`o` after ~), except in 1 cell: voc sg.
+    declension!("kapo", 6, "~o", [gender: MasculinePersonal], like Patron with "", "o" after "~";
     voc: "~o", _;
     ),
     // Szew: 6 words (bez, len, półwysep, szew, najem, pozew). Like Szaber, except in 2 cells: loc sg, voc sg.
@@ -2302,11 +2309,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~~ie", _;
     voc: "~~ie", _;
     ),
-    // Wzorzec: 6 words (marzec, dworzec, proporzec, kobierzec, wzorzec, korzec). Like Garniec, except in 0 cells: .
+    // Wzorzec: 6 words (marzec, dworzec, proporzec, kobierzec, wzorzec, korzec). Like Garniec.
     declension!("wzorzec", 6, "~ze~", [gender: MasculineInanimate], like Garniec;
     stem noun_sg: "~ze~- like założenie";
     ),
-    // Lagier: 6 words (cukier, bunkier, łagier, ugier, lukier, lagier). Like Szaber, except in 0 cells: .
+    // Lagier: 6 words (cukier, bunkier, łagier, ugier, lukier, lagier). Like Szaber.
     declension!("lagier", 6, "~ie~", [gender: MasculineInanimate], like Szaber;
     stem noun_sg: "~ie~- like założenie";
     ),
@@ -2344,20 +2351,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("ankier", 6, "~ie~", [gender: MasculineInanimate], like Lagier;
     gen_: "~~a", _;
     ),
-    // Pizda: 6 words (pizda, uzda, bruzda, brózda, jazda, glizda). Like Brosma, except in 2 cells: dat sg, loc sg.
-    declension!("pizda", 6, "~aˇ", [gender: Feminine], like Brosma;
-    dat: "~zieˇ", _;
-    loc: "~zieˇ", _;
-    ),
-    // Hasło: 6 words (masło, krzesło, wiosło, hasło, koromysło, jasło).
-    declension!("hasło", 6, "~łoˇ", [gender: Neuter];
-    stem noun_sg: "~łoˇ- like założenie";
-    nom: _, "~łaˇ";
-    gen_: "~łaˇ", "~ełˇ";
-    dat: "~łuˇ", "~łomˇ";
-    ins: "~łemˇ", "~łamiˇ";
-    loc: "~leˇ", "~łachˇ";
-    voc: "~łoˇ", _;
+    // Hasło: 6 words (masło, krzesło, wiosło, hasło, koromysło, jasło). Like Gardło with `ˇ` after each pattern.
+    declension!("hasło", 6, "~łoˇ", [gender: Neuter], like Gardło with "ˇ";
     ),
     // Modrzew: 6 words (modrzew, korab, głasnost, żąp, źreb, kump). Like Żółw, except in 1 cell: acc sg.
     declension!("modrzew", 6, "~", like Żółw;
@@ -2381,12 +2376,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("gap", 6, "~", like Żółw;
     gen_: _, "~iów";
     ),
-    // Kolorysta: 5 words (kapusta, rozpusta, folkslista, volkslista, adyjaforysta). Like Krosta, except in 2 cells: nom pl, gen_ pl.
-    declension!("kolorysta", 5, "~sta", [gender: Feminine], like Krosta;
-    nom: _, "~ści";
-    gen_: _, "~stów";
-    ),
-    // Ogar: 5 words (maluch, wałach, łakomczuch, flejtuch, kocmołuch). Like Pazur, except in 0 cells: .
+    // Ogar: 5 words (maluch, wałach, łakomczuch, flejtuch, kocmołuch). Like Pazur.
     declension!("ogar", 5, "~", [gender: MasculinePersonal], like Pazur;
     stem noun_sg: "~- like gospodarz";
     ),
@@ -2452,10 +2442,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ć~u", "~ć~ach";
     voc: "~ć~u", _;
     ),
-    // Poltergeist: 5 words (poltergeist, drapichrust, łuskost, przychlast, ubikwist). Like Abdest, except in 2 cells: gen_ sg, acc sg.
-    declension!("poltergeist", 5, "~tˇ", like Abdest;
-    gen_: "~taˇ", _;
-    acc: "~taˇ", _;
+    // Pizda: 5 words (pizda, uzda, bruzda, brózda, glizda). Like Baba with `ˇ` after each pattern, except in 2 cells: dat sg, loc sg.
+    declension!("pizda", 5, "~aˇ", [gender: Feminine], like Baba with "ˇ";
+    dat: "~zieˇ", _;
+    loc: "~zieˇ", _;
+    ),
+    // Poltergeist: 5 words (poltergeist, drapichrust, łuskost, przychlast, ubikwist). Like Funt with `ˇ` after each pattern.
+    declension!("poltergeist", 5, "~tˇ", like Funt with "ˇ";
     ),
     // Brzdąc: 5 words (truposz, brzdąc, raciądz, barwierz, przepowiedacz). Like Chuj, except in 1 cell: acc pl.
     declension!("brzdąc", 5, "~", [gender: MasculinePersonal], like Chuj;
@@ -2471,16 +2464,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~o~u", _;
     voc: "~o~u", _;
     ),
-    // Miara: 5 words (gwiazda, rozgwiazda, wiara, ofiara, miara).
-    declension!("miara", 5, "~a~a", [gender: Feminine];
-    stem noun_sg: "~a~- like babka";
-    nom: _, "~a~y";
-    gen_: "~a~y", "~a~";
-    dat: "~e~ze", "~a~om";
-    ins: "~a~ą", "~a~ami";
-    loc: "~e~ze", "~a~ach";
-    voc: "~a~o", _;
-    ),
     // Igrzec: 5 words (mędrzec, starzec, igrzec, czarnogórzec, chytrzec). Like Golec, except in 1 cell: nom sg.
     declension!("igrzec", 5, "~ze~", [gender: MasculinePersonal], like Golec;
     nom: "~ze~", _;
@@ -2495,13 +2478,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~ś~u", "~ś~ach";
     voc: "~ś~u", _;
     ),
-    // Suseł: 5 words (diabeł, suseł, wyżeł, paskosuseł, pięknosuseł). Like Hasło, except in 6 cells: nom sg, nom pl, gen_ pl, dat sg, acc sg, voc sg.
-    declension!("suseł", 5, "~ełˇ", like Hasło;
-    nom: "~ełˇ", "~łyˇ";
-    gen_: _, "~łówˇ";
-    dat: "~łowiˇ", _;
+    // Suseł: 5 words (diabeł, suseł, wyżeł, paskosuseł, pięknosuseł). Like Czecheł with `ˇ` after each pattern, except in 1 cell: acc sg.
+    declension!("suseł", 5, "~ełˇ", like Czecheł with "ˇ";
     acc: "~łaˇ", _;
-    voc: "~leˇ", _;
     ),
     // Łabędź: 4 words (łabędź, niedźwiedź, śledź, żołędź). Like Rzeź, except in 6 cells: gen_ sg, dat sg, acc sg, ins sg, loc sg, voc sg.
     declension!("łabędź", 4, "~ź", [gender: MasculineAnimate], like Rzeź;
@@ -2525,6 +2504,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     // Xbox: 4 words (matrix, pontifex, quincunx, xbox). Like Fax, except in 1 cell: gen_ sg.
     declension!("xbox", 4, "~x", like Fax;
     gen_: "~ksa", _;
+    ),
+    // Pismo: 4 words (pismo, czasopismo, dziejopismo, rękopismo).
+    declension!("pismo", 4, "~s~o", [gender: Neuter];
+    stem noun_sg: "~s~o- like założenie";
+    nom: _, "~s~a";
+    gen_: "~s~a", "~s~";
+    dat: "~s~u", "~s~om";
+    ins: "~s~em", "~s~ami";
+    loc: "~ś~ie", "~s~ach";
+    voc: "~s~o", _;
     ),
     // Krzesany: 4 words (czerwony, spalony, leszy, krzesany). Like Woźny, except in 1 cell: nom pl.
     declension!("krzesany", 4, "~y", like Woźny;
@@ -2605,7 +2594,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("dziób", 4, "~ó~", [gender: MasculineInanimate], like Obóz;
     gen_: "~o~a", _;
     ),
-    // Uczeń: 4 words (uczeń, dureń, truteń, roczeń). Like Koń, except in 0 cells: .
+    // Uczeń: 4 words (uczeń, dureń, truteń, roczeń). Like Koń.
     declension!("uczeń", 4, "~eń", like Koń;
     stem noun_sg: "~- like uczeń";
     ),
@@ -2676,11 +2665,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: derived, _;
     voc: derived, _;
     ),
-    // Adinwencyja: 4 words (absorbencyja, adinwencyja, adwertencyja, afabulacyja). Like Amonicyja, except in 6 cells: nom pl, gen_ sg, gen_ pl, acc sg, acc pl, ins sg.
-    declension!("adinwencyja", 4, "~y~a", [gender: Feminine], like Amonicyja;
+    // Adinwencyja: 4 words (absorbencyja, adinwencyja, adwertencyja, afabulacyja). Like Spowiedka with `y~a` after each pattern, except in 3 cells: nom pl, gen_ pl, ins sg.
+    declension!("adinwencyja", 4, "~y~a", [gender: Feminine], like Spowiedka with "y~a";
     nom: _, "~~e";
-    gen_: derived, "~y~";
-    acc: derived, derived;
+    gen_: _, "~y~";
     ins: "~~ą", _;
     ),
     // Toinowate: 4 words (wszystkie, toinowate, błonkoskrzydłe, niewymowne). Like Peryferie, except in 5 cells: gen_ pl, dat pl, acc pl, ins pl, loc pl.
@@ -2691,17 +2679,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: _, "~ymi";
     loc: _, "~ych";
     ),
-    // Pismo: 4 words (pismo, czasopismo, dziejopismo, rękopismo). Like Brosma, except in 4 cells: nom pl, gen_ sg, dat sg, ins sg.
-    declension!("pismo", 4, "~oˇ", [gender: Neuter], like Brosma;
-    stem noun_sg: "~oˇ- like założenie";
-    nom: _, "~aˇ";
-    gen_: "~aˇ", _;
-    dat: "~uˇ", _;
-    ins: "~emˇ", _;
-    ),
-    // Twist: 4 words (host, twist, parst, mikst). Like Abdest, except in 1 cell: gen_ sg.
-    declension!("twist", 4, "~tˇ", [gender: MasculineInanimate], like Abdest;
-    gen_: "~taˇ", _;
+    // Twist: 4 words (host, twist, parst, mikst). Like Kąt with `ˇ` after each pattern.
+    declension!("twist", 4, "~tˇ", [gender: MasculineInanimate], like Kąt with "ˇ";
     ),
     // Mms: 4 words (sms, dj, vip, mms). Like Gps, except in 2 cells: gen_ sg, acc sg.
     declension!("mms", 4, "~", like Gps;
@@ -2724,9 +2703,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: "~ą", derived;
     loc: "~éj", _;
     ),
-    // Wsio: 4 words (sio, wsio, miodzio, brzusio). Like Szpenio, except in 1 cell: acc sg.
-    declension!("wsio", 4, "~o", like Szpenio;
-    acc: "~o", _;
+    // Wsio: 4 words (sio, wsio, miodzio, brzusio). Like Piec with `` after each pattern (`o` after ~).
+    declension!("wsio", 4, "~o", like Piec with "", "o" after "~";
     ),
     // Bania: 3 words (dzieciarnia, głosownia, bałamutnia). Like Cizia, except in 1 cell: voc sg.
     declension!("bania", 3, "~a", [gender: Feminine], like Cizia;
@@ -2739,6 +2717,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     // Akonto: 3 words (divertimento, akonto, dyskonto). Like Błoto, except in 1 cell: gen_ pl.
     declension!("akonto", 3, "~to", [gender: Neuter], like Błoto;
     gen_: _, "~et";
+    ),
+    // Sosna: 3 words (wiosna, brosma, sosna). Like Pismo, except in 5 cells: nom pl, gen_ sg, gen_ pl, dat sg, ins sg.
+    declension!("sosna", 3, "~s~a", [gender: Feminine], like Pismo;
+    stem noun_sg: "~s~- like babka";
+    nom: _, "~s~y";
+    gen_: "~s~y", "~se~";
+    dat: "~ś~ie", _;
+    ins: "~s~ą", _;
     ),
     // Świat: 3 words (kwiat, świat, powiat).
     declension!("świat", 3, "~at", [gender: MasculineInanimate];
@@ -2784,10 +2770,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("cudo", 3, "~o", like Studio;
     loc: "~zie", _;
     ),
-    // Trance: 3 words (trance, breakdance, pro-choice). Like Live, except in 0 cells: .
-    declension!("trance", 3, "~c~", [gender: MasculineInanimate], like Live;
-    stem noun_sg: "~c~- like założenie";
-    stem noun_pl: "~si~- like live";
+    // Trance: 3 words (trance, breakdance, pro-choice). Like Aaron with `c~` after each pattern, except in 3 cells: acc sg, loc sg, voc sg.
+    declension!("trance", 3, "~c~", [gender: MasculineInanimate], like Aaron with "c~";
+    acc: "~c~", _;
+    loc: "~si~", _;
+    voc: "~si~", _;
     ),
     // Słoń: 3 words (słoń, szerszeń, nicień). Like Koń, except in 1 cell: acc pl.
     declension!("słoń", 3, "~ń", like Koń;
@@ -2831,13 +2818,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     declension!("chłop", 3, "~", [gender: MasculinePersonal], like Lewus;
     dat: "~u|~owi", _;
     ),
-    // Starosta: 3 words (starosta, adyjofarysta, ewanjelista). Like Kolorysta, except in 1 cell: nom pl.
-    declension!("starosta", 3, "~sta", [gender: MasculinePersonal], like Kolorysta;
-    nom: _, "~stowie";
-    ),
     // Dłoń: 3 words (dłoń, skroń, toń). Like Przestrzeń, except in 1 cell: ins pl.
     declension!("dłoń", 3, "~ń", [gender: Feminine], like Przestrzeń;
     ins: _, "~ńmi|~niami";
+    ),
+    // Jazda: 3 words (gwiazda, rozgwiazda, jazda). Like Zjazd, except in 5 cells: gen_ sg, gen_ pl, dat sg, ins sg, voc sg.
+    declension!("jazda", 3, "~az~a", [gender: Feminine], like Zjazd;
+    stem noun_sg: "~az~- like babka";
+    gen_: "~az~y", "~az~";
+    dat: "~eź~zie", _;
+    ins: "~az~ą", _;
+    voc: "~az~o", _;
     ),
     // Przedwieć: 3 words (zięć, teść, przedwieć). Like Gość, except in 2 cells: nom pl, gen_ pl.
     declension!("przedwieć", 3, "~ć", [gender: MasculinePersonal], like Gość;
@@ -2858,9 +2849,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~cku", "~ciach";
     voc: "~cko", _;
     ),
-    // Woźnica: 3 words (pijanica, woźnica, hulajdusza). Like Różnica, except in 1 cell: gen_ pl.
-    declension!("woźnica", 3, "~a", [gender: MasculinePersonal], like Różnica;
+    // Woźnica: 3 words (pijanica, woźnica, hulajdusza). Like Moc with `` after each pattern (`a` after ~), except in 3 cells: gen_ pl, acc sg, voc sg.
+    declension!("woźnica", 3, "~a", [gender: MasculinePersonal], like Moc with "", "a" after "~";
     gen_: _, "~ów";
+    acc: "~ę", _;
+    voc: "~o", _;
+    ),
+    // Miara: 3 words (wiara, ofiara, miara).
+    declension!("miara", 3, "~a~a", [gender: Feminine];
+    stem noun_sg: "~a~- like babka";
+    nom: _, "~a~y";
+    gen_: "~a~y", "~a~";
+    dat: "~e~ze", "~a~om";
+    ins: "~a~ą", "~a~ami";
+    loc: "~e~ze", "~a~ach";
+    voc: "~a~o", _;
     ),
     // Dola: 3 words (topola, dola, rola). Like Głowa, except in 4 cells: nom pl, gen_ sg, dat sg, loc sg.
     declension!("dola", 3, "~o~a", [gender: Feminine], like Głowa;
@@ -2925,13 +2928,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: _, "~ę~ami";
     loc: _, "~ę~ach";
     ),
-    // Rebe: 3 words (ślepie, rebe, achcze). Like Powietrze, except in 1 cell: gen_ pl.
-    declension!("rebe", 3, "~e", like Powietrze;
-    gen_: _, "~ów";
+    // Rebe: 3 words (ślepie, rebe, achcze). Like Piec with `` after each pattern (`e` after ~), except in 3 cells: nom pl, dat sg, voc sg.
+    declension!("rebe", 3, "~e", like Piec with "", "e" after "~";
+    nom: _, "~a";
+    dat: "~u", _;
+    voc: "~e", _;
     ),
-    // Misio: 3 words (misio, brysio, hipcio). Like Szpenio, except in 1 cell: acc pl.
-    declension!("misio", 3, "~o", like Szpenio;
-    acc: _, "~e";
+    // Misio: 3 words (misio, brysio, hipcio). Like Brzdąc with `` after each pattern (`o` after ~).
+    declension!("misio", 3, "~o", like Brzdąc with "", "o" after "~";
     ),
     // Opój: 3 words (podwój, opój, darmostój). Like Pokój, except in 2 cells: gen_ sg, acc sg.
     declension!("opój", 3, "~ój", like Pokój;
@@ -2965,23 +2969,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     loc: "~jéj", _;
     voc: derived, _;
     ),
-    // Jaź: 3 words (jaź, witeź, hyź).
-    declension!("jaź", 3, "~ˇ";
-    nom: "~ˇ", "~ieˇ";
-    gen_: "~iaˇ", "~iˇ";
-    dat: "~iowiˇ", "~iomˇ";
-    acc: "~iaˇ", _;
-    ins: "~iemˇ", "~iamiˇ";
-    loc: "~iuˇ", "~iachˇ";
-    voc: "~iuˇ", _;
+    // Przyroda: 3 words (przyroda, zgoda, niezgoda). Like Baba with `ˇ` after each pattern.
+    declension!("przyroda", 3, "~aˇ", [gender: Feminine], like Baba with "ˇ";
     ),
-    // Cyboryjum: 1 words (emfiteatrum). Like Like, except in 5 cells: nom sg, nom pl, acc sg, acc pl, ins sg.
-    declension!("cyboryjum", 1, "~um", like Like;
-    nom: "~um", "~å";
-    acc: derived, "~a";
+    // Jaź: 3 words (jaź, witeź, hyź). Like Żółw with `ˇ` after each pattern.
+    declension!("jaź", 3, "~ˇ", like Żółw with "ˇ";
+    ),
+    // Cyboryjum: 1 words (emfiteatrum). Like Spowiedka with `um` after each pattern, except in 3 cells: nom pl, acc pl, ins sg.
+    declension!("cyboryjum", 1, "~um", like Spowiedka with "um";
+    nom: _, "~å";
+    acc: _, "~a";
     ins: "~um", _;
     ),
-    // Przepowiedanie: 1 words (przypowiedanie). Like Like, except in 0 cells: .
+    // Przepowiedanie: 1 words (przypowiedanie). Like Like.
     declension!("przepowiedanie", 1, "~e", like Like;
     stem noun_sg: "~é- like założenie";
     stem noun_pl: "~- like przepowiedanie";
@@ -3041,20 +3041,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 325] = [
     ins: _, "~~iem";
     loc: _, derived;
     ),
-    // Absentacyja: 1 words (absentacyja). Like Habdank, except in 3 cells: nom sg, ins pl, loc sg.
-    declension!("absentacyja", 1, "~y~a", like Habdank;
-    nom: "~y~a", _;
-    ins: _, derived;
+    // Absentacyja: 1 words (absentacyja). Like Aaron with `y~a` after each pattern, except in 1 cell: loc sg.
+    declension!("absentacyja", 1, "~y~a", like Aaron with "y~a";
     loc: "~~i", _;
     ),
-    // Abtestacyja: 1 words (abtestacyja). Like Absentacyja, except in 2 cells: acc sg, loc sg.
-    declension!("abtestacyja", 1, "~y~a", like Absentacyja;
+    // Abtestacyja: 1 words (abtestacyja). Like Aaron with `y~a` after each pattern, except in 2 cells: acc sg, loc sg.
+    declension!("abtestacyja", 1, "~y~a", like Aaron with "y~a";
     acc: "~~e", _;
     loc: derived, _;
     ),
-    // Admirałka: 1 words (admirałka). Like Aaron, except in 2 cells: nom sg, loc sg.
-    declension!("admirałka", 1, "~a", like Aaron;
-    nom: "~a", _;
+    // Admirałka: 1 words (admirałka). Like Aaron with `a` after each pattern, except in 1 cell: loc sg.
+    declension!("admirałka", 1, "~a", like Aaron with "a";
     loc: "~ą", _;
     ),
     // Adracjonał: 1 words (adracjonał). Like Absentacyja, except in 4 cells: nom sg, nom pl, gen_ sg, loc sg.
