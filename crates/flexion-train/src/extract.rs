@@ -149,6 +149,15 @@ pub fn extract(
     Ok(out)
 }
 
+/// A word's letters with every mark taken off: what tells two spellings of
+/// one word from two words.
+fn letters_of(spelling: &Orthography<'_>, word: &str) -> String {
+    let key = spelling.key(&spelling.read(word).letters);
+    key.nfd()
+        .filter(|&c| !unicode_normalization::char::is_combining_mark(c))
+        .collect()
+}
+
 /// An entry whose table is another word's is rare noise; a convention of
 /// the dictionary's (Greek verbs cited contracted, `φοβῶ` for `φοβέω`'s
 /// table) is common. Below this share of a part of speech's entries, its
@@ -166,11 +175,7 @@ pub fn foreign(
     spelling: &Orthography<'_>,
     data: &mut [PosData],
 ) -> Result<(), String> {
-    let key = |s: &str| -> String {
-        use unicode_normalization::{UnicodeNormalization, char::is_combining_mark};
-        let key = spelling.key(&spelling.read(s).letters);
-        key.nfd().filter(|&c| !is_combining_mark(c)).collect()
-    };
+    let key = |s: &str| letters_of(spelling, s);
     for (part, d) in lang.parts.iter().zip(data.iter_mut()) {
         let Some(lemma_cell) = crate::shape(lang, part)?.lemma_cell else {
             continue;

@@ -1021,8 +1021,28 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .collect();
             let patterns: Vec<Option<&str>> = owned.iter().map(|p| p.as_deref()).collect();
             let found = crate::stems::factor(&patterns).and_then(|(_, table)| {
-                let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
-                let stem = crate::stems::stem_of(p, form, lemma, self.laws.as_ref())?;
+                let entry = |at: usize| table.split('\t').nth(at).filter(|p| !p.is_empty());
+                // A cell the paradigm derives: its source's entry, the form
+                // taken back through the relation's change (the Latin supine
+                // `iussum`, from the infinitive `iussum esse`).
+                let (p, form) = match entry(position) {
+                    Some(p) => (p, form.clone()),
+                    None => {
+                        let relation = self.changing(self.relation(*cell)?);
+                        let source = self.relation(*cell)?.source()?;
+                        let p = entry(slot.position(source)?)?;
+                        let back = if relation.changes.is_empty() {
+                            Some(form.clone())
+                        } else {
+                            relation.changes.iter().find_map(|(old, new)| {
+                                let pieces = crate::pattern::bind(new, form)?;
+                                Some(crate::pattern::fill(old, &pieces))
+                            })
+                        };
+                        (p, back?)
+                    }
+                };
+                let stem = crate::stems::stem_of(p, &form, lemma, self.laws.as_ref())?;
                 Some((table, stem))
             });
             if let Some((table, stem)) = found {
