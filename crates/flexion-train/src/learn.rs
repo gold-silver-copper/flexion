@@ -274,16 +274,29 @@ pub fn learn<'s>(
                 .collect(),
         })
         .collect();
-    let (laws, program, paradigms, assignment) =
-        crate::laws::learn(&orthography, &law_words, paradigms, assignment, &mut trace);
-    let (mut paradigms, assignment) = rehome(
-        &orthography,
-        &law_words,
-        paradigms,
-        assignment,
-        program.as_ref(),
-    );
-    inherent(&words, &assignment, &mut paradigms);
+    // Kept from a run with the same input, for experiments (see
+    // `crate::stage`).
+    let values: Vec<&[u8]> = words.iter().map(|w| w.inherent.as_slice()).collect();
+    let key = crate::stage::key(&[&orthography, &law_words, &paradigms, &assignment, &values]);
+    let (laws, program, paradigms, assignment) = match key.and_then(crate::stage::load) {
+        Some(kept) => kept,
+        None => {
+            let (laws, program, paradigms, assignment) =
+                crate::laws::learn(&orthography, &law_words, paradigms, assignment, &mut trace);
+            let (mut paradigms, assignment) = rehome(
+                &orthography,
+                &law_words,
+                paradigms,
+                assignment,
+                program.as_ref(),
+            );
+            inherent(&words, &assignment, &mut paradigms);
+            if let Some(key) = key {
+                crate::stage::save(key, &laws, program.as_ref(), &paradigms, &assignment);
+            }
+            (laws, program, paradigms, assignment)
+        }
+    };
     trace.mark("rehome and inherent");
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their

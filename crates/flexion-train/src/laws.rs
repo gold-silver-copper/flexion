@@ -38,7 +38,9 @@ use sound_law::{Map, Program, Rule, RuleSet};
 use std::borrow::Cow;
 
 /// What a law changes.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, serde::Serialize, serde::Deserialize,
+)]
 pub enum Change {
     /// Where stem meets ending: after one of `stem` (the stem's last
     /// letters), the ending's first letters `ending` and those of the stem
@@ -103,7 +105,7 @@ pub enum Change {
 pub type Shift = (Vec<char>, String, String);
 
 /// One learned law.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Law {
     pub change: Change,
     /// The words whose forms it gives.
@@ -674,6 +676,7 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
 
 /// A word, as the learner sees it: its letters, and per cell its usual form
 /// (`None` where the dictionary has none, or the cell is derived).
+#[derive(Debug)]
 pub struct Word<'w> {
     pub letters: &'w str,
     pub forms: Vec<Option<&'w str>>,
@@ -1426,17 +1429,18 @@ fn greedy(
 ) -> (Vec<Kept>, [Vec<u16>; 2]) {
     let held = halves.held;
     // Builds by the letters around their boundary.
-    let mut index: HashMap<(String, String), Vec<At>> = HashMap::default();
-    let mut alternating: HashMap<String, Vec<At>> = HashMap::default();
+    let numbered = Numbered::new(&readings);
+    let mut index: HashMap<(String, String), Vec<u32>> = HashMap::default();
+    let mut alternating: HashMap<String, Vec<u32>> = HashMap::default();
     for (w, rs) in readings.iter().enumerate() {
         for (r, reading) in rs.iter().enumerate() {
             for (k, built) in reading.builds.iter().enumerate() {
-                index.entry(window(built)).or_default().push((w, r, k));
+                let Some(id) = numbered.id((w, r, k)) else {
+                    continue;
+                };
+                index.entry(window(built)).or_default().push(id);
                 if built.ends_with(ALTERNATES) {
-                    alternating
-                        .entry(stem_end(built))
-                        .or_default()
-                        .push((w, r, k));
+                    alternating.entry(stem_end(built)).or_default().push(id);
                 }
             }
         }
@@ -1460,6 +1464,11 @@ fn greedy(
             let Some((change, _)) = candidates.get(i) else {
                 continue;
             };
+            let found = Found {
+                numbered: &numbered,
+                index: &index,
+                alternating: &alternating,
+            };
             let mut change = change.clone();
             let mut tried = None;
             // A shift inside a stem learns its context first (it gives
@@ -1470,9 +1479,9 @@ fn greedy(
                 && let [shift] = shifts.as_slice()
                 && after.is_empty()
             {
-                let own = context(&change, &alternating, &readings, forms, halves);
+                let own = context(&change, &found, &readings, forms, halves);
                 let gives = own.as_ref().map_or(0, |own| {
-                    try_law(own, &index, &alternating, &readings, forms, &assignment)
+                    try_law(own, &found, &readings, forms, &assignment)
                         .filter(|t| t.kept(cells_of, held))
                         .map_or(0, |t| t.fixed.len())
                 });
@@ -1496,7 +1505,7 @@ fn greedy(
                         shifts: vec![shift.clone()],
                         after: paths.clone(),
                     };
-                    let t = try_law(&trial, &index, &alternating, &readings, forms, &assignment);
+                    let t = try_law(&trial, &found, &readings, forms, &assignment);
                     #[allow(clippy::cast_precision_loss)]
                     let enough = |t: &Tried| t.fixed.len() as f64 >= (1.0 - BREAKS) * gives as f64;
                     if let Some(t) = t.filter(|t| t.kept(cells_of, held) && enough(t)) {
@@ -1515,8 +1524,7 @@ fn greedy(
                 if into.is_some() {
                     break;
                 }
-                let Some(t) = try_law(&change, &index, &alternating, &readings, forms, &assignment)
-                else {
+                let Some(t) = try_law(&change, &found, &readings, forms, &assignment) else {
                     break;
                 };
                 let kept = t.kept(cells_of, held);
@@ -1564,12 +1572,11 @@ fn greedy(
                 else {
                     continue;
                 };
-                index.entry(window(&after)).or_default().push((w, r, k));
-                if after.ends_with(ALTERNATES) {
-                    alternating
-                        .entry(stem_end(&after))
-                        .or_default()
-                        .push((w, r, k));
+                if let Some(id) = numbered.id((w, r, k)) {
+                    index.entry(window(&after)).or_default().push(id);
+                    if after.ends_with(ALTERNATES) {
+                        alternating.entry(stem_end(&after)).or_default().push(id);
+                    }
                 }
                 *built = after;
             }
@@ -1723,12 +1730,70 @@ impl Tried {
     }
 }
 
-/// What law `change` does to the builds (`index` finds them by the letters
-/// around their boundary): `None` if it doesn't compile.
+/// Every build numbered in order (its word, its reading, its place), so a
+/// set of builds is a set of numbers, read back in that order.
+struct Numbered {
+    at: Vec<At>,
+    first: Vec<Vec<usize>>,
+}
+
+impl Numbered {
+    fn new(readings: &[Vec<Reading>]) -> Numbered {
+        let mut at = Vec::new();
+        let mut first = Vec::new();
+        for (w, rs) in readings.iter().enumerate() {
+            let starts = rs.iter().enumerate().map(|(r, reading)| {
+                let start = at.len();
+                at.extend((0..reading.builds.len()).map(|k| (w, r, k)));
+                start
+            });
+            first.push(starts.collect());
+        }
+        Numbered { at, first }
+    }
+
+    fn id(&self, (w, r, k): At) -> Option<u32> {
+        u32::try_from(self.first.get(w)?.get(r)? + k).ok()
+    }
+
+    /// The builds numbered in `lists`, in order, each once.
+    fn gather<'a>(&self, lists: impl Iterator<Item = &'a Vec<u32>>) -> Vec<At> {
+        let mut set = vec![0_u64; self.at.len().div_ceil(64)];
+        for &id in lists.flatten() {
+            let id = usize::try_from(id).unwrap_or(usize::MAX);
+            if let Some(bits) = set.get_mut(id / 64) {
+                *bits |= 1 << (id % 64);
+            }
+        }
+        let ids = set.iter().enumerate().flat_map(|(i, &bits)| {
+            std::iter::successors(Some(bits), |&b| Some(b & b.wrapping_sub(1)))
+                .take_while(|&b| b != 0)
+                .map(move |b| i * 64 + b.trailing_zeros() as usize)
+        });
+        ids.filter_map(|id| self.at.get(id).copied()).collect()
+    }
+
+    /// The builds numbered in `ids`, as they are.
+    fn of<'a>(&'a self, ids: &'a [u32]) -> impl Iterator<Item = At> + 'a {
+        ids.iter()
+            .filter_map(|&id| self.at.get(usize::try_from(id).ok()?).copied())
+    }
+}
+
+/// Where the builds a law may change are: by the letters around their
+/// boundary (`index`), and those of alternating stems by the stem's end
+/// (`alternating`). Each lists builds a law moved there since, and keeps
+/// them where they were too.
+struct Found<'a> {
+    numbered: &'a Numbered,
+    index: &'a HashMap<(String, String), Vec<u32>>,
+    alternating: &'a HashMap<String, Vec<u32>>,
+}
+
+/// What law `change` does to the builds: `None` if it doesn't compile.
 fn try_law(
     change: &Change,
-    index: &HashMap<(String, String), Vec<At>>,
-    alternating: &HashMap<String, Vec<At>>,
+    found: &Found<'_>,
     readings: &[Vec<Reading>],
     forms: &[Vec<&str>],
     assignment: &[u16],
@@ -1736,63 +1801,74 @@ fn try_law(
     let program = compile(std::slice::from_ref(change))?;
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
     let inner = matches!(change, Change::Inner { .. });
-    let mut at: Vec<At> = if let Change::Inner { shifts, .. } = change {
+    let at: Vec<At> = if let Change::Inner { shifts, .. } = change {
         let near = |end: &String| {
             shifts
                 .iter()
                 .any(|(left, from, _)| left.iter().any(|l| end.contains(&format!("{l}{from}"))))
         };
-        alternating
-            .iter()
-            .filter(|(end, _)| near(end))
-            .flat_map(|(_, v)| v.iter().copied())
-            .collect()
+        let lists = found.alternating.iter().filter(|(end, _)| near(end));
+        found.numbered.gather(lists.map(|(_, v)| v))
     } else {
-        index
-            .iter()
-            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
-            .flat_map(|(_, v)| v.iter().copied())
-            .collect()
+        let lists = (found.index.iter())
+            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""));
+        found.numbered.gather(lists.map(|(_, v)| v))
     };
-    at.sort_unstable();
-    at.dedup();
-    let mut tried = Tried {
+    // In chunks over threads, joined in order: the same as one pass.
+    let chunks: Vec<&[At]> = at.chunks(CHUNK).collect();
+    let tried = crate::par::map(&chunks, |chunk| {
+        let mut tried = Tried {
+            changes: Vec::new(),
+            fixed: Vec::new(),
+            broken: Vec::new(),
+        };
+        for &(w, r, k) in *chunk {
+            let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
+                continue;
+            };
+            // Not an entry the laws so far have moved elsewhere.
+            let Some(built) = reading
+                .builds
+                .get(k)
+                .filter(|b| change.applies(&window(b), b))
+            else {
+                continue;
+            };
+            let after = program.apply(built);
+            if after == *built {
+                continue;
+            }
+            let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
+            let own = assignment
+                .get(w)
+                .is_some_and(|&p| usize::from(p) == reading.paradigm);
+            // A law inside alternating stems breaks the forms of the twins
+            // too: the words it is for may join them.
+            if (own || inner) && was && !is {
+                tried.broken.push((w, r, k));
+            }
+            if !was && is {
+                tried.fixed.push((w, r, k));
+            }
+            tried.changes.push(((w, r, k), after));
+        }
+        tried
+    });
+    let mut all = Tried {
         changes: Vec::new(),
         fixed: Vec::new(),
         broken: Vec::new(),
     };
-    for (w, r, k) in at {
-        let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
-            continue;
-        };
-        // Not an entry the laws so far have moved elsewhere.
-        let Some(built) = reading
-            .builds
-            .get(k)
-            .filter(|b| change.applies(&window(b), b))
-        else {
-            continue;
-        };
-        let after = program.apply(built);
-        if after == *built {
-            continue;
-        }
-        let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
-        let own = assignment
-            .get(w)
-            .is_some_and(|&p| usize::from(p) == reading.paradigm);
-        // A law inside alternating stems breaks the forms of the twins
-        // too: the words it is for may join them.
-        if (own || inner) && was && !is {
-            tried.broken.push((w, r, k));
-        }
-        if !was && is {
-            tried.fixed.push((w, r, k));
-        }
-        tried.changes.push(((w, r, k), after));
+    for t in tried {
+        all.changes.extend(t.changes);
+        all.fixed.extend(t.fixed);
+        all.broken.extend(t.broken);
     }
-    Some(tried)
+    Some(all)
 }
+
+/// How many builds a thread tries a law on at a time.
+const CHUNK: usize = 2048;
 
 /// A law at the stem's edge that breaks too many forms, with one more
 /// letter of context: on the side (before its stem letters, or after its
@@ -1878,7 +1954,7 @@ const NEAR: usize = 2;
 
 /// A change inside alternating stems (see [`Change::Inner`]) with the
 /// context it is made in: what follows it where it gives forms and not
-/// where it breaks them, in the builds of alternating stems (`alternating`
+/// where it breaks them, in the builds of alternating stems (`found`
 /// finds them by their stem's end) of the words not held out. The letters
 /// after the change (the stem's end `+` among them, `$` the form's end)
 /// are read one place at a time while they don't yet tell the two apart (a
@@ -1887,7 +1963,7 @@ const NEAR: usize = 2;
 /// `katumme`. `None` where no path gives enough forms.
 fn context(
     change: &Change,
-    alternating: &HashMap<String, Vec<At>>,
+    found: &Found<'_>,
     readings: &[Vec<Reading>],
     forms: &[Vec<&str>],
     halves: &Halves<'_>,
@@ -1907,10 +1983,9 @@ fn context(
             end.contains(&x)
         })
     };
-    for &(w, r, k) in alternating
-        .iter()
+    for (w, r, k) in (found.alternating.iter())
         .filter(|(end, _)| near(end))
-        .flat_map(|(_, v)| v)
+        .flat_map(|(_, v)| found.numbered.of(v))
     {
         let (Some(built), Some(want)) = (
             readings.get(w).and_then(|rs| rs.get(r)?.builds.get(k)),

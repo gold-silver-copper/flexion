@@ -70,6 +70,7 @@ pub mod relations;
 pub mod script;
 pub mod skeleton;
 pub mod spec;
+pub mod stage;
 pub mod stems;
 pub mod trace;
 

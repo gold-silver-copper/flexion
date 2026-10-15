@@ -63,6 +63,12 @@ fn run() -> Result<(), String> {
         let b = args.get(2).ok_or(USAGE)?;
         return outcomes::compare(name.as_ref(), b.as_ref());
     }
+    // Experiments skip the sound-law stage where its input is a run's
+    // before (see `flexion_train::stage`); builds and the READMEs' tenth
+    // never.
+    if matches!(command.as_str(), "try" | "sweep") && !args.iter().any(|a| a == "--final") {
+        flexion_train::stage::keep_in(workspace().join("target").join("stage-cache"));
+    }
     if command == "sweep" {
         let only = flag("--only");
         let only: Option<Vec<&str>> = only.as_deref().map(|o| o.split(',').collect());
