@@ -286,8 +286,11 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             format!("{p:.2}% ({forms})")
         }
     };
+    // Empty where nothing is scored (English nouns given their plural:
+    // nothing is left).
     let accuracy = |s: &Option<Score>| {
         s.as_ref()
+            .filter(|s| s.forms > 0)
             .map_or(String::new(), |s| format!("{:.2}%", 100.0 * s.accuracy()))
     };
     for m in measured {
