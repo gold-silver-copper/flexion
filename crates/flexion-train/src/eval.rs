@@ -673,18 +673,19 @@ pub struct Oracle {
     pub chosen: Option<usize>,
 }
 
-/// Held-out words scored for [`oracle`], at most: every paradigm is tried
-/// on each.
-pub const ORACLE_WORDS: usize = 1000;
+/// Held-out words and cells scored for [`oracle`], at most: every paradigm
+/// is tried on each word (at most 1,000 words).
+pub const ORACLE_CELLS: usize = 100_000;
 
-/// [`Oracle`] of an even sample of `lexemes` (at most [`ORACLE_WORDS`]),
-/// typed in full: letters only, as the floor.
+/// [`Oracle`] of an even sample of `lexemes` (at most [`ORACLE_CELLS`] of
+/// words and cells), typed in full: letters only, as the floor.
 pub fn oracle<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     lexemes: &[&Lexeme],
 ) -> Vec<Oracle> {
     let o = &grammar.orthography;
-    let step = lexemes.len().div_ceil(ORACLE_WORDS).max(1);
+    let words = (ORACLE_CELLS / grammar.cells.max(1)).clamp(1, 1000);
+    let step = lexemes.len().div_ceil(words).max(1);
     let sample: Vec<(usize, &Lexeme)> = lexemes.iter().copied().enumerate().step_by(step).collect();
     let known = flexion::Known {
         full: true,
