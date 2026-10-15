@@ -1,27 +1,23 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~l`, `journal`: the stem and `l`). A stem in two pieces (`~a~`, `superwoman`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem noun_sg: $s0:tt;)?
-     $(stem noun_pl: $s1:tt;)?
+     $(stem sg: $s0:tt;)?
+     $(stem pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
     ) => {
         Paradigm {
@@ -65,8 +61,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "~", "~s" after "s"`: `~`, or `~s`
+/// where that pattern ends in `s`).
 macro_rules! affix {
     () => {
         None
@@ -97,9 +93,9 @@ const PL_AS_SG: [u16; 2] = [0, 0];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `trait`: 40,525 words.
+    /// Like `trait`: 40,521 words.
     Trait,
-    /// Like `bois`: 1,576 words.
+    /// Like `bois`: 1,572 words.
     Bois,
     /// Like `marteau`: 324 words.
     Marteau,
@@ -165,12 +161,12 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
-    // Trait: 40,525 words (livre, book, chien, pie, connotation, minute).
-    declension!("trait", 40525, "~";
+    // Trait: 40,521 words (livre, book, chien, pie, connotation, minute).
+    declension!("trait", 40521, "~";
     noun: "~", "~s";
     ),
-    // Bois: 1,576 words (fa, abraxas, faq, ce, os, bm). Like Trait.
-    declension!("bois", 1576, "~", like Trait as PL_AS_SG;
+    // Bois: 1,572 words (fa, abraxas, faq, ce, os, bm). Like Trait.
+    declension!("bois", 1572, "~", like Trait as PL_AS_SG;
     ),
     // Marteau: 324 words (ypréau, taureau, gâteau, jeu, dieu, bureau). Like Trait, except in 1 cell: noun pl.
     declension!("marteau", 324, "~", [noun_gender: Masculine], like Trait;

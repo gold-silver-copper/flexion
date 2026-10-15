@@ -43,9 +43,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "cimae" => [2 7, 1 3],
         "nae" => [1 36],
         "s" => [0 2],
-    } listed {
-        "nūllae" => 0,
-    }, true, None),
+    } listed {}, true, None),
     // NOM_F_SG, from NOM_M_SG.
     relation!(NOM_F_SG, [NOM_M_SG], [("~", "~"), ("~us", "~a"), ("~usdecimus", "~adecima")], rules {
         "" => [1 96, 2 7, 0 4],
@@ -58,10 +56,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "" => [0 97, 1 7],
         "cima" => [1 7, 0 3],
         "na" => [0 36],
-    } listed {
-        "duodecima" => 0,
-        "ūndecima" => 0,
-    }, true, None),
+    } listed {}, true, None),
     // NOM_N_SG, from NOM_M_SG.
     relation!(NOM_N_SG, [NOM_M_SG], [("~", "~"), ("~s", "~m"), ("~sdecimus", "~mdecimum")], rules {
         "" => [1 96, 2 7, 0 4],
@@ -83,10 +78,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "simī" => [2 41],
         "nī" => [1 34, 2 2],
         "tī" => [2 12],
-    } listed {
-        "nōnī" => 2,
-        "ūnī" => 2,
-    }, true, None),
+    } listed {}, true, None),
     // GEN_F_SG, from NOM_F_PL.
     relation!(GEN_F_SG, [NOM_F_PL], [], none, true, None),
     // GEN_F_PL, from NOM_M_PL.
@@ -99,10 +91,7 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "simī" => [2 41],
         "nī" => [1 34, 2 2],
         "tī" => [2 12],
-    } listed {
-        "nōnī" => 2,
-        "ūnī" => 2,
-    }, true, None),
+    } listed {}, true, None),
     // GEN_N_SG, from NOM_M_PL.
     relation!(GEN_N_SG, [NOM_M_PL], [], none, true, None),
     // GEN_N_PL, from GEN_M_PL.
@@ -136,21 +125,14 @@ pub(super) static RELATIONS: [Relation<'static>; 35] = [
         "cimās" => [2 7, 1 3],
         "nās" => [1 36],
         "īs" => [0 2],
-    } listed {
-        "nūllās" => 0,
-    }, true, None),
+    } listed {}, true, None),
     // ACC_F_SG, from NOM_F_SG.
     relation!(ACC_F_SG, [NOM_F_SG], [("~", "~"), ("~", "~m"), ("~decima", "~mdecimam")], rules {
         "" => [1 97, 2 7, 0 2],
         "cima" => [2 7, 1 3],
         "na" => [1 36],
         "e" => [0 2],
-    } listed {
-        "duodecima" => 1,
-        "mīlle" => 0,
-        "sēsquimīlle" => 0,
-        "ūndecima" => 1,
-    }, true, None),
+    } listed {}, true, None),
     // ACC_F_PL, from NOM_F_PL.
     relation!(ACC_F_PL, [NOM_F_PL], [("~ae", "~ās"), ("~aedecimae", "~āsdecimās"), ("~ēs", "~īs")], rules {
         "" => [0 107, 1 7, 2 2],

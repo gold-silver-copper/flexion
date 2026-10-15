@@ -217,10 +217,7 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     // ACC_NVIR_ANIM, from NOM_NVIR_ANIM.
     relation!(ACC_NVIR_ANIM, [NOM_NVIR_ANIM], [("~", "~"), ("~aj", "~u")], rules {
         "" => [0 3, 1 2],
-    } listed {
-        "dwaj" => 1,
-        "obaj" => 1,
-    }, true, None),
+    } listed {}, true, None),
     // ACC_NVIR_INAN, from ACC_NVIR_ANIM.
     relation!(ACC_NVIR_INAN, [ACC_NVIR_ANIM], [], none, true, None),
     // INS_M_ANIM, from INS_NVIR_ANIM.

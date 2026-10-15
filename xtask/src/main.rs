@@ -30,7 +30,8 @@
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
-//! - `inspect`: a word's readings and forms, and a sample of irregular forms.
+//! - `inspect`: a word's readings and forms (`--word a,b`; `--parts`: typed in full
+//!   with the dictionary's principal parts given), and a sample of irregular forms.
 
 mod audit;
 mod bench;
@@ -44,7 +45,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -179,6 +180,7 @@ fn run() -> Result<(), String> {
             flag("--pos").as_deref().unwrap_or("noun"),
             flag("--word").as_deref(),
             args.iter().any(|a| a == "--holdout"),
+            args.iter().any(|a| a == "--parts"),
         ),
         _ => Err(USAGE.into()),
     }
@@ -1505,7 +1507,13 @@ fn cell_names(
 
 /// Show what was learned for one part of speech: the commonest paradigms and
 /// stress patterns, and a sample of the irregular forms.
-fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Result<(), String> {
+fn inspect(
+    lang: &Language,
+    pos: &str,
+    word: Option<&str>,
+    holdout: bool,
+    given: bool,
+) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     let pi = lang
@@ -1546,6 +1554,23 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
                 .map(|l| format!("{:?}", l.cells))
                 .collect();
             println!("dictionary: {listed:?}");
+            // With `--parts`: the dictionary's principal parts given too.
+            let entry = d.lexemes.iter().find(|l| l.key == key);
+            let parts = if given {
+                flexion_train::parts(lang, part)?
+            } else {
+                Vec::new()
+            };
+            let forms: Vec<(usize, &str)> = parts
+                .iter()
+                .filter_map(|&c| Some((c, entry?.cells.get(c)?.first()?.as_str())))
+                .collect();
+            let typed = entry.filter(|_| given).map_or(word, |l| l.full.as_str());
+            let known = flexion::Known {
+                forms: &forms,
+                full: given,
+                ..flexion::Known::default()
+            };
             println!(
                 "paradigm readings: {:?}",
                 g.paradigm
@@ -1587,7 +1612,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
             let names = cell_names(lang, part)?;
             for cell in 0..g.cells {
                 let c: Vec<String> = bare
-                    .candidates(word, cell, &flexion::Known::default())
+                    .candidates(typed, cell, &known)
                     .iter()
                     .take(3)
                     .map(ToString::to_string)

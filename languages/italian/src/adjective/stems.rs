@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("adjective_m"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[M_SG, M_PL, SUPERLATIVE]),
     },
     Slot {
@@ -24,10 +24,10 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // adjective_f like maggiore: 7,922 words.
+    // adjective_f like maggiore: 7,917 words.
     EndingTable {
         name: Cow::Borrowed("maggiore"),
-        words: 7922,
+        words: 7917,
         slot: 1,
         table: Cow::Borrowed("~e\t~i\t"),
     },

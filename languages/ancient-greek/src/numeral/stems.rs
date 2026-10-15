@@ -12,7 +12,7 @@ use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
-    name: Cow::Borrowed("numeral"),
+    name: Cow::Borrowed("lemma"),
     cells: Cow::Borrowed(&[
         NOM_M_SG, NOM_M_DU, NOM_M_PL, NOM_F_SG, NOM_F_DU, NOM_F_PL, NOM_N_SG, NOM_N_DU, NOM_N_PL,
         GEN_M_SG, GEN_M_DU, GEN_M_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, GEN_N_SG, GEN_N_DU, GEN_N_PL,
@@ -24,7 +24,7 @@ pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // numeral like πισῠρες: 3 words.
+    // lemma like πισῠρες: 3 words.
     EndingTable {
         name: Cow::Borrowed("πισῠρες"),
         words: 3,

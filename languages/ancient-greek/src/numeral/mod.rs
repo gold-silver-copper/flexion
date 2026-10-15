@@ -93,6 +93,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(flexion::Marks {
         rules: crate::marks::MARKS,
+        roots: Cow::Borrowed(crate::marks::ROOTS),
         part: Cow::Borrowed("numeral"),
     }),
     slots: Cow::Borrowed(&stems::SLOTS),

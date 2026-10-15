@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
-        name: Cow::Borrowed("numeral_nom_m_anim"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[
             NOM_M_ANIM,
             NOM_M_INAN,
@@ -34,7 +34,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("numeral"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             GEN_M_ANIM,
             GEN_M_INAN,
@@ -63,7 +63,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("numeral_ins"),
+        name: Cow::Borrowed("ins"),
         cells: Cow::Borrowed(&[
             INS_M_ANIM,
             INS_M_INAN,
@@ -79,7 +79,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // numeral_nom_m_anim like биллион: 61 words.
+    // lemma like биллион: 61 words.
     EndingTable {
         name: Cow::Borrowed("биллион"),
         words: 61,
@@ -95,7 +95,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~|~ы\t~|~ы\t",
         )),
     },
-    // numeral_nom_m_anim like пятьсот: 5 words.
+    // lemma like пятьсот: 5 words.
     EndingTable {
         name: Cow::Borrowed("пятьсот"),
         words: 5,
@@ -104,7 +104,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "\t~\t", "\t\t", "\t\t", "~\t~\t", "\t\t", "\t\t", "\t\t", "~\t~\t",
         )),
     },
-    // numeral_nom_m_anim like пятьдесят: 4 words.
+    // lemma like пятьдесят: 4 words.
     EndingTable {
         name: Cow::Borrowed("пятьдесят"),
         words: 4,
@@ -113,7 +113,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "~\t~\t",
         )),
     },
-    // numeral like пятеро: 7 words.
+    // rest like пятеро: 7 words.
     EndingTable {
         name: Cow::Borrowed("пятеро"),
         words: 7,
@@ -133,7 +133,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~х\t~х\t",
         )),
     },
-    // numeral like пятьдесят: 4 words.
+    // rest like пятьдесят: 4 words.
     EndingTable {
         name: Cow::Borrowed("пятьдесят"),
         words: 4,
@@ -143,14 +143,14 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~\t~\t", "~\t~\t", "~\t~\t", "~\t~\t",
         )),
     },
-    // numeral_ins like пятеро: 12 words.
+    // ins like пятеро: 12 words.
     EndingTable {
         name: Cow::Borrowed("пятеро"),
         words: 12,
         slot: 2,
         table: Cow::Borrowed(concat!("\t\t", "\t\t", "\t\t", "~\t~\t",)),
     },
-    // numeral_ins like пятьдесят: 4 words.
+    // ins like пятьдесят: 4 words.
     EndingTable {
         name: Cow::Borrowed("пятьдесят"),
         words: 4,

@@ -1,22 +1,20 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~ß`, `naß`: the stem and `ß`). A stem in two pieces (`~e~`, `edel`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~- like veraltet\"`: the slot's cells are `veraltet`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `strong_nom` (m, f, n, pl)
 /// `strong_gen` (m, f, n, pl)
 /// `strong_dat` (m, f, n, pl)
@@ -56,9 +54,9 @@ use flexion::Paradigm;
 /// `predicative` (pos, comp, sup)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem adjective: $s0:tt;)?
-     $(stem comparative: $s1:tt;)?
-     $(stem superlative: $s2:tt;)?
+     $(stem lemma: $s0:tt;)?
+     $(stem rest: $s1:tt;)?
+     $(stem rest_: $s2:tt;)?
      $(strong_nom: $c0:tt, $c1:tt, $c2:tt, $c3:tt;)?
      $(strong_gen: $c4:tt, $c5:tt, $c6:tt, $c7:tt;)?
      $(strong_dat: $c8:tt, $c9:tt, $c10:tt, $c11:tt;)?
@@ -287,17 +285,15 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `veraltet`: 12,242 words.
+    /// Like `veraltet`: 12,558 words.
     Veraltet,
-    /// Like `glatt`: 1,845 words.
+    /// Like `glatt`: 1,966 words.
     Glatt,
-    /// Like `überfinanziert`: 439 words.
-    Überfinanziert,
     /// Like `edel`: 102 words.
     Edel,
     /// Like `scharf`: 52 words.
     Scharf,
-    /// Like `schwarz`: 31 words.
+    /// Like `schwarz`: 33 words.
     Schwarz,
     /// Like `träge`: 24 words.
     Träge,
@@ -311,10 +307,10 @@ pub enum Declension {
     Dumm,
     /// Like `unedel`: 9 words.
     Unedel,
-    /// Like `oberer`: 9 words.
+    /// Like `oberer`: 8 words.
     Oberer,
-    /// Like `rot`: 7 words.
-    Rot,
+    /// Like `roth`: 7 words.
+    Roth,
     /// Like `grob`: 7 words.
     Grob,
     /// Like `lila`: 6 words.
@@ -337,10 +333,9 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 23] = [
+    pub const ALL: [Declension; 22] = [
         Declension::Veraltet,
         Declension::Glatt,
-        Declension::Überfinanziert,
         Declension::Edel,
         Declension::Scharf,
         Declension::Schwarz,
@@ -351,7 +346,7 @@ impl Declension {
         Declension::Dumm,
         Declension::Unedel,
         Declension::Oberer,
-        Declension::Rot,
+        Declension::Roth,
         Declension::Grob,
         Declension::Lila,
         Declension::Hoch,
@@ -378,59 +373,30 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
-    // Veraltet: 12,242 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
-    declension!("veraltet", 12242, "~";
-    stem superlative: "~ste- like veraltet";
-    strong_nom: _, "~e", _, _;
-    strong_gen: _, "~er", "~en", "~er";
-    strong_dat: _, "~er", "~em", "~en";
-    strong_acc: "~en", _, "~es", _;
-    weak_nom: _, _, _, "~en";
-    weak_gen: "~en", "~en", "~en", "~en";
-    weak_dat: "~en", "~en", "~en", "~en";
-    weak_acc: "~en", _, _, "~en";
-    mixed_nom: "~er", _, "~es", "~en";
-    mixed_gen: "~en", "~en", "~en", "~en";
-    mixed_dat: "~en", "~en", "~en", "~en";
-    mixed_acc: "~en", _, "~es", "~en";
-    comparative_strong_nom: "~erer", _, _, "~ere";
-    comparative_strong_gen: _, _, "~eren", _;
-    comparative_strong_dat: _, _, "~erem", "~eren";
-    comparative_strong_acc: "~eren", "~ere", "~eres", "~ere";
-    comparative_weak_nom: "~ere", "~ere", "~ere", "~eren";
-    comparative_weak_gen: "~eren", "~eren", "~eren", "~eren";
-    comparative_weak_dat: "~eren", "~eren", "~eren", "~eren";
-    comparative_weak_acc: "~eren", "~ere", "~ere", "~eren";
-    comparative_mixed_nom: _, "~ere", "~eres", "~eren";
-    comparative_mixed_gen: "~eren", "~eren", "~eren", "~eren";
-    comparative_mixed_dat: "~eren", "~eren", "~eren", "~eren";
-    comparative_mixed_acc: "~eren", "~ere", "~eres", "~eren";
-    predicative: "~", "~er", _;
+pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
+    // Veraltet: 12,558 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
+    declension!("veraltet", 12558, "~";
+    stem lemma: "~- like veraltet";
+    stem rest: "~er- like veraltet";
+    stem rest_: "~ste- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
     ),
-    // Glatt: 1,845 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet.
-    declension!("glatt", 1845, "~", like Veraltet;
-    stem superlative: "~este- like veraltet";
-    ),
-    // Überfinanziert: 439 words (gelaufen, gegessen, getrunken, gesprochen, gekommen, geboren). Like Veraltet, except in 51 cells: superlative_strong_nom m, superlative_strong_nom f, superlative_strong_nom n, superlative_strong_nom pl, superlative_strong_gen m, superlative_strong_gen f, ….
-    declension!("überfinanziert", 439, "~", like Veraltet;
-    superlative_strong_nom: "~ster", "~ste", "~stes", derived;
-    superlative_strong_gen: "~sten", derived, derived, derived;
-    superlative_strong_dat: "~stem", derived, derived, derived;
-    superlative_strong_acc: derived, derived, derived, derived;
-    superlative_weak_nom: derived, derived, derived, derived;
-    superlative_weak_gen: derived, derived, derived, derived;
-    superlative_weak_dat: derived, derived, derived, derived;
-    superlative_weak_acc: derived, derived, derived, derived;
-    superlative_mixed_nom: derived, derived, derived, derived;
-    superlative_mixed_gen: derived, derived, derived, derived;
-    superlative_mixed_dat: derived, derived, derived, derived;
-    superlative_mixed_acc: derived, derived, derived, derived;
-    predicative: "ist ~|es ist ~|sind ~", "ist ~er", "ist am ~sten";
+    // Glatt: 1,966 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet.
+    declension!("glatt", 1966, "~", like Veraltet;
+    stem rest_: "~este- like veraltet";
     ),
     // Edel: 102 words (übel, nobel, dunkel, simpel, sauer, teuer).
     declension!("edel", 102, "~e~";
-    stem superlative: "~e~ste- like veraltet";
+    stem rest: "~~er- like veraltet";
+    stem rest_: "~e~ste- like veraltet";
     strong_nom: _, "~~e", _, _;
     strong_gen: _, "~~er", "~~en", "~~er";
     strong_dat: _, "~~er", "~~em", "~~en";
@@ -443,193 +409,118 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     mixed_gen: "~~en", "~~en", "~~en", "~~en";
     mixed_dat: "~~en", "~~en", "~~en", "~~en";
     mixed_acc: "~~en", _, "~~es", "~~en";
-    comparative_strong_nom: "~~erer", _, _, "~~ere";
-    comparative_strong_gen: _, _, "~~eren", _;
-    comparative_strong_dat: _, _, "~~erem", "~~eren";
-    comparative_strong_acc: "~~eren", "~~ere", "~~eres", "~~ere";
-    comparative_weak_nom: "~~ere", "~~ere", "~~ere", "~~eren";
-    comparative_weak_gen: "~~eren", "~~eren", "~~eren", "~~eren";
-    comparative_weak_dat: "~~eren", "~~eren", "~~eren", "~~eren";
-    comparative_weak_acc: "~~eren", "~~ere", "~~ere", "~~eren";
-    comparative_mixed_nom: _, "~~ere", "~~eres", "~~eren";
-    comparative_mixed_gen: "~~eren", "~~eren", "~~eren", "~~eren";
-    comparative_mixed_dat: "~~eren", "~~eren", "~~eren", "~~eren";
-    comparative_mixed_acc: "~~eren", "~~ere", "~~eres", "~~eren";
-    predicative: "~e~", "~~er", _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
+    predicative: "~e~", _, _;
     ),
     // Scharf: 52 words (warm, kalt, schwarz, stark, lang, scharf).
     declension!("scharf", 52, "~a~";
-    stem superlative: "~ä~ste- like veraltet";
-    strong_nom: _, "~a~e", _, _;
-    strong_gen: _, "~a~er", "~a~en", "~a~er";
-    strong_dat: _, "~a~er", "~a~em", "~a~en";
-    strong_acc: "~a~en", _, "~a~es", _;
-    weak_nom: _, _, _, "~a~en";
-    weak_gen: "~a~en", "~a~en", "~a~en", "~a~en";
-    weak_dat: "~a~en", "~a~en", "~a~en", "~a~en";
-    weak_acc: "~a~en", _, _, "~a~en";
-    mixed_nom: "~a~er", _, "~a~es", "~a~en";
-    mixed_gen: "~a~en", "~a~en", "~a~en", "~a~en";
-    mixed_dat: "~a~en", "~a~en", "~a~en", "~a~en";
-    mixed_acc: "~a~en", _, "~a~es", "~a~en";
-    comparative_strong_nom: "~ä~erer", _, _, "~ä~ere";
-    comparative_strong_gen: _, _, "~ä~eren", _;
-    comparative_strong_dat: _, _, "~ä~erem", "~ä~eren";
-    comparative_strong_acc: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~ere";
-    comparative_weak_nom: "~ä~ere", "~ä~ere", "~ä~ere", "~ä~eren";
-    comparative_weak_gen: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-    comparative_weak_dat: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-    comparative_weak_acc: "~ä~eren", "~ä~ere", "~ä~ere", "~ä~eren";
-    comparative_mixed_nom: _, "~ä~ere", "~ä~eres", "~ä~eren";
-    comparative_mixed_gen: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-    comparative_mixed_dat: "~ä~eren", "~ä~eren", "~ä~eren", "~ä~eren";
-    comparative_mixed_acc: "~ä~eren", "~ä~ere", "~ä~eres", "~ä~eren";
-    predicative: "~a~", "~ä~er", _;
+    stem lemma: "~a~- like veraltet";
+    stem rest: "~ä~er- like veraltet";
+    stem rest_: "~ä~ste- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
     ),
-    // Schwarz: 31 words (hart, galt, uralt, pechschwarz, steinalt, bitterkalt). Like Scharf.
-    declension!("schwarz", 31, "~a~", like Scharf;
-    stem superlative: "~ä~este- like veraltet";
+    // Schwarz: 33 words (hart, galt, uralt, pechschwarz, steinalt, gemalt). Like Scharf.
+    declension!("schwarz", 33, "~a~", like Scharf;
+    stem rest_: "~ä~este- like veraltet";
     ),
     // Träge: 24 words (beige, broke, malle, fake, knorke, äußere).
     declension!("träge", 24, "~~";
-    stem superlative: "~st~- like veraltet";
-    strong_nom: _, "~~", _, _;
-    strong_gen: _, "~~r", "~~n", "~~r";
-    strong_dat: _, "~~r", "~~m", "~~n";
-    strong_acc: "~~n", _, "~~s", _;
-    weak_nom: _, _, _, "~~n";
-    weak_gen: "~~n", "~~n", "~~n", "~~n";
-    weak_dat: "~~n", "~~n", "~~n", "~~n";
-    weak_acc: "~~n", _, _, "~~n";
-    mixed_nom: "~~r", _, "~~s", "~~n";
-    mixed_gen: "~~n", "~~n", "~~n", "~~n";
-    mixed_dat: "~~n", "~~n", "~~n", "~~n";
-    mixed_acc: "~~n", _, "~~s", "~~n";
-    comparative_strong_nom: "~~rer", _, _, "~~re";
-    comparative_strong_gen: _, _, "~~ren", _;
-    comparative_strong_dat: _, _, "~~rem", "~~ren";
-    comparative_strong_acc: "~~ren", "~~re", "~~res", "~~re";
-    comparative_weak_nom: "~~re", "~~re", "~~re", "~~ren";
-    comparative_weak_gen: "~~ren", "~~ren", "~~ren", "~~ren";
-    comparative_weak_dat: "~~ren", "~~ren", "~~ren", "~~ren";
-    comparative_weak_acc: "~~ren", "~~re", "~~re", "~~ren";
-    comparative_mixed_nom: _, "~~re", "~~res", "~~ren";
-    comparative_mixed_gen: "~~ren", "~~ren", "~~ren", "~~ren";
-    comparative_mixed_dat: "~~ren", "~~ren", "~~ren", "~~ren";
-    comparative_mixed_acc: "~~ren", "~~re", "~~res", "~~ren";
-    predicative: "~~", "~~r", _;
+    stem lemma: "~~- like träge";
+    stem rest: "~~r- like veraltet";
+    stem rest_: "~st~- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
     ),
     // Zeitnah: 11 words (nah, bodennah, oberflächennah, verbrauchernah, regierungsnah, berlinnah). Like Scharf.
     declension!("zeitnah", 11, "~a~", like Scharf;
-    stem superlative: "~äc~ste- like veraltet";
+    stem rest_: "~äc~ste- like veraltet";
     ),
     // Groß: 11 words (groß, gross, riesengroß, mittelgroß, flächengroß, übergroß).
     declension!("groß", 11, "~o~";
-    stem superlative: "~ö~te- like veraltet";
-    strong_nom: _, "~o~e", _, _;
-    strong_gen: _, "~o~er", "~o~en", "~o~er";
-    strong_dat: _, "~o~er", "~o~em", "~o~en";
-    strong_acc: "~o~en", _, "~o~es", _;
-    weak_nom: _, _, _, "~o~en";
-    weak_gen: "~o~en", "~o~en", "~o~en", "~o~en";
-    weak_dat: "~o~en", "~o~en", "~o~en", "~o~en";
-    weak_acc: "~o~en", _, _, "~o~en";
-    mixed_nom: "~o~er", _, "~o~es", "~o~en";
-    mixed_gen: "~o~en", "~o~en", "~o~en", "~o~en";
-    mixed_dat: "~o~en", "~o~en", "~o~en", "~o~en";
-    mixed_acc: "~o~en", _, "~o~es", "~o~en";
-    comparative_strong_nom: "~ö~erer", _, _, "~ö~ere";
-    comparative_strong_gen: _, _, "~ö~eren", _;
-    comparative_strong_dat: _, _, "~ö~erem", "~ö~eren";
-    comparative_strong_acc: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~ere";
-    comparative_weak_nom: "~ö~ere", "~ö~ere", "~ö~ere", "~ö~eren";
-    comparative_weak_gen: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-    comparative_weak_dat: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-    comparative_weak_acc: "~ö~eren", "~ö~ere", "~ö~ere", "~ö~eren";
-    comparative_mixed_nom: _, "~ö~ere", "~ö~eres", "~ö~eren";
-    comparative_mixed_gen: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-    comparative_mixed_dat: "~ö~eren", "~ö~eren", "~ö~eren", "~ö~eren";
-    comparative_mixed_acc: "~ö~eren", "~ö~ere", "~ö~eres", "~ö~eren";
-    predicative: "~o~", "~ö~er", _;
+    stem lemma: "~o~- like veraltet";
+    stem rest: "~ö~er- like veraltet";
+    stem rest_: "~ö~te- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
     ),
     // Kurz: 9 words (kurz, gesund, schnurz, ungesund, superkurz, ultrakurz).
     declension!("kurz", 9, "~u~";
-    stem superlative: "~ü~este- like veraltet";
-    strong_nom: _, "~u~e", _, _;
-    strong_gen: _, "~u~er", "~u~en", "~u~er";
-    strong_dat: _, "~u~er", "~u~em", "~u~en";
-    strong_acc: "~u~en", _, "~u~es", _;
-    weak_nom: _, _, _, "~u~en";
-    weak_gen: "~u~en", "~u~en", "~u~en", "~u~en";
-    weak_dat: "~u~en", "~u~en", "~u~en", "~u~en";
-    weak_acc: "~u~en", _, _, "~u~en";
-    mixed_nom: "~u~er", _, "~u~es", "~u~en";
-    mixed_gen: "~u~en", "~u~en", "~u~en", "~u~en";
-    mixed_dat: "~u~en", "~u~en", "~u~en", "~u~en";
-    mixed_acc: "~u~en", _, "~u~es", "~u~en";
-    comparative_strong_nom: "~ü~erer", _, _, "~ü~ere";
-    comparative_strong_gen: _, _, "~ü~eren", _;
-    comparative_strong_dat: _, _, "~ü~erem", "~ü~eren";
-    comparative_strong_acc: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~ere";
-    comparative_weak_nom: "~ü~ere", "~ü~ere", "~ü~ere", "~ü~eren";
-    comparative_weak_gen: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-    comparative_weak_dat: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-    comparative_weak_acc: "~ü~eren", "~ü~ere", "~ü~ere", "~ü~eren";
-    comparative_mixed_nom: _, "~ü~ere", "~ü~eres", "~ü~eren";
-    comparative_mixed_gen: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-    comparative_mixed_dat: "~ü~eren", "~ü~eren", "~ü~eren", "~ü~eren";
-    comparative_mixed_acc: "~ü~eren", "~ü~ere", "~ü~eres", "~ü~eren";
-    predicative: "~u~", "~ü~er", _;
+    stem lemma: "~u~- like veraltet";
+    stem rest: "~ü~er- like veraltet";
+    stem rest_: "~ü~este- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
     ),
     // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug). Like Kurz.
     declension!("dumm", 9, "~u~", like Kurz;
-    stem superlative: "~ü~ste- like veraltet";
+    stem rest_: "~ü~ste- like veraltet";
     ),
-    // Unedel: 9 words (integer, schofel, illuster, makaber, speiübel, unedel). Like Edel, except in 34 cells: strong_nom f, strong_gen f, strong_gen n, strong_gen pl, strong_dat f, strong_dat n, ….
+    // Unedel: 9 words (integer, schofel, illuster, makaber, speiübel, unedel). Like Edel, except in 10 cells: strong_nom pl, strong_acc f, strong_acc pl, weak_nom m, weak_nom f, weak_nom n, ….
     declension!("unedel", 9, "~e~", like Edel;
-    strong_nom: _, "~e~e", _, _;
-    strong_gen: _, "~e~er", "~e~en", "~e~er";
-    strong_dat: _, "~e~er", "~e~em", "~e~en";
-    strong_acc: "~e~en", _, "~e~es", _;
-    weak_nom: _, _, _, "~e~en";
-    weak_gen: "~e~en", "~e~en", "~e~en", "~e~en";
-    weak_dat: "~e~en", "~e~en", "~e~en", "~e~en";
-    weak_acc: "~e~en", _, _, "~e~en";
-    mixed_nom: "~e~er", _, "~e~es", "~e~en";
-    mixed_gen: "~e~en", "~e~en", "~e~en", "~e~en";
-    mixed_dat: "~e~en", "~e~en", "~e~en", "~e~en";
-    mixed_acc: "~e~en", _, "~e~es", "~e~en";
+    stem lemma: "~e~- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
     ),
-    // Oberer: 9 words (nächster, vorkantscher, mittlerer, unterer, oberer, überdünischer).
-    declension!("oberer", 9, "~~r";
-    strong_nom: _, "~~", _, _;
-    strong_gen: _, "~~r", "~~n", "~~r";
-    strong_dat: _, "~~r", "~~m", "~~n";
-    strong_acc: "~~n", _, "~~s", _;
-    weak_nom: _, _, _, "~~n";
-    weak_gen: "~~n", "~~n", "~~n", "~~n";
-    weak_dat: "~~n", "~~n", "~~n", "~~n";
-    weak_acc: "~~n", _, _, "~~n";
-    mixed_nom: "~~r", _, "~~s", "~~n";
-    mixed_gen: "~~n", "~~n", "~~n", "~~n";
-    mixed_dat: "~~n", "~~n", "~~n", "~~n";
-    mixed_acc: "~~n", _, "~~s", "~~n";
+    // Oberer: 8 words (nächster, vorkantscher, mittlerer, unterer, oberer, überdünischer).
+    declension!("oberer", 8, "~~r";
+    stem lemma: "~~- like oberer";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
     superlative_strong_nom: "~st~r", "~st~", "~st~s", _;
     superlative_strong_gen: "~st~n", _, _, _;
     superlative_strong_dat: "~st~m", _, _, _;
-    predicative: "~~r", _, _;
     ),
-    // Rot: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth). Like Groß.
-    declension!("rot", 7, "~o~", like Groß;
-    stem superlative: "~ö~este- like veraltet";
+    // Roth: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth). Like Groß.
+    declension!("roth", 7, "~o~", like Groß;
+    stem rest_: "~ö~este- like veraltet";
     ),
     // Grob: 7 words (grob, fromm, aerob, anaerob, lammfromm, storr). Like Groß.
     declension!("grob", 7, "~o~", like Groß;
-    stem superlative: "~ö~ste- like veraltet";
+    stem rest_: "~ö~ste- like veraltet";
     ),
     // Lila: 6 words (rosa, lila, altrosa, hellrosa, schweinchenrosa, blasslila).
     declension!("lila", 6, "~";
-    stem superlative: "~nste- like veraltet";
+    stem rest: "~ner- like veraltet";
+    stem rest_: "~nste- like veraltet";
     strong_nom: _, "~ne", _, _;
     strong_gen: _, "~ner", "~nen", "~ner";
     strong_dat: _, "~ner", "~nem", "~nen";
@@ -642,28 +533,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     mixed_gen: "~nen", "~nen", "~nen", "~nen";
     mixed_dat: "~nen", "~nen", "~nen", "~nen";
     mixed_acc: "~nen", _, "~nes", "~nen";
-    comparative_strong_nom: "~nerer", _, _, "~nere";
-    comparative_strong_gen: _, _, "~neren", _;
-    comparative_strong_dat: _, _, "~nerem", "~neren";
-    comparative_strong_acc: "~neren", "~nere", "~neres", "~nere";
-    comparative_weak_nom: "~nere", "~nere", "~nere", "~neren";
-    comparative_weak_gen: "~neren", "~neren", "~neren", "~neren";
-    comparative_weak_dat: "~neren", "~neren", "~neren", "~neren";
-    comparative_weak_acc: "~neren", "~nere", "~nere", "~neren";
-    comparative_mixed_nom: _, "~nere", "~neres", "~neren";
-    comparative_mixed_gen: "~neren", "~neren", "~neren", "~neren";
-    comparative_mixed_dat: "~neren", "~neren", "~neren", "~neren";
-    comparative_mixed_acc: "~neren", "~nere", "~neres", "~neren";
-    predicative: "~", "~ner", _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
+    predicative: "~", _, _;
     ),
     // Hoch: 6 words (hoch, himmelhoch, ranghoch, wolkenhoch, hüfthoch, halbhoch). Like Groß, except in 1 cell: predicative pos.
     declension!("hoch", 6, "~oc~", like Groß;
-    stem superlative: "~öc~ste- like veraltet";
+    stem rest_: "~öc~ste- like veraltet";
     predicative: "~oc~", _, _;
     ),
     // Naß: 6 words (naß, gewiß, ungewiß, kraß, blaß, totenblaß).
     declension!("naß", 6, "~ß";
-    stem superlative: "~sseste- like veraltet";
+    stem rest: "~sser- like veraltet";
+    stem rest_: "~sseste- like veraltet";
     strong_nom: _, "~sse", _, _;
     strong_gen: _, "~sser", "~ssen", "~sser";
     strong_dat: _, "~sser", "~ssem", "~ssen";
@@ -676,23 +559,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     mixed_gen: "~ssen", "~ssen", "~ssen", "~ssen";
     mixed_dat: "~ssen", "~ssen", "~ssen", "~ssen";
     mixed_acc: "~ssen", _, "~sses", "~ssen";
-    comparative_strong_nom: "~sserer", _, _, "~ssere";
-    comparative_strong_gen: _, _, "~sseren", _;
-    comparative_strong_dat: _, _, "~sserem", "~sseren";
-    comparative_strong_acc: "~sseren", "~ssere", "~sseres", "~ssere";
-    comparative_weak_nom: "~ssere", "~ssere", "~ssere", "~sseren";
-    comparative_weak_gen: "~sseren", "~sseren", "~sseren", "~sseren";
-    comparative_weak_dat: "~sseren", "~sseren", "~sseren", "~sseren";
-    comparative_weak_acc: "~sseren", "~ssere", "~ssere", "~sseren";
-    comparative_mixed_nom: _, "~ssere", "~sseres", "~sseren";
-    comparative_mixed_gen: "~sseren", "~sseren", "~sseren", "~sseren";
-    comparative_mixed_dat: "~sseren", "~sseren", "~sseren", "~sseren";
-    comparative_mixed_acc: "~sseren", "~ssere", "~sseres", "~sseren";
-    predicative: "~ß", "~sser", _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
+    predicative: "~ß", _, _;
     ),
     // Arg: 3 words (arm, alt, arg).
     declension!("arg", 3, "a~";
-    stem superlative: "~ste- like arg";
+    stem rest: "~er- like arg";
+    stem rest_: "~ste- like arg";
     strong_nom: _, "a~e", _, _;
     strong_gen: _, "a~er", "a~en", "a~er";
     strong_dat: _, "a~er", "a~em", "a~en";
@@ -705,19 +580,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 23] = [
     mixed_gen: "a~en", "a~en", "a~en", "a~en";
     mixed_dat: "a~en", "a~en", "a~en", "a~en";
     mixed_acc: "a~en", _, "a~es", "a~en";
-    comparative_strong_nom: "ä~erer", _, _, "ä~ere";
-    comparative_strong_gen: _, _, "ä~eren", _;
-    comparative_strong_dat: _, _, "ä~erem", "ä~eren";
-    comparative_strong_acc: "ä~eren", "ä~ere", "ä~eres", "ä~ere";
-    comparative_weak_nom: "ä~ere", "ä~ere", "ä~ere", "ä~eren";
-    comparative_weak_gen: "ä~eren", "ä~eren", "ä~eren", "ä~eren";
-    comparative_weak_dat: "ä~eren", "ä~eren", "ä~eren", "ä~eren";
-    comparative_weak_acc: "ä~eren", "ä~ere", "ä~ere", "ä~eren";
-    comparative_mixed_nom: _, "ä~ere", "ä~eres", "ä~eren";
-    comparative_mixed_gen: "ä~eren", "ä~eren", "ä~eren", "ä~eren";
-    comparative_mixed_dat: "ä~eren", "ä~eren", "ä~eren", "ä~eren";
-    comparative_mixed_acc: "ä~eren", "ä~ere", "ä~eres", "ä~eren";
-    predicative: "a~", "ä~er", _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
+    predicative: "a~", _, _;
     ),
     // Gutbesucht: 3 words (gutbesucht, guterhalten, gutgelaunt).
     declension!("gutbesucht", 3, "gut~";

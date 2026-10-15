@@ -55,51 +55,15 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
     // NOM_F_INAN, from NOM_F_ANIM.
     relation!(NOM_F_INAN, [NOM_F_ANIM], [], none, true, None),
     // NOM_N_ANIM, from NOM_M_INAN.
-    relation!(NOM_N_ANIM, [NOM_M_INAN], [("~", "~е"), ("~ей", "~ьё"), ("~ий", "~ое"), ("~й", "~е"), ("~й", "~ё"), ("~т", "~"), ("~ый", "~ое")], rules {
-        "" => [3 9, 6 7, 2 4, 1 3, 4 3, 0 2, 5 2],
-        "ей" => [1 3],
-        "ий" => [2 4],
-        "ой" => [3 9, 4 3],
-        "ый" => [6 7],
-        "т" => [5 2],
-        "ш" => [0 2],
-    } listed {
-        "мой" => 4,
-        "свой" => 4,
-        "твой" => 4,
-    }, true, None),
+    relation!(NOM_N_ANIM, [NOM_M_INAN], [], none, true, None),
     // NOM_N_INAN, from NOM_N_ANIM.
     relation!(NOM_N_INAN, [NOM_N_ANIM], [], none, true, None),
     // NOM_PL_ANIM, from NOM_M_INAN.
-    relation!(NOM_PL_ANIM, [NOM_M_INAN], [("~", "~и"), ("~ей", "~ьи"), ("~й", "~е"), ("~й", "~и"), ("~ой", "~ие"), ("~ой", "~ые")], rules {
-        "" => [2 11, 3 5, 5 4, 0 3, 1 3, 4 3],
-        "ей" => [1 3],
-        "ий" => [2 4],
-        "ой" => [3 5, 5 4, 4 3],
-        "ый" => [2 7],
-        "ш" => [0 2],
-    } listed {
-        "другой" => 4,
-        "иной" => 5,
-        "каковой" => 5,
-        "кое-какой" => 4,
-        "любой" => 5,
-        "никакой" => 4,
-        "таковой" => 5,
-    }, false, None),
+    relation!(NOM_PL_ANIM, [NOM_M_INAN], [], none, false, None),
     // NOM_PL_INAN, from NOM_PL_ANIM.
     relation!(NOM_PL_INAN, [NOM_PL_ANIM], [], none, true, None),
     // GEN_M_ANIM, from NOM_F_ANIM.
-    relation!(GEN_M_ANIM, [NOM_F_ANIM], [("~а", "~его"), ("~а", "~ого"), ("~ая", "~ого"), ("~я", "~его")], rules {
-        "" => [2 17, 3 8, 1 3, 0 2],
-        "а" => [1 3, 0 2],
-        "я" => [2 17, 3 8],
-        "ая" => [2 17],
-        "оя" => [3 5],
-    } listed {
-        "ваша" => 0,
-        "наша" => 0,
-    }, false, None),
+    relation!(GEN_M_ANIM, [NOM_F_ANIM], [], none, false, None),
     // GEN_M_INAN, from GEN_M_ANIM.
     relation!(GEN_M_INAN, [GEN_M_ANIM], [], none, true, None),
     // GEN_F_ANIM, from GEN_M_ANIM.
@@ -113,13 +77,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
     // GEN_N_INAN, from GEN_M_ANIM.
     relation!(GEN_N_INAN, [GEN_M_ANIM], [], none, true, None),
     // GEN_PL_ANIM, from NOM_PL_ANIM.
-    relation!(GEN_PL_ANIM, [NOM_PL_ANIM], [("~", "~х"), ("~е", "~х")], rules {
-        "" => [1 18, 0 13],
-        "е" => [1 18, 0 1],
-        "и" => [0 12],
-    } listed {
-        "те" => 0,
-    }, false, None),
+    relation!(GEN_PL_ANIM, [NOM_PL_ANIM], [], none, false, None),
     // GEN_PL_INAN, from GEN_PL_ANIM.
     relation!(GEN_PL_INAN, [GEN_PL_ANIM], [], none, true, None),
     // DAT_M_ANIM, from GEN_M_ANIM.
@@ -187,12 +145,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "" => [1 24, 0 7],
         "ей" => [0 7, 1 4],
         "ой" => [1 20],
-    } listed {
-        "вашей" => 1,
-        "коей" => 1,
-        "нашей" => 1,
-        "никоей" => 1,
-    }, true, None),
+    } listed {}, true, None),
     // PREP_M_INAN, from PREP_M_ANIM.
     relation!(PREP_M_INAN, [PREP_M_ANIM], [], none, true, None),
     // PREP_F_ANIM, from GEN_F_ANIM.

@@ -13,11 +13,11 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 4] = [
     Slot {
-        name: Cow::Borrowed("adjective_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[NOM_M_SG, NOM_F_SG, VOC_M_SG, VOC_F_SG]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_pl"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_SG, GEN_M_PL, GEN_F_SG, GEN_F_PL, GEN_N_SG,
             GEN_N_PL, DAT_M_SG, DAT_M_PL, DAT_F_SG, DAT_F_PL, DAT_N_SG, DAT_N_PL, ACC_M_SG,
@@ -26,35 +26,42 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_n_sg"),
+        name: Cow::Borrowed("rest_"),
         cells: Cow::Borrowed(&[NOM_N_SG, ACC_N_SG, VOC_N_SG]),
     },
     Slot {
-        name: Cow::Borrowed("comparative"),
+        name: Cow::Borrowed("rest__"),
         cells: Cow::Borrowed(&[COMPARATIVE, SUPERLATIVE]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 10] = [
-    // adjective_sg like iacitūrus: 18,995 words.
+pub(super) static TABLES: [EndingTable<'static>; 15] = [
+    // lemma like iacitūrus: 18,991 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 18995,
+        words: 18991,
         slot: 0,
         table: Cow::Borrowed(concat!("~us\t", "~a\t", "~e\t", "~a\t",)),
     },
-    // adjective_sg like dēmittēns: 8,133 words.
+    // lemma like dēmittēns: 8,132 words.
     EndingTable {
         name: Cow::Borrowed("dēmittēns"),
-        words: 8133,
+        words: 8132,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // adjective_pl like iacitūrus: 19,218 words.
+    // lemma like iambicinus: 2 words.
+    EndingTable {
+        name: Cow::Borrowed("iambicinus"),
+        words: 2,
+        slot: 0,
+        table: Cow::Borrowed(concat!("ï~us\t", "ï~a\t", "ï~e\t", "ï~a\t",)),
+    },
+    // rest like iacitūrus: 19,230 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 19218,
+        words: 19230,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ī\t",
@@ -77,10 +84,36 @@ pub(super) static TABLES: [EndingTable<'static>; 10] = [
             "~a\t",
         )),
     },
-    // adjective_pl like pinguis: 2,217 words.
+    // rest like dēmittēns: 4,755 words.
+    EndingTable {
+        name: Cow::Borrowed("dēmittēns"),
+        words: 4755,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ēs\t",
+            "~ēs\t",
+            "~ia\t",
+            "~is\t~ium\t",
+            "~is\t~ium\t",
+            "~is\t~ium\t",
+            "~ī\t~ibus\t",
+            "~ī\t~ibus\t",
+            "~ī\t~ibus\t",
+            "~em\t~ēs|~īs\t",
+            "~em\t~ēs|~īs\t",
+            "~ia\t",
+            "~e|~ī\t~ibus\t",
+            "~e|~ī\t~ibus\t",
+            "~e|~ī\t~ibus\t",
+            "~ēs\t",
+            "~ēs\t",
+            "~ia\t",
+        )),
+    },
+    // rest like pinguis: 2,226 words.
     EndingTable {
         name: Cow::Borrowed("pinguis"),
-        words: 2217,
+        words: 2226,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
@@ -103,61 +136,139 @@ pub(super) static TABLES: [EndingTable<'static>; 10] = [
             "~ia\t",
         )),
     },
-    // adjective_pl like hȳoīdēs: 37 words.
+    // rest like sōns: 376 words.
     EndingTable {
-        name: Cow::Borrowed("hȳoīdēs"),
-        words: 37,
+        name: Cow::Borrowed("sōns"),
+        words: 376,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ēsˇ\t",
+            "~ēsˇ\t",
+            "~iaˇ\t",
+            "~isˇ\t~iumˇ\t",
+            "~isˇ\t~iumˇ\t",
+            "~isˇ\t~iumˇ\t",
+            "~īˇ\t~ibusˇ\t",
+            "~īˇ\t~ibusˇ\t",
+            "~īˇ\t~ibusˇ\t",
+            "~emˇ\t~īsˇ|~ēsˇ\t",
+            "~emˇ\t~īsˇ|~ēsˇ\t",
+            "~iaˇ\t",
+            "~īˇ|~eˇ\t~ibusˇ\t",
+            "~īˇ|~eˇ\t~ibusˇ\t",
+            "~īˇ|~eˇ\t~ibusˇ\t",
+            "~ēsˇ\t",
+            "~ēsˇ\t",
+            "~iaˇ\t",
+        )),
+    },
+    // rest like iners: 166 words.
+    EndingTable {
+        name: Cow::Borrowed("iners"),
+        words: 166,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
             "~ēs\t",
-            "~a|~ia\t",
-            "~is\t~um|~ium\t",
-            "~is\t~um|~ium\t",
-            "~is\t~um|~ium\t",
+            "~ia\t",
+            "~is\t~ium\t",
+            "~is\t~ium\t",
+            "~is\t~ium\t",
             "~ī\t~ibus\t",
             "~ī\t~ibus\t",
             "~ī\t~ibus\t",
             "~em\t~īs|~ēs\t",
             "~em\t~īs|~ēs\t",
-            "~a|~ia\t",
-            "~e|~ī\t~ibus\t",
-            "~e|~ī\t~ibus\t",
-            "~e|~ī\t~ibus\t",
+            "~ia\t",
+            "~ī|~e\t~ibus\t",
+            "~ī|~e\t~ibus\t",
+            "~ī|~e\t~ibus\t",
             "~ēs\t",
             "~ēs\t",
-            "~a|~ia\t",
+            "~ia\t",
         )),
     },
-    // adjective_n_sg like iacitūrus: 27,444 words.
+    // rest like dīves: 15 words.
+    EndingTable {
+        name: Cow::Borrowed("dīves"),
+        words: 15,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ēs\t",
+            "~ēs\t",
+            "~a\t",
+            "~is\t~um\t",
+            "~is\t~um\t",
+            "~is\t~um\t",
+            "~ī\t~ibus\t",
+            "~ī\t~ibus\t",
+            "~ī\t~ibus\t",
+            "~em\t~īs|~ēs\t",
+            "~em\t~īs|~ēs\t",
+            "~a\t",
+            "~e\t~ibus\t",
+            "~e\t~ibus\t",
+            "~e\t~ibus\t",
+            "~ēs\t",
+            "~ēs\t",
+            "~a\t",
+        )),
+    },
+    // rest like iambicinus: 2 words.
+    EndingTable {
+        name: Cow::Borrowed("iambicinus"),
+        words: 2,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "ï~ī\t",
+            "ï~ae\t",
+            "ï~a\t",
+            "ï~ī\tï~ōrum\t",
+            "ï~ae\tï~ārum\t",
+            "ï~ī\tï~ōrum\t",
+            "ï~ō\tï~īs\t",
+            "ï~ae\tï~īs\t",
+            "ï~ō\tï~īs\t",
+            "ï~um\tï~ōs\t",
+            "ï~am\tï~ās\t",
+            "ï~a\t",
+            "ï~ō\tï~īs\t",
+            "ï~ā\tï~īs\t",
+            "ï~ō\tï~īs\t",
+            "ï~ī\t",
+            "ï~ae\t",
+            "ï~a\t",
+        )),
+    },
+    // rest_ like iacitūrus: 27,437 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 27444,
+        words: 27437,
         slot: 2,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
     },
-    // comparative like iacitūrus: 25,063 words.
+    // rest__ like iacitūrus: 25,017 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 25063,
+        words: 25017,
         slot: 3,
         table: Cow::Borrowed(concat!("~or\t", "~ssimus\t",)),
     },
-    // comparative like sōns: 354 words.
+    // rest__ like sōns: 376 words.
     EndingTable {
         name: Cow::Borrowed("sōns"),
-        words: 354,
+        words: 376,
         slot: 3,
         table: Cow::Borrowed(concat!("~orˇ\t", "~ssimusˇ\t",)),
     },
-    // comparative like miser: 215 words.
+    // rest__ like miser: 215 words.
     EndingTable {
         name: Cow::Borrowed("miser"),
         words: 215,
         slot: 3,
         table: Cow::Borrowed(concat!("~ior\t", "~rimus\t",)),
     },
-    // comparative like dexter: 3 words.
+    // rest__ like dexter: 3 words.
     EndingTable {
         name: Cow::Borrowed("dexter"),
         words: 3,

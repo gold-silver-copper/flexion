@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 9] = [
     Slot {
-        name: Cow::Borrowed("present_ind_act_1_sg"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             IND_ACT_1_SG,
             FUTURE_ACT_1_SG,
@@ -67,7 +67,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("present_act"),
+        name: Cow::Borrowed("rest____"),
         cells: Cow::Borrowed(&[
             IND_ACT_1_DU,
             IND_ACT_1_PL,
@@ -89,7 +89,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("present_2"),
+        name: Cow::Borrowed("rest______"),
         cells: Cow::Borrowed(&[
             IND_ACT_2_DU,
             IND_ACT_3_DU,
@@ -104,7 +104,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("present_ind_act_2_pl"),
+        name: Cow::Borrowed("rest___"),
         cells: Cow::Borrowed(&[
             IND_ACT_2_PL,
             IMP_ACT_2_PL,
@@ -128,7 +128,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("act_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[
             IND_ACT_3_SG,
             IMP_ACT_2_SG,
@@ -144,7 +144,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("present_mid"),
+        name: Cow::Borrowed("rest__"),
         cells: Cow::Borrowed(&[
             IND_MID_1_SG,
             IND_MID_1_DU,
@@ -170,7 +170,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("present"),
+        name: Cow::Borrowed("rest_"),
         cells: Cow::Borrowed(&[
             IMP_ACT_1_SG,
             IMP_ACT_1_DU,
@@ -199,7 +199,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("imperfect_act_1_sg"),
+        name: Cow::Borrowed("rest_______"),
         cells: Cow::Borrowed(&[
             IMPERFECT_ACT_1_SG,
             IMPERFECT_ACT_2_DU,
@@ -212,7 +212,7 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("imperfect"),
+        name: Cow::Borrowed("rest_____"),
         cells: Cow::Borrowed(&[
             IMPERFECT_ACT_1_DU,
             IMPERFECT_ACT_1_PL,
@@ -230,35 +230,8 @@ pub(super) static SLOTS: [Slot<'static>; 9] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 38] = [
-    // present_ind_act_1_sg like साधयति: 112 words.
-    EndingTable {
-        name: Cow::Borrowed("साधयति"),
-        words: 112,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "~ामि\t",
-            "~िष\u{94d}यामि\t\t~िष\u{94d}यामः|~िष\u{94d}यामसि\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "अ~िष\u{94d}य\u{947}\t\t\t",
-            "\t\t\t",
-            "अ~िष\u{94d}यत\t\t\t",
-            "~ामास|~ा\u{902}चकर\t",
-            "~ामासिथ|~ा\u{902}चकर\u{94d}थ\t",
-            "\t\t\t",
-            "\t\t",
-            "\t\t\t",
-            "\t\t",
-        )),
-    },
-    // present_ind_act_1_sg like अग्रहीत्: 31 words.
+pub(super) static TABLES: [EndingTable<'static>; 35] = [
+    // rest like अग्रहीत्: 31 words.
     EndingTable {
         name: Cow::Borrowed("अग\u{94d}रहीत\u{94d}"),
         words: 31,
@@ -285,34 +258,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t",
         )),
     },
-    // present_ind_act_1_sg like बाधिष्यते: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("बाधिष\u{94d}यत\u{947}"),
-        words: 3,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "~\u{947}\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-            "अ~\u{947}\t\t\t",
-            "\t\t\t",
-            "अ~त\t\t\t",
-            "\t",
-            "\t",
-            "\t\t\t",
-            "\t\t",
-            "\t\t\t",
-            "\t\t",
-        )),
-    },
-    // present_ind_act_1_sg like अभोक्: 3 words.
+    // rest like अभोक्: 3 words.
     EndingTable {
         name: Cow::Borrowed("अभोक\u{94d}"),
         words: 3,
@@ -339,7 +285,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t",
         )),
     },
-    // present_ind_act_1_sg like आर्त: 2 words.
+    // rest like आर्त: 2 words.
     EndingTable {
         name: Cow::Borrowed("आर\u{94d}त"),
         words: 2,
@@ -366,7 +312,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t",
         )),
     },
-    // present_ind_act_1_sg like अमौक्: 2 words.
+    // rest like अमौक्: 2 words.
     EndingTable {
         name: Cow::Borrowed("अमौक\u{94d}"),
         words: 2,
@@ -393,7 +339,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t",
         )),
     },
-    // present_ind_act_1_sg like अजनिष्ट: 1 words.
+    // rest like अजनिष्ट: 1 words.
     EndingTable {
         name: Cow::Borrowed("अजनिष\u{94d}ट"),
         words: 1,
@@ -420,25 +366,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t",
         )),
     },
-    // present_act like साधयति: 112 words.
-    EndingTable {
-        name: Cow::Borrowed("साधयति"),
-        words: 112,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ावः\t~ामः|~ामसि\t",
-            "~सि\t",
-            "~न\u{94d}ति\t",
-            "\t",
-            "~\u{947}यम\u{94d}\t~\u{947}व\t\t",
-            "\t\t\t",
-            "\t\t~\u{947}य\u{941}ः\t",
-            "~ामास|~ा\u{902}चकार\t",
-            "\t",
-            "~त\u{94d}\t",
-        )),
-    },
-    // present_act like बध्नाति: 6 words.
+    // rest____ like बध्नाति: 6 words.
     EndingTable {
         name: Cow::Borrowed("बध\u{94d}नाति"),
         words: 6,
@@ -456,7 +384,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~त\u{94d}\t",
         )),
     },
-    // present_act like अकर्: 2 words.
+    // rest____ like अकर्: 2 words.
     EndingTable {
         name: Cow::Borrowed("अकर\u{94d}"),
         words: 2,
@@ -465,30 +393,14 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t\t", "\t", "\t", "\t", "\t\t\t", "\t\t\t", "\t\t\t", "\t", "अ~\t", "\t",
         )),
     },
-    // present_2 like वहति: 619 words.
-    EndingTable {
-        name: Cow::Borrowed("वहति"),
-        words: 619,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~थः\t",
-            "~तः\t",
-            "~स\u{947}\t~ध\u{94d}व\u{947}\t",
-            "~त\u{947}\t",
-            "\t",
-            "\t",
-            "\t\t",
-            "~ताम\u{94d}\t",
-        )),
-    },
-    // present_2 like जानाति: 66 words.
+    // rest______ like जानाति: 66 words.
     EndingTable {
         name: Cow::Borrowed("जानाति"),
         words: 66,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~थः\t",
-            "~तः\t",
+            "\t",
             "~B\u{947}\t~ध\u{94d}व\u{947}\t",
             "~त\u{947}\t",
             "\t",
@@ -497,14 +409,14 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~ताम\u{94d}\t",
         )),
     },
-    // present_2 like नक्ति: 13 words.
+    // rest______ like तक्ति: 13 words.
     EndingTable {
-        name: Cow::Borrowed("नक\u{94d}ति"),
+        name: Cow::Borrowed("तक\u{94d}ति"),
         words: 13,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~क\u{94d}थः\t",
-            "~क\u{94d}तः\t",
+            "\t",
             "~क\u{94d}B\u{947}\t~ग\u{94d}ध\u{94d}व\u{947}\t",
             "~क\u{94d}त\u{947}\t",
             "\t",
@@ -513,14 +425,14 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~क\u{94d}ताम\u{94d}\t",
         )),
     },
-    // present_2 like पिपर्ति: 13 words.
+    // rest______ like पिपर्ति: 13 words.
     EndingTable {
         name: Cow::Borrowed("पिपर\u{94d}ति"),
         words: 13,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~थः\t",
-            "~तः\t",
+            "\t",
             "~ष\u{947}\t~ध\u{94d}व\u{947}\t",
             "~त\u{947}\t",
             "\t",
@@ -529,7 +441,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~ताम\u{94d}\t",
         )),
     },
-    // present_ind_act_2_pl like जानाति: 104 words.
+    // rest___ like जानाति: 104 words.
     EndingTable {
         name: Cow::Borrowed("जानाति"),
         words: 104,
@@ -538,7 +450,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~थ\t", "~त\t", "\t\t", "\t\t", "\t\t", "\t\t\t", "\t\t\t", "\t\t\t", "\t\t",
         )),
     },
-    // present_ind_act_2_pl like आनाश: 70 words.
+    // rest___ like आनाश: 70 words.
     EndingTable {
         name: Cow::Borrowed("आनाश"),
         words: 70,
@@ -547,7 +459,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t",
             "\t",
             "~िव\t\t",
-            "~थ\u{941}ः\t\t",
+            "\t~\t",
             "\t\t",
             "~\u{947}\t~िवह\u{947}\t\t",
             "\t\t\t",
@@ -555,44 +467,27 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~िवा\u{902}स\u{94d}\t\t",
         )),
     },
-    // present_ind_act_2_pl like ररंह: 8 words.
+    // rest___ like वेद: 3 words.
     EndingTable {
-        name: Cow::Borrowed("रर\u{902}ह"),
-        words: 8,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "\t",
-            "\t",
-            "~िव\t\t",
-            "~थ\u{941}ः\t\t",
-            "\t\t",
-            "~\u{947}\t~िवह\u{947}\t\t",
-            "\t\t\t",
-            "~\u{947}\t\t\t",
-            "~\u{94d}वा\u{902}स\u{94d}\t\t",
-        )),
-    },
-    // present_ind_act_2_pl like चकार: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("चकार"),
+        name: Cow::Borrowed("व\u{947}द"),
         words: 3,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "\t",
             "\t",
-            "~\u{943}व\t\t",
-            "~\u{94d}रथ\u{941}ः\t\t",
+            "~दिव|~द\u{94d}व\t~दिम|~द\u{94d}म\t",
+            "\t~द\t",
             "\t\t",
-            "~\u{94d}र\u{947}\t~\u{943}वह\u{947}\t\t",
-            "\t\t\t",
-            "~\u{94d}र\u{947}\t\t\t",
-            "~\u{943}वा\u{902}स\u{94d}\t\t",
+            "~द\u{947}\t~दिवह\u{947}|~द\u{94d}वह\u{947}\t~दिमह\u{947}|~द\u{94d}मह\u{947}\t",
+            "~दिष\u{947}|~त\u{94d}स\u{947}\t\t~दिध\u{94d}व\u{947}|~द\u{94d}ध\u{94d}व\u{947}\t",
+            "~द\u{947}\t\t~दिर\u{947}|~द\u{94d}र\u{947}\t",
+            "~द\u{94d}वा\u{902}स\u{94d}\t\t",
         )),
     },
-    // act_sg like वहति: 262 words.
+    // lemma like वहति: 265 words.
     EndingTable {
         name: Cow::Borrowed("वहति"),
-        words: 262,
+        words: 265,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "~ति\t",
@@ -603,7 +498,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "अ~ीत\u{94d}\t\t",
         )),
     },
-    // act_sg like आपत्: 25 words.
+    // lemma like आपत्: 25 words.
     EndingTable {
         name: Cow::Borrowed("आपत\u{94d}"),
         words: 25,
@@ -617,7 +512,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~त\u{94d}\t\t",
         )),
     },
-    // act_sg like अमौक्: 2 words.
+    // lemma like अमौक्: 2 words.
     EndingTable {
         name: Cow::Borrowed("अमौक\u{94d}"),
         words: 2,
@@ -631,10 +526,10 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~\t\t",
         )),
     },
-    // present_mid like वहति: 374 words.
+    // rest__ like वहति: 377 words.
     EndingTable {
         name: Cow::Borrowed("वहति"),
-        words: 374,
+        words: 377,
         slot: 5,
         table: Cow::Borrowed(concat!(
             "~\u{947}\t~ावह\u{947}\t\t",
@@ -642,18 +537,56 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t~न\u{94d}त\u{947}\t",
             "\t",
             "\t\t",
-            "~\u{947}य\t\t\t",
             "\t\t\t",
+            "\t\t~\u{947}ध\u{94d}वम\u{94d}\t",
             "\t\t\t",
             "~ित\u{941}म\u{94d}\t",
             "~ित\u{94d}वा\t",
             "~माA\t",
         )),
     },
-    // present_mid like जानाति: 29 words.
+    // rest__ like तनोति: 27 words.
     EndingTable {
-        name: Cow::Borrowed("जानाति"),
-        words: 29,
+        name: Cow::Borrowed("तनोति"),
+        words: 27,
+        slot: 5,
+        table: Cow::Borrowed(concat!(
+            "~\u{947}\t~ह\u{947}\t\t",
+            "~ाथ\u{947}\t",
+            "\t~त\u{947}\t",
+            "\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t~ीध\u{94d}वम\u{94d}\t",
+            "\t\t\t",
+            "\t",
+            "\t",
+            "~ाA\t",
+        )),
+    },
+    // rest__ like तक्ति: 13 words.
+    EndingTable {
+        name: Cow::Borrowed("तक\u{94d}ति"),
+        words: 13,
+        slot: 5,
+        table: Cow::Borrowed(concat!(
+            "~\u{947}\t~\u{94d}वह\u{947}\t\t",
+            "~ाथ\u{947}\t",
+            "\t~त\u{947}\t",
+            "\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t~ीध\u{94d}वम\u{94d}\t",
+            "\t\t\t",
+            "\t",
+            "\t",
+            "~ान\t",
+        )),
+    },
+    // rest__ like बध्नाति: 10 words.
+    EndingTable {
+        name: Cow::Borrowed("बध\u{94d}नाति"),
+        words: 10,
         slot: 5,
         table: Cow::Borrowed(concat!(
             "~\u{947}\t~ीवह\u{947}\t\t",
@@ -669,64 +602,71 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~ान\t",
         )),
     },
-    // present_mid like तनोति: 27 words.
+    // rest_ like वहति: 376 words.
+    EndingTable {
+        name: Cow::Borrowed("वहति"),
+        words: 376,
+        slot: 6,
+        table: Cow::Borrowed(concat!(
+            "~ाAि\t~ाव\t\t",
+            "\t\t\t",
+            "~ाAि\t~ाव\t~ाम\t",
+            "~ाः|~ासि\t\t\t",
+            "~ात\u{94d}|~ाति\t\t\t",
+            "~\u{948}\t~ावह\u{948}\t~ामह\u{948}\t",
+            "~ास\u{947}|~ास\u{948}\t\t~ाध\u{94d}व\u{948}\t",
+            "~ात\u{947}|~ात\u{948}\t\t~न\u{94d}त|~ान\u{94d}त\u{948}\t",
+        )),
+    },
+    // rest_ like तनोति: 39 words.
     EndingTable {
         name: Cow::Borrowed("तनोति"),
-        words: 27,
-        slot: 5,
+        words: 39,
+        slot: 6,
         table: Cow::Borrowed(concat!(
-            "~\u{947}\t~ह\u{947}\t\t",
-            "~ाथ\u{947}\t",
-            "\t~त\u{947}\t",
-            "\t",
-            "\t\t",
-            "~ीय\t\t\t",
+            "~ाAि\t~ाव\t\t",
             "\t\t\t",
-            "\t\t\t",
-            "\t",
-            "\t",
-            "~ाA\t",
+            "~ाAि|~ा\t~ाव\t~ाम\t",
+            "~ः|~सि\t\t\t",
+            "~त\u{94d}|~ति\t\t\t",
+            "~\u{948}\t~ावह\u{948}\t~ामह\u{948}\t",
+            "~स\u{947}\t\t~ध\u{94d}व\u{947}\t",
+            "\t\t~न\u{94d}त\t",
         )),
     },
-    // present_mid like नक्ति: 13 words.
+    // rest_ like वेत्ति: 16 words.
     EndingTable {
-        name: Cow::Borrowed("नक\u{94d}ति"),
-        words: 13,
-        slot: 5,
+        name: Cow::Borrowed("व\u{947}त\u{94d}ति"),
+        words: 16,
+        slot: 6,
         table: Cow::Borrowed(concat!(
-            "~\u{947}\t~\u{94d}वह\u{947}\t\t",
-            "~ाथ\u{947}\t",
-            "\t~त\u{947}\t",
-            "\t",
-            "\t\t",
-            "~ीय\t\t\t",
+            "~ाAि\t~ाव\t\t",
+            "\t\t\t",
+            "~ाAि\t~ाव\t~ाम\t",
             "\t\t\t",
             "\t\t\t",
-            "\t",
-            "\t",
-            "~ान\t",
+            "~\u{948}\t~ावह\u{948}\t~ामह\u{948}\t",
+            "~स\u{947}\t\t~ध\u{94d}व\u{947}\t",
+            "\t\t~न\u{94d}त\t",
         )),
     },
-    // present_mid like संतापयति: 1 words.
+    // rest_ like बध्नाति: 6 words.
     EndingTable {
-        name: Cow::Borrowed("स\u{902}तापयति"),
-        words: 1,
-        slot: 5,
+        name: Cow::Borrowed("बध\u{94d}नाति"),
+        words: 6,
+        slot: 6,
         table: Cow::Borrowed(concat!(
-            "~\u{947}\t~ावह\u{947}\t\t",
-            "~\u{947}थ\u{947}\t",
-            "\t~न\u{94d}त\u{947}\t",
-            "\t",
-            "\t\t",
-            "~\u{947}य\t\t\t",
+            "~ानि\t~ाव\t\t",
             "\t\t\t",
-            "\t\t\t",
-            "~ित\u{941}म\u{94d}\t",
-            "~ित\u{94d}वा\t",
-            "~मान|~ान\t",
+            "~ानि|~ा\t~ाव\t~ाम\t",
+            "~ाः|~ासि\t\t\t",
+            "~ात\u{94d}|~ाति\t\t\t",
+            "~\u{948}\t~ावह\u{948}\t~ामह\u{948}\t",
+            "~ास\u{947}\t\t~ाध\u{94d}व\u{947}\t",
+            "\t\t~ान\u{94d}त\t",
         )),
     },
-    // present like ईष्टे: 3 words.
+    // rest_ like ईष्टे: 3 words.
     EndingTable {
         name: Cow::Borrowed("ईष\u{94d}ट\u{947}"),
         words: 3,
@@ -742,24 +682,10 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "~त\u{947}|~ात\u{948}\t\t~न\u{94d}त|~ान\u{94d}त\u{948}\t",
         )),
     },
-    // imperfect_act_1_sg like लभते: 268 words.
-    EndingTable {
-        name: Cow::Borrowed("लभत\u{947}"),
-        words: 268,
-        slot: 7,
-        table: Cow::Borrowed(concat!(
-            "अ~म\u{94d}\t",
-            "अ~तम\u{94d}\t\t",
-            "\t",
-            "अ~थाः\tअ~ध\u{94d}वम\u{94d}\t",
-            "अ~त\t",
-            "\t",
-        )),
-    },
-    // imperfect_act_1_sg like वहति: 262 words.
+    // rest_______ like वहति: 265 words.
     EndingTable {
         name: Cow::Borrowed("वहति"),
-        words: 262,
+        words: 265,
         slot: 7,
         table: Cow::Borrowed(concat!(
             "अ~म\u{94d}\t",
@@ -770,7 +696,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "अ~िढ\u{94d}वम\u{94d}\t",
         )),
     },
-    // imperfect_act_1_sg like जानाति: 25 words.
+    // rest_______ like जानाति: 25 words.
     EndingTable {
         name: Cow::Borrowed("जानाति"),
         words: 25,
@@ -784,9 +710,9 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t",
         )),
     },
-    // imperfect_act_1_sg like नक्ति: 8 words.
+    // rest_______ like तक्ति: 8 words.
     EndingTable {
-        name: Cow::Borrowed("नक\u{94d}ति"),
+        name: Cow::Borrowed("तक\u{94d}ति"),
         words: 8,
         slot: 7,
         table: Cow::Borrowed(concat!(
@@ -798,7 +724,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t",
         )),
     },
-    // imperfect_act_1_sg like आनयति: 7 words.
+    // rest_______ like आनयति: 7 words.
     EndingTable {
         name: Cow::Borrowed("आनयति"),
         words: 7,
@@ -812,17 +738,17 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t",
         )),
     },
-    // imperfect_act_1_sg like अकर्: 2 words.
+    // rest_______ like अकर्: 2 words.
     EndingTable {
         name: Cow::Borrowed("अकर\u{94d}"),
         words: 2,
         slot: 7,
         table: Cow::Borrowed(concat!("\t", "\t\t", "\t", "\t\t", "\t", "अ~\t",)),
     },
-    // imperfect like वहति: 616 words.
+    // rest_____ like वहति: 615 words.
     EndingTable {
         name: Cow::Borrowed("वहति"),
-        words: 616,
+        words: 615,
         slot: 8,
         table: Cow::Borrowed(concat!(
             "\t\t",
@@ -833,7 +759,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\tअ~न\u{94d}त\t",
         )),
     },
-    // imperfect like आनयति: 7 words.
+    // rest_____ like आनयति: 7 words.
     EndingTable {
         name: Cow::Borrowed("आनयति"),
         words: 7,
@@ -847,7 +773,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\t~न\u{94d}त\t",
         )),
     },
-    // imperfect like बध्नाति: 6 words.
+    // rest_____ like बध्नाति: 6 words.
     EndingTable {
         name: Cow::Borrowed("बध\u{94d}नाति"),
         words: 6,
@@ -861,7 +787,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\tअ~त\t",
         )),
     },
-    // imperfect like वमति: 4 words.
+    // rest_____ like वमति: 4 words.
     EndingTable {
         name: Cow::Borrowed("वमति"),
         words: 4,
@@ -875,7 +801,7 @@ pub(super) static TABLES: [EndingTable<'static>; 38] = [
             "\tअ~न\u{94d}त\t",
         )),
     },
-    // imperfect like ईष्टे: 3 words.
+    // rest_____ like ईष्टे: 3 words.
     EndingTable {
         name: Cow::Borrowed("ईष\u{94d}ट\u{947}"),
         words: 3,

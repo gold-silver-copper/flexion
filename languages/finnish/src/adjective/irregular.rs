@@ -1,9 +1,8 @@
 //! What no declension gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with (`rest`, `chic- like abstrakti`), then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
@@ -20,7 +19,7 @@ ala-	12	alla	14	alta	16	alle	28	alempi	29	alin
 apokalyptinen	4	apokalyptista	5	apokalyptisia	6	apokalyptisessa	7	apokalyptisissa
 arvostetumpi	1	arvostetummät	4	arvostetumpää	5	arvostetumpiä	10	arvostetumpään
 autuaaksitekevä	5	autuaaksitekeviä	7	autuaaksitekevissä
-chic	adjective	chic- like abstrakti	adjective_pl	chic- like abstrakti
+chic	rest	chic- like abstrakti	rest_	chic- like abstrakti
 efferentti	4	efferenttia	5	efferentteja	6	efferentissa	7	efferenteissa
 emeettinen	4	emeettista	5	emeettisia	6	emeettisessa	7	emeettisissa
 ensimmäinenkolmatta	4	ensimmäistäkolmatta	5	ensimmäisiäkolmatta	6	ensimmäisessäkolmatta	7	ensimmäisissäkolmatta	8	ensimmäisestäkolmatta	9	ensimmäisistäkolmatta	12	ensimmäiselläkolmatta	13	ensimmäisilläkolmatta	14	ensimmäiseltäkolmatta	15	ensimmäisiltäkolmatta	18	ensimmäisenäkolmatta	19	ensimmäisinäkolmatta	22	ensimmäisettäkolmatta	23	ensimmäisittäkolmatta
@@ -32,13 +31,13 @@ etimmäinen	28	etummaisempi	29	etummaisin
 etä-	18	etänä
 fäärinkielinen	4	fäärinkielista	5	fäärinkielisia	6	fäärinkielisessa	7	fäärinkielisissa
 gurmee	3	gurmeiden	5	gurmeita	7	gurmeissa	10	gurmeehen	11	gurmeihin	25	gurmein	27	gurmeine
-halal	adjective	halal- like abstrakti	adjective_pl	halal- like abstrakti
+halal	rest	halal- like abstrakti	rest_	halal- like abstrakti
 halpa	3	halpojen	5	halpoja	7	halvoissa	11	halpoihin	25	halvoin	27	halpoine	29	halvin
 halpis	4	halpista	5	halpiksia	6	halpiksessa	7	halpiksissa
 handsfree	1	handsfreet	4	handsfreetä	7	handsfreeissä	9	handsfreeistä	10	handsfreehin	11	handsfreeihin	13	handsfreeillä	15	handsfreeiltä	19	handsfreeinä	23	handsfreeittä
 hapan	1	happamat	3	happamien	5	happamia	10	happamaan	11	happamiin	27	happamine
 hapanimelä	5	hapanimeliä	7	hapanimelissä
-haram	adjective	haram- like abstrakti	adjective_pl	haram- like abstrakti
+haram	rest	haram- like abstrakti	rest_	haram- like abstrakti
 harhaanvievä	5	harhaanvieviä	7	harhaanvievissä
 harras	1	hartaat	3	hartaiden	5	hartaita	10	hartaaseen	11	hartaisiin	27	hartaine
 heidänlaisensa	4	heidänlaistaan	5	heidänlaisiaan	6	heidänlaisessaan	7	heidänlaisissaan	16	heidänlaiselleen	17	heidänlaisilleen	20	heidänlaisekseen	21	heidänlaisikseen	27	heidänlaisineen
@@ -135,7 +134,7 @@ sisä-	6	sisässä	8	sisästä	10	sisään	12	sisällä	14	sisältä	16	sisälle
 spesifinen	4	spesifista	5	spesifisia	6	spesifisessa	7	spesifisissa
 suhdanneherkkä	6	suhdanneherkässä
 suklaapäällysteinen	4	suklaapäällysteista	5	suklaapäällysteisia	6	suklaapäällysteisessa	7	suklaapäällysteisissa
-suoti	adjective	suod- like abstrakti	adjective_pl	suot- like abstrakti	4	suotia	5	suoteja	10	suotiin	18	suotina	19	suoteina
+suoti	rest	suod- like abstrakti	rest_	suot- like abstrakti	4	suotia	5	suoteja	10	suotiin	18	suotina	19	suoteina
 suurpiirteisin	1	suurpiirteisimmät	4	suurpiirteisintä	5	suurpiirteisimpiä	10	suurpiirteisimpään
 syndaktylinen	4	syndaktylista	5	syndaktylisia	6	syndaktylisessa	7	syndaktylisissa
 taka-	20	taakse

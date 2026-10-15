@@ -1,106 +1,104 @@
 //! What no conjugation gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with (`rest`, `abought- like settle`), then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 242 stems, 202 forms.
+/// 242 stems, 200 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"abegge	verb_past	abought- like settle
-aby	verb_past	abought- like settle
-amazon	verb	amazon- like settle
-anhyzer	verb	anhyzer- like settle
+        r#"abegge	rest	abought- like settle
+aby	rest	abought- like settle
+amazon	lemma	amazon- like settle
+anhyzer	lemma	anhyzer- like settle
 arede	3	areding
 areed	2	ared	3	areeds
-arreede	verb_past	arred- like settle
-assoilzie	verb	assoilzie- like settle
+arreede	rest	arred- like settle
+assoilzie	lemma	assoilzie- like settle
 atren	2	atran	4	atrun
 awreak	4	awroke
-axel	verb	axel- like settle
-backtaxi	verb	backtaxi- like settle
-banzai	verb	banzai- like settle
-bazooka	verb	bazooka- like settle
+axel	lemma	axel- like settle
+backtaxi	lemma	backtaxi- like settle
+banzai	lemma	banzai- like settle
+bazooka	lemma	bazooka- like settle
 be	1	is	2	was
 bede	2	bade	4	bode
-bedizen	verb	bedizen- like settle
-bedizzen	verb	bedizzen- like settle
-begird	verb_past	begirt- like settle
+bedizen	lemma	bedizen- like settle
+bedizzen	lemma	bedizzen- like settle
+begird	rest	begirt- like settle
 beholde	2	behelde	3	beholding
 benim	4	benomen
-beseeke	verb_past	besoughte- like settle
+beseeke	rest	besoughte- like settle
 bespit	4	bespitten
-besprenge	verb_past	besprent- like settle
+besprenge	rest	besprent- like settle
 bestead	4	bestead
-betwynde	verb_past	betwound- like settle
-bewizard	verb	bewizard- like settle
+betwynde	rest	betwound- like settle
+bewizard	lemma	bewizard- like settle
 bide	2	bode
 bivouac	2	bivouacked	3	bivouacing
-blazen	verb	blazen- like settle
-blazon	verb	blazon- like settle
-bless	verb_past	blest- like settle
-blizzard	verb	blizzard- like settle
+blazen	lemma	blazen- like settle
+blazon	lemma	blazon- like settle
+bless	rest	blest- like settle
+blizzard	lemma	blizzard- like settle
 blowe	2	blewe	4	blowne
-bmx	verb	bmx- like settle
+bmx	lemma	bmx- like settle
 born	2	bornt	3	bornin
-boxcar	verb	boxcar- like settle
-boxhaul	verb	boxhaul- like settle
-brazen	verb	brazen- like settle
-breake	verb_past	broke- like break
-breezen	verb	breezen- like settle
-brexit	verb	brexit- like settle
-bringe	verb_past	broughte- like settle
-bronzen	verb	bronzen- like settle
-brozier	verb	brozier- like settle
-buie	verb_past	bought- like settle
-bulldozer	verb	bulldozer- like settle
-cadenza	verb	cadenza- like settle
+boxcar	lemma	boxcar- like settle
+boxhaul	lemma	boxhaul- like settle
+brazen	lemma	brazen- like settle
+breake	rest	broke- like break
+breezen	lemma	breezen- like settle
+brexit	lemma	brexit- like settle
+bringe	rest	broughte- like settle
+bronzen	lemma	bronzen- like settle
+brozier	lemma	brozier- like settle
+buie	rest	bought- like settle
+bulldozer	lemma	bulldozer- like settle
+cadenza	lemma	cadenza- like settle
 can	2	could	3	able
 caut	1	cauteth
 chor	3	chorrin
-chuse	verb_past	chose- like break
-claxon	verb	claxon- like settle
+chuse	rest	chose- like break
+claxon	lemma	claxon- like settle
 clep	2	clept	3	clepping
-coexert	verb	coexert- like settle
-coexhibit	verb	coexhibit- like settle
-coexpand	verb	coexpand- like settle
-coexport	verb	coexport- like settle
-coextend	verb	coextend- like settle
-coextract	verb	coextract- like settle
-commixt	verb	commixt- like settle
-complexion	verb	complexion- like settle
+coexert	lemma	coexert- like settle
+coexhibit	lemma	coexhibit- like settle
+coexpand	lemma	coexpand- like settle
+coexport	lemma	coexport- like settle
+coextend	lemma	coextend- like settle
+coextract	lemma	coextract- like settle
+commixt	lemma	commixt- like settle
+complexion	lemma	complexion- like settle
 coom	2	came
-cotch	verb_past	caught- like settle
-cozen	verb	cozen- like settle
-crazen	verb	crazen- like settle
+cotch	rest	caught- like settle
+cozen	lemma	cozen- like settle
+crazen	lemma	crazen- like settle
 cum	2	came	4	come
 darf	3	durving
-dazen	verb	dazen- like settle
+dazen	lemma	dazen- like settle
 de	1	diz	2	did	4	dyun
-dee	verb_past	dyun- like settle	1	diz
+dee	rest	dyun- like settle	1	diz
 deeky	2	deekied	3	deekyin
 dehydrofreeze	2	dehydrofreezing	3	dehydrofreezes	4	dehydrofrozen
-denizen	verb	denizen- like settle
-detext	verb	detext- like settle
-dezinc	verb	dezinc- like settle
-dizen	verb	dizen- like settle
-dizzen	verb	dizzen- like settle
+denizen	lemma	denizen- like settle
+detext	lemma	detext- like settle
+dezinc	lemma	dezinc- like settle
+dizen	lemma	dizen- like settle
+dizzen	lemma	dizzen- like settle
 doe	2	did	4	done
 downtrod	4	downtrodden
 drawe	2	drewe
 driue	4	driuen
 dunsh	3	dunshin
-dx	verb	dx- like settle
+dx	lemma	dx- like settle
 eat	2	ate
 eate	2	ate
 emblazon	1	emblazons
 endenizen	1	endenizens
 ennui	2	ennuied	3	ennuying
-erastocate	0	erastocat	2	erastocated
 ew	2	ewwed	3	ewwing	4	ewwed
 exact	1	exacts
 exalt	1	exalts
@@ -158,248 +156,248 @@ extreat	1	extreats
 extrovert	1	extroverts
 extruct	1	extructs
 exult	1	exults
-fext	verb	fext- like settle
+fext	lemma	fext- like settle
 fix	1	fixes
 fizgig	1	fizgigs
-fluxion	verb	fluxion- like settle
+fluxion	lemma	fluxion- like settle
 forbid	2	forbade	4	forbidden
-foretel	verb_past	foretold- like settle
-forewit	verb_past	forewist- like settle	1	forewot
-forgoe	verb_past	for- like overgo
-forhele	verb_past	forhole- like break
+foretel	rest	foretold- like settle
+forewit	rest	forewist- like settle	1	forewot
+forgoe	rest	for- like overgo
+forhele	rest	forhole- like break
 forlat	2	forleet	4	forlatten
-forlese	verb_past	forlor- like wear
+forlese	rest	forlor- like wear
 forswing	4	forswungen
 forswink	4	forswunken
-foxhunt	verb	foxhunt- like settle
-foxproof	verb	foxproof- like settle
-foxtrot	verb	foxtrot- like settle
-freezeproof	verb	freezeproof- like settle
+foxhunt	lemma	foxhunt- like settle
+foxproof	lemma	foxproof- like settle
+foxtrot	lemma	foxtrot- like settle
+freezeproof	lemma	freezeproof- like settle
 fuq	3	fuqqing	4	fuqqed
-fuxk	verb	fuxk- like settle
+fuxk	lemma	fuxk- like settle
 gan	2	went	3	gawn	4	gane
 gar	2	gart	3	garring
-gazang	verb	gazang- like settle
-gazeteer	verb	gazeteer- like settle
-gazetteer	verb	gazetteer- like settle
-gazoomph	verb	gazoomph- like settle
-gazump	verb	gazump- like settle
-gazumph	verb	gazumph- like settle
-gazunder	verb	gazunder- like settle
-gezumph	verb	gezumph- like settle
+gazang	lemma	gazang- like settle
+gazeteer	lemma	gazeteer- like settle
+gazetteer	lemma	gazetteer- like settle
+gazoomph	lemma	gazoomph- like settle
+gazump	lemma	gazump- like settle
+gazumph	lemma	gazumph- like settle
+gazunder	lemma	gazunder- like settle
+gezumph	lemma	gezumph- like settle
 git	2	got	4	gotten
 go	2	went
-goozer	verb	goozer- like settle
+goozer	lemma	goozer- like settle
 got	2	had
 growe	2	grewe	4	growne
-gunzel	verb	gunzel- like settle
-gzip	verb	gzip- like settle
-haffta	verb_past	hadda- like settle	1	hasta
-hafta	verb_past	hadda- like settle	1	hasta
+gunzel	lemma	gunzel- like settle
+gzip	lemma	gzip- like settle
+haffta	rest	hadda- like settle	1	hasta
+hafta	rest	hadda- like settle	1	hasta
 half	1	halves	3	halving	4	halved
-haue	verb_past	had- like settle	1	has
-hav	verb_past	had- like settle	1	has
-have	verb_past	had- like settle	1	has
-haxor	verb	haxor- like settle
-hazard	verb	hazard- like settle
-hazen	verb	hazen- like settle
+haue	rest	had- like settle	1	has
+hav	rest	had- like settle	1	has
+have	rest	had- like settle	1	has
+haxor	lemma	haxor- like settle
+hazard	lemma	hazard- like settle
+hazen	lemma	hazen- like settle
 herye	1	heryeth
-hev	verb_past	hed- like settle	1	hes
-hexedit	verb	hexedit- like settle
+hev	rest	hed- like settle	1	hes
+hexedit	lemma	hexedit- like settle
 ho	3	hoeing
-hould	verb_past	held- like settle
-howitzer	verb	howitzer- like settle
-huxter	verb	huxter- like settle
-huzza	verb	huzza- like settle
-huzzah	verb	huzzah- like settle
-hx	verb	hx- like settle
-hyzer	verb	hyzer- like settle
-imblazon	verb	imblazon- like settle
-indenizen	verb	indenizen- like settle
-inwork	verb_past	inwrought- like settle
-ixnay	verb	ixnay- like settle
-jacuzzi	verb	jacuzzi- like settle
-kaizen	verb	kaizen- like settle
-kamikaze	verb	kamikaze- like settle
-kazoo	verb	kazoo- like settle
-klaxon	verb	klaxon- like settle
+hould	rest	held- like settle
+howitzer	lemma	howitzer- like settle
+huxter	lemma	huxter- like settle
+huzza	lemma	huzza- like settle
+huzzah	lemma	huzzah- like settle
+hx	lemma	hx- like settle
+hyzer	lemma	hyzer- like settle
+imblazon	lemma	imblazon- like settle
+indenizen	lemma	indenizen- like settle
+inwork	rest	inwrought- like settle
+ixnay	lemma	ixnay- like settle
+jacuzzi	lemma	jacuzzi- like settle
+kaizen	lemma	kaizen- like settle
+kamikaze	lemma	kamikaze- like settle
+kazoo	lemma	kazoo- like settle
+klaxon	lemma	klaxon- like settle
 lade	4	laden
-laxen	verb	laxen- like settle
-lazen	verb	lazen- like settle
-lazo	verb	lazo- like settle
-lazyload	verb	lazyload- like settle
-leaue	verb_past	left- like settle
-leese	verb_past	lor- like wear
-lese	verb_past	lor- like wear
-lexicon	verb	lexicon- like settle
-lozzuck	verb	lozzuck- like settle
+laxen	lemma	laxen- like settle
+lazen	lemma	lazen- like settle
+lazo	lemma	lazo- like settle
+lazyload	lemma	lazyload- like settle
+leaue	rest	left- like settle
+leese	rest	lor- like wear
+lese	rest	lor- like wear
+lexicon	lemma	lexicon- like settle
+lozzuck	lemma	lozzuck- like settle
 luv	1	luvz
 mak	3	makkin
-marzipan	verb	marzipan- like settle
-maximin	verb	maximin- like settle
+marzipan	lemma	marzipan- like settle
+maximin	lemma	maximin- like settle
 may	2	might
 maye	2	mighte
-mezzotint	verb	mezzotint- like settle
-mezzotinto	verb	mezzotinto- like settle
+mezzotint	lemma	mezzotint- like settle
+mezzotinto	lemma	mezzotinto- like settle
 misbid	4	misbidden
 moonrun	4	moonran
-mote	verb_past	must- like settle
-muzak	verb	muzak- like settle
-myek	verb_past	made- like settle
-outpizza	verb	outpizza- like settle
-overexert	verb	overexert- like settle
+mote	rest	must- like settle
+muzak	lemma	muzak- like settle
+myek	rest	made- like settle
+outpizza	lemma	outpizza- like settle
+overexert	lemma	overexert- like settle
 overfreight	4	overfraught
 overren	2	overran	4	overrun
-oxter	verb	oxter- like settle
-oxtercog	verb	oxtercog- like settle
-oxyweld	verb	oxyweld- like settle
+oxter	lemma	oxter- like settle
+oxtercog	lemma	oxtercog- like settle
+oxyweld	lemma	oxyweld- like settle
 pet	2	pet
-pixel	verb	pixel- like settle
-pixelfuck	verb	pixelfuck- like settle
+pixel	lemma	pixel- like settle
+pixelfuck	lemma	pixelfuck- like settle
 ponzi	3	ponzying
 precum	2	precame
-pretzel	verb	pretzel- like settle
-puzzivant	verb	puzzivant- like settle
-queazen	verb	queazen- like settle
+pretzel	lemma	pretzel- like settle
+puzzivant	lemma	puzzivant- like settle
+queazen	lemma	queazen- like settle
 radge	3	radgin
-razee	verb	razee- like settle
-razor	verb	razor- like settle
-reblazon	verb	reblazon- like settle
-reexhibit	verb	reexhibit- like settle
-reexit	verb	reexit- like settle
-reexpand	verb	reexpand- like settle
-reexplain	verb	reexplain- like settle
-reexport	verb	reexport- like settle
-reextend	verb	reextend- like settle
-reextract	verb	reextract- like settle
+razee	lemma	razee- like settle
+razor	lemma	razor- like settle
+reblazon	lemma	reblazon- like settle
+reexhibit	lemma	reexhibit- like settle
+reexit	lemma	reexit- like settle
+reexpand	lemma	reexpand- like settle
+reexplain	lemma	reexplain- like settle
+reexport	lemma	reexport- like settle
+reextend	lemma	reextend- like settle
+reextract	lemma	reextract- like settle
 reforbid	2	reforbade	4	reforbidden
-rehave	verb_past	rehad- like settle	1	rehas
+rehave	rest	rehad- like settle	1	rehas
 reshear	4	reshorn
-rez	verb	rez- like settle
-rezip	verb	rezip- like settle
-rezipper	verb	rezipper- like settle
-rizzar	verb	rizzar- like settle
+rez	lemma	rez- like settle
+rezip	lemma	rezip- like settle
+rezipper	lemma	rezipper- like settle
+rizzar	lemma	rizzar- like settle
 ronne	2	ronne	3	ronning
-roxor	verb	roxor- like settle
-sambaza	verb	sambaza- like settle
-saye	verb_past	saide- like settle
-schiz	verb	schiz- like settle
-seech	verb_past	sought- like settle
-sexpect	verb	sexpect- like settle
-sexperiment	verb	sexperiment- like settle
-sexploit	verb	sexploit- like settle
-sext	verb	sext- like settle
-sextort	verb	sextort- like settle
+roxor	lemma	roxor- like settle
+sambaza	lemma	sambaza- like settle
+saye	rest	saide- like settle
+schiz	lemma	schiz- like settle
+seech	rest	sought- like settle
+sexpect	lemma	sexpect- like settle
+sexperiment	lemma	sexperiment- like settle
+sexploit	lemma	sexploit- like settle
+sext	lemma	sext- like settle
+sextort	lemma	sextort- like settle
 shall	2	should
-shazam	verb	shazam- like settle
+shazam	lemma	shazam- like settle
 shear	4	shorn
-shende	verb_past	shent- like settle
+shende	rest	shent- like settle
 shrinke	2	shrank	4	shrunke
-shxt	verb	shxt- like settle
+shxt	lemma	shxt- like settle
 sixth	1	sixths
 sk	3	skg
-sleepe	verb_past	slepte- like settle
-slizzer	verb	slizzer- like settle
-smight	verb_past	smote- like break
-spaik	verb_past	spoke- like settle
+sleepe	rest	slepte- like settle
+slizzer	lemma	slizzer- like settle
+smight	rest	smote- like break
+spaik	rest	spoke- like settle
 speake	2	spoke
-spuilzie	verb	spuilzie- like settle
-spulzie	verb	spulzie- like settle
-steale	verb_past	stole- like break
-sticke	verb_past	stuck- like settle
-strikethrough	verb_past	struckthrough- like settle	1	strikesthrough
-stryde	verb_past	strode- like settle
-superexalt	verb	superexalt- like settle
+spuilzie	lemma	spuilzie- like settle
+spulzie	lemma	spulzie- like settle
+steale	rest	stole- like break
+sticke	rest	stuck- like settle
+strikethrough	rest	struckthrough- like settle	1	strikesthrough
+stryde	rest	strode- like settle
+superexalt	lemma	superexalt- like settle
 surbeat	4	surbeaten
-suxor	verb	suxor- like settle
-swally	verb	swally- like settle
+suxor	lemma	suxor- like settle
+swally	lemma	swally- like settle
 sweare	2	swore	4	sworne
 swike	4	swicken
 tak	2	teuk	3	takkin	4	takken
-tarzan	verb	tarzan- like settle
-taxi	verb	taxi- like settle
-taxicab	verb	taxicab- like settle
-teazel	verb	teazel- like settle
+tarzan	lemma	tarzan- like settle
+taxi	lemma	taxi- like settle
+taxicab	lemma	taxicab- like settle
+teazel	lemma	teazel- like settle
 tek	2	took	4	tekken
-text	verb	text- like settle
-thinck	verb_past	thought- like settle
-thinke	verb_past	thought- like settle
+text	lemma	text- like settle
+thinck	rest	thought- like settle
+thinke	rest	thought- like settle
 titup	2	tituped	3	titupping
-torive	verb_past	torift- like settle
-townsizing	verb	townsizing- like settle
+torive	rest	torift- like settle
+townsizing	lemma	townsizing- like settle
 trafficate	2	trafficated	3	trafficateking
 trailbreak	4	trailbroke
-tweezer	verb	tweezer- like settle
-txt	verb	txt- like settle
+tweezer	lemma	tweezer- like settle
+txt	lemma	txt- like settle
 tyek	2	teuk	3	tyekin
-uncitizen	verb	uncitizen- like settle
-undergoe	verb_past	under- like overgo
-underly	verb_past	underla- like lie
-underlye	verb_past	underla- like lie
-unexport	verb	unexport- like settle
-unextinct	verb	unextinct- like settle
+uncitizen	lemma	uncitizen- like settle
+undergoe	rest	under- like overgo
+underly	rest	underla- like lie
+underlye	rest	underla- like lie
+unexport	lemma	unexport- like settle
+unextinct	lemma	unextinct- like settle
 unlade	4	unladen
 untread	4	untrod
-unvizard	verb	unvizard- like settle
-unvizor	verb	unvizor- like settle
-unzip	verb	unzip- like settle
-unzipper	verb	unzipper- like settle
-unzoom	verb	unzoom- like settle
-uppluck	verb_past	upplight- like settle
-vfx	verb	vfx- like settle
-viz	verb	viz- like settle
+unvizard	lemma	unvizard- like settle
+unvizor	lemma	unvizor- like settle
+unzip	lemma	unzip- like settle
+unzipper	lemma	unzipper- like settle
+unzoom	lemma	unzoom- like settle
+uppluck	rest	upplight- like settle
+vfx	lemma	vfx- like settle
+viz	lemma	viz- like settle
 wayfare	2	wayfore
 weare	2	wore	4	worne
 will	2	would
 wis	1	wis
-wit	verb_past	wist- like settle	1	wot
-wizard	verb	wizard- like settle
-wizen	verb	wizen- like settle
+wit	rest	wist- like settle	1	wot
+wizard	lemma	wizard- like settle
+wizen	lemma	wizen- like settle
 wright	2	wrighten	3	wrought
 wuv	1	wuvz
-x	verb	x- like settle
-xeet	verb	xeet- like settle
-xenograft	verb	xenograft- like settle
-xerograph	verb	xerograph- like settle
-xeroprint	verb	xeroprint- like settle
-xfer	verb	xfer- like settle
-xform	verb	xform- like settle
-xit	verb	xit- like settle
-xmit	verb	xmit- like settle
-xor	verb	xor- like settle
-xray	verb	xray- like settle
-xylograph	verb	xylograph- like settle
-zag	verb	zag- like settle
-zap	verb	zap- like settle
-zapruder	verb	zapruder- like settle
-zareba	verb	zareba- like settle
-zed	verb	zed- like settle
-zee	verb	zee- like settle
-zephyr	verb	zephyr- like settle
-zereba	verb	zereba- like settle
-zerg	verb	zerg- like settle
-zeriba	verb	zeriba- like settle
-zig	verb	zig- like settle
-zigzag	verb	zigzag- like settle
-zinc	verb	zinc- like settle
-zing	verb	zing- like settle
-zip	verb	zip- like settle
-zipper	verb	zipper- like settle
-zippo	verb	zippo- like settle
-zither	verb	zither- like settle
-zoink	verb	zoink- like settle
-zonk	verb	zonk- like settle
-zook	verb	zook- like settle
-zoom	verb	zoom- like settle
-zoombomb	verb	zoombomb- like settle
-zoot	verb	zoot- like settle
-zorb	verb	zorb- like settle
-zot	verb	zot- like settle
-zouk	verb	zouk- like settle
-zucc	verb	zucc- like settle
-zuckerberg	verb	zuckerberg- like settle
-zugzwang	verb	zugzwang- like settle
-zzz	verb	zzz- like settle
+x	lemma	x- like settle
+xeet	lemma	xeet- like settle
+xenograft	lemma	xenograft- like settle
+xerograph	lemma	xerograph- like settle
+xeroprint	lemma	xeroprint- like settle
+xfer	lemma	xfer- like settle
+xform	lemma	xform- like settle
+xit	lemma	xit- like settle
+xmit	lemma	xmit- like settle
+xor	lemma	xor- like settle
+xray	lemma	xray- like settle
+xylograph	lemma	xylograph- like settle
+zag	lemma	zag- like settle
+zap	lemma	zap- like settle
+zapruder	lemma	zapruder- like settle
+zareba	lemma	zareba- like settle
+zed	lemma	zed- like settle
+zee	lemma	zee- like settle
+zephyr	lemma	zephyr- like settle
+zereba	lemma	zereba- like settle
+zerg	lemma	zerg- like settle
+zeriba	lemma	zeriba- like settle
+zig	lemma	zig- like settle
+zigzag	lemma	zigzag- like settle
+zinc	lemma	zinc- like settle
+zing	lemma	zing- like settle
+zip	lemma	zip- like settle
+zipper	lemma	zipper- like settle
+zippo	lemma	zippo- like settle
+zither	lemma	zither- like settle
+zoink	lemma	zoink- like settle
+zonk	lemma	zonk- like settle
+zook	lemma	zook- like settle
+zoom	lemma	zoom- like settle
+zoombomb	lemma	zoombomb- like settle
+zoot	lemma	zoot- like settle
+zorb	lemma	zorb- like settle
+zot	lemma	zot- like settle
+zouk	lemma	zouk- like settle
+zucc	lemma	zucc- like settle
+zuckerberg	lemma	zuckerberg- like settle
+zugzwang	lemma	zugzwang- like settle
+zzz	lemma	zzz- like settle
 "#,
     ),
 };

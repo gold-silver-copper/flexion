@@ -10,18 +10,18 @@ use flexion::Choice;
 /// 3 rules and 9 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [कतम 9, कतर 4, तद 2],
+        "" => [कतम 9, कतर 4, यद 2],
         "र" => [कतर 3] regular,
-        "द्" => [तद 2] regular,
+        "द्" => [यद 2] regular,
     }
     listed {
         "#अन्यतर" => कतर,
         "#इदम्" => कतम,
         "#किम्" => कतम,
         "#तक" => कतम,
-        "#तद्" => तद,
+        "#तद्" => यद,
         "#त्व" => कतम,
-        "#यद्" => तद,
+        "#यद्" => यद,
         "#सर्व" => कतर,
         "#स्व" => कतम,
     }

@@ -1,22 +1,22 @@
 //! The conjugations, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~en`, `machen`: the stem and `en`). A stem in two pieces (`~e~n`, `nudeln`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first. A `%`
+//! is the first letter of the stem piece after it (reduplication: `blie% ~`, of
+//! `bestehenbleiben`), as the copy laws in `laws.rs` change it.
 
 use flexion::Paradigm;
 
 /// Writes one conjugation: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the conjugation it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the conjugation's it is like, or, in a conjugation like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the conjugation it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem rest_____: \"~- like machen\"`: the slot's cells are `machen`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the conjugation's it is
+/// like, or, in a conjugation like no other, derived):
 /// `pres_1` (sg, pl)
 /// `pres_2` (sg, pl)
 /// `pres_3` (sg, pl)
@@ -47,15 +47,15 @@ use flexion::Paradigm;
 /// `participle` (pres, past)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem verb_pres_1_sg: $s0:tt;)?
-     $(stem verb_pl: $s1:tt;)?
-     $(stem pres_sg: $s2:tt;)?
-     $(stem verb_2_pl: $s3:tt;)?
-     $(stem verb_pret_sg: $s4:tt;)?
-     $(stem verb_pret_pl: $s5:tt;)?
-     $(stem verb_pret_2_pl: $s6:tt;)?
-     $(stem verb_subj1_sg: $s7:tt;)?
-     $(stem subj2_sg: $s8:tt;)?
+     $(stem pres_1_sg: $s0:tt;)?
+     $(stem rest__: $s1:tt;)?
+     $(stem rest___: $s2:tt;)?
+     $(stem rest_____: $s3:tt;)?
+     $(stem rest______: $s4:tt;)?
+     $(stem rest_: $s5:tt;)?
+     $(stem rest____: $s6:tt;)?
+     $(stem rest: $s7:tt;)?
+     $(stem lemma: $s8:tt;)?
      $(stem subordinate_pret: $s9:tt;)?
      $(stem zu_infinitive: $s10:tt;)?
      $(stem participle_past: $s11:tt;)?
@@ -209,20 +209,20 @@ pub enum Conjugation {
     Nudeln,
     /// Like `richten`: 238 words.
     Richten,
-    /// Like `sein`: 31 words.
-    Sein,
+    /// Like `öffnen`: 31 words.
+    Öffnen,
     /// Like `langmachen`: 27 words.
     Langmachen,
     /// Like `schwingen`: 24 words.
     Schwingen,
     /// Like `schreiben`: 22 words.
     Schreiben,
-    /// Like `lagen`: 20 words.
-    Lagen,
+    /// Like `fahren`: 20 words.
+    Fahren,
     /// Like `dagegenhalten`: 19 words.
     Dagegenhalten,
-    /// Like `befördern`: 18 words.
-    Befördern,
+    /// Like `begeistern`: 18 words.
+    Begeistern,
     /// Like `bereiten`: 14 words.
     Bereiten,
     /// Like `drangehen`: 12 words.
@@ -231,20 +231,20 @@ pub enum Conjugation {
     Fliegen,
     /// Like `wahrnehmen`: 11 words.
     Wahrnehmen,
-    /// Like `geben`: 11 words.
-    Geben,
+    /// Like `ergeben`: 11 words.
+    Ergeben,
     /// Like `greifen`: 10 words.
     Greifen,
-    /// Like `werden`: 10 words.
-    Werden,
+    /// Like `werfen`: 10 words.
+    Werfen,
     /// Like `sehen`: 10 words.
     Sehen,
-    /// Like `hängenlassen`: 9 words.
-    Hängenlassen,
+    /// Like `liegenlassen`: 9 words.
+    Liegenlassen,
     /// Like `schmeißen`: 8 words.
     Schmeißen,
-    /// Like `bieten`: 8 words.
-    Bieten,
+    /// Like `giessen`: 8 words.
+    Giessen,
     /// Like `schießen`: 8 words.
     Schießen,
     /// Like `wehtun`: 8 words.
@@ -257,16 +257,16 @@ pub enum Conjugation {
     Gegenüberstellen,
     /// Like `drankommen`: 7 words.
     Drankommen,
-    /// Like `vierteilen`: 7 words.
-    Vierteilen,
+    /// Like `einstellen`: 7 words.
+    Einstellen,
     /// Like `gaberln`: 7 words.
     Gaberln,
     /// Like `sprechen`: 7 words.
     Sprechen,
     /// Like `beissen`: 6 words.
     Beissen,
-    /// Like `stehenbleiben`: 6 words.
-    Stehenbleiben,
+    /// Like `bestehenbleiben`: 6 words.
+    Bestehenbleiben,
     /// Like `achthaben`: 6 words.
     Achthaben,
     /// Like `melken`: 6 words.
@@ -275,14 +275,14 @@ pub enum Conjugation {
     Ziehen,
     /// Like `bestehen`: 6 words.
     Bestehen,
-    /// Like `heißen`: 5 words.
-    Heißen,
+    /// Like `weisen`: 5 words.
+    Weisen,
     /// Like `darüberliegen`: 5 words.
     Darüberliegen,
     /// Like `radfahren`: 5 words.
     Radfahren,
-    /// Like `lesen`: 5 words.
-    Lesen,
+    /// Like `nesen`: 5 words.
+    Nesen,
     /// Like `brennen`: 4 words.
     Brennen,
     /// Like `reiten`: 4 words.
@@ -295,139 +295,121 @@ pub enum Conjugation {
     Gegenüberstehen,
     /// Like `einleuchten`: 4 words.
     Einleuchten,
-    /// Like `fechten`: 4 words.
-    Fechten,
+    /// Like `entflechten`: 4 words.
+    Entflechten,
     /// Like `umhinkönnen`: 4 words.
     Umhinkönnen,
     /// Like `behalten`: 4 words.
     Behalten,
-    /// Like `gewinnen`: 4 words.
-    Gewinnen,
+    /// Like `verschwimmen`: 4 words.
+    Verschwimmen,
     /// Like `begegnen`: 4 words.
     Begegnen,
-    /// Like `bären`: 3 words.
-    Bären,
-    /// Like `beklimmen`: 3 words.
-    Beklimmen,
-    /// Like `reien`: 3 words.
-    Reien,
+    /// Like `gären`: 3 words.
+    Gären,
+    /// Like `glimmen`: 3 words.
+    Glimmen,
+    /// Like `speien`: 3 words.
+    Speien,
     /// Like `schneiden`: 3 words.
     Schneiden,
     /// Like `scheren`: 3 words.
     Scheren,
-    /// Like `stoßen`: 3 words.
-    Stoßen,
-    /// Like `fressen`: 3 words.
-    Fressen,
+    /// Like `stossen`: 3 words.
+    Stossen,
+    /// Like `messen`: 3 words.
+    Messen,
     /// Like `schmelzen`: 3 words.
     Schmelzen,
     /// Like `dürfen`: 3 words.
     Dürfen,
-    /// Like `wören`: 3 words.
-    Wören,
+    /// Like `schwören`: 3 words.
+    Schwören,
     /// Like `salzen`: 3 words.
     Salzen,
     /// Like `dreinreden`: 3 words.
     Dreinreden,
-    /// Like `flachlegen`: 3 words.
-    Flachlegen,
+    /// Like `bloßlegen`: 3 words.
+    Bloßlegen,
     /// Like `vorfallen`: 3 words.
     Vorfallen,
     /// Like `bekennen`: 3 words.
     Bekennen,
     /// Like `kiesen`: 2 words.
     Kiesen,
-    /// Like `beiseitigen`: 1 words.
-    Beiseitigen,
-    /// Like `sputen`: 1 words.
-    Sputen,
-    /// Like `herüberkönnen`: 1 words.
-    Herüberkönnen,
-    /// Like `abstreuen`: 1 words.
-    Abstreuen,
-    /// Like `versündigen`: 1 words.
-    Versündigen,
-    /// Like `stoppeln`: 1 words.
-    Stoppeln,
 }
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 74] = [
+    pub const ALL: [Conjugation; 68] = [
         Conjugation::Machen,
         Conjugation::Kassieren,
         Conjugation::Nudeln,
         Conjugation::Richten,
-        Conjugation::Sein,
+        Conjugation::Öffnen,
         Conjugation::Langmachen,
         Conjugation::Schwingen,
         Conjugation::Schreiben,
-        Conjugation::Lagen,
+        Conjugation::Fahren,
         Conjugation::Dagegenhalten,
-        Conjugation::Befördern,
+        Conjugation::Begeistern,
         Conjugation::Bereiten,
         Conjugation::Drangehen,
         Conjugation::Fliegen,
         Conjugation::Wahrnehmen,
-        Conjugation::Geben,
+        Conjugation::Ergeben,
         Conjugation::Greifen,
-        Conjugation::Werden,
+        Conjugation::Werfen,
         Conjugation::Sehen,
-        Conjugation::Hängenlassen,
+        Conjugation::Liegenlassen,
         Conjugation::Schmeißen,
-        Conjugation::Bieten,
+        Conjugation::Giessen,
         Conjugation::Schießen,
         Conjugation::Wehtun,
         Conjugation::Halten,
         Conjugation::Schwimmen,
         Conjugation::Gegenüberstellen,
         Conjugation::Drankommen,
-        Conjugation::Vierteilen,
+        Conjugation::Einstellen,
         Conjugation::Gaberln,
         Conjugation::Sprechen,
         Conjugation::Beissen,
-        Conjugation::Stehenbleiben,
+        Conjugation::Bestehenbleiben,
         Conjugation::Achthaben,
         Conjugation::Melken,
         Conjugation::Ziehen,
         Conjugation::Bestehen,
-        Conjugation::Heißen,
+        Conjugation::Weisen,
         Conjugation::Darüberliegen,
         Conjugation::Radfahren,
-        Conjugation::Lesen,
+        Conjugation::Nesen,
         Conjugation::Brennen,
         Conjugation::Reiten,
         Conjugation::Notlanden,
         Conjugation::Achtgeben,
         Conjugation::Gegenüberstehen,
         Conjugation::Einleuchten,
-        Conjugation::Fechten,
+        Conjugation::Entflechten,
         Conjugation::Umhinkönnen,
         Conjugation::Behalten,
-        Conjugation::Gewinnen,
+        Conjugation::Verschwimmen,
         Conjugation::Begegnen,
-        Conjugation::Bären,
-        Conjugation::Beklimmen,
-        Conjugation::Reien,
+        Conjugation::Gären,
+        Conjugation::Glimmen,
+        Conjugation::Speien,
         Conjugation::Schneiden,
         Conjugation::Scheren,
-        Conjugation::Stoßen,
-        Conjugation::Fressen,
+        Conjugation::Stossen,
+        Conjugation::Messen,
         Conjugation::Schmelzen,
         Conjugation::Dürfen,
-        Conjugation::Wören,
+        Conjugation::Schwören,
         Conjugation::Salzen,
         Conjugation::Dreinreden,
-        Conjugation::Flachlegen,
+        Conjugation::Bloßlegen,
         Conjugation::Vorfallen,
         Conjugation::Bekennen,
         Conjugation::Kiesen,
-        Conjugation::Beiseitigen,
-        Conjugation::Sputen,
-        Conjugation::Herüberkönnen,
-        Conjugation::Abstreuen,
-        Conjugation::Versündigen,
-        Conjugation::Stoppeln,
     ];
 
     /// Its table.
@@ -445,22 +427,24 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 68] = [
     // Machen: 1,996 words (raven, stricken, landen, nerven, legen, glauben).
     conjugation!("machen", 1996, "~en", [auxiliary: Haben];
-    stem verb_2_pl: "~- like dürfen";
-    stem verb_pret_2_pl: "~te- like machen";
+    stem rest_____: "~- like machen";
+    stem rest_: "~te- like machen";
+    stem rest____: "~- like machen";
     stem zu_infinitive: "~en- like machen";
     stem participle_past: "~t- like machen";
     pres_1: "~e", "~en";
     pres_2: "~st", _;
-    pret_1: "~te", "~ten";
-    pret_2: "~test", _;
-    subj1_1: "~e", _;
-    subj1_2: "~est", _;
-    subj2_1: "~te", "~ten";
+    pret_1: "~te", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~te", _;
+    subj2_2: _, "~tet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~t", _;
-    imperative: "~|~e", _;
+    imperative: _, derived;
     infinitive: "~en";
     participle: "~end", _;
     ),
@@ -470,122 +454,134 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Nudeln: 828 words (nebeln, modern, klettern, pinkeln, steuern, tafeln).
     conjugation!("nudeln", 828, "~e~n", [auxiliary: Haben];
-    stem verb_pret_2_pl: "~e~te- like machen";
+    stem rest_: "~e~te- like machen";
     stem zu_infinitive: "~e~n- like machen";
     stem participle_past: "~e~t- like machen";
     pres_1: "~~e|~e~e|~e~", "~e~n";
     pres_2: "~e~st", "~e~t";
-    pret_1: "~e~te", "~e~ten";
-    pret_2: "~e~test", _;
+    pret_1: "~e~te", _;
+    pret_3: _, derived;
     subj1_1: "~e~e|~~e", _;
     subj1_2: "~e~est|~~est", "~e~et|~~et";
-    subj2_1: "~e~te", "~e~ten";
+    subj2_1: "~e~te", _;
+    subj2_2: _, "~e~tet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~t", _;
     imperative: "~~e|~e~|~e~e", _;
     infinitive: "~e~n";
     participle: "~e~nd", _;
     ),
-    // Richten: 238 words (listen, bitten, rotten, arbeiten, kitten, hasten). Like Machen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, ….
+    // Richten: 238 words (listen, bitten, rotten, arbeiten, kitten, hasten). Like Machen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
     conjugation!("richten", 238, "~en", [auxiliary: Haben], like Machen;
-    stem verb_pret_2_pl: "~ete- like machen";
+    stem rest_: "~ete- like machen";
     stem participle_past: "~et- like machen";
     pres_2: "~est", "~et";
-    pret_1: "~ete", "~eten";
-    pret_2: "~etest", _;
-    subj2_1: "~ete", "~eten";
+    pret_1: "~ete", _;
+    pret_3: _, derived;
+    subj2_1: "~ete", _;
+    subj2_2: _, "~etet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~et", _;
     ),
-    // Sein: 31 words (regnen, sein, öffnen, atmen, rechnen, leugnen). Like Machen, except in 8 cells: pres_1 sg, pres_1 pl, subj1_1 sg, subj1_2 sg, subj1_2 pl, imperative sg, ….
-    conjugation!("sein", 31, "~n", like Machen;
+    // Öffnen: 31 words (regnen, sein, öffnen, atmen, rechnen, leugnen). Like Machen, except in 6 cells: pres_1 sg, pres_1 pl, subj1_2 pl, subj1_3 sg, infinitive, participle pres.
+    conjugation!("öffnen", 31, "~n", like Machen;
+    stem rest____: "~- like sein";
     stem zu_infinitive: "~n- like machen";
     pres_1: "~", "~n";
-    subj1_1: "~", _;
-    subj1_2: "~st", "~t";
-    imperative: "~", _;
+    subj1_2: _, "~t";
+    subj1_3: derived, _;
     infinitive: "~n";
     participle: "~nd", _;
     ),
     // Langmachen: 27 words (wiedergutmachen, schlechtmachen, saubermachen, wettmachen, kaltmachen, mobilmachen).
     conjugation!("langmachen", 27, "~machen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like langmachen";
-    stem verb_pret_2_pl: "~- like langmachen";
+    stem rest__: "~- like langmachen";
+    stem rest_____: "~- like langmachen";
+    stem rest______: "~- like langmachen";
+    stem rest_: "~- like langmachen";
+    stem rest____: "~- like langmachen";
+    stem lemma: "~mach- like machen";
     stem subordinate_pret: "~machte- like machen";
-    pres_1: _, "machen ~";
-    pres_2: "machst ~", "macht ~";
-    pret_1: "machte ~", "machten ~";
-    pret_2: "machtest ~", _;
-    subj1_1: "mache ~", _;
-    subj1_2: "machest ~", "machet ~";
-    subj2_1: "machte ~", "machten ~";
+    pres_1: "mache ~", _;
+    pres_2: "machst ~", _;
+    pres_3: _, derived;
+    pret_3: derived, derived;
+    subj1_1: _, derived;
+    subj1_3: derived, derived;
+    subj2_1: "machte ~", _;
+    subj2_2: _, "machtet ~";
+    subj2_3: _, derived;
+    subordinate_pres_1: "~mache", _;
     subordinate_pres_2: "~machst", _;
     subordinate_pres_3: "~macht", _;
     subordinate_subj2_1: "~machte", "~machten";
     subordinate_subj2_2: "~machtest", "~machtet";
     subordinate_subj2_3: "~machte", "~machten";
-    imperative: "mach ~", _;
+    imperative: _, derived;
     zu_infinitive: "~zumachen";
     participle: _, "~gemacht";
     ),
-    // Schwingen: 24 words (trinken, finden, springen, singen, binden, wringen). Like Nudeln, except in 17 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
+    // Schwingen: 24 words (trinken, finden, springen, singen, binden, wringen). Like Nudeln, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
     conjugation!("schwingen", 24, "~i~en", like Nudeln;
-    stem verb_2_pl: "~i~- like dürfen";
+    stem rest_____: "~i~- like machen";
+    stem rest____: "~i~- like machen";
     stem zu_infinitive: "~i~en- like machen";
     stem participle_past: "~u~en- like machen";
     pres_1: "~i~e", "~i~en";
     pres_2: "~i~st", _;
     pret_1: "~a~", "~a~en";
     pret_2: "~a~st", "~a~t";
-    subj1_1: "~i~e", _;
-    subj1_2: "~i~est", _;
+    subj1_3: derived, _;
     subj2_1: "~ä~e", "~ä~en";
     subj2_2: "~ä~est|~ä~st", "~ä~et|~ä~t";
     subordinate_pres_3: "~i~t", _;
-    imperative: "~i~|~i~e", _;
+    imperative: _, derived;
     infinitive: "~i~en";
     participle: "~i~end", _;
     ),
     // Schreiben: 22 words (schreiben, scheinen, meiden, bleiben, scheiden, treiben).
     conjugation!("schreiben", 22, "~e~~en";
-    stem verb_2_pl: "~e~~- like dürfen";
-    stem verb_pret_2_pl: "~~e~- like schreiben";
+    stem rest_____: "~e~~- like machen";
+    stem rest_: "~~e~- like schreiben";
+    stem rest____: "~e~~- like machen";
     stem zu_infinitive: "~e~~en- like machen";
     stem participle_past: "~~e~en- like machen";
     pres_1: "~e~~e", "~e~~en";
     pres_2: "~e~~st", _;
-    pret_1: "~~e~", "~~e~en";
-    pret_2: "~~e~st", _;
-    subj1_1: "~e~~e", _;
-    subj1_2: "~e~~est", _;
-    subj2_1: "~~e~e", "~~e~en";
+    pret_1: "~~e~", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~~e~e", _;
+    subj2_2: _, "~~e~et|~~e~t";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~~t", _;
-    imperative: "~e~~|~e~~e", _;
+    imperative: _, derived;
     infinitive: "~e~~en";
     participle: "~e~~end", _;
     ),
-    // Lagen: 20 words (fallen, fangen, laden, fahren, laufen, lassen). Like Nudeln, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_3 sg, pret_1 sg, pret_1 pl, ….
-    conjugation!("lagen", 20, "~a~en", like Nudeln;
-    stem verb_2_pl: "~a~- like dürfen";
+    // Fahren: 20 words (fallen, fangen, laden, fahren, laufen, lassen). Like Nudeln, except in 15 cells: pres_1 sg, pres_1 pl, pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, ….
+    conjugation!("fahren", 20, "~a~en", like Nudeln;
+    stem rest___: "~ä~- like machen";
+    stem rest_____: "~a~- like machen";
+    stem rest____: "~a~- like machen";
     stem zu_infinitive: "~a~en- like machen";
     stem participle_past: "~a~en- like machen";
     pres_1: "~a~e", "~a~en";
-    pres_2: "~ä~st", _;
-    pres_3: "~ä~t", _;
     pret_1: "~u~", "~u~en";
     pret_2: "~u~st", "~u~t";
-    subj1_1: "~a~e", _;
-    subj1_2: "~a~est", _;
+    subj1_3: derived, _;
     subj2_1: "~ü~e", "~ü~en";
     subj2_2: "~ü~est", "~ü~et|~ü~t";
-    subordinate_pres_3: "~ä~t", _;
-    imperative: "~a~|~a~e", _;
+    subordinate_pres_2: derived, _;
+    imperative: _, derived;
     infinitive: "~a~en";
     participle: "~a~end", _;
     ),
     // Dagegenhalten: 19 words (standhalten, warmhalten, maßhalten, masshalten, aneinanderhalten, beieinanderhalten).
     conjugation!("dagegenhalten", 19, "~halten", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like dagegenhalten";
+    stem lemma: "~halte- like richten";
     stem subordinate_pret: "~hielt- like dagegenhalten";
-    pres_1: _, "halten ~";
+    pres_1: "halte ~", "halten ~";
     pres_2: "hältst ~", "haltet ~";
     pres_3: "hält ~", _;
     pret_1: "hielt ~", "hielten ~";
@@ -594,6 +590,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "haltest ~", "haltet ~";
     subj2_1: "hielte ~", "hielten ~";
     subj2_2: "hieltest ~", "hieltet ~";
+    subordinate_pres_1: "~halte", _;
     subordinate_pres_2: "~hältst", _;
     subordinate_pres_3: "~hält", _;
     subordinate_subj2_1: "~hielte", "~hielten";
@@ -603,8 +600,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zuhalten";
     participle: _, "~gehalten";
     ),
-    // Befördern: 18 words (begeistern, kalfatern, containern, vergewissern, misgendern, menetekeln). Like Nudeln, except in 1 cell: participle past.
-    conjugation!("befördern", 18, "~e~n", [auxiliary: Haben], like Nudeln;
+    // Begeistern: 18 words (begeistern, kalfatern, containern, vergewissern, misgendern, menetekeln). Like Nudeln, except in 1 cell: participle past.
+    conjugation!("begeistern", 18, "~e~n", [auxiliary: Haben], like Nudeln;
     participle: _, "~e~t";
     ),
     // Bereiten: 14 words (begleiten, ballasten, bereiten, entgelten, obwalten, promoten). Like Richten, except in 1 cell: participle past.
@@ -613,9 +610,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Drangehen: 12 words (spazierengehen, vorübergehen, sichergehen, drangehen, fremdgehen, verlorengehen).
     conjugation!("drangehen", 12, "~gehen", [auxiliary: Sein];
-    stem verb_pres_1_sg: "~- like drangehen";
+    stem lemma: "~geh- like machen";
     stem subordinate_pret: "~ging- like schwingen";
-    pres_1: _, "gehen ~";
+    pres_1: "gehe ~", "gehen ~";
     pres_2: "gehst ~", "geht ~";
     pret_1: "ging ~", "gingen ~";
     pret_2: "gingst ~", "gingt ~";
@@ -623,6 +620,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "gehest ~", "gehet ~";
     subj2_1: "ginge ~", "gingen ~";
     subj2_2: "gingest ~|gingst ~", "ginget ~|gingt ~";
+    subordinate_pres_1: "~gehe", _;
     subordinate_pres_2: "~gehst", _;
     subordinate_pres_3: "~geht", _;
     subordinate_subj2_1: "~ginge", "~gingen";
@@ -632,29 +630,29 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zugehen";
     participle: _, "~gegangen";
     ),
-    // Fliegen: 11 words (biegen, wiegen, fliehen, fliegen, riechen, frieren). Like Nudeln, except in 17 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
+    // Fliegen: 11 words (biegen, wiegen, fliehen, fliegen, riechen, frieren). Like Nudeln, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
     conjugation!("fliegen", 11, "~ie~en", like Nudeln;
-    stem verb_2_pl: "~ie~- like dürfen";
+    stem rest_____: "~ie~- like machen";
+    stem rest____: "~ie~- like machen";
     stem zu_infinitive: "~ie~en- like machen";
     stem participle_past: "~o~en- like machen";
     pres_1: "~ie~e", "~ie~en";
     pres_2: "~ie~st", _;
     pret_1: "~o~", "~o~en";
     pret_2: "~o~st", "~o~t";
-    subj1_1: "~ie~e", _;
-    subj1_2: "~ie~est", _;
+    subj1_3: derived, _;
     subj2_1: "~ö~e", "~ö~en";
     subj2_2: "~ö~est|~ö~st", "~ö~et|~ö~t";
     subordinate_pres_3: "~ie~t", _;
-    imperative: "~ie~|~ie~e", _;
+    imperative: _, derived;
     infinitive: "~ie~en";
     participle: "~ie~end", _;
     ),
     // Wahrnehmen: 11 words (teilnehmen, wahrnehmen, vorwegnehmen, vorliebnehmen, wundernehmen, überhandnehmen).
     conjugation!("wahrnehmen", 11, "~nehmen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like wahrnehmen";
+    stem lemma: "~nehm- like machen";
     stem subordinate_pret: "~nahm- like schwingen";
-    pres_1: _, "nehmen ~";
+    pres_1: "nehme ~", "nehmen ~";
     pres_2: "nimmst ~", "nehmt ~";
     pres_3: "nimmt ~", _;
     pret_1: "nahm ~", "nahmen ~";
@@ -663,6 +661,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "nehmest ~", "nehmet ~";
     subj2_1: "nähme ~", "nähmen ~";
     subj2_2: "nähmest ~", "nähmet ~";
+    subordinate_pres_1: "~nehme", _;
     subordinate_pres_2: "~nimmst", _;
     subordinate_pres_3: "~nimmt", _;
     subordinate_subj2_1: "~nähme", "~nähmen";
@@ -672,50 +671,53 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zunehmen";
     participle: _, "~genommen";
     ),
-    // Geben: 11 words (geben, nehmen, ergeben, vergeben, umgeben, begeben). Like Schwingen, except in 9 cells: pres_1 sg, pres_1 pl, pres_3 sg, subj1_1 sg, subj1_2 sg, imperative sg, ….
-    conjugation!("geben", 11, "~e~en", [auxiliary: Haben], like Schwingen;
-    stem verb_2_pl: "~e~- like dürfen";
+    // Ergeben: 11 words (geben, nehmen, ergeben, vergeben, umgeben, begeben). Like Schwingen, except in 10 cells: pres_1 sg, pres_1 pl, subj1_1 sg, subj1_2 sg, subordinate_pres_2 sg, imperative sg, ….
+    conjugation!("ergeben", 11, "~e~en", [auxiliary: Haben], like Schwingen;
+    stem rest___: "~i~- like machen";
+    stem rest_____: "~e~- like machen";
     stem zu_infinitive: "~e~en- like machen";
     pres_1: "~e~e", "~e~en";
-    pres_3: "~i~t", _;
     subj1_1: "~e~e", _;
     subj1_2: "~e~est", _;
-    imperative: "~i~", _;
+    subordinate_pres_2: derived, _;
+    imperative: "~i~", derived;
     infinitive: "~e~en";
     participle: "~e~end", "~e~en";
     ),
-    // Greifen: 10 words (pfeifen, greifen, kneifen, weichen, schleichen, schleifen). Like Geben, except in 9 cells: pres_2 sg, pres_3 sg, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, ….
-    conjugation!("greifen", 10, "~e~en", like Geben;
-    stem verb_pret_2_pl: "~~f- like schreiben";
+    // Greifen: 10 words (pfeifen, greifen, kneifen, weichen, schleichen, schleifen). Like Ergeben, except in 9 cells: pres_2 sg, pres_3 sg, pret_1 sg, pret_3 pl, subj1_3 sg, subj2_1 sg, ….
+    conjugation!("greifen", 10, "~e~en", like Ergeben;
+    stem rest_: "~~f- like schreiben";
+    stem rest____: "~e~- like machen";
     stem participle_past: "~~fen- like machen";
     pres_2: "~e~st", _;
     pres_3: derived, _;
-    pret_1: "~~f", "~~fen";
-    pret_2: "~~fst", _;
-    subj2_1: "~~fe", "~~fen";
+    pret_1: "~~f", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~~fe", _;
+    subj2_2: _, "~~fet|~~ft";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~t", _;
-    imperative: "~e~|~e~e", _;
     ),
-    // Werden: 10 words (helfen, werden, werfen, sterben, werben, treffen). Like Geben, except in 4 cells: subj2_1 sg, subj2_1 pl, subj2_2 sg, subj2_2 pl.
-    conjugation!("werden", 10, "~e~en", like Geben;
+    // Werfen: 10 words (helfen, werden, werfen, sterben, werben, treffen). Like Ergeben, except in 4 cells: subj2_1 sg, subj2_1 pl, subj2_2 sg, subj2_2 pl.
+    conjugation!("werfen", 10, "~e~en", like Ergeben;
     stem participle_past: "~o~en- like machen";
     subj2_1: "~ü~e", "~ü~en";
     subj2_2: "~ü~est|~ü~st", "~ü~et|~ü~t";
     ),
-    // Sehen: 10 words (sehen, stehlen, treten, hellsehen, befehlen, empfehlen). Like Geben, except in 6 cells: pres_2 sg, pres_3 sg, subj2_2 sg, subj2_2 pl, subordinate_pres_3 sg, imperative sg.
-    conjugation!("sehen", 10, "~e~en", like Geben;
+    // Sehen: 10 words (sehen, stehlen, treten, hellsehen, befehlen, empfehlen). Like Ergeben, except in 4 cells: subj2_2 sg, subj2_2 pl, subordinate_pres_2 sg, imperative sg.
+    conjugation!("sehen", 10, "~e~en", like Ergeben;
+    stem rest___: "~ie~- like machen";
     stem participle_past: "~e~en- like machen";
-    pres_2: "~ie~st", _;
-    pres_3: "~ie~t", _;
     subj2_2: "~ä~est", "~ä~et";
-    subordinate_pres_3: "~ie~t", _;
+    subordinate_pres_2: derived, _;
     imperative: "~ie~", _;
     ),
-    // Hängenlassen: 9 words (liegenlassen, stehenlassen, alleinlassen, fallenlassen, seinlassen, bleibenlassen).
-    conjugation!("hängenlassen", 9, "~lassen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like hängenlassen";
+    // Liegenlassen: 9 words (liegenlassen, stehenlassen, alleinlassen, fallenlassen, seinlassen, bleibenlassen).
+    conjugation!("liegenlassen", 9, "~lassen", [auxiliary: Haben];
+    stem lemma: "~lass- like machen";
     stem subordinate_pret: "~ließ- like hängenlassen";
-    pres_1: _, "lassen ~";
+    pres_1: "lasse ~", "lassen ~";
     pres_2: "lässt ~", "lasst ~";
     pres_3: "lässt ~", _;
     pret_1: "ließ ~", "ließen ~";
@@ -724,6 +726,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "lassest ~", "lasset ~";
     subj2_1: "ließe ~", "ließen ~";
     subj2_2: "ließest ~", "ließet ~";
+    subordinate_pres_1: "~lasse", _;
     subordinate_pres_2: "~lässt", _;
     subordinate_pres_3: "~lässt", _;
     subordinate_subj2_1: "~ließe", "~ließen";
@@ -733,53 +736,55 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zulassen";
     participle: _, "~lassen";
     ),
-    // Schmeißen: 8 words (scheißen, beißen, schleißen, reißen, schmeißen, spleißen). Like Nudeln, except in 14 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
+    // Schmeißen: 8 words (scheißen, beißen, schleißen, reißen, schmeißen, spleißen). Like Nudeln, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_3 pl, subj1_3 sg, ….
     conjugation!("schmeißen", 8, "~e~ßen", [auxiliary: Haben], like Nudeln;
-    stem verb_2_pl: "~e~ß- like dürfen";
-    stem verb_pret_2_pl: "~~ss- like schmeißen";
+    stem rest_____: "~e~ß- like machen";
+    stem rest_: "~~ss- like schmeißen";
+    stem rest____: "~e~ß- like machen";
     stem zu_infinitive: "~e~ßen- like machen";
     stem participle_past: "~~ssen- like machen";
     pres_1: "~e~ße", "~e~ßen";
     pres_2: "~e~ßt", _;
-    pret_1: "~~ss", "~~ssen";
-    pret_2: "~~ssest|~~sst", _;
-    subj1_1: "~e~ße", _;
-    subj1_2: "~e~ßest", _;
-    subj2_1: "~~sse", "~~ssen";
+    pret_1: "~~ss", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~~sse", _;
+    subj2_2: _, "~~sset|~~sst";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~ßt", _;
-    imperative: "~e~ß|~e~ße", _;
+    imperative: _, derived;
     infinitive: "~e~ßen";
     participle: "~e~ßend", _;
     ),
-    // Bieten: 8 words (schliessen, giessen, fliessen, bieten, schiessen, niessen). Like Fliegen, except in 3 cells: pres_2 sg, pret_2 sg, subj2_2 sg.
-    conjugation!("bieten", 8, "~ie~en", like Fliegen;
+    // Giessen: 8 words (schliessen, giessen, fliessen, bieten, schiessen, niessen). Like Fliegen, except in 3 cells: pres_2 sg, pret_2 sg, subj2_2 sg.
+    conjugation!("giessen", 8, "~ie~en", like Fliegen;
     pres_2: "~ie~t", _;
     pret_2: "~o~est|~o~t", _;
     subj2_2: "~ö~est|~ö~t", _;
     ),
-    // Schießen: 8 words (fließen, gießen, schließen, schießen, sprießen, nießen). Like Machen, except in 17 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
+    // Schießen: 8 words (fließen, gießen, schließen, schießen, sprießen, nießen). Like Machen, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
     conjugation!("schießen", 8, "~ießen", like Machen;
-    stem verb_2_pl: "~ieß- like dürfen";
+    stem rest_____: "~ieß- like machen";
+    stem rest____: "~ieß- like machen";
     stem zu_infinitive: "~ießen- like machen";
     stem participle_past: "~ossen- like machen";
     pres_1: "~ieße", "~ießen";
     pres_2: "~ießt", _;
     pret_1: "~oss", "~ossen";
     pret_2: "~ossest|~osst", "~osst";
-    subj1_1: "~ieße", _;
-    subj1_2: "~ießest", _;
+    subj1_3: derived, _;
     subj2_1: "~össe", "~össen";
     subj2_2: "~össest|~össt", "~össet|~össt";
     subordinate_pres_3: "~ießt", _;
-    imperative: "~ieß|~ieße", _;
+    imperative: _, derived;
     infinitive: "~ießen";
     participle: "~ießend", _;
     ),
     // Wehtun: 8 words (wehtun, leidtun, heimlichtun, schwertun, nottun, wichtigtun).
     conjugation!("wehtun", 8, "~tun", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like wehtun";
+    stem lemma: "~tu- like wehtun";
     stem subordinate_pret: "~tat- like dagegenhalten";
-    pres_1: _, "tun ~";
+    pres_1: "tue ~", "tun ~";
     pres_2: "tust ~", "tut ~";
     pret_1: "tat ~", "taten ~";
     pret_2: "tatest ~|tatst ~", "tatet ~";
@@ -788,6 +793,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_3: _, "tuen ~";
     subj2_1: "täte ~", "täten ~";
     subj2_2: "tätest ~", "tätet ~";
+    subordinate_pres_1: "~tue", _;
     subordinate_pres_2: "~tust", _;
     subordinate_pres_3: "~tut", _;
     subordinate_subj2_1: "~täte", "~täten";
@@ -797,15 +803,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zutun";
     participle: _, "~getan";
     ),
-    // Halten: 8 words (braten, halten, blasen, schlafen, raten, rathen). Like Lagen, except in 8 cells: pres_2 pl, pres_3 sg, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, ….
-    conjugation!("halten", 8, "~a~en", [auxiliary: Haben], like Lagen;
-    stem verb_pret_2_pl: "~ie~e- like machen";
+    // Halten: 8 words (braten, halten, blasen, schlafen, raten, rathen). Like Fahren, except in 7 cells: pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, subj2_3 pl, ….
+    conjugation!("halten", 8, "~a~en", [auxiliary: Haben], like Fahren;
+    stem rest___: "~ä~- like halten";
+    stem rest_: "~ie~- like halten";
     pres_2: _, "~a~et";
-    pres_3: "~ä~", _;
-    pret_1: "~ie~", "~ie~en";
-    pret_2: "~ie~est|~ie~st", _;
-    subj2_1: "~ie~e", "~ie~en";
-    subordinate_pres_3: "~ä~", _;
+    pret_1: "~ie~", _;
+    pret_3: _, derived;
+    subj2_1: "~ie~e", _;
+    subj2_2: _, "~ie~et";
+    subj2_3: _, derived;
+    subordinate_pres_2: derived, _;
     ),
     // Schwimmen: 7 words (schwimmen, spinnen, sinnen, rinnen, brinnen, ginnen). Like Schwingen, except in 4 cells: subj2_1 sg, subj2_1 pl, subj2_2 sg, subj2_2 pl.
     conjugation!("schwimmen", 7, "~i~en", like Schwingen;
@@ -815,30 +823,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Gegenüberstellen: 7 words (zufriedenstellen, wiederherstellen, sicherstellen, gegenüberstellen, bloßstellen, besserstellen).
     conjugation!("gegenüberstellen", 7, "~stellen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like gegenüberstellen";
-    stem verb_pret_2_pl: "~- like gegenüberstellen";
+    stem rest__: "~- like gegenüberstellen";
+    stem rest_____: "~- like gegenüberstellen";
+    stem rest______: "~- like gegenüberstellen";
+    stem rest_: "~- like gegenüberstellen";
+    stem rest____: "~- like gegenüberstellen";
+    stem lemma: "~stell- like machen";
     stem subordinate_pret: "~stellte- like machen";
-    pres_1: _, "stellen ~";
-    pres_2: "stellst ~", "stellt ~";
-    pret_1: "stellte ~", "stellten ~";
-    pret_2: "stelltest ~", _;
-    subj1_1: "stelle ~", _;
-    subj1_2: "stellest ~", "stellet ~";
-    subj2_1: "stellte ~", "stellten ~";
+    pres_1: "stelle ~", _;
+    pres_2: "stellst ~", _;
+    pres_3: _, derived;
+    pret_3: derived, derived;
+    subj1_1: _, derived;
+    subj1_3: derived, derived;
+    subj2_1: "stellte ~", _;
+    subj2_2: _, "stelltet ~";
+    subj2_3: _, derived;
+    subordinate_pres_1: "~stelle", _;
     subordinate_pres_2: "~stellst", _;
     subordinate_pres_3: "~stellt", _;
     subordinate_subj2_1: "~stellte", "~stellten";
     subordinate_subj2_2: "~stelltest", "~stelltet";
     subordinate_subj2_3: "~stellte", "~stellten";
-    imperative: "stell ~", _;
+    imperative: _, derived;
     zu_infinitive: "~zustellen";
     participle: _, "~gestellt";
     ),
     // Drankommen: 7 words (drankommen, zupasskommen, abhandenkommen, zugutekommen, hierherkommen, dahinterkommen).
     conjugation!("drankommen", 7, "~kommen", [auxiliary: Sein];
-    stem verb_pres_1_sg: "~- like drankommen";
+    stem lemma: "~komm- like machen";
     stem subordinate_pret: "~kam- like schwingen";
-    pres_1: _, "kommen ~";
+    pres_1: "komme ~", "kommen ~";
     pres_2: "kommst ~", "kommt ~";
     pret_1: "kam ~", "kamen ~";
     pret_2: "kamst ~", "kamt ~";
@@ -846,6 +861,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "kommest ~", "kommet ~";
     subj2_1: "käme ~", "kämen ~";
     subj2_2: "kämest ~|kämst ~", "kämet ~|kämt ~";
+    subordinate_pres_1: "~komme", _;
     subordinate_pres_2: "~kommst", _;
     subordinate_pres_3: "~kommt", _;
     subordinate_subj2_1: "~käme", "~kämen";
@@ -855,19 +871,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zukommen";
     participle: _, "~gekommen";
     ),
-    // Vierteilen: 7 words (wechselwirken, lobsagen, vierteilen, machinieren, mausrutschen, einstellen). Like Nudeln, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
-    conjugation!("vierteilen", 7, "~~en", like Nudeln;
-    stem verb_2_pl: "~~- like dürfen";
-    stem verb_pret_2_pl: "~~te- like machen";
+    // Einstellen: 7 words (wechselwirken, lobsagen, vierteilen, machinieren, mausrutschen, einstellen). Like Nudeln, except in 15 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_3 pl, subj1_3 sg, ….
+    conjugation!("einstellen", 7, "~~en", like Nudeln;
+    stem rest_____: "~~- like machen";
+    stem rest_: "~~te- like machen";
+    stem rest____: "~~- like machen";
     pres_1: "~~e", "~~en";
     pres_2: "~~st", _;
-    pret_1: "~~te", "~~ten";
-    pret_2: "~~test", _;
-    subj1_1: "~~e", _;
-    subj1_2: "~~est", _;
-    subj2_1: "~~te", "~~ten";
+    pret_1: "~~te", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~~te", _;
+    subj2_2: _, "~~tet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~~t", _;
-    imperative: "~~|~~e", _;
+    imperative: _, derived;
     infinitive: "~~en";
     zu_infinitive: derived;
     participle: "~~end", "~ge~t";
@@ -883,24 +901,26 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: derived;
     participle: "~nd", _;
     ),
-    // Sprechen: 7 words (bergen, sprechen, brechen, bersten, gelten, schelten). Like Geben.
-    conjugation!("sprechen", 7, "~e~en", like Geben;
+    // Sprechen: 7 words (bergen, sprechen, brechen, bersten, gelten, schelten). Like Ergeben.
+    conjugation!("sprechen", 7, "~e~en", like Ergeben;
     stem participle_past: "~o~en- like machen";
     ),
-    // Beissen: 6 words (scheissen, reissen, beissen, schmeissen, fleissen, leissen). Like Greifen, except in 6 cells: pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, subj2_1 pl.
+    // Beissen: 6 words (scheissen, reissen, beissen, schmeissen, fleissen, leissen). Like Greifen, except in 6 cells: pres_2 sg, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, subj2_3 pl.
     conjugation!("beissen", 6, "~e~en", like Greifen;
-    stem verb_pret_2_pl: "~~- like schmeißen";
+    stem rest_: "~~- like schmeißen";
     stem participle_past: "~~en- like machen";
     pres_2: "~e~t", _;
-    pret_1: "~~", "~~en";
-    pret_2: "~~est|~~t", _;
-    subj2_1: "~~e", "~~en";
+    pret_1: "~~", _;
+    pret_3: _, derived;
+    subj2_1: "~~e", _;
+    subj2_2: _, "~~et|~~t";
+    subj2_3: _, derived;
     ),
-    // Stehenbleiben: 6 words (sitzenbleiben, liegenbleiben, stehenbleiben, steckenbleiben, hierbleiben, bestehenbleiben).
-    conjugation!("stehenbleiben", 6, "~bleiben", [auxiliary: Sein];
-    stem verb_pres_1_sg: "~- like stehenbleiben";
+    // Bestehenbleiben: 6 words (sitzenbleiben, liegenbleiben, stehenbleiben, steckenbleiben, hierbleiben, bestehenbleiben).
+    conjugation!("bestehenbleiben", 6, "~bleiben", [auxiliary: Sein];
+    stem lemma: "~bleib- like machen";
     stem subordinate_pret: "~blieb- like schwingen";
-    pres_1: _, "bleiben ~";
+    pres_1: "bleibe ~", "bleiben ~";
     pres_2: "bleibst ~", "bleibt ~";
     pret_1: "blie% ~", "blieben ~";
     pret_2: "bliebst ~", "bliebt ~";
@@ -908,6 +928,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "bleibest ~", "bleibet ~";
     subj2_1: "bliebe ~", "blieben ~";
     subj2_2: "bliebest ~", "bliebet ~";
+    subordinate_pres_1: "~bleibe", _;
     subordinate_pres_2: "~bleibst", _;
     subordinate_pres_3: "~bleibt", _;
     subordinate_subj2_1: "~bliebe", "~blieben";
@@ -919,9 +940,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Achthaben: 6 words (liebhaben, teilhaben, gernhaben, satthaben, achthaben, theilhaben).
     conjugation!("achthaben", 6, "~haben", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like achthaben";
+    stem lemma: "~hab- like machen";
     stem subordinate_pret: "~hatte- like machen";
-    pres_1: _, "haben ~";
+    pres_1: "habe ~", "haben ~";
     pres_2: "hast ~", "habt ~";
     pres_3: "hat ~", _;
     pret_1: "hatte ~", "hatten ~";
@@ -930,6 +951,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "habest ~", "habet ~";
     subj2_1: "hätte ~", "hätten ~";
     subj2_2: "hättest ~", "hättet ~";
+    subordinate_pres_1: "~habe", _;
     subordinate_pres_2: "~hast", _;
     subordinate_pres_3: "~hat", _;
     subordinate_subj2_1: "~hätte", "~hätten";
@@ -939,41 +961,43 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zuhaben";
     participle: _, "~gehabt";
     ),
-    // Melken: 6 words (dreschen, melken, schwellen, quellen, kahlscheren, leschen). Like Werden, except in 8 cells: pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, subj2_1 sg, subj2_1 pl, ….
-    conjugation!("melken", 6, "~e~en", like Werden;
+    // Melken: 6 words (dreschen, melken, schwellen, quellen, kahlscheren, leschen). Like Werfen, except in 8 cells: pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, subj2_1 sg, subj2_1 pl, ….
+    conjugation!("melken", 6, "~e~en", like Werfen;
     pret_1: "~o~", "~o~en";
     pret_2: "~o~st", "~o~t";
     subj2_1: "~ö~e", "~ö~en";
     subj2_2: "~ö~est|~ö~st", "~ö~et|~ö~t";
     ),
-    // Ziehen: 6 words (ziehen, großziehen, blankziehen, erziehen, vollziehen, beziehen). Like Machen, except in 14 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_1 pl, pret_2 sg, ….
+    // Ziehen: 6 words (ziehen, großziehen, blankziehen, erziehen, vollziehen, beziehen). Like Machen, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_3 pl, subj1_3 sg, ….
     conjugation!("ziehen", 6, "~iehen", [auxiliary: Haben], like Machen;
-    stem verb_2_pl: "~ieh- like dürfen";
-    stem verb_pret_2_pl: "~- like ziehen";
+    stem rest_____: "~ieh- like machen";
+    stem rest_: "~- like ziehen";
+    stem rest____: "~ieh- like ziehen";
     stem zu_infinitive: "~iehen- like machen";
     stem participle_past: "~ogen- like machen";
     pres_1: "~iehe", "~iehen";
     pres_2: "~iehst", _;
-    pret_1: "~og", "~ogen";
-    pret_2: "~ogst", _;
-    subj1_1: "~iehe", _;
-    subj1_2: "~iehest", _;
-    subj2_1: "~öge", "~ögen";
+    pret_1: "~og", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~öge", _;
+    subj2_2: _, "~öget";
+    subj2_3: _, derived;
     subordinate_pres_3: "~ieht", _;
-    imperative: "~ieh", _;
+    imperative: _, derived;
     infinitive: "~iehen";
     participle: "~iehend", _;
     ),
     // Bestehen: 6 words (stehen, wiederauferstehen, verstehen, erstehen, gestehen, bestehen).
     conjugation!("bestehen", 6, "~ehen";
-    stem verb_2_pl: "~eh- like dürfen";
+    stem rest_____: "~eh- like machen";
+    stem rest____: "~eh- like ziehen";
     stem zu_infinitive: "~ehen- like machen";
     pres_1: "~ehe", "~ehen";
     pres_2: "~ehst", _;
     pret_1: "~and", "~anden";
     pret_2: "~andest", "~andet";
-    subj1_1: "~ehe", _;
-    subj1_2: "~ehest", _;
+    subj1_3: derived, _;
     subj2_1: "~ände", "~änden";
     subj2_2: "~ändest", "~ändet";
     subordinate_pres_3: "~eht", _;
@@ -981,21 +1005,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subordinate_subj2_1: "~ände|~ünde", "~änden|~ünden";
     subordinate_subj2_2: "~ändest|~ündest", "~ändet|~ündet";
     subordinate_subj2_3: "~ände|~ünde", "~änden|~ünden";
-    imperative: "~eh", _;
+    imperative: _, derived;
     infinitive: "~ehen";
     participle: "~ehend", "~anden";
     ),
-    // Heißen: 5 words (heißen, weisen, preisen, zwangseinweisen, überweisen). Like Schreiben, except in 2 cells: pres_2 sg, pret_2 sg.
-    conjugation!("heißen", 5, "~e~~en", [auxiliary: Haben], like Schreiben;
-    stem verb_pret_2_pl: "~~e~- like schmeißen";
+    // Weisen: 5 words (heißen, weisen, preisen, zwangseinweisen, überweisen). Like Schreiben, except in 3 cells: pres_2 sg, pret_3 pl, subj2_3 pl.
+    conjugation!("weisen", 5, "~e~~en", [auxiliary: Haben], like Schreiben;
+    stem rest_: "~~e~- like schmeißen";
     pres_2: "~e~~t", _;
-    pret_2: "~~e~est|~~e~t", _;
+    pret_3: _, derived;
+    subj2_3: _, derived;
     ),
     // Darüberliegen: 5 words (darüberliegen, darniederliegen, falschliegen, richtigliegen, brachliegen).
     conjugation!("darüberliegen", 5, "~liegen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like darüberliegen";
+    stem lemma: "~lieg- like machen";
     stem subordinate_pret: "~lag- like schwingen";
-    pres_1: _, "liegen ~";
+    pres_1: "liege ~", "liegen ~";
     pres_2: "liegst ~", "liegt ~";
     pret_1: "lag ~", "lagen ~";
     pret_2: "lagst ~", "lagt ~";
@@ -1003,6 +1028,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "liegest ~", "lieget ~";
     subj2_1: "läge ~", "lägen ~";
     subj2_2: "lägest ~|lägst ~", "läget ~|lägt ~";
+    subordinate_pres_1: "~liege", _;
     subordinate_pres_2: "~liegst", _;
     subordinate_pres_3: "~liegt", _;
     subordinate_subj2_1: "~läge", "~lägen";
@@ -1014,9 +1040,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Radfahren: 5 words (radfahren, entlangfahren, vorüberfahren, rückwärtsfahren, probefahren).
     conjugation!("radfahren", 5, "~fahren";
-    stem verb_pres_1_sg: "~- like radfahren";
+    stem lemma: "~fahr- like machen";
     stem subordinate_pret: "~fuhr- like schwingen";
-    pres_1: _, "fahren ~";
+    pres_1: "fahre ~", "fahren ~";
     pres_2: "fährst ~", "fahrt ~";
     pres_3: "fährt ~", _;
     pret_1: "fuhr ~", "fuhren ~";
@@ -1025,6 +1051,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "fahrest ~", "fahret ~";
     subj2_1: "führe ~", "führen ~";
     subj2_2: "führest ~|führst ~", "führet ~|führt ~";
+    subordinate_pres_1: "~fahre", _;
     subordinate_pres_2: "~fährst", _;
     subordinate_pres_3: "~fährt", _;
     subordinate_subj2_1: "~führe", "~führen";
@@ -1034,8 +1061,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zufahren";
     participle: _, "~gefahren";
     ),
-    // Lesen: 5 words (lesen, kürzertreten, breittreten, nesen, erlesen). Like Sehen, except in 5 cells: pres_2 sg, pret_2 sg, subj2_2 sg, subj2_2 pl, participle past.
-    conjugation!("lesen", 5, "~e~en", like Sehen;
+    // Nesen: 5 words (lesen, kürzertreten, breittreten, nesen, erlesen). Like Sehen, except in 5 cells: pres_2 sg, pret_2 sg, subj2_2 sg, subj2_2 pl, participle past.
+    conjugation!("nesen", 5, "~e~en", like Sehen;
     pres_2: "~ie~t", _;
     pret_2: "~a~est|~a~t", _;
     subj2_2: "~ä~est|~ä~t", "~ä~et|~ä~t";
@@ -1049,31 +1076,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj2_1: "~e~te", "~e~ten";
     subj2_2: "~e~test", "~e~tet";
     ),
-    // Reiten: 4 words (gleiten, reiten, streiten, schreiten). Like Greifen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, ….
+    // Reiten: 4 words (gleiten, reiten, streiten, schreiten). Like Greifen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
     conjugation!("reiten", 4, "~e~en", like Greifen;
-    stem verb_pret_2_pl: "~~te- like machen";
+    stem rest_: "~~t- like halten";
     stem participle_past: "~~ten- like machen";
     pres_2: "~e~est", "~e~et";
-    pret_1: "~~t", "~~ten";
-    pret_2: "~~test|~~tst", _;
-    subj2_1: "~~te", "~~ten";
+    pret_1: "~~t", _;
+    pret_3: _, derived;
+    subj2_1: "~~te", _;
+    subj2_2: _, "~~tet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~et", _;
     ),
-    // Notlanden: 4 words (notlanden, bauchreden, stoßlüften, stosslüften). Like Vierteilen, except in 9 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, pret_2 sg, subj2_1 sg, ….
-    conjugation!("notlanden", 4, "~~en", [auxiliary: Haben], like Vierteilen;
-    stem verb_pret_2_pl: "~~ete- like machen";
+    // Notlanden: 4 words (notlanden, bauchreden, stoßlüften, stosslüften). Like Einstellen, except in 9 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
+    conjugation!("notlanden", 4, "~~en", [auxiliary: Haben], like Einstellen;
+    stem rest_: "~~ete- like machen";
     pres_2: "~~est", "~~et";
-    pret_1: "~~ete", "~~eten";
-    pret_2: "~~etest", _;
-    subj2_1: "~~ete", "~~eten";
+    pret_1: "~~ete", _;
+    pret_3: _, derived;
+    subj2_1: "~~ete", _;
+    subj2_2: _, "~~etet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~~et", _;
     participle: _, "~ge~et";
     ),
     // Achtgeben: 4 words (preisgeben, achtgeben, bekanntgeben, zufriedengeben).
     conjugation!("achtgeben", 4, "~geben", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like achtgeben";
+    stem lemma: "~geb- like machen";
     stem subordinate_pret: "~gab- like schwingen";
-    pres_1: _, "geben ~";
+    pres_1: "gebe ~", "geben ~";
     pres_2: "gibst ~", "gebt ~";
     pres_3: "gibt ~", _;
     pret_1: "gab ~", "gaben ~";
@@ -1082,6 +1113,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "gebest ~", "gebet ~";
     subj2_1: "gäbe ~", "gäben ~";
     subj2_2: "gäbest ~|gäbst ~", "gäbet ~|gäbt ~";
+    subordinate_pres_1: "~gebe", _;
     subordinate_pres_2: "~gibst", _;
     subordinate_pres_3: "~gibt", _;
     subordinate_subj2_1: "~gäbe", "~gäben";
@@ -1093,9 +1125,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Gegenüberstehen: 4 words (strammstehen, bevorstehen, gegenüberstehen, umeinanderstehen).
     conjugation!("gegenüberstehen", 4, "~stehen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like gegenüberstehen";
+    stem lemma: "~steh- like machen";
     stem subordinate_pret: "~stand- like dagegenhalten";
-    pres_1: _, "stehen ~";
+    pres_1: "stehe ~", "stehen ~";
     pres_2: "stehst ~", "steht ~";
     pret_1: "stand ~", "standen ~";
     pret_2: "standest ~|standst ~", "standet ~";
@@ -1103,6 +1135,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "stehest ~", "stehet ~";
     subj2_1: "stände ~|stünde ~", "ständen ~|stünden ~";
     subj2_2: "ständest ~|stündest ~", "ständet ~|stündet ~";
+    subordinate_pres_1: "~stehe", _;
     subordinate_pres_2: "~stehst", _;
     subordinate_pres_3: "~steht", _;
     subordinate_subj2_1: "~stände|~stünde", "~ständen|~stünden";
@@ -1112,45 +1145,50 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zustehen";
     participle: _, "~gestanden";
     ),
-    // Einleuchten: 4 words (endlagern, einleuchten, maßschneidern, massschneidern). Like Schreiben, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, ….
+    // Einleuchten: 4 words (endlagern, einleuchten, maßschneidern, massschneidern). Like Schreiben, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, ….
     conjugation!("einleuchten", 4, "~~e~n", [auxiliary: Haben], like Schreiben;
-    stem verb_pret_2_pl: "~~e~te- like machen";
+    stem rest_: "~~e~te- like machen";
     pres_1: "~~~e|~~e~e|~~e~", "~~e~n";
     pres_2: "~~e~st", "~~e~t";
-    pret_1: "~~e~te", "~~e~ten";
-    pret_2: "~~e~test", _;
+    pret_1: "~~e~te", _;
+    pret_3: _, derived;
     subj1_1: "~~e~e|~~~e", _;
     subj1_2: "~~e~est|~~~est", "~~e~et|~~~et";
-    subj2_1: "~~e~te", "~~e~ten";
+    subj2_1: "~~e~te", _;
+    subj2_2: _, "~~e~tet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~~e~t", _;
     imperative: "~~~e|~~e~|~~e~e", _;
     infinitive: "~~e~n";
     zu_infinitive: derived;
     participle: "~~e~nd", "~ge~e~t";
     ),
-    // Fechten: 4 words (fechten, verfechten, verflechten, entflechten). Like Melken, except in 9 cells: pres_2 pl, pres_3 sg, pret_2 sg, pret_2 pl, subj2_2 sg, subj2_2 pl, ….
-    conjugation!("fechten", 4, "~e~en", [auxiliary: Haben], like Melken;
+    // Entflechten: 4 words (fechten, verfechten, verflechten, entflechten). Like Melken, except in 8 cells: pres_2 pl, pret_2 sg, pret_2 pl, subj2_2 sg, subj2_2 pl, subordinate_pres_2 sg, ….
+    conjugation!("entflechten", 4, "~e~en", [auxiliary: Haben], like Melken;
+    stem rest___: "~i~- like halten";
     pres_2: _, "~e~et";
-    pres_3: "~i~", _;
     pret_2: "~o~est|~o~st", "~o~et";
     subj2_2: "~ö~est", "~ö~et";
-    subordinate_pres_3: "~i~", _;
+    subordinate_pres_2: derived, _;
     zu_infinitive: derived;
     participle: _, "~o~en";
     ),
     // Umhinkönnen: 4 words (umhinkönnen, drüberkönnen, drunterkönnen, hinüberkönnen).
     conjugation!("umhinkönnen", 4, "~können", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like umhinkönnen";
-    stem pres_sg: "~- like umhinkönnen";
-    stem verb_2_pl: "~- like umhinkönnen";
-    stem verb_pret_2_pl: "~- like umhinkönnen";
+    stem lemma: "~könn- like machen";
     stem subordinate_pret: "~konnte- like machen";
-    pres_1: _, "können ~";
+    pres_1: "kann ~", "können ~";
+    pres_2: "kannst ~", "könnt ~";
+    pres_3: "kann ~", _;
     pret_1: "konnte ~", "konnten ~";
-    pret_2: "konntest ~", _;
+    pret_2: "konntest ~", "konntet ~";
     subj1_1: "könne ~", _;
-    subj1_2: "könnest ~", _;
+    subj1_2: "könnest ~", "könnet ~";
     subj2_1: "könnte ~", "könnten ~";
+    subj2_2: "könntest ~", "könntet ~";
+    subordinate_pres_1: "~kann", _;
+    subordinate_pres_2: "~kannst", _;
+    subordinate_pres_3: "~kann", _;
     subordinate_subj2_1: "~könnte", "~könnten";
     subordinate_subj2_2: "~könntest", "~könntet";
     subordinate_subj2_3: "~könnte", "~könnten";
@@ -1161,100 +1199,108 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     conjugation!("behalten", 4, "~a~en", like Halten;
     participle: _, "~a~en";
     ),
-    // Gewinnen: 4 words (verschwimmen, liebgewinnen, gewinnen, besinnen). Like Schwimmen, except in 1 cell: participle past.
-    conjugation!("gewinnen", 4, "~i~en", like Schwimmen;
+    // Verschwimmen: 4 words (verschwimmen, liebgewinnen, gewinnen, besinnen). Like Schwimmen, except in 1 cell: participle past.
+    conjugation!("verschwimmen", 4, "~i~en", like Schwimmen;
     participle: _, "~o~en";
     ),
-    // Begegnen: 4 words (begegnen, entgegnen, unterzeichnen, berechnen). Like Sein, except in 1 cell: participle past.
-    conjugation!("begegnen", 4, "~n", like Sein;
+    // Begegnen: 4 words (begegnen, entgegnen, unterzeichnen, berechnen). Like Öffnen, except in 1 cell: participle past.
+    conjugation!("begegnen", 4, "~n", like Öffnen;
     participle: _, "~t";
     ),
-    // Bären: 3 words (wägen, gären, bären). Like Fliegen, except in 11 cells: pres_1 sg, pres_1 pl, pres_2 sg, subj1_1 sg, subj1_2 sg, subj2_2 sg, ….
-    conjugation!("bären", 3, "~ä~en", [auxiliary: Haben], like Fliegen;
-    stem verb_2_pl: "~ä~- like dürfen";
+    // Gären: 3 words (wägen, gären, bären). Like Fliegen, except in 10 cells: pres_1 sg, pres_1 pl, pres_2 sg, subj1_3 sg, subj2_2 sg, subj2_2 pl, ….
+    conjugation!("gären", 3, "~ä~en", [auxiliary: Haben], like Fliegen;
+    stem rest_____: "~ä~- like machen";
+    stem rest____: "~ä~- like machen";
     stem zu_infinitive: "~ä~en- like machen";
     pres_1: "~ä~e", "~ä~en";
     pres_2: "~ä~st", _;
-    subj1_1: "~ä~e", _;
-    subj1_2: "~ä~est", _;
+    subj1_3: derived, _;
     subj2_2: "~ö~est", "~ö~et";
     subordinate_pres_3: "~ä~t", _;
-    imperative: "~ä~|~ä~e", _;
+    imperative: _, derived;
     infinitive: "~ä~en";
     participle: "~ä~end", _;
     ),
-    // Beklimmen: 3 words (klimmen, glimmen, beklimmen). Like Schwimmen, except in 9 cells: pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, subj2_1 sg, subj2_1 pl, ….
-    conjugation!("beklimmen", 3, "~i~en", like Schwimmen;
+    // Glimmen: 3 words (klimmen, glimmen, beklimmen). Like Schwimmen, except in 9 cells: pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, subj2_1 sg, subj2_1 pl, ….
+    conjugation!("glimmen", 3, "~i~en", like Schwimmen;
     pret_1: "~o~", "~o~en";
     pret_2: "~o~st", "~o~t";
     subj2_1: "~ö~e", "~ö~en";
     subj2_2: "~ö~est", "~ö~et";
     zu_infinitive: derived;
     ),
-    // Reien: 3 words (schreien, speien, reien). Like Beissen, except in 3 cells: pres_2 sg, pret_1 sg, pret_2 sg.
-    conjugation!("reien", 3, "~e~en", [auxiliary: Haben], like Beissen;
-    stem verb_pret_2_pl: "~~e- like machen";
+    // Speien: 3 words (schreien, speien, reien). Like Beissen, except in 5 cells: pres_2 sg, pret_1 sg, pret_3 pl, subj2_2 pl, subj2_3 pl.
+    conjugation!("speien", 3, "~e~en", [auxiliary: Haben], like Beissen;
+    stem rest_: "~~e- like machen";
     pres_2: "~e~st", _;
     pret_1: "~~e", _;
-    pret_2: "~~est", _;
+    pret_3: _, derived;
+    subj2_2: _, "~~et";
+    subj2_3: _, derived;
     ),
-    // Schneiden: 3 words (leiden, schneiden, verschneiden). Like Nudeln, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, ….
+    // Schneiden: 3 words (leiden, schneiden, verschneiden). Like Nudeln, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, pret_1 sg, pret_3 pl, subj1_3 sg, ….
     conjugation!("schneiden", 3, "~e~den", [auxiliary: Haben], like Nudeln;
-    stem verb_pret_2_pl: "~~tte- like machen";
+    stem rest_____: "~e~det- like richten";
+    stem rest_: "~~tt- like halten";
+    stem rest____: "~e~d- like machen";
     stem zu_infinitive: "~e~den- like machen";
     stem participle_past: "~~tten- like machen";
     pres_1: "~e~de", "~e~den";
-    pres_2: "~e~dest", "~e~det";
-    pret_1: "~~tt", "~~tten";
-    pret_2: "~~ttest|~~ttst", _;
-    subj1_1: "~e~de", _;
-    subj1_2: "~e~dest", "~e~det";
-    subj2_1: "~~tte", "~~tten";
+    pres_2: "~e~dest", _;
+    pret_1: "~~tt", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_1: "~~tte", _;
+    subj2_2: _, "~~ttet";
+    subj2_3: _, derived;
     subordinate_pres_3: "~e~det", _;
-    imperative: "~e~d|~e~de", _;
+    imperative: _, derived;
     infinitive: "~e~den";
     participle: "~e~dend", _;
     ),
-    // Scheren: 3 words (scheren, heben, wegen). Like Melken, except in 4 cells: pres_2 sg, pres_3 sg, subordinate_pres_3 sg, imperative sg.
+    // Scheren: 3 words (scheren, heben, wegen). Like Melken, except in 4 cells: pres_2 sg, pres_3 sg, subj1_3 sg, subordinate_pres_3 sg.
     conjugation!("scheren", 3, "~e~en", [auxiliary: Haben], like Melken;
+    stem rest____: "~e~- like machen";
     pres_2: "~e~st", _;
     pres_3: derived, _;
+    subj1_3: derived, _;
     subordinate_pres_3: "~e~t", _;
-    imperative: "~e~|~e~e", _;
     ),
-    // Stoßen: 3 words (stoßen, verstoßen, stossen). Like Halten, except in 11 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_3 sg, pret_2 sg, subj1_1 sg, ….
-    conjugation!("stoßen", 3, "~o~en", [auxiliary: Haben], like Halten;
-    stem verb_2_pl: "~o~- like dürfen";
-    stem verb_pret_2_pl: "~ie~- like schmeißen";
+    // Stossen: 3 words (stoßen, verstoßen, stossen). Like Halten, except in 10 cells: pres_1 sg, pres_1 pl, pret_3 pl, subj1_3 sg, subj2_2 pl, subj2_3 pl, ….
+    conjugation!("stossen", 3, "~o~en", [auxiliary: Haben], like Halten;
+    stem rest___: "~ö~t- like schmeißen";
+    stem rest_____: "~o~- like machen";
+    stem rest_: "~ie~- like schmeißen";
+    stem rest____: "~o~- like machen";
     stem zu_infinitive: "~o~en- like machen";
     stem participle_past: "~o~en- like machen";
     pres_1: "~o~e", "~o~en";
-    pres_2: "~ö~t", _;
-    pres_3: "~ö~t", _;
-    pret_2: "~ie~est|~ie~t", _;
-    subj1_1: "~o~e", _;
-    subj1_2: "~o~est", _;
-    subordinate_pres_3: "~ö~t", _;
-    imperative: "~o~|~o~e", _;
+    pret_3: _, derived;
+    subj1_3: derived, _;
+    subj2_2: _, "~ie~et|~ie~t";
+    subj2_3: _, derived;
+    subordinate_pres_2: derived, _;
+    imperative: _, derived;
     infinitive: "~o~en";
     participle: "~o~end", _;
     ),
-    // Fressen: 3 words (fressen, messen, vergessen). Like Machen, except in 15 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_3 sg, pret_1 sg, pret_1 pl, ….
-    conjugation!("fressen", 3, "~essen", [auxiliary: Haben], like Machen;
-    stem verb_2_pl: "~ess- like dürfen";
-    stem verb_pret_2_pl: "~- like fressen";
+    // Messen: 3 words (fressen, messen, vergessen). Like Machen, except in 14 cells: pres_1 sg, pres_1 pl, pret_1 sg, pret_3 pl, subj1_1 sg, subj1_2 sg, ….
+    conjugation!("messen", 3, "~essen", [auxiliary: Haben], like Machen;
+    stem rest___: "~isst- like schmeißen";
+    stem rest_____: "~ess- like machen";
+    stem rest_: "~- like messen";
     stem zu_infinitive: "~essen- like machen";
     stem participle_past: "~essen- like machen";
     pres_1: "~esse", "~essen";
-    pres_2: "~isst", _;
-    pres_3: "~isst", _;
-    pret_1: "~aß", "~aßen";
-    pret_2: "~aßest|~aßt", _;
+    pret_1: "~aß", _;
+    pret_3: _, derived;
     subj1_1: "~esse", _;
     subj1_2: "~essest", _;
-    subj2_1: "~äße", "~äßen";
-    subordinate_pres_3: "~isst", _;
-    imperative: "~iss", _;
+    subj2_1: "~äße", _;
+    subj2_2: _, "~äßet|~äßt";
+    subj2_3: _, derived;
+    subordinate_pres_2: derived, _;
+    imperative: "~iss", derived;
     infinitive: "~essen";
     participle: "~essend", _;
     ),
@@ -1264,37 +1310,36 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     pret_2: "~o~est|~o~t", _;
     subj2_2: "~ö~est|~ö~t", _;
     ),
-    // Dürfen: 3 words (müssen, dürfen, thüren). Like Nudeln, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_3 sg, pret_1 sg, pret_1 pl, ….
+    // Dürfen: 3 words (müssen, dürfen, thüren). Like Nudeln, except in 17 cells: pres_1 sg, pres_1 pl, pret_1 sg, pret_1 pl, pret_2 sg, pret_2 pl, ….
     conjugation!("dürfen", 3, "~ü~en", [auxiliary: Haben], like Nudeln;
-    stem verb_2_pl: "~ü~- like dürfen";
+    stem rest___: "~a~- like halten";
+    stem rest_____: "~ü~- like machen";
     stem zu_infinitive: "~ü~en- like machen";
     stem participle_past: "~u~t- like machen";
     pres_1: "~a~", "~ü~en";
-    pres_2: "~a~st", _;
-    pres_3: "~a~", _;
     pret_1: "~u~te", "~u~ten";
     pret_2: "~u~test", "~u~tet";
     subj1_1: "~ü~e", _;
     subj1_2: "~ü~est", _;
     subj2_1: "~ü~te", "~ü~ten";
     subj2_2: "~ü~test", "~ü~tet";
-    subordinate_pres_3: "~a~", _;
-    imperative: derived, _;
+    subordinate_pres_2: derived, _;
+    imperative: derived, derived;
     infinitive: "~ü~en";
     participle: "~ü~end", _;
     ),
-    // Wören: 3 words (schwören, wören, beschwören). Like Fliegen, except in 13 cells: pres_1 sg, pres_1 pl, pres_2 sg, subj1_1 sg, subj1_2 sg, subj2_1 sg, ….
-    conjugation!("wören", 3, "~ö~en", [auxiliary: Haben], like Fliegen;
-    stem verb_2_pl: "~ö~- like dürfen";
+    // Schwören: 3 words (schwören, wören, beschwören). Like Fliegen, except in 12 cells: pres_1 sg, pres_1 pl, pres_2 sg, subj1_3 sg, subj2_1 sg, subj2_1 pl, ….
+    conjugation!("schwören", 3, "~ö~en", [auxiliary: Haben], like Fliegen;
+    stem rest_____: "~ö~- like machen";
+    stem rest____: "~ö~- like machen";
     stem zu_infinitive: "~ö~en- like machen";
     pres_1: "~ö~e", "~ö~en";
     pres_2: "~ö~st", _;
-    subj1_1: "~ö~e", _;
-    subj1_2: "~ö~est", _;
+    subj1_3: derived, _;
     subj2_1: "~ö~e|~ü~e", "~ö~en|~ü~en";
     subj2_2: "~ö~est|~ö~st|~ü~est|~ü~st", "~ö~et|~ö~t|~ü~et|~ü~t";
     subordinate_pres_3: "~ö~t", _;
-    imperative: "~ö~|~ö~e", _;
+    imperative: _, derived;
     infinitive: "~ö~en";
     participle: "~ö~end", _;
     ),
@@ -1306,9 +1351,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Dreinreden: 3 words (schlechtreden, klugreden, dreinreden).
     conjugation!("dreinreden", 3, "~reden", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like dreinreden";
+    stem lemma: "~rede- like richten";
     stem subordinate_pret: "~redete- like machen";
-    pres_1: _, "reden ~";
+    pres_1: "rede ~", "reden ~";
     pres_2: "redest ~", "redet ~";
     pret_1: "redet% ~", "redeten ~";
     pret_2: "redetest ~", "redetet ~";
@@ -1316,6 +1361,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "redest ~", "redet ~";
     subj2_1: "redete ~", "redeten ~";
     subj2_2: "redetest ~", "redetet ~";
+    subordinate_pres_1: "~rede", _;
     subordinate_pres_2: "~redest", _;
     subordinate_pres_3: "~redet", _;
     subordinate_subj2_1: "~redete", "~redeten";
@@ -1325,11 +1371,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     zu_infinitive: "~zureden";
     participle: _, "~geredet";
     ),
-    // Flachlegen: 3 words (lahmlegen, flachlegen, bloßlegen).
-    conjugation!("flachlegen", 3, "~legen", [auxiliary: Haben];
-    stem verb_pres_1_sg: "~- like flachlegen";
+    // Bloßlegen: 3 words (lahmlegen, flachlegen, bloßlegen).
+    conjugation!("bloßlegen", 3, "~legen", [auxiliary: Haben];
+    stem lemma: "~leg- like machen";
     stem subordinate_pret: "~legte- like machen";
-    pres_1: _, "legen ~";
+    pres_1: "lege ~", "legen ~";
     pres_2: "legst ~", "legt ~";
     pret_1: "legte ~", "legten ~";
     pret_2: "legtest ~", "legtet ~";
@@ -1337,6 +1383,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "legest ~", "leget ~";
     subj2_1: "legte ~", "legten ~";
     subj2_2: "legtest ~", "legtet ~";
+    subordinate_pres_1: "~lege", _;
     subordinate_pres_2: "~legst", _;
     subordinate_pres_3: "~legt", _;
     subordinate_subj2_1: "~legte", "~legten";
@@ -1348,9 +1395,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     ),
     // Vorfallen: 3 words (schwerfallen, vorfallen, leichtfallen).
     conjugation!("vorfallen", 3, "~fallen", [auxiliary: Sein];
-    stem verb_pres_1_sg: "~- like vorfallen";
+    stem lemma: "~fall- like machen";
     stem subordinate_pret: "~fiel- like schwingen";
-    pres_1: _, "fallen ~";
+    pres_1: "falle ~", "fallen ~";
     pres_2: "fällst ~", "fallt ~";
     pres_3: "fällt ~", _;
     pret_1: "fie% ~", "fielen ~";
@@ -1359,6 +1406,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     subj1_2: "fallest ~", "fallet ~";
     subj2_1: "fiele ~", "fielen ~";
     subj2_2: "fielest ~", "fielet ~";
+    subordinate_pres_1: "~falle", _;
     subordinate_pres_2: "~fällst", _;
     subordinate_pres_3: "~fällt", _;
     subordinate_subj2_1: "~fiele", "~fielen";
@@ -1388,102 +1436,5 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 74] = [
     infinitive: "~iesen";
     zu_infinitive: derived;
     participle: derived, _;
-    ),
-    // Beiseitigen: 1 words (beiseitigen). Like Vierteilen, except in 1 cell: participle past.
-    conjugation!("beiseitigen", 1, "~i~en", like Vierteilen;
-    participle: _, "~~t";
-    ),
-    // Sputen: 1 words (sputen).
-    conjugation!("sputen", 1, "~en";
-    stem verb_pres_1_sg: "~e- like sputen";
-    stem pres_sg: "~e- like versündigen";
-    stem verb_pret_sg: "~ete - like versündigen";
-    stem verb_pret_pl: "~ete- like versündigen";
-    stem verb_pret_2_pl: "~ete- like versündigen";
-    stem verb_subj1_sg: "~- like versündigen";
-    stem subj2_sg: "~ete- like sputen";
-    stem subordinate_pret: "~ete- like sputen";
-    stem zu_infinitive: "~en- like versündigen";
-    pres_1: _, "~en uns";
-    pres_2: _, "~et euch";
-    pres_3: _, "~en sich";
-    subj1_2: _, "~et euch";
-    subj1_3: _, "~en sich";
-    participle: _, "sich ge~et";
-    ),
-    // Herüberkönnen: 1 words (herüberkönnen).
-    conjugation!("herüberkönnen", 1, "~er~können";
-    stem verb_pres_1_sg: "~in~- like umhinkönnen";
-    stem pres_sg: "~in~- like umhinkönnen";
-    stem verb_2_pl: "~in~- like umhinkönnen";
-    stem verb_pret_2_pl: "~in~- like umhinkönnen";
-    stem subordinate_pret: "~in~konnte- like machen";
-    pres_1: _, "können ~in~";
-    pret_1: "konnte ~in~", "konnten ~in~";
-    pret_2: "konntest ~in~", _;
-    subj1_1: "könne ~in~", _;
-    subj1_2: "könnest ~in~", _;
-    subj2_1: "könnte ~in~", "könnten ~in~";
-    subordinate_subj2_1: "~in~könnte", "~in~könnten";
-    subordinate_subj2_2: "~in~könntest", "~in~könntet";
-    subordinate_subj2_3: "~in~könnte", "~in~könnten";
-    zu_infinitive: "~in~zukönnen";
-    participle: _, "~in~gekonnt";
-    ),
-    // Abstreuen: 1 words (abstreuen).
-    conjugation!("abstreuen", 1, "ab~en";
-    stem verb_pres_1_sg: "~- like abstreuen";
-    stem subordinate_pret: "~te- like abstreuen";
-    pres_1: _, "~en ein";
-    pres_2: "~st ein", "~t ein";
-    pret_1: "~te ein", "~ten ein";
-    pret_2: "~test ein", "~tet ein";
-    subj1_1: "~e ein", _;
-    subj1_2: "~est ein", "~et ein";
-    subj2_1: "~te ein", "~ten ein";
-    subj2_2: "~test ein", "~tet ein";
-    subordinate_pres_2: "ein~st", _;
-    subordinate_pres_3: "ein~t", _;
-    subordinate_subj2_1: "ein~te", "ein~ten";
-    subordinate_subj2_2: "ein~test", "ein~tet";
-    subordinate_subj2_3: "ein~te", "ein~ten";
-    imperative: "~ ein|~e ein", _;
-    zu_infinitive: "einzu~en";
-    participle: _, "einge~t";
-    ),
-    // Versündigen: 1 words (versündigen).
-    conjugation!("versündigen", 1, "~en";
-    stem verb_pres_1_sg: "~- like versündigen";
-    stem pres_sg: "~- like versündigen";
-    stem verb_pret_sg: "~te - like versündigen";
-    stem verb_pret_pl: "~te- like versündigen";
-    stem verb_pret_2_pl: "~te- like versündigen";
-    stem verb_subj1_sg: "~- like versündigen";
-    stem subj2_sg: "~te- like versündigen";
-    stem subordinate_pret: "~te- like versündigen";
-    stem zu_infinitive: "~en- like versündigen";
-    pres_1: _, "~en uns";
-    pres_2: _, "~t euch";
-    pres_3: _, "~en sich";
-    subj1_2: _, "~et euch";
-    subj1_3: _, "~en sich";
-    participle: _, "sich ~t";
-    ),
-    // Stoppeln: 1 words (stoppeln). Like Schreiben, except in 16 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_1 pl, ….
-    conjugation!("stoppeln", 1, "~o~pe~n", like Schreiben;
-    stem verb_pret_2_pl: "~ö~se~te- like machen";
-    stem zu_infinitive: "~ö~se~n- like machen";
-    stem participle_past: "~ö~se~t- like machen";
-    pres_1: "~ö~s~e|~ö~se~e|~ö~se~", "~ö~se~n";
-    pres_2: "~ö~se~st", "~ö~se~t";
-    pret_1: "~ö~se~te", "~ö~se~ten";
-    pret_2: "~ö~se~test", _;
-    subj1_1: "~ö~se~e|~ö~s~e", _;
-    subj1_2: "~ö~se~est|~ö~s~est", "~ö~se~et|~ö~s~et";
-    subj2_1: "~ö~se~te", "~ö~se~ten";
-    subordinate_pres_3: "~ö~se~t", _;
-    imperative: "~ö~s~e|~ö~se~|~ö~se~e", _;
-    infinitive: "~ö~se~n";
-    participle: "~ö~se~nd", _;
     ),
 ];

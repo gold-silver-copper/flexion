@@ -680,7 +680,7 @@ pub fn imperative(
     ))
 }
 
-/// An infinitive (the one-word ones: the periphrastic perfect passive and future infinitives are phrases).
+/// An infinitive (the perfect passive and the futures are phrases: `amātum esse`, `amātūrum esse`, `amātum īrī`).
 #[must_use]
 pub fn infinitive(lemma: &str, voice: Voice, infinitive_tense: InfinitiveTense) -> String {
     verb::Verb::new(lemma).form(verb::Cell::Infinitive(voice, infinitive_tense))

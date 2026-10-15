@@ -1,30 +1,28 @@
 //! The conjugations, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it. A capital (`T`, `S`)
+//! A pattern is the form with `~` where the stem goes (`~e`, `settle`: the stem and `e`). A stem in two pieces (`~i~e`, `write`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first. A capital (`T`, `S`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it.
 
 use flexion::Paradigm;
 
 /// Writes one conjugation: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the conjugation it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the conjugation's it is like, or, in a conjugation like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the conjugation it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~e- like settle\"`: the slot's cells are `settle`'s table's patterns
+/// with `~e` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the conjugation's it is
+/// like, or, in a conjugation like no other, derived):
 /// `verb` (inf, _3sg, past, prp, pp)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem verb: $s0:tt;)?
-     $(stem verb_past: $s1:tt;)?
-     $(stem verb_prp: $s2:tt;)?
+     $(stem lemma: $s0:tt;)?
+     $(stem rest: $s1:tt;)?
+     $(stem prp: $s2:tt;)?
      $(verb: $c0:tt, $c1:tt, $c2:tt, $c3:tt, $c4:tt;)?
     ) => {
         Paradigm {
@@ -72,8 +70,8 @@ macro_rules! view {
     };
 }
 
-/// What a conjugation adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a conjugation adds after each pattern of the one it is like (`with "", "e" after "~"`: ``, or `e`
+/// where that pattern ends in `~`).
 macro_rules! affix {
     () => {
         None
@@ -97,7 +95,7 @@ const INF_AS_PP: [u16; 5] = [4, 1, 2, 3, 4];
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `settle`: 16,919 words.
+    /// Like `settle`: 16,918 words.
     Settle,
     /// Like `burn`: 13,672 words.
     Burn,
@@ -205,8 +203,8 @@ pub enum Conjugation {
     Rec,
     /// Like `beteach`: 11 words.
     Beteach,
-    /// Like `fix`: 10 words.
-    Fix,
+    /// Like `outleap`: 10 words.
+    Outleap,
     /// Like `catch`: 10 words.
     Catch,
     /// Like `freeze`: 10 words.
@@ -322,7 +320,7 @@ impl Conjugation {
         Conjugation::Bring,
         Conjugation::Rec,
         Conjugation::Beteach,
-        Conjugation::Fix,
+        Conjugation::Outleap,
         Conjugation::Catch,
         Conjugation::Freeze,
         Conjugation::Hang,
@@ -369,9 +367,9 @@ impl flexion::Label for Conjugation {
 }
 
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
-    // Settle: 16,919 words (nonsense, minute, trade, adjective, substantive, patronage).
-    conjugation!("settle", 16919, "~e";
-    stem verb: "~e- like settle";
+    // Settle: 16,918 words (nonsense, minute, trade, adjective, substantive, patronage).
+    conjugation!("settle", 16918, "~e";
+    stem lemma: "~e- like settle";
     verb: _, _, "~ed", "~ing", _;
     ),
     // Burn: 13,672 words (portmanteau, word, book, pound, pond, crow). Like Settle, except in 2 cells: verb inf, verb _3sg.
@@ -412,22 +410,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Write: 85 words (write, arise, drive, override, rewrite, ride).
     conjugation!("write", 85, "~i~e";
-    stem verb: "~i~e- like settle";
+    stem lemma: "~i~e- like settle";
     verb: _, _, "~o~e", "~i~ing", "~i~Ten";
     ),
     // Die: 62 words (die, noogie, tie, sie, auntie, vie).
     conjugation!("die", 62, "~~e";
-    stem verb: "~~e- like settle";
+    stem lemma: "~~e- like settle";
     verb: _, _, "~~ed", "~y~ng", _;
     ),
     // Bleed: 61 words (upbreed, bleed, breed, feed, interbreed, meet).
     conjugation!("bleed", 61, "~e~";
-    stem verb: "~e~- like settle";
+    stem lemma: "~e~- like settle";
     verb: _, _, "~~", "~e~ing", _;
     ),
     // Bind: 60 words (upbind, bind, fight, find, grind, rebind).
     conjugation!("bind", 60, "~i~";
-    stem verb: "~i~- like settle";
+    stem lemma: "~i~- like settle";
     verb: _, _, "~ou~", "~i~ing", _;
     ),
     // Keep: 56 words (creep, feel, keep, kneel, oversleep, sleep). Like Bleed, except in 1 cell: verb past.
@@ -436,7 +434,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Throw: 46 words (know, upblow, blow, grow, outgrow, overthrow).
     conjugation!("throw", 46, "~o~";
-    stem verb: "~o~- like settle";
+    stem lemma: "~o~- like settle";
     verb: _, _, "~e~", "~o~ing", "~o~n";
     ),
     // Spring: 46 words (spring, shrink, drink, sing, stink, sink). Like Bind, except in 2 cells: verb past, verb pp.
@@ -445,13 +443,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Break: 46 words (upbreak, break, speak, housebreak, misspeak, outbreak).
     conjugation!("break", 46, "~ea~";
-    stem verb: "~ea~- like settle";
-    stem verb_past: "~o~e- like break";
+    stem lemma: "~ea~- like settle";
+    stem rest: "~o~e- like break";
     verb: _, _, _, "~ea~ing", _;
     ),
     // Take: 41 words (take, forsake, mistake, overtake, partake, shake).
     conjugation!("take", 41, "~a~e";
-    stem verb: "~a~e- like settle";
+    stem lemma: "~a~e- like settle";
     verb: _, _, "~oo~", "~a~ing", "~a~en";
     ),
     // Cast: 40 words (read, misread, proofread, spread, worth, redd). Like Burn, except in 1 cell: verb past.
@@ -468,12 +466,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Lay: 37 words (say, lay, mislay, overlay, overpay, pay). Like Carry, except in 1 cell: verb past.
     conjugation!("lay", 37, "~y", like Carry;
-    stem verb: "~y- like settle";
+    stem lemma: "~y- like settle";
     verb: _, _, "~id", _, _;
     ),
     // Wear: 28 words (abear, tear, swear, wear, forswear, foreswear). Like Break.
     conjugation!("wear", 28, "~ea~", like Break;
-    stem verb_past: "~o~- like wear";
+    stem rest: "~o~- like wear";
     ),
     // Sit: 28 words (shit, sit, babysit, resit, housesit, birdsit). Like Bind, except in 2 cells: verb past, verb prp.
     conjugation!("sit", 28, "~i~", like Bind;
@@ -489,17 +487,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Stand: 23 words (stand, misunderstand, understand, withstand, handstand, headstand).
     conjugation!("stand", 23, "~an~";
-    stem verb: "~an~- like settle";
+    stem lemma: "~an~- like settle";
     verb: _, _, "~oo~", "~an~ing", _;
     ),
     // Draw: 23 words (draw, overdraw, withdraw, updraw, redraw, outdraw).
     conjugation!("draw", 23, "~a~";
-    stem verb: "~a~- like settle";
+    stem lemma: "~a~- like settle";
     verb: _, _, "~e~", "~a~ing", "~a~n";
     ),
     // Tell: 23 words (foretell, outsell, oversell, resell, sell, tell).
     conjugation!("tell", 23, "~e~l";
-    stem verb: "~e~l- like settle";
+    stem lemma: "~e~l- like settle";
     verb: _, _, "~o~d", "~e~ling", _;
     ),
     // Backbite: 21 words (bite, hide, frostbite, backbite, backslide, overbite). Like Settle, except in 2 cells: verb past, verb pp.
@@ -512,7 +510,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Make: 20 words (make, remake, matchmake, unmake, premake, merrymake).
     conjugation!("make", 20, "~ke";
-    stem verb: "~ke- like settle";
+    stem lemma: "~ke- like settle";
     verb: _, _, "~de", "~king", _;
     ),
     // Give: 18 words (give, forgive, upgive, foregive, misgive, regive). Like Write, except in 2 cells: verb past, verb pp.
@@ -525,12 +523,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Run: 18 words (outrun, overrun, rerun, run, assrun, speedrun). Like Spring, except in 1 cell: verb prp.
     conjugation!("run", 18, "~u~", like Spring as INF_AS_PP;
-    stem verb: "~u~- like settle";
+    stem lemma: "~u~- like settle";
     verb: _, _, _, "~u~Ting", _;
     ),
     // Think: 17 words (think, rethink, doublethink, outthink, crimethink, misthink).
     conjugation!("think", 17, "~ink";
-    stem verb: "~ink- like settle";
+    stem lemma: "~ink- like settle";
     verb: _, _, "~ought", "~inking", _;
     ),
     // Shoot: 17 words (overshoot, shoot, troubleshoot, undershoot, reshoot, sharpshoot). Like Hold, except in 1 cell: verb past.
@@ -547,13 +545,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Overgo: 16 words (forego, forgo, undergo, togo, outgo, misgo).
     conjugation!("overgo", 16, "~go";
-    stem verb: "~go- like pass";
-    stem verb_past: "~- like overgo";
+    stem lemma: "~go- like pass";
+    stem rest: "~- like overgo";
     verb: _, _, _, "~going", _;
     ),
     // See: 15 words (see, foresee, oversee, forsee, sightsee, unsee).
     conjugation!("see", 15, "~ee";
-    stem verb: "~ee- like settle";
+    stem lemma: "~ee- like settle";
     verb: _, _, "~aw", "~eeing", "~een";
     ),
     // Unbe: 15 words (be, beat, browbeat, wright, tyek, forbeat). Like Cast, except in 1 cell: verb pp.
@@ -562,7 +560,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Become: 15 words (become, come, overcome, misbecome, oncome, undercome).
     conjugation!("become", 15, "~o~e";
-    stem verb: "~o~e- like settle";
+    stem lemma: "~o~e- like settle";
     verb: _, _, "~a~e", "~o~ing", "~o~e";
     ),
     // Fall: 14 words (fall, befall, eat, freefall, pratfall, downfall). Like Draw, except in 1 cell: verb pp.
@@ -571,7 +569,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Undo: 13 words (do, go, outdo, overdo, redo, undo).
     conjugation!("undo", 13, "~o";
-    stem verb: "~o- like pass";
+    stem lemma: "~o- like pass";
     verb: _, _, "~iT", "~oing", "~one";
     ),
     // Slide: 13 words (slide, chide, landslide, rede, betide, slite). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
@@ -580,8 +578,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Weave: 12 words (weave, interweave, reweave, forcleave, unweave, tocleave).
     conjugation!("weave", 12, "~~ave";
-    stem verb: "~~ave- like settle";
-    stem verb_past: "~ov~- like break";
+    stem lemma: "~~ave- like settle";
+    stem rest: "~ov~- like break";
     verb: _, _, _, "~~aving", _;
     ),
     // Swim: 12 words (begin, swim, rin, nim, benim, rebegin). Like Spring, except in 1 cell: verb prp.
@@ -594,12 +592,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Buy: 11 words (buy, rebuy, overbuy, underbuy, prebuy, forbuy).
     conjugation!("buy", 11, "~~y";
-    stem verb: "~~y- like settle";
+    stem lemma: "~~y- like settle";
     verb: _, _, "~o~ght", "~~ying", _;
     ),
     // Bring: 11 words (bring, upbring, underbring, forthbring, inbring, imbring).
     conjugation!("bring", 11, "~in~";
-    stem verb: "~in~- like settle";
+    stem lemma: "~in~- like settle";
     verb: _, _, "~ou~ht", "~in~ing", _;
     ),
     // Rec: 11 words (sic, floc, tic, vac, proc, fanfic). Like Burn, except in 2 cells: verb past, verb prp.
@@ -608,22 +606,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Beteach: 11 words (teach, reteach, overteach, misteach, beteach, unteach).
     conjugation!("beteach", 11, "~e~c~";
-    stem verb: "~e~c~- like pass";
+    stem lemma: "~e~c~- like pass";
     verb: _, _, "~~ug~t", "~e~c~ing", _;
     ),
-    // Fix: 10 words (gar, fix, daydream, wis, lowp, outleap). Like Burn, except in 1 cell: verb past.
-    conjugation!("fix", 10, "~", like Burn;
+    // Outleap: 10 words (gar, fix, daydream, wis, lowp, outleap). Like Burn, except in 1 cell: verb past.
+    conjugation!("outleap", 10, "~", like Burn;
     verb: _, _, "~t", _, _;
     ),
     // Catch: 10 words (catch, bycatch, recatch, overcatch, becatch, outcatch).
     conjugation!("catch", 10, "~tc~";
-    stem verb: "~tc~- like pass";
+    stem lemma: "~tc~- like pass";
     verb: _, _, "~ug~t", "~tc~ing", _;
     ),
     // Freeze: 10 words (freeze, unfreeze, refreeze, enfreeze, befreeze, prefreeze).
     conjugation!("freeze", 10, "~~eze";
-    stem verb: "~~eze- like settle";
-    stem verb_past: "~oz~- like break";
+    stem lemma: "~~eze- like settle";
+    stem rest: "~oz~- like break";
     verb: _, _, _, "~~ezing", _;
     ),
     // Hang: 9 words (hang, overhang, uphang, cliffhang, behang, unhang). Like Mislead, except in 1 cell: verb past.
@@ -632,13 +630,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Lie: 9 words (lie, overlie, underlie, belie, superlie, forelie).
     conjugation!("lie", 9, "~ie";
-    stem verb: "~ie- like settle";
-    stem verb_past: "~a- like lie";
+    stem lemma: "~ie- like settle";
+    stem rest: "~a- like lie";
     verb: _, _, _, "~ying", _;
     ),
     // Seek: 9 words (seek, upseek, beseek, outseek, reseek, misseek).
     conjugation!("seek", 9, "~eek";
-    stem verb: "~eek- like settle";
+    stem lemma: "~eek- like settle";
     verb: _, _, "~ought", "~eeking", _;
     ),
     // Strike: 9 words (strike, airstrike, restrike, counterstrike, overstrike, outstrike). Like Abide, except in 1 cell: verb past.
@@ -647,12 +645,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Forget: 8 words (forget, beget, unbeget, misget, unforget, rebeget).
     conjugation!("forget", 8, "~e~";
-    stem verb: "~e~- like settle";
+    stem lemma: "~e~- like settle";
     verb: _, _, "~o~", "~e~Ting", "~o~ten";
     ),
     // Leave: 8 words (leave, cleave, beleave, toreave, dreave, forleave).
     conjugation!("leave", 8, "~ave";
-    stem verb: "~ave- like settle";
+    stem lemma: "~ave- like settle";
     verb: _, _, "~ft", "~aving", _;
     ),
     // Overeat: 8 words (overeat, outeat, undereat, sleepeat, uneat, miseat). Like Bleed, except in 2 cells: verb past, verb pp.
@@ -665,7 +663,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Distil: 7 words (expel, extol, excel, partial, reexpel, superexcel).
     conjugation!("distil", 7, "~";
-    stem verb: "~- like settle";
+    stem lemma: "~- like settle";
     verb: _, _, "~led", "~ling", _;
     ),
     // Gas: 7 words (gas, yes, teargas, outgas, degas, regas). Like Quiz, except in 1 cell: verb _3sg.
@@ -674,7 +672,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Light: 7 words (light, flashlight, twilight, floodlight, prelight, overlight).
     conjugation!("light", 7, "~gh~";
-    stem verb: "~gh~- like settle";
+    stem lemma: "~gh~- like settle";
     verb: _, _, "~~|~gh~ed", "~gh~ing", _;
     ),
     // Panic: 6 words (hydraulic, bivouac, dak, wuk, dekek, hydrofrac). Like Burn, except in 2 cells: verb past, verb prp.
@@ -691,7 +689,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Choose: 6 words (choose, forechoose, rechoose, mischoose, unchoose, prechoose). Like Become.
     conjugation!("choose", 6, "~o~e", like Become;
-    stem verb_past: "~~e- like break";
+    stem rest: "~~e- like break";
     ),
     // Fly: 6 words (fly, overfly, outfly, refly, befly, upfly). Like Carry, except in 2 cells: verb past, verb pp.
     conjugation!("fly", 6, "~y", like Carry;
@@ -723,7 +721,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     ),
     // Slay: 3 words (slay, foreslay, reslay).
     conjugation!("slay", 3, "~ay";
-    stem verb: "~ay- like settle";
+    stem lemma: "~ay- like settle";
     verb: _, _, "~ew", "~aying", "~ain";
     ),
     // Swell: 3 words (swell, unswell, reswell). Like Bleed, except in 2 cells: verb past, verb pp.

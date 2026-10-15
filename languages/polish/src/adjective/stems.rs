@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("adjective"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[
             NOM_M_ANIM,
             NOM_M_INAN,
@@ -76,18 +76,106 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_nom_vir_anim"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[NOM_VIR_ANIM, NOM_VIR_INAN, COMPARATIVE, SUPERLATIVE]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // adjective_nom_vir_anim like słaby: 1,431 words.
+pub(super) static TABLES: [EndingTable<'static>; 5] = [
+    // lemma like wolny: 9,731 words.
+    EndingTable {
+        name: Cow::Borrowed("wolny"),
+        words: 9731,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~y\t",
+            "~a\t~a\t",
+            "~e\t~e\t",
+            "~e\t~e\t",
+            "~ego\t~ego\t",
+            "~ej\t~ej\t",
+            "~ego\t~ego\t",
+            "~ych\t~ych\t",
+            "~ych\t~ych\t",
+            "~emu\t~emu\t",
+            "~ej\t~ej\t",
+            "~emu\t~emu\t",
+            "\t~ym\t",
+            "~ym\t~ym\t",
+            "~ego\t~y\t",
+            "\t~ą\t",
+            "~e\t~e\t",
+            "~ych\t~ych\t",
+            "~e\t~e\t",
+            "~ym\t~ym\t",
+            "~ą\t~ą\t",
+            "~ym\t~ym\t",
+            "\t~ymi\t",
+            "~ymi\t~ymi\t",
+            "~ym\t~ym\t",
+            "~ej\t~ej\t",
+            "~ym\t~ym\t",
+            "~ych\t~ych\t",
+            "~ych\t~ych\t",
+        )),
+    },
+    // lemma like lekki: 1,981 words.
+    EndingTable {
+        name: Cow::Borrowed("lekki"),
+        words: 1981,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~i\t",
+            "~a\t~a\t",
+            "~ie\t~ie\t",
+            "~ie\t~ie\t",
+            "~iego\t~iego\t",
+            "~iej\t~iej\t",
+            "~iego\t~iego\t",
+            "~ich\t~ich\t",
+            "~ich\t~ich\t",
+            "~iemu\t~iemu\t",
+            "~iej\t~iej\t",
+            "~iemu\t~iemu\t",
+            "\t~im\t",
+            "~im\t~im\t",
+            "~iego\t~i\t",
+            "\t~ą\t",
+            "~ie\t~ie\t",
+            "~ich\t~ich\t",
+            "~ie\t~ie\t",
+            "~im\t~im\t",
+            "~ą\t~ą\t",
+            "~im\t~im\t",
+            "\t~imi\t",
+            "~imi\t~imi\t",
+            "~im\t~im\t",
+            "~iej\t~iej\t",
+            "~im\t~im\t",
+            "~ich\t~ich\t",
+            "~ich\t~ich\t",
+        )),
+    },
+    // rest like wolny: 8,436 words.
+    EndingTable {
+        name: Cow::Borrowed("wolny"),
+        words: 8436,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~\t~\t", "~ejszy\t", "\t",)),
+    },
+    // rest like słaby: 1,431 words.
     EndingTable {
         name: Cow::Borrowed("słaby"),
         words: 1431,
         slot: 1,
         table: Cow::Borrowed(concat!("~i\t~i\t", "~szy\t", "\t",)),
+    },
+    // rest like mały: 36 words.
+    EndingTable {
+        name: Cow::Borrowed("mały"),
+        words: 36,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~i\t~i\t", "~ejszy\t", "\t",)),
     },
 ];

@@ -3,10 +3,10 @@
 
 use std::borrow::Cow;
 
-/// 35 words.
+/// 37 words.
 pub(super) static HEADS: &[Cow<'static, str>] = flexion::words![
-    "happi", "hyöty", "häpeä", "häät", "kampi", "kesi", "kevät", "kilpa", "lahti", "lampi", "lape",
-    "liemi", "lipeä", "lyseo", "museo", "mätäs", "neiti", "olut", "ommel", "pimeä", "ruis",
-    "salpa", "sampi", "sappi", "sisar", "suo", "tatar", "tie", "tuppi", "typpi", "tytär", "vapaa",
-    "vuo", "yö", "äes",
+    "happi", "häpeä", "häät", "kampi", "kesi", "kevät", "kilpa", "lahti", "lampi", "lape", "liemi",
+    "lipeä", "lyseo", "museo", "mänty", "mätäs", "neiti", "olut", "ommel", "pimeä", "pytty",
+    "ruis", "salpa", "sampi", "sappi", "sisar", "suo", "sänky", "tatar", "tie", "tuppi", "typpi",
+    "tytär", "vapaa", "vuo", "yö", "äes",
 ];

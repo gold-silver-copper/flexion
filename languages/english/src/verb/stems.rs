@@ -13,64 +13,64 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
-        name: Cow::Borrowed("verb"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[VERB_INF, VERB_3SG]),
     },
     Slot {
-        name: Cow::Borrowed("verb_past"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[VERB_PAST, VERB_PP]),
     },
     Slot {
-        name: Cow::Borrowed("verb_prp"),
+        name: Cow::Borrowed("prp"),
         cells: Cow::Borrowed(&[VERB_PRP]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // verb like settle: 18,062 words.
+    // lemma like settle: 18,061 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 18062,
+        words: 18061,
         slot: 0,
         table: Cow::Borrowed("~\t~s\t"),
     },
-    // verb like pass: 2,095 words.
+    // lemma like pass: 2,095 words.
     EndingTable {
         name: Cow::Borrowed("pass"),
         words: 2095,
         slot: 0,
         table: Cow::Borrowed("~\t~es\t"),
     },
-    // verb_past like settle: 37,494 words.
+    // rest like settle: 37,493 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 37494,
+        words: 37493,
         slot: 1,
         table: Cow::Borrowed("~\t~\t"),
     },
-    // verb_past like break: 74 words.
+    // rest like break: 74 words.
     EndingTable {
         name: Cow::Borrowed("break"),
         words: 74,
         slot: 1,
         table: Cow::Borrowed("~\t~n\t"),
     },
-    // verb_past like wear: 28 words.
+    // rest like wear: 28 words.
     EndingTable {
         name: Cow::Borrowed("wear"),
         words: 28,
         slot: 1,
         table: Cow::Borrowed("~e\t~n\t"),
     },
-    // verb_past like overgo: 16 words.
+    // rest like overgo: 16 words.
     EndingTable {
         name: Cow::Borrowed("overgo"),
         words: 16,
         slot: 1,
         table: Cow::Borrowed("~went\t~gone\t"),
     },
-    // verb_past like lie: 9 words.
+    // rest like lie: 9 words.
     EndingTable {
         name: Cow::Borrowed("lie"),
         words: 9,

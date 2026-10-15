@@ -9,14 +9,14 @@ use flexion::Placement::*;
 use flexion::{Prefix, Prefixes, Separation};
 use std::borrow::Cow;
 
-/// 152 prefixes and 450 words that go against most with theirs.
+/// 152 prefixes and 446 words that go against most with theirs.
 pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
     prefixes: Cow::Borrowed(&[
         Prefix {
             letters: Cow::Borrowed("ab"),
             separable: 388,
             inseparable: 15,
-            words: 408,
+            words: 407,
         },
         Prefix {
             letters: Cow::Borrowed("ad"),
@@ -82,7 +82,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
             letters: Cow::Borrowed("bei"),
             separable: 28,
             inseparable: 2,
-            words: 37,
+            words: 36,
         },
         Prefix {
             letters: Cow::Borrowed("beiseite"),
@@ -194,9 +194,9 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         },
         Prefix {
             letters: Cow::Borrowed("durch"),
-            separable: 97,
+            separable: 96,
             inseparable: 18,
-            words: 115,
+            words: 114,
         },
         Prefix {
             letters: Cow::Borrowed("durcheinander"),
@@ -340,7 +340,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
             letters: Cow::Borrowed("her"),
             separable: 25,
             inseparable: 2,
-            words: 34,
+            words: 33,
         },
         Prefix {
             letters: Cow::Borrowed("herab"),
@@ -736,7 +736,7 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
             letters: Cow::Borrowed("ver"),
             separable: 0,
             inseparable: 657,
-            words: 679,
+            words: 678,
         },
         Prefix {
             letters: Cow::Borrowed("verab"),
@@ -854,9 +854,9 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         },
         Prefix {
             letters: Cow::Borrowed("zu"),
-            separable: 131,
+            separable: 130,
             inseparable: 0,
-            words: 149,
+            words: 148,
         },
         Prefix {
             letters: Cow::Borrowed("zurecht"),
@@ -943,7 +943,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("absolvieren"), Separation::Inseparable),
         (Cow::Borrowed("absorbieren"), Separation::Inseparable),
         (Cow::Borrowed("abstrahieren"), Separation::Inseparable),
-        (Cow::Borrowed("abstreuen"), Separation::Neither),
         (Cow::Borrowed("abstrudeln"), Separation::Neither),
         (Cow::Borrowed("abzwacken"), Separation::Neither),
         (Cow::Borrowed("adden"), Separation::Neither),
@@ -1002,7 +1001,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("beigen"), Separation::Neither),
         (Cow::Borrowed("beinhalten"), Separation::Inseparable),
         (Cow::Borrowed("beirren"), Separation::Inseparable),
-        (Cow::Borrowed("beiseitigen"), Separation::Neither),
         (Cow::Borrowed("beissen"), Separation::Neither),
         (Cow::Borrowed("beizen"), Separation::Neither),
         (Cow::Borrowed("beißen"), Separation::Neither),
@@ -1137,7 +1135,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("herumkrebsen"), Separation::Neither),
         (Cow::Borrowed("herzen"), Separation::Neither),
         (Cow::Borrowed("herüberkommen"), Separation::Neither),
-        (Cow::Borrowed("herüberkönnen"), Separation::Neither),
         (Cow::Borrowed("hindern"), Separation::Neither),
         (Cow::Borrowed("hindurchgehen"), Separation::Neither),
         (Cow::Borrowed("hinken"), Separation::Neither),
@@ -1305,7 +1302,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         (Cow::Borrowed("verschwimmen"), Separation::Neither),
         (Cow::Borrowed("versenden"), Separation::Neither),
         (Cow::Borrowed("verstoßen"), Separation::Neither),
-        (Cow::Borrowed("versündigen"), Separation::Neither),
         (Cow::Borrowed("verwringen"), Separation::Neither),
         (Cow::Borrowed("vollbringen"), Separation::Inseparable),
         (Cow::Borrowed("vollenden"), Separation::Inseparable),

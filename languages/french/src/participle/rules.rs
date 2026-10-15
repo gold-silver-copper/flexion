@@ -7,10 +7,10 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 17 rules and 23 listed words.
+/// 17 rules and 25 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Aveindzu 6431, Mis 44, Été 22, Crû 4, Absous 3] regular,
+        "" => [Aveindzu 6427, Mis 44, Été 22, Crû 4, Absous 3] regular,
         "i" => [Aveindzu 333, Été 6] regular,
         "ti" => [Aveindzu 66] regular,
         "ui" => [Aveindzu 13, Été 4] regular,
@@ -44,10 +44,12 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#joui" => Été,
         "#lui" => Été,
         "#miaulé" => Été,
+        "#musclée" => Aveindzu,
         "#neigé" => Été,
         "#nui" => Été,
         "#pu" => Été,
         "#relui" => Été,
+        "#sténographie" => Aveindzu,
         "#surdosé" => Été,
         "#tchatté" => Été,
         "#ânonné" => Été,

@@ -13,11 +13,11 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("noun_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[NOM_SG, VOC_SG]),
     },
     Slot {
-        name: Cow::Borrowed("noun_pl"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             NOM_PL,
             GEN_SG,
@@ -36,25 +36,18 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 13] = [
-    // noun_sg like lingua: 13,111 words.
+pub(super) static TABLES: [EndingTable<'static>; 15] = [
+    // lemma like lingua: 13,102 words.
     EndingTable {
         name: Cow::Borrowed("lingua"),
-        words: 13111,
+        words: 13102,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // noun_sg like bannus: 2,209 words.
-    EndingTable {
-        name: Cow::Borrowed("bannus"),
-        words: 2209,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~us\t", "~e\t",)),
-    },
-    // noun_pl like ratiō: 4,119 words.
+    // rest like ratiō: 4,121 words.
     EndingTable {
         name: Cow::Borrowed("ratiō"),
-        words: 4119,
+        words: 4121,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
@@ -66,10 +59,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t\t",
         )),
     },
-    // noun_pl like iugum: 2,611 words.
+    // rest like iugum: 2,610 words.
     EndingTable {
         name: Cow::Borrowed("iugum"),
-        words: 2611,
+        words: 2610,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~a\t",
@@ -81,22 +74,22 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ī\t\t",
         )),
     },
-    // noun_pl like bannus: 2,207 words.
+    // rest like cōs: 863 words.
     EndingTable {
-        name: Cow::Borrowed("bannus"),
-        words: 2207,
+        name: Cow::Borrowed("cōs"),
+        words: 863,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~ī\t",
-            "~ī\t~ōrum\t",
-            "~ō\t~īs\t",
-            "~um\t~ōs\t",
-            "~ō\t~īs\t",
-            "~ī\t",
-            "~ī\t~īs\t",
+            "~ēsˇ\t",
+            "~isˇ\t~umˇ\t",
+            "~īˇ\t~ibusˇ\t",
+            "~emˇ\t~ēsˇ\t",
+            "~eˇ\t~ibusˇ\t",
+            "~ēsˇ\t",
+            "\t\t",
         )),
     },
-    // noun_pl like fīnis: 228 words.
+    // rest like fīnis: 228 words.
     EndingTable {
         name: Cow::Borrowed("fīnis"),
         words: 228,
@@ -111,10 +104,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ī\t~ibus\t",
         )),
     },
-    // noun_pl like lēmma: 150 words.
+    // rest like lēmma: 148 words.
     EndingTable {
         name: Cow::Borrowed("lēmma"),
-        words: 150,
+        words: 148,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ta\t",
@@ -126,7 +119,22 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t\t",
         )),
     },
-    // noun_pl like commūne: 111 words.
+    // rest like mōlēs: 116 words.
+    EndingTable {
+        name: Cow::Borrowed("mōlēs"),
+        words: 116,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ēs\t",
+            "~is\t~ium\t",
+            "~ī\t~ibus\t",
+            "~em\t~ēs|~īs\t",
+            "~e\t~ibus\t",
+            "~ēs\t",
+            "\t\t",
+        )),
+    },
+    // rest like commūne: 111 words.
     EndingTable {
         name: Cow::Borrowed("commūne"),
         words: 111,
@@ -141,7 +149,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t\t",
         )),
     },
-    // noun_pl like hospitālia: 45 words.
+    // rest like hospitālia: 45 words.
     EndingTable {
         name: Cow::Borrowed("hospitālia"),
         words: 45,
@@ -150,7 +158,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~a\t", "\t~um\t", "\t~bus\t", "\t~a\t", "\t~bus\t", "~a\t", "\t\t",
         )),
     },
-    // noun_pl like vās: 41 words.
+    // rest like vās: 41 words.
     EndingTable {
         name: Cow::Borrowed("vās"),
         words: 41,
@@ -165,7 +173,22 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t\t",
         )),
     },
-    // noun_pl like ōs: 32 words.
+    // rest like trēsvirī: 40 words.
+    EndingTable {
+        name: Cow::Borrowed("trēsvirī"),
+        words: 40,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ī\t",
+            "\t~ōrum\t",
+            "\t~īs\t",
+            "\t~ōs\t",
+            "\t~īs\t",
+            "~ī\t",
+            "\t\t",
+        )),
+    },
+    // rest like ōs: 32 words.
     EndingTable {
         name: Cow::Borrowed("ōs"),
         words: 32,
@@ -180,7 +203,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t\t",
         )),
     },
-    // noun_pl like corpus: 22 words.
+    // rest like corpus: 22 words.
     EndingTable {
         name: Cow::Borrowed("corpus"),
         words: 22,
@@ -195,7 +218,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~orī\t~oribus\t",
         )),
     },
-    // noun_pl like aegis: 20 words.
+    // rest like aegis: 20 words.
     EndingTable {
         name: Cow::Borrowed("aegis"),
         words: 20,
@@ -207,6 +230,21 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~a|~em\t~as|~ēs\t",
             "~e\t~ibus\t",
             "~es|~ēs\t",
+            "\t\t",
+        )),
+    },
+    // rest like tetraedrum: 1 words.
+    EndingTable {
+        name: Cow::Borrowed("tetraedrum"),
+        words: 1,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~a\t",
+            "~ī\t~ōrum\t",
+            "~ō\t~īs\t",
+            "~um\t~a\t",
+            "~ō\t~īs\t",
+            "~a\t",
             "\t\t",
         )),
     },

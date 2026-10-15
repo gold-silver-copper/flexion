@@ -10,15 +10,15 @@ use flexion::Choice;
 /// 6 rules and 2 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Smerdato 7984, Andatosene 103] regular,
+        "" => [Casso 7984, Andatosene 103] regular,
         "e" => [Andatosene 14] regular,
         "ne" => [Andatosene 9] regular,
         "i" => [Andatosene 89] regular,
         "si" => [Andatosene 34] regular,
-        "o" => [Smerdato 7984] regular,
+        "o" => [Casso 7984] regular,
     }
     listed {
         "#affidatole" => Andatosene,
-        "#vendico" => Smerdato,
+        "#vendico" => Casso,
     }
 };

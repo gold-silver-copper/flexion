@@ -1,27 +1,23 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~z`, `matriz`: the stem and `z`). A stem in two pieces (`~ó~`, `lastón`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem noun_sg: $s0:tt;)?
-     $(stem noun_pl: $s1:tt;)?
+     $(stem sg: $s0:tt;)?
+     $(stem pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
     ) => {
         Paradigm {
@@ -65,8 +61,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "~"`: `~` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -97,13 +92,13 @@ const PL_AS_SG: [u16; 2] = [0, 0];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `medio`: 46,334 words.
+    /// Like `medio`: 46,326 words.
     Medio,
     /// Like `flor`: 6,068 words.
     Flor,
     /// Like `lastón`: 4,740 words.
     Lastón,
-    /// Like `análisis`: 1,707 words.
+    /// Like `análisis`: 1,704 words.
     Análisis,
     /// Like `almacén`: 339 words.
     Almacén,
@@ -119,20 +114,20 @@ pub enum Declension {
     Betún,
     /// Like `desorden`: 27 words.
     Desorden,
-    /// Like `mitin`: 18 words.
-    Mitin,
+    /// Like `crimen`: 18 words.
+    Crimen,
     /// Like `volumen`: 17 words.
     Volumen,
-    /// Like `germen`: 8 words.
-    Germen,
+    /// Like `beicon`: 8 words.
+    Beicon,
     /// Like `psi`: 7 words.
     Psi,
     /// Like `lobby`: 5 words.
     Lobby,
     /// Like `copín`: 4 words.
     Copín,
-    /// Like `barman`: 3 words.
-    Barman,
+    /// Like `campin`: 3 words.
+    Campin,
     /// Like `fijodalgo`: 3 words.
     Fijodalgo,
     /// Like `régimen`: 3 words.
@@ -155,13 +150,13 @@ impl Declension {
         Declension::Canon,
         Declension::Betún,
         Declension::Desorden,
-        Declension::Mitin,
+        Declension::Crimen,
         Declension::Volumen,
-        Declension::Germen,
+        Declension::Beicon,
         Declension::Psi,
         Declension::Lobby,
         Declension::Copín,
-        Declension::Barman,
+        Declension::Campin,
         Declension::Fijodalgo,
         Declension::Régimen,
         Declension::Clac,
@@ -183,8 +178,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
-    // Medio: 46,334 words (pie, swap, deal, abada, abate, quiz).
-    declension!("medio", 46334, "~";
+    // Medio: 46,326 words (pie, swap, deal, abada, abate, quiz).
+    declension!("medio", 46326, "~";
     noun: "~", "~s";
     ),
     // Flor: 6,068 words (abdominal, abductor, aboriginal, raptor, accidental, plural). Like Medio, except in 1 cell: noun pl.
@@ -195,8 +190,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     declension!("lastón", 4740, "~ó~";
     noun: "~ó~", "~o~es";
     ),
-    // Análisis: 1,707 words (fa, gnosis, ime, menos, sms, paraguas). Like Medio.
-    declension!("análisis", 1707, "~", like Medio as PL_AS_SG;
+    // Análisis: 1,704 words (fa, gnosis, ime, menos, sms, paraguas). Like Medio.
+    declension!("análisis", 1704, "~", like Medio as PL_AS_SG;
     ),
     // Almacén: 339 words (japonés, luxemburgués, inglés, francés, ugandés, javanés).
     declension!("almacén", 339, "~é~", [noun_gender: Masculine];
@@ -226,16 +221,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     declension!("desorden", 27, "~o~";
     noun: "~o~", "~ó~es";
     ),
-    // Mitin: 18 words (hooligan, crimen, origen, shamisen, mitin, limen).
-    declension!("mitin", 18, "~i~";
+    // Crimen: 18 words (hooligan, crimen, origen, shamisen, mitin, limen).
+    declension!("crimen", 18, "~i~";
     noun: "~i~", "~í~es";
     ),
     // Volumen: 17 words (lumen, acumen, rumen, numen, gluten, albumen).
     declension!("volumen", 17, "~u~", [noun_gender: Masculine];
     noun: "~u~", "~ú~es";
     ),
-    // Germen: 8 words (gentleman, semen, theremin, germen, penetron, beicon).
-    declension!("germen", 8, "~e~", [noun_gender: Masculine];
+    // Beicon: 8 words (gentleman, semen, theremin, germen, penetron, beicon).
+    declension!("beicon", 8, "~e~", [noun_gender: Masculine];
     noun: "~e~", "~é~es";
     ),
     // Psi: 7 words (mi, pi, ni, xi, psi, fi).
@@ -250,8 +245,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     declension!("copín", 4, "~í~", [noun_gender: Masculine], like Comodín;
     noun: _, "~i~os";
     ),
-    // Barman: 3 words (barman, campin, dauntaun). Like Canon, except in 1 cell: noun pl.
-    declension!("barman", 3, "~a~", like Canon;
+    // Campin: 3 words (barman, campin, dauntaun). Like Canon, except in 1 cell: noun pl.
+    declension!("campin", 3, "~a~", like Canon;
     noun: _, "~á~s|~á~es";
     ),
     // Fijodalgo: 3 words (hijodalgo, hijadalgo, fijodalgo). Like Medio with `~` after each pattern.

@@ -1,9 +1,8 @@
 //! What no conjugation gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with (`rest_`, `abbuon- like girare`), then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
@@ -11,29 +10,29 @@ use std::borrow::Cow;
 /// 102 stems, 737 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"abbonare	verb_pres_1_sg	abbuon- like girare
-accidere	verb	accid- like infrociare	verb_impf	accide- like infrociare	verb_pres_1_pl	accide- like noiare	verb_pres_1_sg	accid- like girare	3	accidete	4	accide	5	accideno	17	acciseno	23	acciderorno	33	accidete	42	accide	47	accidere	52	accidere
+        r#"abbonare	rest_	abbuon- like girare
+accidere	lemma	accid- like infrociare	rest	accide- like infrociare	rest_	accid- like girare	rest__	accide- like noiare	3	accidete	4	accide	5	accideno	17	acciseno	23	acciderorno	33	accidete	42	accide	47	accidere	52	accidere
 adempiersi	3	adempite	45	adempitevi
-adempire	verb_impf	adempi- like uscire	0	adempisco	2	adempisci	4	adempisce	5	adempiscono	42	adempisci
+adempire	rest	adempi- like incattivire	0	adempisco	2	adempisci	4	adempisce	5	adempiscono	42	adempisci
 affocare	4	affuoca	30	affuochi
 alchimiare	2	alchimii	30	alchimii
-alluccare	verb	allucch- like infrociare	verb_impf	allucca- like infrociare	verb_past	allucc- like infrociare	verb_pres_1_pl	allucca- like noiare	3	alluccate	5	alluccheno	33	alluccate	47	alluccare	52	alluccare
+alluccare	lemma	allucch- like infrociare	rest	allucca- like infrociare	rest__	allucca- like noiare	rest___	allucc- like infrociare	3	alluccate	5	alluccheno	33	alluccate	47	alluccare	52	alluccare
 andare	0	vado	4	va	18	andrò	22	andrà	23	andranno	26	andresti	30	vada
-annare	verb	ann- like infrociare	verb_impf	anna- like infrociare	verb_past	agne- like cadere	verb_pres_1_sg	vad- like girare	0	vo	2	vai	3	annate	4	va	5	vanno	7	annavimo	9	annavivo	17	agnedeno	23	annerorno	42	vai	47	annare	52	annare	55	ito
+annare	lemma	ann- like infrociare	rest	anna- like infrociare	rest_	vad- like girare	rest___	agne- like cadere	0	vo	2	vai	3	annate	4	va	5	vanno	7	annavimo	9	annavivo	17	agnedeno	23	annerorno	42	vai	47	annare	52	annare	55	ito
 appercepire	54	appercipiente
 applaudere	55	applauso
-arindare	verb	arind- like infrociare	verb_impf	arinda- like infrociare	verb_past	arigne- like cadere	verb_pres_1_sg	arivad- like girare	0	arivò	2	arivai	3	arindate	4	arivà	5	arivanno	13	arignedimo	17	arignedeno	42	ariva'	47	arindare	52	arindare	55	arindato
+arindare	lemma	arind- like infrociare	rest	arinda- like infrociare	rest_	arivad- like girare	rest___	arigne- like cadere	0	arivò	2	arivai	3	arindate	4	arivà	5	arivanno	13	arignedimo	17	arignedeno	42	ariva'	47	arindare	52	arindare	55	arindato
 arissomigliare	18	arissomigliarò	22	arissomigliarà	23	arissomigliaranno	24	arissomigliaria	25	arissomigliariamo	26	arissomigliarissi	27	arissomigliariavo	29	arissomigliarieno
-arrolare	verb_pres_1_sg	arruol- like girare
+arrolare	rest_	arruol- like girare
 asciolvere	55	asciolto
 assalire	0	assalgo	5	assalgono	30	assalga
 assistersi	55	assistitosi
-assonare	verb_pres_1_sg	assuon- like girare
-assorbere	verb_impf	assorb- like uscire	verb_past	assorb- like uscire	verb_pres_1_pl	assorbi- like uscire	3	assorbite	42	assorbi
-assumersi	verb_past	assun- like tingersi
-astraere	verb	astrar- like vivere	verb_past	astra- like reggere	verb_pres_1_pl	astra- like traggere	verb_pres_1_sg	astragg- like uscire	3	astraete	33	astraggiate	47	astraere	52	astraere
+assonare	rest_	assuon- like girare
+assorbere	rest	assorb- like incattivire	rest__	assorbi- like incattivire	rest___	assorb- like incattivire	3	assorbite	42	assorbi
+assumersi	rest___	assun- like tingersi
+astraere	lemma	astrar- like vivere	rest_	astragg- like incattivire	rest__	astra- like traggere	rest___	astra- like reggere	3	astraete	33	astraggiate	47	astraere	52	astraere
 astrignere	55	astretto
-audire	verb_pres_1_sg	od- like uscire
+audire	rest_	od- like incattivire
 autoadempiersi	3	autoadempite	45	autoadempitevi
 avellere	12	vulsi	55	vulso
 avere	1	abbiamo	4	ha	12	ebbi	30	abbia	31	abbiamo	33	abbiate	42	abbi	44	abbiamo	45	abbiate
@@ -42,31 +41,31 @@ avviare	2	avvii	30	avvii
 avviarsi	2	avvii	30	avvii
 benedicere	3	benedite	12	benedissi	45	benedite	55	benedetto
 bersi	1	beviamo	3	bevete	6	bevevo	12	bevvi	14	bevesti	30	beva	31	beviamo	33	beviate	36	bevessi	37	bevessimo	39	beveste	40	bevesse	41	bevessero	44	beviamoci	45	bevetevi	55	bevutosi
-caggere	verb_pres_1_sg	caggi- like uscire
+caggere	rest_	caggi- like incattivire
 calere	34	caglia	55	caluto
 chicchiriare	2	chicchirii	30	chicchirii
 chiedersi	55	chiestosi
-comburere	verb_past	combus- like volgere
+comburere	rest___	combus- like volgere
 compiere	3	compiete	42	compi	45	compiete
-compire	verb_impf	compi- like uscire	0	compisco	2	compisci	4	compisce	5	compiscono	42	compisci
-concedersi	verb_past	concess- like perdersi
+compire	rest	compi- like incattivire	0	compisco	2	compisci	4	compisce	5	compiscono	42	compisci
+concedersi	rest___	concess- like perdersi
 concepire	54	concipiente
 concepirsi	54	concipientesi
 concupire	54	concupiscente
 consentirsi	54	consenzientesi
-corrersi	verb_past	cors- like perdersi
+corrersi	rest___	cors- like perdersi
 cucirsi	0	cucio	5	cuciono	30	cucia
 dare	0	do	12	diedi
 darsi	0	do
 decernere	55	decreto
-delinquere	verb_past	deli- like reggere
+delinquere	rest___	deli- like reggere
 desiare	2	desii	30	desii
 deviare	2	devii	30	devii
 devolvere	55	devoluto
-dicere	verb	di- like vivere	verb_past	d- like dire	verb_pres_1_pl	dice- like noiare	3	dicete	33	dicete	47	dicere	52	dicere
+dicere	lemma	di- like vivere	rest__	dice- like noiare	rest___	d- like dire	3	dicete	33	dicete	47	dicere	52	dicere
 dire	42	di'
 dirigersi	12	diressi	55	direttosi
-dirimere	verb_past	diren- like volgere
+dirimere	rest___	diren- like volgere
 dirsi	42	ditti
 disfarsi	0	disfò
 disiare	2	disii	30	disii
@@ -77,11 +76,11 @@ disviare	2	disvii	30	disvii
 disviarsi	2	disvii	30	disvii
 dolere	4	duole	42	duoli	55	doluto
 dovere	1	dobbiamo	4	deve	30	debba	31	dobbiamo	33	dobbiate
-elogiare	verb	eloge- like vivere	3	elogiate	47	elogiare	52	elogiare
-empiere	participle_pres	empente- like girare	verb_impf	emp- like uscire	verb_past	emp- like uscire	55	empiuto
+elogiare	lemma	eloge- like vivere	3	elogiate	47	elogiare	52	elogiare
+empiere	participle_pres	empente- like girare	rest	emp- like incattivire	rest___	emp- like incattivire	55	empiuto
 erigersi	12	eressi	55	erettosi
-espandere	verb_past	espan- like volgere
-espandersi	verb_past	espan- like tingersi
+espandere	rest___	espan- like volgere
+espandersi	rest___	espan- like tingersi
 espiare	2	espii	30	espii
 essere	0	sono	1	siamo	2	sei	3	siete	4	è	5	sono	6	ero	7	eravamo	9	eravate	12	fui	13	fummo	14	fosti	18	sarò	22	sarà	23	saranno	26	saresti	30	sia	31	siamo	33	siate	36	fossi	37	fossimo	39	foste	40	fosse	41	fossero	42	sii	44	siamo	45	siate	53	essendo	55	stato
 evolvere	55	evoluto
@@ -90,21 +89,21 @@ fare	4	fa	42	fai
 farsi	4	fa
 fire	22	fia	23	fiano
 forviare	2	forvii	30	forvii
-fuoriuscire	verb_pres_1_sg	fuoriesc- like uscire
+fuoriuscire	rest_	fuoriesc- like incattivire
 fuorviare	2	fuorvii	30	fuorvii
 gire	0	vado	4	va	30	vada	42	va'
-godersi	verb	god- like vivere	47	goderti	52	godersi
+godersi	lemma	god- like vivere	47	goderti	52	godersi
 havere	1	habbiamo	4	ha	12	hebbi	30	habbia	31	habbiamo	33	habbiate	42	habbi	44	habbiamo	45	habbiate
 iacere	1	iacemo	5	iaccio	13	iacestimo	15	iacestivo	18	iacerraio	22	iacerrao	23	iacerraco	24	iaceria	25	iaceriamo	27	iaceriavo	29	iaceriano	41	iacessino
 imbeversi	12	imbevvi	18	imberrò	22	imberrà	23	imberranno	26	imberresti
-impeciare	verb	impece- like vivere	3	impeciate	47	impeciare	52	impeciare
-indirigere	verb_past	indiri- like reggere
+impeciare	lemma	impece- like vivere	3	impeciate	47	impeciare	52	impeciare
+indirigere	rest___	indiri- like reggere
 infocare	4	infuoca	30	infuochi	42	infuoca
 infocarsi	4	infuoca	30	infuochi
 inmiarsi	2	inmii	30	inmii
-intravienire	verb	intravie- like vivere	verb_impf	intravieni- like infrociare	verb_past	intravin- like venire	verb_pres_1_pl	intravieni- like noiare	verb_pres_1_sg	intraviengh- like infrociare	0	intraviengo	3	intravienite	4	intraviè	17	intravinneno	24	intravienirebbi	25	intravieniressimo	26	intravieniressi	27	intravieressivo	28	intravienirebbe	29	intravierebbeno	33	intravienite	42	intraviè	47	intravienire	52	intravienire	53	intravienendo	55	intravienuto
+intravienire	lemma	intravie- like vivere	rest	intravieni- like infrociare	rest_	intraviengh- like infrociare	rest__	intravieni- like noiare	rest___	intravin- like convenire	0	intraviengo	3	intravienite	4	intraviè	17	intravinneno	24	intravienirebbi	25	intravieniressimo	26	intravieniressi	27	intravieressivo	28	intravienirebbe	29	intravierebbeno	33	intravienite	42	intraviè	47	intravienire	52	intravienire	53	intravienendo	55	intravienuto
 introvertere	55	introverso
-introvertersi	verb_past	introvers- like perdersi
+introvertersi	rest___	introvers- like perdersi
 inviare	2	invii	30	invii
 inviarsi	2	invii	30	invii
 ire	1	imo	3	ite	6	ivo	12	ii	14	isti	18	irò	22	irà	23	iranno	26	iresti	36	issi	37	issimo	39	iste	40	isse	41	issero	45	ite	53	endo	55	ito
@@ -112,11 +111,11 @@ licere	4	lice	55	lecito
 litaniare	2	litanii	30	litanii
 malandare	0	malvado	4	malvà	18	malandrò	22	malandrà	23	malandranno	26	malandresti	30	malvada
 manicare	4	manuca	30	manuchi	42	manuca
-mazzolare	verb_pres_1_sg	mazzuol- like girare
+mazzolare	rest_	mazzuol- like girare
 mescere	55	mesciuto
 morirsi	4	muore	30	muoia	55	mortosi
 nascere	12	nacqui	55	nato
-notare	verb	not- like infrociare	verb_impf	nota- like infrociare	verb_past	not- like infrociare	verb_pres_1_pl	nota- like noiare	3	notate	23	noterorno	33	notate	47	notare	52	notare
+notare	lemma	not- like infrociare	rest	nota- like infrociare	rest__	nota- like noiare	rest___	not- like infrociare	3	notate	23	noterorno	33	notate	47	notare	52	notare
 nuocere	0	noccio	5	nocciono	12	nocqui	30	noccia	54	nocente	55	nociuto
 nutrire	54	nutriente
 nutrirsi	54	nutrientesi
@@ -131,19 +130,19 @@ parere	0	paio	1	paiamo	5	paiono	12	parvi	30	paia	31	paiamo	33	paiate	54	parvente
 pascere	55	pasciuto
 pascersi	55	pasciutosi
 pazziare	2	pazzii	30	pazzii
-percuotersi	verb_past	percoss- like perdersi
+percuotersi	rest___	percoss- like perdersi
 permanere	4	permane	12	permasi
 perplettere	12	perplessi
 perplimere	55	perplesso
 piare	2	pii	30	pii
 piovere	12	piovvi
-plaudere	verb_past	plaud- like uscire	14	plaudisti
+plaudere	rest___	plaud- like incattivire	14	plaudisti
 possere	0	posso	1	possemo	4	po	5	possono	6	posseva	7	possevamo	8	possevi	9	possevavo	11	possevano	12	potei	13	potestimo	14	potesti	15	potestivo	18	porraio	22	porrà	23	porranno	24	porria	25	porriamo	26	porresti	27	porriavo	29	porriano	31	pozzamo	33	pozzate	36	potessi	37	potessimo	39	potessivo	40	potesse	41	potessino	42	possi	44	pozzamo
 potere	1	possiamo	4	può	12	potei	30	possa	31	possiamo	33	possiate
 prefare	55	prefato
 prenascere	12	prenacqui	55	prenato
 prepotere	1	prepossiamo	4	prepuò	12	prepotei	30	prepossa	31	prepossiamo	33	prepossiate
-presummere	verb_past	presun- like volgere
+presummere	rest___	presun- like volgere
 profferire	55	profferto
 provvedersi	12	provvidi
 ravvedersi	55	ravvedutosi
@@ -151,10 +150,10 @@ ravviare	2	ravvii	30	ravvii
 ravviarsi	2	ravvii	30	ravvii
 razziare	2	razzii	30	razzii
 recere	55	reciuto
-redimere	verb_past	reden- like volgere
-redimersi	verb_past	reden- like tingersi
-redire	verb_pres_1_sg	ried- like uscire
-relinquere	verb_past	reli- like reggere
+redimere	rest___	reden- like volgere
+redimersi	rest___	reden- like tingersi
+redire	rest_	ried- like incattivire
+relinquere	rest___	reli- like reggere
 riammollire	54	riammollente
 riandare	0	rivado	4	rivà
 riavere	0	rio	2	riai	4	ria	5	rianno	42	riabbi
@@ -184,19 +183,19 @@ risolvere	12	risolsi	16	risolse	17	risolsero	55	risolto
 ristare	0	ristò	4	ristà	42	ristai
 risviare	16	risviò
 ritessere	12	ritessei	16	ritessé	17	ritesserono
-rotare	verb_pres_1_sg	ruot- like girare
+rotare	rest_	ruot- like girare
 salire	0	salgo	5	salgono	30	salga
 sapere	4	sa	42	sappi
 sapersi	1	sappiamo	4	sa	12	seppi	18	saprò	22	saprà	23	sapranno	26	sapresti	30	sappia	31	sappiamo	33	sappiate	42	sappiti	44	sappiamoci	45	sappiatevi	53	sapendosi
-scegnere	verb	scegn- like infrociare	verb_impf	scegne- like infrociare	verb_pres_1_pl	scegne- like noiare	verb_pres_1_sg	scegn- like girare	3	scegnete	4	scegne	5	scegneno	17	scenseno	33	scegnete	42	scegne	47	scegnere	52	scegnere
-scernere	verb_past	scer- like volgere
+scegnere	lemma	scegn- like infrociare	rest	scegne- like infrociare	rest_	scegn- like girare	rest__	scegne- like noiare	3	scegnete	4	scegne	5	scegneno	17	scenseno	33	scegnete	42	scegne	47	scegnere	52	scegnere
+scernere	rest___	scer- like volgere
 sciare	2	scii	18	scierò	22	scierà	23	scieranno	26	scieresti	30	scii
-scindersi	verb_past	sciss- like perdersi
+scindersi	rest___	sciss- like perdersi
 sciolvere	55	sciolto
-scorare	verb_pres_1_sg	scuor- like girare
+scorare	rest_	scuor- like girare
 scorarsi	4	scuora	30	scuori
-sculpere	verb_past	scul- like volgere
-scuotersi	verb_past	scoss- like perdersi
+sculpere	rest___	scul- like volgere
+scuotersi	rest___	scoss- like perdersi
 sdolere	4	sduole	55	sdoluto
 sdraiarsi	16	sdraio
 secernere	55	secreto
@@ -212,10 +211,10 @@ sofferire	55	sofferto
 soffrire	54	sofferente
 solere	2	suoli
 solvere	55	soluto
-sonare	verb_pres_1_sg	suon- like girare
+sonare	rest_	suon- like girare
 soppellire	55	sepolto
-spandere	verb_past	span- like volgere
-spandersi	verb_past	span- like tingersi
+spandere	rest___	span- like volgere
+spandersi	rest___	span- like tingersi
 sparere	0	spaio	1	spaiamo	5	spaiono	12	sparvi	30	spaia	31	spaiamo	33	spaiate	54	sparvente	55	sparso
 sparire	12	sparvi
 spegnersi	0	spengo	5	spengono	12	spensi	30	spenga	55	spentosi
@@ -223,22 +222,22 @@ spiare	2	spii	30	spii
 spiovere	12	spiovvi
 stare	4	sta	42	stai
 starsi	4	sta	12	stetti
-stregnere	verb	stregn- like infrociare	verb_impf	stregne- like infrociare	verb_pres_1_pl	stregne- like noiare	verb_pres_1_sg	stregn- like girare	3	stregnete	4	stregne	5	stregneno	17	strenseno	33	stregnete	42	stregne	47	stregnere	52	stregnere
+stregnere	lemma	stregn- like infrociare	rest	stregne- like infrociare	rest_	stregn- like girare	rest__	stregne- like noiare	3	stregnete	4	stregne	5	stregneno	17	strenseno	33	stregnete	42	stregne	47	stregnere	52	stregnere
 striare	2	strii	30	strii
 striarsi	2	strii	30	strii
 strignere	55	stretto
-succedersi	verb_past	success- like perdersi
-svegliere	verb_past	svel- like volgere
+succedersi	rest___	success- like perdersi
+svegliere	rest___	svel- like volgere
 sviare	2	svii	30	svii
 sviarsi	2	svii	30	svii
-trasparire	verb_past	traspar- like uscire
-traudire	verb	traud- like vivere	verb_pres_1_sg	traod- like uscire	3	traudite	47	traudire	52	traudire
-udire	verb	ud- like vivere	verb_pres_1_sg	od- like uscire	3	udite	47	udire	52	udire
-uprire	verb_impf	upri- like infrociare	verb_past	uper- like volgere	verb_pres_1_pl	upri- like noiare	verb_pres_1_sg	opr- like girare	4	opre	5	opreno	17	uperseno	24	uprirebbi	25	upriressimo	26	upriressi	27	upriressivo	29	uprirebbeno	33	uprite	41	uprisseno	42	opre	53	uprendo
-uscire	verb_pres_1_sg	esc- like uscire
+trasparire	rest___	traspar- like incattivire
+traudire	lemma	traud- like vivere	rest_	traod- like incattivire	3	traudite	47	traudire	52	traudire
+udire	lemma	ud- like vivere	rest_	od- like incattivire	3	udite	47	udire	52	udire
+uprire	rest	upri- like infrociare	rest_	opr- like girare	rest__	upri- like noiare	rest___	uper- like volgere	4	opre	5	opreno	17	uperseno	24	uprirebbi	25	upriressimo	26	upriressi	27	upriressivo	29	uprirebbeno	33	uprite	41	uprisseno	42	opre	53	uprendo
+uscire	rest_	esc- like incattivire
 valersi	4	vale	55	valsosi
-vienire	verb	vi- like infrociare	verb_impf	vieni- like infrociare	verb_past	vin- like venire	verb_pres_1_pl	vieni- like noiare	verb_pres_1_sg	viengh- like infrociare	0	viengo	3	vienite	4	viene	17	vinneno	22	vierà	23	vierorno	33	vienite	42	vie	47	vienire	52	vienire	53	vienendo	55	vienuto
-viversi	verb	viv- like vivere	47	viverti	52	viversi	55	vissutosi
+vienire	lemma	vi- like infrociare	rest	vieni- like infrociare	rest_	viengh- like infrociare	rest__	vieni- like noiare	rest___	vin- like convenire	0	viengo	3	vienite	4	viene	17	vinneno	22	vierà	23	vierorno	33	vienite	42	vie	47	vienire	52	vienire	53	vienendo	55	vienuto
+viversi	lemma	viv- like vivere	47	viverti	52	viversi	55	vissutosi
 volersi	1	vogliamo	2	vuoi	4	vuole	5	vogliono	12	volli	30	voglia	31	vogliamo	33	vogliate	42	vogliti	44	vogliamoci	45	vogliatevi	53	volendosi	54	volentesi
 "#,
     ),

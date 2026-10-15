@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 3] = [
     Slot {
-        name: Cow::Borrowed("adjective"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[
             STRONG_NOM_M,
             STRONG_NOM_F,
@@ -67,7 +67,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("comparative"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             COMPARATIVE_STRONG_NOM_M,
             COMPARATIVE_STRONG_NOM_F,
@@ -121,7 +121,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("superlative"),
+        name: Cow::Borrowed("rest_"),
         cells: Cow::Borrowed(&[
             SUPERLATIVE_STRONG_NOM_M,
             SUPERLATIVE_STRONG_NOM_F,
@@ -177,11 +177,116 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // superlative like veraltet: 14,377 words.
+pub(super) static TABLES: [EndingTable<'static>; 7] = [
+    // lemma like veraltet: 14,672 words.
     EndingTable {
         name: Cow::Borrowed("veraltet"),
-        words: 14377,
+        words: 14672,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~e\t\t~e\t",
+            "\t~er\t~en\t~er\t",
+            "\t~er\t~em\t~en\t",
+            "~en\t~e\t~es\t~e\t",
+            "~e\t~e\t~e\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~e\t~e\t~en\t",
+            "~er\t~e\t~es\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~e\t~es\t~en\t",
+            "~\t",
+        )),
+    },
+    // lemma like träge: 24 words.
+    EndingTable {
+        name: Cow::Borrowed("träge"),
+        words: 24,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~\t\t~\t",
+            "\t~r\t~n\t~r\t",
+            "\t~r\t~m\t~n\t",
+            "~n\t~\t~s\t~\t",
+            "~\t~\t~\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~\t~n\t",
+            "~r\t~\t~s\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~s\t~n\t",
+            "~\t",
+        )),
+    },
+    // lemma like oberer: 8 words.
+    EndingTable {
+        name: Cow::Borrowed("oberer"),
+        words: 8,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "\t~\t\t~\t",
+            "\t~r\t~n\t~r\t",
+            "\t~r\t~m\t~n\t",
+            "~n\t~\t~s\t~\t",
+            "~\t~\t~\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~\t~n\t",
+            "~r\t~\t~s\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~n\t~n\t~n\t",
+            "~n\t~\t~s\t~n\t",
+            "~r\t",
+        )),
+    },
+    // rest like veraltet: 14,816 words.
+    EndingTable {
+        name: Cow::Borrowed("veraltet"),
+        words: 14816,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~er\t\t\t~e\t",
+            "\t~er\t~en\t~er\t",
+            "\t~er\t~em\t~en\t",
+            "~en\t~e\t~es\t~e\t",
+            "~e\t~e\t~e\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~e\t~e\t~en\t",
+            "~er\t~e\t~es\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~en\t~en\t~en\t",
+            "~en\t~e\t~es\t~en\t",
+            "~\t",
+        )),
+    },
+    // rest like arg: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("arg"),
+        words: 3,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "ä~er\t\t\tä~e\t",
+            "\tä~er\tä~en\tä~er\t",
+            "\tä~er\tä~em\tä~en\t",
+            "ä~en\tä~e\tä~es\tä~e\t",
+            "ä~e\tä~e\tä~e\tä~en\t",
+            "ä~en\tä~en\tä~en\tä~en\t",
+            "ä~en\tä~en\tä~en\tä~en\t",
+            "ä~en\tä~e\tä~e\tä~en\t",
+            "ä~er\tä~e\tä~es\tä~en\t",
+            "ä~en\tä~en\tä~en\tä~en\t",
+            "ä~en\tä~en\tä~en\tä~en\t",
+            "ä~en\tä~e\tä~es\tä~en\t",
+            "ä~\t",
+        )),
+    },
+    // rest_ like veraltet: 14,816 words.
+    EndingTable {
+        name: Cow::Borrowed("veraltet"),
+        words: 14816,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "\t\t\t~\t",
@@ -199,7 +304,7 @@ pub(super) static TABLES: [EndingTable<'static>; 2] = [
             "am ~n\t",
         )),
     },
-    // superlative like arg: 3 words.
+    // rest_ like arg: 3 words.
     EndingTable {
         name: Cow::Borrowed("arg"),
         words: 3,

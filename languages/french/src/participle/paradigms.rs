@@ -1,27 +1,22 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~û`, `crû`: the stem and `û`).
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem past_participle: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
     ) => {
@@ -78,7 +73,7 @@ const SG_AS_PL: [u16; 4] = [1, 1, 3, 3];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `aveindzu`: 6,431 words.
+    /// Like `aveindzu`: 6,427 words.
     Aveindzu,
     /// Like `mis`: 44 words.
     Mis,
@@ -116,8 +111,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 5] = [
-    // Aveindzu: 6,431 words (point, animé, massé, mu, eu, lu).
-    declension!("aveindzu", 6431, "~";
+    // Aveindzu: 6,427 words (point, animé, massé, mu, eu, lu).
+    declension!("aveindzu", 6427, "~";
     m: "~", "~s";
     f: "~e", "~es";
     ),

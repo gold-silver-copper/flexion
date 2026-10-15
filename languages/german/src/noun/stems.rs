@@ -13,60 +13,81 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("noun_sg"),
+        name: Cow::Borrowed("sg"),
         cells: Cow::Borrowed(&[NOM_SG, GEN_SG, DAT_SG, ACC_SG]),
     },
     Slot {
-        name: Cow::Borrowed("noun_pl"),
+        name: Cow::Borrowed("pl"),
         cells: Cow::Borrowed(&[NOM_PL, GEN_PL, DAT_PL, ACC_PL]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // noun_sg like pilot: 2,164 words.
+pub(super) static TABLES: [EndingTable<'static>; 10] = [
+    // sg like platte: 62,556 words.
+    EndingTable {
+        name: Cow::Borrowed("platte"),
+        words: 62556,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
+    },
+    // sg like lager: 44,826 words.
+    EndingTable {
+        name: Cow::Borrowed("lager"),
+        words: 44826,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~\t", "~s\t", "~\t", "~\t",)),
+    },
+    // sg like tag: 28,976 words.
+    EndingTable {
+        name: Cow::Borrowed("tag"),
+        words: 28976,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~\t", "~es|~s\t", "~|~e\t", "~\t",)),
+    },
+    // sg like pilot: 2,162 words.
     EndingTable {
         name: Cow::Borrowed("pilot"),
-        words: 2164,
+        words: 2162,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~en\t", "~en\t", "~en\t",)),
     },
-    // noun_sg like hausgenosse: 1,310 words.
+    // sg like hausgenosse: 1,310 words.
     EndingTable {
         name: Cow::Borrowed("hausgenosse"),
         words: 1310,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~n\t", "~n\t", "~n\t",)),
     },
-    // noun_sg like grüner: 974 words.
+    // sg like guß: 164 words.
     EndingTable {
-        name: Cow::Borrowed("grüner"),
-        words: 974,
+        name: Cow::Borrowed("guß"),
+        words: 164,
         slot: 0,
-        table: Cow::Borrowed(concat!("~r\t", "~n\t", "~m\t", "~n\t",)),
+        table: Cow::Borrowed(concat!("~ß\t", "~sses\t", "~ß|~sse\t", "~ß\t",)),
     },
-    // noun_sg like freie: 4 words.
+    // sg like eis: 34 words.
     EndingTable {
-        name: Cow::Borrowed("freie"),
-        words: 4,
+        name: Cow::Borrowed("eis"),
+        words: 34,
         slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~n\t", "~n\t", "~\t",)),
+        table: Cow::Borrowed(concat!("~\t", "~es\t", "~|~e\t", "~\t",)),
     },
-    // noun_pl like platte: 75,640 words.
+    // pl like platte: 75,637 words.
     EndingTable {
         name: Cow::Borrowed("platte"),
-        words: 75640,
+        words: 75637,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // noun_pl like lager: 66,309 words.
+    // pl like lager: 66,307 words.
     EndingTable {
         name: Cow::Borrowed("lager"),
-        words: 66309,
+        words: 66307,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~n\t", "~\t",)),
     },
-    // noun_pl like landsmann: 22 words.
+    // pl like landsmann: 22 words.
     EndingTable {
         name: Cow::Borrowed("landsmann"),
         words: 22,

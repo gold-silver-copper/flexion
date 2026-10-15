@@ -42,23 +42,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 59],
     } listed {}, true, None),
     // ACC_SG, from NOM_SG.
-    relation!(ACC_SG, [NOM_SG], [("~", "~I"), ("~", "~yI"), ("~k", "~ğI")], rules {
-        "" => [0 27, 1 24, 2 6],
-        "i" => [1 8],
-        "k" => [2 6, 0 1],
-        "l" => [0 11],
-        "ı" => [1 8],
-    } listed {
-        "apocu" => 1,
-        "ayna" => 1,
-        "fino" => 1,
-        "hamile" => 1,
-        "hüzünlü" => 1,
-        "maço" => 1,
-        "sik" => 0,
-        "yapma" => 1,
-        "yüzüncü" => 1,
-    }, true, None),
+    relation!(ACC_SG, [NOM_SG], [], none, true, None),
     // ACC_PL, from NOM_PL.
     relation!(ACC_PL, [NOM_PL], [("~", "~I")], rules {
         "" => [0 60],
@@ -76,21 +60,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "" => [0 60],
     } listed {}, true, None),
     // LOC_SG, from NOM_PL.
-    relation!(LOC_SG, [NOM_PL], [("~lar", "~dE"), ("~lar", "~tE"), ("~ler", "~de"), ("~ler", "~tE")], rules {
-        "" => [2 25, 0 22, 1 7, 3 6],
-        "ar" => [0 22, 1 7],
-        "klar" => [1 5],
-        "er" => [2 25, 3 6],
-    } listed {
-        "alplar" => 1,
-        "biricikler" => 3,
-        "interseksler" => 3,
-        "içler" => 3,
-        "müntehaplar" => 1,
-        "sikler" => 3,
-        "ulviyetler" => 3,
-        "çiftler" => 3,
-    }, true, None),
+    relation!(LOC_SG, [NOM_PL], [], none, true, None),
     // LOC_PL, from NOM_PL.
     relation!(LOC_PL, [NOM_PL], [("~", "~dE")], rules {
         "" => [0 60],
@@ -113,15 +83,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ü" => [0 2, 3 2],
         "ı" => [0 14, 4 10],
         "yı" => [4 10, 0 2],
-    } listed {
-        "apocuyu" => 2,
-        "bayı" => 0,
-        "finoyu" => 2,
-        "hüzünlüyü" => 3,
-        "kurmayı" => 0,
-        "maçoyu" => 2,
-        "yüzüncüyü" => 3,
-    }, true, None),
+    } listed {}, true, None),
     // GEN_PL, from NOM_PL.
     relation!(GEN_PL, [NOM_PL], [("~", "~In")], rules {
         "" => [0 60],
@@ -135,14 +97,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ü" => [3 2, 0 1],
         "ı" => [0 11, 4 10],
         "yı" => [4 10, 0 1],
-    } listed {
-        "apocuyu" => 2,
-        "finoyu" => 2,
-        "hüzünlüyü" => 3,
-        "kurmayı" => 0,
-        "maçoyu" => 2,
-        "yüzüncüyü" => 3,
-    }, true, None),
+    } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_NOM_ONE_2SG, from ADJECTIVE_POSSESSIVE_NOM_ONE_1SG.
     relation!(ADJECTIVE_POSSESSIVE_NOM_ONE_2SG, [ADJECTIVE_POSSESSIVE_NOM_ONE_1SG], [("~m", "~n")], rules {
         "" => [0 48],
@@ -156,14 +111,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ü" => [3 2, 0 1],
         "ı" => [0 11, 4 10],
         "yı" => [4 10, 0 1],
-    } listed {
-        "apocuyu" => 2,
-        "finoyu" => 2,
-        "hüzünlüyü" => 3,
-        "kurmayı" => 0,
-        "maçoyu" => 2,
-        "yüzüncüyü" => 3,
-    }, true, None),
+    } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_NOM_ONE_1PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1SG.
     relation!(ADJECTIVE_POSSESSIVE_NOM_ONE_1PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1SG], [("~", "~Iz")], rules {
         "" => [0 47],
@@ -245,11 +193,7 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ü" => [3 2, 0 1],
         "ı" => [0 11, 4 10],
         "yı" => [4 10, 0 1],
-    } listed {
-        "hüzünlüyü" => 3,
-        "kurmayı" => 0,
-        "yüzüncüyü" => 3,
-    }, true, None),
+    } listed {}, true, None),
     // ADJECTIVE_POSSESSIVE_ACC_ONE_1PL, from ADJECTIVE_POSSESSIVE_NOM_ONE_1PL.
     relation!(ADJECTIVE_POSSESSIVE_ACC_ONE_1PL, [ADJECTIVE_POSSESSIVE_NOM_ONE_1PL], [("~", "~I")], rules {
         "" => [0 47],

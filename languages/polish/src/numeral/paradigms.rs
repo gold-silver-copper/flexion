@@ -1,22 +1,18 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~ście`, `jedenaście`: the stem and `ście`). A stem in two pieces (`~~`, `sto`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -49,7 +45,7 @@ use flexion::Paradigm;
 /// `loc_nvir` (anim, inan)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem numeral: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -179,8 +175,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "~"`: `~` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -200,8 +195,8 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `dwieście`: 9 words.
-    Dwieście,
+    /// Like `jedenaście`: 9 words.
+    Jedenaście,
     /// Like `sto`: 6 words.
     Sto,
     /// Like `pięćdziesiąt`: 5 words.
@@ -235,7 +230,7 @@ pub enum Declension {
 impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 15] = [
-        Declension::Dwieście,
+        Declension::Jedenaście,
         Declension::Sto,
         Declension::Pięćdziesiąt,
         Declension::Pięć,
@@ -268,8 +263,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
-    // Dwieście: 9 words (piętnaście, jedenaście, trzynaście, czternaście, szesnaście, siedemnaście).
-    declension!("dwieście", 9, "~ście";
+    // Jedenaście: 9 words (piętnaście, jedenaście, trzynaście, czternaście, szesnaście, siedemnaście).
+    declension!("jedenaście", 9, "~ście";
     nom_m: _, "~ście";
     nom_vir: "~stu", _;
     acc_vir: _, "~stu";
@@ -280,14 +275,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     nom_vir: "~ius~", _;
     acc_vir: _, "~ius~";
     ),
-    // Pięćdziesiąt: 5 words (sześćdziesiąt, dziewięćdziesiąt, pięćdziesiąt, osiemdziesiąt, siedemdziesiąt). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
-    declension!("pięćdziesiąt", 5, "~ąt", like Dwieście;
+    // Pięćdziesiąt: 5 words (sześćdziesiąt, dziewięćdziesiąt, pięćdziesiąt, osiemdziesiąt, siedemdziesiąt). Like Jedenaście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
+    declension!("pięćdziesiąt", 5, "~ąt", like Jedenaście;
     nom_m: _, "~ąt";
     nom_vir: "~ęciu", _;
     acc_vir: _, "~ęciu";
     ),
-    // Pięć: 3 words (pięć, dziewięć, dziesięć). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
-    declension!("pięć", 3, "~ć", like Dwieście;
+    // Pięć: 3 words (pięć, dziewięć, dziesięć). Like Jedenaście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
+    declension!("pięć", 3, "~ć", like Jedenaście;
     nom_m: _, "~ć";
     nom_vir: "~ciu", _;
     acc_vir: _, "~ciu";
@@ -295,8 +290,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     // Pięćset: 3 words (dziewięćset, pięćset, sześćset). Like Pięć with `~` after each pattern.
     declension!("pięćset", 3, "~ć~", like Pięć with "~";
     ),
-    // Dwa: 2 words (oba, dwa). Like Dwieście, except in 6 cells: nom_m inan, nom_vir anim, nom_nvir anim, acc_vir inan, acc_nvir anim, ins_nvir anim.
-    declension!("dwa", 2, "~a", like Dwieście;
+    // Dwa: 2 words (oba, dwa). Like Jedenaście, except in 6 cells: nom_m inan, nom_vir anim, nom_nvir anim, acc_vir inan, acc_nvir anim, ins_nvir anim.
+    declension!("dwa", 2, "~a", like Jedenaście;
     nom_m: _, "~a";
     nom_vir: derived, _;
     nom_nvir: "~aj|~a", _;
@@ -304,8 +299,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     acc_nvir: "~u|~óch|~a", _;
     ins_nvir: "~oma|~u", _;
     ),
-    // Tyle: 2 words (wiele, tyle). Like Dwieście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
-    declension!("tyle", 2, "~e", like Dwieście;
+    // Tyle: 2 words (wiele, tyle). Like Jedenaście, except in 3 cells: nom_m inan, nom_vir anim, acc_vir inan.
+    declension!("tyle", 2, "~e", like Jedenaście;
     nom_m: _, "~e";
     nom_vir: "~u", _;
     acc_vir: _, "~u";
@@ -314,15 +309,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     declension!("obydwa", 2, "~a", like Tyle;
     nom_m: _, "~a";
     ),
-    // Trzydzieści: 2 words (trzydzieści, czterdzieści). Like Dwieście, except in 1 cell: nom_m inan.
-    declension!("trzydzieści", 2, "~ści", like Dwieście;
+    // Trzydzieści: 2 words (trzydzieści, czterdzieści). Like Jedenaście, except in 1 cell: nom_m inan.
+    declension!("trzydzieści", 2, "~ści", like Jedenaście;
     nom_m: _, "~ści";
     ),
     // Dwanaście: 1 words (dwanaście). Like Obydwa with `~stu` after each pattern (`~ście` after a).
     declension!("dwanaście", 1, "~a~ście", like Obydwa with "~stu", "~ście" after "a";
     ),
-    // Cztery: 1 words (cztery). Like Dwieście, except in 4 cells: nom_m inan, nom_vir anim, acc_vir anim, acc_vir inan.
-    declension!("cztery", 1, "~y", like Dwieście;
+    // Cztery: 1 words (cztery). Like Jedenaście, except in 4 cells: nom_m inan, nom_vir anim, acc_vir anim, acc_vir inan.
+    declension!("cztery", 1, "~y", like Jedenaście;
     nom_m: _, "~y";
     nom_vir: "~ej", _;
     acc_vir: "~ech", derived;

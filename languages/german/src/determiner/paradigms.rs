@@ -1,29 +1,24 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~er`, `keiner`: the stem and `er`).
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom` (m, f, n, pl)
 /// `gen_` (m, f, n, pl)
 /// `dat` (m, f, n, pl)
 /// `acc` (m, f, n, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem determiner: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(nom: $c0:tt, $c1:tt, $c2:tt, $c3:tt;)?
      $(gen_: $c4:tt, $c5:tt, $c6:tt, $c7:tt;)?
      $(dat: $c8:tt, $c9:tt, $c10:tt, $c11:tt;)?
@@ -86,17 +81,17 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `einer`: 15 words.
-    Einer,
+    /// Like `keiner`: 15 words.
+    Keiner,
     /// Like `sein`: 13 words.
     Sein,
-    /// Like `ihrige`: 9 words.
+    /// Like `ihrige`: 8 words.
     Ihrige,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 3] = [Declension::Einer, Declension::Sein, Declension::Ihrige];
+    pub const ALL: [Declension; 3] = [Declension::Keiner, Declension::Sein, Declension::Ihrige];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {
@@ -114,20 +109,20 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
-    // Einer: 15 words (der, jener, einer, welcher, meiner, seiner).
-    declension!("einer", 15, "~er";
+    // Keiner: 15 words (der, jener, einer, welcher, meiner, seiner).
+    declension!("keiner", 15, "~er";
     nom: "~er", "~e", "~es", "~e";
-    gen_: "~es", "~er", _, "~er";
+    gen_: "~es", "~er", _, _;
     dat: "~em", _, _, "~en";
     ),
-    // Sein: 13 words (sein, ihr, dein, mein, kein, sier). Like Einer, except in 2 cells: nom m, nom n.
-    declension!("sein", 13, "~", like Einer;
+    // Sein: 13 words (sein, ihr, dein, mein, kein, sier). Like Keiner, except in 2 cells: nom m, nom n.
+    declension!("sein", 13, "~", like Keiner;
     nom: "~", _, "~", _;
     ),
-    // Ihrige: 9 words (eine, derselbe, derjenige, seinige, meinige, deinige). Like Sein, except in 7 cells: nom f, nom pl, gen_ m, gen_ f, gen_ pl, dat m, ….
-    declension!("ihrige", 9, "~", like Sein;
+    // Ihrige: 8 words (derselbe, derjenige, seinige, meinige, deinige, ihrige). Like Sein, except in 6 cells: nom f, nom pl, gen_ m, gen_ f, dat m, dat pl.
+    declension!("ihrige", 8, "~", like Sein;
     nom: _, "~", _, "~n";
-    gen_: "~n", "~n", _, "~n";
+    gen_: "~n", "~n", _, _;
     dat: "~n", _, _, "~n";
     ),
 ];

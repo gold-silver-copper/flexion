@@ -1,22 +1,17 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~ый`, `оный`: the stem and `ый`).
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -43,7 +38,7 @@ use flexion::Paradigm;
 /// `prep_pl` (anim, inan)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem pronoun: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -155,8 +150,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "", "от" after "~"`: ``, or `от`
+/// where that pattern ends in `~`).
 macro_rules! affix {
     () => {
         None
@@ -184,8 +179,8 @@ pub enum Declension {
     Чей,
     /// Like `иной`: 4 words.
     Иной,
-    /// Like `некий`: 4 words.
-    Некий,
+    /// Like `всякий`: 4 words.
+    Всякий,
     /// Like `другой`: 3 words.
     Другой,
     /// Like `наш`: 2 words.
@@ -205,7 +200,7 @@ impl Declension {
         Declension::Свой,
         Declension::Чей,
         Declension::Иной,
-        Declension::Некий,
+        Declension::Всякий,
         Declension::Другой,
         Declension::Наш,
         Declension::Тот,
@@ -300,8 +295,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 10] = [
     nom_m: _, "~ой";
     acc_m: _, "~ой";
     ),
-    // Некий: 4 words (некий, всякий, этакий, эдакий). Like Оный, except in 16 cells: nom_m inan, nom_pl anim, gen_f anim, gen_f inan, gen_pl anim, dat_f anim, ….
-    declension!("некий", 4, "~ий", like Оный;
+    // Всякий: 4 words (некий, всякий, этакий, эдакий). Like Оный, except in 16 cells: nom_m inan, nom_pl anim, gen_f anim, gen_f inan, gen_pl anim, dat_f anim, ….
+    declension!("всякий", 4, "~ий", like Оный;
     nom_m: _, "~ий";
     nom_pl: "~ие", _;
     gen_f: "~ой", derived;

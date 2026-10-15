@@ -10,9 +10,9 @@ use flexion::Choice;
 /// 10 rules and 18 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Todo 24, Docientos 13, Poco 10, Unx 9, Dambos 3, Cuál 1],
-        "e" => [Unx 4] regular,
-        "l" => [Unx 3] regular,
+        "" => [Todo 24, Docientos 13, Poco 10, Un 9, Dambos 3, Cuál 1],
+        "e" => [Un 4] regular,
+        "l" => [Un 3] regular,
         "o" => [Todo 24, Poco 10],
         "ho" => [Todo 4] regular,
         "no" => [Todo 11] regular,
@@ -22,14 +22,14 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "tos" => [Docientos 12] regular,
     }
     listed {
-        "#aquel" => Unx,
-        "#aquese" => Unx,
-        "#aqueste" => Unx,
-        "#cuál" => Unx,
+        "#aquel" => Un,
+        "#aquese" => Un,
+        "#aqueste" => Un,
+        "#cuál" => Un,
         "#dambos" => Dambos,
-        "#el" => Unx,
-        "#ese" => Unx,
-        "#este" => Unx,
+        "#el" => Un,
+        "#ese" => Un,
+        "#este" => Un,
         "#la" => Cuál,
         "#nuestro" => Todo,
         "#poco" => Poco,
@@ -37,7 +37,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#suyo" => Poco,
         "#tanto" => Todo,
         "#tuyo" => Poco,
-        "#unx" => Unx,
+        "#unx" => Un,
         "#varios" => Dambos,
         "#voso" => Poco,
     }

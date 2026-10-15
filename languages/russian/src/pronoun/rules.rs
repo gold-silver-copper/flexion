@@ -10,10 +10,10 @@ use flexion::Choice;
 /// 10 rules and 13 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Оный 7, Свой 5, Чей 4, Иной 4, Некий 4, Другой 3, Наш 2, Тот 2, Сам 1, Иже 1],
+        "" => [Оный 7, Свой 5, Чей 4, Иной 4, Всякий 4, Другой 3, Наш 2, Тот 2, Сам 1, Иже 1],
         "ей" => [Чей 4] regular,
-        "ий" => [Некий 4] regular,
-        "кий" => [Некий 4] regular,
+        "ий" => [Всякий 4] regular,
+        "кий" => [Всякий 4] regular,
         "ой" => [Свой 5, Иной 4, Другой 3],
         "овой" => [Иной 2] regular,
         "акой" => [Другой 2] regular,
@@ -28,7 +28,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#кой" => Свой,
         "#любой" => Иной,
         "#мой" => Свой,
-        "#некий" => Некий,
+        "#некий" => Всякий,
         "#никой" => Свой,
         "#сам" => Сам,
         "#свой" => Свой,

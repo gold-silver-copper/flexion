@@ -53,20 +53,10 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
     relation!(F_PL, [F_SG], [("~", "~s"), ("~a", "~os")], rules {
         "" => [0 19, 1 14],
     } listed {
-        "algotra" => 1,
         "aquesta" => 1,
-        "cierta" => 1,
-        "cuanta" => 1,
-        "cuánta" => 1,
         "esa" => 1,
         "la" => 0,
         "la" => 1,
-        "otra" => 1,
-        "poca" => 1,
-        "suya" => 1,
-        "tuya" => 1,
         "una" => 1,
-        "vosa" => 1,
-        "vuestra" => 1,
     }, true, None),
 ];

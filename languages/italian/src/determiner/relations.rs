@@ -40,13 +40,7 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
     // M_PL, from F_SG.
     relation!(M_PL, [F_SG], [("~a", "~"), ("~a", "~i"), ("~a", "~oi")], rules {
         "" => [1 28, 2 3, 0 2],
-    } listed {
-        "parecchia" => 0,
-        "sa" => 2,
-        "sua" => 2,
-        "suoia" => 0,
-        "tua" => 2,
-    }, true, None),
+    } listed {}, true, None),
     // F_SG, from M_SG.
     relation!(F_SG, [M_SG], [("~o", "~a")], rules {
         "" => [0 40],

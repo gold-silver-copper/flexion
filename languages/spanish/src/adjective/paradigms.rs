@@ -1,31 +1,29 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! A pattern is the form with `~` where the stem goes (`~o`, `duro`: the stem and `o`). A stem in two pieces (`~~`, `simple`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
-//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
+//! for alternating stems change them (`~ˇ`: `santiagués`).
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~- like natural\"`: the slot's cells are `natural`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 /// `superlative`
 /// `before_noun`
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem adjective_sg: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(stem adjective_pl: $s1:tt;)?
      $(stem superlative: $s2:tt;)?
      $(m: $c0:tt, $c1:tt;)?
@@ -79,8 +77,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "ˇ"`: `ˇ` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -110,28 +107,28 @@ const F_AS_M: [u16; 6] = [0, 1, 0, 1, 4, 5];
 pub enum Declension {
     /// Like `duro`: 14,448 words.
     Duro,
-    /// Like `natural`: 6,632 words.
+    /// Like `natural`: 6,614 words.
     Natural,
-    /// Like `fiel`: 1,150 words.
-    Fiel,
+    /// Like `simple`: 1,149 words.
+    Simple,
     /// Like `entrador`: 983 words.
     Entrador,
     /// Like `santiagués`: 551 words.
     Santiagués,
-    /// Like `tuanis`: 498 words.
+    /// Like `tuanis`: 492 words.
     Tuanis,
-    /// Like `piola`: 115 words.
+    /// Like `piola`: 119 words.
     Piola,
     /// Like `rapaz`: 65 words.
     Rapaz,
     /// Like `catrín`: 31 words.
     Catrín,
-    /// Like `fácil`: 28 words.
+    /// Like `fácil`: 27 words.
     Fácil,
     /// Like `verde`: 14 words.
     Verde,
-    /// Like `aweonao`: 14 words.
-    Aweonao,
+    /// Like `dejao`: 14 words.
+    Dejao,
     /// Like `grandote`: 11 words.
     Grandote,
     /// Like `tontolaba`: 9 words.
@@ -145,7 +142,7 @@ impl Declension {
     pub const ALL: [Declension; 15] = [
         Declension::Duro,
         Declension::Natural,
-        Declension::Fiel,
+        Declension::Simple,
         Declension::Entrador,
         Declension::Santiagués,
         Declension::Tuanis,
@@ -154,7 +151,7 @@ impl Declension {
         Declension::Catrín,
         Declension::Fácil,
         Declension::Verde,
-        Declension::Aweonao,
+        Declension::Dejao,
         Declension::Grandote,
         Declension::Tontolaba,
         Declension::Loco,
@@ -182,15 +179,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     f: "~a", "~as";
     superlative: "~ísimo";
     ),
-    // Natural: 6,632 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
-    declension!("natural", 6632, "~";
-    stem adjective_sg: "~- like natural";
+    // Natural: 6,614 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
+    declension!("natural", 6614, "~";
+    stem lemma: "~- like natural";
     stem adjective_pl: "~es- like natural";
     superlative: "~ísimo";
     ),
-    // Fiel: 1,150 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
-    declension!("fiel", 1150, "~~";
-    stem adjective_sg: "~~- like natural";
+    // Simple: 1,149 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
+    declension!("simple", 1149, "~~";
+    stem lemma: "~~- like natural";
     stem adjective_pl: "~~es- like natural";
     superlative: "~d~ísimo";
     ),
@@ -202,12 +199,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     // Santiagués: 551 words (chingón, catalán, japonés, luxemburgués, inglés, francés). Like Entrador with `ˇ` after each pattern.
     declension!("santiagués", 551, "~ˇ", like Entrador with "ˇ";
     ),
-    // Tuanis: 498 words (gratis, acid, tao, bio, beige, magenta). Like Natural, except in 1 cell: before_noun.
-    declension!("tuanis", 498, "~", like Natural as PL_AS_SG;
+    // Tuanis: 492 words (gratis, acid, tao, bio, beige, magenta). Like Natural, except in 1 cell: before_noun.
+    declension!("tuanis", 492, "~", like Natural as PL_AS_SG;
     before_noun: derived;
     ),
-    // Piola: 115 words (fit, heavy, teen, gourmet, pop, random). Like Natural, except in 1 cell: superlative.
-    declension!("piola", 115, "~", like Natural;
+    // Piola: 119 words (touch, fit, heavy, teen, gourmet, pop). Like Natural, except in 1 cell: superlative.
+    declension!("piola", 119, "~", like Natural;
     stem adjective_pl: "~s- like natural";
     superlative: "~lísimo";
     ),
@@ -221,17 +218,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     m: "~í~", "~i~es";
     f: "~i~a", "~i~as";
     ),
-    // Fácil: 28 words (grácil, versátil, hábil, fácil, estándar, frágil).
-    declension!("fácil", 28, "~á~";
-    stem adjective_sg: "~á~- like natural";
+    // Fácil: 27 words (grácil, versátil, hábil, fácil, estándar, frágil).
+    declension!("fácil", 27, "~á~";
+    stem lemma: "~á~- like natural";
     stem adjective_pl: "~á~es- like natural";
     superlative: "~a~ísimo";
     ),
     // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural with `` after each pattern (`e` after ~).
     declension!("verde", 14, "~e", like Natural with "", "e" after "~";
     ),
-    // Aweonao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
-    declension!("aweonao", 14, "~ao";
+    // Dejao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
+    declension!("dejao", 14, "~ao";
     m: "~ao", "~aos";
     f: "~á", "~ás";
     ),

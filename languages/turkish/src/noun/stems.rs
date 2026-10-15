@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("noun_nom_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[
             NOM_SG,
             NOM_PL,
@@ -69,7 +69,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("noun_acc_sg"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             ACC_SG,
             DAT_SG,
@@ -110,7 +110,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 11] = [
-    // noun_nom_sg like makas: 815 words.
+    // lemma like makas: 815 words.
     EndingTable {
         name: Cow::Borrowed("makas"),
         words: 815,
@@ -136,7 +136,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~lArInIn\t~lArInIn\t\t\t~lArInIn\t",
         )),
     },
-    // noun_nom_sg like devir: 64 words.
+    // lemma like devir: 64 words.
     EndingTable {
         name: Cow::Borrowed("devir"),
         words: 64,
@@ -162,7 +162,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~lerinin\t~lerinin\t\t\t~lerinin\t",
         )),
     },
-    // noun_nom_sg like akıl: 30 words.
+    // lemma like akıl: 30 words.
     EndingTable {
         name: Cow::Borrowed("akıl"),
         words: 30,
@@ -188,7 +188,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~larının\t~larının\t\t\t~larının\t",
         )),
     },
-    // noun_nom_sg like keyif: 12 words.
+    // lemma like keyif: 12 words.
     EndingTable {
         name: Cow::Borrowed("keyif"),
         words: 12,
@@ -214,7 +214,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~lerinin\t~lerinin\t\t\t~lerinin\t",
         )),
     },
-    // noun_acc_sg like dalga: 3,955 words.
+    // rest like dalga: 3,955 words.
     EndingTable {
         name: Cow::Borrowed("dalga"),
         words: 3955,
@@ -231,7 +231,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~nIn\t\t\t~nIzIn\t",
         )),
     },
-    // noun_acc_sg like sav: 3,757 words.
+    // rest like sav: 3,757 words.
     EndingTable {
         name: Cow::Borrowed("sav"),
         words: 3757,
@@ -248,7 +248,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InIn\t\t\t~InIzIn\t",
         )),
     },
-    // noun_acc_sg like ant: 1,734 words.
+    // rest like ant: 1,734 words.
     EndingTable {
         name: Cow::Borrowed("ant"),
         words: 1734,
@@ -265,7 +265,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InInˇ\t\t\t~InIzInˇ\t",
         )),
     },
-    // noun_acc_sg like yer: 167 words.
+    // rest like yer: 167 words.
     EndingTable {
         name: Cow::Borrowed("yer"),
         words: 167,
@@ -282,7 +282,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~inIn\t\t\t~inIzIn\t",
         )),
     },
-    // noun_acc_sg like göz: 37 words.
+    // rest like göz: 37 words.
     EndingTable {
         name: Cow::Borrowed("göz"),
         words: 37,
@@ -299,7 +299,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~ünIn\t\t\t~ünIzIn\t",
         )),
     },
-    // noun_acc_sg like set: 4 words.
+    // rest like set: 4 words.
     EndingTable {
         name: Cow::Borrowed("set"),
         words: 4,
@@ -316,7 +316,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~inin\t\t\t~inizin\t",
         )),
     },
-    // noun_acc_sg like ufuk: 3 words.
+    // rest like ufuk: 3 words.
     EndingTable {
         name: Cow::Borrowed("ufuk"),
         words: 3,

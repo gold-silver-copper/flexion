@@ -203,7 +203,7 @@ pub const CLASS: Choice<'static, AccentClass> = flexion::choice! {
 /// its last syllable (`θεοῦ`).
 pub static CIRCUMFLEX: [Cow<'static, [u16]>; 7] = [
     Cow::Borrowed(&[]), // Χῑλῐοι
-    Cow::Borrowed(&[]), // Πισῠρες
+    Cow::Borrowed(&[]), // Τεσσᾰρες
     Cow::Borrowed(&[GEN_M_DU, GEN_F_DU, GEN_N_DU, DAT_M_DU, DAT_F_DU, DAT_N_DU]), // Δῠο
     Cow::Borrowed(&[
         NOM_M_PL, NOM_F_PL, GEN_M_PL, GEN_F_PL, GEN_N_PL, ACC_M_PL, ACC_F_PL,

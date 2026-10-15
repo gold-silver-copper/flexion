@@ -12,7 +12,7 @@ use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
-    name: Cow::Borrowed("adjective"),
+    name: Cow::Borrowed("lemma"),
     cells: Cow::Borrowed(&[
         NOM_SG,
         NOM_PL,
@@ -103,7 +103,7 @@ pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // adjective like faydalı: 26 words.
+    // lemma like faydalı: 26 words.
     EndingTable {
         name: Cow::Borrowed("faydalı"),
         words: 26,
@@ -129,7 +129,7 @@ pub(super) static TABLES: [EndingTable<'static>; 2] = [
             "\t~lErInIn\t~lErInIn\t\t\t~lErInIn\t",
         )),
     },
-    // adjective like dazlak: 5 words.
+    // lemma like dazlak: 5 words.
     EndingTable {
         name: Cow::Borrowed("dazlak"),
         words: 5,

@@ -54,32 +54,17 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
         "" => [0 21, 1 5],
     } listed {
         "niejedne" => 1,
-        "one" => 1,
         "owe" => 1,
         "tamte" => 1,
     }, true, None),
     // NOM_N_INAN, from NOM_N_ANIM.
     relation!(NOM_N_INAN, [NOM_N_ANIM], [], none, true, None),
     // NOM_VIR_ANIM, from NOM_NVIR_ANIM.
-    relation!(NOM_VIR_ANIM, [NOM_NVIR_ANIM], [("~e", "~i"), ("~e", "~zy"), ("~je", "~i"), ("~kie", "~cy"), ("~ze", "~i")], rules {
-        "" => [0 6, 2 5, 1 3, 3 3, 4 2],
-        "ie" => [3 3],
-        "je" => [2 5],
-        "re" => [1 3],
-    } listed {
-        "nasze" => 4,
-        "wasze" => 4,
-    }, false, None),
+    relation!(NOM_VIR_ANIM, [NOM_NVIR_ANIM], [], none, false, None),
     // NOM_VIR_INAN, from NOM_VIR_ANIM.
     relation!(NOM_VIR_INAN, [NOM_VIR_ANIM], [], none, true, None),
     // NOM_NVIR_ANIM, from NOM_M_INAN.
-    relation!(NOM_NVIR_ANIM, [NOM_M_INAN], [("~", "~e"), ("~kolwiek", "~ekolwiek"), ("~y", "~e"), ("~ój", "~oje")], rules {
-        "" => [0 9, 2 6, 3 3, 1 2],
-        "i" => [0 4],
-        "j" => [3 3, 0 2],
-        "k" => [1 2],
-        "y" => [2 6],
-    } listed {}, true, None),
+    relation!(NOM_NVIR_ANIM, [NOM_M_INAN], [], none, true, None),
     // NOM_NVIR_INAN, from NOM_NVIR_ANIM.
     relation!(NOM_NVIR_INAN, [NOM_NVIR_ANIM], [], none, true, None),
     // GEN_M_ANIM, from NOM_NVIR_ANIM.

@@ -8,7 +8,7 @@ use flexion::Compound::{self, *};
 /// 123 rules and 217 listed first parts.
 pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
     rules {
-        "" => [Last 1328, Each 438],
+        "" => [Last 1327, Each 438],
         "c" => [Last 19, Each 19],
         "ic" => [Last 4],
         "ied" => [Each 4, Last 2],
@@ -75,7 +75,7 @@ pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
         "mi" => [Last 60, Each 1],
         "ui" => [Last 3, Each 3],
         "k" => [Last 11],
-        "l" => [Each 26, Last 23],
+        "l" => [Each 26, Last 22],
         "val" => [Each 4],
         "œil" => [Each 4],
         "ll" => [Last 5],
