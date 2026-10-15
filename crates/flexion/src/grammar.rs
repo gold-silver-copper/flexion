@@ -357,11 +357,43 @@ impl Heads<'_> {
 /// [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`; `#de` → `ē`, as in
 /// `dē-`; `ae` → `e`, a diphthong; `eni#numeral` → `ē`, as in `quīngēnī`,
 /// where adjectives in `-genus` have `e`). One language's rules serve every
-/// part of speech, each read with its `part`.
+/// part of speech, each read with its `part`. A root the rules don't tell
+/// comes first (see [`Marks::roots`]).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Marks<'a> {
     pub rules: Choice<'a, char>,
+    /// Word beginnings whose letter third from their end the dictionary's
+    /// words beginning so all write one way (two or more) the rules don't:
+    /// `("iudi", 'ū')`, a word typed `iudicium` writes `ū`, as `iūdicō` and
+    /// `iūdicātiō` do. Sorted.
+    pub roots: Cow<'a, [(Cow<'a, str>, char)]>,
     pub part: Cow<'a, str>,
+}
+
+/// The fewest letters of a root (see [`Marks::roots`]).
+pub const ROOT_LETTERS: usize = 4;
+
+/// How likely a letter is as its root writes it: the share of the letters
+/// roots decide on held-out Latin and Greek lemmas that they get right (244
+/// of 250).
+const ROOT_TRUST: f32 = 0.97;
+
+impl Marks<'_> {
+    /// How the root of `key` through the letter at char `i` and two past it
+    /// writes that letter, if it is listed.
+    pub fn root(&self, key: &str, i: usize) -> Option<char> {
+        let end = i + 3;
+        if end < ROOT_LETTERS {
+            return None;
+        }
+        let root = match key.char_indices().nth(end) {
+            Some((at, _)) => key.get(..at)?,
+            None if key.chars().count() == end => key,
+            None => return None,
+        };
+        let at = self.roots.binary_search_by(|(r, _)| r.as_ref().cmp(root));
+        at.ok().and_then(|at| self.roots.get(at)).map(|(_, v)| *v)
+    }
 }
 
 /// The inflection of one part of speech, as learned from the dictionary.
@@ -1452,14 +1484,33 @@ fn restorations(
 ) -> ((String, f32), Vec<(String, f32)>) {
     let mut beam: Vec<(String, f32)> = vec![(String::with_capacity(letters.len()), 1.0)];
     let mut before = WORD_END;
-    for ((i, k), c) in key.char_indices().zip(letters.chars()) {
-        let readings = if c == k && o.folded.iter().any(|e| e.1 == c) {
+    for (n, ((i, k), c)) in key.char_indices().zip(letters.chars()).enumerate() {
+        let mut readings: Vec<(char, f32)> = if c == k && o.folded.iter().any(|e| e.1 == c) {
             let rest = key.get(i..).unwrap_or("");
             let around = format!("{before}{rest}{WORD_END}{}", marks.part);
-            marks.rules.read(&around, smoothing, |m| o.fold(m) == c)
+            (marks
+                .rules
+                .read(&around, smoothing, |m| o.fold(m) == c)
+                .iter())
+            .map(|r| (r.value, r.probability))
+            .collect()
         } else {
             Vec::new()
         };
+        // Its root's letter first, the rules' others after.
+        if let Some(v) = marks.root(key, n).filter(|_| !readings.is_empty()) {
+            let others: f32 = readings.iter().filter(|r| r.0 != v).map(|r| r.1).sum();
+            readings.retain(|r| r.0 != v);
+            for r in &mut readings {
+                r.1 = if others > 0.0 {
+                    r.1 * (1.0 - ROOT_TRUST) / others
+                } else {
+                    0.0
+                };
+            }
+            let trust = if readings.is_empty() { 1.0 } else { ROOT_TRUST };
+            readings.insert(0, (v, trust));
+        }
         before = k;
         if readings.is_empty() {
             for (s, _) in &mut beam {
@@ -1472,8 +1523,8 @@ fn restorations(
             .flat_map(|(s, p)| {
                 readings.iter().map(move |r| {
                     let mut s = s.clone();
-                    s.push(r.value);
-                    (s, p * r.probability)
+                    s.push(r.0);
+                    (s, p * r.1)
                 })
             })
             .collect();

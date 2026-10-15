@@ -12,7 +12,7 @@ mod stress;
 pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
 pub use grammar::{
     Compound, FRONT_LETTERS, Grammar, Heads, Irregular, Known, ListedStem, Marks, Placement,
-    Prefix, Prefixes, Separation, Trust, WORD_END, restore, sharpen,
+    Prefix, Prefixes, ROOT_LETTERS, Separation, Trust, WORD_END, restore, sharpen,
 };
 pub use orthography::{Casing, Orthography, Stress, Written, recase};
 pub use paradigm::{Affix, DERIVED, Form, Paradigm, Relation, Space};
@@ -235,6 +235,15 @@ macro_rules! changes {
 macro_rules! spellings {
     ( $( $key:literal => $letters:literal ),* $(,)? ) => {
         &[ $( (::std::borrow::Cow::Borrowed($key), ::std::borrow::Cow::Borrowed($letters)) ),* ]
+    };
+}
+
+/// Roots and how they write their letter third from the end, as
+/// `Marks::roots` keeps them.
+#[macro_export]
+macro_rules! roots {
+    ( $( $root:literal => $letter:literal ),* $(,)? ) => {
+        &[ $( (::std::borrow::Cow::Borrowed($root), $letter) ),* ]
     };
 }
 

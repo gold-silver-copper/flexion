@@ -54,16 +54,15 @@ pub fn files(
 
 /// The language's marks model: one for every part of speech (see
 /// [`crate::learn::language_marks`]), or none.
-fn marks_of<'a, 's>(
-    parts: &[Part<'a, 's>],
-) -> Result<Option<&'a flexion::Choice<'s, char>>, String> {
+fn marks_of<'a, 's>(parts: &[Part<'a, 's>]) -> Result<Option<&'a flexion::Marks<'s>>, String> {
     let mut all = parts
         .iter()
-        .filter_map(|p| p.learned.grammar.marks.as_ref().map(|m| &m.rules));
+        .filter_map(|p| p.learned.grammar.marks.as_ref());
     let Some(first) = all.next() else {
         return Ok(None);
     };
-    if all.any(|m| m != first) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
+    let same = |m: &flexion::Marks<'s>| m.rules == first.rules && m.roots == first.roots;
+    if !all.all(same) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
         return Err("the parts of speech have different marks: learn them once for the language (`flexion_train::marks`)".into());
     }
     Ok(Some(first))
@@ -71,7 +70,8 @@ fn marks_of<'a, 's>(
 
 /// `src/marks.rs`: how a letter typed without its mark is written, with
 /// examples of its own rules.
-fn marks_file(marks: &flexion::Choice<'_, char>) -> String {
+fn marks_file(marks: &flexion::Marks<'_>) -> String {
+    let (roots, marks) = (&marks.roots, &marks.rules);
     // Its three best-supported rules that decide alone.
     let mut decisive: Vec<&flexion::Rule<'_, char>> = marks
         .rules
@@ -89,11 +89,23 @@ fn marks_file(marks: &flexion::Choice<'_, char>) -> String {
     } else {
         format!(" ({})", examples.join("; "))
     };
+    // A root whose letter is marked, else the first.
+    let root = (roots.iter())
+        .find(|(r, v)| !r.contains(*v))
+        .or(roots.first())
+        .map_or(String::new(), |(r, v)| {
+            let letter = r.chars().rev().nth(2).unwrap_or(*v);
+            format!(" (`{r}` → `{v}`: a word typed `{r}…` writes its `{letter}` `{v}`)")
+        });
+    let lines: String = (roots.iter())
+        .map(|(r, v)| format!("    {} => {v:?},\n", Lit(r)))
+        .collect();
     format!(
-        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so.\n\nuse flexion::Choice;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n",
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so. A root comes first: the beginning of a word through a letter and two\n//! past it, where the dictionary's words beginning so (two or more) all write\n//! the letter one way the rules don't{root}.\n\nuse flexion::Choice;\nuse std::borrow::Cow;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n\n/// {} roots.\npub(crate) static ROOTS: &[(Cow<'static, str>, char)] = flexion::roots! {{\n{lines}}};\n",
         examples,
         thousands(marks.rules.len()),
-        choice_macro("starts", marks, |c| format!("{c:?}"))
+        choice_macro("starts", marks, |c| format!("{c:?}")),
+        thousands(roots.len()),
     )
 }
 
@@ -461,7 +473,7 @@ fn grammar_files(
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
         marks = g.marks.as_ref().map_or("None".to_string(), |m| format!(
-            "Some(flexion::Marks {{ rules: crate::marks::MARKS, part: Cow::Borrowed({:?}) }})",
+            "Some(flexion::Marks {{ rules: crate::marks::MARKS, roots: Cow::Borrowed(crate::marks::ROOTS), part: Cow::Borrowed({:?}) }})",
             m.part
         )),
     );

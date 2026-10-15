@@ -94,7 +94,7 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let learned = |lexemes: &[Lexeme], marks: &Option<flexion::Choice<'static, char>>| {
+        let learned = |lexemes: &[Lexeme], marks: &Option<flexion::Marks<'static>>| {
             let shape = learn::Shape {
                 marks: marks.clone(),
                 ..shape.clone()

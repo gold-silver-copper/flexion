@@ -484,6 +484,18 @@ fn try_tenth(
         flexion_train::marks(lang, &script.orthography(), data, keep, settings)
     };
     let train_marks = marks(&trained)?;
+    if o.diagnose && train_marks.is_some() {
+        length(
+            lang,
+            data,
+            &script.orthography(),
+            only,
+            &trained,
+            fold,
+            &train_marks,
+            settings,
+        );
+    }
     let fit_marks = if o.quick {
         None
     } else {
@@ -1157,6 +1169,134 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
         100.0 * all,
         without.join(", ")
     );
+}
+
+/// How much of the lemmas' vowel length their letters tell (see
+/// [`flexion_train::length`]): per part of speech, the held-out lemmas
+/// spelled right by the marks rules and by a classifier with many more cues,
+/// with each kind left out; the words whose key the dictionary spells two
+/// ways, and those it writes with no mark, apart.
+#[allow(clippy::too_many_arguments)]
+fn length(
+    lang: &Language,
+    data: &[PosData],
+    o: &flexion::Orthography<'_>,
+    only: Option<&str>,
+    trained: &dyn Fn(&Lexeme) -> bool,
+    fold: u64,
+    marks: &Option<flexion::Marks<'static>>,
+    settings: flexion_train::choose::Settings,
+) {
+    use flexion_train::length::{CUES, Model, Spelled};
+    let Some(marks) = marks else { return };
+    let mut all: Vec<(String, String, &str, bool)> = Vec::new();
+    for (part, d) in lang.parts.iter().zip(data) {
+        let Ok(shape) = flexion_train::shape(lang, part) else {
+            continue;
+        };
+        for l in &d.lexemes {
+            let letters = learn::spelled(o, shape.lemma_cell, l);
+            let test = eval::bucket(&l.key) == fold && l.source == 0;
+            if test || trained(l) {
+                all.push((o.key(&letters), letters, part.name, test));
+            }
+        }
+    }
+    all.sort();
+    all.dedup();
+    let mut spellings: std::collections::HashMap<&str, std::collections::BTreeSet<&str>> =
+        std::collections::HashMap::new();
+    for (k, l, _, _) in &all {
+        spellings.entry(k).or_default().insert(l);
+    }
+    fn spelled<'a>((k, l, p, _): &'a (String, String, &'a str, bool)) -> Spelled<'a> {
+        Spelled {
+            key: k,
+            letters: l,
+            part: p,
+        }
+    }
+    let train: Vec<Spelled<'_>> = all.iter().filter(|w| !w.3).map(spelled).collect();
+    let model = Model::learn(o, &train);
+    for part in &lang.parts {
+        if only.is_some_and(|o| o != part.name) {
+            continue;
+        }
+        let test: Vec<Spelled<'_>> = all
+            .iter()
+            .filter(|w| w.3 && w.2 == part.name)
+            .map(spelled)
+            .collect();
+        let group = |w: &Spelled<'_>| {
+            if spellings.get(w.key).is_some_and(|s| s.len() > 1) {
+                0
+            } else if w.letters == w.key {
+                1
+            } else {
+                2
+            }
+        };
+        let rooted = flexion::Marks {
+            part: part.name.into(),
+            ..marks.clone()
+        };
+        let rules = flexion::Marks {
+            roots: Vec::new().into(),
+            ..rooted.clone()
+        };
+        // Words right, and errors by group.
+        let score = |spell: &dyn Fn(&Spelled<'_>) -> String| {
+            let mut right = 0;
+            let mut wrong = [0; 3];
+            for w in &test {
+                if spell(w) == w.letters {
+                    right += 1;
+                } else if let Some(n) = wrong.get_mut(group(w)) {
+                    *n += 1;
+                }
+            }
+            (100.0 * f64::from(right) / test.len().max(1) as f64, wrong)
+        };
+        let by_rules = score(&|w| flexion::restore(o, &rules, settings.smoothing, w.key, w.key).0);
+        let every = score(&|w| model.spell(o, w, None));
+        let with_roots =
+            score(&|w| flexion::restore(o, &rooted, settings.smoothing, w.key, w.key).0);
+        let (roots, bytes) = (
+            marks.roots.len(),
+            marks.roots.iter().map(|r| r.0.len() + 13).sum::<usize>(),
+        );
+        // The letters a root writes, and those right.
+        let mut decided = (0, 0);
+        for w in &test {
+            for (n, v) in w.letters.chars().enumerate() {
+                if let Some(r) = rooted.root(w.key, n) {
+                    decided.0 += 1;
+                    decided.1 += usize::from(r == v);
+                }
+            }
+        }
+        let without: Vec<String> = CUES
+            .iter()
+            .map(|&cue| format!("{cue:?} {:.2}%", score(&|w| model.spell(o, w, Some(cue))).0))
+            .collect();
+        let groups = [0, 1, 2].map(|g| test.iter().filter(|w| group(w) == g).count());
+        println!(
+            "  {} lemma spelling ({} held-out words; {} spelled two ways, {} with no mark): the marks rules {:.2}%, a classifier with every cue {:.2}%; without each: {}; errors (two ways / no mark / the rest): rules {:?}, classifier {:?}; the rules with roots {:.2}% ({:?}; {roots} roots listed, {bytes} bytes; {} of {} letters roots write right)",
+            part.name,
+            test.len(),
+            groups[0],
+            groups[1],
+            by_rules.0,
+            every.0,
+            without.join(", "),
+            by_rules.1,
+            every.1,
+            with_roots.0,
+            with_roots.1,
+            decided.1,
+            decided.0,
+        );
+    }
 }
 
 /// Each cell's name: its group and its values' short names (`present 1 sg`).

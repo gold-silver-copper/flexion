@@ -13,7 +13,7 @@ use flexion::{
     StressClass, Written,
 };
 use std::borrow::Cow;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
@@ -34,8 +34,8 @@ pub struct Shape {
     pub names: Vec<String>,
     /// How a letter typed without its mark is written, learned once for the
     /// language from every part of speech's words (see [`language_marks`]);
-    /// none: learned from this part's alone.
-    pub marks: Option<flexion::Choice<'static, char>>,
+    /// none: learned from this part's alone. Its `part` is this part's.
+    pub marks: Option<flexion::Marks<'static>>,
     /// The part of speech's name, as the marks read it (see
     /// [`flexion::Marks`]).
     pub part: String,
@@ -415,13 +415,21 @@ pub fn learn<'s>(
         .unzip();
     let stress_labels = stress_labels.unwrap_or_default();
     // How a letter typed without its mark is written, by what follows it.
-    let rules: Option<flexion::Choice<'s, char>> = match &shape.marks {
-        Some(marks) => Some(flexion::Choice {
-            side: marks.side,
+    let marks: Option<flexion::Marks<'static>> = match &shape.marks {
+        Some(marks) => Some(marks.clone()),
+        None => {
+            let spelled = words
+                .iter()
+                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
+            marks(&orthography, spelled, settings)
+        }
+    };
+    // Owned again: a choice's lifetime can't shorten.
+    let marks = marks.map(|m| flexion::Marks {
+        rules: flexion::Choice {
+            side: m.rules.side,
             rules: Cow::Owned(
-                marks
-                    .rules
-                    .iter()
+                (m.rules.rules.iter())
                     .map(|r| flexion::Rule {
                         ending: Cow::Owned(r.ending.to_string()),
                         counts: Cow::Owned(r.counts.to_vec()),
@@ -430,22 +438,16 @@ pub fn learn<'s>(
                     .collect(),
             ),
             exceptions: Cow::Owned(
-                marks
-                    .exceptions
-                    .iter()
+                (m.rules.exceptions.iter())
                     .map(|(w, l)| (Cow::Owned(w.to_string()), *l))
                     .collect(),
             ),
-        }),
-        None => {
-            let spelled = words
-                .iter()
-                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
-            marks(&orthography, spelled, settings)
-        }
-    };
-    let marks = rules.map(|rules| flexion::Marks {
-        rules,
+        },
+        roots: Cow::Owned(
+            (m.roots.iter())
+                .map(|(r, v)| (Cow::Owned(r.to_string()), *v))
+                .collect(),
+        ),
         part: Cow::Owned(shape.part.clone()),
     });
     // Spellings a key doesn't show, listed: those the marks don't give (of
@@ -811,7 +813,7 @@ pub fn learn<'s>(
 /// A word as its table writes it (`ὑποκρῠ́πτω`, where the headword says
 /// `ὑποκρύπτω`): its forms carry those marks. `lemma_cell`: its part of
 /// speech's.
-fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme) -> String {
+pub fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme) -> String {
     let headword = orthography.read(&l.full).letters;
     lemma_cell
         .and_then(|c| l.cells.get(c))
@@ -830,7 +832,7 @@ pub fn language_marks<'l>(
     orthography: &Orthography<'_>,
     words: impl Iterator<Item = (Option<usize>, &'l str, &'l Lexeme)>,
     settings: Settings,
-) -> Option<flexion::Choice<'static, char>> {
+) -> Option<flexion::Marks<'static>> {
     let mut seen = crate::HashSet::default();
     let words: Vec<(String, String, &str)> = words
         .map(|(lemma_cell, part, l)| {
@@ -1607,15 +1609,16 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
 /// [`flexion::Grammar::marks`]): learned from every letter of the words that
 /// a mark could stand on, by the letter before it and the letters from it
 /// on. `None` where no word writes such a mark.
-fn marks<'a, 'w>(
+fn marks<'w>(
     orthography: &Orthography<'_>,
     words: impl Iterator<Item = (&'w str, &'w str, &'w str)>,
     settings: Settings,
-) -> Option<flexion::Choice<'a, char>> {
+) -> Option<flexion::Marks<'static>> {
     let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    let words: Vec<(&str, &str, &str)> = words.collect();
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
-    for (key, letters, part) in words {
+    for &(key, letters, part) in &words {
         let mut before = flexion::WORD_END;
         for ((i, k), l) in key.char_indices().zip(letters.chars()) {
             if markable(k)
@@ -1631,7 +1634,77 @@ fn marks<'a, 'w>(
         return None;
     }
     // What the rules get wrong is a word's own spelling, listed with it.
-    Some(choose::learn_starts(&examples, settings))
+    let rules = choose::learn_starts(&examples, settings);
+    let roots = mark_roots(orthography, &words, &rules, settings.smoothing);
+    Some(flexion::Marks {
+        rules,
+        roots: Cow::Owned(roots),
+        part: Cow::Borrowed(""),
+    })
+}
+
+/// The fewest words whose letter a root (see [`flexion::Marks::roots`])
+/// writes one way for it to be listed.
+const ROOT_WORDS: u32 = 2;
+
+/// The roots the marks `rules` don't tell (see [`flexion::Marks::roots`]):
+/// of `words` (key, letters, part of speech), the beginnings through a
+/// letter that may take a mark and two letters past it whose words (each
+/// spelling once, at least [`ROOT_WORDS`]) all write that letter one way,
+/// where the rules write it otherwise in one of them. Sorted.
+pub fn mark_roots(
+    orthography: &Orthography<'_>,
+    words: &[(&str, &str, &str)],
+    rules: &flexion::Choice<'_, char>,
+    smoothing: f32,
+) -> Vec<(Cow<'static, str>, char)> {
+    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    // Each letter's root, and how the word writes the letter.
+    let places = |key: &str, letters: &str| -> Vec<(usize, String, char)> {
+        let key: Vec<char> = key.chars().collect();
+        let letters: Vec<char> = letters.chars().collect();
+        (0..key.len())
+            .filter(|&n| n + 3 >= flexion::ROOT_LETTERS && key.get(n).is_some_and(|&c| markable(c)))
+            .filter_map(|n| Some((n, key.get(..n + 3)?.iter().collect(), *letters.get(n)?)))
+            .collect()
+    };
+    let spellings: BTreeSet<(&str, &str)> = words.iter().map(|&(k, l, _)| (k, l)).collect();
+    let mut seen: BTreeMap<String, BTreeMap<char, u32>> = BTreeMap::new();
+    for &(key, letters) in &spellings {
+        for (_, root, v) in places(key, letters) {
+            *seen.entry(root).or_default().entry(v).or_default() += 1;
+        }
+    }
+    let one_way = |root: &str| match seen.get(root).map(|v| v.iter().collect::<Vec<_>>()) {
+        Some(v) => match v.as_slice() {
+            &[(&v, &n)] if n >= ROOT_WORDS => Some(v),
+            _ => None,
+        },
+        None => None,
+    };
+    let ruled = |&(key, _, part): &(&str, &str, &str)| {
+        let marks = flexion::Marks {
+            rules: flexion::Choice {
+                side: rules.side,
+                rules: Cow::Borrowed(rules.rules.as_ref()),
+                exceptions: Cow::Borrowed(rules.exceptions.as_ref()),
+            },
+            roots: Cow::Borrowed(&[]),
+            part: Cow::Borrowed(part),
+        };
+        flexion::restore(orthography, &marks, smoothing, key, key).0
+    };
+    let told: Vec<String> = crate::par::map(words, ruled);
+    let mut out: BTreeSet<(String, char)> = BTreeSet::new();
+    for (&(key, letters, _), told) in words.iter().zip(&told) {
+        let told: Vec<char> = told.chars().collect();
+        for (n, root, v) in places(key, letters) {
+            if one_way(&root) == Some(v) && told.get(n) != Some(&v) {
+                out.insert((root, v));
+            }
+        }
+    }
+    out.into_iter().map(|(r, v)| (Cow::Owned(r), v)).collect()
 }
 
 /// Of the words with each value of a feature, the share whose form of a
@@ -3549,8 +3622,8 @@ mod tests {
         .expect("marks");
         let spell = |word: &str, part: &str| {
             let marks = flexion::Marks {
-                rules: rules.clone(),
                 part: Cow::Owned(part.to_string()),
+                ..rules.clone()
             };
             flexion::restore(&orthography, &marks, 1.0, word, word).0
         };
