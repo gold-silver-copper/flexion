@@ -371,6 +371,49 @@ fn table_to_head(entry: &mut Entry) {
     entry.forms.extend(moved);
 }
 
+/// An article's table (`il`: `il`, `lo (l')`, `i`, `gli`, `la (l')`, `le`):
+/// each cell's spellings in the table's order, the citation form first
+/// (`il|lo|l'`, `i|gli`), in place of the head line's. Which one a noun
+/// takes is the next word's, not the article's. An entry with another
+/// article's table (`lo`, `la` with `il`'s) is a form of it, and goes.
+fn article_table(entry: &mut Entry) {
+    let meta = |f: &flexion_train::kaikki::Form| {
+        f.tags
+            .iter()
+            .any(|t| t == "table-tags" || t == "inflection-template")
+    };
+    let table: Vec<flexion_train::kaikki::Form> = entry
+        .forms
+        .iter()
+        .filter(|f| f.source.is_some() && !meta(f))
+        .flat_map(|f| {
+            let spellings = f
+                .form
+                .split(['(', ')'])
+                .map(str::trim)
+                .filter(|w| !w.is_empty());
+            spellings
+                .map(|w| flexion_train::kaikki::Form {
+                    form: w.to_string(),
+                    tags: f.tags.clone(),
+                    ..Default::default()
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    let Some(first) = table.first() else {
+        return;
+    };
+    if first.form != entry.word {
+        entry.forms.clear();
+        return;
+    }
+    entry
+        .forms
+        .retain(|f| f.source.is_none() && f.tags.iter().any(|t| t == "canonical"));
+    entry.forms.extend(table);
+}
+
 struct ItalianHooks;
 
 /// Letters, an apostrophe after a truncated imperative (`da'`, `fa'`), and
@@ -426,6 +469,7 @@ impl Hooks for ItalianHooks {
                 }
             }
             "determiner" => {
+                article_table(entry);
                 if romance::agrees(entry) {
                     romance::adjective(entry, &register);
                 } else {
