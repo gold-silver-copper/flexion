@@ -323,7 +323,7 @@ pub fn verdict(
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`. `seen`: per paradigm, the
 /// cells its training words have forms in.
-pub fn score<P: Label, A: Label, F: Label>(
+pub fn score<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
@@ -387,21 +387,22 @@ pub fn typed_back(
 /// lemma's cell only where its form isn't what was typed (see
 /// [`typed_back`]). `seen`: per paradigm, the cells its training words have
 /// forms in (empty: every cell counts as seen).
-pub fn outcomes<P: Label, A: Label, F: Label>(
+pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
     input: Input<'_>,
     seen: &[Vec<bool>],
-    scored: impl Fn(usize) -> bool,
+    scored: impl Fn(usize) -> bool + Sync,
 ) -> Vec<Outcome> {
-    let mut out = Vec::new();
     // Words spelled alike, for the homographs: per key, the scored words.
     let mut alike: crate::HashMap<&str, Vec<&Lexeme>> = crate::HashMap::default();
     for l in lexemes {
         alike.entry(l.key.as_str()).or_default().push(l);
     }
-    for (word, l) in lexemes.iter().enumerate() {
+    let numbered: Vec<(usize, &&Lexeme)> = lexemes.iter().enumerate().collect();
+    let each = crate::par::map(&numbered, |&(word, l)| {
+        let mut out = Vec::new();
         let firsts: Vec<String> = l.cells.iter().filter_map(|f| f.first().cloned()).collect();
         let stem = measure::word_stem(&l.full, &firsts);
         let typed = match input {
@@ -419,7 +420,7 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
             Input::Citation(parts) => parts.to_vec(),
             Input::Given(k) => match given_cells(l, k, grammar.lemma_cell) {
                 Some(cells) => cells,
-                None => continue,
+                None => return out,
             },
             _ => Vec::new(),
         };
@@ -502,8 +503,9 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
                 error,
             });
         }
-    }
-    out
+        out
+    });
+    each.into_iter().flatten().collect()
 }
 
 /// Top-1 by block of cells (`blocks`, the part's groups of cells: a
@@ -581,21 +583,25 @@ pub fn floor(
             .collect();
         let baseline =
             crate::baseline::Baseline::learn(forms.iter().map(|(l, f)| (*l, f.as_str())));
-        for (word, (l, lemma)) in test.iter().zip(&tests).enumerate() {
-            let Some(want) = l
+        let asked: Vec<(usize, &&Lexeme, &String)> = test
+            .iter()
+            .zip(&tests)
+            .enumerate()
+            .map(|(word, (l, lemma))| (word, l, lemma))
+            .collect();
+        let found = crate::par::map(&asked, |&(word, l, lemma)| {
+            let want = l
                 .cells
                 .get(cell)
                 .and_then(|forms| forms.first())
-                .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))
-            else {
-                continue;
-            };
-            out.push(FloorOutcome {
+                .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))?;
+            Some(FloorOutcome {
                 word,
                 cell,
                 right: baseline.inflect(lemma) == letters(want),
-            });
-        }
+            })
+        });
+        out.extend(found.into_iter().flatten());
     }
     out.sort_unstable_by_key(|o| (o.word, o.cell));
     out
@@ -703,15 +709,15 @@ pub fn by_word(outcomes: &[Outcome]) -> Vec<(usize, usize)> {
 /// headwords): the power, of a grid from 0.5 to 4, by calibration error;
 /// then each status's trust, where at least [`TRUSTED`] of the forms have
 /// an answer of that status first (else all of it).
-pub fn fit_sharpness<P: Label, A: Label, F: Label>(
+pub fn fit_sharpness<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     words: &[&Lexeme],
 ) -> (f32, flexion::Trust) {
     // Every scored form's answers: (probability, right, status) each.
-    let mut forms: Vec<Vec<(f32, bool, flexion::Status)>> = Vec::new();
     // From the headword, as the grammar is most often asked (and scored).
-    for l in words {
+    let each = crate::par::map(words, |l| {
+        let mut forms: Vec<Vec<(f32, bool, flexion::Status)>> = Vec::new();
         let table = grammar.table(&l.lemma, &flexion::Known::default());
         for (cell, fs) in l.cells.iter().enumerate() {
             let Some(want) = fs.first() else {
@@ -730,7 +736,9 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
             });
             forms.push(scored.collect());
         }
-    }
+        forms
+    });
+    let forms: Vec<Vec<(f32, bool, flexion::Status)>> = each.into_iter().flatten().collect();
     // The power: of a grid, the one whose answers' stated probabilities are
     // nearest how often they are right (calibration error).
     let sharpened = |f: &[(f32, bool, flexion::Status)], power: f32| -> Vec<f32> {

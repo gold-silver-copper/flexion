@@ -3327,8 +3327,6 @@ fn irregular(
         .collect()
 }
 
-/// [`irregular`], each form with whether the grammar's letters are wrong
-/// (not only its stress).
 /// The most words [`judge`] asks the runtime about: more are sampled, every
 /// so many.
 const JUDGED: usize = 20_000;
@@ -3430,6 +3428,8 @@ pub fn judge(grammar: &Grammar<'_, u16, u16, u8>, lexemes: &[Lexeme], parts: &[u
     })
 }
 
+/// [`irregular`], each form with whether the grammar's letters are wrong
+/// (not only its stress).
 fn misbuilt(
     grammar: &Grammar<'_, u16, u16, u8>,
     lexemes: &[Lexeme],

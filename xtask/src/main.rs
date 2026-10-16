@@ -452,7 +452,8 @@ fn score_line(label: &str, words: usize, s: &eval::Score) -> String {
 fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(), String> {
     let data = load(lang)?;
     let mut saved = outcomes::Saved::default();
-    try_tenth(lang, &data, only, o, &mut saved)?;
+    let mut marks = Marks::new();
+    try_tenth(lang, &data, only, o, &mut saved, &mut marks)?;
     // A small part of speech, on more tenths: their outcomes saved together
     // (compare pools them).
     if o.pool {
@@ -467,7 +468,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                     save: None,
                     ..o.clone()
                 };
-                try_tenth(lang, &data, Some(part.name), &tenth, &mut saved)?;
+                try_tenth(lang, &data, Some(part.name), &tenth, &mut saved, &mut marks)?;
             }
         }
     }
@@ -478,6 +479,17 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
     Ok(())
 }
 
+/// The language's marks models per tenth held out: learned on the other
+/// tenths, and on those less the dev tenth (none with `--quick`); learned
+/// once per tenth, for every part of speech scored on it.
+type Marks = std::collections::BTreeMap<
+    u64,
+    (
+        Option<flexion::Marks<'static>>,
+        Option<flexion::Marks<'static>>,
+    ),
+>;
+
 /// `try` on one tenth (`o.fold`), its outcomes added to `saved`.
 fn try_tenth(
     lang: &Language,
@@ -485,6 +497,7 @@ fn try_tenth(
     only: Option<&str>,
     o: &TryOptions,
     saved: &mut outcomes::Saved,
+    models: &mut Marks,
 ) -> Result<(), String> {
     let fold = o.fold;
     let settings = o.settings;
@@ -500,7 +513,19 @@ fn try_tenth(
     let marks = |keep: &dyn Fn(&Lexeme) -> bool| {
         flexion_train::marks(lang, &script.orthography(), data, keep, settings)
     };
-    let train_marks = marks(&trained)?;
+    let (train_marks, fit_marks) = match models.get(&fold) {
+        Some(m) => m.clone(),
+        None => {
+            let train_marks = marks(&trained)?;
+            let fit_marks = if o.quick {
+                None
+            } else {
+                marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
+            };
+            models.insert(fold, (train_marks.clone(), fit_marks.clone()));
+            (train_marks, fit_marks)
+        }
+    };
     if o.diagnose && train_marks.is_some() {
         length(
             lang,
@@ -513,11 +538,6 @@ fn try_tenth(
             settings,
         );
     }
-    let fit_marks = if o.quick {
-        None
-    } else {
-        marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
-    };
     for (part, d) in lang.parts.iter().zip(data) {
         if only.is_some_and(|o| o != part.name) {
             continue;
