@@ -522,12 +522,16 @@ pub fn learn<'s>(
         trust: flexion::Trust::FULL,
     };
     // Where words inflect their last part, judged on the words ending in
-    // one the rules build wrong (those whose listing a compound would take).
+    // one the rules build wrong (those whose listing a compound would
+    // take); a longer one listed for its paradigm only is none where its
+    // own words say so.
     let ruled_wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |_| true)
         .into_iter()
         .map(|(k, _, _)| k)
         .collect();
-    grammar.heads = heads(&everyone, shape.cells, &|key| ruled_wrong.contains(key));
+    let wrong = |key: &str| ruled_wrong.contains(key);
+    let listed = |key: &str| wrong(key) || grammar.lists(key);
+    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed);
     // Compounds: words ending in another (`aavameri` in `meri`), where
     // words inflect their last part.
     let keys: crate::HashSet<&str> = everyone.iter().map(|w| w.key.as_str()).collect();
@@ -2769,15 +2773,23 @@ const HEAD_OWN: usize = 2;
 /// `aavameri` as `meri`), of those `irregular` accepts: every one of at
 /// least so many letters, the fewest for which [`HEAD_SHARE`] of the words
 /// ending in a word that long have that word's forms, their front kept,
-/// in every cell both have (none if no length does); and, of the shorter
-/// ones (or all, where no length does), each word that [`HEAD_SHARE`] of
-/// the words ending in it, at least [`HEAD_OWN`], inflect as (German
-/// `Schein`: `Fahrschein`, `Führerschein`).
-fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> flexion::Heads<'a> {
+/// in every cell both have (none if no length does), but those `listed`
+/// accepts whose own words, at least [`HEAD_OWN`], don't (Latin `capitālis`,
+/// `digitālis`, `hospitālis` aren't `Ītalis`'s compounds); and, of the
+/// shorter ones (or all, where no length does), each word that
+/// [`HEAD_SHARE`] of the words ending in it, at least [`HEAD_OWN`], inflect
+/// as (German `Schein`: `Fahrschein`, `Führerschein`).
+fn heads<'a>(
+    words: &[Word],
+    cells: usize,
+    irregular: &dyn Fn(&str) -> bool,
+    listed: &dyn Fn(&str) -> bool,
+) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
-    // Per word ending in another: the longest such, its letters, and
-    // whether the word inflects as it.
-    let found: Vec<(&str, usize, bool)> = words
+    // Per word ending in a listed one: the longest such, its letters,
+    // whether the word inflects as it, and whether it is one `irregular`
+    // accepts.
+    let found: Vec<(&str, usize, bool, bool)> = words
         .iter()
         .filter(|w| !w.key.contains('-'))
         .filter_map(|w| {
@@ -2786,7 +2798,7 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
                 let (b, _) = w.key.char_indices().nth(i)?;
                 Some((i, *by_key.get(w.key.get(b..)?)?))
             })?;
-            if !irregular(&head.key) {
+            if !listed(&head.key) {
                 return None;
             }
             let front: String = w.letters.chars().take(at).collect();
@@ -2796,13 +2808,13 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
             let same = pairs
                 .iter()
                 .all(|(mine, theirs)| mine.strip_prefix(front.as_str()) == Some(*theirs));
-            (!pairs.is_empty()).then_some((head.key.as_str(), n - at, same))
+            (!pairs.is_empty()).then_some((head.key.as_str(), n - at, same, irregular(&head.key)))
         })
         .collect();
     // Per length of the last part (the longest counted together), the words
     // and those that inflect as it.
     let mut by_length = [(0usize, 0usize); HEAD_MOST + 1];
-    for &(_, letters, same) in &found {
+    for &(_, letters, same, _) in found.iter().filter(|f| f.3) {
         if let Some(slot) = by_length.get_mut(letters.min(HEAD_MOST)) {
             *slot = (slot.0 + 1, slot.1 + usize::from(same));
         }
@@ -2829,21 +2841,27 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
             all >= HEAD_WORDS && holds(&pool)
         })
         .and_then(|least| u8::try_from(least).ok());
-    // The shorter heads, each by its own words.
-    let mut by_head: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
-    for &(head, letters, same) in &found {
-        if least.is_none_or(|least| letters < usize::from(least)) {
-            let slot = by_head.entry(head).or_default();
-            *slot = (slot.0 + 1, slot.1 + usize::from(same));
+    // Each head by its own words: the shorter ones to be heads, the longer
+    // ones, any listed, not to be.
+    let mut by_head: BTreeMap<&str, (bool, usize, usize)> = BTreeMap::new();
+    for &(head, letters, same, judged) in &found {
+        let long = least.is_some_and(|least| letters >= usize::from(least));
+        if !long && !judged {
+            continue;
+        }
+        let slot = by_head.entry(head).or_insert((long, 0, 0));
+        *slot = (long, slot.1 + 1, slot.2 + usize::from(same));
+    }
+    let (mut not, mut words) = (Vec::new(), Vec::new());
+    for (head, (long, n, same)) in by_head {
+        if n >= HEAD_OWN && holds(&(n, same)) != long {
+            let list = if long { &mut not } else { &mut words };
+            list.push(Cow::Owned(head.to_string()));
         }
     }
-    let words: Vec<Cow<'a, str>> = by_head
-        .into_iter()
-        .filter(|(_, counts)| counts.0 >= HEAD_OWN && holds(counts))
-        .map(|(head, _)| Cow::Owned(head.to_string()))
-        .collect();
     flexion::Heads {
         least,
+        not: Cow::Owned(not),
         words: Cow::Owned(words),
     }
 }
@@ -3429,7 +3447,17 @@ mod tests {
                 ],
             ));
         }
-        assert_eq!(heads(&words, 3, &|_| true).least, Some(1));
+        // Among them, two words that only happen to end in `kala`: it is
+        // no head.
+        words.push(word("kala", &["kala", "kalan", "kalaa"]));
+        for key in ["pohjoiskala", "sisäkala"] {
+            words.push(word(key, &[key, &format!("{key}in"), &format!("{key}ta")]));
+        }
+        let found = heads(&words, 3, &|_| true, &|_| true);
+        assert_eq!(
+            (found.least, found.not.to_vec()),
+            (Some(1), vec![Cow::from("kala")])
+        );
         // Words that only happen to end in another: no last part.
         let mut words: Vec<Word> = vec![word("meri", &["meri", "meren", "merta"])];
         for front in [
@@ -3443,7 +3471,7 @@ mod tests {
                 ));
             }
         }
-        assert!(heads(&words, 3, &|_| true).is_empty());
+        assert!(heads(&words, 3, &|_| true, &|_| true).is_empty());
         // Among them, a word whose own compounds inflect as it (Italian
         // `fare`): it alone is a head.
         words.push(word("fare", &["fare", "faccio", "fatto"]));
@@ -3451,7 +3479,7 @@ mod tests {
             let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let found = heads(&words, 3, &|_| true);
+        let found = heads(&words, 3, &|_| true, &|_| true);
         assert_eq!(
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])

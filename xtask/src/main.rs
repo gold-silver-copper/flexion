@@ -736,7 +736,12 @@ fn try_tenth(
                 g.heads
                     .least
                     .map_or("none by its length".to_string(), |l| format!(
-                        "of at least {l} letters"
+                        "of at least {l} letters but {} ({})",
+                        g.heads.not.len(),
+                        abbreviate(
+                            &g.heads.not.iter().map(AsRef::as_ref).collect::<Vec<&str>>(),
+                            12
+                        )
                     )),
                 g.heads.words.len(),
                 abbreviate(

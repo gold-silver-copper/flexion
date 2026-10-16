@@ -205,6 +205,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     prefixes: None,
     heads: flexion::Heads {
         least: Some(6),
+        not: Cow::Borrowed(heads::NOT),
         words: Cow::Borrowed(heads::HEADS),
     },
     accent: None,

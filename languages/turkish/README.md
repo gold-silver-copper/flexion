@@ -97,8 +97,8 @@ developed (changes are judged on another tenth since PR #16).
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 2997 | 114800 |
-| adjective | 1173 | 59300 |
+| noun | 2997 | 114825 |
+| adjective | 1173 | 59325 |
 
 ## Data and license
 

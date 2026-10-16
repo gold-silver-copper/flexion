@@ -52,6 +52,7 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Animacy> = Grammar {
     prefixes: None,
     heads: flexion::Heads {
         least: None,
+        not: Cow::Borrowed(&[]),
         words: Cow::Borrowed(heads::HEADS),
     },
     accent: None,

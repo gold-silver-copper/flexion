@@ -414,14 +414,18 @@ fn grammar_files(
             "None".into()
         }
     };
-    let heads = format!(
-        "flexion::Heads {{ least: {:?}, words: Cow::Borrowed({}) }}",
-        g.heads.least,
-        if g.heads.words.is_empty() {
-            "&[]"
+    let list = |words: &[std::borrow::Cow<'_, str>], name: &str| {
+        if words.is_empty() {
+            "&[]".to_string()
         } else {
-            "heads::HEADS"
+            format!("heads::{name}")
         }
+    };
+    let heads = format!(
+        "flexion::Heads {{ least: {:?}, not: Cow::Borrowed({}), words: Cow::Borrowed({}) }}",
+        g.heads.least,
+        list(&g.heads.not, "NOT"),
+        list(&g.heads.words, "HEADS"),
     );
     let _ = writeln!(
         m,
@@ -931,18 +935,28 @@ fn grammar_files(
     }
 
     // heads.rs
-    if !g.heads.words.is_empty() {
+    if !g.heads.words.is_empty() || !g.heads.not.is_empty() {
         let mut r = format!(
-            "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): those whose own compounds in the dictionary do{}.\n\nuse std::borrow::Cow;\n\n/// {} words.\npub(super) static HEADS: &[Cow<'static, str>] = flexion::words![\n",
-            g.heads.least.map_or(String::new(), |l| format!(
-                ", shorter than the {l} letters from which every listed word is one"
-            )),
-            thousands(g.heads.words.len()),
+            "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): {}.\n\nuse std::borrow::Cow;\n",
+            g.heads.least.map_or(
+                "those whose own compounds in the dictionary do".to_string(),
+                |l| format!("every listed word of {l} letters or more, but those in `NOT`,\n//! whose own words in the dictionary don't; and the shorter ones in `HEADS`,\n//! whose own compounds do")
+            ),
         );
-        for w in g.heads.words.iter() {
-            let _ = writeln!(r, "    {w:?},");
+        for (name, words) in [("NOT", &g.heads.not), ("HEADS", &g.heads.words)] {
+            if words.is_empty() {
+                continue;
+            }
+            let _ = write!(
+                r,
+                "\n/// {} words.\npub(super) static {name}: &[Cow<'static, str>] = flexion::words![\n",
+                thousands(words.len())
+            );
+            for w in words.iter() {
+                let _ = writeln!(r, "    {w:?},");
+            }
+            r.push_str("];\n");
         }
-        r.push_str("];\n");
         files.push((format!("{dir}/heads.rs"), r));
     }
 

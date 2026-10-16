@@ -329,10 +329,14 @@ pub struct Known<'q> {
 
 /// Which listed words a word ending in one inflects as (compounds, Finnish
 /// `aavameri` as `meri`): every one of at least `least` letters, where the
-/// language's compounds do; and those `words`, whose own compounds do.
+/// language's compounds do, but those `not`, whose own words don't (Latin
+/// `capitālis`, `digitālis` don't inflect as `Ītalis`); and those `words`,
+/// whose own compounds do.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Heads<'a> {
     pub least: Option<u8>,
+    /// Sorted.
+    pub not: Cow<'a, [Cow<'a, str>]>,
     /// Sorted.
     pub words: Cow<'a, [Cow<'a, str>]>,
 }
@@ -345,12 +349,10 @@ impl Heads<'_> {
 
     /// Whether a word ending in `head` (a listed word) inflects as it.
     pub fn inflects(&self, head: &str) -> bool {
+        let has = |words: &[Cow<'_, str>]| words.binary_search_by(|w| w.as_ref().cmp(head)).is_ok();
         self.least
-            .is_some_and(|least| head.chars().count() >= usize::from(least))
-            || self
-                .words
-                .binary_search_by(|w| w.as_ref().cmp(head))
-                .is_ok()
+            .is_some_and(|least| head.chars().count() >= usize::from(least) && !has(&self.not))
+            || has(&self.words)
     }
 }
 
@@ -1246,7 +1248,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// Whether the grammar lists the word looked up as `key`: its forms, or
     /// its paradigm.
-    fn lists(&self, key: &str) -> bool {
+    pub fn lists(&self, key: &str) -> bool {
         self.irregular.has(key)
             || self
                 .paradigm

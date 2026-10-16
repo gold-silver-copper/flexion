@@ -206,6 +206,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     prefixes: Some(prefixes::PREFIXES),
     heads: flexion::Heads {
         least: None,
+        not: Cow::Borrowed(&[]),
         words: Cow::Borrowed(&[]),
     },
     accent: None,

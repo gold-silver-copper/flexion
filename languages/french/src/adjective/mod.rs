@@ -41,6 +41,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     prefixes: None,
     heads: flexion::Heads {
         least: None,
+        not: Cow::Borrowed(&[]),
         words: Cow::Borrowed(&[]),
     },
     accent: None,

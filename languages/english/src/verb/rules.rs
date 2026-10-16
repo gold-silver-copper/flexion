@@ -7,7 +7,7 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 1,124 rules and 1,667 listed words.
+/// 1,124 rules and 1,664 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
         "" => [Settle 16918, Burn 13672, Pass 2045, Spot 1522, Carry 1477, Drop 446, Hear 398, Set 152, Shred 114, Stir 100, Write 85, Die 62, Bleed 61, Bind 60, Keep 56, Throw 46, Spring 46, Break 46, Take 41, Cast 40, Show 40, Wring 39, Lay 37, Wear 28, Sit 28, Hold 25, Quiz 24, Stand 23, Draw 23, Tell 23, Backbite 21, Spin 21, Make 20, Give 18, Mislead 18, Run 18, Think 17, Shoot 17, Should 17, Forbear 16, Overgo 16, See 15, Unbe 15, Become 15, Fall 14, Undo 13, Slide 13, Weave 12, Swim 12, Abide 11, Buy 11, Bring 11, Rec 11, Beteach 11, Outleap 10, Catch 10, Freeze 10, Hang 9, Lie 9, Seek 9, Strike 9, Forget 8, Leave 8, Overeat 8, Tread 8, Distil 7, Gas 7, Light 7, Panic 6, Win 6, Wake 6, Choose 6, Fly 6, Larn 6, Lose 5, Flee 5, Get 5, Might 4, Chef 3, Slay 3, Swell 3, Braai 3, Downstrike 3],
@@ -1183,7 +1183,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#atrin" => Swim,
         "#attrite" => Settle,
         "#audiocast" => Burn,
-        "#autocleave" => Settle,
         "#autohide" => Backbite,
         "#autopen" => Spot,
         "#autotag" => Burn,
@@ -1196,7 +1195,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#backdrive" => Settle,
         "#backslide" => Backbite,
         "#backtaxi" => Burn,
-        "#backthrust" => Burn,
         "#backup" => Drop,
         "#backwind" => Burn,
         "#backwing" => Burn,
@@ -1731,7 +1729,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#fuxk" => Burn,
         "#gad" => Shred,
         "#gaf" => Might,
-        "#gainstrive" => Settle,
         "#gam" => Spot,
         "#gammet" => Spot,
         "#gan" => Burn,
@@ -1990,6 +1987,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#minnow" => Burn,
         "#mirrorship" => Spot,
         "#misbid" => Set,
+        "#miscleave" => Leave,
         "#misdo" => Undo,
         "#miseat" => Overeat,
         "#misflip" => Spot,
@@ -2008,7 +2006,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#missew" => Show,
         "#misspell" => Hear,
         "#misspit" => Sit,
-        "#misthrust" => Burn,
         "#miswend" => Hear,
         "#miswrap" => Spot,
         "#mom" => Spot,
@@ -2098,6 +2095,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#outspit" => Sit,
         "#outstink" => Spring,
         "#outsweat" => Hear,
+        "#outthrust" => Hear,
         "#outwin" => Win,
         "#outwing" => Burn,
         "#overbide" => Write,
@@ -2122,8 +2120,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#oversit" => Sit,
         "#overstraw" => Show,
         "#overstride" => Abide,
+        "#overstrive" => Write,
         "#oversup" => Drop,
-        "#overthrust" => Burn,
         "#overwing" => Burn,
         "#oxter" => Burn,
         "#oxtercog" => Spot,
@@ -2625,7 +2623,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "#underpin" => Spot,
         "#underrep" => Spot,
         "#understride" => Abide,
-        "#underthrust" => Burn,
         "#underwhip" => Spot,
         "#underwrap" => Spot,
         "#undiadem" => Spot,

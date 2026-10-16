@@ -662,6 +662,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation, accent::AccentClass> = Grammar
     prefixes: Some(prefixes::PREFIXES),
     heads: flexion::Heads {
         least: None,
+        not: Cow::Borrowed(&[]),
         words: Cow::Borrowed(heads::HEADS),
     },
     accent: Some(flexion::Accent {

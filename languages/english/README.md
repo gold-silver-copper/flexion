@@ -71,7 +71,7 @@ reason (the rule and its counts).
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | noun | 228066 | 84 | 0 | 2233 | 5720 | 243 | 0 |
-| verb | 38229 | 83 | 31 | 1124 | 1667 | 200 | 18 |
+| verb | 38229 | 83 | 31 | 1124 | 1664 | 200 | 18 |
 | adjective | 61453 | 13 | 4 | 465 | 2506 | 41 | 1 |
 | adverb | 12620 | 4 | 2 | 81 | 169 | 16 | 1 |
 
@@ -124,10 +124,10 @@ developed (changes are judged on another tenth since PR #16).
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 9106 | 315787 |
-| verb | 4919 | 166727 |
-| adjective | 3478 | 105111 |
-| adverb | 669 | 22978 |
+| noun | 9106 | 315812 |
+| verb | 4924 | 166822 |
+| adjective | 3478 | 105136 |
+| adverb | 669 | 23003 |
 
 ## Data and license
 

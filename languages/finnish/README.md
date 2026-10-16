@@ -47,7 +47,7 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 126530 | 100 | 21 | 4381 | 5695 | 9878 | 25 |
+| noun | 126530 | 100 | 21 | 4381 | 5594 | 10168 | 25 |
 | adjective | 17353 | 83 | 12 | 610 | 691 | 631 | 20 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -92,13 +92,13 @@ developed (changes are judged on another tenth since PR #16).
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 12869 | 1899864 | **97.83%** (97.6–98.0) | 99.09% | 99.11% | 94.93% | 0.009 | 0.805 | 97.83% | 98.95% | 98.66 / 98.65 / 98.61 |  | 97.83% (1899576) | 57.29% (288) | 98.29% (98.96%) | -0.47 (-0.66…-0.28) | 97.98% | 99.98% | 98.59% / 96.30% |  | 97.88% (12649) / 100.00% (7) / 94.16% (213) |  | 1.32% |
+| noun | 12869 | 1899864 | **97.81%** (97.6–98.0) | 99.10% | 99.12% | 94.94% | 0.009 | 0.805 | 97.81% | 99.15% | 98.73 / 98.77 / 98.90 |  | 97.82% (1899576) | 57.29% (288) | 98.29% (98.96%) | -0.48 (-0.68…-0.29) | 97.98% | 99.98% | 98.56% / 96.30% |  | 97.87% (12649) / 100.00% (7) / 94.16% (213) |  | 1.34% |
 | adjective | 1721 | 44395 | **97.45%** (96.9–98.0) | 99.33% | 99.33% | 94.71% | 0.010 | 0.499 | 97.45% |  | 98.64 / 98.70 / 98.87 |  | 97.45% (44392) | 33.33% (3) | 97.41% (66.67%) | +0.04 (-0.62…+0.72) | 97.52% | 100.00% | 99.15% / 96.40% |  | 97.37% (1570) / 98.54% (104) / 97.81% (47) |  | 0.90% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 18317 | 901265 |
-| adjective | 4924 | 201232 |
+| noun | 18273 | 906911 |
+| adjective | 4924 | 201257 |
 
 ## Data and license
 

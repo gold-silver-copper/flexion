@@ -181,10 +181,7 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "on" => [4 34],
         "s" => [9 2],
     } listed {
-        "celerem" => 1,
-        "concolōrem" => 0,
         "congregem" => 0,
-        "percelerem" => 1,
     }, true, None),
     // GEN_M_SG, from NOM_M_PL.
     relation!(GEN_M_SG, [NOM_M_PL], [("~", "~"), ("~", "~us"), ("~ēs", "~is")], rules {
@@ -232,10 +229,7 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ȳgī" => [5 2],
         "ēnī" => [6 30, 4 3],
     } listed {
-        "celerēs" => 1,
-        "concolōrēs" => 2,
         "congregēs" => 2,
-        "percelerēs" => 1,
         "quotīquīque" => 9,
         "ūnīquīque" => 9,
     }, true, None),
@@ -283,10 +277,7 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "vīs" => [4 279, 10 2],
         "svīs" => [10 2],
     } listed {
-        "celeribus" => 0,
-        "concolōribus" => 1,
         "congregibus" => 1,
-        "perceleribus" => 0,
         "utrīsvīs" => 10,
     }, true, None),
     // GEN_N_SG, from GEN_M_SG.
@@ -356,7 +347,7 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "lex" => [8 32],
         "āx" => [22 68],
         "īx" => [22 9],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // DAT_F_SG, from GEN_F_SG.
     relation!(DAT_F_SG, [GEN_F_SG], [("~", "~"), ("~is", "~ī"), ("~us", "~"), ("~ēs", "~ae"), ("~ī", "~ō")], rules {
         "" => [0 19268, 1 8155, 4 16, 2 7, 3 3],

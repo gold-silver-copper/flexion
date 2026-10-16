@@ -110,10 +110,10 @@ developed (changes are judged on another tenth since PR #16).
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 2841 | 126585 |
-| adjective | 3256 | 156130 |
-| verb | 5435 | 295464 |
-| pronoun | 886 | 36067 |
+| noun | 2841 | 126610 |
+| adjective | 3256 | 156155 |
+| verb | 5435 | 295489 |
+| pronoun | 886 | 36092 |
 
 ## Data and license
 

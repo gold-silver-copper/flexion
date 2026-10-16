@@ -128,11 +128,11 @@ developed (changes are judged on another tenth since PR #16).
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 28943 | 1243316 |
-| adjective | 3747 | 202975 |
-| verb | 13661 | 797377 |
-| pronoun | 899 | 41781 |
-| numeral | 927 | 37273 |
+| noun | 28943 | 1243341 |
+| adjective | 3747 | 203000 |
+| verb | 13661 | 797402 |
+| pronoun | 899 | 41806 |
+| numeral | 927 | 37298 |
 
 ## Data and license
 
