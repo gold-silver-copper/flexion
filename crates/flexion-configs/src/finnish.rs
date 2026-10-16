@@ -16,13 +16,18 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    small(crate::with_proper_nouns(Language {
         name: "finnish",
         display: "Finnish",
         wiktionary: "fi",
         version: "0.1.0",
         description: "Finnish declension for any word, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Genitive "gen" ["genitive"],
@@ -185,6 +190,7 @@ pub fn language() -> Language {
                 max_words: None,
             },
             verb(),
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -214,7 +220,28 @@ pub fn language() -> Language {
             ("verb", "indicative", "kurpata"),
         ],
         editions: vec![],
-    }
+    }))
+}
+
+/// The pronouns and numerals, declined in a noun's cells (`minä`, `minun`;
+/// `kaksi`, `kahden`).
+fn small(lang: Language) -> Language {
+    let lang = crate::with_small(
+        lang,
+        "noun",
+        "pronoun",
+        "Pronouns and determiners (`minä`, `tämä`).",
+        &["pron", "det"],
+        &[],
+    );
+    crate::with_small(
+        lang,
+        "pronoun",
+        "numeral",
+        "Numerals (`kaksi`, `kolmas`).",
+        &["num"],
+        &[],
+    )
 }
 
 /// The tags of a possessive form: the third person's, and the first and

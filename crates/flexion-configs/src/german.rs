@@ -17,7 +17,7 @@ use flexion_train::spec::{
 };
 
 pub fn language() -> Language {
-    Language {
+    numerals(crate::with_proper_nouns(Language {
         name: "german",
         display: "German",
         wiktionary: "de",
@@ -291,7 +291,20 @@ pub fn language() -> Language {
             dump: "Deutsch",
             merge: Merge::All,
         }],
-    }
+    }))
+}
+
+/// The numerals that decline as nouns (`Million`, `Millionen`; `de-ndecl`
+/// is the German noun's declension, not "indeclinable").
+fn numerals(lang: Language) -> Language {
+    crate::with_small(
+        lang,
+        "noun",
+        "numeral",
+        "Numerals that decline (`Million`, `Nonillion`).",
+        &["num"],
+        &[],
+    )
 }
 
 fn group(

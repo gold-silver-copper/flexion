@@ -16,13 +16,18 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "latin",
         display: "Latin",
         wiktionary: "la",
         version: "0.1.0",
         description: "Latin inflection for any word: declension, conjugation and vowel length, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Genitive "gen" ["genitive"],
@@ -230,6 +235,7 @@ pub fn language() -> Language {
                 lemmas_from: vec![],
                 max_words: None,
             },
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -277,7 +283,7 @@ pub fn language() -> Language {
             ("verb", "participle", "blicio"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(

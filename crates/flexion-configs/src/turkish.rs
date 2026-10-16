@@ -16,7 +16,7 @@ use flexion_train::kaikki::{Entry, Form};
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    small(crate::with_proper_nouns(Language {
         name: "turkish",
         display: "Turkish",
         wiktionary: "tr",
@@ -154,7 +154,28 @@ pub fn language() -> Language {
             ("verb", "finite", "zerpemek"),
         ],
         editions: vec![],
-    }
+    }))
+}
+
+/// The pronouns and numerals, declined in a noun's plain cells (`ben`,
+/// `bana`; `iki`, `ikiye`).
+fn small(lang: Language) -> Language {
+    let lang = crate::with_small(
+        lang,
+        "noun",
+        "pronoun",
+        "Pronouns (`ben`, `bu`).",
+        &["pron"],
+        &["tr-decl*", "tr-infl-noun*"],
+    );
+    crate::with_small(
+        lang,
+        "pronoun",
+        "numeral",
+        "Numerals (`iki`, `bin`).",
+        &["num"],
+        &["tr-infl-noun*"],
+    )
 }
 
 /// A part of speech read from the noun tables: the plain cases, then the

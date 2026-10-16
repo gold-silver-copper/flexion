@@ -262,7 +262,7 @@ pub fn cell_names(cells: &Cells<'_>) -> Vec<String> {
 
 /// A cell's constant: `gen_pl` → `GEN_PL`, `non_past_1_sg` → `NON_PAST_1_SG`.
 fn const_name(s: &str) -> String {
-    let mut out = underscored(s).trim_start_matches('_').to_ascii_uppercase();
+    let mut out = underscored(s).trim_start_matches('_').to_uppercase();
     if out.chars().next().is_none_or(|c| c.is_ascii_digit()) {
         out.insert(0, 'C');
     }

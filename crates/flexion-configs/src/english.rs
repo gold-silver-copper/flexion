@@ -7,7 +7,7 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "english",
         display: "English",
         wiktionary: "en",
@@ -149,7 +149,7 @@ pub fn language() -> Language {
             ("adverb", "adverb", "glorpily"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(name: &'static str, doc: &'static str, features: &[&'static str]) -> Group {

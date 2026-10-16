@@ -14,7 +14,7 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    numerals(crate::with_proper_nouns(Language {
         name: "sanskrit",
         display: "Sanskrit",
         wiktionary: "sa",
@@ -245,7 +245,19 @@ pub fn language() -> Language {
             ("verb", "imperfect", "ग्लोर्पति"),
         ],
         editions: vec![],
-    }
+    }))
+}
+
+/// The numerals, declined in an adjective's cells (`द्वि`, `त्रि`).
+fn numerals(lang: Language) -> Language {
+    crate::with_small(
+        lang,
+        "adjective",
+        "numeral",
+        "Numerals (`द्वि`, `त्रि`).",
+        &["num"],
+        &["sa-decl-adj*", "sa-decl-num*", "sa-decl-noun*"],
+    )
 }
 
 fn group(
@@ -353,6 +365,26 @@ impl Hooks for SanskritHooks {
                     && let Some(g) = table.and_then(|t| GENDERS.get(t))
                 {
                     f.tags.push((*g).to_string());
+                }
+            }
+        }
+        // A numeral's tables name their gender in the template only
+        // (`sa-decl-noun-m`); `sa-decl-num`'s forms are every gender's.
+        if pos == "numeral" {
+            let mut genders: &[&str] = &[];
+            for f in entry.forms.iter_mut() {
+                if has(&f.tags, "inflection-template") {
+                    genders = match f.form.as_str() {
+                        "sa-decl-noun-m" => &["masculine"],
+                        "sa-decl-noun-f" => &["feminine"],
+                        "sa-decl-noun-n" => &["neuter"],
+                        "sa-decl-num" => &GENDERS,
+                        _ => &[],
+                    };
+                    continue;
+                }
+                if f.source.is_some() && !GENDERS.iter().any(|g| has(&f.tags, g)) {
+                    f.tags.extend(genders.iter().map(|g| (*g).to_string()));
                 }
             }
         }

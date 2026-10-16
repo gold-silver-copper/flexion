@@ -96,6 +96,7 @@ pub enum FormSource {
 
 /// A part of speech: the Wiktionary parts of speech it reads and the cell
 /// groups it generates.
+#[derive(Clone)]
 pub struct PartOfSpeech {
     pub name: &'static str,
     pub doc: &'static str,
@@ -133,6 +134,7 @@ pub struct PartOfSpeech {
 
 /// A group of cells that is one generated function: the product of its
 /// features' values.
+#[derive(Clone)]
 pub struct Group {
     /// Function name in the generated crate.
     pub name: &'static str,

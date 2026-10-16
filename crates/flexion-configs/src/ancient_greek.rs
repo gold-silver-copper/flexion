@@ -14,7 +14,7 @@ use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spel
 use unicode_normalization::UnicodeNormalization;
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "ancient-greek",
         display: "Ancient Greek",
         wiktionary: "grc",
@@ -328,7 +328,7 @@ pub fn language() -> Language {
             ("verb", "aorist", "ἀπογλορπίζω"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(

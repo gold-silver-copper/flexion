@@ -11,13 +11,18 @@ use flexion_train::spec::{
 };
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "russian",
         display: "Russian",
         wiktionary: "ru",
         version: "0.1.0",
         description: "Russian inflection for any word: declension and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Genitive "gen" ["genitive"],
@@ -235,6 +240,7 @@ pub fn language() -> Language {
                 lemmas_from: vec![],
                 max_words: None,
             },
+            crate::adverb(),
         ],
         // Stress is left out: Wiktionary's stress marks (the acute, and the
         // grave of secondary stress) are dropped when reading, and no form is
@@ -283,7 +289,7 @@ pub fn language() -> Language {
             dump: "Русский",
             merge: Merge::All,
         }],
-    }
+    })
 }
 
 fn group(
@@ -322,6 +328,30 @@ impl Hooks for RussianHooks {
 
     fn form_ok(&self, _pos: &str, _lemma: &str, form: &str) -> bool {
         cyrillic_word(form)
+    }
+
+    /// An adverb's comparative with its optional prefix in brackets
+    /// (`(по)лу́чше`): the plain one first, the prefixed one after it.
+    fn repair(&self, pos: &str, entry: &mut Entry) {
+        if pos != "adverb" {
+            return;
+        }
+        let mut forms = Vec::with_capacity(entry.forms.len());
+        for f in &entry.forms {
+            match f
+                .form
+                .strip_prefix('(')
+                .and_then(|rest| rest.split_once(')'))
+            {
+                Some((prefix, rest)) => {
+                    for form in [rest.to_string(), format!("{prefix}{rest}")] {
+                        forms.push(Form { form, ..f.clone() });
+                    }
+                }
+                None => forms.push(f.clone()),
+            }
+        }
+        entry.forms = forms;
     }
 
     /// Gender, animacy and aspect from the head line (`кот • (kot) m anim (…)`)

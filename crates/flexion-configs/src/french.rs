@@ -69,6 +69,11 @@ pub fn language() -> Language {
         version: "0.1.0",
         description: "French inflection for any word: noun plurals, adjective and participle agreement and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Number "Grammatical number." {
                 Singular "sg" [] !["plural"],
                 Plural "pl" ["plural"],
@@ -240,6 +245,7 @@ pub fn language() -> Language {
                 lemmas_from: vec![],
                 max_words: None,
             },
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,
