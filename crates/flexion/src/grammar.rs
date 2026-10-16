@@ -858,11 +858,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 ..*known
             };
             for (out, more) in lists.iter_mut().zip(self.unsharpened(&typed, cells, &full)) {
-                // A listed form is the answer however the word is spelled.
-                if out
-                    .iter()
-                    .any(|c| c.status == Status::Listed && c.paradigm.is_empty())
-                {
+                // A listed form, or one built on a stem the word lists, is the
+                // answer however the word is spelled.
+                if out.iter().any(|c| {
+                    c.status == Status::Listed && (c.paradigm.is_empty() || c.stem.is_some())
+                }) {
                     continue;
                 }
                 for mut c in more {
