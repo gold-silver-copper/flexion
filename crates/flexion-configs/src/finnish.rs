@@ -1,10 +1,15 @@
-//! Finnish. Forms come from Wiktionary's generated declension tables
-//! (`fi-decl-*`): fourteen cases in two numbers, and for nouns the same with
-//! a possessive suffix. Stress is always on the first syllable and not
-//! written, so there is no stress model. One part of the data is broken and
-//! repaired here (see [`FinnishHooks::repair`]): the possessive rows of the
-//! first and second persons tag the possessor's number where the noun's
-//! belongs.
+//! Finnish. Forms come from Wiktionary's generated tables: declensions
+//! (`fi-decl-*`), fourteen cases in two numbers, and for nouns the same with
+//! a possessive suffix; conjugations (`fi-conj-*`), the four moods in each
+//! person and the passive, affirmative and negative (`en tule`), simple and
+//! perfect (`olen tullut`), and the infinitives and participles. Stress is
+//! always on the first syllable and not written, so there is no stress
+//! model. Two parts of the data are broken and repaired here (see
+//! [`FinnishHooks::repair`]): the possessive rows of the first and second
+//! persons tag the possessor's number where the noun's belongs, and a
+//! conjugation's infinitives and participles are tagged as persons and
+//! tenses they aren't (`tullessa`, the second infinitive's inessive, as
+//! `second-person`), so they are read by their places.
 
 use flexion_train::features;
 use flexion_train::kaikki::Entry;
@@ -44,6 +49,62 @@ pub fn language() -> Language {
                 FirstPlural "1pl" ["first-person", "plural-possessive"],
                 SecondPlural "2pl" ["second-person", "plural-possessive"],
                 Third "3" ["third-person", "possessive"],
+            }
+            Tense "An indicative's tense." {
+                Present "pres" ["present"],
+                Past "past" ["past"],
+                Perfect "perf" ["perfect"],
+                Pluperfect "plup" ["pluperfect"],
+            }
+            Aspect "Simple or perfect (`olisin tullut`)." {
+                Present "pres" ["present"],
+                Perfect "perf" ["perfect"],
+            }
+            Polarity "Affirmative, or negated with the negative verb (`en tule`)." {
+                Affirmative "aff" [] !["negative"],
+                Negative "neg" ["negative"],
+            }
+            Person "A finite verb's person and number, or the passive." {
+                FirstSingular "1sg" ["first-person", "singular"],
+                SecondSingular "2sg" ["second-person", "singular"],
+                ThirdSingular "3sg" ["third-person", "singular"],
+                FirstPlural "1pl" ["first-person", "plural"],
+                SecondPlural "2pl" ["second-person", "plural"],
+                ThirdPlural "3pl" ["third-person", "plural"],
+                Passive "pass" ["passive"],
+            }
+            ImperativePerson "An imperative's person: none of the first singular." {
+                SecondSingular "2sg" ["second-person", "singular"],
+                ThirdSingular "3sg" ["third-person", "singular"],
+                FirstPlural "1pl" ["first-person", "plural"],
+                SecondPlural "2pl" ["second-person", "plural"],
+                ThirdPlural "3pl" ["third-person", "plural"],
+                Passive "pass" ["passive"],
+            }
+            PerfectImperativePerson "A perfect imperative's person: the third, or the passive." {
+                ThirdSingular "3sg" ["third-person", "singular"],
+                ThirdPlural "3pl" ["third-person", "plural"],
+                Passive "pass" ["passive"],
+            }
+            Voice "Active or passive." {
+                Active "act" ["voice-active"],
+                Passive "pass" ["voice-passive"],
+            }
+            ThirdCase "A case of the third infinitive (`tulemassa`)." {
+                Inessive "ine" ["third-inessive"],
+                Elative "ela" ["third-elative"],
+                Illative "ill" ["third-illative"],
+                Adessive "ade" ["third-adessive"],
+                Abessive "abe" ["third-abessive"],
+                Instructive "ins" ["third-instructive"],
+            }
+            Participle "A participle." {
+                PresentActive "pres.act" ["participle-present-active"],
+                PresentPassive "pres.pass" ["participle-present-passive"],
+                PastActive "past.act" ["participle-past-active"],
+                PastPassive "past.pass" ["participle-past-passive"],
+                Agent "agent" ["participle-agent"],
+                Negative "neg" ["participle-negative"],
             }
         },
         parts: vec![
@@ -123,6 +184,7 @@ pub fn language() -> Language {
                 lemmas_from: vec![],
                 max_words: None,
             },
+            verb(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -149,6 +211,7 @@ pub fn language() -> Language {
             ("noun", "noun", "plokka"),
             ("noun", "noun", "hymppö"),
             ("adjective", "adjective", "kurppea"),
+            ("verb", "indicative", "kurpata"),
         ],
         editions: vec![],
     }
@@ -185,6 +248,163 @@ fn group(
     }
 }
 
+/// Verbs, from the conjugation tables (see [`FinnishHooks::repair`]). The
+/// lemma is the first infinitive (`tulla`); the dictionary's principal
+/// parts, the present and the past (`tulen`, `tuli`) and the past
+/// participles (`tullut`, `tultu`), whose stems the rest are built on.
+fn verb() -> PartOfSpeech {
+    let finite = |name, doc, features: &[&'static str], all: &[&'static str]| {
+        group(name, doc, features, all, &[])
+    };
+    let nonfinite = |name, doc, features: &[&'static str]| group(name, doc, features, &[name], &[]);
+    PartOfSpeech {
+        name: "verb",
+        doc: "Verbs. The lemma is the first infinitive (`tulla`).",
+        wiktionary: vec!["verb"],
+        templates: vec!["fi-conj*"],
+        forms: FormSource::Tables,
+        groups: vec![
+            finite(
+                "indicative",
+                "The indicative.",
+                &["Tense", "Polarity", "Person"],
+                &["indicative"],
+            ),
+            finite(
+                "conditional",
+                "The conditional (`-isi-`).",
+                &["Aspect", "Polarity", "Person"],
+                &["conditional"],
+            ),
+            finite(
+                "imperative",
+                "The imperative.",
+                &["Polarity", "ImperativePerson"],
+                &["imperative", "present"],
+            ),
+            finite(
+                "perfect_imperative",
+                "The perfect imperative (`olkoon tullut`).",
+                &["Polarity", "PerfectImperativePerson"],
+                &["imperative", "perfect"],
+            ),
+            finite(
+                "potential",
+                "The potential (`-ne-`).",
+                &["Aspect", "Polarity", "Person"],
+                &["potential"],
+            ),
+            nonfinite("infinitive", "The first infinitive.", &[]),
+            nonfinite(
+                "long_infinitive",
+                "The first infinitive's long form, with a possessive (`tullakseni`).",
+                &["Possessor"],
+            ),
+            nonfinite(
+                "second_infinitive",
+                "The second infinitive's inessive (`tullessa`).",
+                &["Voice"],
+            ),
+            nonfinite(
+                "second_infinitive_possessive",
+                "The second infinitive's inessive, with a possessive (`tullessani`).",
+                &["Possessor"],
+            ),
+            nonfinite(
+                "second_infinitive_instructive",
+                "The second infinitive's instructive (`tullen`).",
+                &[],
+            ),
+            nonfinite(
+                "third_infinitive",
+                "The third infinitive in a case (`tulemassa`).",
+                &["ThirdCase"],
+            ),
+            nonfinite(
+                "third_infinitive_passive",
+                "The third infinitive's passive instructive (`tultaman`).",
+                &[],
+            ),
+            nonfinite(
+                "fourth_infinitive",
+                "The fourth infinitive (`tuleminen`).",
+                &[],
+            ),
+            nonfinite(
+                "fifth_infinitive",
+                "The fifth infinitive, with a possessive (`tulemaisillani`).",
+                &["Possessor"],
+            ),
+            nonfinite(
+                "participle",
+                "A participle's citation form; decline it as an adjective.",
+                &["Participle"],
+            ),
+        ],
+        lemma: Some(("infinitive", vec![])),
+        citation: vec![
+            (
+                "indicative",
+                vec!["Present", "Affirmative", "FirstSingular"],
+            ),
+            ("indicative", vec!["Past", "Affirmative", "ThirdSingular"]),
+            ("participle", vec!["PastActive"]),
+            ("participle", vec!["PastPassive"]),
+        ],
+        inherent: vec![],
+        capitalized: false,
+        lemmas_from: vec![],
+        max_words: None,
+    }
+}
+
+/// The tags of the conjugation table's infinitives and participles, by
+/// their places from the first infinitive's (the dump tags them as persons
+/// and tenses they aren't); none for the table's blanks.
+fn nonfinite(place: usize) -> Option<Vec<&'static str>> {
+    // The possessives in the table's order: 1sg, 1pl, 2sg, 2pl, then the
+    // third person's two spellings (`-kseen`, `-ksensa`).
+    const POSSESSORS: [[&str; 2]; 6] = [
+        ["first-person", "singular-possessive"],
+        ["first-person", "plural-possessive"],
+        ["second-person", "singular-possessive"],
+        ["second-person", "plural-possessive"],
+        ["third-person", "possessive"],
+        ["third-person", "possessive"],
+    ];
+    let possessive = |group: &'static str, at: usize| -> Option<Vec<&'static str>> {
+        let [person, number] = POSSESSORS.get(at)?;
+        Some(vec![group, person, number])
+    };
+    let third = [
+        "third-inessive",
+        "third-elative",
+        "third-illative",
+        "third-adessive",
+        "third-abessive",
+    ];
+    Some(match place {
+        0 => vec!["infinitive"],
+        1 => vec!["participle", "participle-present-active"],
+        2 => vec!["participle", "participle-present-passive"],
+        3..9 => possessive("long_infinitive", place - 3)?,
+        9 => vec!["participle", "participle-past-active"],
+        10 => vec!["participle", "participle-past-passive"],
+        11 => vec!["second_infinitive", "voice-active"],
+        12 => vec!["second_infinitive", "voice-passive"],
+        13 => vec!["participle", "participle-agent"],
+        14..20 => possessive("second_infinitive_possessive", place - 14)?,
+        20 => vec!["participle", "participle-negative"],
+        21 => vec!["second_infinitive_instructive"],
+        23 | 25 | 27 | 29 | 31 => vec!["third_infinitive", *third.get((place - 23) / 2)?],
+        33 => vec!["third_infinitive", "third-instructive"],
+        34 => vec!["third_infinitive_passive"],
+        35 => vec!["fourth_infinitive"],
+        36..42 => possessive("fifth_infinitive", place - 36)?,
+        _ => return None,
+    })
+}
+
 struct FinnishHooks;
 
 /// Letters, hyphens and the apostrophe a weak grade writes (`vaa'an`): no
@@ -201,8 +421,12 @@ impl Hooks for FinnishHooks {
         finnish_word(lemma)
     }
 
-    fn form_ok(&self, _pos: &str, _lemma: &str, form: &str) -> bool {
+    /// A word; of a verb, also a phrase of up to three (`en ole tullut`).
+    fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
         finnish_word(form)
+            || (pos == "verb"
+                && (2..=3).contains(&form.split(' ').count())
+                && form.split(' ').all(finnish_word))
     }
 
     /// The possessive rows of the first and second persons (`talossani`,
@@ -213,7 +437,11 @@ impl Hooks for FinnishHooks {
     /// nominative) is both numbers. The possessor's number is dropped, and
     /// the noun's put in its place by position. The third person's rows
     /// already tag the noun's number.
-    fn repair(&self, _pos: &str, entry: &mut Entry) {
+    fn repair(&self, pos: &str, entry: &mut Entry) {
+        if pos == "verb" {
+            repair_verb(entry);
+            return;
+        }
         let first_or_second = |tags: &[String]| {
             tags.iter()
                 .any(|t| t == "singular-possessive" || t == "plural-possessive")
@@ -259,3 +487,44 @@ impl Hooks for FinnishHooks {
 }
 
 const README: &str = include_str!("../readme/finnish.md");
+
+/// A conjugation table read: its finite forms as tagged (the class labels
+/// and blanks out), then its infinitives and participles retagged by their
+/// places from the first infinitive's (see [`nonfinite`]); what follows
+/// them, the colloquial forms, out.
+fn repair_verb(entry: &mut Entry) {
+    let table: Vec<_> = entry
+        .forms
+        .iter()
+        .filter(|f| {
+            f.source.as_deref() == Some("conjugation")
+                && !f
+                    .tags
+                    .iter()
+                    .any(|t| matches!(t.as_str(), "table-tags" | "inflection-template" | "class"))
+        })
+        .take_while(|f| !f.tags.iter().any(|t| t == "error-unrecognized-form"))
+        .cloned()
+        .collect();
+    let first = table
+        .iter()
+        .position(|f| f.tags.iter().any(|t| t == "infinitive-i"));
+    let mut forms = Vec::new();
+    for (i, mut f) in table.into_iter().enumerate() {
+        if f.form == "-" {
+            continue;
+        }
+        match first {
+            Some(at) if i >= at => {
+                let Some(tags) = nonfinite(i - at) else {
+                    continue;
+                };
+                f.tags = tags.into_iter().map(String::from).collect();
+            }
+            Some(_) => {}
+            None => continue,
+        }
+        forms.push(f);
+    }
+    entry.forms = forms;
+}
