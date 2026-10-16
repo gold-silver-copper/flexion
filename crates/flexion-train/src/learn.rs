@@ -1241,21 +1241,20 @@ fn parts(w: &Word) -> Option<(char, &str, &str)> {
     Some((joiner, first, rest))
 }
 
-/// Each child's cells that write what it would take anyway (from its stem
-/// slots, else its parent: Greek `ποιεω`'s derived `subj_pass_3` as
-/// `μελλω`'s) left to take it: the same patterns, stated once.
+/// Each paradigm's cells that write what it would take anyway (from its
+/// stem slots, else its parent, else, like no other, derived: Greek
+/// `ποιεω`'s derived `subj_pass_3` as `μελλω`'s) left to take it: the same
+/// patterns, stated once.
 fn unrepeated(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
     for i in 0..paradigms.len() {
         let Some(par) = paradigms.get(i).filter(|p| p.affix.is_none()) else {
             continue;
         };
-        let Some(up) = par.parent.and_then(|q| paradigms.get(usize::from(q))) else {
-            continue;
-        };
+        let up = par.parent.and_then(|q| paradigms.get(usize::from(q)));
         let cells = par.table.split('\t').count().saturating_sub(1);
         let taken = |c: usize| {
             par.stated(space, c).or_else(|| {
-                up.pattern_in(paradigms, space, par.read(c))
+                up.and_then(|u| u.pattern_in(paradigms, space, par.read(c)))
                     .map(Cow::into_owned)
             })
         };
