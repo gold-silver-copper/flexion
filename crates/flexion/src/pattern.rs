@@ -179,8 +179,9 @@ pub fn fill_marked(pattern: &str, stems: &[&str]) -> String {
 }
 
 /// Build a form: `pattern` (one alternative) with `stems` at its `~`s, and
-/// the first letter of the stem piece after each [`COPY`]. Missing stem
-/// pieces leave their place empty.
+/// the first letter of the stem piece after each [`COPY`]. A pattern with
+/// more `~`s than stem pieces takes them again from the first: a form
+/// written twice (Turkish `gele gele` of `gele`, by `~ ~`).
 pub fn fill(pattern: &str, stems: &[&str]) -> String {
     build(pattern, stems, false)
 }
@@ -189,14 +190,19 @@ pub fn fill(pattern: &str, stems: &[&str]) -> String {
 /// a first literal if `marked`.
 fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     let mut out = String::with_capacity(pattern.len().saturating_add(16));
+    let piece = |i: usize| {
+        stems
+            .get(i)
+            .or_else(|| stems.get(i.checked_rem(stems.len())?))
+    };
     for (i, lit) in pattern.split('~').enumerate() {
-        if let Some(s) = i.checked_sub(1).and_then(|i| stems.get(i)) {
+        if let Some(s) = i.checked_sub(1).and_then(piece) {
             if marked && i == 1 && !out.is_empty() {
                 out.push(FRONT);
             }
             out.push_str(s);
         }
-        let next = stems.get(i).and_then(|s| s.chars().next());
+        let next = piece(i).and_then(|s| s.chars().next());
         for c in lit.chars() {
             match (c, next) {
                 (COPY, Some(n)) => {
