@@ -12,6 +12,7 @@ description = "The runtime of learned inflection grammars: paradigms, the rules 
 [dependencies]
 sound-law = { workspace = true }
 sound-law-macros = { workspace = true }
+flexion-macros = { workspace = true }
 unicode-normalization = { workspace = true }
 
 [lints]

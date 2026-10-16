@@ -1404,14 +1404,32 @@ fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) ->
     choice.rules.iter().map(rule).collect()
 }
 
-/// A choice's listed words, a line each.
+/// A choice's listed words, grouped by what they are (each value once, its
+/// words in order after it, as many to a line as fit).
 fn listed<L: flexion::Label>(
     choice: &flexion::Choice<'_, L>,
     name: impl Fn(L) -> String,
 ) -> String {
-    let word =
-        |(w, l): &(std::borrow::Cow<'_, str>, L)| format!("        {} => {},\n", Lit(w), name(*l));
-    choice.exceptions.iter().map(word).collect()
+    let mut by: std::collections::BTreeMap<usize, (L, Vec<&str>)> = Default::default();
+    for (w, l) in choice.exceptions.iter() {
+        by.entry(l.index()).or_insert((*l, Vec::new())).1.push(w);
+    }
+    let mut out = String::new();
+    for (l, words) in by.values() {
+        let _ = writeln!(out, "        {} => [", name(*l));
+        let mut line = String::from("           ");
+        for w in words {
+            let word = format!(" {},", Lit(w));
+            if line.chars().count() + word.chars().count() > 100 {
+                let _ = writeln!(out, "{line}");
+                line = String::from("           ");
+            }
+            line.push_str(&word);
+        }
+        let _ = writeln!(out, "{line}");
+        out.push_str("        ],\n");
+    }
+    out
 }
 
 /// A choice as a constant `name` of `ty`s, saying how many rules and listed
