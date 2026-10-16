@@ -323,6 +323,7 @@ impl Hooks for SpanishHooks {
             "noun" => romance::noun(entry, &register),
             "adjective" => romance::adjective(entry, &register),
             "determiner" => {
+                own_row(entry);
                 if romance::agrees(entry) {
                     romance::adjective(entry, &register);
                 } else {
@@ -347,6 +348,24 @@ impl Hooks for SpanishHooks {
     fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
         edition == "es" && pos == "verb" && edition_verb(entry)
     }
+}
+
+/// A demonstrative's table lists its siblings' rows too (`ése`'s: `éste`,
+/// `ése`, `aquél`, tagged proximal, medial and distal): the headword's only.
+fn own_row(entry: &mut Entry) {
+    let rows = ["proximal", "medial", "distal"];
+    let tagged = |f: &flexion_train::kaikki::Form, r: &str| f.tags.iter().any(|t| t == r);
+    let Some(row) = entry
+        .forms
+        .iter()
+        .filter(|f| f.form == entry.word)
+        .find_map(|f| rows.into_iter().find(|r| tagged(f, r)))
+    else {
+        return;
+    };
+    entry
+        .forms
+        .retain(|f| !rows.iter().any(|r| *r != row && tagged(f, r)));
 }
 
 /// Whether a form of the imperfect subjunctive is the one in `-se`
