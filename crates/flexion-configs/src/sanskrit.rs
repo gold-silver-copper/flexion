@@ -21,6 +21,18 @@ pub fn language() -> Language {
         version: "0.1.0",
         description: "Sanskrit inflection for any word, in Devanagari: declension and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            PresentClass "The present class, how a verb makes its present stem (Whitney §§ 602ff)." {
+                Class1 "1" ["class-1"],
+                Class2 "2" ["class-2"],
+                Class3 "3" ["class-3"],
+                Class4 "4" ["class-4"],
+                Class5 "5" ["class-5"],
+                Class6 "6" ["class-6"],
+                Class7 "7" ["class-7"],
+                Class8 "8" ["class-8"],
+                Class9 "9" ["class-9"],
+                Class10 "10" ["class-10"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Accusative "acc" ["accusative"],
@@ -186,7 +198,7 @@ pub fn language() -> Language {
                     ("perfect", vec!["Active", "Third", "Singular"]),
                     ("aorist", vec!["Active", "Third", "Singular"]),
                 ],
-                inherent: vec![],
+                inherent: vec!["PresentClass"],
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
@@ -453,6 +465,30 @@ impl Hooks for SanskritHooks {
 
     /// Gender from the declension template (`sa-decl-noun-m`) or the head
     /// line (`देव • (devá) stem, m`).
+    /// The root (the form tagged `root`) of a page of a perfect, aorist,
+    /// future or benedictive, and of a verb of a present class not a
+    /// causative (Whitney §§ 602ff): the head line's last words say which
+    /// (`(class 6, type P, present, root विश्)`, `(type P, aorist, root
+    /// ग्रह्)`). Causatives, passives and desideratives are verbs of their own.
+    fn root(&self, entry: &Entry) -> Option<String> {
+        if entry.pos != "verb" {
+            return None;
+        }
+        let head = &entry.head_templates.first()?.expansion;
+        let (_, last) = head.rsplit_once('(')?;
+        let words: Vec<&str> = last.trim_end_matches(')').split(", ").collect();
+        let tense = words
+            .iter()
+            .any(|w| matches!(*w, "perfect" | "aorist" | "future" | "benedictive"));
+        let primary =
+            words.iter().any(|w| w.starts_with("class ")) && !words.contains(&"causative");
+        let root = entry
+            .forms
+            .iter()
+            .find(|f| f.tags.iter().any(|t| t == "root"))?;
+        (tense || primary).then(|| root.form.clone())
+    }
+
     fn inherent_tags(&self, entry: &Entry) -> Vec<String> {
         let template = entry
             .forms
@@ -466,7 +502,14 @@ impl Hooks for SanskritHooks {
             "n" => Some("neuter"),
             _ => None,
         };
-        tag.map(|t| vec![t.to_string()]).unwrap_or_default()
+        // A verb's present class, from its senses (`class-6`).
+        let classes = entry
+            .senses
+            .iter()
+            .flat_map(|s| &s.tags)
+            .filter(|t| t.starts_with("class-"))
+            .cloned();
+        tag.map(str::to_string).into_iter().chain(classes).collect()
     }
 }
 
