@@ -25,8 +25,8 @@ const KEEP: usize = 4;
 /// The paradigm readings a word's table is built from, the likeliest.
 pub const READINGS: usize = 4;
 
-/// What joins the parts of a compound written in parts.
-const JOINER: char = '-';
+/// What joins the parts of a word written in parts: a hyphen, or a space.
+const JOINERS: [char; 2] = ['-', ' '];
 
 /// The fewest letters before a compound's last part (see [`Grammar::head`]).
 pub const FRONT_LETTERS: usize = 3;
@@ -39,6 +39,9 @@ pub enum Compound {
     Last,
     /// Each part, as the word it is: `диван-кровать`, `дивана-кровати`.
     Each,
+    /// Only its first part, the rest kept: `pyytää anteeksi`, `en pyydä
+    /// anteeksi`; `кто-то`, `кого-то`.
+    First,
 }
 
 impl Label for Compound {
@@ -46,7 +49,9 @@ impl Label for Compound {
         self as usize
     }
     fn from_index(index: usize) -> Option<Self> {
-        [Compound::Last, Compound::Each].get(index).copied()
+        [Compound::Last, Compound::Each, Compound::First]
+            .get(index)
+            .copied()
     }
 }
 
@@ -428,9 +433,13 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// Where words inflect their last part (compounds; see
     /// [`Grammar::head`]).
     pub heads: Heads<'a>,
-    /// Which words written in parts inflect each part, read off the first
-    /// part (`диван` of `диван-кровать`).
+    /// Which words written in parts inflect each part or only the first,
+    /// read off the first part (`диван` of `диван-кровать`).
     pub compound: Option<Choice<'a, Compound>>,
+    /// Where a word that inflects its first part keeps the rest, per cell:
+    /// after it (Finnish `otan kiinni`) or before it (`kiinni ottava`).
+    /// Empty: after it in every cell.
+    pub kept: Cow<'a, [Placement]>,
     /// Mobile stress, where the language writes it.
     pub accent: Option<Accent<'a, A>>,
     /// Sound laws and spelling rules every built form goes through.
@@ -642,9 +651,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 (inf, classes, built)
             })
             .collect();
-        // A word written in parts: as one word, or part by part.
-        let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
-            (Some(compound), Some((first, rest))) => {
+        // A word written in parts: as one word, part by part, or its first
+        // part with the rest kept.
+        let parted = JOINERS
+            .iter()
+            .filter_map(|&j| Some((lemma.find(j)?, j)))
+            .min()
+            .and_then(|(_, j)| Some((lemma.split_once(j)?, j)));
+        let (whole, parts) = match (&self.compound, parted) {
+            (Some(compound), Some(((first, rest), joiner))) => {
                 let first_key = self.orthography.key(&self.orthography.read(first).letters);
                 let readings = compound.read(&first_key, self.smoothing, |_| true);
                 let p = |c: Compound| {
@@ -653,14 +668,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         .find(|r| r.value == c)
                         .map_or(0.0, |r| r.probability)
                 };
-                let each = p(Compound::Each);
-                let parts = (each > 0.0).then(|| {
-                    (
-                        top(self.unsharpened(first, cells, &Known::default())),
-                        top(self.unsharpened(rest, cells, known)),
-                    )
+                let (each, kept) = (p(Compound::Each), p(Compound::First));
+                // The forms given, of the first part: without the rest.
+                let (tail, head) = (format!("{joiner}{rest}"), format!("{rest}{joiner}"));
+                let given: Vec<(usize, &str)> = known
+                    .forms
+                    .iter()
+                    .filter_map(|&(c, f)| {
+                        Some((c, f.strip_suffix(&tail).or_else(|| f.strip_prefix(&head))?))
+                    })
+                    .collect();
+                let base = Known {
+                    forms: &given,
+                    ..*known
+                };
+                let firsts = (each + kept > 0.0).then(|| {
+                    let known = if kept > 0.0 { &base } else { &Known::default() };
+                    top(self.unsharpened(first, cells, known))
                 });
-                (p(Compound::Last), parts.map(|parts| (parts, each)))
+                let rests = (each > 0.0).then(|| top(self.unsharpened(rest, cells, known)));
+                (
+                    p(Compound::Last),
+                    firsts.map(|firsts| (firsts, rests, joiner, rest, each, kept)),
+                )
             }
             _ => (1.0, None),
         };
@@ -798,13 +828,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     }
                 }
             }
-            if let Some(((firsts, rests), p)) = &each {
+            if let Some((firsts, rests, joiner, rest, each, kept)) = &parts {
                 for a in firsts.get(i).into_iter().flatten() {
-                    for b in rests.get(i).into_iter().flatten() {
+                    if *kept > 0.0 {
+                        let with = |f: &str| match self.kept.get(cell) {
+                            Some(Placement::Before) => format!("{rest}{joiner}{f}"),
+                            _ => format!("{f}{joiner}{rest}"),
+                        };
+                        add(
+                            &mut out,
+                            Candidate {
+                                form: with(&a.form),
+                                also: a.also.iter().map(|f| with(f)).collect(),
+                                probability: kept * a.probability,
+                                ..a.clone()
+                            },
+                        );
+                    }
+                    let rests = rests.as_ref().and_then(|r| r.get(i)).into_iter().flatten();
+                    for b in rests {
                         out.push(Candidate {
-                            form: format!("{}{JOINER}{}", a.form, b.form),
+                            form: format!("{}{joiner}{}", a.form, b.form),
                             also: Vec::new(),
-                            probability: p * a.probability * b.probability,
+                            probability: each * a.probability * b.probability,
                             status: b.status,
                             paradigm: b.paradigm,
                             evidence: b.evidence,
@@ -1068,7 +1114,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let phrase = paradigm
                 .pattern_in(&self.paradigms, self.space(), *cell)
                 .is_some_and(|p| p.contains(' '));
-            if lemma.contains(JOINER) || form.contains(JOINER) || (form.contains(' ') && !phrase) {
+            if lemma.contains('-') || form.contains('-') || (form.contains(' ') && !phrase) {
                 continue;
             }
             // A form the paradigm builds fixes nothing it doesn't.

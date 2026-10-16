@@ -187,14 +187,15 @@ pub fn learn<'s>(
         .collect();
     let (words, rest_words) = everyone.split_at(learned_from.min(everyone.len()));
     trace.mark("words");
-    // Words written in parts that inflect each part are the grammar of
-    // their parts, not paradigms of their own.
+    // Words written in parts that inflect each part, or their first only,
+    // are the grammar of their parts, not paradigms of their own.
     let compounds: Vec<(String, Compound)> = words.iter().filter_map(compound).collect();
+    let kept = kept_rest(words, shape.cells);
     let compound_choice =
         (!compounds.is_empty()).then(|| choose::learn(&compounds, settings, |_, _| true));
     let parted: crate::HashSet<&str> = words
         .iter()
-        .filter(|w| compound(w).is_some_and(|c| c.1 == Compound::Each))
+        .filter(|w| compound(w).is_some_and(|c| c.1 != Compound::Last))
         .map(|w| w.key.as_str())
         .collect();
     let all_words = words;
@@ -353,7 +354,7 @@ pub fn learn<'s>(
             rest_words
                 .iter()
                 .zip(&rest_assignment)
-                .filter(|(w, _)| compound(w).is_none_or(|c| c.1 != Compound::Each))
+                .filter(|(w, _)| compound(w).is_none_or(|c| c.1 == Compound::Last))
                 .filter_map(|(w, p)| Some((w, (*p)?))),
         )
         .collect();
@@ -510,6 +511,7 @@ pub fn learn<'s>(
             .and_then(|f| u8::try_from(f.0).ok())
             .zip(feature_choice),
         compound: compound_choice,
+        kept: Cow::Owned(kept),
         prefixes,
         heads: flexion::Heads::default(),
         accent,
@@ -780,6 +782,13 @@ pub fn learn<'s>(
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         let space = (grammar.slots.to_vec(), grammar.tables.to_vec());
         layers(
+            paradigms,
+            flexion::Space {
+                slots: &space.0,
+                tables: &space.1,
+            },
+        );
+        unrepeated(
             paradigms,
             flexion::Space {
                 slots: &space.0,
@@ -1159,20 +1168,112 @@ fn layers(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
     }
 }
 
-/// How a word written in parts inflects, keyed by its first part: each
-/// part when a form changes its first part. `None` for a word of one part.
+/// How a word written in parts (by a hyphen or a space, whichever comes
+/// first) inflects, keyed by its first part: only the first when every form
+/// keeps the rest (`pyytää anteeksi`, `en pyydä anteeksi`), each part when a
+/// form changes its first part, else the last. `None` for a word of one
+/// part.
 fn compound(w: &Word) -> Option<(String, Compound)> {
-    let (first, _) = w.letters.split_once('-')?;
-    let (first_key, _) = w.key.split_once('-')?;
-    let firsts = w
-        .cells
-        .iter()
-        .filter_map(|fs| fs.first()?.letters.split_once('-'));
-    let how = match firsts.map(|(f, _)| f).any(|f| f != first) {
-        true => Compound::Each,
-        false => Compound::Last,
+    let (joiner, first, rest) = parts(w)?;
+    let (first_key, _) = w.key.split_once(joiner)?;
+    let (tail, head) = (format!("{joiner}{rest}"), format!("{rest}{joiner}"));
+    let forms = || {
+        w.cells
+            .iter()
+            .filter_map(|fs| Some(fs.first()?.letters.as_str()))
+    };
+    let kept = |f: &str| f.ends_with(&tail) || f.starts_with(&head);
+    let how = if forms().all(kept) && forms().any(|f| f != w.letters) {
+        Compound::First
+    } else if forms()
+        .filter_map(|f| f.split_once(joiner))
+        .any(|(f, _)| f != first)
+    {
+        Compound::Each
+    } else {
+        Compound::Last
     };
     Some((first_key.to_string(), how))
+}
+
+/// Where words that inflect their first part keep the rest, per cell (see
+/// [`flexion::Grammar::kept`]): before it where most of them do. Empty when
+/// none does.
+fn kept_rest(words: &[Word], cells: usize) -> Vec<flexion::Placement> {
+    let mut before = vec![(0usize, 0usize); cells];
+    for w in words {
+        let Some((_, Compound::First)) = compound(w) else {
+            continue;
+        };
+        let Some((joiner, _, rest)) = parts(w) else {
+            continue;
+        };
+        let head = format!("{rest}{joiner}");
+        for (counts, f) in before.iter_mut().zip(&w.cells) {
+            if let Some(f) = f.first() {
+                counts.0 += usize::from(f.letters.starts_with(&head));
+                counts.1 += 1;
+            }
+        }
+    }
+    if before.iter().all(|&(b, n)| 2 * b <= n) {
+        return Vec::new();
+    }
+    before
+        .into_iter()
+        .map(|(b, n)| match 2 * b > n {
+            true => flexion::Placement::Before,
+            false => flexion::Placement::After,
+        })
+        .collect()
+}
+
+/// A word written in parts: what joins them (a hyphen or a space, whichever
+/// comes first), its first part, and the rest.
+fn parts(w: &Word) -> Option<(char, &str, &str)> {
+    let (_, joiner) = ['-', ' ']
+        .into_iter()
+        .filter_map(|j| Some((w.letters.find(j)?, j)))
+        .min()?;
+    let (first, rest) = w.letters.split_once(joiner)?;
+    Some((joiner, first, rest))
+}
+
+/// Each child's cells that write what it would take anyway (from its stem
+/// slots, else its parent: Greek `ποιεω`'s derived `subj_pass_3` as
+/// `μελλω`'s) left to take it: the same patterns, stated once.
+fn unrepeated(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
+    for i in 0..paradigms.len() {
+        let Some(par) = paradigms.get(i).filter(|p| p.affix.is_none()) else {
+            continue;
+        };
+        let Some(up) = par.parent.and_then(|q| paradigms.get(usize::from(q))) else {
+            continue;
+        };
+        let cells = par.table.split('\t').count().saturating_sub(1);
+        let taken = |c: usize| {
+            par.stated(space, c).or_else(|| {
+                up.pattern_in(paradigms, space, par.read(c))
+                    .map(Cow::into_owned)
+            })
+        };
+        let table: String = (0..cells)
+            .map(|c| {
+                let mine = match par.own(c) {
+                    None => return "\t".to_string(),
+                    Some(flexion::Form::Derived) => None,
+                    Some(flexion::Form::Pattern(p)) => Some(p.to_string()),
+                };
+                match (mine == taken(c), par.table.split('\t').nth(c)) {
+                    (true, _) | (_, None) => "\t".to_string(),
+                    (false, Some(field)) => format!("{field}\t"),
+                }
+            })
+            .collect();
+        if let Some(p) = paradigms.get_mut(i) {
+            p.table = Cow::Owned(table);
+        }
+    }
 }
 
 /// A view: a cell order in which each cell reads another of the same
@@ -3541,6 +3642,33 @@ mod tests {
     }
 
     #[test]
+    fn a_word_in_parts_whose_rest_stays_inflects_its_first() {
+        // Finnish `pyytää anteeksi`: every form keeps `anteeksi`, after a
+        // phrase (`en pyydä anteeksi`) or before a participle (`anteeksi
+        // pyytävä`). Russian `диван-кровать`: both parts change. Turkish
+        // `fransız kalmak`: the last part only.
+        let first = word(
+            "pyytää anteeksi",
+            &[
+                "pyytää anteeksi",
+                "pyydän anteeksi",
+                "en pyydä anteeksi",
+                "anteeksi pyytävä",
+            ],
+        );
+        let each = word("диван-кровать", &["диван-кровать", "дивана-кровати"]);
+        let last = word("fransız kalmak", &["fransız kalmak", "fransız kaldım"]);
+        assert_eq!(
+            [&first, &each, &last].map(|w| compound(w).map(|c| c.1)),
+            [
+                Some(Compound::First),
+                Some(Compound::Each),
+                Some(Compound::Last)
+            ]
+        );
+    }
+
+    #[test]
     fn words_inflect_their_last_part_where_compounds_do() {
         // Finnish compounds of `meri` and `talo`: inflected as those.
         let fronts = [
@@ -3759,6 +3887,7 @@ mod tests {
             relations: Cow::Borrowed(&[]),
             feature: None,
             compound: None,
+            kept: Cow::Borrowed(&[]),
             prefixes: None,
             heads: flexion::Heads::default(),
             accent: None,

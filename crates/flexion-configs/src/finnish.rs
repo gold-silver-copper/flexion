@@ -434,6 +434,11 @@ fn nonfinite(place: usize) -> Option<Vec<&'static str>> {
 
 struct FinnishHooks;
 
+/// Up to `n` Finnish words, a space apart.
+fn words(s: &str, n: usize) -> bool {
+    s.split(' ').count() <= n && s.split(' ').all(finnish_word)
+}
+
 /// Letters, hyphens and the apostrophe a weak grade writes (`vaa'an`): no
 /// spaces, no abbreviations (`EU:n`).
 fn finnish_word(w: &str) -> bool {
@@ -444,16 +449,15 @@ fn finnish_word(w: &str) -> bool {
 }
 
 impl Hooks for FinnishHooks {
-    fn lemma_ok(&self, _pos: &str, lemma: &str) -> bool {
-        finnish_word(lemma)
+    /// A word; a verb may be of two or three (`pyytää anteeksi`).
+    fn lemma_ok(&self, pos: &str, lemma: &str) -> bool {
+        words(lemma, if pos == "verb" { 3 } else { 1 })
     }
 
-    /// A word; of a verb, also a phrase of up to three (`en ole tullut`).
+    /// A word; of a verb, also a phrase of up to five (`en ole tullut`, `en
+    /// ole pyytänyt anteeksi`).
     fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
-        finnish_word(form)
-            || (pos == "verb"
-                && (2..=3).contains(&form.split(' ').count())
-                && form.split(' ').all(finnish_word))
+        words(form, if pos == "verb" { 5 } else { 1 })
     }
 
     /// The possessive rows of the first and second persons (`talossani`,
