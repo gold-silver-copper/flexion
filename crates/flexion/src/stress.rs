@@ -467,6 +467,21 @@ mod tests {
     }
 
     #[test]
+    fn a_capital_keeps_its_accent() {
+        // A name's first letter, capital and accented (`Ἄδωνις`), is read
+        // as the lowercase letter is: the accent on the first vowel.
+        let mut greek = GREEK;
+        greek.stressed = &[('ἄ', 'ἀ', 0)];
+        greek.vowels = "αεηιουωἀ";
+        let capital = greek.read("Ἄδωνις");
+        assert_eq!(
+            (capital.letters.as_str(), capital.stress),
+            ("ἀδωνις", greek.read("ἄδωνις").stress)
+        );
+        assert!(capital.stress.is_some());
+    }
+
+    #[test]
     fn a_word_reads_the_same_however_composed() {
         // `ἔλυον` typed as one letter or as `ε` with its breathing and
         // accent after it.

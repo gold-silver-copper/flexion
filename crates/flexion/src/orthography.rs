@@ -129,8 +129,15 @@ impl Orthography<'_> {
     /// written: each word's accent is its own (the participle's on `-μέν-`,
     /// the auxiliary's), none a rule places.
     pub fn read(&self, word: &str) -> Written {
-        let word: &str = &self.composed(word);
-        let casing = casing(word);
+        let composed = self.composed(word);
+        let casing = casing(&composed);
+        // Lowercased first, so that a capital's stress mark is read as the
+        // lowercase letter's (`Ἄδωνις`).
+        let word: &str = &if self.lowercase {
+            composed.chars().map(lower).collect()
+        } else {
+            composed
+        };
         if word.contains(' ') {
             let letters = word
                 .chars()
