@@ -520,3 +520,21 @@ impl Hooks for TurkishHooks {
 }
 
 const README: &str = include_str!("../readme/turkish.md");
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_verb_table_s_places_are_928_cells_with_the_template_s_anchors() {
+        // The infinitive at 209 and the first participle at 211 (zero-based,
+        // as `gelmek`'s table has `gelmek` and `gelen` there); the
+        // imperative's first persons are blanks in each of the four blocks.
+        let cells: Vec<Vec<&str>> = (0..VERB_TABLE).filter_map(verb_cell).collect();
+        let distinct: std::collections::BTreeSet<&Vec<&str>> = cells.iter().collect();
+        assert_eq!((cells.len(), distinct.len()), (928, 928));
+        let has = |place: usize, tag: &str| verb_cell(place).is_some_and(|t| t.contains(&tag));
+        assert!(has(209, "infinitive") && has(211, "participle-imperfective"));
+        assert!(has(235 + 209, "polarity-negative") && has(235 + 209, "infinitive"));
+    }
+}

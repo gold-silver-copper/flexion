@@ -33,3 +33,7 @@ assert_eq!(pronoun(Person::Third, Number::Singular, Gender::Feminine, Case::Accu
 assert_eq!(count_with_number("mouse", 3), "3 mice");
 assert_eq!(add_possessive("dogs"), "dogs'");
 ```
+
+The personal pronouns are a fixed table written by hand (`pronoun`): the
+dictionary's head lines give only some of their forms (`he` lists `himself`
+and not `him`), so a grammar learned from them would guess the rest.
