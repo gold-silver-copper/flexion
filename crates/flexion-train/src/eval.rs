@@ -73,6 +73,9 @@ pub struct Score {
     pub any: usize,
     /// The wrong forms by what went wrong, in [`Kind::ALL`]'s order.
     pub errors: [usize; Kind::ALL.len()],
+    /// First candidates without the stress mark the right answer writes
+    /// (Greek `ὀστουν` for `ὀστοῦν`).
+    pub accentless: usize,
     /// The right answer among the candidates at all, at any place.
     pub among: usize,
     /// Summed over forms: −log₂ of the probability the grammar gives the
@@ -113,6 +116,9 @@ pub struct Outcome {
     pub bits: f64,
     /// What went wrong, if the first candidate isn't right.
     pub error: Option<Kind>,
+    /// The first candidate has no stress mark where the right answer has
+    /// one.
+    pub accentless: bool,
 }
 
 impl Outcome {
@@ -190,6 +196,7 @@ impl Score {
                 s.lemma.1 += usize::from(right);
             }
             s.any += usize::from(o.any);
+            s.accentless += usize::from(o.accentless);
             if let Some(slot) = o
                 .error
                 .and_then(|e| Kind::ALL.iter().position(|&k| k == e))
@@ -238,6 +245,11 @@ impl Score {
             })
             .collect::<Vec<_>>()
             .join(", ")
+            + &if self.accentless > 0 {
+                format!("; {} without the accent they need", self.accentless)
+            } else {
+                String::new()
+            }
     }
 
     /// The mean reciprocal rank of the right answer.
@@ -501,6 +513,10 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 any,
                 bits,
                 error,
+                accentless: first.is_some_and(|c| {
+                    orthography.read(&c.form).stress.is_none()
+                        && orthography.read(want).stress.is_some()
+                }),
             });
         }
         out
@@ -961,6 +977,7 @@ mod tests {
             mark_monosyllables: false,
             folded: &[('ё', 'е')],
             prosody: None,
+            initial: "",
         };
         let listed = |forms: &[&str]| forms.iter().map(ToString::to_string).collect::<Vec<_>>();
         assert_eq!(

@@ -1187,7 +1187,7 @@ fn orthography(script: &Script) -> String {
         .map(|(c, p, k)| format!("({c:?}, {p:?}, {k})"))
         .collect();
     format!(
-        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n    prosody: {},\n}};\n",
+        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n    prosody: {},\n    initial: {:?},\n}};\n",
         script.lowercase,
         script.vowels,
         script.stress_marks,
@@ -1202,9 +1202,10 @@ fn orthography(script: &Script) -> String {
             .collect::<Vec<_>>()
             .join(", "),
         script.prosody.as_ref().map_or("None".to_string(), |p| format!(
-            "Some(flexion::Prosody {{\n        diphthongs: &{:?},\n        hiatus: {:?},\n        long: {:?},\n        short_finals: &{:?},\n        acute: {},\n        circumflex: {},\n    }})",
-            p.diphthongs, p.hiatus, p.long, p.short_finals, p.acute, p.circumflex
+            "Some(flexion::Prosody {{\n        diphthongs: &{:?},\n        hiatus: {:?},\n        long: {:?},\n        short_finals: &{:?},\n        short_endings: &{:?},\n        acute: {},\n        circumflex: {},\n    }})",
+            p.diphthongs, p.hiatus, p.long, p.short_finals, p.short_endings, p.acute, p.circumflex
         )),
+        script.initial,
     )
 }
 

@@ -21,6 +21,7 @@ pub struct Script {
     pub folded: Vec<(char, char)>,
     /// The law of limitation's facts, where the language has one.
     pub prosody: Option<Prosody>,
+    pub initial: String,
 }
 
 /// What [`flexion::Prosody`] needs, owned.
@@ -30,6 +31,7 @@ pub struct Prosody {
     pub hiatus: String,
     pub long: String,
     pub short_finals: Vec<&'static str>,
+    pub short_endings: Vec<&'static str>,
     pub acute: u8,
     pub circumflex: u8,
 }
@@ -140,6 +142,7 @@ impl Script {
             hiatus,
             long,
             short_finals: s.short_finals.clone(),
+            short_endings: s.short_endings.clone(),
             acute: 0,
             circumflex: s
                 .circumflex
@@ -159,6 +162,7 @@ impl Script {
             implicit: s.implicit.to_string(),
             dropped: s.strip_marks.to_string(),
             mark_monosyllables: s.mark_monosyllables,
+            initial: s.initial_marks.to_string(),
         }
     }
 
@@ -177,9 +181,11 @@ impl Script {
                 hiatus: &p.hiatus,
                 long: &p.long,
                 short_finals: &p.short_finals,
+                short_endings: &p.short_endings,
                 acute: p.acute,
                 circumflex: p.circumflex,
             }),
+            initial: &self.initial,
         }
     }
 }

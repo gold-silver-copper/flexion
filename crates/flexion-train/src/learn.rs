@@ -3858,6 +3858,7 @@ mod tests {
             mark_monosyllables: false,
             folded: &[],
             prosody: None,
+            initial: "",
         };
         let anchored = |w: &str| Cow::Owned(format!("{}{w}", flexion::WORD_END));
         let mut grammar = Grammar {
@@ -3928,6 +3929,7 @@ mod tests {
             mark_monosyllables: false,
             folded: &[('ē', 'e')],
             prosody: None,
+            initial: "",
         };
         let mut words: Vec<(String, String, &str)> = Vec::new();
         for front in [

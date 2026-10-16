@@ -206,6 +206,9 @@ pub struct Spelling {
     pub long_marks: &'static str,
     /// Diphthongs short at a word's end (`αι`, `οι`).
     pub short_finals: Vec<&'static str>,
+    /// Endings whose last syllable counts short, long as it is (Greek
+    /// `-εως`, `-εων`: `πόλεως`, Smyth §163a).
+    pub short_endings: Vec<&'static str>,
     /// The stress mark that can only stand on a long vowel (the circumflex):
     /// a vowel read with it is read long (`ᾶ` as `ᾱ`).
     pub circumflex: Option<char>,

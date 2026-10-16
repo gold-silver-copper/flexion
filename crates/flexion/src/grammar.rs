@@ -957,15 +957,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // places it), and whether its final `-αι`, `-οι` counts as long.
         let accent = self.accent.as_ref();
         let recedes = accent
-            .and_then(|a| {
-                let commonest = (0..a.patterns.len()).max_by_key(|&i| {
-                    (
-                        a.patterns.get(i).map_or(0, |p| p.words),
-                        std::cmp::Reverse(i),
-                    )
-                })?;
-                a.place(u16::try_from(commonest).ok()?, cell)
-            })
+            .and_then(|a| a.usual(cell))
             .is_none_or(|place| place == crate::Place::Recessive);
         let long = accent.is_some_and(|a| {
             a.long_finals
@@ -1618,8 +1610,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 None => out.push((s, *p)),
             }
         }
+        // A cell none of the word's classes places: where most words have
+        // it, else as far back as the law allows. A form that needs an accent
+        // never goes without one (Greek `ὀστοῦν`, not `ὀστουν`).
         if out.is_empty() {
-            out.push((None, 1.0));
+            let place = accent.usual(cell).unwrap_or(crate::Place::Recessive);
+            let stem = classes.first().map_or(0, |c| c.2);
+            let s = stress::place(&self.orthography, form, ending, finals, place, stem);
+            out.push((s, 1.0));
         }
         out
     }

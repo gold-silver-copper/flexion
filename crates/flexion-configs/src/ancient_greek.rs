@@ -291,6 +291,7 @@ pub fn language() -> Language {
             long_vowels: "ηω",
             long_marks: "\u{304}\u{345}",
             short_finals: vec!["αι", "οι"],
+            short_endings: vec!["εως", "εων"],
             circumflex: Some('\u{342}'),
             stress_setting: "accents",
             marks_setting: "length_marks",
