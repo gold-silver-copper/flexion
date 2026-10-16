@@ -63,7 +63,8 @@ pub struct Words<'a> {
 /// The rows of a run, as written: a header, then per form `part of speech,
 /// mode, word, cell, right (1/0), the right answer's place (1 first; `-`
 /// if no candidate), the first candidate's probability, the right
-/// answer's, its bits, the word's group and the cell's name`,
+/// answer's, its bits, the word's group, the cell's name, and what went
+/// wrong if anything (see [`flexion_train::measure::Kind`])`,
 /// tab-separated.
 #[derive(Debug, Default)]
 pub struct Saved {
@@ -81,7 +82,8 @@ pub fn bytes_path(path: &Path) -> std::path::PathBuf {
     std::path::PathBuf::from(name)
 }
 
-const HEADER: &str = "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\tgroup\tname\n";
+const HEADER: &str =
+    "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\tgroup\tname\terror\n";
 
 impl Saved {
     pub fn add(&mut self, pos: &str, mode: &str, words: &Words<'_>, outcomes: &[Outcome]) {
@@ -90,9 +92,10 @@ impl Saved {
             let group = words.groups.get(o.word).map_or("?", String::as_str);
             let name = words.cells.get(o.cell).map_or("?", String::as_str);
             let rank = o.rank.map_or("-".to_string(), |r| (r + 1).to_string());
+            let error = o.error.map_or(String::new(), |e| e.to_string());
             let _ = writeln!(
                 self.text,
-                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}\t{group}\t{name}",
+                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}\t{group}\t{name}\t{error}",
                 o.cell,
                 u8::from(o.right()),
                 o.top,

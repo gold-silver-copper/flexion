@@ -30,9 +30,10 @@
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
-//! - `inspect`: a word's readings and forms (`--word a,b`; `--parts`: typed in full
-//!   with the dictionary's principal parts given; `--holdout`: learned without the
-//!   tenth `try` scores), and a sample of irregular forms.
+//! - `inspect`: a word's readings and its table as `try` scores it, each cell
+//!   marked right or wrong (`--word a,b`; `--parts`: also typed in full with the
+//!   dictionary's principal parts given; `--holdout`: learned without the tenth
+//!   `try` scores), and a sample of irregular forms.
 
 mod audit;
 mod bench;
@@ -863,6 +864,12 @@ fn try_tenth(
         if !o.quick || o.given {
             inputs.extend((1..=3).map(eval::Input::Given));
         }
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let blocks: Vec<std::ops::Range<usize>> = cells
+            .groups
+            .iter()
+            .map(|g| g.offset..g.offset + g.len())
+            .collect();
         let ids = outcomes::word_ids(&test);
         let on = flexion_train::pipeline::on_training(&train, g, &test);
         let groups = outcomes::groups(&test, &on);
@@ -883,6 +890,22 @@ fn try_tenth(
                 "{}",
                 score_line(&format!("held-out {input:?}"), s.words, &s)
             );
+            println!("    errors: {}", s.census());
+            if blocks.len() > 1 {
+                let (mean, scores) = eval::by_block(&out, &blocks);
+                let each: Vec<String> = cells
+                    .groups
+                    .iter()
+                    .zip(&scores)
+                    .filter(|(_, s)| s.forms > 0)
+                    .map(|(g, s)| format!("{} {:.2}% ({})", g.name, 100.0 * s.accuracy(), s.forms))
+                    .collect();
+                println!(
+                    "    by block: mean {:.2}%; {}",
+                    100.0 * mean,
+                    each.join(", ")
+                );
+            }
             let bins: Vec<String> = s
                 .bins
                 .iter()
@@ -960,10 +983,12 @@ fn try_tenth(
             eval::Input::Headword,
             &learned.seen,
         );
+        let (all, filled) = eval::completion(g, &train_refs);
         println!(
-            "  attested (sample of {}): top-1 {:.2}%",
+            "  attested (sample of {}): top-1 {:.2}%; every cell (the dictionary's or not) has a form in {filled} of {all}, {} gaps",
             train_refs.len(),
-            100.0 * s.accuracy()
+            100.0 * s.accuracy(),
+            all - filled
         );
         // What the runtime reads of the relations, unchanged by pruning the
         // rest: the same words' every answer with the relations whole.
@@ -1546,10 +1571,6 @@ fn inspect(
     if let Some(words) = word {
         for word in words.split(',') {
             println!("{word}");
-            let bare = flexion::Grammar {
-                irregular: flexion::Irregular::default(),
-                ..g.clone()
-            };
             let key = script
                 .orthography()
                 .key(&script.orthography().read(word).letters);
@@ -1560,7 +1581,8 @@ fn inspect(
                 .map(|l| format!("{:?}", l.cells))
                 .collect();
             println!("dictionary: {listed:?}");
-            // With `--parts`: the dictionary's principal parts given too.
+            // The first entry spelled so is the one scored; with `--parts`,
+            // its principal parts are given too.
             let entry = d.lexemes.iter().find(|l| l.key == key);
             let parts = if given {
                 flexion_train::parts(lang, part)?
@@ -1571,12 +1593,18 @@ fn inspect(
                 .iter()
                 .filter_map(|&c| Some((c, entry?.cells.get(c)?.first()?.as_str())))
                 .collect();
-            let typed = entry.filter(|_| given).map_or(word, |l| l.full.as_str());
-            let known = flexion::Known {
-                forms: &forms,
-                full: given,
-                ..flexion::Known::default()
-            };
+            let names = cell_names(lang, part)?;
+            let headword = entry.map_or(word, |l| l.lemma.as_str());
+            let full = entry.map_or(word, |l| l.full.as_str());
+            println!(
+                "entry: headword {headword}, in full {full}, held out {}; given: {}",
+                entry.is_some_and(|l| !kept(l)),
+                forms
+                    .iter()
+                    .map(|(c, f)| format!("{} {f}", names.get(*c).map_or("?", String::as_str)))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
             println!(
                 "paradigm readings: {:?}",
                 g.paradigm
@@ -1615,25 +1643,35 @@ fn inspect(
                     );
                 }
             }
-            let names = cell_names(lang, part)?;
-            // Given its principal parts, the whole table as `try` scores it.
-            let table = if given {
-                g.table(typed, &known)
-            } else {
-                Vec::new()
+            // Both tables as `try` scores them: from the headword, and with
+            // the principal parts given (typed in full).
+            let from_headword = g.table(headword, &flexion::Known::default());
+            let known = flexion::Known {
+                forms: &forms,
+                full: true,
+                ..flexion::Known::default()
             };
+            let with_parts = given.then(|| g.table(full, &known));
+            let o = &g.orthography;
             for cell in 0..g.cells {
-                let c: Vec<String> = match table.get(cell) {
-                    Some(forms) => forms.iter().take(3).map(ToString::to_string).collect(),
-                    None => bare
-                        .candidates(typed, cell, &known)
-                        .iter()
-                        .take(3)
-                        .map(ToString::to_string)
-                        .collect(),
+                let gold: &[String] = entry
+                    .and_then(|l| l.cells.get(cell))
+                    .map_or(&[], Vec::as_slice);
+                let mark = |table: &[Vec<flexion::Candidate<'_>>]| {
+                    let top = table.get(cell).and_then(|c| c.first());
+                    let verdict = eval::verdict(o, top.map(|t| t.form.as_str()), gold);
+                    let shown: Vec<String> = table
+                        .get(cell)
+                        .map(|c| c.iter().take(3).map(ToString::to_string).collect())
+                        .unwrap_or_default();
+                    format!("[{verdict:?}] {}", shown.join(" | "))
                 };
                 let name = names.get(cell).map_or("", String::as_str);
-                println!("cell {cell} ({name}): {}", c.join(" | "));
+                println!("cell {cell} ({name}): dictionary {gold:?}");
+                println!("    from the headword {}", mark(&from_headword));
+                if let Some(t) = &with_parts {
+                    println!("    principal parts given {}", mark(t));
+                }
             }
         }
         return Ok(());
