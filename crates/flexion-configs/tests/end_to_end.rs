@@ -80,7 +80,7 @@ fn firsts<'d>(script: &Script, lexemes: &'d [Lexeme]) -> Vec<&'d Lexeme> {
 }
 
 #[test]
-fn every_language_gives_its_dictionary_forms() {
+fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_not() {
     for lang in flexion_configs::all() {
         lang.validate().expect("valid config");
         let script = Script::new(&lang.spelling);
@@ -88,17 +88,34 @@ fn every_language_gives_its_dictionary_forms() {
         let grammars = grammars(&lang, &script, &data);
         for ((part, d), learned) in lang.parts.iter().zip(&data).zip(&grammars) {
             let g = &learned.grammar;
+            let parts = flexion_train::parts(&lang, part).expect("principal parts");
             for l in firsts(&script, &d.lexemes) {
+                // The dictionary's own principal parts give nothing the
+                // grammar doesn't know, and take nothing from it.
+                let given: Vec<(usize, &str)> = parts
+                    .iter()
+                    .filter_map(|&c| Some((c, l.cells.get(c)?.first()?.as_str())))
+                    .collect();
+                let with_parts = Known {
+                    forms: &given,
+                    full: true,
+                    ..Known::default()
+                };
                 for (cell, forms) in l.cells.iter().enumerate() {
                     let Some(want) = forms.first() else { continue };
-                    let got = g.best(&l.full, cell, &Known::default());
-                    assert!(
-                        same_form(&g.orthography, &got, want),
-                        "{} {}: {} cell {cell} is {want}, the grammar says {got}",
-                        lang.name,
-                        part.name,
-                        l.full
-                    );
+                    for (known, how) in [
+                        (Known::default(), ""),
+                        (with_parts, ", given its principal parts"),
+                    ] {
+                        let got = g.best(&l.full, cell, &known);
+                        assert!(
+                            same_form(&g.orthography, &got, want),
+                            "{} {}: {} cell {cell} is {want}, the grammar says {got}{how}",
+                            lang.name,
+                            part.name,
+                            l.full
+                        );
+                    }
                 }
             }
         }

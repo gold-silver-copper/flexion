@@ -607,6 +607,19 @@ fn try_tenth(
             st.irregular_forms,
         );
         println!("  stages: {}", learned.trace.line());
+        let j = &learn::judge(g, &train, &shape.parts);
+        let pct = |n: usize| 100.0 * n as f64 / j.forms.max(1) as f64;
+        println!(
+            "  the dictionary's words through the runtime ({} words, {} forms): wrong from the headword {:.2}%, in full {:.2}%, given the principal parts {:.2}%; {} broken by the given parts{}{}",
+            j.words,
+            j.forms,
+            pct(j.headword),
+            pct(j.full),
+            pct(j.given),
+            j.broken,
+            if j.examples.is_empty() { "" } else { ": " },
+            j.examples.join("; ")
+        );
         let bytes = flexion_train::print::part_bytes(lang, part, &learned)?;
         let total: usize = bytes.iter().map(|b| b.1).sum();
         let shown: Vec<String> = bytes.iter().map(|(f, n)| format!("{f} {n}")).collect();

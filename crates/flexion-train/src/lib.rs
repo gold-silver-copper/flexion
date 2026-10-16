@@ -157,6 +157,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         max_words: part.max_words,
         marks: None,
         part: part.name.to_string(),
+        parts: parts(lang, part)?,
         inherent: part
             .inherent
             .iter()

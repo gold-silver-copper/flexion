@@ -489,7 +489,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// caller knows (readings that disagree with it are dropped, unless all
     /// do).
     pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
-        self.sharpened(self.unsharpened(lemma, &[cell], known))
+        let given = self.informative(lemma, known);
+        let known = Known {
+            forms: &given,
+            ..*known
+        };
+        self.sharpened(self.unsharpened(lemma, &[cell], &known))
             .pop()
             .unwrap_or_default()
     }
@@ -497,8 +502,43 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The forms of every cell for `lemma`, as [`Grammar::candidates`]
     /// gives each, read once.
     pub fn table(&self, lemma: &str, known: &Known<'_>) -> Vec<Vec<Candidate<'_>>> {
+        let given = self.informative(lemma, known);
+        let known = Known {
+            forms: &given,
+            ..*known
+        };
         let cells: Vec<usize> = (0..self.cells).collect();
-        self.sharpened(self.unsharpened(lemma, &cells, known))
+        self.sharpened(self.unsharpened(lemma, &cells, &known))
+    }
+
+    /// The forms `known` gives that tell the grammar something. Of a word the
+    /// grammar lists, the dictionary's own, a form it already gives first
+    /// tells nothing, and changes nothing (Sanskrit `खादति` given its perfect
+    /// `चखाद`, which its line lists, keeps its augment: `अखादम्`). Of
+    /// another word, every given form tells which readings it can have.
+    fn informative<'k>(&self, lemma: &str, known: &Known<'k>) -> Vec<(usize, &'k str)> {
+        let o = &self.orthography;
+        let key = o.key(&o.read(lemma).letters);
+        if known.forms.is_empty() || !self.lists(&key) {
+            return known.forms.to_vec();
+        }
+        let cells: Vec<usize> = known.forms.iter().map(|&(c, _)| c).collect();
+        let bare = Known {
+            forms: &[],
+            ..*known
+        };
+        let firsts = self.sharpened(self.unsharpened(lemma, &cells, &bare));
+        let same = |a: &str, b: &str| {
+            let (a, b) = (o.read(a), o.read(b));
+            a.letters == b.letters && a.stress == b.stress
+        };
+        known
+            .forms
+            .iter()
+            .zip(&firsts)
+            .filter(|((_, form), built)| !built.first().is_some_and(|c| same(&c.form, form)))
+            .map(|(&given, _)| given)
+            .collect()
     }
 
     /// Each list of candidates sharpened and sorted, likeliest first.
@@ -992,8 +1032,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     ) -> Vec<(usize, String, String)> {
         let mut out: Vec<(usize, String, String)> = Vec::new();
         for (cell, form) in given {
-            // A word written in parts has no one stem.
-            if lemma.contains(JOINER) || form.contains(JOINER) {
+            // A word written in parts has no one stem; nor has a form written
+            // in two words where the paradigm writes one (a separated prefix:
+            // German `richtete zugrunde` fixes no stem `zugrunderichtete` is
+            // built on).
+            let phrase = paradigm
+                .pattern_in(&self.paradigms, self.space(), *cell)
+                .is_some_and(|p| p.contains(' '));
+            if lemma.contains(JOINER) || form.contains(JOINER) || (form.contains(' ') && !phrase) {
                 continue;
             }
             // A form the paradigm builds fixes nothing it doesn't.
@@ -1264,8 +1310,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// for a word a prefix splits (see [`Prefixes`]): the prefix decides
     /// where its letters go.
     pub fn head<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
+        if self.lists(key) {
+            return None;
+        }
+        self.head_unlisted(key, letters)
+    }
+
+    /// The head [`Grammar::head`] gives the word `key` once the grammar
+    /// doesn't list it (the trainer asks before it stops listing a word).
+    pub fn head_unlisted<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
         if self.heads.is_empty()
-            || self.lists(key)
             || self
                 .prefixes
                 .as_ref()
@@ -1315,14 +1369,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .iter()
             .map(|&(c, f)| (c, self.orthography.read(f).letters))
             .collect();
+        // A form the word's own line gives (listed, or built on a stem it
+        // lists) agrees with any paradigm: German `geschehen` lists
+        // `geschieh-`, which its paradigm alone doesn't build.
+        let line = self.irregular.line(key);
+        let lines = |cell: usize, form: &str| {
+            line.is_some_and(|l| {
+                let listed = u16::try_from(cell).ok().and_then(|c| listed_in(l, c));
+                listed.is_some_and(|f| self.orthography.read(f).letters == form)
+                    || self
+                        .stem_built(l, cell)
+                        .is_some_and(|(forms, ..)| forms.iter().any(|(f, _)| f == form))
+            })
+        };
         let agrees = |p: &Paradigm<'a>| {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
             given.iter().all(|(cell, form)| {
-                self.build(p, &stems, key, inherent, *cell, &mut Built::default())
-                    .iter()
-                    .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
+                lines(*cell, form)
+                    || self
+                        .build(p, &stems, key, inherent, *cell, &mut Built::default())
+                        .iter()
+                        .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
             })
         };
         let fits = |p: P| self.paradigms.get(p.index()).is_some_and(agrees);

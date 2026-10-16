@@ -39,6 +39,8 @@ pub struct Shape {
     /// The part of speech's name, as the marks read it (see
     /// [`flexion::Marks`]).
     pub part: String,
+    /// The dictionary's principal parts: the cells it gives a word by.
+    pub parts: Vec<usize>,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -531,7 +533,14 @@ pub fn learn<'s>(
         .collect();
     let wrong = |key: &str| ruled_wrong.contains(key);
     let listed = |key: &str| wrong(key) || grammar.lists(key);
-    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed);
+    let split = |key: &str| {
+        grammar
+            .prefixes
+            .as_ref()
+            .and_then(|p| p.split(key))
+            .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
+    };
+    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed, &split);
     // Compounds: words ending in another (`aavameri` in `meri`), where
     // words inflect their last part.
     let keys: crate::HashSet<&str> = everyone.iter().map(|w| w.key.as_str()).collect();
@@ -888,6 +897,11 @@ fn untie(grammar: &mut Grammar<'_, u16, u16, u8>, words: &[Word]) {
         let Some(&word) = letters.get(key) else {
             return false;
         };
+        // Nor one the runtime would inflect as its last part once unlisted:
+        // its rules' paradigm wouldn't be asked.
+        if g.head_unlisted(key, word).is_some() {
+            return false;
+        }
         let ruled = rules
             .read(anchored, g.smoothing, |_| true)
             .first()
@@ -2784,14 +2798,17 @@ fn heads<'a>(
     cells: usize,
     irregular: &dyn Fn(&str) -> bool,
     listed: &dyn Fn(&str) -> bool,
+    split: &dyn Fn(&str) -> bool,
 ) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
     // Per word ending in a listed one: the longest such, its letters,
     // whether the word inflects as it, and whether it is one `irregular`
     // accepts.
+    // A word a prefix splits isn't inflected as its last part (see
+    // `flexion::Grammar::head`): it isn't counted.
     let found: Vec<(&str, usize, bool, bool)> = words
         .iter()
-        .filter(|w| !w.key.contains('-'))
+        .filter(|w| !w.key.contains('-') && !split(&w.key))
         .filter_map(|w| {
             let n = w.key.chars().count();
             let (at, head) = (flexion::FRONT_LETTERS..n).find_map(|i| {
@@ -3312,6 +3329,107 @@ fn irregular(
 
 /// [`irregular`], each form with whether the grammar's letters are wrong
 /// (not only its stress).
+/// The most words [`judge`] asks the runtime about: more are sampled, every
+/// so many.
+const JUDGED: usize = 20_000;
+
+/// The dictionary's own words as the runtime answers them, judged as `try`
+/// judges held-out ones, each way a word is typed (see [`judge`]).
+#[derive(Debug, Clone, Default)]
+pub struct Judged {
+    pub words: usize,
+    /// Forms scored (the lemma's aside where it is what was typed).
+    pub forms: usize,
+    /// Forms wrong from the headword, typed in full, and in full with the
+    /// principal parts given (those cells aside).
+    pub headword: usize,
+    pub full: usize,
+    pub given: usize,
+    /// Forms right typed in full but wrong once the principal parts are
+    /// given: the given path breaking what the grammar knows.
+    pub broken: usize,
+    /// A few of those: the word, the cell, the dictionary's form and the
+    /// answer.
+    pub examples: Vec<String>,
+}
+
+/// Ask the runtime for every form of the dictionary's words (`lexemes`, the
+/// main dictionary's, at most [`JUDGED`] of them), typed three ways, and
+/// count what it gets wrong: the check that a stage judged on one path
+/// holds on the others. `parts`: the principal parts' cells.
+pub fn judge(grammar: &Grammar<'_, u16, u16, u8>, lexemes: &[Lexeme], parts: &[usize]) -> Judged {
+    let o = &grammar.orthography;
+    let mine: Vec<&Lexeme> = lexemes.iter().filter(|l| l.source == 0).collect();
+    let step = mine.len().div_ceil(JUDGED).max(1);
+    let sample: Vec<&Lexeme> = mine.into_iter().step_by(step).collect();
+    let each = crate::par::map(&sample, |l| {
+        let given: Vec<(usize, &str)> = parts
+            .iter()
+            .filter_map(|&c| Some((c, l.cells.get(c)?.first()?.as_str())))
+            .collect();
+        let full = flexion::Known {
+            full: true,
+            ..flexion::Known::default()
+        };
+        let with_parts = flexion::Known {
+            forms: &given,
+            full: true,
+            ..flexion::Known::default()
+        };
+        let tables = [
+            grammar.table(&l.lemma, &flexion::Known::default()),
+            grammar.table(&l.full, &full),
+            grammar.table(&l.full, &with_parts),
+        ];
+        let mut j = Judged {
+            words: 1,
+            ..Judged::default()
+        };
+        for (cell, forms) in l.cells.iter().enumerate() {
+            let Some(want) = forms.first() else { continue };
+            if crate::eval::typed_back(o, grammar.lemma_cell, cell, want, &l.lemma) {
+                continue;
+            }
+            let right = |t: &Vec<Vec<flexion::Candidate<'_>>>| {
+                t.get(cell)
+                    .and_then(|c| c.first())
+                    .is_some_and(|c| crate::eval::same_form(o, &c.form, want))
+            };
+            let [h, f, g] = &tables;
+            j.forms += 1;
+            j.headword += usize::from(!right(h));
+            j.full += usize::from(!right(f));
+            if !parts.contains(&cell) && !right(g) {
+                j.given += 1;
+                if right(f) {
+                    j.broken += 1;
+                    if j.examples.len() < 2 {
+                        let got = g
+                            .get(cell)
+                            .and_then(|c| c.first())
+                            .map_or("-", |c| c.form.as_str());
+                        j.examples
+                            .push(format!("{} cell {cell}: {want}, given parts {got}", l.full));
+                    }
+                }
+            }
+        }
+        j
+    });
+    each.into_iter().fold(Judged::default(), |mut a, j| {
+        a.words += j.words;
+        a.forms += j.forms;
+        a.headword += j.headword;
+        a.full += j.full;
+        a.given += j.given;
+        a.broken += j.broken;
+        if a.examples.len() < 12 {
+            a.examples.extend(j.examples);
+        }
+        a
+    })
+}
+
 fn misbuilt(
     grammar: &Grammar<'_, u16, u16, u8>,
     lexemes: &[Lexeme],
@@ -3453,7 +3571,7 @@ mod tests {
         for key in ["pohjoiskala", "sisäkala"] {
             words.push(word(key, &[key, &format!("{key}in"), &format!("{key}ta")]));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true);
+        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
         assert_eq!(
             (found.least, found.not.to_vec()),
             (Some(1), vec![Cow::from("kala")])
@@ -3471,7 +3589,7 @@ mod tests {
                 ));
             }
         }
-        assert!(heads(&words, 3, &|_| true, &|_| true).is_empty());
+        assert!(heads(&words, 3, &|_| true, &|_| true, &|_| false).is_empty());
         // Among them, a word whose own compounds inflect as it (Italian
         // `fare`): it alone is a head.
         words.push(word("fare", &["fare", "faccio", "fatto"]));
@@ -3479,7 +3597,7 @@ mod tests {
             let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true);
+        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
         assert_eq!(
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])
@@ -3565,6 +3683,7 @@ mod tests {
             words.push(w);
         }
         let shape = Shape {
+            parts: Vec::new(),
             cells: 3,
             lemma_cell: None,
             capitalized: false,
