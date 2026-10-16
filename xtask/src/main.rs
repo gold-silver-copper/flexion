@@ -517,6 +517,13 @@ fn try_tenth(
         Some(m) => m.clone(),
         None => {
             let train_marks = marks(&trained)?;
+            if let Some(m) = &train_marks {
+                println!(
+                    "  marks: {} rules, {} roots",
+                    m.rules.rules.len(),
+                    m.roots.len()
+                );
+            }
             let fit_marks = if o.quick {
                 None
             } else {
@@ -545,6 +552,17 @@ fn try_tenth(
         let mut shape = flexion_train::shape(lang, part)?;
         let names = cell_names(lang, part)?;
         let mut train = training(d, o, shape.lemma_cell);
+        let taught = flexion_train::teachers(lang, part, data, |l| {
+            eval::bucket(&l.key) != o.fold && (!o.main_only || l.source == 0)
+        });
+        if !taught.is_empty() {
+            println!(
+                "  learning from {} words of {} too",
+                taught.len(),
+                part.learns_from.unwrap_or_default()
+            );
+            train.extend(taught.into_iter().cloned());
+        }
         if o.share < 100 || o.thin > 0 {
             println!(
                 "  training on {}% of the words ({}), {}% of each table's cells taken out",
@@ -1704,6 +1722,34 @@ fn inspect(
                 let name = names.get(cell).map_or("", String::as_str);
                 println!("cell {cell} ({name}): dictionary {gold:?}");
                 println!("    from the headword {}", mark(&from_headword));
+                // A gap: the way the likeliest paradigm would build the cell.
+                if from_headword.get(cell).is_none_or(Vec::is_empty) {
+                    let paradigm = g
+                        .readings(headword, &flexion::Known::default())
+                        .first()
+                        .and_then(|r| g.paradigms.get(usize::from(r.value)));
+                    let mut chain = Vec::new();
+                    let mut c = cell;
+                    for _ in 0..6 {
+                        let own = paradigm.and_then(|p| p.own(c));
+                        let relation = g.relation(c);
+                        chain.push(format!(
+                            "{c} {own:?} {}",
+                            relation.map_or("no relation".to_string(), |r| format!(
+                                "from {:?}{}",
+                                r.from,
+                                if r.listed { " (listed)" } else { "" }
+                            ))
+                        ));
+                        match relation.and_then(flexion::Relation::source) {
+                            Some(from) if !matches!(own, Some(flexion::Form::Pattern(_))) => {
+                                c = usize::from(from);
+                            }
+                            _ => break,
+                        }
+                    }
+                    println!("    gap: {}", chain.join("; "));
+                }
                 if let Some(t) = &with_parts {
                     println!("    principal parts given {}", mark(t));
                 }

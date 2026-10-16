@@ -286,6 +286,28 @@ pub fn analogies<'s>(
         }
     }
     let mut out: Vec<Relation<'s>> = Vec::new();
+    // Whether cell `s` is told, through relations, from `c` (a cell whose
+    // tree edge no change could be learned for is told by analogy, and must
+    // not be from a cell told from it: Finnish verbs' 38 and 39).
+    let from_cell = |out: &[Relation<'_>], s: usize, c: usize| {
+        let source = |x: usize| {
+            let of = |r: &Relation<'_>| (usize::from(r.cell) == x).then(|| r.source());
+            relations
+                .iter()
+                .find_map(of)
+                .or_else(|| out.iter().find_map(of))
+                .flatten()
+        };
+        let mut at = Some(s);
+        for _ in 0..=cells {
+            match at {
+                Some(x) if x == c => return true,
+                Some(x) => at = source(x),
+                None => return false,
+            }
+        }
+        true
+    };
     loop {
         let before = out.len();
         for c in 0..cells {
@@ -294,7 +316,9 @@ pub fn analogies<'s>(
             }
             let mut best = None;
             // From a cell words have, never one itself told by analogy.
-            for s in (0..cells).filter(|&s| has(s) && told.get(s).copied().unwrap_or(false)) {
+            for s in (0..cells).filter(|&s| {
+                has(s) && told.get(s).copied().unwrap_or(false) && !from_cell(&out, s, c)
+            }) {
                 let (1, k) = apart(s, c) else { continue };
                 let (Some(&from), Some(&to)) = (at(s).get(k), at(c).get(k)) else {
                     continue;
@@ -348,7 +372,7 @@ pub fn analogies<'s>(
     // A cell no pair of cells tells: the form of the nearest one, as it is.
     for c in (0..cells).filter(|&c| !told.get(c).copied().unwrap_or(true)) {
         let nearest = (0..cells)
-            .filter(|&s| has(s) && told.get(s).copied().unwrap_or(false))
+            .filter(|&s| has(s) && told.get(s).copied().unwrap_or(false) && !from_cell(&out, s, c))
             .min_by_key(|&s| {
                 (
                     apart(s, c).0,
