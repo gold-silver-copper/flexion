@@ -10,8 +10,12 @@ assert_eq!(noun("rosa", Case::Ablative, Number::Plural), "rosīs");
 assert_eq!(noun("rex", Case::Genitive, Number::Singular), "rēgis");
 assert_eq!(adjective("bonus", Case::Dative, Gender::Feminine, Number::Singular), "bonae");
 assert_eq!(
-    verb("amo", Mood::Indicative, Voice::Active, Tense::Perfect, Person::Third, Number::Plural),
+    indicative("amo", Voice::Active, Tense::Perfect, Person::Third, Number::Plural),
     "amāvērunt"
+);
+assert_eq!(
+    subjunctive("amo", Voice::Active, SubjunctiveTense::Imperfect, Person::First, Number::Singular),
+    "amārem"
 );
 ```
 

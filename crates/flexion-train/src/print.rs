@@ -317,6 +317,12 @@ fn variant(name: &str) -> String {
     out
 }
 
+/// A part of speech's word type: its name in camel case (`proper_noun` →
+/// `ProperNoun`).
+fn word_type(part: &str) -> String {
+    part.split('_').map(variant).collect()
+}
+
 /// What a part of speech's paradigms are called: conjugations for verbs,
 /// declensions otherwise.
 fn kind(part: &PartOfSpeech) -> (&'static str, &'static str, &'static str) {
@@ -391,7 +397,10 @@ fn grammar_files(
         (!g.relations.is_empty(), "mod relations"),
         (g.compound.is_some(), "mod compounds"),
         (g.prefixes.is_some(), "mod prefixes"),
-        (!g.heads.words.is_empty(), "mod heads"),
+        (
+            !g.heads.words.is_empty() || !g.heads.not.is_empty(),
+            "mod heads",
+        ),
         (true, "mod irregular"),
         (!g.slots.is_empty(), "mod stems"),
         (g.laws.is_some(), "mod laws"),
@@ -1230,7 +1239,7 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     // Each part of speech's word type, unless a feature has its name
     // (French `Participle`).
     for part in parts {
-        let word = variant(part.spec.name);
+        let word = word_type(part.spec.name);
         if !lang.features.iter().any(|f| f.name == word) {
             let _ = writeln!(s, "pub use {}::{word};", part.spec.name);
         }
@@ -1249,7 +1258,7 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
         let name = part.spec.name;
-        let word = variant(name);
+        let word = word_type(name);
         for g in &cells.groups {
             let params: String = g
                 .features
@@ -1631,7 +1640,7 @@ fn api_code(
 ) -> String {
     let (ty, one, many) = kind(spec);
     let name = spec.name;
-    let word = variant(name);
+    let word = word_type(name);
     // The cell type.
     let mut s = format!(
         "/// A {name} form: which cell of its {one}.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum Cell {{\n"

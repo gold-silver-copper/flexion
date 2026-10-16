@@ -1073,8 +1073,12 @@ fn merge(laws: &[Law]) -> Vec<Law> {
             if taken.get(j) == Some(&true) {
                 continue;
             }
-            let between = laws.get(i + 1..j).unwrap_or(&[]);
-            if let Some(change) = joined(&law.change, &later.change, between) {
+            // The laws between, but those taken in already: they stand here.
+            let between: Vec<Law> = (i + 1..j)
+                .filter(|&k| taken.get(k) != Some(&true))
+                .filter_map(|k| laws.get(k).cloned())
+                .collect();
+            if let Some(change) = joined(&law.change, &later.change, &between) {
                 law.change = change;
                 law.words += later.words;
                 law.breaks += later.breaks;
@@ -3184,5 +3188,8 @@ mod tests {
         };
         let laws = [written("к"), edge("ц", "о", "е"), written("г")];
         assert_eq!(merge(&laws).len(), 2);
+        // Nor does a law taken in already, between (`г` before `х`).
+        let laws = [written("к"), written("г"), written("х")];
+        assert_eq!(merge(&laws).len(), 1);
     }
 }

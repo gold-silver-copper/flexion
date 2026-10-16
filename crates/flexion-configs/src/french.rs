@@ -69,13 +69,6 @@ pub fn language() -> Language {
         version: "0.1.0",
         description: "French inflection for any word: noun plurals, adjective and participle agreement and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
-            PronounCase "A personal pronoun's form: the subject's, the objects', the stressed one, the possessive." {
-                Subject "subj" ["subjective"],
-                Accusative "acc" ["accusative"],
-                Dative "dat" ["dative"],
-                Emphatic "emph" ["emphatic"],
-                Possessive "poss" ["determiner", "possessive"],
-            }
             Degree "Degree of comparison." {
                 Positive "pos" ["positive"],
                 Comparative "comp" ["comparative"],
@@ -258,29 +251,6 @@ pub fn language() -> Language {
                 learns_from: None,
             },
             crate::adverb(),
-            PartOfSpeech {
-                name: "pronoun",
-                doc: "Personal pronouns, from their head lines (`il`, `le`, `lui`, `son`).",
-                wiktionary: vec!["pron"],
-                templates: vec![],
-                forms: FormSource::All,
-                groups: vec![flexion_train::spec::Group {
-                    name: "pronoun",
-                    doc: "A personal pronoun's form.",
-                    features: vec!["PronounCase"],
-                    all: vec![],
-                    any: vec![],
-                    none: vec![],
-                    from_head: false,
-                }],
-                lemma: Some(("pronoun", vec!["Subject"])),
-                citation: vec![],
-                inherent: vec![],
-                capitalized: false,
-                lemmas_from: vec![],
-                max_words: None,
-                learns_from: None,
-            },
         ],
         spelling: Spelling {
             fold_case: true,
