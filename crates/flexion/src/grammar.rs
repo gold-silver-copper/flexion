@@ -637,6 +637,28 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             };
             inflections = self.inflections(&word.letters, &key, &none);
         }
+        // A word no paradigm's lemma fits (Greek `ἵ`, one letter): the
+        // commonest paradigm's forms, the word its one stem, unsure. Every
+        // word has every form.
+        if inflections.is_empty()
+            && let Some((value, paradigm)) = self
+                .paradigms
+                .iter()
+                .enumerate()
+                .max_by_key(|(i, p)| (p.words, std::cmp::Reverse(*i)))
+                .and_then(|(i, p)| Some((P::from_index(i)?, p)))
+        {
+            inflections.push(Inflection {
+                reading: Reading {
+                    value,
+                    probability: 1.0,
+                    status: Status::Unsettled,
+                    rule: None,
+                },
+                paradigm,
+                stems: vec![word.letters.as_str()],
+            });
+        }
         // The likeliest few readings, each with its accent classes and its
         // forms, cell by cell, built once.
         let mut readings: Vec<_> = inflections

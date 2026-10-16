@@ -788,6 +788,14 @@ pub fn learn<'s>(
                 tables: &space.1,
             },
         );
+        rooted(
+            paradigms,
+            flexion::Space {
+                slots: &space.0,
+                tables: &space.1,
+            },
+            shape,
+        );
         unrepeated(
             paradigms,
             flexion::Space {
@@ -1245,6 +1253,54 @@ fn parts(w: &Word) -> Option<(char, &str, &str)> {
         .min()?;
     let (first, rest) = w.letters.split_once(joiner)?;
     Some((joiner, first, rest))
+}
+
+/// Each paradigm that builds nothing in the cell every other is told from
+/// (none of its words has it: Sanskrit `चतुर्`, plural only) writes there
+/// the pattern of its nearest cell that it builds (fewest features apart),
+/// as a cell no pair of cells tells takes the nearest one's form: every word
+/// has every form.
+fn rooted(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>, shape: &Shape) {
+    let root = shape.lemma_cell.unwrap_or(0);
+    let at = |c: usize| shape.coordinates.get(c).map_or(&[][..], Vec::as_slice);
+    let apart = |c: usize| {
+        let (a, b) = (at(root), at(c));
+        (0..a.len().max(b.len()))
+            .filter(|&k| a.get(k) != b.get(k))
+            .count()
+    };
+    for i in 0..paradigms.len() {
+        let Some(par) = paradigms.get(i) else {
+            continue;
+        };
+        if par.pattern_in(paradigms, space, root).is_some() {
+            continue;
+        }
+        let nearest = (0..shape.cells)
+            .filter(|&c| c != root)
+            .filter_map(|c| Some((apart(c), c, par.pattern_in(paradigms, space, c)?)))
+            .min_by_key(|(n, c, _)| (*n, *c))
+            .map(|(_, _, p)| p.into_owned());
+        let Some(pattern) = nearest else {
+            continue;
+        };
+        let table: String = par
+            .table
+            .split('\t')
+            .take(shape.cells)
+            .enumerate()
+            .map(|(c, field)| {
+                if c == root {
+                    format!("{pattern}\t")
+                } else {
+                    format!("{field}\t")
+                }
+            })
+            .collect();
+        if let Some(p) = paradigms.get_mut(i) {
+            p.table = Cow::Owned(table);
+        }
+    }
 }
 
 /// Each paradigm's cells that write what it would take anyway (from its
