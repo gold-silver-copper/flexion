@@ -89,6 +89,37 @@ pub fn run(
                 }
             }
         }
+        // A whole table, as `try` and a caller wanting every form ask.
+        let words = group(true);
+        let t = Instant::now();
+        for _ in 0..ROUNDS {
+            for w in &words {
+                std::hint::black_box(g.table(w, &known));
+            }
+        }
+        let rounds = u32::try_from(ROUNDS * words.len().max(1)).unwrap_or(u32::MAX);
+        let micros = t.elapsed().as_secs_f64() * 1e6 / f64::from(rounds);
+        let _ = write!(
+            line,
+            "; a whole table ({} cells), held out, {micros:.0} µs",
+            g.cells
+        );
+        if dump.is_some() {
+            for w in &words {
+                for (c, list) in g.table(w, &known).iter().enumerate() {
+                    for cand in list {
+                        let _ = writeln!(
+                            out,
+                            "{} {w} table {c} {} {:08x} {}",
+                            part.name,
+                            cand.form,
+                            cand.probability.to_bits(),
+                            cand.status
+                        );
+                    }
+                }
+            }
+        }
         println!("{line} per call");
     }
     if let Some(path) = dump {
