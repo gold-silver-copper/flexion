@@ -668,7 +668,13 @@ pub fn learn<'s>(
         }
     }
     trace.mark("derived cells");
-    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names, shape.lemma_cell);
+    let built = crate::stems::tables(
+        &grammar.paradigms,
+        &slot_of,
+        &shape.names,
+        shape.lemma_cell,
+        &shape.parts,
+    );
     grammar.slots = Cow::Owned(built.slots);
     grammar.tables = Cow::Owned(built.tables);
     // A word the grammar builds with the wrong letters lists the stems that
