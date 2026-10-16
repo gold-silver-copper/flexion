@@ -116,8 +116,8 @@ pub struct Outcome {
     pub bits: f64,
     /// What went wrong, if the first candidate isn't right.
     pub error: Option<Kind>,
-    /// The first candidate has no stress mark where the right answer has
-    /// one.
+    /// The first candidate, a word, has no stress mark where the right
+    /// answer has one.
     pub accentless: bool,
 }
 
@@ -513,8 +513,10 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 any,
                 bits,
                 error,
+                // A phrase's words carry their own (`μεμιασμένος ὦ`).
                 accentless: first.is_some_and(|c| {
-                    orthography.read(&c.form).stress.is_none()
+                    !c.form.contains(' ')
+                        && orthography.read(&c.form).stress.is_none()
                         && orthography.read(want).stress.is_some()
                 }),
             });
