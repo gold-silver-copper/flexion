@@ -16,7 +16,7 @@ use flexion_train::kaikki::{Entry, Form};
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    small(crate::with_proper_nouns(Language {
+    small(names(crate::with_proper_nouns(Language {
         name: "turkish",
         display: "Turkish",
         wiktionary: "tr",
@@ -154,7 +154,17 @@ pub fn language() -> Language {
             ("verb", "finite", "zerpemek"),
         ],
         editions: vec![],
-    }))
+    })))
+}
+
+/// Proper nouns also from the tables of names (`tr-poss-prop-*`), which
+/// keep the apostrophe before an ending as the language writes it
+/// (`Nepal'in`, `Nepal'e`).
+fn names(mut lang: Language) -> Language {
+    if let Some(p) = lang.parts.iter_mut().find(|p| p.name == "proper_noun") {
+        p.templates.push("tr-poss-prop*");
+    }
+    lang
 }
 
 /// The pronouns and numerals, declined in a noun's plain cells (`ben`,
@@ -420,29 +430,46 @@ struct TurkishHooks;
 
 /// Letters and hyphens only: no abbreviations (`ABD'nin`); of a verb,
 /// words of them too (`Fransız kalmak`: its last word inflects).
-fn turkish_word(w: &str, spaced: bool) -> bool {
+fn turkish_word(w: &str, pos: &str) -> bool {
+    let name = pos == "proper_noun";
+    let spaced = name || pos == "verb";
     !w.is_empty()
         && !w.starts_with('-')
         && w.chars()
-            .all(|c| c.is_alphabetic() || c == '-' || (spaced && c == ' '))
+            .all(|c| c.is_alphabetic() || c == '-' || (spaced && c == ' ') || (name && c == '\''))
 }
 
 impl Hooks for TurkishHooks {
     fn lemma_ok(&self, pos: &str, lemma: &str) -> bool {
-        turkish_word(lemma, pos == "verb")
+        turkish_word(lemma, pos)
     }
 
     fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
-        turkish_word(form, pos == "verb")
+        turkish_word(form, pos)
     }
 
     /// A verb table's forms read by their places (see [`verb_cell`]); a
     /// table that hasn't the 940 isn't read. The template writes the
     /// abilitative aorist of some verbs with their own aorist vowel
     /// (`atabilarım` for `atabilirim`): those forms, not the auxiliary's
-    /// `-bilir`, go.
+    /// `-bilir`, go. A possessed form of no case is the nominative (the
+    /// names' tables don't say so: `Nepal'im`).
     fn repair(&self, pos: &str, entry: &mut Entry) {
         if pos != "verb" {
+            let cases = [
+                "nominative",
+                "accusative",
+                "dative",
+                "locative",
+                "ablative",
+                "genitive",
+            ];
+            for f in &mut entry.forms {
+                let has = |t: &str| f.tags.iter().any(|x| x == t);
+                if has("possessive") && !cases.iter().any(|c| has(c)) {
+                    f.tags.push("nominative".to_string());
+                }
+            }
             return;
         }
         let table: Vec<String> = entry
