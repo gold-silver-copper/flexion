@@ -330,9 +330,24 @@ impl Hooks for RussianHooks {
         cyrillic_word(form)
     }
 
-    /// An adverb's comparative with its optional prefix in brackets
-    /// (`(по)лу́чше`): the plain one first, the prefixed one after it.
+    /// A verb's past passive participles, in `-нный` or `-тый` (the dump
+    /// has an active one in the cell twice); an adverb's comparative with
+    /// its optional prefix in brackets (`(по)лу́чше`): the plain one first,
+    /// the prefixed one after it.
     fn repair(&self, pos: &str, entry: &mut Entry) {
+        if pos == "verb" {
+            // `документи́рующий` of `документировать`, `заретуши́ровавший`.
+            let has = |f: &Form, t: &str| f.tags.iter().any(|x| x == t);
+            entry.forms.retain(|f| {
+                let plain: String = f.form.chars().filter(|&c| c != '\u{301}').collect();
+                !(has(f, "participle") && has(f, "passive") && has(f, "past"))
+                    || has(f, "adverbial")
+                    || f.form == "-"
+                    || plain.ends_with("нный")
+                    || plain.ends_with("тый")
+            });
+            return;
+        }
         if pos != "adverb" {
             return;
         }

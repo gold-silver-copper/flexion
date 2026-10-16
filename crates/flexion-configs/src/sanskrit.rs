@@ -315,6 +315,16 @@ const TENSES: [&str; 6] = [
 ];
 const GENDERS: [&str; 3] = ["masculine", "feminine", "neuter"];
 
+/// Tables whose template is given a misspelt stem, as `(word, the
+/// misspelling, the stem)`, read by the classicists: अयोग्य's neuter
+/// (`ayógam`, 6 forms), अदनीय's feminine (`adaniyā`, 29), अन्यतर's neuter
+/// nominative (`anytarát`, 1).
+const TYPOS: [(&str, &str, &str); 3] = [
+    ("अयोग्य", "अ॒योग", "अ॒योग्य"),
+    ("अदनीय", "अदनि", "अदनी"),
+    ("अन्यतर", "अ॒न्य्त॒र", "अ॒न्य॒त॒र"),
+];
+
 impl Hooks for SanskritHooks {
     fn lemma_ok(&self, _pos: &str, lemma: &str) -> bool {
         devanagari(lemma)
@@ -338,6 +348,12 @@ impl Hooks for SanskritHooks {
     fn repair(&self, pos: &str, entry: &mut Entry) {
         let has = |tags: &[String], t: &str| tags.iter().any(|x| x == t);
         for f in entry.forms.iter_mut() {
+            if let Some(&(_, typo, stem)) = TYPOS.iter().find(|t| t.0 == entry.word)
+                && let Some(rest) = f.form.strip_prefix(typo)
+                && !f.form.starts_with(stem)
+            {
+                f.form = format!("{stem}{rest}");
+            }
             let trimmed = f.form.trim_end_matches(|c: char| c.is_ascii_digit());
             if trimmed.len() != f.form.len() {
                 f.form = trimmed.to_string();
