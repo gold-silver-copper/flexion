@@ -133,9 +133,6 @@ pub struct PosData {
     /// What reading the tables left out (see [`Audit`]).
     #[serde(skip)]
     pub audit: Audit,
-    /// Each lexeme's root (see [`crate::spec::Hooks::root`]), while reading.
-    #[serde(skip)]
-    roots: Vec<Option<String>>,
 }
 
 /// The data gate on a part's repaired tables: forms that map to no cell
@@ -181,67 +178,11 @@ pub fn extract(
         stats.failures,
         summary(lang, &out)
     );
-    for (part, d) in lang.parts.iter().zip(&mut out) {
+    for (part, d) in lang.parts.iter().zip(&out) {
         eprintln!("{}", d.audit.report(part.name));
-        by_root(part.name, d);
     }
     foreign(lang, spelling, &mut out)?;
     Ok(out)
-}
-
-/// Pages that are a form of their root's word (a Sanskrit aorist page,
-/// `अग्रहीत्` of `ग्रह्`) read into the word of their root (`गृह्णाति`): their
-/// forms after its own in each cell, and gone. A page whose root has no
-/// word of its own stays.
-fn by_root(part: &str, d: &mut PosData) {
-    let roots = std::mem::take(&mut d.roots);
-    let mut words: BTreeMap<&str, usize> = BTreeMap::new();
-    for (i, (l, root)) in d.lexemes.iter().zip(&roots).enumerate() {
-        if let (Of::Own, Some(root)) = (l.of, root) {
-            words.entry(root).or_insert(i);
-        }
-    }
-    let mut into: Vec<Option<usize>> = vec![None; d.lexemes.len()];
-    for (i, (l, root)) in d.lexemes.iter().zip(&roots).enumerate() {
-        if l.of == Of::Form
-            && let Some(slot) = into.get_mut(i)
-        {
-            *slot = root.as_deref().and_then(|r| words.get(r)).copied();
-        }
-    }
-    let pages = into.iter().filter(|t| t.is_some()).count();
-    let kept = d
-        .lexemes
-        .iter()
-        .zip(&roots)
-        .filter(|(l, r)| l.of == Of::Form && r.is_some())
-        .count()
-        - pages;
-    if pages + kept == 0 {
-        return;
-    }
-    for (i, target) in into.iter().enumerate() {
-        let Some(cells) = target.and(d.lexemes.get(i)).map(|l| l.cells.clone()) else {
-            continue;
-        };
-        if let Some(word) = target.and_then(|t| d.lexemes.get_mut(t)) {
-            for (mine, theirs) in word.cells.iter_mut().zip(cells) {
-                for f in theirs {
-                    if !mine.contains(&f) {
-                        mine.push(f);
-                    }
-                }
-            }
-        }
-    }
-    let mut at = 0;
-    d.lexemes.retain(|_| {
-        at += 1;
-        into.get(at - 1).is_none_or(Option::is_none)
-    });
-    eprintln!(
-        "  {part}: {pages} pages of a root's tenses read into its word; {kept} whose root has none kept"
-    );
 }
 
 /// A word's letters with every mark taken off: what tells two spellings of
@@ -511,7 +452,6 @@ fn read_entry(
         if let Some(mut lex) = lexeme(lang, spelling, part, c, &repaired, order, &mut sink.audit) {
             lex.source = edition.map_or(0, |(s, _)| s);
             sink.lexemes.push(lex);
-            sink.roots.push(lang.hooks.root(entry));
         }
     }
 }

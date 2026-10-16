@@ -285,13 +285,6 @@ pub trait Hooks: Sync + Send {
     fn adapt(&self, _edition: &str, _pos: &str, _entry: &mut Entry) -> bool {
         false
     }
-    /// The root an entry is of, where a root's tenses have pages of their
-    /// own (Sanskrit `अग्रहीत्`, the aorist of `ग्रह्`, beside `गृह्णाति`): a
-    /// page that is a form of another word is read into the entry of its
-    /// root.
-    fn root(&self, _entry: &Entry) -> Option<String> {
-        None
-    }
 }
 
 impl Language {

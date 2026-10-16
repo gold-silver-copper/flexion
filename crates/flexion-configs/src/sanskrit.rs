@@ -469,30 +469,6 @@ impl Hooks for SanskritHooks {
 
     /// Gender from the declension template (`sa-decl-noun-m`) or the head
     /// line (`देव • (devá) stem, m`).
-    /// The root (the form tagged `root`) of a page of a perfect, aorist,
-    /// future or benedictive, and of a verb of a present class not a
-    /// causative (Whitney §§ 602ff): the head line's last words say which
-    /// (`(class 6, type P, present, root विश्)`, `(type P, aorist, root
-    /// ग्रह्)`). Causatives, passives and desideratives are verbs of their own.
-    fn root(&self, entry: &Entry) -> Option<String> {
-        if entry.pos != "verb" {
-            return None;
-        }
-        let head = &entry.head_templates.first()?.expansion;
-        let (_, last) = head.rsplit_once('(')?;
-        let words: Vec<&str> = last.trim_end_matches(')').split(", ").collect();
-        let tense = words
-            .iter()
-            .any(|w| matches!(*w, "perfect" | "aorist" | "future" | "benedictive"));
-        let primary =
-            words.iter().any(|w| w.starts_with("class ")) && !words.contains(&"causative");
-        let root = entry
-            .forms
-            .iter()
-            .find(|f| f.tags.iter().any(|t| t == "root"))?;
-        (tense || primary).then(|| root.form.clone())
-    }
-
     fn inherent_tags(&self, entry: &Entry) -> Vec<String> {
         let template = entry
             .forms
