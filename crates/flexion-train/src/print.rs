@@ -946,7 +946,7 @@ fn grammar_files(
     // compounds.rs
     if let Some(c) = &g.compound {
         let r = format!(
-            "//! How a word written in parts inflects: only its last part (`Last`), each\n//! part as the word it is (`Each`), or only its first, the rest kept\n//! (`First`). The first part decides, by its ending\n//! (the longest rule it has), or as listed.\n\nuse flexion::Choice;\nuse flexion::Compound::{{self, *}};\n\n{}",
+            "//! How a word written in parts inflects: only its last part (`Last`), each\n//! part as the word it is (`Each`), or only its first, the rest kept\n//! (`First`). The first part decides, with what joins it (`-` or a\n//! space, last), by its ending (the longest rule it has), or as listed.\n\nuse flexion::Choice;\nuse flexion::Compound::{{self, *}};\n\n{}",
             choice_const("COMPOUND", "Compound", "first parts", c, |l| format!(
                 "{l:?}"
             ))

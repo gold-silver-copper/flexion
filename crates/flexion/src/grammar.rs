@@ -39,8 +39,8 @@ pub enum Compound {
     Last,
     /// Each part, as the word it is: `диван-кровать`, `дивана-кровати`.
     Each,
-    /// Only its first part, the rest kept: `pyytää anteeksi`, `en pyydä
-    /// anteeksi`; `кто-то`, `кого-то`.
+    /// Only its first part, the rest kept, a word apart: `pyytää anteeksi`,
+    /// `en pyydä anteeksi`.
     First,
 }
 
@@ -661,7 +661,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let (whole, parts) = match (&self.compound, parted) {
             (Some(compound), Some(((first, rest), joiner))) => {
                 let first_key = self.orthography.key(&self.orthography.read(first).letters);
-                let readings = compound.read(&first_key, self.smoothing, |_| true);
+                let key = format!("{first_key}{joiner}");
+                let readings = compound.read(&key, self.smoothing, |_| true);
                 let p = |c: Compound| {
                     readings
                         .iter()

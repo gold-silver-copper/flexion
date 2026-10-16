@@ -1169,11 +1169,15 @@ fn layers(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
 }
 
 /// How a word written in parts (by a hyphen or a space, whichever comes
-/// first) inflects, keyed by its first part: only the first when every form
-/// keeps the rest, after it or before it (`pyytää anteeksi`, `en pyydä
-/// anteeksi`, `anteeksi pyytävä`); only the last when every form keeps the
-/// first, wherever a phrase puts it (`keski-ikäistyä`, `en ole
-/// keski-ikäistynyt`); else each part. `None` for a word of one part.
+/// first) inflects, keyed by its first part and what joins it: only the
+/// first when the parts are words apart and every form keeps the rest,
+/// after it or before it (`pyytää anteeksi`, `en pyydä anteeksi`, `anteeksi
+/// pyytävä`); only the last when every form keeps the first, wherever a
+/// phrase puts it (`keski-ikäistyä`, `en ole keski-ikäistynyt`); else each
+/// part. A hyphened word whose first part alone changes (French
+/// `arcs-en-ciel`) is each part's: as the first part's, it would pull the
+/// many whose first part never changes (`coupe-coupes`, measured −0.12 on
+/// French nouns). `None` for a word of one part.
 fn compound(w: &Word) -> Option<(String, Compound)> {
     let (joiner, first, rest) = parts(w)?;
     let (first_key, _) = w.key.split_once(joiner)?;
@@ -1188,14 +1192,16 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
             .filter_map(|fs| Some(fs.first()?.letters.as_str()))
     };
     let kept = |f: &str| f.ends_with(&tail) || f.starts_with(&head);
-    let how = if forms().all(kept) && forms().any(|f| f != w.letters) {
+    let how = if joiner == ' ' && forms().all(kept) && forms().any(|f| f != w.letters) {
         Compound::First
     } else if forms().all(|f| f.contains(&front)) {
         Compound::Last
     } else {
         Compound::Each
     };
-    Some((first_key.to_string(), how))
+    // Keyed with what joins the parts: words joined by a space and by a
+    // hyphen choose apart (French `pommes de terre`, `coupe-coupe`).
+    Some((format!("{first_key}{joiner}"), how))
 }
 
 /// Where words that inflect their first part keep the rest, per cell (see
