@@ -23,3 +23,8 @@ for c in Noun::new("blorp").candidates((Case::Genitive, Number::Singular)) {
 let blorp = Noun::new("blorp").given((Case::Genitive, Number::Singular), "blorpu");
 assert_eq!(blorp.form((Case::Locative, Number::Singular)), "blorpie");
 ```
+
+Left out: the mobile person endings (`żebym`, `kiedyś`, `gdzieśmy`). The
+dictionary gives the same six forms on conjunctions, adverbs and particles,
+but they attach to whatever word begins the clause: they are no inflection of
+those words.

@@ -42,6 +42,7 @@ pub fn adverb() -> PartOfSpeech {
         capitalized: false,
         lemmas_from: vec![],
         max_words: None,
+        learns_from: None,
     }
 }
 
@@ -140,6 +141,7 @@ pub fn like(
             .collect(),
         lemmas_from: vec![],
         max_words: None,
+        learns_from: None,
         ..host.clone()
     }
 }

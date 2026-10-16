@@ -25,6 +25,13 @@ pub fn language() -> Language {
                 PresentParticiple "prp" ["participle", "present"],
                 PastParticiple "pp" ["participle", "past"],
             }
+            PronounForm "A pronoun's form: its case, or the possessive's two." {
+                Subjective "subj" ["subjective"],
+                Objective "obj" ["objective"],
+                Determiner "det" ["determiner", "possessive"],
+                Possessive "poss" ["possessive", "without-noun"],
+                Reflexive "refl" ["reflexive"],
+            }
             Degree "Degree of comparison." {
                 Positive "pos" ["positive"],
                 Comparative "comp" ["comparative"],
@@ -45,6 +52,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -59,6 +67,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -80,6 +89,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adverb",
@@ -101,6 +111,22 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
+            },
+            PartOfSpeech {
+                name: "pronoun",
+                doc: "Pronouns whose head line gives their forms (`we`, `us`, `our`, `ours`, `ourselves`).",
+                wiktionary: vec!["pron"],
+                templates: vec![],
+                forms: FormSource::All,
+                groups: vec![group("pronoun", "A pronoun's form.", &["PronounForm"])],
+                lemma: Some(("pronoun", vec!["Subjective"])),
+                citation: vec![],
+                inherent: vec![],
+                capitalized: false,
+                lemmas_from: vec![],
+                max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {

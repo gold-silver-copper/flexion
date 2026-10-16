@@ -92,8 +92,9 @@ pub fn build<'s>(
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let parts = crate::parts(lang, part)?;
-        let train: Vec<Lexeme> = d
-            .lexemes
+        let taught = crate::teachers(lang, part, data, |_| true);
+        let every: Vec<Lexeme> = d.lexemes.iter().chain(taught).cloned().collect();
+        let train: Vec<Lexeme> = every
             .iter()
             .filter(|l| eval::bucket(&l.key) != eval::TEST)
             .cloned()
@@ -153,7 +154,7 @@ pub fn build<'s>(
         let ceiling = eval::ceiling(&orthography, &test, &outcomes);
         let (on_training, new_root) = strata(&train, g, &test, &outcomes);
         let scoring = at.elapsed().as_secs_f64() - sharpening - scored.trace.total().0;
-        let mut shipped = learned(&d.lexemes, &all_marks);
+        let mut shipped = learned(&every, &all_marks);
         shipped.grammar.sharpness = sharpness;
         shipped.grammar.trust = trust;
         let by_entry = [Of::Own, Of::Form, Of::Spelling].map(|of| {

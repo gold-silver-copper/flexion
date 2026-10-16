@@ -103,6 +103,34 @@ pub fn marks(
     ))
 }
 
+/// The words of the part of speech `part` learns from too (see
+/// [`spec::PartOfSpeech::learns_from`]) that `keep` keeps, but those it has
+/// itself.
+pub fn teachers<'d>(
+    lang: &Language,
+    part: &PartOfSpeech,
+    data: &'d [extract::PosData],
+    keep: impl Fn(&extract::Lexeme) -> bool,
+) -> Vec<&'d extract::Lexeme> {
+    let Some((_, host)) = part
+        .learns_from
+        .and_then(|h| lang.parts.iter().zip(data).find(|(p, _)| p.name == h))
+    else {
+        return Vec::new();
+    };
+    let own: HashSet<&str> = lang
+        .parts
+        .iter()
+        .zip(data)
+        .find(|(p, _)| p.name == part.name)
+        .map(|(_, d)| d.lexemes.iter().map(|l| l.key.as_str()).collect())
+        .unwrap_or_default();
+    host.lexemes
+        .iter()
+        .filter(|l| keep(l) && !own.contains(l.key.as_str()))
+        .collect()
+}
+
 /// The cells of a part of speech's principal parts after its lemma.
 pub fn parts(lang: &Language, part: &PartOfSpeech) -> Result<Vec<usize>, String> {
     let cells = cells::Cells::new(lang, part)?;

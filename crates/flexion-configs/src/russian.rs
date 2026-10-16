@@ -107,6 +107,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -137,6 +138,7 @@ pub fn language() -> Language {
                 // A participle is a verb's form too, stressed as the verb is.
                 lemmas_from: vec![("verb", "participle")],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -193,6 +195,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -213,6 +216,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "numeral",
@@ -239,6 +243,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             crate::adverb(),
         ],

@@ -94,6 +94,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -132,6 +133,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -202,6 +204,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -222,6 +225,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {

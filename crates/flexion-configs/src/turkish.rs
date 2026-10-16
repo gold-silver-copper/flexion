@@ -168,7 +168,8 @@ fn names(mut lang: Language) -> Language {
 }
 
 /// The pronouns and numerals, declined in a noun's plain cells (`ben`,
-/// `bana`; `iki`, `ikiye`).
+/// `bana`; `iki`, `ikiye`). Adjectives decline as nouns do (Göksel &
+/// Kerslake § 8.1): their few tables learn from the nouns' too.
 fn small(lang: Language) -> Language {
     let lang = crate::with_small(
         lang,
@@ -178,14 +179,20 @@ fn small(lang: Language) -> Language {
         &["pron"],
         &["tr-decl*", "tr-infl-noun*"],
     );
-    crate::with_small(
+    let mut lang = crate::with_small(
         lang,
         "pronoun",
         "numeral",
         "Numerals (`iki`, `bin`).",
         &["num"],
         &["tr-infl-noun*"],
-    )
+    );
+    for p in &mut lang.parts {
+        if p.name == "adjective" {
+            p.learns_from = Some("noun");
+        }
+    }
+    lang
 }
 
 /// A part of speech read from the noun tables: the plain cases, then the
@@ -238,6 +245,7 @@ fn part(
         capitalized: false,
         lemmas_from: vec![],
         max_words: None,
+        learns_from: None,
     }
 }
 
@@ -314,6 +322,7 @@ fn verb() -> PartOfSpeech {
         capitalized: false,
         lemmas_from: vec![],
         max_words: None,
+        learns_from: None,
     }
 }
 

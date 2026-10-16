@@ -55,6 +55,14 @@ pub fn language() -> Language {
                 SecondPlural "2pl" ["second-person", "plural-possessive"],
                 Third "3" ["third-person", "possessive"],
             }
+            Suffix "A postposition's possessive suffix, or none." {
+                Plain "plain" ["no-possessor"],
+                FirstSingular "1sg" ["first-person", "singular-possessive"],
+                SecondSingular "2sg" ["second-person", "singular-possessive"],
+                FirstPlural "1pl" ["first-person", "plural-possessive"],
+                SecondPlural "2pl" ["second-person", "plural-possessive"],
+                Third "3" ["third-person", "possessive"],
+            }
             Tense "An indicative's tense." {
                 Present "pres" ["present"],
                 Past "past" ["past"],
@@ -150,6 +158,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: Some(6_000),
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -188,9 +197,11 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             verb(),
             crate::adverb(),
+            postposition(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -242,6 +253,34 @@ fn small(lang: Language) -> Language {
         &["num"],
         &[],
     )
+}
+
+/// Postpositions with their possessive suffixes (`alla`, `allani`, `allaan`;
+/// Karlsson, *Finnish: An Essential Grammar* § 89), from `fi-adv-poss`.
+fn postposition() -> PartOfSpeech {
+    PartOfSpeech {
+        name: "postposition",
+        doc: "Postpositions, which take possessive suffixes (`alla`, `allani`).",
+        wiktionary: vec!["postp"],
+        templates: vec!["fi-adv-poss"],
+        forms: FormSource::Tables,
+        groups: vec![Group {
+            name: "postposition",
+            doc: "A postposition, plain or with a possessive suffix.",
+            features: vec!["Suffix"],
+            all: vec![],
+            any: vec![],
+            none: vec![],
+            from_head: false,
+        }],
+        lemma: Some(("postposition", vec!["Plain"])),
+        citation: vec![],
+        inherent: vec![],
+        capitalized: false,
+        lemmas_from: vec![],
+        max_words: None,
+        learns_from: None,
+    }
 }
 
 /// The tags of a possessive form: the third person's, and the first and
@@ -382,6 +421,7 @@ fn verb() -> PartOfSpeech {
         capitalized: false,
         lemmas_from: vec![],
         max_words: None,
+        learns_from: None,
     }
 }
 
@@ -471,6 +511,18 @@ impl Hooks for FinnishHooks {
     fn repair(&self, pos: &str, entry: &mut Entry) {
         if pos == "verb" {
             repair_verb(entry);
+            return;
+        }
+        // A postposition's suffixes name the possessor's number as
+        // `singular`, `plural`.
+        if pos == "postposition" {
+            for f in &mut entry.forms {
+                for t in &mut f.tags {
+                    if t == "singular" || t == "plural" {
+                        t.push_str("-possessive");
+                    }
+                }
+            }
             return;
         }
         let first_or_second = |tags: &[String]| {

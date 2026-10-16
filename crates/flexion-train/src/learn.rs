@@ -1170,13 +1170,18 @@ fn layers(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
 
 /// How a word written in parts (by a hyphen or a space, whichever comes
 /// first) inflects, keyed by its first part: only the first when every form
-/// keeps the rest (`pyytää anteeksi`, `en pyydä anteeksi`), each part when a
-/// form changes its first part, else the last. `None` for a word of one
-/// part.
+/// keeps the rest, after it or before it (`pyytää anteeksi`, `en pyydä
+/// anteeksi`, `anteeksi pyytävä`); only the last when every form keeps the
+/// first, wherever a phrase puts it (`keski-ikäistyä`, `en ole
+/// keski-ikäistynyt`); else each part. `None` for a word of one part.
 fn compound(w: &Word) -> Option<(String, Compound)> {
     let (joiner, first, rest) = parts(w)?;
     let (first_key, _) = w.key.split_once(joiner)?;
-    let (tail, head) = (format!("{joiner}{rest}"), format!("{rest}{joiner}"));
+    let (tail, head, front) = (
+        format!("{joiner}{rest}"),
+        format!("{rest}{joiner}"),
+        format!("{first}{joiner}"),
+    );
     let forms = || {
         w.cells
             .iter()
@@ -1185,13 +1190,10 @@ fn compound(w: &Word) -> Option<(String, Compound)> {
     let kept = |f: &str| f.ends_with(&tail) || f.starts_with(&head);
     let how = if forms().all(kept) && forms().any(|f| f != w.letters) {
         Compound::First
-    } else if forms()
-        .filter_map(|f| f.split_once(joiner))
-        .any(|(f, _)| f != first)
-    {
-        Compound::Each
-    } else {
+    } else if forms().all(|f| f.contains(&front)) {
         Compound::Last
+    } else {
+        Compound::Each
     };
     Some((first_key.to_string(), how))
 }
@@ -3645,8 +3647,8 @@ mod tests {
     fn a_word_in_parts_whose_rest_stays_inflects_its_first() {
         // Finnish `pyytää anteeksi`: every form keeps `anteeksi`, after a
         // phrase (`en pyydä anteeksi`) or before a participle (`anteeksi
-        // pyytävä`). Russian `диван-кровать`: both parts change. Turkish
-        // `fransız kalmak`: the last part only.
+        // pyytävä`). Russian `диван-кровать`: both parts change. Finnish
+        // `keski-ikäistyä`: the last part only, in a phrase too.
         let first = word(
             "pyytää anteeksi",
             &[
@@ -3657,7 +3659,14 @@ mod tests {
             ],
         );
         let each = word("диван-кровать", &["диван-кровать", "дивана-кровати"]);
-        let last = word("fransız kalmak", &["fransız kalmak", "fransız kaldım"]);
+        let last = word(
+            "keski-ikäistyä",
+            &[
+                "keski-ikäistyä",
+                "keski-ikäistyn",
+                "en ole keski-ikäistynyt",
+            ],
+        );
         assert_eq!(
             [&first, &each, &last].map(|w| compound(w).map(|c| c.1)),
             [
