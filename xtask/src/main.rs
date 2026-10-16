@@ -1743,7 +1743,7 @@ fn inspect(
                         ));
                         match relation.and_then(flexion::Relation::source) {
                             Some(from) if !matches!(own, Some(flexion::Form::Pattern(_))) => {
-                                c = usize::from(from);
+                                c = from;
                             }
                             _ => break,
                         }
