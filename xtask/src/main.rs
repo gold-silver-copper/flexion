@@ -1016,12 +1016,14 @@ fn try_tenth(
             eval::Input::Headword,
             &learned.seen,
         );
-        let (all, filled) = eval::completion(g, &train_refs);
+        let (all, filled, gaps) = eval::completion(g, &train_refs);
         println!(
-            "  attested (sample of {}): top-1 {:.2}%; every cell (the dictionary's or not) has a form in {filled} of {all}, {} gaps",
+            "  attested (sample of {}): top-1 {:.2}%; every cell (the dictionary's or not) has a form in {filled} of {all}, {} gaps{}{}",
             train_refs.len(),
             100.0 * s.accuracy(),
-            all - filled
+            all - filled,
+            if gaps.is_empty() { "" } else { ": " },
+            gaps.join(", ")
         );
         // What the runtime reads of the relations, unchanged by pruning the
         // rest: the same words' every answer with the relations whole.

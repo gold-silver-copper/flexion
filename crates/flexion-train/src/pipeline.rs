@@ -186,7 +186,8 @@ pub fn build<'s>(
             Input::Headword,
             &shipped.seen,
         );
-        let complete = eval::completion(&shipped.grammar, &own);
+        let (all, filled, _) = eval::completion(&shipped.grammar, &own);
+        let complete = (all, filled);
         #[allow(clippy::cast_precision_loss)]
         let irregular_share =
             shipped.stats.irregular_words as f64 / shipped.stats.words.max(1) as f64;

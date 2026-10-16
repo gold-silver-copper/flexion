@@ -535,18 +535,26 @@ pub fn by_block(outcomes: &[Outcome], blocks: &[std::ops::Range<usize>]) -> (f64
 }
 
 /// How complete `grammar`'s tables are for `lexemes` typed as their
-/// headwords: every cell, the dictionary's or not, `(cells, with a form)`.
-/// A cell without one is a gap: no way of building it gave a form.
+/// headwords: every cell, the dictionary's or not, `(cells, with a form)`,
+/// and the first few gaps (`word cell`). A cell without a form is a gap: no
+/// way of building it gave one.
 pub fn completion<P: Label, A: Label, F: Label>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     lexemes: &[&Lexeme],
-) -> (usize, usize) {
+) -> (usize, usize, Vec<String>) {
     let known = flexion::Known::default();
-    lexemes.iter().fold((0, 0), |(cells, filled), l| {
+    let mut gaps = Vec::new();
+    let (cells, filled) = lexemes.iter().fold((0, 0), |(cells, filled), l| {
         let table = grammar.table(&l.lemma, &known);
+        for cell in (0..grammar.cells).filter(|&c| table.get(c).is_none_or(Vec::is_empty)) {
+            if gaps.len() < 6 {
+                gaps.push(format!("{} {cell}", l.lemma));
+            }
+        }
         let with = table.iter().filter(|c| !c.is_empty()).count();
         (cells + grammar.cells, filled + with.min(grammar.cells))
-    })
+    });
+    (cells, filled, gaps)
 }
 
 /// One held-out form the floor was asked for: the word (its place among
