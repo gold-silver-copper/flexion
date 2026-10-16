@@ -156,10 +156,26 @@ pub fn analyze(lemma: &str, forms: &[&str]) -> Analysis {
         out.extend(w.get(last..).unwrap_or_default());
         out
     };
+    // A form that is another written twice (Turkish `gele gele`): its
+    // pattern twice (`~e ~e`), not the first with the second copied out.
+    let owned = stems.clone();
+    let pieces: Vec<&str> = owned.iter().map(String::as_str).collect();
+    let doubled = |p: String| -> String {
+        for sep in [' ', '-'] {
+            if let Some((head, tail)) = p.split_once(sep)
+                && head.contains('~')
+                && !tail.contains('~')
+                && flexion::pattern::fill(head, &pieces) == tail
+            {
+                return format!("{head}{sep}{head}");
+            }
+        }
+        p
+    };
     let mut patterns = all
         .iter()
         .zip(&places)
-        .map(|(w, p)| p.as_ref().map(|p| pattern(w, p)));
+        .map(|(w, p)| p.as_ref().map(|p| doubled(pattern(w, p))));
     let lemma_pattern = patterns
         .next()
         .flatten()
