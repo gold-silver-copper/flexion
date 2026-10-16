@@ -8,7 +8,7 @@ use flexion::Compound::{self, *};
 /// 260 rules and 289 listed first parts.
 pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
     rules {
-        "" => [Last 2998, Each 824],
+        "" => [Last 2997, Each 824],
         "а" => [Last 190, Each 165],
         "ба" => [Each 19, Last 3],
         "ава" => [Last 3],
@@ -122,7 +122,7 @@ pub(super) const COMPOUND: Choice<'static, Compound> = flexion::choice! {
         "зык" => [Each 4],
         "язык" => [Each 4],
         "эк" => [Last 7],
-        "л" => [Last 169, Each 9],
+        "л" => [Last 168, Each 9],
         "нал" => [Last 18],
         "ел" => [Last 2, Each 2],
         "ам" => [Last 16, Each 1],

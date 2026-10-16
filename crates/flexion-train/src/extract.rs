@@ -40,6 +40,10 @@ pub struct Lexeme {
     /// after.
     #[serde(default)]
     pub vulgar: bool,
+    /// What the entry is: a word of its own, or another word's form or
+    /// spelling (for scoring them apart).
+    #[serde(default)]
+    pub of: Of,
     /// The dictionary editors' own analysis of the word. **For scoring
     /// only**: the learner never reads it (the grammar must find classes,
     /// stems and features itself); `xtask` compares what was learned with it.
@@ -134,14 +138,90 @@ pub fn extract(
     spelling: &Orthography<'_>,
     dump: &Path,
 ) -> Result<Vec<PosData>, String> {
-    let (out, stats) = read_dump(lang, spelling, dump, 0, None)?;
+    let (mut out, stats) = read_dump(lang, spelling, dump, 0, None)?;
     eprintln!(
         "read {} lines ({} unparsable); lexemes: {}",
         stats.lines,
         stats.failures,
         summary(lang, &out)
     );
+    foreign(lang, spelling, &mut out)?;
     Ok(out)
+}
+
+/// A word's letters with every mark taken off: what tells two spellings of
+/// one word from two words.
+fn letters_of(spelling: &Orthography<'_>, word: &str) -> String {
+    let key = spelling.key(&spelling.read(word).letters);
+    key.nfd()
+        .filter(|&c| !unicode_normalization::char::is_combining_mark(c))
+        .collect()
+}
+
+/// An entry whose table is another word's is rare noise; a convention of
+/// the dictionary's (Greek verbs cited contracted, `φοβῶ` for `φοβέω`'s
+/// table) is common. Below this share of a part of speech's entries, its
+/// foreign tables are dropped (see [`foreign`]).
+const FOREIGN: f64 = 0.02;
+
+/// Entries whose table is another word's: none of the forms in its
+/// lemma's cell has the headword's letters, whatever marks either writes
+/// (Polish `zaklepywać` with `zaklepywywać`'s table; not Latin `homo` with
+/// `homō̆`, its length unsure). Where they are fewer than [`FOREIGN`] of a part
+/// of speech's entries they are noise and go; else a convention, and they
+/// stay. Each one is printed either way.
+pub fn foreign(
+    lang: &Language,
+    spelling: &Orthography<'_>,
+    data: &mut [PosData],
+) -> Result<(), String> {
+    let key = |s: &str| letters_of(spelling, s);
+    for (part, d) in lang.parts.iter().zip(data.iter_mut()) {
+        let Some(lemma_cell) = crate::shape(lang, part)?.lemma_cell else {
+            continue;
+        };
+        let foreign = |l: &Lexeme| {
+            l.cells.get(lemma_cell).is_some_and(|forms| {
+                !forms.is_empty() && !forms.iter().any(|f| key(f) == key(&l.lemma))
+            })
+        };
+        let flagged: Vec<String> = d
+            .lexemes
+            .iter()
+            .filter(|l| foreign(l))
+            .map(|l| {
+                let table = l
+                    .cells
+                    .get(lemma_cell)
+                    .and_then(|f| f.first())
+                    .map_or("", String::as_str);
+                format!("{} ({table})", l.lemma)
+            })
+            .collect();
+        if flagged.is_empty() {
+            continue;
+        }
+        #[allow(clippy::cast_precision_loss)]
+        let share = flagged.len() as f64 / d.lexemes.len().max(1) as f64;
+        let dropped = share < FOREIGN;
+        eprintln!(
+            "  {}: {} of {} entries have another word's table ({:.2}%): {}; {}",
+            part.name,
+            flagged.len(),
+            d.lexemes.len(),
+            100.0 * share,
+            if dropped {
+                "dropped"
+            } else {
+                "kept, a convention"
+            },
+            flagged.join(", ")
+        );
+        if dropped {
+            d.lexemes.retain(|l| !foreign(l));
+        }
+    }
+    Ok(())
 }
 
 /// Read edition `index` of the language (see [`Language::editions`]) from its
@@ -228,7 +308,7 @@ pub fn add_edition(
         summary(lang, data),
         report.join("\n")
     );
-    Ok(())
+    foreign(lang, spelling, data)
 }
 
 /// Read a dump's entries into every part of speech, numbered on from
@@ -296,6 +376,19 @@ fn read_entry(
                 };
                 let read = part.templates.is_empty() || template.is_some_and(|t| matches(&t.form));
                 if read {
+                    // An entry may have more than one table (Polish: a Middle
+                    // Polish one after the modern one): each table's forms
+                    // come after its template's name; those of a template
+                    // the part of speech doesn't read go.
+                    if !part.templates.is_empty() {
+                        let mut reading = true;
+                        repaired.forms.retain(|f| {
+                            if f.tags.iter().any(|t| t == "inflection-template") {
+                                reading = matches(&f.form);
+                            }
+                            f.source.is_none() || reading
+                        });
+                    }
                     lang.hooks.repair(part.name, &mut repaired);
                 }
                 read
@@ -466,6 +559,7 @@ fn lexeme(
                 .any(|t| matches!(t.as_str(), "vulgar" | "offensive" | "derogatory" | "slur"))
         }),
         editors: Editors::of(entry),
+        of: Of::of_entry(entry),
     })
 }
 
@@ -495,6 +589,34 @@ fn initial_marks_only(word: &str, marks: &str, vowels: &str) -> String {
         out.push(c);
     }
     out.nfc().collect()
+}
+
+/// What a dictionary entry is: a word of its own, or, by every sense's tags,
+/// another word's form (`form-of`: a participle, a comparative) or another
+/// word's spelling (`alt-of`).
+#[derive(
+    Debug, Clone, Copy, Default, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize,
+)]
+pub enum Of {
+    #[default]
+    Own,
+    Form,
+    Spelling,
+}
+
+impl Of {
+    pub fn of_entry(entry: &Entry) -> Of {
+        let every = |tag: &str| {
+            !entry.senses.is_empty() && entry.senses.iter().all(|s| s.tags.iter().any(|t| t == tag))
+        };
+        if every("form-of") {
+            Of::Form
+        } else if every("alt-of") {
+            Of::Spelling
+        } else {
+            Of::Own
+        }
+    }
 }
 
 fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {

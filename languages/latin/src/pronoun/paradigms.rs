@@ -1,22 +1,20 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~us`, `suus`: the stem and `us`). A stem in two pieces (`~~`, `ecquīnam`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem gen_sg: \"~ius~- like quīvīs\"`: the slot's cells are `quīvīs`'s table's patterns
+/// with `~ius~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (sg, pl)
 /// `nom_f` (sg, pl)
 /// `nom_n` (sg, pl)
@@ -37,14 +35,14 @@ use flexion::Paradigm;
 /// `voc_n` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem pronoun_m_sg: $s0:tt;)?
-     $(stem pronoun_m: $s1:tt;)?
-     $(stem pronoun_f: $s2:tt;)?
-     $(stem pronoun_n_sg: $s3:tt;)?
-     $(stem pronoun_gen_sg: $s4:tt;)?
-     $(stem pronoun_gen_pl: $s5:tt;)?
-     $(stem pronoun_pl: $s6:tt;)?
-     $(stem pronoun_abl_sg: $s7:tt;)?
+     $(stem lemma: $s0:tt;)?
+     $(stem rest__: $s1:tt;)?
+     $(stem rest: $s2:tt;)?
+     $(stem rest___: $s3:tt;)?
+     $(stem gen_sg: $s4:tt;)?
+     $(stem gen_pl: $s5:tt;)?
+     $(stem rest_: $s6:tt;)?
+     $(stem abl_sg: $s7:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -145,8 +143,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "~", "us~" after "ī"`: `~`, or `us~`
+/// where that pattern ends in `ī`).
 macro_rules! affix {
     () => {
         None
@@ -166,52 +164,46 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `ecquīnam`: 28 words.
+    /// Like `ecquīnam`: 29 words.
     Ecquīnam,
-    /// Like `quīvīs`: 8 words.
-    Quīvīs,
-    /// Like `uter`: 8 words.
-    Uter,
+    /// Like `quīdam`: 8 words.
+    Quīdam,
+    /// Like `noster`: 8 words.
+    Noster,
     /// Like `ecquis`: 6 words.
     Ecquis,
-    /// Like `quidquid`: 6 words.
-    Quidquid,
+    /// Like `istic`: 6 words.
+    Istic,
     /// Like `suus`: 5 words.
     Suus,
     /// Like `iste`: 5 words.
     Iste,
     /// Like `utervīs`: 4 words.
     Utervīs,
-    /// Like `alius`: 3 words.
-    Alius,
-    /// Like `quis`: 3 words.
-    Quis,
+    /// Like `ūllus`: 3 words.
+    Ūllus,
+    /// Like `quālis`: 3 words.
+    Quālis,
     /// Like `complūria`: 2 words.
     Complūria,
-    /// Like `ambŏ`: 1 words.
-    Ambŏ,
-    /// Like `temet`: 1 words.
-    Temet,
     /// Like `quicquidlibet`: 1 words.
     Quicquidlibet,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 14] = [
+    pub const ALL: [Declension; 12] = [
         Declension::Ecquīnam,
-        Declension::Quīvīs,
-        Declension::Uter,
+        Declension::Quīdam,
+        Declension::Noster,
         Declension::Ecquis,
-        Declension::Quidquid,
+        Declension::Istic,
         Declension::Suus,
         Declension::Iste,
         Declension::Utervīs,
-        Declension::Alius,
-        Declension::Quis,
+        Declension::Ūllus,
+        Declension::Quālis,
         Declension::Complūria,
-        Declension::Ambŏ,
-        Declension::Temet,
         Declension::Quicquidlibet,
     ];
 
@@ -230,9 +222,9 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
-    // Ecquīnam: 28 words (is, nēmō, quī, aliquī, suī, quisque).
-    declension!("ecquīnam", 28, "~~";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
+    // Ecquīnam: 29 words (is, nēmō, quī, aliquī, suī, quisque).
+    declension!("ecquīnam", 29, "~~";
     nom_m: "~~", "~~";
     nom_f: _, "~~";
     nom_n: _, "~~";
@@ -240,13 +232,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     acc_m: _, "~~";
     acc_f: _, "~~";
     ),
-    // Quīvīs: 8 words (quīdam, quīcumque, quīnam, quīlibet, quīvīs, quīcunque).
-    declension!("quīvīs", 8, "q~ī~";
+    // Quīdam: 8 words (quīdam, quīcumque, quīnam, quīlibet, quīvīs, quīcunque).
+    declension!("quīdam", 8, "q~ī~";
+    stem gen_sg: "~ius~- like quīvīs";
     nom_m: "q~ī~", "q~ī~";
     nom_f: "q~ae~", "q~ae~";
-    nom_n: "q~id~", "q~ae~";
-    gen_m: "c~ius~", "q~ōrun~";
-    gen_f: "c~ius~", "q~ārun~";
+    nom_n: _, "q~ae~";
+    gen_m: _, "q~ōrun~";
+    gen_f: _, "q~ārun~";
+    gen_n: derived, _;
     dat_m: "c~i~", "q~ibus~";
     dat_f: "c~i~", _;
     acc_m: "q~en~", "q~ōs~";
@@ -255,44 +249,48 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     abl_m: "q~ō~", _;
     abl_f: "q~ā~", _;
     ),
-    // Uter: 8 words (alter, noster, uter, vester, egomet, tūtemet).
-    declension!("uter", 8, "~e~";
-    stem pronoun_m_sg: "~e~- like uter";
+    // Noster: 8 words (alter, noster, uter, vester, egomet, tūtemet).
+    declension!("noster", 8, "~e~";
+    stem lemma: "~e~- like uter";
+    stem rest: "~~- like uter";
+    stem rest___: "~~- like uter";
+    stem abl_sg: "~~- like uter";
     nom_m: _, "~~ī";
-    nom_f: "~~a", "~~ae";
-    nom_n: "~~um", "~~a";
     gen_m: "~~ī", "~~ōrum";
     gen_f: "~~ae", "~~ārum";
     dat_m: "~~ō", "~~īs";
     dat_f: "~~ae", _;
-    acc_m: "~~um", "~~ōs";
-    acc_f: "~~am", "~~ās";
-    acc_n: "~~um", _;
-    abl_m: "~~ō", _;
-    abl_f: "~~ā", _;
+    acc_n: _, derived;
+    abl_n: derived, _;
+    voc_f: derived, derived;
+    voc_n: _, derived;
     ),
-    // Ecquis: 6 words (aliquis, ecquis, nēquis, sīquis, numquis, nesciōquis). Like Ecquīnam, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
+    // Ecquis: 6 words (aliquis, ecquis, nēquis, sīquis, numquis, nesciōquis). Like Ecquīnam, except in 15 cells: nom_m sg, nom_m pl, nom_n sg, gen_n sg, dat_m sg, dat_m pl, ….
     declension!("ecquis", 6, "~q~is", like Ecquīnam;
+    stem rest: "~q~- like uter";
+    stem gen_sg: "~c~ius- like quidquid";
+    stem abl_sg: "~q~- like uter";
     nom_m: "~q~is", "~q~ī";
-    nom_f: "~q~a", "~q~ae";
-    nom_n: "~q~id", "~q~a";
-    gen_m: "~c~ius", _;
-    gen_f: "~c~ius", _;
+    nom_n: "~q~id", _;
+    gen_n: derived, _;
     dat_m: "~c~i", derived;
     dat_f: "~c~i", _;
-    acc_m: "~q~em", "~q~ōs";
-    acc_f: "~q~am", "~q~ās";
-    acc_n: "~q~od", _;
-    abl_m: "~q~ō", _;
-    abl_f: "~q~ā", _;
+    acc_m: "~q~em", _;
+    acc_f: "~q~am", _;
+    acc_n: "~q~od", derived;
+    abl_n: derived, _;
+    voc_f: derived, derived;
+    voc_n: _, derived;
     ),
-    // Quidquid: 6 words (hic, hice, quidquid, illic, istic, isthic).
-    declension!("quidquid", 6, "~i~";
+    // Istic: 6 words (hic, hice, quidquid, illic, istic, isthic).
+    declension!("istic", 6, "~i~";
+    stem gen_sg: "~īus~e- like quidquid";
     nom_m: "~i~", "~īs~e";
     nom_f: "~ae~", "~ae~";
     nom_n: "~u~|~u~ce|~o~", "~ae~";
-    gen_m: "~ĭus~e", "~ōrun~";
-    gen_f: "~ĭus~e", "~ārun~";
+    gen_m: _, "~ōrun~";
+    gen_f: _, "~ārun~";
+    gen_n: derived, _;
     dat_m: "~ī~", "~īs~e";
     dat_f: "~ī~", _;
     acc_m: "~un~", "~ōs~e";
@@ -303,66 +301,70 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     ),
     // Suus: 5 words (tuus, meus, suus, cuius, ipsimus).
     declension!("suus", 5, "~us";
+    stem rest: "~- like uter";
+    stem rest___: "~- like uter";
+    stem abl_sg: "~- like uter";
     nom_m: "~us", "~ī";
-    nom_f: "~a", "~ae";
-    nom_n: "~um", "~a";
     gen_m: "~ī", "~ōrum";
     gen_f: "~ae", "~ārum";
     dat_m: "~ō", "~īs";
     dat_f: "~ae", _;
-    acc_m: "~um", "~ōs";
-    acc_f: "~am", "~ās";
-    acc_n: "~um", _;
-    abl_m: "~ō", _;
-    abl_f: "~ā", _;
+    acc_n: _, derived;
+    abl_n: derived, _;
     voc_m: "~e", _;
+    voc_f: derived, derived;
+    voc_n: _, derived;
     ),
-    // Iste: 5 words (ille, iste, ipse, seipse, olle). Like Suus, except in 8 cells: nom_m sg, nom_n sg, gen_m sg, gen_f sg, dat_m sg, dat_f sg, ….
+    // Iste: 5 words (ille, iste, ipse, seipse, olle). Like Suus, except in 7 cells: nom_m sg, gen_n sg, dat_n sg, acc_n sg, voc_m sg, voc_m pl, ….
     declension!("iste", 5, "~e", like Suus;
+    stem rest__: "~ī- like utervīs";
+    stem gen_sg: "~īus- like quidquid";
     nom_m: "~e", _;
-    nom_n: "~ud", _;
-    gen_m: "~ĭus", _;
-    gen_f: "~ĭus", _;
-    dat_m: "~ī", _;
-    dat_f: "~ī", _;
+    gen_n: derived, _;
+    dat_n: derived, _;
     acc_n: "~ud", _;
-    voc_m: derived, _;
+    voc_m: derived, derived;
+    voc_n: derived, _;
     ),
-    // Utervīs: 4 words (uterque, utervīs, utercumque, uterlibet). Like Uter with `~` after each pattern, except in 4 cells: gen_m sg, gen_f sg, dat_m sg, dat_f sg.
-    declension!("utervīs", 4, "~e~~", like Uter with "~";
-    gen_m: "~~ĭus~", _;
-    gen_f: "~~ĭus~", _;
+    // Utervīs: 4 words (uterque, utervīs, utercumque, uterlibet). Like Noster with `~` after each pattern (`us~` after ī), except in 4 cells: nom_m pl, gen_f sg, dat_m sg, dat_f sg.
+    declension!("utervīs", 4, "~e~~", like Noster with "~", "us~" after "ī";
+    nom_m: _, "~~ī~";
+    gen_f: "~~īus~", _;
     dat_m: "~~ī~", _;
     dat_f: "~~ī~", _;
     ),
-    // Alius: 3 words (alius, ūllus, nūllus). Like Suus, except in 4 cells: gen_m sg, gen_f sg, dat_m sg, dat_f sg.
-    declension!("alius", 3, "~us", like Suus;
-    gen_m: "~ĭus|~ī", _;
-    gen_f: "~ĭus", _;
-    dat_m: "~ī", _;
-    dat_f: "~ī", _;
+    // Ūllus: 3 words (alius, ūllus, nūllus). Like Suus, except in 4 cells: gen_m sg, gen_f sg, dat_n sg, voc_m pl.
+    declension!("ūllus", 3, "~us", like Suus;
+    stem rest__: "~ī- like utervīs";
+    gen_m: "~īus|~ī", _;
+    gen_f: "~īus", _;
+    dat_n: derived, _;
+    voc_m: _, derived;
     ),
-    // Quis: 3 words (quis, quisquis, quālis).
-    declension!("quis", 3, "~is";
-    stem pronoun_m_sg: "~is- like uter";
+    // Quālis: 3 words (quis, quisquis, quālis).
+    declension!("quālis", 3, "~is";
+    stem lemma: "~is- like uter";
+    stem gen_sg: "~is- like quidquid";
+    stem abl_sg: "~ī- like quis";
     nom_m: _, "~ēs";
     nom_f: "~is", "~ēs";
-    nom_n: "~e", "~ia";
-    gen_m: "~is", "~ium";
-    gen_f: "~is", "~ium";
+    nom_n: _, "~ia";
+    gen_m: _, "~ium";
+    gen_f: _, "~ium";
+    gen_n: derived, _;
     dat_m: "~ī", "~ibus";
     dat_f: "~ī", _;
     acc_m: "~em", "~īs";
     acc_f: "~em", "~īs";
     acc_n: "~e", _;
-    abl_m: "~ī", _;
-    abl_f: "~ī", _;
+    abl_n: derived, _;
+    voc_n: "~e", _;
     ),
-    // Complūria: 2 words (complūria, conplūria). Like Quis, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, ….
-    declension!("complūria", 2, "~ia", like Quis;
+    // Complūria: 2 words (complūria, conplūria). Like Quālis, except in 18 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n pl, gen_m sg, ….
+    declension!("complūria", 2, "~ia", like Quālis;
     nom_m: "~ia", "~a|~ia";
     nom_f: derived, "~a|~ia";
-    nom_n: derived, "~a|~ia";
+    nom_n: _, "~a|~ia";
     gen_m: derived, _;
     gen_f: derived, _;
     dat_m: derived, _;
@@ -373,43 +375,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     abl_m: derived, _;
     abl_f: derived, _;
     voc_m: derived, _;
-    ),
-    // Ambŏ: 1 words (ambŏ). Like Complūria, except in 11 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m pl, gen_f pl, ….
-    declension!("ambŏ", 1, "~ŏ", like Complūria;
-    nom_m: "~ŏ", "~ō";
-    nom_f: _, "~ae";
-    nom_n: _, "~ō";
-    gen_m: _, "~ōrum";
-    gen_f: _, "~ārum";
-    dat_m: _, "~ōbus";
-    dat_f: _, "~ābus";
-    acc_m: _, "~ōs|~ō";
-    acc_f: _, "~ās";
-    abl_f: _, "~ābus";
-    ),
-    // Temet: 1 words (temet). Like Ecquis, except in 16 cells: nom_m pl, nom_f sg, nom_f pl, nom_n sg, nom_n pl, gen_m sg, ….
-    declension!("temet", 1, "~e~", like Ecquis;
-    stem pronoun_m_sg: "~ūte~- like uter";
-    nom_m: _, derived;
-    nom_f: "~ūte~", derived;
-    nom_n: "~ūte~", derived;
-    gen_m: "~uī~", _;
-    gen_f: "~uī~", _;
-    dat_m: "~ibi~", _;
-    dat_f: "~ibi~", _;
-    acc_m: "~e~", derived;
-    acc_f: "~e~", derived;
-    acc_n: "~e~", _;
-    abl_m: "~e~", _;
-    abl_f: "~e~", _;
+    voc_n: derived, _;
     ),
     // Quicquidlibet: 1 words (quicquidlibet).
     declension!("quicquidlibet", 1, "q~icq~id~";
+    stem gen_sg: "~i~scuius~- like quīvīs";
     nom_m: "q~idq~id~|q~icq~id~", "q~aeq~ae~";
     nom_f: "q~idq~id~|q~icq~id~", "q~aeq~ae~";
     nom_n: "q~idq~id~|q~icq~id~", "q~aeq~ae~";
-    gen_m: "c~i~scuius~", "q~ōr~mquōrum~";
-    gen_f: "c~i~scuius~", "q~ōr~mquōrum~";
+    gen_m: _, "q~ōr~mquōrum~";
+    gen_f: _, "q~ōr~mquōrum~";
+    gen_n: derived, _;
     dat_m: "c~ic~i~", "q~ib~squibus~|q~īsq~īs~";
     dat_f: "c~ic~i~", _;
     acc_m: "q~idq~id~|q~icq~id~", "q~aeq~ae~";

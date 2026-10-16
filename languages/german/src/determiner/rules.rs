@@ -7,22 +7,21 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 6 rules and 9 listed words.
+/// 6 rules and 8 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Einer 15, Sein 13, Ihrige 9],
-        "e" => [Ihrige 9] regular,
+        "" => [Keiner 15, Sein 13, Ihrige 8],
+        "e" => [Ihrige 8] regular,
         "ge" => [Ihrige 7] regular,
         "n" => [Sein 8] regular,
-        "r" => [Einer 15, Sein 5] regular,
-        "ner" => [Einer 8] regular,
+        "r" => [Keiner 15, Sein 5] regular,
+        "ner" => [Keiner 8] regular,
     }
     listed {
-        "#der" => Einer,
+        "#der" => Keiner,
         "#derjenige" => Ihrige,
         "#derselbe" => Ihrige,
-        "#eine" => Ihrige,
-        "#einer" => Einer,
+        "#einer" => Keiner,
         "#euer" => Sein,
         "#sier" => Sein,
         "#unser" => Sein,

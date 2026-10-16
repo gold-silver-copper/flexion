@@ -13,11 +13,11 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("noun_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[NOM_SG, ACC_SG]),
     },
     Slot {
-        name: Cow::Borrowed("noun_pl"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             NOM_PL, GEN_SG, GEN_PL, DAT_SG, DAT_PL, ACC_PL, INS_SG, INS_PL, LOC_SG, LOC_PL, VOC_SG,
             VOC_PL,
@@ -26,60 +26,46 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 29] = [
-    // noun_sg like założenie: 18,314 words.
+pub(super) static TABLES: [EndingTable<'static>; 34] = [
+    // lemma like obraz: 18,222 words.
     EndingTable {
-        name: Cow::Borrowed("założenie"),
-        words: 18314,
+        name: Cow::Borrowed("obraz"),
+        words: 18222,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // noun_sg like babka: 12,206 words.
+    // lemma like babka: 12,060 words.
     EndingTable {
         name: Cow::Borrowed("babka"),
-        words: 12206,
+        words: 12060,
         slot: 0,
         table: Cow::Borrowed(concat!("~a\t", "~ę\t",)),
     },
-    // noun_sg like gospodarz: 4,413 words.
+    // lemma like gospodarz: 4,383 words.
     EndingTable {
         name: Cow::Borrowed("gospodarz"),
-        words: 4413,
+        words: 4383,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~a\t",)),
     },
-    // noun_sg like woźny: 239 words.
+    // lemma like woźny: 235 words.
     EndingTable {
         name: Cow::Borrowed("woźny"),
-        words: 239,
+        words: 235,
         slot: 0,
         table: Cow::Borrowed(concat!("~y\t", "~ego\t",)),
     },
-    // noun_sg like stara: 177 words.
-    EndingTable {
-        name: Cow::Borrowed("stara"),
-        words: 177,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~a\t", "~ą\t",)),
-    },
-    // noun_sg like okazyja: 10 words.
-    EndingTable {
-        name: Cow::Borrowed("okazyja"),
-        words: 10,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~å\t", "~ą\t",)),
-    },
-    // noun_sg like uczeń: 4 words.
+    // lemma like uczeń: 4 words.
     EndingTable {
         name: Cow::Borrowed("uczeń"),
         words: 4,
         slot: 0,
         table: Cow::Borrowed(concat!("~eń\t", "~nia\t",)),
     },
-    // noun_pl like obraz: 3,503 words.
+    // rest like obraz: 3,471 words.
     EndingTable {
         name: Cow::Borrowed("obraz"),
-        words: 3503,
+        words: 3471,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~y\t",
@@ -91,22 +77,22 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~ie\t~y\t",
         )),
     },
-    // noun_pl like linia: 2,443 words.
+    // rest like język: 2,290 words.
     EndingTable {
-        name: Cow::Borrowed("linia"),
-        words: 2443,
+        name: Cow::Borrowed("język"),
+        words: 2290,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~e\t",
-            "~i\t~i\t",
-            "~i\t~om\t",
+            "~i\t",
+            "~a\t~ów\t",
+            "~owi\t~om\t",
             "\t",
-            "~ą\t~ami\t",
-            "~i\t~ach\t",
-            "~o\t~e\t",
+            "~iem\t~ami\t",
+            "~u\t~ach\t",
+            "~u\t~i\t",
         )),
     },
-    // noun_pl like sieć: 1,524 words.
+    // rest like sieć: 1,524 words.
     EndingTable {
         name: Cow::Borrowed("sieć"),
         words: 1524,
@@ -121,25 +107,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~\t~\t",
         )),
     },
-    // noun_pl like różnica: 1,103 words.
-    EndingTable {
-        name: Cow::Borrowed("różnica"),
-        words: 1103,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~e\t",
-            "~y\t~\t",
-            "~y\t~om\t",
-            "\t",
-            "~ą\t~ami\t",
-            "~y\t~ach\t",
-            "~o\t~e\t",
-        )),
-    },
-    // noun_pl like gospodarz: 1,103 words.
+    // rest like gospodarz: 1,101 words.
     EndingTable {
         name: Cow::Borrowed("gospodarz"),
-        words: 1103,
+        words: 1101,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -151,10 +122,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~u\t~e\t",
         )),
     },
-    // noun_pl like grunt: 1,086 words.
+    // rest like grunt: 1,080 words.
     EndingTable {
         name: Cow::Borrowed("grunt"),
-        words: 1086,
+        words: 1080,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ty\t",
@@ -166,37 +137,82 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~cie\t~ty\t",
         )),
     },
-    // noun_pl like stara: 154 words.
+    // rest like garniec: 579 words.
     EndingTable {
-        name: Cow::Borrowed("stara"),
-        words: 154,
+        name: Cow::Borrowed("garniec"),
+        words: 579,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
-            "~ej\t~ych\t",
-            "~ej\t~ym\t",
-            "\t",
-            "~ą\t~ymi\t",
-            "~ej\t~ych\t",
-            "~a\t~e\t",
-        )),
-    },
-    // noun_pl like patron: 150 words.
-    EndingTable {
-        name: Cow::Borrowed("patron"),
-        words: 150,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~owie\t",
             "~a\t~ów\t",
             "~owi\t~om\t",
             "\t",
             "~em\t~ami\t",
-            "~ie\t~ach\t",
-            "~ie\t~owie\t",
+            "~u\t~ach\t",
+            "~u\t~e\t",
         )),
     },
-    // noun_pl like woźny: 148 words.
+    // rest like pazur: 248 words.
+    EndingTable {
+        name: Cow::Borrowed("pazur"),
+        words: 248,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~y\t",
+            "~a\t~ów\t",
+            "~owi\t~om\t",
+            "~y\t",
+            "~em\t~ami\t",
+            "~ze\t~ach\t",
+            "~ze\t~y\t",
+        )),
+    },
+    // rest like chłopiec: 209 words.
+    EndingTable {
+        name: Cow::Borrowed("chłopiec"),
+        words: 209,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~y\t",
+            "~a\t~ów\t",
+            "~owi\t~om\t",
+            "\t",
+            "~em\t~ami\t",
+            "~u\t~ach\t",
+            "~ze\t~y\t",
+        )),
+    },
+    // rest like wybór: 195 words.
+    EndingTable {
+        name: Cow::Borrowed("wybór"),
+        words: 195,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~y\t",
+            "~u\t~ów\t",
+            "~owi\t~om\t",
+            "\t",
+            "~em\t~ami\t",
+            "~ze\t~ach\t",
+            "~ze\t~y\t",
+        )),
+    },
+    // rest like grzebień: 192 words.
+    EndingTable {
+        name: Cow::Borrowed("grzebień"),
+        words: 192,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~e\t",
+            "~a\t~\t",
+            "~owi\t~om\t",
+            "\t",
+            "~em\t~ami\t",
+            "~u\t~ach\t",
+            "~u\t~e\t",
+        )),
+    },
+    // rest like woźny: 148 words.
     EndingTable {
         name: Cow::Borrowed("woźny"),
         words: 148,
@@ -211,7 +227,37 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~y\t~i\t",
         )),
     },
-    // noun_pl like przestrzeń: 143 words.
+    // rest like patron: 147 words.
+    EndingTable {
+        name: Cow::Borrowed("patron"),
+        words: 147,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~owie\t",
+            "~a\t~ów\t",
+            "~owi\t~om\t",
+            "\t",
+            "~em\t~ami\t",
+            "~ie\t~ach\t",
+            "~ie\t~owie\t",
+        )),
+    },
+    // rest like stara: 147 words.
+    EndingTable {
+        name: Cow::Borrowed("stara"),
+        words: 147,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~e\t",
+            "~ej\t~ych\t",
+            "~ej\t~ym\t",
+            "\t",
+            "~ą\t~ymi\t",
+            "~ej\t~ych\t",
+            "~a\t~e\t",
+        )),
+    },
+    // rest like przestrzeń: 143 words.
     EndingTable {
         name: Cow::Borrowed("przestrzeń"),
         words: 143,
@@ -226,10 +272,10 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~\t~e\t",
         )),
     },
-    // noun_pl like jaźwiec: 133 words.
+    // rest like jaźwiec: 131 words.
     EndingTable {
         name: Cow::Borrowed("jaźwiec"),
-        words: 133,
+        words: 131,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -241,7 +287,7 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~u\t~e\t",
         )),
     },
-    // noun_pl like moc: 97 words.
+    // rest like moc: 97 words.
     EndingTable {
         name: Cow::Borrowed("moc"),
         words: 97,
@@ -256,9 +302,9 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~y\t~e\t",
         )),
     },
-    // noun_pl like byk: 70 words.
+    // rest like konik: 70 words.
     EndingTable {
-        name: Cow::Borrowed("byk"),
+        name: Cow::Borrowed("konik"),
         words: 70,
         slot: 1,
         table: Cow::Borrowed(concat!(
@@ -271,7 +317,7 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~u\t~i\t",
         )),
     },
-    // noun_pl like król: 67 words.
+    // rest like król: 67 words.
     EndingTable {
         name: Cow::Borrowed("król"),
         words: 67,
@@ -286,10 +332,34 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~u\t~owie\t",
         )),
     },
-    // noun_pl like konował: 38 words.
+    // rest like dudy: 58 words.
     EndingTable {
-        name: Cow::Borrowed("konował"),
+        name: Cow::Borrowed("dudy"),
+        words: 58,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~y\t", "\t~\t", "\t~om\t", "~y\t", "\t~ami\t", "\t~ach\t", "\t~y\t",
+        )),
+    },
+    // rest like pokój: 38 words.
+    EndingTable {
+        name: Cow::Borrowed("pokój"),
         words: 38,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~je\t",
+            "~ju\t~jów|~i\t",
+            "~jowi\t~jom\t",
+            "\t",
+            "~jem\t~jami\t",
+            "~ju\t~jach\t",
+            "~ju\t~je\t",
+        )),
+    },
+    // rest like warchoł: 37 words.
+    EndingTable {
+        name: Cow::Borrowed("warchoł"),
+        words: 37,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ły\t",
@@ -301,10 +371,25 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~le\t~ły\t",
         )),
     },
-    // noun_pl like lis: 25 words.
+    // rest like dół: 24 words.
+    EndingTable {
+        name: Cow::Borrowed("dół"),
+        words: 24,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ły\t",
+            "~łu\t~łów\t",
+            "~łowi\t~łom\t",
+            "\t",
+            "~łem\t~łami\t",
+            "~le\t~łach\t",
+            "~le\t~ły\t",
+        )),
+    },
+    // rest like lis: 24 words.
     EndingTable {
         name: Cow::Borrowed("lis"),
-        words: 25,
+        words: 24,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~y\t",
@@ -316,7 +401,7 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~ie\t~y\t",
         )),
     },
-    // noun_pl like live: 22 words.
+    // rest like live: 22 words.
     EndingTable {
         name: Cow::Borrowed("live"),
         words: 22,
@@ -325,19 +410,19 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "\t", "\t\t", "\t\t", "\t", "\t\t", "~\t\t", "~\t\t",
         )),
     },
-    // noun_pl like usta: 13 words.
+    // rest like usta: 12 words.
     EndingTable {
         name: Cow::Borrowed("usta"),
-        words: 13,
+        words: 12,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~a\t", "\t~\t", "\t~om\t", "~a\t", "\t~ami\t", "\t~ach\t", "\t~a\t",
         )),
     },
-    // noun_pl like byl: 11 words.
+    // rest like kleszcz: 8 words.
     EndingTable {
-        name: Cow::Borrowed("byl"),
-        words: 11,
+        name: Cow::Borrowed("kleszcz"),
+        words: 8,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t",
@@ -349,37 +434,43 @@ pub(super) static TABLES: [EndingTable<'static>; 29] = [
             "~u\t~e\t",
         )),
     },
-    // noun_pl like gnat: 9 words.
+    // rest like ołów: 4 words.
     EndingTable {
-        name: Cow::Borrowed("gnat"),
-        words: 9,
+        name: Cow::Borrowed("ołów"),
+        words: 4,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~ty\t",
-            "~ta\t~tów\t",
-            "~towi\t~tom\t",
-            "~ty\t",
-            "~tem\t~tami\t",
-            "~cie\t~tach\t",
-            "~cie\t~ty\t",
+            "~e\t",
+            "~u\t~\t",
+            "~owi\t~om\t",
+            "\t",
+            "~em\t~ami\t",
+            "~u\t~ach\t",
+            "~u\t~e\t",
         )),
     },
-    // noun_pl like regaty: 3 words.
+    // rest like media: 3 words.
     EndingTable {
-        name: Cow::Borrowed("regaty"),
+        name: Cow::Borrowed("media"),
         words: 3,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~y\t", "\t~\t", "\t~om\t", "~y\t", "\t~ami\t", "\t~ach\t", "\t~y\t",
+            "~a\t", "\t~ów\t", "\t~om\t", "~a\t", "\t~ami\t", "\t~ach\t", "\t~a\t",
         )),
     },
-    // noun_pl like przepowiedanie: 1 words.
+    // rest like jaź: 3 words.
     EndingTable {
-        name: Cow::Borrowed("przepowiedanie"),
-        words: 1,
+        name: Cow::Borrowed("jaź"),
+        words: 3,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~å\t", "~å\t\t", "~u\t\t", "\t", "~em\t\t", "~u\t\t", "\t\t",
+            "~eˇ\t",
+            "~aˇ\t~ˇ\t",
+            "~owiˇ\t~omˇ\t",
+            "\t",
+            "~emˇ\t~amiˇ\t",
+            "~uˇ\t~achˇ\t",
+            "~uˇ\t~eˇ\t",
         )),
     },
 ];

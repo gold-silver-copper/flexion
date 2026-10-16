@@ -199,6 +199,33 @@ impl Relation<'_> {
         }
         out
     }
+
+    /// The forms of the cell it comes from that it makes `form` of: a
+    /// change's old ending put back where its new one is, where the rules
+    /// would make that form `form` again (Latin `audiistī` from `audiī`
+    /// through `-ī → -istī` is not one: an `-iī` perfect makes `audīstī`).
+    pub fn sources(
+        &self,
+        form: &str,
+        smoothing: f32,
+        laws: Option<&sound_law::Program<'_>>,
+    ) -> Vec<String> {
+        if self.changes.is_empty() {
+            return vec![form.to_string()];
+        }
+        let mut out: Vec<String> = Vec::new();
+        for (old, new) in self.changes.iter() {
+            let Some(pieces) = pattern::bind(new, form) else {
+                continue;
+            };
+            let source = pattern::fill(old, &pieces);
+            let again = self.told(&source, smoothing, laws);
+            if again.is_some_and(|(again, _)| again == form) && !out.contains(&source) {
+                out.push(source);
+            }
+        }
+        out
+    }
 }
 
 impl<'a> Paradigm<'a> {
@@ -340,5 +367,48 @@ impl<'a> Paradigm<'a> {
                 Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
             })
             .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::choice::{Rule, Side};
+
+    #[test]
+    fn a_source_is_a_form_the_relation_makes_the_given_one_of() {
+        // The Latin perfect's second person from its first: `-ī → -istī`,
+        // but `-iī → -īstī` after `i`.
+        let relation = Relation {
+            cell: 1,
+            from: Cow::Borrowed(&[0]),
+            changes: Cow::Owned(vec![
+                (Cow::Borrowed("~ī"), Cow::Borrowed("~istī")),
+                (Cow::Borrowed("~iī"), Cow::Borrowed("~īstī")),
+            ]),
+            change: Some(Choice {
+                side: Side::End,
+                rules: Cow::Owned(vec![
+                    Rule {
+                        ending: "".into(),
+                        counts: Cow::Owned(vec![(0, 100)]),
+                        regular: true,
+                    },
+                    Rule {
+                        ending: "iī".into(),
+                        counts: Cow::Owned(vec![(1, 30)]),
+                        regular: true,
+                    },
+                ]),
+                exceptions: Cow::Borrowed(&[]),
+            }),
+            listed: true,
+            analogy: None,
+        };
+        let sources = |form| relation.sources(form, 2.0, None);
+        assert_eq!(sources("amāvistī"), ["amāvī"]);
+        assert_eq!(sources("audīstī"), ["audiī"]);
+        // `audiī` fits `-ī → -istī`, but makes `audīstī`.
+        assert!(sources("audiistī").is_empty());
     }
 }

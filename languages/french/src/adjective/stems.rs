@@ -17,24 +17,24 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         cells: Cow::Borrowed(&[M_SG, M_PL]),
     },
     Slot {
-        name: Cow::Borrowed("adjective_f"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[F_SG, F_PL, BEFORE_VOWEL]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // adjective_m like sauvage: 16,425 words.
+    // adjective_m like simple: 16,418 words.
     EndingTable {
-        name: Cow::Borrowed("sauvage"),
-        words: 16425,
+        name: Cow::Borrowed("simple"),
+        words: 16418,
         slot: 0,
         table: Cow::Borrowed("~\t~s\t"),
     },
-    // adjective_f like sauvage: 17,899 words.
+    // rest like simple: 17,892 words.
     EndingTable {
-        name: Cow::Borrowed("sauvage"),
-        words: 17899,
+        name: Cow::Borrowed("simple"),
+        words: 17892,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t~s\t", "\t",)),
     },

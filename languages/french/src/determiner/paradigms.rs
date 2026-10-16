@@ -1,30 +1,28 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! A pattern is the form with `~` where the stem goes (`~ˇ`, `mesdits`: the stem and `ˇ`). A stem in two pieces (`~e~`, `mesdites`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
-//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
+//! for alternating stems change them (`~ˇ`: `mesdits`).
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem pl: \"~- like tes\"`: the slot's cells are `tes`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem determiner_sg: $s0:tt;)?
-     $(stem determiner_pl: $s1:tt;)?
+     $(stem sg: $s0:tt;)?
+     $(stem pl: $s1:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
     ) => {
@@ -71,8 +69,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "ˇ"`: `ˇ` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -96,8 +93,8 @@ const M_AS_F: [u16; 4] = [2, 3, 2, 3];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `tes`: 23 words.
-    Tes,
+    /// Like `aucun`: 23 words.
+    Aucun,
     /// Like `mesdits`: 6 words.
     Mesdits,
     /// Like `mesdites`: 5 words.
@@ -119,7 +116,7 @@ pub enum Declension {
 impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 9] = [
-        Declension::Tes,
+        Declension::Aucun,
         Declension::Mesdits,
         Declension::Mesdites,
         Declension::Mon,
@@ -146,31 +143,31 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
-    // Tes: 23 words (tout, certain, du, un, ce, le).
-    declension!("tes", 23, "~";
-    stem determiner_pl: "~- like tes";
+    // Aucun: 23 words (tout, certain, du, un, ce, le).
+    declension!("aucun", 23, "~";
+    stem pl: "~- like tes";
     m: "~", _;
     f: "~e", _;
     ),
-    // Mesdits: 6 words (mesdits, tesdits, sesdits, nosdits, vosdits, leursdits). Like Tes with `ˇ` after each pattern.
-    declension!("mesdits", 6, "~ˇ", like Tes with "ˇ";
+    // Mesdits: 6 words (mesdits, tesdits, sesdits, nosdits, vosdits, leursdits). Like Aucun with `ˇ` after each pattern.
+    declension!("mesdits", 6, "~ˇ", like Aucun with "ˇ";
     ),
     // Mesdites: 5 words (mesdites, sesdites, nosdites, vosdites, leursdites).
     declension!("mesdites", 5, "~e~";
     m: "~e~", "~~";
     ),
-    // Mon: 3 words (son, ton, mon). Like Tes, except in 2 cells: m sg, f sg.
-    declension!("mon", 3, "~on", like Tes as M_AS_F;
+    // Mon: 3 words (son, ton, mon). Like Aucun, except in 2 cells: m sg, f sg.
+    declension!("mon", 3, "~on", like Aucun as M_AS_F;
     m: "~on", _;
     f: "~a", _;
     ),
-    // Nul: 3 words (nul, quel, équel). Like Tes, except in 2 cells: f sg, f pl.
-    declension!("nul", 3, "~", like Tes;
+    // Nul: 3 words (nul, quel, équel). Like Aucun, except in 2 cells: f sg, f pl.
+    declension!("nul", 3, "~", like Aucun;
     f: "~le", "~les";
     ),
     // Mondit: 3 words (tondit, sondit, mondit).
     declension!("mondit", 3, "~on~";
-    stem determiner_pl: "~es~- like tes";
+    stem pl: "~es~- like tes";
     m: "~on~", _;
     f: "~a~e", _;
     ),
@@ -180,7 +177,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     ),
     // Notredite: 2 words (notredite, votredite).
     declension!("notredite", 2, "~tre~e";
-    stem determiner_pl: "~s~- like tes";
+    stem pl: "~s~- like tes";
     m: "~tre~", _;
     ),
     // Leurdite: 1 words (leurdite). Like Notredite, except in 1 cell: m sg.

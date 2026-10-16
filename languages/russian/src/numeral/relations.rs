@@ -151,10 +151,7 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "на" => [1 23],
         "та" => [0 3],
         "и" => [0 23],
-    } listed {
-        "полутора" => 0,
-        "сорока" => 0,
-    }, false, None),
+    } listed {}, false, None),
     // PREP_M_INAN, from PREP_M_ANIM.
     relation!(PREP_M_INAN, [PREP_M_ANIM], [], none, true, None),
     // PREP_F_ANIM, from PREP_M_ANIM.

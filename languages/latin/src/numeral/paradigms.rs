@@ -1,22 +1,18 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~us`, `singulus`: the stem and `us`). A stem in two pieces (`~us~us`, `nōnusdecimus`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (sg, pl)
 /// `nom_f` (sg, pl)
 /// `nom_n` (sg, pl)
@@ -37,7 +33,7 @@ use flexion::Paradigm;
 /// `voc_n` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem numeral: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -271,9 +267,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 9] = [
     declension!("nūlla", 1, "~a", like Singulus;
     nom_m: "~a", "~ae";
     nom_n: "~a", _;
-    gen_m: "~ĭus", "~ārum";
-    gen_f: "~ĭus", _;
-    gen_n: "~ĭus", _;
+    gen_m: "~īus", "~ārum";
+    gen_f: "~īus", _;
+    gen_n: "~īus", _;
     dat_m: "~ī", _;
     dat_f: "~ī", _;
     acc_m: "~am", "~ās";

@@ -1,27 +1,23 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~y`, `body`: the stem and `y`). A stem in two pieces (`~a~`, `man`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem noun_sg: $s0:tt;)?
-     $(stem noun_pl: $s1:tt;)?
+     $(stem sg: $s0:tt;)?
+     $(stem pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
     ) => {
         Paradigm {
@@ -65,8 +61,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "es", "y" after "~"`: `es`, or `y`
+/// where that pattern ends in `~`).
 macro_rules! affix {
     () => {
         None
@@ -94,13 +90,13 @@ const SG_AS_PL: [u16; 2] = [1, 1];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `line`: 197,330 words.
+    /// Like `line`: 197,326 words.
     Line,
     /// Like `body`: 12,168 words.
     Body,
     /// Like `wash`: 7,533 words.
     Wash,
-    /// Like `silverfish`: 2,606 words.
+    /// Like `silverfish`: 2,605 words.
     Silverfish,
     /// Like `man`: 1,731 words.
     Man,
@@ -110,7 +106,7 @@ pub enum Declension {
     Medium,
     /// Like `focus`: 797 words.
     Focus,
-    /// Like `aura`: 536 words.
+    /// Like `aura`: 535 words.
     Aura,
     /// Like `lexicon`: 438 words.
     Lexicon,
@@ -369,8 +365,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
-    // Line: 197,330 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
-    declension!("line", 197330, "~";
+    // Line: 197,326 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
+    declension!("line", 197326, "~";
     noun: "~", "~s";
     ),
     // Body: 12,168 words (dictionary, lexicography, etymology, abbacy, abditory, abecedary). Like Blin with `es` after each pattern (`y` after ~).
@@ -380,8 +376,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     declension!("wash", 7533, "~", like Line;
     noun: _, "~es";
     ),
-    // Silverfish: 2,606 words (semantics, craft, abatis, abatvoix, english, bpd). Like Line.
-    declension!("silverfish", 2606, "~", like Line as PL_AS_SG;
+    // Silverfish: 2,605 words (semantics, craft, abatis, abatvoix, english, bpd). Like Line.
+    declension!("silverfish", 2605, "~", like Line as PL_AS_SG;
     ),
     // Man: 1,731 words (chairman, man, hardwareman, woman, englishman, hammerman). Like Aura with `a~` after each pattern (`~` after e).
     declension!("man", 1731, "~a~", like Aura with "a~", "~" after "e";
@@ -395,8 +391,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     // Focus: 797 words (thesaurus, abaciscus, abaculus, abacus, acarus, stylus). Like Blin with `` after each pattern (`us` after ~).
     declension!("focus", 797, "~us", like Blin with "", "us" after "~";
     ),
-    // Aura: 536 words (fabella, pupa, vertebra, abolla, familia, larva). Like Line, except in 1 cell: noun pl.
-    declension!("aura", 536, "~", like Line;
+    // Aura: 535 words (fabella, pupa, vertebra, abolla, familia, larva). Like Line, except in 1 cell: noun pl.
+    declension!("aura", 535, "~", like Line;
     noun: _, "~e";
     ),
     // Lexicon: 438 words (hexahedron, tetrahedron, pyramidion, eidolon, polyhedron, lexicon). Like Exotic with `` after each pattern (`on` after ~).

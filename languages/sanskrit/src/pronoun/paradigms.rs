@@ -1,22 +1,17 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (sg, du, pl)
 /// `nom_f` (sg, du, pl)
 /// `nom_n` (sg, du, pl)
@@ -43,7 +38,7 @@ use flexion::Paradigm;
 /// `voc_n` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem pronoun: $s0:tt;)?
+     $(stem rest: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
      $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
@@ -186,13 +181,13 @@ pub enum Declension {
     कतम,
     /// Like `कतर`: 4 words.
     कतर,
-    /// Like `तद्`: 2 words.
-    तद,
+    /// Like `यद्`: 2 words.
+    यद,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 3] = [Declension::कतम, Declension::कतर, Declension::तद];
+    pub const ALL: [Declension; 3] = [Declension::कतम, Declension::कतर, Declension::यद];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {
@@ -240,8 +235,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
     nom_n: _, _, "~ाणि";
     ins_m: "~ेण", _, _;
     ),
-    // तद: 2 words (तद्, यद्). Like कतम, except in 8 cells: nom_m du, acc_m du, voc_m du, voc_f sg, voc_f du, voc_f pl, ….
-    declension!("तद्", 2, "~द्", like कतम;
+    // यद: 2 words (तद्, यद्). Like कतम, except in 8 cells: nom_m du, acc_m du, voc_m du, voc_f sg, voc_f du, voc_f pl, ….
+    declension!("यद्", 2, "~द्", like कतम;
     nom_m: _, "~ौ", _;
     acc_m: _, derived, _;
     voc_m: _, derived, _;

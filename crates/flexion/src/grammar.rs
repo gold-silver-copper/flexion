@@ -22,6 +22,9 @@ const OTHER_VALUES: f32 = 0.05;
 /// Readings of each kind kept when combining them into candidates.
 const KEEP: usize = 4;
 
+/// The paradigm readings a word's table is built from, the likeliest.
+pub const READINGS: usize = 4;
+
 /// What joins the parts of a compound written in parts.
 const JOINER: char = '-';
 
@@ -326,10 +329,14 @@ pub struct Known<'q> {
 
 /// Which listed words a word ending in one inflects as (compounds, Finnish
 /// `aavameri` as `meri`): every one of at least `least` letters, where the
-/// language's compounds do; and those `words`, whose own compounds do.
+/// language's compounds do, but those `not`, whose own words don't (Latin
+/// `capitālis`, `digitālis` don't inflect as `Ītalis`); and those `words`,
+/// whose own compounds do.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Heads<'a> {
     pub least: Option<u8>,
+    /// Sorted.
+    pub not: Cow<'a, [Cow<'a, str>]>,
     /// Sorted.
     pub words: Cow<'a, [Cow<'a, str>]>,
 }
@@ -342,12 +349,10 @@ impl Heads<'_> {
 
     /// Whether a word ending in `head` (a listed word) inflects as it.
     pub fn inflects(&self, head: &str) -> bool {
+        let has = |words: &[Cow<'_, str>]| words.binary_search_by(|w| w.as_ref().cmp(head)).is_ok();
         self.least
-            .is_some_and(|least| head.chars().count() >= usize::from(least))
-            || self
-                .words
-                .binary_search_by(|w| w.as_ref().cmp(head))
-                .is_ok()
+            .is_some_and(|least| head.chars().count() >= usize::from(least) && !has(&self.not))
+            || has(&self.words)
     }
 }
 
@@ -357,11 +362,43 @@ impl Heads<'_> {
 /// [`WORD_END`]: Latin `tatio#` → `ā`, as in `-ātiō`; `#de` → `ē`, as in
 /// `dē-`; `ae` → `e`, a diphthong; `eni#numeral` → `ē`, as in `quīngēnī`,
 /// where adjectives in `-genus` have `e`). One language's rules serve every
-/// part of speech, each read with its `part`.
+/// part of speech, each read with its `part`. A root the rules don't tell
+/// comes first (see [`Marks::roots`]).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Marks<'a> {
     pub rules: Choice<'a, char>,
+    /// Word beginnings whose letter third from their end the dictionary's
+    /// words beginning so all write one way (two or more) the rules don't:
+    /// `("iudi", 'ū')`, a word typed `iudicium` writes `ū`, as `iūdicō` and
+    /// `iūdicātiō` do. Sorted.
+    pub roots: Cow<'a, [(Cow<'a, str>, char)]>,
     pub part: Cow<'a, str>,
+}
+
+/// The fewest letters of a root (see [`Marks::roots`]).
+pub const ROOT_LETTERS: usize = 4;
+
+/// How likely a letter is as its root writes it: the share of the letters
+/// roots decide on held-out Latin and Greek lemmas that they get right (244
+/// of 250).
+const ROOT_TRUST: f32 = 0.97;
+
+impl Marks<'_> {
+    /// How the root of `key` through the letter at char `i` and two past it
+    /// writes that letter, if it is listed.
+    pub fn root(&self, key: &str, i: usize) -> Option<char> {
+        let end = i + 3;
+        if end < ROOT_LETTERS {
+            return None;
+        }
+        let root = match key.char_indices().nth(end) {
+            Some((at, _)) => key.get(..at)?,
+            None if key.chars().count() == end => key,
+            None => return None,
+        };
+        let at = self.roots.binary_search_by(|(r, _)| r.as_ref().cmp(root));
+        at.ok().and_then(|at| self.roots.get(at)).map(|(_, v)| *v)
+    }
 }
 
 /// The inflection of one part of speech, as learned from the dictionary.
@@ -555,7 +592,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         // forms, cell by cell, built once.
         let mut readings: Vec<_> = inflections
             .into_iter()
-            .take(KEEP)
+            .take(READINGS)
             .map(|inf| {
                 let classes = self.accent_classes(&word, &inf, cells);
                 let built = Built {
@@ -854,6 +891,20 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         cell: usize,
         steps: usize,
     ) -> Option<(String, usize)> {
+        let (relation, source) = self.listed_source(listed, cell, steps)?;
+        relation.told(&source, self.smoothing, self.laws.as_ref())
+    }
+
+    /// The relation (its changes' owner: see [`Grammar::changing`]) that
+    /// tells `cell` of a word whose forms are listed (`listed`), and the
+    /// letters it reads: the listed form of the cell it comes from, or that
+    /// cell's told in turn.
+    fn listed_source(
+        &self,
+        listed: &impl Fn(usize) -> Option<String>,
+        cell: usize,
+        steps: usize,
+    ) -> Option<(&Relation<'a>, String)> {
         let relation = self.relation(cell).filter(|r| r.listed)?;
         let from = relation.source()?;
         let source = match listed(from) {
@@ -863,8 +914,30 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     .0
             }
         };
-        self.changing(relation)
-            .told(&source, self.smoothing, self.laws.as_ref())
+        Some((self.changing(relation), source))
+    }
+
+    /// Of a word the grammar lists (looked up as `key`), for each cell no
+    /// form or stem of its line gives: the cell whose relation's changes
+    /// tell it, and the letters that relation reads. What a listed word can
+    /// ask of the relations.
+    pub fn listed_sources(&self, key: &str) -> Vec<(usize, String)> {
+        let Some(line) = self.irregular.line(key) else {
+            return Vec::new();
+        };
+        let have = |c: usize| -> Option<String> {
+            match listed_in(line, u16::try_from(c).ok()?) {
+                Some(form) => Some(self.orthography.read(form).letters),
+                None => self.stem_built(line, c)?.0.into_iter().next().map(|f| f.0),
+            }
+        };
+        (0..self.cells)
+            .filter(|&c| have(c).is_none())
+            .filter_map(|c| {
+                let (relation, source) = self.listed_source(&have, c, self.relations.len())?;
+                Some((usize::from(relation.cell), source))
+            })
+            .collect()
     }
 
     /// The forms (letters, each with where its ending starts) of `cell` for
@@ -950,8 +1023,34 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .collect();
             let patterns: Vec<Option<&str>> = owned.iter().map(|p| p.as_deref()).collect();
             let found = crate::stems::factor(&patterns).and_then(|(_, table)| {
-                let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
-                let stem = crate::stems::stem_of(p, form, lemma, self.laws.as_ref())?;
+                let entry = |at: usize| table.split('\t').nth(at).filter(|p| !p.is_empty());
+                // A cell the paradigm derives: its source's entry, the form
+                // taken back through the relation (the Latin supine `iussum`,
+                // from the infinitive `iussum esse`), where the paradigm
+                // doesn't build that source form itself (Finnish `madon`
+                // from `madot`, which `mato` builds: its stem alternates).
+                let stem = match entry(position) {
+                    Some(p) => crate::stems::stem_of(p, form, lemma, self.laws.as_ref())?,
+                    None => {
+                        let relation = self.changing(self.relation(*cell)?);
+                        let source = self.relation(*cell)?.source()?;
+                        let p = entry(slot.position(source)?)?;
+                        let backs = relation.sources(form, self.smoothing, self.laws.as_ref());
+                        let built = paradigm.built_in(
+                            &self.paradigms,
+                            self.space(),
+                            self.laws.as_ref(),
+                            source,
+                            stems,
+                        );
+                        if backs.iter().any(|b| built.iter().any(|(f, _)| f == b)) {
+                            return None;
+                        }
+                        backs.iter().find_map(|back| {
+                            crate::stems::stem_of(p, back, lemma, self.laws.as_ref())
+                        })?
+                    }
+                };
                 Some((table, stem))
             });
             if let Some((table, stem)) = found {
@@ -972,7 +1071,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The relation whose changes `relation` makes: its own, or, for one by
     /// analogy with no changes of its own, those of the relation it is by
     /// analogy with.
-    fn changing<'r>(&'r self, relation: &'r Relation<'a>) -> &'r Relation<'a> {
+    pub fn changing<'r>(&'r self, relation: &'r Relation<'a>) -> &'r Relation<'a> {
         match relation.analogy {
             Some((a, b)) if a != b && relation.change.is_none() => self
                 .relation(usize::from(b))
@@ -1149,7 +1248,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
 
     /// Whether the grammar lists the word looked up as `key`: its forms, or
     /// its paradigm.
-    fn lists(&self, key: &str) -> bool {
+    pub fn lists(&self, key: &str) -> bool {
         self.irregular.has(key)
             || self
                 .paradigm
@@ -1416,14 +1515,33 @@ fn restorations(
 ) -> ((String, f32), Vec<(String, f32)>) {
     let mut beam: Vec<(String, f32)> = vec![(String::with_capacity(letters.len()), 1.0)];
     let mut before = WORD_END;
-    for ((i, k), c) in key.char_indices().zip(letters.chars()) {
-        let readings = if c == k && o.folded.iter().any(|e| e.1 == c) {
+    for (n, ((i, k), c)) in key.char_indices().zip(letters.chars()).enumerate() {
+        let mut readings: Vec<(char, f32)> = if c == k && o.folded.iter().any(|e| e.1 == c) {
             let rest = key.get(i..).unwrap_or("");
             let around = format!("{before}{rest}{WORD_END}{}", marks.part);
-            marks.rules.read(&around, smoothing, |m| o.fold(m) == c)
+            (marks
+                .rules
+                .read(&around, smoothing, |m| o.fold(m) == c)
+                .iter())
+            .map(|r| (r.value, r.probability))
+            .collect()
         } else {
             Vec::new()
         };
+        // Its root's letter first, the rules' others after.
+        if let Some(v) = marks.root(key, n).filter(|_| !readings.is_empty()) {
+            let others: f32 = readings.iter().filter(|r| r.0 != v).map(|r| r.1).sum();
+            readings.retain(|r| r.0 != v);
+            for r in &mut readings {
+                r.1 = if others > 0.0 {
+                    r.1 * (1.0 - ROOT_TRUST) / others
+                } else {
+                    0.0
+                };
+            }
+            let trust = if readings.is_empty() { 1.0 } else { ROOT_TRUST };
+            readings.insert(0, (v, trust));
+        }
         before = k;
         if readings.is_empty() {
             for (s, _) in &mut beam {
@@ -1436,8 +1554,8 @@ fn restorations(
             .flat_map(|(s, p)| {
                 readings.iter().map(move |r| {
                     let mut s = s.clone();
-                    s.push(r.value);
-                    (s, p * r.probability)
+                    s.push(r.0);
+                    (s, p * r.1)
                 })
             })
             .collect();

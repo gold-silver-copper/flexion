@@ -84,7 +84,8 @@ impl Orthography<'_> {
     /// `word` in Unicode's composed form (NFC), a mark a lookup ignores
     /// that can't join its letter joining it without the letter's own (`ᾰ`
     /// with a breathing, which no character writes, is `ἀ`), so that each
-    /// letter is one character.
+    /// letter is one character. Not a mark reading drops (Latin `ō̆`, its
+    /// length unsure, is `ō`, not `ŏ`).
     fn composed(&self, word: &str) -> String {
         let mut out = String::with_capacity(word.len());
         let mut chars = word.nfc().peekable();
@@ -94,6 +95,7 @@ impl Orthography<'_> {
                 .filter(|&&m| {
                     unicode_normalization::char::is_combining_mark(m)
                         && !self.stress_marks.contains(m)
+                        && !self.dropped.contains(m)
                 })
                 .and_then(|&m| {
                     let plain = self.fold(c);
@@ -119,10 +121,24 @@ impl Orthography<'_> {
     /// Read a typed word, however its letters and marks are composed (it is
     /// read in Unicode's composed form, NFC): stress marks become
     /// [`Written::stress`], letters are lowercased where the language folds
-    /// case.
+    /// case. A phrase (Greek `λελυμένος ὦ`) keeps its words' marks as
+    /// written: each word's accent is its own (the participle's on `-μέν-`,
+    /// the auxiliary's), none a rule places.
     pub fn read(&self, word: &str) -> Written {
         let word: &str = &self.composed(word);
         let casing = casing(word);
+        if word.contains(' ') {
+            let letters = word
+                .chars()
+                .filter(|&c| !self.dropped.contains(c))
+                .map(|c| if self.lowercase { lower(c) } else { c })
+                .collect();
+            return Written {
+                letters,
+                stress: None,
+                casing,
+            };
+        }
         // The word's stress is its last stress mark (a compound's head,
         // `мастер-цили́ндр`); marks before it are dropped.
         let is_mark = |c: char| self.stress_marks.contains(c);
@@ -306,5 +322,25 @@ mod tests {
         );
         // Typed with е, looked up as the word written with ё.
         assert_eq!(RUSSIAN.key("ёжик"), RUSSIAN.key("ежик"));
+    }
+
+    #[test]
+    fn a_mark_reading_drops_never_takes_its_letter_s_place() {
+        // Latin `homō̆`, its length unsure: the breve after `ō` goes, and the
+        // word is looked up as `homo`, not `homŏ`.
+        let latin = Orthography {
+            lowercase: true,
+            vowels: "aeiouyāēīōūȳ",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "\u{306}\u{304}",
+            mark_monosyllables: false,
+            folded: &[('ā', 'a'), ('ē', 'e'), ('ī', 'i'), ('ō', 'o'), ('ū', 'u')],
+            prosody: None,
+        };
+        let w = latin.read("homō\u{306}");
+        assert_eq!(w.letters, "homō");
+        assert_eq!(latin.key(&w.letters), "homo");
     }
 }

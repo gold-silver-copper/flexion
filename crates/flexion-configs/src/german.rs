@@ -332,10 +332,12 @@ impl Hooks for GermanHooks {
         german_word(form) && (matches!(pos, "verb" | "adjective") || !form.contains(' '))
     }
 
-    /// Three repairs.
+    /// Four repairs.
     ///
     /// - Adjective tables write the weak and mixed forms with an article
     ///   (`der schöne`, `keine schönen`): the article goes.
+    /// - A participle's adjective table writes the predicative with the
+    ///   verb (`ist überfinanziert`, `es ist …`, `sind …`): the verb goes.
     /// - Conjugation tables give subordinate-clause forms only where they
     ///   differ from the main clause's (separable verbs): for every other
     ///   verb, the main-clause forms are copied.
@@ -353,6 +355,13 @@ impl Hooks for GermanHooks {
             }
             if has(&f.tags, "subjunctive-ii") {
                 f.tags.retain(|t| t != "formal" && t != "rare");
+            }
+            if has(&f.tags, "predicative")
+                && let Some(rest) = ["es ist ", "ist ", "sind "]
+                    .iter()
+                    .find_map(|v| f.form.strip_prefix(v))
+            {
+                f.form = rest.to_string();
             }
         }
         if pos == "verb" {

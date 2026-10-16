@@ -1,27 +1,23 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~o`, `casso`: the stem and `o`). A stem in two pieces (`~o~`, `andatosene`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem past_participle: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
     ) => {
@@ -67,8 +63,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "~"`: `~` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -88,15 +83,15 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `smerdato`: 7,984 words.
-    Smerdato,
+    /// Like `casso`: 7,984 words.
+    Casso,
     /// Like `andatosene`: 103 words.
     Andatosene,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 2] = [Declension::Smerdato, Declension::Andatosene];
+    pub const ALL: [Declension; 2] = [Declension::Casso, Declension::Andatosene];
 
     /// Its table.
     pub fn paradigm(self) -> Option<&'static Paradigm<'static>> {
@@ -114,12 +109,12 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 2] = [
-    // Smerdato: 7,984 words (barato, appassionato, accusato, castrato, pizzicato, potato).
-    declension!("smerdato", 7984, "~o";
+    // Casso: 7,984 words (barato, appassionato, accusato, castrato, pizzicato, potato).
+    declension!("casso", 7984, "~o";
     m: "~o", "~i";
     f: "~a", "~e";
     ),
-    // Andatosene: 103 words (indottomi, avutone, avutosi, affidatoci, affidatogli, affidatole). Like Smerdato with `~` after each pattern.
-    declension!("andatosene", 103, "~o~", like Smerdato with "~";
+    // Andatosene: 103 words (indottomi, avutone, avutosi, affidatoci, affidatogli, affidatole). Like Casso with `~` after each pattern.
+    declension!("andatosene", 103, "~o~", like Casso with "~";
     ),
 ];

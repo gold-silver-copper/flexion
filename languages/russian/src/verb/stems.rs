@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         cells: Cow::Borrowed(&[INFINITIVE]),
     },
     Slot {
-        name: Cow::Borrowed("non_past"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             NON_PAST_1_SG,
             NON_PAST_1_PL,
@@ -33,7 +33,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("past"),
+        name: Cow::Borrowed("rest_"),
         cells: Cow::Borrowed(&[
             PAST_M,
             PAST_F,
@@ -48,7 +48,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 35] = [
-    // non_past like играть: 16,343 words.
+    // rest like играть: 16,343 words.
     EndingTable {
         name: Cow::Borrowed("играть"),
         words: 16343,
@@ -62,7 +62,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~я\t",
         )),
     },
-    // non_past like завибрировать: 879 words.
+    // rest like завибрировать: 879 words.
     EndingTable {
         name: Cow::Borrowed("завибрировать"),
         words: 879,
@@ -76,7 +76,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~яˇ\t",
         )),
     },
-    // non_past like тянуть: 786 words.
+    // rest like тянуть: 786 words.
     EndingTable {
         name: Cow::Borrowed("тянуть"),
         words: 786,
@@ -90,7 +90,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like рвануть: 695 words.
+    // rest like рвануть: 695 words.
     EndingTable {
         name: Cow::Borrowed("рвануть"),
         words: 695,
@@ -104,7 +104,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like оказать: 409 words.
+    // rest like оказать: 409 words.
     EndingTable {
         name: Cow::Borrowed("оказать"),
         words: 409,
@@ -118,7 +118,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~а\t",
         )),
     },
-    // non_past like перевернуть: 359 words.
+    // rest like перевернуть: 359 words.
     EndingTable {
         name: Cow::Borrowed("перевернуть"),
         words: 359,
@@ -132,7 +132,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like стучать: 255 words.
+    // rest like стучать: 255 words.
     EndingTable {
         name: Cow::Borrowed("стучать"),
         words: 255,
@@ -146,7 +146,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~а\t",
         )),
     },
-    // non_past like засосать: 243 words.
+    // rest like засосать: 243 words.
     EndingTable {
         name: Cow::Borrowed("засосать"),
         words: 243,
@@ -160,7 +160,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~я\t",
         )),
     },
-    // non_past like подкинуть: 218 words.
+    // rest like подкинуть: 218 words.
     EndingTable {
         name: Cow::Borrowed("подкинуть"),
         words: 218,
@@ -174,7 +174,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like пасть: 215 words.
+    // rest like пасть: 215 words.
     EndingTable {
         name: Cow::Borrowed("пасть"),
         words: 215,
@@ -188,7 +188,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~я\t",
         )),
     },
-    // non_past like заглохнуть: 149 words.
+    // rest like заглохнуть: 149 words.
     EndingTable {
         name: Cow::Borrowed("заглохнуть"),
         words: 149,
@@ -202,7 +202,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like клевать: 97 words.
+    // rest like клевать: 97 words.
     EndingTable {
         name: Cow::Borrowed("клевать"),
         words: 97,
@@ -216,7 +216,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~я\t",
         )),
     },
-    // non_past like колоть: 85 words.
+    // rest like колоть: 85 words.
     EndingTable {
         name: Cow::Borrowed("колоть"),
         words: 85,
@@ -230,7 +230,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~я\t",
         )),
     },
-    // non_past like просмотреть: 62 words.
+    // rest like просмотреть: 62 words.
     EndingTable {
         name: Cow::Borrowed("просмотреть"),
         words: 62,
@@ -244,7 +244,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like обтечь: 60 words.
+    // rest like обтечь: 60 words.
     EndingTable {
         name: Cow::Borrowed("обтечь"),
         words: 60,
@@ -258,7 +258,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like обыскать: 41 words.
+    // rest like обыскать: 41 words.
     EndingTable {
         name: Cow::Borrowed("обыскать"),
         words: 41,
@@ -272,7 +272,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~ща\t",
         )),
     },
-    // non_past like пересидеть: 31 words.
+    // rest like пересидеть: 31 words.
     EndingTable {
         name: Cow::Borrowed("пересидеть"),
         words: 31,
@@ -286,7 +286,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like выровнять: 29 words.
+    // rest like выровнять: 29 words.
     EndingTable {
         name: Cow::Borrowed("выровнять"),
         words: 29,
@@ -300,7 +300,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like плакать: 26 words.
+    // rest like плакать: 26 words.
     EndingTable {
         name: Cow::Borrowed("плакать"),
         words: 26,
@@ -314,7 +314,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~а\t",
         )),
     },
-    // non_past like понять: 20 words.
+    // rest like понять: 20 words.
     EndingTable {
         name: Cow::Borrowed("понять"),
         words: 20,
@@ -328,7 +328,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like сберечь: 15 words.
+    // rest like сберечь: 15 words.
     EndingTable {
         name: Cow::Borrowed("сберечь"),
         words: 15,
@@ -342,7 +342,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like отослать: 12 words.
+    // rest like отослать: 12 words.
     EndingTable {
         name: Cow::Borrowed("отослать"),
         words: 12,
@@ -356,7 +356,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // non_past like разжечь: 10 words.
+    // rest like разжечь: 10 words.
     EndingTable {
         name: Cow::Borrowed("разжечь"),
         words: 10,
@@ -370,7 +370,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "\t",
         )),
     },
-    // past like играть: 16,033 words.
+    // rest_ like играть: 16,033 words.
     EndingTable {
         name: Cow::Borrowed("играть"),
         words: 16033,
@@ -381,14 +381,14 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~в|~вши\t",
         )),
     },
-    // past like раздуть: 2,738 words.
+    // rest_ like раздуть: 2,738 words.
     EndingTable {
         name: Cow::Borrowed("раздуть"),
         words: 2738,
         slot: 2,
         table: Cow::Borrowed(concat!("~л\t~ла\t~ло\t~ли\t", "~вший\t~тый\t", "~в|~вши\t",)),
     },
-    // past like ударить: 2,737 words.
+    // rest_ like ударить: 2,737 words.
     EndingTable {
         name: Cow::Borrowed("ударить"),
         words: 2737,
@@ -399,7 +399,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~ив|~ивши\t",
         )),
     },
-    // past like распуститься: 496 words.
+    // rest_ like распуститься: 496 words.
     EndingTable {
         name: Cow::Borrowed("распуститься"),
         words: 496,
@@ -410,21 +410,21 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~вшись\t",
         )),
     },
-    // past like прошипеть: 399 words.
+    // rest_ like прошипеть: 399 words.
     EndingTable {
         name: Cow::Borrowed("прошипеть"),
         words: 399,
         slot: 2,
         table: Cow::Borrowed(concat!("~л\t~ла\t~ло\t~ли\t", "~вший\t\t", "~в|~вши\t",)),
     },
-    // past like залипнуть: 247 words.
+    // rest_ like залипнуть: 247 words.
     EndingTable {
         name: Cow::Borrowed("залипнуть"),
         words: 247,
         slot: 2,
         table: Cow::Borrowed(concat!("~\t~ла\t~ло\t~ли\t", "~ший\t\t", "~ши\t",)),
     },
-    // past like сычевать: 174 words.
+    // rest_ like сычевать: 174 words.
     EndingTable {
         name: Cow::Borrowed("сычевать"),
         words: 174,
@@ -435,7 +435,7 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~евав|~евавши\t",
         )),
     },
-    // past like заглохнуть: 60 words.
+    // rest_ like заглохнуть: 60 words.
     EndingTable {
         name: Cow::Borrowed("заглохнуть"),
         words: 60,
@@ -446,14 +446,14 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~нув|~ши|~нувши\t",
         )),
     },
-    // past like грызть: 28 words.
+    // rest_ like грызть: 28 words.
     EndingTable {
         name: Cow::Borrowed("грызть"),
         words: 28,
         slot: 2,
         table: Cow::Borrowed(concat!("~\t~ла\t~ло\t~ли\t", "~ший\t~енный\t", "~ши\t",)),
     },
-    // past like понять: 20 words.
+    // rest_ like понять: 20 words.
     EndingTable {
         name: Cow::Borrowed("понять"),
         words: 20,
@@ -464,14 +464,14 @@ pub(super) static TABLES: [EndingTable<'static>; 35] = [
             "~вˇ|~вшиˇ\t",
         )),
     },
-    // past like замереть: 6 words.
+    // rest_ like замереть: 6 words.
     EndingTable {
         name: Cow::Borrowed("замереть"),
         words: 6,
         slot: 2,
         table: Cow::Borrowed(concat!("~\t~ла\t~ло\t~ли\t", "~ший\t~тый\t", "~ев\t",)),
     },
-    // past like обмереть: 3 words.
+    // rest_ like обмереть: 3 words.
     EndingTable {
         name: Cow::Borrowed("обмереть"),
         words: 3,

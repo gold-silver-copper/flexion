@@ -38,7 +38,9 @@ use sound_law::{Map, Program, Rule, RuleSet};
 use std::borrow::Cow;
 
 /// What a law changes.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(
+    Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord, serde::Serialize, serde::Deserialize,
+)]
 pub enum Change {
     /// Where stem meets ending: after one of `stem` (the stem's last
     /// letters), the ending's first letters `ending` and those of the stem
@@ -103,7 +105,7 @@ pub enum Change {
 pub type Shift = (Vec<char>, String, String);
 
 /// One learned law.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Law {
     pub change: Change,
     /// The words whose forms it gives.
@@ -242,7 +244,10 @@ impl std::fmt::Display for Law {
             }
             // A copy as the pattern writes it: `%ε‹ἀ → ἠ`.
             Change::Front {
-                literal, stem, to, ..
+                literal,
+                stem,
+                to,
+                plain,
             } => {
                 let mut copy = false;
                 for c in literal.chars() {
@@ -255,7 +260,12 @@ impl std::fmt::Display for Law {
                         _ => write!(f, "{c}")?,
                     }
                 }
-                write!(f, "{FRONT}{stem} → {to}")
+                write!(f, "{FRONT}{stem} → {to}")?;
+                let more: Vec<String> = plain.iter().map(|(c, p)| format!("{c} → {p}")).collect();
+                if !more.is_empty() {
+                    write!(f, " ({})", more.join(", "))?;
+                }
+                Ok(())
             }
         }
     }
@@ -521,9 +531,9 @@ struct Stated {
     or: Vec<String>,
 }
 
-/// The laws compiled, in order.
-pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
-    let texts: Vec<(String, Stated)> = changes
+/// Each law as `sound-law` states it, named `law0`, `law1`, ….
+fn stated(changes: &[Change]) -> Vec<(String, Stated)> {
+    changes
         .iter()
         .enumerate()
         .map(|(i, c)| {
@@ -531,7 +541,88 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
             let stated = c.rule(&name);
             (name, stated)
         })
-        .collect();
+        .collect()
+}
+
+/// The laws in `sound-law`'s notation (what `sound_law::sound_laws!` and
+/// `flexion::laws!` read), in order: the correspondence maps, the agreement
+/// maps, and a rule line per law (`law0: "к+ы" => "к+и";`).
+pub struct Notation {
+    pub maps: Vec<String>,
+    pub agreements: Vec<String>,
+    pub rules: Vec<String>,
+}
+
+/// `s` as a Rust string literal: quotes and backslashes escaped, every
+/// letter and mark as it is.
+fn literal(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('"');
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\t' => out.push_str("\\t"),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
+/// The laws written in `sound-law`'s notation (see [`Notation`]): what
+/// [`compile`] compiles.
+pub fn notation(changes: &[Change]) -> Notation {
+    let mut out = Notation {
+        maps: Vec::new(),
+        agreements: Vec::new(),
+        rules: Vec::new(),
+    };
+    for (name, s) in stated(changes) {
+        if !s.map.is_empty() {
+            let entries: Vec<String> = s
+                .map
+                .iter()
+                .map(|(a, b)| format!("{} => {}", literal(a), literal(b)))
+                .collect();
+            out.maps.push(format!("{name} = [{}];", entries.join(", ")));
+        } else if !s.agree.is_empty() {
+            let entries: Vec<String> = s
+                .agree
+                .iter()
+                .map(|(a, k, b)| format!("({}, {}) => {}", literal(a), literal(k), literal(b)))
+                .collect();
+            out.agreements
+                .push(format!("{name} = [{}];", entries.join(", ")));
+        }
+        let mut line = name.clone();
+        if s.iterative {
+            line.push_str("[iterative]");
+        }
+        line.push_str(&format!(": {} => {}", literal(&s.target), literal(&s.to)));
+        if !s.before.is_empty() || !s.after.is_empty() || !s.or.is_empty() {
+            line.push_str(&format!(
+                " / {} _ {}",
+                literal(&s.before),
+                literal(&s.after)
+            ));
+            for or in &s.or {
+                line.push_str(&format!(" | {}", literal(or)));
+            }
+        }
+        if !s.stop.is_empty() {
+            line.push_str(&format!(" unless \"\" _ {}", literal(&s.stop)));
+        }
+        line.push(';');
+        out.rules.push(line);
+    }
+    out
+}
+
+/// The laws compiled, in order.
+pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
+    let texts = stated(changes);
     let pairs: Vec<Vec<(&str, &str)>> = texts
         .iter()
         .map(|(_, s)| {
@@ -585,6 +676,7 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
 
 /// A word, as the learner sees it: its letters, and per cell its usual form
 /// (`None` where the dictionary has none, or the cell is derived).
+#[derive(Debug)]
 pub struct Word<'w> {
     pub letters: &'w str,
     pub forms: Vec<Option<&'w str>>,
@@ -622,6 +714,7 @@ pub fn learn<'s>(
     words: &[Word<'_>],
     paradigms: Vec<Paradigm<'s>>,
     assignment: Vec<u16>,
+    trace: &mut crate::trace::Trace,
 ) -> (
     Vec<Law>,
     Option<Program<'static>>,
@@ -631,6 +724,7 @@ pub fn learn<'s>(
     // Harmony first: the other laws see its class letters filled.
     let (harmony, paradigms, assignment) =
         harmony::learn(orthography, words, paradigms, assignment);
+    trace.mark("laws: harmony");
     let filled: Vec<Change> = harmony.iter().map(|l| l.change.clone()).collect();
     let pre = (!filled.is_empty()).then(|| compile(&filled)).flatten();
     let pre = pre.as_ref();
@@ -651,6 +745,7 @@ pub fn learn<'s>(
     });
     let originals = paradigms.len();
     let (paradigms, twins) = twins(orthography, words, paradigms, &assignment, pre, &rank);
+    trace.mark("laws: twins");
     for (twin, of, _) in &twins {
         rank.push(rank.get(*of).copied().unwrap_or((usize::MAX, *twin)));
     }
@@ -700,6 +795,7 @@ pub fn learn<'s>(
                 .collect()
         })
         .collect();
+    trace.mark("laws: readings");
     // Every change that would let a word's paradigm (where a change explains
     // the form), or a more general one (all its forms), build a form it has,
     // with the words it would do that for.
@@ -761,6 +857,7 @@ pub fn learn<'s>(
         })
         .collect();
     let held: Vec<bool> = words.iter().map(|w| held_out(w.letters)).collect();
+    trace.mark("laws: candidates");
     let (laws, moved) = greedy(
         &candidates,
         readings,
@@ -789,45 +886,61 @@ pub fn learn<'s>(
     let mut laws: Vec<Law> = harmony.into_iter().chain(kept).collect();
     plain(orthography, &mut laws);
     // A word stays where it was unless, under the laws kept, the paradigm
-    // it moved to builds its forms as well.
-    let right = |program: Option<&Program<'_>>, p: u16, w: &Word<'_>| {
-        reading(orthography, &paradigms, usize::from(p), w, None).map_or(0, |r| {
-            let built = |b: &String| program.map_or_else(|| b.clone(), |p| p.apply(b));
-            let forms = w.forms.iter().flatten();
-            r.builds
-                .iter()
-                .zip(forms)
-                .filter(|(b, f)| same(&built(b), f))
-                .count()
-        })
-    };
+    // it moved to builds its forms as well. Its builds in each, made once:
+    // only the laws change.
+    let [plain, last] = &moved;
+    let tried: Vec<[u16; 3]> = (assignment.iter().zip(plain.iter().zip(last)))
+        .map(|(&was, (&mid, &now))| [was, mid, now])
+        .collect();
+    let builds: Vec<Vec<(u16, Option<Vec<String>>)>> =
+        crate::par::map(&tried.iter().zip(words).collect::<Vec<_>>(), |&(ps, w)| {
+            let mut out: Vec<(u16, Option<Vec<String>>)> = Vec::new();
+            for &p in ps {
+                if !out.iter().any(|(q, _)| *q == p) {
+                    let r = reading(orthography, &paradigms, usize::from(p), w, None);
+                    out.push((p, r.map(|r| r.builds)));
+                }
+            }
+            out
+        });
     let settle = |laws: &[Law]| {
         let changes: Vec<Change> = laws.iter().map(|l| l.change.clone()).collect();
         let program = (!laws.is_empty()).then(|| compile(&changes)).flatten();
-        // Where the laws last moved it, else where the plain laws did.
-        let [plain, last] = &moved;
-        let assignment: Vec<u16> = assignment
-            .iter()
-            .zip(plain.iter().zip(last))
-            .zip(words)
-            .map(|((&was, (&mid, &now)), w)| {
-                let right = |p| right(program.as_ref(), p, w);
-                [now, mid]
-                    .into_iter()
-                    .find(|&p| p != was && right(p) >= right(was))
-                    .unwrap_or(was)
-            })
-            .collect();
-        let total: usize = assignment
-            .iter()
-            .zip(words)
-            .map(|(&p, w)| right(program.as_ref(), p, w))
-            .sum();
+        let at: Vec<usize> = (0..words.len()).collect();
+        let settled: Vec<(u16, usize)> = crate::par::map(&at, |&i| {
+            let (Some(&[was, mid, now]), Some(builds), Some(w)) =
+                (tried.get(i), builds.get(i), words.get(i))
+            else {
+                return (0, 0);
+            };
+            let right = |p: u16| {
+                let built = |b: &String| program.as_ref().map_or_else(|| b.clone(), |p| p.apply(b));
+                let Some((_, Some(builds))) = builds.iter().find(|(q, _)| *q == p) else {
+                    return 0;
+                };
+                let forms = w.forms.iter().flatten();
+                builds
+                    .iter()
+                    .zip(forms)
+                    .filter(|(b, f)| same(&built(b), f))
+                    .count()
+            };
+            let mine = right(was);
+            [now, mid]
+                .into_iter()
+                .filter(|&p| p != was)
+                .map(|p| (p, right(p)))
+                .find(|&(_, r)| r >= mine)
+                .unwrap_or((was, mine))
+        });
+        let assignment: Vec<u16> = settled.iter().map(|s| s.0).collect();
+        let total: usize = settled.iter().map(|s| s.1).sum();
         (program, assignment, total)
     };
     // A law grown context must pay in the end too, with the words where
     // they settled: dropped where the grammar builds as many forms without
     // it.
+    trace.mark("laws: greedy");
     let (mut program, mut assignment, mut total) = settle(&laws);
     let grown: Vec<Change> = laws
         .iter()
@@ -848,6 +961,7 @@ pub fn learn<'s>(
     // A law inside alternating stems pays in bits (see `crate::bits`): the
     // grammar is shorter with it, its paradigms that have words, its laws
     // and the forms it gets wrong (listed) counted, than without it.
+    trace.mark("laws: settle");
     let alphabet: crate::HashSet<char> = forms.iter().flatten().flat_map(|f| f.chars()).collect();
     let prices = crate::bits::Prices::new(alphabet.len(), cells);
     let all: usize = forms.iter().map(Vec::len).sum();
@@ -899,6 +1013,7 @@ pub fn learn<'s>(
         .take(originals)
         .map(|p| p.name.to_string())
         .collect();
+    trace.mark("laws: alternating");
     let (mut paradigms, assignment) = drop_empty(paradigms, assignment);
     // A twin with words is named after the word a paradigm it took the
     // words of was named after (commonest first), else its first word no
@@ -925,7 +1040,154 @@ pub fn learn<'s>(
             par.name = Cow::Owned(name.to_string());
         }
     }
+    // Laws that are one law, stated once: those that differ only in the
+    // stem letters they follow (Russian `ы → и` after `к`, `г`, `х`, `ш`,
+    // `ч`, `ж`, `щ`), or the letter a front literal meets (the Greek
+    // augment, one lengthening).
+    let merged = merge(&laws);
+    let (laws, program) = if merged.len() < laws.len() {
+        let changes: Vec<Change> = merged.iter().map(|l| l.change.clone()).collect();
+        let program = compile(&changes).or(program);
+        (merged, program)
+    } else {
+        (laws, program)
+    };
     (laws, program, paradigms, assignment)
+}
+
+/// `laws` with those that are one law stated once (see [`learn`]): an edge
+/// law takes in a later one with every field but its stem letters the same,
+/// and a front law a later one with the same literal and one letter, where
+/// every law between them is an edge law that neither reads nor writes
+/// what they do. Laws apart from those don't meet the same letters, so the
+/// laws give what they gave.
+fn merge(laws: &[Law]) -> Vec<Law> {
+    let mut out: Vec<Law> = Vec::with_capacity(laws.len());
+    let mut taken = vec![false; laws.len()];
+    for (i, law) in laws.iter().enumerate() {
+        if taken.get(i) == Some(&true) {
+            continue;
+        }
+        let mut law = law.clone();
+        for (j, later) in laws.iter().enumerate().skip(i + 1) {
+            if taken.get(j) == Some(&true) {
+                continue;
+            }
+            let between = laws.get(i + 1..j).unwrap_or(&[]);
+            if let Some(change) = joined(&law.change, &later.change, between) {
+                law.change = change;
+                law.words += later.words;
+                law.breaks += later.breaks;
+                for e in &later.examples {
+                    if law.examples.len() < 4 && !law.examples.contains(e) {
+                        law.examples.push(e.clone());
+                    }
+                }
+                if let Some(t) = taken.get_mut(j) {
+                    *t = true;
+                }
+            } else if !apart(&law.change, &later.change) {
+                // A law that meets the same letters: nothing after it joins.
+                break;
+            }
+        }
+        out.push(law);
+    }
+    out
+}
+
+/// `a` and `b` as one law, if they are one but for their stem letters (an
+/// edge) or their one letter (a front), and every law in `between` is apart
+/// from them.
+fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
+    if !between.iter().all(|l| apart(a, &l.change)) {
+        return None;
+    }
+    match (a, b) {
+        (
+            Change::Edge {
+                stem,
+                ending,
+                to,
+                keep,
+                earlier,
+                left,
+                right,
+            },
+            Change::Edge {
+                stem: other,
+                ending: e2,
+                to: t2,
+                keep: k2,
+                earlier: r2,
+                left: l2,
+                right: g2,
+            },
+        ) if (ending, to, keep, earlier, left, right) == (e2, t2, k2, r2, l2, g2) => {
+            let mut stem = stem.clone();
+            stem.extend(
+                other
+                    .iter()
+                    .filter(|s| !stem.contains(s))
+                    .cloned()
+                    .collect::<Vec<_>>(),
+            );
+            Some(Change::Edge {
+                stem,
+                ending: ending.clone(),
+                to: to.clone(),
+                keep: *keep,
+                earlier: earlier.clone(),
+                left: left.clone(),
+                right: right.clone(),
+            })
+        }
+        (
+            Change::Front {
+                literal,
+                stem,
+                to,
+                plain,
+            },
+            Change::Front {
+                literal: l2,
+                stem: s2,
+                to: t2,
+                plain: p2,
+            },
+        ) if literal == l2 && p2.is_empty() => {
+            let mut letters = s2.chars();
+            let (Some(letter), None) = (letters.next(), letters.next()) else {
+                return None;
+            };
+            if stem.chars().eq(std::iter::once(letter)) || plain.iter().any(|(c, _)| *c == letter) {
+                return None;
+            }
+            let mut plain = plain.clone();
+            plain.push((letter, t2.clone()));
+            Some(Change::Front {
+                literal: literal.clone(),
+                stem: stem.clone(),
+                to: to.clone(),
+                plain,
+            })
+        }
+        _ => None,
+    }
+}
+
+/// Whether law `other` can't meet what `law` reads or writes: an edge law
+/// of another ending, whose replacement doesn't write `law`'s ending,
+/// beside an edge law; any edge law beside a front law (they meet the
+/// stem's two ends).
+fn apart(law: &Change, other: &Change) -> bool {
+    match (law, other) {
+        (Change::Edge { ending, .. }, Change::Edge { ending: e2, to, .. }) => {
+            ending != e2 && !to.contains(ending.as_str())
+        }
+        (Change::Front { .. }, Change::Edge { .. }) => true,
+        _ => false,
+    }
 }
 
 /// A twin (see [`twins`]): its place, the paradigm it is a twin of, and
@@ -1182,17 +1444,18 @@ fn greedy(
 ) -> (Vec<Kept>, [Vec<u16>; 2]) {
     let held = halves.held;
     // Builds by the letters around their boundary.
-    let mut index: HashMap<(String, String), Vec<At>> = HashMap::default();
-    let mut alternating: HashMap<String, Vec<At>> = HashMap::default();
+    let numbered = Numbered::new(&readings);
+    let mut index: HashMap<(String, String), Vec<u32>> = HashMap::default();
+    let mut alternating: HashMap<String, Vec<u32>> = HashMap::default();
     for (w, rs) in readings.iter().enumerate() {
         for (r, reading) in rs.iter().enumerate() {
             for (k, built) in reading.builds.iter().enumerate() {
-                index.entry(window(built)).or_default().push((w, r, k));
+                let Some(id) = numbered.id((w, r, k)) else {
+                    continue;
+                };
+                index.entry(window(built)).or_default().push(id);
                 if built.ends_with(ALTERNATES) {
-                    alternating
-                        .entry(stem_end(built))
-                        .or_default()
-                        .push((w, r, k));
+                    alternating.entry(stem_end(built)).or_default().push(id);
                 }
             }
         }
@@ -1216,6 +1479,11 @@ fn greedy(
             let Some((change, _)) = candidates.get(i) else {
                 continue;
             };
+            let found = Found {
+                numbered: &numbered,
+                index: &index,
+                alternating: &alternating,
+            };
             let mut change = change.clone();
             let mut tried = None;
             // A shift inside a stem learns its context first (it gives
@@ -1226,9 +1494,9 @@ fn greedy(
                 && let [shift] = shifts.as_slice()
                 && after.is_empty()
             {
-                let own = context(&change, &alternating, &readings, forms, halves);
+                let own = context(&change, &found, &readings, forms, halves);
                 let gives = own.as_ref().map_or(0, |own| {
-                    try_law(own, &index, &alternating, &readings, forms, &assignment)
+                    try_law(own, &found, &readings, forms, &assignment)
                         .filter(|t| t.kept(cells_of, held))
                         .map_or(0, |t| t.fixed.len())
                 });
@@ -1252,7 +1520,7 @@ fn greedy(
                         shifts: vec![shift.clone()],
                         after: paths.clone(),
                     };
-                    let t = try_law(&trial, &index, &alternating, &readings, forms, &assignment);
+                    let t = try_law(&trial, &found, &readings, forms, &assignment);
                     #[allow(clippy::cast_precision_loss)]
                     let enough = |t: &Tried| t.fixed.len() as f64 >= (1.0 - BREAKS) * gives as f64;
                     if let Some(t) = t.filter(|t| t.kept(cells_of, held) && enough(t)) {
@@ -1271,8 +1539,7 @@ fn greedy(
                 if into.is_some() {
                     break;
                 }
-                let Some(t) = try_law(&change, &index, &alternating, &readings, forms, &assignment)
-                else {
+                let Some(t) = try_law(&change, &found, &readings, forms, &assignment) else {
                     break;
                 };
                 let kept = t.kept(cells_of, held);
@@ -1320,12 +1587,11 @@ fn greedy(
                 else {
                     continue;
                 };
-                index.entry(window(&after)).or_default().push((w, r, k));
-                if after.ends_with(ALTERNATES) {
-                    alternating
-                        .entry(stem_end(&after))
-                        .or_default()
-                        .push((w, r, k));
+                if let Some(id) = numbered.id((w, r, k)) {
+                    index.entry(window(&after)).or_default().push(id);
+                    if after.ends_with(ALTERNATES) {
+                        alternating.entry(stem_end(&after)).or_default().push(id);
+                    }
                 }
                 *built = after;
             }
@@ -1479,12 +1745,70 @@ impl Tried {
     }
 }
 
-/// What law `change` does to the builds (`index` finds them by the letters
-/// around their boundary): `None` if it doesn't compile.
+/// Every build numbered in order (its word, its reading, its place), so a
+/// set of builds is a set of numbers, read back in that order.
+struct Numbered {
+    at: Vec<At>,
+    first: Vec<Vec<usize>>,
+}
+
+impl Numbered {
+    fn new(readings: &[Vec<Reading>]) -> Numbered {
+        let mut at = Vec::new();
+        let mut first = Vec::new();
+        for (w, rs) in readings.iter().enumerate() {
+            let starts = rs.iter().enumerate().map(|(r, reading)| {
+                let start = at.len();
+                at.extend((0..reading.builds.len()).map(|k| (w, r, k)));
+                start
+            });
+            first.push(starts.collect());
+        }
+        Numbered { at, first }
+    }
+
+    fn id(&self, (w, r, k): At) -> Option<u32> {
+        u32::try_from(self.first.get(w)?.get(r)? + k).ok()
+    }
+
+    /// The builds numbered in `lists`, in order, each once.
+    fn gather<'a>(&self, lists: impl Iterator<Item = &'a Vec<u32>>) -> Vec<At> {
+        let mut set = vec![0_u64; self.at.len().div_ceil(64)];
+        for &id in lists.flatten() {
+            let id = usize::try_from(id).unwrap_or(usize::MAX);
+            if let Some(bits) = set.get_mut(id / 64) {
+                *bits |= 1 << (id % 64);
+            }
+        }
+        let ids = set.iter().enumerate().flat_map(|(i, &bits)| {
+            std::iter::successors(Some(bits), |&b| Some(b & b.wrapping_sub(1)))
+                .take_while(|&b| b != 0)
+                .map(move |b| i * 64 + b.trailing_zeros() as usize)
+        });
+        ids.filter_map(|id| self.at.get(id).copied()).collect()
+    }
+
+    /// The builds numbered in `ids`, as they are.
+    fn of<'a>(&'a self, ids: &'a [u32]) -> impl Iterator<Item = At> + 'a {
+        ids.iter()
+            .filter_map(|&id| self.at.get(usize::try_from(id).ok()?).copied())
+    }
+}
+
+/// Where the builds a law may change are: by the letters around their
+/// boundary (`index`), and those of alternating stems by the stem's end
+/// (`alternating`). Each lists builds a law moved there since, and keeps
+/// them where they were too.
+struct Found<'a> {
+    numbered: &'a Numbered,
+    index: &'a HashMap<(String, String), Vec<u32>>,
+    alternating: &'a HashMap<String, Vec<u32>>,
+}
+
+/// What law `change` does to the builds: `None` if it doesn't compile.
 fn try_law(
     change: &Change,
-    index: &HashMap<(String, String), Vec<At>>,
-    alternating: &HashMap<String, Vec<At>>,
+    found: &Found<'_>,
     readings: &[Vec<Reading>],
     forms: &[Vec<&str>],
     assignment: &[u16],
@@ -1492,63 +1816,74 @@ fn try_law(
     let program = compile(std::slice::from_ref(change))?;
     let form = |w: usize, k: usize| forms.get(w).and_then(|f| f.get(k)).copied().unwrap_or("");
     let inner = matches!(change, Change::Inner { .. });
-    let mut at: Vec<At> = if let Change::Inner { shifts, .. } = change {
+    let at: Vec<At> = if let Change::Inner { shifts, .. } = change {
         let near = |end: &String| {
             shifts
                 .iter()
                 .any(|(left, from, _)| left.iter().any(|l| end.contains(&format!("{l}{from}"))))
         };
-        alternating
-            .iter()
-            .filter(|(end, _)| near(end))
-            .flat_map(|(_, v)| v.iter().copied())
-            .collect()
+        let lists = found.alternating.iter().filter(|(end, _)| near(end));
+        found.numbered.gather(lists.map(|(_, v)| v))
     } else {
-        index
-            .iter()
-            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""))
-            .flat_map(|(_, v)| v.iter().copied())
-            .collect()
+        let lists = (found.index.iter())
+            .filter(|(k, _)| !matches!(change, Change::Edge { .. }) || change.applies(k, ""));
+        found.numbered.gather(lists.map(|(_, v)| v))
     };
-    at.sort_unstable();
-    at.dedup();
-    let mut tried = Tried {
+    // In chunks over threads, joined in order: the same as one pass.
+    let chunks: Vec<&[At]> = at.chunks(CHUNK).collect();
+    let tried = crate::par::map(&chunks, |chunk| {
+        let mut tried = Tried {
+            changes: Vec::new(),
+            fixed: Vec::new(),
+            broken: Vec::new(),
+        };
+        for &(w, r, k) in *chunk {
+            let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
+                continue;
+            };
+            // Not an entry the laws so far have moved elsewhere.
+            let Some(built) = reading
+                .builds
+                .get(k)
+                .filter(|b| change.applies(&window(b), b))
+            else {
+                continue;
+            };
+            let after = program.apply(built);
+            if after == *built {
+                continue;
+            }
+            let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
+            let own = assignment
+                .get(w)
+                .is_some_and(|&p| usize::from(p) == reading.paradigm);
+            // A law inside alternating stems breaks the forms of the twins
+            // too: the words it is for may join them.
+            if (own || inner) && was && !is {
+                tried.broken.push((w, r, k));
+            }
+            if !was && is {
+                tried.fixed.push((w, r, k));
+            }
+            tried.changes.push(((w, r, k), after));
+        }
+        tried
+    });
+    let mut all = Tried {
         changes: Vec::new(),
         fixed: Vec::new(),
         broken: Vec::new(),
     };
-    for (w, r, k) in at {
-        let Some(reading) = readings.get(w).and_then(|rs| rs.get(r)) else {
-            continue;
-        };
-        // Not an entry the laws so far have moved elsewhere.
-        let Some(built) = reading
-            .builds
-            .get(k)
-            .filter(|b| change.applies(&window(b), b))
-        else {
-            continue;
-        };
-        let after = program.apply(built);
-        if after == *built {
-            continue;
-        }
-        let (was, is) = (same(built, form(w, k)), same(&after, form(w, k)));
-        let own = assignment
-            .get(w)
-            .is_some_and(|&p| usize::from(p) == reading.paradigm);
-        // A law inside alternating stems breaks the forms of the twins
-        // too: the words it is for may join them.
-        if (own || inner) && was && !is {
-            tried.broken.push((w, r, k));
-        }
-        if !was && is {
-            tried.fixed.push((w, r, k));
-        }
-        tried.changes.push(((w, r, k), after));
+    for t in tried {
+        all.changes.extend(t.changes);
+        all.fixed.extend(t.fixed);
+        all.broken.extend(t.broken);
     }
-    Some(tried)
+    Some(all)
 }
+
+/// How many builds a thread tries a law on at a time.
+const CHUNK: usize = 2048;
 
 /// A law at the stem's edge that breaks too many forms, with one more
 /// letter of context: on the side (before its stem letters, or after its
@@ -1634,7 +1969,7 @@ const NEAR: usize = 2;
 
 /// A change inside alternating stems (see [`Change::Inner`]) with the
 /// context it is made in: what follows it where it gives forms and not
-/// where it breaks them, in the builds of alternating stems (`alternating`
+/// where it breaks them, in the builds of alternating stems (`found`
 /// finds them by their stem's end) of the words not held out. The letters
 /// after the change (the stem's end `+` among them, `$` the form's end)
 /// are read one place at a time while they don't yet tell the two apart (a
@@ -1643,7 +1978,7 @@ const NEAR: usize = 2;
 /// `katumme`. `None` where no path gives enough forms.
 fn context(
     change: &Change,
-    alternating: &HashMap<String, Vec<At>>,
+    found: &Found<'_>,
     readings: &[Vec<Reading>],
     forms: &[Vec<&str>],
     halves: &Halves<'_>,
@@ -1663,10 +1998,9 @@ fn context(
             end.contains(&x)
         })
     };
-    for &(w, r, k) in alternating
-        .iter()
+    for (w, r, k) in (found.alternating.iter())
         .filter(|(end, _)| near(end))
-        .flat_map(|(_, v)| v)
+        .flat_map(|(_, v)| found.numbered.of(v))
     {
         let (Some(built), Some(want)) = (
             readings.get(w).and_then(|rs| rs.get(r)?.builds.get(k)),
@@ -2764,5 +3098,44 @@ mod tests {
             let built_now = program.apply(built);
             assert_eq!(pattern::unmarked(&built_now).0, after, "{law:?} on {built}");
         }
+    }
+
+    #[test]
+    fn laws_that_differ_only_in_the_stem_letter_are_one_law() {
+        // Russian: `ы → и` after `к`, after `г`, …: one law. A law between
+        // them of another ending doesn't stop that; one writing `ы` does.
+        let edge = |stem: &str, ending: &str, to: &str| Law {
+            change: Change::Edge {
+                stem: vec![stem.to_string()],
+                ending: ending.to_string(),
+                to: to.to_string(),
+                keep: true,
+                earlier: Vec::new(),
+                left: Vec::new(),
+                right: Vec::new(),
+            },
+            words: 10,
+            examples: vec![stem.to_string()],
+            breaks: 0,
+        };
+        let stems = |law: &Law| match &law.change {
+            Change::Edge { stem, .. } => stem.clone(),
+            _ => Vec::new(),
+        };
+        let laws = [
+            edge("к", "ы", "и"),
+            edge("ц", "о", "е"),
+            edge("г", "ы", "и"),
+        ];
+        let merged = merge(&laws);
+        assert_eq!(merged.len(), 2);
+        assert_eq!(stems(&merged[0]), vec!["к", "г"]);
+        assert_eq!(merged[0].words, 20);
+        let laws = [
+            edge("к", "ы", "и"),
+            edge("б", "и", "ы"),
+            edge("г", "ы", "и"),
+        ];
+        assert_eq!(merge(&laws).len(), 3);
     }
 }

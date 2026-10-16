@@ -7,10 +7,10 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 269 rules and 628 listed words.
+/// 266 rules and 624 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Trait 40525, Bois 1576, Marteau 324, Journal 152, Caddy 15, Superwoman 12, Bonhomme 11, Émail 9, Impedimentum 8, Match 5, Nævus 5, De 3, Dipinto 3, Dr 3, Bisaïeul 3] regular,
+        "" => [Trait 40521, Bois 1572, Marteau 324, Journal 152, Caddy 15, Superwoman 12, Bonhomme 11, Émail 9, Impedimentum 8, Match 5, Nævus 5, De 3, Dipinto 3, Dr 3, Bisaïeul 3] regular,
         "a" => [Trait 692, Bois 44] regular,
         "ca" => [Trait 22] regular,
         "ia" => [Trait 97] regular,
@@ -200,15 +200,12 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "seur" => [Trait 237] regular,
         "teur" => [Trait 861] regular,
         "œur" => [Trait 14, Bois 2] regular,
-        "s" => [Bois 924, Trait 21, Nævus 5] regular,
-        "es" => [Bois 47, Trait 4] regular,
-        "les" => [Bois 14] regular,
+        "s" => [Bois 920, Trait 17, Nævus 5] regular,
         "is" => [Bois 480, Trait 2] regular,
         "sis" => [Bois 19, Trait 2] regular,
         "asis" => [Trait 2, Bois 2] regular,
         "niasis" => [Trait 2] regular,
         "ps" => [Bois 23, Trait 3] regular,
-        "ts" => [Bois 6, Trait 2] regular,
         "us" => [Bois 113, Nævus 5] regular,
         "vus" => [Nævus 2] regular,
         "t" => [Trait 2989, Bois 53, Bonhomme 2] regular,
@@ -646,16 +643,12 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#nucléus" => Nævus,
         "#nunavummiuq" => Trait,
         "#nævus" => Nævus,
-        "#obsèques" => Trait,
         "#oeil" => Trait,
         "#ogm" => Bois,
         "#omicron" => Bois,
         "#oméga" => Bois,
         "#on-dit" => Bois,
         "#opa" => Bois,
-        "#oreillons" => Trait,
-        "#orgues" => Trait,
-        "#ossements" => Trait,
         "#ouï-dire" => Bois,
         "#ovni" => Bois,
         "#pa" => Bois,

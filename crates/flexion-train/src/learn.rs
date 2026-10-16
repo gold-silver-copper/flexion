@@ -13,7 +13,7 @@ use flexion::{
     StressClass, Written,
 };
 use std::borrow::Cow;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
@@ -34,8 +34,8 @@ pub struct Shape {
     pub names: Vec<String>,
     /// How a letter typed without its mark is written, learned once for the
     /// language from every part of speech's words (see [`language_marks`]);
-    /// none: learned from this part's alone.
-    pub marks: Option<flexion::Choice<'static, char>>,
+    /// none: learned from this part's alone. Its `part` is this part's.
+    pub marks: Option<flexion::Marks<'static>>,
     /// The part of speech's name, as the marks read it (see
     /// [`flexion::Marks`]).
     pub part: String,
@@ -64,11 +64,18 @@ pub struct Learned<'s> {
     pub views: Vec<View>,
     /// Each stage's time and peak memory.
     pub trace: crate::trace::Trace,
+    /// The relations before what the runtime can't read of them went (see
+    /// [`Read`]): for checking that nothing it reads changed.
+    pub unpruned: Vec<Relation<'s>>,
 }
 
 /// Counts for the report.
 #[derive(Debug, Clone, Default)]
 pub struct Stats {
+    /// Words the relations list (their exceptions), over every relation.
+    pub relation_listed: usize,
+    /// Words with an irregular line: forms or stems listed.
+    pub irregular_words: usize,
     pub words: usize,
     pub paradigms: usize,
     pub accent_patterns: usize,
@@ -89,6 +96,9 @@ struct Word {
     dictionaries: u8,
     /// A sense of it is vulgar or offensive.
     vulgar: bool,
+    /// The dictionary has it (not the rest of a word behind a prefix, Latin
+    /// `imō` of `redimō`).
+    entry: bool,
     /// Per inherent feature, its value (`u8::MAX` if the dictionary doesn't
     /// say).
     inherent: Vec<u8>,
@@ -158,6 +168,7 @@ pub fn learn<'s>(
             letters: letters(l),
             senses: l.senses,
             vulgar: l.vulgar,
+            entry: true,
             dictionaries: dictionaries
                 .get(&key(l))
                 .map_or(1, |s| u8::try_from(s.len()).unwrap_or(1)),
@@ -267,17 +278,30 @@ pub fn learn<'s>(
                 .collect(),
         })
         .collect();
-    let (laws, program, paradigms, assignment) =
-        crate::laws::learn(&orthography, &law_words, paradigms, assignment);
-    let (mut paradigms, assignment) = rehome(
-        &orthography,
-        &law_words,
-        paradigms,
-        assignment,
-        program.as_ref(),
-    );
-    inherent(&words, &assignment, &mut paradigms);
-    trace.mark("laws");
+    // Kept from a run with the same input, for experiments (see
+    // `crate::stage`).
+    let values: Vec<&[u8]> = words.iter().map(|w| w.inherent.as_slice()).collect();
+    let key = crate::stage::key(&[&orthography, &law_words, &paradigms, &assignment, &values]);
+    let (laws, program, paradigms, assignment) = match key.and_then(crate::stage::load) {
+        Some(kept) => kept,
+        None => {
+            let (laws, program, paradigms, assignment) =
+                crate::laws::learn(&orthography, &law_words, paradigms, assignment, &mut trace);
+            let (mut paradigms, assignment) = rehome(
+                &orthography,
+                &law_words,
+                paradigms,
+                assignment,
+                program.as_ref(),
+            );
+            inherent(&words, &assignment, &mut paradigms);
+            if let Some(key) = key {
+                crate::stage::save(key, &laws, program.as_ref(), &paradigms, &assignment);
+            }
+            (laws, program, paradigms, assignment)
+        }
+    };
+    trace.mark("rehome and inherent");
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their
     // cells' place.
@@ -395,13 +419,21 @@ pub fn learn<'s>(
         .unzip();
     let stress_labels = stress_labels.unwrap_or_default();
     // How a letter typed without its mark is written, by what follows it.
-    let rules: Option<flexion::Choice<'s, char>> = match &shape.marks {
-        Some(marks) => Some(flexion::Choice {
-            side: marks.side,
+    let marks: Option<flexion::Marks<'static>> = match &shape.marks {
+        Some(marks) => Some(marks.clone()),
+        None => {
+            let spelled = words
+                .iter()
+                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
+            marks(&orthography, spelled, settings)
+        }
+    };
+    // Owned again: a choice's lifetime can't shorten.
+    let marks = marks.map(|m| flexion::Marks {
+        rules: flexion::Choice {
+            side: m.rules.side,
             rules: Cow::Owned(
-                marks
-                    .rules
-                    .iter()
+                (m.rules.rules.iter())
                     .map(|r| flexion::Rule {
                         ending: Cow::Owned(r.ending.to_string()),
                         counts: Cow::Owned(r.counts.to_vec()),
@@ -410,22 +442,16 @@ pub fn learn<'s>(
                     .collect(),
             ),
             exceptions: Cow::Owned(
-                marks
-                    .exceptions
-                    .iter()
+                (m.rules.exceptions.iter())
                     .map(|(w, l)| (Cow::Owned(w.to_string()), *l))
                     .collect(),
             ),
-        }),
-        None => {
-            let spelled = words
-                .iter()
-                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
-            marks(&orthography, spelled, settings)
-        }
-    };
-    let marks = rules.map(|rules| flexion::Marks {
-        rules,
+        },
+        roots: Cow::Owned(
+            (m.roots.iter())
+                .map(|(r, v)| (Cow::Owned(r.to_string()), *v))
+                .collect(),
+        ),
         part: Cow::Owned(shape.part.clone()),
     });
     // Spellings a key doesn't show, listed: those the marks don't give (of
@@ -496,12 +522,16 @@ pub fn learn<'s>(
         trust: flexion::Trust::FULL,
     };
     // Where words inflect their last part, judged on the words ending in
-    // one the rules build wrong (those whose listing a compound would take).
+    // one the rules build wrong (those whose listing a compound would
+    // take); a longer one listed for its paradigm only is none where its
+    // own words say so.
     let ruled_wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |_| true)
         .into_iter()
         .map(|(k, _, _)| k)
         .collect();
-    grammar.heads = heads(&everyone, shape.cells, &|key| ruled_wrong.contains(key));
+    let wrong = |key: &str| ruled_wrong.contains(key);
+    let listed = |key: &str| wrong(key) || grammar.lists(key);
+    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed);
     // Compounds: words ending in another (`aavameri` in `meri`), where
     // words inflect their last part.
     let keys: crate::HashSet<&str> = everyone.iter().map(|w| w.key.as_str()).collect();
@@ -629,7 +659,7 @@ pub fn learn<'s>(
         }
     }
     trace.mark("derived cells");
-    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names);
+    let built = crate::stems::tables(&grammar.paradigms, &slot_of, &shape.names, shape.lemma_cell);
     grammar.slots = Cow::Owned(built.slots);
     grammar.tables = Cow::Owned(built.tables);
     // A word the grammar builds with the wrong letters lists the stems that
@@ -702,6 +732,13 @@ pub fn learn<'s>(
     let all_tables = grammar.tables.to_vec();
     let mut used: Vec<usize> = Vec::new();
     let views = views(shape);
+    // The cells a relation tells as a copy of another cell's form.
+    let copies: HashMap<u16, u16> = grammar
+        .relations
+        .iter()
+        .filter(|r| r.analogy.is_none() && r.change.is_none())
+        .filter_map(|r| Some((r.cell, u16::try_from(r.source()?).ok()?)))
+        .collect();
     if let Cow::Owned(paradigms) = &mut grammar.paradigms {
         inherit(paradigms, &grammar.relations, &views);
         used = crate::stems::state(
@@ -710,6 +747,7 @@ pub fn learn<'s>(
             &all_tables,
             &listed_tables,
             &prices,
+            &copies,
         );
     }
     grammar.tables = Cow::Owned(
@@ -735,7 +773,30 @@ pub fn learn<'s>(
         );
     }
     trace.mark("stated");
+    // What the runtime can't read of the relations goes.
+    let unpruned = grammar.relations.to_vec();
+    let listed: crate::HashSet<&str> = irregular
+        .iter()
+        .map(|(k, _, _)| k.as_str())
+        .chain(stems.iter().map(|(k, _, _, _)| k.as_str()))
+        .collect();
+    let read = unread(&grammar, &assigned, &listed);
+    if let Cow::Owned(paradigms) = &mut grammar.paradigms {
+        rename(paradigms, &assigned, &listed);
+    }
+    if let Cow::Owned(relations) = &mut grammar.relations {
+        for r in relations.iter_mut() {
+            read.prune(r);
+        }
+    }
     let stats = Stats {
+        irregular_words: listed.len(),
+        relation_listed: grammar
+            .relations
+            .iter()
+            .filter_map(|r| r.change.as_ref())
+            .map(|c| c.exceptions.len())
+            .sum(),
         words: everyone.len(),
         paradigms: grammar.paradigms.len(),
         accent_patterns: grammar.accent.as_ref().map_or(0, |a| a.patterns.len()),
@@ -753,13 +814,14 @@ pub fn learn<'s>(
         stability,
         views,
         trace,
+        unpruned,
     }
 }
 
 /// A word as its table writes it (`ὑποκρῠ́πτω`, where the headword says
 /// `ὑποκρύπτω`): its forms carry those marks. `lemma_cell`: its part of
 /// speech's.
-fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme) -> String {
+pub fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lexeme) -> String {
     let headword = orthography.read(&l.full).letters;
     lemma_cell
         .and_then(|c| l.cells.get(c))
@@ -778,7 +840,7 @@ pub fn language_marks<'l>(
     orthography: &Orthography<'_>,
     words: impl Iterator<Item = (Option<usize>, &'l str, &'l Lexeme)>,
     settings: Settings,
-) -> Option<flexion::Choice<'static, char>> {
+) -> Option<flexion::Marks<'static>> {
     let mut seen = crate::HashSet::default();
     let words: Vec<(String, String, &str)> = words
         .map(|(lemma_cell, part, l)| {
@@ -840,6 +902,89 @@ fn untie(grammar: &mut Grammar<'_, u16, u16, u8>, words: &[Word]) {
         .exceptions
         .to_mut()
         .retain(|_| keep.next().unwrap_or(true));
+}
+
+/// What the runtime reads of the relations, per relation (by its cell) whose
+/// changes something reads: the exception keys it can look up.
+/// A relation's changes are read where a paradigm derives its cell (for
+/// any word of it), or where it tells listed words' forms (only theirs:
+/// see [`Grammar::listed_sources`]); a relation by analogy reads another's
+/// (see [`Grammar::changing`]).
+#[derive(Debug, Default)]
+pub struct Read {
+    read: HashMap<u16, crate::HashSet<String>>,
+}
+
+impl Read {
+    /// `r` with what nothing reads of it gone: its changes and rules, if
+    /// nothing reads them; else the exceptions no reader looks up. The
+    /// relation itself stays (that a cell has one is read).
+    pub fn prune(&self, r: &mut Relation<'_>) {
+        match self.read.get(&r.cell) {
+            None => {
+                r.changes = Cow::Owned(Vec::new());
+                r.change = None;
+            }
+            Some(keys) => {
+                if let Some(change) = r.change.as_mut() {
+                    change
+                        .exceptions
+                        .to_mut()
+                        .retain(|(word, _)| keys.contains(word.as_ref()));
+                }
+            }
+        }
+    }
+}
+
+/// What the runtime can read of `grammar`'s relations (see [`Read`]): for a
+/// relation some paradigms derive the cell of, the keys the words assigned
+/// to them (`assigned`) read; for one that tells listed words (`listed`,
+/// their keys), the letters they read.
+fn unread(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    assigned: &[(&Word, u16)],
+    listed: &crate::HashSet<&str>,
+) -> Read {
+    let space = grammar.space();
+    let mut read = Read::default();
+    for r in grammar.relations.iter() {
+        let c = usize::from(r.cell);
+        let deriving: Vec<u16> = (0..grammar.paradigms.len())
+            .filter(|&p| {
+                grammar
+                    .paradigms
+                    .get(p)
+                    .is_some_and(|q| q.pattern_in(&grammar.paradigms, space, c).is_none())
+            })
+            .filter_map(|p| u16::try_from(p).ok())
+            .collect();
+        if deriving.is_empty() {
+            continue;
+        }
+        // The keys the deriving paradigms' words read (their source forms).
+        // A word of another paradigm reading this one second may read a key
+        // that went: its first answer stays (checked by `try`), a later one
+        // may move.
+        let owner = grammar.changing(r).cell;
+        let keys = read.read.entry(owner).or_default();
+        for &(w, _) in assigned.iter().filter(|(_, p)| deriving.contains(p)) {
+            for &from in r.from.iter() {
+                if let Some(f) = first_form(w, usize::from(from)) {
+                    keys.insert(f.to_string());
+                }
+            }
+        }
+    }
+    for key in listed {
+        for (owner, source) in grammar.listed_sources(key) {
+            let Ok(owner) = u16::try_from(owner) else {
+                continue;
+            };
+            read.read.entry(owner).or_default().insert(source);
+        }
+    }
+    read
 }
 
 /// The share of a paradigm's cells another's patterns with an affix added
@@ -1177,7 +1322,9 @@ const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
 /// more than the start of a word.
 ///
 /// A word separates a prefix when a form of it puts the prefix after the
-/// rest, as a word of its own (`räuchre aus`). It keeps one in front when
+/// rest, as a word of its own, the rest without it (`räuchre aus`; not
+/// Latin `sitītus sit`, `sitiō`'s perfect subjunctive, whose auxiliary
+/// only spells the word's start). It keeps one in front when
 /// every form begins with it and the rest is a word whose forms, with what
 /// the cell's inseparable prefixes take off (the participle's `ge`), are the
 /// rest of its forms (`verhindern`, `hindern`); the cells' drops are learned
@@ -1192,9 +1339,12 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     let mut separable: HashMap<&str, &str> = HashMap::default();
     for w in words {
         let prefix = w.cells.iter().filter_map(|fs| fs.first()).find_map(|f| {
-            let (_, tail) = f.letters.rsplit_once(' ')?;
-            (!tail.is_empty() && w.letters.starts_with(tail) && w.letters.len() > tail.len())
-                .then_some(tail)
+            let (head, tail) = f.letters.rsplit_once(' ')?;
+            (!tail.is_empty()
+                && w.letters.starts_with(tail)
+                && w.letters.len() > tail.len()
+                && !head.starts_with(tail))
+            .then_some(tail)
         });
         if let Some(p) = prefix {
             separable.insert(w.key.as_str(), p);
@@ -1373,6 +1523,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         let mut base = w.clone();
         base.letters = w.letters.chars().skip(n).collect();
         base.key = rest_key;
+        base.entry = false;
         // Its forms without the prefix; a cell with one that isn't, none.
         for (c, forms) in base.cells.iter_mut().enumerate() {
             let rests: Option<Vec<String>> = forms
@@ -1472,15 +1623,16 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
 /// [`flexion::Grammar::marks`]): learned from every letter of the words that
 /// a mark could stand on, by the letter before it and the letters from it
 /// on. `None` where no word writes such a mark.
-fn marks<'a, 'w>(
+fn marks<'w>(
     orthography: &Orthography<'_>,
     words: impl Iterator<Item = (&'w str, &'w str, &'w str)>,
     settings: Settings,
-) -> Option<flexion::Choice<'a, char>> {
+) -> Option<flexion::Marks<'static>> {
     let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    let words: Vec<(&str, &str, &str)> = words.collect();
     let mut examples: Vec<(String, char)> = Vec::new();
     let mut marked = false;
-    for (key, letters, part) in words {
+    for &(key, letters, part) in &words {
         let mut before = flexion::WORD_END;
         for ((i, k), l) in key.char_indices().zip(letters.chars()) {
             if markable(k)
@@ -1496,7 +1648,77 @@ fn marks<'a, 'w>(
         return None;
     }
     // What the rules get wrong is a word's own spelling, listed with it.
-    Some(choose::learn_starts(&examples, settings))
+    let rules = choose::learn_starts(&examples, settings);
+    let roots = mark_roots(orthography, &words, &rules, settings.smoothing);
+    Some(flexion::Marks {
+        rules,
+        roots: Cow::Owned(roots),
+        part: Cow::Borrowed(""),
+    })
+}
+
+/// The fewest words whose letter a root (see [`flexion::Marks::roots`])
+/// writes one way for it to be listed.
+const ROOT_WORDS: u32 = 2;
+
+/// The roots the marks `rules` don't tell (see [`flexion::Marks::roots`]):
+/// of `words` (key, letters, part of speech), the beginnings through a
+/// letter that may take a mark and two letters past it whose words (each
+/// spelling once, at least [`ROOT_WORDS`]) all write that letter one way,
+/// where the rules write it otherwise in one of them. Sorted.
+pub fn mark_roots(
+    orthography: &Orthography<'_>,
+    words: &[(&str, &str, &str)],
+    rules: &flexion::Choice<'_, char>,
+    smoothing: f32,
+) -> Vec<(Cow<'static, str>, char)> {
+    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
+    // Each letter's root, and how the word writes the letter.
+    let places = |key: &str, letters: &str| -> Vec<(usize, String, char)> {
+        let key: Vec<char> = key.chars().collect();
+        let letters: Vec<char> = letters.chars().collect();
+        (0..key.len())
+            .filter(|&n| n + 3 >= flexion::ROOT_LETTERS && key.get(n).is_some_and(|&c| markable(c)))
+            .filter_map(|n| Some((n, key.get(..n + 3)?.iter().collect(), *letters.get(n)?)))
+            .collect()
+    };
+    let spellings: BTreeSet<(&str, &str)> = words.iter().map(|&(k, l, _)| (k, l)).collect();
+    let mut seen: BTreeMap<String, BTreeMap<char, u32>> = BTreeMap::new();
+    for &(key, letters) in &spellings {
+        for (_, root, v) in places(key, letters) {
+            *seen.entry(root).or_default().entry(v).or_default() += 1;
+        }
+    }
+    let one_way = |root: &str| match seen.get(root).map(|v| v.iter().collect::<Vec<_>>()) {
+        Some(v) => match v.as_slice() {
+            &[(&v, &n)] if n >= ROOT_WORDS => Some(v),
+            _ => None,
+        },
+        None => None,
+    };
+    let ruled = |&(key, _, part): &(&str, &str, &str)| {
+        let marks = flexion::Marks {
+            rules: flexion::Choice {
+                side: rules.side,
+                rules: Cow::Borrowed(rules.rules.as_ref()),
+                exceptions: Cow::Borrowed(rules.exceptions.as_ref()),
+            },
+            roots: Cow::Borrowed(&[]),
+            part: Cow::Borrowed(part),
+        };
+        flexion::restore(orthography, &marks, smoothing, key, key).0
+    };
+    let told: Vec<String> = crate::par::map(words, ruled);
+    let mut out: BTreeSet<(String, char)> = BTreeSet::new();
+    for (&(key, letters, _), told) in words.iter().zip(&told) {
+        let told: Vec<char> = told.chars().collect();
+        for (n, root, v) in places(key, letters) {
+            if one_way(&root) == Some(v) && told.get(n) != Some(&v) {
+                out.insert((root, v));
+            }
+        }
+    }
+    out.into_iter().map(|(r, v)| (Cow::Owned(r), v)).collect()
 }
 
 /// Of the words with each value of a feature, the share whose form of a
@@ -2551,15 +2773,23 @@ const HEAD_OWN: usize = 2;
 /// `aavameri` as `meri`), of those `irregular` accepts: every one of at
 /// least so many letters, the fewest for which [`HEAD_SHARE`] of the words
 /// ending in a word that long have that word's forms, their front kept,
-/// in every cell both have (none if no length does); and, of the shorter
-/// ones (or all, where no length does), each word that [`HEAD_SHARE`] of
-/// the words ending in it, at least [`HEAD_OWN`], inflect as (German
-/// `Schein`: `Fahrschein`, `Führerschein`).
-fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> flexion::Heads<'a> {
+/// in every cell both have (none if no length does), but those `listed`
+/// accepts whose own words, at least [`HEAD_OWN`], don't (Latin `capitālis`,
+/// `digitālis`, `hospitālis` aren't `Ītalis`'s compounds); and, of the
+/// shorter ones (or all, where no length does), each word that
+/// [`HEAD_SHARE`] of the words ending in it, at least [`HEAD_OWN`], inflect
+/// as (German `Schein`: `Fahrschein`, `Führerschein`).
+fn heads<'a>(
+    words: &[Word],
+    cells: usize,
+    irregular: &dyn Fn(&str) -> bool,
+    listed: &dyn Fn(&str) -> bool,
+) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
-    // Per word ending in another: the longest such, its letters, and
-    // whether the word inflects as it.
-    let found: Vec<(&str, usize, bool)> = words
+    // Per word ending in a listed one: the longest such, its letters,
+    // whether the word inflects as it, and whether it is one `irregular`
+    // accepts.
+    let found: Vec<(&str, usize, bool, bool)> = words
         .iter()
         .filter(|w| !w.key.contains('-'))
         .filter_map(|w| {
@@ -2568,7 +2798,7 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
                 let (b, _) = w.key.char_indices().nth(i)?;
                 Some((i, *by_key.get(w.key.get(b..)?)?))
             })?;
-            if !irregular(&head.key) {
+            if !listed(&head.key) {
                 return None;
             }
             let front: String = w.letters.chars().take(at).collect();
@@ -2578,13 +2808,13 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
             let same = pairs
                 .iter()
                 .all(|(mine, theirs)| mine.strip_prefix(front.as_str()) == Some(*theirs));
-            (!pairs.is_empty()).then_some((head.key.as_str(), n - at, same))
+            (!pairs.is_empty()).then_some((head.key.as_str(), n - at, same, irregular(&head.key)))
         })
         .collect();
     // Per length of the last part (the longest counted together), the words
     // and those that inflect as it.
     let mut by_length = [(0usize, 0usize); HEAD_MOST + 1];
-    for &(_, letters, same) in &found {
+    for &(_, letters, same, _) in found.iter().filter(|f| f.3) {
         if let Some(slot) = by_length.get_mut(letters.min(HEAD_MOST)) {
             *slot = (slot.0 + 1, slot.1 + usize::from(same));
         }
@@ -2611,21 +2841,27 @@ fn heads<'a>(words: &[Word], cells: usize, irregular: &dyn Fn(&str) -> bool) -> 
             all >= HEAD_WORDS && holds(&pool)
         })
         .and_then(|least| u8::try_from(least).ok());
-    // The shorter heads, each by its own words.
-    let mut by_head: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
-    for &(head, letters, same) in &found {
-        if least.is_none_or(|least| letters < usize::from(least)) {
-            let slot = by_head.entry(head).or_default();
-            *slot = (slot.0 + 1, slot.1 + usize::from(same));
+    // Each head by its own words: the shorter ones to be heads, the longer
+    // ones, any listed, not to be.
+    let mut by_head: BTreeMap<&str, (bool, usize, usize)> = BTreeMap::new();
+    for &(head, letters, same, judged) in &found {
+        let long = least.is_some_and(|least| letters >= usize::from(least));
+        if !long && !judged {
+            continue;
+        }
+        let slot = by_head.entry(head).or_insert((long, 0, 0));
+        *slot = (long, slot.1 + 1, slot.2 + usize::from(same));
+    }
+    let (mut not, mut words) = (Vec::new(), Vec::new());
+    for (head, (long, n, same)) in by_head {
+        if n >= HEAD_OWN && holds(&(n, same)) != long {
+            let list = if long { &mut not } else { &mut words };
+            list.push(Cow::Owned(head.to_string()));
         }
     }
-    let words: Vec<Cow<'a, str>> = by_head
-        .into_iter()
-        .filter(|(_, counts)| counts.0 >= HEAD_OWN && holds(counts))
-        .map(|(head, _)| Cow::Owned(head.to_string()))
-        .collect();
     flexion::Heads {
         least,
+        not: Cow::Owned(not),
         words: Cow::Owned(words),
     }
 }
@@ -2687,10 +2923,21 @@ fn fit(
 /// the first alphabetically), of its plain words (letters only) of at least
 /// three letters if it has any.
 fn name<T: PartialEq>(words: &[Word], chosen: &[T], s: T) -> String {
+    let mine: Vec<&Word> = words
+        .iter()
+        .zip(chosen)
+        .filter(|&(_, c)| *c == s)
+        .map(|(w, _)| w)
+        .collect();
+    commonest(&mine).unwrap_or_default()
+}
+
+/// The commonest of `words` to name a paradigm after (see [`name`]).
+fn commonest(words: &[&Word]) -> Option<String> {
     use std::cmp::Reverse;
     let pick = |plain: bool| {
-        let mine = words.iter().zip(chosen).filter(|&(_, c)| *c == s);
-        mine.map(|(w, _)| w)
+        words
+            .iter()
             .filter(|w| {
                 !plain
                     || (w.letters.chars().count() >= 3
@@ -2700,6 +2947,7 @@ fn name<T: PartialEq>(words: &[Word], chosen: &[T], s: T) -> String {
                 let length = Reverse(w.letters.chars().count());
                 (
                     !w.vulgar,
+                    w.entry,
                     w.dictionaries,
                     w.senses,
                     length,
@@ -2708,7 +2956,37 @@ fn name<T: PartialEq>(words: &[Word], chosen: &[T], s: T) -> String {
             })
             .map(|w| w.letters.clone())
     };
-    pick(true).or_else(|| pick(false)).unwrap_or_default()
+    pick(true).or_else(|| pick(false))
+}
+
+/// Each paradigm named after a word the grammar lists forms or stems of
+/// (`listed`, keys) renamed after its commonest word that it builds whole,
+/// if it has one: a paradigm is named after a word that follows it.
+fn rename(
+    paradigms: &mut [Paradigm<'_>],
+    assigned: &[(&Word, u16)],
+    listed: &crate::HashSet<&str>,
+) {
+    let mut members: Vec<Vec<&Word>> = vec![Vec::new(); paradigms.len()];
+    for &(w, p) in assigned {
+        if let Some(m) = members.get_mut(usize::from(p)) {
+            m.push(w);
+        }
+    }
+    for (p, mine) in paradigms.iter_mut().zip(&members) {
+        let named = mine.iter().find(|w| w.letters == p.name.as_ref());
+        if named.is_none_or(|w| !listed.contains(w.key.as_str())) {
+            continue;
+        }
+        let regular: Vec<&Word> = mine
+            .iter()
+            .copied()
+            .filter(|w| !listed.contains(w.key.as_str()))
+            .collect();
+        if let Some(name) = commonest(&regular) {
+            p.name = Cow::Owned(name);
+        }
+    }
 }
 
 /// The last `n` letters of `word`.
@@ -3090,6 +3368,7 @@ mod tests {
             senses: 1,
             dictionaries: 1,
             vulgar: false,
+            entry: true,
             inherent: Vec::new(),
             cells: forms
                 .iter()
@@ -3102,6 +3381,39 @@ mod tests {
                 })
                 .collect(),
         }
+    }
+
+    #[test]
+    fn an_auxiliary_that_spells_the_word_s_start_is_no_separated_prefix() {
+        // German `ausräuchern`, `räuchre aus`: the prefix after the rest,
+        // the rest without it. Latin `summoveō`, `summōtus sum`: the
+        // auxiliary only spells the word's start, which the participle
+        // still has.
+        let rests = ["räuchern", "machen", "laufen", "gehen", "sehen", "fallen"];
+        let german: Vec<Word> = rests
+            .iter()
+            .flat_map(|r| {
+                let stem = r.trim_end_matches("en").trim_end_matches('n');
+                [
+                    word(
+                        &format!("aus{r}"),
+                        &[&format!("aus{r}"), &format!("{stem}e aus")],
+                    ),
+                    word(r, &[r, &format!("{stem}e")]),
+                ]
+            })
+            .collect();
+        assert!(prefixes(&german).0.is_some());
+        let latin: Vec<Word> = ["moveo", "muto", "murmuro", "mitto", "mergo", "mano"]
+            .iter()
+            .map(|r| {
+                word(
+                    &format!("sum{r}"),
+                    &[&format!("sum{r}"), &format!("sum{r}tus sum")],
+                )
+            })
+            .collect();
+        assert!(prefixes(&latin).0.is_none());
     }
 
     #[test]
@@ -3135,7 +3447,17 @@ mod tests {
                 ],
             ));
         }
-        assert_eq!(heads(&words, 3, &|_| true).least, Some(1));
+        // Among them, two words that only happen to end in `kala`: it is
+        // no head.
+        words.push(word("kala", &["kala", "kalan", "kalaa"]));
+        for key in ["pohjoiskala", "sisäkala"] {
+            words.push(word(key, &[key, &format!("{key}in"), &format!("{key}ta")]));
+        }
+        let found = heads(&words, 3, &|_| true, &|_| true);
+        assert_eq!(
+            (found.least, found.not.to_vec()),
+            (Some(1), vec![Cow::from("kala")])
+        );
         // Words that only happen to end in another: no last part.
         let mut words: Vec<Word> = vec![word("meri", &["meri", "meren", "merta"])];
         for front in [
@@ -3149,7 +3471,7 @@ mod tests {
                 ));
             }
         }
-        assert!(heads(&words, 3, &|_| true).is_empty());
+        assert!(heads(&words, 3, &|_| true, &|_| true).is_empty());
         // Among them, a word whose own compounds inflect as it (Italian
         // `fare`): it alone is a head.
         words.push(word("fare", &["fare", "faccio", "fatto"]));
@@ -3157,7 +3479,7 @@ mod tests {
             let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let found = heads(&words, 3, &|_| true);
+        let found = heads(&words, 3, &|_| true, &|_| true);
         assert_eq!(
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])
@@ -3373,8 +3695,8 @@ mod tests {
         .expect("marks");
         let spell = |word: &str, part: &str| {
             let marks = flexion::Marks {
-                rules: rules.clone(),
                 part: Cow::Owned(part.to_string()),
+                ..rules.clone()
             };
             flexion::restore(&orthography, &marks, 1.0, word, word).0
         };

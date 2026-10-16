@@ -1,24 +1,22 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! A pattern is the form with `~` where the stem goes (`~y`, `wolny`: the stem and `y`). A stem in two pieces (`~~ki`, `niski`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
-//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
+//! for alternating stems change them (`~yˇ`: `party`).
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~- like wolny\"`: the slot's cells are `wolny`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (anim, inan)
 /// `nom_f` (anim, inan)
 /// `nom_n` (anim, inan)
@@ -53,8 +51,8 @@ use flexion::Paradigm;
 /// `superlative`
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem adjective: $s0:tt;)?
-     $(stem adjective_nom_vir_anim: $s1:tt;)?
+     $(stem lemma: $s0:tt;)?
+     $(stem rest: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -189,8 +187,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "", "y" after "~"`: ``, or `y`
+/// where that pattern ends in `~`).
 macro_rules! affix {
     () => {
         None
@@ -214,8 +212,8 @@ pub enum Declension {
     Wolny,
     /// Like `słaby`: 1,412 words.
     Słaby,
-    /// Like `lekki`: 1,310 words.
-    Lekki,
+    /// Like `niski`: 1,310 words.
+    Niski,
     /// Like `party`: 1,218 words.
     Party,
     /// Like `ciężki`: 618 words.
@@ -238,8 +236,8 @@ pub enum Declension {
     Herbaciany,
     /// Like `zajęczy`: 12 words.
     Zajęczy,
-    /// Like `rad`: 8 words.
-    Rad,
+    /// Like `wart`: 8 words.
+    Wart,
     /// Like `ostry`: 6 words.
     Ostry,
     /// Like `zwięzły`: 6 words.
@@ -257,7 +255,7 @@ impl Declension {
     pub const ALL: [Declension; 20] = [
         Declension::Wolny,
         Declension::Słaby,
-        Declension::Lekki,
+        Declension::Niski,
         Declension::Party,
         Declension::Ciężki,
         Declension::Odpowiedni,
@@ -269,7 +267,7 @@ impl Declension {
         Declension::Stały,
         Declension::Herbaciany,
         Declension::Zajęczy,
-        Declension::Rad,
+        Declension::Wart,
         Declension::Ostry,
         Declension::Zwięzły,
         Declension::Uczulony,
@@ -295,83 +293,87 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     // Wolny: 8,195 words (wolny, jenny, bury, bezwstydny, homoseksualny, uszny).
     declension!("wolny", 8195, "~y";
-    nom_m: _, "~y";
-    nom_f: "~a", _;
-    nom_n: "~e", _;
-    nom_vir: "~i", _;
-    gen_m: "~ego", _;
-    gen_f: "~ej", _;
-    gen_vir: "~ych", _;
-    dat_m: "~emu", _;
-    dat_vir: _, "~ym";
-    dat_nvir: "~ym", "~ym";
-    acc_m: _, "~y";
-    acc_f: _, "~ą";
-    ins_m: "~ym", "~ym";
-    ins_f: "~ą", "~ą";
-    ins_n: "~ym", "~ym";
-    ins_vir: _, "~ymi";
-    ins_nvir: "~ymi", "~ymi";
-    loc_m: "~ym", "~ym";
-    loc_n: "~ym", "~ym";
-    comparative: "~iejszy";
+    stem lemma: "~- like wolny";
+    stem rest: "~i- like wolny";
+    nom_f: _, derived;
+    nom_n: _, derived;
+    nom_vir: _, derived;
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     ),
-    // Słaby: 1,412 words (mulczujący, różowy, żółty, dany, chory, stary). Like Rad with `` after each pattern (`y` after ~), except in 1 cell: comparative.
-    declension!("słaby", 1412, "~y", like Rad with "", "y" after "~";
+    // Słaby: 1,412 words (mulczujący, różowy, żółty, dany, chory, stary). Like Wart with `` after each pattern (`y` after ~), except in 1 cell: comparative.
+    declension!("słaby", 1412, "~y", like Wart with "", "y" after "~";
     comparative: "~szy";
     ),
-    // Lekki: 1,310 words (polski, rosyjski, norweski, ruski, łaciński, morski).
-    declension!("lekki", 1310, "~~ki";
-    nom_m: _, "~~ki";
-    nom_f: "~~ka", _;
-    nom_n: "~~kie", _;
+    // Niski: 1,310 words (polski, rosyjski, norweski, ruski, łaciński, morski).
+    declension!("niski", 1310, "~~ki";
+    stem lemma: "~~k- like lekki";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~~cy", _;
-    gen_m: "~~kiego", _;
-    gen_f: "~~kiej", _;
-    gen_vir: "~~kich", _;
-    dat_m: "~~kiemu", _;
-    dat_vir: _, "~~kim";
-    dat_nvir: "~~kim", "~~kim";
-    acc_m: _, "~~ki";
-    acc_f: _, "~~ką";
-    ins_m: "~~kim", "~~kim";
-    ins_f: "~~ką", "~~ką";
-    ins_n: "~~kim", "~~kim";
-    ins_vir: _, "~~kimi";
-    ins_nvir: "~~kimi", "~~kimi";
-    loc_m: "~~kim", "~~kim";
-    loc_n: "~~kim", "~~kim";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~ż~zy";
     ),
     // Party: 1,218 words (party, złoty, hardy, pity, pusty, ciasny). Like Wolny with `ˇ` after each pattern.
     declension!("party", 1218, "~yˇ", like Wolny with "ˇ";
     ),
-    // Ciężki: 618 words (słodki, jaki, wszelki, malutki, niderlandzki, niemiecki). Like Słaby, except in 26 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Ciężki: 618 words (słodki, jaki, wszelki, malutki, niderlandzki, niemiecki). Like Słaby, except in 30 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("ciężki", 618, "~ki", like Słaby;
-    nom_m: _, "~ki";
-    nom_f: "~ka", _;
-    nom_n: "~kie", _;
+    stem lemma: "~k- like lekki";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~cy", _;
-    gen_m: "~kiego", _;
-    gen_f: "~kiej", _;
-    gen_vir: "~kich", _;
-    dat_m: "~kiemu", _;
-    dat_vir: _, "~kim";
-    dat_nvir: "~kim", "~kim";
-    acc_m: _, "~ki";
-    acc_f: _, "~ką";
-    ins_m: "~kim", "~kim";
-    ins_f: "~ką", "~ką";
-    ins_n: "~kim", "~kim";
-    ins_vir: _, "~kimi";
-    ins_nvir: "~kimi", "~kimi";
-    loc_m: "~kim", "~kim";
-    loc_n: "~kim", "~kim";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     ),
-    // Odpowiedni: 238 words (psi, kani, babi, kuni, tani, dropi). Like Wolny, except in 19 cells: nom_m inan, nom_vir anim, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ….
+    // Odpowiedni: 238 words (psi, kani, babi, kuni, tani, dropi). Like Wolny, except in 18 cells: nom_m inan, nom_vir inan, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ….
     declension!("odpowiedni", 238, "~", like Wolny;
+    stem rest: "~- like wolny";
     nom_m: _, "~";
-    nom_vir: "~", _;
+    nom_vir: _, derived;
     gen_vir: "~ch", _;
     dat_vir: _, "~m";
     dat_nvir: "~m", "~m";
@@ -382,80 +384,82 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     ins_nvir: "~mi", "~mi";
     loc_m: "~m", "~m";
     loc_n: "~m", "~m";
-    comparative: "~ejszy";
     ),
-    // Drugi: 49 words (drogi, nagi, drugi, długi, mnogi, wrogi). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Drugi: 49 words (drogi, nagi, drugi, długi, mnogi, wrogi). Like Wolny, except in 31 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("drugi", 49, "~gi", like Wolny;
-    nom_m: _, "~gi";
-    nom_f: "~ga", _;
-    nom_n: "~gie", _;
+    stem lemma: "~g- like lekki";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~dzy", _;
-    gen_m: "~giego", _;
-    gen_f: "~giej", _;
-    gen_vir: "~gich", _;
-    dat_m: "~giemu", _;
-    dat_vir: _, "~gim";
-    dat_nvir: "~gim", "~gim";
-    acc_m: _, "~gi";
-    acc_f: _, "~gą";
-    ins_m: "~gim", "~gim";
-    ins_f: "~gą", "~gą";
-    ins_n: "~gim", "~gim";
-    ins_vir: _, "~gimi";
-    ins_nvir: "~gimi", "~gimi";
-    loc_m: "~gim", "~gim";
-    loc_n: "~gim", "~gim";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~ższy";
     ),
-    // Mały: 30 words (zwykły, ciekły, niezwykły, ścisły, nikły, smukły). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Mały: 30 words (zwykły, ciekły, niezwykły, ścisły, nikły, smukły). Like Wolny, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("mały", 30, "~ły", like Wolny;
-    nom_m: _, "~ły";
-    nom_f: "~ła", _;
-    nom_n: "~łe", _;
-    nom_vir: "~li", _;
-    gen_m: "~łego", _;
-    gen_f: "~łej", _;
-    gen_vir: "~łych", _;
-    dat_m: "~łemu", _;
-    dat_vir: _, "~łym";
-    dat_nvir: "~łym", "~łym";
-    acc_m: _, "~ły";
-    acc_f: _, "~łą";
-    ins_m: "~łym", "~łym";
-    ins_f: "~łą", "~łą";
-    ins_n: "~łym", "~łym";
-    ins_vir: _, "~łymi";
-    ins_nvir: "~łymi", "~łymi";
-    loc_m: "~łym", "~łym";
-    loc_n: "~łym", "~łym";
-    comparative: "~lejszy";
+    stem lemma: "~ł- like wolny";
+    stem rest: "~l- like mały";
+    nom_f: _, derived;
+    nom_n: _, derived;
+    nom_vir: _, derived;
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     ),
-    // Otwarty: 29 words (odkryty, szyty, uszyty, umyty, myty, zmyty). Like Wolny, except in 28 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Otwarty: 29 words (odkryty, szyty, uszyty, umyty, myty, zmyty). Like Wolny, except in 32 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("otwarty", 29, "~ty", like Wolny;
-    nom_m: _, "~ty";
-    nom_f: "~ta", _;
-    nom_n: "~te", _;
+    stem lemma: "~t- like wolny";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~ci", _;
-    gen_m: "~tego", _;
-    gen_f: "~tej", _;
-    gen_vir: "~tych", _;
-    dat_m: "~temu", _;
-    dat_vir: _, "~tym";
-    dat_nvir: "~tym", "~tym";
-    acc_m: _, "~ty";
-    acc_f: _, "~tą";
-    ins_m: "~tym", "~tym";
-    ins_f: "~tą", "~tą";
-    ins_n: "~tym", "~tym";
-    ins_vir: _, "~tymi";
-    ins_nvir: "~tymi", "~tymi";
-    loc_m: "~tym", "~tym";
-    loc_n: "~tym", "~tym";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~tszy";
     superlative: "naj~tszy";
     ),
-    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli). Like Rad with `` after each pattern (`i` after ~), except in 15 cells: gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ins_m anim, ins_m inan, ….
-    declension!("soboli", 25, "~i", like Rad with "", "i" after "~";
+    // Soboli: 25 words (orli, muli, karli, ośli, krokodyli, pszczeli). Like Wart with `` after each pattern (`i` after ~), except in 15 cells: gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ins_m anim, ins_m inan, ….
+    declension!("soboli", 25, "~i", like Wart with "", "i" after "~";
     gen_vir: "~ich", _;
     dat_vir: _, "~im";
     dat_nvir: "~im", "~im";
@@ -470,140 +474,146 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     declension!("prosty", 23, "~yˇ", like Wolny with "ˇ";
     comparative: "~szyˇ";
     ),
-    // Stały: 19 words (miły, były, dojrzały, stały, doskonały, czuły). Like Mały, except in 1 cell: comparative.
+    // Stały: 19 words (miły, były, dojrzały, stały, doskonały, czuły). Like Mały, except in 1 cell: nom_vir inan.
     declension!("stały", 19, "~ły", like Mały;
-    comparative: "~lszy";
+    stem rest: "~l- like słaby";
+    nom_vir: _, derived;
     ),
-    // Herbaciany: 14 words (słony, jasnozielony, ciemnoczerwony, biało-czerwony, podczerwony, infraczerwony). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Herbaciany: 14 words (słony, jasnozielony, ciemnoczerwony, biało-czerwony, podczerwony, infraczerwony). Like Wolny, except in 31 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("herbaciany", 14, "~ny", like Wolny;
-    nom_m: _, "~ny";
-    nom_f: "~na", _;
-    nom_n: "~ne", _;
+    stem lemma: "~n- like wolny";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~ni", _;
-    gen_m: "~nego", _;
-    gen_f: "~nej", _;
-    gen_vir: "~nych", _;
-    dat_m: "~nemu", _;
-    dat_vir: _, "~nym";
-    dat_nvir: "~nym", "~nym";
-    acc_m: _, "~ny";
-    acc_f: _, "~ną";
-    ins_m: "~nym", "~nym";
-    ins_f: "~ną", "~ną";
-    ins_n: "~nym", "~nym";
-    ins_vir: _, "~nymi";
-    ins_nvir: "~nymi", "~nymi";
-    loc_m: "~nym", "~nym";
-    loc_n: "~nym", "~nym";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~ńszy";
     ),
-    // Zajęczy: 12 words (bosy, łasy, rusy, krasy, kusy, kosy). Like Rad with `` after each pattern (`y` after ~), except in 3 cells: nom_vir anim, comparative, superlative.
-    declension!("zajęczy", 12, "~y", like Rad with "", "y" after "~";
+    // Zajęczy: 12 words (bosy, łasy, rusy, krasy, kusy, kosy). Like Wart with `` after each pattern (`y` after ~), except in 3 cells: nom_vir anim, comparative, superlative.
+    declension!("zajęczy", 12, "~y", like Wart with "", "y" after "~";
     nom_vir: "~y", _;
     comparative: "~szy";
     superlative: "naj~szy";
     ),
-    // Rad: 8 words (wart, rad, syt, łaskaw, miłościw, kontent). Like Wolny, except in 3 cells: nom_m inan, acc_m inan, comparative.
-    declension!("rad", 8, "~", like Wolny;
+    // Wart: 8 words (wart, rad, syt, łaskaw, miłościw, kontent). Like Wolny, except in 3 cells: nom_m inan, acc_m inan, comparative.
+    declension!("wart", 8, "~", like Wolny;
     nom_m: _, "~";
     acc_m: _, "~";
     comparative: derived;
     ),
-    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Rad with `` after each pattern (`y` after ~), except in 2 cells: nom_vir anim, comparative.
-    declension!("ostry", 6, "~y", like Rad with "", "y" after "~";
+    // Ostry: 6 words (ostry, mądry, bystry, chytry, szczodry, przykry). Like Wart with `` after each pattern (`y` after ~), except in 2 cells: nom_vir anim, comparative.
+    declension!("ostry", 6, "~y", like Wart with "", "y" after "~";
     nom_vir: "~zy", _;
     comparative: "~zejszy";
     ),
-    // Zwięzły: 6 words (zwięzły, rozwiązły, niezły, spełzły, wypełzły, sczezły). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Zwięzły: 6 words (zwięzły, rozwiązły, niezły, spełzły, wypełzły, sczezły). Like Wolny, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("zwięzły", 6, "~zły", like Wolny;
-    nom_m: _, "~zły";
-    nom_f: "~zła", _;
-    nom_n: "~złe", _;
-    nom_vir: "~źli", _;
-    gen_m: "~złego", _;
-    gen_f: "~złej", _;
-    gen_vir: "~złych", _;
-    dat_m: "~złemu", _;
-    dat_vir: _, "~złym";
-    dat_nvir: "~złym", "~złym";
-    acc_m: _, "~zły";
-    acc_f: _, "~złą";
-    ins_m: "~złym", "~złym";
-    ins_f: "~złą", "~złą";
-    ins_n: "~złym", "~złym";
-    ins_vir: _, "~złymi";
-    ins_nvir: "~złymi", "~złymi";
-    loc_m: "~złym", "~złym";
-    loc_n: "~złym", "~złym";
-    comparative: "~źlejszy";
+    stem lemma: "~zł- like wolny";
+    stem rest: "~źl- like mały";
+    nom_f: _, derived;
+    nom_n: _, derived;
+    nom_vir: _, derived;
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     ),
-    // Uczulony: 5 words (ulubiony, szalony, uczony, zasłużony, uniżony). Like Wolny, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
+    // Uczulony: 5 words (ulubiony, szalony, uczony, zasłużony, uniżony). Like Wolny, except in 31 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("uczulony", 5, "~ony", like Wolny;
-    nom_m: _, "~ony";
-    nom_f: "~ona", _;
-    nom_n: "~one", _;
+    stem lemma: "~on- like wolny";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~eni", _;
-    gen_m: "~onego", _;
-    gen_f: "~onej", _;
-    gen_vir: "~onych", _;
-    dat_m: "~onemu", _;
-    dat_vir: _, "~onym";
-    dat_nvir: "~onym", "~onym";
-    acc_m: _, "~ony";
-    acc_f: _, "~oną";
-    ins_m: "~onym", "~onym";
-    ins_f: "~oną", "~oną";
-    ins_n: "~onym", "~onym";
-    ins_vir: _, "~onymi";
-    ins_nvir: "~onymi", "~onymi";
-    loc_m: "~onym", "~onym";
-    loc_n: "~onym", "~onym";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~eńszy";
     ),
-    // Wązki: 4 words (sąsiedzki, wązki, dobrosąsiedzki, grudziądzki). Like Lekki, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("wązki", 4, "~ą~ki", like Lekki;
-    nom_m: _, "~ą~ki";
-    nom_f: "~ą~ka", _;
-    nom_n: "~ą~kie", _;
+    // Wązki: 4 words (sąsiedzki, wązki, dobrosąsiedzki, grudziądzki). Like Niski, except in 31 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
+    declension!("wązki", 4, "~ą~ki", like Niski;
+    stem lemma: "~ą~k- like lekki";
+    nom_f: _, derived;
+    nom_n: _, derived;
     nom_vir: "~ą~cy", _;
-    gen_m: "~ą~kiego", _;
-    gen_f: "~ą~kiej", _;
-    gen_vir: "~ą~kich", _;
-    dat_m: "~ą~kiemu", _;
-    dat_vir: _, "~ą~kim";
-    dat_nvir: "~ą~kim", "~ą~kim";
-    acc_m: _, "~ą~ki";
-    acc_f: _, "~ą~ką";
-    ins_m: "~ą~kim", "~ą~kim";
-    ins_f: "~ą~ką", "~ą~ką";
-    ins_n: "~ą~kim", "~ą~kim";
-    ins_vir: _, "~ą~kimi";
-    ins_nvir: "~ą~kimi", "~ą~kimi";
-    loc_m: "~ą~kim", "~ą~kim";
-    loc_n: "~ą~kim", "~ą~kim";
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     comparative: "~ężs~y";
     ),
-    // Żyzny: 3 words (przyjazny, żyzny, nieprzyjazny). Like Lekki, except in 27 cells: nom_m inan, nom_f anim, nom_n anim, nom_vir anim, gen_m anim, gen_f anim, ….
-    declension!("żyzny", 3, "~z~y", like Lekki;
-    nom_m: _, "~z~y";
-    nom_f: "~z~a", _;
-    nom_n: "~z~e", _;
-    nom_vir: "~ź~i", _;
-    gen_m: "~z~ego", _;
-    gen_f: "~z~ej", _;
-    gen_vir: "~z~ych", _;
-    dat_m: "~z~emu", _;
-    dat_vir: _, "~z~ym";
-    dat_nvir: "~z~ym", "~z~ym";
-    acc_m: _, "~z~y";
-    acc_f: _, "~z~ą";
-    ins_m: "~z~ym", "~z~ym";
-    ins_f: "~z~ą", "~z~ą";
-    ins_n: "~z~ym", "~z~ym";
-    ins_vir: _, "~z~ymi";
-    ins_nvir: "~z~ymi", "~z~ymi";
-    loc_m: "~z~ym", "~z~ym";
-    loc_n: "~z~ym", "~z~ym";
-    comparative: "~ź~iejszy";
+    // Żyzny: 3 words (przyjazny, żyzny, nieprzyjazny). Like Niski, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
+    declension!("żyzny", 3, "~z~y", like Niski;
+    stem lemma: "~z~- like wolny";
+    stem rest: "~ź~i- like wolny";
+    nom_f: _, derived;
+    nom_n: _, derived;
+    nom_vir: _, derived;
+    nom_nvir: derived, derived;
+    gen_m: _, derived;
+    gen_f: _, derived;
+    gen_n: derived, derived;
+    gen_vir: _, derived;
+    gen_nvir: derived, derived;
+    dat_m: _, derived;
+    dat_f: derived, derived;
+    dat_n: derived, derived;
+    acc_m: derived, _;
+    acc_n: derived, derived;
+    acc_vir: derived, derived;
+    acc_nvir: derived, derived;
+    loc_f: derived, derived;
+    loc_vir: derived, derived;
+    loc_nvir: derived, derived;
     ),
 ];

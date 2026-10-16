@@ -1,28 +1,26 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~o`, `gagliardo`: the stem and `o`). A stem in two pieces (`~o~e`, `riparatore`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem adjective_f: \"~- like maggiore\"`: the slot's cells are `maggiore`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 /// `superlative`
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem adjective_m: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(stem adjective_f: $s1:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
@@ -85,7 +83,7 @@ const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
 pub enum Declension {
     /// Like `gagliardo`: 11,179 words.
     Gagliardo,
-    /// Like `maggiore`: 7,517 words.
+    /// Like `maggiore`: 7,512 words.
     Maggiore,
     /// Like `lubrico`: 5,291 words.
     Lubrico,
@@ -148,8 +146,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     f: "~a", "~e";
     superlative: "~issimo";
     ),
-    // Maggiore: 7,517 words (acclive, andante, mobile, dilettante, finale, simile). Like Gagliardo, except in 1 cell: m sg.
-    declension!("maggiore", 7517, "~e", like Gagliardo as SG_AS_PL;
+    // Maggiore: 7,512 words (acclive, andante, mobile, dilettante, finale, simile). Like Gagliardo, except in 1 cell: m sg.
+    declension!("maggiore", 7512, "~e", like Gagliardo as SG_AS_PL;
     stem adjective_f: "~- like maggiore";
     m: "~e", _;
     ),

@@ -141,6 +141,114 @@ impl Class {
     }
 }
 
+/// Of paradigms of one shape, by a cell, one of its other spellings (its
+/// place among them), the pattern before its ending and the ending's
+/// length: each paradigm's ending.
+type Spellings<'p> = BTreeMap<(String, usize, usize, &'p str, usize), Vec<(usize, Vec<char>)>>;
+
+/// The places of a cell's other spellings (not of its usual one's shape)
+/// where paradigms of one shape write different letters (Finnish
+/// `~selleen|~sellensa`, `~selleen|~sellensä`): by paradigm, cell,
+/// spelling and place in its ending, the class of `chosen` that gives the
+/// letter there, if one gives it on nearly all the words the paradigm
+/// builds that spelling of (each word once). Not the letters the lemma
+/// ends in.
+fn other_spellings(
+    orthography: &Orthography<'_>,
+    words: &[Word<'_>],
+    paradigms: &[Paradigm<'_>],
+    members: &[Vec<usize>],
+    chosen: &BTreeMap<Spot, (usize, u32)>,
+    classes: &[Class],
+) -> BTreeMap<(usize, usize, usize, usize), usize> {
+    let used: BTreeSet<usize> = chosen.values().map(|(k, _)| *k).collect();
+    // Per paradigm and cell, its own spellings but the usual one's shape.
+    let mut groups: Spellings<'_> = BTreeMap::new();
+    for (p, par) in paradigms.iter().enumerate() {
+        let shape: String = (par.lemma.chars())
+            .map(|c| {
+                if c == '~' || c == pattern::COPY {
+                    c
+                } else {
+                    '.'
+                }
+            })
+            .collect();
+        for (c, cell) in par.table.split('\t').enumerate() {
+            let mut variants = pattern::variants(cell).map(|v| v.rsplit_once('~'));
+            let Some(Some((head, end))) = variants.next() else {
+                continue;
+            };
+            let first = (head, end.chars().count());
+            for (i, v) in variants.enumerate() {
+                let Some((h, e)) = v else { continue };
+                let e: Vec<char> = e.chars().collect();
+                if (h, e.len()) == first {
+                    continue;
+                }
+                let key = (shape.clone(), c, i + 1, h, e.len());
+                groups.entry(key).or_default().push((p, e));
+            }
+        }
+    }
+    let mut out = BTreeMap::new();
+    for ((_, c, i, head, len), ps) in groups.iter().filter(|(_, ps)| ps.len() > 1) {
+        for at in 0..*len {
+            let mut set: Vec<char> = ps.iter().filter_map(|(_, e)| e.get(at).copied()).collect();
+            set.sort_unstable();
+            set.dedup();
+            if set.len() < 2 {
+                continue;
+            }
+            for (p, e) in ps {
+                let (Some(&letter), Some(par)) = (e.get(at), paradigms.get(*p)) else {
+                    continue;
+                };
+                // Not the letters the lemma ends in: the word shows them.
+                let lemma: Vec<char> =
+                    (par.lemma.rsplit_once('~')).map_or(Vec::new(), |(_, e)| e.chars().collect());
+                if at < lemma.len() && e.starts_with(&lemma) {
+                    continue;
+                }
+                let ending: String = e.iter().collect();
+                let spelling = format!("{head}~{ending}");
+                // The letters before the place in each word's form, once a
+                // word.
+                let befores: Vec<String> = members
+                    .get(*p)
+                    .into_iter()
+                    .flatten()
+                    .filter_map(|&w| {
+                        let stems = par.stems(orthography, words.get(w)?.letters)?;
+                        let form: Vec<char> = pattern::fill(&spelling, &stems).chars().collect();
+                        let before = form.len().checked_sub(len - at)?;
+                        Some(form.get(..before)?.iter().collect())
+                    })
+                    .collect();
+                if befores.is_empty() {
+                    continue;
+                }
+                let fits = used.iter().find(|&&k| {
+                    let Some(class) = classes.get(k).filter(|cl| cl.letters.contains(&letter))
+                    else {
+                        return false;
+                    };
+                    let wrong = (befores.iter())
+                        .filter(|b| class.value(b) != Some(letter))
+                        .count();
+                    #[allow(clippy::cast_precision_loss)]
+                    let ok = wrong as f64 <= BREAKS * befores.len() as f64;
+                    ok
+                });
+                if let Some(&k) = fits {
+                    out.insert((*p, *c, *i, at), k);
+                }
+            }
+        }
+    }
+    out
+}
+
 /// A class's examples: its letters, and what its places show on the words
 /// it is learned from and those it is checked on (see [`held_out`]).
 struct Pool<'w> {
@@ -568,6 +676,7 @@ pub(super) fn learn<'s>(
         }
     }
     chosen.retain(|_, (k, _)| names.get(*k).copied().flatten().is_some());
+    let more = other_spellings(orthography, words, &paradigms, &members, &chosen, &classes);
     // The tables rewritten.
     let mut paradigms = paradigms;
     for (p, par) in paradigms.iter_mut().enumerate() {
@@ -585,21 +694,29 @@ pub(super) fn learn<'s>(
                 .filter(|(s, _)| s.1 == c)
                 .filter_map(|(s, (k, _))| Some((s.2, (*names.get(*k)?)?, classes.get(*k)?)))
                 .collect();
-            if here.is_empty() {
+            let others = more.range((p, c, 0, 0)..(p, c + 1, 0, 0));
+            if here.is_empty() && others.clone().next().is_none() {
                 continue;
             }
             let rewritten: Vec<String> = pattern::variants(cell)
-                .map(|v| {
+                .enumerate()
+                .map(|(i, v)| {
                     let Some((h, e)) = v.rsplit_once('~') else {
                         return v.to_string();
                     };
                     let mut e: Vec<char> = e.chars().collect();
                     if h != head.as_str() || e.len() != end.len() {
-                        return v.to_string();
-                    }
-                    for &(at, name, class) in &here {
-                        if let Some(l) = e.get_mut(at).filter(|l| class.letters.contains(l)) {
-                            *l = name;
+                        // Another spelling: its own places.
+                        for (&(_, _, _, at), k) in others.clone().filter(|(s, _)| s.2 == i) {
+                            if let (Some(l), Some(Some(name))) = (e.get_mut(at), names.get(*k)) {
+                                *l = *name;
+                            }
+                        }
+                    } else {
+                        for &(at, name, class) in &here {
+                            if let Some(l) = e.get_mut(at).filter(|l| class.letters.contains(l)) {
+                                *l = name;
+                            }
                         }
                     }
                     format!("{h}~{}", e.into_iter().collect::<String>())
@@ -897,6 +1014,71 @@ mod tests {
         let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
         let map = values(&units(&all, &tier)).expect("values");
         assert_eq!(map.get(&None), Some(&'ä'), "{map:?}");
+    }
+
+    #[test]
+    fn a_cell_s_other_spelling_takes_the_class_letter_too() {
+        // Finnish allative with a possessive suffix, written two ways
+        // (`talolleen` or `talollensa`): back and front words' paradigms
+        // differ only in the second spelling's last letter. The inessive
+        // `-ssA` makes the class; with its letter in that spelling too, they
+        // are one paradigm.
+        let orthography = Orthography {
+            lowercase: true,
+            vowels: "aeiouyäö",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+        };
+        let consonants = ["k", "t", "p", "m", "s", "n", "h", "v", "l", "r"];
+        // Fewer front words than back, as in Finnish: the tier is the back
+        // vowels, the front value where there is none (the tier keeps the
+        // commoner letters).
+        let mut lexicon: Vec<(String, [String; 3], u16)> = Vec::new();
+        for (i, c) in consonants.iter().enumerate() {
+            for d in consonants {
+                let front: &[char] = if i % 2 == 0 { &['ä', 'ö'] } else { &[] };
+                for (vowels, a, p) in [(&['a', 'o', 'u'][..], 'a', 0), (front, 'ä', 1)] {
+                    for &v in vowels {
+                        let word = format!("{c}{v}{d}{v}");
+                        let forms = [word.clone(), format!("{word}ss{a}"), format!("{word}lleen")];
+                        lexicon.push((word, forms, p));
+                    }
+                }
+            }
+        }
+        let words: Vec<Word<'_>> = lexicon
+            .iter()
+            .map(|(w, forms, _)| Word {
+                letters: w,
+                forms: forms.iter().map(|f| Some(f.as_str())).collect(),
+            })
+            .collect();
+        let paradigm = |name: &'static str, table: &'static str| Paradigm {
+            name: Cow::Borrowed(name),
+            words: 0,
+            lemma: Cow::Borrowed("~"),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Borrowed(table),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let paradigms = vec![
+            paradigm("talo", "~\t~ssa\t~lleen|~llensa\t"),
+            paradigm("kylä", "~\t~ssä\t~lleen|~llensä\t"),
+        ];
+        let assignment: Vec<u16> = lexicon.iter().map(|w| w.2).collect();
+        let (laws, paradigms, assignment) = learn(&orthography, &words, paradigms, assignment);
+        assert!(!laws.is_empty());
+        let tables: Vec<&str> = paradigms.iter().map(|p| p.table.as_ref()).collect();
+        assert_eq!(tables, ["~\t~ssA\t~lleen|~llensA\t"]);
+        assert!(assignment.iter().all(|&a| a == 0));
     }
 
     #[test]

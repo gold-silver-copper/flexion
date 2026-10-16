@@ -10,10 +10,10 @@ use flexion::Choice;
 /// 12 rules and 17 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Dwieście 9, Sto 6, Pięćdziesiąt 5, Pięć 3, Pięćset 3, Dwa 2, Tyle 2, Obydwa 2, Trzydzieści 2, Dwanaście 1, Cztery 1, Siedem 1, Dwadzieścia 1, Siedemset 1, Osiemset 1],
+        "" => [Jedenaście 9, Sto 6, Pięćdziesiąt 5, Pięć 3, Pięćset 3, Dwa 2, Tyle 2, Obydwa 2, Trzydzieści 2, Dwanaście 1, Cztery 1, Siedem 1, Dwadzieścia 1, Siedemset 1, Osiemset 1],
         "a" => [Dwa 2, Obydwa 2, Dwadzieścia 1] regular,
-        "e" => [Dwieście 9, Tyle 2, Dwanaście 1] regular,
-        "ie" => [Dwieście 9, Dwanaście 1] regular,
+        "e" => [Jedenaście 9, Tyle 2, Dwanaście 1] regular,
+        "ie" => [Jedenaście 9, Dwanaście 1] regular,
         "le" => [Tyle 2] regular,
         "i" => [Trzydzieści 2] regular,
         "t" => [Pięćdziesiąt 5, Pięćset 3, Sto 1, Siedemset 1, Osiemset 1],
@@ -28,7 +28,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#dwa" => Dwa,
         "#dwadzieścia" => Dwadzieścia,
         "#dwanaście" => Dwanaście,
-        "#dwieście" => Dwieście,
+        "#dwieście" => Jedenaście,
         "#jeden" => Sto,
         "#oba" => Dwa,
         "#obydwa" => Obydwa,

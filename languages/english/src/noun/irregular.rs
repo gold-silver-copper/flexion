@@ -1,14 +1,13 @@
 //! What no declension gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with, then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 249 forms.
+/// 0 stems, 243 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aandblom	1	aandblomme
@@ -32,7 +31,6 @@ balabos	1	balabatim
 balebos	1	balebatim
 baleboste	1	balebatim
 ballotful	1	ballotsful
-banditti	0	bandit
 barbiton	1	barbitoi
 bedroomful	1	bedroomsful
 benennungsmotiv	1	bennenungsmotive
@@ -67,7 +65,6 @@ drapa	1	drapur
 egun	1	egungun
 eiruv	1	eiruvin
 eisteddfodwr	1	eisteddfodwyr
-emerita	0	emeritus
 encephaloradiculitis	1	encephaloradiculides
 englyn	1	englynion
 enterocoely	1	enterocoelia
@@ -91,7 +88,6 @@ gentilhomme	1	gentilshommes
 gepik	1	qepik
 geresh	1	gershayim
 giyoret	1	giyorot
-gnocchi	0	gnocco
 guernseywoman	1	guernseyswomen
 haal	1	ahwaal
 hal	1	ahwal
@@ -166,7 +162,6 @@ oliebol	1	oliebollen
 opanak	1	opanci
 ornis	1	ornithes
 paczek	1	paczki
-pampas	0	pampa
 pampushok	1	pampushky
 panegyris	1	panegyreis
 paralipsis	1	paraleipses
@@ -198,7 +193,6 @@ qintar	1	qindarka
 raqi	1	ruqat
 remex	1	remiges
 retiarius	1	retiari
-rigatoni	0	rigatone
 rosc	1	roscada
 rubai	1	rubaiyat
 rubel	1	rublei
@@ -227,7 +221,6 @@ spinitrix	1	spinitriches
 stereovillum	1	stereovilli
 stipes	1	stipites
 swagful	1	swagsful
-tagliatelle	0	tagliatella
 tefilla	1	tefillin
 tephillah	1	tephillin
 termes	1	termites

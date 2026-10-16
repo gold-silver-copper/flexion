@@ -7,10 +7,10 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 465 rules and 2,507 listed words.
+/// 465 rules and 2,506 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Open 58664, Heavy 1984, Soft 695, Right 30, Awful 22, Slim 13, Flat 10, Sad 9, Big 8, First 7, Inner 6, Flip 3, Thin 3],
+        "" => [Open 58663, Heavy 1984, Soft 695, Right 30, Awful 22, Slim 13, Flat 10, Sad 9, Big 8, First 7, Inner 6, Flip 3, Thin 3],
         "a" => [Open 103],
         "b" => [Open 14, Soft 5, Awful 5] regular,
         "ib" => [Awful 2] regular,
@@ -212,7 +212,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "mp" => [Open 14, Soft 5] regular,
         "op" => [Open 12] regular,
         "up" => [Open 10] regular,
-        "r" => [Open 615, Soft 30, Inner 6, Right 1],
+        "r" => [Open 614, Soft 30, Inner 6, Right 1],
         "ar" => [Open 364, Soft 8] regular,
         "ear" => [Open 24, Soft 8] regular,
         "inear" => [Open 11] regular,
@@ -580,7 +580,6 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "#benign" => Soft,
         "#bent" => Soft,
         "#bergy" => Open,
-        "#better" => Open,
         "#big" => Big,
         "#billowy" => Heavy,
         "#bingy" => Open,

@@ -14,17 +14,25 @@
 //!   `--hold-cells auto|<cells>`: hold those cells out of training and
 //!   score them; `--train-share 25|50|100`: train on that share of the
 //!   words; `--drop-cells 50`: take that share of each training table's
-//!   cells out);
-//! - `compare <a> <b>`: two saved `try` runs, paired word by word (or two
-//!   sweeps: every language's, with their time and memory);
+//!   cells out; `--pool`: small parts of speech on four tenths;
+//!   `--diagnose`: how well the paradigms build words apart from how well
+//!   one is chosen, and how much vowel length the letters tell;
+//!   `--without-editions`: learn from the main dump's words only);
+//! - `compare <a> <b>`: two saved `try` runs, paired word by word, in all
+//!   and by word group (`--apart <text>`: the cells whose name has it
+//!   apart from the rest) (or two sweeps: every language's, with their time
+//!   and memory);
 //! - `sweep <dir>`: `try --quick` for every language, one after another,
 //!   each saved in `<dir>` with its time and peak memory (`--only
-//!   a,b`: those languages; `--final`: the READMEs' tenth);
+//!   a,b`: those languages; `--final`: the READMEs' tenth; `--pool`: small
+//!   parts of speech on four tenths, as `try --pool`);
 //! - `audit`: a sample of wrong answers with their kind (`--cells
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
-//! - `inspect`: a word's readings and forms, and a sample of irregular forms.
+//! - `inspect`: a word's readings and forms (`--word a,b`; `--parts`: typed in full
+//!   with the dictionary's principal parts given; `--holdout`: learned without the
+//!   tenth `try` scores), and a sample of irregular forms.
 
 mod audit;
 mod bench;
@@ -38,7 +46,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b>";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -60,7 +68,13 @@ fn run() -> Result<(), String> {
     };
     if command == "compare" {
         let b = args.get(2).ok_or(USAGE)?;
-        return outcomes::compare(name.as_ref(), b.as_ref());
+        return outcomes::compare(name.as_ref(), b.as_ref(), flag("--apart").as_deref());
+    }
+    // Experiments skip the sound-law stage where its input is a run's
+    // before (see `flexion_train::stage`); builds and the READMEs' tenth
+    // never.
+    if matches!(command.as_str(), "try" | "sweep") && !args.iter().any(|a| a == "--final") {
+        flexion_train::stage::keep_in(workspace().join("target").join("stage-cache"));
     }
     if command == "sweep" {
         let only = flag("--only");
@@ -70,6 +84,7 @@ fn run() -> Result<(), String> {
             only.as_deref(),
             args.iter().any(|a| a == "--final"),
             args.iter().any(|a| a == "--diagnose"),
+            args.iter().any(|a| a == "--pool"),
         );
     }
     let lang = flexion_configs::by_name(name).ok_or(format!("no language {name}"))?;
@@ -122,6 +137,8 @@ fn run() -> Result<(), String> {
                 share: percent("--train-share", 100)?,
                 thin: percent("--drop-cells", 0)?,
                 diagnose: args.iter().any(|a| a == "--diagnose"),
+                pool: args.iter().any(|a| a == "--pool"),
+                main_only: args.iter().any(|a| a == "--without-editions"),
             };
             try_language(&lang, flag("--pos").as_deref(), &options)
         }
@@ -163,7 +180,8 @@ fn run() -> Result<(), String> {
             &lang,
             flag("--pos").as_deref().unwrap_or("noun"),
             flag("--word").as_deref(),
-            args.iter().any(|a| a == "--holdout"),
+            args.iter().any(|a| a == "--holdout").then_some(fold),
+            args.iter().any(|a| a == "--parts"),
         ),
         _ => Err(USAGE.into()),
     }
@@ -309,7 +327,20 @@ struct TryOptions {
     /// Also the diagnostics of how well the paradigms build words apart
     /// from how well one is chosen (see [`diagnose`]).
     diagnose: bool,
+    /// Score a part of speech with fewer than [`POOLED`] words on the
+    /// tenths [`POOL`] together (see [`try_language`]).
+    pool: bool,
+    /// Learn from the main dump's words only, not other editions'.
+    main_only: bool,
 }
+
+/// A part of speech with fewer words is scored on several development
+/// tenths together (`--pool`): about 5,000 held-out words a tenth.
+const POOLED: usize = 50_000;
+
+/// The development tenths a small part of speech is scored on together
+/// (none the READMEs', none another's sharpness tenth).
+const POOL: [u64; 4] = [2, 4, 6, 8];
 
 /// The training words of a part of speech for a `try`: every word outside
 /// tenth `fold`, `share` percent of them, with `thin` percent of each
@@ -318,6 +349,7 @@ fn training(d: &PosData, o: &TryOptions, lemma_cell: Option<usize>) -> Vec<Lexem
     d.lexemes
         .iter()
         .filter(|l| eval::bucket(&l.key) != o.fold && measure::kept(&l.key, o.share))
+        .filter(|l| !o.main_only || l.source == 0)
         .cloned()
         .map(|mut l| {
             if o.thin > 0 {
@@ -417,25 +449,75 @@ fn score_line(label: &str, words: usize, s: &eval::Score) -> String {
 }
 
 fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(), String> {
+    let data = load(lang)?;
+    let mut saved = outcomes::Saved::default();
+    try_tenth(lang, &data, only, o, &mut saved)?;
+    // A small part of speech, on more tenths: their outcomes saved together
+    // (compare pools them).
+    if o.pool {
+        for (part, d) in lang.parts.iter().zip(&data) {
+            if only.is_some_and(|o| o != part.name) || d.lexemes.len() >= POOLED {
+                continue;
+            }
+            for fold in POOL.into_iter().filter(|&f| f != o.fold) {
+                println!("{} {}: also tenth {fold}", lang.name, part.name);
+                let tenth = TryOptions {
+                    fold,
+                    save: None,
+                    ..o.clone()
+                };
+                try_tenth(lang, &data, Some(part.name), &tenth, &mut saved)?;
+            }
+        }
+    }
+    if let Some(path) = &o.save {
+        saved.write(path)?;
+        eprintln!("wrote {}", path.display());
+    }
+    Ok(())
+}
+
+/// `try` on one tenth (`o.fold`), its outcomes added to `saved`.
+fn try_tenth(
+    lang: &Language,
+    data: &[PosData],
+    only: Option<&str>,
+    o: &TryOptions,
+    saved: &mut outcomes::Saved,
+) -> Result<(), String> {
     let fold = o.fold;
     let settings = o.settings;
     let dev = eval::dev_of(fold);
-    let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
-    let mut saved = outcomes::Saved::default();
     // The language's marks model, from every part of speech's training
     // words (and those less the dev tenth, for the sharpness).
-    let trained = |l: &Lexeme| eval::bucket(&l.key) != fold && measure::kept(&l.key, o.share);
+    let trained = |l: &Lexeme| {
+        eval::bucket(&l.key) != fold
+            && measure::kept(&l.key, o.share)
+            && (!o.main_only || l.source == 0)
+    };
     let marks = |keep: &dyn Fn(&Lexeme) -> bool| {
-        flexion_train::marks(lang, &script.orthography(), &data, keep, settings)
+        flexion_train::marks(lang, &script.orthography(), data, keep, settings)
     };
     let train_marks = marks(&trained)?;
+    if o.diagnose && train_marks.is_some() {
+        length(
+            lang,
+            data,
+            &script.orthography(),
+            only,
+            &trained,
+            fold,
+            &train_marks,
+            settings,
+        );
+    }
     let fit_marks = if o.quick {
         None
     } else {
         marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
     };
-    for (part, d) in lang.parts.iter().zip(&data) {
+    for (part, d) in lang.parts.iter().zip(data) {
         if only.is_some_and(|o| o != part.name) {
             continue;
         }
@@ -524,6 +606,17 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             st.irregular_forms,
         );
         println!("  stages: {}", learned.trace.line());
+        let bytes = flexion_train::print::part_bytes(lang, part, &learned)?;
+        let total: usize = bytes.iter().map(|b| b.1).sum();
+        let shown: Vec<String> = bytes.iter().map(|(f, n)| format!("{f} {n}")).collect();
+        println!(
+            "  generated bytes {total}: {}; listed: {} by the paradigm choice, {} by relations, {} irregular forms",
+            shown.join(", "),
+            learned.grammar.paradigm.exceptions.len(),
+            learned.stats.relation_listed,
+            learned.stats.irregular_forms
+        );
+        saved.add_bytes(part.name, &bytes);
         let affixed: Vec<String> = g
             .paradigms
             .iter()
@@ -643,7 +736,12 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 g.heads
                     .least
                     .map_or("none by its length".to_string(), |l| format!(
-                        "of at least {l} letters"
+                        "of at least {l} letters but {} ({})",
+                        g.heads.not.len(),
+                        abbreviate(
+                            &g.heads.not.iter().map(AsRef::as_ref).collect::<Vec<&str>>(),
+                            12
+                        )
                     )),
                 g.heads.words.len(),
                 abbreviate(
@@ -665,7 +763,8 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             );
         }
         {
-            let main: Vec<&Lexeme> = train.iter().filter(|l| l.source == 0).collect();
+            // The floor learns from the same words as the grammar, every edition's.
+            let main: Vec<&Lexeme> = train.iter().collect();
             let out = eval::outcomes(
                 g,
                 &g.orthography,
@@ -727,6 +826,14 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             floor_cells(&out, &floored, &names);
             let (lo, hi) = measure::interval(&eval::by_word(&out));
             let (on, rest) = flexion_train::pipeline::strata(&train, g, &test, &out);
+            let phrases = eval::Score::of(&eval::phrases(&out, &test));
+            if phrases.forms > 0 {
+                println!(
+                    "  phrases (the dictionary writes with a space): top-1 {:.2}% of {} forms",
+                    100.0 * phrases.accuracy(),
+                    phrases.forms
+                );
+            }
             println!(
                 "  top-1 {:.2}% ({:.2} … {:.2}); any listed form {:.2}%; homograph ceiling {:.2}%; lemma spelling {:.2}% ({}); on a training word {:.2}% ({} words), new root {:.2}% ({} words)",
                 100.0 * s.accuracy(),
@@ -757,6 +864,13 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             inputs.extend((1..=3).map(eval::Input::Given));
         }
         let ids = outcomes::word_ids(&test);
+        let on = flexion_train::pipeline::on_training(&train, g, &test);
+        let groups = outcomes::groups(&test, &on);
+        let saving = outcomes::Words {
+            ids: &ids,
+            groups: &groups,
+            cells: &names,
+        };
         for input in inputs {
             let out = eval::outcomes(g, &g.orthography, &test, input, &learned.seen, |c| {
                 !is_held(c)
@@ -776,7 +890,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 .map(|&(n, r, p)| format!("{:.2}→{:.2} ({n})", p / n as f64, r as f64 / n as f64))
                 .collect();
             println!("    stated → right: {}", bins.join(", "));
-            saved.add(part.name, &outcomes::mode(input), &ids, &out);
+            saved.add(part.name, &outcomes::mode(input), &saving, &out);
         }
         if !held.is_empty() {
             let out = eval::outcomes(
@@ -792,11 +906,11 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 "{}",
                 score_line("held-out cells, from the headword", s.words, &s)
             );
-            saved.add(part.name, "held-cells", &ids, &out);
+            saved.add(part.name, "held-cells", &saving, &out);
         }
         editors::report(lang, part, &learned, &train, &test);
         if o.diagnose {
-            diagnose(&learned, &train, &test);
+            diagnose(&learned, &train, &test, settings);
         }
         if o.errors > 0 {
             let mut shown = 0;
@@ -851,10 +965,38 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             train_refs.len(),
             100.0 * s.accuracy()
         );
-    }
-    if let Some(path) = &o.save {
-        saved.write(path)?;
-        eprintln!("wrote {}", path.display());
+        // What the runtime reads of the relations, unchanged by pruning the
+        // rest: the same words' every answer with the relations whole.
+        let whole = flexion::Grammar {
+            relations: std::borrow::Cow::Borrowed(&learned.unpruned),
+            ..g.clone()
+        };
+        let known = flexion::Known::default();
+        let answers = |g: &flexion::Grammar<'_, u16, u16, u8>, l: &Lexeme| {
+            g.table(&l.lemma, &known)
+                .into_iter()
+                .map(|c| {
+                    c.into_iter()
+                        .map(|c| (c.form, c.probability))
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>()
+        };
+        let (mut changed, mut first) = (0, 0);
+        for l in &train_refs {
+            let (a, b) = (answers(g, l), answers(&whole, l));
+            if a != b {
+                changed += 1;
+                let firsts = |t: &[Vec<(String, f32)>]| -> Vec<Option<String>> {
+                    t.iter().map(|c| c.first().map(|x| x.0.clone())).collect()
+                };
+                first += usize::from(firsts(&a) != firsts(&b));
+            }
+        }
+        println!(
+            "  relations pruned: {changed} of {} training words' answers changed, {first} of them a first answer",
+            train_refs.len()
+        );
     }
     Ok(())
 }
@@ -928,6 +1070,7 @@ fn sweep(
     only: Option<&[&str]>,
     last: bool,
     diagnose: bool,
+    pool: bool,
 ) -> Result<(), String> {
     let langs: Vec<Language> = flexion_configs::all()
         .into_iter()
@@ -953,6 +1096,7 @@ fn sweep(
             save: Some(dir.join(format!("{}.tsv", lang.name))),
             share: 100,
             diagnose,
+            pool,
             ..TryOptions::default()
         };
         flexion_train::trace::reset_peak();
@@ -974,7 +1118,12 @@ fn sweep(
 /// paradigm choice lists though its rules give a paradigm that builds them
 /// alike; and how well a classifier with many more cues than the rules
 /// tells the best paradigm, with each kind of cue left out.
-fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
+fn diagnose(
+    learned: &learn::Learned<'_>,
+    train: &[Lexeme],
+    test: &[&Lexeme],
+    settings: choose::Settings,
+) {
     use flexion_train::ceiling::{self, Example};
     let g = &learned.grammar;
     let o = &g.orthography;
@@ -983,7 +1132,7 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
     let forms = sum(&|x| x.forms).max(1) as f64;
     let chosen_best = oracle
         .iter()
-        .filter(|x| x.best.is_some() && x.chosen == x.best)
+        .filter(|x| x.chosen.is_some_and(|c| x.best.contains(&c)))
         .count();
     println!(
         "  diagnosis ({} held-out words, typed in full, letters): the grammar {:.2}%, the paradigm building the most {:.2}%; the grammar's paradigm is that one for {:.2}% of words",
@@ -1027,29 +1176,313 @@ fn diagnose(learned: &learn::Learned<'_>, train: &[Lexeme], test: &[&Lexeme]) {
     let held: Vec<(&eval::Oracle, &Lexeme)> = oracle
         .iter()
         .filter_map(|x| Some((x, *test.get(x.word)?)))
-        .filter(|(x, l)| x.best.is_some() && count.get(l.key.as_str()) == Some(&1))
+        .filter(|(x, l)| !x.best.is_empty() && count.get(l.key.as_str()) == Some(&1))
         .collect();
-    let test_examples: Vec<(Example<'_>, usize)> = held
+    let test_examples: Vec<(Example<'_>, ceiling::Held<'_>)> = held
         .iter()
-        .filter_map(|(x, l)| Some((example(o, l), x.best?)))
+        .map(|(x, l)| {
+            let held = ceiling::Held {
+                best: &x.best,
+                built: &x.built,
+                forms: x.forms,
+            };
+            (example(o, l), held)
+        })
         .collect();
-    let rules =
-        held.iter().filter(|(x, _)| x.chosen == x.best).count() as f64 / held.len().max(1) as f64;
+    let rules = (
+        held.iter()
+            .filter(|(x, _)| x.chosen.is_some_and(|c| x.best.contains(&c)))
+            .count() as f64
+            / held.len().max(1) as f64,
+        held.iter()
+            .filter_map(|(x, _)| x.built.get(x.chosen?))
+            .sum::<usize>() as f64
+            / held.iter().map(|(x, _)| x.forms).sum::<usize>().max(1) as f64,
+    );
+    let pair = |(w, f): (f64, f64)| format!("{:.2}% / {:.2}%", 100.0 * w, 100.0 * f);
     let all = ceiling::score(&train_examples, &test_examples, None);
     let without: Vec<String> = ceiling::CUES
         .iter()
         .map(|&cue| {
             let s = ceiling::score(&train_examples, &test_examples, Some(cue));
-            format!("{cue:?} {:.2}%", 100.0 * s)
+            format!("{cue:?} {}", pair(s))
         })
         .collect();
     println!(
-        "    best paradigm told ({} words): by the rules {:.2}%, by a classifier with every cue {:.2}%; without each: {}",
+        "    best paradigm told ({} words; words / forms): by the rules {}, by a classifier with every cue {}; without each: {}",
         held.len(),
-        100.0 * rules,
-        100.0 * all,
+        pair(rules),
+        pair(all),
         without.join(", ")
     );
+    per_slot(g, &labelled, &held, settings);
+    // How much of the paradigm choice's probability the readings the
+    // runtime builds keep, by how many it keeps; and a table's time.
+    let readings: Vec<Vec<f32>> = held
+        .iter()
+        .map(|(_, l)| {
+            let r = g.readings(&l.full, &flexion::Known::default());
+            r.iter().map(|r| r.probability).collect()
+        })
+        .collect();
+    let kept: Vec<String> = [4, 8, 16]
+        .iter()
+        .map(|&k| {
+            let mass: f64 = readings
+                .iter()
+                .map(|r| {
+                    let all: f32 = r.iter().sum();
+                    f64::from(r.iter().take(k).sum::<f32>() / all.max(f32::MIN_POSITIVE))
+                })
+                .sum::<f64>()
+                / readings.len().max(1) as f64;
+            format!("{k}: {:.2}%", 100.0 * mass)
+        })
+        .collect();
+    let t = Instant::now();
+    for (_, l) in &held {
+        std::hint::black_box(g.table(&l.lemma, &flexion::Known::default()));
+    }
+    println!(
+        "    the paradigm choice's probability in its likeliest readings: {}; {:.0} µs a table (keeping {})",
+        kept.join(", "),
+        t.elapsed().as_secs_f64() * 1e6 / held.len().max(1) as f64,
+        flexion::READINGS,
+    );
+}
+
+/// Whether choosing each stem slot's endings apart (Polish `Ciąg` and
+/// `Język`, products of a singular and a plural choice) would build more
+/// forms: per slot, each paradigm's patterns in the slot's cells are its
+/// class there; the trainer's rules learned per slot on the training words'
+/// classes, each word's slots told apart and built as a paradigm of each
+/// class builds them (cells in no slot as its paradigm's), against the
+/// rules choosing whole paradigms, on the forms of the held-out words.
+fn per_slot(
+    g: &flexion::Grammar<'_, u16, u16, u8>,
+    labelled: &[(&Lexeme, usize)],
+    held: &[(&eval::Oracle, &Lexeme)],
+    settings: choose::Settings,
+) {
+    let o = &g.orthography;
+    let slots: Vec<Vec<usize>> = (g.slots.iter())
+        .map(|s| s.cells.iter().map(|&c| usize::from(c)).collect())
+        .collect();
+    if slots.len() < 2 {
+        return;
+    }
+    // Per slot: each paradigm's class, and per class the paradigm that
+    // first has it.
+    let mut class_of: Vec<Vec<u16>> = Vec::new();
+    let mut shown_by: Vec<Vec<usize>> = Vec::new();
+    for cells in &slots {
+        let mut seen: Vec<Vec<Option<String>>> = Vec::new();
+        let mut by: Vec<usize> = Vec::new();
+        let classes = (0..g.paradigms.len())
+            .map(|p| {
+                let mine: Vec<Option<String>> = (cells.iter())
+                    .map(|&c| {
+                        g.paradigms
+                            .get(p)?
+                            .pattern(&g.paradigms, c)
+                            .map(|x| x.to_string())
+                    })
+                    .collect();
+                let at = seen.iter().position(|s| *s == mine).unwrap_or_else(|| {
+                    seen.push(mine);
+                    by.push(p);
+                    seen.len() - 1
+                });
+                u16::try_from(at).unwrap_or(u16::MAX)
+            })
+            .collect();
+        class_of.push(classes);
+        shown_by.push(by);
+    }
+    let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
+    let choices: Vec<flexion::Choice<'_, u16>> = class_of
+        .iter()
+        .map(|classes| {
+            let examples: Vec<(String, u16)> = labelled
+                .iter()
+                .filter_map(|&(l, p)| Some((anchored(&l.key), *classes.get(p)?)))
+                .collect();
+            choose::learn(&examples, settings, |_, _| true)
+        })
+        .collect();
+    let in_slot: Vec<bool> = (0..g.cells)
+        .map(|c| slots.iter().any(|s| s.contains(&c)))
+        .collect();
+    let (mut whole, mut apart, mut forms) = (0, 0, 0);
+    for (x, l) in held {
+        let wanted: Vec<Option<String>> = (l.cells.iter().enumerate())
+            .map(|(cell, fs)| {
+                let want = fs.first()?;
+                (!eval::typed_back(o, g.lemma_cell, cell, want, &l.full))
+                    .then(|| o.read(want).letters)
+            })
+            .collect();
+        let right = |p: usize, cells: &dyn Fn(usize) -> bool| -> usize {
+            let built = g.built_as(&l.full, p);
+            (wanted.iter().zip(&built).enumerate())
+                .filter(|(c, (w, b))| {
+                    cells(*c) && w.is_some() && b.first().map(|f| o.read(f).letters) == **w
+                })
+                .count()
+        };
+        let Some(chosen) = x.chosen else { continue };
+        forms += x.forms;
+        whole += x.built.get(chosen).copied().unwrap_or(0);
+        apart += right(chosen, &|c| !in_slot.get(c).copied().unwrap_or(false));
+        for ((cells, choice), by) in slots.iter().zip(&choices).zip(&shown_by) {
+            let class = choice.read(&anchored(&l.key), g.smoothing, |_| true);
+            let p = class
+                .first()
+                .and_then(|r| by.get(usize::from(r.value)))
+                .copied()
+                .unwrap_or(chosen);
+            apart += right(p, &|c| cells.contains(&c));
+        }
+    }
+    let share = |n: usize| 100.0 * n as f64 / forms.max(1) as f64;
+    let classes: Vec<String> = (slots.iter().zip(&shown_by))
+        .map(|(s, by)| format!("{} cells, {} classes", s.len(), by.len()))
+        .collect();
+    println!(
+        "    each slot chosen apart ({}; {} paradigms): forms right {:.2}%, the paradigms chosen whole {:.2}%",
+        classes.join("; "),
+        g.paradigms.len(),
+        share(apart),
+        share(whole),
+    );
+}
+
+/// How much of the lemmas' vowel length their letters tell (see
+/// [`flexion_train::length`]): per part of speech, the held-out lemmas
+/// spelled right by the marks rules and by a classifier with many more cues,
+/// with each kind left out; the words whose key the dictionary spells two
+/// ways, and those it writes with no mark, apart.
+#[allow(clippy::too_many_arguments)]
+fn length(
+    lang: &Language,
+    data: &[PosData],
+    o: &flexion::Orthography<'_>,
+    only: Option<&str>,
+    trained: &dyn Fn(&Lexeme) -> bool,
+    fold: u64,
+    marks: &Option<flexion::Marks<'static>>,
+    settings: flexion_train::choose::Settings,
+) {
+    use flexion_train::length::{CUES, Model, Spelled};
+    let Some(marks) = marks else { return };
+    let mut all: Vec<(String, String, &str, bool)> = Vec::new();
+    for (part, d) in lang.parts.iter().zip(data) {
+        let Ok(shape) = flexion_train::shape(lang, part) else {
+            continue;
+        };
+        for l in &d.lexemes {
+            let letters = learn::spelled(o, shape.lemma_cell, l);
+            let test = eval::bucket(&l.key) == fold && l.source == 0;
+            if test || trained(l) {
+                all.push((o.key(&letters), letters, part.name, test));
+            }
+        }
+    }
+    all.sort();
+    all.dedup();
+    let mut spellings: std::collections::HashMap<&str, std::collections::BTreeSet<&str>> =
+        std::collections::HashMap::new();
+    for (k, l, _, _) in &all {
+        spellings.entry(k).or_default().insert(l);
+    }
+    fn spelled<'a>((k, l, p, _): &'a (String, String, &'a str, bool)) -> Spelled<'a> {
+        Spelled {
+            key: k,
+            letters: l,
+            part: p,
+        }
+    }
+    let train: Vec<Spelled<'_>> = all.iter().filter(|w| !w.3).map(spelled).collect();
+    let model = Model::learn(o, &train);
+    for part in &lang.parts {
+        if only.is_some_and(|o| o != part.name) {
+            continue;
+        }
+        let test: Vec<Spelled<'_>> = all
+            .iter()
+            .filter(|w| w.3 && w.2 == part.name)
+            .map(spelled)
+            .collect();
+        let group = |w: &Spelled<'_>| {
+            if spellings.get(w.key).is_some_and(|s| s.len() > 1) {
+                0
+            } else if w.letters == w.key {
+                1
+            } else {
+                2
+            }
+        };
+        let rooted = flexion::Marks {
+            part: part.name.into(),
+            ..marks.clone()
+        };
+        let rules = flexion::Marks {
+            roots: Vec::new().into(),
+            ..rooted.clone()
+        };
+        // Words right, and errors by group.
+        let score = |spell: &dyn Fn(&Spelled<'_>) -> String| {
+            let mut right = 0;
+            let mut wrong = [0; 3];
+            for w in &test {
+                if spell(w) == w.letters {
+                    right += 1;
+                } else if let Some(n) = wrong.get_mut(group(w)) {
+                    *n += 1;
+                }
+            }
+            (100.0 * f64::from(right) / test.len().max(1) as f64, wrong)
+        };
+        let by_rules = score(&|w| flexion::restore(o, &rules, settings.smoothing, w.key, w.key).0);
+        let every = score(&|w| model.spell(o, w, None));
+        let with_roots =
+            score(&|w| flexion::restore(o, &rooted, settings.smoothing, w.key, w.key).0);
+        let (roots, bytes) = (
+            marks.roots.len(),
+            marks.roots.iter().map(|r| r.0.len() + 13).sum::<usize>(),
+        );
+        // The letters a root writes, and those right.
+        let mut decided = (0, 0);
+        for w in &test {
+            for (n, v) in w.letters.chars().enumerate() {
+                if let Some(r) = rooted.root(w.key, n) {
+                    decided.0 += 1;
+                    decided.1 += usize::from(r == v);
+                }
+            }
+        }
+        let without: Vec<String> = CUES
+            .iter()
+            .map(|&cue| format!("{cue:?} {:.2}%", score(&|w| model.spell(o, w, Some(cue))).0))
+            .collect();
+        let groups = [0, 1, 2].map(|g| test.iter().filter(|w| group(w) == g).count());
+        println!(
+            "  {} lemma spelling ({} held-out words; {} spelled two ways, {} with no mark): the marks rules {:.2}%, a classifier with every cue {:.2}%; without each: {}; errors (two ways / no mark / the rest): rules {:?}, classifier {:?}; the rules with roots {:.2}% ({:?}; {roots} roots listed, {bytes} bytes; {} of {} letters roots write right)",
+            part.name,
+            test.len(),
+            groups[0],
+            groups[1],
+            by_rules.0,
+            every.0,
+            without.join(", "),
+            by_rules.1,
+            every.1,
+            with_roots.0,
+            with_roots.1,
+            decided.1,
+            decided.0,
+        );
+    }
 }
 
 /// Each cell's name: its group and its values' short names (`present 1 sg`).
@@ -1080,7 +1513,13 @@ fn cell_names(
 
 /// Show what was learned for one part of speech: the commonest paradigms and
 /// stress patterns, and a sample of the irregular forms.
-fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Result<(), String> {
+fn inspect(
+    lang: &Language,
+    pos: &str,
+    word: Option<&str>,
+    holdout: Option<u64>,
+    given: bool,
+) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
     let pi = lang
@@ -1093,7 +1532,7 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         data.get(pi).ok_or("data")?,
     );
     let mut shape = flexion_train::shape(lang, part)?;
-    let kept = |l: &Lexeme| !holdout || eval::bucket(&l.key) != eval::TEST;
+    let kept = |l: &Lexeme| holdout.is_none_or(|fold| eval::bucket(&l.key) != fold);
     let settings = choose::Settings::default();
     shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
     let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
@@ -1104,67 +1543,98 @@ fn inspect(lang: &Language, pos: &str, word: Option<&str>, holdout: bool) -> Res
         choose::Settings::default(),
     );
     let g = &learned.grammar;
-    if let Some(word) = word {
-        let bare = flexion::Grammar {
-            irregular: flexion::Irregular::default(),
-            ..g.clone()
-        };
-        let key = script
-            .orthography()
-            .key(&script.orthography().read(word).letters);
-        let listed: Vec<String> = d
-            .lexemes
-            .iter()
-            .filter(|l| l.key == key)
-            .map(|l| format!("{:?}", l.cells))
-            .collect();
-        println!("dictionary: {listed:?}");
-        println!(
-            "paradigm readings: {:?}",
-            g.paradigm
-                .read(&key, 2.0, |_| true)
+    if let Some(words) = word {
+        for word in words.split(',') {
+            println!("{word}");
+            let bare = flexion::Grammar {
+                irregular: flexion::Irregular::default(),
+                ..g.clone()
+            };
+            let key = script
+                .orthography()
+                .key(&script.orthography().read(word).letters);
+            let listed: Vec<String> = d
+                .lexemes
                 .iter()
-                .take(3)
-                .map(|r| (
-                    g.paradigms
-                        .get(usize::from(r.value))
-                        .map(|p| p.name.to_string()),
-                    r.probability
-                ))
-                .collect::<Vec<_>>()
-        );
-        if let Some(a) = &g.accent {
-            for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
-                let class = a.class_of(r.value);
-                let places: String = class
-                    .and_then(|c| a.pattern_of(c))
-                    .map(|p| {
-                        p.places
-                            .split('\t')
-                            .filter_map(|x| x.parse().ok())
-                            .map(place_letter)
-                            .collect()
-                    })
-                    .unwrap_or_default();
-                println!(
-                    "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
-                    r.value,
-                    class.map(|c| c.vowel),
-                    r.probability,
-                    r.rule.map_or("", |x| x.ending.as_ref()),
-                    r.rule
-                        .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
-                );
-            }
-        }
-        for cell in 0..g.cells {
-            let c: Vec<String> = bare
-                .candidates(word, cell, &flexion::Known::default())
-                .iter()
-                .take(3)
-                .map(ToString::to_string)
+                .filter(|l| l.key == key)
+                .map(|l| format!("{:?}", l.cells))
                 .collect();
-            println!("cell {cell}: {}", c.join(" | "));
+            println!("dictionary: {listed:?}");
+            // With `--parts`: the dictionary's principal parts given too.
+            let entry = d.lexemes.iter().find(|l| l.key == key);
+            let parts = if given {
+                flexion_train::parts(lang, part)?
+            } else {
+                Vec::new()
+            };
+            let forms: Vec<(usize, &str)> = parts
+                .iter()
+                .filter_map(|&c| Some((c, entry?.cells.get(c)?.first()?.as_str())))
+                .collect();
+            let typed = entry.filter(|_| given).map_or(word, |l| l.full.as_str());
+            let known = flexion::Known {
+                forms: &forms,
+                full: given,
+                ..flexion::Known::default()
+            };
+            println!(
+                "paradigm readings: {:?}",
+                g.paradigm
+                    .read(&key, 2.0, |_| true)
+                    .iter()
+                    .take(3)
+                    .map(|r| (
+                        g.paradigms
+                            .get(usize::from(r.value))
+                            .map(|p| p.name.to_string()),
+                        r.probability
+                    ))
+                    .collect::<Vec<_>>()
+            );
+            if let Some(a) = &g.accent {
+                for r in a.class.read(&key, 2.0, |_| true).iter().take(4) {
+                    let class = a.class_of(r.value);
+                    let places: String = class
+                        .and_then(|c| a.pattern_of(c))
+                        .map(|p| {
+                            p.places
+                                .split('\t')
+                                .filter_map(|x| x.parse().ok())
+                                .map(place_letter)
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    println!(
+                        "stress class {:?} vowel {:?} {places}: {:.2} (rule -{} {:?})",
+                        r.value,
+                        class.map(|c| c.vowel),
+                        r.probability,
+                        r.rule.map_or("", |x| x.ending.as_ref()),
+                        r.rule
+                            .map(|x| x.counts.iter().take(4).cloned().collect::<Vec<_>>())
+                    );
+                }
+            }
+            let names = cell_names(lang, part)?;
+            // Given its principal parts, the whole table as `try` scores it.
+            let table = if given {
+                g.table(typed, &known)
+            } else {
+                Vec::new()
+            };
+            for cell in 0..g.cells {
+                let c: Vec<String> = match table.get(cell) {
+                    Some(forms) => forms.iter().take(3).map(ToString::to_string).collect(),
+                    None => bare
+                        .candidates(typed, cell, &known)
+                        .iter()
+                        .take(3)
+                        .map(ToString::to_string)
+                        .collect(),
+                };
+                let name = names.get(cell).map_or("", String::as_str);
+                println!("cell {cell} ({name}): {}", c.join(" | "));
+            }
         }
         return Ok(());
     }

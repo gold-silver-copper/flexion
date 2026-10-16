@@ -1,22 +1,19 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~οι`, `χῑλῐοι`: the stem and `οι`).
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~- like πισῠρες\"`: the slot's cells are `πισῠρες`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom_m` (sg, du, pl)
 /// `nom_f` (sg, du, pl)
 /// `nom_n` (sg, du, pl)
@@ -34,7 +31,7 @@ use flexion::Paradigm;
 /// `voc_n` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem numeral: $s0:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
      $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
@@ -139,8 +136,8 @@ macro_rules! view {
 pub enum Declension {
     /// Like `χῑλῐοι`: 11 words.
     Χῑλῐοι,
-    /// Like `πισῠρες`: 3 words.
-    Πισῠρες,
+    /// Like `τεσσᾰρες`: 3 words.
+    Τεσσᾰρες,
     /// Like `δῠο`: 1 words.
     Δῠο,
     /// Like `τρεις`: 1 words.
@@ -157,7 +154,7 @@ impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 7] = [
         Declension::Χῑλῐοι,
-        Declension::Πισῠρες,
+        Declension::Τεσσᾰρες,
         Declension::Δῠο,
         Declension::Τρεις,
         Declension::Δεκᾰτεσσᾰρες,
@@ -193,15 +190,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     acc_m: _, _, "~ους";
     acc_f: _, _, "~ᾱς";
     ),
-    // Πισῠρες: 3 words (τεσσᾰρες, τεττᾰρες, πισῠρες). Like Χῑλῐοι, except in 8 cells: nom_m sg, nom_m pl, nom_f pl, dat_m pl, dat_f pl, dat_n pl, ….
-    declension!("πισῠρες", 3, "~ες", like Χῑλῐοι;
-    nom_m: "~ες", _, "~ες";
-    nom_f: _, _, "~ες";
-    dat_m: _, _, "~σῐ|~σῐν";
-    dat_f: _, _, "~σῐ|~σῐν";
-    dat_n: _, _, "~σῐ|~σῐν";
-    acc_m: _, _, "~ᾰς";
-    acc_f: _, _, "~ᾰς";
+    // Τεσσᾰρες: 3 words (τεσσᾰρες, τεττᾰρες, πισῠρες). Like Χῑλῐοι, except in 1 cell: acc_n pl.
+    declension!("τεσσᾰρες", 3, "~ες", like Χῑλῐοι;
+    stem lemma: "~- like πισῠρες";
+    acc_n: _, _, derived;
     ),
     // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 18 cells: nom_m sg, nom_m du, nom_m pl, nom_f du, nom_f pl, nom_n pl, ….
     declension!("δῠο", 1, "~ο", like Χῑλῐοι;

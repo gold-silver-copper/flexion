@@ -11,7 +11,9 @@ use std::borrow::Cow;
 /// different cells.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Slot<'a> {
-    /// What most of its cells' names begin with (`aorist`).
+    /// What every one of its cells' names has and no other cell's has all
+    /// of (`aorist_pass`); else `lemma`, the slot of the lemma's cell, or
+    /// `rest`.
     pub name: Cow<'a, str>,
     /// Its cells, in order.
     pub cells: Cow<'a, [u16]>,

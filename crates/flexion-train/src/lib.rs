@@ -62,6 +62,7 @@ pub mod extract;
 pub mod kaikki;
 pub mod laws;
 pub mod learn;
+pub mod length;
 pub mod measure;
 pub mod par;
 pub mod pipeline;
@@ -70,6 +71,7 @@ pub mod relations;
 pub mod script;
 pub mod skeleton;
 pub mod spec;
+pub mod stage;
 pub mod stems;
 pub mod trace;
 
@@ -83,7 +85,7 @@ pub fn marks(
     data: &[extract::PosData],
     keep: impl Fn(&extract::Lexeme) -> bool,
     settings: choose::Settings,
-) -> Result<Option<flexion::Choice<'static, char>>, String> {
+) -> Result<Option<flexion::Marks<'static>>, String> {
     let mut words = Vec::new();
     for (part, d) in lang.parts.iter().zip(data) {
         let lemma_cell = shape(lang, part)?.lemma_cell;

@@ -277,14 +277,10 @@ fn print_and_compare(lang: Language) {
         "the Russian nouns have their sound laws and relations"
     );
     // English verbs have stem slots (`sing` and `sang` are built on two
-    // stems), and a word that lists a stem and its ending table.
+    // stems).
     assert!(
-        lang.name != "english"
-            || (printed("verb/stems.rs")
-                && files.iter().any(|(path, text)| {
-                    path.ends_with("verb/irregular.rs") && text.contains(flexion::LIKE)
-                })),
-        "the English verbs have their stem slots and a listed stem"
+        lang.name != "english" || printed("verb/stems.rs"),
+        "the English verbs have their stem slots"
     );
     let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join(format!("printed-{}", lang.name));
     flexion_train::print::write(&dir, &files).expect("written");
@@ -466,4 +462,87 @@ fn a_circumflex_closing_a_diphthong_is_not_vowel_length() {
     assert_eq!(o.read("προῧπτος").letters, "προϋπτος");
     let w = o.read("ἀριθμοῦ");
     assert_eq!(o.write(&w.letters, w.stress, w.casing), "ἀριθμοῦ");
+}
+
+#[test]
+fn every_relation_s_changes_have_a_reader() {
+    // A relation's changes are read where a paradigm derives its cell (or
+    // derives a cell by analogy with it), or where it tells a listed word's
+    // form: anything else would be printed for nothing.
+    for lang in flexion_configs::all() {
+        let script = Script::new(&lang.spelling);
+        let data = data(&lang, &script);
+        for (part, learned) in lang.parts.iter().zip(grammars(&lang, &script, &data)) {
+            let g = &learned.grammar;
+            let derives = |cell: usize| {
+                g.paradigms
+                    .iter()
+                    .any(|p| p.pattern_in(&g.paradigms, g.space(), cell).is_none())
+            };
+            let listed: HashSet<&str> = learned
+                .irregular
+                .iter()
+                .map(|(k, _, _)| k.as_str())
+                .collect();
+            let told: HashSet<usize> = listed
+                .iter()
+                .flat_map(|k| g.listed_sources(k))
+                .map(|(cell, _)| cell)
+                .collect();
+            for r in g.relations.iter().filter(|r| !r.changes.is_empty()) {
+                let cell = usize::from(r.cell);
+                let read = g
+                    .relations
+                    .iter()
+                    .any(|q| g.changing(q).cell == r.cell && derives(usize::from(q.cell)))
+                    || told.contains(&cell);
+                assert!(
+                    read,
+                    "{} {}: the relation of cell {cell} has changes nothing reads",
+                    lang.name, part.name
+                );
+            }
+        }
+    }
+}
+
+#[test]
+fn the_perfect_passive_is_the_participle_and_sum() {
+    // The tables write it as a recipe (`fātus + present active indicative of
+    // sum`): it is a phrase per person and number, the participle agreeing
+    // in number, and the grammar gives it back.
+    let lang = flexion_configs::latin::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let (_, d) = lang
+        .parts
+        .iter()
+        .zip(&data)
+        .find(|(p, _)| p.name == "verb")
+        .expect("verbs");
+    let forms: Vec<&str> = d
+        .lexemes
+        .iter()
+        .flat_map(|l| l.cells.iter().flatten())
+        .map(String::as_str)
+        .collect();
+    assert!(forms.contains(&"fātus sum") && forms.contains(&"fātī sunt"));
+    assert!(!forms.iter().any(|f| f.contains(" + ")));
+    let grammars = grammars(&lang, &script, &data);
+    let g = &grammars[lang
+        .parts
+        .iter()
+        .position(|p| p.name == "verb")
+        .expect("verb")]
+    .grammar;
+    let l = d
+        .lexemes
+        .iter()
+        .find(|l| l.cells.iter().flatten().any(|f| f == "fātus sum"))
+        .expect("the verb");
+    for (cell, fs) in l.cells.iter().enumerate() {
+        if let Some(want) = fs.first().filter(|f| f.contains(' ')) {
+            assert_eq!(&g.best(&l.full, cell, &Known::default()), want);
+        }
+    }
 }

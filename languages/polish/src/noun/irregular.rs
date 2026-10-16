@@ -1,90 +1,62 @@
 //! What no declension gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with (`rest`, `amfimakr- like obraz`), then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 127 stems, 957 forms.
+/// 108 stems, 882 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"aaron	10	aaronem
-absolucyja	0	absolucyjå
-abuna	4	abunowi
+        r#"abuna	4	abunowi
 adagio	13	adagio
 adiudykacya	5	adiudykacyaom	7	adiudykacyae	11	adiudykacyach
-adracjonał	noun_pl	adracyjonał- like obraz	noun_sg	adracyjonał- like założenie
 adresat	7	adresatów
-adzamogłan	3	adzamogłan
-adziamugłan	3	adziamugłan
 aerosanie	3	aerosań
-afekcyja	0	afekcyjå	6	afekcyją
 aga	1	agowie
 agonista	3	agonistów
 agresor	7	agresorów
-agresta	7	agrest
-akademija	noun_pl	akademij- like regaty	noun_sg	akademij- like stara
-akcesoryja	1	akcesoryjå	7	akcesoryjå
 alkalifil	3	alkafili
 alonż	3	alożny
-amatys	2	amatys
-amatyst	3	amatystow
 ambasador	7	ambasadorów
 amerykaniec	7	amerykańców	12	amerykańcze
-amfimacer	noun_pl	amfimakr- like obraz	7	amfimakry
-amfiteatrum	9	amfiteatry
-amomum	noun_pl	amom- like obraz
-anioł	noun_pl	aniele- like live
+amfimacer	rest	amfimakr- like obraz	7	amfimakry
+anioł	rest	aniele- like live
 ansa	1	anse	7	anse
 antecesor	7	antecesorów
 antychryst	10	antychryście	12	antychryście
 aprowizator	1	aprowizatorze
 aranżer	7	aranżerów
-archa	12	arko
-archanioł	noun_pl	archaniele- like live	3	archanioły
-archanjoł	7	archanjoły	9	archanjoły	12	archaniele
-armonia	2	armoniej
-armoniak	2	armoniaku	6	amoniak
+archanioł	rest	archaniele- like live	3	archanioły
 asan	4	acanu
 asesor	3	asesorzy
-atmosferyki	1	amtmosferyki	3	amtmosferyków	5	amtmosferykom	7	amtmosferyki
+atmosferyki	rest	amtmosferyk- like pazur
 auriga	1	aurogiwie
 baba-chłop	4	babie-chłopowi	12	babie-chłopie
 bajacz	7	bajaczy
-bajtko	9	baćkami
-bakalarz	3	bakałarzy	7	bakałarze
 baklava	7	baklav
 balownik	7	balowników
-balwierz	7	balwierzy
 bankrut	7	bankrutów
 baronostwo	3	baronostwa	5	baronostwu	7	baronostwo	11	baronostwie
 batko	4	batku	8	batkiem	12	batko
 bawół	6	bawoła
 bałt	7	bałtów
-bdła	3	bedł	5	bdłam
-bedawija	noun_pl	bedewij- like obraz
 beksa-lala	1	beksy-lale	3	beks-lal	7	beksy-lale	13	beksy-lale
 belg	8	belgiem
 bezbek	7	bezbeków
-bezdeń	noun_pl	bezdni- like przestrzeń
-białodrzew	noun_sg	białodrzew- like założenie	4	białodrzewiowi	5	białodrzewiom
+bezdeń	rest	bezdni- like przestrzeń
+białodrzew	lemma	białodrzew- like obraz
 biczownik	7	biczowników
 bidaczysko	7	bidaczysków
 bidak	7	bidaków
 biedaczysko	7	biedaczysków
 biedak	7	biedaków
 biegacz	7	biegaczy
-biodegradalność	noun_pl	tantum-sci- like sieć	noun_sg	tantum-sć- like założenie	7	tantum-sci
-biodegradowalność	noun_pl	tantum-sci- like sieć	noun_sg	tantum-sć- like założenie	7	tantum-sci
-biokorozja	noun_pl	tantum-sj- like linia	noun_sg	tantum-sj- like babka	7	tantum-sje
 bit	2	bit
-bliźniec	noun_pl	bliźńc- like patron
-bluźnierz	noun_pl	bluźniérz- like jaźwiec	6	bluźniérza	9	bluźniérzmi	11	bluźniérzoch
-bniec	noun_pl	bieńc- like jaźwiec
-bociek	noun_pl	boćk- like byk	6	boćka
+bniec	rest	bieńc- like jaźwiec
+bociek	rest	boćk- like konik	6	boćka
 bogacz	7	bogaczy
 bojownik	7	bojowników
 boruta	7	borutów
@@ -92,10 +64,9 @@ bożec	1	bożcy
 brakorób	7	brakorobów
 braniec	7	brańców
 brataniec	7	bratańców
-brew	noun_pl	brwi- like regaty
+brew	rest	brwi- like dudy
 brizol	2	brizoli
 brosma	3	brosm
-bryzelija	2	bryzelijej
 brzuchacz	7	brzuchaczy
 brązownik	7	brązowników
 buchacz	7	buchaczy
@@ -103,16 +74,15 @@ budowlaniec	7	budowlańców
 budyń	2	budyniu
 buntownik	7	buntowników
 burczymucha	3	burczymuchów	7	burczymuchów
-byl	8	bylim
 bóg	4	bogu	7	bogów	8	bogiem	12	boże
 bękart	7	bękartów
-błazen	noun_pl	błaźnie- like live
+błazen	rest	błaźnie- like live
 błąkacz	7	błąkaczy
 cannolo	1	cannoli	3	cannoli	5	cannoli	7	cannoli
 casanova	1	casanovie
 cenzor	7	cenzorów
-chachoł	noun_pl	chach- like konował	6	chachła	7	chachłów
-chrzest	noun_pl	chrz- like grunt	7	chrzty
+chachoł	rest	chach- like warchoł	6	chachła	7	chachłów
+chrzest	rest	chrz- like grunt	7	chrzty
 chłopek-roztropek	6	chłopka-roztropka	7	chłopków-roztropków
 chłopiec	4	chłopcu
 chłoptyś	7	chłoptysiów
@@ -127,21 +97,20 @@ ciułacz	7	ciułaczy
 cizia	3	ciź
 co	2	czego	4	czemu	8	czym	10	czym
 cokolwiek	2	czegokolwiek	4	czemukolwiek	8	czymkolwiek	10	czymkolwiek
-cokół	noun_pl	coko- like konował
+cokół	rest	coko- like warchoł
 cośkolwiek	2	czegośkolwiek	4	czemuśkolwiek	8	czymśkolwiek	10	czymśkolwiek
-cud	1	cuda	7	cuda
+cud	rest	cud- like media
 cudak	7	cudaków
-cyboryjum	1	cyboryjå
 cykor	7	cykorów
 czarnuch	7	czarnuchów
 czarodziej	3	czarodziei	7	czarodziei
 czarownik	7	czarowników
 czary-mary	3	czarów-marów
 czeczeniec	7	czeczeńców
-cześć	noun_pl	czci- like sieć
+cześć	rest	czci- like sieć
 czynownik	7	czynowników
 czynszownik	7	czynszowników
-czyściec	noun_sg	czyściec- like założenie
+czyściec	0	czyściec
 człowiek	1	ludzie	3	ludzi	5	ludziom	7	ludzi	12	człowiecze
 cóż	2	czegóż	4	czemuż	8	czymże	10	czymże
 dech	2	tchu	4	tchu	8	tchem	10	tchu	12	tchu
@@ -159,7 +128,6 @@ dorszyk	3	dorszów
 drag	6	draga
 drop	12	dropie
 drzwi	3	drzwi
-drżeń	3	drżeniów
 duperele	2	duperelom	4	duperelami	5	duperelach
 dureń	3	durniów	7	durniów
 dyplomatołek	7	dyplomatołków
@@ -169,44 +137,42 @@ dziecioruch	7	dziecioruchów
 dzieciorób	7	dzieciorobów
 dziegieć	2	dziegciu
 dziekan	7	dziekanów
-dziewierz	7	dziewierzy
-dzień	noun_pl	dni- like regaty	noun_sg	dzień- like założenie
+dzień	lemma	dzień- like obraz	rest	dni- like dudy	8	dniem
 dziumdzia	3	dziumdź
 dżinn	7	dżinnów
-eksmąż	noun_pl	eksmęż- like król
+eksmąż	rest	eksmęż- like król
+ekspens	rest	ekspens- like media
 endemit	6	endemitu
 eunuch	7	eunuchów
 europoseł	10	europośle	12	europośle
-ewanjelista	1	ewanjelistowie	7	ewanjelisty
-ezt	noun_pl	ezt- like live
+ezt	rest	ezt- like live
 faksymile	3	faksymiliów
-familija	3	familijej	10	familijej
+feminatyw	rest	feminatyw- like media
 funk	6	funku
 fąfel	1	fąfele
 gagatek	7	gagatków
 gamrat	7	gamratów
 garncarnia	3	grancarni
-gate	noun_pl	ga- like grunt
+gate	rest	ga- like grunt
 gazda	4	gaździe	10	gaździe
 gazownik	7	gazowników
-gałąź	noun_pl	gałęzi- like przestrzeń	noun_sg	gałąź- like założenie
-gańdźa	noun_pl	gańdzi- like linia	noun_sg	gańdzi- like babka
+gałąź	lemma	gałąź- like obraz	rest	gałęzi- like przestrzeń
 geologia	8	geologia
 gniazdo	10	gnieździe
 gogo	4	gogu	8	gogiem	12	gogo
 goniec	7	gońców
-gołąb	noun_pl	gołębi- like byl	6	gołębia
-gościec	noun_sg	gościec- like założenie
+gołąb	rest	gołębi- like kleszcz	6	gołębia
+gościec	0	gościec
 gość	7	gości	9	gośćmi
-grudzień	noun_sg	grudzień- like założenie
+grudzień	lemma	grudzień- like obraz
 gwałtownik	7	gwałtowników
 gwiazdor	7	gwiazdorów
-gwóźdź	noun_pl	gwoździ- like gospodarz
+gwóźdź	rest	gwoździ- like gospodarz
 gzło	3	giezł
-głasnost	noun_pl	głasnosti- like sieć	7	głasnosti
+głasnost	rest	głasnosti- like sieć	7	głasnosti
 głupek	7	głupków
+hacel	7	hacelów
 harcownik	7	harcowników
-harmonija	noun_sg	harmonij- like stara	4	harmonijej	7	harmonij
 hrabia	8	hrabim
 hucuł	1	huculi
 hurtownik	7	hurtowników
@@ -216,23 +182,21 @@ interlingua	4	interlingwie	6	interlingwę	8	interlingwą	10	interlingwie	12	inte
 ja	1	my	3	nas	4	mnie	5	nam	6	mnie	7	nas	8	mną	10	mnie
 jajco	8	jajcem
 japoniec	7	japońców
-jastrząb	noun_pl	jastrzębi- like byl	6	jastrzębia
+jastrząb	rest	jastrzębi- like kleszcz	6	jastrzębia
 jaśniepan	4	jaśniepanu	10	jaśniepanu
-jeden	noun_pl	jedn- like woźny	6	jednego	7	jednych	12	jeden
-jedno	noun_pl	jedn- like woźny	12	jedno
+jeden	rest	jedn- like woźny	6	jednego	7	jednych	12	jeden
+jedno	rest	jedn- like woźny	12	jedno
 jeniec	7	jeńców
 jeździec	1	jeźdźcy	12	jeźdźcze
 junkier	1	junkrowie
-jurodiwyj	noun_pl	jurodiw- like woźny	6	jurodiwego	7	jurodiwych	12	jurodiwyj
+jurodiwyj	rest	jurodiw- like woźny	6	jurodiwego	7	jurodiwych	12	jurodiwyj
 juror	7	jurorów
 kalander	7	kalandrów
 kameduła	1	kameduli
 kamrat	7	kamratów
 kandydat	7	kandydatów
 kapeć	6	kapcia
-kapslownia	noun_pl	kasplowni- like różnica	noun_sg	kasplowni- like babka	7	kasplownie
 karo	12	karze
-karw	0	kårw	1	karw
 kat	4	katu
 katol	1	katola
 katownik	7	katowników
@@ -244,7 +208,7 @@ kić	3	kiciów	4	kiciu
 kiściec	0	kiściec
 klecha	3	klechów	7	klechów
 knypek	7	knypków
-kocioł	noun_pl	kotł- like lis
+kocioł	rest	kotł- like lis
 koczownik	7	koczowników
 kojo	3	koi
 kolej	2	kolei	3	kolei	4	kolei	10	kolei	12	kolei
@@ -260,31 +224,31 @@ kopidół	1	kopidołowie
 korzec	2	korcu
 kosaciec	0	kosaciec
 kot	4	kotu
-kozioł	noun_pl	kozł- like lis	6	kozła
+kozioł	rest	kozł- like lis	6	kozła
 koń	9	końmi
-kościec	noun_sg	kościec- like założenie
-kościół	noun_pl	kościele- like live
+kościec	0	kościec
+kościół	rest	kościele- like live
 kość	9	kośćmi
 krosno	10	krośnie
 krzykacz	7	krzykaczy
-króciec	noun_sg	króciec- like założenie
+króciec	0	króciec
 kręciek	4	kręćkowi	6	kręćka	8	kręćkiem	10	kręćku	12	kręćku
 krętacz	7	krętaczy
 ksiądz	1	księża	3	księży	4	księdzu	5	księżom	7	księży	12	księże
-kstałt	9	kstałty	11	kstałciech
 kto	4	komu	6	kogo	8	kim	10	kim
 ktokolwiek	4	komukolwiek	6	kogokolwiek	8	kimkolwiek	10	kimkolwiek
 ktoś	4	komuś	6	kogoś	8	kimś	10	kimś
 któż	4	komuż	6	kogoż	8	kimże	10	kimże
 kupido	4	kupidowi	6	kupida	12	kupidzie
 kupno-sprzedaż	3	kupien-sprzedaży
-kwiecień	noun_pl	kwietni- like byl
+kwiecień	rest	kwietni- like kleszcz
 kłusownik	7	kłusowników
 lakiernik	7	lakiernicy
-las	noun_pl	lesie- like live
+las	rest	lesie- like live
 lato	10	lecie
 led	2	led-a	10	led-zie	12	led-zie
 lekkoduch	7	lekkoduchów
+leszy	7	leszych
 lew	4	lwu	6	lwa
 leworęki	7	leworękich
 leżuch	7	leżuchów
@@ -302,15 +266,14 @@ matołek	7	matołków
 matula	12	matulu
 mech	2	mchu
 melepeta	7	melepety
-meszt	noun_pl	mesz- like gnat
+meszt	rest	meszt- like pazur
 miasto	10	mieście
 miedziownik	7	miedziowników
 mieszkaniec	7	mieszkańców
 miotacz	7	miotaczy
 mirra	4	mirze	10	mirze
 misie-patysie	1	misie-patysie	3	misiów-patysiów	7	misie-patysie	13	misie-patysie
-mięsiąc	noun_pl	mięsiąc- like jaźwiec
-monobrew	noun_pl	monobrwi- like regaty
+monobrew	rest	monobrwi- like dudy
 monopolowy	7	monopolowych
 morga	3	mórg
 mosiek	1	mośkowie
@@ -320,10 +283,10 @@ mufti	1	muftiowie
 mućka	3	muciek
 mułła	4	mulle	10	mulle
 my	3	nas	5	nam	7	nas
-mysz	1	myszy	7	myszy
-myśl	1	myśli	7	myśli
-mól	noun_pl	mol- like byl
-mąż	noun_pl	męż- like król
+mysz	rest	mysz- like dudy	3	myszy
+myśl	rest	myśl- like dudy	3	myśli
+mól	rest	mol- like kleszcz
+mąż	rest	męż- like król
 mędrzec	12	mędrcze
 męka	3	mąk
 mężczyzna	1	mężczyźni
@@ -331,16 +294,15 @@ mężuś	3	mężusi	7	mężusi
 młodożeniec	7	młodożeńców
 młodzieniec	7	młodzieńców
 naciągacz	7	naciągaczy
-nasób	noun_sg	násób- like założenie	7	násobom
 nibyliść	9	nibyliśćmi
 nic	2	niczego	4	niczemu	8	niczym	10	niczym
 niedbaluch	7	niedbaluchów
-niejeden	noun_pl	niejedn- like woźny	6	niejednego	7	niejednych	12	niejeden
+niejeden	rest	niejedn- like woźny	6	niejednego	7	niejednych	12	niejeden
 nieprzyjaciel	3	nieprzyjaciół	7	nieprzyjaciół
 nierób	7	nierobów
 nieuk	1	neuki
 niewiasta	4	niewieście	10	niewieście
-nikiel	noun_pl	nikl- like obraz
+nikiel	rest	nikl- like obraz
 nikt	4	nikomu	6	nikogo	8	nikim	10	nikim
 ninja	1	ninjowie	3	ninjów	7	ninjów
 nić	9	nićmi
@@ -350,36 +312,33 @@ nowożeniec	7	nowożeńców
 nożownik	7	nożowników
 nurogęś	9	nurogęśmi
 nów	3	nowiów
-nóż	noun_pl	noż- like byl
+nóż	rest	noż- like kleszcz
 obec	2	obcy	3	obcy	4	obcy	8	obcą	10	obcy	12	obcy
-obiad	noun_pl	obiedzie- like live
+obiad	rest	obiedzie- like live
 oblubieniec	7	oblubieńców
-obmowca	4	obmowcom	7	obmowce	9	obmowcą
 obmównik	7	obmówników
 obrzezaniec	7	obrzezańców
-obywaciel	5	obywacielem
 obłąkaniec	7	obłąkańców
-ociec	noun_pl	oćc- like król	0	ociec
+ocel	7	ocelów
+ociec	rest	oćc- like król	0	ociec
 odmieniec	7	odmieńców
-odpowiedanie	noun_pl	odpowiedani- like przepowiedanie	8	odpowiadanim
 odpowiednik	7	odpowiedniki
 odszczepieniec	7	odszczepieńców
 ogieniek	6	ogieniek	8	ogieńkiem
-ojciec	noun_pl	ojc- like patron	4	ojcu	6	ojca	7	ojców	10	ojcu
+ojciec	rest	ojc- like patron	4	ojcu	6	ojca	7	ojców	10	ojcu
 ojczysko	6	ojczyska
-oko	1	oczy	3	oczu	5	oczom	7	oczy
+oko	rest	ocz- like dudy	3	oczu
 okowy	3	oków
-on	noun_pl	j- like woźny	6	jego	8	nim	10	nim
-ona	noun_pl	j- like stara	6	ją	8	nią	10	niej
+on	rest	j- like woźny	6	jego	8	nim	10	nim
+ona	rest	j- like stara	6	ją	8	nią	10	niej
 oni	3	ich	5	im	7	ich
-ono	noun_pl	j- like woźny	6	je	8	nim	10	nim
+ono	rest	j- like woźny	6	je	8	nim	10	nim
 onu	2	jenu	4	wu	6	nu	8	num	10	num
 ony	3	ich	5	im	7	ni
-opowiedacz	9	opowiedaczem
 orzeł	4	orłu
 osiec	6	ośca
-osieł	noun_pl	os- like konował	4	osłu
-osioł	noun_pl	osł- like lis	4	osłu	6	osła
+osieł	rest	os- like warchoł	4	osłu
+osioł	rest	osł- like lis	4	osłu	6	osła
 oszukaniec	7	oszukańców
 otręby	3	otrąb
 owca	3	owiec
@@ -392,31 +351,29 @@ paparazzo	1	paparazzi	3	paparazzich	5	paparazzim	7	paparazzich
 papla	7	paple
 parobek	1	parobcy
 partacz	7	partaczy
-partyja	noun_sg	partyj- like stara
 parób	7	parobów
 pastuch	7	pastuchów
 patyś	6	patyś
-paweza	11	pawęzach
 pawąz	2	pawęza
 paćka	3	paciek
 paź	1	paziowie
-paździerzec	noun_pl	pazdzierc- like jaźwiec
-pc	noun_pl	pc-e- like gnat
+paździerzec	rest	pazdzierc- like jaźwiec
+pc	rest	pc-et- like pazur
 pesel	1	pesel-e	3	pesel-i	7	pesel-e	10	pesel-u	12	pesel-u
 pgr	10	pgr-ze	12	pgr-ze
 piecuch	7	piecuchów
 pieniek	6	pieniek	8	pieńkiem
 pieniądz	9	pieniędzmi
 pierdoły	3	pierdół
+pierdziel	7	pierdzieli
 pies	4	psu
 piesiec	6	pieśca
-pieśń	noun_pl	pieśni- like regaty
+pieśń	rest	pieśni- like dudy
 pikolo	3	pikoli
-pit	noun_pl	picie- like live	4	pit-u
+pit	rest	picie- like live	4	pit-u
 piąty	12	trzeci
 pięknoduch	7	pięknoduchów
-playboy	12	playboy
-plecień	noun_pl	pletni- like byl
+plecień	rest	pletni- like kleszcz
 plotuch	7	plotuchów
 podkuwacz	7	podkuwaczy
 podlizywacz	7	podlizywaczy
@@ -433,10 +390,10 @@ pohaniec	7	pohańców
 pojebaniec	7	pojebańców
 polje	3	polji
 pomazaniec	7	pomazańców
-pontifex	noun_pl	pontifeks- like patron	6	pontifeksa
+pontifex	rest	pontifeks- like patron	6	pontifeksa
 popapraniec	7	popaprańców
 popijała	7	popijały
-popiół	noun_pl	popiele- like live
+popiół	rest	popiele- like live
 porywacz	7	porywaczy
 poseł	10	pośle	12	pośle
 poskramiacz	7	poskramiaczy
@@ -449,7 +406,7 @@ potakiwacz	7	potakiwaczy
 powieść-rzeka	12	powieść-rzeko
 powstaniec	7	powstańców
 połownik	7	połowników
-praojciec	noun_pl	praojc- like patron	4	praojcu	6	praojca	7	praojców	10	praojcu
+praojciec	rest	praojc- like patron	4	praojcu	6	praojca	7	praojców	10	praojcu
 praprzodek	7	praprzodków
 prawnik	7	prawników
 prawnuczek	7	prawnuczków
@@ -458,19 +415,16 @@ prekursor	7	prekursorów
 prequel	2	prequela
 prezes	7	prezesów
 procent	1	procent	2	procent	3	procent	7	procent
-produkcyja	2	produkcyi
 prodziekan	7	prodziekanów
 profesor	7	profesorów
 profesorostwo	3	profesorostwa	5	profesorostwu	7	profesorostwa
 prowizor	7	prowizorów
 przebieraniec	7	przebierańców
 przeciwnik	7	przeciwników
-przeddzień	noun_pl	przededni- like byl
+przeddzień	rest	przededni- like kleszcz
 przemądrzalec	1	przemądrzalcy
 przeor	7	przeorów
 przepisywacz	7	przepisywaczy
-przepowiedacz	noun_pl	przepowiadacz- like gospodarz	0	przepowiedåcz	3	przepowiedaczów	5	przepowiedaczom	9	przepowiadaczmi
-przepowiedanie	noun_pl	przepowiedani- like przepowiedanie	noun_sg	przepowiedanié- like założenie
 przodek	7	przodków
 przyjaciel	3	przyjaciół	5	przyjaciołom	7	przyjaciół	9	przyjaciółmi
 przysłowie	3	przysłów
@@ -478,29 +432,28 @@ przywoływacz	7	przywoływaczy
 przyzywacz	7	przyzywaczy
 psor	7	psorów
 psowacz	7	psowaczów
-pustogłów	noun_pl	pustogłow- like patron
+pustogłów	rest	pustogłow- like patron
 pułkownik	7	pułkowników
 pyskacz	7	pyskaczy
 półbóg	4	półbogu	7	półbogów	8	półbogiem
 półgłupek	7	półgłupków
-półsen	noun_pl	półśnie- like live
+półsen	rest	półśnie- like live
 pączuś	2	pączusiu
-pędziwiatr	noun_pl	pędziwietrze- like live
-płeć	noun_pl	płci- like przestrzeń
+pędziwiatr	rest	pędziwietrze- like live
+płeć	rest	płci- like przestrzeń
 płótno	3	płócien
-quale	1	qualia	3	qualiów	5	qualiom	7	qualia
+quale	rest	quali- like media
 ratownik	7	ratowników
 raz	3	razy
-raza	9	razy	11	raziech
-rebe	1	rebowie	4	rebemu	6	rebego	10	rebem
+rebe	1	rebowie	3	rebów	4	rebemu	6	rebego	7	rebów	10	rebem
 rednacz	7	rednaczy
 rekrut	7	rekrutów
 rewizor	7	rewizorów
-reż	noun_pl	rż- like moc
-roczek	noun_pl	latk- like usta	3	latek
+reż	rest	rż- like moc
+roczek	rest	latk- like usta	3	latek
 rodak	7	rodaków
 rogacz	7	rogaczy
-rok	noun_pl	lat- like usta
+rok	rest	lat- like usta
 romeo	10	romeo
 rozbójnik	7	rozbójników
 rozczochraniec	7	rozczochrańców
@@ -513,17 +466,17 @@ rupieć	2	rupieciu
 rybałt	7	rybałtów
 rysownik	7	rysowników
 rytownik	7	rytowników
-rzecz	1	rzeczy	7	rzeczy
-rzeczpospolita	noun_pl	rzeczypospolit- like stara	5	rzeczompospolitym	7	rzeczypospolite	8	rzecząpospolitą	9	rzeczamipospolitymi	11	rzeczachpospolitych
+rzecz	rest	rzecz- like dudy	3	rzeczy
+rzeczpospolita	rest	rzeczypospolit- like stara	5	rzeczompospolitym	7	rzeczypospolite	8	rzecząpospolitą	9	rzeczamipospolitymi	11	rzeczachpospolitych
 rzezaniec	7	rzezańców
 rzępoła	1	rzępole	13	rzępoły
-rówień	noun_pl	równi- like przestrzeń
+rówień	rest	równi- like przestrzeń
 rąsia	3	rąś
 ręka	1	ręce	3	rąk	7	ręce
 samobój	7	samobójów	12	samobój
 sanie	3	sań
-sebix	noun_pl	sebiksie- like live	1	sebiksi
-sen	noun_pl	śnie- like live
+sebix	rest	sebiksie- like live	1	sebiksi
+sen	rest	śnie- like live
 sequel	2	sequela
 siepacz	7	siepaczy
 sierszeńki	3	sierszeniek
@@ -540,8 +493,7 @@ skubaniec	7	skubańców
 skupień	3	skupniów	7	skupniów
 smarkacz	7	smarkaczy
 smoluch	7	smoluchów
-sobak	12	sobak
-soból	noun_pl	sobol- like byl
+soból	rest	sobol- like kleszcz
 solidaruch	7	solidaruchów
 sor	10	sor-ze	12	sor-ze
 spawacz	7	spawaczy
@@ -552,22 +504,21 @@ sprzymierzeniec	7	sprzymierzeńców
 sprzątacz	7	sprzątaczy
 spłacheć	3	spłachciów
 stacz	7	staczy
-starolas	noun_pl	starolesie- like live
+starolas	rest	starolesie- like live
 starosta	1	starostowie
 staruch	7	staruchów
 starzec	12	starcze
-statua	1	statuy	7	statuy
+statua	rest	statu- like dudy	3	statui
 stołownik	7	stołowników
 straceniec	7	straceńców
 strugacz	7	strugaczy
-stryj	0	stryjowie
 strzygoń	3	strzygoniów
 styczeń	3	styczniów
 stópkarz	7	stópkarze
 sukcesor	7	sukcesorów
 sukinkot	4	sukinkotu
 suv	2	suv-a
-swąd	noun_pl	swędzie- like live	2	swędu	4	swędowi	8	swędem
+swąd	rest	swędzie- like live	2	swędu	4	swędowi	8	swędem
 szabla	3	szabel
 szankier	7	szankrów
 szansa	1	szanse	7	szanse
@@ -577,20 +528,20 @@ szewc	10	szewcu
 szkieł	1	szieły
 szmalcownik	7	szmalcowników
 szmondak	7	szmondaków
-szmugiel	noun_pl	szmugl- like obraz
-sztuciec	noun_sg	sztuciec- like założenie
+szmugiel	rest	szmugl- like obraz
+sztuciec	0	sztuciec
 szwacz	7	szwaczy
-szwagier	noun_pl	szwagr- like patron
+szwagier	rest	szwagr- like patron
 szwoleżer	7	szwoleżerów
-sól	noun_pl	sol- like moc	7	sole
-sąsiad	noun_pl	sąsiedzie- like live	1	sąsiedzi
+sól	rest	sol- like moc	7	sole
+sąsiad	rest	sąsiedzie- like live	1	sąsiedzi
 sąsiada	4	sąsiedzie	10	sąsiedzie
 słoweniec	7	słoweńców
 słowo	3	słów
 słuchacz	7	słuchaczy
 sługa	3	sług	7	sług
 słój	2	słoja
-tamandua	1	tamanduy	7	tamanduy
+tamandua	rest	tamandu- like dudy	3	tamandui
 tamburmajor	7	tamburmajorów
 tarczownik	7	tarczowników
 tata	1	tatowie
@@ -612,41 +563,42 @@ trzewa	3	trzewi
 turek	1	turcy
 turkuć	3	turkuciów
 tułacz	7	tułaczy
-tułów	noun_pl	tułowi- like gospodarz
+tułów	rest	tułowi- like gospodarz
+twardziel	7	twardzieli
 ty	4	tobie	6	ciebie	8	tobą	10	tobie
-tydzień	noun_pl	tygodni- like byl
+tydzień	rest	tygodni- like kleszcz
 typek	7	typków
 tytoń	2	tytoniu
 tłumacz	7	tłumaczy
 ubogi	1	ubodzy
-ucho	1	uszy	3	uszu	5	uszom	7	uszy
+ucho	rest	usz- like dudy	3	uszu
 uczeniec	7	uczeńców
 uczeń	1	uczniowie
 ujeżdżacz	7	ujeżdżaczy
 ulaniec	7	ulańców
 ulubieniec	7	ulubieńców
-update	noun_pl	upda- like grunt
+update	rest	upda- like grunt
 upgrade	10	upgradzie
-uprząż	noun_pl	uprzęż- like moc	noun_sg	uprząż- like założenie
+uprząż	lemma	uprząż- like obraz	rest	uprzęż- like moc
 urwipołeć	3	urwipołciów	6	urwipołcia	7	urwipołciów
 uspokajacz	7	uspokajaczy
 utrapieniec	7	utrapieńców
 uzbek	7	uzbeków
 uzdrowieniec	7	uzdrowieńców
 użytkownik	7	użytkowników
-vat	noun_pl	vacie- like live	4	vat-u
+vat	rest	vacie- like live	4	vat-u
 wartownik	7	wartowników
 warzywnik	7	warzywników
 waćpan	10	waćpanu
 wesz	2	wszy	3	wszy	4	wszy	8	wszą	10	wszy	12	wszy
-wiatr	noun_pl	wietrze- like live
+wiatr	rest	wietrze- like live
 wicehrabia	3	wicehrabich	10	wicehrabi
 wiceminister	1	wiceminstrowie
 wiceprezes	7	wiceprezesów
 wici	3	wici
 wierzeje	3	wierzei
-wieś	noun_pl	wsi- like przestrzeń	7	wsie
-więzień	noun_pl	więźni- like król	noun_sg	więź- like uczeń	7	więźniów
+wieś	rest	wsi- like przestrzeń	7	wsie
+więzień	lemma	więź- like uczeń	rest	więźni- like król	7	więźniów
 wnuczek	7	wnuczków
 woj	6	woj	7	wojowie
 wojownik	7	wojowników
@@ -655,7 +607,7 @@ wróg	8	wrogiem
 wspinacz	7	wspinaczy
 współadresat	7	współadresatów
 współplemieniec	7	współplemieńców
-współwięzień	noun_pl	współwięźni- like król	noun_sg	współwięź- like uczeń	7	współwięźniów
+współwięzień	lemma	współwięź- like uczeń	rest	współwięźni- like król	7	współwięźniów
 wsza	3	wesz
 wszyscy	3	wszystkich	5	wszystkim	7	wszystkich
 wszystko	2	wszystkiego	4	wszystkiemu	8	wszystkim	10	wszystkim
@@ -668,10 +620,10 @@ wymijacz	7	wymijaczy
 wyzyskiwacz	7	wyzyskiwaczy
 wół	6	wołu
 wąsacz	7	wąsaczy
-wąż	noun_pl	węż- like gospodarz
+wąż	rest	węż- like gospodarz
 wędrownik	7	wędrowników
 węgieł	6	węgieł
-włosień	noun_sg	włoś- like uczeń
+włosień	lemma	włoś- like uczeń
 włók	2	włóka
 xbox	6	xboksa
 xiądz	1	xięża	3	xięży	4	xiędzu	5	xiężom	7	xięży	12	xięże
@@ -689,7 +641,7 @@ zawadiaka	7	zawadiaki	13	zawadiaki
 zboczeniec	7	zboczeńców
 zbójnicki	6	zbójnickiego
 zbójnik	7	zbójników
-ziele	noun_pl	zioł- like usta	3	ziół
+ziele	rest	zioł- like usta	3	ziół
 ziemia	3	ziem
 ziemiokrąg	2	ziemiokręga
 ziewacz	7	ziewaczy
@@ -703,7 +655,7 @@ złodziej	3	złodziei	7	złodziei
 złotogłów	1	złotogłowie	2	złotogłowia	3	złotogłowi	4	złotogłowiowi	5	złotogłowiom	7	złotogłowie
 zły	1	źli
 ćma	3	ciem
-łabądź	noun_pl	łabędzi- like gospodarz
+łabądź	rest	łabędzi- like gospodarz
 ładowacz	7	ładowaczy
 łajdak	7	łajdaków
 łapacz	7	łapaczy
@@ -712,25 +664,25 @@ zły	1	źli
 łatacz	7	łataczy
 ławnik	7	ławników
 łeb	4	łbu
-łeż	noun_pl	łż- like moc
+łeż	rest	łż- like moc
 łowca-zbieracz	2	łowcy-zbieraczy
 ścierciałka	7	ścierciałki
 ścigacz	7	ścigaczy
-śmierdziel	0	śmierdziele
-śmieć	noun_pl	śmieci- like regaty
+ślepie	3	ślepiów
+śmierdziel	7	śmierdzieli
+śmieć	rest	śmieci- like dudy
 śmigacz	7	śmigaczy
 świat	2	świata	4	światu
 światło	10	świetle
-świekier	noun_pl	świekr- like patron
+świekier	rest	świekr- like patron
 świntuch	7	świntuchów
 święto	3	świąt
 żeleźce	3	żeleziec
 żeniec	7	żeńców	12	żeńcze
 żołdak	7	żołdaków
-żołądź	noun_pl	żołędzi- like gospodarz	noun_sg	żołądź- like założenie
+żołądź	lemma	żołądź- like obraz	rest	żołędzi- like gospodarz
 życzenia	3	życzeń
 żydzisko	8	żydiskiem
-żydło	0	noms
 żąp	3	żąpiów
 "#,
     ),

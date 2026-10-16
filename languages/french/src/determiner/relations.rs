@@ -45,11 +45,7 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
         "ces" => 0,
         "des" => 0,
         "les" => 0,
-        "mes" => 0,
-        "quelles" => 2,
-        "ses" => 0,
         "tes" => 0,
-        "équelles" => 2,
     }, true, None),
     // F_SG, from M_SG.
     relation!(F_SG, [M_SG], [("~", "~e"), ("~", "~le"), ("~on", "~a")], rules {
@@ -67,12 +63,6 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
         "s" => [8 6],
         "edit" => [9 4],
     } listed {
-        "leurdit" => 6,
-        "mon" => 7,
-        "mondit" => 0,
-        "son" => 7,
-        "sondit" => 1,
         "ton" => 7,
-        "tondit" => 2,
     }, true, None),
 ];

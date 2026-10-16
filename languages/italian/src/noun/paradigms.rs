@@ -1,27 +1,25 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~o`, `mano`: the stem and `o`). A stem in two pieces (`~o~`, `capolista`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem pl: \"~- like programma\"`: the slot's cells are `programma`'s table's patterns
+/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `noun` (sg, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem noun_sg: $s0:tt;)?
-     $(stem noun_pl: $s1:tt;)?
+     $(stem sg: $s0:tt;)?
+     $(stem pl: $s1:tt;)?
      $(noun: $c0:tt, $c1:tt;)?
     ) => {
         Paradigm {
@@ -65,8 +63,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "", "ia" after "~"`: ``, or `ia`
+/// where that pattern ends in `~`).
 macro_rules! affix {
     () => {
         None
@@ -95,11 +93,11 @@ macro_rules! feature {
 pub enum Declension {
     /// Like `mano`: 16,641 words.
     Mano,
-    /// Like `mercatanzia`: 15,709 words.
+    /// Like `mercatanzia`: 15,708 words.
     Mercatanzia,
-    /// Like `lume`: 13,482 words.
+    /// Like `lume`: 13,481 words.
     Lume,
-    /// Like `autorità`: 7,297 words.
+    /// Like `autorità`: 7,295 words.
     Autorità,
     /// Like `testimonio`: 3,698 words.
     Testimonio,
@@ -121,28 +119,28 @@ pub enum Declension {
     Spoiler,
     /// Like `braccio`: 22 words.
     Braccio,
-    /// Like `bassofondo`: 14 words.
-    Bassofondo,
+    /// Like `caposaldo`: 14 words.
+    Caposaldo,
     /// Like `uomo`: 13 words.
     Uomo,
     /// Like `acquaforte`: 10 words.
     Acquaforte,
     /// Like `superficie`: 8 words.
     Superficie,
-    /// Like `mezzasega`: 8 words.
-    Mezzasega,
-    /// Like `bimbaminkia`: 6 words.
-    Bimbaminkia,
+    /// Like `cartasuga`: 8 words.
+    Cartasuga,
+    /// Like `scuolaguida`: 6 words.
+    Scuolaguida,
     /// Like `capoccia`: 4 words.
     Capoccia,
     /// Like `heroon`: 4 words.
     Heroon,
     /// Like `capsa`: 3 words.
     Capsa,
-    /// Like `gattomammone`: 3 words.
-    Gattomammone,
-    /// Like `capofficina`: 3 words.
-    Capofficina,
+    /// Like `capocarceriere`: 3 words.
+    Capocarceriere,
+    /// Like `vetrofusione`: 3 words.
+    Vetrofusione,
     /// Like `doppiosenso`: 3 words.
     Doppiosenso,
 }
@@ -164,17 +162,17 @@ impl Declension {
         Declension::Mezzaluna,
         Declension::Spoiler,
         Declension::Braccio,
-        Declension::Bassofondo,
+        Declension::Caposaldo,
         Declension::Uomo,
         Declension::Acquaforte,
         Declension::Superficie,
-        Declension::Mezzasega,
-        Declension::Bimbaminkia,
+        Declension::Cartasuga,
+        Declension::Scuolaguida,
         Declension::Capoccia,
         Declension::Heroon,
         Declension::Capsa,
-        Declension::Gattomammone,
-        Declension::Capofficina,
+        Declension::Capocarceriere,
+        Declension::Vetrofusione,
         Declension::Doppiosenso,
     ];
 
@@ -198,16 +196,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("mano", 16641, "~o", [noun_gender: Masculine];
     noun: "~o", "~i";
     ),
-    // Mercatanzia: 15,709 words (aquila, acicula, aria, arietta, guerra, acacia).
-    declension!("mercatanzia", 15709, "~a", [noun_gender: Feminine];
+    // Mercatanzia: 15,708 words (aquila, acicula, aria, arietta, guerra, acacia).
+    declension!("mercatanzia", 15708, "~a", [noun_gender: Feminine];
     noun: "~a", "~e";
     ),
-    // Lume: 13,482 words (abate, lente, decade, seme, are, andante). Like Mano, except in 1 cell: noun sg.
-    declension!("lume", 13482, "~e", like Mano;
+    // Lume: 13,481 words (abate, lente, decade, seme, are, andante). Like Mano, except in 1 cell: noun sg.
+    declension!("lume", 13481, "~e", like Mano;
     noun: "~e", _;
     ),
-    // Autorità: 7,297 words (fa, abaca, abracadabra, quiz, nu, robot).
-    declension!("autorità", 7297, "~";
+    // Autorità: 7,295 words (fa, abaca, abracadabra, quiz, nu, robot).
+    declension!("autorità", 7295, "~";
     noun: "~", "~";
     ),
     // Testimonio: 3,698 words (radio, bancario, curio, scenario, pugio, sorcio). Like Mano, except in 1 cell: noun pl.
@@ -216,7 +214,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     ),
     // Programma: 2,282 words (abada, comma, plasma, miasma, papa, poeta). Like Mercatanzia.
     declension!("programma", 2282, "~a", like Mercatanzia;
-    stem noun_pl: "~- like programma";
+    stem pl: "~- like programma";
     ),
     // Mosca: 1,323 words (replica, musica, pesca, riga, vacca, fuga). Like Mercatanzia, except in 1 cell: noun pl.
     declension!("mosca", 1323, "~a", [noun_gender: Feminine], like Mercatanzia;
@@ -247,8 +245,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("braccio", 22, "~o", [noun_gender: Masculine], like Mano;
     noun: _, "~a";
     ),
-    // Bassofondo: 14 words (altoforno, bassofondo, camposanto, caposaldo, caposcarico, collotorto). Like Mano with `~i` after each pattern (`~o` after o).
-    declension!("bassofondo", 14, "~o~o", [noun_gender: Masculine], like Mano with "~i", "~o" after "o";
+    // Caposaldo: 14 words (altoforno, bassofondo, camposanto, caposaldo, caposcarico, collotorto). Like Mano with `~i` after each pattern (`~o` after o).
+    declension!("caposaldo", 14, "~o~o", [noun_gender: Masculine], like Mano with "~i", "~o" after "o";
     ),
     // Uomo: 13 words (homo, uomo, galantuomo, gentiluomo, superuomo, nobiluomo). Like Mano, except in 1 cell: noun pl.
     declension!("uomo", 13, "~o", [noun_gender: Masculine], like Mano;
@@ -261,11 +259,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("superficie", 8, "~e", [noun_gender: Feminine], like Lume;
     noun: _, "~";
     ),
-    // Mezzasega: 8 words (cappalunga, cassapanca, cartasuga, gambasecca, mezzasega, mezzatacca). Like Mercatanzia with `~a` after each pattern (`~he` after e).
-    declension!("mezzasega", 8, "~a~a", [noun_gender: Feminine], like Mercatanzia with "~a", "~he" after "e";
+    // Cartasuga: 8 words (cappalunga, cassapanca, cartasuga, gambasecca, mezzasega, mezzatacca). Like Mercatanzia with `~a` after each pattern (`~he` after e).
+    declension!("cartasuga", 8, "~a~a", [noun_gender: Feminine], like Mercatanzia with "~a", "~he" after "e";
     ),
-    // Bimbaminkia: 6 words (cartacarbone, scuolaguida, spinacristi, zappacavallo, bimbaminkia, mostramercato). Like Mercatanzia with `~` after each pattern.
-    declension!("bimbaminkia", 6, "~a~", [noun_gender: Feminine], like Mercatanzia with "~";
+    // Scuolaguida: 6 words (cartacarbone, scuolaguida, spinacristi, zappacavallo, bimbaminkia, mostramercato). Like Mercatanzia with `~` after each pattern.
+    declension!("scuolaguida", 6, "~a~", [noun_gender: Feminine], like Mercatanzia with "~";
     ),
     // Capoccia: 4 words (maracaia, capoccia, correggia, porteria). Like Mercatanzia, except in 1 cell: noun pl.
     declension!("capoccia", 4, "~a", like Mercatanzia;
@@ -278,11 +276,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 26] = [
     declension!("capsa", 3, "~", [noun_gender: Feminine], like Mercatanzia;
     noun: "~", _;
     ),
-    // Gattomammone: 3 words (gattomammone, capocarceriere, capotimoniere). Like Mano with `~e` after each pattern (`~i` after i).
-    declension!("gattomammone", 3, "~o~e", [noun_gender: Masculine], like Mano with "~e", "~i" after "i";
+    // Capocarceriere: 3 words (gattomammone, capocarceriere, capotimoniere). Like Mano with `~e` after each pattern (`~i` after i).
+    declension!("capocarceriere", 3, "~o~e", [noun_gender: Masculine], like Mano with "~e", "~i" after "i";
     ),
-    // Capofficina: 3 words (capofficina, decanapulazione, vetrofusione). Like Capolista, except in 1 cell: noun sg.
-    declension!("capofficina", 3, "~~", like Capolista;
+    // Vetrofusione: 3 words (capofficina, decanapulazione, vetrofusione). Like Capolista, except in 1 cell: noun sg.
+    declension!("vetrofusione", 3, "~~", like Capolista;
     noun: "~~", _;
     ),
     // Doppiosenso: 3 words (doppiovetro, occhiogrosso, doppiosenso). Like Testimonio with `~i` after each pattern (`~o` after o).

@@ -13,49 +13,106 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 8] = [
     Slot {
-        name: Cow::Borrowed("pronoun_m_sg"),
+        name: Cow::Borrowed("lemma"),
         cells: Cow::Borrowed(&[NOM_M_SG, VOC_M_SG]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_m"),
+        name: Cow::Borrowed("rest__"),
         cells: Cow::Borrowed(&[NOM_M_PL, DAT_M_SG, DAT_F_SG, DAT_N_SG, VOC_M_PL]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_f"),
+        name: Cow::Borrowed("rest"),
         cells: Cow::Borrowed(&[
             NOM_F_SG, NOM_F_PL, NOM_N_PL, ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_F_SG, VOC_F_PL,
             VOC_N_PL,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_n_sg"),
+        name: Cow::Borrowed("rest___"),
         cells: Cow::Borrowed(&[NOM_N_SG, ACC_M_SG, ACC_F_SG, ACC_N_SG, VOC_N_SG]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_gen_sg"),
+        name: Cow::Borrowed("gen_sg"),
         cells: Cow::Borrowed(&[GEN_M_SG, GEN_F_SG, GEN_N_SG]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_gen_pl"),
+        name: Cow::Borrowed("gen_pl"),
         cells: Cow::Borrowed(&[GEN_M_PL, GEN_F_PL, GEN_N_PL]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_pl"),
+        name: Cow::Borrowed("rest_"),
         cells: Cow::Borrowed(&[DAT_M_PL, DAT_F_PL, DAT_N_PL, ABL_M_PL, ABL_F_PL, ABL_N_PL]),
     },
     Slot {
-        name: Cow::Borrowed("pronoun_abl_sg"),
+        name: Cow::Borrowed("abl_sg"),
         cells: Cow::Borrowed(&[ABL_M_SG, ABL_F_SG, ABL_N_SG]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // pronoun_m_sg like uter: 16 words.
+pub(super) static TABLES: [EndingTable<'static>; 8] = [
+    // lemma like uter: 15 words.
+    EndingTable {
+        name: Cow::Borrowed("uter"),
+        words: 15,
+        slot: 0,
+        table: Cow::Borrowed(concat!("~\t", "~\t",)),
+    },
+    // rest__ like utervīs: 7 words.
+    EndingTable {
+        name: Cow::Borrowed("utervīs"),
+        words: 7,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t", "~\t",)),
+    },
+    // rest like uter: 16 words.
     EndingTable {
         name: Cow::Borrowed("uter"),
         words: 16,
-        slot: 0,
-        table: Cow::Borrowed(concat!("~\t", "~\t",)),
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "~a\t~ae\t",
+            "~a\t",
+            "~ōs\t",
+            "~ās\t",
+            "~a\t",
+            "~a\t~ae\t",
+            "~a\t",
+        )),
+    },
+    // rest___ like uter: 16 words.
+    EndingTable {
+        name: Cow::Borrowed("uter"),
+        words: 16,
+        slot: 3,
+        table: Cow::Borrowed(concat!("\t", "~um\t", "~am\t", "~um\t", "~um\t",)),
+    },
+    // gen_sg like quidquid: 24 words.
+    EndingTable {
+        name: Cow::Borrowed("quidquid"),
+        words: 24,
+        slot: 4,
+        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
+    },
+    // gen_sg like quīvīs: 9 words.
+    EndingTable {
+        name: Cow::Borrowed("quīvīs"),
+        words: 9,
+        slot: 4,
+        table: Cow::Borrowed(concat!("c~\t", "c~\t", "c~\t",)),
+    },
+    // abl_sg like uter: 27 words.
+    EndingTable {
+        name: Cow::Borrowed("uter"),
+        words: 27,
+        slot: 7,
+        table: Cow::Borrowed(concat!("~ō\t", "~ā\t", "~ō\t",)),
+    },
+    // abl_sg like quis: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("quis"),
+        words: 3,
+        slot: 7,
+        table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
     },
 ];

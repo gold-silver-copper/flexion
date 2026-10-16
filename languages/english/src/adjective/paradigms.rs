@@ -1,29 +1,23 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! A pattern is the form with `~` where the stem goes (`~ˇ`, `heavy`: the stem and `ˇ`).
+//! Alternatives are separated by `|`, the usual one first. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
-//! for alternating stems change them (`~nˇ`: `katu`, `kadun`).
+//! for alternating stems change them (`~ˇ`: `heavy`).
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `adjective` (pos, comp, sup)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem adjective_pos: $s0:tt;)?
-     $(stem adjective: $s1:tt;)?
+     $(stem lemma: $s0:tt;)?
      $(adjective: $c0:tt, $c1:tt, $c2:tt;)?
     ) => {
         Paradigm {
@@ -40,7 +34,6 @@ macro_rules! declension {
             )),
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
-                $(flexion::cell!($s1),)? "\t",
             )),
             affix: affix!($($($affix $(, $other, $letters)?)?)?),
         }
@@ -68,8 +61,7 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "ˇ"`: `ˇ` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -89,7 +81,7 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `open`: 58,664 words.
+    /// Like `open`: 58,663 words.
     Open,
     /// Like `heavy`: 1,984 words.
     Heavy,
@@ -151,8 +143,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
-    // Open: 58,664 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
-    declension!("open", 58664, "~";
+    // Open: 58,663 words (nonsense, raven, polysemic, adjectival, substantive, fabaceous).
+    declension!("open", 58663, "~";
     adjective: "~", "more ~", "most ~";
     ),
     // Heavy: 1,984 words (craggy, country, early, smiley, baby, cherry). Like Soft with `ˇ` after each pattern.
@@ -160,8 +152,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
     ),
     // Soft: 695 words (free, brown, august, minute, abject, able).
     declension!("soft", 695, "~";
-    stem adjective: "~e- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~er", "~est";
     ),
     // Right: 30 words (left, right, gone, inset, downstairs, upstairs).
     declension!("right", 30, "~";
@@ -173,23 +164,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
     ),
     // Slim: 13 words (slim, bum, prim, clam, dim, rum).
     declension!("slim", 13, "~";
-    stem adjective: "~me- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~mer", "~mest";
     ),
     // Flat: 10 words (shit, hot, fit, wet, flat, jet).
     declension!("flat", 10, "~";
-    stem adjective: "~te- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~ter", "~test";
     ),
     // Sad: 9 words (red, dud, glad, rad, sad, mad).
     declension!("sad", 9, "~";
-    stem adjective: "~de- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~der", "~dest";
     ),
     // Big: 8 words (big, bog, mug, snug, brag, smug).
     declension!("big", 8, "~";
-    stem adjective: "~ge- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~ger", "~gest";
     ),
     // First: 7 words (first, ben, middle, fore, mid, rightern).
     declension!("first", 7, "~";
@@ -201,11 +188,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 13] = [
     ),
     // Flip: 3 words (crap, hip, flip).
     declension!("flip", 3, "~";
-    stem adjective: "~pe- like soft";
-    adjective: "~", _, _;
+    adjective: "~", "~per", "~pest";
     ),
-    // Thin: 3 words (thin, tan, wan). Like First.
+    // Thin: 3 words (thin, tan, wan). Like First, except in 1 cell: adjective sup.
     declension!("thin", 3, "~", like First;
-    stem adjective: "~ne- like soft";
+    adjective: _, _, "~nest";
     ),
 ];

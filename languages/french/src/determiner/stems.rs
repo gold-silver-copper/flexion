@@ -13,18 +13,18 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 2] = [
     Slot {
-        name: Cow::Borrowed("determiner_sg"),
+        name: Cow::Borrowed("sg"),
         cells: Cow::Borrowed(&[M_SG, F_SG]),
     },
     Slot {
-        name: Cow::Borrowed("determiner_pl"),
+        name: Cow::Borrowed("pl"),
         cells: Cow::Borrowed(&[M_PL, F_PL]),
     },
 ];
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // determiner_pl like tes: 32 words.
+    // pl like tes: 32 words.
     EndingTable {
         name: Cow::Borrowed("tes"),
         words: 32,

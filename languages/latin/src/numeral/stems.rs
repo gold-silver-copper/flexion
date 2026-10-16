@@ -12,7 +12,7 @@ use std::borrow::Cow;
 
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
-    name: Cow::Borrowed("numeral"),
+    name: Cow::Borrowed("lemma"),
     cells: Cow::Borrowed(&[
         NOM_M_SG, NOM_M_PL, NOM_F_SG, NOM_F_PL, NOM_N_SG, NOM_N_PL, GEN_M_SG, GEN_M_PL, GEN_F_SG,
         GEN_F_PL, GEN_N_SG, GEN_N_PL, DAT_M_SG, DAT_M_PL, DAT_F_SG, DAT_F_PL, DAT_N_SG, DAT_N_PL,

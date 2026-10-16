@@ -3,6 +3,6 @@
 
 use std::borrow::Cow;
 
-/// 5 words.
+/// 4 words.
 pub(super) static HEADS: &[Cow<'static, str>] =
-    flexion::words!["disco", "fido", "taedet", "tollo", "ungo",];
+    flexion::words!["disco", "taedet", "tollo", "ungo",];

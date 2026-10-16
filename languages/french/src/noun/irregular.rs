@@ -1,14 +1,13 @@
 //! What no declension gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with, then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 285 forms.
+/// 0 stems, 280 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abri-sous-roche	1	abris-sous-roche
@@ -177,7 +176,6 @@ leitmotiv	1	leitmotive
 leu	1	lei
 libre-arbitre	1	libres-arbitres
 libre-échange	1	libres-échanges
-libéral-démocrate	1	libéraux-démocrates
 lied	1	lieder
 lieutenant-colonel	1	lieutenants-colonels
 long-métrage	1	longs-métrages
@@ -221,12 +219,8 @@ mᵐᵉ	1	mᵐᵉˢ
 navire-citerne	1	navires-citerne
 nid-de-poule	1	nids-de-poule
 nunavummiuq	1	nunavummiut
-obsèques	1	only
 oeil	1	yeux
 opéra-féerie	1	opéras-féeries
-oreillons	1	only
-orgues	1	only
-ossements	1	only
 paon-du-jour	1	paons-du-jour
 pause-déjeuner	1	pauses-déjeuner
 pet-de-nonne	1	pets-de-nonne

@@ -1,52 +1,50 @@
 //! What no declension gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`aorist`, `ἀγγειλ- like λυω`), then each listed form, by its
-//! cell's number (see `super::cell`), all tab-separated. They are the answer
-//! for that word.
+//! built with, then each listed form, by its cell's number (see
+//! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 28 stems, 16 forms.
+/// 0 stems, 41 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"bad	adjective	wor- like heavy	1	worse
-bay	adjective	baye- like heavy
-bene	adjective	bena- like heavy	2	benat
-better	0	good	2	best
-blak	adjective	blakke- like heavy
-common	1	commoner
-coy	adjective	coye- like heavy
-def	adjective	deffe- like heavy
-far	adjective	farthe- like heavy
-fey	adjective	feye- like heavy
-gas	adjective	gasse- like heavy
-gay	adjective	gaye- like heavy
-gey	adjective	geye- like heavy
-ghey	adjective	gheye- like heavy
-good	adjective	be- like heavy	1	better
-gooey	adjective	gooeye- like heavy
-gray	adjective	graye- like heavy
-grey	adjective	greye- like heavy
+        r#"bad	1	worse	2	worst
+bay	1	bayer
+bene	1	benar	2	benat
+blak	1	blakker
+common	1	commoner	2	most common
+coy	1	coyer
+def	1	deffer
+far	1	farther
+fey	1	feyer
+gas	1	gasser
+gay	1	gayer
+gey	1	geyer
+ghey	1	gheyer
+good	1	better
+gooey	1	gooeyer
+gray	1	grayer
+grey	1	greyer
 hind	2	hindmost
-honey	adjective	honeye- like heavy
-key	adjective	keye- like heavy
+honey	1	honeyer
+key	1	keyer
 known	1	better known	2	best known
-kway	adjective	kwaye- like heavy
-kwik	adjective	kwikke- like heavy
-luxe	1	luxier
-many	1	more	2	most
+kway	1	kwayer
+kwik	1	kwikker
+luxe	1	luxier	2	luxest
+many	1	more
 matching	1	better matching	2	best matching
-quay	adjective	quaye- like heavy
-qway	adjective	qwaye- like heavy
-stay	adjective	staye- like heavy
-thic	adjective	thicce- like heavy
-toey	adjective	toeie- like heavy
-treey	adjective	treeie- like heavy
+quay	1	quayer
+qway	1	qwayer
+stay	1	stayer
+thic	1	thiccer
+toey	1	toeier
+treey	1	treeier
 utter	2	utmost
-verye	adjective	verie- like heavy
-well	adjective	be- like heavy	1	better
+verye	1	verier
+well	1	better
 "#,
     ),
 };

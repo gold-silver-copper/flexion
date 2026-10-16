@@ -64,17 +64,18 @@ reason (the rule and its counts).
 
 ## The grammar
 
-| | words | paradigms | sound laws | rules | listed words | irregular forms |
-|---|---:|---:|---:|---:|---:|---:|
-| noun | 143828 | 167 | 88 | 7745 | 14744 | 252 |
-| adjective | 14840 | 23 | 26 | 375 | 585 | 893 |
-| verb | 9323 | 74 | 5 | 248 | 739 | 4500 |
-| determiner | 37 | 3 | 0 | 6 | 9 | 16 |
+| | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| noun | 143818 | 162 | 88 | 7749 | 14735 | 254 | 0 |
+| adjective | 14839 | 22 | 26 | 284 | 178 | 892 | 0 |
+| verb | 9316 | 68 | 5 | 250 | 732 | 4484 | 91 |
+| determiner | 36 | 3 | 0 | 6 | 8 | 15 | 1 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
 choose a paradigm. *Listed words*: words no rule gets right, listed with their paradigm.
-*Irregular forms*: forms no paradigm gives, listed.
+*Irregular forms*: forms no paradigm gives, listed. *Listed by relations*: the words the
+relations' rules get wrong, listed with the change they take.
 
 ## How well it does
 
@@ -103,23 +104,26 @@ interval (resampling words). *Any listed form*: top-1 where any of the forms the
 dictionary lists in the cell counts. *Homograph ceiling*: the most any grammar could get
 right, words typed alike getting one answer per cell. *On a training word / new root*:
 top-1 of the held-out words that are a training word with a prefix or a compound's front
-before it, and of the rest. *Attested*: top-1 of the shipped grammar on the dictionary's
-own words, typed in full. The held-out tenth was looked at while the trainer was being
+before it, and of the rest. *Own / form-of / alt-of*: top-1 of the held-out entries that
+are words of their own, another word's form (a participle, a comparative) and another
+word's spelling, with their number of words. *Phrases*: top-1 on the forms the dictionary
+writes as phrases (the Latin perfect passive, `amātus sum`). *Irregular lines*: the share of the
+dictionary's words the grammar lists a form or a stem of. The held-out tenth was looked at while the trainer was being
 developed (changes are judged on another tenth since PR #16).
 
-| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | attested |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 6323 | 40053 | **93.63%** (93.2–94.1) | 98.74% | 98.85% | 86.92% | 0.007 | 0.782 | 93.63% | 99.79% | 97.99 / 98.35 / 99.09 | 94.05% | 93.63% (40053) |  | 93.88% (0.00%) | -0.25 (-0.58…+0.08) | 94.43% | 99.69% | 96.70% / 89.92% |  | 100.00% |
-| adjective | 1487 | 125205 | **98.76%** (98.2–99.3) | 99.80% | 99.80% | 96.50% | 0.003 | 0.140 | 98.76% | 99.86% | 99.42 / 99.41 / 99.41 |  | 98.76% (125205) |  | 99.00% (0.00%) | -0.24 (-0.74…+0.25) | 99.03% | 100.00% | 98.59% / 98.83% | 0.00% (28) | 100.00% |
-| verb | 971 | 50629 | **95.07%** (94.1–96.0) | 98.22% | 98.39% | 85.58% | 0.013 | 1.037 | 95.07% | 95.78% | 95.55 / 95.61 / 95.68 | 95.18% | 95.07% (50629) |  | 73.03% (0.00%) | +22.04 (+20.29…+23.86) | 95.17% | 99.26% | 95.91% / 94.14% | 0.00% (1) | 100.00% |
-| determiner | 3 | 45 | **40.00%** (0.0–100.0) | 73.33% | 73.33% | 33.33% | 0.598 | 16.619 | 40.00% |  | 73.81 / 69.23 / 66.67 |  | 40.00% (45) |  | 40.00% (0.00%) | +0.00 (+0.00…+0.00) | 40.00% | 100.00% | 0.00% / 40.00% |  | 100.00% |
+| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 6323 | 40053 | **93.63%** (93.2–94.1) | 98.74% | 98.85% | 86.92% | 0.007 | 0.782 | 93.63% | 99.79% | 98.04 / 98.43 / 99.10 | 94.05% | 93.63% (40053) |  | 94.77% (0.00%) | -1.15 (-1.46…-0.85) | 94.43% | 99.69% | 96.70% / 89.92% |  | 93.44% (5249) / 98.79% (730) / 87.78% (344) |  | 0.51% |
+| adjective | 1487 | 125177 | **98.79%** (98.2–99.3) | 99.80% | 99.84% | 98.45% | 0.005 | 0.134 | 98.79% | 99.88% | 99.44 / 99.44 / 99.43 |  | 98.79% (125079) | 100.00% (98) | 99.02% (100.00%) | -0.23 (-0.73…+0.26) | 99.06% | 100.00% | 98.61% / 98.87% |  | 98.73% (1410) / 100.00% (28) / 100.00% (49) | 96.53% (548) | 0.11% |
+| verb | 970 | 50575 | **95.17%** (94.2–96.1) | 98.32% | 98.50% | 85.67% | 0.012 | 0.970 | 95.17% | 95.88% | 95.52 / 95.59 / 95.66 | 95.28% | 95.17% (50575) |  | 73.16% (0.00%) | +22.01 (+20.25…+23.80) | 95.27% | 99.25% | 95.91% / 94.35% |  | 95.00% (936) / – / 99.83% (34) | 91.76% (9057) | 5.12% |
+| determiner | 3 | 45 | **40.00%** (0.0–100.0) | 73.33% | 73.33% | 33.33% | 0.598 | 16.615 | 40.00% |  | 69.05 / 69.23 / 69.44 |  | 40.00% (45) |  | 40.00% (0.00%) | +0.00 (+0.00…+0.00) | 40.00% | 100.00% | 0.00% / 40.00% |  | 40.00% (3) / – / – |  | 13.89% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 53537 | 1814780 |
-| adjective | 3131 | 178524 |
-| verb | 7165 | 371853 |
-| determiner | 516 | 17832 |
+| noun | 25298 | 968931 |
+| adjective | 2395 | 130500 |
+| verb | 5272 | 310749 |
+| determiner | 451 | 15888 |
 
 ## Data and license
 

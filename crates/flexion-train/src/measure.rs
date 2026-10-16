@@ -539,6 +539,7 @@ mod tests {
                 source: 0,
                 vulgar: false,
                 editors: crate::extract::Editors::default(),
+                of: crate::extract::Of::Own,
             }
         };
         let words: Vec<Lexeme> = (0..24).map(|i| word(i, i % 2 == 0)).collect();

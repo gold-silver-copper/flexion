@@ -1,22 +1,20 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes: `~а` is the stem and
-//! `а`; a stem in two pieces, `~о~`, has a vowel between them that other
-//! forms drop. Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~κα`),
-//! as the copy laws in `laws.rs` change it.
+//! A pattern is the form with `~` where the stem goes (`~ος`, `ἀρῐθμος`: the stem and `ος`). A stem in two pieces (`~ω~`, `ῥητωρ`) has
+//! letters between them that other forms may drop or change.
+//! Alternatives are separated by `|`, the usual one first.
 
 use flexion::Paradigm;
 
 /// Writes one declension: the word it is named after, how many words follow it,
-/// the lemma's pattern, its words' inherent features (`[gender: Neuter]`, if
-/// they share them), the declension it is like (if any), the stem slots
-/// it states with a stem and an ending table (`stem aorist: "~σ- like λυω"`:
-/// the slot's cells are `λυω`'s table's patterns with `~σ` for their `~`; see
-/// `stems.rs`), then a row of patterns per line (`derived`: the form comes
-/// from another cell's, see `relations.rs`; `_`, or a row left out: the
-/// form is its stem slot's, or the declension's it is like, or, in a declension like
-/// no other, derived):
+/// the lemma's pattern, its words' inherent features (if they share them),
+/// the declension it is like (if any), the stem slots it states with a stem and an
+/// ending table
+/// (`stem lemma: \"~ον- like σημειον\"`: the slot's cells are `σημειον`'s table's patterns
+/// with `~ον` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
+/// or a row left out: the form is its stem slot's, or the declension's it is
+/// like, or, in a declension like no other, derived):
 /// `nom` (sg, du, pl)
 /// `gen_` (sg, du, pl)
 /// `dat` (sg, du, pl)
@@ -24,8 +22,8 @@ use flexion::Paradigm;
 /// `voc` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem noun_sg: $s0:tt;)?
-     $(stem noun: $s1:tt;)?
+     $(stem lemma: $s0:tt;)?
+     $(stem rest: $s1:tt;)?
      $(nom: $c0:tt, $c1:tt, $c2:tt;)?
      $(gen_: $c3:tt, $c4:tt, $c5:tt;)?
      $(dat: $c6:tt, $c7:tt, $c8:tt;)?
@@ -86,8 +84,8 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~ь", "~я"
-/// after "йлмть"`: `~ь`, or `~я` where that pattern ends in `й`, `л`, `м`, `т` or `ь`).
+/// What a declension adds after each pattern of the one it is like (`with "", "ς" after "η"`: ``, or `ς`
+/// where that pattern ends in `η`).
 macro_rules! affix {
     () => {
         None
@@ -122,8 +120,8 @@ pub enum Declension {
     Νῠμφη,
     /// Like `φορᾱ`: 772 words.
     Φορᾱ,
-    /// Like `δῐαιρεσῐς`: 494 words.
-    Δῐαιρεσῐς,
+    /// Like `περῐφρονησῐς`: 494 words.
+    Περῐφρονησῐς,
     /// Like `θεμᾰ`: 448 words.
     Θεμᾰ,
     /// Like `ἰδῐωτης`: 323 words.
@@ -132,8 +130,8 @@ pub enum Declension {
     Κορᾰξ,
     /// Like `κερκῐς`: 196 words.
     Κερκῐς,
-    /// Like `κλεις`: 168 words.
-    Κλεις,
+    /// Like `βᾰρῠτης`: 168 words.
+    Βᾰρῠτης,
     /// Like `τρᾰπεζᾰ`: 151 words.
     Τρᾰπεζᾰ,
     /// Like `ἐπῐφᾰνειᾰ`: 145 words.
@@ -146,7 +144,7 @@ pub enum Declension {
     Ἱππευς,
     /// Like `χᾰρᾰκτηρ`: 86 words.
     Χᾰρᾰκτηρ,
-    /// Like `δᾰνᾰοι`: 78 words.
+    /// Like `δᾰνᾰοι`: 77 words.
     Δᾰνᾰοι,
     /// Like `κᾰλπῐς`: 67 words.
     Κᾰλπῐς,
@@ -158,7 +156,7 @@ pub enum Declension {
     Κοχλῐᾱς,
     /// Like `κολλοψ`: 48 words.
     Κολλοψ,
-    /// Like `κροσσαι`: 42 words.
+    /// Like `κροσσαι`: 41 words.
     Κροσσαι,
     /// Like `φᾰος`: 40 words.
     Φᾰος,
@@ -177,29 +175,29 @@ pub enum Declension {
     /// Like `λᾰτρῐς`: 21 words.
     Λᾰτρῐς,
     /// Like `βᾰρῠτης`: 20 words.
-    Βᾰρῠτης,
+    Βᾰρῠτης2,
     /// Like `πους`: 19 words.
     Πους,
-    /// Like `μῡς`: 19 words.
-    Μῡς,
+    /// Like `νηδῡς`: 19 words.
+    Νηδῡς,
     /// Like `ἰκρῐα`: 15 words.
     Ἰκρῐα,
-    /// Like `ῥως`: 13 words.
-    Ῥως,
+    /// Like `ὑπᾰρ`: 13 words.
+    Ὑπᾰρ,
     /// Like `ἁλως`: 12 words.
     Ἁλως,
-    /// Like `κηρ`: 12 words.
-    Κηρ,
+    /// Like `θενᾰρ`: 12 words.
+    Θενᾰρ,
     /// Like `περᾰς`: 11 words.
     Περᾰς,
     /// Like `πεπερῐ`: 11 words.
     Πεπερῐ,
     /// Like `ἀθῠρᾱς`: 11 words.
     Ἀθῠρᾱς,
-    /// Like `τρωες`: 11 words.
-    Τρωες,
     /// Like `ἱππομᾰνες`: 10 words.
     Ἱππομᾰνες,
+    /// Like `τρωες`: 10 words.
+    Τρωες,
     /// Like `φρην`: 9 words.
     Φρην,
     /// Like `ἱμᾱς`: 9 words.
@@ -214,16 +212,16 @@ pub enum Declension {
     Νους,
     /// Like `ἠχω`: 7 words.
     Ἠχω,
-    /// Like `μητρως`: 6 words.
-    Μητρως,
+    /// Like `δμως`: 6 words.
+    Δμως,
     /// Like `γερᾰς`: 6 words.
     Γερᾰς,
     /// Like `πᾰτηρ`: 6 words.
     Πᾰτηρ,
-    /// Like `ἁλς`: 6 words.
-    Ἁλς,
-    /// Like `θῐος`: 6 words.
-    Θῐος,
+    /// Like `ὀϊς`: 6 words.
+    Ὀϊς,
+    /// Like `δᾱμος`: 6 words.
+    Δᾱμος,
     /// Like `λῐψ`: 5 words.
     Λῐψ,
     /// Like `κωμῡς`: 5 words.
@@ -264,8 +262,6 @@ pub enum Declension {
     Θεωσῐς,
     /// Like `δυσμαι`: 2 words.
     Δυσμαι,
-    /// Like `γλωσσᾰ`: 1 words.
-    Γλωσσᾰ,
     /// Like `ἱερος`: 1 words.
     Ἱερος,
     /// Like `ἱερον`: 1 words.
@@ -274,12 +270,6 @@ pub enum Declension {
     Ἱερα,
     /// Like `μηριᾰ`: 1 words.
     Μηριᾰ,
-    /// Like `ἰᾱλεμος`: 1 words.
-    Ἰᾱλεμος,
-    /// Like `κῠνοχᾰλκη`: 1 words.
-    Κῠνοχᾰλκη,
-    /// Like `λιμεναρχης`: 1 words.
-    Λιμεναρχης,
     /// Like `βυσναιοι`: 1 words.
     Βυσναιοι,
     /// Like `ἐπισφυρῐᾰ`: 1 words.
@@ -290,29 +280,25 @@ pub enum Declension {
     Βακχῐαδαι,
     /// Like `βρογχῐᾰ`: 1 words.
     Βρογχῐᾰ,
-    /// Like `κοσμητης`: 1 words.
-    Κοσμητης,
     /// Like `χᾰριστῐᾰ`: 1 words.
     Χᾰριστῐᾰ,
-    /// Like `ὀρθογραφος`: 1 words.
-    Ὀρθογραφος,
     /// Like `ἑλληνοτᾰμιαι`: 1 words.
     Ἑλληνοτᾰμιαι,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 92] = [
+    pub const ALL: [Declension; 86] = [
         Declension::Ἀρῐθμος,
         Declension::Σημειον,
         Declension::Νῠμφη,
         Declension::Φορᾱ,
-        Declension::Δῐαιρεσῐς,
+        Declension::Περῐφρονησῐς,
         Declension::Θεμᾰ,
         Declension::Ἰδῐωτης,
         Declension::Κορᾰξ,
         Declension::Κερκῐς,
-        Declension::Κλεις,
+        Declension::Βᾰρῠτης,
         Declension::Τρᾰπεζᾰ,
         Declension::Ἐπῐφᾰνειᾰ,
         Declension::Τευχος,
@@ -334,18 +320,18 @@ impl Declension {
         Declension::Πτερῠξ,
         Declension::Λεων,
         Declension::Λᾰτρῐς,
-        Declension::Βᾰρῠτης,
+        Declension::Βᾰρῠτης2,
         Declension::Πους,
-        Declension::Μῡς,
+        Declension::Νηδῡς,
         Declension::Ἰκρῐα,
-        Declension::Ῥως,
+        Declension::Ὑπᾰρ,
         Declension::Ἁλως,
-        Declension::Κηρ,
+        Declension::Θενᾰρ,
         Declension::Περᾰς,
         Declension::Πεπερῐ,
         Declension::Ἀθῠρᾱς,
-        Declension::Τρωες,
         Declension::Ἱππομᾰνες,
+        Declension::Τρωες,
         Declension::Φρην,
         Declension::Ἱμᾱς,
         Declension::Πτῠξ,
@@ -353,11 +339,11 @@ impl Declension {
         Declension::Κῠᾰρ,
         Declension::Νους,
         Declension::Ἠχω,
-        Declension::Μητρως,
+        Declension::Δμως,
         Declension::Γερᾰς,
         Declension::Πᾰτηρ,
-        Declension::Ἁλς,
-        Declension::Θῐος,
+        Declension::Ὀϊς,
+        Declension::Δᾱμος,
         Declension::Λῐψ,
         Declension::Κωμῡς,
         Declension::Ἀγλῑς,
@@ -378,22 +364,16 @@ impl Declension {
         Declension::Ἐντεᾰ,
         Declension::Θεωσῐς,
         Declension::Δυσμαι,
-        Declension::Γλωσσᾰ,
         Declension::Ἱερος,
         Declension::Ἱερον,
         Declension::Ἱερα,
         Declension::Μηριᾰ,
-        Declension::Ἰᾱλεμος,
-        Declension::Κῠνοχᾰλκη,
-        Declension::Λιμεναρχης,
         Declension::Βυσναιοι,
         Declension::Ἐπισφυρῐᾰ,
         Declension::Πᾰραφερνᾰ,
         Declension::Βακχῐαδαι,
         Declension::Βρογχῐᾰ,
-        Declension::Κοσμητης,
         Declension::Χᾰριστῐᾰ,
-        Declension::Ὀρθογραφος,
         Declension::Ἑλληνοτᾰμιαι,
     ];
 
@@ -412,7 +392,7 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Ἀρῐθμος: 1,783 words (λῠκος, κοσμος, ἱππος, ἐρωμενος, σπογγος, ἀγγελος).
     declension!("ἀρῐθμος", 1783, "~ος";
     nom: "~ος", "~ω", "~οι";
@@ -423,13 +403,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Σημειον: 1,175 words (ἀστρον, παιδῐον, δενδρον, μῠστηρῐον, ἐργον, εἰδωλον). Like Ἀρῐθμος, except in 2 cells: nom pl, acc pl.
     declension!("σημειον", 1175, "~ον", [gender: Neuter], like Ἀρῐθμος;
-    stem noun_sg: "~ον- like σημειον";
+    stem lemma: "~ον- like σημειον";
     nom: _, _, "~ᾰ";
     acc: _, _, "~ᾰ";
     ),
     // Νῠμφη: 867 words (νῑκη, μηχᾰνη, μουσῐκη, γη, δῑνη, κορη).
     declension!("νῠμφη", 867, "~η", [gender: Feminine];
-    stem noun_sg: "~η- like σημειον";
+    stem lemma: "~η- like σημειον";
     nom: _, "~ᾱ", "~αι";
     gen_: "~ης", "~αιν", "~ων";
     dat: "~ῃ", _, "~αις";
@@ -437,14 +417,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Φορᾱ: 772 words (δημοκρᾰτῐᾱ, χωρᾱ, μελῳδῐᾱ, παιδῐᾱ, φῐλῐᾱ, σοφῐᾱ). Like Νῠμφη, except in 3 cells: gen_ sg, dat sg, acc sg.
     declension!("φορᾱ", 772, "~ᾱ", [gender: Feminine], like Νῠμφη;
-    stem noun_sg: "~ᾱ- like σημειον";
+    stem lemma: "~ᾱ- like σημειον";
     gen_: "~ᾱς", _, _;
     dat: "~ᾳ", _, _;
     acc: "~ᾱν", _, _;
     ),
-    // Δῐαιρεσῐς: 494 words (πολῐς, γνωσῐς, κῠβερνησῐς, ἀποκᾰλῠψῐς, μορφωσῐς, φῠσῐς).
-    declension!("δῐαιρεσῐς", 494, "~ῐς", [gender: Feminine];
-    stem noun_sg: "~ῐ- like δῐαιρεσῐς";
+    // Περῐφρονησῐς: 494 words (πολῐς, γνωσῐς, κῠβερνησῐς, ἀποκᾰλῠψῐς, μορφωσῐς, φῠσῐς).
+    declension!("περῐφρονησῐς", 494, "~ῐς", [gender: Feminine];
+    stem lemma: "~ῐ- like δῐαιρεσῐς";
     nom: _, "~ει", "~εις";
     gen_: "~εως", "~εοιν", "~εων";
     dat: "~ει", _, "~εσῐ|~εσῐν";
@@ -452,11 +432,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Θεμᾰ: 448 words (μελῐ, γρᾰμμᾰ, δερμᾰ, σῑγμᾰ, πνευμᾰ, βαπτισμᾰ).
     declension!("θεμᾰ", 448, "~", [gender: Neuter];
-    stem noun_sg: "~- like σημειον";
-    nom: _, "~τε", "~τᾰ";
-    gen_: "~τος", "~τοιν", "~των";
-    dat: "~τῐ", _, "~σῐ|~σῐν";
-    acc: "~", _, "~τᾰ";
+    stem lemma: "~- like σημειον";
+    stem rest: "~- like θεμᾰ";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
     // Ἰδῐωτης: 323 words (ἐρᾰστης, προφητης, ποιητης, ὑποκρῐτης, κλεπτης, ἰσρᾱηλῑτης). Like Νῠμφη with `` after each pattern (`ς` after η), except in 2 cells: gen_ sg, voc sg.
     declension!("ἰδῐωτης", 323, "~ης", [gender: Masculine], like Νῠμφη with "", "ς" after "η";
@@ -465,27 +445,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Κορᾰξ: 220 words (χᾰλῐξ, σᾰρξ, ἀνθρᾰξ, ἀβᾰξ, πτερῠξ, γλαυξ).
     declension!("κορᾰξ", 220, "~ξ";
-    stem noun_sg: "~ξ- like σημειον";
-    nom: _, "~κε", "~κες";
-    gen_: "~κος", "~κοιν", "~κων";
-    dat: "~κῐ", _, "~ξῐ|~ξῐν";
-    acc: "~κᾰ", _, "~κᾰς";
+    stem lemma: "~ξ- like σημειον";
+    stem rest: "~- like κορᾰξ";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
     // Κερκῐς: 196 words (παις, λεπῐς, πᾰτρῐς, ἑλληνῐς, περσῐς, γρᾰφῐς).
     declension!("κερκῐς", 196, "~ς", [gender: Feminine];
-    stem noun_sg: "~- like δῐαιρεσῐς";
+    stem lemma: "~- like δῐαιρεσῐς";
     nom: _, "~δε", "~δες";
     gen_: "~δος", "~δοιν", "~δων";
     dat: "~δῐ", _, "~σῐ|~σῐν";
     acc: "~δᾰ", _, "~δᾰς";
     ),
-    // Κλεις: 168 words (μῠκης, κρης, σκληροτης, μᾰρτῠς, θης, κλεις). Like Κερκῐς, except in 1 cell: voc sg.
-    declension!("κλεις", 168, "~ς", like Κερκῐς;
+    // Βᾰρῠτης: 168 words (μῠκης, κρης, σκληροτης, μᾰρτῠς, θης, κλεις). Like Κερκῐς, except in 1 cell: voc sg.
+    declension!("βᾰρῠτης", 168, "~ς", like Κερκῐς;
     voc: "~ς", _, _;
     ),
     // Τρᾰπεζᾰ: 151 words (θᾰλᾰσσᾰ, ῥῐζᾰ, θᾰλᾰττᾰ, δοξᾰ, γλωττᾰ, μελῐττᾰ). Like Νῠμφη, except in 1 cell: acc sg.
     declension!("τρᾰπεζᾰ", 151, "~ᾰ", [gender: Feminine], like Νῠμφη;
-    stem noun_sg: "~ᾰ- like σημειον";
+    stem lemma: "~ᾰ- like σημειον";
     acc: "~ᾰν", _, _;
     ),
     // Ἐπῐφᾰνειᾰ: 145 words (βᾰσῐλειᾰ, ἀσθενειᾰ, μᾰχαιρᾰ, ἀληθειᾰ, βοηθειᾰ, μοιρᾰ). Like Τρᾰπεζᾰ, except in 2 cells: gen_ sg, dat sg.
@@ -495,7 +475,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Τευχος: 118 words (σκῠλος, κλεος, ἐθνος, πληθος, τελος, στηθος).
     declension!("τευχος", 118, "~ος", [gender: Neuter];
-    stem noun_sg: "~ος- like σημειον";
+    stem lemma: "~ος- like σημειον";
     nom: _, "~ει", "~η";
     gen_: "~ους", "~οιν", "~ων";
     dat: "~ει", _, "~εσῐ|~εσῐν";
@@ -503,29 +483,34 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Αἰων: 104 words (ἑλλην, αἰων, λεγεων, ἀγων, σᾱπων, μην).
     declension!("αἰων", 104, "~ν", [gender: Masculine];
-    stem noun_sg: "~ν- like σημειον";
-    nom: _, "~νε", "~νες";
-    gen_: "~νος", "~νοιν", "~νων";
-    dat: "~νῐ", _, "~σῐ|~σῐν";
-    acc: "~νᾰ", _, "~νᾰς";
+    stem lemma: "~ν- like σημειον";
+    stem rest: "~- like αἰων";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
-    // Ἱππευς: 86 words (βᾰσῐλευς, ἀρχιερευς, γραμμᾰτευς, ἀλεξᾰνδρευς, αἰολευς, ἀμφισσευς). Like Δῐαιρεσῐς, except in 5 cells: nom du, nom pl, dat pl, acc sg, acc pl.
-    declension!("ἱππευς", 86, "~ευς", [gender: Masculine], like Δῐαιρεσῐς;
-    stem noun_sg: "~ευ- like δῐαιρεσῐς";
+    // Ἱππευς: 86 words (βᾰσῐλευς, ἀρχιερευς, γραμμᾰτευς, ἀλεξᾰνδρευς, αἰολευς, ἀμφισσευς). Like Περῐφρονησῐς, except in 5 cells: nom du, nom pl, dat pl, acc sg, acc pl.
+    declension!("ἱππευς", 86, "~ευς", [gender: Masculine], like Περῐφρονησῐς;
+    stem lemma: "~ευ- like δῐαιρεσῐς";
     nom: _, "~η", "~ης|~εις";
     dat: _, _, "~ευσῐ|~ευσῐν";
     acc: "~εᾱ", _, "~εᾱς";
     ),
     // Χᾰρᾰκτηρ: 86 words (μᾰρτῠρ, πᾰνθηρ, κᾱρ, ἰβηρ, χειρ, ἐορ).
     declension!("χᾰρᾰκτηρ", 86, "~";
-    stem noun_sg: "~- like σημειον";
-    nom: _, "~ε", "~ες";
-    gen_: "~ος", "~οιν", "~ων";
-    dat: "~ῐ", _, "~σῐ|~σῐν";
-    acc: "~ᾰ", _, "~ᾰς";
+    stem lemma: "~- like σημειον";
+    stem rest: "~- like χᾰρᾰκτηρ";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
-    // Δᾰνᾰοι: 78 words (βοττῐαιοι, δᾰνᾰοι, τῐβᾰρηνοι, μεθοδῐκοι, πᾰλαιοι, πᾰρᾰβολᾱνοι). Like Ἀρῐθμος.
-    declension!("δᾰνᾰοι", 78, "~οι", [gender: Masculine], like Ἀρῐθμος;
+    // Δᾰνᾰοι: 77 words (βοττῐαιοι, δᾰνᾰοι, τῐβᾰρηνοι, μεθοδῐκοι, πᾰλαιοι, πᾰρᾰβολᾱνοι). Like Ἀρῐθμος, except in 7 cells: nom sg, nom du, gen_ sg, gen_ du, dat sg, acc sg, ….
+    declension!("δᾰνᾰοι", 77, "~οι", [gender: Masculine], like Ἀρῐθμος;
+    nom: "~οι", derived, _;
+    gen_: derived, derived, _;
+    dat: derived, _, _;
+    acc: derived, _, _;
+    voc: derived, _, _;
     ),
     // Κᾰλπῐς: 67 words (πελασγῐωτῐς, σπᾰρτῐᾱτῐς, σῠβᾰρῑτῐς, σμῠρῐς, ἀσπρῐς, εὐνῐς). Like Κερκῐς, except in 1 cell: acc sg.
     declension!("κᾰλπῐς", 67, "~ς", like Κερκῐς;
@@ -536,13 +521,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     gen_: "~ου", _, _;
     voc: "~η", _, _;
     ),
-    // Ὀργῐᾰ: 56 words (πῠρᾰ, κᾰστᾰνειᾰ, κᾰστᾰνᾰ, ὀργῐᾰ, πολῑτῐκᾰ, γαρσᾰνᾰ). Like Σημειον, except in 7 cells: nom sg, nom du, gen_ sg, gen_ du, dat sg, acc sg, ….
-    declension!("ὀργῐᾰ", 56, "~ᾰ", [gender: Neuter], like Σημειον;
-    nom: "~ᾰ", derived, _;
-    gen_: derived, derived, _;
-    dat: derived, _, _;
-    acc: derived, _, _;
-    voc: derived, _, _;
+    // Ὀργῐᾰ: 56 words (πῠρᾰ, κᾰστᾰνειᾰ, κᾰστᾰνᾰ, ὀργῐᾰ, πολῑτῐκᾰ, γαρσᾰνᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
+    declension!("ὀργῐᾰ", 56, "~ᾰ", [gender: Neuter], like Δᾰνᾰοι;
+    stem rest: "~- like ὀργῐᾰ";
+    nom: "~ᾰ", _, _;
+    voc: _, _, derived;
     ),
     // Κοχλῐᾱς: 48 words (νεᾱνῐᾱς, γᾰλᾰξῐᾱς, καικιᾱς, κῠβᾱς, τᾰμῐᾱς, κοχλῐᾱς). Like Φορᾱ with `` after each pattern (`ς` after ᾱ), except in 3 cells: nom du, gen_ sg, voc sg.
     declension!("κοχλῐᾱς", 48, "~ᾱς", [gender: Masculine], like Φορᾱ with "", "ς" after "ᾱ";
@@ -552,14 +535,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Κολλοψ: 48 words (αἰθῐοψ, ὠψ, κῠκλωψ, δολοψ, αἰγῐλωψ, ἀγχιλωψ).
     declension!("κολλοψ", 48, "~ψ";
-    stem noun_sg: "~ψ- like σημειον";
+    stem lemma: "~ψ- like σημειον";
     nom: _, "~πε", "~πες";
     gen_: "~πος", "~ποιν", "~πων";
     dat: "~πῐ", _, "~ψῐ|~ψῐν";
     acc: "~πᾰ", _, "~πᾰς";
     ),
-    // Κροσσαι: 42 words (ἑβδομηκοντᾰκωμηται, τεσσᾰρεσκαιδεκᾰτῑται, ὀᾰσῑται, ἰσκαι, γᾰμφηλαι, κρουπεζαι). Like Ἰδῐωτης.
-    declension!("κροσσαι", 42, "~αι", like Ἰδῐωτης;
+    // Κροσσαι: 41 words (ἑβδομηκοντᾰκωμηται, τεσσᾰρεσκαιδεκᾰτῑται, ὀᾰσῑται, ἰσκαι, γᾰμφηλαι, κρουπεζαι). Like Ἰκρῐα with `` after each pattern (`ι` after α), except in 3 cells: nom pl, dat pl, acc pl.
+    declension!("κροσσαι", 41, "~αι", like Ἰκρῐα with "", "ι" after "α";
+    nom: _, _, "~αι";
+    dat: _, _, "~αις";
+    acc: _, _, "~ᾱς";
     ),
     // Φᾰος: 40 words (δᾰσος, πεος, σκᾰφος, φᾰος, πᾰχος, κᾰμπος). Like Τευχος, except in 7 cells: nom du, nom pl, gen_ sg, gen_ du, gen_ pl, dat sg, ….
     declension!("φᾰος", 40, "~ος", [gender: Neuter], like Τευχος;
@@ -570,11 +556,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Ἀξων: 40 words (κῠων, ἀρχιτεκτων, βιστων, χᾱων, ἰᾱων, λῠκᾱων).
     declension!("ἀξων", 40, "~ων", [gender: Masculine];
-    nom: "~ων", "~ονε", "~ονες";
-    gen_: "~ονος", "~ονοιν", "~ονων";
-    dat: "~ονῐ", _, "~οσῐ|~οσῐν";
-    acc: "~ονᾰ", _, "~ονᾰς";
-    voc: "~ον", _, _;
+    stem rest: "~ο- like αἰων";
+    nom: "~ων", _, _;
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: "~ον", derived, derived;
     ),
     // Κᾰνων: 36 words (ἡγεμων, τεκτων, ἀμᾰζων, ἀλκῠων, μᾰκεδων, μῠρμῐδων). Like Ἀξων, except in 1 cell: voc sg.
     declension!("κᾰνων", 36, "~ων", like Ἀξων;
@@ -582,15 +568,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Ῥητωρ: 33 words (ἀλεκτωρ, καστωρ, ῥητωρ, δωτωρ, στατωρ, κοσμοκρᾰτωρ).
     declension!("ῥητωρ", 33, "~ω~";
-    nom: "~ω~", "~ο~ε", "~ο~ες";
-    gen_: "~ο~ος", "~ο~οιν", "~ο~ων";
-    dat: "~ο~ῐ", _, "~ο~σῐ|~ο~σῐν";
-    acc: "~ο~ᾰ", _, "~ο~ᾰς";
-    voc: "~ο~", _, _;
+    stem rest: "~ο~- like χᾰρᾰκτηρ";
+    nom: "~ω~", _, _;
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: "~ο~", derived, derived;
     ),
     // Στᾰχῠς: 32 words (λῐβῠς, λῐγῠς, γενῠς, ἐγχελῠς, ῥᾰπῠς, ῥᾰφῠς).
     declension!("στᾰχῠς", 32, "~ῠς";
-    stem noun_sg: "~ῠ- like δῐαιρεσῐς";
+    stem lemma: "~ῠ- like δῐαιρεσῐς";
     nom: _, "~ῠε|~ῡ", "~ῠες|~ῡς";
     gen_: "~ῠος", "~ῠοιν", "~ῠων";
     dat: "~ῠϊ|~υι", _, "~ῠσῐ|~ῠσῐν";
@@ -598,7 +584,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Πτερῠξ: 22 words (φλοξ, αἰξ, ἰᾱπῠξ, λᾰτᾰξ, ὀρτῠξ, σφᾰξ).
     declension!("πτερῠξ", 22, "~ξ";
-    stem noun_sg: "~ξ- like σημειον";
+    stem lemma: "~ξ- like σημειον";
     nom: _, "~γε", "~γες";
     gen_: "~γος", "~γοιν", "~γων";
     dat: "~γῐ", _, "~ξῐ|~ξῐν";
@@ -614,33 +600,33 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Λᾰτρῐς: 21 words (ἀκρῐς, ὀκρῐς, λᾰτρῐς, μηνῐς, πορτῐς, ἀρδῐς).
     declension!("λᾰτρῐς", 21, "~ῐς";
-    stem noun_sg: "~ῐ- like δῐαιρεσῐς";
+    stem lemma: "~ῐ- like δῐαιρεσῐς";
     nom: _, "~ῐε", "~ῐες";
     gen_: "~ῐος", "~ῐοιν", "~ῐων";
     dat: "~ῑ", _, "~ῐσῐ|~ῐσῐν";
     acc: "~ῐν", _, "~ῑς|~ῐᾰς";
     ),
-    // Βᾰρῠτης: 20 words (χᾰρῐς, ῥῑς, εἱλως, ἰς, ἱδρως, ἐρως). Like Θεμᾰ with `` after each pattern (`ς` after ~, ᾰ), except in 2 cells: nom pl, acc sg.
+    // Βᾰρῠτης2: 20 words (χᾰρῐς, ῥῑς, εἱλως, ἰς, ἱδρως, ἐρως). Like Θεμᾰ with `` after each pattern (`ς` after ~, ᾰ), except in 2 cells: nom pl, acc sg.
     declension!("βᾰρῠτης", 20, "~ς", like Θεμᾰ with "", "ς" after "~ᾰ";
     nom: _, _, "~τες";
     acc: "~τᾰ", _, _;
     ),
     // Πους: 19 words (πους, ὀκτωπους, πολυπους, τρῐπους, ἀπους, δᾰσῠπους). Like Κερκῐς.
     declension!("πους", 19, "~υς", [gender: Masculine], like Κερκῐς;
-    stem noun_sg: "~υς- like σημειον";
+    stem lemma: "~υς- like σημειον";
     ),
-    // Μῡς: 19 words (ἰχθῡς, σῡς, δελφῡς, δρῡς, ὀφρῡς, μῡς). Like Στᾰχῠς, except in 1 cell: acc sg.
-    declension!("μῡς", 19, "~ῡς", like Στᾰχῠς;
-    stem noun_sg: "~ῡ- like δῐαιρεσῐς";
+    // Νηδῡς: 19 words (ἰχθῡς, σῡς, δελφῡς, δρῡς, ὀφρῡς, μῡς). Like Στᾰχῠς, except in 1 cell: acc sg.
+    declension!("νηδῡς", 19, "~ῡς", like Στᾰχῠς;
+    stem lemma: "~ῡ- like δῐαιρεσῐς";
     acc: "~ῡν", _, _;
     ),
     // Ἰκρῐα: 15 words (γενεσια, μουστακια, σαγματοπασμαγαδια, εὐληρα, βρῡτεα, κανθηλια). Like Ὀργῐᾰ, except in 1 cell: nom sg.
     declension!("ἰκρῐα", 15, "~α", [gender: Neuter], like Ὀργῐᾰ;
     nom: "~α", _, _;
     ),
-    // Ῥως: 13 words (ἑξηκοντᾰ, ὀσσε, ὑφεν, ῥᾰββῑ, ῥᾰββονῑ, ῥᾰββουνῑ).
-    declension!("ῥως", 13, "~";
-    stem noun_sg: "~- like σημειον";
+    // Ὑπᾰρ: 13 words (ἑξηκοντᾰ, ὀσσε, ὑφεν, ῥᾰββῑ, ῥᾰββονῑ, ῥᾰββουνῑ).
+    declension!("ὑπᾰρ", 13, "~";
+    stem lemma: "~- like σημειον";
     nom: _, "~", "~";
     gen_: "~", "~", "~";
     dat: "~", _, "~";
@@ -648,22 +634,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Ἁλως: 12 words (νεως, γᾰλως, τᾰως, λᾰγως, ἑως, λεως).
     declension!("ἁλως", 12, "~ως";
-    stem noun_sg: "~ως- like σημειον";
+    stem lemma: "~ως- like σημειον";
     nom: _, "~ω", "~ῳ";
     gen_: "~ω", "~ῳν", "~ων";
     dat: "~ῳ", _, "~ῳς";
     acc: "~ω|~ων", _, "~ως";
     ),
-    // Κηρ: 12 words (κηρ, ἐᾰρ, θενᾰρ, ὀνᾰρ, νεκτᾰρ, μελᾰν). Like Χᾰρᾰκτηρ, except in 3 cells: nom pl, acc sg, acc pl.
-    declension!("κηρ", 12, "~", [gender: Neuter], like Χᾰρᾰκτηρ;
+    // Θενᾰρ: 12 words (κηρ, ἐᾰρ, θενᾰρ, ὀνᾰρ, νεκτᾰρ, μελᾰν). Like Χᾰρᾰκτηρ, except in 3 cells: nom pl, acc sg, acc pl.
+    declension!("θενᾰρ", 12, "~", [gender: Neuter], like Χᾰρᾰκτηρ;
     nom: _, _, "~ᾰ";
     acc: "~", _, "~ᾰ";
     ),
     // Περᾰς: 11 words (φως, τερᾰς, πᾰγκρεᾰς, ἐρῠσῐπελᾰς, περᾰς, εἰκος). Like Θεμᾰ with `` after each pattern (`ς` after ~).
     declension!("περᾰς", 11, "~ς", [gender: Neuter], like Θεμᾰ with "", "ς" after "~";
     ),
-    // Πεπερῐ: 11 words (σῐνᾱπῐ, κομμῐ, πεπερῐ, κιννᾰβᾰρῐ, ἀμῐ, στῐμμῐ). Like Δῐαιρεσῐς, except in 4 cells: nom sg, nom pl, acc sg, acc pl.
-    declension!("πεπερῐ", 11, "~ῐ", [gender: Neuter], like Δῐαιρεσῐς;
+    // Πεπερῐ: 11 words (σῐνᾱπῐ, κομμῐ, πεπερῐ, κιννᾰβᾰρῐ, ἀμῐ, στῐμμῐ). Like Περῐφρονησῐς, except in 4 cells: nom sg, nom pl, acc sg, acc pl.
+    declension!("πεπερῐ", 11, "~ῐ", [gender: Neuter], like Περῐφρονησῐς;
     nom: "~ῐ", _, "~η|~εᾰ";
     acc: "~ῐ", _, "~η|~εᾰ";
     ),
@@ -673,24 +659,24 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     gen_: "~ᾱ", _, _;
     voc: "~ᾱ", _, _;
     ),
-    // Τρωες: 11 words (πῑερες, τρωες, κηφηνες, ἁλτηρες, αἰγες, ἀνᾰξῠρῐδες). Like Ὀργῐᾰ, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
-    declension!("τρωες", 11, "~ες", like Ὀργῐᾰ;
+    // Ἱππομᾰνες: 10 words (νευροειδες, μονοειδες, τρῐχομᾰνες, ἡμεροκᾰλλες, σησᾰμοειδες, ὠκῐμοειδες). Like Τευχος, except in 1 cell: acc sg.
+    declension!("ἱππομᾰνες", 10, "~ες", [gender: Neuter], like Τευχος;
+    stem lemma: "~ες- like σημειον";
+    acc: "~ες", _, _;
+    ),
+    // Τρωες: 10 words (πῑερες, τρωες, κηφηνες, ἁλτηρες, αἰγες, ὠρῠγγες). Like Δᾰνᾰοι, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
+    declension!("τρωες", 10, "~ες", like Δᾰνᾰοι;
     nom: "~ες", _, "~ες";
     dat: _, _, "~σῐ|~σῐν";
     acc: _, _, "~ᾰς";
     ),
-    // Ἱππομᾰνες: 10 words (νευροειδες, μονοειδες, τρῐχομᾰνες, ἡμεροκᾰλλες, σησᾰμοειδες, ὠκῐμοειδες). Like Τευχος, except in 1 cell: acc sg.
-    declension!("ἱππομᾰνες", 10, "~ες", [gender: Neuter], like Τευχος;
-    stem noun_sg: "~ες- like σημειον";
-    acc: "~ες", _, _;
-    ),
     // Φρην: 9 words (φρην, ὑμην, ποιμην, πῠθμην, ἀδην, αὐχην).
     declension!("φρην", 9, "~ην";
-    stem noun_sg: "~ην- like σημειον";
-    nom: _, "~ενε", "~ενες";
-    gen_: "~ενος", "~ενοιν", "~ενων";
-    dat: "~ενῐ", _, "~εσῐ|~εσῐν";
-    acc: "~ενᾰ", _, "~ενᾰς";
+    stem lemma: "~ην- like σημειον";
+    stem rest: "~ε- like αἰων";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
     // Ἱμᾱς: 9 words (κορῠβᾱς, γῐγᾱς, ἐλεφᾱς, ἀδᾰμᾱς, ἀνδρῐᾱς, λῠκᾰβᾱς).
     declension!("ἱμᾱς", 9, "~ᾱς", [gender: Masculine];
@@ -702,7 +688,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Πτῠξ: 8 words (ὀνῠξ, ψῑξ, σᾰρδονῠξ, ὑστρῐξ, στῐξ, βηξ).
     declension!("πτῠξ", 8, "~ξ";
-    stem noun_sg: "~ξ- like σημειον";
+    stem lemma: "~ξ- like σημειον";
     nom: _, "~χε", "~χες";
     gen_: "~χος", "~χοιν", "~χων";
     dat: "~χῐ", _, "~ξῐ|~ξῐν";
@@ -718,7 +704,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Νους: 8 words (νους, πλους, θῠγατρῐδους, ῥους, πᾰραπλους, ἐκπλους). Like Ἀρῐθμος, except in 2 cells: nom du, acc sg.
     declension!("νους", 8, "~ους", [gender: Masculine], like Ἀρῐθμος;
-    stem noun_sg: "~ου- like δῐαιρεσῐς";
+    stem lemma: "~ου- like δῐαιρεσῐς";
     nom: _, "~ω|~ω", _;
     acc: "~ουν", _, _;
     ),
@@ -730,16 +716,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     acc: "~ω", _, _;
     voc: "~οι", _, _;
     ),
-    // Μητρως: 6 words (τρως, ἡρως, δμως, πᾰτρως, θως, μητρως).
-    declension!("μητρως", 6, "~ως", [gender: Masculine];
-    stem noun_sg: "~ως- like σημειον";
+    // Δμως: 6 words (τρως, ἡρως, δμως, πᾰτρως, θως, μητρως).
+    declension!("δμως", 6, "~ως", [gender: Masculine];
+    stem lemma: "~ως- like σημειον";
     nom: _, "~ωε", "~ωες";
     gen_: "~ωος", "~ωοιν", "~ωων";
     dat: "~ῳ|~ωϊ", _, "~ωσῐ|~ωσῐν";
     acc: "~ω", _, "~ωᾰς";
     ),
-    // Γερᾰς: 6 words (γερᾰς, δεπᾰς, ψεφᾰς, σφελᾰς, βουκερᾰς, σκεπᾰς). Like Κηρ with `` after each pattern (`ς` after ~), except in 2 cells: dat sg, dat pl.
-    declension!("γερᾰς", 6, "~ς", [gender: Neuter], like Κηρ with "", "ς" after "~";
+    // Γερᾰς: 6 words (γερᾰς, δεπᾰς, ψεφᾰς, σφελᾰς, βουκερᾰς, σκεπᾰς). Like Θενᾰρ with `` after each pattern (`ς` after ~), except in 2 cells: dat sg, dat pl.
+    declension!("γερᾰς", 6, "~ς", [gender: Neuter], like Θενᾰρ with "", "ς" after "~";
     dat: "~ϊ", _, "~σῐ";
     ),
     // Πᾰτηρ: 6 words (ἀνηρ, μητηρ, πᾰτηρ, ἀστηρ, θῠγᾰτηρ, ἐνᾰτηρ).
@@ -750,21 +736,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     acc: "~ε~ᾰ", _, "~ε~ᾰς";
     voc: "~ε~", _, _;
     ),
-    // Ἁλς: 6 words (ἁλς, βους, ὑς, ὀϊς, χους, κῑς). Like Χᾰρᾰκτηρ, except in 4 cells: dat sg, dat pl, acc sg, acc pl.
-    declension!("ἁλς", 6, "~ς", [gender: Masculine], like Χᾰρᾰκτηρ;
-    stem noun_sg: "~- like δῐαιρεσῐς";
+    // Ὀϊς: 6 words (ἁλς, βους, ὑς, ὀϊς, χους, κῑς). Like Χᾰρᾰκτηρ, except in 4 cells: dat sg, dat pl, acc sg, acc pl.
+    declension!("ὀϊς", 6, "~ς", [gender: Masculine], like Χᾰρᾰκτηρ;
+    stem lemma: "~- like δῐαιρεσῐς";
     dat: "~", _, "~σῐ";
     acc: "~ν", _, "~ς";
     ),
-    // Θῐος: 6 words (ὀρᾰνος, ξεννος, δᾱμος, θῐος, ἁλῐος, ἀρχᾱγος). Like Ἀρῐθμος, except in 3 cells: gen_ sg, dat pl, acc pl.
-    declension!("θῐος", 6, "~ος", [gender: Masculine], like Ἀρῐθμος;
+    // Δᾱμος: 6 words (ὀρᾰνος, ξεννος, δᾱμος, θῐος, ἁλῐος, ἀρχᾱγος). Like Ἀρῐθμος, except in 3 cells: gen_ sg, dat pl, acc pl.
+    declension!("δᾱμος", 6, "~ος", [gender: Masculine], like Ἀρῐθμος;
     gen_: "~ω|~οιο", _, _;
     dat: _, _, "~οις|~οισῐ|~οισῐν";
     acc: _, _, "~ως";
     ),
     // Λῐψ: 5 words (χᾰλῠψ, φλεψ, χερνῐψ, φᾰψ, λῐψ).
     declension!("λῐψ", 5, "~ψ";
-    stem noun_sg: "~ψ- like σημειον";
+    stem lemma: "~ψ- like σημειον";
     nom: _, "~βε", "~βες";
     gen_: "~βος", "~βοιν", "~βων";
     dat: "~βῐ", _, "~ψῐ|~ψῐν";
@@ -772,7 +758,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Κωμῡς: 5 words (ἑλμῐνς, κωμῡς, κορῠς, πειρῐνς, ἀγνῡς).
     declension!("κωμῡς", 5, "~ς";
-    stem noun_sg: "~ς- like σημειον";
+    stem lemma: "~ς- like σημειον";
     nom: _, "~θε", "~θες";
     gen_: "~θος", "~θοιν", "~θων";
     dat: "~θῐ", _, "~σῐ|~σῐν";
@@ -791,36 +777,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     acc: "~ντᾰ", _, "~ντᾰς";
     voc: "~ν", _, _;
     ),
-    // Ἀηρ: 5 words (γᾰστηρ, ἀηρ, φρᾱτηρ, αἰθηρ, ἀθηρ). Like Πᾰτηρ, except in 4 cells: gen_ sg, dat sg, dat pl, voc sg.
+    // Ἀηρ: 5 words (γᾰστηρ, ἀηρ, φρᾱτηρ, αἰθηρ, ἀθηρ). Like Πᾰτηρ, except in 5 cells: dat du, acc du, voc sg, voc du, voc pl.
     declension!("ἀηρ", 5, "~η~", like Πᾰτηρ;
-    gen_: "~ε~ος", _, _;
-    dat: "~ε~ῐ", _, "~ε~σῐ|~ε~σῐν";
-    voc: "~η~", _, _;
+    stem rest: "~ε~- like χᾰρᾰκτηρ";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: "~η~", derived, derived;
     ),
     // Κηρῠξ: 5 words (κοκκῠξ, κηρῠξ, δοιδῠξ, ψευδοκηρῠξ, ἱεροκηρῠξ).
     declension!("κηρῠξ", 5, "~ῠξ", [gender: Masculine];
-    stem noun_sg: "~ῠξ- like σημειον";
-    nom: _, "~ῡκε", "~ῡκες";
-    gen_: "~ῡκος", "~ῡκοιν", "~ῡκων";
-    dat: "~ῡκῐ", _, "~ῡξῐ|~ῡξῐν";
-    acc: "~ῡκᾰ", _, "~ῡκᾰς";
+    stem lemma: "~ῠξ- like σημειον";
+    stem rest: "~ῡ- like κορᾰξ";
+    dat: _, derived, _;
+    acc: _, derived, _;
+    voc: _, derived, derived;
     ),
     // Κρεᾰς: 5 words (κρεᾰς, σελᾰς, κνεφᾰς, γηρᾰς, κᾰλλῐκρεᾰς).
     declension!("κρεᾰς", 5, "~ᾰς", [gender: Neuter];
-    stem noun_sg: "~ᾰς- like σημειον";
+    stem lemma: "~ᾰς- like σημειον";
     nom: _, "~ᾱ", "~ᾱ";
     gen_: "~ως", "~οιν", "~ων";
     dat: "~ᾳ", _, "~ᾰσῐ";
     acc: "~ᾰς", _, "~ᾱ";
     ),
-    // Πηχῠς: 4 words (πελεκῠς, πρεσβῠς, πηχῠς, ἀμφῐβρᾰχῠς). Like Δῐαιρεσῐς, except in 1 cell: acc sg.
-    declension!("πηχῠς", 4, "~ῠς", [gender: Masculine], like Δῐαιρεσῐς;
-    stem noun_sg: "~ῠ- like δῐαιρεσῐς";
+    // Πηχῠς: 4 words (πελεκῠς, πρεσβῠς, πηχῠς, ἀμφῐβρᾰχῠς). Like Περῐφρονησῐς, except in 1 cell: acc sg.
+    declension!("πηχῠς", 4, "~ῠς", [gender: Masculine], like Περῐφρονησῐς;
+    stem lemma: "~ῠ- like δῐαιρεσῐς";
     acc: "~ῠν", _, _;
     ),
     // Δᾰσῠ: 4 words (ἀστῠ, ὀξῠ, δᾰσῠ, πλᾰτῠ). Like Φᾰος, except in 3 cells: nom du, dat sg, acc sg.
     declension!("δᾰσῠ", 4, "~ῠ", like Φᾰος;
-    stem noun_sg: "~ῠ- like σημειον";
+    stem lemma: "~ῠ- like σημειον";
     nom: _, "~ει", _;
     dat: "~ει", _, _;
     acc: "~ῠ", _, _;
@@ -871,27 +858,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     declension!("ἐντεᾰ", 3, "~ᾰ", [gender: Neuter], like Ὀργῐᾰ;
     dat: _, _, "~σῐ|~σῐν";
     ),
-    // Θεωσῐς: 3 words (θεωσῐς, ἀλθησῐς, ζαχαρῐς). Like Δῐαιρεσῐς, except in 6 cells: nom du, nom pl, gen_ du, dat sg, dat pl, acc pl.
-    declension!("θεωσῐς", 3, "~ῐς", [gender: Feminine], like Δῐαιρεσῐς;
+    // Θεωσῐς: 3 words (θεωσῐς, ἀλθησῐς, ζαχαρῐς). Like Περῐφρονησῐς, except in 6 cells: nom du, nom pl, gen_ du, dat sg, dat pl, acc pl.
+    declension!("θεωσῐς", 3, "~ῐς", [gender: Feminine], like Περῐφρονησῐς;
     nom: _, derived, "~εες";
     gen_: _, derived, _;
     dat: "~εϊ", _, "~εσῐ";
     acc: _, _, "~εᾰς";
     ),
-    // Δυσμαι: 2 words (προλυται, δυσμαι). Like Λαλλαι, except in 5 cells: nom sg, nom pl, gen_ pl, dat pl, acc pl.
+    // Δυσμαι: 2 words (προλυται, δυσμαι). Like Λαλλαι, except in 2 cells: nom sg, voc pl.
     declension!("δυσμαι", 2, "~υ~αι", like Λαλλαι;
-    nom: "~υ~αι", _, "~ῠ~αι";
-    gen_: _, _, "~ῠ~ων";
-    dat: _, _, "~ῠ~αις";
-    acc: _, _, "~ῠ~ᾱς";
-    ),
-    // Γλωσσᾰ: 1 words (γλωσσᾰ).
-    declension!("γλωσσᾰ", 1, "~σσᾰ";
-    stem noun_sg: "~ττᾰ- like σημειον";
-    nom: _, "~ττᾱ", "~τται";
-    gen_: "~ττης", "~τταιν", "~ττων";
-    dat: "~ττῃ", _, "~τταις";
-    acc: "~ττᾰν", _, "~ττᾱς";
+    stem rest: "~ῠ~- like κροσσαι";
+    nom: "~υ~αι", _, _;
+    voc: _, _, derived;
     ),
     // Ἱερος: 1 words (ἱερος).
     declension!("ἱερος", 1, "ἱ~ος";
@@ -903,48 +881,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     ),
     // Ἱερον: 1 words (ἱερον). Like Ἱερος, except in 2 cells: nom pl, acc pl.
     declension!("ἱερον", 1, "ἱ~ον", like Ἱερος;
-    stem noun_sg: "~ον- like ἱερον";
+    stem lemma: "~ον- like ἱερον";
     nom: _, _, "ῐ̔~ᾰ";
     acc: _, _, "ῐ̔~ᾰ";
     ),
     // Ἱερα: 1 words (ἱερα).
     declension!("ἱερα", 1, "ἱ~α";
-    stem noun_sg: "~ᾱ- like ἱερον";
+    stem lemma: "~ᾱ- like ἱερον";
     nom: _, "ῐ̔~ᾱ", "ῐ̔~αι";
     gen_: "ῐ̔~ᾱς", "ῐ̔~αιν", "ῐ̔~ων";
     dat: "ῐ̔~ᾳ", _, "ῐ̔~αις";
     acc: "ῐ̔~ᾱν", _, "ῐ̔~ᾱς";
     ),
-    // Μηριᾰ: 1 words (μηριᾰ). Like Ὀργῐᾰ, except in 5 cells: nom sg, nom pl, gen_ pl, dat pl, acc pl.
-    declension!("μηριᾰ", 1, "~ιᾰ", like Ὀργῐᾰ;
-    nom: "~ιᾰ", _, "~ῐᾰ";
-    gen_: _, _, "~ῐων";
-    dat: _, _, "~ῐοις";
-    acc: _, _, "~ῐᾰ";
-    ),
-    // Ἰᾱλεμος: 1 words (ἰᾱλεμος).
-    declension!("ἰᾱλεμος", 1, "~ος";
-    nom: "~μος", "~μω", "~μοι";
-    gen_: "~μου", "~μοιν", "~μων";
-    dat: "~μῳ", _, "~μοις";
-    acc: "~μον", _, "~μους";
-    voc: "~με", _, _;
-    ),
-    // Κῠνοχᾰλκη: 1 words (κῠνοχᾰλκη).
-    declension!("κῠνοχᾰλκη", 1, "~~η";
-    stem noun_sg: "~κ~η- like σημειον";
-    nom: _, "~κ~ᾱ", "~κ~αι";
-    gen_: "~κ~ης", "~κ~αιν", "~κ~ων";
-    dat: "~κ~ῃ", _, "~κ~αις";
-    acc: "~κ~ην", _, "~κ~ᾱς";
-    ),
-    // Λιμεναρχης: 1 words (λιμεναρχης).
-    declension!("λιμεναρχης", 1, "~ι~ε~α~ης";
-    stem noun_sg: "~ῐ~η~ᾰ~η- like δῐαιρεσῐς";
-    nom: _, "~ῐ~η~ᾰ~ᾱ", "~ῐ~η~ᾰ~αι";
-    gen_: "~ῐ~η~ᾰ~ου", "~ῐ~η~ᾰ~αιν", "~ῐ~η~ᾰ~ων";
-    dat: "~ῐ~η~ᾰ~ῃ", _, "~ῐ~η~ᾰ~αις";
-    acc: "~ῐ~η~ᾰ~ην", _, "~ῐ~η~ᾰ~ᾱς";
+    // Μηριᾰ: 1 words (μηριᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
+    declension!("μηριᾰ", 1, "~ιᾰ", like Δᾰνᾰοι;
+    stem rest: "~ῐ- like ὀργῐᾰ";
+    nom: "~ιᾰ", _, _;
+    voc: _, _, derived;
     ),
     // Βυσναιοι: 1 words (βυσναιοι). Like Δυσμαι, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
     declension!("βυσναιοι", 1, "~υ~οι", like Δυσμαι;
@@ -952,10 +905,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     dat: _, _, "~ῠ~οις";
     acc: _, _, "~ῠ~ους";
     ),
-    // Ἐπισφυρῐᾰ: 1 words (ἐπισφυρῐᾰ). Like Βυσναιοι, except in 3 cells: nom sg, nom pl, acc pl.
+    // Ἐπισφυρῐᾰ: 1 words (ἐπισφυρῐᾰ). Like Βυσναιοι, except in 2 cells: nom sg, voc pl.
     declension!("ἐπισφυρῐᾰ", 1, "~υ~ᾰ", like Βυσναιοι;
-    nom: "~υ~ᾰ", _, "~ῠ~ᾰ";
-    acc: _, _, "~ῠ~ᾰ";
+    stem rest: "~ῠ~- like ὀργῐᾰ";
+    nom: "~υ~ᾰ", _, _;
+    voc: _, _, derived;
     ),
     // Πᾰραφερνᾰ: 1 words (πᾰραφερνᾰ). Like Ἰκρῐα with `~ᾰ` after each pattern, except in 2 cells: gen_ pl, dat pl.
     declension!("πᾰραφερνᾰ", 1, "~α~ᾰ", like Ἰκρῐα with "~ᾰ";
@@ -968,40 +922,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 92] = [
     dat: _, _, "~ᾰ~ᾰ~αις";
     acc: _, _, "~ᾰ~ᾰ~ᾱς";
     ),
-    // Βρογχῐᾰ: 1 words (βρογχῐᾰ). Like Ὀργῐᾰ, except in 5 cells: nom sg, nom pl, gen_ pl, dat pl, acc pl.
-    declension!("βρογχῐᾰ", 1, "~ῐᾰ", like Ὀργῐᾰ;
-    nom: "~ῐᾰ", _, "~ιᾰ";
-    gen_: _, _, "~ιων";
-    dat: _, _, "~ιοις";
-    acc: _, _, "~ιᾰ";
+    // Βρογχῐᾰ: 1 words (βρογχῐᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
+    declension!("βρογχῐᾰ", 1, "~ῐᾰ", like Δᾰνᾰοι;
+    stem rest: "~ι- like ὀργῐᾰ";
+    nom: "~ῐᾰ", _, _;
+    voc: _, _, derived;
     ),
-    // Κοσμητης: 1 words (κοσμητης).
-    declension!("κοσμητης", 1, "~σ~ης";
-    nom: "~~ης", "~~ᾱ", "~~αι";
-    gen_: "~~ου", "~~αιν", "~~ων";
-    dat: "~~ῃ", _, "~~αις";
-    acc: "~~ην", _, "~~ᾱς";
-    voc: "~~ᾰ", _, _;
-    ),
-    // Χᾰριστῐᾰ: 1 words (χᾰριστῐᾰ). Like Λαλλαι, except in 5 cells: nom sg, nom pl, gen_ pl, dat pl, acc pl.
+    // Χᾰριστῐᾰ: 1 words (χᾰριστῐᾰ). Like Λαλλαι, except in 2 cells: nom sg, voc pl.
     declension!("χᾰριστῐᾰ", 1, "~ι~ᾰ", like Λαλλαι;
-    nom: "~ι~ᾰ", _, "~ῐ~ᾰ";
-    gen_: _, _, "~ῐ~ων";
-    dat: _, _, "~ῐ~οις";
-    acc: _, _, "~ῐ~ᾰ";
+    stem rest: "~ῐ~- like ὀργῐᾰ";
+    nom: "~ι~ᾰ", _, _;
+    voc: _, _, derived;
     ),
-    // Ὀρθογραφος: 1 words (ὀρθογραφος).
-    declension!("ὀρθογραφος", 1, "ὀρθ~α~ος";
-    nom: "λογ~ᾰ~ος", "λογ~ᾰ~ω", "λογ~ᾰ~οι";
-    gen_: "λογ~ᾰ~ου", "λογ~ᾰ~οιν", "λογ~ᾰ~ων";
-    dat: "λογ~ᾰ~ῳ", _, "λογ~ᾰ~οις";
-    acc: "λογ~ᾰ~ον", _, "λογ~ᾰ~ους";
-    voc: "λογ~ᾰ~ε", _, _;
-    ),
-    // Ἑλληνοτᾰμιαι: 1 words (ἑλληνοτᾰμιαι). Like Μηριᾰ, except in 4 cells: nom sg, nom pl, dat pl, acc pl.
+    // Ἑλληνοτᾰμιαι: 1 words (ἑλληνοτᾰμιαι). Like Μηριᾰ, except in 2 cells: nom sg, voc pl.
     declension!("ἑλληνοτᾰμιαι", 1, "~ιαι", like Μηριᾰ;
-    nom: "~ιαι", _, "~ῐαι";
-    dat: _, _, "~ῐαις";
-    acc: _, _, "~ῐᾱς";
+    stem rest: "~ῐ- like κροσσαι";
+    nom: "~ιαι", _, _;
+    voc: _, _, derived;
     ),
 ];

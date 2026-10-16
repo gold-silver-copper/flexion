@@ -38,89 +38,32 @@ macro_rules! relation {
 
 pub(super) static RELATIONS: [Relation<'static>; 15] = [
     // NOM_F, from GEN_F.
-    relation!(NOM_F, [GEN_F], [("der~n", "die~"), ("~n", "~"), ("~r", "~")], rules {
-        "" => [2 28, 1 6, 0 2],
-        "n" => [1 6, 0 2],
-        "r" => [2 28],
-    } listed {
-        "derjenigen" => 0,
-        "derselben" => 0,
-    }, true, None),
+    relation!(NOM_F, [GEN_F], [], none, true, None),
     // NOM_N, from NOM_M.
-    relation!(NOM_N, [NOM_M], [("der~", "das~"), ("~", "~"), ("~r", "~s")], rules {
-        "" => [1 19, 2 15, 0 2],
-        "e" => [1 6, 0 2],
-        "n" => [1 8],
-        "r" => [2 15, 1 5],
-    } listed {
-        "derjenige" => 0,
-        "derselbe" => 0,
-        "euer" => 1,
-        "ihr" => 1,
-        "sier" => 1,
-        "unser" => 1,
-        "unßer" => 1,
-    }, true, None),
+    relation!(NOM_N, [NOM_M], [], none, true, None),
     // NOM_PL, from NOM_F.
     relation!(NOM_PL, [NOM_F], [("~", "~"), ("~", "~n")], rules {
-        "" => [0 25, 1 10],
+        "" => [0 25, 1 9],
         "ge" => [1 7],
     } listed {
         "dieselbe" => 1,
-        "eine" => 1,
     }, true, None),
     // GEN_M, from GEN_F.
-    relation!(GEN_M, [GEN_F], [("der~", "des~"), ("~", "~"), ("~r", "~s")], rules {
-        "" => [2 29, 1 6, 0 2],
-        "n" => [1 6, 0 2],
-        "r" => [2 29],
-    } listed {
-        "derjenigen" => 0,
-        "derselben" => 0,
-    }, true, None),
+    relation!(GEN_M, [GEN_F], [], none, true, None),
     // GEN_F, from NOM_M.
-    relation!(GEN_F, [NOM_M], [("~", "~"), ("~", "~er"), ("~", "~n")], rules {
-        "" => [0 16, 1 13, 2 8],
-        "e" => [2 8],
-        "n" => [1 8],
-        "r" => [0 16, 1 5],
-    } listed {
-        "euer" => 1,
-        "ihr" => 1,
-        "sier" => 1,
-        "unser" => 1,
-        "unßer" => 1,
-    }, true, None),
+    relation!(GEN_F, [NOM_M], [], none, true, None),
     // GEN_N, from GEN_M.
     relation!(GEN_N, [GEN_M], [], none, true, None),
     // GEN_PL, from GEN_F.
-    relation!(GEN_PL, [GEN_F], [("~", "~"), ("~r", "~n")], rules {
-        "" => [0 33, 1 2],
-    } listed {
-        "einer" => 1,
-    }, true, None),
+    relation!(GEN_PL, [GEN_F], [], none, true, None),
     // DAT_M, from GEN_F.
-    relation!(DAT_M, [GEN_F], [("der~", "dem~"), ("~", "~"), ("~r", "~m")], rules {
-        "" => [2 29, 1 6, 0 2],
-        "n" => [1 6, 0 2],
-        "r" => [2 29],
-    } listed {
-        "derjenigen" => 0,
-        "derselben" => 0,
-    }, true, None),
+    relation!(DAT_M, [GEN_F], [], none, true, None),
     // DAT_F, from GEN_F.
     relation!(DAT_F, [GEN_F], [], none, true, None),
     // DAT_N, from DAT_M.
     relation!(DAT_N, [DAT_M], [], none, true, None),
-    // DAT_PL, from GEN_PL.
-    relation!(DAT_PL, [GEN_PL], [("der~", "den~"), ("~", "~"), ("~r", "~n")], rules {
-        "" => [2 25, 1 8, 0 2],
-        "n" => [1 8, 0 2],
-        "r" => [2 25],
-    } listed {
-        "derjenigen" => 0,
-        "derselben" => 0,
-    }, true, None),
+    // DAT_PL, from GEN_F.
+    relation!(DAT_PL, [GEN_F], [], none, true, None),
     // ACC_M, from DAT_PL.
     relation!(ACC_M, [DAT_PL], [], none, true, None),
     // ACC_F, from NOM_F.

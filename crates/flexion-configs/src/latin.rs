@@ -1,8 +1,15 @@
 //! Latin. Forms come from Wiktionary's generated tables (`la-ndecl`,
 //! `la-adecl`, `la-conj`), which write long vowels with macrons; headwords
 //! don't, so the citation form (from the canonical head form) restores them.
-//! Perfect passive and other periphrastic forms (`tāctus sum`) are phrases,
-//! not forms of the verb, and are left out.
+//! The perfect passive system has no one-word forms: it is the perfect
+//! passive participle, agreeing with the subject, and a form of `sum`
+//! (`amātus sum`, `amātus eram`, `amātus erō`, `amātus sim`, `amātus essem`;
+//! the infinitives `amātum esse`, `amātūrum esse`, `amātum īrī`; Allen &
+//! Greenough §§ 184–196, Gildersleeve & Lodge §§ 116, 128, 248–250). The
+//! tables write those as phrases (the infinitives) or as a recipe (`amātus
+//! + present active indicative of sum`), here written out per person and
+//! number, the participle singular in the singular (`amātus est`) and
+//! plural in the plural (`amātī sunt`), masculine, as the tables cite it.
 
 use flexion_train::features;
 use flexion_train::kaikki::Entry;
@@ -153,7 +160,7 @@ pub fn language() -> Language {
                     ),
                     group(
                         "infinitive",
-                        "An infinitive (the one-word ones: the periphrastic perfect passive and future infinitives are phrases).",
+                        "An infinitive (the perfect passive and the futures are phrases: `amātum esse`, `amātūrum esse`, `amātum īrī`).",
                         &["Voice", "InfinitiveTense"],
                         &["infinitive"],
                         &["potential"],
@@ -277,6 +284,41 @@ fn group(
 
 struct LatinHooks;
 
+/// The forms of `sum` the tables' recipes name, by person and number (see
+/// [`PERSONS`]).
+const SUM: [(&str, [&str; 6]); 5] = [
+    (
+        "present active indicative of sum",
+        ["sum", "es", "est", "sumus", "estis", "sunt"],
+    ),
+    (
+        "imperfect active indicative of sum",
+        ["eram", "erās", "erat", "erāmus", "erātis", "erant"],
+    ),
+    (
+        "future active indicative of sum",
+        ["erō", "eris", "erit", "erimus", "eritis", "erunt"],
+    ),
+    (
+        "present active subjunctive of sum",
+        ["sim", "sīs", "sit", "sīmus", "sītis", "sint"],
+    ),
+    (
+        "imperfect active subjunctive of sum",
+        ["essem", "essēs", "esset", "essēmus", "essētis", "essent"],
+    ),
+];
+
+/// The persons and numbers, in the order [`SUM`] lists them.
+const PERSONS: [(&str, &str); 6] = [
+    ("first-person", "singular"),
+    ("second-person", "singular"),
+    ("third-person", "singular"),
+    ("first-person", "plural"),
+    ("second-person", "plural"),
+    ("third-person", "plural"),
+];
+
 /// Letters only: no spaces (periphrastic forms), no `+` (the tables' "tāctus +
 /// present active indicative of sum"), no IPA that leaks into some tables.
 fn latin_word(w: &str) -> bool {
@@ -290,8 +332,45 @@ impl Hooks for LatinHooks {
         latin_word(lemma)
     }
 
-    fn form_ok(&self, _pos: &str, _lemma: &str, form: &str) -> bool {
+    /// A word; or, of a verb, a phrase of two (`amātum esse`).
+    fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
         latin_word(form)
+            || (pos == "verb" && form.split(' ').count() == 2 && form.split(' ').all(latin_word))
+    }
+
+    /// The perfect passive system's recipe (`amātus + present active
+    /// indicative of sum`) written out: the participle and each person and
+    /// number's form of `sum`, the participle plural in the plural.
+    fn repair(&self, pos: &str, entry: &mut Entry) {
+        if pos != "verb" {
+            return;
+        }
+        let mut written = Vec::new();
+        for f in entry.forms.iter().filter(|f| f.form.contains(" + ")) {
+            let Some((participle, recipe)) = f.form.split_once(" + ") else {
+                continue;
+            };
+            let Some(&(_, forms)) = SUM.iter().find(|(r, _)| *r == recipe) else {
+                continue;
+            };
+            let plural = participle.strip_suffix("us").map(|stem| format!("{stem}ī"));
+            for ((person, number), aux) in PERSONS.iter().zip(forms) {
+                let participle = match (*number, &plural) {
+                    ("plural", Some(p)) => p.as_str(),
+                    _ => participle,
+                };
+                let mut tags = f.tags.clone();
+                tags.push((*person).to_string());
+                tags.push((*number).to_string());
+                written.push(flexion_train::kaikki::Form {
+                    form: format!("{participle} {aux}"),
+                    tags,
+                    ..f.clone()
+                });
+            }
+        }
+        entry.forms.retain(|f| !f.form.contains(" + "));
+        entry.forms.extend(written);
     }
 
     /// Gender from the head line (`aquila f (genitive aquilae); first

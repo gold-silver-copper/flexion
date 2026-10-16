@@ -80,6 +80,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     prefixes: None,
     heads: flexion::Heads {
         least: None,
+        not: Cow::Borrowed(&[]),
         words: Cow::Borrowed(&[]),
     },
     accent: Some(flexion::Accent {
@@ -93,15 +94,16 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(flexion::Marks {
         rules: crate::marks::MARKS,
+        roots: Cow::Borrowed(crate::marks::ROOTS),
         part: Cow::Borrowed("pronoun"),
     }),
     slots: Cow::Borrowed(&stems::SLOTS),
     tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 1.0,
+    sharpness: 0.5,
     trust: flexion::Trust {
-        regular: 0.5779967,
+        regular: 0.66219646,
         unsettled: 1.0,
         unattested: 1.0,
     },

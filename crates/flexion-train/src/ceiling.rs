@@ -1,7 +1,8 @@
 //! How well a word's paradigm can be told from its letters and features at
 //! all: a classifier with far more cues than the grammar's ending rules
-//! (regularized multinomial logistic regression over its endings and
-//! beginnings, its length, its syllables and its inherent features), and
+//! (regularized multinomial logistic regression over its endings, the whole
+//! word where an ending reaches its start, its beginnings, its length, its
+//! syllables and its inherent features), scored on words and on forms, and
 //! the same with each kind of cue left out. A diagnostic of the trainer's,
 //! never part of a grammar: where it beats the rules, the cue it leans on
 //! is one the rules could learn to read.
@@ -11,8 +12,11 @@ use crate::HashMap;
 /// The kinds of cue, for leaving each out.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Cue {
-    /// The word's last one to six letters.
+    /// The word's last one to [`ENDING`] letters.
     Ending,
+    /// Its whole letters, where they are no more than [`ENDING`]: an ending
+    /// that reaches its start.
+    Anchor,
     /// Its first one to three letters.
     Beginning,
     /// How many letters it has.
@@ -23,8 +27,9 @@ pub enum Cue {
     Features,
 }
 
-pub const CUES: [Cue; 5] = [
+pub const CUES: [Cue; 6] = [
     Cue::Ending,
+    Cue::Anchor,
     Cue::Beginning,
     Cue::Length,
     Cue::Syllables,
@@ -41,6 +46,9 @@ pub struct Example<'w> {
     pub inherent: &'w [u8],
 }
 
+/// The most letters an ending has.
+pub const ENDING: usize = 8;
+
 /// Hashed feature space.
 const DIMENSIONS: usize = 1 << 16;
 const EPOCHS: usize = 6;
@@ -56,9 +64,12 @@ fn cues(e: &Example<'_>, without: Option<Cue>) -> Vec<usize> {
             out.push(usize::try_from(crate::eval::hash(&name)).unwrap_or(0) % DIMENSIONS);
         }
     };
-    for k in 1..=6.min(n) {
+    for k in 1..=ENDING.min(n) {
         let end: String = letters.iter().skip(n - k).collect();
         add(Cue::Ending, format!("e{k}\u{1f}{end}"));
+    }
+    if n <= ENDING {
+        add(Cue::Anchor, format!("w\u{1f}{}", e.key));
     }
     for k in 1..=3.min(n) {
         let start: String = letters.iter().take(k).collect();
@@ -75,13 +86,25 @@ fn cues(e: &Example<'_>, without: Option<Cue>) -> Vec<usize> {
     out
 }
 
+/// A word held out: the paradigms that build the most of its forms (tied,
+/// all of them), and per paradigm how many of its forms it builds, of
+/// `forms`.
+#[derive(Debug, Clone)]
+pub struct Held<'o> {
+    pub best: &'o [usize],
+    pub built: &'o [usize],
+    pub forms: usize,
+}
+
 /// A classifier learned from `train` (each word with its paradigm), and its
-/// share right on `test`, with every cue but `without`.
+/// share right on `test`, with every cue but `without`: of the words (its
+/// paradigm one of their best), and of their forms (those its paradigm
+/// builds).
 pub fn score(
     train: &[(Example<'_>, usize)],
-    test: &[(Example<'_>, usize)],
+    test: &[(Example<'_>, Held<'_>)],
     without: Option<Cue>,
-) -> f64 {
+) -> (f64, f64) {
     let mut classes: Vec<usize> = train.iter().map(|(_, p)| *p).collect();
     classes.sort_unstable();
     classes.dedup();
@@ -133,21 +156,24 @@ pub fn score(
             }
         }
     }
-    let right = test
-        .iter()
-        .filter(|(e, p)| {
-            let l = logits(&weights, &cues(e, without));
-            let best = l
-                .iter()
-                .enumerate()
-                .max_by(|a, b| a.1.total_cmp(b.1))
-                .and_then(|(i, _)| classes.get(i));
-            best == Some(p)
-        })
-        .count();
+    let (mut words, mut forms, mut all) = (0, 0, 0);
+    for (e, held) in test {
+        let l = logits(&weights, &cues(e, without));
+        let chosen = l
+            .iter()
+            .enumerate()
+            .max_by(|a, b| a.1.total_cmp(b.1))
+            .and_then(|(i, _)| classes.get(i));
+        words += usize::from(chosen.is_some_and(|c| held.best.contains(c)));
+        forms += chosen
+            .and_then(|&c| held.built.get(c))
+            .copied()
+            .unwrap_or(0);
+        all += held.forms;
+    }
     #[allow(clippy::cast_precision_loss)]
-    let share = right as f64 / test.len().max(1) as f64;
-    share
+    let share = |n: usize, of: usize| n as f64 / of.max(1) as f64;
+    (share(words, test.len()), share(forms, all))
 }
 
 #[cfg(test)]
@@ -168,7 +194,28 @@ mod tests {
             .map(|i| (example(i), usize::from(i % 2 == 0)))
             .collect();
         let (train, test) = all.split_at(300);
-        assert!(score(train, test, None) > 0.95);
-        assert!(score(train, test, Some(Cue::Features)) < 0.7);
+        let classes: Vec<[usize; 1]> = test.iter().map(|(_, p)| [*p]).collect();
+        let built: Vec<[usize; 2]> = test
+            .iter()
+            .map(|(_, p)| if *p == 0 { [3, 0] } else { [0, 3] })
+            .collect();
+        let test: Vec<(Example<'_>, Held<'_>)> = test
+            .iter()
+            .zip(classes.iter().zip(&built))
+            .map(|((e, _), (best, built))| {
+                (
+                    e.clone(),
+                    Held {
+                        best,
+                        built,
+                        forms: 3,
+                    },
+                )
+            })
+            .collect();
+        let test = test.as_slice();
+        assert!(score(train, test, None).0 > 0.95);
+        assert!(score(train, test, None).1 > 0.95);
+        assert!(score(train, test, Some(Cue::Features)).0 < 0.7);
     }
 }
