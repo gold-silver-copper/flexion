@@ -782,6 +782,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         prefix,
                         rest,
                         c.form.strip_prefix(drop).unwrap_or(&c.form),
+                        cell,
                     );
                     for (form, p) in [(separated, *separable), (kept, *inseparable)] {
                         if p <= 0.0 {
@@ -874,12 +875,24 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         lists
     }
 
-    /// The form `form` (written) of the word `rest` with `prefix` kept in
-    /// front, as they meet. Its accent stays on the syllable it is on, counted
-    /// from the end; one as far back as the law allows on the rest goes as
-    /// far back as it allows on the whole word, but not before the prefix's
-    /// last syllable, nor before an augment (`ἀπόλυε`, `ἀπῆλθον`).
-    fn kept(&self, prefixes: &Prefixes<'_>, prefix: &str, rest: &str, form: &str) -> String {
+    /// The form `form` (written) of `cell` of the word `rest` with `prefix`
+    /// kept in front, as they meet. Its accent stays on the syllable it is
+    /// on, counted from the end; in a cell whose accent recedes, one as far
+    /// back as the law allows on the rest goes as far back as it allows on
+    /// the whole word, but not before the prefix's last syllable, nor before
+    /// an augment (`ἀπόλυε`, `ἀπῆλθον`; Smyth §§ 426, 450). How long the
+    /// last syllable counts is the cell's (the optative's `-οι` is long,
+    /// Smyth §169: `προφέροι`); a cell whose accent doesn't recede keeps it
+    /// where it is (the infinitives and participles, Smyth §425:
+    /// `προλῦσαι`).
+    fn kept(
+        &self,
+        prefixes: &Prefixes<'_>,
+        prefix: &str,
+        rest: &str,
+        form: &str,
+        cell: usize,
+    ) -> String {
         let o = &self.orthography;
         let written = o.read(form);
         let (letters, rest_at) = prefixes.join(&o.key(prefix), prefix, &written.letters);
@@ -894,15 +907,31 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 ..written.stress?
             })
         });
-        if let (Some(p), Some(s)) = (&o.prosody, written.stress) {
+        // The cell's accent: whether it recedes (as the commonest pattern
+        // places it), and whether its final `-αι`, `-οι` counts as long.
+        let accent = self.accent.as_ref();
+        let recedes = accent
+            .and_then(|a| {
+                let commonest = (0..a.patterns.len()).max_by_key(|&i| {
+                    (
+                        a.patterns.get(i).map_or(0, |p| p.words),
+                        std::cmp::Reverse(i),
+                    )
+                })?;
+                a.place(u16::try_from(commonest).ok()?, cell)
+            })
+            .is_none_or(|place| place == crate::Place::Recessive);
+        let long = accent.is_some_and(|a| {
+            a.long_finals
+                .binary_search(&u16::try_from(cell).unwrap_or(u16::MAX))
+                .is_ok()
+        });
+        if let (Some(p), Some(s), true) = (&o.prosody, written.stress, recedes) {
             let recessive = |letters: &str, long: bool, wall: usize| {
                 let syllables = p.syllables(o, letters, long);
                 p.accent(&syllables, wall, p.acute)
             };
-            let long = [false, true]
-                .into_iter()
-                .find(|&long| recessive(&written.letters, long, 0) == Some(s));
-            if let Some(long) = long {
+            if recessive(&written.letters, long, 0) == Some(s) {
                 // The augment: the form begins otherwise than the word.
                 let augmented = written.letters.chars().next() != rest.chars().next();
                 let syllables = p.syllables(o, &letters, long);
