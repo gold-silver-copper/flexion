@@ -1103,7 +1103,7 @@ fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
     if !between.iter().all(|l| apart(a, &l.change)) {
         return None;
     }
-    match (a, b) {
+    match (&kept(a), &kept(b)) {
         (
             Change::Edge {
                 stem,
@@ -1155,16 +1155,21 @@ fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
                 to: t2,
                 plain: p2,
             },
-        ) if literal == l2 && p2.is_empty() => {
+        ) if literal == l2 => {
             let mut letters = s2.chars();
             let (Some(letter), None) = (letters.next(), letters.next()) else {
                 return None;
             };
-            if stem.chars().eq(std::iter::once(letter)) || plain.iter().any(|(c, _)| *c == letter) {
+            let theirs: Vec<(char, String)> = std::iter::once((letter, t2.clone()))
+                .chain(p2.iter().cloned())
+                .collect();
+            let mine =
+                |c: char| stem.chars().eq(std::iter::once(c)) || plain.iter().any(|(p, _)| *p == c);
+            if theirs.iter().any(|(c, _)| mine(*c)) {
                 return None;
             }
             let mut plain = plain.clone();
-            plain.push((letter, t2.clone()));
+            plain.extend(theirs);
             Some(Change::Front {
                 literal: literal.clone(),
                 stem: stem.clone(),
@@ -1176,16 +1181,42 @@ fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
     }
 }
 
+/// `change` with the stem letter it writes again kept instead (`к+ы → к+и`
+/// is `[к]+ы → +и`): the same law, which joins others kept so.
+fn kept(change: &Change) -> Change {
+    match change {
+        Change::Edge {
+            stem,
+            to,
+            keep: false,
+            ..
+        } if let [one] = stem.as_slice()
+            && let Some(rest) = to.strip_prefix(one.as_str())
+            && rest.starts_with(BOUNDARY) =>
+        {
+            let mut change = change.clone();
+            if let Change::Edge { to, keep, .. } = &mut change {
+                *to = rest.to_string();
+                *keep = true;
+            }
+            change
+        }
+        _ => change.clone(),
+    }
+}
+
 /// Whether law `other` can't meet what `law` reads or writes: an edge law
 /// of another ending, whose replacement doesn't write `law`'s ending,
 /// beside an edge law; any edge law beside a front law (they meet the
-/// stem's two ends).
+/// stem's two ends); a front law of another literal beside a front law.
 fn apart(law: &Change, other: &Change) -> bool {
     match (law, other) {
         (Change::Edge { ending, .. }, Change::Edge { ending: e2, to, .. }) => {
             ending != e2 && !to.contains(ending.as_str())
         }
         (Change::Front { .. }, Change::Edge { .. }) => true,
+        // Each reads the literal a form begins with, and writes it away.
+        (Change::Front { literal, .. }, Change::Front { literal: l2, .. }) => literal != l2,
         _ => false,
     }
 }
@@ -3137,5 +3168,21 @@ mod tests {
             edge("г", "ы", "и"),
         ];
         assert_eq!(merge(&laws).len(), 3);
+        // As the learner finds them, writing the stem letter again (`к+ы →
+        // к+и`): one law all the same.
+        let written = |stem: &str| Law {
+            change: Change::Edge {
+                stem: vec![stem.to_string()],
+                ending: "ы".to_string(),
+                to: format!("{stem}{BOUNDARY}и"),
+                keep: false,
+                earlier: Vec::new(),
+                left: Vec::new(),
+                right: Vec::new(),
+            },
+            ..edge(stem, "ы", "и")
+        };
+        let laws = [written("к"), edge("ц", "о", "е"), written("г")];
+        assert_eq!(merge(&laws).len(), 2);
     }
 }
