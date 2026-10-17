@@ -22,6 +22,9 @@ pub struct Script {
     /// The law of limitation's facts, where the language has one.
     pub prosody: Option<Prosody>,
     pub initial: String,
+    /// The marks that state a vowel's length both ways (see
+    /// [`crate::spec::Spelling::stated_length`]).
+    pub stated_length: String,
 }
 
 /// What [`flexion::Prosody`] needs, owned.
@@ -163,6 +166,7 @@ impl Script {
             dropped: s.strip_marks.to_string(),
             mark_monosyllables: s.mark_monosyllables,
             initial: s.initial_marks.to_string(),
+            stated_length: s.stated_length.to_string(),
         }
     }
 

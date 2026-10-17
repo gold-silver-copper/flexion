@@ -295,6 +295,10 @@ pub fn language() -> Language {
             // final -αι, -οι counts as short.
             long_vowels: "ηω",
             long_marks: "\u{304}\u{345}",
+            // The tables mark short α, ι, υ with a breve as well as long
+            // ones with a macron (λῡ́ουσῐ): one written bare has its length
+            // unstated.
+            stated_length: "\u{304}\u{306}",
             short_finals: vec!["αι", "οι"],
             short_endings: vec!["εως", "εων"],
             circumflex: Some('\u{342}'),

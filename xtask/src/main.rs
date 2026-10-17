@@ -140,6 +140,7 @@ fn run() -> Result<(), String> {
                 diagnose: args.iter().any(|a| a == "--diagnose"),
                 pool: args.iter().any(|a| a == "--pool"),
                 main_only: args.iter().any(|a| a == "--without-editions"),
+                again: false,
             };
             try_language(&lang, flag("--pos").as_deref(), &options)
         }
@@ -333,6 +334,10 @@ struct TryOptions {
     pool: bool,
     /// Learn from the main dump's words only, not other editions'.
     main_only: bool,
+    /// Another tenth of a pooled run (see [`try_language`]): what doesn't
+    /// depend on the tenth (a small part's words left out in turn) isn't
+    /// measured again.
+    again: bool,
 }
 
 /// A part of speech with fewer words is scored on several development
@@ -466,6 +471,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 let tenth = TryOptions {
                     fold,
                     save: None,
+                    again: true,
                     ..o.clone()
                 };
                 try_tenth(lang, &data, Some(part.name), &tenth, &mut saved, &mut marks)?;
@@ -503,6 +509,7 @@ fn try_tenth(
     let settings = o.settings;
     let dev = eval::dev_of(fold);
     let script = script::Script::new(&lang.spelling);
+    let stated = script.stated_length.as_str();
     // The language's marks model, from every part of speech's training
     // words (and those less the dev tenth, for the sharpness).
     let trained = |l: &Lexeme| {
@@ -814,12 +821,15 @@ fn try_tenth(
                 a.class.exceptions.len(),
             );
         }
-        {
+        if test.is_empty() {
+            println!("  no held-out words: no score (–)");
+        } else {
             // The floor learns from the same words as the grammar, every edition's.
             let main: Vec<&Lexeme> = train.iter().collect();
             let out = eval::outcomes(
                 g,
                 &g.orthography,
+                stated,
                 &test,
                 eval::Input::Headword,
                 &learned.seen,
@@ -827,7 +837,7 @@ fn try_tenth(
             );
             let s = eval::Score::of(&out);
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
-            let floored = eval::floor(&g.orthography, &main, &test, g.lemma_cell);
+            let floored = eval::floor(&g.orthography, stated, &main, &test, g.lemma_cell);
             let (floor, floor_unseen) = eval::floor_shares(&out, &floored);
             println!(
                 "  floor {:.2}% (unseen cells {:.2}%); seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
@@ -838,7 +848,7 @@ fn try_tenth(
                 pct(s.unseen),
                 s.unseen.0
             );
-            let c = measure::compare(&eval::against_floor(&out, &floored, |_| true));
+            let c = measure::compare(&eval::against_floor(&out, &floored, |_| true, false));
             println!(
                 "  against the floor (letters, same forms): {:+.2} ({:+.2} … {:+.2}), {} words better, {} worse, sign p {:.2e}",
                 100.0 * (c.b - c.a),
@@ -848,6 +858,23 @@ fn try_tenth(
                 c.worse,
                 c.p
             );
+            if !stated.is_empty() {
+                // A second score, never more right forms: see `eval::TableLength`.
+                let c = measure::compare(&eval::against_floor(&out, &floored, |_| true, true));
+                println!(
+                    "  compatible with stated length (a second score; top-1 stays the score): top-1 {:.2}% (strictly {:.2}%), floor {:.2}% (strictly {:.2}%); against the floor {:+.2} ({:+.2} … {:+.2}), {} words better, {} worse, sign p {:.2e}",
+                    100.0 * s.compatible_accuracy(),
+                    100.0 * s.accuracy(),
+                    100.0 * eval::floor_compatible(&floored),
+                    100.0 * floor,
+                    100.0 * (c.b - c.a),
+                    100.0 * c.low,
+                    100.0 * c.high,
+                    c.better,
+                    c.worse,
+                    c.p
+                );
+            }
             // The same apart for the words built on a training word, and the
             // rest.
             let keys: flexion_train::HashSet<&str> = train.iter().map(|l| l.key.as_str()).collect();
@@ -865,7 +892,7 @@ fn try_tenth(
                     })
                     .cloned()
                     .collect();
-                let c = measure::compare(&eval::against_floor(&mine, &floored, |_| true));
+                let c = measure::compare(&eval::against_floor(&mine, &floored, |_| true, false));
                 println!(
                     "    {label}: grammar {:.2}%, floor {:.2}%, {:+.2} ({:+.2} … {:+.2})",
                     100.0 * c.b,
@@ -930,9 +957,15 @@ fn try_tenth(
             cells: &names,
         };
         for input in inputs {
-            let out = eval::outcomes(g, &g.orthography, &test, input, &learned.seen, |c| {
-                !is_held(c)
-            });
+            let out = eval::outcomes(
+                g,
+                &g.orthography,
+                stated,
+                &test,
+                input,
+                &learned.seen,
+                |c| !is_held(c),
+            );
             let s = eval::Score::of(&out);
             if s.words == 0 {
                 continue;
@@ -941,20 +974,25 @@ fn try_tenth(
                 "{}",
                 score_line(&format!("held-out {input:?}"), s.words, &s)
             );
+            if !stated.is_empty() {
+                println!(
+                    "    compatible with stated length: {:.2}%",
+                    100.0 * s.compatible_accuracy()
+                );
+            }
             println!("    errors: {}", s.census());
             if blocks.len() > 1 {
                 let (mean, scores) = eval::by_block(&out, &blocks);
-                let each: Vec<String> = cells
+                let named: Vec<(String, eval::Score)> = cells
                     .groups
                     .iter()
-                    .zip(&scores)
-                    .filter(|(_, s)| s.forms > 0)
-                    .map(|(g, s)| format!("{} {:.2}% ({})", g.name, 100.0 * s.accuracy(), s.forms))
+                    .map(|g| g.name.to_string())
+                    .zip(scores)
                     .collect();
                 println!(
-                    "    by block: mean {:.2}%; {}",
-                    100.0 * mean,
-                    each.join(", ")
+                    "    by block: mean {}; {}",
+                    mean.map_or("–".to_string(), |m| format!("{:.2}%", 100.0 * m)),
+                    flexion_train::pipeline::blocks(&named)
                 );
             }
             let bins: Vec<String> = s
@@ -970,6 +1008,7 @@ fn try_tenth(
             let out = eval::outcomes(
                 g,
                 &g.orthography,
+                stated,
                 &test,
                 eval::Input::Headword,
                 &learned.seen,
@@ -981,6 +1020,67 @@ fn try_tenth(
                 score_line("held-out cells, from the headword", s.words, &s)
             );
             saved.add(part.name, "held-cells", &saving, &out);
+        }
+        if !o.again && flexion_train::pipeline::small(part, test.len()) {
+            // A small part of speech is judged on its own words, learned from
+            // every word, with a new word's score beside: each left out in turn.
+            let kept = |l: &Lexeme| !o.main_only || l.source == 0;
+            let mut every: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
+            every.extend(
+                flexion_train::teachers(lang, part, data, kept)
+                    .into_iter()
+                    .cloned(),
+            );
+            let mut seen = std::collections::HashSet::new();
+            let own: Vec<&Lexeme> = d
+                .lexemes
+                .iter()
+                .filter(|l| l.source == 0 && seen.insert(l.key.as_str()))
+                .collect();
+            let all = learn::learn(script.orthography(), &shape, &every, settings);
+            let reproduced = eval::score(
+                &all.grammar,
+                &all.grammar.orthography,
+                stated,
+                &own,
+                eval::Input::Headword,
+                &all.seen,
+            );
+            let (left, by_tenth) = flexion_train::pipeline::left_out(
+                script.orthography(),
+                stated,
+                &shape,
+                &every,
+                &own,
+                settings,
+            );
+            let new = eval::Score::of(&left);
+            println!(
+                "  {}: reproduced {} of {} forms of its {} words; a new word, each {} left out in turn: top-1 {:.2}% of {} forms ({} words)",
+                if part.closed() {
+                    "a closed class".to_string()
+                } else {
+                    format!(
+                        "fewer than {} held-out words",
+                        flexion_train::pipeline::SMALL
+                    )
+                },
+                reproduced.right,
+                reproduced.forms,
+                own.len(),
+                if by_tenth { "tenth" } else { "word" },
+                100.0 * new.accuracy(),
+                new.forms,
+                new.words
+            );
+            let ids = outcomes::word_ids(&own);
+            let groups = vec!["left-out".to_string(); own.len()];
+            let words = outcomes::Words {
+                ids: &ids,
+                groups: &groups,
+                cells: &names,
+            };
+            saved.add(part.name, "left-out", &words, &left);
         }
         editors::report(lang, part, &learned, &train, &test);
         if o.diagnose {
@@ -1030,6 +1130,7 @@ fn try_tenth(
         let s = eval::score(
             g,
             &g.orthography,
+            stated,
             &train_refs,
             eval::Input::Headword,
             &learned.seen,
