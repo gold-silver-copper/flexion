@@ -394,16 +394,23 @@ fn up<'s, 'a>(
 
 /// A paradigm's line (it, the one it is like, and so on up), each table
 /// and stated stem slot read once, the first time a cell needs it: what
-/// [`Paradigm::pattern_in`] tells, for a word's many cells.
+/// [`Paradigm::pattern_in`] tells, for a word's many cells. The first
+/// [`FEW`] cells asked are read where they are: a caller asking one cell
+/// doesn't pay for reading every table whole.
 pub(crate) struct Tables<'s, 'a> {
     paradigm: &'s Paradigm<'a>,
     family: &'s [Paradigm<'a>],
     space: Space<'s, 'a>,
+    /// How many cells were asked.
+    asked: usize,
     /// Up the line, each paradigm read.
     levels: Vec<Level<'s>>,
     /// Per cell, its stem slot and its place among the slot's cells.
     slots: Option<Vec<Option<(usize, usize)>>>,
 }
+
+/// The cells [`Tables`] reads where they are before reading its tables whole.
+const FEW: usize = 4;
 
 /// One paradigm of a line, read: its own table's cells, and per stem slot
 /// it states, the stem and its ending table's patterns.
@@ -448,6 +455,7 @@ impl<'s, 'a> Tables<'s, 'a> {
             paradigm,
             family,
             space,
+            asked: 0,
             levels: Vec::new(),
             slots: None,
         }
@@ -460,12 +468,17 @@ impl<'s, 'a> Tables<'s, 'a> {
 
     /// [`Paradigm::pattern_in`] of `cell`.
     pub fn pattern(&mut self, cell: usize) -> Option<Cow<'s, str>> {
+        if self.asked < FEW {
+            self.asked += 1;
+            return self.paradigm.pattern_in(self.family, self.space, cell);
+        }
         let Tables {
             paradigm,
             family,
             space,
             levels,
             slots,
+            ..
         } = self;
         up(paradigm, family, cell, |level, p, cell| {
             if levels.len() == level {
