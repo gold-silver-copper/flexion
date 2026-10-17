@@ -103,12 +103,26 @@ fn marks_file(marks: &flexion::Marks<'_>) -> String {
     let lines: String = (roots.iter())
         .map(|(r, v)| format!("    {} => {v:?},\n", Lit(r)))
         .collect();
+    // No roots, where no part of speech reads them.
+    let (roots_doc, cow, roots) = if roots.is_empty() {
+        (String::new(), "", String::new())
+    } else {
+        (
+            format!(
+                " A root comes first: the beginning of a word through a letter and two\n//! past it, where nine in ten of the dictionary's words with a form beginning\n//! so (two or more) write the letter one way the rules don't{root}."
+            ),
+            "\nuse std::borrow::Cow;",
+            format!(
+                "\n/// {} roots.\npub(crate) static ROOTS: &[(Cow<'static, str>, char)] = flexion::roots! {{\n{lines}}};\n",
+                thousands(roots.len())
+            ),
+        )
+    };
     format!(
-        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so. A root comes first: the beginning of a word through a letter and two\n//! past it, where nine in ten of the dictionary's words with a form beginning\n//! so (two or more) write the letter one way the rules don't{root}.\n\nuse flexion::Choice;\nuse std::borrow::Cow;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n\n/// {} roots.\npub(crate) static ROOTS: &[(Cow<'static, str>, char)] = flexion::roots! {{\n{lines}}};\n",
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so.{roots_doc}\n\nuse flexion::Choice;{cow}\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n{roots}",
         examples,
         thousands(marks.rules.len()),
         choice_macro("starts", marks, |c| format!("{c:?}")),
-        thousands(roots.len()),
     )
 }
 
