@@ -278,8 +278,8 @@ Where the grammar is weak or below the floor, and why:
   verbs (−0.89), English verbs (−0.62), French verbs (−0.59), Finnish nouns (−0.48),
   Spanish verbs (−0.31), Polish adjectives (−0.07), and of the new parts Russian proper
   nouns (−2.75), Finnish pronouns (−7.49, 9 words), Sanskrit numerals (−28.79, 9
-  words, four in five wrong forms the class chosen wrong) and Turkish pronouns (one
-  held-out word, its 11 forms all wrong in the stem); Spanish adjectives are within
+  words, four in five wrong forms right but for their marks) and Turkish pronouns (one
+  held-out word, its 11 wrong forms all wrong in the ending); Spanish adjectives are within
   chance of it (−0.10). Finnish verbs are above it (+0.92). The grammar's own top-1 on these rows is what it was
   (Finnish nouns −0.08 on this tenth, +0.24 on the development tenth);
   the floor rose with its words (German nouns 93.88% → 94.77%, Russian verbs 95.92% →
