@@ -57,6 +57,7 @@ const SOURCE: &[(&str, &str)] = sources![
     "laws.rs",
     "laws/harmony.rs",
     "learn.rs",
+    "marks.rs",
     "length.rs",
     "lib.rs",
     "measure.rs",

@@ -304,7 +304,7 @@ pub fn build<'s>(
         );
         let small = small(part, test.len()).then(|| {
             let shape = learn::Shape {
-                marks: all_marks.clone(),
+                marks: all_marks.as_ref().map(|m| m.of(part.name)),
                 ..shape.clone()
             };
             let (outcomes, by_tenth) =
