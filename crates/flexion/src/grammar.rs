@@ -479,11 +479,12 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
 /// A cell's forms, the usual first, each with where its ending starts.
 type Forms = Vec<(String, usize)>;
 
-/// A reading's forms of the cells built so far: per cell, its forms with
-/// where their endings start, by how likely; and the stems the forms the
-/// caller gives fix, per slot: `(slot, ending table, stem)`.
-#[derive(Default)]
-struct Built {
+/// A reading's paradigm and its forms of the cells built so far: its line's
+/// tables, each read once; per cell, its forms with where their endings
+/// start, by how likely; and the stems the forms the caller gives fix, per
+/// slot: `(slot, ending table, stem)`.
+struct Built<'g, 'a> {
+    tables: crate::paradigm::Tables<'g, 'a>,
     cells: std::collections::HashMap<usize, Vec<(Forms, f32)>>,
     fixed: Vec<(usize, String, String)>,
 }
@@ -672,10 +673,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .take(READINGS)
             .map(|inf| {
                 let classes = self.accent_classes(&word, &inf, cells);
-                let built = Built {
-                    fixed: self.fixed(inf.paradigm, &inf.stems, &given, &word.letters),
-                    ..Built::default()
-                };
+                let mut built = self.built(inf.paradigm);
+                built.fixed = self.fixed(inf.paradigm, &inf.stems, &given, &word.letters);
                 (inf, classes, built)
             })
             .collect();
@@ -901,7 +900,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     count: r.count(inf.reading.value),
                     total: r.total(),
                 });
-                let forms = self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, built);
+                let forms = self.build(&inf.stems, &key, known.inherent, cell, built);
                 for (forms, p_cell) in forms {
                     let Some(((first, ending), also)) = forms.split_first() else {
                         continue;
@@ -1108,6 +1107,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
     }
 
+    /// A reading of `paradigm`, nothing built yet.
+    fn built<'g>(&'g self, paradigm: &'g Paradigm<'a>) -> Built<'g, 'a> {
+        Built {
+            tables: crate::paradigm::Tables::new(paradigm, &self.paradigms, self.space()),
+            cells: std::collections::HashMap::new(),
+            fixed: Vec::new(),
+        }
+    }
+
     /// The slot `cell` is in, and its place among the slot's cells.
     fn slot_of(&self, cell: usize) -> Option<(usize, usize)> {
         self.slots
@@ -1243,12 +1251,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// feature, given or chosen), changed. `built`: the cells built so far.
     fn build(
         &self,
-        paradigm: &Paradigm<'a>,
         stems: &[&str],
         key: &str,
         inherent: &[(u8, u8)],
         cell: usize,
-        built: &mut Built,
+        built: &mut Built<'_, 'a>,
     ) -> Vec<(Vec<(String, usize)>, f32)> {
         if let Some(forms) = built.cells.get(&cell) {
             return forms.clone();
@@ -1259,20 +1266,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let mut out = Vec::new();
         // A cell of a slot a given form fixes the stem of: built on that
         // stem; else as the paradigm builds it.
-        let on_given = self.slot_of(cell).and_then(|(s, position)| {
-            let (_, table, stem) = built.fixed.iter().find(|f| f.0 == s)?;
-            let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
-            Some(crate::stems::build(p, stem, self.laws.as_ref()))
-        });
-        let forms = on_given.unwrap_or_else(|| {
-            paradigm.built_in(
-                &self.paradigms,
-                self.space(),
-                self.laws.as_ref(),
-                cell,
-                stems,
-            )
-        });
+        let on_given = (!built.fixed.is_empty())
+            .then(|| built.tables.slot(cell))
+            .flatten()
+            .and_then(|(s, position)| {
+                let (_, table, stem) = built.fixed.iter().find(|f| f.0 == s)?;
+                let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
+                Some(crate::stems::build(p, stem, self.laws.as_ref()))
+            });
+        let forms = on_given.unwrap_or_else(|| built.tables.built(self.laws.as_ref(), cell, stems));
         if !forms.is_empty() {
             out.push((forms, 1.0));
         } else if let Some(relation) = self.relation(cell) {
@@ -1306,7 +1308,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let relation = self.changing(relation);
             for (from, p) in sources {
                 let from = usize::from(from);
-                for (forms, q) in self.build(paradigm, stems, key, inherent, from, built) {
+                for (forms, q) in self.build(stems, key, inherent, from, built) {
                     if relation.change.is_none() {
                         out.push((forms, p * q));
                         continue;
@@ -1344,10 +1346,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         else {
             return vec![Vec::new(); self.cells];
         };
-        let mut built = Built::default();
+        let mut built = self.built(p);
         (0..self.cells)
             .map(|cell| {
-                let forms = self.build(p, &stems, &key, &[], cell, &mut built);
+                let forms = self.build(&stems, &key, &[], cell, &mut built);
                 forms
                     .first()
                     .map(|(forms, _)| forms.iter().map(|(f, _)| f.clone()).collect())
@@ -1490,7 +1492,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             given.iter().all(|(cell, form)| {
                 lines(*cell, form)
                     || self
-                        .build(p, &stems, key, inherent, *cell, &mut Built::default())
+                        .build(&stems, key, inherent, *cell, &mut self.built(p))
                         .iter()
                         .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
             })

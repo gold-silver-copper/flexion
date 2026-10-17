@@ -392,6 +392,32 @@ fn print_and_compare(lang: Language) {
              assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), *probabilities, \"{{word}} {{cell}}\");\n    }}",
             part.name
         );
+        // Each typed cell's place, as the grammar numbers its cells: every
+        // group's values in order, the last fastest.
+        let cells = flexion_train::cells::Cells::new(&lang, part).expect("cells");
+        for g in &cells.groups {
+            let cell = format!(
+                "{crate_name}::{}::Cell::{}",
+                part.name,
+                flexion_train::print::cell_variant(part.name, g.name)
+            );
+            let vars: Vec<String> = (0..g.features.len()).map(|i| format!("v{i}")).collect();
+            if vars.is_empty() {
+                let _ = writeln!(checks, "    assert_eq!({cell}.index(), {});", g.offset);
+                continue;
+            }
+            let _ = writeln!(checks, "    let mut place = {};", g.offset);
+            for (f, v) in g.features.iter().zip(&vars) {
+                let _ = writeln!(checks, "    for {v} in {crate_name}::{}::ALL {{", f.name);
+            }
+            let _ = writeln!(
+                checks,
+                "    assert_eq!({cell}({}).index(), place);\n    place += 1;\n    {}",
+                vars.join(", "),
+                "}".repeat(vars.len())
+            );
+            let _ = writeln!(checks, "    assert_eq!(place, {});", g.offset + g.len());
+        }
     }
     let _ = write!(test, "#[test]\nfn answers() {{\n{checks}}}\n");
     std::fs::create_dir_all(dir.join("tests")).expect("tests dir");
