@@ -485,8 +485,8 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
 type Marks = std::collections::BTreeMap<
     u64,
     (
-        Option<flexion::Marks<'static>>,
-        Option<flexion::Marks<'static>>,
+        Option<flexion_train::marks::LanguageMarks>,
+        Option<flexion_train::marks::LanguageMarks>,
     ),
 >;
 
@@ -518,10 +518,20 @@ fn try_tenth(
         None => {
             let train_marks = marks(&trained)?;
             if let Some(m) = &train_marks {
+                let checked: Vec<String> = (m.checked.iter())
+                    .map(|(part, fixed, broken)| format!("{part} +{fixed} −{broken}"))
+                    .collect();
+                let rootless: Vec<&str> = m.rootless().collect();
                 println!(
-                    "  marks: {} rules, {} roots",
-                    m.rules.rules.len(),
-                    m.roots.len()
+                    "  marks: {} rules, {} roots; lemmas the roots spell right and wrong on half the words: {}; no roots for: {}",
+                    m.marks.rules.rules.len(),
+                    m.marks.roots.len(),
+                    checked.join(", "),
+                    if rootless.is_empty() {
+                        "none".to_string()
+                    } else {
+                        rootless.join(", ")
+                    }
                 );
             }
             let fit_marks = if o.quick {
@@ -541,7 +551,7 @@ fn try_tenth(
             only,
             &trained,
             fold,
-            &train_marks,
+            &train_marks.as_ref().map(|m| m.marks.clone()),
             settings,
         );
     }
@@ -610,7 +620,7 @@ fn try_tenth(
                 .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
             let shape = learn::Shape {
-                marks: fit_marks.clone(),
+                marks: fit_marks.as_ref().map(|m| m.of(part.name)),
                 ..shape.clone()
             };
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
@@ -622,7 +632,7 @@ fn try_tenth(
             .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
-        shape.marks = train_marks.clone();
+        shape.marks = train_marks.as_ref().map(|m| m.of(part.name));
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
         learned.grammar.sharpness = sharpness;
         learned.grammar.trust = trust;
@@ -1612,7 +1622,8 @@ fn inspect(
     let mut shape = flexion_train::shape(lang, part)?;
     let kept = |l: &Lexeme| holdout.is_none_or(|fold| eval::bucket(&l.key) != fold);
     let settings = choose::Settings::default();
-    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
+    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?
+        .map(|m| m.of(part.name));
     let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
     let learned = learn::learn(
         script.orthography(),

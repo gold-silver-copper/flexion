@@ -13,7 +13,7 @@ use flexion::{
     StressClass, Written,
 };
 use std::borrow::Cow;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 /// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
@@ -33,7 +33,7 @@ pub struct Shape {
     /// Per cell, its name (`gen_pl`), as the crate's constants are named.
     pub names: Vec<String>,
     /// How a letter typed without its mark is written, learned once for the
-    /// language from every part of speech's words (see [`language_marks`]);
+    /// language from every part of speech's words (see [`crate::marks`]);
     /// none: learned from this part's alone. Its `part` is this part's.
     pub marks: Option<flexion::Marks<'static>>,
     /// The part of speech's name, as the marks read it (see
@@ -425,10 +425,22 @@ pub fn learn<'s>(
     let marks: Option<flexion::Marks<'static>> = match &shape.marks {
         Some(marks) => Some(marks.clone()),
         None => {
-            let spelled = words
-                .iter()
-                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
-            marks(&orthography, spelled, settings)
+            let part = shape.part.as_str();
+            let spelled: Vec<(&str, &str, &str)> = (words.iter())
+                .map(|w| (w.key.as_str(), w.letters.as_str(), part))
+                .collect();
+            let voters: Vec<crate::marks::Voter<'_>> = (words.iter().enumerate())
+                .map(|(owner, w)| crate::marks::Voter {
+                    owner,
+                    part,
+                    key: w.key.clone(),
+                    spellings: std::iter::once(&w.letters)
+                        .chain(w.cells.iter().flatten().map(|f| &f.letters))
+                        .cloned()
+                        .collect(),
+                })
+                .collect();
+            crate::marks::learn(&orthography, &spelled, &voters, settings).map(|m| m.of(part))
         }
     };
     // Owned again: a choice's lifetime can't shorten.
@@ -862,31 +874,6 @@ pub fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lex
         .map(|f| orthography.read(f).letters)
         .filter(|t| orthography.key(t) == orthography.key(&headword))
         .unwrap_or(headword)
-}
-
-/// How a letter typed without its mark is written (vowel length), learned
-/// once for a language from every part of speech's words (each part's
-/// lexemes with its lemma cell): a root's length shown in one part of
-/// speech's word (`iūdicō`) tells it in another's (`iūdex`). None where
-/// no word writes a mark its key doesn't.
-pub fn language_marks<'l>(
-    orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (Option<usize>, &'l str, &'l Lexeme)>,
-    settings: Settings,
-) -> Option<flexion::Marks<'static>> {
-    let mut seen = crate::HashSet::default();
-    let words: Vec<(String, String, &str)> = words
-        .map(|(lemma_cell, part, l)| {
-            let letters = spelled(orthography, lemma_cell, l);
-            (orthography.key(&letters), letters, part)
-        })
-        .filter(|w| seen.insert(w.clone()))
-        .collect();
-    marks(
-        orthography,
-        words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
-        settings,
-    )
 }
 
 /// The words the paradigm choice lists though the paradigm its rules alone
@@ -1802,108 +1789,6 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
     let (pk, rest_key) = w.key.split_at(key_at);
     (rest.chars().count() >= 3 && w.key.chars().count() == w.letters.chars().count())
         .then_some((p, pk, rest_key))
-}
-
-/// How a letter typed without its mark is written (see
-/// [`flexion::Grammar::marks`]): learned from every letter of the words that
-/// a mark could stand on, by the letter before it and the letters from it
-/// on. `None` where no word writes such a mark.
-fn marks<'w>(
-    orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (&'w str, &'w str, &'w str)>,
-    settings: Settings,
-) -> Option<flexion::Marks<'static>> {
-    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
-    let words: Vec<(&str, &str, &str)> = words.collect();
-    let mut examples: Vec<(String, char)> = Vec::new();
-    let mut marked = false;
-    for &(key, letters, part) in &words {
-        let mut before = flexion::WORD_END;
-        for ((i, k), l) in key.char_indices().zip(letters.chars()) {
-            if markable(k)
-                && let Some(rest) = key.get(i..)
-            {
-                marked |= l != k;
-                examples.push((format!("{before}{rest}{}{part}", flexion::WORD_END), l));
-            }
-            before = k;
-        }
-    }
-    if !marked {
-        return None;
-    }
-    // What the rules get wrong is a word's own spelling, listed with it.
-    let rules = choose::learn_starts(&examples, settings);
-    let roots = mark_roots(orthography, &words, &rules, settings.smoothing);
-    Some(flexion::Marks {
-        rules,
-        roots: Cow::Owned(roots),
-        part: Cow::Borrowed(""),
-    })
-}
-
-/// The fewest words whose letter a root (see [`flexion::Marks::roots`])
-/// writes one way for it to be listed.
-const ROOT_WORDS: u32 = 2;
-
-/// The roots the marks `rules` don't tell (see [`flexion::Marks::roots`]):
-/// of `words` (key, letters, part of speech), the beginnings through a
-/// letter that may take a mark and two letters past it whose words (each
-/// spelling once, at least [`ROOT_WORDS`]) all write that letter one way,
-/// where the rules write it otherwise in one of them. Sorted.
-pub fn mark_roots(
-    orthography: &Orthography<'_>,
-    words: &[(&str, &str, &str)],
-    rules: &flexion::Choice<'_, char>,
-    smoothing: f32,
-) -> Vec<(Cow<'static, str>, char)> {
-    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
-    // Each letter's root, and how the word writes the letter.
-    let places = |key: &str, letters: &str| -> Vec<(usize, String, char)> {
-        let key: Vec<char> = key.chars().collect();
-        let letters: Vec<char> = letters.chars().collect();
-        (0..key.len())
-            .filter(|&n| n + 3 >= flexion::ROOT_LETTERS && key.get(n).is_some_and(|&c| markable(c)))
-            .filter_map(|n| Some((n, key.get(..n + 3)?.iter().collect(), *letters.get(n)?)))
-            .collect()
-    };
-    let spellings: BTreeSet<(&str, &str)> = words.iter().map(|&(k, l, _)| (k, l)).collect();
-    let mut seen: BTreeMap<String, BTreeMap<char, u32>> = BTreeMap::new();
-    for &(key, letters) in &spellings {
-        for (_, root, v) in places(key, letters) {
-            *seen.entry(root).or_default().entry(v).or_default() += 1;
-        }
-    }
-    let one_way = |root: &str| match seen.get(root).map(|v| v.iter().collect::<Vec<_>>()) {
-        Some(v) => match v.as_slice() {
-            &[(&v, &n)] if n >= ROOT_WORDS => Some(v),
-            _ => None,
-        },
-        None => None,
-    };
-    let ruled = |&(key, _, part): &(&str, &str, &str)| {
-        let marks = flexion::Marks {
-            rules: flexion::Choice {
-                side: rules.side,
-                rules: Cow::Borrowed(rules.rules.as_ref()),
-                exceptions: Cow::Borrowed(rules.exceptions.as_ref()),
-            },
-            roots: Cow::Borrowed(&[]),
-            part: Cow::Borrowed(part),
-        };
-        flexion::restore(orthography, &marks, smoothing, key, key).0
-    };
-    let told: Vec<String> = crate::par::map(words, ruled);
-    let mut out: BTreeSet<(String, char)> = BTreeSet::new();
-    for (&(key, letters, _), told) in words.iter().zip(&told) {
-        let told: Vec<char> = told.chars().collect();
-        for (n, root, v) in places(key, letters) {
-            if one_way(&root) == Some(v) && told.get(n) != Some(&v) {
-                out.insert((root, v));
-            }
-        }
-    }
-    out.into_iter().map(|(r, v)| (Cow::Owned(r), v)).collect()
 }
 
 /// Of the words with each value of a feature, the share whose form of a
@@ -4155,51 +4040,5 @@ mod tests {
             grammar.paradigm.exceptions.to_vec(),
             vec![(anchored("lis"), 3), (anchored("noga"), 2)]
         );
-    }
-
-    #[test]
-    fn a_mark_the_letters_leave_open_is_told_by_the_part_of_speech() {
-        // Latin adjectives in `-genus` ("born") have a short `e`, the
-        // distributive numerals in `-gēnus` a long one: the same letters,
-        // told apart by the part of speech alone.
-        let orthography = Orthography {
-            lowercase: true,
-            vowels: "aeiouē",
-            stress_marks: "",
-            stressed: &[],
-            implicit: "",
-            dropped: "",
-            mark_monosyllables: false,
-            folded: &[('ē', 'e')],
-            prosody: None,
-            initial: "",
-        };
-        let mut words: Vec<(String, String, &str)> = Vec::new();
-        for front in [
-            "indi", "terri", "capri", "nubi", "ali", "primi", "uni", "multi",
-        ] {
-            let key = format!("{front}genus");
-            words.push((key.clone(), key, "adjective"));
-        }
-        for front in [
-            "quin", "septin", "non", "octin", "quadrin", "tre", "du", "ses",
-        ] {
-            words.push((format!("{front}genus"), format!("{front}gēnus"), "numeral"));
-        }
-        let rules = marks(
-            &orthography,
-            words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
-            Settings::default(),
-        )
-        .expect("marks");
-        let spell = |word: &str, part: &str| {
-            let marks = flexion::Marks {
-                part: Cow::Owned(part.to_string()),
-                ..rules.clone()
-            };
-            flexion::restore(&orthography, &marks, 1.0, word, word).0
-        };
-        assert_eq!(spell("sescentigenus", "numeral"), "sescentigēnus");
-        assert_eq!(spell("sescentigenus", "adjective"), "sescentigenus");
     }
 }

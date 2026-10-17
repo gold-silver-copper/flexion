@@ -235,7 +235,8 @@ pub fn sigmorphon(lang: &Language, data: &[PosData], file: &Path) -> Result<(), 
             let settings = choose::Settings::default();
             let keep = |l: &Lexeme| !held || !lemmas.contains(&l.key);
             let shape = learn::Shape {
-                marks: flexion_train::marks(lang, &script.orthography(), data, keep, settings)?,
+                marks: flexion_train::marks(lang, &script.orthography(), data, keep, settings)?
+                    .map(|m| m.of(part.name)),
                 ..shape.clone()
             };
             let learned = learn::learn(script.orthography(), &shape, lexemes, settings);
@@ -346,7 +347,8 @@ pub fn nonce(lang: &Language, data: &[PosData], file: &Path) -> Result<(), Strin
     let script = script::Script::new(&lang.spelling);
     let mut shape = flexion_train::shape(lang, part)?;
     let settings = choose::Settings::default();
-    shape.marks = flexion_train::marks(lang, &script.orthography(), data, |_| true, settings)?;
+    shape.marks = flexion_train::marks(lang, &script.orthography(), data, |_| true, settings)?
+        .map(|m| m.of(part.name));
     let learned = learn::learn(script.orthography(), &shape, &d.lexemes, settings);
     let g = &learned.grammar;
     // (regular, ours, production, rating)
