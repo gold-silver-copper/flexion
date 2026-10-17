@@ -232,6 +232,46 @@ macro_rules! changes {
     };
 }
 
+/// One [`Relation`]: its cell, the cells it comes from (by the word's
+/// feature, in order, if several), its changes, then the rules choosing one
+/// and the words they get wrong (`none`: the form itself), whether it tells
+/// listed words' forms, and the pair of cells it is by analogy with.
+///
+/// ```
+/// use flexion::{Relation, relation};
+/// const PERF_2_SG: u16 = 1;
+/// const PERF_1_SG: u16 = 0;
+/// static SECOND: Relation<'static> = relation!(PERF_2_SG, [PERF_1_SG], [("~ī", "~istī"), ("~iī", "~īstī")], rules {
+///     "" => [0 100],
+///     "iī" => [1 30],
+/// } listed {}, true, None);
+/// assert_eq!(SECOND.told("amāvī", 2.0, None).map(|t| t.0).as_deref(), Some("amāvistī"));
+/// assert_eq!(SECOND.told("audiī", 2.0, None).map(|t| t.0).as_deref(), Some("audīstī"));
+/// ```
+#[macro_export]
+macro_rules! relation {
+    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
+        $crate::Relation {
+            cell: $cell,
+            from: ::std::borrow::Cow::Borrowed(&[$($from),*]),
+            changes: $crate::changes![$(($old, $new)),*],
+            change: None,
+            listed: $listed,
+            analogy: $analogy,
+        }
+    };
+    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
+        $crate::Relation {
+            cell: $cell,
+            from: ::std::borrow::Cow::Borrowed(&[$($from),*]),
+            changes: $crate::changes![$(($old, $new)),*],
+            change: Some($crate::choice! { rules { $($rules)* } listed { $($words)* } }),
+            listed: $listed,
+            analogy: $analogy,
+        }
+    };
+}
+
 /// Spellings written as data: `key => letters`, sorted by key.
 #[macro_export]
 macro_rules! spellings {

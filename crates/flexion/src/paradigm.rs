@@ -247,11 +247,7 @@ impl<'a> Paradigm<'a> {
     /// What its own table has in `cell`; `None` where it is the parent's
     /// (at a paradigm like no other, derived).
     pub fn own(&self, cell: usize) -> Option<Form<'_>> {
-        match self.table.split('\t').nth(cell)? {
-            "" => None,
-            DERIVED => Some(Form::Derived),
-            pattern => Some(Form::Pattern(pattern)),
-        }
+        form(self.table.split('\t').nth(cell)?)
     }
 
     /// What it states of `cell` through the cell's stem slot (see
@@ -277,22 +273,9 @@ impl<'a> Paradigm<'a> {
     /// what they state through stem slots (see [`Paradigm::pattern_in`]);
     /// `None` for a derived cell (and one no paradigm up the line writes).
     pub fn pattern<'s>(&'s self, family: &'s [Paradigm<'a>], cell: usize) -> Option<Cow<'s, str>> {
-        let (mut p, mut cell) = (self, cell);
-        let mut affixes: Vec<&Affix<'_>> = Vec::new();
-        // Parents come before their children, so this ends.
-        for _ in 0..=family.len() {
-            match p.own(cell) {
-                Some(Form::Pattern(pattern)) => {
-                    return Some(affixed(Cow::Borrowed(pattern), &affixes));
-                }
-                Some(Form::Derived) => return None,
-                None => {}
-            }
-            cell = p.read(cell);
-            affixes.splice(0..0, p.affix.as_ref());
-            p = family.get(usize::from(p.parent?))?;
-        }
-        None
+        up(self, family, cell, |_, p, cell| {
+            p.own(cell).map(|f| f.pattern().map(Cow::Borrowed))
+        })
     }
 
     /// The cell of its parent its `cell` reads (see [`Paradigm::reads`]).
@@ -313,25 +296,10 @@ impl<'a> Paradigm<'a> {
         space: Space<'_, '_>,
         cell: usize,
     ) -> Option<Cow<'s, str>> {
-        let (mut p, mut cell) = (self, cell);
-        let mut affixes: Vec<&Affix<'_>> = Vec::new();
-        // Parents come before their children, so this ends.
-        for _ in 0..=family.len() {
-            match p.own(cell) {
-                Some(Form::Pattern(pattern)) => {
-                    return Some(affixed(Cow::Borrowed(pattern), &affixes));
-                }
-                Some(Form::Derived) => return None,
-                None => {}
-            }
-            if let Some(pattern) = p.stated(space, cell) {
-                return Some(affixed(Cow::Owned(pattern), &affixes));
-            }
-            cell = p.read(cell);
-            affixes.splice(0..0, p.affix.as_ref());
-            p = family.get(usize::from(p.parent?))?;
-        }
-        None
+        up(self, family, cell, |_, p, cell| match p.own(cell) {
+            Some(f) => Some(f.pattern().map(Cow::Borrowed)),
+            None => p.stated(space, cell).map(|s| Some(Cow::Owned(s))),
+        })
     }
 
     /// The forms of `cell` for these stems, the usual one first, each with
@@ -358,16 +326,198 @@ impl<'a> Paradigm<'a> {
         cell: usize,
         stems: &[&str],
     ) -> Vec<(String, usize)> {
-        let Some(p) = self.pattern_in(family, space, cell) else {
-            return Vec::new();
-        };
-        pattern::variants(&p)
-            .map(|v| match laws {
-                None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
-                Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
-            })
-            .collect()
+        self.pattern_in(family, space, cell)
+            .map_or_else(Vec::new, |p| filled(&p, laws, stems))
     }
+}
+
+impl<'t> Form<'t> {
+    /// Its pattern; `None` for a derived cell.
+    fn pattern(self) -> Option<&'t str> {
+        match self {
+            Form::Pattern(pattern) => Some(pattern),
+            Form::Derived => None,
+        }
+    }
+}
+
+/// What a paradigm's table writes in a cell: nothing (the parent's), a
+/// pattern, or [`DERIVED`].
+fn form(entry: &str) -> Option<Form<'_>> {
+    match entry {
+        "" => None,
+        DERIVED => Some(Form::Derived),
+        pattern => Some(Form::Pattern(pattern)),
+    }
+}
+
+/// `pattern`'s forms (see [`Paradigm::built`]).
+fn filled(
+    pattern: &str,
+    laws: Option<&sound_law::Program<'_>>,
+    stems: &[&str],
+) -> Vec<(String, usize)> {
+    pattern::variants(pattern)
+        .map(|v| match laws {
+            None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
+            Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
+        })
+        .collect()
+}
+
+/// The pattern of `cell` up `paradigm`'s line: `has` says what the
+/// paradigm `level` steps up (the cell it reads there) has: a pattern,
+/// `Some(None)` where it derives the cell, `None` where it is its parent's.
+/// The affixes met on the way are added.
+fn up<'s, 'a>(
+    paradigm: &'s Paradigm<'a>,
+    family: &'s [Paradigm<'a>],
+    cell: usize,
+    mut has: impl FnMut(usize, &'s Paradigm<'a>, usize) -> Option<Option<Cow<'s, str>>>,
+) -> Option<Cow<'s, str>> {
+    let (mut p, mut cell) = (paradigm, cell);
+    let mut affixes: Vec<&Affix<'_>> = Vec::new();
+    // Parents come before their children, so this ends.
+    for level in 0..=family.len() {
+        if let Some(found) = has(level, p, cell) {
+            return found.map(|pattern| affixed(pattern, &affixes));
+        }
+        cell = p.read(cell);
+        affixes.splice(0..0, p.affix.as_ref());
+        p = family.get(usize::from(p.parent?))?;
+    }
+    None
+}
+
+/// A paradigm's line (it, the one it is like, and so on up), each table
+/// and stated stem slot read once, the first time a cell needs it: what
+/// [`Paradigm::pattern_in`] tells, for a word's many cells.
+pub(crate) struct Tables<'s, 'a> {
+    paradigm: &'s Paradigm<'a>,
+    family: &'s [Paradigm<'a>],
+    space: Space<'s, 'a>,
+    /// Up the line, each paradigm read.
+    levels: Vec<Level<'s>>,
+    /// Per cell, its stem slot and its place among the slot's cells.
+    slots: Option<Vec<Option<(usize, usize)>>>,
+}
+
+/// One paradigm of a line, read: its own table's cells, and per stem slot
+/// it states, the stem and its ending table's patterns.
+struct Level<'s> {
+    own: Vec<&'s str>,
+    stated: Vec<Option<(&'s str, Vec<&'s str>)>>,
+}
+
+impl<'s> Level<'s> {
+    fn new(p: &'s Paradigm<'_>, space: Space<'s, '_>) -> Level<'s> {
+        let mut stated: Vec<Option<(&str, Vec<&str>)>> = p
+            .stems
+            .split('\t')
+            .enumerate()
+            .map(|(s, entry)| {
+                let (stem, name) = crate::stems::listed_stem(entry)?;
+                let table = space
+                    .tables
+                    .iter()
+                    .find(|t| usize::from(t.slot) == s && t.name == name)?;
+                Some((stem, table.table.split('\t').collect()))
+            })
+            .collect();
+        if stated.iter().all(Option::is_none) {
+            stated.clear();
+        }
+        Level {
+            own: p.table.split('\t').collect(),
+            stated,
+        }
+    }
+}
+
+impl<'s, 'a> Tables<'s, 'a> {
+    /// `paradigm`'s line in `family`, with the stem slots of `space`.
+    pub fn new(
+        paradigm: &'s Paradigm<'a>,
+        family: &'s [Paradigm<'a>],
+        space: Space<'s, 'a>,
+    ) -> Tables<'s, 'a> {
+        Tables {
+            paradigm,
+            family,
+            space,
+            levels: Vec::new(),
+            slots: None,
+        }
+    }
+
+    /// The stem slot `cell` is in, and its place among the slot's cells.
+    pub fn slot(&mut self, cell: usize) -> Option<(usize, usize)> {
+        slot(&mut self.slots, self.space, cell)
+    }
+
+    /// [`Paradigm::pattern_in`] of `cell`.
+    pub fn pattern(&mut self, cell: usize) -> Option<Cow<'s, str>> {
+        let Tables {
+            paradigm,
+            family,
+            space,
+            levels,
+            slots,
+        } = self;
+        up(paradigm, family, cell, |level, p, cell| {
+            if levels.len() == level {
+                levels.push(Level::new(p, *space));
+            }
+            let read = levels.get(level)?;
+            if let Some(f) = read.own.get(cell).copied().and_then(form) {
+                return Some(f.pattern().map(Cow::Borrowed));
+            }
+            if read.stated.is_empty() {
+                return None;
+            }
+            let (s, position) = slot(slots, *space, cell)?;
+            let (stem, table) = read.stated.get(s)?.as_ref()?;
+            let pattern = table.get(position).filter(|p| !p.is_empty())?;
+            Some(Some(Cow::Owned(crate::stems::compose(stem, pattern))))
+        })
+    }
+
+    /// [`Paradigm::built_in`] of `cell`.
+    pub fn built(
+        &mut self,
+        laws: Option<&sound_law::Program<'_>>,
+        cell: usize,
+        stems: &[&str],
+    ) -> Vec<(String, usize)> {
+        self.pattern(cell)
+            .map_or_else(Vec::new, |p| filled(&p, laws, stems))
+    }
+}
+
+/// The stem slot `cell` is in (the first, as [`Paradigm::stated`] finds
+/// it), and its place among the slot's cells: `slots`, every cell's, read
+/// from `space` the first time.
+fn slot(
+    slots: &mut Option<Vec<Option<(usize, usize)>>>,
+    space: Space<'_, '_>,
+    cell: usize,
+) -> Option<(usize, usize)> {
+    let slots = slots.get_or_insert_with(|| {
+        let mut out: Vec<Option<(usize, usize)>> = Vec::new();
+        for (s, slot) in space.slots.iter().enumerate() {
+            for (position, &c) in slot.cells.iter().enumerate() {
+                let c = usize::from(c);
+                if out.len() <= c {
+                    out.resize(c + 1, None);
+                }
+                if let Some(at @ None) = out.get_mut(c) {
+                    *at = Some((s, position));
+                }
+            }
+        }
+        out
+    });
+    slots.get(cell).copied().flatten()
 }
 
 #[cfg(test)]

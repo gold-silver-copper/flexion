@@ -889,7 +889,7 @@ fn grammar_files(
     // relations.rs
     if !g.relations.is_empty() {
         let mut r = format!(
-            "//! Where a cell's form comes from: another cell's form of the word, changed.\n//! A {one} that writes `derived` in a cell takes the form this way, and so\n//! does a word whose form of the other cell is listed but not this one's.\n//! Each relation lists its changes, as patterns around the letters they keep\n//! (`(\"~ī\", \"~istī\")`, numbered in order), and the rules on that form's\n//! ending choosing one.\n\nuse super::cell::*;\nuse flexion::Relation;\nuse std::borrow::Cow;\n\n/// Writes one relation: its cell, the cells it comes from (by the word's\n/// feature, in order, if several), its changes, then the rules choosing one\n/// and the words they get wrong (`none`: the form itself), whether it tells\n/// listed words' forms, and the pair of cells it is by analogy with.\nmacro_rules! relation {{\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: None,\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules {{ $($rules:tt)* }} listed {{ $($words:tt)* }}, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: Some(flexion::choice! {{ rules {{ $($rules)* }} listed {{ $($words)* }} }}),\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n}}\n\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
+            "//! Where a cell's form comes from: another cell's form of the word, changed.\n//! A {one} that writes `derived` in a cell takes the form this way, and so\n//! does a word whose form of the other cell is listed but not this one's.\n//! Each relation lists its changes, as patterns around the letters they keep\n//! (`(\"~ī\", \"~istī\")`, numbered in order), and the rules on that form's\n//! ending choosing one.\n\nuse super::cell::*;\nuse flexion::{{Relation, relation}};\n\n// Each relation: its cell, the cells it comes from (by the word's feature,\n// in order, if several), its changes, then the rules choosing one and the\n// words they get wrong (`none`: the form itself), whether it tells listed\n// words' forms, and the pair of cells it is by analogy with.\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
             g.relations.len()
         );
         for rel in g.relations.iter() {
@@ -1618,7 +1618,7 @@ fn tuple(items: &[String]) -> String {
 
 /// A cell group's variant of a part of speech's `Cell`: `noun_second_case`
 /// → `SecondCase`; the part's own group is `Form`.
-fn cell_variant(part: &str, group: &str) -> String {
+pub fn cell_variant(part: &str, group: &str) -> String {
     let name = group
         .strip_prefix(part)
         .map_or(group, |g| g.trim_start_matches('_'));
@@ -1654,60 +1654,38 @@ fn api_code(
         let v = call(&cell_variant(name, g.name), &paths(g));
         let _ = writeln!(s, "    /// {}\n    {v},", g.group.doc);
     }
-    // A feature's values are written bare where no other feature has a value
-    // of the same name.
-    let mut features: Vec<&Feature> = cells
-        .groups
-        .iter()
-        .flat_map(|g| g.features.iter().copied())
-        .collect();
-    features.sort_by_key(|f| f.name);
-    features.dedup_by_key(|f| f.name);
-    let bare: Vec<&str> = features
-        .iter()
-        .filter(|f| {
-            f.values.iter().all(|v| {
-                features
-                    .iter()
-                    .filter(|o| o.name != f.name)
-                    .all(|o| o.values.iter().all(|w| w.name != v.name))
-            })
-        })
-        .map(|f| f.name)
-        .collect();
-    let uses: String = bare
-        .iter()
-        .map(|f| format!("        use crate::{f}::*;\n"))
-        .collect();
-    let _ = write!(
-        s,
-        "}}\n\nimpl Cell {{\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {{\n{uses}        let cell = match self {{\n"
+    // A cell's place: its group's first cell, then its values counted in
+    // order, the last fastest (as `cell` numbers them).
+    s.push_str(
+        "}\n\nimpl Cell {\n    /// Its place in a paradigm: its group's first cell, then its values\n    /// counted in order, the last fastest.\n    pub const fn index(self) -> usize {\n        match self {\n",
     );
     for g in &cells.groups {
-        let v = cell_variant(name, g.name);
-        for cell in g.offset..g.offset + g.len() {
-            let args: Vec<String> = g
-                .features
-                .iter()
-                .zip(g.values(cell))
-                .map(|(f, x)| {
-                    let value = f.values.get(x).map_or("", |v| v.name);
-                    if bare.contains(&f.name) {
-                        value.to_string()
-                    } else {
-                        format!("crate::{}::{value}", f.name)
-                    }
-                })
-                .collect();
-            let constant = layout.name(cell);
-            let _ = writeln!(
-                s,
-                "            Cell::{} => cell::{constant},",
-                call(&v, &args)
-            );
+        let vars: Vec<String> = g.features.iter().map(|f| snake(f.name)).collect();
+        let mut place = String::new();
+        for (f, var) in g.features.iter().zip(&vars) {
+            let value = format!("{var} as usize");
+            place = match (place.is_empty(), f.values.len()) {
+                (true, _) => value,
+                (false, 1) => format!("{place} + {value}"),
+                (false, n) if place.contains('+') => {
+                    format!("({place}) * {n} + {value}")
+                }
+                (false, n) => format!("{place} * {n} + {value}"),
+            };
         }
+        let first = format!("cell::{} as usize", layout.name(g.offset));
+        let index = if place.is_empty() {
+            first
+        } else {
+            format!("{first} + {place}")
+        };
+        let _ = writeln!(
+            s,
+            "            Cell::{} => {index},",
+            call(&cell_variant(name, g.name), &vars)
+        );
     }
-    s.push_str("        };\n        cell as usize\n    }\n}\n\n");
+    s.push_str("        }\n    }\n}\n\n");
     // Conversions from a group's values, where no other group has the same
     // features.
     for g in &cells.groups {
