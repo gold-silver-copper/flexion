@@ -2025,11 +2025,98 @@ fn analyze(w: &Word) -> Analyzed {
             (!mine.is_empty()).then(|| mine.join("|"))
         })
         .collect();
-    Analyzed {
+    let mut analyzed = Analyzed {
         lemma: a.lemma,
         cells,
         stems: a.stems,
+    };
+    anchor(&mut analyzed);
+    analyzed
+}
+
+/// Two stem pieces the lemma writes side by side (`pensar` as `p` and `ens`,
+/// `~~ar`, because `pienso` is `~i~o`) would be read off a new word wherever
+/// its letters allow, the rightmost reading first (`reasentar` as `reasen`
+/// and `t`, `*reasenito`): the place they meet is anchored on a letter. The
+/// second piece's first letter moves into the patterns between them (the
+/// vowel a diphthong is written on: `~e~ar`, `~ie~o`); where that piece is one
+/// letter, the first piece's last does (Polish `niski`, `niższy`: `~i~ki`,
+/// `~iż~zy`, which `dziki` doesn't fit). Not a letter a copy reads (`%`).
+fn anchor(a: &mut Analyzed) {
+    let mut k = 0;
+    while k + 1 < a.stems.len() {
+        let side = side_by_side(&a.lemma, k);
+        let (first, second) = (a.stems.get(k), a.stems.get(k + 1));
+        let (Some(first), Some(second)) = (first, second) else {
+            break;
+        };
+        let patterns = || std::iter::once(&a.lemma).chain(a.cells.iter().flatten());
+        let copied = patterns().any(|p| {
+            pattern::variants(p).any(|v| {
+                tilde(v, k + 1)
+                    .is_some_and(|at| v.get(..at).is_some_and(|b| b.ends_with(pattern::COPY)))
+            })
+        });
+        let moved = if !side {
+            None
+        } else if second.chars().count() > 1 && !copied {
+            second.chars().next().map(|c| (c, k + 1, false))
+        } else if first.chars().count() > 1 {
+            first.chars().next_back().map(|c| (c, k, true))
+        } else {
+            None
+        };
+        if let Some((c, piece, after)) = moved {
+            let shift = |p: &str| -> String {
+                pattern::variants(p)
+                    .map(|v| match tilde(v, piece) {
+                        Some(at) if after => format!(
+                            "{}~{c}{}",
+                            v.get(..at).unwrap_or(""),
+                            v.get(at + 1..).unwrap_or("")
+                        ),
+                        Some(at) => format!(
+                            "{}{c}~{}",
+                            v.get(..at).unwrap_or(""),
+                            v.get(at + 1..).unwrap_or("")
+                        ),
+                        None => v.to_string(),
+                    })
+                    .collect::<Vec<_>>()
+                    .join("|")
+            };
+            a.lemma = shift(&a.lemma);
+            for cell in a.cells.iter_mut().flatten() {
+                *cell = shift(cell);
+            }
+            if let Some(stem) = a.stems.get_mut(piece) {
+                if after {
+                    stem.pop();
+                } else {
+                    *stem = stem.chars().skip(1).collect();
+                }
+            }
+        }
+        k += 1;
     }
+}
+
+/// Whether stem pieces `k` and `k + 1` of `lemma` meet with no letter
+/// between them.
+fn side_by_side(lemma: &str, k: usize) -> bool {
+    tilde(lemma, k).is_some_and(|at| {
+        lemma
+            .get(at + 1..)
+            .is_some_and(|rest| rest.starts_with('~'))
+    })
+}
+
+/// The byte where pattern `p`'s stem piece `k` (its `k`-th `~`) is.
+fn tilde(p: &str, k: usize) -> Option<usize> {
+    p.char_indices()
+        .filter(|&(_, c)| c == '~')
+        .nth(k)
+        .map(|(i, _)| i)
 }
 
 /// Per stem piece of `pattern` (chars) after a letter that may copy it, a
@@ -3669,6 +3756,23 @@ mod tests {
                 })
                 .collect(),
         }
+    }
+
+    #[test]
+    fn stem_pieces_side_by_side_meet_at_a_letter() {
+        // Spanish `pensar`, `pienso`: the diphthong's `i` goes before the
+        // `e`, so a new word splits there, not at its last letter
+        // (`reasentar`, `reasiento`, not `*reasenito`).
+        let a = analyze(&word("pensar", &["pensar", "pienso", "pensamos"]));
+        assert_eq!(a.lemma, "~e~ar");
+        assert_eq!(a.cells.get(1).cloned().flatten().as_deref(), Some("~ie~o"));
+        let stems = pattern::bind(&a.lemma, "reasentar").expect("binds");
+        assert_eq!(pattern::fill("~ie~o", &stems), "reasiento");
+        // Polish `niski`, `niższy`: the second piece is one letter, so the
+        // first's last anchors it, and `dziki` (`dzikszy`) doesn't fit.
+        let a = analyze(&word("niski", &["niski", "niższy"]));
+        assert_eq!(a.lemma, "~i~ki");
+        assert_eq!(pattern::bind(&a.lemma, "dziki"), None);
     }
 
     #[test]
