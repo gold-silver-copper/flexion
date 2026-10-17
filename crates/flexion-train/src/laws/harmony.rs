@@ -865,13 +865,21 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
     let vowels = pools.iter().all(|p| p.letters.iter().all(|&c| vowel(c)));
     // Whether one law on `tier` (read just before where `adjacent`) decides
     // every class within the tolerance, learned and held out, writing at
-    // least two of each one's letters.
+    // least two of each one's letters: after two tier letters, or after one
+    // and after none where enough words have none before them (Finnish
+    // `-ssA`: `a` after a back vowel, `ä` after none; not German verbs' `E`,
+    // `e` after any vowel and `ä` only in `tun`).
     let decides = |tier: &BTreeSet<char>, adjacent: bool| {
         pools.iter().all(|pool| {
-            let Some(map) = values(&units(&pool.learned, tier, adjacent)) else {
+            let by = units(&pool.learned, tier, adjacent);
+            let Some(map) = values(&by) else {
                 return false;
             };
-            let outputs: BTreeSet<&char> = map.values().collect();
+            let none: u32 = by.get(&None).map_or(0, |v| v.values().sum());
+            let outputs: BTreeSet<&char> = map
+                .iter()
+                .filter_map(|(t, v)| (t.is_some() || none as usize >= MIN_WORDS).then_some(v))
+                .collect();
             let fits = |seen: &[Seen<'_>]| {
                 let (n, wrong) = judged(&units(seen, tier, adjacent), &map);
                 n > 0 && tolerated(n, wrong)
@@ -1186,6 +1194,36 @@ mod tests {
         let tables: Vec<&str> = paradigms.iter().map(|p| p.table.as_ref()).collect();
         assert_eq!(tables, ["~\t~ssA\t~lleen|~llensA\t"]);
         assert!(assignment.iter().all(|&a| a == 0));
+    }
+
+    #[test]
+    fn a_letter_written_only_after_no_vowel_on_few_words_is_no_harmony() {
+        // German verbs: `e` after any vowel (`regnete`), `ä` only in `tun`'s
+        // `täte`, whose stem has none: no law of a tier.
+        let mut forms: Vec<(String, char)> = Vec::new();
+        for v in ['a', 'e', 'i', 'o', 'u'] {
+            for b in ["b", "d", "k", "m", "p", "t", "l", "r"] {
+                forms.push((format!("{b}{v}{b}t"), 'e'));
+            }
+        }
+        for w in ["t", "tt"] {
+            forms.push((w.to_string(), 'ä'));
+        }
+        let mut pool = Pool {
+            letters: vec!['e', 'ä'],
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for (i, (form, value)) in forms.iter().enumerate() {
+            let seen = (form.as_str(), *value, i);
+            if i % 3 == 1 {
+                pool.held.push(seen);
+            } else {
+                pool.learned.push(seen);
+            }
+        }
+        let vowel = |c: char| "aeiouä".contains(c);
+        assert_eq!(fit(&[&pool], &vowel), None);
     }
 
     #[test]
