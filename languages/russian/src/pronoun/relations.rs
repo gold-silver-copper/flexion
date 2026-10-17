@@ -49,8 +49,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "о" => [2 3],
         "ё" => [4 6],
     } listed {
-        "кое" => 1,
-        "никое" => 1,
+        1 => [
+            "кое", "никое",
+        ],
     }, true, None),
     // NOM_F_INAN, from NOM_F_ANIM.
     relation!(NOM_F_INAN, [NOM_F_ANIM], [], none, true, None),

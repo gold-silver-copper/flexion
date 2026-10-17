@@ -7,14 +7,13 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 66 forms.
+/// 0 stems, 65 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"acromion	1	acrómiones
 arráez	1	arraeces
 bahman	1	báhmanes
 barman	1	bármans
-bebotear	1	beboteados
 bluesman	1	bluesmen
 bolon	1	bólones
 brahman	1	bráhmanes

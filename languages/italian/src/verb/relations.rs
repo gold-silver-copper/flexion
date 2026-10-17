@@ -79,11 +79,18 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "sà" => [19 3],
         "ò" => [16 2],
     } listed {
-        "duole" => 0,
-        "empe" => 8,
-        "fa" => 2,
-        "sduole" => 15,
-        "sfa" => 2,
+        0 => [
+            "duole",
+        ],
+        2 => [
+            "fa", "sfa",
+        ],
+        8 => [
+            "empe",
+        ],
+        15 => [
+            "sduole",
+        ],
     }, true, None),
     // PRES_1_PL, from PRES_3_SG.
     relation!(PRES_1_PL, [PRES_3_SG], [("du~e", "d~iamo"), ("mu~e", "m~iamo"), ("si~e", "s~iamo"), ("su~a", "s~iamo"), ("ti~e", "t~iamo"), ("~", "~bbiamo"), ("~", "~cciamo"), ("~", "~mo"), ("~", "~ppiamo"), ("~a", "~hiamo"), ("~a", "~iamo"), ("~e", "~amo"), ("~e", "~ciamo"), ("~e", "~iamo"), ("~iede", "~ediamo"), ("~iene", "~eniamo"), ("~re", "~iamo"), ("~sce", "~amo"), ("~uoca", "~ochiamo"), ("~uola", "~oliamo"), ("~uole", "~ogliamo"), ("~uole", "~oliamo"), ("~uona", "~oniamo"), ("~uora", "~oriamo"), ("~uore", "~oriamo"), ("~uò", "~ossiamo"), ("~à", "~acciamo"), ("~à", "~appiamo"), ("~à", "~iamo")], rules {
@@ -199,12 +206,9 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "à" => [7 41],
         "ò" => [8 2],
     } listed {
-        "fa" => 0,
-        "ha" => 0,
-        "sa" => 0,
-        "sfa" => 0,
-        "sta" => 0,
-        "va" => 0,
+        0 => [
+            "fa", "ha", "sa", "sfa", "sta", "va",
+        ],
     }, true, None),
     // PRES_2_PL, from INFINITIVE.
     relation!(PRES_2_PL, [INFINITIVE], [], none, true, None),
@@ -289,9 +293,12 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "vendo" => [17 59, 11 6],
         "zendo" => [11 22],
     } listed {
-        "assorbendo" => 17,
-        "compiendo" => 12,
-        "compiendo" => 17,
+        12 => [
+            "compiendo",
+        ],
+        17 => [
+            "assorbendo", "compiendo",
+        ],
     }, true, None),
     // PRES_3_PL, from PRES_3_SG.
     relation!(PRES_3_PL, [PRES_3_SG], [("du~e", "d~gono"), ("ti~e", "t~gono"), ("~", "~nno"), ("~", "~no"), ("~a", "~eno"), ("~e", "~ciono"), ("~e", "~ggono"), ("~e", "~gono"), ("~e", "~iono"), ("~e", "~ono"), ("~glie", "~lgono"), ("~gne", "~ngono"), ("~ia", "~eno"), ("~iene", "~engono"), ("~re", "~iono"), ("~uole", "~ogliono"), ("~uole", "~olgono"), ("~uò", "~ossono"), ("~à", "~anno")], rules {
@@ -334,18 +341,24 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "à" => [18 43],
         "ò" => [17 2],
     } listed {
-        "duole" => 0,
-        "empe" => 8,
-        "fa" => 2,
-        "ha" => 2,
-        "nota" => 4,
-        "prepuò" => 17,
-        "può" => 17,
-        "sa" => 2,
-        "sduole" => 16,
-        "sfa" => 2,
-        "sta" => 2,
-        "va" => 2,
+        0 => [
+            "duole",
+        ],
+        2 => [
+            "fa", "ha", "sa", "sfa", "sta", "va",
+        ],
+        4 => [
+            "nota",
+        ],
+        8 => [
+            "empe",
+        ],
+        16 => [
+            "sduole",
+        ],
+        17 => [
+            "prepuò", "può",
+        ],
     }, true, None),
     // IMPF_1_SG, from PRES_2_PL.
     relation!(IMPF_1_SG, [PRES_2_PL], [], none, false, None),
@@ -414,7 +427,9 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "ui" => [4 18, 3 1],
         "vi" => [4 17],
     } listed {
-        "fui" => 3,
+        3 => [
+            "fui",
+        ],
     }, true, None),
     // PAST_3_PL, from PAST_1_SG.
     relation!(PAST_3_PL, [PAST_1_SG], [("~ai", "~orno"), ("~i", "~eno"), ("~i", "~ero"), ("~i", "~rono")], rules {
@@ -436,7 +451,9 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "ui" => [2 18, 3 1],
         "vi" => [2 17],
     } listed {
-        "fui" => 3,
+        3 => [
+            "fui",
+        ],
     }, true, None),
     // FUT_1_SG, from PRES_3_SG.
     relation!(FUT_1_SG, [PRES_3_SG], [("mu~e", "m~irò"), ("su~a", "s~erò"), ("~", "~prò"), ("~", "~rraio"), ("~", "~rò"), ("~a", "~erò"), ("~a", "~herò"), ("~ce", "~rrò"), ("~ce", "~rò"), ("~e", "~irò"), ("~e", "~rrò"), ("~e", "~rò"), ("~gge", "~rrò"), ("~glie", "~rrò"), ("~ia", "~erò"), ("~iene", "~errò"), ("~le", "~rrò"), ("~ne", "~rrò"), ("~sce", "~rò"), ("~uoca", "~ocherò"), ("~uola", "~olerò"), ("~uole", "~orrò"), ("~uona", "~onerò"), ("~uora", "~orerò"), ("~uore", "~orirò"), ("~uò", "~otrò"), ("~ve", "~rrò"), ("~à", "~aprò"), ("~à", "~arò")], rules {
@@ -722,31 +739,33 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "fà" => [10 19, 12 12],
         "sà" => [11 3],
     } listed {
-        "adempie" => 5,
-        "adempie" => 8,
-        "autoadempie" => 8,
-        "avvale" => 7,
-        "beve" => 6,
-        "beve" => 7,
-        "dice" => 4,
-        "fa" => 1,
-        "fa" => 3,
-        "infuoca" => 0,
-        "infuoca" => 2,
-        "muore" => 6,
-        "muore" => 7,
-        "osta" => 1,
-        "scuora" => 0,
-        "scuora" => 2,
-        "sfa" => 1,
-        "sfa" => 3,
-        "siede" => 6,
-        "siede" => 7,
-        "sta" => 1,
-        "sta" => 3,
-        "va" => 1,
-        "vale" => 6,
-        "vale" => 7,
+        0 => [
+            "infuoca", "scuora",
+        ],
+        1 => [
+            "fa", "osta", "sfa", "sta", "va",
+        ],
+        2 => [
+            "infuoca", "scuora",
+        ],
+        3 => [
+            "fa", "sfa", "sta",
+        ],
+        4 => [
+            "dice",
+        ],
+        5 => [
+            "adempie",
+        ],
+        6 => [
+            "beve", "muore", "siede", "vale",
+        ],
+        7 => [
+            "avvale", "beve", "muore", "siede", "vale",
+        ],
+        8 => [
+            "adempie", "autoadempie",
+        ],
     }, true, None),
     // IMPERATIVE_LEI, from SUBJ_1_SG.
     relation!(IMPERATIVE_LEI, [SUBJ_1_SG], [], none, true, None),
@@ -819,9 +838,12 @@ pub(super) static RELATIONS: [Relation<'static>; 55] = [
         "ditevi" => [3 27, 8 6],
         "mpitevi" => [9 3],
     } listed {
-        "abbiate" => 0,
-        "benedite" => 5,
-        "habbiate" => 0,
+        0 => [
+            "abbiate", "habbiate",
+        ],
+        5 => [
+            "benedite",
+        ],
     }, true, None),
     // PARTICIPLE_PRES, from GERUND.
     relation!(PARTICIPLE_PRES, [GERUND], [("~do", "~te"), ("~dosi", "~tesi"), ("~endo", "~iente"), ("~endo", "~vente"), ("~endosi", "~ientesi"), ("~ependo", "~ipiente"), ("~rendo", "~erente"), ("~tendo", "~ziente")], rules {

@@ -143,10 +143,15 @@ pub(super) static RELATIONS: [Relation<'static>; 4] = [
         "ò" => [0 5],
         "ù" => [0 8],
     } listed {
-        "belghe" => 4,
-        "difenditrici" => 1,
-        "invaditrici" => 1,
-        "iofe" => 0,
+        0 => [
+            "iofe",
+        ],
+        1 => [
+            "difenditrici", "invaditrici",
+        ],
+        4 => [
+            "belghe",
+        ],
     }, true, None),
     // F_SG, from M_SG.
     relation!(F_SG, [M_SG], [("~", "~"), ("~e", "~a"), ("~o", "~a"), ("~ore", "~rice"), ("~sore", "~ditrice")], rules {

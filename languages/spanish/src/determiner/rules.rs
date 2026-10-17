@@ -7,38 +7,35 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 10 rules and 18 listed words.
+/// 10 rules and 15 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Todo 24, Docientos 13, Poco 10, Un 9, Dambos 3, Cuál 1],
-        "e" => [Un 4] regular,
-        "l" => [Un 3] regular,
-        "o" => [Todo 24, Poco 10],
-        "ho" => [Todo 4] regular,
-        "no" => [Todo 11] regular,
-        "ro" => [Poco 3, Todo 1] regular,
-        "to" => [Poco 3, Todo 1] regular,
-        "s" => [Docientos 13, Dambos 3] regular,
+        "" => [Poco 37, Docientos 15, Tal 9, Ése 6, Nosotros 6, Mvd 3, Nosotres 2],
+        "a" => [Mvd 2] regular,
+        "e" => [Ése 6] regular,
+        "l" => [Tal 6] regular,
+        "o" => [Poco 37] regular,
+        "s" => [Docientos 15, Nosotros 6, Nosotres 2],
+        "es" => [Nosotres 2] regular,
+        "os" => [Docientos 14, Nosotros 6] regular,
+        "bos" => [Nosotros 3] regular,
         "tos" => [Docientos 12] regular,
     }
     listed {
-        "#aquel" => Un,
-        "#aquese" => Un,
-        "#aqueste" => Un,
-        "#cuál" => Un,
-        "#dambos" => Dambos,
-        "#el" => Un,
-        "#ese" => Un,
-        "#este" => Un,
-        "#la" => Cuál,
-        "#nuestro" => Todo,
-        "#poco" => Poco,
-        "#sendos" => Dambos,
-        "#suyo" => Poco,
-        "#tanto" => Todo,
-        "#tuyo" => Poco,
-        "#unx" => Un,
-        "#varios" => Dambos,
-        "#voso" => Poco,
+        Docientos => [
+            "#nosotras",
+        ],
+        Tal => [
+            "#aquel", "#aquél", "#el", "#un", "#unx", "#él",
+        ],
+        Nosotros => [
+            "#nosotros", "#sendos", "#varios",
+        ],
+        Mvd => [
+            "#ella", "#la", "#mvd",
+        ],
+        Nosotres => [
+            "#nosotres", "#vosotres",
+        ],
     }
 };

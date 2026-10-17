@@ -42,7 +42,7 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
+     $(stem gen_m_anim: $s1:tt;)?
      $(stem ins: $s2:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
@@ -209,7 +209,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     ),
     // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро).
     declension!("пятеро", 7, "~о";
-    stem rest: "~ы- like пятеро";
+    stem gen_m_anim: "~ы- like пятеро";
     stem ins: "~ыми- like пятеро";
     nom_m: _, "~о";
     nom_pl: "~о", "~о";
@@ -226,7 +226,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     // Пятьдесят: 4 words (пятьдесят, шестьдесят, семьдесят, восемьдесят).
     declension!("пятьдесят", 4, "~ь~";
     stem lemma: "~ь~- like пятьдесят";
-    stem rest: "~и~и- like пятьдесят";
+    stem gen_m_anim: "~и~и- like пятьдесят";
     stem ins: "~ью~ью- like пятьдесят";
     gen_m: _, derived;
     gen_f: derived, derived;

@@ -87,24 +87,24 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
             OPT_PASS_3_SG,
             OPT_PASS_3_DU,
             OPT_PASS_3_PL,
-            IMP_ACT_2_SG,
-            IMP_ACT_2_DU,
-            IMP_ACT_2_PL,
-            IMP_ACT_3_SG,
-            IMP_ACT_3_DU,
-            IMP_ACT_3_PL,
-            IMP_MID_2_SG,
-            IMP_MID_2_DU,
-            IMP_MID_2_PL,
-            IMP_MID_3_SG,
-            IMP_MID_3_DU,
-            IMP_MID_3_PL,
-            IMP_PASS_2_SG,
-            IMP_PASS_2_DU,
-            IMP_PASS_2_PL,
-            IMP_PASS_3_SG,
-            IMP_PASS_3_DU,
-            IMP_PASS_3_PL,
+            PRESENT_IMPERATIVE_ACT_2_SG,
+            PRESENT_IMPERATIVE_ACT_2_DU,
+            PRESENT_IMPERATIVE_ACT_2_PL,
+            PRESENT_IMPERATIVE_ACT_3_SG,
+            PRESENT_IMPERATIVE_ACT_3_DU,
+            PRESENT_IMPERATIVE_ACT_3_PL,
+            PRESENT_IMPERATIVE_MID_2_SG,
+            PRESENT_IMPERATIVE_MID_2_DU,
+            PRESENT_IMPERATIVE_MID_2_PL,
+            PRESENT_IMPERATIVE_MID_3_SG,
+            PRESENT_IMPERATIVE_MID_3_DU,
+            PRESENT_IMPERATIVE_MID_3_PL,
+            PRESENT_IMPERATIVE_PASS_2_SG,
+            PRESENT_IMPERATIVE_PASS_2_DU,
+            PRESENT_IMPERATIVE_PASS_2_PL,
+            PRESENT_IMPERATIVE_PASS_3_SG,
+            PRESENT_IMPERATIVE_PASS_3_DU,
+            PRESENT_IMPERATIVE_PASS_3_PL,
             FUTURE_PERFECT_IND_ACT_1_SG,
             FUTURE_PERFECT_IND_ACT_1_PL,
             FUTURE_PERFECT_IND_ACT_2_SG,
@@ -132,7 +132,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest____"),
+        name: Cow::Borrowed("imperfect"),
         cells: Cow::Borrowed(&[
             IMPERFECT_ACT_1_SG,
             IMPERFECT_ACT_1_PL,
@@ -161,7 +161,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest__"),
+        name: Cow::Borrowed("future_ind_act_1_sg"),
         cells: Cow::Borrowed(&[
             FUTURE_IND_ACT_1_SG,
             FUTURE_IND_ACT_1_PL,
@@ -202,7 +202,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_______"),
+        name: Cow::Borrowed("pass_"),
         cells: Cow::Borrowed(&[
             FUTURE_IND_PASS_1_SG,
             FUTURE_IND_PASS_1_PL,
@@ -225,7 +225,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest________"),
+        name: Cow::Borrowed("aorist_ind_act_1_sg"),
         cells: Cow::Borrowed(&[
             AORIST_IND_ACT_1_SG,
             AORIST_IND_ACT_1_PL,
@@ -246,7 +246,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest__________"),
+        name: Cow::Borrowed("aorist_ind_pass_1_sg"),
         cells: Cow::Borrowed(&[
             AORIST_IND_PASS_1_SG,
             AORIST_IND_PASS_1_PL,
@@ -259,7 +259,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("aorist_subj_act_1_sg"),
         cells: Cow::Borrowed(&[
             AORIST_SUBJ_ACT_1_SG,
             AORIST_SUBJ_ACT_1_PL,
@@ -293,18 +293,18 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
             AORIST_OPT_MID_3_SG,
             AORIST_OPT_MID_3_DU,
             AORIST_OPT_MID_3_PL,
-            AORIST_IMP_ACT_2_SG,
-            AORIST_IMP_ACT_2_DU,
-            AORIST_IMP_ACT_2_PL,
-            AORIST_IMP_ACT_3_SG,
-            AORIST_IMP_ACT_3_DU,
-            AORIST_IMP_ACT_3_PL,
-            AORIST_IMP_MID_2_SG,
-            AORIST_IMP_MID_2_DU,
-            AORIST_IMP_MID_2_PL,
-            AORIST_IMP_MID_3_SG,
-            AORIST_IMP_MID_3_DU,
-            AORIST_IMP_MID_3_PL,
+            AORIST_IMPERATIVE_ACT_2_SG,
+            AORIST_IMPERATIVE_ACT_2_DU,
+            AORIST_IMPERATIVE_ACT_2_PL,
+            AORIST_IMPERATIVE_ACT_3_SG,
+            AORIST_IMPERATIVE_ACT_3_DU,
+            AORIST_IMPERATIVE_ACT_3_PL,
+            AORIST_IMPERATIVE_MID_2_SG,
+            AORIST_IMPERATIVE_MID_2_DU,
+            AORIST_IMPERATIVE_MID_2_PL,
+            AORIST_IMPERATIVE_MID_3_SG,
+            AORIST_IMPERATIVE_MID_3_DU,
+            AORIST_IMPERATIVE_MID_3_PL,
             INFINITIVE_AOR_ACT,
             INFINITIVE_AOR_MID,
             PARTICIPLE_AOR_ACT,
@@ -312,7 +312,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_____"),
+        name: Cow::Borrowed("pass"),
         cells: Cow::Borrowed(&[
             AORIST_SUBJ_PASS_1_SG,
             AORIST_SUBJ_PASS_1_PL,
@@ -330,18 +330,18 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
             AORIST_OPT_PASS_3_SG,
             AORIST_OPT_PASS_3_DU,
             AORIST_OPT_PASS_3_PL,
-            AORIST_IMP_PASS_2_SG,
-            AORIST_IMP_PASS_2_DU,
-            AORIST_IMP_PASS_2_PL,
-            AORIST_IMP_PASS_3_SG,
-            AORIST_IMP_PASS_3_DU,
-            AORIST_IMP_PASS_3_PL,
+            AORIST_IMPERATIVE_PASS_2_SG,
+            AORIST_IMPERATIVE_PASS_2_DU,
+            AORIST_IMPERATIVE_PASS_2_PL,
+            AORIST_IMPERATIVE_PASS_3_SG,
+            AORIST_IMPERATIVE_PASS_3_DU,
+            AORIST_IMPERATIVE_PASS_3_PL,
             INFINITIVE_AOR_PASS,
             PARTICIPLE_AOR_PASS,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest___"),
+        name: Cow::Borrowed("perfect_ind_act_1_sg"),
         cells: Cow::Borrowed(&[
             PERFECT_IND_ACT_1_SG,
             PERFECT_IND_ACT_1_PL,
@@ -367,18 +367,18 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
             PERFECT_OPT_ACT_3_SG,
             PERFECT_OPT_ACT_3_DU,
             PERFECT_OPT_ACT_3_PL,
-            PERFECT_IMP_ACT_2_SG,
-            PERFECT_IMP_ACT_2_DU,
-            PERFECT_IMP_ACT_2_PL,
-            PERFECT_IMP_ACT_3_SG,
-            PERFECT_IMP_ACT_3_DU,
-            PERFECT_IMP_ACT_3_PL,
+            PERFECT_IMPERATIVE_ACT_2_SG,
+            PERFECT_IMPERATIVE_ACT_2_DU,
+            PERFECT_IMPERATIVE_ACT_2_PL,
+            PERFECT_IMPERATIVE_ACT_3_SG,
+            PERFECT_IMPERATIVE_ACT_3_DU,
+            PERFECT_IMPERATIVE_ACT_3_PL,
             INFINITIVE_PERF_ACT,
             PARTICIPLE_PERF_ACT,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("perfect_ind_mid_1_sg"),
         cells: Cow::Borrowed(&[
             PERFECT_IND_MID_1_SG,
             PERFECT_IND_MID_1_PL,
@@ -459,7 +459,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest______"),
+        name: Cow::Borrowed("perfect_ind_mid_2_sg"),
         cells: Cow::Borrowed(&[
             PERFECT_IND_MID_2_SG,
             PERFECT_IND_MID_2_DU,
@@ -471,24 +471,24 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
             PERFECT_IND_PASS_2_PL,
             PERFECT_IND_PASS_3_DU,
             PERFECT_IND_PASS_3_PL,
-            PERFECT_IMP_MID_2_SG,
-            PERFECT_IMP_MID_2_DU,
-            PERFECT_IMP_MID_2_PL,
-            PERFECT_IMP_MID_3_SG,
-            PERFECT_IMP_MID_3_DU,
-            PERFECT_IMP_MID_3_PL,
-            PERFECT_IMP_PASS_2_SG,
-            PERFECT_IMP_PASS_2_DU,
-            PERFECT_IMP_PASS_2_PL,
-            PERFECT_IMP_PASS_3_SG,
-            PERFECT_IMP_PASS_3_DU,
-            PERFECT_IMP_PASS_3_PL,
+            PERFECT_IMPERATIVE_MID_2_SG,
+            PERFECT_IMPERATIVE_MID_2_DU,
+            PERFECT_IMPERATIVE_MID_2_PL,
+            PERFECT_IMPERATIVE_MID_3_SG,
+            PERFECT_IMPERATIVE_MID_3_DU,
+            PERFECT_IMPERATIVE_MID_3_PL,
+            PERFECT_IMPERATIVE_PASS_2_SG,
+            PERFECT_IMPERATIVE_PASS_2_DU,
+            PERFECT_IMPERATIVE_PASS_2_PL,
+            PERFECT_IMPERATIVE_PASS_3_SG,
+            PERFECT_IMPERATIVE_PASS_3_DU,
+            PERFECT_IMPERATIVE_PASS_3_PL,
             INFINITIVE_PERF_MID,
             INFINITIVE_PERF_PASS,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest___________"),
+        name: Cow::Borrowed("pluperfect_act"),
         cells: Cow::Borrowed(&[
             PLUPERFECT_ACT_1_SG,
             PLUPERFECT_ACT_1_PL,
@@ -501,7 +501,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_________"),
+        name: Cow::Borrowed("pluperfect"),
         cells: Cow::Borrowed(&[
             PLUPERFECT_MID_1_SG,
             PLUPERFECT_MID_1_PL,
@@ -524,7 +524,7 @@ pub(super) static SLOTS: [Slot<'static>; 13] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 263] = [
+pub(super) static TABLES: [EndingTable<'static>; 266] = [
     // lemma like βουλευω: 539 words.
     EndingTable {
         name: Cow::Borrowed("βουλευω"),
@@ -1698,7 +1698,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest____ like ἐχω: 551 words.
+    // imperfect like ἐχω: 551 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 551,
@@ -1715,7 +1715,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ετο\tἐ~εσθην\tἐ~οντο\t",
         )),
     },
-    // rest____ like βουλευω: 412 words.
+    // imperfect like βουλευω: 412 words.
     EndingTable {
         name: Cow::Borrowed("βουλευω"),
         words: 412,
@@ -1732,7 +1732,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ετο\tἐ~εσθην\tἐ~οντο\t",
         )),
     },
-    // rest____ like ποιεω: 309 words.
+    // imperfect like ποιεω: 309 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 309,
@@ -1749,7 +1749,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ειτο\tἐ~εισθην\tἐ~ουντο\t",
         )),
     },
-    // rest____ like ἐλπω: 124 words.
+    // imperfect like ἐλπω: 124 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπω"),
         words: 124,
@@ -1766,7 +1766,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ετο\t~εσθην\t~οντο\t",
         )),
     },
-    // rest____ like φοιτᾰω: 109 words.
+    // imperfect like φοιτᾰω: 109 words.
     EndingTable {
         name: Cow::Borrowed("φοιτᾰω"),
         words: 109,
@@ -1783,7 +1783,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ᾱτο\tἐ~ᾱσθην\tἐ~ωντο\t",
         )),
     },
-    // rest____ like γῡροω: 95 words.
+    // imperfect like γῡροω: 95 words.
     EndingTable {
         name: Cow::Borrowed("γῡροω"),
         words: 95,
@@ -1800,7 +1800,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~το\tἐ~σθην\tἐ~ντο\t",
         )),
     },
-    // rest____ like εὐλογεω: 74 words.
+    // imperfect like εὐλογεω: 74 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 74,
@@ -1817,7 +1817,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ειτο\t~εισθην\t~ουντο\t",
         )),
     },
-    // rest____ like ἀειρω: 39 words.
+    // imperfect like ἀειρω: 39 words.
     EndingTable {
         name: Cow::Borrowed("ἀειρω"),
         words: 39,
@@ -1834,7 +1834,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ετο\t~εσθην\t~οντο\t",
         )),
     },
-    // rest____ like σβεννῡμῐ: 34 words.
+    // imperfect like σβεννῡμῐ: 34 words.
     EndingTable {
         name: Cow::Borrowed("σβεννῡμῐ"),
         words: 34,
@@ -1851,7 +1851,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ῠτο\tἐ~ῠσθην\tἐ~ῠντο\t",
         )),
     },
-    // rest____ like εἰσερχομαι: 34 words.
+    // imperfect like εἰσερχομαι: 34 words.
     EndingTable {
         name: Cow::Borrowed("εἰσερχομαι"),
         words: 34,
@@ -1868,7 +1868,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ετο\t~εσθην\t~οντο\t",
         )),
     },
-    // rest____ like σῑνομαι: 34 words.
+    // imperfect like σῑνομαι: 34 words.
     EndingTable {
         name: Cow::Borrowed("σῑνομαι"),
         words: 34,
@@ -1885,7 +1885,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ετο\tἐ~εσθην\tἐ~οντο\t",
         )),
     },
-    // rest____ like ἀνῐστημῐ: 24 words.
+    // imperfect like ἀνῐστημῐ: 24 words.
     EndingTable {
         name: Cow::Borrowed("ἀνῐστημῐ"),
         words: 24,
@@ -1902,7 +1902,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾰτο\t~ᾰσθην\t~ᾰντο\t",
         )),
     },
-    // rest____ like ἀφῑημῐ: 13 words.
+    // imperfect like ἀφῑημῐ: 13 words.
     EndingTable {
         name: Cow::Borrowed("ἀφῑημῐ"),
         words: 13,
@@ -1919,7 +1919,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ετο\t~εσθην\t~εντο\t",
         )),
     },
-    // rest____ like ἀθῡρω: 13 words.
+    // imperfect like ἀθῡρω: 13 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 13,
@@ -1936,7 +1936,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~ετο\tἠ~εσθην\tἠ~οντο\t",
         )),
     },
-    // rest____ like ποιμαινω: 8 words.
+    // imperfect like ποιμαινω: 8 words.
     EndingTable {
         name: Cow::Borrowed("ποιμαινω"),
         words: 8,
@@ -1953,7 +1953,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ε~ετο\tε~εσθην\tε~οντο\t",
         )),
     },
-    // rest____ like μηκᾰομαι: 6 words.
+    // imperfect like μηκᾰομαι: 6 words.
     EndingTable {
         name: Cow::Borrowed("μηκᾰομαι"),
         words: 6,
@@ -1970,7 +1970,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱτο\t~ᾱσθην\t~ωντο\t",
         )),
     },
-    // rest____ like σκηπτω: 5 words.
+    // imperfect like σκηπτω: 5 words.
     EndingTable {
         name: Cow::Borrowed("σκηπτω"),
         words: 5,
@@ -1987,7 +1987,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ετο\tἐ~εσθην\tἐ~οντο\t",
         )),
     },
-    // rest____ like ἡγεομαι: 5 words.
+    // imperfect like ἡγεομαι: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἡγεομαι"),
         words: 5,
@@ -2004,7 +2004,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ειτο\t~εισθην\t~ουντο\t",
         )),
     },
-    // rest____ like ἐλᾰσσοω: 4 words.
+    // imperfect like ἐλᾰσσοω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ἐλᾰσσοω"),
         words: 4,
@@ -2021,7 +2021,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~το\tἠ~σθην\tἠ~ντο\t",
         )),
     },
-    // rest____ like κᾰκοω: 4 words.
+    // imperfect like κᾰκοω: 4 words.
     EndingTable {
         name: Cow::Borrowed("κᾰκοω"),
         words: 4,
@@ -2038,7 +2038,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~το\t~σθην\t~ντο\t",
         )),
     },
-    // rest____ like ξυνναυμᾰχεω: 4 words.
+    // imperfect like ξυνναυμᾰχεω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ξυνναυμᾰχεω"),
         words: 4,
@@ -2055,7 +2055,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like δηλεομαι: 3 words.
+    // imperfect like δηλεομαι: 3 words.
     EndingTable {
         name: Cow::Borrowed("δηλεομαι"),
         words: 3,
@@ -2072,7 +2072,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ειτο\tἐ~εισθην\tἐ~ουντο\t",
         )),
     },
-    // rest____ like δῐακειμαι: 2 words.
+    // imperfect like δῐακειμαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("δῐακειμαι"),
         words: 2,
@@ -2089,7 +2089,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like συγκειμαι: 2 words.
+    // imperfect like συγκειμαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("συγκειμαι"),
         words: 2,
@@ -2106,7 +2106,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like επῐλῡω: 2 words.
+    // imperfect like επῐλῡω: 2 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 2,
@@ -2123,7 +2123,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~ετο\tἑ~εσθην\tἑ~οντο\t",
         )),
     },
-    // rest____ like μειδᾰω: 2 words.
+    // imperfect like μειδᾰω: 2 words.
     EndingTable {
         name: Cow::Borrowed("μειδᾰω"),
         words: 2,
@@ -2140,7 +2140,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like ἀπαυραω: 2 words.
+    // imperfect like ἀπαυραω: 2 words.
     EndingTable {
         name: Cow::Borrowed("ἀπαυραω"),
         words: 2,
@@ -2157,7 +2157,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱτο\t~ᾱσθην\t~ωντο\t",
         )),
     },
-    // rest____ like ὑποκοριζομαι: 2 words.
+    // imperfect like ὑποκοριζομαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("ὑποκοριζομαι"),
         words: 2,
@@ -2174,7 +2174,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like ᾰνθρωπεω: 2 words.
+    // imperfect like ᾰνθρωπεω: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰνθρωπεω"),
         words: 2,
@@ -2191,7 +2191,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~ειτο\tἠ~εισθην\tἠ~ουντο\t",
         )),
     },
-    // rest____ like ἀποστατεω: 1 words.
+    // imperfect like ἀποστατεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἀποστατεω"),
         words: 1,
@@ -2208,7 +2208,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest____ like λαλαχευομαι: 1 words.
+    // imperfect like λαλαχευομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("λαλαχευομαι"),
         words: 1,
@@ -2225,7 +2225,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ετο\tἐ~εσθην\tἐ~οντο\t",
         )),
     },
-    // rest____ like ᾰντᾰποκρῑνομαι: 1 words.
+    // imperfect like ᾰντᾰποκρῑνομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 1,
@@ -2242,7 +2242,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἀ~ετο\tἀ~εσθην\tἀ~οντο\t",
         )),
     },
-    // rest____ like ὑπεκτιθεμαι: 1 words.
+    // imperfect like ὑπεκτιθεμαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπεκτιθεμαι"),
         words: 1,
@@ -2259,7 +2259,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~το\t~σθην\t~ντο\t",
         )),
     },
-    // rest__ like ποιεω: 751 words.
+    // future_ind_act_1_sg like ποιεω: 751 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 751,
@@ -2281,7 +2281,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἐχω: 632 words.
+    // future_ind_act_1_sg like ἐχω: 632 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 632,
@@ -2303,7 +2303,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἑπομαι: 163 words.
+    // future_ind_act_1_sg like ἑπομαι: 163 words.
     EndingTable {
         name: Cow::Borrowed("ἑπομαι"),
         words: 163,
@@ -2325,7 +2325,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like χρημᾰτῐζω: 146 words.
+    // future_ind_act_1_sg like χρημᾰτῐζω: 146 words.
     EndingTable {
         name: Cow::Borrowed("χρημᾰτῐζω"),
         words: 146,
@@ -2347,7 +2347,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like λογῐζομαι: 114 words.
+    // future_ind_act_1_sg like λογῐζομαι: 114 words.
     EndingTable {
         name: Cow::Borrowed("λογῐζομαι"),
         words: 114,
@@ -2369,7 +2369,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like γῡροω: 86 words.
+    // future_ind_act_1_sg like γῡροω: 86 words.
     EndingTable {
         name: Cow::Borrowed("γῡροω"),
         words: 86,
@@ -2391,7 +2391,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like εἰσερχομαι: 46 words.
+    // future_ind_act_1_sg like εἰσερχομαι: 46 words.
     EndingTable {
         name: Cow::Borrowed("εἰσερχομαι"),
         words: 46,
@@ -2413,7 +2413,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἐπᾰνᾰχωρεω: 23 words.
+    // future_ind_act_1_sg like ἐπᾰνᾰχωρεω: 23 words.
     EndingTable {
         name: Cow::Borrowed("ἐπᾰνᾰχωρεω"),
         words: 23,
@@ -2435,7 +2435,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like σκᾰνδᾰλῐζω: 13 words.
+    // future_ind_act_1_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -2457,7 +2457,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἀθῡρω: 8 words.
+    // future_ind_act_1_sg like ἀθῡρω: 8 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 8,
@@ -2479,7 +2479,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἐλπῐζω: 5 words.
+    // future_ind_act_1_sg like ἐλπῐζω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 5,
@@ -2501,7 +2501,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἐλᾰσσοω: 4 words.
+    // future_ind_act_1_sg like ἐλᾰσσοω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ἐλᾰσσοω"),
         words: 4,
@@ -2523,7 +2523,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ἐρωτᾰω: 4 words.
+    // future_ind_act_1_sg like ἐρωτᾰω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ἐρωτᾰω"),
         words: 4,
@@ -2545,7 +2545,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ερεω: 4 words.
+    // future_ind_act_1_sg like ερεω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ερεω"),
         words: 4,
@@ -2567,7 +2567,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ὑποκοριζομαι: 4 words.
+    // future_ind_act_1_sg like ὑποκοριζομαι: 4 words.
     EndingTable {
         name: Cow::Borrowed("ὑποκοριζομαι"),
         words: 4,
@@ -2589,7 +2589,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ξυνναυμᾰχεω: 3 words.
+    // future_ind_act_1_sg like ξυνναυμᾰχεω: 3 words.
     EndingTable {
         name: Cow::Borrowed("ξυνναυμᾰχεω"),
         words: 3,
@@ -2611,7 +2611,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ᾰντᾰποκρῑνομαι: 2 words.
+    // future_ind_act_1_sg like ᾰντᾰποκρῑνομαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 2,
@@ -2633,7 +2633,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ᾰνθρωπεω: 2 words.
+    // future_ind_act_1_sg like ᾰνθρωπεω: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰνθρωπεω"),
         words: 2,
@@ -2655,7 +2655,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like περνημῐ: 1 words.
+    // future_ind_act_1_sg like περνημῐ: 1 words.
     EndingTable {
         name: Cow::Borrowed("περνημῐ"),
         words: 1,
@@ -2677,7 +2677,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like χᾰριζω: 1 words.
+    // future_ind_act_1_sg like χᾰριζω: 1 words.
     EndingTable {
         name: Cow::Borrowed("χᾰριζω"),
         words: 1,
@@ -2699,7 +2699,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like ὑπονοεω: 1 words.
+    // future_ind_act_1_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -2721,7 +2721,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like εισκᾰτοικεω: 1 words.
+    // future_ind_act_1_sg like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -2743,7 +2743,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest__ like τρᾰπω: 1 words.
+    // future_ind_act_1_sg like τρᾰπω: 1 words.
     EndingTable {
         name: Cow::Borrowed("τρᾰπω"),
         words: 1,
@@ -2765,7 +2765,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest_______ like ἐχω: 1,218 words.
+    // pass_ like ἐχω: 1,218 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 1218,
@@ -2781,7 +2781,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_______ like ποιεω: 589 words.
+    // pass_ like ποιεω: 589 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 589,
@@ -2797,7 +2797,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_______ like ἐλπῐζω: 9 words.
+    // pass_ like ἐλπῐζω: 9 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 9,
@@ -2813,7 +2813,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_______ like ᾰντᾰποκρῑνομαι: 3 words.
+    // pass_ like ᾰντᾰποκρῑνομαι: 3 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 3,
@@ -2829,7 +2829,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_______ like εισκᾰτοικεω: 1 words.
+    // pass_ like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -2845,7 +2845,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest________ like ποιεω: 882 words.
+    // aorist_ind_act_1_sg like ποιεω: 882 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 882,
@@ -2859,7 +2859,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐχω: 598 words.
+    // aorist_ind_act_1_sg like ἐχω: 598 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 598,
@@ -2873,7 +2873,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like εὐλογεω: 136 words.
+    // aorist_ind_act_1_sg like εὐλογεω: 136 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 136,
@@ -2887,7 +2887,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἑπομαι: 132 words.
+    // aorist_ind_act_1_sg like ἑπομαι: 132 words.
     EndingTable {
         name: Cow::Borrowed("ἑπομαι"),
         words: 132,
@@ -2901,7 +2901,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐλπω: 91 words.
+    // aorist_ind_act_1_sg like ἐλπω: 91 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπω"),
         words: 91,
@@ -2915,7 +2915,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἀνᾰγω: 30 words.
+    // aorist_ind_act_1_sg like ἀνᾰγω: 30 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰγω"),
         words: 30,
@@ -2929,7 +2929,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like μηκᾰομαι: 20 words.
+    // aorist_ind_act_1_sg like μηκᾰομαι: 20 words.
     EndingTable {
         name: Cow::Borrowed("μηκᾰομαι"),
         words: 20,
@@ -2943,7 +2943,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like εἰσερχομαι: 16 words.
+    // aorist_ind_act_1_sg like εἰσερχομαι: 16 words.
     EndingTable {
         name: Cow::Borrowed("εἰσερχομαι"),
         words: 16,
@@ -2957,7 +2957,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like φᾰρμᾰσσω: 15 words.
+    // aorist_ind_act_1_sg like φᾰρμᾰσσω: 15 words.
     EndingTable {
         name: Cow::Borrowed("φᾰρμᾰσσω"),
         words: 15,
@@ -2971,7 +2971,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like σκᾰνδᾰλῐζω: 13 words.
+    // aorist_ind_act_1_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -2985,7 +2985,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἀθῡρω: 12 words.
+    // aorist_ind_act_1_sg like ἀθῡρω: 12 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 12,
@@ -2999,7 +2999,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἀνᾰλᾰμβᾰνω: 12 words.
+    // aorist_ind_act_1_sg like ἀνᾰλᾰμβᾰνω: 12 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰλᾰμβᾰνω"),
         words: 12,
@@ -3013,7 +3013,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐλπῐζω: 11 words.
+    // aorist_ind_act_1_sg like ἐλπῐζω: 11 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 11,
@@ -3027,7 +3027,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ὑπογῐγνομαι: 8 words.
+    // aorist_ind_act_1_sg like ὑπογῐγνομαι: 8 words.
     EndingTable {
         name: Cow::Borrowed("ὑπογῐγνομαι"),
         words: 8,
@@ -3041,7 +3041,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like βαινω: 6 words.
+    // aorist_ind_act_1_sg like βαινω: 6 words.
     EndingTable {
         name: Cow::Borrowed("βαινω"),
         words: 6,
@@ -3055,7 +3055,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐφῐστημῐ: 6 words.
+    // aorist_ind_act_1_sg like ἐφῐστημῐ: 6 words.
     EndingTable {
         name: Cow::Borrowed("ἐφῐστημῐ"),
         words: 6,
@@ -3069,7 +3069,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ησᾰτο|~ᾰτο\t~ησᾰσθην|~ᾰσθην\t~ησᾰντο|~ᾰντο\t",
         )),
     },
-    // rest________ like ἀναιρεω: 5 words.
+    // aorist_ind_act_1_sg like ἀναιρεω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἀναιρεω"),
         words: 5,
@@ -3083,7 +3083,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐπῐτῐθημῐ: 3 words.
+    // aorist_ind_act_1_sg like ἐπῐτῐθημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐπῐτῐθημῐ"),
         words: 3,
@@ -3097,7 +3097,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ηκᾰτο|~ετο\t~ηκᾰσθην|~εσθην\t~ηκᾰντο|~εντο\t",
         )),
     },
-    // rest________ like σῠνιστημῐ: 3 words.
+    // aorist_ind_act_1_sg like σῠνιστημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("σῠνιστημῐ"),
         words: 3,
@@ -3111,7 +3111,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ξυνναυμᾰχεω: 3 words.
+    // aorist_ind_act_1_sg like ξυνναυμᾰχεω: 3 words.
     EndingTable {
         name: Cow::Borrowed("ξυνναυμᾰχεω"),
         words: 3,
@@ -3125,7 +3125,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like χᾰριζω: 3 words.
+    // aorist_ind_act_1_sg like χᾰριζω: 3 words.
     EndingTable {
         name: Cow::Borrowed("χᾰριζω"),
         words: 3,
@@ -3139,7 +3139,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like εἰδον: 2 words.
+    // aorist_ind_act_1_sg like εἰδον: 2 words.
     EndingTable {
         name: Cow::Borrowed("εἰδον"),
         words: 2,
@@ -3153,7 +3153,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like επῐλῡω: 2 words.
+    // aorist_ind_act_1_sg like επῐλῡω: 2 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 2,
@@ -3167,7 +3167,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἐπεφνον: 2 words.
+    // aorist_ind_act_1_sg like ἐπεφνον: 2 words.
     EndingTable {
         name: Cow::Borrowed("ἐπεφνον"),
         words: 2,
@@ -3181,7 +3181,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like ἠλθον: 1 words.
+    // aorist_ind_act_1_sg like ἠλθον: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἠλθον"),
         words: 1,
@@ -3195,7 +3195,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like φθιω: 1 words.
+    // aorist_ind_act_1_sg like φθιω: 1 words.
     EndingTable {
         name: Cow::Borrowed("φθιω"),
         words: 1,
@@ -3209,7 +3209,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ῑσᾰτο|ἐ~εισᾰτο|ἐ~ῐνησᾰτο\tἐ~ῑσᾰσθην|ἐ~εισᾰσθην|ἐ~ῐνησᾰσθην\tἐ~ῑσᾰντο|ἐ~εισᾰντο|ἐ~ῐνησᾰντο\t",
         )),
     },
-    // rest________ like ὑπονοεω: 1 words.
+    // aorist_ind_act_1_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -3223,7 +3223,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like εισκᾰτοικεω: 1 words.
+    // aorist_ind_act_1_sg like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -3237,7 +3237,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest________ like εκπλεω: 1 words.
+    // aorist_ind_act_1_sg like εκπλεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εκπλεω"),
         words: 1,
@@ -3251,28 +3251,28 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t\t",
         )),
     },
-    // rest__________ like ἐχω: 1,589 words.
+    // aorist_ind_pass_1_sg like ἐχω: 1,589 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 1589,
         slot: 5,
         table: Cow::Borrowed(concat!("ἐ~\t\t", "\t\t\t", "\t\t\t",)),
     },
-    // rest__________ like ἐλπω: 249 words.
+    // aorist_ind_pass_1_sg like ἐλπω: 249 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπω"),
         words: 249,
         slot: 5,
         table: Cow::Borrowed(concat!("~\t\t", "\t\t\t", "\t\t\t",)),
     },
-    // rest__________ like ἀθῡρω: 23 words.
+    // aorist_ind_pass_1_sg like ἀθῡρω: 23 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 23,
         slot: 5,
         table: Cow::Borrowed(concat!("ἠ~\t\t", "\t\t\t", "\t\t\t",)),
     },
-    // rest__________ like πᾰρᾰλλᾰσσω: 4 words.
+    // aorist_ind_pass_1_sg like πᾰρᾰλλᾰσσω: 4 words.
     EndingTable {
         name: Cow::Borrowed("πᾰρᾰλλᾰσσω"),
         words: 4,
@@ -3283,7 +3283,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~χθη|~γη\t~χθητην|~γητην\t~χθησᾰν|~γησᾰν\t",
         )),
     },
-    // rest__________ like ἐπισκεπτομαι: 1 words.
+    // aorist_ind_pass_1_sg like ἐπισκεπτομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἐπισκεπτομαι"),
         words: 1,
@@ -3294,14 +3294,14 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~φθη|~πη\t~φθητην|~πητην\t~φθησᾰν|~πησᾰν\t",
         )),
     },
-    // rest__________ like εκπλεω: 1 words.
+    // aorist_ind_pass_1_sg like εκπλεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εκπλεω"),
         words: 1,
         slot: 5,
         table: Cow::Borrowed(concat!("ἐξε~\t\t", "\t\t\t", "\t\t\t",)),
     },
-    // rest_ like ποιεω: 1,005 words.
+    // aorist_subj_act_1_sg like ποιεω: 1,005 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 1005,
@@ -3327,7 +3327,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱς\t~ᾰμενος\t",
         )),
     },
-    // rest_ like ἐχω: 659 words.
+    // aorist_subj_act_1_sg like ἐχω: 659 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 659,
@@ -3353,7 +3353,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱς\t~ᾰμενος\t",
         )),
     },
-    // rest_ like ἑπομαι: 146 words.
+    // aorist_subj_act_1_sg like ἑπομαι: 146 words.
     EndingTable {
         name: Cow::Borrowed("ἑπομαι"),
         words: 146,
@@ -3379,7 +3379,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~ᾰμενος\t",
         )),
     },
-    // rest_ like φᾰρμᾰσσω: 30 words.
+    // aorist_subj_act_1_sg like φᾰρμᾰσσω: 30 words.
     EndingTable {
         name: Cow::Borrowed("φᾰρμᾰσσω"),
         words: 30,
@@ -3405,7 +3405,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ων\t~ομενος\t",
         )),
     },
-    // rest_ like ἀνᾰγω: 20 words.
+    // aorist_subj_act_1_sg like ἀνᾰγω: 20 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰγω"),
         words: 20,
@@ -3431,7 +3431,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ων\t~ομενος\t",
         )),
     },
-    // rest_ like εἰσερχομαι: 18 words.
+    // aorist_subj_act_1_sg like εἰσερχομαι: 18 words.
     EndingTable {
         name: Cow::Borrowed("εἰσερχομαι"),
         words: 18,
@@ -3457,7 +3457,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ων\t\t",
         )),
     },
-    // rest_ like σκᾰνδᾰλῐζω: 13 words.
+    // aorist_subj_act_1_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -3483,7 +3483,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱςˇ\t~ᾰμενοςˇ\t",
         )),
     },
-    // rest_ like ἐλπῐζω: 9 words.
+    // aorist_subj_act_1_sg like ἐλπῐζω: 9 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 9,
@@ -3509,7 +3509,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ᾱς\tἐ~ᾰμενος\t",
         )),
     },
-    // rest_ like ἀθῡρω: 8 words.
+    // aorist_subj_act_1_sg like ἀθῡρω: 8 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 8,
@@ -3535,7 +3535,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἀ~ᾱς\tἀ~ᾰμενος\t",
         )),
     },
-    // rest_ like φῠω: 8 words.
+    // aorist_subj_act_1_sg like φῠω: 8 words.
     EndingTable {
         name: Cow::Borrowed("φῠω"),
         words: 8,
@@ -3561,7 +3561,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱς\t~ᾰμενος\t",
         )),
     },
-    // rest_ like ὑπογῐγνομαι: 8 words.
+    // aorist_subj_act_1_sg like ὑπογῐγνομαι: 8 words.
     EndingTable {
         name: Cow::Borrowed("ὑπογῐγνομαι"),
         words: 8,
@@ -3587,7 +3587,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~ομενος\t",
         )),
     },
-    // rest_ like πᾰρεχω: 6 words.
+    // aorist_subj_act_1_sg like πᾰρεχω: 6 words.
     EndingTable {
         name: Cow::Borrowed("πᾰρεχω"),
         words: 6,
@@ -3613,7 +3613,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ων\t~ομενος\t",
         )),
     },
-    // rest_ like ξυνναυμᾰχεω: 6 words.
+    // aorist_subj_act_1_sg like ξυνναυμᾰχεω: 6 words.
     EndingTable {
         name: Cow::Borrowed("ξυνναυμᾰχεω"),
         words: 6,
@@ -3639,7 +3639,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱς\t\t",
         )),
     },
-    // rest_ like ἐρωτᾰω: 4 words.
+    // aorist_subj_act_1_sg like ἐρωτᾰω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ἐρωτᾰω"),
         words: 4,
@@ -3665,7 +3665,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ᾱς\tἐ~ᾰμενος\t",
         )),
     },
-    // rest_ like ἐπῐτῐθημῐ: 3 words.
+    // aorist_subj_act_1_sg like ἐπῐτῐθημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐπῐτῐθημῐ"),
         words: 3,
@@ -3691,7 +3691,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ηκᾱς|~εις\t~ηκᾰμενος|~εμενος\t",
         )),
     },
-    // rest_ like ἐφελκω: 3 words.
+    // aorist_subj_act_1_sg like ἐφελκω: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐφελκω"),
         words: 3,
@@ -3717,7 +3717,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~υσᾱς\t~υσᾰμενος\t",
         )),
     },
-    // rest_ like σῠνιστημῐ: 3 words.
+    // aorist_subj_act_1_sg like σῠνιστημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("σῠνιστημῐ"),
         words: 3,
@@ -3743,7 +3743,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ᾱς\t~ᾰμενος\t",
         )),
     },
-    // rest_ like ἐφῐστημῐ: 3 words.
+    // aorist_subj_act_1_sg like ἐφῐστημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐφῐστημῐ"),
         words: 3,
@@ -3769,7 +3769,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ησᾱς|~ᾱς\t~ησᾰμενος|~ᾰμενος\t",
         )),
     },
-    // rest_ like ἁμᾰρτᾰνω: 3 words.
+    // aorist_subj_act_1_sg like ἁμᾰρτᾰνω: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἁμᾰρτᾰνω"),
         words: 3,
@@ -3795,7 +3795,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~ων|~ησᾱς\t~ομενος\t",
         )),
     },
-    // rest_ like ὠνεομαι: 3 words.
+    // aorist_subj_act_1_sg like ὠνεομαι: 3 words.
     EndingTable {
         name: Cow::Borrowed("ὠνεομαι"),
         words: 3,
@@ -3821,7 +3821,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\tἐ~ᾰμενος\t",
         )),
     },
-    // rest_ like επῐλῡω: 2 words.
+    // aorist_subj_act_1_sg like επῐλῡω: 2 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 2,
@@ -3847,7 +3847,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~ᾱς\tἑ~ᾰμενος\t",
         )),
     },
-    // rest_ like ᾰντᾰποκρῑνομαι: 2 words.
+    // aorist_subj_act_1_sg like ᾰντᾰποκρῑνομαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 2,
@@ -3873,7 +3873,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\tἀ~ᾰμενος\t",
         )),
     },
-    // rest_ like ᾰνθρωπεω: 2 words.
+    // aorist_subj_act_1_sg like ᾰνθρωπεω: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰνθρωπεω"),
         words: 2,
@@ -3899,7 +3899,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἀ~ᾱς\tἀ~ᾰμενος\t",
         )),
     },
-    // rest_ like ὑπονοεω: 1 words.
+    // aorist_subj_act_1_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -3925,7 +3925,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ῠ~ᾱς\tῠ~ᾰμενος\t",
         )),
     },
-    // rest_ like εισκᾰτοικεω: 1 words.
+    // aorist_subj_act_1_sg like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -3951,7 +3951,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~ᾱς\tἑ~ᾰμενος\t",
         )),
     },
-    // rest_ like εκπλεω: 1 words.
+    // aorist_subj_act_1_sg like εκπλεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εκπλεω"),
         words: 1,
@@ -3977,7 +3977,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐκ~ᾱς\t\t",
         )),
     },
-    // rest_____ like ἐχω: 1,188 words.
+    // pass like ἐχω: 1,188 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 1188,
@@ -3995,7 +3995,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ποιεω: 579 words.
+    // pass like ποιεω: 579 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 579,
@@ -4013,7 +4013,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ἐγειρω: 49 words.
+    // pass like ἐγειρω: 49 words.
     EndingTable {
         name: Cow::Borrowed("ἐγειρω"),
         words: 49,
@@ -4031,7 +4031,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ἐλπῐζω: 15 words.
+    // pass like ἐλπῐζω: 15 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 15,
@@ -4049,7 +4049,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ἐρωτᾰω: 7 words.
+    // pass like ἐρωτᾰω: 7 words.
     EndingTable {
         name: Cow::Borrowed("ἐρωτᾰω"),
         words: 7,
@@ -4067,7 +4067,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like πᾰρᾰλλᾰσσω: 4 words.
+    // pass like πᾰρᾰλλᾰσσω: 4 words.
     EndingTable {
         name: Cow::Borrowed("πᾰρᾰλλᾰσσω"),
         words: 4,
@@ -4085,7 +4085,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~χθεις|~γεις\t",
         )),
     },
-    // rest_____ like ᾰντᾰποκρῑνομαι: 2 words.
+    // pass like ᾰντᾰποκρῑνομαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 2,
@@ -4103,7 +4103,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like αἰσθᾰνομαι: 1 words.
+    // pass like αἰσθᾰνομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("αἰσθᾰνομαι"),
         words: 1,
@@ -4121,7 +4121,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ἐπισκεπτομαι: 1 words.
+    // pass like ἐπισκεπτομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἐπισκεπτομαι"),
         words: 1,
@@ -4139,7 +4139,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~φθεις|~πεις\t",
         )),
     },
-    // rest_____ like ὑπονοεω: 1 words.
+    // pass like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -4157,7 +4157,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like ὑπεκτιθεμαι: 1 words.
+    // pass like ὑπεκτιθεμαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπεκτιθεμαι"),
         words: 1,
@@ -4175,7 +4175,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like εισκᾰτοικεω: 1 words.
+    // pass like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -4193,7 +4193,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest_____ like εκπλεω: 1 words.
+    // pass like εκπλεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εκπλεω"),
         words: 1,
@@ -4211,7 +4211,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἐχω: 825 words.
+    // perfect_ind_act_1_sg like ἐχω: 825 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 825,
@@ -4232,7 +4232,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ποιεω: 326 words.
+    // perfect_ind_act_1_sg like ποιεω: 326 words.
     EndingTable {
         name: Cow::Borrowed("ποιεω"),
         words: 326,
@@ -4253,7 +4253,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like εὐλογεω: 179 words.
+    // perfect_ind_act_1_sg like εὐλογεω: 179 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 179,
@@ -4274,7 +4274,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like πεμπω: 170 words.
+    // perfect_ind_act_1_sg like πεμπω: 170 words.
     EndingTable {
         name: Cow::Borrowed("πεμπω"),
         words: 170,
@@ -4295,7 +4295,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like σκοπεω: 123 words.
+    // perfect_ind_act_1_sg like σκοπεω: 123 words.
     EndingTable {
         name: Cow::Borrowed("σκοπεω"),
         words: 123,
@@ -4316,7 +4316,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like στηρῐζω: 59 words.
+    // perfect_ind_act_1_sg like στηρῐζω: 59 words.
     EndingTable {
         name: Cow::Borrowed("στηρῐζω"),
         words: 59,
@@ -4337,7 +4337,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἀθῡρω: 16 words.
+    // perfect_ind_act_1_sg like ἀθῡρω: 16 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 16,
@@ -4358,7 +4358,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like σκᾰνδᾰλῐζω: 13 words.
+    // perfect_ind_act_1_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -4379,7 +4379,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~ωςˇ\t",
         )),
     },
-    // rest___ like εἰσερχομαι: 9 words.
+    // perfect_ind_act_1_sg like εἰσερχομαι: 9 words.
     EndingTable {
         name: Cow::Borrowed("εἰσερχομαι"),
         words: 9,
@@ -4400,7 +4400,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἐπῐλᾰμβᾰνω: 7 words.
+    // perfect_ind_act_1_sg like ἐπῐλᾰμβᾰνω: 7 words.
     EndingTable {
         name: Cow::Borrowed("ἐπῐλᾰμβᾰνω"),
         words: 7,
@@ -4421,7 +4421,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἐλπῐζω: 6 words.
+    // perfect_ind_act_1_sg like ἐλπῐζω: 6 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 6,
@@ -4442,7 +4442,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἐφῐστημῐ: 3 words.
+    // perfect_ind_act_1_sg like ἐφῐστημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐφῐστημῐ"),
         words: 3,
@@ -4463,7 +4463,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like επῐλῡω: 2 words.
+    // perfect_ind_act_1_sg like επῐλῡω: 2 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 2,
@@ -4484,7 +4484,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like ἐδω: 1 words.
+    // perfect_ind_act_1_sg like ἐδω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἐδω"),
         words: 1,
@@ -4505,7 +4505,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~οκως|~ως\t",
         )),
     },
-    // rest___ like ὑπονοεω: 1 words.
+    // perfect_ind_act_1_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -4526,7 +4526,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like εισκᾰτοικεω: 1 words.
+    // perfect_ind_act_1_sg like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -4547,7 +4547,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest___ like εκπλεω: 1 words.
+    // perfect_ind_act_1_sg like εκπλεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εκπλεω"),
         words: 1,
@@ -4568,7 +4568,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t",
         )),
     },
-    // rest like βουλευω: 459 words.
+    // perfect_ind_mid_1_sg like βουλευω: 459 words.
     EndingTable {
         name: Cow::Borrowed("βουλευω"),
         words: 459,
@@ -4607,7 +4607,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἐχω: 303 words.
+    // perfect_ind_mid_1_sg like ἐχω: 303 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 303,
@@ -4646,7 +4646,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t%ε~σομενος\t",
         )),
     },
-    // rest like ἐλπω: 140 words.
+    // perfect_ind_mid_1_sg like ἐλπω: 140 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπω"),
         words: 140,
@@ -4685,7 +4685,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like εὐλογεω: 133 words.
+    // perfect_ind_mid_1_sg like εὐλογεω: 133 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 133,
@@ -4724,7 +4724,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like σκοπεω: 117 words.
+    // perfect_ind_mid_1_sg like σκοπεω: 117 words.
     EndingTable {
         name: Cow::Borrowed("σκοπεω"),
         words: 117,
@@ -4763,7 +4763,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like χρημᾰτῐζω: 107 words.
+    // perfect_ind_mid_1_sg like χρημᾰτῐζω: 107 words.
     EndingTable {
         name: Cow::Borrowed("χρημᾰτῐζω"),
         words: 107,
@@ -4802,7 +4802,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like σβεννῡμῐ: 46 words.
+    // perfect_ind_mid_1_sg like σβεννῡμῐ: 46 words.
     EndingTable {
         name: Cow::Borrowed("σβεννῡμῐ"),
         words: 46,
@@ -4841,7 +4841,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like πορσῡνω: 33 words.
+    // perfect_ind_mid_1_sg like πορσῡνω: 33 words.
     EndingTable {
         name: Cow::Borrowed("πορσῡνω"),
         words: 33,
@@ -4880,7 +4880,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἀνᾰγω: 21 words.
+    // perfect_ind_mid_1_sg like ἀνᾰγω: 21 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰγω"),
         words: 21,
@@ -4919,7 +4919,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἀνῐστημῐ: 15 words.
+    // perfect_ind_mid_1_sg like ἀνῐστημῐ: 15 words.
     EndingTable {
         name: Cow::Borrowed("ἀνῐστημῐ"),
         words: 15,
@@ -4958,7 +4958,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~ηξομενος\t",
         )),
     },
-    // rest like σκᾰνδᾰλῐζω: 13 words.
+    // perfect_ind_mid_1_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -4997,7 +4997,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like πρεπω: 11 words.
+    // perfect_ind_mid_1_sg like πρεπω: 11 words.
     EndingTable {
         name: Cow::Borrowed("πρεπω"),
         words: 11,
@@ -5036,7 +5036,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἐλπῐζω: 10 words.
+    // perfect_ind_mid_1_sg like ἐλπῐζω: 10 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 10,
@@ -5075,7 +5075,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like σειω: 9 words.
+    // perfect_ind_mid_1_sg like σειω: 9 words.
     EndingTable {
         name: Cow::Borrowed("σειω"),
         words: 9,
@@ -5114,7 +5114,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἀνᾰλᾰμβᾰνω: 9 words.
+    // perfect_ind_mid_1_sg like ἀνᾰλᾰμβᾰνω: 9 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰλᾰμβᾰνω"),
         words: 9,
@@ -5153,7 +5153,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like σκηπτω: 5 words.
+    // perfect_ind_mid_1_sg like σκηπτω: 5 words.
     EndingTable {
         name: Cow::Borrowed("σκηπτω"),
         words: 5,
@@ -5192,7 +5192,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἀνᾰπτω: 5 words.
+    // perfect_ind_mid_1_sg like ἀνᾰπτω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰπτω"),
         words: 5,
@@ -5231,7 +5231,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like πᾰρᾰλλᾰσσω: 5 words.
+    // perfect_ind_mid_1_sg like πᾰρᾰλλᾰσσω: 5 words.
     EndingTable {
         name: Cow::Borrowed("πᾰρᾰλλᾰσσω"),
         words: 5,
@@ -5270,7 +5270,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like φλῡω: 3 words.
+    // perfect_ind_mid_1_sg like φλῡω: 3 words.
     EndingTable {
         name: Cow::Borrowed("φλῡω"),
         words: 3,
@@ -5309,7 +5309,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~σομενος\t",
         )),
     },
-    // rest like ἐφῐστημῐ: 3 words.
+    // perfect_ind_mid_1_sg like ἐφῐστημῐ: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἐφῐστημῐ"),
         words: 3,
@@ -5348,7 +5348,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~ηξομενος\t",
         )),
     },
-    // rest like ἀντᾰνᾰλῡω: 3 words.
+    // perfect_ind_mid_1_sg like ἀντᾰνᾰλῡω: 3 words.
     EndingTable {
         name: Cow::Borrowed("ἀντᾰνᾰλῡω"),
         words: 3,
@@ -5387,7 +5387,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t~ῡσομενος\t",
         )),
     },
-    // rest like ὑποκοριζομαι: 3 words.
+    // perfect_ind_mid_1_sg like ὑποκοριζομαι: 3 words.
     EndingTable {
         name: Cow::Borrowed("ὑποκοριζομαι"),
         words: 3,
@@ -5426,7 +5426,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like επῐλῡω: 2 words.
+    // perfect_ind_mid_1_sg like επῐλῡω: 2 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 2,
@@ -5465,7 +5465,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ἐπισευω: 1 words.
+    // perfect_ind_mid_1_sg like ἐπισευω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἐπισευω"),
         words: 1,
@@ -5504,7 +5504,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ὑπονοεω: 1 words.
+    // perfect_ind_mid_1_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -5543,7 +5543,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like λαλαχευομαι: 1 words.
+    // perfect_ind_mid_1_sg like λαλαχευομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("λαλαχευομαι"),
         words: 1,
@@ -5582,7 +5582,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest like ᾰντᾰποκρῑνομαι: 1 words.
+    // perfect_ind_mid_1_sg like ᾰντᾰποκρῑνομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 1,
@@ -5621,7 +5621,46 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest______ like ἐχω: 942 words.
+    // perfect_ind_mid_1_sg like εκπλεω: 1 words.
+    EndingTable {
+        name: Cow::Borrowed("εκπλεω"),
+        words: 1,
+        slot: 9,
+        table: Cow::Borrowed(concat!(
+            "ἐκ%ε~μαι\t\t",
+            "ἐκ%ε~ται\t",
+            "ἐκ%ε~μαι\tἐκ%ε~μεθᾰ\t",
+            "ἐκ%ε~ται\t",
+            "\t\t",
+            "\t\t\t",
+            "\tἐκ%ε~μένω ἦτον\tἐκ%ε~μένοι ὦσῐ|ἐκ%ε~μένοι ὦσῐν\t",
+            "ἐκ%ε~μένος ὦ\tἐκ%ε~μένοι ὦμεν\t",
+            "ἐκ%ε~μένος ᾖς\tἐκ%ε~μένω ἦτον\tἐκ%ε~μένοι ἦτε\t",
+            "ἐκ%ε~μένος ᾖ\tἐκ%ε~μένω ἦτον\tἐκ%ε~μένοι ὦσῐ|ἐκ%ε~μένοι ὦσῐν\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t\t",
+            "ἐκ%ε~μένος εἴην\tἐκ%ε~μένοι εἴημεν\t",
+            "ἐκ%ε~μένος εἴης\tἐκ%ε~μένω εἴητον\tἐκ%ε~μένοι εἴητε\t",
+            "ἐκ%ε~μένος εἴη\tἐκ%ε~μένω εἰήτην\tἐκ%ε~μένοι εἴησᾰν\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t\t",
+            "\t\t",
+            "\t\t\t",
+            "\t\t\t",
+            "\t\t",
+            "\tἐκ%ε~μενος\t",
+            "\t\t",
+        )),
+    },
+    // perfect_ind_mid_2_sg like ἐχω: 942 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 942,
@@ -5638,7 +5677,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~σθαι\t%ε~σθαι\t",
         )),
     },
-    // rest______ like εὐλογεω: 209 words.
+    // perfect_ind_mid_2_sg like εὐλογεω: 209 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 209,
@@ -5655,7 +5694,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~σθαι\t~σθαι\t",
         )),
     },
-    // rest______ like σκοπεω: 96 words.
+    // perfect_ind_mid_2_sg like σκοπεω: 96 words.
     EndingTable {
         name: Cow::Borrowed("σκοπεω"),
         words: 96,
@@ -5672,7 +5711,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~σθαι\tἐ~σθαι\t",
         )),
     },
-    // rest______ like τᾰσσω: 75 words.
+    // perfect_ind_mid_2_sg like τᾰσσω: 75 words.
     EndingTable {
         name: Cow::Borrowed("τᾰσσω"),
         words: 75,
@@ -5689,7 +5728,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~χθαι\t%ε~χθαι\t",
         )),
     },
-    // rest______ like ψηφῐζω: 55 words.
+    // perfect_ind_mid_2_sg like ψηφῐζω: 55 words.
     EndingTable {
         name: Cow::Borrowed("ψηφῐζω"),
         words: 55,
@@ -5706,7 +5745,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~σθαι\tἐ~σθαι\t",
         )),
     },
-    // rest______ like χεω: 42 words.
+    // perfect_ind_mid_2_sg like χεω: 42 words.
     EndingTable {
         name: Cow::Borrowed("χεω"),
         words: 42,
@@ -5723,7 +5762,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~θαι\t%ε~θαι\t",
         )),
     },
-    // rest______ like ἐλπω: 31 words.
+    // perfect_ind_mid_2_sg like ἐλπω: 31 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπω"),
         words: 31,
@@ -5740,7 +5779,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~θαι\t~θαι\t",
         )),
     },
-    // rest______ like πορσῡνω: 31 words.
+    // perfect_ind_mid_2_sg like πορσῡνω: 31 words.
     EndingTable {
         name: Cow::Borrowed("πορσῡνω"),
         words: 31,
@@ -5757,7 +5796,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~θαι\t%ε~θαι\t",
         )),
     },
-    // rest______ like στηρῐζω: 23 words.
+    // perfect_ind_mid_2_sg like στηρῐζω: 23 words.
     EndingTable {
         name: Cow::Borrowed("στηρῐζω"),
         words: 23,
@@ -5774,7 +5813,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~χθαι\tἐ~χθαι\t",
         )),
     },
-    // rest______ like ἱζω: 23 words.
+    // perfect_ind_mid_2_sg like ἱζω: 23 words.
     EndingTable {
         name: Cow::Borrowed("ἱζω"),
         words: 23,
@@ -5791,7 +5830,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~σθαι\t~σθαι\t",
         )),
     },
-    // rest______ like φᾰρμᾰσσω: 22 words.
+    // perfect_ind_mid_2_sg like φᾰρμᾰσσω: 22 words.
     EndingTable {
         name: Cow::Borrowed("φᾰρμᾰσσω"),
         words: 22,
@@ -5808,7 +5847,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~χθαι\t%ε~χθαι\t",
         )),
     },
-    // rest______ like ἀειρω: 22 words.
+    // perfect_ind_mid_2_sg like ἀειρω: 22 words.
     EndingTable {
         name: Cow::Borrowed("ἀειρω"),
         words: 22,
@@ -5825,7 +5864,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~θαι\t~θαι\t",
         )),
     },
-    // rest______ like ἐγειρω: 17 words.
+    // perfect_ind_mid_2_sg like ἐγειρω: 17 words.
     EndingTable {
         name: Cow::Borrowed("ἐγειρω"),
         words: 17,
@@ -5842,7 +5881,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~θαι\tἐ~θαι\t",
         )),
     },
-    // rest______ like ἀθῡρω: 17 words.
+    // perfect_ind_mid_2_sg like ἀθῡρω: 17 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 17,
@@ -5859,7 +5898,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~σθαι\tἠ~σθαι\t",
         )),
     },
-    // rest______ like ἀνᾰγω: 15 words.
+    // perfect_ind_mid_2_sg like ἀνᾰγω: 15 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰγω"),
         words: 15,
@@ -5876,7 +5915,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~χθαι\t~χθαι\t",
         )),
     },
-    // rest______ like σκᾰνδᾰλῐζω: 13 words.
+    // perfect_ind_mid_2_sg like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -5893,7 +5932,24 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~σθαιˇ\t%ε~σθαιˇ\t",
         )),
     },
-    // rest______ like θρῠπτω: 12 words.
+    // perfect_ind_mid_2_sg like ἐπᾰϊω: 12 words.
+    EndingTable {
+        name: Cow::Borrowed("ἐπᾰϊω"),
+        words: 12,
+        slot: 10,
+        table: Cow::Borrowed(concat!(
+            "~σαι\t~σθον\t\t",
+            "~σθον\t~τᾰται\t",
+            "~σαι\t~σθον\t~σθε\t",
+            "~σθον\t~τᾰται\t",
+            "\t~σθον\t~σθε\t",
+            "\t\t~σθων\t",
+            "~σο\t~σθον\t~σθε\t",
+            "~σθω\t~σθων\t~σθων\t",
+            "~σθαι\t~σθαι\t",
+        )),
+    },
+    // perfect_ind_mid_2_sg like θρῠπτω: 12 words.
     EndingTable {
         name: Cow::Borrowed("θρῠπτω"),
         words: 12,
@@ -5910,7 +5966,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~φθαι\t%ε~φθαι\t",
         )),
     },
-    // rest______ like πᾰρᾰλλᾰσσω: 11 words.
+    // perfect_ind_mid_2_sg like πᾰρᾰλλᾰσσω: 11 words.
     EndingTable {
         name: Cow::Borrowed("πᾰρᾰλλᾰσσω"),
         words: 11,
@@ -5927,7 +5983,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~χθαι\t~χθαι\t",
         )),
     },
-    // rest______ like ἀνᾰπτω: 9 words.
+    // perfect_ind_mid_2_sg like ἀνᾰπτω: 9 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰπτω"),
         words: 9,
@@ -5944,7 +6000,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~φθαι\t~φθαι\t",
         )),
     },
-    // rest______ like ἀνᾰλᾰμβᾰνω: 5 words.
+    // perfect_ind_mid_2_sg like ἀνᾰλᾰμβᾰνω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰλᾰμβᾰνω"),
         words: 5,
@@ -5961,7 +6017,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~φθαι\t~φθαι\t",
         )),
     },
-    // rest______ like σκηπτω: 5 words.
+    // perfect_ind_mid_2_sg like σκηπτω: 5 words.
     EndingTable {
         name: Cow::Borrowed("σκηπτω"),
         words: 5,
@@ -5978,7 +6034,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~φθαι\tἐ~φθαι\t",
         )),
     },
-    // rest______ like επῐλῡω: 3 words.
+    // perfect_ind_mid_2_sg like επῐλῡω: 3 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 3,
@@ -5995,7 +6051,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~σθαι\tἑ~σθαι\t",
         )),
     },
-    // rest______ like δῐᾰσευομαι: 2 words.
+    // perfect_ind_mid_2_sg like δῐᾰσευομαι: 2 words.
     EndingTable {
         name: Cow::Borrowed("δῐᾰσευομαι"),
         words: 2,
@@ -6012,7 +6068,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest______ like κορυσσω: 1 words.
+    // perfect_ind_mid_2_sg like κορυσσω: 1 words.
     EndingTable {
         name: Cow::Borrowed("κορυσσω"),
         words: 1,
@@ -6029,7 +6085,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest______ like ὑπονοεω: 1 words.
+    // perfect_ind_mid_2_sg like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -6046,7 +6102,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ῠ~σθαι\tῠ~σθαι\t",
         )),
     },
-    // rest______ like λαλαχευομαι: 1 words.
+    // perfect_ind_mid_2_sg like λαλαχευομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("λαλαχευομαι"),
         words: 1,
@@ -6063,7 +6119,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "\t\t",
         )),
     },
-    // rest______ like ᾰντᾰποκρῑνομαι: 1 words.
+    // perfect_ind_mid_2_sg like ᾰντᾰποκρῑνομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ᾰντᾰποκρῑνομαι"),
         words: 1,
@@ -6080,14 +6136,14 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἀ~σθαι\tἀ~σθαι\t",
         )),
     },
-    // rest___________ like ἐχω: 947 words.
+    // pluperfect_act like ἐχω: 947 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 947,
         slot: 11,
         table: Cow::Borrowed(concat!("ἐ%ε~\t\t", "\t\t\t", "\t\t\t",)),
     },
-    // rest___________ like σκοπεω: 121 words.
+    // pluperfect_act like σκοπεω: 121 words.
     EndingTable {
         name: Cow::Borrowed("σκοπεω"),
         words: 121,
@@ -6098,7 +6154,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~ει|ἐ~ειν\t\t\t",
         )),
     },
-    // rest___________ like χρημᾰτῐζω: 90 words.
+    // pluperfect_act like χρημᾰτῐζω: 90 words.
     EndingTable {
         name: Cow::Borrowed("χρημᾰτῐζω"),
         words: 90,
@@ -6109,14 +6165,14 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~ει|ἐ%ε~ειν\t\t\t",
         )),
     },
-    // rest___________ like εὐλογεω: 69 words.
+    // pluperfect_act like εὐλογεω: 69 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 69,
         slot: 11,
         table: Cow::Borrowed(concat!("~ειν|~η\t\t", "~εις|~ης\t\t\t", "~ει|~ειν\t\t\t",)),
     },
-    // rest___________ like σκᾰνδᾰλῐζω: 13 words.
+    // pluperfect_act like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -6127,7 +6183,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~ιˇ\tἐ%ε~τηνˇ\tἐ%ε~σᾰνˇ\t",
         )),
     },
-    // rest___________ like ἐλπῐζω: 5 words.
+    // pluperfect_act like ἐλπῐζω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἐλπῐζω"),
         words: 5,
@@ -6138,7 +6194,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~ει|ἠ~ειν\t\t\t",
         )),
     },
-    // rest___________ like ὑπονοεω: 1 words.
+    // pluperfect_act like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -6149,7 +6205,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ῠ~ει|ῠ~ειν\t\t\t",
         )),
     },
-    // rest___________ like εισκᾰτοικεω: 1 words.
+    // pluperfect_act like εισκᾰτοικεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("εισκᾰτοικεω"),
         words: 1,
@@ -6160,7 +6216,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~ει|ἑ~ειν\t\t\t",
         )),
     },
-    // rest_________ like ἐχω: 848 words.
+    // pluperfect like ἐχω: 848 words.
     EndingTable {
         name: Cow::Borrowed("ἐχω"),
         words: 848,
@@ -6174,7 +6230,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~το\tἐ%ε~σθην\tἐ%ε~ντο\t",
         )),
     },
-    // rest_________ like χρημᾰτῐζω: 146 words.
+    // pluperfect like χρημᾰτῐζω: 146 words.
     EndingTable {
         name: Cow::Borrowed("χρημᾰτῐζω"),
         words: 146,
@@ -6188,7 +6244,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~στο\tἐ%ε~σθην\tἐ%ε~δᾰτο\t",
         )),
     },
-    // rest_________ like σκοπεω: 103 words.
+    // pluperfect like σκοπεω: 103 words.
     EndingTable {
         name: Cow::Borrowed("σκοπεω"),
         words: 103,
@@ -6202,7 +6258,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~το\tἐ~σθην\tἐ~ντο\t",
         )),
     },
-    // rest_________ like εὐλογεω: 92 words.
+    // pluperfect like εὐλογεω: 92 words.
     EndingTable {
         name: Cow::Borrowed("εὐλογεω"),
         words: 92,
@@ -6216,7 +6272,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~το\t~σθην\t~ντο\t",
         )),
     },
-    // rest_________ like ψηφῐζω: 70 words.
+    // pluperfect like ψηφῐζω: 70 words.
     EndingTable {
         name: Cow::Borrowed("ψηφῐζω"),
         words: 70,
@@ -6230,7 +6286,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~στο\tἐ~σθην\tἐ~δᾰτο\t",
         )),
     },
-    // rest_________ like πειθω: 46 words.
+    // pluperfect like πειθω: 46 words.
     EndingTable {
         name: Cow::Borrowed("πειθω"),
         words: 46,
@@ -6244,7 +6300,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~το\tἐ%ε~θην\tἐ%ε~ᾰτο\t",
         )),
     },
-    // rest_________ like τᾰσσω: 32 words.
+    // pluperfect like τᾰσσω: 32 words.
     EndingTable {
         name: Cow::Borrowed("τᾰσσω"),
         words: 32,
@@ -6258,7 +6314,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~κτο\tἐ%ε~χθην\tἐ%ε~γᾰτο\t",
         )),
     },
-    // rest_________ like ἐγειρω: 26 words.
+    // pluperfect like ἐγειρω: 26 words.
     EndingTable {
         name: Cow::Borrowed("ἐγειρω"),
         words: 26,
@@ -6272,7 +6328,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~το\tἐ~θην\tἐ~ᾰτο\t",
         )),
     },
-    // rest_________ like ἱζω: 23 words.
+    // pluperfect like ἱζω: 23 words.
     EndingTable {
         name: Cow::Borrowed("ἱζω"),
         words: 23,
@@ -6286,7 +6342,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~στο\t~σθην\t~δᾰτο\t",
         )),
     },
-    // rest_________ like ἁπτω: 20 words.
+    // pluperfect like ἁπτω: 20 words.
     EndingTable {
         name: Cow::Borrowed("ἁπτω"),
         words: 20,
@@ -6300,7 +6356,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~το\t%ε~σθην\t%ε~ντο\t",
         )),
     },
-    // rest_________ like φᾰρμᾰσσω: 19 words.
+    // pluperfect like φᾰρμᾰσσω: 19 words.
     EndingTable {
         name: Cow::Borrowed("φᾰρμᾰσσω"),
         words: 19,
@@ -6314,7 +6370,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~κτο\tἐ%ε~χθην\tἐ%ε~χᾰτο\t",
         )),
     },
-    // rest_________ like ἀθῡρω: 16 words.
+    // pluperfect like ἀθῡρω: 16 words.
     EndingTable {
         name: Cow::Borrowed("ἀθῡρω"),
         words: 16,
@@ -6328,7 +6384,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἠ~το\tἠ~σθην\tἠ~ντο\t",
         )),
     },
-    // rest_________ like σκᾰνδᾰλῐζω: 13 words.
+    // pluperfect like σκᾰνδᾰλῐζω: 13 words.
     EndingTable {
         name: Cow::Borrowed("σκᾰνδᾰλῐζω"),
         words: 13,
@@ -6342,7 +6398,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~τοˇ\tἐ%ε~σθηνˇ\tἐ%ε~ντοˇ\t",
         )),
     },
-    // rest_________ like πρεπω: 11 words.
+    // pluperfect like πρεπω: 11 words.
     EndingTable {
         name: Cow::Borrowed("πρεπω"),
         words: 11,
@@ -6356,7 +6412,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ%ε~πτο\tἐ%ε~φθην\tἐ%ε~φᾰτο\t",
         )),
     },
-    // rest_________ like ἀειρω: 7 words.
+    // pluperfect like ἀειρω: 7 words.
     EndingTable {
         name: Cow::Borrowed("ἀειρω"),
         words: 7,
@@ -6370,7 +6426,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~το\t~θην\t~ᾰτο\t",
         )),
     },
-    // rest_________ like κᾰτειργω: 7 words.
+    // pluperfect like κᾰτειργω: 7 words.
     EndingTable {
         name: Cow::Borrowed("κᾰτειργω"),
         words: 7,
@@ -6384,7 +6440,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~κτο\t~χθην\t~χᾰτο\t",
         )),
     },
-    // rest_________ like ἀνᾰλᾰμβᾰνω: 5 words.
+    // pluperfect like ἀνᾰλᾰμβᾰνω: 5 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰλᾰμβᾰνω"),
         words: 5,
@@ -6398,7 +6454,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~πτο\t~φθην\t~φᾰτο\t",
         )),
     },
-    // rest_________ like σκηπτω: 5 words.
+    // pluperfect like σκηπτω: 5 words.
     EndingTable {
         name: Cow::Borrowed("σκηπτω"),
         words: 5,
@@ -6412,7 +6468,21 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~πτο\tἐ~φθην\tἐ~φᾰτο\t",
         )),
     },
-    // rest_________ like ἀνᾰπτω: 4 words.
+    // pluperfect like τῠπτω: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("τῠπτω"),
+        words: 4,
+        slot: 12,
+        table: Cow::Borrowed(concat!(
+            "ἐ%ε~μμην\t\t",
+            "ἐ%ε~ψο\tἐ%ε~φθον\t\t",
+            "ἐ%ε~πτο\t\tἐ%ε~πᾰτο\t",
+            "ἐ%ε~μμην\tἐ%ε~μμεθᾰ\t",
+            "ἐ%ε~ψο\tἐ%ε~φθον\tἐ%ε~φθε\t",
+            "ἐ%ε~πτο\tἐ%ε~φθην\tἐ%ε~πᾰτο\t",
+        )),
+    },
+    // pluperfect like ἀνᾰπτω: 4 words.
     EndingTable {
         name: Cow::Borrowed("ἀνᾰπτω"),
         words: 4,
@@ -6426,7 +6496,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~πτο\t~φθην\t~πᾰτο\t",
         )),
     },
-    // rest_________ like κρουω: 4 words.
+    // pluperfect like κρουω: 4 words.
     EndingTable {
         name: Cow::Borrowed("κρουω"),
         words: 4,
@@ -6440,7 +6510,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "%ε~το\t%ε~θην\t%ε~ᾰτο\t",
         )),
     },
-    // rest_________ like ῥηγνῡμῐ: 4 words.
+    // pluperfect like ῥηγνῡμῐ: 4 words.
     EndingTable {
         name: Cow::Borrowed("ῥηγνῡμῐ"),
         words: 4,
@@ -6454,7 +6524,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "~κτο\t~χθην\t~γᾰτο\t",
         )),
     },
-    // rest_________ like επῐλῡω: 3 words.
+    // pluperfect like επῐλῡω: 3 words.
     EndingTable {
         name: Cow::Borrowed("επῐλῡω"),
         words: 3,
@@ -6468,7 +6538,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἑ~το\tἑ~σθην\tἑ~ντο\t",
         )),
     },
-    // rest_________ like κᾰθημαι: 1 words.
+    // pluperfect like κᾰθημαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("κᾰθημαι"),
         words: 1,
@@ -6482,7 +6552,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~το|~στο|~το\tἐ~σθην|~σθην\tἐ~ντο|~ντο\t",
         )),
     },
-    // rest_________ like ὑπονοεω: 1 words.
+    // pluperfect like ὑπονοεω: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑπονοεω"),
         words: 1,
@@ -6496,7 +6566,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ῠ~το\tῠ~σθην\tῠ~ντο\t",
         )),
     },
-    // rest_________ like λαλαχευομαι: 1 words.
+    // pluperfect like λαλαχευομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("λαλαχευομαι"),
         words: 1,
@@ -6510,7 +6580,7 @@ pub(super) static TABLES: [EndingTable<'static>; 263] = [
             "ἐ~το\tἐ~σθην\tἐ~ντο\t",
         )),
     },
-    // rest_________ like ὑποκοριζομαι: 1 words.
+    // pluperfect like ὑποκοριζομαι: 1 words.
     EndingTable {
         name: Cow::Borrowed("ὑποκοριζομαι"),
         words: 1,

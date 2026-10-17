@@ -38,7 +38,7 @@ use flexion::Paradigm;
 /// `voc_n` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem rest: $s0:tt;)?
+     $(stem nom_m_sg: $s0:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
      $(nom_n: $c6:tt, $c7:tt, $c8:tt;)?
@@ -208,10 +208,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 3] = [
     // कतम: 9 words (तक, अन्य, किम्, स्व, त्व, उभ).
     declension!("कतम", 9, "~";
     nom_m: "~ः", _, "~े";
-    nom_n: _, "~े", "~ानि";
+    nom_n: "~त्", "~े", "~ानि";
     acc_m: _, "~ौ", _;
     acc_f: _, "~े", "~ाः";
-    acc_n: "~त्", "~े", _;
+    acc_n: _, "~े", _;
     ins_m: "~ेन", _, _;
     ins_f: "~या", "~ाभ्याम्", _;
     ins_n: _, "~ाभ्याम्", "~ैः";

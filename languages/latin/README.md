@@ -12,8 +12,12 @@ assert_eq!(noun("rosa", Case::Ablative, Number::Plural), "rosīs");
 assert_eq!(noun("rex", Case::Genitive, Number::Singular), "rēgis");
 assert_eq!(adjective("bonus", Case::Dative, Gender::Feminine, Number::Singular), "bonae");
 assert_eq!(
-    verb("amo", Mood::Indicative, Voice::Active, Tense::Perfect, Person::Third, Number::Plural),
+    indicative("amo", Voice::Active, Tense::Perfect, Person::Third, Number::Plural),
     "amāvērunt"
+);
+assert_eq!(
+    subjunctive("amo", Voice::Active, SubjunctiveTense::Imperfect, Person::First, Number::Singular),
+    "amārem"
 );
 ```
 
@@ -66,11 +70,13 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 15883 | 95 | 20 | 496 | 1306 | 224 | 14 |
+| noun | 15883 | 95 | 20 | 496 | 1300 | 224 | 14 |
+| proper_noun | 8787 | 83 | 10 | 235 | 948 | 153 | 11 |
 | adjective | 27458 | 67 | 11 | 256 | 461 | 212 | 34 |
-| verb | 6168 | 200 | 41 | 793 | 1268 | 495 | 61 |
+| verb | 6168 | 200 | 41 | 793 | 1264 | 495 | 61 |
 | pronoun | 80 | 12 | 0 | 18 | 63 | 362 | 45 |
 | numeral | 118 | 9 | 0 | 12 | 5 | 5 | 0 |
+| adverb | 612 | 13 | 1 | 35 | 49 | 23 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -114,19 +120,45 @@ developed (changes are judged on another tenth since PR #16).
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 1565 | 17859 | **70.07%** (67.8–72.3) | 91.32% | 92.86% | 68.12% | 0.025 | 4.404 | 92.93% | 98.70% | 97.83 / 99.32 / 99.41 | 70.95% | 70.09% (17854) | 0.00% (5) | 59.09% (0.00%) | +10.98 (+8.20…+13.69) | 70.12% | 99.46% | 76.53% / 68.08% | 70.53% (984) | 70.26% (1379) / 72.73% (19) / 68.17% (167) |  | 1.16% |
-| adjective | 2841 | 101595 | **87.26%** (86.1–88.4) | 96.97% | 97.11% | 86.24% | 0.016 | 2.040 | 99.23% | 99.48% | 99.52 / 99.61 / 99.61 |  | 87.26% (101594) | 0.00% (1) | 71.87% (0.00%) | +15.40 (+13.68…+17.15) | 87.36% | 99.60% | 90.01% / 85.54% | 86.75% (2151) | 75.63% (981) / 94.27% (1684) / 84.87% (176) |  | 0.48% |
-| verb | 619 | 77103 | **76.85%** (73.7–80.1) | 95.45% | 97.30% | 67.69% | 0.041 | 2.545 | 84.92% | 98.59% | 95.68 / 95.82 / 95.93 |  | 76.93% (76833) | 54.44% (270) | 64.17% (33.33%) | +12.68 (+8.60…+16.87) | 76.97% | 98.43% | 84.24% / 73.67% | 88.85% (592) | 77.52% (541) / – / 72.34% (78) | 74.02% (16157) | 4.69% |
-| pronoun | 9 | 268 | **6.34%** (0.0–16.1) | 27.99% | 43.66% | 0.00% | 0.243 | 31.428 | 19.08% |  | 33.20 / 35.25 / 35.74 |  | 6.34% (268) |  | 25.00% (0.00%) | -18.66 (-47.89…+3.14) | 10.07% | 100.00% | 0.00% / 6.34% | 14.29% (7) | 8.42% (7) / – / 0.00% (2) |  | 73.75% |
-| numeral | 11 | 396 | **72.73%** (45.5–100.0) | 100.00% | 100.00% | 72.73% | 0.273 | 1.021 | 100.00% |  | 100.00 / 100.00 / 100.00 |  | 72.73% (396) |  | 72.73% (0.00%) | +0.00 (-36.36…+36.36) | 72.73% | 100.00% | 66.67% / 75.00% | 72.73% (11) | 62.50% (8) / – / 100.00% (3) |  | 0.85% |
+| noun | 1565 | 17859 | **71.12%** (68.9–73.4) | 91.50% | 93.38% | 69.33% | 0.038 | 4.110 | 92.93% | 98.70% | 97.83 / 99.32 / 99.41 | 71.98% | 71.14% (17854) | 0.00% (5) | 59.09% (0.00%) | +12.03 (+9.41…+14.72) | 71.22% | 99.46% | 77.96% / 69.02% | 69.72% (984) | 71.25% (1379) / 77.99% (19) / 69.27% (167) |  | 1.16% |
+| proper_noun | 834 | 5119 | **59.84%** (56.4–63.2) | 87.15% | 90.27% | 59.23% | 0.054 | 5.756 | 92.75% | 98.24% | 96.74 / 98.45 / 98.71 | 59.84% | 59.89% (5098) | 47.62% (21) | 60.58% (57.14%) | -0.74 (-4.64…+3.12) | 60.32% | 99.32% | 58.77% / 59.93% | 47.51% (362) | 59.75% (801) / – / 61.84% (33) |  | 1.63% |
+| adjective | 2841 | 101595 | **87.50%** (86.3–88.6) | 97.03% | 97.16% | 86.45% | 0.022 | 2.004 | 99.23% | 99.48% | 99.52 / 99.61 / 99.61 |  | 87.50% (101594) | 0.00% (1) | 71.87% (0.00%) | +15.63 (+13.86…+17.46) | 87.61% | 99.60% | 89.98% / 85.95% | 86.66% (2151) | 76.94% (981) / 93.73% (1684) / 86.59% (176) |  | 0.48% |
+| verb | 619 | 77103 | **77.49%** (74.4–80.6) | 95.65% | 97.46% | 68.17% | 0.027 | 2.481 | 84.92% | 98.59% | 95.37 / 95.48 / 95.80 |  | 77.57% (76833) | 54.44% (270) | 64.17% (33.33%) | +13.32 (+9.35…+17.33) | 77.61% | 98.43% | 84.08% / 74.65% | 89.86% (592) | 78.26% (541) / – / 72.34% (78) | 74.64% (16157) | 4.69% |
+| pronoun | 9 | 268 | **6.34%** (0.0–16.1) | 27.99% | 43.66% | 0.00% | 0.230 | 31.506 | 19.08% |  | 33.20 / 35.25 / 35.74 |  | 6.34% (268) |  | 25.00% (0.00%) | -18.66 (-47.89…+3.14) | 10.07% | 100.00% | 0.00% / 6.34% | 14.29% (7) | 8.42% (7) / – / 0.00% (2) |  | 73.75% |
+| numeral | 11 | 396 | **72.73%** (45.5–100.0) | 100.00% | 100.00% | 72.73% | 0.303 | 1.223 | 100.00% |  | 100.00 / 100.00 / 100.00 |  | 72.73% (396) |  | 72.73% (0.00%) | +0.00 (-36.36…+36.36) | 72.73% | 100.00% | 66.67% / 75.00% | 72.73% (11) | 62.50% (8) / – / 100.00% (3) |  | 0.85% |
+| adverb | 63 | 175 | **85.14%** (75.8–93.3) | 97.14% | 97.14% | 84.13% | 0.084 | 2.097 | 98.35% | 96.72% | 98.28 / 0.00 / 0.00 |  | 85.14% (175) |  | 44.57% (0.00%) | +40.57 (+25.58…+55.62) | 85.71% | 100.00% | 100.00% / 84.62% | 85.19% (54) | 84.05% (58) / 100.00% (3) / 100.00% (2) |  | 5.56% |
+
+## Where the errors are
+
+The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
+of them: *class*, the right form is among its answers but another paradigm's comes first;
+*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
+and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
+the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
+that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
+group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
+dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
+cells, the dictionary's or not, the share with a form.
+
+| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 5158 | 15% | 77% | 0% | 2% | 4% | 0% | 2% | 0% | 68.89% | 100.00% | 100.00% |
+| proper_noun | 2056 | 8% | 83% | 0% | 2% | 4% | 1% | 2% | 0% | 57.85% | 99.93% | 100.00% |
+| adjective | 12698 | 2% | 92% | 0% | 0% | 2% | 1% | 3% | 0% | 81.84% | 99.95% | 100.00% |
+| verb | 17359 | 49% | 35% | 0% | 5% | 4% | 1% | 6% | 0% | 77.90% | 100.00% | 100.00% |
+| pronoun | 251 | 24% | 15% | 0% | 8% | 49% | 4% | 0% | 0% | 6.34% | 100.00% | 100.00% |
+| numeral | 108 | 0% | 100% | 0% | 0% | 0% | 0% | 0% | 0% | 72.73% | 100.00% | 100.00% |
+| adverb | 26 | 0% | 92% | 0% | 0% | 4% | 4% | 0% | 0% | 85.14% | 100.00% | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 7111 | 239564 |
-| adjective | 5297 | 189694 |
-| verb | 11388 | 472702 |
-| pronoun | 1309 | 48888 |
-| numeral | 808 | 29747 |
+| noun | 6106 | 218378 |
+| proper_noun | 5090 | 177378 |
+| adjective | 5004 | 181967 |
+| verb | 10345 | 440000 |
+| pronoun | 1336 | 48889 |
+| numeral | 814 | 29809 |
+| adverb | 700 | 24640 |
 
 ## Data and license
 

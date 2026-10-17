@@ -10,7 +10,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the declension it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem rest: \"~- like योग\"`: the slot's cells are `योग`'s table's patterns
+/// (`stem nom_sg: \"~- like योग\"`: the slot's cells are `योग`'s table's patterns
 /// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the declension's it is
@@ -25,9 +25,9 @@ use flexion::Paradigm;
 /// `voc` (sg, du, pl)
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)?)?;
-     $(stem rest: $s0:tt;)?
-     $(stem rest__: $s1:tt;)?
-     $(stem rest_: $s2:tt;)?
+     $(stem nom_sg: $s0:tt;)?
+     $(stem nom_du: $s1:tt;)?
+     $(stem acc_pl: $s2:tt;)?
      $(nom: $c0:tt, $c1:tt, $c2:tt;)?
      $(acc: $c3:tt, $c4:tt, $c5:tt;)?
      $(ins: $c6:tt, $c7:tt, $c8:tt;)?
@@ -301,9 +301,9 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     // योग: 2,089 words (क, ङ, ज, ञ, ट, ण).
     declension!("योग", 2089, "~", [gender: Masculine];
-    stem rest: "~- like योग";
-    stem rest__: "~- like योग";
-    stem rest_: "~- like योग";
+    stem nom_sg: "~- like योग";
+    stem nom_du: "~- like योग";
+    stem acc_pl: "~- like योग";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -312,9 +312,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // साधन: 1,091 words (विश्व, ख, साम्य, तृण, आसन, तीर). Like योग, except in 7 cells: acc du, dat du, abl du, abl pl, loc du, voc du, ….
     declension!("साधन", 1091, "~", [gender: Neuter], like योग;
-    stem rest: "~- like साधन";
-    stem rest__: "~- like साधन";
-    stem rest_: "~- like साधन";
+    stem nom_sg: "~- like साधन";
+    stem nom_du: "~- like साधन";
+    stem acc_pl: "~- like साधन";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -323,9 +323,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // कला: 506 words (देवता, काला, घृणा, भाषा, जरा, अहिंसा).
     declension!("कला", 506, "~ा", [gender: Feminine];
-    stem rest: "~- like कला";
-    stem rest__: "~- like कला";
-    stem rest_: "~- like कला";
+    stem nom_sg: "~- like कला";
+    stem nom_du: "~- like कला";
+    stem acc_pl: "~- like कला";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -334,9 +334,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // गति: 261 words (मुक्ति, संस्कृति, बुद्धि, नाभि, राजनीति, कृषि).
     declension!("गति", 261, "~ि", [gender: Feminine];
-    stem rest: "~- like गति";
-    stem rest__: "~- like गति";
-    stem rest_: "~- like गति";
+    stem nom_sg: "~- like गति";
+    stem nom_du: "~- like गति";
+    stem acc_pl: "~- like गति";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -387,7 +387,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // दातृ: 56 words (दातृ, सवितृ, नप्तृ, होतृ, उद्गातृ, धातृ).
     declension!("दातृ", 56, "~ृ", [gender: Masculine];
-    stem rest__: "~ार- like दातृ";
+    stem nom_du: "~ार- like दातृ";
     nom: "~ा", _, _;
     acc: _, derived, "~ॄन्";
     ins: "~्रा", "~ृभ्याम्", "~ृभिः";
@@ -399,7 +399,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // मूरधन: 51 words (अश्मन्, ग्रावन्, श्वन्, क्लोमन्, युवन्, रक्षोहन्).
     declension!("मूर्धन्", 51, "~न्", [gender: Masculine];
-    stem rest__: "~ान- like दातृ";
+    stem nom_du: "~ान- like दातृ";
     nom: "~ा", _, _;
     acc: _, derived, "~्नः";
     ins: "~्ना", "~भ्याम्", "~भिः";
@@ -411,8 +411,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // सवामिन: 49 words (हस्तिन्, मन्त्रिन्, फणिन्, अन्तर्यामिन्, केशिन्, रुधिरोद्गारिन्). Like संधि, except in 6 cells: nom sg, acc du, loc du, voc sg, voc du, voc pl.
     declension!("स्वामिन्", 49, "~िन्", [gender: Masculine], like संधि;
-    stem rest__: "~िन- like दातृ";
-    stem rest_: "~िन- like स्वामिन्";
+    stem nom_du: "~िन- like दातृ";
+    stem acc_pl: "~िन- like स्वामिन्";
     nom: "~ी", _, _;
     acc: _, derived, _;
     loc: _, derived, _;
@@ -436,9 +436,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // मरुत: 19 words (मरुत्, नपात्, विद्युत्, दशत्, कृत्, हरित्).
     declension!("मरुत्", 19, "~त्";
-    stem rest: "~- like मरुत्";
-    stem rest__: "~त- like दातृ";
-    stem rest_: "~त- like स्वामिन्";
+    stem nom_sg: "~- like मरुत्";
+    stem nom_du: "~त- like दातृ";
+    stem acc_pl: "~त- like स्वामिन्";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -467,17 +467,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // समपद: 15 words (हृद्, पद्, विद्, शरद्, मृद्, परिषद्). Like मरुत, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("सम्पद्", 15, "~द्", like मरुत;
-    stem rest__: "~द- like दातृ";
-    stem rest_: "~द- like स्वामिन्";
+    stem nom_du: "~द- like दातृ";
+    stem acc_pl: "~द- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
     ),
     // युज: 13 words (असृज्, बणिज्, वणिज्, भुज्, भिषज्, उशिज्).
     declension!("युज्", 13, "~ज्";
-    stem rest: "~- like युज्";
-    stem rest__: "~ज- like दातृ";
-    stem rest_: "~ज- like स्वामिन्";
+    stem nom_sg: "~- like युज्";
+    stem nom_du: "~ज- like दातृ";
+    stem acc_pl: "~ज- like स्वामिन्";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -486,7 +486,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // जयोतिस: 10 words (दोस्, क्रविस्, सर्पिस्, बर्हिस्, हविस्, रोचिस्).
     declension!("ज्योतिस्", 10, "~~स्";
-    stem rest: "~~- like ज्योतिस्";
+    stem nom_sg: "~~- like ज्योतिस्";
     nom: _, "~~षी", "~ींष~";
     acc: "~~ः", _, "~ींष~";
     ins: "~~षा", _, _;
@@ -497,8 +497,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // धी: 10 words (ह्री, स्त्री, धी, श्री, भी, ली).
     declension!("धी", 10, "~ी";
-    stem rest: "~ी- like धी";
-    stem rest__: "~िय- like दातृ";
+    stem nom_sg: "~ी- like धी";
+    stem nom_du: "~िय- like दातृ";
     acc: _, derived, "~ियः";
     ins: "~िया", _, _;
     dat: "~िये", derived, _;
@@ -509,8 +509,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // चनदरमस: 10 words (ऊधस्, उषस्, श्रेयस्, मास्, अप्सरस्, पुंस्). Like अपसस, except in 5 cells: nom sg, acc du, loc du, voc du, voc pl.
     declension!("चन्द्रमस्", 10, "~स्", like अपसस;
-    stem rest__: "~स- like दातृ";
-    stem rest_: "~स- like स्वामिन्";
+    stem nom_du: "~स- like दातृ";
+    stem acc_pl: "~स- like स्वामिन्";
     nom: "~ाः", _, _;
     acc: _, derived, _;
     loc: _, derived, _;
@@ -518,36 +518,36 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // तवच: 9 words (त्वच्, ऋच्, रुच्, शुच्, मुच्, स्फिच्). Like युज, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("त्वच्", 9, "~च्", like युज;
-    stem rest__: "~च- like दातृ";
-    stem rest_: "~च- like स्वामिन्";
+    stem nom_du: "~च- like दातृ";
+    stem acc_pl: "~च- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
     ),
     // सपृध: 8 words (प्रबुध्, स्पृध्, क्षुध्, युध्, वीरुध्, श्वाविध्). Like मरुत, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("स्पृध्", 8, "~ध्", like मरुत;
-    stem rest__: "~ध- like दातृ";
-    stem rest_: "~ध- like स्वामिन्";
+    stem nom_du: "~ध- like दातृ";
+    stem acc_pl: "~ध- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
     ),
     // आतमन: 8 words (अथर्वन्, पर्वन्, वन्, धन्वन्, अध्वन्, भुर्वन्). Like मूरधन, except in 1 cell: loc du.
     declension!("आत्मन्", 8, "~न्", like मूरधन;
-    stem rest_: "~न- like स्वामिन्";
+    stem acc_pl: "~न- like स्वामिन्";
     loc: _, derived, _;
     ),
     // मिह: 8 words (स्निह्, द्रुह्, मिह्, गुह्, संदिह्, उपानह्). Like युज, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("मिह्", 8, "~ह्", like युज;
-    stem rest__: "~ह- like दातृ";
-    stem rest_: "~ह- like स्वामिन्";
+    stem nom_du: "~ह- like दातृ";
+    stem acc_pl: "~ह- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
     ),
     // गोपा: 7 words (जा, पन्था, प्रतिमा, दा, गोपा, रथेष्ठा). Like कला, except in 11 cells: nom du, acc pl, ins sg, dat sg, dat du, abl sg, ….
     declension!("गोपा", 7, "~ा", [gender: Masculine], like कला;
-    stem rest: "~ा- like गोपा";
+    stem nom_sg: "~ा- like गोपा";
     nom: _, "~ौ", _;
     acc: _, _, "~ः";
     ins: "~ा", _, _;
@@ -558,8 +558,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // इरावत: 7 words (हिमवत्, महत्, परस्वत्, श्रीमत्, अर्वत्, इरावत्). Like मरुत, except in 6 cells: acc du, dat du, abl du, abl pl, voc du, voc pl.
     declension!("इरावत्", 7, "~त्", [gender: Masculine], like मरुत;
-    stem rest: "~- like महत्";
-    stem rest__: "~न्त- like दातृ";
+    stem nom_sg: "~- like महत्";
+    stem nom_du: "~न्त- like दातृ";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -574,7 +574,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // वार: 7 words (अहर्, द्वार्, पुर्, स्वर्, वार्, गिर्).
     declension!("वार्", 7, "~र्";
-    stem rest: "~- like स्वर्";
+    stem nom_sg: "~- like स्वर्";
     nom: _, "~री", "~रि";
     acc: "~ः", _, "~रि";
     ins: "~रा", _, _;
@@ -585,9 +585,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // तविष: 6 words (त्विष्, विष्, प्रेष्, प्रावृष्, द्विष्, रुष्).
     declension!("त्विष्", 6, "~ष्", [gender: Feminine];
-    stem rest: "~- like त्विष्";
-    stem rest__: "~ष- like दातृ";
-    stem rest_: "~ष- like स्वामिन्";
+    stem nom_sg: "~- like त्विष्";
+    stem nom_du: "~ष- like दातृ";
+    stem acc_pl: "~ष- like स्वामिन्";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -596,14 +596,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // मातृ: 6 words (मातृ, दुहितृ, यातृ, ननान्दृ, उसृ, विमातृ). Like दातृ, except in 4 cells: acc du, acc pl, voc du, voc pl.
     declension!("मातृ", 6, "~ृ", [gender: Feminine], like दातृ;
-    stem rest__: "~र- like दातृ";
+    stem nom_du: "~र- like दातृ";
     acc: _, derived, "~ॄः";
     voc: _, derived, derived;
     ),
     // भू: 6 words (भ्रू, भू, स्वपू, सू, जू, मू). Like चमू, except in 14 cells: acc du, acc pl, ins sg, dat sg, dat du, abl sg, ….
     declension!("भू", 6, "~ू", like चमू;
-    stem rest: "~ू- like धी";
-    stem rest__: "~ुव- like दातृ";
+    stem nom_sg: "~ू- like धी";
+    stem nom_du: "~ुव- like दातृ";
     acc: _, derived, "~ुवः";
     ins: "~ुवा", _, _;
     dat: "~ुवे", derived, _;
@@ -618,7 +618,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // चकषुस: 6 words (यजुस्, आयुस्, वपुस्, तरुस्, चक्षुस्, धनुस्).
     declension!("चक्षुस्", 6, "~ुस्";
-    stem rest: "~ु- like ज्योतिस्";
+    stem nom_sg: "~ु- like ज्योतिस्";
     nom: _, "~ुषी", "~ूंषि";
     acc: "~ुः", _, "~ूंषि";
     ins: "~ुषा", _, _;
@@ -646,8 +646,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // रिप: 4 words (अप्, क्षप्, कृप्, रिप्).
     declension!("रिप्", 4, "~प्", [gender: Feminine];
-    stem rest__: "~प- like दातृ";
-    stem rest_: "~प- like स्वामिन्";
+    stem nom_du: "~प- like दातृ";
+    stem acc_pl: "~प- like स्वामिन्";
     nom: "~प्", _, _;
     acc: _, derived, _;
     ins: _, "~ब्भ्याम्", "~ब्भिः";
@@ -657,8 +657,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // सपश: 4 words (विश्, स्पश्, दिश्, व्रिश्). Like तविष, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("स्पश्", 4, "~श्", like तविष;
-    stem rest__: "~श- like दातृ";
-    stem rest_: "~श- like स्वामिन्";
+    stem nom_du: "~श- like दातृ";
+    stem acc_pl: "~श- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
@@ -673,8 +673,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // शुभ: 4 words (गृभ्, क्षुभ्, शुभ्, अनुष्टुभ्). Like रिप, except in 4 cells: acc du, loc du, voc du, voc pl.
     declension!("शुभ्", 4, "~भ्", [gender: Feminine], like रिप;
-    stem rest__: "~भ- like दातृ";
-    stem rest_: "~भ- like स्वामिन्";
+    stem nom_du: "~भ- like दातृ";
+    stem acc_pl: "~भ- like स्वामिन्";
     acc: _, derived, _;
     loc: _, derived, _;
     voc: _, derived, derived;
@@ -686,9 +686,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // गलौ: 3 words (नौ, ज्यौ, ग्लौ).
     declension!("ग्लौ", 3, "~ौ";
-    stem rest: "~ौ- like धी";
-    stem rest__: "~ाव- like दातृ";
-    stem rest_: "~ाव- like स्वामिन्";
+    stem nom_sg: "~ौ- like धी";
+    stem nom_du: "~ाव- like दातृ";
+    stem acc_pl: "~ाव- like स्वामिन्";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -697,7 +697,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // मधुलिह: 3 words (मधुलिह्, आरुह्, प्रष्ठवाह्). Like मिह, except in 3 cells: dat du, abl du, abl pl.
     declension!("मधुलिह्", 3, "~ह्", like मिह;
-    stem rest: "~- like त्विष्";
+    stem nom_sg: "~- like त्विष्";
     dat: _, derived, _;
     abl: _, derived, derived;
     ),
@@ -708,7 +708,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // विराज: 3 words (विराज्, राज्, सम्राज्). Like युज, except in 3 cells: dat du, abl du, abl pl.
     declension!("विराज्", 3, "~ज्", like युज;
-    stem rest: "~- like त्विष्";
+    stem nom_sg: "~- like त्विष्";
     dat: _, derived, _;
     abl: _, derived, derived;
     ),
@@ -736,7 +736,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // कणठय: 1 words (कण्ठ्य). Like चनदरमस, except in 5 cells: nom sg, acc du, voc sg, voc du, voc pl.
     declension!("कण्ठ्य", 1, "~", like चनदरमस;
-    stem rest__: "~ांस- like दातृ";
+    stem nom_du: "~ांस- like दातृ";
     nom: "~ान्", _, _;
     acc: _, derived, _;
     voc: "~न्", derived, derived;
@@ -746,9 +746,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // असंखयेय: 1 words (असंख्येय).
     declension!("असंख्येय", 1, "~ं~";
-    stem rest: "~ङ्~- like साधन";
-    stem rest__: "~ङ्~- like साधन";
-    stem rest_: "~ङ्~- like साधन";
+    stem nom_sg: "~ङ्~- like साधन";
+    stem nom_du: "~ङ्~- like साधन";
+    stem acc_pl: "~ङ्~- like साधन";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -757,9 +757,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // तृतीया: 1 words (तृतीया).
     declension!("तृतीया", 1, "~ृ~ा";
-    stem rest: "~्रि~- like कला";
-    stem rest__: "~्रि~- like कला";
-    stem rest_: "~्रि~- like कला";
+    stem nom_sg: "~्रि~- like कला";
+    stem nom_du: "~्रि~- like कला";
+    stem acc_pl: "~्रि~- like कला";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -768,9 +768,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // पराचीनावीत: 1 words (प्राचीनावीत).
     declension!("प्राचीनावीत", 1, "~ी~";
-    stem rest: "~ि~- like साधन";
-    stem rest__: "~ि~- like साधन";
-    stem rest_: "~ि~- like साधन";
+    stem nom_sg: "~ि~- like साधन";
+    stem nom_du: "~ि~- like साधन";
+    stem acc_pl: "~ि~- like साधन";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -779,9 +779,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // निरऋति: 1 words (निर्ऋति).
     declension!("निर्ऋति", 1, "~्ऋ~ि";
-    stem rest: "~ृ~- like गति";
-    stem rest__: "~ृ~- like गति";
-    stem rest_: "~ृ~- like गति";
+    stem nom_sg: "~ृ~- like गति";
+    stem nom_du: "~ृ~- like गति";
+    stem acc_pl: "~ृ~- like गति";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;
@@ -790,9 +790,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 55] = [
     ),
     // नैरऋत: 1 words (नैर्ऋत).
     declension!("नैर्ऋत", 1, "~्ऋ~";
-    stem rest: "~ृ~- like योग";
-    stem rest__: "~ृ~- like योग";
-    stem rest_: "~ृ~- like योग";
+    stem nom_sg: "~ृ~- like योग";
+    stem nom_du: "~ृ~- like योग";
+    stem acc_pl: "~ृ~- like योग";
     acc: _, derived, _;
     dat: _, derived, _;
     abl: _, derived, derived;

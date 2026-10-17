@@ -525,33 +525,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // OPT_PASS_3_SG
         Before, // OPT_PASS_3_DU
         Before, // OPT_PASS_3_PL
-        Before, // IMP_ACT_1_SG
-        Before, // IMP_ACT_1_DU
-        Before, // IMP_ACT_1_PL
-        Before, // IMP_ACT_2_SG
-        Before, // IMP_ACT_2_DU
-        Before, // IMP_ACT_2_PL
-        Before, // IMP_ACT_3_SG
-        Before, // IMP_ACT_3_DU
-        Before, // IMP_ACT_3_PL
-        Before, // IMP_MID_1_SG
-        Before, // IMP_MID_1_DU
-        Before, // IMP_MID_1_PL
-        Before, // IMP_MID_2_SG
-        Before, // IMP_MID_2_DU
-        Before, // IMP_MID_2_PL
-        Before, // IMP_MID_3_SG
-        Before, // IMP_MID_3_DU
-        Before, // IMP_MID_3_PL
-        Before, // IMP_PASS_1_SG
-        Before, // IMP_PASS_1_DU
-        Before, // IMP_PASS_1_PL
-        Before, // IMP_PASS_2_SG
-        Before, // IMP_PASS_2_DU
-        Before, // IMP_PASS_2_PL
-        Before, // IMP_PASS_3_SG
-        Before, // IMP_PASS_3_DU
-        Before, // IMP_PASS_3_PL
+        Before, // PRESENT_IMPERATIVE_ACT_2_SG
+        Before, // PRESENT_IMPERATIVE_ACT_2_DU
+        Before, // PRESENT_IMPERATIVE_ACT_2_PL
+        Before, // PRESENT_IMPERATIVE_ACT_3_SG
+        Before, // PRESENT_IMPERATIVE_ACT_3_DU
+        Before, // PRESENT_IMPERATIVE_ACT_3_PL
+        Before, // PRESENT_IMPERATIVE_MID_2_SG
+        Before, // PRESENT_IMPERATIVE_MID_2_DU
+        Before, // PRESENT_IMPERATIVE_MID_2_PL
+        Before, // PRESENT_IMPERATIVE_MID_3_SG
+        Before, // PRESENT_IMPERATIVE_MID_3_DU
+        Before, // PRESENT_IMPERATIVE_MID_3_PL
+        Before, // PRESENT_IMPERATIVE_PASS_2_SG
+        Before, // PRESENT_IMPERATIVE_PASS_2_DU
+        Before, // PRESENT_IMPERATIVE_PASS_2_PL
+        Before, // PRESENT_IMPERATIVE_PASS_3_SG
+        Before, // PRESENT_IMPERATIVE_PASS_3_DU
+        Before, // PRESENT_IMPERATIVE_PASS_3_PL
         Before, // IMPERFECT_ACT_1_SG
         Before, // IMPERFECT_ACT_1_DU
         Before, // IMPERFECT_ACT_1_PL
@@ -606,33 +597,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // FUTURE_IND_PASS_3_SG
         Before, // FUTURE_IND_PASS_3_DU
         Before, // FUTURE_IND_PASS_3_PL
-        Before, // FUTURE_SUBJ_ACT_1_SG
-        Before, // FUTURE_SUBJ_ACT_1_DU
-        Before, // FUTURE_SUBJ_ACT_1_PL
-        Before, // FUTURE_SUBJ_ACT_2_SG
-        Before, // FUTURE_SUBJ_ACT_2_DU
-        Before, // FUTURE_SUBJ_ACT_2_PL
-        Before, // FUTURE_SUBJ_ACT_3_SG
-        Before, // FUTURE_SUBJ_ACT_3_DU
-        Before, // FUTURE_SUBJ_ACT_3_PL
-        Before, // FUTURE_SUBJ_MID_1_SG
-        Before, // FUTURE_SUBJ_MID_1_DU
-        Before, // FUTURE_SUBJ_MID_1_PL
-        Before, // FUTURE_SUBJ_MID_2_SG
-        Before, // FUTURE_SUBJ_MID_2_DU
-        Before, // FUTURE_SUBJ_MID_2_PL
-        Before, // FUTURE_SUBJ_MID_3_SG
-        Before, // FUTURE_SUBJ_MID_3_DU
-        Before, // FUTURE_SUBJ_MID_3_PL
-        Before, // FUTURE_SUBJ_PASS_1_SG
-        Before, // FUTURE_SUBJ_PASS_1_DU
-        Before, // FUTURE_SUBJ_PASS_1_PL
-        Before, // FUTURE_SUBJ_PASS_2_SG
-        Before, // FUTURE_SUBJ_PASS_2_DU
-        Before, // FUTURE_SUBJ_PASS_2_PL
-        Before, // FUTURE_SUBJ_PASS_3_SG
-        Before, // FUTURE_SUBJ_PASS_3_DU
-        Before, // FUTURE_SUBJ_PASS_3_PL
         Before, // FUTURE_OPT_ACT_1_SG
         Before, // FUTURE_OPT_ACT_1_DU
         Before, // FUTURE_OPT_ACT_1_PL
@@ -660,33 +624,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // FUTURE_OPT_PASS_3_SG
         Before, // FUTURE_OPT_PASS_3_DU
         Before, // FUTURE_OPT_PASS_3_PL
-        Before, // FUTURE_IMP_ACT_1_SG
-        Before, // FUTURE_IMP_ACT_1_DU
-        Before, // FUTURE_IMP_ACT_1_PL
-        Before, // FUTURE_IMP_ACT_2_SG
-        Before, // FUTURE_IMP_ACT_2_DU
-        Before, // FUTURE_IMP_ACT_2_PL
-        Before, // FUTURE_IMP_ACT_3_SG
-        Before, // FUTURE_IMP_ACT_3_DU
-        Before, // FUTURE_IMP_ACT_3_PL
-        Before, // FUTURE_IMP_MID_1_SG
-        Before, // FUTURE_IMP_MID_1_DU
-        Before, // FUTURE_IMP_MID_1_PL
-        Before, // FUTURE_IMP_MID_2_SG
-        Before, // FUTURE_IMP_MID_2_DU
-        Before, // FUTURE_IMP_MID_2_PL
-        Before, // FUTURE_IMP_MID_3_SG
-        Before, // FUTURE_IMP_MID_3_DU
-        Before, // FUTURE_IMP_MID_3_PL
-        Before, // FUTURE_IMP_PASS_1_SG
-        Before, // FUTURE_IMP_PASS_1_DU
-        Before, // FUTURE_IMP_PASS_1_PL
-        Before, // FUTURE_IMP_PASS_2_SG
-        Before, // FUTURE_IMP_PASS_2_DU
-        Before, // FUTURE_IMP_PASS_2_PL
-        Before, // FUTURE_IMP_PASS_3_SG
-        Before, // FUTURE_IMP_PASS_3_DU
-        Before, // FUTURE_IMP_PASS_3_PL
         Before, // AORIST_IND_ACT_1_SG
         Before, // AORIST_IND_ACT_1_DU
         Before, // AORIST_IND_ACT_1_PL
@@ -768,33 +705,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // AORIST_OPT_PASS_3_SG
         Before, // AORIST_OPT_PASS_3_DU
         Before, // AORIST_OPT_PASS_3_PL
-        Before, // AORIST_IMP_ACT_1_SG
-        Before, // AORIST_IMP_ACT_1_DU
-        Before, // AORIST_IMP_ACT_1_PL
-        Before, // AORIST_IMP_ACT_2_SG
-        Before, // AORIST_IMP_ACT_2_DU
-        Before, // AORIST_IMP_ACT_2_PL
-        Before, // AORIST_IMP_ACT_3_SG
-        Before, // AORIST_IMP_ACT_3_DU
-        Before, // AORIST_IMP_ACT_3_PL
-        Before, // AORIST_IMP_MID_1_SG
-        Before, // AORIST_IMP_MID_1_DU
-        Before, // AORIST_IMP_MID_1_PL
-        Before, // AORIST_IMP_MID_2_SG
-        Before, // AORIST_IMP_MID_2_DU
-        Before, // AORIST_IMP_MID_2_PL
-        Before, // AORIST_IMP_MID_3_SG
-        Before, // AORIST_IMP_MID_3_DU
-        Before, // AORIST_IMP_MID_3_PL
-        Before, // AORIST_IMP_PASS_1_SG
-        Before, // AORIST_IMP_PASS_1_DU
-        Before, // AORIST_IMP_PASS_1_PL
-        Before, // AORIST_IMP_PASS_2_SG
-        Before, // AORIST_IMP_PASS_2_DU
-        Before, // AORIST_IMP_PASS_2_PL
-        Before, // AORIST_IMP_PASS_3_SG
-        Before, // AORIST_IMP_PASS_3_DU
-        Before, // AORIST_IMP_PASS_3_PL
+        Before, // AORIST_IMPERATIVE_ACT_2_SG
+        Before, // AORIST_IMPERATIVE_ACT_2_DU
+        Before, // AORIST_IMPERATIVE_ACT_2_PL
+        Before, // AORIST_IMPERATIVE_ACT_3_SG
+        Before, // AORIST_IMPERATIVE_ACT_3_DU
+        Before, // AORIST_IMPERATIVE_ACT_3_PL
+        Before, // AORIST_IMPERATIVE_MID_2_SG
+        Before, // AORIST_IMPERATIVE_MID_2_DU
+        Before, // AORIST_IMPERATIVE_MID_2_PL
+        Before, // AORIST_IMPERATIVE_MID_3_SG
+        Before, // AORIST_IMPERATIVE_MID_3_DU
+        Before, // AORIST_IMPERATIVE_MID_3_PL
+        Before, // AORIST_IMPERATIVE_PASS_2_SG
+        Before, // AORIST_IMPERATIVE_PASS_2_DU
+        Before, // AORIST_IMPERATIVE_PASS_2_PL
+        Before, // AORIST_IMPERATIVE_PASS_3_SG
+        Before, // AORIST_IMPERATIVE_PASS_3_DU
+        Before, // AORIST_IMPERATIVE_PASS_3_PL
         Before, // PERFECT_IND_ACT_1_SG
         Before, // PERFECT_IND_ACT_1_DU
         Before, // PERFECT_IND_ACT_1_PL
@@ -876,33 +804,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // PERFECT_OPT_PASS_3_SG
         Before, // PERFECT_OPT_PASS_3_DU
         Before, // PERFECT_OPT_PASS_3_PL
-        Before, // PERFECT_IMP_ACT_1_SG
-        Before, // PERFECT_IMP_ACT_1_DU
-        Before, // PERFECT_IMP_ACT_1_PL
-        Before, // PERFECT_IMP_ACT_2_SG
-        Before, // PERFECT_IMP_ACT_2_DU
-        Before, // PERFECT_IMP_ACT_2_PL
-        Before, // PERFECT_IMP_ACT_3_SG
-        Before, // PERFECT_IMP_ACT_3_DU
-        Before, // PERFECT_IMP_ACT_3_PL
-        Before, // PERFECT_IMP_MID_1_SG
-        Before, // PERFECT_IMP_MID_1_DU
-        Before, // PERFECT_IMP_MID_1_PL
-        Before, // PERFECT_IMP_MID_2_SG
-        Before, // PERFECT_IMP_MID_2_DU
-        Before, // PERFECT_IMP_MID_2_PL
-        Before, // PERFECT_IMP_MID_3_SG
-        Before, // PERFECT_IMP_MID_3_DU
-        Before, // PERFECT_IMP_MID_3_PL
-        Before, // PERFECT_IMP_PASS_1_SG
-        Before, // PERFECT_IMP_PASS_1_DU
-        Before, // PERFECT_IMP_PASS_1_PL
-        Before, // PERFECT_IMP_PASS_2_SG
-        Before, // PERFECT_IMP_PASS_2_DU
-        Before, // PERFECT_IMP_PASS_2_PL
-        Before, // PERFECT_IMP_PASS_3_SG
-        Before, // PERFECT_IMP_PASS_3_DU
-        Before, // PERFECT_IMP_PASS_3_PL
+        Before, // PERFECT_IMPERATIVE_ACT_2_SG
+        Before, // PERFECT_IMPERATIVE_ACT_2_DU
+        Before, // PERFECT_IMPERATIVE_ACT_2_PL
+        Before, // PERFECT_IMPERATIVE_ACT_3_SG
+        Before, // PERFECT_IMPERATIVE_ACT_3_DU
+        Before, // PERFECT_IMPERATIVE_ACT_3_PL
+        Before, // PERFECT_IMPERATIVE_MID_2_SG
+        Before, // PERFECT_IMPERATIVE_MID_2_DU
+        Before, // PERFECT_IMPERATIVE_MID_2_PL
+        Before, // PERFECT_IMPERATIVE_MID_3_SG
+        Before, // PERFECT_IMPERATIVE_MID_3_DU
+        Before, // PERFECT_IMPERATIVE_MID_3_PL
+        Before, // PERFECT_IMPERATIVE_PASS_2_SG
+        Before, // PERFECT_IMPERATIVE_PASS_2_DU
+        Before, // PERFECT_IMPERATIVE_PASS_2_PL
+        Before, // PERFECT_IMPERATIVE_PASS_3_SG
+        Before, // PERFECT_IMPERATIVE_PASS_3_DU
+        Before, // PERFECT_IMPERATIVE_PASS_3_PL
         Before, // PLUPERFECT_ACT_1_SG
         Before, // PLUPERFECT_ACT_1_DU
         Before, // PLUPERFECT_ACT_1_PL
@@ -957,33 +876,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // FUTURE_PERFECT_IND_PASS_3_SG
         Before, // FUTURE_PERFECT_IND_PASS_3_DU
         Before, // FUTURE_PERFECT_IND_PASS_3_PL
-        Before, // FUTURE_PERFECT_SUBJ_ACT_1_SG
-        Before, // FUTURE_PERFECT_SUBJ_ACT_1_DU
-        Before, // FUTURE_PERFECT_SUBJ_ACT_1_PL
-        Before, // FUTURE_PERFECT_SUBJ_ACT_2_SG
-        Before, // FUTURE_PERFECT_SUBJ_ACT_2_DU
-        Before, // FUTURE_PERFECT_SUBJ_ACT_2_PL
-        Before, // FUTURE_PERFECT_SUBJ_ACT_3_SG
-        Before, // FUTURE_PERFECT_SUBJ_ACT_3_DU
-        Before, // FUTURE_PERFECT_SUBJ_ACT_3_PL
-        Before, // FUTURE_PERFECT_SUBJ_MID_1_SG
-        Before, // FUTURE_PERFECT_SUBJ_MID_1_DU
-        Before, // FUTURE_PERFECT_SUBJ_MID_1_PL
-        Before, // FUTURE_PERFECT_SUBJ_MID_2_SG
-        Before, // FUTURE_PERFECT_SUBJ_MID_2_DU
-        Before, // FUTURE_PERFECT_SUBJ_MID_2_PL
-        Before, // FUTURE_PERFECT_SUBJ_MID_3_SG
-        Before, // FUTURE_PERFECT_SUBJ_MID_3_DU
-        Before, // FUTURE_PERFECT_SUBJ_MID_3_PL
-        Before, // FUTURE_PERFECT_SUBJ_PASS_1_SG
-        Before, // FUTURE_PERFECT_SUBJ_PASS_1_DU
-        Before, // FUTURE_PERFECT_SUBJ_PASS_1_PL
-        Before, // FUTURE_PERFECT_SUBJ_PASS_2_SG
-        Before, // FUTURE_PERFECT_SUBJ_PASS_2_DU
-        Before, // FUTURE_PERFECT_SUBJ_PASS_2_PL
-        Before, // FUTURE_PERFECT_SUBJ_PASS_3_SG
-        Before, // FUTURE_PERFECT_SUBJ_PASS_3_DU
-        Before, // FUTURE_PERFECT_SUBJ_PASS_3_PL
         Before, // FUTURE_PERFECT_OPT_ACT_1_SG
         Before, // FUTURE_PERFECT_OPT_ACT_1_DU
         Before, // FUTURE_PERFECT_OPT_ACT_1_PL
@@ -1011,33 +903,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Before, // FUTURE_PERFECT_OPT_PASS_3_SG
         Before, // FUTURE_PERFECT_OPT_PASS_3_DU
         Before, // FUTURE_PERFECT_OPT_PASS_3_PL
-        Before, // FUTURE_PERFECT_IMP_ACT_1_SG
-        Before, // FUTURE_PERFECT_IMP_ACT_1_DU
-        Before, // FUTURE_PERFECT_IMP_ACT_1_PL
-        Before, // FUTURE_PERFECT_IMP_ACT_2_SG
-        Before, // FUTURE_PERFECT_IMP_ACT_2_DU
-        Before, // FUTURE_PERFECT_IMP_ACT_2_PL
-        Before, // FUTURE_PERFECT_IMP_ACT_3_SG
-        Before, // FUTURE_PERFECT_IMP_ACT_3_DU
-        Before, // FUTURE_PERFECT_IMP_ACT_3_PL
-        Before, // FUTURE_PERFECT_IMP_MID_1_SG
-        Before, // FUTURE_PERFECT_IMP_MID_1_DU
-        Before, // FUTURE_PERFECT_IMP_MID_1_PL
-        Before, // FUTURE_PERFECT_IMP_MID_2_SG
-        Before, // FUTURE_PERFECT_IMP_MID_2_DU
-        Before, // FUTURE_PERFECT_IMP_MID_2_PL
-        Before, // FUTURE_PERFECT_IMP_MID_3_SG
-        Before, // FUTURE_PERFECT_IMP_MID_3_DU
-        Before, // FUTURE_PERFECT_IMP_MID_3_PL
-        Before, // FUTURE_PERFECT_IMP_PASS_1_SG
-        Before, // FUTURE_PERFECT_IMP_PASS_1_DU
-        Before, // FUTURE_PERFECT_IMP_PASS_1_PL
-        Before, // FUTURE_PERFECT_IMP_PASS_2_SG
-        Before, // FUTURE_PERFECT_IMP_PASS_2_DU
-        Before, // FUTURE_PERFECT_IMP_PASS_2_PL
-        Before, // FUTURE_PERFECT_IMP_PASS_3_SG
-        Before, // FUTURE_PERFECT_IMP_PASS_3_DU
-        Before, // FUTURE_PERFECT_IMP_PASS_3_PL
         Before, // INFINITIVE_PRES_ACT
         Before, // INFINITIVE_PRES_MID
         Before, // INFINITIVE_PRES_PASS
@@ -1151,33 +1016,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // OPT_PASS_3_SG
         Cow::Borrowed(""), // OPT_PASS_3_DU
         Cow::Borrowed(""), // OPT_PASS_3_PL
-        Cow::Borrowed(""), // IMP_ACT_1_SG
-        Cow::Borrowed(""), // IMP_ACT_1_DU
-        Cow::Borrowed(""), // IMP_ACT_1_PL
-        Cow::Borrowed(""), // IMP_ACT_2_SG
-        Cow::Borrowed(""), // IMP_ACT_2_DU
-        Cow::Borrowed(""), // IMP_ACT_2_PL
-        Cow::Borrowed(""), // IMP_ACT_3_SG
-        Cow::Borrowed(""), // IMP_ACT_3_DU
-        Cow::Borrowed(""), // IMP_ACT_3_PL
-        Cow::Borrowed(""), // IMP_MID_1_SG
-        Cow::Borrowed(""), // IMP_MID_1_DU
-        Cow::Borrowed(""), // IMP_MID_1_PL
-        Cow::Borrowed(""), // IMP_MID_2_SG
-        Cow::Borrowed(""), // IMP_MID_2_DU
-        Cow::Borrowed(""), // IMP_MID_2_PL
-        Cow::Borrowed(""), // IMP_MID_3_SG
-        Cow::Borrowed(""), // IMP_MID_3_DU
-        Cow::Borrowed(""), // IMP_MID_3_PL
-        Cow::Borrowed(""), // IMP_PASS_1_SG
-        Cow::Borrowed(""), // IMP_PASS_1_DU
-        Cow::Borrowed(""), // IMP_PASS_1_PL
-        Cow::Borrowed(""), // IMP_PASS_2_SG
-        Cow::Borrowed(""), // IMP_PASS_2_DU
-        Cow::Borrowed(""), // IMP_PASS_2_PL
-        Cow::Borrowed(""), // IMP_PASS_3_SG
-        Cow::Borrowed(""), // IMP_PASS_3_DU
-        Cow::Borrowed(""), // IMP_PASS_3_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_2_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_2_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_2_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_3_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_3_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_ACT_3_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_2_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_2_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_2_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_3_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_3_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_MID_3_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_2_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_2_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_2_PL
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_3_SG
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_3_DU
+        Cow::Borrowed(""), // PRESENT_IMPERATIVE_PASS_3_PL
         Cow::Borrowed(""), // IMPERFECT_ACT_1_SG
         Cow::Borrowed(""), // IMPERFECT_ACT_1_DU
         Cow::Borrowed(""), // IMPERFECT_ACT_1_PL
@@ -1232,33 +1088,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // FUTURE_IND_PASS_3_SG
         Cow::Borrowed(""), // FUTURE_IND_PASS_3_DU
         Cow::Borrowed(""), // FUTURE_IND_PASS_3_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_1_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_1_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_1_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_2_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_2_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_2_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_3_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_3_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_ACT_3_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_1_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_1_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_1_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_2_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_2_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_2_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_3_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_3_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_MID_3_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_1_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_1_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_1_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_2_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_2_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_2_PL
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_3_SG
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_3_DU
-        Cow::Borrowed(""), // FUTURE_SUBJ_PASS_3_PL
         Cow::Borrowed(""), // FUTURE_OPT_ACT_1_SG
         Cow::Borrowed(""), // FUTURE_OPT_ACT_1_DU
         Cow::Borrowed(""), // FUTURE_OPT_ACT_1_PL
@@ -1286,33 +1115,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // FUTURE_OPT_PASS_3_SG
         Cow::Borrowed(""), // FUTURE_OPT_PASS_3_DU
         Cow::Borrowed(""), // FUTURE_OPT_PASS_3_PL
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_1_SG
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_1_DU
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_1_PL
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_2_SG
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_2_DU
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_2_PL
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_3_SG
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_3_DU
-        Cow::Borrowed(""), // FUTURE_IMP_ACT_3_PL
-        Cow::Borrowed(""), // FUTURE_IMP_MID_1_SG
-        Cow::Borrowed(""), // FUTURE_IMP_MID_1_DU
-        Cow::Borrowed(""), // FUTURE_IMP_MID_1_PL
-        Cow::Borrowed(""), // FUTURE_IMP_MID_2_SG
-        Cow::Borrowed(""), // FUTURE_IMP_MID_2_DU
-        Cow::Borrowed(""), // FUTURE_IMP_MID_2_PL
-        Cow::Borrowed(""), // FUTURE_IMP_MID_3_SG
-        Cow::Borrowed(""), // FUTURE_IMP_MID_3_DU
-        Cow::Borrowed(""), // FUTURE_IMP_MID_3_PL
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_1_SG
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_1_DU
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_1_PL
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_2_SG
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_2_DU
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_2_PL
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_3_SG
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_3_DU
-        Cow::Borrowed(""), // FUTURE_IMP_PASS_3_PL
         Cow::Borrowed(""), // AORIST_IND_ACT_1_SG
         Cow::Borrowed(""), // AORIST_IND_ACT_1_DU
         Cow::Borrowed(""), // AORIST_IND_ACT_1_PL
@@ -1394,33 +1196,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // AORIST_OPT_PASS_3_SG
         Cow::Borrowed(""), // AORIST_OPT_PASS_3_DU
         Cow::Borrowed(""), // AORIST_OPT_PASS_3_PL
-        Cow::Borrowed(""), // AORIST_IMP_ACT_1_SG
-        Cow::Borrowed(""), // AORIST_IMP_ACT_1_DU
-        Cow::Borrowed(""), // AORIST_IMP_ACT_1_PL
-        Cow::Borrowed(""), // AORIST_IMP_ACT_2_SG
-        Cow::Borrowed(""), // AORIST_IMP_ACT_2_DU
-        Cow::Borrowed(""), // AORIST_IMP_ACT_2_PL
-        Cow::Borrowed(""), // AORIST_IMP_ACT_3_SG
-        Cow::Borrowed(""), // AORIST_IMP_ACT_3_DU
-        Cow::Borrowed(""), // AORIST_IMP_ACT_3_PL
-        Cow::Borrowed(""), // AORIST_IMP_MID_1_SG
-        Cow::Borrowed(""), // AORIST_IMP_MID_1_DU
-        Cow::Borrowed(""), // AORIST_IMP_MID_1_PL
-        Cow::Borrowed(""), // AORIST_IMP_MID_2_SG
-        Cow::Borrowed(""), // AORIST_IMP_MID_2_DU
-        Cow::Borrowed(""), // AORIST_IMP_MID_2_PL
-        Cow::Borrowed(""), // AORIST_IMP_MID_3_SG
-        Cow::Borrowed(""), // AORIST_IMP_MID_3_DU
-        Cow::Borrowed(""), // AORIST_IMP_MID_3_PL
-        Cow::Borrowed(""), // AORIST_IMP_PASS_1_SG
-        Cow::Borrowed(""), // AORIST_IMP_PASS_1_DU
-        Cow::Borrowed(""), // AORIST_IMP_PASS_1_PL
-        Cow::Borrowed(""), // AORIST_IMP_PASS_2_SG
-        Cow::Borrowed(""), // AORIST_IMP_PASS_2_DU
-        Cow::Borrowed(""), // AORIST_IMP_PASS_2_PL
-        Cow::Borrowed(""), // AORIST_IMP_PASS_3_SG
-        Cow::Borrowed(""), // AORIST_IMP_PASS_3_DU
-        Cow::Borrowed(""), // AORIST_IMP_PASS_3_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_2_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_2_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_2_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_3_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_3_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_ACT_3_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_2_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_2_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_2_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_3_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_3_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_MID_3_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_2_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_2_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_2_PL
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_3_SG
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_3_DU
+        Cow::Borrowed(""), // AORIST_IMPERATIVE_PASS_3_PL
         Cow::Borrowed(""), // PERFECT_IND_ACT_1_SG
         Cow::Borrowed(""), // PERFECT_IND_ACT_1_DU
         Cow::Borrowed(""), // PERFECT_IND_ACT_1_PL
@@ -1502,33 +1295,24 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // PERFECT_OPT_PASS_3_SG
         Cow::Borrowed(""), // PERFECT_OPT_PASS_3_DU
         Cow::Borrowed(""), // PERFECT_OPT_PASS_3_PL
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_1_SG
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_1_DU
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_1_PL
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_2_SG
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_2_DU
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_2_PL
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_3_SG
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_3_DU
-        Cow::Borrowed(""), // PERFECT_IMP_ACT_3_PL
-        Cow::Borrowed(""), // PERFECT_IMP_MID_1_SG
-        Cow::Borrowed(""), // PERFECT_IMP_MID_1_DU
-        Cow::Borrowed(""), // PERFECT_IMP_MID_1_PL
-        Cow::Borrowed(""), // PERFECT_IMP_MID_2_SG
-        Cow::Borrowed(""), // PERFECT_IMP_MID_2_DU
-        Cow::Borrowed(""), // PERFECT_IMP_MID_2_PL
-        Cow::Borrowed(""), // PERFECT_IMP_MID_3_SG
-        Cow::Borrowed(""), // PERFECT_IMP_MID_3_DU
-        Cow::Borrowed(""), // PERFECT_IMP_MID_3_PL
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_1_SG
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_1_DU
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_1_PL
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_2_SG
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_2_DU
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_2_PL
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_3_SG
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_3_DU
-        Cow::Borrowed(""), // PERFECT_IMP_PASS_3_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_2_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_2_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_2_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_3_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_3_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_ACT_3_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_2_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_2_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_2_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_3_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_3_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_MID_3_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_2_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_2_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_2_PL
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_3_SG
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_3_DU
+        Cow::Borrowed(""), // PERFECT_IMPERATIVE_PASS_3_PL
         Cow::Borrowed(""), // PLUPERFECT_ACT_1_SG
         Cow::Borrowed(""), // PLUPERFECT_ACT_1_DU
         Cow::Borrowed(""), // PLUPERFECT_ACT_1_PL
@@ -1583,33 +1367,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // FUTURE_PERFECT_IND_PASS_3_SG
         Cow::Borrowed(""), // FUTURE_PERFECT_IND_PASS_3_DU
         Cow::Borrowed(""), // FUTURE_PERFECT_IND_PASS_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_ACT_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_MID_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_SUBJ_PASS_3_PL
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_ACT_1_SG
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_ACT_1_DU
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_ACT_1_PL
@@ -1637,33 +1394,6 @@ pub(super) const PREFIXES: Prefixes<'static> = Prefixes {
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_PASS_3_SG
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_PASS_3_DU
         Cow::Borrowed(""), // FUTURE_PERFECT_OPT_PASS_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_ACT_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_MID_3_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_1_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_1_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_1_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_2_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_2_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_2_PL
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_3_SG
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_3_DU
-        Cow::Borrowed(""), // FUTURE_PERFECT_IMP_PASS_3_PL
         Cow::Borrowed(""), // INFINITIVE_PRES_ACT
         Cow::Borrowed(""), // INFINITIVE_PRES_MID
         Cow::Borrowed(""), // INFINITIVE_PRES_PASS

@@ -1,6 +1,6 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes (`~o`, `todo`: the stem and `o`). A stem in two pieces (`~o~`, `docientos`) has
+//! A pattern is the form with `~` where the stem goes (`~o`, `poco`: the stem and `o`). A stem in two pieces (`~o~`, `docientos`) has
 //! letters between them that other forms may drop or change.
 //! Alternatives are separated by `|`, the usual one first.
 
@@ -16,7 +16,7 @@ use flexion::Paradigm;
 /// `m` (sg, pl)
 /// `f` (sg, pl)
 macro_rules! declension {
-    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
+    ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
      $(stem lemma: $s0:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
@@ -37,7 +37,7 @@ macro_rules! declension {
             stems: ::std::borrow::Cow::Borrowed(concat!(
                 $(flexion::cell!($s0),)? "\t",
             )),
-            affix: affix!($($($affix $(, $other, $letters)?)?)?),
+            affix: None,
         }
     };
 }
@@ -63,49 +63,35 @@ macro_rules! view {
     };
 }
 
-/// What a declension adds after each pattern of the one it is like (`with "~"`: `~` after every pattern).
-macro_rules! affix {
-    () => {
-        None
-    };
-    ($affix:literal) => {
-        affix!($affix, $affix, "")
-    };
-    ($affix:literal, $other:literal, $letters:literal) => {
-        Some(flexion::Affix {
-            pattern: ::std::borrow::Cow::Borrowed($affix),
-            other: ::std::borrow::Cow::Borrowed($other),
-            letters: ::std::borrow::Cow::Borrowed($letters),
-        })
-    };
-}
-
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `todo`: 24 words.
-    Todo,
-    /// Like `docientos`: 13 words.
-    Docientos,
-    /// Like `poco`: 10 words.
+    /// Like `poco`: 37 words.
     Poco,
-    /// Like `un`: 9 words.
-    Un,
-    /// Like `dambos`: 3 words.
-    Dambos,
-    /// Like `cuál`: 1 words.
-    Cuál,
+    /// Like `docientos`: 15 words.
+    Docientos,
+    /// Like `tal`: 9 words.
+    Tal,
+    /// Like `ése`: 6 words.
+    Ése,
+    /// Like `nosotros`: 6 words.
+    Nosotros,
+    /// Like `mvd`: 3 words.
+    Mvd,
+    /// Like `nosotres`: 2 words.
+    Nosotres,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 6] = [
-        Declension::Todo,
-        Declension::Docientos,
+    pub const ALL: [Declension; 7] = [
         Declension::Poco,
-        Declension::Un,
-        Declension::Dambos,
-        Declension::Cuál,
+        Declension::Docientos,
+        Declension::Tal,
+        Declension::Ése,
+        Declension::Nosotros,
+        Declension::Mvd,
+        Declension::Nosotres,
     ];
 
     /// Its table.
@@ -123,30 +109,36 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 6] = [
-    // Todo: 24 words (tanto, uno, todo, mucho, cuyo, alguno).
-    declension!("todo", 24, "~o";
-    m: "~o", _;
+pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
+    // Poco: 37 words (tanto, uno, todo, mucho, poco, otro).
+    declension!("poco", 37, "~o";
+    m: "~o", "~os";
     f: "~a", "~as";
     ),
-    // Docientos: 13 words (los, quinientos, doscientos, setecientos, novecientos, trescientos). Like Todo with `~` after each pattern, except in 1 cell: f pl.
-    declension!("docientos", 13, "~o~", like Todo with "~";
-    f: _, derived;
+    // Docientos: 15 words (los, vosotros, quinientos, nosotras, doscientos, setecientos).
+    declension!("docientos", 15, "~o~";
+    m: "~o~", _;
+    f: "~a~", _;
     ),
-    // Poco: 10 words (poco, otro, cierto, vuestro, cuanto, tuyo). Like Todo, except in 1 cell: f pl.
-    declension!("poco", 10, "~o", like Todo;
-    f: _, "~os|~as";
+    // Tal: 9 words (el, un, él, tal, ud, aquel).
+    declension!("tal", 9, "~";
+    m: "~", "~es";
+    f: "~", "~es";
     ),
-    // Un: 9 words (el, ese, un, este, aquel, cuál). Like Poco, except in 1 cell: m sg.
-    declension!("un", 9, "~", like Poco;
-    m: "~", _;
+    // Ése: 6 words (ese, este, ése, éste, aqueste, aquese). Like Poco, except in 1 cell: m sg.
+    declension!("ése", 6, "~e", like Poco;
+    m: "~e", _;
     ),
-    // Dambos: 3 words (varios, sendos, dambos). Like Docientos, except in 2 cells: f sg, f pl.
-    declension!("dambos", 3, "~o~", like Docientos;
+    // Nosotros: 6 words (nosotros, ambos, varios, sendos, dambos, entrambos). Like Docientos, except in 2 cells: f sg, f pl.
+    declension!("nosotros", 6, "~o~", like Docientos;
     f: derived, "~a~";
     ),
-    // Cuál: 1 words (la). Like Un, except in 2 cells: f sg, f pl.
-    declension!("cuál", 1, "~", like Un;
-    f: "~", "~es";
+    // Mvd: 3 words (la, ella, mvd). Like Tal, except in 2 cells: m pl, f pl.
+    declension!("mvd", 3, "~", like Tal;
+    m: _, "~s";
+    f: _, "~s";
+    ),
+    // Nosotres: 2 words (vosotres, nosotres). Like Docientos.
+    declension!("nosotres", 2, "~e~", like Docientos;
     ),
 ];

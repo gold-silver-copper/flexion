@@ -259,7 +259,9 @@ pub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {
         hiatus: "ϊϋ",
         long: "ηωἠἡὠὡᾀᾁᾐᾑᾠᾡᾱᾳῃῑῡῳ",
         short_finals: &["αι", "οι"],
+        short_endings: &["εως", "εων"],
         acute: 0,
         circumflex: 1,
     }),
+    initial: "\u{313}\u{314}",
 };

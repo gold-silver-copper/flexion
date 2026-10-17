@@ -58,29 +58,27 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law17: "{x:[c|k]}+m" => "{x}+k";
         // l+n → l+l: 11 words (canal, annul, enrol, disannul), 0 forms wrong.
         law18: "l+n" => "l+l";
-        // n+d → n+t: 11 words (born, uplean, mean, bemean), 0 forms wrong.
-        law19: "n+d" => "n+t";
+        // [n|al]+d → +t: 18 words (born, uplean, mean, bemean), 0 forms wrong.
+        law19: "{x:[n|al]}+d" => "{x}+t";
         // ur+n → ur+r: 10 words (incur, concur, unblur, encur), 0 forms wrong.
         law20: "ur+n" => "ur+r";
         // ay+ne → a+i: 9 words (gainsay, unlay, inlay, naysay), 0 forms wrong.
         law21: "ay+ne" => "a+i";
         // y+n → y+: 9 words (gainsay, unlay, inlay, naysay), 0 forms wrong.
         law22: "y+n" => "y+";
-        // al+d → al+t: 7 words (deal, misdeal, redeal, overdeal), 0 forms wrong.
-        law23: "al+d" => "al+t";
         // ar+n → ar+r: 7 words (gnar, unbar, snar, unspar), 0 forms wrong.
-        law24: "ar+n" => "ar+r";
+        law23: "ar+n" => "ar+r";
         // f+t → f+f: 7 words (ref, chef, crossref, coif), 0 forms wrong.
-        law25: "f+t" => "f+f";
+        law24: "f+t" => "f+f";
         // v+p → v+v: 7 words (shiv, rev, nav, improv), 0 forms wrong.
-        law26: "v+p" => "v+v";
+        law25: "v+p" => "v+v";
         // b+m → b+b: 6 words (demob, mob, mab, simulpub), 0 forms wrong.
-        law27: "b+m" => "b+b";
+        law26: "b+m" => "b+b";
         // [c|k]+g → +k: 6 words (grok, logic, magic, garlic), 0 forms wrong.
-        law28: "{x:[c|k]}+g" => "{x}+k";
+        law27: "{x:[c|k]}+g" => "{x}+k";
         // [c|k]+n → +k: 5 words (panic, tonic, picnic, nuk), 0 forms wrong.
-        law29: "{x:[c|k]}+n" => "{x}+k";
+        law28: "{x:[c|k]}+n" => "{x}+k";
         // ll+d → l+t: 5 words (dwell, misspell, foresmell, outdwell), 0 forms wrong.
-        law30: "ll+d" => "l+t";
+        law29: "ll+d" => "l+t";
     }
 };

@@ -37,18 +37,16 @@ macro_rules! relation {
 }
 
 pub(super) static RELATIONS: [Relation<'static>; 3] = [
-    // M_PL, from F_SG.
-    relation!(M_PL, [F_SG], [("~a", "~"), ("~a", "~i"), ("~a", "~oi")], rules {
-        "" => [1 28, 2 3, 0 2],
+    // M_PL, from F_PL.
+    relation!(M_PL, [F_PL], [("~e", "~"), ("~e", "~i"), ("~e", "~oi")], rules {
+        "" => [1 29, 2 3, 0 2],
     } listed {}, true, None),
     // F_SG, from M_SG.
     relation!(F_SG, [M_SG], [("~o", "~a")], rules {
         "" => [0 40],
     } listed {}, true, None),
-    // F_PL, from M_SG.
-    relation!(F_PL, [M_SG], [("~i", "~e"), ("~o", "~e")], rules {
-        "" => [1 34, 0 2],
-        "i" => [0 2],
-        "o" => [1 34],
-    } listed {}, false, None),
+    // F_PL, from F_SG.
+    relation!(F_PL, [F_SG], [("~a", "~e")], rules {
+        "" => [0 35],
+    } listed {}, true, None),
 ];

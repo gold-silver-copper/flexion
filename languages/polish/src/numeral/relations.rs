@@ -41,14 +41,14 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     relation!(NOM_M_ANIM, [NOM_M_INAN], [("~", "~")], rules {
         "" => [0 3],
     } listed {}, true, None),
-    // NOM_F_ANIM, from NOM_F_INAN. Few or no words have it: changed as NOM_M_INAN is into NOM_M_ANIM.
+    // NOM_F_ANIM, from NOM_M_ANIM. Few or no words have it: changed as GEN_M_ANIM is into GEN_F_ANIM.
     relation!(
         NOM_F_ANIM,
-        [NOM_F_INAN],
+        [NOM_M_ANIM],
         [],
         none,
         true,
-        Some((NOM_M_INAN, NOM_M_ANIM))
+        Some((GEN_M_ANIM, GEN_F_ANIM))
     ),
     // NOM_F_INAN, from NOM_F_ANIM.
     relation!(NOM_F_INAN, [NOM_F_ANIM], [("~", "~")], rules {
@@ -67,32 +67,29 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     relation!(NOM_N_INAN, [NOM_N_ANIM], [("~", "~")], rules {
         "" => [0 3],
     } listed {}, true, None),
-    // NOM_VIR_ANIM, from NOM_VIR_INAN. Few or no words have it: changed as NOM_M_INAN is into NOM_M_ANIM.
+    // NOM_VIR_ANIM, from NOM_NVIR_ANIM. Few or no words have it: changed as INS_NVIR_ANIM is into INS_VIR_ANIM.
     relation!(
         NOM_VIR_ANIM,
-        [NOM_VIR_INAN],
+        [NOM_NVIR_ANIM],
         [],
         none,
         true,
-        Some((NOM_M_INAN, NOM_M_ANIM))
+        Some((INS_NVIR_ANIM, INS_VIR_ANIM))
     ),
     // NOM_VIR_INAN, from NOM_VIR_ANIM.
-    relation!(NOM_VIR_INAN, [NOM_VIR_ANIM], [], none, true, None),
+    relation!(NOM_VIR_INAN, [NOM_VIR_ANIM], [("~", "~")], rules {
+        "" => [0 3],
+    } listed {}, true, None),
     // NOM_NVIR_ANIM, from NOM_N_ANIM.
     relation!(NOM_NVIR_ANIM, [NOM_N_ANIM], [("~", "~")], rules {
         "" => [0 2],
     } listed {}, true, None),
     // NOM_NVIR_INAN, from NOM_NVIR_ANIM.
     relation!(NOM_NVIR_INAN, [NOM_NVIR_ANIM], [], none, true, None),
-    // GEN_M_ANIM, from GEN_M_INAN. Few or no words have it: changed as NOM_M_INAN is into NOM_M_ANIM.
-    relation!(
-        GEN_M_ANIM,
-        [GEN_M_INAN],
-        [],
-        none,
-        true,
-        Some((NOM_M_INAN, NOM_M_ANIM))
-    ),
+    // GEN_M_ANIM, from NOM_M_ANIM. Few or no words have it: changed as NOM_F_ANIM is into GEN_F_ANIM.
+    relation!(GEN_M_ANIM, [NOM_M_ANIM], [("~a", "~ej")], rules {
+        "" => [0 2],
+    } listed {}, true, Some((NOM_F_ANIM, GEN_F_ANIM))),
     // GEN_M_INAN, from GEN_M_ANIM.
     relation!(GEN_M_INAN, [GEN_M_ANIM], [("~", "~")], rules {
         "" => [0 3],
@@ -129,15 +126,10 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     relation!(GEN_NVIR_INAN, [GEN_VIR_ANIM], [("~", "~")], rules {
         "" => [0 3],
     } listed {}, true, None),
-    // DAT_M_ANIM, from DAT_M_INAN. Few or no words have it: changed as NOM_M_INAN is into NOM_M_ANIM.
-    relation!(
-        DAT_M_ANIM,
-        [DAT_M_INAN],
-        [],
-        none,
-        true,
-        Some((NOM_M_INAN, NOM_M_ANIM))
-    ),
+    // DAT_M_ANIM, from NOM_M_ANIM. Few or no words have it: changed as NOM_F_ANIM is into DAT_F_ANIM.
+    relation!(DAT_M_ANIM, [NOM_M_ANIM], [("~a", "~ej")], rules {
+        "" => [0 2],
+    } listed {}, true, Some((NOM_F_ANIM, DAT_F_ANIM))),
     // DAT_M_INAN, from DAT_M_ANIM.
     relation!(DAT_M_INAN, [DAT_M_ANIM], [("~", "~")], rules {
         "" => [0 3],
@@ -208,16 +200,21 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     relation!(ACC_N_INAN, [NOM_N_ANIM], [("~", "~")], rules {
         "" => [0 3],
     } listed {}, true, None),
-    // ACC_VIR_ANIM, from NOM_VIR_ANIM.
-    relation!(ACC_VIR_ANIM, [NOM_VIR_ANIM], [("~", "~")], rules {
-        "" => [0 35],
-    } listed {}, true, None),
+    // ACC_VIR_ANIM, from NOM_VIR_ANIM. Few or no words have it: changed as NOM_N_ANIM is into ACC_N_ANIM.
+    relation!(
+        ACC_VIR_ANIM,
+        [NOM_VIR_ANIM],
+        [],
+        none,
+        true,
+        Some((NOM_N_ANIM, ACC_N_ANIM))
+    ),
     // ACC_VIR_INAN, from ACC_VIR_ANIM.
-    relation!(ACC_VIR_INAN, [ACC_VIR_ANIM], [], none, true, None),
-    // ACC_NVIR_ANIM, from NOM_NVIR_ANIM.
-    relation!(ACC_NVIR_ANIM, [NOM_NVIR_ANIM], [("~", "~"), ("~aj", "~u")], rules {
-        "" => [0 3, 1 2],
+    relation!(ACC_VIR_INAN, [ACC_VIR_ANIM], [("~", "~")], rules {
+        "" => [0 3],
     } listed {}, true, None),
+    // ACC_NVIR_ANIM, from NOM_NVIR_ANIM.
+    relation!(ACC_NVIR_ANIM, [NOM_NVIR_ANIM], [], none, true, None),
     // ACC_NVIR_INAN, from ACC_NVIR_ANIM.
     relation!(ACC_NVIR_INAN, [ACC_NVIR_ANIM], [], none, true, None),
     // INS_M_ANIM, from INS_NVIR_ANIM.
@@ -253,9 +250,7 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
         "" => [0 3],
     } listed {}, true, None),
     // INS_NVIR_ANIM, from NOM_NVIR_ANIM.
-    relation!(INS_NVIR_ANIM, [NOM_NVIR_ANIM], [("~aj", "~oma"), ("~e", "~ymi")], rules {
-        "" => [0 2, 1 2],
-    } listed {}, true, None),
+    relation!(INS_NVIR_ANIM, [NOM_NVIR_ANIM], [], none, true, None),
     // INS_NVIR_INAN, from INS_NVIR_ANIM.
     relation!(INS_NVIR_INAN, [INS_NVIR_ANIM], [], none, true, None),
     // LOC_M_ANIM, from GEN_M_ANIM.

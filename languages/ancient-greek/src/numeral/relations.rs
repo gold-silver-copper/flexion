@@ -37,22 +37,42 @@ macro_rules! relation {
 }
 
 pub(super) static RELATIONS: [Relation<'static>; 44] = [
-    // NOM_M_DU, from VOC_M_DU. Few or no words have it: changed as VOC_M_PL is into NOM_M_PL.
-    relation!(NOM_M_DU, [VOC_M_DU], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, Some((VOC_M_PL, NOM_M_PL))),
-    // NOM_M_PL, from NOM_F_PL. Few or no words have it: changed as GEN_F_PL is into GEN_M_PL.
-    relation!(NOM_M_PL, [NOM_F_PL], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, Some((GEN_F_PL, GEN_M_PL))),
-    // NOM_F_SG, from VOC_F_SG. Few or no words have it: changed as VOC_F_PL is into NOM_F_PL.
-    relation!(NOM_F_SG, [VOC_F_SG], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, Some((VOC_F_PL, NOM_F_PL))),
-    // NOM_F_DU, from VOC_F_DU. Few or no words have it: changed as VOC_F_PL is into NOM_F_PL.
-    relation!(NOM_F_DU, [VOC_F_DU], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, Some((VOC_F_PL, NOM_F_PL))),
+    // NOM_M_DU, from NOM_M_SG. Few or no words have it: as it is.
+    relation!(
+        NOM_M_DU,
+        [NOM_M_SG],
+        [],
+        none,
+        true,
+        Some((NOM_M_SG, NOM_M_SG))
+    ),
+    // NOM_M_PL, from NOM_M_SG. Few or no words have it: as it is.
+    relation!(
+        NOM_M_PL,
+        [NOM_M_SG],
+        [],
+        none,
+        true,
+        Some((NOM_M_SG, NOM_M_SG))
+    ),
+    // NOM_F_SG, from NOM_F_PL. Few or no words have it: as it is.
+    relation!(
+        NOM_F_SG,
+        [NOM_F_PL],
+        [],
+        none,
+        true,
+        Some((NOM_F_PL, NOM_F_PL))
+    ),
+    // NOM_F_DU, from NOM_F_PL. Few or no words have it: as it is.
+    relation!(
+        NOM_F_DU,
+        [NOM_F_PL],
+        [],
+        none,
+        true,
+        Some((NOM_F_PL, NOM_F_PL))
+    ),
     // NOM_F_PL, from NOM_M_PL.
     relation!(NOM_F_PL, [NOM_M_PL], [("~", "~"), ("~οι", "~αι")], rules {
         "" => [1 12, 0 5],
@@ -78,36 +98,36 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
         "ι" => [1 12],
         "ς" => [0 4],
     } listed {}, true, None),
-    // GEN_M_SG, from GEN_N_SG. Few or no words have it: changed as GEN_N_PL is into GEN_M_PL.
-    relation!(GEN_M_SG, [GEN_N_SG], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, Some((GEN_N_PL, GEN_M_PL))),
-    // GEN_M_DU, from GEN_N_DU. Few or no words have it: changed as GEN_N_PL is into GEN_M_PL.
-    relation!(GEN_M_DU, [GEN_N_DU], [("~", "~")], rules {
-        "" => [0 17],
-    } listed {}, true, Some((GEN_N_PL, GEN_M_PL))),
+    // GEN_M_SG, from GEN_M_PL. Few or no words have it: as it is.
+    relation!(
+        GEN_M_SG,
+        [GEN_M_PL],
+        [],
+        none,
+        true,
+        Some((GEN_M_PL, GEN_M_PL))
+    ),
+    // GEN_M_DU, from GEN_M_PL. Few or no words have it: as it is.
+    relation!(
+        GEN_M_DU,
+        [GEN_M_PL],
+        [],
+        none,
+        true,
+        Some((GEN_M_PL, GEN_M_PL))
+    ),
     // GEN_M_PL, from NOM_N_PL.
     relation!(GEN_M_PL, [NOM_N_PL], [("~ᾰ", "~ων")], rules {
         "" => [0 17],
     } listed {}, true, None),
-    // GEN_F_SG, from GEN_M_SG. Few or no words have it: changed as GEN_M_PL is into GEN_F_PL.
-    relation!(
-        GEN_F_SG,
-        [GEN_M_SG],
-        [],
-        none,
-        true,
-        Some((GEN_M_PL, GEN_F_PL))
-    ),
-    // GEN_F_DU, from GEN_M_DU. Few or no words have it: changed as GEN_M_PL is into GEN_F_PL.
-    relation!(
-        GEN_F_DU,
-        [GEN_M_DU],
-        [],
-        none,
-        true,
-        Some((GEN_M_PL, GEN_F_PL))
-    ),
+    // GEN_F_SG, from GEN_N_SG. Few or no words have it: changed as GEN_N_PL is into GEN_F_PL.
+    relation!(GEN_F_SG, [GEN_N_SG], [("~", "~")], rules {
+        "" => [0 17],
+    } listed {}, true, Some((GEN_N_PL, GEN_F_PL))),
+    // GEN_F_DU, from GEN_N_DU. Few or no words have it: changed as GEN_N_PL is into GEN_F_PL.
+    relation!(GEN_F_DU, [GEN_N_DU], [("~", "~")], rules {
+        "" => [0 17],
+    } listed {}, true, Some((GEN_N_PL, GEN_F_PL))),
     // GEN_F_PL, from GEN_M_PL.
     relation!(GEN_F_PL, [GEN_M_PL], [], none, true, None),
     // GEN_N_SG, from GEN_M_SG.
@@ -120,14 +140,14 @@ pub(super) static RELATIONS: [Relation<'static>; 44] = [
     } listed {}, true, None),
     // GEN_N_PL, from GEN_M_PL.
     relation!(GEN_N_PL, [GEN_M_PL], [], none, true, None),
-    // DAT_M_SG, from GEN_M_SG. Few or no words have it: changed as GEN_M_DU is into DAT_M_DU.
+    // DAT_M_SG, from DAT_M_PL. Few or no words have it: as it is.
     relation!(
         DAT_M_SG,
-        [GEN_M_SG],
+        [DAT_M_PL],
         [],
         none,
         true,
-        Some((GEN_M_DU, DAT_M_DU))
+        Some((DAT_M_PL, DAT_M_PL))
     ),
     // DAT_M_DU, from GEN_M_DU.
     relation!(DAT_M_DU, [GEN_M_DU], [("~", "~")], rules {

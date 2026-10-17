@@ -174,7 +174,9 @@ pub(super) static RELATIONS: [Relation<'static>; 51] = [
         "я" => [2 5126],
         "ся" => [2 5126],
     } listed {
-        "эко" => 0,
+        0 => [
+            "эко",
+        ],
     }, true, None),
     // GEN_M_INAN, from GEN_M_ANIM.
     relation!(GEN_M_INAN, [GEN_M_ANIM], [], none, true, None),
@@ -189,7 +191,9 @@ pub(super) static RELATIONS: [Relation<'static>; 51] = [
         "я" => [2 5117],
         "ся" => [2 5117],
     } listed {
-        "господне" => 0,
+        0 => [
+            "господне",
+        ],
     }, true, None),
     // GEN_F_INAN, from GEN_F_ANIM.
     relation!(GEN_F_INAN, [GEN_F_ANIM], [], none, true, None),
@@ -222,7 +226,9 @@ pub(super) static RELATIONS: [Relation<'static>; 51] = [
         "я" => [2 5126],
         "ся" => [2 5126],
     } listed {
-        "эко" => 0,
+        0 => [
+            "эко",
+        ],
     }, true, None),
     // DAT_M_INAN, from DAT_M_ANIM.
     relation!(DAT_M_INAN, [DAT_M_ANIM], [], none, true, None),
@@ -305,7 +311,9 @@ pub(super) static RELATIONS: [Relation<'static>; 51] = [
         "я" => [2 5126],
         "ся" => [2 5126],
     } listed {
-        "господне" => 0,
+        0 => [
+            "господне",
+        ],
     }, true, None),
     // PREP_M_INAN, from PREP_M_ANIM.
     relation!(PREP_M_INAN, [PREP_M_ANIM], [], none, true, None),

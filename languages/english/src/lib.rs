@@ -11,10 +11,12 @@ pub mod adjective;
 pub mod adverb;
 pub mod noun;
 mod orthography;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
 pub use adverb::Adverb;
 pub use noun::Noun;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
 
 /// Grammatical number.
@@ -201,6 +203,12 @@ impl flexion::Label for Degree {
 #[must_use]
 pub fn noun(lemma: &str, number: Number) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Form(number))
+}
+
+/// A noun in the given number.
+#[must_use]
+pub fn proper_noun(lemma: &str, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(number))
 }
 
 /// A verb form.

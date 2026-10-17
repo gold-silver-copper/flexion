@@ -21,4 +21,5 @@ pub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {
         ('ȳ', 'y'),
     ],
     prosody: None,
+    initial: "",
 };

@@ -90,6 +90,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
+    kept: Cow::Borrowed(&[]),
     prefixes: Some(prefixes::PREFIXES),
     heads: flexion::Heads {
         least: None,

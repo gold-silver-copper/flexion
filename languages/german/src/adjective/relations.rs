@@ -39,19 +39,19 @@ macro_rules! relation {
 pub(super) static RELATIONS: [Relation<'static>; 146] = [
     // STRONG_NOM_M, from STRONG_NOM_F.
     relation!(STRONG_NOM_M, [STRONG_NOM_F], [("~", "~r")], rules {
-        "" => [0 14832],
+        "" => [0 14838],
     } listed {}, true, None),
     // STRONG_NOM_F, from PREDICATIVE_POS.
     relation!(STRONG_NOM_F, [PREDICATIVE_POS], [], none, false, None),
     // STRONG_NOM_N, from STRONG_NOM_F.
     relation!(STRONG_NOM_N, [STRONG_NOM_F], [("~", "~s")], rules {
-        "" => [0 14832],
+        "" => [0 14838],
     } listed {}, true, None),
     // STRONG_NOM_PL, from STRONG_NOM_F.
     relation!(STRONG_NOM_PL, [STRONG_NOM_F], [], none, true, None),
     // STRONG_GEN_M, from STRONG_NOM_F.
     relation!(STRONG_GEN_M, [STRONG_NOM_F], [("~", "~n")], rules {
-        "" => [0 14832],
+        "" => [0 14838],
     } listed {}, true, None),
     // STRONG_GEN_F, from STRONG_NOM_M.
     relation!(STRONG_GEN_F, [STRONG_NOM_M], [], none, true, None),
@@ -61,7 +61,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     relation!(STRONG_GEN_PL, [STRONG_NOM_M], [], none, true, None),
     // STRONG_DAT_M, from STRONG_NOM_F.
     relation!(STRONG_DAT_M, [STRONG_NOM_F], [("~", "~m")], rules {
-        "" => [0 14832],
+        "" => [0 14838],
     } listed {}, true, None),
     // STRONG_DAT_F, from STRONG_NOM_M.
     relation!(STRONG_DAT_F, [STRONG_NOM_M], [], none, true, None),
@@ -143,14 +143,14 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     relation!(MIXED_ACC_PL, [STRONG_GEN_M], [], none, true, None),
     // COMPARATIVE_STRONG_NOM_M, from STRONG_NOM_M.
     relation!(COMPARATIVE_STRONG_NOM_M, [STRONG_NOM_M], [("a~", "ä~er"), ("gro~", "grö~er"), ("ku~", "kü~er"), ("na~", "nä~er"), ("ro~", "rö~er"), ("~", "~er"), ("~acher", "~ächerer"), ("~aher", "~äherer"), ("~anker", "~änkerer"), ("~arker", "~ärkerer"), ("~armer", "~ärmerer"), ("~arzer", "~ärzerer"), ("~eler", "~lerer"), ("~erer", "~rerer"), ("~oher", "~öherer"), ("~uger", "~ügerer"), ("~under", "~ünderer")], rules {
-        "" => [5 5565, 10 19, 7 6, 12 4, 0 3, 1 3, 6 3, 8 3, 11 3, 13 3, 15 3, 16 3, 2 2, 3 2, 4 2, 9 2, 14 2],
+        "" => [5 5571, 10 19, 7 6, 12 4, 0 3, 1 3, 6 3, 8 3, 11 3, 13 3, 15 3, 16 3, 2 2, 3 2, 4 2, 9 2, 14 2],
         "der" => [5 317, 16 3],
         "under" => [5 4, 16 3],
         "ger" => [5 1350, 15 3, 0 1],
         "uger" => [15 3, 5 1],
-        "her" => [5 1421, 7 6, 6 3, 3 2, 14 2, 4 1],
+        "her" => [5 1422, 7 6, 6 3, 3 2, 14 2, 4 1],
         "aher" => [7 6, 5 3, 3 2],
-        "cher" => [5 1399, 6 3],
+        "cher" => [5 1400, 6 3],
         "acher" => [5 5, 6 3],
         "oher" => [5 5, 14 2],
         "ker" => [5 37, 8 3, 9 2],
@@ -160,16 +160,16 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
         "mer" => [5 101, 10 19, 0 1],
         "amer" => [5 60],
         "rmer" => [10 19, 5 15, 0 1],
-        "rer" => [5 270, 13 3],
+        "rer" => [5 271, 13 3],
         "zer" => [5 5, 11 3, 2 2],
     } listed {}, true, None),
     // COMPARATIVE_STRONG_NOM_F, from COMPARATIVE_STRONG_NOM_M.
     relation!(COMPARATIVE_STRONG_NOM_F, [COMPARATIVE_STRONG_NOM_M], [("~r", "~")], rules {
-        "" => [0 5648],
+        "" => [0 5654],
     } listed {}, true, None),
     // COMPARATIVE_STRONG_NOM_N, from COMPARATIVE_STRONG_NOM_M.
     relation!(COMPARATIVE_STRONG_NOM_N, [COMPARATIVE_STRONG_NOM_M], [("~r", "~s")], rules {
-        "" => [0 5648],
+        "" => [0 5654],
     } listed {}, true, None),
     // COMPARATIVE_STRONG_NOM_PL, from COMPARATIVE_STRONG_NOM_F.
     relation!(
@@ -182,7 +182,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     ),
     // COMPARATIVE_STRONG_GEN_M, from COMPARATIVE_STRONG_NOM_M.
     relation!(COMPARATIVE_STRONG_GEN_M, [COMPARATIVE_STRONG_NOM_M], [("~r", "~n")], rules {
-        "" => [0 5648],
+        "" => [0 5654],
     } listed {}, true, None),
     // COMPARATIVE_STRONG_GEN_F, from COMPARATIVE_STRONG_NOM_M.
     relation!(
@@ -213,7 +213,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     ),
     // COMPARATIVE_STRONG_DAT_M, from COMPARATIVE_STRONG_NOM_M.
     relation!(COMPARATIVE_STRONG_DAT_M, [COMPARATIVE_STRONG_NOM_M], [("~r", "~m")], rules {
-        "" => [0 5648],
+        "" => [0 5654],
     } listed {}, true, None),
     // COMPARATIVE_STRONG_DAT_F, from COMPARATIVE_STRONG_NOM_M.
     relation!(
@@ -568,15 +568,15 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     ),
     // SUPERLATIVE_STRONG_NOM_M, from PREDICATIVE_SUP.
     relation!(SUPERLATIVE_STRONG_NOM_M, [PREDICATIVE_SUP], [("am ~n", "~r")], rules {
-        "" => [0 5647],
+        "" => [0 5653],
     } listed {}, true, None),
     // SUPERLATIVE_STRONG_NOM_F, from PREDICATIVE_SUP.
     relation!(SUPERLATIVE_STRONG_NOM_F, [PREDICATIVE_SUP], [("am ~n", "~")], rules {
-        "" => [0 5647],
+        "" => [0 5653],
     } listed {}, true, None),
     // SUPERLATIVE_STRONG_NOM_N, from PREDICATIVE_SUP.
     relation!(SUPERLATIVE_STRONG_NOM_N, [PREDICATIVE_SUP], [("am ~n", "~s")], rules {
-        "" => [0 5647],
+        "" => [0 5653],
     } listed {}, true, None),
     // SUPERLATIVE_STRONG_NOM_PL, from SUPERLATIVE_STRONG_NOM_F.
     relation!(
@@ -589,7 +589,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     ),
     // SUPERLATIVE_STRONG_GEN_M, from PREDICATIVE_SUP.
     relation!(SUPERLATIVE_STRONG_GEN_M, [PREDICATIVE_SUP], [("am ~", "~")], rules {
-        "" => [0 5647],
+        "" => [0 5653],
     } listed {}, true, None),
     // SUPERLATIVE_STRONG_GEN_F, from SUPERLATIVE_STRONG_NOM_M.
     relation!(
@@ -620,7 +620,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     ),
     // SUPERLATIVE_STRONG_DAT_M, from PREDICATIVE_SUP.
     relation!(SUPERLATIVE_STRONG_DAT_M, [PREDICATIVE_SUP], [("am ~n", "~m")], rules {
-        "" => [0 5647],
+        "" => [0 5653],
     } listed {}, true, None),
     // SUPERLATIVE_STRONG_DAT_F, from SUPERLATIVE_STRONG_NOM_M.
     relation!(
@@ -977,7 +977,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
     relation!(PREDICATIVE_COMP, [STRONG_NOM_M], [], none, true, None),
     // PREDICATIVE_SUP, from PREDICATIVE_POS.
     relation!(PREDICATIVE_SUP, [PREDICATIVE_POS], [("~", "am ~esten"), ("~", "am ~sten"), ("~ach", "am ~ächsten"), ("~ah", "am ~ächsten"), ("~ank", "am ~änksten"), ("~ark", "am ~ärksten"), ("~arm", "am ~ärmsten"), ("~arz", "am ~ärzesten"), ("~e", "am ~sten"), ("~och", "am ~öchsten"), ("~oß", "am ~ößten"), ("~ug", "am ~ügsten"), ("~und", "am ~ündesten"), ("~ß", "am ~ssesten")], rules {
-        "" => [1 4306, 0 1243, 6 19, 8 16, 3 7, 13 5, 4 4, 11 4, 2 3, 5 3, 7 3, 9 3, 12 3, 10 2],
+        "" => [1 4310, 0 1245, 6 19, 8 16, 3 7, 13 5, 4 4, 11 4, 2 3, 5 3, 7 3, 9 3, 12 3, 10 2],
         "b" => [1 15],
         "d" => [1 247, 0 47, 12 3],
         "id" => [0 12],
@@ -994,15 +994,15 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
         "g" => [1 1343, 11 4],
         "ig" => [1 1334],
         "ug" => [11 4],
-        "h" => [1 1391, 0 26, 3 7, 2 3, 9 3],
+        "h" => [1 1392, 0 26, 3 7, 2 3, 9 3],
         "ah" => [3 7, 1 2],
-        "ch" => [1 1373, 0 25, 2 3, 9 3],
+        "ch" => [1 1374, 0 25, 2 3, 9 3],
         "ach" => [1 5, 2 3],
         "ich" => [1 627],
         "och" => [9 3],
-        "sch" => [1 736, 0 25],
+        "sch" => [1 737, 0 25],
         "asch" => [0 2],
-        "isch" => [1 735, 0 5],
+        "isch" => [1 736, 0 5],
         "frisch" => [0 5],
         "rsch" => [0 8],
         "tsch" => [0 5],
@@ -1017,18 +1017,18 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
         "m" => [1 101, 6 19],
         "am" => [1 60],
         "rm" => [6 19, 1 15],
-        "n" => [1 248],
-        "r" => [1 271],
+        "n" => [1 249],
+        "r" => [1 272],
         "s" => [0 240],
-        "t" => [0 837, 1 118],
+        "t" => [0 839, 1 119],
         "bt" => [0 19],
         "et" => [1 42, 0 5],
         "ret" => [0 4],
         "tet" => [1 23],
-        "ft" => [0 134],
-        "gt" => [0 27, 1 15],
+        "ft" => [0 135],
+        "gt" => [0 27, 1 16],
         "egt" => [0 9],
-        "igt" => [1 15, 0 1],
+        "igt" => [1 16, 0 1],
         "ht" => [0 75, 1 1],
         "kt" => [0 47],
         "lt" => [0 19, 1 19],
@@ -1042,7 +1042,7 @@ pub(super) static RELATIONS: [Relation<'static>; 146] = [
         "iert" => [0 93, 1 1],
         "tert" => [1 12],
         "wert" => [0 33],
-        "st" => [0 69],
+        "st" => [0 70],
         "zt" => [0 22],
         "u" => [0 36],
         "v" => [1 133],

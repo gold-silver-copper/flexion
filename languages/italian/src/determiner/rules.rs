@@ -7,23 +7,27 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 5 rules and 8 listed words.
+/// 5 rules and 9 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Nullo 37, Suo 3, Diversi 3, Nessun 1] regular,
+        "" => [Nullo 37, Suo 3, Diversi 3, Nessun 2] regular,
         "i" => [Diversi 3] regular,
         "o" => [Nullo 37, Suo 3] regular,
         "to" => [Nullo 13] regular,
         "uo" => [Suo 2] regular,
     }
     listed {
-        "#entrambi" => Diversi,
-        "#mio" => Nullo,
-        "#parecchio" => Nullo,
-        "#poco" => Nullo,
-        "#so" => Suo,
-        "#suo" => Suo,
-        "#suoio" => Nullo,
-        "#tuo" => Suo,
+        Nullo => [
+            "#mio", "#parecchio", "#poco", "#suoio",
+        ],
+        Suo => [
+            "#so", "#suo", "#tuo",
+        ],
+        Diversi => [
+            "#entrambi",
+        ],
+        Nessun => [
+            "#il",
+        ],
     }
 };

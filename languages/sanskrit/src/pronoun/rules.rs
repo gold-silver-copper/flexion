@@ -7,7 +7,7 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 3 rules and 9 listed words.
+/// 3 rules and 8 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
         "" => [कतम 9, कतर 4, यद 2],
@@ -15,14 +15,14 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "द्" => [यद 2] regular,
     }
     listed {
-        "#अन्यतर" => कतर,
-        "#इदम्" => कतम,
-        "#किम्" => कतम,
-        "#तक" => कतम,
-        "#तद्" => यद,
-        "#त्व" => कतम,
-        "#यद्" => यद,
-        "#सर्व" => कतर,
-        "#स्व" => कतम,
+        कतम => [
+            "#इदम्", "#किम्", "#तक", "#त्व", "#स्व",
+        ],
+        कतर => [
+            "#सर्व",
+        ],
+        यद => [
+            "#तद्", "#यद्",
+        ],
     }
 };

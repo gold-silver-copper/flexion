@@ -34,7 +34,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("gen_m_anim"),
         cells: Cow::Borrowed(&[
             GEN_M_ANIM,
             GEN_M_INAN,
@@ -113,7 +113,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "\t~\t", "~\t~\t", "~\t~\t", "~\t~\t",
         )),
     },
-    // rest like пятеро: 7 words.
+    // gen_m_anim like пятеро: 7 words.
     EndingTable {
         name: Cow::Borrowed("пятеро"),
         words: 7,
@@ -133,7 +133,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~х\t~х\t",
         )),
     },
-    // rest like пятьдесят: 4 words.
+    // gen_m_anim like пятьдесят: 4 words.
     EndingTable {
         name: Cow::Borrowed("пятьдесят"),
         words: 4,

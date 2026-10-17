@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
         cells: Cow::Borrowed(&[NOM_M_SG, NOM_N_SG, ACC_M_SG, ACC_N_SG, VOC_M_SG, VOC_N_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("adjective_nom_m_du"),
         cells: Cow::Borrowed(&[
             NOM_M_DU,
             NOM_M_PL,
@@ -47,7 +47,7 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("adjective_nom_f_sg"),
         cells: Cow::Borrowed(&[
             NOM_F_SG, NOM_F_DU, NOM_F_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, DAT_F_SG, DAT_F_DU,
             ACC_F_SG, ACC_F_DU, ACC_F_PL, VOC_F_SG, VOC_F_DU, VOC_F_PL,
@@ -89,7 +89,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "ᾰ\u{313}~ον\t",
         )),
     },
-    // rest like μᾰλᾰκος: 2,849 words.
+    // adjective_nom_m_du like μᾰλᾰκος: 2,849 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
         words: 2849,
@@ -110,7 +110,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ως\t",
         )),
     },
-    // rest like προσηκων: 772 words.
+    // adjective_nom_m_du like προσηκων: 772 words.
     EndingTable {
         name: Cow::Borrowed("προσηκων"),
         words: 772,
@@ -131,7 +131,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ως\t",
         )),
     },
-    // rest_ like μᾰλᾰκος: 1,747 words.
+    // adjective_nom_f_sg like μᾰλᾰκος: 1,747 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
         words: 1747,
@@ -144,7 +144,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~η\t~ᾱ\t~αι\t",
         )),
     },
-    // rest_ like προσηκων: 713 words.
+    // adjective_nom_f_sg like προσηκων: 713 words.
     EndingTable {
         name: Cow::Borrowed("προσηκων"),
         words: 713,
@@ -157,7 +157,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ᾰ\t~ᾱ\t~αι\t",
         )),
     },
-    // rest_ like τελειος: 624 words.
+    // adjective_nom_f_sg like τελειος: 624 words.
     EndingTable {
         name: Cow::Borrowed("τελειος"),
         words: 624,
@@ -170,7 +170,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ᾱ\t~ᾱ\t~αι\t",
         )),
     },
-    // rest_ like εἰκως: 77 words.
+    // adjective_nom_f_sg like εἰκως: 77 words.
     EndingTable {
         name: Cow::Borrowed("εἰκως"),
         words: 77,
@@ -183,7 +183,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ᾰ\t~ᾱ\t~αι\t",
         )),
     },
-    // rest_ like ἀειμακαριστος: 1 words.
+    // adjective_nom_f_sg like ἀειμακαριστος: 1 words.
     EndingTable {
         name: Cow::Borrowed("ἀειμακαριστος"),
         words: 1,

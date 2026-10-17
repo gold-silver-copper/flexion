@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         cells: Cow::Borrowed(&[NOM_SG, ACC_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("gen_sg"),
         cells: Cow::Borrowed(&[
             NOM_PL, GEN_SG, GEN_PL, DAT_SG, DAT_PL, ACC_PL, INS_SG, INS_PL, LOC_SG, LOC_PL, VOC_SG,
             VOC_PL,
@@ -62,7 +62,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~eń\t", "~nia\t",)),
     },
-    // rest like obraz: 3,471 words.
+    // gen_sg like obraz: 3,471 words.
     EndingTable {
         name: Cow::Borrowed("obraz"),
         words: 3471,
@@ -77,7 +77,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ie\t~y\t",
         )),
     },
-    // rest like język: 2,290 words.
+    // gen_sg like język: 2,290 words.
     EndingTable {
         name: Cow::Borrowed("język"),
         words: 2290,
@@ -92,7 +92,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~i\t",
         )),
     },
-    // rest like sieć: 1,524 words.
+    // gen_sg like sieć: 1,524 words.
     EndingTable {
         name: Cow::Borrowed("sieć"),
         words: 1524,
@@ -107,7 +107,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~\t~\t",
         )),
     },
-    // rest like gospodarz: 1,101 words.
+    // gen_sg like gospodarz: 1,101 words.
     EndingTable {
         name: Cow::Borrowed("gospodarz"),
         words: 1101,
@@ -122,7 +122,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like grunt: 1,080 words.
+    // gen_sg like grunt: 1,080 words.
     EndingTable {
         name: Cow::Borrowed("grunt"),
         words: 1080,
@@ -137,7 +137,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~cie\t~ty\t",
         )),
     },
-    // rest like garniec: 579 words.
+    // gen_sg like garniec: 579 words.
     EndingTable {
         name: Cow::Borrowed("garniec"),
         words: 579,
@@ -152,7 +152,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like pazur: 248 words.
+    // gen_sg like pazur: 248 words.
     EndingTable {
         name: Cow::Borrowed("pazur"),
         words: 248,
@@ -167,7 +167,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ze\t~y\t",
         )),
     },
-    // rest like chłopiec: 209 words.
+    // gen_sg like chłopiec: 209 words.
     EndingTable {
         name: Cow::Borrowed("chłopiec"),
         words: 209,
@@ -182,7 +182,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ze\t~y\t",
         )),
     },
-    // rest like wybór: 195 words.
+    // gen_sg like wybór: 195 words.
     EndingTable {
         name: Cow::Borrowed("wybór"),
         words: 195,
@@ -197,7 +197,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ze\t~y\t",
         )),
     },
-    // rest like grzebień: 192 words.
+    // gen_sg like grzebień: 192 words.
     EndingTable {
         name: Cow::Borrowed("grzebień"),
         words: 192,
@@ -212,7 +212,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like woźny: 148 words.
+    // gen_sg like woźny: 148 words.
     EndingTable {
         name: Cow::Borrowed("woźny"),
         words: 148,
@@ -227,7 +227,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~y\t~i\t",
         )),
     },
-    // rest like patron: 147 words.
+    // gen_sg like patron: 147 words.
     EndingTable {
         name: Cow::Borrowed("patron"),
         words: 147,
@@ -242,7 +242,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ie\t~owie\t",
         )),
     },
-    // rest like stara: 147 words.
+    // gen_sg like stara: 147 words.
     EndingTable {
         name: Cow::Borrowed("stara"),
         words: 147,
@@ -257,7 +257,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~a\t~e\t",
         )),
     },
-    // rest like przestrzeń: 143 words.
+    // gen_sg like przestrzeń: 143 words.
     EndingTable {
         name: Cow::Borrowed("przestrzeń"),
         words: 143,
@@ -272,7 +272,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~\t~e\t",
         )),
     },
-    // rest like jaźwiec: 131 words.
+    // gen_sg like jaźwiec: 131 words.
     EndingTable {
         name: Cow::Borrowed("jaźwiec"),
         words: 131,
@@ -287,7 +287,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like moc: 97 words.
+    // gen_sg like moc: 97 words.
     EndingTable {
         name: Cow::Borrowed("moc"),
         words: 97,
@@ -302,7 +302,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~y\t~e\t",
         )),
     },
-    // rest like konik: 70 words.
+    // gen_sg like konik: 70 words.
     EndingTable {
         name: Cow::Borrowed("konik"),
         words: 70,
@@ -317,7 +317,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~i\t",
         )),
     },
-    // rest like król: 67 words.
+    // gen_sg like król: 67 words.
     EndingTable {
         name: Cow::Borrowed("król"),
         words: 67,
@@ -332,7 +332,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~owie\t",
         )),
     },
-    // rest like dudy: 58 words.
+    // gen_sg like dudy: 58 words.
     EndingTable {
         name: Cow::Borrowed("dudy"),
         words: 58,
@@ -341,7 +341,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~y\t", "\t~\t", "\t~om\t", "~y\t", "\t~ami\t", "\t~ach\t", "\t~y\t",
         )),
     },
-    // rest like pokój: 38 words.
+    // gen_sg like pokój: 38 words.
     EndingTable {
         name: Cow::Borrowed("pokój"),
         words: 38,
@@ -356,7 +356,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ju\t~je\t",
         )),
     },
-    // rest like warchoł: 37 words.
+    // gen_sg like warchoł: 37 words.
     EndingTable {
         name: Cow::Borrowed("warchoł"),
         words: 37,
@@ -371,7 +371,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~le\t~ły\t",
         )),
     },
-    // rest like dół: 24 words.
+    // gen_sg like dół: 24 words.
     EndingTable {
         name: Cow::Borrowed("dół"),
         words: 24,
@@ -386,7 +386,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~le\t~ły\t",
         )),
     },
-    // rest like lis: 24 words.
+    // gen_sg like lis: 24 words.
     EndingTable {
         name: Cow::Borrowed("lis"),
         words: 24,
@@ -401,7 +401,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~ie\t~y\t",
         )),
     },
-    // rest like live: 22 words.
+    // gen_sg like live: 22 words.
     EndingTable {
         name: Cow::Borrowed("live"),
         words: 22,
@@ -410,7 +410,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "\t", "\t\t", "\t\t", "\t", "\t\t", "~\t\t", "~\t\t",
         )),
     },
-    // rest like usta: 12 words.
+    // gen_sg like usta: 12 words.
     EndingTable {
         name: Cow::Borrowed("usta"),
         words: 12,
@@ -419,7 +419,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~a\t", "\t~\t", "\t~om\t", "~a\t", "\t~ami\t", "\t~ach\t", "\t~a\t",
         )),
     },
-    // rest like kleszcz: 8 words.
+    // gen_sg like kleszcz: 8 words.
     EndingTable {
         name: Cow::Borrowed("kleszcz"),
         words: 8,
@@ -434,7 +434,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like ołów: 4 words.
+    // gen_sg like ołów: 4 words.
     EndingTable {
         name: Cow::Borrowed("ołów"),
         words: 4,
@@ -449,7 +449,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~u\t~e\t",
         )),
     },
-    // rest like media: 3 words.
+    // gen_sg like media: 3 words.
     EndingTable {
         name: Cow::Borrowed("media"),
         words: 3,
@@ -458,7 +458,7 @@ pub(super) static TABLES: [EndingTable<'static>; 34] = [
             "~a\t", "\t~ów\t", "\t~om\t", "~a\t", "\t~ami\t", "\t~ach\t", "\t~a\t",
         )),
     },
-    // rest like jaź: 3 words.
+    // gen_sg like jaź: 3 words.
     EndingTable {
         name: Cow::Borrowed("jaź"),
         words: 3,

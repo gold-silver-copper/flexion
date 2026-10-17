@@ -46,6 +46,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
+    kept: Cow::Borrowed(&[]),
     prefixes: None,
     heads: flexion::Heads {
         least: None,
@@ -66,8 +67,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     smoothing: 2.0,
     sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.9880999,
-        unsettled: 0.965792,
+        regular: 1.0,
+        unsettled: 0.9470908,
         unattested: 1.0,
     },
 };

@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         cells: Cow::Borrowed(&[M_SG, M_PL]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("adjective_f_sg"),
         cells: Cow::Borrowed(&[F_SG, F_PL, BEFORE_VOWEL]),
     },
 ];
@@ -31,7 +31,7 @@ pub(super) static TABLES: [EndingTable<'static>; 2] = [
         slot: 0,
         table: Cow::Borrowed("~\t~s\t"),
     },
-    // rest like simple: 17,892 words.
+    // adjective_f_sg like simple: 17,892 words.
     EndingTable {
         name: Cow::Borrowed("simple"),
         words: 17892,

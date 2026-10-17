@@ -49,23 +49,21 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law13: "gu+é" => "g+üé";
         // zd+ → +d: 37 words (tender, perder, encender, defender), 0 forms wrong.
         law14: "zd+" => "+d";
-        // ñ+y → ñ+: 26 words (atañer, plañir, muñir, gruñir), 0 forms wrong.
-        law15: "ñ+y" => "ñ+";
-        // l+y → l+: 18 words (bullir, mullir, zabullir, çabullir), 0 forms wrong.
-        law16: "l+y" => "l+";
+        // [ñ|l]+y → +: 44 words (atañer, plañir, muñir, gruñir), 0 forms wrong.
+        law15: "{x:[ñ|l]}+y" => "{x}+";
         // lc+e → l+que: 23 words (calcar, revolcar, volcar, remolcar), 0 forms wrong.
-        law17: "lc+e" => "l+que";
+        law16: "lc+e" => "l+que";
         // lc+é → l+qué: 23 words (calcar, revolcar, volcar, remolcar), 0 forms wrong.
-        law18: "lc+é" => "l+qué";
+        law17: "lc+é" => "l+qué";
         // zc+e → z+que: 12 words (pellizcar, pizcar, bizcar, peñizcar), 0 forms wrong.
-        law19: "zc+e" => "z+que";
+        law18: "zc+e" => "z+que";
         // zc+é → z+qué: 12 words (pellizcar, pizcar, bizcar, peñizcar), 0 forms wrong.
-        law20: "zc+é" => "z+qué";
+        law19: "zc+é" => "z+qué";
         // zt+ → +t: 11 words (verter, entrometerse, entremeterse, cometerse), 0 forms wrong.
-        law21: "zt+" => "+t";
+        law20: "zt+" => "+t";
         // c+e → +que before [p|ˇ]: 187 words (caber, buscar, rascar, tocar), 0 forms wrong.
-        law22: "c+e" => "+que" / "" _ "{[p|ˇ]}";
+        law21: "c+e" => "+que" / "" _ "{[p|ˇ]}";
         // eg+ue → +iegue before ˇ: 25 words (negar, renegar, fregar, regar), 0 forms wrong.
-        law23: "eg+ue" => "+iegue" / "" _ "{[ˇ]}";
+        law22: "eg+ue" => "+iegue" / "" _ "{[ˇ]}";
     }
 };

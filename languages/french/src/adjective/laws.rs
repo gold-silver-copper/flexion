@@ -16,17 +16,15 @@ use flexion::sound_law::Program;
 pub(super) const LAWS: Program<'static> = flexion::laws! {
     classes {}
     rules {
-        // s+s → s+: 521 words (gratis, japonais, bourgeois, anglais), 20 forms wrong.
-        law0: "s+s" => "s+";
+        // [s|x]+s → +: 530 words (gratis, japonais, bourgeois, anglais), 20 forms wrong.
+        law0: "{x:[s|x]}+s" => "{x}+";
         // [t|i|u|o]+n → +t: 11 words (sot, chou, coi, favori), 0 forms wrong.
         law1: "{x:[t|i|u|o]}+n" => "{x}+t";
         // et+e → et+te: 40 words (violet, net, cadet, gringalet), 0 forms wrong.
         law2: "et+e" => "et+te";
-        // x+s → x+: 9 words (x, inox, relax, préfix), 0 forms wrong.
-        law3: "x+s" => "x+";
         // c+e → +que: 10 words (public, turc, ammoniac, caduc), 0 forms wrong.
-        law4: "c+e" => "+que";
+        law3: "c+e" => "+que";
         // gu+e → gu+ë: 7 words (aigu, ambigu, contigu, subaigu), 0 forms wrong.
-        law5: "gu+e" => "gu+ë";
+        law4: "gu+e" => "gu+ë";
     }
 };

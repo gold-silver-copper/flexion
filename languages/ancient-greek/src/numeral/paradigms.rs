@@ -8,9 +8,7 @@ use flexion::Paradigm;
 /// Writes one declension: the word it is named after, how many words follow it,
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the declension it is like (if any), the stem slots it states with a stem and an
-/// ending table
-/// (`stem lemma: \"~- like πισῠρες\"`: the slot's cells are `πισῠρες`'s table's patterns
-/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// ending table (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the declension's it is
 /// like, or, in a declension like no other, derived):
@@ -190,10 +188,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 7] = [
     acc_m: _, _, "~ους";
     acc_f: _, _, "~ᾱς";
     ),
-    // Τεσσᾰρες: 3 words (τεσσᾰρες, τεττᾰρες, πισῠρες). Like Χῑλῐοι, except in 1 cell: acc_n pl.
+    // Τεσσᾰρες: 3 words (τεσσᾰρες, τεττᾰρες, πισῠρες). Like Χῑλῐοι, except in 8 cells: nom_m sg, nom_m pl, nom_f pl, dat_m pl, dat_f pl, dat_n pl, ….
     declension!("τεσσᾰρες", 3, "~ες", like Χῑλῐοι;
-    stem lemma: "~- like πισῠρες";
-    acc_n: _, _, derived;
+    nom_m: "~ες", _, "~ες";
+    nom_f: _, _, "~ες";
+    dat_m: _, _, "~σῐ|~σῐν";
+    dat_f: _, _, "~σῐ|~σῐν";
+    dat_n: _, _, "~σῐ|~σῐν";
+    acc_m: _, _, "~ᾰς";
+    acc_f: _, _, "~ᾰς";
     ),
     // Δῠο: 1 words (δῠο). Like Χῑλῐοι, except in 18 cells: nom_m sg, nom_m du, nom_m pl, nom_f du, nom_f pl, nom_n pl, ….
     declension!("δῠο", 1, "~ο", like Χῑλῐοι;

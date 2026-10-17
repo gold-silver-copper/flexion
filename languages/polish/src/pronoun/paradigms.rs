@@ -48,7 +48,7 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
+     $(stem nom_f_anim: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?

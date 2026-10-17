@@ -203,6 +203,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
+    kept: Cow::Borrowed(&[]),
     prefixes: Some(prefixes::PREFIXES),
     heads: flexion::Heads {
         least: None,
@@ -452,6 +453,7 @@ impl From<(crate::Tense, crate::Voice)> for Cell {
 pub struct Verb<'w> {
     lemma: &'w str,
     given: Vec<(usize, &'w str)>,
+    inherent: Vec<(u8, u8)>,
 }
 
 impl<'w> Verb<'w> {
@@ -461,6 +463,7 @@ impl<'w> Verb<'w> {
         Verb {
             lemma,
             given: Vec::new(),
+            inherent: Vec::new(),
         }
     }
 
@@ -472,10 +475,17 @@ impl<'w> Verb<'w> {
         self
     }
 
+    /// Its presentclass: only conjugations of words of that presentclass are read.
+    #[must_use]
+    pub fn present_class(mut self, present_class: crate::PresentClass) -> Self {
+        self.inherent.push((0, present_class as u8));
+        self
+    }
+
     fn known(&self) -> Known<'_> {
         Known {
             forms: &self.given,
-            inherent: &[],
+            inherent: &self.inherent,
             full: false,
         }
     }

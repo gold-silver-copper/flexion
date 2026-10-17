@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 7] = [
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("verb_pres_1_sg"),
         cells: Cow::Borrowed(&[
             PRES_1_SG,
             PRES_2_SG,
@@ -49,7 +49,7 @@ pub(super) static SLOTS: [Slot<'static>; 7] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("verb_pret_1_sg"),
         cells: Cow::Borrowed(&[
             PRET_1_SG,
             PRET_1_PL,
@@ -78,14 +78,14 @@ pub(super) static SLOTS: [Slot<'static>; 7] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest__"),
+        name: Cow::Borrowed("verb"),
         cells: Cow::Borrowed(&[
             FUT_1_SG, FUT_1_PL, FUT_2_SG, FUT_2_PL, FUT_3_SG, FUT_3_PL, COND_1_SG, COND_1_PL,
             COND_2_SG, COND_2_PL, COND_3_SG, COND_3_PL,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest___"),
+        name: Cow::Borrowed("verb_subj_1_pl"),
         cells: Cow::Borrowed(&[
             SUBJ_1_PL,
             SUBJ_2_PL,
@@ -112,7 +112,7 @@ pub(super) static SLOTS: [Slot<'static>; 7] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 41] = [
-    // rest_ like echar: 10,103 words.
+    // verb_pres_1_sg like echar: 10,103 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
         words: 10103,
@@ -128,7 +128,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~es\t~e\t~en\t",
         )),
     },
-    // rest_ like realizar: 1,223 words.
+    // verb_pres_1_sg like realizar: 1,223 words.
     EndingTable {
         name: Cow::Borrowed("realizar"),
         words: 1223,
@@ -144,7 +144,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~ces\t~ce\t~cen\t",
         )),
     },
-    // rest_ like curtir: 802 words.
+    // verb_pres_1_sg like curtir: 802 words.
     EndingTable {
         name: Cow::Borrowed("curtir"),
         words: 802,
@@ -160,7 +160,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~as\t~a\t~an\t",
         )),
     },
-    // rest_ like sacar: 258 words.
+    // verb_pres_1_sg like sacar: 258 words.
     EndingTable {
         name: Cow::Borrowed("sacar"),
         words: 258,
@@ -176,7 +176,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~ques\t~que\t~quen\t",
         )),
     },
-    // rest_ like darse: 205 words.
+    // verb_pres_1_sg like darse: 205 words.
     EndingTable {
         name: Cow::Borrowed("darse"),
         words: 205,
@@ -192,7 +192,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~es\t~e\t~en\t",
         )),
     },
-    // rest_ like dirigir: 75 words.
+    // verb_pres_1_sg like dirigir: 75 words.
     EndingTable {
         name: Cow::Borrowed("dirigir"),
         words: 75,
@@ -208,7 +208,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~jas\t~ja\t~jan\t",
         )),
     },
-    // rest_ like fruncir: 40 words.
+    // verb_pres_1_sg like fruncir: 40 words.
     EndingTable {
         name: Cow::Borrowed("fruncir"),
         words: 40,
@@ -224,7 +224,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~zas\t~za\t~zan\t",
         )),
     },
-    // rest_ like freírse: 9 words.
+    // verb_pres_1_sg like freírse: 9 words.
     EndingTable {
         name: Cow::Borrowed("freírse"),
         words: 9,
@@ -240,7 +240,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~as\t~a\t~an\t",
         )),
     },
-    // rest_ like seguirse: 3 words.
+    // verb_pres_1_sg like seguirse: 3 words.
     EndingTable {
         name: Cow::Borrowed("seguirse"),
         words: 3,
@@ -416,7 +416,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~rse\t",
         )),
     },
-    // rest like echar: 13,613 words.
+    // verb_pret_1_sg like echar: 13,613 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
         words: 13613,
@@ -436,7 +436,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~are\t\t",
         )),
     },
-    // rest like realizar: 1,589 words.
+    // verb_pret_1_sg like realizar: 1,589 words.
     EndingTable {
         name: Cow::Borrowed("realizar"),
         words: 1589,
@@ -456,7 +456,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~zare\t\t",
         )),
     },
-    // rest like conocer: 1,439 words.
+    // verb_pret_1_sg like conocer: 1,439 words.
     EndingTable {
         name: Cow::Borrowed("conocer"),
         words: 1439,
@@ -476,7 +476,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~iere\t\t",
         )),
     },
-    // rest like sacar: 522 words.
+    // verb_pret_1_sg like sacar: 522 words.
     EndingTable {
         name: Cow::Borrowed("sacar"),
         words: 522,
@@ -496,7 +496,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~care\t\t",
         )),
     },
-    // rest like instruir: 126 words.
+    // verb_pret_1_sg like instruir: 126 words.
     EndingTable {
         name: Cow::Borrowed("instruir"),
         words: 126,
@@ -516,7 +516,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~yere\t\t",
         )),
     },
-    // rest like poner: 121 words.
+    // verb_pret_1_sg like poner: 121 words.
     EndingTable {
         name: Cow::Borrowed("poner"),
         words: 121,
@@ -536,7 +536,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~iere\t\t",
         )),
     },
-    // rest like reducir: 69 words.
+    // verb_pret_1_sg like reducir: 69 words.
     EndingTable {
         name: Cow::Borrowed("reducir"),
         words: 69,
@@ -556,7 +556,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~ere\t\t",
         )),
     },
-    // rest like fraguar: 45 words.
+    // verb_pret_1_sg like fraguar: 45 words.
     EndingTable {
         name: Cow::Borrowed("fraguar"),
         words: 45,
@@ -576,7 +576,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~uare\t\t",
         )),
     },
-    // rest like creer: 36 words.
+    // verb_pret_1_sg like creer: 36 words.
     EndingTable {
         name: Cow::Borrowed("creer"),
         words: 36,
@@ -596,7 +596,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~yere\t\t",
         )),
     },
-    // rest like escabullirse: 18 words.
+    // verb_pret_1_sg like escabullirse: 18 words.
     EndingTable {
         name: Cow::Borrowed("escabullirse"),
         words: 18,
@@ -616,14 +616,14 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~ere\t\t",
         )),
     },
-    // rest__ like echar: 17,812 words.
+    // verb like echar: 17,812 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
         words: 17812,
         slot: 3,
         table: Cow::Borrowed(concat!("~é\t\t", "\t\t", "\t\t", "\t\t", "\t\t", "~ía\t\t",)),
     },
-    // rest__ like sonar: 121 words.
+    // verb like sonar: 121 words.
     EndingTable {
         name: Cow::Borrowed("sonar"),
         words: 121,
@@ -637,7 +637,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~íaˇ\t\t",
         )),
     },
-    // rest___ like echar: 11,611 words.
+    // verb_subj_1_pl like echar: 11,611 words.
     EndingTable {
         name: Cow::Borrowed("echar"),
         words: 11611,
@@ -650,7 +650,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~emos\t~éis\t",
         )),
     },
-    // rest___ like incautarse: 4,161 words.
+    // verb_subj_1_pl like incautarse: 4,161 words.
     EndingTable {
         name: Cow::Borrowed("incautarse"),
         words: 4161,
@@ -663,7 +663,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~emos\t~éis\t",
         )),
     },
-    // rest___ like conocer: 1,439 words.
+    // verb_subj_1_pl like conocer: 1,439 words.
     EndingTable {
         name: Cow::Borrowed("conocer"),
         words: 1439,
@@ -676,7 +676,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~amos\t~áis\t",
         )),
     },
-    // rest___ like autoabastecerse: 592 words.
+    // verb_subj_1_pl like autoabastecerse: 592 words.
     EndingTable {
         name: Cow::Borrowed("autoabastecerse"),
         words: 592,
@@ -689,7 +689,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~amos\t~áis\t",
         )),
     },
-    // rest___ like sonar: 109 words.
+    // verb_subj_1_pl like sonar: 109 words.
     EndingTable {
         name: Cow::Borrowed("sonar"),
         words: 109,
@@ -702,7 +702,7 @@ pub(super) static TABLES: [EndingTable<'static>; 41] = [
             "~emosˇ\t~éisˇ\t",
         )),
     },
-    // rest___ like guiar: 8 words.
+    // verb_subj_1_pl like guiar: 8 words.
     EndingTable {
         name: Cow::Borrowed("guiar"),
         words: 8,

@@ -90,7 +90,7 @@ const SG_AS_PL: [u16; 2] = [1, 1];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `line`: 197,326 words.
+    /// Like `line`: 197,325 words.
     Line,
     /// Like `body`: 12,168 words.
     Body,
@@ -365,8 +365,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
-    // Line: 197,326 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
-    declension!("line", 197326, "~";
+    // Line: 197,325 words (free, encyclopedia, portmanteau, encyclopaedia, cat, word).
+    declension!("line", 197325, "~";
     noun: "~", "~s";
     ),
     // Body: 12,168 words (dictionary, lexicography, etymology, abbacy, abditory, abecedary). Like Blin with `es` after each pattern (`y` after ~).

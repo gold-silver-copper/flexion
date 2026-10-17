@@ -92,7 +92,7 @@ const PL_AS_SG: [u16; 2] = [0, 0];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `medio`: 46,326 words.
+    /// Like `medio`: 46,325 words.
     Medio,
     /// Like `flor`: 6,068 words.
     Flor,
@@ -178,8 +178,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
-    // Medio: 46,326 words (pie, swap, deal, abada, abate, quiz).
-    declension!("medio", 46326, "~";
+    // Medio: 46,325 words (pie, swap, deal, abada, abate, quiz).
+    declension!("medio", 46325, "~";
     noun: "~", "~s";
     ),
     // Flor: 6,068 words (abdominal, abductor, aboriginal, raptor, accidental, plural). Like Medio, except in 1 cell: noun pl.

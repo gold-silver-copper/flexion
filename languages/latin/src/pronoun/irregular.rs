@@ -25,7 +25,7 @@ cuiusvis	2	cuiavīs	3	cuiaevīs	6	cuiīvīs	7	cuiōrumvīs	12	cuiōvīs	13	cuiī
 ecqui	3	ecquae	5	ecqua	24	ecquō
 ecquinam	3	ecquaenam	5	ecquaenam	24	ecquōnam
 ecquisnam	2	ecquaenam	3	ecquaenam	12	eccuinam	22	ecquidnam	24	ecquōnam
-egomet	abl_sg	mēmet- like quis	gen_sg	meīmet- like quidquid	rest__	mihimet- like utervīs	2	egomet	4	egomet	20	mēmet
+egomet	abl_sg	mēmet- like quis	gen_sg	meīmet- like quidquid	nom_m_pl	mihimet- like utervīs	2	egomet	4	egomet	20	mēmet
 hic	3	hae	6	huius	7	hōrum	8	huius	12	huic	13	hīs	22	hoc
 hice	1	hīce	6	huiusce	8	huiusce	12	huīce	13	hīsce	19	hōsce	22	hoce
 idem	2	eadem	3	eaedem	6	eiusdem	7	eōrundem	8	eiusdem	9	eārundem	12	eīdem	13	iīsdem	18	eundem	19	eōsdem	20	eandem	21	eāsdem	22	idem	24	eōdem	26	eādem
@@ -62,7 +62,7 @@ semet	6	suīmet	7	suīmet	9	suīmet	12	sibimet	13	sibimet	25	sēmet	27	sēmet	29
 siquis	22	sīquid
 sui	8	suī	12	sibī	20	sē	24	sē
 tutemet	2	tūtemet	4	tūtemet	6	tuīmet	12	tibimet	20	temet	24	temet
-unusquisque	abl_sg	ūnōquōque- like quis	gen_sg	ūnīuscuiusque- like quidquid	rest__	ūnīcuique- like utervīs	2	ūnaquaeque	18	ūnumquemque	20	ūnamquamque	26	ūnāquāque
+unusquisque	abl_sg	ūnōquōque- like quis	gen_sg	ūnīuscuiusque- like quidquid	nom_m_pl	ūnīcuique- like utervīs	2	ūnaquaeque	18	ūnumquemque	20	ūnamquamque	26	ūnāquāque
 uter	6	utrīus	12	utrī
 utercumque	2	utracumque	3	utraecumque	6	utrīuscumque	7	utrōrumcumque	12	utrīcumque	13	utrīscumque	18	utrumcumque	20	utramcumque	21	utrāscumque	24	utrōcumque	26	utrācumque
 uterlibet	2	utralibet	3	utraelibet	6	utrīuslibet	7	utrōrumlibet	12	utrīlibet	13	utrīslibet	18	utrumlibet	20	utramlibet	21	utrāslibet	24	utrōlibet	26	utrālibet

@@ -76,7 +76,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("adjective_nom_vir_anim"),
         cells: Cow::Borrowed(&[NOM_VIR_ANIM, NOM_VIR_INAN, COMPARATIVE, SUPERLATIVE]),
     },
 ];
@@ -157,21 +157,21 @@ pub(super) static TABLES: [EndingTable<'static>; 5] = [
             "~ich\t~ich\t",
         )),
     },
-    // rest like wolny: 8,436 words.
+    // adjective_nom_vir_anim like wolny: 8,436 words.
     EndingTable {
         name: Cow::Borrowed("wolny"),
         words: 8436,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t~\t", "~ejszy\t", "\t",)),
     },
-    // rest like słaby: 1,431 words.
+    // adjective_nom_vir_anim like słaby: 1,431 words.
     EndingTable {
         name: Cow::Borrowed("słaby"),
         words: 1431,
         slot: 1,
         table: Cow::Borrowed(concat!("~i\t~i\t", "~szy\t", "\t",)),
     },
-    // rest like mały: 36 words.
+    // adjective_nom_vir_anim like mały: 36 words.
     EndingTable {
         name: Cow::Borrowed("mały"),
         words: 36,

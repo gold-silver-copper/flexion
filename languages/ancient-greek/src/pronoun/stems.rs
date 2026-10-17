@@ -20,7 +20,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("nom_m_du"),
         cells: Cow::Borrowed(&[
             NOM_M_DU, NOM_F_DU, NOM_N_DU, DAT_M_SG, DAT_M_PL, DAT_F_SG, DAT_F_PL, DAT_N_SG,
             DAT_N_PL, ACC_M_DU, ACC_F_DU, ACC_N_DU, VOC_M_SG, VOC_M_DU, VOC_M_PL, VOC_F_DU,
@@ -28,7 +28,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("nom_m_pl"),
         cells: Cow::Borrowed(&[
             NOM_M_PL, NOM_F_PL, NOM_N_PL, GEN_M_DU, GEN_M_PL, GEN_F_DU, GEN_F_PL, GEN_N_DU,
             GEN_N_PL, DAT_M_DU, DAT_F_DU, DAT_N_DU, ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_N_PL,

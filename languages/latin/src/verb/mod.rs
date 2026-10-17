@@ -20,202 +20,166 @@ use std::borrow::Cow;
 /// Each cell's place in a paradigm.
 #[allow(dead_code)]
 pub mod cell {
-    pub const IND_ACT_PRES_1_SG: u16 = 0;
-    pub const IND_ACT_PRES_1_PL: u16 = 1;
-    pub const IND_ACT_PRES_2_SG: u16 = 2;
-    pub const IND_ACT_PRES_2_PL: u16 = 3;
-    pub const IND_ACT_PRES_3_SG: u16 = 4;
-    pub const IND_ACT_PRES_3_PL: u16 = 5;
-    pub const IND_ACT_IMPF_1_SG: u16 = 6;
-    pub const IND_ACT_IMPF_1_PL: u16 = 7;
-    pub const IND_ACT_IMPF_2_SG: u16 = 8;
-    pub const IND_ACT_IMPF_2_PL: u16 = 9;
-    pub const IND_ACT_IMPF_3_SG: u16 = 10;
-    pub const IND_ACT_IMPF_3_PL: u16 = 11;
-    pub const IND_ACT_FUT_1_SG: u16 = 12;
-    pub const IND_ACT_FUT_1_PL: u16 = 13;
-    pub const IND_ACT_FUT_2_SG: u16 = 14;
-    pub const IND_ACT_FUT_2_PL: u16 = 15;
-    pub const IND_ACT_FUT_3_SG: u16 = 16;
-    pub const IND_ACT_FUT_3_PL: u16 = 17;
-    pub const IND_ACT_PERF_1_SG: u16 = 18;
-    pub const IND_ACT_PERF_1_PL: u16 = 19;
-    pub const IND_ACT_PERF_2_SG: u16 = 20;
-    pub const IND_ACT_PERF_2_PL: u16 = 21;
-    pub const IND_ACT_PERF_3_SG: u16 = 22;
-    pub const IND_ACT_PERF_3_PL: u16 = 23;
-    pub const IND_ACT_PLUP_1_SG: u16 = 24;
-    pub const IND_ACT_PLUP_1_PL: u16 = 25;
-    pub const IND_ACT_PLUP_2_SG: u16 = 26;
-    pub const IND_ACT_PLUP_2_PL: u16 = 27;
-    pub const IND_ACT_PLUP_3_SG: u16 = 28;
-    pub const IND_ACT_PLUP_3_PL: u16 = 29;
-    pub const IND_ACT_FUTP_1_SG: u16 = 30;
-    pub const IND_ACT_FUTP_1_PL: u16 = 31;
-    pub const IND_ACT_FUTP_2_SG: u16 = 32;
-    pub const IND_ACT_FUTP_2_PL: u16 = 33;
-    pub const IND_ACT_FUTP_3_SG: u16 = 34;
-    pub const IND_ACT_FUTP_3_PL: u16 = 35;
-    pub const IND_PASS_PRES_1_SG: u16 = 36;
-    pub const IND_PASS_PRES_1_PL: u16 = 37;
-    pub const IND_PASS_PRES_2_SG: u16 = 38;
-    pub const IND_PASS_PRES_2_PL: u16 = 39;
-    pub const IND_PASS_PRES_3_SG: u16 = 40;
-    pub const IND_PASS_PRES_3_PL: u16 = 41;
-    pub const IND_PASS_IMPF_1_SG: u16 = 42;
-    pub const IND_PASS_IMPF_1_PL: u16 = 43;
-    pub const IND_PASS_IMPF_2_SG: u16 = 44;
-    pub const IND_PASS_IMPF_2_PL: u16 = 45;
-    pub const IND_PASS_IMPF_3_SG: u16 = 46;
-    pub const IND_PASS_IMPF_3_PL: u16 = 47;
-    pub const IND_PASS_FUT_1_SG: u16 = 48;
-    pub const IND_PASS_FUT_1_PL: u16 = 49;
-    pub const IND_PASS_FUT_2_SG: u16 = 50;
-    pub const IND_PASS_FUT_2_PL: u16 = 51;
-    pub const IND_PASS_FUT_3_SG: u16 = 52;
-    pub const IND_PASS_FUT_3_PL: u16 = 53;
-    pub const IND_PASS_PERF_1_SG: u16 = 54;
-    pub const IND_PASS_PERF_1_PL: u16 = 55;
-    pub const IND_PASS_PERF_2_SG: u16 = 56;
-    pub const IND_PASS_PERF_2_PL: u16 = 57;
-    pub const IND_PASS_PERF_3_SG: u16 = 58;
-    pub const IND_PASS_PERF_3_PL: u16 = 59;
-    pub const IND_PASS_PLUP_1_SG: u16 = 60;
-    pub const IND_PASS_PLUP_1_PL: u16 = 61;
-    pub const IND_PASS_PLUP_2_SG: u16 = 62;
-    pub const IND_PASS_PLUP_2_PL: u16 = 63;
-    pub const IND_PASS_PLUP_3_SG: u16 = 64;
-    pub const IND_PASS_PLUP_3_PL: u16 = 65;
-    pub const IND_PASS_FUTP_1_SG: u16 = 66;
-    pub const IND_PASS_FUTP_1_PL: u16 = 67;
-    pub const IND_PASS_FUTP_2_SG: u16 = 68;
-    pub const IND_PASS_FUTP_2_PL: u16 = 69;
-    pub const IND_PASS_FUTP_3_SG: u16 = 70;
-    pub const IND_PASS_FUTP_3_PL: u16 = 71;
-    pub const SUBJ_ACT_PRES_1_SG: u16 = 72;
-    pub const SUBJ_ACT_PRES_1_PL: u16 = 73;
-    pub const SUBJ_ACT_PRES_2_SG: u16 = 74;
-    pub const SUBJ_ACT_PRES_2_PL: u16 = 75;
-    pub const SUBJ_ACT_PRES_3_SG: u16 = 76;
-    pub const SUBJ_ACT_PRES_3_PL: u16 = 77;
-    pub const SUBJ_ACT_IMPF_1_SG: u16 = 78;
-    pub const SUBJ_ACT_IMPF_1_PL: u16 = 79;
-    pub const SUBJ_ACT_IMPF_2_SG: u16 = 80;
-    pub const SUBJ_ACT_IMPF_2_PL: u16 = 81;
-    pub const SUBJ_ACT_IMPF_3_SG: u16 = 82;
-    pub const SUBJ_ACT_IMPF_3_PL: u16 = 83;
-    pub const SUBJ_ACT_FUT_1_SG: u16 = 84;
-    pub const SUBJ_ACT_FUT_1_PL: u16 = 85;
-    pub const SUBJ_ACT_FUT_2_SG: u16 = 86;
-    pub const SUBJ_ACT_FUT_2_PL: u16 = 87;
-    pub const SUBJ_ACT_FUT_3_SG: u16 = 88;
-    pub const SUBJ_ACT_FUT_3_PL: u16 = 89;
-    pub const SUBJ_ACT_PERF_1_SG: u16 = 90;
-    pub const SUBJ_ACT_PERF_1_PL: u16 = 91;
-    pub const SUBJ_ACT_PERF_2_SG: u16 = 92;
-    pub const SUBJ_ACT_PERF_2_PL: u16 = 93;
-    pub const SUBJ_ACT_PERF_3_SG: u16 = 94;
-    pub const SUBJ_ACT_PERF_3_PL: u16 = 95;
-    pub const SUBJ_ACT_PLUP_1_SG: u16 = 96;
-    pub const SUBJ_ACT_PLUP_1_PL: u16 = 97;
-    pub const SUBJ_ACT_PLUP_2_SG: u16 = 98;
-    pub const SUBJ_ACT_PLUP_2_PL: u16 = 99;
-    pub const SUBJ_ACT_PLUP_3_SG: u16 = 100;
-    pub const SUBJ_ACT_PLUP_3_PL: u16 = 101;
-    pub const SUBJ_ACT_FUTP_1_SG: u16 = 102;
-    pub const SUBJ_ACT_FUTP_1_PL: u16 = 103;
-    pub const SUBJ_ACT_FUTP_2_SG: u16 = 104;
-    pub const SUBJ_ACT_FUTP_2_PL: u16 = 105;
-    pub const SUBJ_ACT_FUTP_3_SG: u16 = 106;
-    pub const SUBJ_ACT_FUTP_3_PL: u16 = 107;
-    pub const SUBJ_PASS_PRES_1_SG: u16 = 108;
-    pub const SUBJ_PASS_PRES_1_PL: u16 = 109;
-    pub const SUBJ_PASS_PRES_2_SG: u16 = 110;
-    pub const SUBJ_PASS_PRES_2_PL: u16 = 111;
-    pub const SUBJ_PASS_PRES_3_SG: u16 = 112;
-    pub const SUBJ_PASS_PRES_3_PL: u16 = 113;
-    pub const SUBJ_PASS_IMPF_1_SG: u16 = 114;
-    pub const SUBJ_PASS_IMPF_1_PL: u16 = 115;
-    pub const SUBJ_PASS_IMPF_2_SG: u16 = 116;
-    pub const SUBJ_PASS_IMPF_2_PL: u16 = 117;
-    pub const SUBJ_PASS_IMPF_3_SG: u16 = 118;
-    pub const SUBJ_PASS_IMPF_3_PL: u16 = 119;
-    pub const SUBJ_PASS_FUT_1_SG: u16 = 120;
-    pub const SUBJ_PASS_FUT_1_PL: u16 = 121;
-    pub const SUBJ_PASS_FUT_2_SG: u16 = 122;
-    pub const SUBJ_PASS_FUT_2_PL: u16 = 123;
-    pub const SUBJ_PASS_FUT_3_SG: u16 = 124;
-    pub const SUBJ_PASS_FUT_3_PL: u16 = 125;
-    pub const SUBJ_PASS_PERF_1_SG: u16 = 126;
-    pub const SUBJ_PASS_PERF_1_PL: u16 = 127;
-    pub const SUBJ_PASS_PERF_2_SG: u16 = 128;
-    pub const SUBJ_PASS_PERF_2_PL: u16 = 129;
-    pub const SUBJ_PASS_PERF_3_SG: u16 = 130;
-    pub const SUBJ_PASS_PERF_3_PL: u16 = 131;
-    pub const SUBJ_PASS_PLUP_1_SG: u16 = 132;
-    pub const SUBJ_PASS_PLUP_1_PL: u16 = 133;
-    pub const SUBJ_PASS_PLUP_2_SG: u16 = 134;
-    pub const SUBJ_PASS_PLUP_2_PL: u16 = 135;
-    pub const SUBJ_PASS_PLUP_3_SG: u16 = 136;
-    pub const SUBJ_PASS_PLUP_3_PL: u16 = 137;
-    pub const SUBJ_PASS_FUTP_1_SG: u16 = 138;
-    pub const SUBJ_PASS_FUTP_1_PL: u16 = 139;
-    pub const SUBJ_PASS_FUTP_2_SG: u16 = 140;
-    pub const SUBJ_PASS_FUTP_2_PL: u16 = 141;
-    pub const SUBJ_PASS_FUTP_3_SG: u16 = 142;
-    pub const SUBJ_PASS_FUTP_3_PL: u16 = 143;
-    pub const IMPERATIVE_ACT_PRES_1_SG: u16 = 144;
-    pub const IMPERATIVE_ACT_PRES_1_PL: u16 = 145;
-    pub const IMPERATIVE_ACT_PRES_2_SG: u16 = 146;
-    pub const IMPERATIVE_ACT_PRES_2_PL: u16 = 147;
-    pub const IMPERATIVE_ACT_PRES_3_SG: u16 = 148;
-    pub const IMPERATIVE_ACT_PRES_3_PL: u16 = 149;
-    pub const IMPERATIVE_ACT_FUT_1_SG: u16 = 150;
-    pub const IMPERATIVE_ACT_FUT_1_PL: u16 = 151;
-    pub const IMPERATIVE_ACT_FUT_2_SG: u16 = 152;
-    pub const IMPERATIVE_ACT_FUT_2_PL: u16 = 153;
-    pub const IMPERATIVE_ACT_FUT_3_SG: u16 = 154;
-    pub const IMPERATIVE_ACT_FUT_3_PL: u16 = 155;
-    pub const IMPERATIVE_PASS_PRES_1_SG: u16 = 156;
-    pub const IMPERATIVE_PASS_PRES_1_PL: u16 = 157;
-    pub const IMPERATIVE_PASS_PRES_2_SG: u16 = 158;
-    pub const IMPERATIVE_PASS_PRES_2_PL: u16 = 159;
-    pub const IMPERATIVE_PASS_PRES_3_SG: u16 = 160;
-    pub const IMPERATIVE_PASS_PRES_3_PL: u16 = 161;
-    pub const IMPERATIVE_PASS_FUT_1_SG: u16 = 162;
-    pub const IMPERATIVE_PASS_FUT_1_PL: u16 = 163;
-    pub const IMPERATIVE_PASS_FUT_2_SG: u16 = 164;
-    pub const IMPERATIVE_PASS_FUT_2_PL: u16 = 165;
-    pub const IMPERATIVE_PASS_FUT_3_SG: u16 = 166;
-    pub const IMPERATIVE_PASS_FUT_3_PL: u16 = 167;
-    pub const INFINITIVE_ACT_PRES: u16 = 168;
-    pub const INFINITIVE_ACT_PERF: u16 = 169;
-    pub const INFINITIVE_ACT_FUT: u16 = 170;
-    pub const INFINITIVE_PASS_PRES: u16 = 171;
-    pub const INFINITIVE_PASS_PERF: u16 = 172;
-    pub const INFINITIVE_PASS_FUT: u16 = 173;
-    pub const PARTICIPLE_PRES_ACT: u16 = 174;
-    pub const PARTICIPLE_PERF_PASS: u16 = 175;
-    pub const PARTICIPLE_FUT_ACT: u16 = 176;
-    pub const PARTICIPLE_FUT_PASS: u16 = 177;
-    pub const GERUND_NOM: u16 = 178;
-    pub const GERUND_GEN: u16 = 179;
-    pub const GERUND_DAT: u16 = 180;
-    pub const GERUND_ACC: u16 = 181;
-    pub const GERUND_ABL: u16 = 182;
-    pub const GERUND_VOC: u16 = 183;
-    pub const SUPINE_NOM: u16 = 184;
-    pub const SUPINE_GEN: u16 = 185;
-    pub const SUPINE_DAT: u16 = 186;
-    pub const SUPINE_ACC: u16 = 187;
-    pub const SUPINE_ABL: u16 = 188;
-    pub const SUPINE_VOC: u16 = 189;
+    pub const ACT_PRES_1_SG: u16 = 0;
+    pub const ACT_PRES_1_PL: u16 = 1;
+    pub const ACT_PRES_2_SG: u16 = 2;
+    pub const ACT_PRES_2_PL: u16 = 3;
+    pub const ACT_PRES_3_SG: u16 = 4;
+    pub const ACT_PRES_3_PL: u16 = 5;
+    pub const ACT_IMPF_1_SG: u16 = 6;
+    pub const ACT_IMPF_1_PL: u16 = 7;
+    pub const ACT_IMPF_2_SG: u16 = 8;
+    pub const ACT_IMPF_2_PL: u16 = 9;
+    pub const ACT_IMPF_3_SG: u16 = 10;
+    pub const ACT_IMPF_3_PL: u16 = 11;
+    pub const ACT_FUT_1_SG: u16 = 12;
+    pub const ACT_FUT_1_PL: u16 = 13;
+    pub const ACT_FUT_2_SG: u16 = 14;
+    pub const ACT_FUT_2_PL: u16 = 15;
+    pub const ACT_FUT_3_SG: u16 = 16;
+    pub const ACT_FUT_3_PL: u16 = 17;
+    pub const ACT_PERF_1_SG: u16 = 18;
+    pub const ACT_PERF_1_PL: u16 = 19;
+    pub const ACT_PERF_2_SG: u16 = 20;
+    pub const ACT_PERF_2_PL: u16 = 21;
+    pub const ACT_PERF_3_SG: u16 = 22;
+    pub const ACT_PERF_3_PL: u16 = 23;
+    pub const ACT_PLUP_1_SG: u16 = 24;
+    pub const ACT_PLUP_1_PL: u16 = 25;
+    pub const ACT_PLUP_2_SG: u16 = 26;
+    pub const ACT_PLUP_2_PL: u16 = 27;
+    pub const ACT_PLUP_3_SG: u16 = 28;
+    pub const ACT_PLUP_3_PL: u16 = 29;
+    pub const ACT_FUTP_1_SG: u16 = 30;
+    pub const ACT_FUTP_1_PL: u16 = 31;
+    pub const ACT_FUTP_2_SG: u16 = 32;
+    pub const ACT_FUTP_2_PL: u16 = 33;
+    pub const ACT_FUTP_3_SG: u16 = 34;
+    pub const ACT_FUTP_3_PL: u16 = 35;
+    pub const PASS_PRES_1_SG: u16 = 36;
+    pub const PASS_PRES_1_PL: u16 = 37;
+    pub const PASS_PRES_2_SG: u16 = 38;
+    pub const PASS_PRES_2_PL: u16 = 39;
+    pub const PASS_PRES_3_SG: u16 = 40;
+    pub const PASS_PRES_3_PL: u16 = 41;
+    pub const PASS_IMPF_1_SG: u16 = 42;
+    pub const PASS_IMPF_1_PL: u16 = 43;
+    pub const PASS_IMPF_2_SG: u16 = 44;
+    pub const PASS_IMPF_2_PL: u16 = 45;
+    pub const PASS_IMPF_3_SG: u16 = 46;
+    pub const PASS_IMPF_3_PL: u16 = 47;
+    pub const PASS_FUT_1_SG: u16 = 48;
+    pub const PASS_FUT_1_PL: u16 = 49;
+    pub const PASS_FUT_2_SG: u16 = 50;
+    pub const PASS_FUT_2_PL: u16 = 51;
+    pub const PASS_FUT_3_SG: u16 = 52;
+    pub const PASS_FUT_3_PL: u16 = 53;
+    pub const PASS_PERF_1_SG: u16 = 54;
+    pub const PASS_PERF_1_PL: u16 = 55;
+    pub const PASS_PERF_2_SG: u16 = 56;
+    pub const PASS_PERF_2_PL: u16 = 57;
+    pub const PASS_PERF_3_SG: u16 = 58;
+    pub const PASS_PERF_3_PL: u16 = 59;
+    pub const PASS_PLUP_1_SG: u16 = 60;
+    pub const PASS_PLUP_1_PL: u16 = 61;
+    pub const PASS_PLUP_2_SG: u16 = 62;
+    pub const PASS_PLUP_2_PL: u16 = 63;
+    pub const PASS_PLUP_3_SG: u16 = 64;
+    pub const PASS_PLUP_3_PL: u16 = 65;
+    pub const PASS_FUTP_1_SG: u16 = 66;
+    pub const PASS_FUTP_1_PL: u16 = 67;
+    pub const PASS_FUTP_2_SG: u16 = 68;
+    pub const PASS_FUTP_2_PL: u16 = 69;
+    pub const PASS_FUTP_3_SG: u16 = 70;
+    pub const PASS_FUTP_3_PL: u16 = 71;
+    pub const SUBJUNCTIVE_ACT_PRES_1_SG: u16 = 72;
+    pub const SUBJUNCTIVE_ACT_PRES_1_PL: u16 = 73;
+    pub const SUBJUNCTIVE_ACT_PRES_2_SG: u16 = 74;
+    pub const SUBJUNCTIVE_ACT_PRES_2_PL: u16 = 75;
+    pub const SUBJUNCTIVE_ACT_PRES_3_SG: u16 = 76;
+    pub const SUBJUNCTIVE_ACT_PRES_3_PL: u16 = 77;
+    pub const SUBJUNCTIVE_ACT_IMPF_1_SG: u16 = 78;
+    pub const SUBJUNCTIVE_ACT_IMPF_1_PL: u16 = 79;
+    pub const SUBJUNCTIVE_ACT_IMPF_2_SG: u16 = 80;
+    pub const SUBJUNCTIVE_ACT_IMPF_2_PL: u16 = 81;
+    pub const SUBJUNCTIVE_ACT_IMPF_3_SG: u16 = 82;
+    pub const SUBJUNCTIVE_ACT_IMPF_3_PL: u16 = 83;
+    pub const SUBJUNCTIVE_ACT_PERF_1_SG: u16 = 84;
+    pub const SUBJUNCTIVE_ACT_PERF_1_PL: u16 = 85;
+    pub const SUBJUNCTIVE_ACT_PERF_2_SG: u16 = 86;
+    pub const SUBJUNCTIVE_ACT_PERF_2_PL: u16 = 87;
+    pub const SUBJUNCTIVE_ACT_PERF_3_SG: u16 = 88;
+    pub const SUBJUNCTIVE_ACT_PERF_3_PL: u16 = 89;
+    pub const SUBJUNCTIVE_ACT_PLUP_1_SG: u16 = 90;
+    pub const SUBJUNCTIVE_ACT_PLUP_1_PL: u16 = 91;
+    pub const SUBJUNCTIVE_ACT_PLUP_2_SG: u16 = 92;
+    pub const SUBJUNCTIVE_ACT_PLUP_2_PL: u16 = 93;
+    pub const SUBJUNCTIVE_ACT_PLUP_3_SG: u16 = 94;
+    pub const SUBJUNCTIVE_ACT_PLUP_3_PL: u16 = 95;
+    pub const SUBJUNCTIVE_PASS_PRES_1_SG: u16 = 96;
+    pub const SUBJUNCTIVE_PASS_PRES_1_PL: u16 = 97;
+    pub const SUBJUNCTIVE_PASS_PRES_2_SG: u16 = 98;
+    pub const SUBJUNCTIVE_PASS_PRES_2_PL: u16 = 99;
+    pub const SUBJUNCTIVE_PASS_PRES_3_SG: u16 = 100;
+    pub const SUBJUNCTIVE_PASS_PRES_3_PL: u16 = 101;
+    pub const SUBJUNCTIVE_PASS_IMPF_1_SG: u16 = 102;
+    pub const SUBJUNCTIVE_PASS_IMPF_1_PL: u16 = 103;
+    pub const SUBJUNCTIVE_PASS_IMPF_2_SG: u16 = 104;
+    pub const SUBJUNCTIVE_PASS_IMPF_2_PL: u16 = 105;
+    pub const SUBJUNCTIVE_PASS_IMPF_3_SG: u16 = 106;
+    pub const SUBJUNCTIVE_PASS_IMPF_3_PL: u16 = 107;
+    pub const SUBJUNCTIVE_PASS_PERF_1_SG: u16 = 108;
+    pub const SUBJUNCTIVE_PASS_PERF_1_PL: u16 = 109;
+    pub const SUBJUNCTIVE_PASS_PERF_2_SG: u16 = 110;
+    pub const SUBJUNCTIVE_PASS_PERF_2_PL: u16 = 111;
+    pub const SUBJUNCTIVE_PASS_PERF_3_SG: u16 = 112;
+    pub const SUBJUNCTIVE_PASS_PERF_3_PL: u16 = 113;
+    pub const SUBJUNCTIVE_PASS_PLUP_1_SG: u16 = 114;
+    pub const SUBJUNCTIVE_PASS_PLUP_1_PL: u16 = 115;
+    pub const SUBJUNCTIVE_PASS_PLUP_2_SG: u16 = 116;
+    pub const SUBJUNCTIVE_PASS_PLUP_2_PL: u16 = 117;
+    pub const SUBJUNCTIVE_PASS_PLUP_3_SG: u16 = 118;
+    pub const SUBJUNCTIVE_PASS_PLUP_3_PL: u16 = 119;
+    pub const PRESENT_IMPERATIVE_ACT_SG: u16 = 120;
+    pub const PRESENT_IMPERATIVE_ACT_PL: u16 = 121;
+    pub const PRESENT_IMPERATIVE_PASS_SG: u16 = 122;
+    pub const PRESENT_IMPERATIVE_PASS_PL: u16 = 123;
+    pub const FUTURE_IMPERATIVE_ACT_2_SG: u16 = 124;
+    pub const FUTURE_IMPERATIVE_ACT_2_PL: u16 = 125;
+    pub const FUTURE_IMPERATIVE_ACT_3_SG: u16 = 126;
+    pub const FUTURE_IMPERATIVE_ACT_3_PL: u16 = 127;
+    pub const FUTURE_IMPERATIVE_PASS_2_SG: u16 = 128;
+    pub const FUTURE_IMPERATIVE_PASS_2_PL: u16 = 129;
+    pub const FUTURE_IMPERATIVE_PASS_3_SG: u16 = 130;
+    pub const FUTURE_IMPERATIVE_PASS_3_PL: u16 = 131;
+    pub const INFINITIVE_ACT_PRES: u16 = 132;
+    pub const INFINITIVE_ACT_PERF: u16 = 133;
+    pub const INFINITIVE_ACT_FUT: u16 = 134;
+    pub const INFINITIVE_PASS_PRES: u16 = 135;
+    pub const INFINITIVE_PASS_PERF: u16 = 136;
+    pub const INFINITIVE_PASS_FUT: u16 = 137;
+    pub const PARTICIPLE_PRES_ACT: u16 = 138;
+    pub const PARTICIPLE_PERF_PASS: u16 = 139;
+    pub const PARTICIPLE_FUT_ACT: u16 = 140;
+    pub const PARTICIPLE_FUT_PASS: u16 = 141;
+    pub const GERUND_NOM: u16 = 142;
+    pub const GERUND_GEN: u16 = 143;
+    pub const GERUND_DAT: u16 = 144;
+    pub const GERUND_ACC: u16 = 145;
+    pub const GERUND_ABL: u16 = 146;
+    pub const GERUND_VOC: u16 = 147;
+    pub const SUPINE_NOM: u16 = 148;
+    pub const SUPINE_GEN: u16 = 149;
+    pub const SUPINE_DAT: u16 = 150;
+    pub const SUPINE_ACC: u16 = 151;
+    pub const SUPINE_ABL: u16 = 152;
+    pub const SUPINE_VOC: u16 = 153;
 }
 
 /// The grammar: paradigms, the rules choosing one, irregular forms.
 pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     orthography: crate::orthography::ORTHOGRAPHY,
-    cells: 190,
+    cells: 154,
     lemma_cell: Some(0),
     capitalized: false,
     paradigms: Cow::Borrowed(&paradigms::CONJUGATIONS),
@@ -223,6 +187,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
+    kept: Cow::Borrowed(&[]),
     prefixes: None,
     heads: flexion::Heads {
         least: None,
@@ -243,8 +208,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 1.25,
     trust: flexion::Trust {
-        regular: 1.0,
-        unsettled: 0.9476536,
+        regular: 0.9913773,
+        unsettled: 0.96678114,
         unattested: 1.0,
     },
 };
@@ -252,21 +217,19 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
 /// A verb form: which cell of its conjugation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Cell {
-    /// A finite form.
-    Form(
-        crate::Mood,
+    /// An indicative.
+    Indicative(crate::Voice, crate::Tense, crate::Person, crate::Number),
+    /// A subjunctive.
+    Subjunctive(
         crate::Voice,
-        crate::Tense,
+        crate::SubjunctiveTense,
         crate::Person,
         crate::Number,
     ),
-    /// An imperative.
-    Imperative(
-        crate::Voice,
-        crate::ImperativeTense,
-        crate::Person,
-        crate::Number,
-    ),
+    /// A present imperative (the second person only).
+    PresentImperative(crate::Voice, crate::Number),
+    /// A future imperative.
+    FutureImperative(crate::Voice, crate::ImperativePerson, crate::Number),
     /// An infinitive (the perfect passive and the futures are phrases: `amātum esse`, `amātūrum esse`, `amātum īrī`).
     Infinitive(crate::Voice, crate::InfinitiveTense),
     /// A participle's citation form; decline it with `adjective`. The future passive participle is the gerundive.
@@ -281,515 +244,574 @@ impl Cell {
     /// Its place in a paradigm.
     pub const fn index(self) -> usize {
         use crate::Case::*;
-        use crate::Mood::*;
         use crate::Number::*;
         use crate::Participle::*;
-        use crate::Person::*;
         use crate::Voice::*;
         let cell = match self {
-            Cell::Form(Indicative, Active, crate::Tense::Present, First, Singular) => {
-                cell::IND_ACT_PRES_1_SG
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::First, Singular) => {
+                cell::ACT_PRES_1_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Present, First, Plural) => {
-                cell::IND_ACT_PRES_1_PL
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::First, Plural) => {
+                cell::ACT_PRES_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Present, Second, Singular) => {
-                cell::IND_ACT_PRES_2_SG
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::Second, Singular) => {
+                cell::ACT_PRES_2_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Present, Second, Plural) => {
-                cell::IND_ACT_PRES_2_PL
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::Second, Plural) => {
+                cell::ACT_PRES_2_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Present, Third, Singular) => {
-                cell::IND_ACT_PRES_3_SG
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::Third, Singular) => {
+                cell::ACT_PRES_3_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Present, Third, Plural) => {
-                cell::IND_ACT_PRES_3_PL
+            Cell::Indicative(Active, crate::Tense::Present, crate::Person::Third, Plural) => {
+                cell::ACT_PRES_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, First, Singular) => {
-                cell::IND_ACT_IMPF_1_SG
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::First, Singular) => {
+                cell::ACT_IMPF_1_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, First, Plural) => {
-                cell::IND_ACT_IMPF_1_PL
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::First, Plural) => {
+                cell::ACT_IMPF_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, Second, Singular) => {
-                cell::IND_ACT_IMPF_2_SG
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::Second, Singular) => {
+                cell::ACT_IMPF_2_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, Second, Plural) => {
-                cell::IND_ACT_IMPF_2_PL
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::Second, Plural) => {
+                cell::ACT_IMPF_2_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, Third, Singular) => {
-                cell::IND_ACT_IMPF_3_SG
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::Third, Singular) => {
+                cell::ACT_IMPF_3_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Imperfect, Third, Plural) => {
-                cell::IND_ACT_IMPF_3_PL
+            Cell::Indicative(Active, crate::Tense::Imperfect, crate::Person::Third, Plural) => {
+                cell::ACT_IMPF_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, First, Singular) => {
-                cell::IND_ACT_FUT_1_SG
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::First, Singular) => {
+                cell::ACT_FUT_1_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, First, Plural) => {
-                cell::IND_ACT_FUT_1_PL
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::First, Plural) => {
+                cell::ACT_FUT_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, Second, Singular) => {
-                cell::IND_ACT_FUT_2_SG
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::Second, Singular) => {
+                cell::ACT_FUT_2_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, Second, Plural) => {
-                cell::IND_ACT_FUT_2_PL
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::Second, Plural) => {
+                cell::ACT_FUT_2_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, Third, Singular) => {
-                cell::IND_ACT_FUT_3_SG
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::Third, Singular) => {
+                cell::ACT_FUT_3_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Future, Third, Plural) => {
-                cell::IND_ACT_FUT_3_PL
+            Cell::Indicative(Active, crate::Tense::Future, crate::Person::Third, Plural) => {
+                cell::ACT_FUT_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, First, Singular) => {
-                cell::IND_ACT_PERF_1_SG
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::First, Singular) => {
+                cell::ACT_PERF_1_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, First, Plural) => {
-                cell::IND_ACT_PERF_1_PL
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::First, Plural) => {
+                cell::ACT_PERF_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, Second, Singular) => {
-                cell::IND_ACT_PERF_2_SG
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::Second, Singular) => {
+                cell::ACT_PERF_2_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, Second, Plural) => {
-                cell::IND_ACT_PERF_2_PL
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::Second, Plural) => {
+                cell::ACT_PERF_2_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, Third, Singular) => {
-                cell::IND_ACT_PERF_3_SG
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::Third, Singular) => {
+                cell::ACT_PERF_3_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Perfect, Third, Plural) => {
-                cell::IND_ACT_PERF_3_PL
+            Cell::Indicative(Active, crate::Tense::Perfect, crate::Person::Third, Plural) => {
+                cell::ACT_PERF_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, First, Singular) => {
-                cell::IND_ACT_PLUP_1_SG
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::First, Singular) => {
+                cell::ACT_PLUP_1_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, First, Plural) => {
-                cell::IND_ACT_PLUP_1_PL
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::First, Plural) => {
+                cell::ACT_PLUP_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, Second, Singular) => {
-                cell::IND_ACT_PLUP_2_SG
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::Second, Singular) => {
+                cell::ACT_PLUP_2_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, Second, Plural) => {
-                cell::IND_ACT_PLUP_2_PL
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::Second, Plural) => {
+                cell::ACT_PLUP_2_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, Third, Singular) => {
-                cell::IND_ACT_PLUP_3_SG
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::Third, Singular) => {
+                cell::ACT_PLUP_3_SG
             }
-            Cell::Form(Indicative, Active, crate::Tense::Pluperfect, Third, Plural) => {
-                cell::IND_ACT_PLUP_3_PL
+            Cell::Indicative(Active, crate::Tense::Pluperfect, crate::Person::Third, Plural) => {
+                cell::ACT_PLUP_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, First, Singular) => {
-                cell::IND_ACT_FUTP_1_SG
+            Cell::Indicative(
+                Active,
+                crate::Tense::FuturePerfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::ACT_FUTP_1_SG,
+            Cell::Indicative(Active, crate::Tense::FuturePerfect, crate::Person::First, Plural) => {
+                cell::ACT_FUTP_1_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, First, Plural) => {
-                cell::IND_ACT_FUTP_1_PL
+            Cell::Indicative(
+                Active,
+                crate::Tense::FuturePerfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::ACT_FUTP_2_SG,
+            Cell::Indicative(
+                Active,
+                crate::Tense::FuturePerfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::ACT_FUTP_2_PL,
+            Cell::Indicative(
+                Active,
+                crate::Tense::FuturePerfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::ACT_FUTP_3_SG,
+            Cell::Indicative(Active, crate::Tense::FuturePerfect, crate::Person::Third, Plural) => {
+                cell::ACT_FUTP_3_PL
             }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, Second, Singular) => {
-                cell::IND_ACT_FUTP_2_SG
-            }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, Second, Plural) => {
-                cell::IND_ACT_FUTP_2_PL
-            }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, Third, Singular) => {
-                cell::IND_ACT_FUTP_3_SG
-            }
-            Cell::Form(Indicative, Active, crate::Tense::FuturePerfect, Third, Plural) => {
-                cell::IND_ACT_FUTP_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, First, Singular) => {
-                cell::IND_PASS_PRES_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, First, Plural) => {
-                cell::IND_PASS_PRES_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, Second, Singular) => {
-                cell::IND_PASS_PRES_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, Second, Plural) => {
-                cell::IND_PASS_PRES_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, Third, Singular) => {
-                cell::IND_PASS_PRES_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Present, Third, Plural) => {
-                cell::IND_PASS_PRES_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, First, Singular) => {
-                cell::IND_PASS_IMPF_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, First, Plural) => {
-                cell::IND_PASS_IMPF_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, Second, Singular) => {
-                cell::IND_PASS_IMPF_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, Second, Plural) => {
-                cell::IND_PASS_IMPF_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, Third, Singular) => {
-                cell::IND_PASS_IMPF_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Imperfect, Third, Plural) => {
-                cell::IND_PASS_IMPF_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, First, Singular) => {
-                cell::IND_PASS_FUT_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, First, Plural) => {
-                cell::IND_PASS_FUT_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, Second, Singular) => {
-                cell::IND_PASS_FUT_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, Second, Plural) => {
-                cell::IND_PASS_FUT_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, Third, Singular) => {
-                cell::IND_PASS_FUT_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Future, Third, Plural) => {
-                cell::IND_PASS_FUT_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, First, Singular) => {
-                cell::IND_PASS_PERF_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, First, Plural) => {
-                cell::IND_PASS_PERF_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, Second, Singular) => {
-                cell::IND_PASS_PERF_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, Second, Plural) => {
-                cell::IND_PASS_PERF_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, Third, Singular) => {
-                cell::IND_PASS_PERF_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Perfect, Third, Plural) => {
-                cell::IND_PASS_PERF_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, First, Singular) => {
-                cell::IND_PASS_PLUP_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, First, Plural) => {
-                cell::IND_PASS_PLUP_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, Second, Singular) => {
-                cell::IND_PASS_PLUP_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, Second, Plural) => {
-                cell::IND_PASS_PLUP_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, Third, Singular) => {
-                cell::IND_PASS_PLUP_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::Pluperfect, Third, Plural) => {
-                cell::IND_PASS_PLUP_3_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, First, Singular) => {
-                cell::IND_PASS_FUTP_1_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, First, Plural) => {
-                cell::IND_PASS_FUTP_1_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, Second, Singular) => {
-                cell::IND_PASS_FUTP_2_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, Second, Plural) => {
-                cell::IND_PASS_FUTP_2_PL
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, Third, Singular) => {
-                cell::IND_PASS_FUTP_3_SG
-            }
-            Cell::Form(Indicative, Passive, crate::Tense::FuturePerfect, Third, Plural) => {
-                cell::IND_PASS_FUTP_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, First, Singular) => {
-                cell::SUBJ_ACT_PRES_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, First, Plural) => {
-                cell::SUBJ_ACT_PRES_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, Second, Singular) => {
-                cell::SUBJ_ACT_PRES_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, Second, Plural) => {
-                cell::SUBJ_ACT_PRES_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, Third, Singular) => {
-                cell::SUBJ_ACT_PRES_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Present, Third, Plural) => {
-                cell::SUBJ_ACT_PRES_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, First, Singular) => {
-                cell::SUBJ_ACT_IMPF_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, First, Plural) => {
-                cell::SUBJ_ACT_IMPF_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, Second, Singular) => {
-                cell::SUBJ_ACT_IMPF_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, Second, Plural) => {
-                cell::SUBJ_ACT_IMPF_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, Third, Singular) => {
-                cell::SUBJ_ACT_IMPF_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Imperfect, Third, Plural) => {
-                cell::SUBJ_ACT_IMPF_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, First, Singular) => {
-                cell::SUBJ_ACT_FUT_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, First, Plural) => {
-                cell::SUBJ_ACT_FUT_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, Second, Singular) => {
-                cell::SUBJ_ACT_FUT_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, Second, Plural) => {
-                cell::SUBJ_ACT_FUT_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, Third, Singular) => {
-                cell::SUBJ_ACT_FUT_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Future, Third, Plural) => {
-                cell::SUBJ_ACT_FUT_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, First, Singular) => {
-                cell::SUBJ_ACT_PERF_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, First, Plural) => {
-                cell::SUBJ_ACT_PERF_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, Second, Singular) => {
-                cell::SUBJ_ACT_PERF_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, Second, Plural) => {
-                cell::SUBJ_ACT_PERF_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, Third, Singular) => {
-                cell::SUBJ_ACT_PERF_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Perfect, Third, Plural) => {
-                cell::SUBJ_ACT_PERF_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, First, Singular) => {
-                cell::SUBJ_ACT_PLUP_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, First, Plural) => {
-                cell::SUBJ_ACT_PLUP_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, Second, Singular) => {
-                cell::SUBJ_ACT_PLUP_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, Second, Plural) => {
-                cell::SUBJ_ACT_PLUP_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, Third, Singular) => {
-                cell::SUBJ_ACT_PLUP_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::Pluperfect, Third, Plural) => {
-                cell::SUBJ_ACT_PLUP_3_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, First, Singular) => {
-                cell::SUBJ_ACT_FUTP_1_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, First, Plural) => {
-                cell::SUBJ_ACT_FUTP_1_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, Second, Singular) => {
-                cell::SUBJ_ACT_FUTP_2_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, Second, Plural) => {
-                cell::SUBJ_ACT_FUTP_2_PL
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, Third, Singular) => {
-                cell::SUBJ_ACT_FUTP_3_SG
-            }
-            Cell::Form(Subjunctive, Active, crate::Tense::FuturePerfect, Third, Plural) => {
-                cell::SUBJ_ACT_FUTP_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, First, Singular) => {
-                cell::SUBJ_PASS_PRES_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, First, Plural) => {
-                cell::SUBJ_PASS_PRES_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, Second, Singular) => {
-                cell::SUBJ_PASS_PRES_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, Second, Plural) => {
-                cell::SUBJ_PASS_PRES_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, Third, Singular) => {
-                cell::SUBJ_PASS_PRES_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Present, Third, Plural) => {
-                cell::SUBJ_PASS_PRES_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, First, Singular) => {
-                cell::SUBJ_PASS_IMPF_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, First, Plural) => {
-                cell::SUBJ_PASS_IMPF_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, Second, Singular) => {
-                cell::SUBJ_PASS_IMPF_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, Second, Plural) => {
-                cell::SUBJ_PASS_IMPF_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, Third, Singular) => {
-                cell::SUBJ_PASS_IMPF_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Imperfect, Third, Plural) => {
-                cell::SUBJ_PASS_IMPF_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, First, Singular) => {
-                cell::SUBJ_PASS_FUT_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, First, Plural) => {
-                cell::SUBJ_PASS_FUT_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, Second, Singular) => {
-                cell::SUBJ_PASS_FUT_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, Second, Plural) => {
-                cell::SUBJ_PASS_FUT_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, Third, Singular) => {
-                cell::SUBJ_PASS_FUT_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Future, Third, Plural) => {
-                cell::SUBJ_PASS_FUT_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, First, Singular) => {
-                cell::SUBJ_PASS_PERF_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, First, Plural) => {
-                cell::SUBJ_PASS_PERF_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, Second, Singular) => {
-                cell::SUBJ_PASS_PERF_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, Second, Plural) => {
-                cell::SUBJ_PASS_PERF_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, Third, Singular) => {
-                cell::SUBJ_PASS_PERF_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Perfect, Third, Plural) => {
-                cell::SUBJ_PASS_PERF_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, First, Singular) => {
-                cell::SUBJ_PASS_PLUP_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, First, Plural) => {
-                cell::SUBJ_PASS_PLUP_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, Second, Singular) => {
-                cell::SUBJ_PASS_PLUP_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, Second, Plural) => {
-                cell::SUBJ_PASS_PLUP_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, Third, Singular) => {
-                cell::SUBJ_PASS_PLUP_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::Pluperfect, Third, Plural) => {
-                cell::SUBJ_PASS_PLUP_3_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, First, Singular) => {
-                cell::SUBJ_PASS_FUTP_1_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, First, Plural) => {
-                cell::SUBJ_PASS_FUTP_1_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, Second, Singular) => {
-                cell::SUBJ_PASS_FUTP_2_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, Second, Plural) => {
-                cell::SUBJ_PASS_FUTP_2_PL
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, Third, Singular) => {
-                cell::SUBJ_PASS_FUTP_3_SG
-            }
-            Cell::Form(Subjunctive, Passive, crate::Tense::FuturePerfect, Third, Plural) => {
-                cell::SUBJ_PASS_FUTP_3_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, First, Singular) => {
-                cell::IMPERATIVE_ACT_PRES_1_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, First, Plural) => {
-                cell::IMPERATIVE_ACT_PRES_1_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, Second, Singular) => {
-                cell::IMPERATIVE_ACT_PRES_2_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, Second, Plural) => {
-                cell::IMPERATIVE_ACT_PRES_2_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, Third, Singular) => {
-                cell::IMPERATIVE_ACT_PRES_3_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Present, Third, Plural) => {
-                cell::IMPERATIVE_ACT_PRES_3_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, First, Singular) => {
-                cell::IMPERATIVE_ACT_FUT_1_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, First, Plural) => {
-                cell::IMPERATIVE_ACT_FUT_1_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, Second, Singular) => {
-                cell::IMPERATIVE_ACT_FUT_2_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, Second, Plural) => {
-                cell::IMPERATIVE_ACT_FUT_2_PL
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, Third, Singular) => {
-                cell::IMPERATIVE_ACT_FUT_3_SG
-            }
-            Cell::Imperative(Active, crate::ImperativeTense::Future, Third, Plural) => {
-                cell::IMPERATIVE_ACT_FUT_3_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, First, Singular) => {
-                cell::IMPERATIVE_PASS_PRES_1_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, First, Plural) => {
-                cell::IMPERATIVE_PASS_PRES_1_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, Second, Singular) => {
-                cell::IMPERATIVE_PASS_PRES_2_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, Second, Plural) => {
-                cell::IMPERATIVE_PASS_PRES_2_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, Third, Singular) => {
-                cell::IMPERATIVE_PASS_PRES_3_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Present, Third, Plural) => {
-                cell::IMPERATIVE_PASS_PRES_3_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, First, Singular) => {
-                cell::IMPERATIVE_PASS_FUT_1_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, First, Plural) => {
-                cell::IMPERATIVE_PASS_FUT_1_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, Second, Singular) => {
-                cell::IMPERATIVE_PASS_FUT_2_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, Second, Plural) => {
-                cell::IMPERATIVE_PASS_FUT_2_PL
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, Third, Singular) => {
-                cell::IMPERATIVE_PASS_FUT_3_SG
-            }
-            Cell::Imperative(Passive, crate::ImperativeTense::Future, Third, Plural) => {
-                cell::IMPERATIVE_PASS_FUT_3_PL
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::First, Singular) => {
+                cell::PASS_PRES_1_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::First, Plural) => {
+                cell::PASS_PRES_1_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::Second, Singular) => {
+                cell::PASS_PRES_2_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::Second, Plural) => {
+                cell::PASS_PRES_2_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::Third, Singular) => {
+                cell::PASS_PRES_3_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Present, crate::Person::Third, Plural) => {
+                cell::PASS_PRES_3_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::First, Singular) => {
+                cell::PASS_IMPF_1_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::First, Plural) => {
+                cell::PASS_IMPF_1_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::Second, Singular) => {
+                cell::PASS_IMPF_2_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::Second, Plural) => {
+                cell::PASS_IMPF_2_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::Third, Singular) => {
+                cell::PASS_IMPF_3_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Imperfect, crate::Person::Third, Plural) => {
+                cell::PASS_IMPF_3_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::First, Singular) => {
+                cell::PASS_FUT_1_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::First, Plural) => {
+                cell::PASS_FUT_1_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::Second, Singular) => {
+                cell::PASS_FUT_2_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::Second, Plural) => {
+                cell::PASS_FUT_2_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::Third, Singular) => {
+                cell::PASS_FUT_3_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Future, crate::Person::Third, Plural) => {
+                cell::PASS_FUT_3_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::First, Singular) => {
+                cell::PASS_PERF_1_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::First, Plural) => {
+                cell::PASS_PERF_1_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::Second, Singular) => {
+                cell::PASS_PERF_2_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::Second, Plural) => {
+                cell::PASS_PERF_2_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::Third, Singular) => {
+                cell::PASS_PERF_3_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Perfect, crate::Person::Third, Plural) => {
+                cell::PASS_PERF_3_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Pluperfect, crate::Person::First, Singular) => {
+                cell::PASS_PLUP_1_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Pluperfect, crate::Person::First, Plural) => {
+                cell::PASS_PLUP_1_PL
+            }
+            Cell::Indicative(
+                Passive,
+                crate::Tense::Pluperfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::PASS_PLUP_2_SG,
+            Cell::Indicative(Passive, crate::Tense::Pluperfect, crate::Person::Second, Plural) => {
+                cell::PASS_PLUP_2_PL
+            }
+            Cell::Indicative(Passive, crate::Tense::Pluperfect, crate::Person::Third, Singular) => {
+                cell::PASS_PLUP_3_SG
+            }
+            Cell::Indicative(Passive, crate::Tense::Pluperfect, crate::Person::Third, Plural) => {
+                cell::PASS_PLUP_3_PL
+            }
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::PASS_FUTP_1_SG,
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::PASS_FUTP_1_PL,
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::PASS_FUTP_2_SG,
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::PASS_FUTP_2_PL,
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::PASS_FUTP_3_SG,
+            Cell::Indicative(
+                Passive,
+                crate::Tense::FuturePerfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::PASS_FUTP_3_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_1_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_1_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_2_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_2_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_3_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PRES_3_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_1_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_1_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_2_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_2_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_3_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_IMPF_3_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_1_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_1_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_2_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_2_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_3_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PERF_3_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_1_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_1_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_2_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_2_PL,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_3_SG,
+            Cell::Subjunctive(
+                Active,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_ACT_PLUP_3_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_1_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_1_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_2_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_2_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_3_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Present,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PRES_3_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_1_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_1_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_2_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_2_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_3_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Imperfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_IMPF_3_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_1_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_1_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_2_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_2_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_3_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Perfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PERF_3_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::First,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_1_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::First,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_1_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Second,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_2_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Second,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_2_PL,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Third,
+                Singular,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_3_SG,
+            Cell::Subjunctive(
+                Passive,
+                crate::SubjunctiveTense::Pluperfect,
+                crate::Person::Third,
+                Plural,
+            ) => cell::SUBJUNCTIVE_PASS_PLUP_3_PL,
+            Cell::PresentImperative(Active, Singular) => cell::PRESENT_IMPERATIVE_ACT_SG,
+            Cell::PresentImperative(Active, Plural) => cell::PRESENT_IMPERATIVE_ACT_PL,
+            Cell::PresentImperative(Passive, Singular) => cell::PRESENT_IMPERATIVE_PASS_SG,
+            Cell::PresentImperative(Passive, Plural) => cell::PRESENT_IMPERATIVE_PASS_PL,
+            Cell::FutureImperative(Active, crate::ImperativePerson::Second, Singular) => {
+                cell::FUTURE_IMPERATIVE_ACT_2_SG
+            }
+            Cell::FutureImperative(Active, crate::ImperativePerson::Second, Plural) => {
+                cell::FUTURE_IMPERATIVE_ACT_2_PL
+            }
+            Cell::FutureImperative(Active, crate::ImperativePerson::Third, Singular) => {
+                cell::FUTURE_IMPERATIVE_ACT_3_SG
+            }
+            Cell::FutureImperative(Active, crate::ImperativePerson::Third, Plural) => {
+                cell::FUTURE_IMPERATIVE_ACT_3_PL
+            }
+            Cell::FutureImperative(Passive, crate::ImperativePerson::Second, Singular) => {
+                cell::FUTURE_IMPERATIVE_PASS_2_SG
+            }
+            Cell::FutureImperative(Passive, crate::ImperativePerson::Second, Plural) => {
+                cell::FUTURE_IMPERATIVE_PASS_2_PL
+            }
+            Cell::FutureImperative(Passive, crate::ImperativePerson::Third, Singular) => {
+                cell::FUTURE_IMPERATIVE_PASS_3_SG
+            }
+            Cell::FutureImperative(Passive, crate::ImperativePerson::Third, Plural) => {
+                cell::FUTURE_IMPERATIVE_PASS_3_PL
             }
             Cell::Infinitive(Active, crate::InfinitiveTense::Present) => cell::INFINITIVE_ACT_PRES,
             Cell::Infinitive(Active, crate::InfinitiveTense::Perfect) => cell::INFINITIVE_ACT_PERF,
@@ -822,45 +844,45 @@ impl Cell {
     }
 }
 
-impl
-    From<(
-        crate::Mood,
-        crate::Voice,
-        crate::Tense,
-        crate::Person,
-        crate::Number,
-    )> for Cell
-{
+impl From<(crate::Voice, crate::Tense, crate::Person, crate::Number)> for Cell {
     fn from(
-        (mood, voice, tense, person, number): (
-            crate::Mood,
-            crate::Voice,
-            crate::Tense,
-            crate::Person,
-            crate::Number,
-        ),
+        (voice, tense, person, number): (crate::Voice, crate::Tense, crate::Person, crate::Number),
     ) -> Self {
-        Cell::Form(mood, voice, tense, person, number)
+        Cell::Indicative(voice, tense, person, number)
     }
 }
 
 impl
     From<(
         crate::Voice,
-        crate::ImperativeTense,
+        crate::SubjunctiveTense,
         crate::Person,
         crate::Number,
     )> for Cell
 {
     fn from(
-        (voice, imperative_tense, person, number): (
+        (voice, subjunctive_tense, person, number): (
             crate::Voice,
-            crate::ImperativeTense,
+            crate::SubjunctiveTense,
             crate::Person,
             crate::Number,
         ),
     ) -> Self {
-        Cell::Imperative(voice, imperative_tense, person, number)
+        Cell::Subjunctive(voice, subjunctive_tense, person, number)
+    }
+}
+
+impl From<(crate::Voice, crate::Number)> for Cell {
+    fn from((voice, number): (crate::Voice, crate::Number)) -> Self {
+        Cell::PresentImperative(voice, number)
+    }
+}
+
+impl From<(crate::Voice, crate::ImperativePerson, crate::Number)> for Cell {
+    fn from(
+        (voice, imperative_person, number): (crate::Voice, crate::ImperativePerson, crate::Number),
+    ) -> Self {
+        Cell::FutureImperative(voice, imperative_person, number)
     }
 }
 

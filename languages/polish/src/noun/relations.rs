@@ -482,23 +482,33 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "daż" => [11 7, 10 3, 3 1],
         "eż" => [11 11, 10 4, 32 2],
     } listed {
-        "bawoła" => 12,
-        "białodrzew" => 8,
-        "ciebie" => 0,
-        "draga" => 12,
-        "dzień" => 55,
-        "grudzień" => 55,
-        "kieł" => 40,
-        "kogokolwiek" => 0,
-        "kogoś" => 0,
-        "kogoż" => 0,
-        "mnie" => 0,
-        "ogieniek" => 45,
-        "patyś" => 90,
-        "pieniek" => 45,
-        "trajluś" => 89,
-        "woj" => 3,
-        "węgieł" => 40,
+        0 => [
+            "ciebie", "kogokolwiek", "kogoś", "kogoż", "mnie",
+        ],
+        3 => [
+            "woj",
+        ],
+        8 => [
+            "białodrzew",
+        ],
+        12 => [
+            "bawoła", "draga",
+        ],
+        40 => [
+            "kieł", "węgieł",
+        ],
+        45 => [
+            "ogieniek", "pieniek",
+        ],
+        55 => [
+            "dzień", "grudzień",
+        ],
+        89 => [
+            "trajluś",
+        ],
+        90 => [
+            "patyś",
+        ],
     }, true, None),
     // GEN_PL, from NOM_SG.
     relation!(GEN_PL, [NOM_SG], [("~", "~"), ("~", "~-ów"), ("~", "~ch"), ("~", "~i"), ("~", "~iów"), ("~", "~y"), ("~", "~ów"), ("~a", "~"), ("~a", "~ch"), ("~a", "~i"), ("~a", "~ich"), ("~a", "~j"), ("~a", "~y"), ("~a", "~ych"), ("~a", "~ów"), ("~cia", "~ć"), ("~cie", "~ć"), ("~ciec", "~ćców"), ("~cień", "~tni"), ("~człowiek", "~ludzi"), ("~e", "~"), ("~e", "~i"), ("~e", "~iów"), ("~e", "~y"), ("~e", "~ych"), ("~e", "~ów"), ("~ec", "~ców"), ("~ek", "~ków"), ("~el", "~li"), ("~el", "~lów"), ("~el", "~ół"), ("~en", "~nych"), ("~en", "~nów"), ("~er", "~rów"), ("~et", "~tów"), ("~ew", "~wi"), ("~ew", "~wów"), ("~eć", "~ci"), ("~eć", "~ciów"), ("~eł", "~łów"), ("~eń", "~ni"), ("~eń", "~niów"), ("~eż", "~ży"), ("~iec", "~ców"), ("~iec", "~ów"), ("~iel", "~li"), ("~ier", "~rów"), ("~ies", "~sów"), ("~iew", "~wi"), ("~ieć", "~ci"), ("~ieł", "~łów"), ("~ień", "~ni"), ("~in", "~"), ("~in", "~ów"), ("~ioł", "~łów"), ("~j", "~i"), ("~ja", "~i"), ("~ka", "~ek"), ("~ko", "~ek"), ("~ko", "~i"), ("~mo", "~em"), ("~na", "~en"), ("~na", "~ien"), ("~ni", "~ń"), ("~nia", "~ń"), ("~nie", "~ń"), ("~niec", "~ńców"), ("~niek", "~ńków"), ("~no", "~en"), ("~no", "~ien"), ("~o", "~"), ("~o", "~i"), ("~o", "~ów"), ("~oba", "~ób"), ("~oda", "~ód"), ("~oga", "~óg"), ("~ola", "~ól"), ("~ole", "~ól"), ("~ora", "~ór"), ("~ota", "~ót"), ("~owa", "~ów"), ("~oza", "~óz"), ("~oła", "~ół"), ("~oło", "~ół"), ("~oże", "~óż"), ("~ra", "~er"), ("~ra", "~ier"), ("~ro", "~er"), ("~sia", "~ś"), ("~siec", "~śców"), ("~siek", "~śków"), ("~sień", "~śni"), ("~t", "~ci"), ("~to", "~et"), ("~um", "~ów"), ("~wa", "~ew"), ("~wo", "~ew"), ("~x", "~ksów"), ("~zec", "~ców"), ("~zeł", "~łów"), ("~zia", "~ź"), ("~ziec", "~źców"), ("~zień", "~ni"), ("~zień", "~niów"), ("~zień", "~źniów"), ("~ób", "~obów"), ("~ód", "~odów"), ("~ódź", "~odzi"), ("~óg", "~ogów"), ("~ój", "~ojów"), ("~ól", "~oli"), ("~ór", "~orów"), ("~ót", "~otów"), ("~ów", "~owi"), ("~ów", "~owów"), ("~óz", "~ozów"), ("~ół", "~ołów"), ("~ąb", "~ębi"), ("~ąb", "~ębów"), ("~ąc", "~ęcy"), ("~ąd", "~ędów"), ("~ądz", "~ęży"), ("~ądź", "~ędzi"), ("~ąg", "~ęgów"), ("~ąz", "~ęzów"), ("~ąż", "~ęży"), ("~ąż", "~ężów"), ("~ć", "~ci"), ("~ć", "~ciów"), ("~ćka", "~ciek"), ("~ćma", "~ciem"), ("~ę", "~on"), ("~ę", "~ąt"), ("~ęga", "~ąg"), ("~ęka", "~ąk"), ("~ła", "~eł"), ("~ła", "~ieł"), ("~ło", "~eł"), ("~ło", "~ieł"), ("~ń", "~ni"), ("~ńka", "~niek"), ("~ś", "~si"), ("~ś", "~siów"), ("~śka", "~siek"), ("~ź", "~zi"), ("~ź", "~ziów"), ("~źka", "~ziek")], rules {
@@ -956,10 +966,18 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "aż" => [5 51, 6 15],
         "ąż" => [125 2, 126 2],
     } listed {
-        "białodrzew" => 3,
-        "duperele" => 0,
-        "grudzień" => 102,
-        "włosień" => 91,
+        0 => [
+            "duperele",
+        ],
+        3 => [
+            "białodrzew",
+        ],
+        91 => [
+            "włosień",
+        ],
+        102 => [
+            "grudzień",
+        ],
     }, true, None),
     // DAT_SG, from NOM_SG.
     relation!(DAT_SG, [NOM_SG], [("~", "~"), ("~", "~-owi"), ("~", "~-u"), ("~", "~ciu"), ("~", "~emu"), ("~", "~i"), ("~", "~iowi"), ("~", "~mu"), ("~", "~owi"), ("~", "~u"), ("~", "~wi"), ("~", "~y"), ("~a", "~"), ("~a", "~ej"), ("~a", "~emu"), ("~a", "~i"), ("~a", "~ie"), ("~a", "~iej"), ("~a", "~y"), ("~a", "~ze"), ("~a", "~zie"), ("~ara", "~erze"), ("~azda", "~eździe"), ("~cha", "~sze"), ("~ciec", "~ćcowi"), ("~ciek", "~ćkowi"), ("~cień", "~tniowi"), ("~e", "~u"), ("~ec", "~cowi"), ("~ek", "~kowi"), ("~el", "~lowi"), ("~en", "~nemu"), ("~en", "~nowi"), ("~er", "~rowi"), ("~et", "~towi"), ("~ew", "~wi"), ("~ew", "~wowi"), ("~ew", "~wu"), ("~eć", "~ciowi"), ("~eł", "~łowi"), ("~eń", "~niowi"), ("~eż", "~ży"), ("~ga", "~dze"), ("~ha", "~sze"), ("~iec", "~cowi"), ("~iec", "~u"), ("~iel", "~lowi"), ("~ier", "~rowi"), ("~iew", "~wi"), ("~ieć", "~ciowi"), ("~ieł", "~łowi"), ("~ień", "~niowi"), ("~j", "~i"), ("~ja", "~i"), ("~ka", "~ce"), ("~niec", "~ńcowi"), ("~niek", "~ńkowi"), ("~o", "~emu"), ("~o", "~u"), ("~siec", "~ścowi"), ("~siek", "~śkowi"), ("~sień", "~śniowi"), ("~sna", "~śnie"), ("~sta", "~ście"), ("~sła", "~śle"), ("~ta", "~cie"), ("~x", "~ksowi"), ("~y", "~emu"), ("~zda", "~ździe"), ("~zec", "~cowi"), ("~zeł", "~łowi"), ("~ziec", "~źcowi"), ("~zień", "~niowi"), ("~zień", "~źniowi"), ("~zna", "~źnie"), ("~ób", "~obowi"), ("~ód", "~odowi"), ("~ódź", "~odzi"), ("~óg", "~ogowi"), ("~óg", "~ogu"), ("~ój", "~ojowi"), ("~ól", "~olowi"), ("~ór", "~orowi"), ("~ót", "~otowi"), ("~ów", "~owiowi"), ("~ów", "~owowi"), ("~óz", "~ozowi"), ("~ół", "~ołowi"), ("~ąb", "~ębiowi"), ("~ąb", "~ębowi"), ("~ąd", "~ędowi"), ("~ądz", "~ędzu"), ("~ądź", "~ędziowi"), ("~ąg", "~ęgowi"), ("~ąz", "~ęzowi"), ("~ąż", "~ężowi"), ("~ążę", "~ęciu"), ("~ć", "~ci"), ("~ć", "~ciowi"), ("~ę", "~eniu"), ("~ła", "~le"), ("~ń", "~ni"), ("~ń", "~niowi"), ("~ś", "~si"), ("~ś", "~siowi"), ("~ź", "~zi"), ("~ź", "~ziowi")], rules {
@@ -1309,7 +1327,9 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "eż" => [11 11, 8 8, 41 2],
         "ąż" => [95 3],
     } listed {
-        "białodrzew" => 6,
+        6 => [
+            "białodrzew",
+        ],
     }, true, None),
     // DAT_PL, from NOM_SG.
     relation!(DAT_PL, [NOM_SG], [("~", "~-om"), ("~", "~iom"), ("~", "~m"), ("~", "~om"), ("~", "~tom"), ("~a", "~im"), ("~a", "~m"), ("~a", "~om"), ("~a", "~ym"), ("~ciec", "~ćcom"), ("~cień", "~tniom"), ("~człowiek", "~ludziom"), ("~e", "~om"), ("~e", "~ym"), ("~ec", "~com"), ("~ek", "~kom"), ("~el", "~lom"), ("~en", "~nom"), ("~en", "~nym"), ("~er", "~rom"), ("~et", "~tom"), ("~ew", "~wiom"), ("~ew", "~wom"), ("~eć", "~ciom"), ("~eł", "~łom"), ("~eń", "~niom"), ("~eż", "~żom"), ("~iec", "~com"), ("~iec", "~om"), ("~iel", "~lom"), ("~ier", "~rom"), ("~ies", "~som"), ("~iew", "~wiom"), ("~ieć", "~ciom"), ("~ieł", "~łom"), ("~ień", "~niom"), ("~in", "~om"), ("~ioł", "~łom"), ("~ko", "~iom"), ("~niec", "~ńcom"), ("~niek", "~ńkom"), ("~siec", "~ścom"), ("~siek", "~śkom"), ("~sień", "~śniom"), ("~t", "~ciom"), ("~um", "~om"), ("~x", "~ksom"), ("~zec", "~com"), ("~zeł", "~łom"), ("~ziec", "~źcom"), ("~zień", "~niom"), ("~zień", "~źniom"), ("~ób", "~obom"), ("~ód", "~odom"), ("~ódź", "~odziom"), ("~óg", "~ogom"), ("~ój", "~ojom"), ("~ól", "~olom"), ("~ór", "~orom"), ("~ót", "~otom"), ("~ów", "~owiom"), ("~ów", "~owom"), ("~óz", "~ozom"), ("~ół", "~ołom"), ("~ąb", "~ębiom"), ("~ąb", "~ębom"), ("~ąd", "~ędom"), ("~ądz", "~ężom"), ("~ądź", "~ędziom"), ("~ąg", "~ęgom"), ("~ąz", "~ęzom"), ("~ąż", "~ężom"), ("~ć", "~ciom"), ("~ę", "~onom"), ("~ń", "~niom"), ("~ś", "~siom"), ("~ź", "~ziom")], rules {
@@ -1571,9 +1591,15 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "aż" => [3 67],
         "ąż" => [71 4],
     } listed {
-        "białodrzew" => 1,
-        "grudzień" => 50,
-        "włosień" => 43,
+        1 => [
+            "białodrzew",
+        ],
+        43 => [
+            "włosień",
+        ],
+        50 => [
+            "grudzień",
+        ],
     }, true, None),
     // ACC_SG, from NOM_SG.
     relation!(ACC_SG, [NOM_SG], [("kt~", "kog~"), ("~", "~"), ("~", "~-a"), ("~", "~a"), ("~", "~ego"), ("~", "~ia"), ("~", "~u"), ("~", "~ą"), ("~", "~ę"), ("~a", "~ego"), ("~a", "~ą"), ("~a", "~ę"), ("~ciec", "~ćca"), ("~ciek", "~ćka"), ("~ec", "~ca"), ("~ek", "~ka"), ("~el", "~la"), ("~en", "~nego"), ("~er", "~ra"), ("~ew", "~wa"), ("~eć", "~cia"), ("~eł", "~ła"), ("~eń", "~nia"), ("~iec", "~a"), ("~iec", "~ca"), ("~iel", "~la"), ("~ier", "~ra"), ("~ieł", "~ła"), ("~ień", "~nia"), ("~ioł", "~ła"), ("~niec", "~ńca"), ("~o", "~a"), ("~o", "~ę"), ("~siec", "~śca"), ("~siek", "~śka"), ("~x", "~ksa"), ("~y", "~ego"), ("~zec", "~ca"), ("~zeł", "~ła"), ("~ziec", "~źca"), ("~zień", "~nia"), ("~zień", "~źnia"), ("~ób", "~oba"), ("~ód", "~oda"), ("~óg", "~oga"), ("~ój", "~oja"), ("~ól", "~ola"), ("~ór", "~ora"), ("~ów", "~owa"), ("~ół", "~oła"), ("~ąb", "~ęba"), ("~ąb", "~ębia"), ("~ądz", "~ędza"), ("~ąż", "~ęża"), ("~ążę", "~ęcia"), ("~ć", "~cia"), ("~ń", "~nia"), ("~ś", "~sia"), ("~ź", "~zia")], rules {
@@ -1884,9 +1910,9 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "aż" => [1 81],
         "ąż" => [53 3, 1 1],
     } listed {
-        "kiściec" => 12,
-        "kosaciec" => 12,
-        "ociec" => 12,
+        12 => [
+            "kiściec", "kosaciec", "ociec",
+        ],
     }, true, None),
     // ACC_PL, from GEN_PL or NOM_PL or NOM_PL or NOM_PL or NOM_PL (by gender, in order).
     relation!(
@@ -2134,7 +2160,9 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "eż" => [6 11, 3 8, 25 2],
         "ąż" => [69 3],
     } listed {
-        "grudzień" => 48,
+        48 => [
+            "grudzień",
+        ],
     }, true, None),
     // INS_PL, from DAT_PL.
     relation!(INS_PL, [DAT_PL], [("~", "n~i"), ("~", "~"), ("~", "~i"), ("~ciom", "~ćmi"), ("~iom", "~ami"), ("~niom", "~ńmi"), ("~om", "~ami"), ("~om", "~mi"), ("~u", "~em"), ("~ziom", "~źmi")], rules {
@@ -2156,15 +2184,24 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ym" => [2 464],
         "u" => [8 2],
     } listed {
-        "adiudykacyaom" => 7,
-        "białodrzewiom" => 4,
-        "cannoli" => 1,
-        "im" => 0,
-        "księżom" => 7,
-        "ludziom" => 6,
-        "ludziom" => 9,
-        "xiężom" => 7,
-        "złotogłowiom" => 4,
+        0 => [
+            "im",
+        ],
+        1 => [
+            "cannoli",
+        ],
+        4 => [
+            "białodrzewiom", "złotogłowiom",
+        ],
+        6 => [
+            "ludziom",
+        ],
+        7 => [
+            "adiudykacyaom", "księżom", "xiężom",
+        ],
+        9 => [
+            "ludziom",
+        ],
     }, true, None),
     // LOC_SG, from VOC_SG.
     relation!(LOC_SG, [VOC_SG], [("~", "~"), ("~", "~ciu"), ("~", "~m"), ("~", "~u"), ("~a", "~ej"), ("~a", "~iej"), ("~aro", "~erze"), ("~asto", "~eście"), ("~azdo", "~eździe"), ("~ało", "~ele"), ("~cho", "~sze"), ("~e", "~u"), ("~e", "~ym"), ("~en", "~nym"), ("~go", "~dze"), ("~ho", "~sze"), ("~ie", "~u"), ("~jo", "~i"), ("~ko", "~ce"), ("~o", "~"), ("~o", "~ej"), ("~o", "~i"), ("~o", "~ie"), ("~o", "~m"), ("~o", "~u"), ("~o", "~y"), ("~o", "~ze"), ("~o", "~zie"), ("~smo", "~śmie"), ("~sno", "~śnie"), ("~sto", "~ście"), ("~sło", "~śle"), ("~to", "~cie"), ("~u", "~"), ("~zdo", "~ździe"), ("~ze", "~u"), ("~zno", "~źnie"), ("~zło", "~źle"), ("~ążę", "~ęciu"), ("~ę", "~eniu"), ("~ło", "~le"), ("~że", "~dzu")], rules {
@@ -2467,9 +2504,12 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "wiom" => [5 78, 1 2],
         "ym" => [3 464],
     } listed {
-        "białodrzewiom" => 1,
-        "im" => 2,
-        "złotogłowiom" => 1,
+        1 => [
+            "białodrzewiom", "złotogłowiom",
+        ],
+        2 => [
+            "im",
+        ],
     }, true, None),
     // VOC_SG, from NOM_SG.
     relation!(VOC_SG, [NOM_SG], [("~", "~"), ("~", "~-ie"), ("~", "~-u"), ("~", "~-ze"), ("~", "~i"), ("~", "~ie"), ("~", "~iu"), ("~", "~u"), ("~", "~y"), ("~", "~ze"), ("~", "~zie"), ("~a", "~o"), ("~a", "~u"), ("~ad", "~edzie"), ("~as", "~esie"), ("~at", "~ecie"), ("~atr", "~etrze"), ("~azd", "~eździe"), ("~ce", "~sie"), ("~ciec", "~ćcu"), ("~ciek", "~ćku"), ("~cień", "~tniu"), ("~e", "~ie"), ("~e", "~ze"), ("~ec", "~cu"), ("~ek", "~ku"), ("~el", "~lu"), ("~en", "~nie"), ("~er", "~rze"), ("~et", "~cie"), ("~ew", "~wi"), ("~ew", "~wie"), ("~eć", "~ciu"), ("~eł", "~le"), ("~eń", "~niu"), ("~eż", "~ży"), ("~iec", "~cu"), ("~iec", "~cze"), ("~iec", "~ze"), ("~iel", "~lu"), ("~ier", "~rze"), ("~iew", "~wi"), ("~ieć", "~ciu"), ("~ieł", "~le"), ("~ień", "~niu"), ("~j", "~i"), ("~niec", "~ńcu"), ("~niec", "~ńcze"), ("~niek", "~ńku"), ("~o", "~u"), ("~oł", "~ele"), ("~seł", "~śle"), ("~siec", "~ścu"), ("~siek", "~śku"), ("~sień", "~śniu"), ("~st", "~ście"), ("~sł", "~śle"), ("~t", "~cie"), ("~te", "~cie"), ("~x", "~ksie"), ("~zd", "~ździe"), ("~zec", "~cu"), ("~zec", "~cze"), ("~zeł", "~le"), ("~zeł", "~źle"), ("~ziec", "~źcu"), ("~zień", "~niu"), ("~zień", "~źniu"), ("~ób", "~obie"), ("~ód", "~odzie"), ("~ódź", "~odzi"), ("~óg", "~ogu"), ("~ój", "~oju"), ("~ól", "~olu"), ("~ór", "~orze"), ("~ót", "~ocie"), ("~ów", "~owie"), ("~ów", "~owiu"), ("~óz", "~ozie"), ("~ół", "~ele"), ("~ół", "~ole"), ("~ąb", "~ębie"), ("~ąb", "~ębiu"), ("~ąd", "~ędzie"), ("~ądz", "~ęże"), ("~ądź", "~ędziu"), ("~ąg", "~ęgu"), ("~ąz", "~ęzie"), ("~ąż", "~ężu"), ("~ć", "~ci"), ("~ć", "~ciu"), ("~ł", "~le"), ("~ń", "~ni"), ("~ń", "~niu"), ("~ś", "~si"), ("~ś", "~siu"), ("~ź", "~zi"), ("~ź", "~ziu")], rules {

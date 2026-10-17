@@ -69,7 +69,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("noun_acc_sg"),
         cells: Cow::Borrowed(&[
             ACC_SG,
             DAT_SG,
@@ -214,7 +214,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~lerinin\t~lerinin\t\t\t~lerinin\t",
         )),
     },
-    // rest like dalga: 3,955 words.
+    // noun_acc_sg like dalga: 3,955 words.
     EndingTable {
         name: Cow::Borrowed("dalga"),
         words: 3955,
@@ -231,7 +231,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~nIn\t\t\t~nIzIn\t",
         )),
     },
-    // rest like sav: 3,757 words.
+    // noun_acc_sg like sav: 3,757 words.
     EndingTable {
         name: Cow::Borrowed("sav"),
         words: 3757,
@@ -248,7 +248,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InIn\t\t\t~InIzIn\t",
         )),
     },
-    // rest like ant: 1,734 words.
+    // noun_acc_sg like ant: 1,734 words.
     EndingTable {
         name: Cow::Borrowed("ant"),
         words: 1734,
@@ -265,7 +265,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InInˇ\t\t\t~InIzInˇ\t",
         )),
     },
-    // rest like yer: 167 words.
+    // noun_acc_sg like yer: 167 words.
     EndingTable {
         name: Cow::Borrowed("yer"),
         words: 167,
@@ -282,7 +282,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~inIn\t\t\t~inIzIn\t",
         )),
     },
-    // rest like göz: 37 words.
+    // noun_acc_sg like göz: 37 words.
     EndingTable {
         name: Cow::Borrowed("göz"),
         words: 37,
@@ -299,7 +299,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~ünIn\t\t\t~ünIzIn\t",
         )),
     },
-    // rest like set: 4 words.
+    // noun_acc_sg like set: 4 words.
     EndingTable {
         name: Cow::Borrowed("set"),
         words: 4,
@@ -316,7 +316,7 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~inin\t\t\t~inizin\t",
         )),
     },
-    // rest like ufuk: 3 words.
+    // noun_acc_sg like ufuk: 3 words.
     EndingTable {
         name: Cow::Borrowed("ufuk"),
         words: 3,

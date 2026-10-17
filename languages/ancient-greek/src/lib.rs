@@ -11,11 +11,13 @@ pub mod noun;
 pub mod numeral;
 mod orthography;
 pub mod pronoun;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
 pub use noun::Noun;
 pub use numeral::Numeral;
 pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
 
 /// Grammatical case.
@@ -201,23 +203,17 @@ impl flexion::Label for Gender {
     }
 }
 
-/// Mood.
+/// Mood (the imperative is a group of its own).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Mood {
     Indicative,
     Subjunctive,
     Optative,
-    Imperative,
 }
 
 impl Mood {
     /// Every value, in order.
-    pub const ALL: [Mood; 4] = [
-        Mood::Indicative,
-        Mood::Subjunctive,
-        Mood::Optative,
-        Mood::Imperative,
-    ];
+    pub const ALL: [Mood; 3] = [Mood::Indicative, Mood::Subjunctive, Mood::Optative];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
@@ -225,7 +221,6 @@ impl Mood {
             Mood::Indicative => "ind",
             Mood::Subjunctive => "subj",
             Mood::Optative => "opt",
-            Mood::Imperative => "imp",
         }
     }
 }
@@ -237,7 +232,6 @@ impl std::fmt::Display for Mood {
             Mood::Indicative => "indicative",
             Mood::Subjunctive => "subjunctive",
             Mood::Optative => "optative",
-            Mood::Imperative => "imperative",
         })
     }
 }
@@ -258,6 +252,114 @@ impl std::str::FromStr for Mood {
 }
 
 impl flexion::Label for Mood {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Mood of a future: no subjunctive or imperative (Smyth's paradigms).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum FutureMood {
+    Indicative,
+    Optative,
+}
+
+impl FutureMood {
+    /// Every value, in order.
+    pub const ALL: [FutureMood; 2] = [FutureMood::Indicative, FutureMood::Optative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            FutureMood::Indicative => "ind",
+            FutureMood::Optative => "opt",
+        }
+    }
+}
+
+impl std::fmt::Display for FutureMood {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            FutureMood::Indicative => "indicative",
+            FutureMood::Optative => "optative",
+        })
+    }
+}
+
+impl std::str::FromStr for FutureMood {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "FutureMood",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for FutureMood {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Person of an imperative: the second or third.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum ImperativePerson {
+    Second,
+    Third,
+}
+
+impl ImperativePerson {
+    /// Every value, in order.
+    pub const ALL: [ImperativePerson; 2] = [ImperativePerson::Second, ImperativePerson::Third];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            ImperativePerson::Second => "2",
+            ImperativePerson::Third => "3",
+        }
+    }
+}
+
+impl std::fmt::Display for ImperativePerson {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            ImperativePerson::Second => "second",
+            ImperativePerson::Third => "third",
+        })
+    }
+}
+
+impl std::str::FromStr for ImperativePerson {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "ImperativePerson",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for ImperativePerson {
     fn index(self) -> usize {
         self as usize
     }
@@ -455,6 +557,12 @@ pub fn noun(lemma: &str, case: Case, number: Number) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
 /// An adjective agreeing in case, gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
@@ -485,6 +593,21 @@ pub fn present(lemma: &str, mood: Mood, voice: Voice, person: Person, number: Nu
     verb::Verb::new(lemma).form(verb::Cell::Present(mood, voice, person, number))
 }
 
+/// The present imperative.
+#[must_use]
+pub fn present_imperative(
+    lemma: &str,
+    voice: Voice,
+    imperative_person: ImperativePerson,
+    number: Number,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::PresentImperative(
+        voice,
+        imperative_person,
+        number,
+    ))
+}
+
 /// The imperfect (indicative only).
 #[must_use]
 pub fn imperfect(lemma: &str, voice: Voice, person: Person, number: Number) -> String {
@@ -493,8 +616,14 @@ pub fn imperfect(lemma: &str, voice: Voice, person: Person, number: Number) -> S
 
 /// The future (no subjunctive or imperative).
 #[must_use]
-pub fn future(lemma: &str, mood: Mood, voice: Voice, person: Person, number: Number) -> String {
-    verb::Verb::new(lemma).form(verb::Cell::Future(mood, voice, person, number))
+pub fn future(
+    lemma: &str,
+    future_mood: FutureMood,
+    voice: Voice,
+    person: Person,
+    number: Number,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Future(future_mood, voice, person, number))
 }
 
 /// The aorist.
@@ -503,10 +632,40 @@ pub fn aorist(lemma: &str, mood: Mood, voice: Voice, person: Person, number: Num
     verb::Verb::new(lemma).form(verb::Cell::Aorist(mood, voice, person, number))
 }
 
+/// The aorist imperative.
+#[must_use]
+pub fn aorist_imperative(
+    lemma: &str,
+    voice: Voice,
+    imperative_person: ImperativePerson,
+    number: Number,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::AoristImperative(
+        voice,
+        imperative_person,
+        number,
+    ))
+}
+
 /// The perfect.
 #[must_use]
 pub fn perfect(lemma: &str, mood: Mood, voice: Voice, person: Person, number: Number) -> String {
     verb::Verb::new(lemma).form(verb::Cell::Perfect(mood, voice, person, number))
+}
+
+/// The perfect imperative.
+#[must_use]
+pub fn perfect_imperative(
+    lemma: &str,
+    voice: Voice,
+    imperative_person: ImperativePerson,
+    number: Number,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::PerfectImperative(
+        voice,
+        imperative_person,
+        number,
+    ))
 }
 
 /// The pluperfect (indicative only).
@@ -515,16 +674,21 @@ pub fn pluperfect(lemma: &str, voice: Voice, person: Person, number: Number) -> 
     verb::Verb::new(lemma).form(verb::Cell::Pluperfect(voice, person, number))
 }
 
-/// The future perfect.
+/// The future perfect (no subjunctive or imperative).
 #[must_use]
 pub fn future_perfect(
     lemma: &str,
-    mood: Mood,
+    future_mood: FutureMood,
     voice: Voice,
     person: Person,
     number: Number,
 ) -> String {
-    verb::Verb::new(lemma).form(verb::Cell::FuturePerfect(mood, voice, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::FuturePerfect(
+        future_mood,
+        voice,
+        person,
+        number,
+    ))
 }
 
 /// An infinitive.

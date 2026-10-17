@@ -29,30 +29,13 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "û" => [Crû 4, Aveindzu 1] regular,
     }
     listed {
-        "#accrû" => Aveindzu,
-        "#accédé" => Été,
-        "#agi" => Été,
-        "#attenu" => Été,
-        "#bondi" => Été,
-        "#coexisté" => Été,
-        "#croassé" => Été,
-        "#erré" => Été,
-        "#esté" => Été,
-        "#existé" => Été,
-        "#golfé" => Été,
-        "#jerké" => Été,
-        "#joui" => Été,
-        "#lui" => Été,
-        "#miaulé" => Été,
-        "#musclée" => Aveindzu,
-        "#neigé" => Été,
-        "#nui" => Été,
-        "#pu" => Été,
-        "#relui" => Été,
-        "#sténographie" => Aveindzu,
-        "#surdosé" => Été,
-        "#tchatté" => Été,
-        "#ânonné" => Été,
-        "#été" => Été,
+        Aveindzu => [
+            "#accrû", "#musclée", "#sténographie",
+        ],
+        Été => [
+            "#accédé", "#agi", "#attenu", "#bondi", "#coexisté", "#croassé", "#erré", "#esté",
+            "#existé", "#golfé", "#jerké", "#joui", "#lui", "#miaulé", "#neigé", "#nui", "#pu",
+            "#relui", "#surdosé", "#tchatté", "#ânonné", "#été",
+        ],
     }
 };

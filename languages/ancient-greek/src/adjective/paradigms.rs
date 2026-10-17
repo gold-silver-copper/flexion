@@ -36,8 +36,8 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
-     $(stem rest_: $s2:tt;)?
+     $(stem adjective_nom_m_du: $s1:tt;)?
+     $(stem adjective_nom_f_sg: $s2:tt;)?
      $(stem adjective_dat_pl: $s3:tt;)?
      $(nom_m: $c0:tt, $c1:tt, $c2:tt;)?
      $(nom_f: $c3:tt, $c4:tt, $c5:tt;)?
@@ -314,8 +314,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     // Μᾰλᾰκος: 1,454 words (ἐρωμενος, παιδῐκος, γᾰλᾰκτῐκος, ὀλῐγος, λευκος, ὁλος).
     declension!("μᾰλᾰκος", 1454, "~ος";
     stem lemma: "~- like μᾰλᾰκος";
-    stem rest: "~- like μᾰλᾰκος";
-    stem rest_: "~- like μᾰλᾰκος";
+    stem adjective_nom_m_du: "~- like μᾰλᾰκος";
+    stem adjective_nom_f_sg: "~- like μᾰλᾰκος";
     stem adjective_dat_pl: "~- like μᾰλᾰκος";
     nom_n: _, derived, _;
     gen_n: derived, derived, derived;
@@ -339,15 +339,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Λᾰμπρος: 464 words (μῑκρος, κῡρῐος, ἁγῐος, νεος, ἐρῠθρος, χλωρος). Like Μᾰλᾰκος, except in 4 cells: dat_f du, acc_f du, voc_f du, voc_f pl.
     declension!("λᾰμπρος", 464, "~ος", like Μᾰλᾰκος;
-    stem rest_: "~- like τελειος";
+    stem adjective_nom_f_sg: "~- like τελειος";
     dat_f: _, derived, _;
     acc_f: _, derived, _;
     voc_f: _, derived, derived;
     ),
     // Προσηκων: 327 words (κῠων, μελλων, πᾰρων, ὀζων, νεων, γερων).
     declension!("προσηκων", 327, "~ων";
-    stem rest: "~οντ- like προσηκων";
-    stem rest_: "~ουσ- like προσηκων";
+    stem adjective_nom_m_du: "~οντ- like προσηκων";
+    stem adjective_nom_f_sg: "~ουσ- like προσηκων";
     stem adjective_dat_pl: "~ουσ- like προσηκων";
     nom_m: "~ων", _, _;
     nom_n: "~ον", derived, _;
@@ -387,8 +387,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Προπᾱς: 168 words (ἀδᾰμᾱς, λῡσᾱς, ἱστᾱς, γῐγᾱς, βῐβᾱς, φωνησᾱς).
     declension!("προπᾱς", 168, "~ᾱς";
-    stem rest: "~ᾰντ- like προσηκων";
-    stem rest_: "~ᾱσ- like προσηκων";
+    stem adjective_nom_m_du: "~ᾰντ- like προσηκων";
+    stem adjective_nom_f_sg: "~ᾱσ- like προσηκων";
     stem adjective_dat_pl: "~ᾱσ- like προσηκων";
     nom_m: "~ᾱς", _, _;
     nom_n: "~ᾰν", derived, _;
@@ -411,7 +411,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     // Ὑστερος: 127 words (ἰδῐωτερος, προτερος, βᾰθῠτερος, πρεσβῠτερος, βεβαιοτερος, ὑστερος).
     declension!("ὑστερος", 127, "~ερος";
     stem lemma: "~ερ- like μᾰλᾰκος";
-    stem rest_: "~ερ- like τελειος";
+    stem adjective_nom_f_sg: "~ερ- like τελειος";
     stem adjective_dat_pl: "~ερ- like μᾰλᾰκος";
     nom_m: _, "~ερω", "~εροι";
     nom_n: _, _, "~ερᾰ";
@@ -436,8 +436,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Πληγεις: 90 words (σῠγγρᾰφεις, θεις, κοιμηθεις, νῠγεις, αὐδηθεις, κᾰλῠφεις).
     declension!("πληγεις", 90, "~ις";
-    stem rest: "~ντ- like προσηκων";
-    stem rest_: "~ισ- like προσηκων";
+    stem adjective_nom_m_du: "~ντ- like προσηκων";
+    stem adjective_nom_f_sg: "~ισ- like προσηκων";
     stem adjective_dat_pl: "~ισ- like προσηκων";
     nom_m: "~ις", _, _;
     nom_n: "~ν", derived, _;
@@ -454,7 +454,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Ἀρκων: 58 words (ποιων, κυκλων, σημειων, βῐων, δηλων, γονῠπετων). Like Προσηκων, except in 16 cells: nom_n sg, nom_n du, gen_n sg, gen_n du, gen_n pl, dat_m du, ….
     declension!("ἀρκων", 58, "~ων", like Προσηκων;
-    stem rest: "~ουντ- like προσηκων";
+    stem adjective_nom_m_du: "~ουντ- like προσηκων";
     nom_n: "~ουν", derived, _;
     gen_n: derived, derived, derived;
     dat_m: _, derived, _;
@@ -466,8 +466,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Εἰκως: 48 words (λελῠκως, κεχηνως, βεβηκως, εἰδως, πεπαιδευκως, ἠγᾰπηκως).
     declension!("εἰκως", 48, "~ως";
-    stem rest: "~οτ- like προσηκων";
-    stem rest_: "~υι- like εἰκως";
+    stem adjective_nom_m_du: "~οτ- like προσηκων";
+    stem adjective_nom_f_sg: "~υι- like εἰκως";
     nom_m: "~ως", _, _;
     nom_n: "~ος", derived, _;
     gen_n: derived, derived, derived;
@@ -502,7 +502,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Φωνηεις: 30 words (ἀργῐνοεις, χᾰρῐεις, φωνηεις, αἱμᾰτοεις, ῥοδοεις, ἰχθυοεις). Like Πληγεις, except in 8 cells: dat_f du, dat_f pl, acc_f du, voc_m sg, voc_f du, voc_f pl, ….
     declension!("φωνηεις", 30, "~ις", like Πληγεις;
-    stem rest_: "~σσ- like προσηκων";
+    stem adjective_nom_f_sg: "~σσ- like προσηκων";
     dat_f: _, derived, "~σσαις";
     acc_f: _, derived, _;
     voc_m: "~ν", _, _;
@@ -517,7 +517,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Ζων: 26 words (ὠν, νῑκων, τῑμων, δῐαιτων, θεων, αὐδων). Like Πληγεις, except in 7 cells: nom_m sg, dat_f du, dat_n pl, acc_f du, voc_m sg, voc_f du, ….
     declension!("ζων", 26, "~ν", like Πληγεις;
-    stem rest_: "~σ- like προσηκων";
+    stem adjective_nom_f_sg: "~σ- like προσηκων";
     stem adjective_dat_pl: "~σ- like προσηκων";
     nom_m: "~ν", _, _;
     dat_f: _, derived, _;
@@ -540,7 +540,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     // Τρᾱχῠς: 25 words (τᾰχῠς, βρᾰδῠς, πολῠς, βᾰθῠς, ὀξῠς, ὠκῠς). Like Ἀτελης, except in 14 cells: nom_n pl, gen_m sg, gen_m du, gen_m pl, dat_f du, dat_f pl, ….
     declension!("τρᾱχῠς", 25, "~ῠς", like Ἀτελης;
     stem lemma: "~ῠ- like τρᾱχῠς";
-    stem rest_: "~ει- like εἰκως";
+    stem adjective_nom_f_sg: "~ει- like εἰκως";
     nom_n: _, _, "~εᾰ";
     gen_m: "~εος", "~εοιν", "~εων";
     dat_f: _, derived, "~ειαις";
@@ -554,7 +554,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Τρῐπους: 8 words (τετρᾰπους, ὀκτωπους, τρῐπους, ὀκτᾰπους, εἰλῐπους, ἐρῠθροπους). Like Ζων, except in 29 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n sg, nom_n du, ….
     declension!("τρῐπους", 8, "~υς", like Ζων;
-    stem rest: "~δ- like προσηκων";
+    stem adjective_nom_m_du: "~δ- like προσηκων";
     stem adjective_dat_pl: "~σῐ- like ἀτελης";
     nom_m: "~υς", _, _;
     nom_f: "~υς", "~δε", "~δες";
@@ -625,7 +625,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Ἀπᾰτωρ: 6 words (ἀλεκτωρ, ἀπᾰτωρ, μεγᾰλητωρ, ἀγηνωρ, ὑψηνωρ, ἀμητωρ).
     declension!("ἀπᾰτωρ", 6, "~ω~";
-    stem rest: "~ο~- like προσηκων";
+    stem adjective_nom_m_du: "~ο~- like προσηκων";
     stem adjective_dat_pl: "~ο~σῐ- like ἀτελης";
     nom_m: "~ω~", _, _;
     nom_f: "~ω~", "~ο~ε", "~ο~ες";
@@ -644,8 +644,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Φῡς: 6 words (δεικνῡς, κᾰτᾰδῡς, ἐπῐμειγνῡς, ἀποδῡς, ἀποδεικνῡς, φῡς).
     declension!("φῡς", 6, "~ῡς";
-    stem rest: "~ῠντ- like προσηκων";
-    stem rest_: "~ῡσ- like προσηκων";
+    stem adjective_nom_m_du: "~ῠντ- like προσηκων";
+    stem adjective_nom_f_sg: "~ῡσ- like προσηκων";
     stem adjective_dat_pl: "~ῡσ- like προσηκων";
     nom_m: "~ῡς", _, _;
     nom_n: "~ῠν", derived, _;
@@ -680,7 +680,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Αἰθοψ: 5 words (οἰνοψ, μῠωψ, αἰθοψ, νωροψ, ἠνοψ).
     declension!("αἰθοψ", 5, "~ψ";
-    stem rest: "~π- like προσηκων";
+    stem adjective_nom_m_du: "~π- like προσηκων";
     stem adjective_dat_pl: "~ψῐ- like ἀτελης";
     nom_m: "~ψ", _, _;
     nom_f: "~ψ", "~πε", "~πες";
@@ -706,7 +706,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Βοτηρ: 5 words (ἀρρην, δᾰϊφρων, βοτηρ, κᾰρτεροχειρ, ἑκτωρ). Like Εὐελπῐς, except in 25 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n du, gen_f sg, ….
     declension!("βοτηρ", 5, "~", like Εὐελπῐς;
-    stem rest: "~- like προσηκων";
+    stem adjective_nom_m_du: "~- like προσηκων";
     nom_m: "~", _, _;
     nom_f: "~", "~ε", "~ες";
     nom_n: _, derived, _;
@@ -728,7 +728,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Μελᾱς: 4 words (μελᾱς, λευκομελᾱς, τᾰλᾱς, χλωρομελᾱς).
     declension!("μελᾱς", 4, "~ᾱς";
-    stem rest_: "~αιν- like προσηκων";
+    stem adjective_nom_f_sg: "~αιν- like προσηκων";
     nom_m: "~ᾱς", "~ᾰνε", "~ᾰνες";
     nom_n: "~ᾰν", _, "~ᾰνᾰ";
     gen_m: "~ᾰνος", "~ᾰνοιν", "~ᾰνων";
@@ -768,7 +768,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Δους: 4 words (δους, βῐους, δῐδους, γνους). Like Πληγεις, except in 7 cells: nom_m sg, dat_f du, dat_n pl, acc_f du, voc_m sg, voc_f du, ….
     declension!("δους", 4, "~υς", like Πληγεις;
-    stem rest_: "~υσ- like προσηκων";
+    stem adjective_nom_f_sg: "~υσ- like προσηκων";
     stem adjective_dat_pl: "~υσ- like προσηκων";
     nom_m: "~υς", _, _;
     dat_f: _, derived, _;
@@ -812,7 +812,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Μωνῠξ: 3 words (μωνῠξ, γᾰμψωνῠξ, κρᾰτερωνῠξ). Like Ὁμηλῐξ, except in 25 cells: nom_f du, nom_f pl, nom_n du, gen_f sg, gen_f du, gen_f pl, ….
     declension!("μωνῠξ", 3, "~ξ", like Ὁμηλῐξ;
-    stem rest: "~χ- like προσηκων";
+    stem adjective_nom_m_du: "~χ- like προσηκων";
     nom_f: _, "~χε", "~χες";
     nom_n: _, derived, _;
     gen_f: "~χος", "~χοιν", "~χων";
@@ -862,7 +862,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     // Ἀειμακαριστος: 1 words (ἀειμακαριστος).
     declension!("ἀειμακαριστος", 1, "ἀ~α~α~ι~ος";
     stem lemma: "~ᾰ~ᾰ~ῐ~- like ἀειμακαριστος";
-    stem rest_: "~ᾰ~ᾰ~ῐ~- like ἀειμακαριστος";
+    stem adjective_nom_f_sg: "~ᾰ~ᾰ~ῐ~- like ἀειμακαριστος";
     nom_m: _, "ᾰ̓~ᾰ~ᾰ~ῐ~ω", "ᾰ̓~ᾰ~ᾰ~ῐ~οι";
     nom_n: _, _, "ᾰ̓~ᾰ~ᾰ~ῐ~ᾰ";
     gen_m: "ᾰ̓~ᾰ~ᾰ~ῐ~ου", "ᾰ̓~ᾰ~ᾰ~ῐ~οιν", "ᾰ̓~ᾰ~ᾰ~ῐ~ων";

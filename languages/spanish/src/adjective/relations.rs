@@ -43,8 +43,8 @@ pub(super) static RELATIONS: [Relation<'static>; 5] = [
     relation!(F_SG, [M_SG], [], none, true, None),
     // F_PL, from F_SG.
     relation!(F_PL, [F_SG], [("~", "~"), ("~", "~es"), ("~", "~s"), ("~z", "~ces"), ("~én", "~enes"), ("~és", "~eses"), ("~ín", "~ines"), ("~ís", "~ises"), ("~ón", "~ones"), ("~ún", "~unes")], rules {
-        "" => [2 21218, 1 2707, 0 509, 3 52, 9 7, 6 5, 8 3, 4 2, 5 2, 7 2],
-        "a" => [2 17539, 0 93],
+        "" => [2 21219, 1 2707, 0 509, 3 52, 9 7, 6 5, 8 3, 4 2, 5 2, 7 2],
+        "a" => [2 17540, 0 93],
         "ca" => [2 3805, 0 4],
         "ica" => [2 3420],
         "uca" => [2 21, 0 2],
@@ -110,7 +110,9 @@ pub(super) static RELATIONS: [Relation<'static>; 5] = [
         "í" => [1 141, 0 1],
         "ú" => [1 18, 0 1],
     } listed {
-        "antideshucio" => 2,
+        2 => [
+            "antideshucio",
+        ],
     }, true, None),
     // SUPERLATIVE, from M_PL.
     relation!(SUPERLATIVE, [M_PL], [("~cos", "~quísimo"), ("~es", "~ísimo"), ("~ios", "~ísimo"), ("~les", "~ilísimo"), ("~os", "~ísimo")], rules {

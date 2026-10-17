@@ -23,7 +23,7 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
+     $(stem gen_sg: $s1:tt;)?
      $(nom: $c0:tt, $c1:tt, $c2:tt;)?
      $(gen_: $c3:tt, $c4:tt, $c5:tt;)?
      $(dat: $c6:tt, $c7:tt, $c8:tt;)?
@@ -433,7 +433,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Θεμᾰ: 448 words (μελῐ, γρᾰμμᾰ, δερμᾰ, σῑγμᾰ, πνευμᾰ, βαπτισμᾰ).
     declension!("θεμᾰ", 448, "~", [gender: Neuter];
     stem lemma: "~- like σημειον";
-    stem rest: "~- like θεμᾰ";
+    stem gen_sg: "~- like θεμᾰ";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -446,7 +446,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Κορᾰξ: 220 words (χᾰλῐξ, σᾰρξ, ἀνθρᾰξ, ἀβᾰξ, πτερῠξ, γλαυξ).
     declension!("κορᾰξ", 220, "~ξ";
     stem lemma: "~ξ- like σημειον";
-    stem rest: "~- like κορᾰξ";
+    stem gen_sg: "~- like κορᾰξ";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -484,7 +484,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Αἰων: 104 words (ἑλλην, αἰων, λεγεων, ἀγων, σᾱπων, μην).
     declension!("αἰων", 104, "~ν", [gender: Masculine];
     stem lemma: "~ν- like σημειον";
-    stem rest: "~- like αἰων";
+    stem gen_sg: "~- like αἰων";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -499,7 +499,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Χᾰρᾰκτηρ: 86 words (μᾰρτῠρ, πᾰνθηρ, κᾱρ, ἰβηρ, χειρ, ἐορ).
     declension!("χᾰρᾰκτηρ", 86, "~";
     stem lemma: "~- like σημειον";
-    stem rest: "~- like χᾰρᾰκτηρ";
+    stem gen_sg: "~- like χᾰρᾰκτηρ";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -523,7 +523,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Ὀργῐᾰ: 56 words (πῠρᾰ, κᾰστᾰνειᾰ, κᾰστᾰνᾰ, ὀργῐᾰ, πολῑτῐκᾰ, γαρσᾰνᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
     declension!("ὀργῐᾰ", 56, "~ᾰ", [gender: Neuter], like Δᾰνᾰοι;
-    stem rest: "~- like ὀργῐᾰ";
+    stem gen_sg: "~- like ὀργῐᾰ";
     nom: "~ᾰ", _, _;
     voc: _, _, derived;
     ),
@@ -556,7 +556,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Ἀξων: 40 words (κῠων, ἀρχιτεκτων, βιστων, χᾱων, ἰᾱων, λῠκᾱων).
     declension!("ἀξων", 40, "~ων", [gender: Masculine];
-    stem rest: "~ο- like αἰων";
+    stem gen_sg: "~ο- like αἰων";
     nom: "~ων", _, _;
     dat: _, derived, _;
     acc: _, derived, _;
@@ -568,7 +568,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Ῥητωρ: 33 words (ἀλεκτωρ, καστωρ, ῥητωρ, δωτωρ, στατωρ, κοσμοκρᾰτωρ).
     declension!("ῥητωρ", 33, "~ω~";
-    stem rest: "~ο~- like χᾰρᾰκτηρ";
+    stem gen_sg: "~ο~- like χᾰρᾰκτηρ";
     nom: "~ω~", _, _;
     dat: _, derived, _;
     acc: _, derived, _;
@@ -673,7 +673,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Φρην: 9 words (φρην, ὑμην, ποιμην, πῠθμην, ἀδην, αὐχην).
     declension!("φρην", 9, "~ην";
     stem lemma: "~ην- like σημειον";
-    stem rest: "~ε- like αἰων";
+    stem gen_sg: "~ε- like αἰων";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -779,7 +779,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Ἀηρ: 5 words (γᾰστηρ, ἀηρ, φρᾱτηρ, αἰθηρ, ἀθηρ). Like Πᾰτηρ, except in 5 cells: dat du, acc du, voc sg, voc du, voc pl.
     declension!("ἀηρ", 5, "~η~", like Πᾰτηρ;
-    stem rest: "~ε~- like χᾰρᾰκτηρ";
+    stem gen_sg: "~ε~- like χᾰρᾰκτηρ";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: "~η~", derived, derived;
@@ -787,7 +787,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     // Κηρῠξ: 5 words (κοκκῠξ, κηρῠξ, δοιδῠξ, ψευδοκηρῠξ, ἱεροκηρῠξ).
     declension!("κηρῠξ", 5, "~ῠξ", [gender: Masculine];
     stem lemma: "~ῠξ- like σημειον";
-    stem rest: "~ῡ- like κορᾰξ";
+    stem gen_sg: "~ῡ- like κορᾰξ";
     dat: _, derived, _;
     acc: _, derived, _;
     voc: _, derived, derived;
@@ -867,7 +867,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Δυσμαι: 2 words (προλυται, δυσμαι). Like Λαλλαι, except in 2 cells: nom sg, voc pl.
     declension!("δυσμαι", 2, "~υ~αι", like Λαλλαι;
-    stem rest: "~ῠ~- like κροσσαι";
+    stem gen_sg: "~ῠ~- like κροσσαι";
     nom: "~υ~αι", _, _;
     voc: _, _, derived;
     ),
@@ -895,7 +895,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Μηριᾰ: 1 words (μηριᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
     declension!("μηριᾰ", 1, "~ιᾰ", like Δᾰνᾰοι;
-    stem rest: "~ῐ- like ὀργῐᾰ";
+    stem gen_sg: "~ῐ- like ὀργῐᾰ";
     nom: "~ιᾰ", _, _;
     voc: _, _, derived;
     ),
@@ -907,7 +907,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Ἐπισφυρῐᾰ: 1 words (ἐπισφυρῐᾰ). Like Βυσναιοι, except in 2 cells: nom sg, voc pl.
     declension!("ἐπισφυρῐᾰ", 1, "~υ~ᾰ", like Βυσναιοι;
-    stem rest: "~ῠ~- like ὀργῐᾰ";
+    stem gen_sg: "~ῠ~- like ὀργῐᾰ";
     nom: "~υ~ᾰ", _, _;
     voc: _, _, derived;
     ),
@@ -924,19 +924,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 86] = [
     ),
     // Βρογχῐᾰ: 1 words (βρογχῐᾰ). Like Δᾰνᾰοι, except in 2 cells: nom sg, voc pl.
     declension!("βρογχῐᾰ", 1, "~ῐᾰ", like Δᾰνᾰοι;
-    stem rest: "~ι- like ὀργῐᾰ";
+    stem gen_sg: "~ι- like ὀργῐᾰ";
     nom: "~ῐᾰ", _, _;
     voc: _, _, derived;
     ),
     // Χᾰριστῐᾰ: 1 words (χᾰριστῐᾰ). Like Λαλλαι, except in 2 cells: nom sg, voc pl.
     declension!("χᾰριστῐᾰ", 1, "~ι~ᾰ", like Λαλλαι;
-    stem rest: "~ῐ~- like ὀργῐᾰ";
+    stem gen_sg: "~ῐ~- like ὀργῐᾰ";
     nom: "~ι~ᾰ", _, _;
     voc: _, _, derived;
     ),
     // Ἑλληνοτᾰμιαι: 1 words (ἑλληνοτᾰμιαι). Like Μηριᾰ, except in 2 cells: nom sg, voc pl.
     declension!("ἑλληνοτᾰμιαι", 1, "~ιαι", like Μηριᾰ;
-    stem rest: "~ῐ- like κροσσαι";
+    stem gen_sg: "~ῐ- like κροσσαι";
     nom: "~ιαι", _, _;
     voc: _, _, derived;
     ),
