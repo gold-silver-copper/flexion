@@ -205,9 +205,9 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let learned = |lexemes: &[Lexeme], marks: &Option<flexion::Marks<'static>>| {
+        let learned = |lexemes: &[Lexeme], marks: &Option<crate::marks::LanguageMarks>| {
             let shape = learn::Shape {
-                marks: marks.clone(),
+                marks: marks.as_ref().map(|m| m.of(part.name)),
                 ..shape.clone()
             };
             learn::learn(orthography, &shape, lexemes, settings)

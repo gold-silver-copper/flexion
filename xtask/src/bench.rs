@@ -34,7 +34,8 @@ pub fn run(
             data,
             |l: &Lexeme| eval::bucket(&l.key) != eval::TEST,
             choose::Settings::default(),
-        )?;
+        )?
+        .map(|m| m.of(part.name));
         let train: Vec<Lexeme> = d
             .lexemes
             .iter()

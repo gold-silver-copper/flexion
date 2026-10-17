@@ -52,7 +52,8 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
         data,
         |l: &Lexeme| eval::bucket(&l.key) != o.fold,
         choose::Settings::default(),
-    )?;
+    )?
+    .map(|m| m.of(part.name));
     let train: Vec<Lexeme> = d
         .lexemes
         .iter()

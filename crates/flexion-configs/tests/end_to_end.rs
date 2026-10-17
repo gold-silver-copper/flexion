@@ -57,7 +57,7 @@ fn grammars<'s>(lang: &Language, script: &'s Script, data: &[PosData]) -> Vec<Le
         .zip(data)
         .map(|(part, d)| {
             let mut shape = flexion_train::shape(lang, part).expect("shape");
-            shape.marks = marks.clone();
+            shape.marks = marks.as_ref().map(|m| m.of(part.name));
             learn::learn(
                 script.orthography(),
                 &shape,

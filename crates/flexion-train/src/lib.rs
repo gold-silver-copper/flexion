@@ -95,6 +95,7 @@ pub mod kaikki;
 pub mod laws;
 pub mod learn;
 pub mod length;
+pub mod marks;
 pub mod measure;
 pub mod par;
 pub mod pipeline;
@@ -110,31 +111,85 @@ pub mod stems;
 pub mod trace;
 
 use spec::{Language, PartOfSpeech};
+use std::collections::BTreeSet;
 
-/// The language's marks model (see [`learn::language_marks`]), from the
-/// words of every part of speech `keep` keeps (those trained on).
+/// The language's marks model (see [`marks`]), from the words of every
+/// part of speech `keep` keeps (those trained on): the rules from their
+/// lemmas, the roots from every form of theirs. A form-of page (Latin
+/// `abditus`, a participle of `abdō`) votes on the roots with the word
+/// whose table lists its headword, if `keep` keeps both: else a held-out
+/// word's forms would teach the roots it is scored with. Without such a
+/// word it doesn't vote.
 pub fn marks(
     lang: &Language,
     orthography: &flexion::Orthography<'_>,
     data: &[extract::PosData],
     keep: impl Fn(&extract::Lexeme) -> bool,
     settings: choose::Settings,
-) -> Result<Option<flexion::Marks<'static>>, String> {
-    let mut words = Vec::new();
-    for (part, d) in lang.parts.iter().zip(data) {
-        let lemma_cell = shape(lang, part)?.lemma_cell;
-        words.extend(
-            d.lexemes
-                .iter()
-                .filter(|l| keep(l))
-                .map(|l| (lemma_cell, part.name, l)),
-        );
+) -> Result<Option<marks::LanguageMarks>, String> {
+    use extract::Of;
+    let read = |f: &str| orthography.read(f).letters;
+    let lemmas: Vec<Option<usize>> = (lang.parts.iter())
+        .map(|part| Ok(shape(lang, part)?.lemma_cell))
+        .collect::<Result<_, String>>()?;
+    // The words, numbered across the parts of speech.
+    let words: Vec<(usize, &str, Option<usize>, &extract::Lexeme)> = (lang.parts.iter())
+        .zip(data)
+        .zip(&lemmas)
+        .flat_map(|((part, d), &cell)| d.lexemes.iter().map(move |l| (part.name, cell, l)))
+        .enumerate()
+        .map(|(i, (part, cell, l))| (i, part, cell, l))
+        .collect();
+    // Each form-of page's word: the first whose table lists its headword
+    // as a form (not as its own lemma: the noun `nexus` is no form of the
+    // participle's).
+    let mut owners: HashMap<String, Option<usize>> = (words.iter())
+        .filter(|w| w.3.of == Of::Form)
+        .map(|w| (orthography.key(&read(&w.3.full)), None))
+        .collect();
+    for &(i, _, cell, l) in words.iter().filter(|w| w.3.of != Of::Form) {
+        let forms = (l.cells.iter().enumerate()).filter(|&(c, _)| Some(c) != cell);
+        for f in forms.flat_map(|(_, fs)| fs) {
+            if let Some(owner @ None) = owners.get_mut(&orthography.key(&read(f))) {
+                *owner = Some(i);
+            }
+        }
     }
-    Ok(learn::language_marks(
-        orthography,
-        words.into_iter(),
-        settings,
-    ))
+    let mut seen = HashSet::default();
+    let mut spelled: Vec<(String, String, &str)> = Vec::new();
+    let mut voters: Vec<marks::Voter<'_>> = Vec::new();
+    for &(i, part, cell, l) in words.iter().filter(|w| keep(w.3)) {
+        let letters = learn::spelled(orthography, cell, l);
+        let key = orthography.key(&letters);
+        let owner = match l.of {
+            Of::Form => owners
+                .get(&orthography.key(&read(&l.full)))
+                .copied()
+                .flatten()
+                .filter(|&o| words.get(o).is_some_and(|w| keep(w.3))),
+            _ => Some(i),
+        };
+        if let Some(owner) = owner {
+            let forms = l.cells.iter().flatten().map(|f| read(f));
+            let spellings: BTreeSet<String> =
+                std::iter::once(letters.clone()).chain(forms).collect();
+            voters.push(marks::Voter {
+                owner,
+                part,
+                key: key.clone(),
+                lemma: letters.clone(),
+                spellings: spellings.into_iter().collect(),
+            });
+        }
+        let word = (key, letters, part);
+        if seen.insert(word.clone()) {
+            spelled.push(word);
+        }
+    }
+    let spelled: Vec<(&str, &str, &str)> = (spelled.iter())
+        .map(|(k, l, p)| (k.as_str(), l.as_str(), *p))
+        .collect();
+    Ok(marks::learn(orthography, &spelled, &voters, settings))
 }
 
 /// The words of the part of speech `part` learns from too (see

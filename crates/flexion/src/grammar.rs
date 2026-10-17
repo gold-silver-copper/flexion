@@ -386,10 +386,11 @@ impl Heads<'_> {
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Marks<'a> {
     pub rules: Choice<'a, char>,
-    /// Word beginnings whose letter third from their end the dictionary's
-    /// words beginning so all write one way (two or more) the rules don't:
-    /// `("iudi", 'ū')`, a word typed `iudicium` writes `ū`, as `iūdicō` and
-    /// `iūdicātiō` do. Sorted.
+    /// Word beginnings whose letter third from their end nine in ten of the
+    /// dictionary's words with a form beginning so (two or more) write one
+    /// way the rules don't: `("iudi", 'ū')`, a word typed `iudicium` writes
+    /// `ū`, as `iūdicō` and `iūdicātiō` do. Sorted. A part of speech they
+    /// would mislead reads none.
     pub roots: Cow<'a, [(Cow<'a, str>, char)]>,
     pub part: Cow<'a, str>,
 }
