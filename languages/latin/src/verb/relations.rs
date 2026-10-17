@@ -36,16 +36,16 @@ macro_rules! relation {
     };
 }
 
-pub(super) static RELATIONS: [Relation<'static>; 189] = [
-    // IND_ACT_PRES_1_PL, from IND_PASS_PRES_1_PL.
-    relation!(IND_ACT_PRES_1_PL, [IND_PASS_PRES_1_PL], [("~r", "~s"), ("~īmus", "~acimus")], rules {
+pub(super) static RELATIONS: [Relation<'static>; 153] = [
+    // ACT_PRES_1_PL, from PASS_PRES_1_PL.
+    relation!(ACT_PRES_1_PL, [PASS_PRES_1_PL], [("~r", "~s"), ("~īmus", "~acimus")], rules {
         "" => [0 4465, 1 52],
         "r" => [0 4465],
         "s" => [1 52],
         "us" => [1 52],
     } listed {}, true, None),
-    // IND_ACT_PRES_2_SG, from IND_ACT_PRES_2_PL.
-    relation!(IND_ACT_PRES_2_SG, [IND_ACT_PRES_2_PL], [("~atis", "~ās"), ("~iminī", "~eris"), ("~is", "~ī"), ("~minī", "~ris"), ("~tis", "~"), ("~tis", "~s"), ("~ultis", "~īs"), ("~īminī", "~eris")], rules {
+    // ACT_PRES_2_SG, from ACT_PRES_2_PL.
+    relation!(ACT_PRES_2_SG, [ACT_PRES_2_PL], [("~atis", "~ās"), ("~iminī", "~eris"), ("~is", "~ī"), ("~minī", "~ris"), ("~tis", "~"), ("~tis", "~s"), ("~ultis", "~īs"), ("~īminī", "~eris")], rules {
         "" => [5 5537, 3 424, 1 140, 4 13, 0 5, 2 4, 6 4, 7 3],
         "s" => [5 5537, 4 13, 0 5, 2 4, 6 4],
         "atis" => [0 5],
@@ -61,11 +61,12 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ēminī" => [3 23],
         "īminī" => [3 44, 7 3],
     } listed {
-        "morīminī" => 7,
-        "ēmorīminī" => 7,
+        7 => [
+            "morīminī", "ēmorīminī",
+        ],
     }, true, None),
-    // IND_ACT_PRES_2_PL, from IND_PASS_PRES_1_PL.
-    relation!(IND_ACT_PRES_2_PL, [IND_PASS_PRES_1_PL], [("~imur", "~tis"), ("~mur", "~tis"), ("~īmus", "~acitis")], rules {
+    // ACT_PRES_2_PL, from PASS_PRES_1_PL.
+    relation!(ACT_PRES_2_PL, [PASS_PRES_1_PL], [("~imur", "~tis"), ("~mur", "~tis"), ("~īmus", "~acitis")], rules {
         "" => [1 4444, 2 52, 0 22],
         "r" => [1 4444, 0 22],
         "imur" => [1 1415, 0 22],
@@ -76,8 +77,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "s" => [2 52],
         "us" => [2 52],
     } listed {}, true, None),
-    // IND_ACT_PRES_3_SG, from IND_ACT_PRES_2_SG.
-    relation!(IND_ACT_PRES_3_SG, [IND_ACT_PRES_2_SG], [("~", "~t"), ("~eris", "~itur"), ("~eris", "~ītur"), ("~ris", "~tur"), ("~s", "~t"), ("~stī", "~t"), ("~ās", "~at"), ("~ēs", "~et"), ("~īs", "~it"), ("~īs", "~ult")], rules {
+    // ACT_PRES_3_SG, from ACT_PRES_2_SG.
+    relation!(ACT_PRES_3_SG, [ACT_PRES_2_SG], [("~", "~t"), ("~eris", "~itur"), ("~eris", "~ītur"), ("~ris", "~tur"), ("~s", "~t"), ("~stī", "~t"), ("~ās", "~at"), ("~ēs", "~et"), ("~īs", "~it"), ("~īs", "~ult")], rules {
         "" => [6 2718, 4 1913, 7 537, 3 425, 8 373, 1 140, 0 13, 5 4, 9 4, 2 3],
         "es" => [0 13],
         "is" => [4 1891, 3 425, 1 140, 2 3],
@@ -115,17 +116,18 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "vīs" => [8 14, 9 4],
         "ī" => [5 4],
     } listed {
-        "moreris" => 2,
-        "māvīs" => 9,
-        "nōn vīs" => 9,
-        "oreris" => 2,
-        "potevīs" => 9,
-        "praeterferris" => 3,
-        "vīs" => 9,
-        "ēmoreris" => 2,
+        2 => [
+            "moreris", "oreris", "ēmoreris",
+        ],
+        3 => [
+            "praeterferris",
+        ],
+        9 => [
+            "māvīs", "nōn vīs", "potevīs", "vīs",
+        ],
     }, true, None),
-    // IND_ACT_PRES_3_PL, from SUBJ_ACT_PRES_1_SG.
-    relation!(IND_ACT_PRES_3_PL, [SUBJ_ACT_PRES_1_SG], [("~am", "~nt"), ("~am", "~unt"), ("~ar", "~ntur"), ("~ar", "~untur"), ("~elim", "~olunt"), ("~em", "~ant"), ("~er", "~antur"), ("~erim", "~ērunt"), ("~im", "~unt")], rules {
+    // ACT_PRES_3_PL, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(ACT_PRES_3_PL, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~nt"), ("~am", "~unt"), ("~ar", "~ntur"), ("~ar", "~untur"), ("~elim", "~olunt"), ("~em", "~ant"), ("~er", "~antur"), ("~erim", "~ērunt"), ("~im", "~unt")], rules {
         "" => [5 2718, 1 2286, 0 537, 6 357, 3 188, 2 23, 8 15, 7 4, 4 2],
         "m" => [5 2718, 1 2286, 0 537, 8 15, 7 4, 4 2],
         "am" => [1 2286, 0 537],
@@ -162,11 +164,12 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uar" => [3 31],
         "er" => [6 357],
     } listed {
-        "potevelim" => 4,
-        "velim" => 4,
+        4 => [
+            "potevelim", "velim",
+        ],
     }, true, None),
-    // IND_ACT_IMPF_1_SG, from PARTICIPLE_PRES_ACT.
-    relation!(IND_ACT_IMPF_1_SG, [PARTICIPLE_PRES_ACT], [("~iēns", "~ībam"), ("~ns", "~bam"), ("~ns", "~bar"), ("~sēns", "~eram"), ("~āns", "~abam"), ("~ēns", "~eram")], rules {
+    // ACT_IMPF_1_SG, from PARTICIPLE_PRES_ACT.
+    relation!(ACT_IMPF_1_SG, [PARTICIPLE_PRES_ACT], [("~iēns", "~ībam"), ("~ns", "~bam"), ("~ns", "~bar"), ("~sēns", "~eram"), ("~āns", "~abam"), ("~ēns", "~eram")], rules {
         "" => [1 5508, 2 568, 0 31, 4 5, 5 4, 3 2],
         "āns" => [1 2713, 2 357, 4 5],
         "recāns" => [2 7, 1 1],
@@ -229,51 +232,53 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "loquēns" => [2 12],
         "rquēns" => [1 13],
     } listed {
-        "compluēns" => 2,
-        "licēns" => 1,
-        "licēns" => 2,
-        "miserēns" => 1,
-        "miserēns" => 2,
-        "potēns" => 1,
-        "potēns" => 5,
+        1 => [
+            "licēns", "miserēns", "potēns",
+        ],
+        2 => [
+            "compluēns", "licēns", "miserēns",
+        ],
+        5 => [
+            "potēns",
+        ],
     }, true, None),
-    // IND_ACT_IMPF_1_PL, from IND_ACT_IMPF_1_SG.
-    relation!(IND_ACT_IMPF_1_PL, [IND_ACT_IMPF_1_SG], [("~am", "~āmus"), ("~ar", "~āmur")], rules {
+    // ACT_IMPF_1_PL, from ACT_IMPF_1_SG.
+    relation!(ACT_IMPF_1_PL, [ACT_IMPF_1_SG], [("~am", "~āmus"), ("~ar", "~āmur")], rules {
         "" => [0 5562, 1 568],
         "m" => [0 5562],
         "r" => [1 568],
         "ar" => [1 568],
     } listed {}, true, None),
-    // IND_ACT_IMPF_2_SG, from IND_ACT_IMPF_1_SG.
-    relation!(IND_ACT_IMPF_2_SG, [IND_ACT_IMPF_1_SG], [("~am", "~ās"), ("~ar", "~āris")], rules {
+    // ACT_IMPF_2_SG, from ACT_IMPF_1_SG.
+    relation!(ACT_IMPF_2_SG, [ACT_IMPF_1_SG], [("~am", "~ās"), ("~ar", "~āris")], rules {
         "" => [0 5562, 1 568],
         "m" => [0 5562],
         "r" => [1 568],
         "ar" => [1 568],
     } listed {}, true, None),
-    // IND_ACT_IMPF_2_PL, from IND_ACT_IMPF_1_SG.
-    relation!(IND_ACT_IMPF_2_PL, [IND_ACT_IMPF_1_SG], [("~am", "~ātis"), ("~ar", "~āminī")], rules {
+    // ACT_IMPF_2_PL, from ACT_IMPF_1_SG.
+    relation!(ACT_IMPF_2_PL, [ACT_IMPF_1_SG], [("~am", "~ātis"), ("~ar", "~āminī")], rules {
         "" => [0 5562, 1 568],
         "m" => [0 5562],
         "r" => [1 568],
         "ar" => [1 568],
     } listed {}, true, None),
-    // IND_ACT_IMPF_3_SG, from IND_ACT_IMPF_1_SG.
-    relation!(IND_ACT_IMPF_3_SG, [IND_ACT_IMPF_1_SG], [("~ar", "~ātur"), ("~m", "~t")], rules {
+    // ACT_IMPF_3_SG, from ACT_IMPF_1_SG.
+    relation!(ACT_IMPF_3_SG, [ACT_IMPF_1_SG], [("~ar", "~ātur"), ("~m", "~t")], rules {
         "" => [1 5562, 0 568],
         "m" => [1 5562],
         "r" => [0 568],
         "ar" => [0 568],
     } listed {}, true, None),
-    // IND_ACT_IMPF_3_PL, from IND_ACT_IMPF_1_SG.
-    relation!(IND_ACT_IMPF_3_PL, [IND_ACT_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
+    // ACT_IMPF_3_PL, from ACT_IMPF_1_SG.
+    relation!(ACT_IMPF_3_PL, [ACT_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
         "" => [0 5562, 1 568],
         "m" => [0 5562],
         "r" => [1 568],
         "ar" => [1 568],
     } listed {}, true, None),
-    // IND_ACT_FUT_1_SG, from SUBJ_ACT_PRES_1_SG.
-    relation!(IND_ACT_FUT_1_SG, [SUBJ_ACT_PRES_1_SG], [("~", "~"), ("~eam", "~ēbō"), ("~eam", "~ībō"), ("~ear", "~ēbor"), ("~elim", "~olam"), ("~em", "~abō"), ("~em", "~ābō"), ("~er", "~ābor"), ("~im", "~am"), ("~im", "~ō"), ("~sim", "~erō")], rules {
+    // ACT_FUT_1_SG, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(ACT_FUT_1_SG, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~", "~"), ("~eam", "~ēbō"), ("~eam", "~ībō"), ("~ear", "~ēbor"), ("~elim", "~olam"), ("~em", "~abō"), ("~em", "~ābō"), ("~er", "~ābor"), ("~im", "~am"), ("~im", "~ō"), ("~sim", "~erō")], rules {
         "" => [6 2713, 0 2440, 1 534, 7 357, 2 31, 3 23, 10 8, 5 5, 9 4, 4 2, 8 2],
         "m" => [6 2713, 0 2252, 1 534, 2 31, 10 8, 5 5, 9 4, 4 2, 8 2],
         "am" => [0 2252, 1 534, 2 31],
@@ -311,8 +316,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uar" => [0 31],
         "er" => [7 357],
     } listed {}, false, None),
-    // IND_ACT_FUT_1_PL, from IND_ACT_FUT_1_SG.
-    relation!(IND_ACT_FUT_1_PL, [IND_ACT_FUT_1_SG], [("~am", "~ēmus"), ("~ar", "~ēmur"), ("~or", "~imur"), ("~ō", "~imus")], rules {
+    // ACT_FUT_1_PL, from ACT_FUT_1_SG.
+    relation!(ACT_FUT_1_PL, [ACT_FUT_1_SG], [("~am", "~ēmus"), ("~ar", "~ēmur"), ("~or", "~imur"), ("~ō", "~imus")], rules {
         "" => [3 3301, 0 2256, 2 380, 1 188],
         "m" => [0 2256],
         "r" => [2 380, 1 188],
@@ -320,8 +325,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "or" => [2 380],
         "ō" => [3 3301],
     } listed {}, true, None),
-    // IND_ACT_FUT_2_SG, from IND_ACT_FUT_1_SG.
-    relation!(IND_ACT_FUT_2_SG, [IND_ACT_FUT_1_SG], [("~am", "~ēs"), ("~ar", "~ēris"), ("~or", "~eris"), ("~ō", "~is")], rules {
+    // ACT_FUT_2_SG, from ACT_FUT_1_SG.
+    relation!(ACT_FUT_2_SG, [ACT_FUT_1_SG], [("~am", "~ēs"), ("~ar", "~ēris"), ("~or", "~eris"), ("~ō", "~is")], rules {
         "" => [3 3301, 0 2256, 2 380, 1 188],
         "m" => [0 2256],
         "r" => [2 380, 1 188],
@@ -329,8 +334,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "or" => [2 380],
         "ō" => [3 3301],
     } listed {}, true, None),
-    // IND_ACT_FUT_2_PL, from IND_ACT_FUT_1_SG.
-    relation!(IND_ACT_FUT_2_PL, [IND_ACT_FUT_1_SG], [("~am", "~ētis"), ("~ar", "~ēminī"), ("~or", "~iminī"), ("~ō", "~itis")], rules {
+    // ACT_FUT_2_PL, from ACT_FUT_1_SG.
+    relation!(ACT_FUT_2_PL, [ACT_FUT_1_SG], [("~am", "~ētis"), ("~ar", "~ēminī"), ("~or", "~iminī"), ("~ō", "~itis")], rules {
         "" => [3 3301, 0 2256, 2 380, 1 188],
         "m" => [0 2256],
         "r" => [2 380, 1 188],
@@ -338,8 +343,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "or" => [2 380],
         "ō" => [3 3301],
     } listed {}, true, None),
-    // IND_ACT_FUT_3_SG, from IND_ACT_FUT_1_SG.
-    relation!(IND_ACT_FUT_3_SG, [IND_ACT_FUT_1_SG], [("~am", "~et"), ("~ar", "~ētur"), ("~or", "~itur"), ("~ō", "~it")], rules {
+    // ACT_FUT_3_SG, from ACT_FUT_1_SG.
+    relation!(ACT_FUT_3_SG, [ACT_FUT_1_SG], [("~am", "~et"), ("~ar", "~ētur"), ("~or", "~itur"), ("~ō", "~it")], rules {
         "" => [3 3301, 0 2256, 2 380, 1 188],
         "m" => [0 2256],
         "r" => [2 380, 1 188],
@@ -347,8 +352,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "or" => [2 380],
         "ō" => [3 3301],
     } listed {}, true, None),
-    // IND_ACT_FUT_3_PL, from IND_ACT_FUT_1_SG.
-    relation!(IND_ACT_FUT_3_PL, [IND_ACT_FUT_1_SG], [("~am", "~ent"), ("~ar", "~entur"), ("~or", "~untur"), ("~ō", "~int"), ("~ō", "~unt")], rules {
+    // ACT_FUT_3_PL, from ACT_FUT_1_SG.
+    relation!(ACT_FUT_3_PL, [ACT_FUT_1_SG], [("~am", "~ent"), ("~ar", "~entur"), ("~or", "~untur"), ("~ō", "~int"), ("~ō", "~unt")], rules {
         "" => [4 3297, 0 2256, 2 380, 1 188, 3 4],
         "m" => [0 2256],
         "r" => [2 380, 1 188],
@@ -358,10 +363,12 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "bō" => [4 3284],
         "rō" => [4 13, 3 4],
     } listed {
-        "ōderō" => 3,
+        3 => [
+            "ōderō",
+        ],
     }, true, None),
-    // IND_ACT_PERF_1_SG, from IMPERATIVE_ACT_PRES_2_SG.
-    relation!(IND_ACT_PERF_1_SG, [IMPERATIVE_ACT_PRES_2_SG], [("e~e", "ē~ī"), ("~", "~"), ("~", "~tus sum"), ("~", "~vī"), ("~ace", "~ēcī"), ("~adere", "~essus sum"), ("~age", "~ēgī"), ("~ahe", "~āxī"), ("~ane", "~ecinī"), ("~ange", "~ānxī"), ("~anē", "~ānsī"), ("~ape", "~ēpī"), ("~audē", "~āvīsus sum"), ("~avā", "~āvī"), ("~avē", "~āvī"), ("~be", "~psī"), ("~bere", "~psus sum"), ("~bē", "~ssī"), ("~c", "~xī"), ("~ce", "~sī"), ("~ce", "~xī"), ("~ce", "~ēcī"), ("~cte", "~xuī"), ("~cte", "~xī"), ("~ctere", "~xus sum"), ("~cā", "~xī"), ("~cē", "~sī"), ("~cē", "~xī"), ("~cēsce", "~xī"), ("~cī", "~sī"), ("~de", "~sus sum"), ("~de", "~sī"), ("~dere", "~ssus sum"), ("~dē", "~sī"), ("~dēsce", "~sī"), ("~e", "~idī"), ("~e", "~psī"), ("~e", "~sī"), ("~e", "~uī"), ("~e", "~xī"), ("~e", "~ī"), ("~e", "~īvī"), ("~ede", "~ēdī"), ("~edē", "~ēdī"), ("~ege", "~ēgī"), ("~ege", "~ēxī"), ("~ehe", "~ēxī"), ("~elle", "~ulsī"), ("~elle", "~ulī"), ("~entī", "~ēnsī"), ("~entīre", "~ēnsus sum"), ("~enī", "~ēnī"), ("~ere", "~itus sum"), ("~ere", "~rīvī"), ("~ere", "~tus sum"), ("~ere", "~tuus sum"), ("~ere", "~ēvī"), ("~ere", "~ūtus sum"), ("~erne", "~rāvī"), ("~erne", "~rēvī"), ("~es", "~fuī"), ("~fer", "~tulī"), ("~ffer", "~stulī"), ("~ge", "~rēxī"), ("~ge", "~sī"), ("~ge", "~xī"), ("~gue", "~xī"), ("~guē", "~sī"), ("~gē", "~sī"), ("~gē", "~xī"), ("~gēsce", "~xī"), ("~here", "~ctus sum"), ("~ice", "~exī"), ("~ice", "~ēcī"), ("~ice", "~ēxī"), ("~ide", "~īsī"), ("~idē", "~ēdī"), ("~idē", "~īdī"), ("~ige", "~ēgī"), ("~ige", "~ēxī"), ("~igne", "~enuī"), ("~ime", "~essī"), ("~ime", "~ēmī"), ("~ince", "~īcī"), ("~incī", "~īnxī"), ("~ine", "~ēvī"), ("~ine", "~īvī"), ("~inge", "~ēgī"), ("~inge", "~īnxī"), ("~ingue", "~īnxī"), ("~inque", "~īquī"), ("~inīscere", "~entus sum"), ("~ipe", "~ēpī"), ("~ipīscere", "~eptus sum"), ("~iste", "~titī"), ("~itte", "~īsī"), ("~itēre", "~essus sum"), ("~iē", "~īvī"), ("~mbe", "~buī"), ("~nde", "~dī"), ("~ne", "~psī"), ("~nge", "~gī"), ("~ode", "~ōdī"), ("~ovē", "~ōvī"), ("~que", "~xī"), ("~quere", "~cūtus sum"), ("~quē", "~sī"), ("~quēsce", "~cuī"), ("~re", "~ssī"), ("~re", "~sīvī"), ("~re", "~tus sum"), ("~rere", "~stus sum"), ("~rre", "~currī"), ("~rē", "~sī"), ("~rēsce", "~sī"), ("~rī", "~sī"), ("~sce", "~dicī"), ("~sce", "~poscī"), ("~sce", "~vī"), ("~scere", "~tus sum"), ("~te", "~ssuī"), ("~te", "~ssī"), ("~tere", "~ssus sum"), ("~tere", "~sus sum"), ("~tere", "~xus sum"), ("~tīre", "~nsus sum"), ("~ue", "~ūxī"), ("~uere", "~ūtus sum"), ("~uge", "~ūgī"), ("~umpe", "~ūpī"), ("~unde", "~ūdī"), ("~unge", "~ūnxī"), ("~ungere", "~ūnctus sum"), ("~uvā", "~ūvī"), ("~uēsce", "~ŭī"), ("~ve", "~xī"), ("~vē", "~buī"), ("~vēsce", "~buī"), ("~vēsce", "~xī"), ("~ā", "~edī"), ("~ā", "~etī"), ("~ā", "~itī"), ("~ā", "~uī"), ("~ē", "~uī"), ("~ē", "~ī"), ("~ēde", "~essī"), ("~ēre", "~itus sum"), ("~ēsce", "~uī"), ("~ēsce", "~ī"), ("~ī", "~actus sum"), ("~ī", "~iī"), ("~ī", "~sī"), ("~ī", "~uī"), ("~īde", "~ēdī"), ("~īre", "~itus sum"), ("~īre", "~tus sum"), ("~īsce", "~uī"), ("~īscere", "~tus sum"), ("~ōne", "~osuī"), ("~ūre", "~ussī")], rules {
+    // ACT_PERF_1_SG, from PRESENT_IMPERATIVE_ACT_SG.
+    relation!(ACT_PERF_1_SG, [PRESENT_IMPERATIVE_ACT_SG], [("e~e", "ē~ī"), ("~", "~"), ("~", "~tus sum"), ("~", "~vī"), ("~ace", "~ēcī"), ("~adere", "~essus sum"), ("~age", "~ēgī"), ("~ahe", "~āxī"), ("~ane", "~ecinī"), ("~ange", "~ānxī"), ("~anē", "~ānsī"), ("~ape", "~ēpī"), ("~audē", "~āvīsus sum"), ("~avā", "~āvī"), ("~avē", "~āvī"), ("~be", "~psī"), ("~bere", "~psus sum"), ("~bē", "~ssī"), ("~c", "~xī"), ("~ce", "~sī"), ("~ce", "~xī"), ("~ce", "~ēcī"), ("~cte", "~xuī"), ("~cte", "~xī"), ("~ctere", "~xus sum"), ("~cā", "~xī"), ("~cē", "~sī"), ("~cē", "~xī"), ("~cēsce", "~xī"), ("~cī", "~sī"), ("~de", "~sus sum"), ("~de", "~sī"), ("~dere", "~ssus sum"), ("~dē", "~sī"), ("~dēsce", "~sī"), ("~e", "~idī"), ("~e", "~psī"), ("~e", "~sī"), ("~e", "~uī"), ("~e", "~xī"), ("~e", "~ī"), ("~e", "~īvī"), ("~ede", "~ēdī"), ("~edē", "~ēdī"), ("~ege", "~ēgī"), ("~ege", "~ēxī"), ("~ehe", "~ēxī"), ("~elle", "~ulsī"), ("~elle", "~ulī"), ("~entī", "~ēnsī"), ("~entīre", "~ēnsus sum"), ("~enī", "~ēnī"), ("~ere", "~itus sum"), ("~ere", "~rīvī"), ("~ere", "~tus sum"), ("~ere", "~tuus sum"), ("~ere", "~ēvī"), ("~ere", "~ūtus sum"), ("~erne", "~rāvī"), ("~erne", "~rēvī"), ("~es", "~fuī"), ("~fer", "~tulī"), ("~ffer", "~stulī"), ("~ge", "~rēxī"), ("~ge", "~sī"), ("~ge", "~xī"), ("~gue", "~xī"), ("~guē", "~sī"), ("~gē", "~sī"), ("~gē", "~xī"), ("~gēsce", "~xī"), ("~here", "~ctus sum"), ("~ice", "~exī"), ("~ice", "~ēcī"), ("~ice", "~ēxī"), ("~ide", "~īsī"), ("~idē", "~ēdī"), ("~idē", "~īdī"), ("~ige", "~ēgī"), ("~ige", "~ēxī"), ("~igne", "~enuī"), ("~ime", "~essī"), ("~ime", "~ēmī"), ("~ince", "~īcī"), ("~incī", "~īnxī"), ("~ine", "~ēvī"), ("~ine", "~īvī"), ("~inge", "~ēgī"), ("~inge", "~īnxī"), ("~ingue", "~īnxī"), ("~inque", "~īquī"), ("~inīscere", "~entus sum"), ("~ipe", "~ēpī"), ("~ipīscere", "~eptus sum"), ("~iste", "~titī"), ("~itte", "~īsī"), ("~itēre", "~essus sum"), ("~iē", "~īvī"), ("~mbe", "~buī"), ("~nde", "~dī"), ("~ne", "~psī"), ("~nge", "~gī"), ("~ode", "~ōdī"), ("~ovē", "~ōvī"), ("~que", "~xī"), ("~quere", "~cūtus sum"), ("~quē", "~sī"), ("~quēsce", "~cuī"), ("~re", "~ssī"), ("~re", "~sīvī"), ("~re", "~tus sum"), ("~rere", "~stus sum"), ("~rre", "~currī"), ("~rē", "~sī"), ("~rēsce", "~sī"), ("~rī", "~sī"), ("~sce", "~dicī"), ("~sce", "~poscī"), ("~sce", "~vī"), ("~scere", "~tus sum"), ("~te", "~ssuī"), ("~te", "~ssī"), ("~tere", "~ssus sum"), ("~tere", "~sus sum"), ("~tere", "~xus sum"), ("~tīre", "~nsus sum"), ("~ue", "~ūxī"), ("~uere", "~ūtus sum"), ("~uge", "~ūgī"), ("~umpe", "~ūpī"), ("~unde", "~ūdī"), ("~unge", "~ūnxī"), ("~ungere", "~ūnctus sum"), ("~uvā", "~ūvī"), ("~uēsce", "~ŭī"), ("~ve", "~xī"), ("~vē", "~buī"), ("~vēsce", "~buī"), ("~vēsce", "~xī"), ("~ā", "~edī"), ("~ā", "~etī"), ("~ā", "~itī"), ("~ā", "~uī"), ("~ē", "~uī"), ("~ē", "~ī"), ("~ēde", "~essī"), ("~ēre", "~itus sum"), ("~ēsce", "~uī"), ("~ēsce", "~ī"), ("~ī", "~actus sum"), ("~ī", "~iī"), ("~ī", "~sī"), ("~ī", "~uī"), ("~īde", "~ēdī"), ("~īre", "~itus sum"), ("~īre", "~tus sum"), ("~īsce", "~uī"), ("~īscere", "~tus sum"), ("~ōne", "~osuī"), ("~ūre", "~ussī")], rules {
         "" => [3 2602, 110 367, 40 263, 143 226, 147 112, 38 82, 31 69, 118 57, 4 55, 142 54, 150 42, 18 40, 88 37, 15 30, 37 29, 68 29, 73 29, 65 28, 158 28, 95 27, 35 26, 126 26, 103 25, 131 25, 41 24, 152 24, 64 20, 21 18, 128 18, 130 18, 144 18, 29 17, 32 17, 51 17, 72 17, 108 17, 145 17, 7 16, 78 16, 27 15, 33 15, 36 15, 48 15, 99 15, 23 14, 45 14, 79 14, 102 14, 129 14, 16 13, 46 13, 57 13, 92 13, 146 13, 76 12, 87 12, 94 12, 105 12, 59 11, 81 11, 98 11, 123 11, 141 11, 44 10, 53 10, 61 10, 109 10, 119 10, 151 10, 159 10, 49 9, 58 9, 63 9, 85 9, 121 9, 20 8, 55 8, 83 8, 89 8, 106 8, 113 8, 125 8, 10 7, 12 7, 42 7, 56 7, 60 7, 69 7, 104 7, 136 7, 153 7, 22 6, 77 6, 82 6, 84 6, 116 6, 135 6, 140 6, 155 6, 157 6, 26 5, 28 5, 43 5, 101 5, 139 5, 156 5, 14 4, 24 4, 71 4, 97 4, 115 4, 122 4, 124 4, 1 3, 6 3, 11 3, 13 3, 17 3, 30 3, 52 3, 74 3, 80 3, 90 3, 112 3, 114 3, 132 3, 137 3, 149 3, 154 3, 0 2, 2 2, 5 2, 8 2, 9 2, 19 2, 25 2, 34 2, 39 2, 47 2, 50 2, 54 2, 62 2, 66 2, 67 2, 70 2, 75 2, 86 2, 91 2, 93 2, 96 2, 100 2, 107 2, 111 2, 117 2, 120 2, 127 2, 133 2, 134 2, 138 2, 148 2],
         "c" => [18 40],
         "e" => [110 367, 40 263, 147 112, 38 82, 31 69, 118 57, 4 55, 88 37, 15 30, 37 29, 73 29, 65 28, 158 28, 95 27, 35 26, 126 26, 131 25, 41 24, 64 20, 21 18, 128 18, 130 18, 32 17, 72 17, 108 17, 145 17, 7 16, 78 16, 36 15, 48 15, 99 15, 23 14, 45 14, 79 14, 102 14, 129 14, 16 13, 46 13, 57 13, 92 13, 146 13, 87 12, 94 12, 105 12, 59 11, 81 11, 98 11, 123 11, 44 10, 53 10, 109 10, 119 10, 159 10, 58 9, 63 9, 85 9, 121 9, 20 8, 55 8, 83 8, 89 8, 125 8, 42 7, 56 7, 104 7, 153 7, 22 6, 82 6, 116 6, 135 6, 155 6, 157 6, 28 5, 101 5, 156 5, 24 4, 71 4, 122 4, 124 4, 6 3, 11 3, 30 3, 52 3, 74 3, 80 3, 90 3, 112 3, 114 3, 132 3, 137 3, 154 3, 0 2, 5 2, 8 2, 9 2, 19 2, 34 2, 39 2, 47 2, 50 2, 54 2, 66 2, 70 2, 75 2, 86 2, 91 2, 93 2, 96 2, 100 2, 107 2, 111 2, 117 2, 120 2, 127 2, 134 2, 138 2, 148 2],
@@ -619,15 +626,15 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "tī" => [3 26, 49 9],
         "ntī" => [49 9, 3 1],
     } listed {}, false, None),
-    // IND_ACT_PERF_1_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PERF_1_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī sumus"), ("~ī", "~imus")], rules {
+    // ACT_PERF_1_PL, from ACT_PERF_1_SG.
+    relation!(ACT_PERF_1_PL, [ACT_PERF_1_SG], [("~us sum", "~ī sumus"), ("~ī", "~imus")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PERF_2_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PERF_2_SG, [IND_ACT_PERF_1_SG], [("~iī", "~īstī"), ("~sum", "~es"), ("~ī", "~istī")], rules {
+    // ACT_PERF_2_SG, from ACT_PERF_1_SG.
+    relation!(ACT_PERF_2_SG, [ACT_PERF_1_SG], [("~iī", "~īstī"), ("~sum", "~es"), ("~ī", "~istī")], rules {
         "" => [2 4877, 1 563, 0 30],
         "m" => [1 563],
         "um" => [1 563],
@@ -637,113 +644,113 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uī" => [2 680],
         "vī" => [2 2806],
     } listed {}, false, None),
-    // IND_ACT_PERF_2_PL, from IND_ACT_PERF_2_SG.
-    relation!(IND_ACT_PERF_2_PL, [IND_ACT_PERF_2_SG], [("~us es", "~ī estis"), ("~ī", "~is")], rules {
+    // ACT_PERF_2_PL, from ACT_PERF_2_SG.
+    relation!(ACT_PERF_2_PL, [ACT_PERF_2_SG], [("~us es", "~ī estis"), ("~ī", "~is")], rules {
         "" => [1 4908, 0 563],
         "s" => [0 563],
         "es" => [0 563],
         "ī" => [1 4908],
     } listed {}, true, None),
-    // IND_ACT_PERF_3_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PERF_3_SG, [IND_ACT_PERF_1_SG], [("~sum", "~est"), ("~ī", "~it")], rules {
+    // ACT_PERF_3_SG, from ACT_PERF_1_SG.
+    relation!(ACT_PERF_3_SG, [ACT_PERF_1_SG], [("~sum", "~est"), ("~ī", "~it")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, false, None),
-    // IND_ACT_PERF_3_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PERF_3_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī sunt"), ("~ī", "~ērunt")], rules {
+    // ACT_PERF_3_PL, from ACT_PERF_1_SG.
+    relation!(ACT_PERF_3_PL, [ACT_PERF_1_SG], [("~us sum", "~ī sunt"), ("~ī", "~ērunt")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_1_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_1_SG, [IND_ACT_PERF_1_SG], [("~sum", "~eram"), ("~ī", "~eram")], rules {
+    // ACT_PLUP_1_SG, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_1_SG, [ACT_PERF_1_SG], [("~sum", "~eram"), ("~ī", "~eram")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_1_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_1_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī erāmus"), ("~ī", "~erāmus")], rules {
+    // ACT_PLUP_1_PL, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_1_PL, [ACT_PERF_1_SG], [("~us sum", "~ī erāmus"), ("~ī", "~erāmus")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_2_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_2_SG, [IND_ACT_PERF_1_SG], [("~sum", "~erās"), ("~ī", "~erās")], rules {
+    // ACT_PLUP_2_SG, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_2_SG, [ACT_PERF_1_SG], [("~sum", "~erās"), ("~ī", "~erās")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_2_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_2_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī erātis"), ("~ī", "~erātis")], rules {
+    // ACT_PLUP_2_PL, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_2_PL, [ACT_PERF_1_SG], [("~us sum", "~ī erātis"), ("~ī", "~erātis")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_3_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_3_SG, [IND_ACT_PERF_1_SG], [("~sum", "~erat"), ("~ī", "~erat")], rules {
+    // ACT_PLUP_3_SG, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_3_SG, [ACT_PERF_1_SG], [("~sum", "~erat"), ("~ī", "~erat")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_PLUP_3_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_PLUP_3_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī erant"), ("~ī", "~erant")], rules {
+    // ACT_PLUP_3_PL, from ACT_PERF_1_SG.
+    relation!(ACT_PLUP_3_PL, [ACT_PERF_1_SG], [("~us sum", "~ī erant"), ("~ī", "~erant")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // IND_ACT_FUTP_1_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_1_SG, [IND_ACT_PERF_1_SG], [("~sum", "~erō"), ("~ī", "~erō")], rules {
+    // ACT_FUTP_1_SG, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_1_SG, [ACT_PERF_1_SG], [("~sum", "~erō"), ("~ī", "~erō")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_ACT_FUTP_1_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_1_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī erimus"), ("~ī", "~erimus")], rules {
+    // ACT_FUTP_1_PL, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_1_PL, [ACT_PERF_1_SG], [("~us sum", "~ī erimus"), ("~ī", "~erimus")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_ACT_FUTP_2_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_2_SG, [IND_ACT_PERF_1_SG], [("~sum", "~eris"), ("~ī", "~eris")], rules {
+    // ACT_FUTP_2_SG, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_2_SG, [ACT_PERF_1_SG], [("~sum", "~eris"), ("~ī", "~eris")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_ACT_FUTP_2_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_2_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī eritis"), ("~ī", "~eritis")], rules {
+    // ACT_FUTP_2_PL, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_2_PL, [ACT_PERF_1_SG], [("~us sum", "~ī eritis"), ("~ī", "~eritis")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_ACT_FUTP_3_SG, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_3_SG, [IND_ACT_PERF_1_SG], [("~sum", "~erit"), ("~ī", "~erit")], rules {
+    // ACT_FUTP_3_SG, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_3_SG, [ACT_PERF_1_SG], [("~sum", "~erit"), ("~ī", "~erit")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_ACT_FUTP_3_PL, from IND_ACT_PERF_1_SG.
-    relation!(IND_ACT_FUTP_3_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī erunt"), ("~ī", "~erint")], rules {
+    // ACT_FUTP_3_PL, from ACT_PERF_1_SG.
+    relation!(ACT_FUTP_3_PL, [ACT_PERF_1_SG], [("~us sum", "~ī erunt"), ("~ī", "~erint")], rules {
         "" => [1 4904, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4904],
     } listed {}, true, None),
-    // IND_PASS_PRES_1_SG, from IND_ACT_PRES_1_SG.
-    relation!(IND_PASS_PRES_1_SG, [IND_ACT_PRES_1_SG], [("~aciō", "~īō"), ("~ō", "~or")], rules {
+    // PASS_PRES_1_SG, from ACT_PRES_1_SG.
+    relation!(PASS_PRES_1_SG, [ACT_PRES_1_SG], [("~aciō", "~īō"), ("~ō", "~or")], rules {
         "" => [1 4466, 0 52],
         "cō" => [1 459],
         "dō" => [1 340],
@@ -766,8 +773,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "rō" => [1 512],
         "tō" => [1 559],
     } listed {}, true, None),
-    // IND_PASS_PRES_1_PL, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_PRES_1_PL, [IND_PASS_FUT_1_SG], [("~am", "~mus"), ("~ar", "~imur"), ("~ar", "~mur"), ("~bor", "~mur"), ("~iar", "~īmur")], rules {
+    // PASS_PRES_1_PL, from PASS_FUT_1_SG.
+    relation!(PASS_PRES_1_PL, [PASS_FUT_1_SG], [("~am", "~mus"), ("~ar", "~imur"), ("~ar", "~mur"), ("~bor", "~mur"), ("~iar", "~īmur")], rules {
         "" => [3 2795, 1 1297, 4 234, 2 140, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -802,8 +809,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "var" => [1 21],
         "or" => [3 2795],
     } listed {}, true, None),
-    // IND_PASS_PRES_2_SG, from SUBJ_ACT_IMPF_1_SG.
-    relation!(IND_PASS_PRES_2_SG, [SUBJ_ACT_IMPF_1_SG], [("~acerem", "~īs"), ("~em", "~is")], rules {
+    // PASS_PRES_2_SG, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(PASS_PRES_2_SG, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~acerem", "~īs"), ("~em", "~is")], rules {
         "" => [1 4466, 0 52],
         "erem" => [1 1416, 0 52],
         "cerem" => [1 245, 0 52],
@@ -815,15 +822,15 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uerem" => [1 121],
         "ārem" => [1 2467],
     } listed {}, true, None),
-    // IND_PASS_PRES_2_PL, from IND_PASS_PRES_1_PL.
-    relation!(IND_PASS_PRES_2_PL, [IND_PASS_PRES_1_PL], [("~mus", "~tis"), ("~ur", "~inī")], rules {
+    // PASS_PRES_2_PL, from PASS_PRES_1_PL.
+    relation!(PASS_PRES_2_PL, [PASS_PRES_1_PL], [("~mus", "~tis"), ("~ur", "~inī")], rules {
         "" => [1 4466, 0 52],
         "r" => [1 4466],
         "s" => [0 52],
         "us" => [0 52],
     } listed {}, true, None),
-    // IND_PASS_PRES_3_SG, from IND_PASS_PRES_1_PL.
-    relation!(IND_PASS_PRES_3_SG, [IND_PASS_PRES_1_PL], [("~imur", "~tur"), ("~mur", "~tur"), ("~īmus", "~it")], rules {
+    // PASS_PRES_3_SG, from PASS_PRES_1_PL.
+    relation!(PASS_PRES_3_SG, [PASS_PRES_1_PL], [("~imur", "~tur"), ("~mur", "~tur"), ("~īmus", "~it")], rules {
         "" => [1 4444, 2 52, 0 22],
         "r" => [1 4444, 0 22],
         "imur" => [1 1415, 0 22],
@@ -834,8 +841,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "s" => [2 52],
         "us" => [2 52],
     } listed {}, true, None),
-    // IND_PASS_PRES_3_PL, from IND_ACT_PRES_3_PL.
-    relation!(IND_PASS_PRES_3_PL, [IND_ACT_PRES_3_PL], [("~", "~ur"), ("~aciunt", "~īunt")], rules {
+    // PASS_PRES_3_PL, from ACT_PRES_3_PL.
+    relation!(PASS_PRES_3_PL, [ACT_PRES_3_PL], [("~", "~ur"), ("~aciunt", "~īunt")], rules {
         "" => [0 4505, 1 52],
         "ant" => [0 2477],
         "ent" => [0 315],
@@ -854,8 +861,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "tiunt" => [0 48],
         "uunt" => [0 127],
     } listed {}, true, None),
-    // IND_PASS_IMPF_1_SG, from IND_ACT_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_1_SG, [IND_ACT_IMPF_1_SG], [("~aciēbam", "~īēbam"), ("~m", "~r")], rules {
+    // PASS_IMPF_1_SG, from ACT_IMPF_1_SG.
+    relation!(PASS_IMPF_1_SG, [ACT_IMPF_1_SG], [("~aciēbam", "~īēbam"), ("~m", "~r")], rules {
         "" => [1 4466, 0 52],
         "ābam" => [1 2467],
         "ēbam" => [1 1971, 0 52],
@@ -871,43 +878,43 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "riēbam" => [1 45],
         "tiēbam" => [1 48],
     } listed {}, true, None),
-    // IND_PASS_IMPF_1_PL, from IND_PASS_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_1_PL, [IND_PASS_IMPF_1_SG], [("~am", "~āmus"), ("~ar", "~āmur")], rules {
+    // PASS_IMPF_1_PL, from PASS_IMPF_1_SG.
+    relation!(PASS_IMPF_1_PL, [PASS_IMPF_1_SG], [("~am", "~āmus"), ("~ar", "~āmur")], rules {
         "" => [1 4466, 0 52],
         "m" => [0 52],
         "am" => [0 52],
         "r" => [1 4466],
     } listed {}, true, None),
-    // IND_PASS_IMPF_2_SG, from IND_PASS_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_2_SG, [IND_PASS_IMPF_1_SG], [("~am", "~ās"), ("~ar", "~āris")], rules {
+    // PASS_IMPF_2_SG, from PASS_IMPF_1_SG.
+    relation!(PASS_IMPF_2_SG, [PASS_IMPF_1_SG], [("~am", "~ās"), ("~ar", "~āris")], rules {
         "" => [1 4466, 0 52],
         "m" => [0 52],
         "am" => [0 52],
         "r" => [1 4466],
     } listed {}, true, None),
-    // IND_PASS_IMPF_2_PL, from IND_PASS_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_2_PL, [IND_PASS_IMPF_1_SG], [("~am", "~ātis"), ("~ar", "~āminī")], rules {
+    // PASS_IMPF_2_PL, from PASS_IMPF_1_SG.
+    relation!(PASS_IMPF_2_PL, [PASS_IMPF_1_SG], [("~am", "~ātis"), ("~ar", "~āminī")], rules {
         "" => [1 4466, 0 52],
         "m" => [0 52],
         "am" => [0 52],
         "r" => [1 4466],
     } listed {}, true, None),
-    // IND_PASS_IMPF_3_SG, from IND_PASS_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_3_SG, [IND_PASS_IMPF_1_SG], [("~ar", "~ātur"), ("~m", "~t")], rules {
+    // PASS_IMPF_3_SG, from PASS_IMPF_1_SG.
+    relation!(PASS_IMPF_3_SG, [PASS_IMPF_1_SG], [("~ar", "~ātur"), ("~m", "~t")], rules {
         "" => [0 4466, 1 52],
         "m" => [1 52],
         "am" => [1 52],
         "r" => [0 4466],
     } listed {}, true, None),
-    // IND_PASS_IMPF_3_PL, from IND_PASS_IMPF_1_SG.
-    relation!(IND_PASS_IMPF_3_PL, [IND_PASS_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
+    // PASS_IMPF_3_PL, from PASS_IMPF_1_SG.
+    relation!(PASS_IMPF_3_PL, [PASS_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
         "" => [1 4466, 0 52],
         "m" => [0 52],
         "am" => [0 52],
         "r" => [1 4466],
     } listed {}, true, None),
-    // IND_PASS_FUT_1_SG, from IND_ACT_FUT_1_SG.
-    relation!(IND_PASS_FUT_1_SG, [IND_ACT_FUT_1_SG], [("~aciam", "~īam"), ("~m", "~r"), ("~ō", "~or")], rules {
+    // PASS_FUT_1_SG, from ACT_FUT_1_SG.
+    relation!(PASS_FUT_1_SG, [ACT_FUT_1_SG], [("~aciam", "~īam"), ("~m", "~r"), ("~ō", "~or")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [1 1671, 0 52],
         "cam" => [1 167],
@@ -926,8 +933,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uam" => [1 121],
         "ō" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_FUT_1_PL, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_FUT_1_PL, [IND_PASS_FUT_1_SG], [("~am", "~ēmus"), ("~ar", "~ēmur"), ("~or", "~imur")], rules {
+    // PASS_FUT_1_PL, from PASS_FUT_1_SG.
+    relation!(PASS_FUT_1_PL, [PASS_FUT_1_SG], [("~am", "~ēmus"), ("~ar", "~ēmur"), ("~or", "~imur")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -935,8 +942,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1671],
         "or" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_FUT_2_SG, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_FUT_2_SG, [IND_PASS_FUT_1_SG], [("~am", "~ēs"), ("~ar", "~ēris"), ("~or", "~eris")], rules {
+    // PASS_FUT_2_SG, from PASS_FUT_1_SG.
+    relation!(PASS_FUT_2_SG, [PASS_FUT_1_SG], [("~am", "~ēs"), ("~ar", "~ēris"), ("~or", "~eris")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -944,8 +951,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1671],
         "or" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_FUT_2_PL, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_FUT_2_PL, [IND_PASS_FUT_1_SG], [("~am", "~ētis"), ("~ar", "~ēminī"), ("~or", "~iminī")], rules {
+    // PASS_FUT_2_PL, from PASS_FUT_1_SG.
+    relation!(PASS_FUT_2_PL, [PASS_FUT_1_SG], [("~am", "~ētis"), ("~ar", "~ēminī"), ("~or", "~iminī")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -953,8 +960,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1671],
         "or" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_FUT_3_SG, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_FUT_3_SG, [IND_PASS_FUT_1_SG], [("~am", "~et"), ("~ar", "~ētur"), ("~or", "~itur")], rules {
+    // PASS_FUT_3_SG, from PASS_FUT_1_SG.
+    relation!(PASS_FUT_3_SG, [PASS_FUT_1_SG], [("~am", "~et"), ("~ar", "~ētur"), ("~or", "~itur")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -962,8 +969,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1671],
         "or" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_FUT_3_PL, from IND_PASS_FUT_1_SG.
-    relation!(IND_PASS_FUT_3_PL, [IND_PASS_FUT_1_SG], [("~am", "~ent"), ("~ar", "~entur"), ("~or", "~untur")], rules {
+    // PASS_FUT_3_PL, from PASS_FUT_1_SG.
+    relation!(PASS_FUT_3_PL, [PASS_FUT_1_SG], [("~am", "~ent"), ("~ar", "~entur"), ("~or", "~untur")], rules {
         "" => [2 2795, 1 1671, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -971,81 +978,81 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1671],
         "or" => [2 2795],
     } listed {}, true, None),
-    // IND_PASS_PERF_1_SG, from INFINITIVE_PASS_PERF.
-    relation!(IND_PASS_PERF_1_SG, [INFINITIVE_PASS_PERF], [("~bitum esse", "~ptus sum"), ("~entum esse", "~ēnsus sum"), ("~itum esse", "~tus sum"), ("~itum esse", "~ātus sum"), ("~m esse", "~s sum"), ("~ptum esse", "~tus sum"), ("~tum esse", "~ātus sum"), ("~um esse", "~tus sum"), ("~xtum esse", "~stus sum"), ("~ātum esse", "~itus sum"), ("~ātum esse", "~tus sum")], rules {
+    // PASS_PERF_1_SG, from INFINITIVE_PASS_PERF.
+    relation!(PASS_PERF_1_SG, [INFINITIVE_PASS_PERF], [("~bitum esse", "~ptus sum"), ("~entum esse", "~ēnsus sum"), ("~itum esse", "~tus sum"), ("~itum esse", "~ātus sum"), ("~m esse", "~s sum"), ("~ptum esse", "~tus sum"), ("~tum esse", "~ātus sum"), ("~um esse", "~tus sum"), ("~xtum esse", "~stus sum"), ("~ātum esse", "~itus sum"), ("~ātum esse", "~tus sum")], rules {
         "" => [4 4101, 2 27, 7 8, 9 4, 1 3, 5 3, 6 3, 8 3, 0 2, 3 2, 10 2],
         "sum esse" => [4 410, 7 8],
     } listed {}, false, None),
-    // IND_PASS_PERF_1_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PERF_1_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī sumus")], rules {
+    // PASS_PERF_1_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PERF_1_PL, [PASS_PERF_1_SG], [("~us sum", "~ī sumus")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PERF_2_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PERF_2_SG, [IND_PASS_PERF_1_SG], [("~sum", "~es")], rules {
+    // PASS_PERF_2_SG, from PASS_PERF_1_SG.
+    relation!(PASS_PERF_2_SG, [PASS_PERF_1_SG], [("~sum", "~es")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PERF_2_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PERF_2_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī estis")], rules {
+    // PASS_PERF_2_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PERF_2_PL, [PASS_PERF_1_SG], [("~us sum", "~ī estis")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PERF_3_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PERF_3_SG, [IND_PASS_PERF_1_SG], [("~sum", "~est")], rules {
+    // PASS_PERF_3_SG, from PASS_PERF_1_SG.
+    relation!(PASS_PERF_3_SG, [PASS_PERF_1_SG], [("~sum", "~est")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PERF_3_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PERF_3_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī sunt")], rules {
+    // PASS_PERF_3_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PERF_3_PL, [PASS_PERF_1_SG], [("~us sum", "~ī sunt")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_1_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_1_SG, [IND_PASS_PERF_1_SG], [("~sum", "~eram")], rules {
+    // PASS_PLUP_1_SG, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_1_SG, [PASS_PERF_1_SG], [("~sum", "~eram")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_1_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_1_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī erāmus")], rules {
+    // PASS_PLUP_1_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_1_PL, [PASS_PERF_1_SG], [("~us sum", "~ī erāmus")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_2_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_2_SG, [IND_PASS_PERF_1_SG], [("~sum", "~erās")], rules {
+    // PASS_PLUP_2_SG, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_2_SG, [PASS_PERF_1_SG], [("~sum", "~erās")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_2_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_2_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī erātis")], rules {
+    // PASS_PLUP_2_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_2_PL, [PASS_PERF_1_SG], [("~us sum", "~ī erātis")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_3_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_3_SG, [IND_PASS_PERF_1_SG], [("~sum", "~erat")], rules {
+    // PASS_PLUP_3_SG, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_3_SG, [PASS_PERF_1_SG], [("~sum", "~erat")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_PLUP_3_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_PLUP_3_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī erant")], rules {
+    // PASS_PLUP_3_PL, from PASS_PERF_1_SG.
+    relation!(PASS_PLUP_3_PL, [PASS_PERF_1_SG], [("~us sum", "~ī erant")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_1_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_1_SG, [IND_PASS_PERF_1_SG], [("~sum", "~erō")], rules {
+    // PASS_FUTP_1_SG, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_1_SG, [PASS_PERF_1_SG], [("~sum", "~erō")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_1_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_1_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī erimus")], rules {
+    // PASS_FUTP_1_PL, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_1_PL, [PASS_PERF_1_SG], [("~us sum", "~ī erimus")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_2_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_2_SG, [IND_PASS_PERF_1_SG], [("~sum", "~eris")], rules {
+    // PASS_FUTP_2_SG, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_2_SG, [PASS_PERF_1_SG], [("~sum", "~eris")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_2_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_2_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī eritis")], rules {
+    // PASS_FUTP_2_PL, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_2_PL, [PASS_PERF_1_SG], [("~us sum", "~ī eritis")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_3_SG, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_3_SG, [IND_PASS_PERF_1_SG], [("~sum", "~erit")], rules {
+    // PASS_FUTP_3_SG, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_3_SG, [PASS_PERF_1_SG], [("~sum", "~erit")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // IND_PASS_FUTP_3_PL, from IND_PASS_PERF_1_SG.
-    relation!(IND_PASS_FUTP_3_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī erunt")], rules {
+    // PASS_FUTP_3_PL, from PASS_PERF_1_SG.
+    relation!(PASS_FUTP_3_PL, [PASS_PERF_1_SG], [("~us sum", "~ī erunt")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_1_SG, from IND_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_1_SG, [IND_ACT_PRES_1_SG], [("~olō", "~elim"), ("~or", "~ar"), ("~or", "~er"), ("~um", "~im"), ("~ī", "~erim"), ("~ō", "~am"), ("~ō", "~em"), ("~ō", "~im")], rules {
+    // SUBJUNCTIVE_ACT_PRES_1_SG, from ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_1_SG, [ACT_PRES_1_SG], [("~olō", "~elim"), ("~or", "~ar"), ("~or", "~er"), ("~um", "~im"), ("~ī", "~erim"), ("~ō", "~am"), ("~ō", "~em"), ("~ō", "~im")], rules {
         "" => [5 2822, 6 2718, 2 357, 1 211, 3 13, 4 4, 0 2, 7 2],
         "m" => [3 13],
         "r" => [2 357, 1 211],
@@ -1233,8 +1240,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "texō" => [5 11],
         "zō" => [6 45],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_1_PL, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_1_PL, [SUBJ_ACT_PRES_1_SG], [("~am", "~āmus"), ("~ar", "~āmur"), ("~em", "~ēmus"), ("~er", "~ēmur"), ("~im", "~īmus")], rules {
+    // SUBJUNCTIVE_ACT_PRES_1_PL, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_1_PL, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~āmus"), ("~ar", "~āmur"), ("~em", "~ēmus"), ("~er", "~ēmur"), ("~im", "~īmus")], rules {
         "" => [0 2821, 2 2718, 3 357, 1 211, 4 21],
         "m" => [0 2821, 2 2718, 4 21],
         "am" => [0 2821],
@@ -1244,8 +1251,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 211],
         "er" => [3 357],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_2_SG, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_2_SG, [SUBJ_ACT_PRES_1_SG], [("~am", "~ās"), ("~ar", "~āris"), ("~em", "~ēs"), ("~er", "~ēris"), ("~im", "~īs")], rules {
+    // SUBJUNCTIVE_ACT_PRES_2_SG, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_2_SG, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~ās"), ("~ar", "~āris"), ("~em", "~ēs"), ("~er", "~ēris"), ("~im", "~īs")], rules {
         "" => [0 2823, 2 2718, 3 357, 1 211, 4 21],
         "m" => [0 2823, 2 2718, 4 21],
         "am" => [0 2823],
@@ -1255,8 +1262,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 211],
         "er" => [3 357],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_2_PL, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_2_PL, [SUBJ_ACT_PRES_1_SG], [("~am", "~ātis"), ("~ar", "~āminī"), ("~em", "~ētis"), ("~er", "~ēminī"), ("~im", "~ītis")], rules {
+    // SUBJUNCTIVE_ACT_PRES_2_PL, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_2_PL, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~ātis"), ("~ar", "~āminī"), ("~em", "~ētis"), ("~er", "~ēminī"), ("~im", "~ītis")], rules {
         "" => [0 2821, 2 2718, 3 357, 1 211, 4 21],
         "m" => [0 2821, 2 2718, 4 21],
         "am" => [0 2821],
@@ -1266,22 +1273,22 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 211],
         "er" => [3 357],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_3_SG, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_3_SG, [SUBJ_ACT_PRES_1_SG], [("~ar", "~ātur"), ("~er", "~ētur"), ("~m", "~t")], rules {
+    // SUBJUNCTIVE_ACT_PRES_3_SG, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_3_SG, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~ar", "~ātur"), ("~er", "~ētur"), ("~m", "~t")], rules {
         "" => [2 5562, 1 357, 0 211],
         "m" => [2 5562],
         "r" => [1 357, 0 211],
         "ar" => [0 211],
         "er" => [1 357],
     } listed {}, true, None),
-    // SUBJ_ACT_PRES_3_PL, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_ACT_PRES_3_PL, [SUBJ_ACT_PRES_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
+    // SUBJUNCTIVE_ACT_PRES_3_PL, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PRES_3_PL, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
         "" => [0 5562, 1 568],
         "m" => [0 5562],
         "r" => [1 568],
     } listed {}, true, None),
-    // SUBJ_ACT_IMPF_1_SG, from IND_ACT_PRES_2_SG.
-    relation!(SUBJ_ACT_IMPF_1_SG, [IND_ACT_PRES_2_SG], [("~", "~sem"), ("~is", "~er"), ("~is", "~erem"), ("~s", "~rem"), ("~tī", "~sem"), ("~ās", "~arem"), ("~īs", "~ellem"), ("~īs", "~ierem")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_1_SG, from ACT_PRES_2_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_1_SG, [ACT_PRES_2_SG], [("~", "~sem"), ("~is", "~er"), ("~is", "~erem"), ("~s", "~rem"), ("~tī", "~sem"), ("~ās", "~arem"), ("~īs", "~ellem"), ("~īs", "~ierem")], rules {
         "" => [3 3641, 2 1888, 1 567, 0 12, 5 5, 4 4, 7 4, 6 2],
         "es" => [0 12],
         "is" => [2 1888, 1 567],
@@ -1318,248 +1325,78 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "vīs" => [3 14, 6 2],
         "ī" => [4 4],
     } listed {
-        "potevīs" => 6,
-        "praeterferris" => 1,
-        "vīs" => 6,
+        1 => [
+            "praeterferris",
+        ],
+        6 => [
+            "potevīs", "vīs",
+        ],
     }, true, None),
-    // SUBJ_ACT_IMPF_1_PL, from SUBJ_ACT_IMPF_1_SG.
-    relation!(SUBJ_ACT_IMPF_1_PL, [SUBJ_ACT_IMPF_1_SG], [("~em", "~ēmus"), ("~er", "~ēmur")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_1_PL, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_1_PL, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~em", "~ēmus"), ("~er", "~ēmur")], rules {
         "" => [0 5560, 1 568],
         "m" => [0 5560],
         "r" => [1 568],
         "er" => [1 568],
     } listed {}, true, None),
-    // SUBJ_ACT_IMPF_2_SG, from SUBJ_ACT_IMPF_1_SG.
-    relation!(SUBJ_ACT_IMPF_2_SG, [SUBJ_ACT_IMPF_1_SG], [("~em", "~ēs"), ("~er", "~ēris")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_2_SG, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_2_SG, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~em", "~ēs"), ("~er", "~ēris")], rules {
         "" => [0 5560, 1 568],
         "m" => [0 5560],
         "r" => [1 568],
         "er" => [1 568],
     } listed {}, true, None),
-    // SUBJ_ACT_IMPF_2_PL, from SUBJ_ACT_IMPF_1_SG.
-    relation!(SUBJ_ACT_IMPF_2_PL, [SUBJ_ACT_IMPF_1_SG], [("~em", "~ētis"), ("~er", "~ēminī")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_2_PL, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_2_PL, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~em", "~ētis"), ("~er", "~ēminī")], rules {
         "" => [0 5560, 1 568],
         "m" => [0 5560],
         "r" => [1 568],
         "er" => [1 568],
     } listed {}, true, None),
-    // SUBJ_ACT_IMPF_3_SG, from SUBJ_ACT_IMPF_1_SG.
-    relation!(SUBJ_ACT_IMPF_3_SG, [SUBJ_ACT_IMPF_1_SG], [("~er", "~ētur"), ("~m", "~t")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_3_SG, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_3_SG, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~er", "~ētur"), ("~m", "~t")], rules {
         "" => [1 5560, 0 568],
         "m" => [1 5560],
         "r" => [0 568],
         "er" => [0 568],
     } listed {}, true, None),
-    // SUBJ_ACT_IMPF_3_PL, from SUBJ_ACT_IMPF_1_SG.
-    relation!(SUBJ_ACT_IMPF_3_PL, [SUBJ_ACT_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
+    // SUBJUNCTIVE_ACT_IMPF_3_PL, from SUBJUNCTIVE_ACT_IMPF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_IMPF_3_PL, [SUBJUNCTIVE_ACT_IMPF_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
         "" => [0 5560, 1 568],
         "m" => [0 5560],
         "r" => [1 568],
         "er" => [1 568],
     } listed {}, true, None),
-    // SUBJ_ACT_FUT_1_SG, from IND_ACT_FUT_1_SG. Few or no words have it: changed as IND_ACT_PERF_1_SG is into SUBJ_ACT_PERF_1_SG.
-    relation!(
-        SUBJ_ACT_FUT_1_SG,
-        [IND_ACT_FUT_1_SG],
-        [],
-        none,
-        true,
-        Some((IND_ACT_PERF_1_SG, SUBJ_ACT_PERF_1_SG))
-    ),
-    // SUBJ_ACT_FUT_1_PL, from IND_ACT_FUT_1_PL. Few or no words have it: changed as IND_ACT_PERF_1_PL is into SUBJ_ACT_PERF_1_PL.
-    relation!(SUBJ_ACT_FUT_1_PL, [IND_ACT_FUT_1_PL], [("~imus", "~erīmus"), ("~umus", "~īmus")], rules {
-        "" => [0 4907, 1 563],
-        "imus" => [0 4907],
-        "umus" => [1 563],
-    } listed {}, true, Some((IND_ACT_PERF_1_PL, SUBJ_ACT_PERF_1_PL))),
-    // SUBJ_ACT_FUT_2_SG, from SUBJ_ACT_IMPF_2_SG. Few or no words have it: changed as IND_ACT_IMPF_2_SG is into IND_ACT_FUT_2_SG.
-    relation!(SUBJ_ACT_FUT_2_SG, [SUBJ_ACT_IMPF_2_SG], [("~bāris", "~ris"), ("~bās", "~s"), ("~āris", "~eris"), ("~ās", "~is")], rules {
-        "" => [3 3301, 1 2256, 2 380, 0 188],
-        "is" => [2 380, 0 188],
-        "ābāris" => [2 357],
-        "ēbāris" => [0 188, 2 23],
-        "iēbāris" => [0 78],
-        "rēbāris" => [2 10, 0 3],
-        "ās" => [3 3301, 1 2256],
-        "ābās" => [3 2713],
-        "ēbās" => [1 2256, 3 534],
-        "bēbās" => [1 57, 3 37],
-        "hibēbās" => [3 10],
-        "mbēbās" => [1 18],
-        "rbēbās" => [3 10],
-        "ībēbās" => [1 22],
-        "acēbās" => [3 17],
-        "lcēbās" => [3 5],
-        "ocēbās" => [3 10, 1 1],
-        "rcēbās" => [3 9, 1 3],
-        "scēbās" => [1 358, 3 11],
-        "iscēbās" => [3 11, 1 7],
-        "ēscēbās" => [1 275],
-        "ūcēbās" => [1 26, 3 22],
-        "dūcēbās" => [1 26],
-        "lūcēbās" => [3 21],
-        "sedēbās" => [3 5],
-        "idēbās" => [3 19, 1 13],
-        "cidēbās" => [1 11],
-        "sidēbās" => [3 12],
-        "ondēbās" => [3 13, 1 3],
-        "rdēbās" => [3 12, 1 3],
-        "udēbās" => [3 11, 1 4],
-        "ēdēbās" => [1 25],
-        "rīdēbās" => [3 11, 1 2],
-        "ūdēbās" => [1 36],
-        "lgēbās" => [3 21, 1 1],
-        "ngēbās" => [1 101, 3 1],
-        "hēbās" => [1 31],
-        "iēbās" => [1 553, 3 6],
-        "lēbās" => [1 64, 3 51],
-        "llēbās" => [1 44, 3 7],
-        "plēbās" => [3 11],
-        "nēbās" => [1 82, 3 51],
-        "manēbās" => [3 8],
-        "tinēbās" => [3 15],
-        "onēbās" => [3 13],
-        "rnēbās" => [1 20, 3 1],
-        "ōnēbās" => [1 29],
-        "upēbās" => [3 6],
-        "rēbās" => [1 109, 3 55],
-        "ferēbās" => [1 22],
-        "gerēbās" => [1 17],
-        "terrēbās" => [3 8],
-        "orrēbās" => [3 11, 1 1],
-        "urrēbās" => [1 19],
-        "ārēbās" => [3 9],
-        "nsēbās" => [3 9, 1 1],
-        "itēbās" => [3 8],
-        "ttēbās" => [1 30],
-        "quēbās" => [3 14, 1 12],
-        "rquēbās" => [3 13],
-        "ruēbās" => [1 30],
-        "vēbās" => [3 46, 1 28],
-        "lvēbās" => [1 20, 3 2],
-        "ovēbās" => [3 26],
-        "ībās" => [3 32],
-        "rās" => [3 17],
-    } listed {}, true, Some((IND_ACT_IMPF_2_SG, IND_ACT_FUT_2_SG))),
-    // SUBJ_ACT_FUT_2_PL, from IND_ACT_FUT_2_PL. Few or no words have it: changed as IND_ACT_PLUP_2_PL is into SUBJ_ACT_PLUP_2_PL.
-    relation!(SUBJ_ACT_FUT_2_PL, [IND_ACT_FUT_2_PL], [("~erātis", "~issētis"), ("~ierātis", "~īssētis"), ("~rātis", "~ssētis")], rules {
-        "" => [0 4877, 2 564, 1 29],
-        " erātis" => [2 563],
-        "cerātis" => [0 126],
-        "derātis" => [0 238],
-        "gerātis" => [0 73],
-        "ierātis" => [1 29, 0 14],
-        "serātis" => [0 393],
-        "terātis" => [0 54],
-        "uerātis" => [0 680],
-        "verātis" => [0 2806],
-        "xerātis" => [0 342],
-    } listed {}, true, Some((IND_ACT_PLUP_2_PL, SUBJ_ACT_PLUP_2_PL))),
-    // SUBJ_ACT_FUT_3_SG, from SUBJ_ACT_IMPF_3_SG. Few or no words have it: changed as IND_ACT_IMPF_3_SG is into IND_ACT_FUT_3_SG.
-    relation!(SUBJ_ACT_FUT_3_SG, [SUBJ_ACT_IMPF_3_SG], [("~at", "~it"), ("~bātur", "~tur"), ("~ātur", "~itur"), ("~ēbat", "~et")], rules {
-        "" => [0 3320, 3 2272, 2 380, 1 188],
-        "r" => [2 380, 1 188],
-        "ābātur" => [2 357],
-        "ēbātur" => [1 188, 2 23],
-        "iēbātur" => [1 78],
-        "rēbātur" => [2 10, 1 3],
-        "t" => [0 3320, 3 2272],
-        "ābat" => [0 2715],
-        "ēbat" => [3 2272, 0 550],
-        "bēbat" => [3 57, 0 40],
-        "hibēbat" => [0 10],
-        "mbēbat" => [3 18],
-        "rbēbat" => [0 10],
-        "ībēbat" => [3 22],
-        "acēbat" => [0 17],
-        "lcēbat" => [0 5],
-        "ocēbat" => [0 10, 3 1],
-        "rcēbat" => [0 9, 3 3],
-        "scēbat" => [3 364, 0 11],
-        "iscēbat" => [0 11, 3 7],
-        "ēscēbat" => [3 277],
-        "ūcēbat" => [3 26, 0 22],
-        "dūcēbat" => [3 26],
-        "lūcēbat" => [0 21],
-        "sedēbat" => [0 5],
-        "idēbat" => [0 19, 3 13],
-        "cidēbat" => [3 11],
-        "sidēbat" => [0 12],
-        "ondēbat" => [0 13, 3 3],
-        "rdēbat" => [0 12, 3 3],
-        "udēbat" => [0 13, 3 4],
-        "ēdēbat" => [3 25],
-        "rīdēbat" => [0 11, 3 2],
-        "ūdēbat" => [3 36],
-        "lgēbat" => [0 21, 3 1],
-        "ngēbat" => [3 102, 0 1],
-        "hēbat" => [3 31],
-        "iēbat" => [3 554, 0 6],
-        "lēbat" => [3 64, 0 51],
-        "llēbat" => [3 44, 0 7],
-        "plēbat" => [0 11],
-        "nēbat" => [3 82, 0 51],
-        "manēbat" => [0 8],
-        "tinēbat" => [0 15],
-        "onēbat" => [0 13],
-        "rnēbat" => [3 20, 0 1],
-        "ōnēbat" => [3 29],
-        "upēbat" => [0 6],
-        "rēbat" => [3 110, 0 56],
-        "ferēbat" => [3 23],
-        "gerēbat" => [3 17],
-        "terrēbat" => [0 8],
-        "orrēbat" => [0 11, 3 1],
-        "urrēbat" => [3 19],
-        "ārēbat" => [0 9],
-        "nsēbat" => [0 9, 3 1],
-        "itēbat" => [0 8],
-        "ttēbat" => [3 30],
-        "quēbat" => [0 14, 3 12],
-        "rquēbat" => [0 13],
-        "ruēbat" => [3 30],
-        "vēbat" => [0 46, 3 29],
-        "lvēbat" => [3 20, 0 2],
-        "ovēbat" => [0 26],
-        "ībat" => [0 32],
-        "rat" => [0 18],
-    } listed {}, true, Some((IND_ACT_IMPF_3_SG, IND_ACT_FUT_3_SG))),
-    // SUBJ_ACT_FUT_3_PL, from IND_ACT_FUT_3_PL. Few or no words have it: changed as IND_ACT_PERF_3_PL is into SUBJ_ACT_PERF_3_PL.
-    relation!(SUBJ_ACT_FUT_3_PL, [IND_ACT_FUT_3_PL], [("~unt", "~int"), ("~ērunt", "~erint")], rules {
-        "" => [1 4912, 0 564],
-        "runt" => [1 4912],
-        "sunt" => [0 564],
-    } listed {}, true, Some((IND_ACT_PERF_3_PL, SUBJ_ACT_PERF_3_PL))),
-    // SUBJ_ACT_PERF_1_SG, from IND_ACT_PERF_1_SG.
-    relation!(SUBJ_ACT_PERF_1_SG, [IND_ACT_PERF_1_SG], [("~um", "~im"), ("~ī", "~erim")], rules {
+    // SUBJUNCTIVE_ACT_PERF_1_SG, from ACT_PERF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PERF_1_SG, [ACT_PERF_1_SG], [("~um", "~im"), ("~ī", "~erim")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // SUBJ_ACT_PERF_1_PL, from IND_ACT_PERF_1_SG.
-    relation!(SUBJ_ACT_PERF_1_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī sīmus"), ("~ī", "~erīmus")], rules {
+    // SUBJUNCTIVE_ACT_PERF_1_PL, from ACT_PERF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PERF_1_PL, [ACT_PERF_1_SG], [("~us sum", "~ī sīmus"), ("~ī", "~erīmus")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // SUBJ_ACT_PERF_2_SG, from IND_ACT_PERF_1_SG.
-    relation!(SUBJ_ACT_PERF_2_SG, [IND_ACT_PERF_1_SG], [("~um", "~īs"), ("~ī", "~erīs")], rules {
+    // SUBJUNCTIVE_ACT_PERF_2_SG, from ACT_PERF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PERF_2_SG, [ACT_PERF_1_SG], [("~um", "~īs"), ("~ī", "~erīs")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // SUBJ_ACT_PERF_2_PL, from IND_ACT_PERF_1_SG.
-    relation!(SUBJ_ACT_PERF_2_PL, [IND_ACT_PERF_1_SG], [("~us sum", "~ī sītis"), ("~ī", "~erītis")], rules {
+    // SUBJUNCTIVE_ACT_PERF_2_PL, from ACT_PERF_1_SG.
+    relation!(SUBJUNCTIVE_ACT_PERF_2_PL, [ACT_PERF_1_SG], [("~us sum", "~ī sītis"), ("~ī", "~erītis")], rules {
         "" => [1 4907, 0 563],
         "m" => [0 563],
         "um" => [0 563],
         "ī" => [1 4907],
     } listed {}, true, None),
-    // SUBJ_ACT_PERF_3_SG, from IND_ACT_FUTP_3_SG.
-    relation!(SUBJ_ACT_PERF_3_SG, [IND_ACT_FUTP_3_SG], [("~", "~"), ("~erit", "~sit")], rules {
+    // SUBJUNCTIVE_ACT_PERF_3_SG, from ACT_FUTP_3_SG.
+    relation!(SUBJUNCTIVE_ACT_PERF_3_SG, [ACT_FUTP_3_SG], [("~", "~"), ("~erit", "~sit")], rules {
         "" => [0 4930, 1 566],
         " erit" => [1 566],
         "cerit" => [0 126],
@@ -1573,90 +1410,56 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "verit" => [0 2811],
         "xerit" => [0 344],
     } listed {}, true, None),
-    // SUBJ_ACT_PERF_3_PL, from IND_ACT_FUTP_3_PL.
-    relation!(SUBJ_ACT_PERF_3_PL, [IND_ACT_FUTP_3_PL], [("~", "~"), ("~erunt", "~sint")], rules {
+    // SUBJUNCTIVE_ACT_PERF_3_PL, from ACT_FUTP_3_PL.
+    relation!(SUBJUNCTIVE_ACT_PERF_3_PL, [ACT_FUTP_3_PL], [("~", "~"), ("~erunt", "~sint")], rules {
         "" => [0 4910, 1 563],
         "int" => [0 4910],
         "unt" => [1 563],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_1_SG, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_1_SG, [IND_ACT_PERF_2_SG], [("~", "~sem"), ("~tī", "~sem")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_1_SG, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_1_SG, [ACT_PERF_2_SG], [("~", "~sem"), ("~tī", "~sem")], rules {
         "" => [1 4908, 0 563],
         "s" => [0 563],
         "es" => [0 563],
         "ī" => [1 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_1_PL, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_1_PL, [IND_ACT_PERF_2_SG], [("~tī", "~sēmus"), ("~us es", "~ī essēmus")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_1_PL, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_1_PL, [ACT_PERF_2_SG], [("~tī", "~sēmus"), ("~us es", "~ī essēmus")], rules {
         "" => [0 4908, 1 563],
         "s" => [1 563],
         "es" => [1 563],
         "ī" => [0 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_2_SG, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_2_SG, [IND_ACT_PERF_2_SG], [("~", "~sēs"), ("~tī", "~sēs")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_2_SG, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_2_SG, [ACT_PERF_2_SG], [("~", "~sēs"), ("~tī", "~sēs")], rules {
         "" => [1 4908, 0 563],
         "s" => [0 563],
         "es" => [0 563],
         "ī" => [1 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_2_PL, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_2_PL, [IND_ACT_PERF_2_SG], [("~tī", "~sētis"), ("~us es", "~ī essētis")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_2_PL, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_2_PL, [ACT_PERF_2_SG], [("~tī", "~sētis"), ("~us es", "~ī essētis")], rules {
         "" => [0 4908, 1 563],
         "s" => [1 563],
         "es" => [1 563],
         "ī" => [0 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_3_SG, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_3_SG, [IND_ACT_PERF_2_SG], [("~", "~set"), ("~tī", "~set")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_3_SG, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_3_SG, [ACT_PERF_2_SG], [("~", "~set"), ("~tī", "~set")], rules {
         "" => [1 4908, 0 563],
         "s" => [0 563],
         "es" => [0 563],
         "ī" => [1 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_PLUP_3_PL, from IND_ACT_PERF_2_SG.
-    relation!(SUBJ_ACT_PLUP_3_PL, [IND_ACT_PERF_2_SG], [("~tī", "~sent"), ("~us es", "~ī essent")], rules {
+    // SUBJUNCTIVE_ACT_PLUP_3_PL, from ACT_PERF_2_SG.
+    relation!(SUBJUNCTIVE_ACT_PLUP_3_PL, [ACT_PERF_2_SG], [("~tī", "~sent"), ("~us es", "~ī essent")], rules {
         "" => [0 4908, 1 563],
         "s" => [1 563],
         "es" => [1 563],
         "ī" => [0 4908],
     } listed {}, true, None),
-    // SUBJ_ACT_FUTP_1_SG, from SUBJ_ACT_PLUP_1_SG. Few or no words have it: changed as IND_ACT_PLUP_1_SG is into IND_ACT_FUTP_1_SG.
-    relation!(SUBJ_ACT_FUTP_1_SG, [SUBJ_ACT_PLUP_1_SG], [("~am", "~ō")], rules {
-        "" => [0 5468],
-    } listed {}, true, Some((IND_ACT_PLUP_1_SG, IND_ACT_FUTP_1_SG))),
-    // SUBJ_ACT_FUTP_1_PL, from SUBJ_ACT_PLUP_1_PL. Few or no words have it: changed as IND_ACT_PLUP_1_PL is into IND_ACT_FUTP_1_PL.
-    relation!(SUBJ_ACT_FUTP_1_PL, [SUBJ_ACT_PLUP_1_PL], [("~āmus", "~imus")], rules {
-        "" => [0 5468],
-    } listed {}, true, Some((IND_ACT_PLUP_1_PL, IND_ACT_FUTP_1_PL))),
-    // SUBJ_ACT_FUTP_2_SG, from SUBJ_ACT_PLUP_2_SG. Few or no words have it: changed as IND_ACT_PLUP_2_SG is into IND_ACT_FUTP_2_SG.
-    relation!(SUBJ_ACT_FUTP_2_SG, [SUBJ_ACT_PLUP_2_SG], [("~ās", "~is")], rules {
-        "" => [0 5468],
-    } listed {}, true, Some((IND_ACT_PLUP_2_SG, IND_ACT_FUTP_2_SG))),
-    // SUBJ_ACT_FUTP_2_PL, from SUBJ_ACT_PLUP_2_PL. Few or no words have it: changed as IND_ACT_PLUP_2_PL is into IND_ACT_FUTP_2_PL.
-    relation!(SUBJ_ACT_FUTP_2_PL, [SUBJ_ACT_PLUP_2_PL], [("~ātis", "~itis")], rules {
-        "" => [0 5468],
-    } listed {}, true, Some((IND_ACT_PLUP_2_PL, IND_ACT_FUTP_2_PL))),
-    // SUBJ_ACT_FUTP_3_SG, from SUBJ_ACT_PLUP_3_SG. Few or no words have it: changed as IND_ACT_PLUP_3_SG is into IND_ACT_FUTP_3_SG.
-    relation!(SUBJ_ACT_FUTP_3_SG, [SUBJ_ACT_PLUP_3_SG], [("~at", "~it")], rules {
-        "" => [0 5496],
-    } listed {}, true, Some((IND_ACT_PLUP_3_SG, IND_ACT_FUTP_3_SG))),
-    // SUBJ_ACT_FUTP_3_PL, from SUBJ_ACT_PLUP_3_PL. Few or no words have it: changed as IND_ACT_PLUP_3_PL is into IND_ACT_FUTP_3_PL.
-    relation!(SUBJ_ACT_FUTP_3_PL, [SUBJ_ACT_PLUP_3_PL], [("~ant", "~int"), ("~ant", "~unt")], rules {
-        "" => [0 4911, 1 563],
-        " erant" => [1 563, 0 1],
-        "cerant" => [0 126],
-        "derant" => [0 238],
-        "gerant" => [0 73],
-        "lerant" => [0 48],
-        "serant" => [0 393],
-        "terant" => [0 54],
-        "uerant" => [0 682],
-        "verant" => [0 2806],
-        "xerant" => [0 342],
-    } listed {}, true, Some((IND_ACT_PLUP_3_PL, IND_ACT_FUTP_3_PL))),
-    // SUBJ_PASS_PRES_1_SG, from SUBJ_ACT_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_1_SG, [SUBJ_ACT_PRES_1_SG], [("~aciam", "~īam"), ("~m", "~r")], rules {
+    // SUBJUNCTIVE_PASS_PRES_1_SG, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_1_SG, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~aciam", "~īam"), ("~m", "~r")], rules {
         "" => [1 4466, 0 52],
         "am" => [1 1994, 0 52],
         "cam" => [1 167],
@@ -1675,8 +1478,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uam" => [1 121],
         "em" => [1 2472],
     } listed {}, true, None),
-    // SUBJ_PASS_PRES_1_PL, from SUBJ_PASS_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_1_PL, [SUBJ_PASS_PRES_1_SG], [("~am", "~āmus"), ("~ar", "~āmur"), ("~er", "~ēmur")], rules {
+    // SUBJUNCTIVE_PASS_PRES_1_PL, from SUBJUNCTIVE_PASS_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_1_PL, [SUBJUNCTIVE_PASS_PRES_1_SG], [("~am", "~āmus"), ("~ar", "~āmur"), ("~er", "~ēmur")], rules {
         "" => [2 2472, 1 1994, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -1684,8 +1487,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1994],
         "er" => [2 2472],
     } listed {}, true, None),
-    // SUBJ_PASS_PRES_2_SG, from SUBJ_PASS_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_2_SG, [SUBJ_PASS_PRES_1_SG], [("~am", "~ās"), ("~ar", "~āris"), ("~er", "~ēris")], rules {
+    // SUBJUNCTIVE_PASS_PRES_2_SG, from SUBJUNCTIVE_PASS_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_2_SG, [SUBJUNCTIVE_PASS_PRES_1_SG], [("~am", "~ās"), ("~ar", "~āris"), ("~er", "~ēris")], rules {
         "" => [2 2472, 1 1994, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -1693,8 +1496,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1994],
         "er" => [2 2472],
     } listed {}, true, None),
-    // SUBJ_PASS_PRES_2_PL, from SUBJ_PASS_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_2_PL, [SUBJ_PASS_PRES_1_SG], [("~am", "~ātis"), ("~ar", "~āminī"), ("~er", "~ēminī")], rules {
+    // SUBJUNCTIVE_PASS_PRES_2_PL, from SUBJUNCTIVE_PASS_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_2_PL, [SUBJUNCTIVE_PASS_PRES_1_SG], [("~am", "~ātis"), ("~ar", "~āminī"), ("~er", "~ēminī")], rules {
         "" => [2 2472, 1 1994, 0 52],
         "m" => [0 52],
         "am" => [0 52],
@@ -1702,8 +1505,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [1 1994],
         "er" => [2 2472],
     } listed {}, true, None),
-    // SUBJ_PASS_PRES_3_SG, from SUBJ_PASS_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_3_SG, [SUBJ_PASS_PRES_1_SG], [("~ar", "~ātur"), ("~er", "~ētur"), ("~m", "~t")], rules {
+    // SUBJUNCTIVE_PASS_PRES_3_SG, from SUBJUNCTIVE_PASS_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_3_SG, [SUBJUNCTIVE_PASS_PRES_1_SG], [("~ar", "~ātur"), ("~er", "~ētur"), ("~m", "~t")], rules {
         "" => [1 2472, 0 1994, 2 52],
         "m" => [2 52],
         "am" => [2 52],
@@ -1711,165 +1514,99 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ar" => [0 1994],
         "er" => [1 2472],
     } listed {}, true, None),
-    // SUBJ_PASS_PRES_3_PL, from SUBJ_PASS_PRES_1_SG.
-    relation!(SUBJ_PASS_PRES_3_PL, [SUBJ_PASS_PRES_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
+    // SUBJUNCTIVE_PASS_PRES_3_PL, from SUBJUNCTIVE_PASS_PRES_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PRES_3_PL, [SUBJUNCTIVE_PASS_PRES_1_SG], [("~m", "~nt"), ("~r", "~ntur")], rules {
         "" => [1 4466, 0 52],
         "m" => [0 52],
         "am" => [0 52],
         "r" => [1 4466],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_1_SG, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_1_SG, [IND_PASS_PRES_2_SG], [("~is", "~er"), ("~īs", "~ierem")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_1_SG, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_1_SG, [PASS_PRES_2_SG], [("~is", "~er"), ("~īs", "~ierem")], rules {
         "" => [0 4466, 1 52],
         "is" => [0 4466],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_1_PL, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_1_PL, [IND_PASS_PRES_2_SG], [("~is", "~ēmur"), ("~īs", "~ierēmus")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_1_PL, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_1_PL, [PASS_PRES_2_SG], [("~is", "~ēmur"), ("~īs", "~ierēmus")], rules {
         "" => [0 4466, 1 52],
         "is" => [0 4466],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_2_SG, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_2_SG, [IND_PASS_PRES_2_SG], [("~is", "~ēris"), ("~īs", "~ierēs")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_2_SG, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_2_SG, [PASS_PRES_2_SG], [("~is", "~ēris"), ("~īs", "~ierēs")], rules {
         "" => [0 4464, 1 52],
         "is" => [0 4464],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_2_PL, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_2_PL, [IND_PASS_PRES_2_SG], [("~is", "~ēminī"), ("~īs", "~ierētis")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_2_PL, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_2_PL, [PASS_PRES_2_SG], [("~is", "~ēminī"), ("~īs", "~ierētis")], rules {
         "" => [0 4466, 1 52],
         "is" => [0 4466],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_3_SG, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_3_SG, [IND_PASS_PRES_2_SG], [("~is", "~ētur"), ("~īs", "~ieret")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_3_SG, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_3_SG, [PASS_PRES_2_SG], [("~is", "~ētur"), ("~īs", "~ieret")], rules {
         "" => [0 4466, 1 52],
         "is" => [0 4466],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_IMPF_3_PL, from IND_PASS_PRES_2_SG.
-    relation!(SUBJ_PASS_IMPF_3_PL, [IND_PASS_PRES_2_SG], [("~is", "~entur"), ("~īs", "~ierent")], rules {
+    // SUBJUNCTIVE_PASS_IMPF_3_PL, from PASS_PRES_2_SG.
+    relation!(SUBJUNCTIVE_PASS_IMPF_3_PL, [PASS_PRES_2_SG], [("~is", "~entur"), ("~īs", "~ierent")], rules {
         "" => [0 4466, 1 52],
         "is" => [0 4466],
         "īs" => [1 52],
     } listed {}, true, None),
-    // SUBJ_PASS_FUT_1_SG, from IND_PASS_FUT_1_SG. Few or no words have it: changed as IND_PASS_PERF_1_SG is into SUBJ_PASS_PERF_1_SG.
-    relation!(
-        SUBJ_PASS_FUT_1_SG,
-        [IND_PASS_FUT_1_SG],
-        [],
-        none,
-        true,
-        Some((IND_PASS_PERF_1_SG, SUBJ_PASS_PERF_1_SG))
-    ),
-    // SUBJ_PASS_FUT_1_PL, from IND_PASS_FUT_1_PL. Few or no words have it: changed as IND_PASS_PERF_1_PL is into SUBJ_PASS_PERF_1_PL.
-    relation!(SUBJ_PASS_FUT_1_PL, [IND_PASS_FUT_1_PL], [("~umus", "~īmus")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_1_PL, SUBJ_PASS_PERF_1_PL))),
-    // SUBJ_PASS_FUT_2_SG, from IND_PASS_FUT_2_SG. Few or no words have it: changed as IND_PASS_PERF_2_SG is into SUBJ_PASS_PERF_2_SG.
-    relation!(SUBJ_PASS_FUT_2_SG, [IND_PASS_FUT_2_SG], [("~es", "~sīs")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_SG, SUBJ_PASS_PERF_2_SG))),
-    // SUBJ_PASS_FUT_2_PL, from IND_PASS_FUT_2_PL. Few or no words have it: changed as IND_PASS_PERF_2_PL is into SUBJ_PASS_PERF_2_PL.
-    relation!(SUBJ_PASS_FUT_2_PL, [IND_PASS_FUT_2_PL], [("~estis", "~sītis")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_PL, SUBJ_PASS_PERF_2_PL))),
-    // SUBJ_PASS_FUT_3_SG, from IND_PASS_FUT_3_SG. Few or no words have it: changed as IND_PASS_PERF_3_SG is into SUBJ_PASS_PERF_3_SG.
-    relation!(SUBJ_PASS_FUT_3_SG, [IND_PASS_FUT_3_SG], [("~est", "~sit")], rules {
-        "" => [0 4265],
-    } listed {}, true, Some((IND_PASS_PERF_3_SG, SUBJ_PASS_PERF_3_SG))),
-    // SUBJ_PASS_FUT_3_PL, from IND_PASS_FUT_3_PL. Few or no words have it: changed as IND_PASS_PERF_3_PL is into SUBJ_PASS_PERF_3_PL.
-    relation!(SUBJ_PASS_FUT_3_PL, [IND_PASS_FUT_3_PL], [("~unt", "~int")], rules {
-        "" => [0 4202],
-    } listed {}, true, Some((IND_PASS_PERF_3_PL, SUBJ_PASS_PERF_3_PL))),
-    // SUBJ_PASS_PERF_1_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_1_SG, [IND_PASS_PERF_1_SG], [("~um", "~im")], rules {
+    // SUBJUNCTIVE_PASS_PERF_1_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_1_SG, [PASS_PERF_1_SG], [("~um", "~im")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PERF_1_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_1_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī sīmus")], rules {
+    // SUBJUNCTIVE_PASS_PERF_1_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_1_PL, [PASS_PERF_1_SG], [("~us sum", "~ī sīmus")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PERF_2_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_2_SG, [IND_PASS_PERF_1_SG], [("~um", "~īs")], rules {
+    // SUBJUNCTIVE_PASS_PERF_2_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_2_SG, [PASS_PERF_1_SG], [("~um", "~īs")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PERF_2_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_2_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī sītis")], rules {
+    // SUBJUNCTIVE_PASS_PERF_2_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_2_PL, [PASS_PERF_1_SG], [("~us sum", "~ī sītis")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PERF_3_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_3_SG, [IND_PASS_PERF_1_SG], [("~um", "~it")], rules {
+    // SUBJUNCTIVE_PASS_PERF_3_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_3_SG, [PASS_PERF_1_SG], [("~um", "~it")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PERF_3_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PERF_3_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī sint")], rules {
+    // SUBJUNCTIVE_PASS_PERF_3_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PERF_3_PL, [PASS_PERF_1_SG], [("~us sum", "~ī sint")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_1_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_1_SG, [IND_PASS_PERF_1_SG], [("~sum", "~essem")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_1_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_1_SG, [PASS_PERF_1_SG], [("~sum", "~essem")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_1_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_1_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī essēmus")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_1_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_1_PL, [PASS_PERF_1_SG], [("~us sum", "~ī essēmus")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_2_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_2_SG, [IND_PASS_PERF_1_SG], [("~sum", "~essēs")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_2_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_2_SG, [PASS_PERF_1_SG], [("~sum", "~essēs")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_2_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_2_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī essētis")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_2_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_2_PL, [PASS_PERF_1_SG], [("~us sum", "~ī essētis")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_3_SG, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_3_SG, [IND_PASS_PERF_1_SG], [("~sum", "~esset")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_3_SG, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_3_SG, [PASS_PERF_1_SG], [("~sum", "~esset")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_PLUP_3_PL, from IND_PASS_PERF_1_SG.
-    relation!(SUBJ_PASS_PLUP_3_PL, [IND_PASS_PERF_1_SG], [("~us sum", "~ī essent")], rules {
+    // SUBJUNCTIVE_PASS_PLUP_3_PL, from PASS_PERF_1_SG.
+    relation!(SUBJUNCTIVE_PASS_PLUP_3_PL, [PASS_PERF_1_SG], [("~us sum", "~ī essent")], rules {
         "" => [0 4176],
     } listed {}, true, None),
-    // SUBJ_PASS_FUTP_1_SG, from IND_PASS_FUTP_1_SG. Few or no words have it: changed as IND_PASS_PERF_1_SG is into SUBJ_PASS_PERF_1_SG.
-    relation!(
-        SUBJ_PASS_FUTP_1_SG,
-        [IND_PASS_FUTP_1_SG],
-        [],
-        none,
-        true,
-        Some((IND_PASS_PERF_1_SG, SUBJ_PASS_PERF_1_SG))
-    ),
-    // SUBJ_PASS_FUTP_1_PL, from IND_PASS_FUTP_1_PL. Few or no words have it: changed as IND_PASS_PERF_1_PL is into SUBJ_PASS_PERF_1_PL.
-    relation!(SUBJ_PASS_FUTP_1_PL, [IND_PASS_FUTP_1_PL], [("~umus", "~īmus")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_1_PL, SUBJ_PASS_PERF_1_PL))),
-    // SUBJ_PASS_FUTP_2_SG, from IND_PASS_FUTP_2_SG. Few or no words have it: changed as IND_PASS_PERF_2_SG is into SUBJ_PASS_PERF_2_SG.
-    relation!(SUBJ_PASS_FUTP_2_SG, [IND_PASS_FUTP_2_SG], [("~es", "~sīs")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_SG, SUBJ_PASS_PERF_2_SG))),
-    // SUBJ_PASS_FUTP_2_PL, from IND_PASS_FUTP_2_PL. Few or no words have it: changed as IND_PASS_PERF_2_PL is into SUBJ_PASS_PERF_2_PL.
-    relation!(SUBJ_PASS_FUTP_2_PL, [IND_PASS_FUTP_2_PL], [("~estis", "~sītis")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_PL, SUBJ_PASS_PERF_2_PL))),
-    // SUBJ_PASS_FUTP_3_SG, from IND_PASS_FUTP_3_SG. Few or no words have it: changed as IND_PASS_PERF_3_SG is into SUBJ_PASS_PERF_3_SG.
-    relation!(SUBJ_PASS_FUTP_3_SG, [IND_PASS_FUTP_3_SG], [("~est", "~sit")], rules {
-        "" => [0 4265],
-    } listed {}, true, Some((IND_PASS_PERF_3_SG, SUBJ_PASS_PERF_3_SG))),
-    // SUBJ_PASS_FUTP_3_PL, from IND_PASS_FUTP_3_PL. Few or no words have it: changed as IND_PASS_PERF_3_PL is into SUBJ_PASS_PERF_3_PL.
-    relation!(SUBJ_PASS_FUTP_3_PL, [IND_PASS_FUTP_3_PL], [("~unt", "~int")], rules {
-        "" => [0 4202],
-    } listed {}, true, Some((IND_PASS_PERF_3_PL, SUBJ_PASS_PERF_3_PL))),
-    // IMPERATIVE_ACT_PRES_1_SG, from IMPERATIVE_ACT_PRES_2_SG. Few or no words have it: changed as IND_ACT_PLUP_2_SG is into IND_ACT_PLUP_1_SG.
-    relation!(IMPERATIVE_ACT_PRES_1_SG, [IMPERATIVE_ACT_PRES_2_SG], [("~ās", "~am")], rules {
-        "" => [0 5471],
-    } listed {}, true, Some((IND_ACT_PLUP_2_SG, IND_ACT_PLUP_1_SG))),
-    // IMPERATIVE_ACT_PRES_1_PL, from IMPERATIVE_ACT_PRES_2_PL. Few or no words have it: changed as IND_ACT_PLUP_2_PL is into IND_ACT_PLUP_1_PL.
-    relation!(IMPERATIVE_ACT_PRES_1_PL, [IMPERATIVE_ACT_PRES_2_PL], [("~tis", "~mus")], rules {
-        "" => [0 5471],
-    } listed {}, true, Some((IND_ACT_PLUP_2_PL, IND_ACT_PLUP_1_PL))),
-    // IMPERATIVE_ACT_PRES_2_SG, from IND_ACT_PRES_2_SG.
-    relation!(IMPERATIVE_ACT_PRES_2_SG, [IND_ACT_PRES_2_SG], [("~", "~"), ("~is", "~"), ("~is", "~e"), ("~s", "~")], rules {
+    // PRESENT_IMPERATIVE_ACT_SG, from ACT_PRES_2_SG.
+    relation!(PRESENT_IMPERATIVE_ACT_SG, [ACT_PRES_2_SG], [("~", "~"), ("~is", "~"), ("~is", "~e"), ("~s", "~")], rules {
         "" => [3 3646, 2 2416, 1 41, 0 12],
         "es" => [0 12],
         "is" => [2 2416, 1 41, 3 2],
@@ -1886,150 +1623,99 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "ēs" => [3 532],
         "īs" => [3 372],
     } listed {
-        "ais" => 3,
-        "īcis" => 2,
+        2 => [
+            "īcis",
+        ],
+        3 => [
+            "ais",
+        ],
     }, true, None),
-    // IMPERATIVE_ACT_PRES_2_PL, from IMPERATIVE_ACT_FUT_2_PL.
-    relation!(IMPERATIVE_ACT_PRES_2_PL, [IMPERATIVE_ACT_FUT_2_PL], [("~ōte", "~e")], rules {
+    // PRESENT_IMPERATIVE_ACT_PL, from FUTURE_IMPERATIVE_ACT_2_PL.
+    relation!(PRESENT_IMPERATIVE_ACT_PL, [FUTURE_IMPERATIVE_ACT_2_PL], [("~ōte", "~e")], rules {
         "" => [0 5545],
     } listed {}, true, None),
-    // IMPERATIVE_ACT_PRES_3_SG, from IMPERATIVE_ACT_PRES_2_SG. Few or no words have it: changed as IMPERATIVE_ACT_FUT_2_SG is into IMPERATIVE_ACT_FUT_3_SG.
+    // PRESENT_IMPERATIVE_PASS_SG, from PASS_PRES_2_SG.
+    relation!(PRESENT_IMPERATIVE_PASS_SG, [PASS_PRES_2_SG], [("~is", "~e"), ("~s", "~")], rules {
+        "" => [0 4466, 1 52],
+        "is" => [0 4466],
+        "īs" => [1 52],
+    } listed {}, true, None),
+    // PRESENT_IMPERATIVE_PASS_PL, from PASS_PRES_2_PL.
     relation!(
-        IMPERATIVE_ACT_PRES_3_SG,
-        [IMPERATIVE_ACT_PRES_2_SG],
+        PRESENT_IMPERATIVE_PASS_PL,
+        [PASS_PRES_2_PL],
         [],
         none,
         true,
-        Some((IMPERATIVE_ACT_FUT_2_SG, IMPERATIVE_ACT_FUT_3_SG))
+        None
     ),
-    // IMPERATIVE_ACT_PRES_3_PL, from IMPERATIVE_ACT_FUT_3_PL. Few or no words have it: changed as IMPERATIVE_ACT_FUT_2_PL is into IMPERATIVE_ACT_PRES_2_PL.
-    relation!(
-        IMPERATIVE_ACT_PRES_3_PL,
-        [IMPERATIVE_ACT_FUT_3_PL],
-        [],
-        none,
-        true,
-        Some((IMPERATIVE_ACT_FUT_2_PL, IMPERATIVE_ACT_PRES_2_PL))
-    ),
-    // IMPERATIVE_ACT_FUT_1_SG, from IMPERATIVE_ACT_FUT_2_SG. Few or no words have it: changed as IND_ACT_PLUP_2_SG is into IND_ACT_PLUP_1_SG.
-    relation!(IMPERATIVE_ACT_FUT_1_SG, [IMPERATIVE_ACT_FUT_2_SG], [("~ās", "~am")], rules {
-        "" => [0 5471],
-    } listed {}, true, Some((IND_ACT_PLUP_2_SG, IND_ACT_PLUP_1_SG))),
-    // IMPERATIVE_ACT_FUT_1_PL, from IMPERATIVE_ACT_FUT_2_PL. Few or no words have it: changed as IND_ACT_PLUP_2_PL is into IND_ACT_PLUP_1_PL.
-    relation!(IMPERATIVE_ACT_FUT_1_PL, [IMPERATIVE_ACT_FUT_2_PL], [("~tis", "~mus")], rules {
-        "" => [0 5471],
-    } listed {}, true, Some((IND_ACT_PLUP_2_PL, IND_ACT_PLUP_1_PL))),
-    // IMPERATIVE_ACT_FUT_2_SG, from IND_ACT_PRES_2_PL.
-    relation!(IMPERATIVE_ACT_FUT_2_SG, [IND_ACT_PRES_2_PL], [("~inistis", "~entō"), ("~is", "~ō"), ("~minī", "~tor")], rules {
+    // FUTURE_IMPERATIVE_ACT_2_SG, from ACT_PRES_2_PL.
+    relation!(FUTURE_IMPERATIVE_ACT_2_SG, [ACT_PRES_2_PL], [("~inistis", "~entō"), ("~is", "~ō"), ("~minī", "~tor")], rules {
         "" => [1 5547, 2 567, 0 3],
         "s" => [1 5547, 0 3],
         "stis" => [1 12, 0 3],
         "ī" => [2 567],
         "nī" => [2 567],
     } listed {}, true, None),
-    // IMPERATIVE_ACT_FUT_2_PL, from IND_ACT_PRES_2_PL.
-    relation!(IMPERATIVE_ACT_FUT_2_PL, [IND_ACT_PRES_2_PL], [("~inistis", "~entōte"), ("~is", "~ōte")], rules {
+    // FUTURE_IMPERATIVE_ACT_2_PL, from ACT_PRES_2_PL.
+    relation!(FUTURE_IMPERATIVE_ACT_2_PL, [ACT_PRES_2_PL], [("~inistis", "~entōte"), ("~is", "~ōte")], rules {
         "" => [1 5546, 0 3],
         "stis" => [1 12, 0 3],
     } listed {}, true, None),
-    // IMPERATIVE_ACT_FUT_3_SG, from IMPERATIVE_ACT_FUT_2_SG.
+    // FUTURE_IMPERATIVE_ACT_3_SG, from FUTURE_IMPERATIVE_ACT_2_SG.
     relation!(
-        IMPERATIVE_ACT_FUT_3_SG,
-        [IMPERATIVE_ACT_FUT_2_SG],
+        FUTURE_IMPERATIVE_ACT_3_SG,
+        [FUTURE_IMPERATIVE_ACT_2_SG],
         [],
         none,
         true,
         None
     ),
-    // IMPERATIVE_ACT_FUT_3_PL, from IND_ACT_PRES_3_PL.
-    relation!(IMPERATIVE_ACT_FUT_3_PL, [IND_ACT_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
+    // FUTURE_IMPERATIVE_ACT_3_PL, from ACT_PRES_3_PL.
+    relation!(FUTURE_IMPERATIVE_ACT_3_PL, [ACT_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
         "" => [0 5554, 1 568],
         "r" => [1 568],
         "ur" => [1 568],
         "t" => [0 5554],
     } listed {}, true, None),
-    // IMPERATIVE_PASS_PRES_1_SG, from IMPERATIVE_PASS_PRES_2_SG. Few or no words have it: changed as IND_PASS_PERF_2_SG is into IND_PASS_PERF_1_SG.
-    relation!(IMPERATIVE_PASS_PRES_1_SG, [IMPERATIVE_PASS_PRES_2_SG], [("~es", "~sum")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_SG, IND_PASS_PERF_1_SG))),
-    // IMPERATIVE_PASS_PRES_1_PL, from IMPERATIVE_PASS_PRES_2_PL. Few or no words have it: changed as IND_PASS_PERF_2_PL is into IND_PASS_PERF_1_PL.
-    relation!(IMPERATIVE_PASS_PRES_1_PL, [IMPERATIVE_PASS_PRES_2_PL], [("~estis", "~sumus")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_PL, IND_PASS_PERF_1_PL))),
-    // IMPERATIVE_PASS_PRES_2_SG, from IND_PASS_PRES_2_SG.
-    relation!(IMPERATIVE_PASS_PRES_2_SG, [IND_PASS_PRES_2_SG], [("~is", "~e"), ("~s", "~")], rules {
-        "" => [0 4466, 1 52],
-        "is" => [0 4466],
-        "īs" => [1 52],
-    } listed {}, true, None),
-    // IMPERATIVE_PASS_PRES_2_PL, from IND_PASS_PRES_2_PL.
-    relation!(
-        IMPERATIVE_PASS_PRES_2_PL,
-        [IND_PASS_PRES_2_PL],
-        [],
-        none,
-        true,
-        None
-    ),
-    // IMPERATIVE_PASS_PRES_3_SG, from IMPERATIVE_PASS_PRES_2_SG. Few or no words have it: changed as IMPERATIVE_PASS_FUT_2_SG is into IMPERATIVE_PASS_FUT_3_SG.
-    relation!(
-        IMPERATIVE_PASS_PRES_3_SG,
-        [IMPERATIVE_PASS_PRES_2_SG],
-        [],
-        none,
-        true,
-        Some((IMPERATIVE_PASS_FUT_2_SG, IMPERATIVE_PASS_FUT_3_SG))
-    ),
-    // IMPERATIVE_PASS_PRES_3_PL, from IMPERATIVE_PASS_PRES_2_PL. Few or no words have it: changed as IMPERATIVE_PASS_FUT_2_PL is into IMPERATIVE_PASS_FUT_3_PL.
-    relation!(IMPERATIVE_PASS_PRES_3_PL, [IMPERATIVE_PASS_PRES_2_PL], [("~tōte", "~untō")], rules {
-        "" => [0 52],
-    } listed {}, true, Some((IMPERATIVE_PASS_FUT_2_PL, IMPERATIVE_PASS_FUT_3_PL))),
-    // IMPERATIVE_PASS_FUT_1_SG, from IMPERATIVE_PASS_FUT_2_SG. Few or no words have it: changed as IND_PASS_PERF_2_SG is into IND_PASS_PERF_1_SG.
-    relation!(IMPERATIVE_PASS_FUT_1_SG, [IMPERATIVE_PASS_FUT_2_SG], [("~es", "~sum")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_SG, IND_PASS_PERF_1_SG))),
-    // IMPERATIVE_PASS_FUT_1_PL, from IMPERATIVE_PASS_FUT_2_PL. Few or no words have it: changed as IND_PASS_PERF_2_PL is into IND_PASS_PERF_1_PL.
-    relation!(IMPERATIVE_PASS_FUT_1_PL, [IMPERATIVE_PASS_FUT_2_PL], [("~estis", "~sumus")], rules {
-        "" => [0 4176],
-    } listed {}, true, Some((IND_PASS_PERF_2_PL, IND_PASS_PERF_1_PL))),
-    // IMPERATIVE_PASS_FUT_2_SG, from IND_PASS_PRES_3_SG.
-    relation!(IMPERATIVE_PASS_FUT_2_SG, [IND_PASS_PRES_3_SG], [("~it", "~ītō"), ("~ur", "~or")], rules {
+    // FUTURE_IMPERATIVE_PASS_2_SG, from PASS_PRES_3_SG.
+    relation!(FUTURE_IMPERATIVE_PASS_2_SG, [PASS_PRES_3_SG], [("~it", "~ītō"), ("~ur", "~or")], rules {
         "" => [1 4466, 0 52],
         "r" => [1 4466],
         "t" => [0 52],
         "it" => [0 52],
     } listed {}, true, None),
-    // IMPERATIVE_PASS_FUT_2_PL, from IND_ACT_PRES_1_SG.
-    relation!(IMPERATIVE_PASS_FUT_2_PL, [IND_ACT_PRES_1_SG], [("~aciō", "~ītōte")], rules {
+    // FUTURE_IMPERATIVE_PASS_2_PL, from ACT_PRES_1_SG.
+    relation!(FUTURE_IMPERATIVE_PASS_2_PL, [ACT_PRES_1_SG], [("~aciō", "~ītōte")], rules {
         "" => [0 52],
     } listed {}, true, None),
-    // IMPERATIVE_PASS_FUT_3_SG, from IMPERATIVE_PASS_FUT_2_SG.
+    // FUTURE_IMPERATIVE_PASS_3_SG, from FUTURE_IMPERATIVE_PASS_2_SG.
     relation!(
-        IMPERATIVE_PASS_FUT_3_SG,
-        [IMPERATIVE_PASS_FUT_2_SG],
+        FUTURE_IMPERATIVE_PASS_3_SG,
+        [FUTURE_IMPERATIVE_PASS_2_SG],
         [],
         none,
         true,
         None
     ),
-    // IMPERATIVE_PASS_FUT_3_PL, from IND_PASS_PRES_3_PL.
-    relation!(IMPERATIVE_PASS_FUT_3_PL, [IND_PASS_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
+    // FUTURE_IMPERATIVE_PASS_3_PL, from PASS_PRES_3_PL.
+    relation!(FUTURE_IMPERATIVE_PASS_3_PL, [PASS_PRES_3_PL], [("~", "~ō"), ("~ur", "~or")], rules {
         "" => [1 4505, 0 52],
         "r" => [1 4505],
         "t" => [0 52],
         "nt" => [0 52],
     } listed {}, true, None),
-    // INFINITIVE_ACT_PRES, from IMPERATIVE_PASS_PRES_2_SG.
+    // INFINITIVE_ACT_PRES, from PRESENT_IMPERATIVE_PASS_SG.
     relation!(
         INFINITIVE_ACT_PRES,
-        [IMPERATIVE_PASS_PRES_2_SG],
+        [PRESENT_IMPERATIVE_PASS_SG],
         [],
         none,
         true,
         None
     ),
-    // INFINITIVE_ACT_PERF, from IND_ACT_PERF_2_SG.
-    relation!(INFINITIVE_ACT_PERF, [IND_ACT_PERF_2_SG], [("~quūtus es", "~cūtum esse"), ("~s es", "~m esse"), ("~sus es", "~xum esse"), ("~tī", "~se"), ("~xus es", "~sum esse")], rules {
+    // INFINITIVE_ACT_PERF, from ACT_PERF_2_SG.
+    relation!(INFINITIVE_ACT_PERF, [ACT_PERF_2_SG], [("~quūtus es", "~cūtum esse"), ("~s es", "~m esse"), ("~sus es", "~xum esse"), ("~tī", "~se"), ("~xus es", "~sum esse")], rules {
         "" => [3 4908, 1 536, 0 12, 2 4, 4 4],
         "s" => [1 536, 0 12, 2 4, 4 4],
         "sus es" => [1 72, 2 4],
@@ -2041,8 +1727,8 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "xus es" => [1 4, 4 4],
         "ī" => [3 4908],
     } listed {}, true, None),
-    // INFINITIVE_ACT_FUT, from IND_ACT_PERF_1_SG.
-    relation!(INFINITIVE_ACT_FUT, [IND_ACT_PERF_1_SG], [("ex~ulī", "ēlā~ūrum esse"), ("~andī", "~ānsūrum esse"), ("~buī", "~ptūrum esse"), ("~buī", "~vitūrum esse"), ("~currī", "~rsūrum esse"), ("~dī", "~ssūrum esse"), ("~dī", "~sūrum esse"), ("~dī", "~tūrum esse"), ("~edī", "~atūrum esse"), ("~eixī", "~ictūrum esse"), ("~ellī", "~ulsūrum esse"), ("~elīvī", "~ultūrum esse"), ("~enduī", "~ēsūrum esse"), ("~endī", "~ēnsūrum esse"), ("~ependī", "~ēnsūrum esse"), ("~etigī", "~āctūrum esse"), ("~etī", "~ātūrum esse"), ("~gī", "~ctūrum esse"), ("~icuī", "~ectūrum esse"), ("~idī", "~āsūrum esse"), ("~igī", "~āctūrum esse"), ("~iluī", "~ultūrum esse"), ("~inuī", "~entūrum esse"), ("~inxī", "~īnctūrum esse"), ("~ipuī", "~eptūrum esse"), ("~issīvī", "~essītūrum esse"), ("~itī", "~ātūrum esse"), ("~iī", "~ītūrum esse"), ("~ntulī", "~llātūrum esse"), ("~nxī", "~ctūrum esse"), ("~oluī", "~ultūrum esse"), ("~ondī", "~ōnsūrum esse"), ("~orruī", "~ōstūrum esse"), ("~otondī", "~ōnsūrum esse"), ("~quūtus sum", "~cūtūrum esse"), ("~rī", "~sūrum esse"), ("~s sum", "~m īrī"), ("~scuī", "~xtūrum esse"), ("~stulī", "~blātūrum esse"), ("~sus sum", "~xūrum esse"), ("~sī", "~tūrum esse"), ("~tulī", "~lātūrum esse"), ("~tus sum", "~itūrum esse"), ("~tuus sum", "~itūrum esse"), ("~tī", "~sūrum esse"), ("~udī", "~ūsūrum esse"), ("~us sum", "~ūrum esse"), ("~uī", "~itūrum esse"), ("~uī", "~tūrum esse"), ("~uī", "~ātūrum esse"), ("~uī", "~ītūrum esse"), ("~uī", "~ūrum esse"), ("~uī", "~ūtūrum esse"), ("~vī", "~stūrum esse"), ("~vī", "~tūrum esse"), ("~vī", "~ūtūrum esse"), ("~xus sum", "~sūrum esse"), ("~xī", "~ctūrum esse"), ("~xī", "~cātūrum esse"), ("~āvī", "~autūrum esse"), ("~āvī", "~avātūrum esse"), ("~āvī", "~ūrum esse"), ("~āxī", "~actūrum esse"), ("~ēcī", "~actūrum esse"), ("~ēcī", "~ectūrum esse"), ("~ēdī", "~essūrum esse"), ("~ēgī", "~āctūrum esse"), ("~ēnī", "~entūrum esse"), ("~ēpī", "~aptūrum esse"), ("~ēpī", "~eptūrum esse"), ("~ēvī", "~atūrum esse"), ("~ēvī", "~itūrum esse"), ("~ēxī", "~ectūrum esse"), ("~ī", "~itūrum esse"), ("~ī", "~ptūrum esse"), ("~ī", "~sūrum esse"), ("~ī", "~tūrum esse"), ("~ī", "~ūrum esse"), ("~īcī", "~ictūrum esse"), ("~īnxī", "~ictūrum esse"), ("~īquī", "~ictūrum esse"), ("~īsī", "~issūrum esse"), ("~īvī", "~itūrum esse"), ("~īvī", "~tūrum esse"), ("~īxī", "~ictūrum esse"), ("~ōdī", "~ossūrum esse"), ("~ōvī", "~itūrum esse"), ("~ūgī", "~ugitūrum esse"), ("~ūpī", "~uptūrum esse"), ("~ūxī", "~uctūrum esse"), ("ī~ī", "i~tūrum esse")], rules {
+    // INFINITIVE_ACT_FUT, from ACT_PERF_1_SG.
+    relation!(INFINITIVE_ACT_FUT, [ACT_PERF_1_SG], [("ex~ulī", "ēlā~ūrum esse"), ("~andī", "~ānsūrum esse"), ("~buī", "~ptūrum esse"), ("~buī", "~vitūrum esse"), ("~currī", "~rsūrum esse"), ("~dī", "~ssūrum esse"), ("~dī", "~sūrum esse"), ("~dī", "~tūrum esse"), ("~edī", "~atūrum esse"), ("~eixī", "~ictūrum esse"), ("~ellī", "~ulsūrum esse"), ("~elīvī", "~ultūrum esse"), ("~enduī", "~ēsūrum esse"), ("~endī", "~ēnsūrum esse"), ("~ependī", "~ēnsūrum esse"), ("~etigī", "~āctūrum esse"), ("~etī", "~ātūrum esse"), ("~gī", "~ctūrum esse"), ("~icuī", "~ectūrum esse"), ("~idī", "~āsūrum esse"), ("~igī", "~āctūrum esse"), ("~iluī", "~ultūrum esse"), ("~inuī", "~entūrum esse"), ("~inxī", "~īnctūrum esse"), ("~ipuī", "~eptūrum esse"), ("~issīvī", "~essītūrum esse"), ("~itī", "~ātūrum esse"), ("~iī", "~ītūrum esse"), ("~ntulī", "~llātūrum esse"), ("~nxī", "~ctūrum esse"), ("~oluī", "~ultūrum esse"), ("~ondī", "~ōnsūrum esse"), ("~orruī", "~ōstūrum esse"), ("~otondī", "~ōnsūrum esse"), ("~quūtus sum", "~cūtūrum esse"), ("~rī", "~sūrum esse"), ("~s sum", "~m īrī"), ("~scuī", "~xtūrum esse"), ("~stulī", "~blātūrum esse"), ("~sus sum", "~xūrum esse"), ("~sī", "~tūrum esse"), ("~tulī", "~lātūrum esse"), ("~tus sum", "~itūrum esse"), ("~tuus sum", "~itūrum esse"), ("~tī", "~sūrum esse"), ("~udī", "~ūsūrum esse"), ("~us sum", "~ūrum esse"), ("~uī", "~itūrum esse"), ("~uī", "~tūrum esse"), ("~uī", "~ātūrum esse"), ("~uī", "~ītūrum esse"), ("~uī", "~ūrum esse"), ("~uī", "~ūtūrum esse"), ("~vī", "~stūrum esse"), ("~vī", "~tūrum esse"), ("~vī", "~ūtūrum esse"), ("~xus sum", "~sūrum esse"), ("~xī", "~ctūrum esse"), ("~xī", "~cātūrum esse"), ("~āvī", "~autūrum esse"), ("~āvī", "~avātūrum esse"), ("~āvī", "~ūrum esse"), ("~āxī", "~actūrum esse"), ("~ēcī", "~actūrum esse"), ("~ēcī", "~ectūrum esse"), ("~ēdī", "~essūrum esse"), ("~ēgī", "~āctūrum esse"), ("~ēnī", "~entūrum esse"), ("~ēpī", "~aptūrum esse"), ("~ēpī", "~eptūrum esse"), ("~ēvī", "~atūrum esse"), ("~ēvī", "~itūrum esse"), ("~ēxī", "~ectūrum esse"), ("~ī", "~itūrum esse"), ("~ī", "~ptūrum esse"), ("~ī", "~sūrum esse"), ("~ī", "~tūrum esse"), ("~ī", "~ūrum esse"), ("~īcī", "~ictūrum esse"), ("~īnxī", "~ictūrum esse"), ("~īquī", "~ictūrum esse"), ("~īsī", "~issūrum esse"), ("~īvī", "~itūrum esse"), ("~īvī", "~tūrum esse"), ("~īxī", "~ictūrum esse"), ("~ōdī", "~ossūrum esse"), ("~ōvī", "~itūrum esse"), ("~ūgī", "~ugitūrum esse"), ("~ūpī", "~uptūrum esse"), ("~ūxī", "~uctūrum esse"), ("ī~ī", "i~tūrum esse")], rules {
         "" => [54 2654, 46 523, 77 230, 47 161, 57 157, 40 135, 52 63, 76 60, 48 57, 63 54, 6 52, 64 49, 13 42, 7 36, 66 27, 81 27, 89 26, 79 23, 44 19, 55 19, 65 18, 67 18, 35 17, 62 17, 71 17, 17 16, 72 16, 51 15, 69 14, 73 14, 75 14, 84 14, 85 14, 88 14, 22 13, 34 12, 5 11, 24 11, 37 11, 41 11, 27 10, 49 9, 74 9, 31 8, 43 8, 78 8, 82 8, 1 7, 26 7, 86 7, 2 6, 9 6, 8 5, 21 5, 30 5, 20 4, 39 4, 45 4, 56 4, 80 4, 87 4, 3 3, 4 3, 10 3, 14 3, 19 3, 28 3, 32 3, 36 3, 42 3, 53 3, 59 3, 60 3, 61 3, 0 2, 11 2, 12 2, 15 2, 16 2, 18 2, 23 2, 25 2, 29 2, 33 2, 38 2, 50 2, 58 2, 68 2, 70 2, 83 2, 90 2],
         "m" => [46 523, 34 12, 43 8, 39 4, 56 4, 36 3, 42 3],
         "sus sum" => [46 72, 39 4],
@@ -2202,34 +1888,57 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "lūxī" => [77 10, 57 3],
         "rūxī" => [57 11],
     } listed {
-        "abolēvī" => 71,
-        "acuī" => 52,
-        "apetissīvī" => 25,
-        "assalīvī" => 83,
-        "comminxī" => 23,
-        "dēferbuī" => 3,
-        "dēlīvī" => 82,
-        "dīvīsī" => 77,
-        "effrixī" => 58,
-        "exfrixī" => 58,
-        "frīxī" => 57,
-        "licuī" => 47,
-        "lūxī" => 57,
-        "misertus sum" => 42,
-        "nōtuī" => 47,
-        "praetotondī" => 33,
-        "revīxī" => 57,
-        "saeviī" => 27,
-        "sarruī" => 50,
-        "saruī" => 50,
-        "subdīvīsī" => 77,
-        "sīvī" => 82,
-        "tetigī" => 15,
-        "totondī" => 33,
-        "vīxī" => 57,
+        3 => [
+            "dēferbuī",
+        ],
+        15 => [
+            "tetigī",
+        ],
+        23 => [
+            "comminxī",
+        ],
+        25 => [
+            "apetissīvī",
+        ],
+        27 => [
+            "saeviī",
+        ],
+        33 => [
+            "praetotondī", "totondī",
+        ],
+        42 => [
+            "misertus sum",
+        ],
+        47 => [
+            "licuī", "nōtuī",
+        ],
+        50 => [
+            "sarruī", "saruī",
+        ],
+        52 => [
+            "acuī",
+        ],
+        57 => [
+            "frīxī", "lūxī", "revīxī", "vīxī",
+        ],
+        58 => [
+            "effrixī", "exfrixī",
+        ],
+        71 => [
+            "abolēvī",
+        ],
+        77 => [
+            "dīvīsī", "subdīvīsī",
+        ],
+        82 => [
+            "dēlīvī", "sīvī",
+        ],
+        83 => [
+            "assalīvī",
+        ],
     }, true, None),
-    // INFINITIVE_PASS_PRES, from IND_ACT_PRES_2_SG.
-    relation!(INFINITIVE_PASS_PRES, [IND_ACT_PRES_2_SG], [("~acis", "~ierī"), ("~is", "~ī"), ("~s", "~rī"), ("~ās", "~arī")], rules {
+    // INFINITIVE_PASS_PRES, from ACT_PRES_2_SG.
+    relation!(INFINITIVE_PASS_PRES, [ACT_PRES_2_SG], [("~acis", "~ierī"), ("~is", "~ī"), ("~s", "~rī"), ("~ās", "~arī")], rules {
         "" => [2 3135, 1 1462, 0 52, 3 5],
         "is" => [1 1462, 0 52],
         "cis" => [1 245, 0 52],
@@ -2252,14 +1961,16 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
     relation!(INFINITIVE_PASS_PERF, [INFINITIVE_ACT_FUT], [("~ātūrum esse", "~atum esse"), ("~ūrum esse", "~um esse")], rules {
         "" => [1 4261, 0 3],
     } listed {
-        "stātūrum esse" => 0,
+        0 => [
+            "stātūrum esse",
+        ],
     }, true, None),
     // INFINITIVE_PASS_FUT, from INFINITIVE_PASS_PERF.
     relation!(INFINITIVE_PASS_FUT, [INFINITIVE_PASS_PERF], [("~esse", "~īrī")], rules {
         "" => [0 4265],
     } listed {}, true, None),
-    // PARTICIPLE_PRES_ACT, from SUBJ_ACT_PRES_1_SG.
-    relation!(PARTICIPLE_PRES_ACT, [SUBJ_ACT_PRES_1_SG], [("~am", "~ēns"), ("~ar", "~ēns"), ("~eam", "~iēns"), ("~eam", "~ēns"), ("~ear", "~ēns"), ("~elim", "~olēns"), ("~em", "~āns"), ("~er", "~āns"), ("~erim", "~ēns"), ("~im", "~ēns")], rules {
+    // PARTICIPLE_PRES_ACT, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(PARTICIPLE_PRES_ACT, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~ēns"), ("~ar", "~ēns"), ("~eam", "~iēns"), ("~eam", "~ēns"), ("~ear", "~ēns"), ("~elim", "~olēns"), ("~em", "~āns"), ("~er", "~āns"), ("~erim", "~ēns"), ("~im", "~ēns")], rules {
         "" => [6 2718, 0 2254, 3 537, 7 357, 1 188, 2 31, 4 23, 9 4, 8 3, 5 2],
         "m" => [6 2718, 0 2254, 3 537, 2 31, 9 4, 8 3, 5 2],
         "am" => [0 2254, 3 537, 2 31],
@@ -2294,28 +2005,28 @@ pub(super) static RELATIONS: [Relation<'static>; 189] = [
         "uar" => [1 31],
         "er" => [7 357],
     } listed {
-        "potevelim" => 5,
-        "velim" => 5,
+        5 => [
+            "potevelim", "velim",
+        ],
     }, true, None),
     // PARTICIPLE_PERF_PASS, from INFINITIVE_PASS_PERF.
     relation!(PARTICIPLE_PERF_PASS, [INFINITIVE_PASS_PERF], [("~ esse", "~"), ("~m esse", "~s")], rules {
         "" => [1 4178, 0 87],
     } listed {
-        "cāsum esse" => 0,
-        "implūtum esse" => 0,
-        "itum esse" => 0,
-        "revīctum esse" => 0,
-        "saevītum esse" => 0,
-        "statum esse" => 0,
-        "statum esse" => 1,
-        "vīctum esse" => 0,
+        0 => [
+            "cāsum esse", "implūtum esse", "itum esse", "revīctum esse", "saevītum esse",
+            "statum esse", "vīctum esse",
+        ],
+        1 => [
+            "statum esse",
+        ],
     }, true, None),
     // PARTICIPLE_FUT_ACT, from INFINITIVE_ACT_FUT.
     relation!(PARTICIPLE_FUT_ACT, [INFINITIVE_ACT_FUT], [("~m esse", "~s")], rules {
         "" => [0 5022],
     } listed {}, true, None),
-    // PARTICIPLE_FUT_PASS, from SUBJ_ACT_PRES_1_SG.
-    relation!(PARTICIPLE_FUT_PASS, [SUBJ_ACT_PRES_1_SG], [("~am", "~endum"), ("~am", "~endus"), ("~am", "~ndum"), ("~am", "~ndus"), ("~am", "~undum"), ("~am", "~undus"), ("~ar", "~endus"), ("~ar", "~ndus"), ("~em", "~andum"), ("~em", "~andus"), ("~er", "~andus")], rules {
+    // PARTICIPLE_FUT_PASS, from SUBJUNCTIVE_ACT_PRES_1_SG.
+    relation!(PARTICIPLE_FUT_PASS, [SUBJUNCTIVE_ACT_PRES_1_SG], [("~am", "~endum"), ("~am", "~endus"), ("~am", "~ndum"), ("~am", "~ndus"), ("~am", "~undum"), ("~am", "~undus"), ("~ar", "~endus"), ("~ar", "~ndus"), ("~em", "~andum"), ("~em", "~andus"), ("~er", "~andus")], rules {
         "" => [9 2474, 1 1734, 10 352, 3 312, 6 185, 0 69, 8 37, 2 25, 5 24, 7 23, 4 5],
         "m" => [9 2474, 1 1734, 3 312, 0 69, 8 37, 2 25, 5 24, 4 5],
         "am" => [1 1734, 3 312, 0 69, 2 25, 5 24, 4 5],

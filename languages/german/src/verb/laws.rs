@@ -18,13 +18,11 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
     rules {
         // [s|z|ß|x]+s → +: 321 words (pflanzen, aasen, pissen, boxen), 26 forms wrong.
         law0: "{x:[s|z|ß|x]}+s" => "{x}+";
-        // t+t → t+et: 257 words (listen, bitten, rotten, arbeiten), 178 forms wrong.
-        law1: "t+t" => "t+et";
-        // d+t → d+et: 99 words (landen, baden, laden, reden), 78 forms wrong.
-        law2: "d+t" => "d+et";
+        // [t|d]+t → +et: 356 words (listen, bitten, rotten, arbeiten), 256 forms wrong.
+        law1: "{x:[t|d]}+t" => "{x}+et";
         // d+s → d+es: 98 words (landen, baden, laden, reden), 2 forms wrong.
-        law3: "d+s" => "d+es";
+        law2: "d+s" => "d+es";
         // [h|i]+f → +: 5 words (weichen, schleichen, streichen, gleichen), 0 forms wrong.
-        law4: "{x:[h|i]}+f" => "{x}+";
+        law3: "{x:[h|i]}+f" => "{x}+";
     }
 };

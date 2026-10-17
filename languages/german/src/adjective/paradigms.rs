@@ -55,8 +55,8 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
-     $(stem rest_: $s2:tt;)?
+     $(stem predicative_comp: $s1:tt;)?
+     $(stem predicative_sup: $s2:tt;)?
      $(strong_nom: $c0:tt, $c1:tt, $c2:tt, $c3:tt;)?
      $(strong_gen: $c4:tt, $c5:tt, $c6:tt, $c7:tt;)?
      $(strong_dat: $c8:tt, $c9:tt, $c10:tt, $c11:tt;)?
@@ -285,7 +285,7 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `veraltet`: 12,558 words.
+    /// Like `veraltet`: 12,564 words.
     Veraltet,
     /// Like `glatt`: 1,966 words.
     Glatt,
@@ -374,11 +374,11 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
-    // Veraltet: 12,558 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
-    declension!("veraltet", 12558, "~";
+    // Veraltet: 12,564 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
+    declension!("veraltet", 12564, "~";
     stem lemma: "~- like veraltet";
-    stem rest: "~er- like veraltet";
-    stem rest_: "~ste- like veraltet";
+    stem predicative_comp: "~er- like veraltet";
+    stem predicative_sup: "~ste- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
     weak_nom: derived, derived, derived, _;
@@ -391,12 +391,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Glatt: 1,966 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet.
     declension!("glatt", 1966, "~", like Veraltet;
-    stem rest_: "~este- like veraltet";
+    stem predicative_sup: "~este- like veraltet";
     ),
     // Edel: 102 words (übel, nobel, dunkel, simpel, sauer, teuer).
     declension!("edel", 102, "~e~";
-    stem rest: "~~er- like veraltet";
-    stem rest_: "~e~ste- like veraltet";
+    stem predicative_comp: "~~er- like veraltet";
+    stem predicative_sup: "~e~ste- like veraltet";
     strong_nom: _, "~~e", _, _;
     strong_gen: _, "~~er", "~~en", "~~er";
     strong_dat: _, "~~er", "~~em", "~~en";
@@ -417,8 +417,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     // Scharf: 52 words (warm, kalt, schwarz, stark, lang, scharf).
     declension!("scharf", 52, "~a~";
     stem lemma: "~a~- like veraltet";
-    stem rest: "~ä~er- like veraltet";
-    stem rest_: "~ä~ste- like veraltet";
+    stem predicative_comp: "~ä~er- like veraltet";
+    stem predicative_sup: "~ä~ste- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
     weak_nom: derived, derived, derived, _;
@@ -431,13 +431,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Schwarz: 33 words (hart, galt, uralt, pechschwarz, steinalt, gemalt). Like Scharf.
     declension!("schwarz", 33, "~a~", like Scharf;
-    stem rest_: "~ä~este- like veraltet";
+    stem predicative_sup: "~ä~este- like veraltet";
     ),
     // Träge: 24 words (beige, broke, malle, fake, knorke, äußere).
     declension!("träge", 24, "~~";
     stem lemma: "~~- like träge";
-    stem rest: "~~r- like veraltet";
-    stem rest_: "~st~- like veraltet";
+    stem predicative_comp: "~~r- like veraltet";
+    stem predicative_sup: "~st~- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
     weak_nom: derived, derived, derived, _;
@@ -450,13 +450,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Zeitnah: 11 words (nah, bodennah, oberflächennah, verbrauchernah, regierungsnah, berlinnah). Like Scharf.
     declension!("zeitnah", 11, "~a~", like Scharf;
-    stem rest_: "~äc~ste- like veraltet";
+    stem predicative_sup: "~äc~ste- like veraltet";
     ),
     // Groß: 11 words (groß, gross, riesengroß, mittelgroß, flächengroß, übergroß).
     declension!("groß", 11, "~o~";
     stem lemma: "~o~- like veraltet";
-    stem rest: "~ö~er- like veraltet";
-    stem rest_: "~ö~te- like veraltet";
+    stem predicative_comp: "~ö~er- like veraltet";
+    stem predicative_sup: "~ö~te- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
     weak_nom: derived, derived, derived, _;
@@ -470,8 +470,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     // Kurz: 9 words (kurz, gesund, schnurz, ungesund, superkurz, ultrakurz).
     declension!("kurz", 9, "~u~";
     stem lemma: "~u~- like veraltet";
-    stem rest: "~ü~er- like veraltet";
-    stem rest_: "~ü~este- like veraltet";
+    stem predicative_comp: "~ü~er- like veraltet";
+    stem predicative_sup: "~ü~este- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
     weak_nom: derived, derived, derived, _;
@@ -484,7 +484,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug). Like Kurz.
     declension!("dumm", 9, "~u~", like Kurz;
-    stem rest_: "~ü~ste- like veraltet";
+    stem predicative_sup: "~ü~ste- like veraltet";
     ),
     // Unedel: 9 words (integer, schofel, illuster, makaber, speiübel, unedel). Like Edel, except in 10 cells: strong_nom pl, strong_acc f, strong_acc pl, weak_nom m, weak_nom f, weak_nom n, ….
     declension!("unedel", 9, "~e~", like Edel;
@@ -511,16 +511,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Roth: 7 words (rot, roth, orthognath, prognath, dunckelroth, dunkelroth). Like Groß.
     declension!("roth", 7, "~o~", like Groß;
-    stem rest_: "~ö~este- like veraltet";
+    stem predicative_sup: "~ö~este- like veraltet";
     ),
     // Grob: 7 words (grob, fromm, aerob, anaerob, lammfromm, storr). Like Groß.
     declension!("grob", 7, "~o~", like Groß;
-    stem rest_: "~ö~ste- like veraltet";
+    stem predicative_sup: "~ö~ste- like veraltet";
     ),
     // Lila: 6 words (rosa, lila, altrosa, hellrosa, schweinchenrosa, blasslila).
     declension!("lila", 6, "~";
-    stem rest: "~ner- like veraltet";
-    stem rest_: "~nste- like veraltet";
+    stem predicative_comp: "~ner- like veraltet";
+    stem predicative_sup: "~nste- like veraltet";
     strong_nom: _, "~ne", _, _;
     strong_gen: _, "~ner", "~nen", "~ner";
     strong_dat: _, "~ner", "~nem", "~nen";
@@ -540,13 +540,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Hoch: 6 words (hoch, himmelhoch, ranghoch, wolkenhoch, hüfthoch, halbhoch). Like Groß, except in 1 cell: predicative pos.
     declension!("hoch", 6, "~oc~", like Groß;
-    stem rest_: "~öc~ste- like veraltet";
+    stem predicative_sup: "~öc~ste- like veraltet";
     predicative: "~oc~", _, _;
     ),
     // Naß: 6 words (naß, gewiß, ungewiß, kraß, blaß, totenblaß).
     declension!("naß", 6, "~ß";
-    stem rest: "~sser- like veraltet";
-    stem rest_: "~sseste- like veraltet";
+    stem predicative_comp: "~sser- like veraltet";
+    stem predicative_sup: "~sseste- like veraltet";
     strong_nom: _, "~sse", _, _;
     strong_gen: _, "~sser", "~ssen", "~sser";
     strong_dat: _, "~sser", "~ssem", "~ssen";
@@ -566,8 +566,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     ),
     // Arg: 3 words (arm, alt, arg).
     declension!("arg", 3, "a~";
-    stem rest: "~er- like arg";
-    stem rest_: "~ste- like arg";
+    stem predicative_comp: "~er- like arg";
+    stem predicative_sup: "~ste- like arg";
     strong_nom: _, "a~e", _, _;
     strong_gen: _, "a~er", "a~en", "a~er";
     strong_dat: _, "a~er", "a~em", "a~en";

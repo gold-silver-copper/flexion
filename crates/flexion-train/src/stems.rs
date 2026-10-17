@@ -591,33 +591,47 @@ fn recurring(
 /// A slot's name: the parts of its cells' names every one of them has and
 /// no other cell has all of (`aorist_pass`), in its first cell's order,
 /// leaving out those every cell of the part of speech has (`noun`); else
-/// `lemma` for the slot of the lemma's cell (`lemma_cell`) and `rest` for
-/// another (Latin nouns: `rēx` on one stem, `rēgis`, `rēgī` … on the rest).
+/// `lemma` for the slot of the lemma's cell (`lemma_cell`); else the
+/// principal part it holds (one of `parts`: Latin nouns' `rēgis`, `gen_sg`,
+/// on the stem of every case but the nominative); else the parts all its
+/// cells have, other cells too; else its first cell's name. Another slot's
+/// name already (`taken`): with `_` after it.
 fn slot_name(
     cells: &[usize],
     names: &[String],
     lemma_cell: Option<usize>,
+    parts: &[usize],
     taken: &[String],
 ) -> String {
-    let parts =
+    let pieces =
         |c: usize| -> Vec<&str> { names.get(c).map_or(Vec::new(), |n| n.split('_').collect()) };
-    let first = cells.first().map_or(Vec::new(), |&c| parts(c));
-    let everywhere = |p: &str| (0..names.len()).all(|c| parts(c).contains(&p));
+    let everywhere = |p: &str| (0..names.len()).all(|c| pieces(c).contains(&p));
+    let own =
+        |c: usize| -> Vec<&str> { pieces(c).into_iter().filter(|p| !everywhere(p)).collect() };
+    let first = cells.first().map_or(Vec::new(), |&c| own(c));
     let shared: Vec<&str> = first
         .iter()
         .copied()
-        .filter(|p| !everywhere(p) && cells.iter().all(|&c| parts(c).contains(p)))
+        .filter(|p| cells.iter().all(|&c| pieces(c).contains(p)))
         .collect();
     let outside = (0..names.len())
         .filter(|c| !cells.contains(c))
-        .any(|c| shared.iter().all(|p| parts(c).contains(p)));
+        .any(|c| shared.iter().all(|p| pieces(c).contains(p)));
+    let part = parts.iter().find(|p| cells.contains(p));
     let mut name = if !shared.is_empty() && !outside {
         shared.join("_")
     } else if lemma_cell.is_some_and(|l| cells.contains(&l)) {
         "lemma".to_string()
+    } else if let Some(&part) = part {
+        own(part).join("_")
+    } else if !shared.is_empty() {
+        shared.join("_")
     } else {
-        "rest".to_string()
+        first.join("_")
     };
+    if name.is_empty() {
+        name = "rest".to_string();
+    }
     while taken.contains(&name) {
         name.push('_');
     }
@@ -646,6 +660,7 @@ pub fn tables<'s>(
     slot_of: &[Option<u16>],
     names: &[String],
     lemma_cell: Option<usize>,
+    parts: &[usize],
 ) -> Tables<'s> {
     let count = slot_of
         .iter()
@@ -669,6 +684,7 @@ pub fn tables<'s>(
             cells.get(s).map_or(&[][..], Vec::as_slice),
             names,
             lemma_cell,
+            parts,
             &taken,
         );
         taken.push(name.clone());

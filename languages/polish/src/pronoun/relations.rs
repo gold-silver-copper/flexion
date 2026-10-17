@@ -53,9 +53,9 @@ pub(super) static RELATIONS: [Relation<'static>; 59] = [
     relation!(NOM_N_ANIM, [NOM_NVIR_ANIM], [("~", "~"), ("~e", "~o")], rules {
         "" => [0 21, 1 5],
     } listed {
-        "niejedne" => 1,
-        "owe" => 1,
-        "tamte" => 1,
+        1 => [
+            "niejedne", "owe", "tamte",
+        ],
     }, true, None),
     // NOM_N_INAN, from NOM_N_ANIM.
     relation!(NOM_N_INAN, [NOM_N_ANIM], [], none, true, None),

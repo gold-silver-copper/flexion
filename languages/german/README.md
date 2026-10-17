@@ -66,9 +66,11 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 143818 | 162 | 88 | 7749 | 14735 | 254 | 0 |
-| adjective | 14839 | 22 | 26 | 284 | 178 | 892 | 0 |
-| verb | 9316 | 68 | 5 | 250 | 732 | 4484 | 91 |
+| noun | 143818 | 162 | 49 | 7749 | 14762 | 277 | 0 |
+| numeral | 18 | 1 | 1 | 1 | 0 | 0 | 0 |
+| proper_noun | 2863 | 16 | 1 | 200 | 337 | 11 | 0 |
+| adjective | 14839 | 22 | 5 | 284 | 178 | 16 | 0 |
+| verb | 9316 | 68 | 4 | 250 | 731 | 4489 | 75 |
 | determiner | 36 | 3 | 0 | 6 | 8 | 15 | 1 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -113,17 +115,42 @@ developed (changes are judged on another tenth since PR #16).
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 6323 | 40053 | **93.63%** (93.2–94.1) | 98.74% | 98.85% | 86.92% | 0.007 | 0.782 | 93.63% | 99.79% | 98.04 / 98.43 / 99.10 | 94.05% | 93.63% (40053) |  | 94.77% (0.00%) | -1.15 (-1.46…-0.85) | 94.43% | 99.69% | 96.70% / 89.92% |  | 93.44% (5249) / 98.79% (730) / 87.78% (344) |  | 0.51% |
-| adjective | 1487 | 125177 | **98.79%** (98.2–99.3) | 99.80% | 99.84% | 98.45% | 0.005 | 0.134 | 98.79% | 99.88% | 99.44 / 99.44 / 99.43 |  | 98.79% (125079) | 100.00% (98) | 99.02% (100.00%) | -0.23 (-0.73…+0.26) | 99.06% | 100.00% | 98.61% / 98.87% |  | 98.73% (1410) / 100.00% (28) / 100.00% (49) | 96.53% (548) | 0.11% |
-| verb | 970 | 50575 | **95.17%** (94.2–96.1) | 98.32% | 98.50% | 85.67% | 0.012 | 0.970 | 95.17% | 95.88% | 95.52 / 95.59 / 95.66 | 95.28% | 95.17% (50575) |  | 73.16% (0.00%) | +22.01 (+20.25…+23.80) | 95.27% | 99.25% | 95.91% / 94.35% |  | 95.00% (936) / – / 99.83% (34) | 91.76% (9057) | 5.12% |
+| noun | 6323 | 40053 | **93.62%** (93.2–94.1) | 98.74% | 98.85% | 86.90% | 0.007 | 0.782 | 93.62% | 99.79% | 98.04 / 98.42 / 99.10 | 94.05% | 93.62% (40053) |  | 94.77% (0.00%) | -1.15 (-1.46…-0.85) | 94.43% | 99.69% | 96.70% / 89.91% |  | 93.44% (5249) / 98.79% (730) / 87.78% (344) |  | 0.53% |
+| numeral | 2 | 14 | **100.00%** (100.0–100.0) | 100.00% | 100.00% | 100.00% | 0.000 | 0.000 | 100.00% |  | 100.00 / 100.00 / 100.00 | 100.00% | 100.00% (14) |  | 100.00% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 0.00% / 100.00% |  | 100.00% (2) / – / – |  | 0.00% |
+| proper_noun | 309 | 1263 | **91.53%** (88.5–94.3) | 99.13% | 99.45% | 87.38% | 0.028 | 0.664 | 91.53% | 99.77% | 98.01 / 97.67 / 98.52 | 91.53% | 91.53% (1263) |  | 90.66% (0.00%) | +0.87 (-1.57…+3.20) | 93.03% | 99.21% | 100.00% / 91.05% |  | 91.39% (296) / 100.00% (1) / 95.00% (12) |  | 0.28% |
+| adjective | 1487 | 125177 | **98.79%** (98.2–99.3) | 99.80% | 99.84% | 98.45% | 0.006 | 0.134 | 98.79% | 99.88% | 99.44 / 99.44 / 99.43 |  | 98.79% (125079) | 100.00% (98) | 99.02% (100.00%) | -0.23 (-0.73…+0.26) | 99.06% | 100.00% | 98.61% / 98.87% |  | 98.73% (1410) / 100.00% (28) / 100.00% (49) | 96.53% (548) | 0.07% |
+| verb | 970 | 50575 | **95.17%** (94.2–96.1) | 98.32% | 98.50% | 85.67% | 0.012 | 0.970 | 95.17% | 95.98% | 95.53 / 95.59 / 95.62 | 95.28% | 95.17% (50575) |  | 73.16% (0.00%) | +22.01 (+20.25…+23.80) | 95.27% | 99.25% | 95.91% / 94.35% |  | 95.00% (936) / – / 99.83% (34) | 91.76% (9057) | 5.11% |
 | determiner | 3 | 45 | **40.00%** (0.0–100.0) | 73.33% | 73.33% | 33.33% | 0.598 | 16.615 | 40.00% |  | 69.05 / 69.23 / 69.44 |  | 40.00% (45) |  | 40.00% (0.00%) | +0.00 (+0.00…+0.00) | 40.00% | 100.00% | 0.00% / 40.00% |  | 40.00% (3) / – / – |  | 13.89% |
+
+## Where the errors are
+
+The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
+of them: *class*, the right form is among its answers but another paradigm's comes first;
+*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
+and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
+the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
+that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
+group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
+dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
+cells, the dictionary's or not, the share with a form.
+
+| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 2554 | 62% | 6% | 0% | 4% | 12% | 13% | 4% | 0% | 93.62% | 100.00% | 100.00% |
+| numeral | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 100.00% | 100.00% | 100.00% |
+| proper_noun | 107 | 67% | 0% | 0% | 0% | 7% | 18% | 8% | 0% | 91.53% | 100.00% | 100.00% |
+| adjective | 1519 | 32% | 42% | 0% | 0% | 3% | 23% | 0% | 0% | 98.04% | 100.00% | 100.00% |
+| verb | 2443 | 57% | 1% | 0% | 19% | 6% | 2% | 15% | 0% | 94.21% | 100.00% | 100.00% |
+| determiner | 27 | 56% | 0% | 0% | 22% | 22% | 0% | 0% | 0% | 40.00% | 100.00% | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 25298 | 968931 |
-| adjective | 2395 | 130500 |
-| verb | 5272 | 310749 |
-| determiner | 451 | 15888 |
+| noun | 13402 | 738781 |
+| numeral | 410 | 14168 |
+| proper_noun | 869 | 36282 |
+| adjective | 2243 | 107583 |
+| verb | 4893 | 301532 |
+| determiner | 455 | 15934 |
 
 ## Data and license
 

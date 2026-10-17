@@ -1,7 +1,7 @@
 //! What no conjugation gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`rest`, `abought- like settle`), then each listed form, by its cell's number (see
+//! built with (`past`, `abought- like settle`), then each listed form, by its cell's number (see
 //! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
@@ -10,13 +10,13 @@ use std::borrow::Cow;
 /// 242 stems, 200 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"abegge	rest	abought- like settle
-aby	rest	abought- like settle
+        r#"abegge	past	abought- like settle
+aby	past	abought- like settle
 amazon	lemma	amazon- like settle
 anhyzer	lemma	anhyzer- like settle
 arede	3	areding
 areed	2	ared	3	areeds
-arreede	rest	arred- like settle
+arreede	past	arred- like settle
 assoilzie	lemma	assoilzie- like settle
 atren	2	atran	4	atrun
 awreak	4	awroke
@@ -28,20 +28,20 @@ be	1	is	2	was
 bede	2	bade	4	bode
 bedizen	lemma	bedizen- like settle
 bedizzen	lemma	bedizzen- like settle
-begird	rest	begirt- like settle
+begird	past	begirt- like settle
 beholde	2	behelde	3	beholding
 benim	4	benomen
-beseeke	rest	besoughte- like settle
+beseeke	past	besoughte- like settle
 bespit	4	bespitten
-besprenge	rest	besprent- like settle
+besprenge	past	besprent- like settle
 bestead	4	bestead
-betwynde	rest	betwound- like settle
+betwynde	past	betwound- like settle
 bewizard	lemma	bewizard- like settle
 bide	2	bode
 bivouac	2	bivouacked	3	bivouacing
 blazen	lemma	blazen- like settle
 blazon	lemma	blazon- like settle
-bless	rest	blest- like settle
+bless	past	blest- like settle
 blizzard	lemma	blizzard- like settle
 blowe	2	blewe	4	blowne
 bmx	lemma	bmx- like settle
@@ -49,19 +49,19 @@ born	2	bornt	3	bornin
 boxcar	lemma	boxcar- like settle
 boxhaul	lemma	boxhaul- like settle
 brazen	lemma	brazen- like settle
-breake	rest	broke- like break
+breake	past	broke- like break
 breezen	lemma	breezen- like settle
 brexit	lemma	brexit- like settle
-bringe	rest	broughte- like settle
+bringe	past	broughte- like settle
 bronzen	lemma	bronzen- like settle
 brozier	lemma	brozier- like settle
-buie	rest	bought- like settle
+buie	past	bought- like settle
 bulldozer	lemma	bulldozer- like settle
 cadenza	lemma	cadenza- like settle
 can	2	could	3	able
 caut	1	cauteth
 chor	3	chorrin
-chuse	rest	chose- like break
+chuse	past	chose- like break
 claxon	lemma	claxon- like settle
 clep	2	clept	3	clepping
 coexert	lemma	coexert- like settle
@@ -73,14 +73,14 @@ coextract	lemma	coextract- like settle
 commixt	lemma	commixt- like settle
 complexion	lemma	complexion- like settle
 coom	2	came
-cotch	rest	caught- like settle
+cotch	past	caught- like settle
 cozen	lemma	cozen- like settle
 crazen	lemma	crazen- like settle
 cum	2	came	4	come
 darf	3	durving
 dazen	lemma	dazen- like settle
 de	1	diz	2	did	4	dyun
-dee	rest	dyun- like settle	1	diz
+dee	past	dyun- like settle	1	diz
 deeky	2	deekied	3	deekyin
 dehydrofreeze	2	dehydrofreezing	3	dehydrofreezes	4	dehydrofrozen
 denizen	lemma	denizen- like settle
@@ -161,12 +161,12 @@ fix	1	fixes
 fizgig	1	fizgigs
 fluxion	lemma	fluxion- like settle
 forbid	2	forbade	4	forbidden
-foretel	rest	foretold- like settle
-forewit	rest	forewist- like settle	1	forewot
-forgoe	rest	for- like overgo
-forhele	rest	forhole- like break
+foretel	past	foretold- like settle
+forewit	past	forewist- like settle	1	forewot
+forgoe	past	for- like overgo
+forhele	past	forhole- like break
 forlat	2	forleet	4	forlatten
-forlese	rest	forlor- like wear
+forlese	past	forlor- like wear
 forswing	4	forswungen
 forswink	4	forswunken
 foxhunt	lemma	foxhunt- like settle
@@ -192,20 +192,20 @@ got	2	had
 growe	2	grewe	4	growne
 gunzel	lemma	gunzel- like settle
 gzip	lemma	gzip- like settle
-haffta	rest	hadda- like settle	1	hasta
-hafta	rest	hadda- like settle	1	hasta
+haffta	past	hadda- like settle	1	hasta
+hafta	past	hadda- like settle	1	hasta
 half	1	halves	3	halving	4	halved
-haue	rest	had- like settle	1	has
-hav	rest	had- like settle	1	has
-have	rest	had- like settle	1	has
+haue	past	had- like settle	1	has
+hav	past	had- like settle	1	has
+have	past	had- like settle	1	has
 haxor	lemma	haxor- like settle
 hazard	lemma	hazard- like settle
 hazen	lemma	hazen- like settle
 herye	1	heryeth
-hev	rest	hed- like settle	1	hes
+hev	past	hed- like settle	1	hes
 hexedit	lemma	hexedit- like settle
 ho	3	hoeing
-hould	rest	held- like settle
+hould	past	held- like settle
 howitzer	lemma	howitzer- like settle
 huxter	lemma	huxter- like settle
 huzza	lemma	huzza- like settle
@@ -214,7 +214,7 @@ hx	lemma	hx- like settle
 hyzer	lemma	hyzer- like settle
 imblazon	lemma	imblazon- like settle
 indenizen	lemma	indenizen- like settle
-inwork	rest	inwrought- like settle
+inwork	past	inwrought- like settle
 ixnay	lemma	ixnay- like settle
 jacuzzi	lemma	jacuzzi- like settle
 kaizen	lemma	kaizen- like settle
@@ -226,9 +226,9 @@ laxen	lemma	laxen- like settle
 lazen	lemma	lazen- like settle
 lazo	lemma	lazo- like settle
 lazyload	lemma	lazyload- like settle
-leaue	rest	left- like settle
-leese	rest	lor- like wear
-lese	rest	lor- like wear
+leaue	past	left- like settle
+leese	past	lor- like wear
+lese	past	lor- like wear
 lexicon	lemma	lexicon- like settle
 lozzuck	lemma	lozzuck- like settle
 luv	1	luvz
@@ -241,9 +241,9 @@ mezzotint	lemma	mezzotint- like settle
 mezzotinto	lemma	mezzotinto- like settle
 misbid	4	misbidden
 moonrun	4	moonran
-mote	rest	must- like settle
+mote	past	must- like settle
 muzak	lemma	muzak- like settle
-myek	rest	made- like settle
+myek	past	made- like settle
 outpizza	lemma	outpizza- like settle
 overexert	lemma	overexert- like settle
 overfreight	4	overfraught
@@ -271,7 +271,7 @@ reexport	lemma	reexport- like settle
 reextend	lemma	reextend- like settle
 reextract	lemma	reextract- like settle
 reforbid	2	reforbade	4	reforbidden
-rehave	rest	rehad- like settle	1	rehas
+rehave	past	rehad- like settle	1	rehas
 reshear	4	reshorn
 rez	lemma	rez- like settle
 rezip	lemma	rezip- like settle
@@ -280,9 +280,9 @@ rizzar	lemma	rizzar- like settle
 ronne	2	ronne	3	ronning
 roxor	lemma	roxor- like settle
 sambaza	lemma	sambaza- like settle
-saye	rest	saide- like settle
+saye	past	saide- like settle
 schiz	lemma	schiz- like settle
-seech	rest	sought- like settle
+seech	past	sought- like settle
 sexpect	lemma	sexpect- like settle
 sexperiment	lemma	sexperiment- like settle
 sexploit	lemma	sexploit- like settle
@@ -291,22 +291,22 @@ sextort	lemma	sextort- like settle
 shall	2	should
 shazam	lemma	shazam- like settle
 shear	4	shorn
-shende	rest	shent- like settle
+shende	past	shent- like settle
 shrinke	2	shrank	4	shrunke
 shxt	lemma	shxt- like settle
 sixth	1	sixths
 sk	3	skg
-sleepe	rest	slepte- like settle
+sleepe	past	slepte- like settle
 slizzer	lemma	slizzer- like settle
-smight	rest	smote- like break
-spaik	rest	spoke- like settle
+smight	past	smote- like break
+spaik	past	spoke- like settle
 speake	2	spoke
 spuilzie	lemma	spuilzie- like settle
 spulzie	lemma	spulzie- like settle
-steale	rest	stole- like break
-sticke	rest	stuck- like settle
-strikethrough	rest	struckthrough- like settle	1	strikesthrough
-stryde	rest	strode- like settle
+steale	past	stole- like break
+sticke	past	stuck- like settle
+strikethrough	past	struckthrough- like settle	1	strikesthrough
+stryde	past	strode- like settle
 superexalt	lemma	superexalt- like settle
 surbeat	4	surbeaten
 suxor	lemma	suxor- like settle
@@ -320,10 +320,10 @@ taxicab	lemma	taxicab- like settle
 teazel	lemma	teazel- like settle
 tek	2	took	4	tekken
 text	lemma	text- like settle
-thinck	rest	thought- like settle
-thinke	rest	thought- like settle
+thinck	past	thought- like settle
+thinke	past	thought- like settle
 titup	2	tituped	3	titupping
-torive	rest	torift- like settle
+torive	past	torift- like settle
 townsizing	lemma	townsizing- like settle
 trafficate	2	trafficated	3	trafficateking
 trailbreak	4	trailbroke
@@ -331,9 +331,9 @@ tweezer	lemma	tweezer- like settle
 txt	lemma	txt- like settle
 tyek	2	teuk	3	tyekin
 uncitizen	lemma	uncitizen- like settle
-undergoe	rest	under- like overgo
-underly	rest	underla- like lie
-underlye	rest	underla- like lie
+undergoe	past	under- like overgo
+underly	past	underla- like lie
+underlye	past	underla- like lie
 unexport	lemma	unexport- like settle
 unextinct	lemma	unextinct- like settle
 unlade	4	unladen
@@ -343,14 +343,14 @@ unvizor	lemma	unvizor- like settle
 unzip	lemma	unzip- like settle
 unzipper	lemma	unzipper- like settle
 unzoom	lemma	unzoom- like settle
-uppluck	rest	upplight- like settle
+uppluck	past	upplight- like settle
 vfx	lemma	vfx- like settle
 viz	lemma	viz- like settle
 wayfare	2	wayfore
 weare	2	wore	4	worne
 will	2	would
 wis	1	wis
-wit	rest	wist- like settle	1	wot
+wit	past	wist- like settle	1	wot
 wizard	lemma	wizard- like settle
 wizen	lemma	wizen- like settle
 wright	2	wrighten	3	wrought

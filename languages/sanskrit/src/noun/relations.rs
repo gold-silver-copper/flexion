@@ -106,8 +106,9 @@ pub(super) static RELATIONS: [Relation<'static>; 23] = [
         "ोः" => [5 143],
         "्" => [2 3177],
     } listed {
-        "दमः" => 1,
-        "पथः" => 1,
+        1 => [
+            "दमः", "पथः",
+        ],
     }, true, None),
     // LOC_DU, from GEN_DU.
     relation!(LOC_DU, [GEN_DU], [], none, true, None),
@@ -186,7 +187,9 @@ pub(super) static RELATIONS: [Relation<'static>; 23] = [
         "प्" => [0 8],
         "म्" => [3 1095],
     } listed {
-        "अर्वा" => 5,
+        5 => [
+            "अर्वा",
+        ],
     }, true, None),
     // VOC_DU, from NOM_DU.
     relation!(VOC_DU, [NOM_DU], [], none, true, None),

@@ -32,6 +32,10 @@ pub struct Orthography<'a> {
     /// The law that limits where the accent falls, where the language has
     /// one (Ancient Greek).
     pub prosody: Option<crate::Prosody<'a>>,
+    /// Combining marks written only on a word's first letter or its first
+    /// vowels (Greek breathings): behind a consonant of the word they go
+    /// (`ὑπἔκρυπτον` is `ὑπέκρυπτον`, `προοἰσθήσεσθαι` `προοισθήσεσθαι`).
+    pub initial: &'a str,
 }
 
 /// Where a word is stressed: its `vowel`-th vowel from the start (from 0),
@@ -125,8 +129,15 @@ impl Orthography<'_> {
     /// written: each word's accent is its own (the participle's on `-μέν-`,
     /// the auxiliary's), none a rule places.
     pub fn read(&self, word: &str) -> Written {
-        let word: &str = &self.composed(word);
-        let casing = casing(word);
+        let composed = self.composed(word);
+        let casing = casing(&composed);
+        // Lowercased first, so that a capital's stress mark is read as the
+        // lowercase letter's (`Ἄδωνις`).
+        let word: &str = &if self.lowercase {
+            composed.chars().map(lower).collect()
+        } else {
+            composed
+        };
         if word.contains(' ') {
             let letters = word
                 .chars()
@@ -247,7 +258,33 @@ impl Orthography<'_> {
                 vowel = vowel.saturating_add(1);
             }
         }
-        recase(&out, casing).nfc().collect()
+        self.initial_only(&recase(&out, casing))
+    }
+
+    /// `word` without the [`Orthography::initial`] marks written behind a
+    /// consonant of it.
+    pub fn initial_only(&self, word: &str) -> String {
+        if self.initial.is_empty() || !word.nfd().any(|c| self.initial.contains(c)) {
+            return word.nfc().collect();
+        }
+        let (mut letters, mut consonant) = (0, false);
+        let mut out = String::with_capacity(word.len());
+        for c in word.nfd() {
+            if unicode_normalization::char::is_combining_mark(c) {
+                if !(self.initial.contains(c) && consonant && letters > 1) {
+                    out.push(c);
+                }
+                continue;
+            }
+            if c.is_alphabetic() {
+                letters += 1;
+                consonant |= !self.is_vowel(lower(c));
+            } else {
+                (letters, consonant) = (0, false);
+            }
+            out.push(c);
+        }
+        out.nfc().collect()
     }
 }
 
@@ -302,6 +339,7 @@ mod tests {
         mark_monosyllables: false,
         folded: &[('ё', 'е')],
         prosody: None,
+        initial: "",
     };
 
     #[test]
@@ -338,9 +376,34 @@ mod tests {
             mark_monosyllables: false,
             folded: &[('ā', 'a'), ('ē', 'e'), ('ī', 'i'), ('ō', 'o'), ('ū', 'u')],
             prosody: None,
+            initial: "",
         };
         let w = latin.read("homō\u{306}");
         assert_eq!(w.letters, "homō");
         assert_eq!(latin.key(&w.letters), "homo");
+    }
+
+    #[test]
+    fn a_breathing_behind_a_consonant_of_the_word_is_dropped() {
+        // A dictionary's compound (`ὑπἔκρυπτον`) and a preverb put in front
+        // (`προ` + `οἰσθήσεσθαι`); not the first vowels' (`αἰτέω`), nor
+        // another word's (`ὁ ἀνήρ`).
+        let greek = Orthography {
+            lowercase: true,
+            vowels: "αεηιουω",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+            initial: "\u{313}\u{314}",
+        };
+        let write = |w: &str| greek.write(w, None, Casing::Lower);
+        assert_eq!(
+            ["ὑπἔκρυπτον", "προοἰσθησεσθαι", "αἰτεω", "ῥητωρ", "ὁ ἀνηρ"].map(write),
+            ["ὑπέκρυπτον", "προοισθησεσθαι", "αἰτεω", "ῥητωρ", "ὁ ἀνηρ"]
+        );
     }
 }

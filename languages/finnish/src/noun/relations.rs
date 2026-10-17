@@ -387,8 +387,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "tö" => [1 36],
         "yö" => [5 9],
     } listed {
-        "airut" => 37,
-        "olut" => 37,
+        37 => [
+            "airut", "olut",
+        ],
     }, false, None),
     // ILL_PL, from ILL_SG.
     relation!(ILL_PL, [ILL_SG], [], none, false, None),
@@ -526,10 +527,15 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ää" => [47 265],
         "öä" => [47 72],
     } listed {
-        "airutta" => 40,
-        "lientä" => 27,
-        "olutta" => 40,
-        "venättä" => 41,
+        27 => [
+            "lientä",
+        ],
+        40 => [
+            "airutta", "olutta",
+        ],
+        41 => [
+            "venättä",
+        ],
     }, true, None),
     // ESS_PL, from INE_PL.
     relation!(ESS_PL, [INE_PL], [("a~ssa", "ak~nA"), ("~deissa", "~teina"), ("~deissä", "~teinä"), ("~dissa", "~tinA"), ("~dissä", "~tinä"), ("~doissa", "~toina"), ("~duissa", "~tuina"), ("~dyissä", "~tyinä"), ("~döissä", "~töinä"), ("~eissa", "~Teina"), ("~eissa", "~keinA"), ("~eissa", "~peinA"), ("~eissä", "~Teinä"), ("~eissä", "~keinä"), ("~eissä", "~peinA"), ("~geissa", "~keinA"), ("~geissä", "~keinA"), ("~gissa", "~kinA"), ("~gissä", "~kinA"), ("~goissa", "~koinA"), ("~issa", "~TinA"), ("~issa", "~kinA"), ("~issa", "~pinA"), ("~issä", "~Tinä"), ("~issä", "~kinA"), ("~issä", "~pinä"), ("~jissa", "~ikVnA"), ("~jissa", "~kinA"), ("~jissä", "~kinA"), ("~joissa", "~ikoina"), ("~lissa", "~tinA"), ("~loissa", "~toina"), ("~missa", "~pinA"), ("~moissa", "~poinA"), ("~muissa", "~pVinA"), ("~möissä", "~pöinA"), ("~neissa", "~teina"), ("~neissä", "~teinä"), ("~nissa", "~tinA"), ("~nissä", "~tinA"), ("~noissa", "~toina"), ("~nuissa", "~tuina"), ("~nyissä", "~tyinä"), ("~nöissä", "~töinä"), ("~oissa", "~ToinA"), ("~oissa", "~koinA"), ("~oissa", "~poinA"), ("~roissa", "~toina"), ("~ssa", "~na"), ("~ssä", "~nä"), ("~uissa", "~TuinA"), ("~uissa", "~kuinA"), ("~uissa", "~puinA"), ("~vissa", "~pinA"), ("~vissä", "~pinä"), ("~voissa", "~poinA"), ("~vuissa", "~kVinA"), ("~vuissa", "~puinA"), ("~vyissä", "~kVinA"), ("~vyissä", "~pyinA"), ("~yissä", "~kyinA"), ("~yissä", "~pyinA"), ("~öissä", "~TöinA"), ("~öissä", "~köinA")], rules {
@@ -664,17 +670,24 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "nnöissä" => [43 16],
         "töissä" => [49 21, 62 11],
     } listed {
-        "briteissa" => 9,
-        "ikeissä" => 49,
-        "kalvoissa" => 48,
-        "kalvoissa" => 55,
-        "koissa" => 48,
-        "salvoissa" => 55,
-        "sammissa" => 32,
-        "uhissa" => 21,
-        "ummissa" => 32,
-        "vanhemmissa" => 32,
-        "vanhimmissa" => 32,
+        9 => [
+            "briteissa",
+        ],
+        21 => [
+            "uhissa",
+        ],
+        32 => [
+            "sammissa", "ummissa", "vanhemmissa", "vanhimmissa",
+        ],
+        48 => [
+            "kalvoissa", "koissa",
+        ],
+        49 => [
+            "ikeissä",
+        ],
+        55 => [
+            "kalvoissa", "salvoissa",
+        ],
     }, true, None),
     // TRA_SG, from POSSESSIVE_TRA_SG_1SG.
     relation!(TRA_SG, [POSSESSIVE_TRA_SG_1SG], [("~eni", "~i")], rules {
@@ -849,8 +862,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ä" => [3 276],
         "ö" => [3 99],
     } listed {
-        "airut" => 33,
-        "olut" => 33,
+        33 => [
+            "airut", "olut",
+        ],
     }, false, None),
     // POSSESSIVE_NOM_SG_2SG, from POSSESSIVE_NOM_SG_1SG.
     relation!(POSSESSIVE_NOM_SG_2SG, [POSSESSIVE_NOM_SG_1SG], [("~ni", "~si")], rules {
@@ -1003,7 +1017,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "esten" => [0 14, 2 11],
         "usten" => [0 300],
     } listed {
-        "isojenveljien" => 2,
+        2 => [
+            "isojenveljien",
+        ],
     }, true, None),
     // POSSESSIVE_PAR_SG_1SG, from PAR_SG.
     relation!(POSSESSIVE_PAR_SG_1SG, [PAR_SG], [("~", "~ni")], rules {
@@ -1205,7 +1221,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "yn" => [0 98, 1 3],
         "än" => [0 278],
     } listed {
-        "isoonveljeen" => 2,
+        2 => [
+            "isoonveljeen",
+        ],
     }, true, None),
     // POSSESSIVE_ILL_PL_1SG, from ILL_PL.
     relation!(POSSESSIVE_ILL_PL_1SG, [ILL_PL], [("~", "~V"), ("~ihin", "~VseVni")], rules {
@@ -1213,7 +1231,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ileihin" => [0 8, 1 2],
         "iin" => [0 2899],
     } listed {
-        "trymoihin" => 1,
+        1 => [
+            "trymoihin",
+        ],
     }, true, None),
     // POSSESSIVE_ILL_PL_2SG, from POSSESSIVE_ILL_PL_1SG.
     relation!(POSSESSIVE_ILL_PL_2SG, [POSSESSIVE_ILL_PL_1SG], [("~ni", "~si")], rules {
@@ -1246,7 +1266,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ksiin" => [0 664],
         "ehtiin" => [2 4, 0 1],
     } listed {
-        "isoihinveljiin" => 2,
+        2 => [
+            "isoihinveljiin",
+        ],
     }, true, None),
     // POSSESSIVE_ADE_SG_1SG, from ADE_SG.
     relation!(POSSESSIVE_ADE_SG_1SG, [ADE_SG], [("~", "~ni")], rules {
@@ -1417,8 +1439,9 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "eleinä" => [0 17, 3 2],
         "erinä" => [0 6, 2 2],
     } listed {
-        "seppeleinä" => 3,
-        "vempeleinä" => 3,
+        3 => [
+            "seppeleinä", "vempeleinä",
+        ],
     }, true, None),
     // POSSESSIVE_ESS_PL_2SG, from POSSESSIVE_ESS_PL_1SG.
     relation!(POSSESSIVE_ESS_PL_2SG, [POSSESSIVE_ESS_PL_1SG], [("~ni", "~si")], rules {

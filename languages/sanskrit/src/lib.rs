@@ -7,13 +7,106 @@ pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 pub mod adjective;
 pub mod noun;
+pub mod numeral;
 mod orthography;
 pub mod pronoun;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
 pub use noun::Noun;
+pub use numeral::Numeral;
 pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
+
+/// The present class, how a verb makes its present stem (Whitney §§ 602ff).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum PresentClass {
+    Class1,
+    Class2,
+    Class3,
+    Class4,
+    Class5,
+    Class6,
+    Class7,
+    Class8,
+    Class9,
+    Class10,
+}
+
+impl PresentClass {
+    /// Every value, in order.
+    pub const ALL: [PresentClass; 10] = [
+        PresentClass::Class1,
+        PresentClass::Class2,
+        PresentClass::Class3,
+        PresentClass::Class4,
+        PresentClass::Class5,
+        PresentClass::Class6,
+        PresentClass::Class7,
+        PresentClass::Class8,
+        PresentClass::Class9,
+        PresentClass::Class10,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            PresentClass::Class1 => "1",
+            PresentClass::Class2 => "2",
+            PresentClass::Class3 => "3",
+            PresentClass::Class4 => "4",
+            PresentClass::Class5 => "5",
+            PresentClass::Class6 => "6",
+            PresentClass::Class7 => "7",
+            PresentClass::Class8 => "8",
+            PresentClass::Class9 => "9",
+            PresentClass::Class10 => "10",
+        }
+    }
+}
+
+impl std::fmt::Display for PresentClass {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            PresentClass::Class1 => "class1",
+            PresentClass::Class2 => "class2",
+            PresentClass::Class3 => "class3",
+            PresentClass::Class4 => "class4",
+            PresentClass::Class5 => "class5",
+            PresentClass::Class6 => "class6",
+            PresentClass::Class7 => "class7",
+            PresentClass::Class8 => "class8",
+            PresentClass::Class9 => "class9",
+            PresentClass::Class10 => "class10",
+        })
+    }
+}
+
+impl std::str::FromStr for PresentClass {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "PresentClass",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for PresentClass {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -449,6 +542,12 @@ pub fn noun(lemma: &str, case: Case, number: Number) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
 }
 
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
 /// An adjective agreeing in case, gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
@@ -465,6 +564,12 @@ pub fn comparative(lemma: &str) -> String {
 #[must_use]
 pub fn superlative(lemma: &str) -> String {
     adjective::Adjective::new(lemma).form(adjective::Cell::Superlative)
+}
+
+/// An adjective agreeing in case, gender and number.
+#[must_use]
+pub fn numeral(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, gender, number))
 }
 
 /// The present system: indicative, imperative, optative and subjunctive.

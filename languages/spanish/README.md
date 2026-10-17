@@ -53,10 +53,11 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 60257 | 21 | 0 | 286 | 731 | 66 | 0 |
-| adjective | 24530 | 15 | 19 | 242 | 525 | 41 | 1 |
-| verb | 17957 | 159 | 24 | 1097 | 812 | 382 | 136 |
-| determiner | 60 | 6 | 0 | 10 | 18 | 14 | 5 |
+| noun | 60256 | 21 | 0 | 286 | 730 | 65 | 0 |
+| adjective | 24530 | 15 | 17 | 242 | 524 | 39 | 1 |
+| verb | 17957 | 159 | 23 | 1097 | 812 | 382 | 136 |
+| determiner | 78 | 7 | 0 | 10 | 15 | 10 | 4 |
+| adverb | 7 | 2 | 0 | 1 | 6 | 4 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -101,16 +102,38 @@ developed (changes are judged on another tenth since PR #16).
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | noun | 6079 | 6079 | **98.67%** (98.4–98.9) | 99.80% | 99.87% | 98.67% | 0.003 | 0.111 | 98.67% |  |  | 98.67% | 98.67% (6079) |  | 98.67% (0.00%) | +0.00 (-0.20…+0.20) | 98.88% | 99.98% | 99.85% / 98.12% |  | 98.74% (5245) / 100.00% (583) / 94.02% (251) |  | 0.11% |
-| adjective | 2399 | 7208 | **98.50%** (98.1–98.9) | 99.81% | 99.82% | 97.79% | 0.003 | 0.180 | 98.50% | 99.67% | 99.67 / 99.88 / 86.67 |  | 98.50% (7208) |  | 98.60% (0.00%) | -0.10 (-0.35…+0.14) | 98.61% | 100.00% | 99.84% / 98.04% |  | 98.49% (2284) / 100.00% (68) / 97.12% (47) |  | 0.22% |
+| adjective | 2399 | 7208 | **98.50%** (98.1–98.9) | 99.81% | 99.82% | 97.79% | 0.003 | 0.180 | 98.50% | 99.67% | 99.67 / 99.88 / 86.67 |  | 98.50% (7208) |  | 98.60% (0.00%) | -0.10 (-0.35…+0.14) | 98.61% | 100.00% | 99.84% / 98.04% |  | 98.49% (2284) / 100.00% (68) / 97.12% (47) |  | 0.21% |
 | verb | 929 | 66839 | **98.97%** (98.6–99.3) | 99.39% | 99.41% | 95.16% | 0.004 | 0.336 | 98.97% | 99.73% | 99.17 / 99.31 / 99.44 |  | 98.97% (66839) |  | 99.28% (0.00%) | -0.31 (-0.60…-0.02) | 98.99% | 99.98% | 99.28% / 98.77% |  | 99.02% (879) / 100.00% (4) / 97.86% (46) |  | 1.73% |
-| determiner | 4 | 12 | **83.33%** (66.7–100.0) | 100.00% | 100.00% | 50.00% | 0.125 | 0.586 | 83.33% |  | 75.00 / 100.00 / 0.00 |  | 83.33% (12) |  | 83.33% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 0.00% / 83.33% |  | 83.33% (2) / 100.00% (1) / 66.67% (1) |  | 15.00% |
+| determiner | 9 | 22 | **90.91%** (70.0–100.0) | 95.45% | 100.00% | 88.89% | 0.094 | 0.621 | 90.91% |  | 100.00 / 100.00 / 0.00 |  | 90.91% (22) |  | 100.00% (0.00%) | -9.09 (-30.00…+0.00) | 90.91% | 100.00% | 100.00% / 90.48% | 0.00% (1) | 77.78% (4) / 100.00% (2) / 100.00% (3) |  | 11.54% |
+| adverb | 0 | 0 | **0.00%** (0.0–0.0) | 0.00% | 0.00% | 0.00% | 0.000 | 0.000 | 0.00% |  |  |  |  |  | 0.00% (0.00%) | +0.00 (+0.00…+0.00) | 0.00% | 0.00% | 0.00% / 0.00% |  | – / – / – |  | 42.86% |
+
+## Where the errors are
+
+The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
+of them: *class*, the right form is among its answers but another paradigm's comes first;
+*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
+and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
+the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
+that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
+group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
+dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
+cells, the dictionary's or not, the share with a form.
+
+| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 81 | 69% | 6% | 0% | 5% | 2% | 16% | 1% | 0% | 98.67% | 100.00% | 100.00% |
+| adjective | 108 | 81% | 3% | 0% | 5% | 5% | 7% | 0% | 0% | 85.63% | 100.00% | 100.00% |
+| verb | 688 | 23% | 25% | 0% | 34% | 16% | 2% | 0% | 0% | 98.81% | 100.00% | 100.00% |
+| determiner | 2 | 100% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 90.91% | 100.00% | 100.00% |
+| adverb | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | -0.00% | 100.00% | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 1606 | 53021 |
-| adjective | 1511 | 53776 |
-| verb | 7618 | 361663 |
-| determiner | 450 | 14907 |
+| noun | 1019 | 41616 |
+| adjective | 1099 | 45577 |
+| verb | 7177 | 354461 |
+| determiner | 445 | 14575 |
+| adverb | 353 | 11774 |
 
 ## Data and license
 

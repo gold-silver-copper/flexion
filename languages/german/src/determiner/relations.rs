@@ -46,7 +46,9 @@ pub(super) static RELATIONS: [Relation<'static>; 15] = [
         "" => [0 25, 1 9],
         "ge" => [1 7],
     } listed {
-        "dieselbe" => 1,
+        1 => [
+            "dieselbe",
+        ],
     }, true, None),
     // GEN_M, from GEN_F.
     relation!(GEN_M, [GEN_F], [], none, true, None),

@@ -21,6 +21,9 @@ Forms are written in standard spelling, with an accent only on a final
 stressed vowel (`città`, `prenderò`) and on the monosyllables that take one
 (`dà`, `può`).
 
+Left out: pronouns. Their dictionary entries give no forms but the
+possessive (`io`, `mio`), which the determiners already decline.
+
 ## How it works
 
 This crate is Italian inflection as a grammar, learned by
@@ -59,9 +62,10 @@ reason (the rule and its counts).
 |---|---:|---:|---:|---:|---:|---:|---:|
 | noun | 61768 | 26 | 0 | 1021 | 2234 | 88 | 0 |
 | adjective | 26286 | 12 | 1 | 322 | 484 | 48 | 4 |
-| verb | 12955 | 116 | 21 | 452 | 416 | 737 | 56 |
+| verb | 12955 | 116 | 18 | 452 | 416 | 737 | 56 |
 | participle | 8087 | 2 | 0 | 6 | 2 | 3 | 0 |
-| determiner | 44 | 4 | 0 | 5 | 8 | 6 | 0 |
+| determiner | 45 | 4 | 0 | 5 | 9 | 7 | 0 |
+| adverb | 8 | 1 | 0 | 1 | 6 | 8 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -107,17 +111,40 @@ developed (changes are judged on another tenth since PR #16).
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | noun | 6392 | 6392 | **95.82%** (95.3–96.3) | 99.44% | 99.67% | 95.82% | 0.003 | 0.387 | 95.82% |  |  | 96.39% | 95.82% (6392) |  | 95.09% (0.00%) | +0.74 (+0.31…+1.16) | 95.96% | 99.77% | 95.91% / 95.76% |  | 95.85% (5862) / 98.57% (210) / 93.44% (320) |  | 0.19% |
 | adjective | 2631 | 7900 | **98.46%** (98.0–98.8) | 99.86% | 99.86% | 97.61% | 0.010 | 0.137 | 98.46% | 99.78% | 99.60 / 99.66 / 100.00 |  | 98.45% (7895) | 100.00% (5) | 98.46% (100.00%) | +0.00 (-0.28…+0.28) | 98.49% | 100.00% | 99.36% / 97.96% |  | 98.48% (2514) / 100.00% (42) / 96.86% (75) |  | 0.19% |
-| verb | 1286 | 70300 | **99.05%** (98.7–99.4) | 99.57% | 99.57% | 96.35% | 0.005 | 0.232 | 99.05% | 99.56% | 99.29 / 99.45 / 99.47 | 99.05% | 99.05% (70300) |  | 99.22% (0.00%) | -0.17 (-0.48…+0.13) | 99.12% | 99.96% | 98.93% / 99.12% |  | 99.34% (1188) / 100.00% (9) / 95.12% (89) |  | 1.77% |
+| verb | 1286 | 70300 | **99.05%** (98.7–99.4) | 99.57% | 99.57% | 96.35% | 0.005 | 0.232 | 99.05% | 99.53% | 99.29 / 99.45 / 99.47 | 99.05% | 99.05% (70300) |  | 99.22% (0.00%) | -0.17 (-0.48…+0.13) | 99.12% | 99.96% | 98.93% / 99.12% |  | 99.34% (1188) / 100.00% (9) / 95.12% (89) |  | 1.77% |
 | participle | 821 | 2463 | **100.00%** (100.0–100.0) | 100.00% | 100.00% | 100.00% | 0.000 | 0.000 | 100.00% |  | 100.00 / 100.00 / 0.00 |  | 100.00% (2463) |  | 100.00% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 100.00% / 100.00% |  | 100.00% (11) / 100.00% (810) / – |  | 0.02% |
-| determiner | 7 | 19 | **94.74%** (84.2–100.0) | 100.00% | 100.00% | 85.71% | 0.053 | 1.316 | 94.74% |  | 91.67 / 83.33 / 0.00 |  | 94.74% (19) |  | 100.00% (0.00%) | -5.26 (-15.79…+0.00) | 94.74% | 100.00% | 100.00% / 93.75% |  | 94.74% (7) / – / – |  | 11.36% |
+| determiner | 8 | 22 | **81.82%** (54.5–100.0) | 86.36% | 86.36% | 75.00% | 0.182 | 2.955 | 81.82% |  | 78.57 / 71.43 / 0.00 |  | 90.00% (20) | 0.00% (2) | 86.36% (0.00%) | -4.55 (-13.64…+0.00) | 81.82% | 100.00% | 100.00% / 78.95% |  | 81.82% (8) / – / – |  | 13.33% |
+| adverb | 1 | 1 | **0.00%** (0.0–0.0) | 0.00% | 0.00% | 0.00% | 1.000 | 55.000 | 0.00% | 0.00% |  |  | 0.00% (1) |  | 0.00% (0.00%) | +0.00 (+0.00…+0.00) | 0.00% | 100.00% | 0.00% / 0.00% |  | 0.00% (1) / – / – |  | 75.00% |
+
+## Where the errors are
+
+The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
+of them: *class*, the right form is among its answers but another paradigm's comes first;
+*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
+and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
+the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
+that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
+group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
+dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
+cells, the dictionary's or not, the share with a form.
+
+| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 267 | 85% | 0% | 0% | 6% | 0% | 3% | 5% | 0% | 95.82% | 100.00% | 100.00% |
+| adjective | 122 | 90% | 0% | 0% | 3% | 4% | 2% | 0% | 0% | 96.56% | 100.00% | 100.00% |
+| verb | 667 | 48% | 1% | 0% | 22% | 19% | 7% | 4% | 0% | 99.03% | 100.00% | 100.00% |
+| participle | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 100.00% | 100.00% | 100.00% |
+| determiner | 4 | 25% | 0% | 0% | 50% | 25% | 0% | 0% | 0% | 81.82% | 100.00% | 100.00% |
+| adverb | 1 | 0% | 0% | 0% | 0% | 100% | 0% | 0% | 0% | 0.00% | 100.00% | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 3955 | 152219 |
-| adjective | 1566 | 56273 |
-| verb | 5079 | 203655 |
-| participle | 405 | 13966 |
-| determiner | 392 | 12887 |
+| noun | 2153 | 112040 |
+| adjective | 1193 | 48056 |
+| verb | 4916 | 201871 |
+| participle | 410 | 14046 |
+| determiner | 396 | 12843 |
+| adverb | 346 | 11575 |
 
 ## Data and license
 

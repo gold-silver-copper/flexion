@@ -16,3 +16,6 @@ assert_eq!(agreeing_participle("prendre", Gender::Feminine, Number::Plural), "pr
 ```
 
 Accents and `ç` are letters: `pêcher` and `pécher` are two words.
+
+Left out: proper nouns, whose dictionary entries give no forms (a French
+name doesn't inflect).

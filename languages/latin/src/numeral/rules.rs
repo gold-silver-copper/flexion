@@ -24,10 +24,17 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "enus" => [Bīnus 27] regular,
     }
     listed {
-        "#duo" => Duo,
-        "#millio" => Milliō,
-        "#nonus" => Singulus,
-        "#nulla" => Nūlla,
-        "#unus" => Singulus,
+        Singulus => [
+            "#nonus", "#unus",
+        ],
+        Duo => [
+            "#duo",
+        ],
+        Nūlla => [
+            "#nulla",
+        ],
+        Milliō => [
+            "#millio",
+        ],
     }
 };

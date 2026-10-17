@@ -34,29 +34,23 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law7: "g+r" => "g+er";
         // g+d → +s: 7 words (convergere, mingere, fungere, defungere), 0 forms wrong.
         law8: "g+d" => "+s";
-        // eg+i → eg+hi: 55 words (pregare, piegare, negare, segare), 0 forms wrong.
-        law9: "eg+i" => "eg+hi";
+        // [eg|og|ec|ug]+i → +hi: 140 words (pregare, piegare, negare, segare), 1 forms wrong.
+        law9: "{x:[eg|og|ec|ug]}+i" => "{x}+hi";
         // g+s → +ss: 10 words (affiggere, crocefiggere, crocifiggere, crucifiggere), 0 forms wrong.
         law10: "g+s" => "+ss";
         // og+e → og+he: 40 words (rogare, interrogare, affogare, derogare), 12 forms wrong.
         law11: "og+e" => "og+he";
-        // og+i → og+hi: 40 words (rogare, interrogare, affogare, derogare), 0 forms wrong.
-        law12: "og+i" => "og+hi";
         // ec+e → ec+he after a vowel earlier in the stem: 21 words (defecare, deprecare, arrecare, accecare), 12 forms wrong.
-        law13: "ec+e" => "ec+he" / "{[a|e|i|o|u]}{![a|e|i|o|u]*}" _ "";
-        // ec+i → ec+hi: 26 words (defecare, deprecare, arrecare, accecare), 1 forms wrong.
-        law14: "ec+i" => "ec+hi";
+        law12: "ec+e" => "ec+he" / "{[a|e|i|o|u]}{![a|e|i|o|u]*}" _ "";
         // [l|n]+ss → +s: 8 words (valere, volvere, contravvalere, disvalere), 0 forms wrong.
-        law15: "{x:[l|n]}+ss" => "{x}+s";
+        law13: "{x:[l|n]}+ss" => "{x}+s";
         // on+s → +us: 20 words (fondere, confondere, circonfondere, diffondere), 0 forms wrong.
-        law16: "on+s" => "+us";
-        // ug+i → ug+hi: 19 words (asciugare, coniugare, coniugarsi, asciugarsi), 0 forms wrong.
-        law17: "ug+i" => "ug+hi";
+        law14: "on+s" => "+us";
         // uo+s → +os: 9 words (muovere, percuotere, scuotere, commuovere), 0 forms wrong.
-        law18: "uo+s" => "+os";
+        law15: "uo+s" => "+os";
         // gl+en → gl+ien: 6 words (inorgoglire, inorgoglirsi, incanaglirsi, orgoglire), 0 forms wrong.
-        law19: "gl+en" => "gl+ien";
+        law16: "gl+en" => "gl+ien";
         // al+r → a+r: 6 words (valere, contravvalere, disvalere, equivalere), 0 forms wrong.
-        law20: "al+r" => "a+r";
+        law17: "al+r" => "a+r";
     }
 };

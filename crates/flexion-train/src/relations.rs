@@ -79,9 +79,14 @@ pub fn learn<'s>(
     // already in it.
     let mut parent: Vec<Option<usize>> = vec![None; cells];
     // The cells not in it yet: each with its best score so far, and source.
-    let mut waiting: Vec<(usize, (usize, usize), usize)> = (0..cells)
+    // Scored over threads, a cell at a time: the same tree.
+    let others: Vec<usize> = (0..cells)
         .filter(|&c| c != root && same.get(c).copied().flatten().is_none())
-        .map(|c| (c, score(root, c), root))
+        .collect();
+    let mut waiting: Vec<(usize, (usize, usize), usize)> = others
+        .iter()
+        .zip(crate::par::map(&others, |&c| score(root, c)))
+        .map(|(&c, n)| (c, n, root))
         .collect();
     while let Some(&(c, _, s)) = waiting
         .iter()
@@ -91,8 +96,8 @@ pub fn learn<'s>(
         if let Some(slot) = parent.get_mut(c) {
             *slot = Some(s);
         }
-        for (d, best, source) in &mut waiting {
-            let n = score(c, *d);
+        let scores = crate::par::map(&waiting, |&(d, _, _)| score(c, d));
+        for ((_, best, source), n) in waiting.iter_mut().zip(scores) {
             if n > *best {
                 (*best, *source) = (n, c);
             }
@@ -125,10 +130,11 @@ const SAME_WORDS: usize = 5;
 /// Per cell, the earlier cell (not itself a copy) whose form it is for
 /// [`SAME_SHARE`] of the words having both: the one sharing it most often.
 fn sameness(forms: &[Vec<Option<&str>>], cells: usize, root: usize) -> Vec<Option<usize>> {
-    let mut same: Vec<Option<usize>> = vec![None; cells];
-    for c in (0..cells).filter(|&c| c != root) {
-        let best = (0..c)
-            .filter(|&s| same.get(s).copied().flatten().is_none())
+    // Per cell, the earlier cells whose form it is for nearly every word,
+    // with how many: found over threads.
+    let later: Vec<usize> = (0..cells).filter(|&c| c != root).collect();
+    let like = crate::par::map(&later, |&c| -> Vec<(usize, usize)> {
+        (0..c)
             .filter_map(|s| {
                 let both = forms.iter().filter_map(|f| {
                     Some((f.get(s).copied().flatten()?, f.get(c).copied().flatten()?))
@@ -139,8 +145,17 @@ fn sameness(forms: &[Vec<Option<&str>>], cells: usize, root: usize) -> Vec<Optio
                 // Counts of words; exact as floats.
                 #[allow(clippy::cast_precision_loss)]
                 let share = equal as f64 / n.max(1) as f64;
-                (n >= SAME_WORDS && share >= SAME_SHARE).then_some((equal, std::cmp::Reverse(s)))
+                (n >= SAME_WORDS && share >= SAME_SHARE).then_some((s, equal))
             })
+            .collect()
+    });
+    // In order: of those, the one not itself another's, most words.
+    let mut same: Vec<Option<usize>> = vec![None; cells];
+    for (&c, candidates) in later.iter().zip(like) {
+        let best = candidates
+            .into_iter()
+            .filter(|&(s, _)| same.get(s).copied().flatten().is_none())
+            .map(|(s, equal)| (equal, std::cmp::Reverse(s)))
             .max()
             .map(|(_, std::cmp::Reverse(s))| s);
         if let Some(slot) = same.get_mut(c) {
@@ -271,6 +286,28 @@ pub fn analogies<'s>(
         }
     }
     let mut out: Vec<Relation<'s>> = Vec::new();
+    // Whether cell `s` is told, through relations, from `c` (a cell whose
+    // tree edge no change could be learned for is told by analogy, and must
+    // not be from a cell told from it: Finnish verbs' 38 and 39).
+    let from_cell = |out: &[Relation<'_>], s: usize, c: usize| {
+        let source = |x: usize| {
+            let of = |r: &Relation<'_>| (usize::from(r.cell) == x).then(|| r.source());
+            relations
+                .iter()
+                .find_map(of)
+                .or_else(|| out.iter().find_map(of))
+                .flatten()
+        };
+        let mut at = Some(s);
+        for _ in 0..=cells {
+            match at {
+                Some(x) if x == c => return true,
+                Some(x) => at = source(x),
+                None => return false,
+            }
+        }
+        true
+    };
     loop {
         let before = out.len();
         for c in 0..cells {
@@ -279,7 +316,9 @@ pub fn analogies<'s>(
             }
             let mut best = None;
             // From a cell words have, never one itself told by analogy.
-            for s in (0..cells).filter(|&s| has(s) && told.get(s).copied().unwrap_or(false)) {
+            for s in (0..cells).filter(|&s| {
+                has(s) && told.get(s).copied().unwrap_or(false) && !from_cell(&out, s, c)
+            }) {
                 let (1, k) = apart(s, c) else { continue };
                 let (Some(&from), Some(&to)) = (at(s).get(k), at(c).get(k)) else {
                     continue;
@@ -333,7 +372,7 @@ pub fn analogies<'s>(
     // A cell no pair of cells tells: the form of the nearest one, as it is.
     for c in (0..cells).filter(|&c| !told.get(c).copied().unwrap_or(true)) {
         let nearest = (0..cells)
-            .filter(|&s| has(s) && told.get(s).copied().unwrap_or(false))
+            .filter(|&s| has(s) && told.get(s).copied().unwrap_or(false) && !from_cell(&out, s, c))
             .min_by_key(|&s| {
                 (
                     apart(s, c).0,
@@ -474,6 +513,16 @@ fn spellings(ending: &str, classes: &Classes) -> Vec<String> {
 /// either (`("~ī", "~istī")` for `amāvī`, `amāvistī`; `("~", "ἐ~")` for the
 /// augment, `λύομεν`, `ἐλύομεν`).
 fn change(a: &str, b: &str) -> (String, String) {
+    // A form that is the other written twice (Turkish `gele gele` of
+    // `gele`): `~` into `~ ~`.
+    if let Some(sep) = b
+        .strip_prefix(a)
+        .and_then(|rest| rest.strip_suffix(a))
+        .filter(|sep| matches!(*sep, " " | "-"))
+        .filter(|_| !a.is_empty())
+    {
+        return ("~".to_string(), format!("~{sep}~"));
+    }
     let (a, b): (Vec<char>, Vec<char>) = (a.chars().collect(), b.chars().collect());
     let shared = |j: usize, k: usize| {
         a.iter()
@@ -528,6 +577,31 @@ pub fn order(relations: &[Relation<'_>], cells: usize) -> Vec<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_form_that_is_another_written_twice_is_told_so() {
+        // Turkish: the doubled converb is the `-(y)A` form twice.
+        let words: Vec<Vec<Option<&str>>> = [
+            ["gelmek", "gele", "gele gele"],
+            ["okumak", "okuya", "okuya okuya"],
+            ["koşmak", "koşa", "koşa koşa"],
+            ["bakmak", "baka", "baka baka"],
+            ["gülmek", "güle", "güle güle"],
+        ]
+        .iter()
+        .map(|w| w.iter().map(|f| Some(*f)).collect())
+        .collect();
+        let relations = learn(&words, 3, 0, Settings::default(), None);
+        let doubled = relations.iter().find(|r| r.cell == 2).expect("a relation");
+        assert_eq!(doubled.from.as_ref(), [1]);
+        assert_eq!(
+            doubled
+                .apply("düşüne", 2.0, None)
+                .first()
+                .map(|f| f.0.as_str()),
+            Some("düşüne düşüne")
+        );
+    }
 
     #[test]
     fn tells_a_cell_from_the_one_that_predicts_it() {

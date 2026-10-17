@@ -96,6 +96,7 @@ pub enum FormSource {
 
 /// A part of speech: the Wiktionary parts of speech it reads and the cell
 /// groups it generates.
+#[derive(Clone)]
 pub struct PartOfSpeech {
     pub name: &'static str,
     pub doc: &'static str,
@@ -129,10 +130,16 @@ pub struct PartOfSpeech {
     /// teaches the rules that choose one, and lists what the grammar gets
     /// wrong. `None`: every word.
     pub max_words: Option<usize>,
+    /// A part of speech whose words it learns from too, where its own are
+    /// few and inflect as those do (Turkish adjectives decline as nouns):
+    /// the other's words teach it, its own are what it is scored on. The
+    /// cells must be the other's.
+    pub learns_from: Option<&'static str>,
 }
 
 /// A group of cells that is one generated function: the product of its
 /// features' values.
+#[derive(Clone)]
 pub struct Group {
     /// Function name in the generated crate.
     pub name: &'static str,
@@ -204,6 +211,9 @@ pub struct Spelling {
     pub long_marks: &'static str,
     /// Diphthongs short at a word's end (`αι`, `οι`).
     pub short_finals: Vec<&'static str>,
+    /// Endings whose last syllable counts short, long as it is (Greek
+    /// `-εως`, `-εων`: `πόλεως`, Smyth §163a).
+    pub short_endings: Vec<&'static str>,
     /// The stress mark that can only stand on a long vowel (the circumflex):
     /// a vowel read with it is read long (`ᾶ` as `ᾱ`).
     pub circumflex: Option<char>,
@@ -308,6 +318,16 @@ impl Language {
                 cells
                     .find(g, v)
                     .ok_or(format!("{}: citation cell {g} {v:?} not found", p.name))?;
+            }
+            if let Some(h) = p.learns_from {
+                let host = self
+                    .parts
+                    .iter()
+                    .find(|q| q.name == h)
+                    .ok_or(format!("{}: learns from no part {h}", p.name))?;
+                if crate::cells::Cells::new(self, host)?.total != cells.total {
+                    return Err(format!("{}: learns from {h}, whose cells differ", p.name));
+                }
             }
         }
         Ok(())

@@ -54,7 +54,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ïs" => [1 4],
         "x" => [1 11],
     } listed {
-        "es" => 0,
+        0 => [
+            "es",
+        ],
     }, true, None),
     // PRES_1_PL, from PARTICIPLE_PRES.
     relation!(PRES_1_PL, [PARTICIPLE_PRES], [("~ant", "~ons"), ("~chant", "~vons"), ("~yant", "~vons"), ("~éant", "~eyons")], rules {
@@ -63,8 +65,12 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "yant" => [0 119, 2 4],
         "éant" => [0 19, 3 2],
     } listed {
-        "ayant" => 2,
-        "séant" => 3,
+        2 => [
+            "ayant",
+        ],
+        3 => [
+            "séant",
+        ],
     }, true, None),
     // PRES_2_SG, from FUT_1_SG.
     relation!(PRES_2_SG, [FUT_1_SG], [("~cevrai", "~çois"), ("~drai", "~s"), ("~drai", "~x"), ("~erai", "~ais"), ("~errai", "~iers"), ("~errai", "~oies"), ("~errai", "~ois"), ("~evrai", "~ois"), ("~illirai", "~s"), ("~irai", "~es"), ("~irai", "~s"), ("~mirai", "~s"), ("~oudrai", "~eux"), ("~ourrai", "~eux"), ("~ouvrai", "~eus"), ("~rai", "~s"), ("~roi", "~s"), ("~tirai", "~s"), ("~trai", "~s"), ("~urai", "~is"), ("~urai", "~s"), ("~virai", "~s"), ("~vrai", "~s"), ("~égerai", "~èges"), ("~érai", "~eds"), ("~îtrai", "~is")], rules {
@@ -111,12 +117,18 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "érai" => [24 2],
         "oi" => [16 7],
     } listed {
-        "aurai" => 20,
-        "enverrai" => 5,
-        "pourrai" => 13,
-        "renverrai" => 5,
-        "repourrai" => 13,
-        "siérai" => 24,
+        5 => [
+            "enverrai", "renverrai",
+        ],
+        13 => [
+            "pourrai", "repourrai",
+        ],
+        20 => [
+            "aurai",
+        ],
+        24 => [
+            "siérai",
+        ],
     }, true, None),
     // PRES_2_PL, from IMPF_1_PL.
     relation!(PRES_2_PL, [IMPF_1_PL], [("~ions", "~ez"), ("~sions", "~tes")], rules {
@@ -143,8 +155,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ïs" => [4 4],
         "x" => [5 11],
     } listed {
-        "es" => 0,
-        "rees" => 0,
+        0 => [
+            "es", "rees",
+        ],
     }, true, None),
     // PRES_3_PL, from SUBJ_1_SG.
     relation!(PRES_3_PL, [SUBJ_1_SG], [("~", "~nt"), ("~aie", "~ont"), ("~asse", "~ont"), ("~che", "~vent"), ("~ille", "~lent"), ("~is", "~nt"), ("~uisse", "~euvent")], rules {
@@ -168,8 +181,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "te" => [0 973],
         "s" => [5 3],
     } listed {
-        "puisse" => 6,
-        "repuisse" => 6,
+        6 => [
+            "puisse", "repuisse",
+        ],
     }, true, None),
     // IMPF_1_SG, from PARTICIPLE_PRES.
     relation!(IMPF_1_SG, [PARTICIPLE_PRES], [("~ant", "~ois"), ("~chant", "~vais"), ("~nt", "~is"), ("~yant", "~vais"), ("~éant", "~eyais")], rules {
@@ -178,11 +192,18 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "yant" => [2 119, 3 4],
         "éant" => [2 19, 4 2],
     } listed {
-        "assachant" => 1,
-        "ayant" => 3,
-        "estant" => 0,
-        "sachant" => 1,
-        "séant" => 4,
+        0 => [
+            "estant",
+        ],
+        1 => [
+            "assachant", "sachant",
+        ],
+        3 => [
+            "ayant",
+        ],
+        4 => [
+            "séant",
+        ],
     }, true, None),
     // IMPF_1_PL, from PARTICIPLE_PAST.
     relation!(IMPF_1_PL, [PARTICIPLE_PAST], [("~", "~ions"), ("~", "~ons"), ("~", "~sions"), ("~", "~ssions"), ("~", "~vions"), ("~cu", "~quions"), ("~ert", "~rions"), ("~eu", "~avions"), ("~i", "~yions"), ("~is", "~enions"), ("~is", "~ettions"), ("~is", "~eyions"), ("~is", "~oyions"), ("~is", "~érions"), ("~it", "~yions"), ("~nt", "~gnions"), ("~rt", "~urions"), ("~s", "~ions"), ("~t", "~sions"), ("~t", "~vions"), ("~u", "~aisions"), ("~u", "~aissions"), ("~u", "~avions"), ("~u", "~evions"), ("~u", "~ions"), ("~u", "~isions"), ("~u", "~oissions"), ("~u", "~ouvions"), ("~u", "~oyions"), ("~us", "~lvions"), ("~çu", "~cevions"), ("~é", "~aissions"), ("~é", "~ions"), ("~écu", "~ivions"), ("~û", "~oissions")], rules {
@@ -324,8 +345,12 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ïs" => [4 5],
         "ûs" => [4 3],
     } listed {
-        "fus" => 4,
-        "fus" => 5,
+        4 => [
+            "fus",
+        ],
+        5 => [
+            "fus",
+        ],
     }, true, None),
     // PAST_2_SG, from PAST_1_SG.
     relation!(PAST_2_SG, [PAST_1_SG], [("~", "~"), ("~i", "~s"), ("~oi", "~as")], rules {
@@ -497,11 +522,18 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "laît" => [24 3],
         "ôt" => [26 6],
     } listed {
-        "fout" => 2,
-        "peut" => 11,
-        "repeut" => 11,
-        "sied" => 9,
-        "tait" => 19,
+        2 => [
+            "fout",
+        ],
+        9 => [
+            "sied",
+        ],
+        11 => [
+            "peut", "repeut",
+        ],
+        19 => [
+            "tait",
+        ],
     }, true, None),
     // SUBJ_1_PL, from IMPF_1_PL.
     relation!(SUBJ_1_PL, [IMPF_1_PL], [], none, true, None),
@@ -635,16 +667,18 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "ï" => [2 5],
         "û" => [37 3],
     } listed {
-        "conclu" => 0,
-        "exclu" => 0,
-        "nui" => 1,
-        "né" => 33,
-        "parnui" => 1,
-        "rené" => 33,
-        "ri" => 0,
-        "sis" => 13,
-        "souri" => 0,
-        "suffi" => 1,
+        0 => [
+            "conclu", "exclu", "ri", "souri",
+        ],
+        1 => [
+            "nui", "parnui", "suffi",
+        ],
+        13 => [
+            "sis",
+        ],
+        33 => [
+            "né", "rené",
+        ],
     }, true, None),
     // PARTICIPLE_PAST, from INFINITIVE.
     relation!(PARTICIPLE_PAST, [INFINITIVE], [], none, true, None),

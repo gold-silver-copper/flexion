@@ -23,28 +23,4 @@ pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
 }];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 1] = [
-    // lemma like πισῠρες: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("πισῠρες"),
-        words: 3,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "~ες\t\t~ες\t",
-            "\t\t~ες\t",
-            "\t\t~ᾰ\t",
-            "\t\t\t",
-            "\t\t~ων\t",
-            "\t\t~ων\t",
-            "\t\t~σῐ|~σῐν\t",
-            "\t\t~σῐ|~σῐν\t",
-            "\t\t~σῐ|~σῐν\t",
-            "\t\t~ᾰς\t",
-            "\t\t~ᾰς\t",
-            "\t\t~ᾰ\t",
-            "\t\t\t",
-            "\t\t\t",
-            "\t\t\t",
-        )),
-    },
-];
+pub(super) static TABLES: [EndingTable<'static>; 0] = [];

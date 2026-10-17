@@ -18,13 +18,14 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "ner" => [Keiner 8] regular,
     }
     listed {
-        "#der" => Keiner,
-        "#derjenige" => Ihrige,
-        "#derselbe" => Ihrige,
-        "#einer" => Keiner,
-        "#euer" => Sein,
-        "#sier" => Sein,
-        "#unser" => Sein,
-        "#unßer" => Sein,
+        Keiner => [
+            "#der", "#einer",
+        ],
+        Sein => [
+            "#euer", "#sier", "#unser", "#unßer",
+        ],
+        Ihrige => [
+            "#derjenige", "#derselbe",
+        ],
     }
 };

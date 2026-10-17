@@ -8,16 +8,77 @@ pub use flexion::{Candidate, Reading, Status, UnknownValue};
 mod extra;
 pub use extra::*;
 pub mod adjective;
+pub mod adverb;
 pub mod noun;
 pub mod numeral;
 mod orthography;
 pub mod pronoun;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
+pub use adverb::Adverb;
 pub use noun::Noun;
 pub use numeral::Numeral;
 pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
+
+/// Degree of comparison.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Degree {
+    Positive,
+    Comparative,
+    Superlative,
+}
+
+impl Degree {
+    /// Every value, in order.
+    pub const ALL: [Degree; 3] = [Degree::Positive, Degree::Comparative, Degree::Superlative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Degree::Positive => "pos",
+            Degree::Comparative => "comp",
+            Degree::Superlative => "sup",
+        }
+    }
+}
+
+impl std::fmt::Display for Degree {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Degree::Positive => "positive",
+            Degree::Comparative => "comparative",
+            Degree::Superlative => "superlative",
+        })
+    }
+}
+
+impl std::str::FromStr for Degree {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Degree",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Degree {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -618,6 +679,18 @@ pub fn noun_second_case(lemma: &str, second_case: SecondCase) -> String {
     noun::Noun::new(lemma).form(noun::Cell::SecondCase(second_case))
 }
 
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
+/// The second genitive or second locative singular. A noun without one gives its genitive or prepositional singular.
+#[must_use]
+pub fn proper_noun_second_case(lemma: &str, second_case: SecondCase) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::SecondCase(second_case))
+}
+
 /// The long (attributive) form.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
@@ -676,4 +749,10 @@ pub fn pronoun(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) 
 #[must_use]
 pub fn numeral(lemma: &str, case: Case, agreement: Agreement, animacy: Animacy) -> String {
     numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, agreement, animacy))
+}
+
+/// An adverb in a degree.
+#[must_use]
+pub fn adverb(lemma: &str, degree: Degree) -> String {
+    adverb::Adverb::new(lemma).form(adverb::Cell::Form(degree))
 }

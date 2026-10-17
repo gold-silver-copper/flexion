@@ -36,12 +36,12 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest__: $s1:tt;)?
-     $(stem rest: $s2:tt;)?
-     $(stem rest___: $s3:tt;)?
+     $(stem nom_m_pl: $s1:tt;)?
+     $(stem nom_f_sg: $s2:tt;)?
+     $(stem sg: $s3:tt;)?
      $(stem gen_sg: $s4:tt;)?
      $(stem gen_pl: $s5:tt;)?
-     $(stem rest_: $s6:tt;)?
+     $(stem pl: $s6:tt;)?
      $(stem abl_sg: $s7:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
@@ -252,8 +252,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     // Noster: 8 words (alter, noster, uter, vester, egomet, tūtemet).
     declension!("noster", 8, "~e~";
     stem lemma: "~e~- like uter";
-    stem rest: "~~- like uter";
-    stem rest___: "~~- like uter";
+    stem nom_f_sg: "~~- like uter";
+    stem sg: "~~- like uter";
     stem abl_sg: "~~- like uter";
     nom_m: _, "~~ī";
     gen_m: "~~ī", "~~ōrum";
@@ -267,7 +267,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     ),
     // Ecquis: 6 words (aliquis, ecquis, nēquis, sīquis, numquis, nesciōquis). Like Ecquīnam, except in 15 cells: nom_m sg, nom_m pl, nom_n sg, gen_n sg, dat_m sg, dat_m pl, ….
     declension!("ecquis", 6, "~q~is", like Ecquīnam;
-    stem rest: "~q~- like uter";
+    stem nom_f_sg: "~q~- like uter";
     stem gen_sg: "~c~ius- like quidquid";
     stem abl_sg: "~q~- like uter";
     nom_m: "~q~is", "~q~ī";
@@ -301,8 +301,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     ),
     // Suus: 5 words (tuus, meus, suus, cuius, ipsimus).
     declension!("suus", 5, "~us";
-    stem rest: "~- like uter";
-    stem rest___: "~- like uter";
+    stem nom_f_sg: "~- like uter";
+    stem sg: "~- like uter";
     stem abl_sg: "~- like uter";
     nom_m: "~us", "~ī";
     gen_m: "~ī", "~ōrum";
@@ -317,7 +317,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     ),
     // Iste: 5 words (ille, iste, ipse, seipse, olle). Like Suus, except in 7 cells: nom_m sg, gen_n sg, dat_n sg, acc_n sg, voc_m sg, voc_m pl, ….
     declension!("iste", 5, "~e", like Suus;
-    stem rest__: "~ī- like utervīs";
+    stem nom_m_pl: "~ī- like utervīs";
     stem gen_sg: "~īus- like quidquid";
     nom_m: "~e", _;
     gen_n: derived, _;
@@ -335,7 +335,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     ),
     // Ūllus: 3 words (alius, ūllus, nūllus). Like Suus, except in 4 cells: gen_m sg, gen_f sg, dat_n sg, voc_m pl.
     declension!("ūllus", 3, "~us", like Suus;
-    stem rest__: "~ī- like utervīs";
+    stem nom_m_pl: "~ī- like utervīs";
     gen_m: "~īus|~ī", _;
     gen_f: "~īus", _;
     dat_n: derived, _;

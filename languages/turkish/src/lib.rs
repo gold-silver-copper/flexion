@@ -7,9 +7,17 @@ pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 pub mod adjective;
 pub mod noun;
+pub mod numeral;
 mod orthography;
+pub mod pronoun;
+pub mod proper_noun;
+pub mod verb;
 pub use adjective::Adjective;
 pub use noun::Noun;
+pub use numeral::Numeral;
+pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
+pub use verb::Verb;
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -265,6 +273,720 @@ impl flexion::Label for Possessor {
     }
 }
 
+/// Whether a verb form is negated (`-mA-`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Polarity {
+    Positive,
+    Negative,
+}
+
+impl Polarity {
+    /// Every value, in order.
+    pub const ALL: [Polarity; 2] = [Polarity::Positive, Polarity::Negative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Polarity::Positive => "pos",
+            Polarity::Negative => "neg",
+        }
+    }
+}
+
+impl std::fmt::Display for Polarity {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Polarity::Positive => "positive",
+            Polarity::Negative => "negative",
+        })
+    }
+}
+
+impl std::str::FromStr for Polarity {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Polarity",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Polarity {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Whether a verb form says one can (`-(y)Abil-`; negated, `-(y)AmA-`: can't).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Ability {
+    Plain,
+    Abilitative,
+}
+
+impl Ability {
+    /// Every value, in order.
+    pub const ALL: [Ability; 2] = [Ability::Plain, Ability::Abilitative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Ability::Plain => "plain",
+            Ability::Abilitative => "abil",
+        }
+    }
+}
+
+impl std::fmt::Display for Ability {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Ability::Plain => "plain",
+            Ability::Abilitative => "abilitative",
+        })
+    }
+}
+
+impl std::str::FromStr for Ability {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Ability",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Ability {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A finite verb's tense, aspect or mood suffix.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Tense {
+    Aorist,
+    Progressive,
+    Evidential,
+    Future,
+    Continuous,
+    Necessitative,
+}
+
+impl Tense {
+    /// Every value, in order.
+    pub const ALL: [Tense; 6] = [
+        Tense::Aorist,
+        Tense::Progressive,
+        Tense::Evidential,
+        Tense::Future,
+        Tense::Continuous,
+        Tense::Necessitative,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Tense::Aorist => "aor",
+            Tense::Progressive => "prog",
+            Tense::Evidential => "evid",
+            Tense::Future => "fut",
+            Tense::Continuous => "cont",
+            Tense::Necessitative => "necess",
+        }
+    }
+}
+
+impl std::fmt::Display for Tense {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Tense::Aorist => "aorist",
+            Tense::Progressive => "progressive",
+            Tense::Evidential => "evidential",
+            Tense::Future => "future",
+            Tense::Continuous => "continuous",
+            Tense::Necessitative => "necessitative",
+        })
+    }
+}
+
+impl std::str::FromStr for Tense {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Tense",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Tense {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// The copula after a tense: past `-(y)DI`, evidential `-(y)mIş`, conditional `-(y)sA`, or none.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Copula {
+    None,
+    Evidential,
+    Past,
+    Conditional,
+}
+
+impl Copula {
+    /// Every value, in order.
+    pub const ALL: [Copula; 4] = [
+        Copula::None,
+        Copula::Evidential,
+        Copula::Past,
+        Copula::Conditional,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Copula::None => "-",
+            Copula::Evidential => "evid",
+            Copula::Past => "past",
+            Copula::Conditional => "cond",
+        }
+    }
+}
+
+impl std::fmt::Display for Copula {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Copula::None => "none",
+            Copula::Evidential => "evidential",
+            Copula::Past => "past",
+            Copula::Conditional => "conditional",
+        })
+    }
+}
+
+impl std::str::FromStr for Copula {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Copula",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Copula {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// The copula after the past `-DI`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum PastCopula {
+    None,
+    Past,
+    Conditional,
+}
+
+impl PastCopula {
+    /// Every value, in order.
+    pub const ALL: [PastCopula; 3] = [PastCopula::None, PastCopula::Past, PastCopula::Conditional];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            PastCopula::None => "-",
+            PastCopula::Past => "past",
+            PastCopula::Conditional => "cond",
+        }
+    }
+}
+
+impl std::fmt::Display for PastCopula {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            PastCopula::None => "none",
+            PastCopula::Past => "past",
+            PastCopula::Conditional => "conditional",
+        })
+    }
+}
+
+impl std::str::FromStr for PastCopula {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "PastCopula",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for PastCopula {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// The copula after the conditional or optative.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum MoodCopula {
+    None,
+    Evidential,
+    Past,
+}
+
+impl MoodCopula {
+    /// Every value, in order.
+    pub const ALL: [MoodCopula; 3] = [MoodCopula::None, MoodCopula::Evidential, MoodCopula::Past];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            MoodCopula::None => "-",
+            MoodCopula::Evidential => "evid",
+            MoodCopula::Past => "past",
+        }
+    }
+}
+
+impl std::fmt::Display for MoodCopula {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            MoodCopula::None => "none",
+            MoodCopula::Evidential => "evidential",
+            MoodCopula::Past => "past",
+        })
+    }
+}
+
+impl std::str::FromStr for MoodCopula {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "MoodCopula",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for MoodCopula {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// The subject's person and number.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Subject {
+    FirstSingular,
+    SecondSingular,
+    ThirdSingular,
+    FirstPlural,
+    SecondPlural,
+    ThirdPlural,
+}
+
+impl Subject {
+    /// Every value, in order.
+    pub const ALL: [Subject; 6] = [
+        Subject::FirstSingular,
+        Subject::SecondSingular,
+        Subject::ThirdSingular,
+        Subject::FirstPlural,
+        Subject::SecondPlural,
+        Subject::ThirdPlural,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Subject::FirstSingular => "1sg",
+            Subject::SecondSingular => "2sg",
+            Subject::ThirdSingular => "3sg",
+            Subject::FirstPlural => "1pl",
+            Subject::SecondPlural => "2pl",
+            Subject::ThirdPlural => "3pl",
+        }
+    }
+}
+
+impl std::fmt::Display for Subject {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Subject::FirstSingular => "firstsingular",
+            Subject::SecondSingular => "secondsingular",
+            Subject::ThirdSingular => "thirdsingular",
+            Subject::FirstPlural => "firstplural",
+            Subject::SecondPlural => "secondplural",
+            Subject::ThirdPlural => "thirdplural",
+        })
+    }
+}
+
+impl std::str::FromStr for Subject {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Subject",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Subject {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Who an imperative is to: the second or third person, plain, formal (`-(y)InIz`) or urging (`-sAnA`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Addressee {
+    SecondSingular,
+    ThirdSingular,
+    SecondPlural,
+    ThirdPlural,
+    FormalSingular,
+    FormalPlural,
+    UrgingSingular,
+    UrgingPlural,
+}
+
+impl Addressee {
+    /// Every value, in order.
+    pub const ALL: [Addressee; 8] = [
+        Addressee::SecondSingular,
+        Addressee::ThirdSingular,
+        Addressee::SecondPlural,
+        Addressee::ThirdPlural,
+        Addressee::FormalSingular,
+        Addressee::FormalPlural,
+        Addressee::UrgingSingular,
+        Addressee::UrgingPlural,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Addressee::SecondSingular => "2sg",
+            Addressee::ThirdSingular => "3sg",
+            Addressee::SecondPlural => "2pl",
+            Addressee::ThirdPlural => "3pl",
+            Addressee::FormalSingular => "2sg.formal",
+            Addressee::FormalPlural => "2pl.formal",
+            Addressee::UrgingSingular => "2sg.urging",
+            Addressee::UrgingPlural => "2pl.urging",
+        }
+    }
+}
+
+impl std::fmt::Display for Addressee {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Addressee::SecondSingular => "secondsingular",
+            Addressee::ThirdSingular => "thirdsingular",
+            Addressee::SecondPlural => "secondplural",
+            Addressee::ThirdPlural => "thirdplural",
+            Addressee::FormalSingular => "formalsingular",
+            Addressee::FormalPlural => "formalplural",
+            Addressee::UrgingSingular => "urgingsingular",
+            Addressee::UrgingPlural => "urgingplural",
+        })
+    }
+}
+
+impl std::str::FromStr for Addressee {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Addressee",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Addressee {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A subject participle: imperfective `-(y)An`, perfective `-mIş`, prospective `-(y)AcAk`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Participle {
+    Imperfective,
+    Perfective,
+    Prospective,
+}
+
+impl Participle {
+    /// Every value, in order.
+    pub const ALL: [Participle; 3] = [
+        Participle::Imperfective,
+        Participle::Perfective,
+        Participle::Prospective,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Participle::Imperfective => "an",
+            Participle::Perfective => "miş",
+            Participle::Prospective => "acak",
+        }
+    }
+}
+
+impl std::fmt::Display for Participle {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Participle::Imperfective => "imperfective",
+            Participle::Perfective => "perfective",
+            Participle::Prospective => "prospective",
+        })
+    }
+}
+
+impl std::str::FromStr for Participle {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Participle",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Participle {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// An object participle, with its subject's person: non-prospective `-DIk`, prospective `-(y)AcAk`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Relative {
+    NonProspective,
+    Prospective,
+}
+
+impl Relative {
+    /// Every value, in order.
+    pub const ALL: [Relative; 2] = [Relative::NonProspective, Relative::Prospective];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Relative::NonProspective => "dik",
+            Relative::Prospective => "acak",
+        }
+    }
+}
+
+impl std::fmt::Display for Relative {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Relative::NonProspective => "nonprospective",
+            Relative::Prospective => "prospective",
+        })
+    }
+}
+
+impl std::str::FromStr for Relative {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Relative",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Relative {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A converb: `-(y)ken` while, `-(y)IncA` when, `-(y)Ip` and, `-(y)AlI` since, `-(y)AsIyA` until, `-DIkçA` as long as, `-(y)ArAk` by, doubled, `-(y)AsIcA` as if.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Converb {
+    Ken,
+    Ince,
+    Ip,
+    Eli,
+    Esiye,
+    Dikce,
+    Erek,
+    Doubled,
+    Cesine,
+}
+
+impl Converb {
+    /// Every value, in order.
+    pub const ALL: [Converb; 9] = [
+        Converb::Ken,
+        Converb::Ince,
+        Converb::Ip,
+        Converb::Eli,
+        Converb::Esiye,
+        Converb::Dikce,
+        Converb::Erek,
+        Converb::Doubled,
+        Converb::Cesine,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Converb::Ken => "ken",
+            Converb::Ince => "ince",
+            Converb::Ip => "ip",
+            Converb::Eli => "eli",
+            Converb::Esiye => "esiye",
+            Converb::Dikce => "dikçe",
+            Converb::Erek => "erek",
+            Converb::Doubled => "doubled",
+            Converb::Cesine => "cesine",
+        }
+    }
+}
+
+impl std::fmt::Display for Converb {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Converb::Ken => "ken",
+            Converb::Ince => "ince",
+            Converb::Ip => "ip",
+            Converb::Eli => "eli",
+            Converb::Esiye => "esiye",
+            Converb::Dikce => "dikce",
+            Converb::Erek => "erek",
+            Converb::Doubled => "doubled",
+            Converb::Cesine => "cesine",
+        })
+    }
+}
+
+impl std::str::FromStr for Converb {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Converb",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Converb {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
 /// A word in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
@@ -275,6 +997,36 @@ pub fn noun(lemma: &str, case: Case, number: Number) -> String {
 #[must_use]
 pub fn possessive(lemma: &str, case: Case, possessed: Possessed, possessor: Possessor) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Possessive(case, possessed, possessor))
+}
+
+/// A word in a case and number.
+#[must_use]
+pub fn pronoun(lemma: &str, case: Case, number: Number) -> String {
+    pronoun::Pronoun::new(lemma).form(pronoun::Cell::Form(case, number))
+}
+
+/// A word in a case and number.
+#[must_use]
+pub fn numeral(lemma: &str, case: Case, number: Number) -> String {
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, number))
+}
+
+/// A word in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
+/// A possessed word in a case: one thing or many, and whose.
+#[must_use]
+pub fn proper_noun_possessive(
+    lemma: &str,
+    case: Case,
+    possessed: Possessed,
+    possessor: Possessor,
+) -> String {
+    proper_noun::ProperNoun::new(lemma)
+        .form(proper_noun::Cell::Possessive(case, possessed, possessor))
 }
 
 /// A word in a case and number.
@@ -292,4 +1044,117 @@ pub fn adjective_possessive(
     possessor: Possessor,
 ) -> String {
     adjective::Adjective::new(lemma).form(adjective::Cell::Possessive(case, possessed, possessor))
+}
+
+/// A finite verb: a tense, its copula, the subject.
+#[must_use]
+pub fn finite(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    tense: Tense,
+    copula: Copula,
+    subject: Subject,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Finite(
+        polarity, ability, tense, copula, subject,
+    ))
+}
+
+/// The past (`-DI`), with its copula.
+#[must_use]
+pub fn past(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    past_copula: PastCopula,
+    subject: Subject,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Past(polarity, ability, past_copula, subject))
+}
+
+/// The conditional (`-sA`), with its copula.
+#[must_use]
+pub fn conditional(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    mood_copula: MoodCopula,
+    subject: Subject,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Conditional(
+        polarity,
+        ability,
+        mood_copula,
+        subject,
+    ))
+}
+
+/// The optative (`-(y)A`), with its copula.
+#[must_use]
+pub fn optative(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    mood_copula: MoodCopula,
+    subject: Subject,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Optative(
+        polarity,
+        ability,
+        mood_copula,
+        subject,
+    ))
+}
+
+/// An imperative.
+#[must_use]
+pub fn imperative(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    addressee: Addressee,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(polarity, ability, addressee))
+}
+
+/// The infinitive (`-mAk`).
+#[must_use]
+pub fn infinitive(lemma: &str, polarity: Polarity, ability: Ability) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive(polarity, ability))
+}
+
+/// The verbal noun (`-mA`).
+#[must_use]
+pub fn verbal_noun(lemma: &str, polarity: Polarity, ability: Ability) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::AlNoun(polarity, ability))
+}
+
+/// A subject participle.
+#[must_use]
+pub fn participle(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    participle: Participle,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Participle(polarity, ability, participle))
+}
+
+/// An object participle, with its subject's possessive.
+#[must_use]
+pub fn relative(
+    lemma: &str,
+    polarity: Polarity,
+    ability: Ability,
+    relative: Relative,
+    subject: Subject,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Relative(polarity, ability, relative, subject))
+}
+
+/// A converb.
+#[must_use]
+pub fn converb(lemma: &str, polarity: Polarity, ability: Ability, converb: Converb) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Converb(polarity, ability, converb))
 }

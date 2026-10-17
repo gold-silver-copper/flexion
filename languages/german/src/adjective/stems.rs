@@ -67,7 +67,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("predicative_comp"),
         cells: Cow::Borrowed(&[
             COMPARATIVE_STRONG_NOM_M,
             COMPARATIVE_STRONG_NOM_F,
@@ -121,7 +121,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("predicative_sup"),
         cells: Cow::Borrowed(&[
             SUPERLATIVE_STRONG_NOM_M,
             SUPERLATIVE_STRONG_NOM_F,
@@ -178,10 +178,10 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // lemma like veraltet: 14,672 words.
+    // lemma like veraltet: 14,678 words.
     EndingTable {
         name: Cow::Borrowed("veraltet"),
-        words: 14672,
+        words: 14678,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "\t~e\t\t~e\t",
@@ -241,10 +241,10 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~r\t",
         )),
     },
-    // rest like veraltet: 14,816 words.
+    // predicative_comp like veraltet: 14,822 words.
     EndingTable {
         name: Cow::Borrowed("veraltet"),
-        words: 14816,
+        words: 14822,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~er\t\t\t~e\t",
@@ -262,7 +262,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "~\t",
         )),
     },
-    // rest like arg: 3 words.
+    // predicative_comp like arg: 3 words.
     EndingTable {
         name: Cow::Borrowed("arg"),
         words: 3,
@@ -283,10 +283,10 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "ä~\t",
         )),
     },
-    // rest_ like veraltet: 14,816 words.
+    // predicative_sup like veraltet: 14,822 words.
     EndingTable {
         name: Cow::Borrowed("veraltet"),
-        words: 14816,
+        words: 14822,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "\t\t\t~\t",
@@ -304,7 +304,7 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
             "am ~n\t",
         )),
     },
-    // rest_ like arg: 3 words.
+    // predicative_sup like arg: 3 words.
     EndingTable {
         name: Cow::Borrowed("arg"),
         words: 3,

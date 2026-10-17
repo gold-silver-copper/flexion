@@ -17,18 +17,18 @@ pub(super) static SLOTS: [Slot<'static>; 8] = [
         cells: Cow::Borrowed(&[NOM_M_SG, VOC_M_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest__"),
+        name: Cow::Borrowed("nom_m_pl"),
         cells: Cow::Borrowed(&[NOM_M_PL, DAT_M_SG, DAT_F_SG, DAT_N_SG, VOC_M_PL]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("nom_f_sg"),
         cells: Cow::Borrowed(&[
             NOM_F_SG, NOM_F_PL, NOM_N_PL, ACC_M_PL, ACC_F_PL, ACC_N_PL, VOC_F_SG, VOC_F_PL,
             VOC_N_PL,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest___"),
+        name: Cow::Borrowed("sg"),
         cells: Cow::Borrowed(&[NOM_N_SG, ACC_M_SG, ACC_F_SG, ACC_N_SG, VOC_N_SG]),
     },
     Slot {
@@ -40,7 +40,7 @@ pub(super) static SLOTS: [Slot<'static>; 8] = [
         cells: Cow::Borrowed(&[GEN_M_PL, GEN_F_PL, GEN_N_PL]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("pl"),
         cells: Cow::Borrowed(&[DAT_M_PL, DAT_F_PL, DAT_N_PL, ABL_M_PL, ABL_F_PL, ABL_N_PL]),
     },
     Slot {
@@ -58,14 +58,14 @@ pub(super) static TABLES: [EndingTable<'static>; 8] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // rest__ like utervīs: 7 words.
+    // nom_m_pl like utervīs: 7 words.
     EndingTable {
         name: Cow::Borrowed("utervīs"),
         words: 7,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t", "~\t",)),
     },
-    // rest like uter: 16 words.
+    // nom_f_sg like uter: 16 words.
     EndingTable {
         name: Cow::Borrowed("uter"),
         words: 16,
@@ -80,7 +80,7 @@ pub(super) static TABLES: [EndingTable<'static>; 8] = [
             "~a\t",
         )),
     },
-    // rest___ like uter: 16 words.
+    // sg like uter: 16 words.
     EndingTable {
         name: Cow::Borrowed("uter"),
         words: 16,

@@ -59,6 +59,7 @@ dependencies = [
 name = "flexion"
 version = "0.2.0"
 dependencies = [
+ "flexion-macros",
  "sound-law",
  "sound-law-macros",
  "unicode-normalization",
@@ -72,6 +73,10 @@ dependencies = [
  "flexion-train",
  "unicode-normalization",
 ]
+
+[[package]]
+name = "flexion-macros"
+version = "0.1.0"
 
 [[package]]
 name = "flexion-train"

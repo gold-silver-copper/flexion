@@ -55,9 +55,12 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "vīs" => [1 279, 5 2],
         "svīs" => [5 2],
     } listed {
-        "quotīsquibusque" => 4,
-        "utrīsvīs" => 5,
-        "ūnīsquibusque" => 4,
+        4 => [
+            "quotīsquibusque", "ūnīsquibusque",
+        ],
+        5 => [
+            "utrīsvīs",
+        ],
     }, true, None),
     // NOM_F_SG, from NOM_M_SG.
     relation!(NOM_F_SG, [NOM_M_SG], [("~", "~"), ("~", "~a"), ("~", "~is"), ("~er", "~ra"), ("~er", "~ris"), ("~os", "~a"), ("~os", "~ē"), ("~us", "~a"), ("~uscumque", "~acumque"), ("~usque", "~aque"), ("~usquisque", "~aquaeque")], rules {
@@ -89,8 +92,12 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ēs" => [0 118],
         "x" => [0 131],
     } listed {
-        "pauper" => 0,
-        "pauper" => 1,
+        0 => [
+            "pauper",
+        ],
+        1 => [
+            "pauper",
+        ],
     }, true, None),
     // NOM_F_PL, from DAT_M_PL.
     relation!(NOM_F_PL, [DAT_M_PL], [("~ibus", "~ēs"), ("~s", "~"), ("~īs", "~ae"), ("~īscumque", "~aecumque"), ("~īsque", "~aeque"), ("~īsquibusque", "~aequaeque"), ("~īsvīs", "~aevīs")], rules {
@@ -106,7 +113,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "vīs" => [2 279, 6 2],
         "svīs" => [6 2],
     } listed {
-        "utrīsvīs" => 6,
+        6 => [
+            "utrīsvīs",
+        ],
     }, true, None),
     // NOM_N_SG, from NOM_F_SG.
     relation!(NOM_N_SG, [NOM_F_SG], [("~", "~"), ("~a", "~on"), ("~a", "~um"), ("~acumque", "~umcumque"), ("~aque", "~umque"), ("~avīs", "~umvīs"), ("~is", "~e"), ("~or", "~us"), ("~s", "~n"), ("~ē", "~on"), ("~ēs", "~es")], rules {
@@ -181,7 +190,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "on" => [4 34],
         "s" => [9 2],
     } listed {
-        "congregem" => 0,
+        0 => [
+            "congregem",
+        ],
     }, true, None),
     // GEN_M_SG, from NOM_M_PL.
     relation!(GEN_M_SG, [NOM_M_PL], [("~", "~"), ("~", "~us"), ("~ēs", "~is")], rules {
@@ -229,9 +240,12 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ȳgī" => [5 2],
         "ēnī" => [6 30, 4 3],
     } listed {
-        "congregēs" => 2,
-        "quotīquīque" => 9,
-        "ūnīquīque" => 9,
+        2 => [
+            "congregēs",
+        ],
+        9 => [
+            "quotīquīque", "ūnīquīque",
+        ],
     }, true, None),
     // GEN_F_SG, from NOM_F_PL.
     relation!(GEN_F_SG, [NOM_F_PL], [("~", "~"), ("~ae", "~ēs"), ("~ae", "~īus"), ("~ēs", "~is")], rules {
@@ -277,8 +291,12 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "vīs" => [4 279, 10 2],
         "svīs" => [10 2],
     } listed {
-        "congregibus" => 1,
-        "utrīsvīs" => 10,
+        1 => [
+            "congregibus",
+        ],
+        10 => [
+            "utrīsvīs",
+        ],
     }, true, None),
     // GEN_N_SG, from GEN_M_SG.
     relation!(GEN_N_SG, [GEN_M_SG], [], none, true, None),
@@ -383,8 +401,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "austī" => [3 11, 2 2],
         "ātī" => [3 2702],
     } listed {
-        "quotīquīque" => 6,
-        "ūnīquīque" => 6,
+        6 => [
+            "quotīquīque", "ūnīquīque",
+        ],
     }, true, None),
     // ACC_M_PL, from DAT_M_SG.
     relation!(ACC_M_PL, [DAT_M_SG], [("~", "~s"), ("~ae", "~ās"), ("~cumque", "~scumque"), ("~que", "~sque"), ("~ī", "~ēs"), ("~ī", "~ōs")], rules {
@@ -452,8 +471,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "īs" => [6 2],
         "ī" => [8 16],
     } listed {
-        "quotaequaeque" => 4,
-        "ūnaequaeque" => 4,
+        4 => [
+            "quotaequaeque", "ūnaequaeque",
+        ],
     }, true, None),
     // ACC_F_PL, from ACC_M_PL.
     relation!(ACC_F_PL, [ACC_M_PL], [("~", "~"), ("~ōs", "~ās"), ("~ōscumque", "~āscumque"), ("~ōsque", "~āsque"), ("~ōsvīs", "~āsvīs")], rules {
@@ -470,7 +490,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ȳgōs" => [0 2],
         "ūrōs" => [1 4103],
     } listed {
-        "utrōsvīs" => 4,
+        4 => [
+            "utrōsvīs",
+        ],
     }, true, None),
     // ACC_N_SG, from NOM_N_SG.
     relation!(ACC_N_SG, [NOM_N_SG], [], none, true, None),
@@ -502,19 +524,18 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "vīs" => [0 17, 5 2],
         "ōs" => [0 19266],
     } listed {
-        "celerēs" => 7,
-        "concolōrīs" => 8,
-        "congregīs" => 8,
-        "impūberīs" => 8,
-        "octuplicēs" => 7,
-        "pernoctīs" => 8,
-        "perveterīs" => 8,
-        "plūrēs" => 7,
-        "pūberīs" => 8,
-        "quotōsquōsque" => 4,
-        "utrōsvīs" => 5,
-        "veterīs" => 8,
-        "ūnōsquōsque" => 4,
+        4 => [
+            "quotōsquōsque", "ūnōsquōsque",
+        ],
+        5 => [
+            "utrōsvīs",
+        ],
+        7 => [
+            "celerēs", "octuplicēs", "plūrēs",
+        ],
+        8 => [
+            "concolōrīs", "congregīs", "impūberīs", "pernoctīs", "perveterīs", "pūberīs", "veterīs",
+        ],
     }, true, None),
     // ABL_M_PL, from DAT_M_PL.
     relation!(ABL_M_PL, [DAT_M_PL], [], none, true, None),
@@ -533,8 +554,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ȳgō" => [0 2],
         "ūrō" => [1 4103],
     } listed {
-        "quotōquōque" => 5,
-        "ūnōquōque" => 5,
+        5 => [
+            "quotōquōque", "ūnōquōque",
+        ],
     }, true, None),
     // ABL_F_PL, from DAT_M_PL.
     relation!(ABL_F_PL, [DAT_M_PL], [], none, true, None),
@@ -565,7 +587,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ēs" => [0 116, 7 2],
         "x" => [0 131],
     } listed {
-        "lūdicer" => 1,
+        1 => [
+            "lūdicer",
+        ],
     }, true, None),
     // VOC_M_PL, from NOM_M_PL.
     relation!(VOC_M_PL, [NOM_M_PL], [], none, true, None),
@@ -594,7 +618,9 @@ pub(super) static RELATIONS: [Relation<'static>; 37] = [
         "ua" => [1 8],
         "va" => [1 10],
     } listed {
-        "tenuïa" => 2,
+        2 => [
+            "tenuïa",
+        ],
     }, true, None),
     // SUPERLATIVE, from NOM_M_SG.
     relation!(SUPERLATIVE, [NOM_M_SG], [("~", "~rimus"), ("~", "~simus"), ("~er", "~imus"), ("~erus", "~rēmus"), ("~icus", "~īcentissimus"), ("~is", "~limus"), ("~or", "~ssimus"), ("~s", "~dissimus"), ("~s", "~tissimus"), ("~us", "~entissimus"), ("~us", "~issimus"), ("~us", "~rimus"), ("~x", "~cissimus"), ("~āns", "~antissimus"), ("~ēns", "~entissimus")], rules {

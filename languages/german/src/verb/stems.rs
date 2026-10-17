@@ -17,11 +17,11 @@ pub(super) static SLOTS: [Slot<'static>; 12] = [
         cells: Cow::Borrowed(&[PRES_1_SG, SUBORDINATE_PRES_1_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest__"),
+        name: Cow::Borrowed("verb_pl"),
         cells: Cow::Borrowed(&[PRES_1_PL, PRES_3_PL, SUBJ1_1_PL, SUBJ1_3_PL]),
     },
     Slot {
-        name: Cow::Borrowed("rest___"),
+        name: Cow::Borrowed("verb_pres_3_sg"),
         cells: Cow::Borrowed(&[
             PRES_2_SG,
             PRES_3_SG,
@@ -30,25 +30,25 @@ pub(super) static SLOTS: [Slot<'static>; 12] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest_____"),
+        name: Cow::Borrowed("pl"),
         cells: Cow::Borrowed(&[PRES_2_PL, SUBJ1_2_PL, IMPERATIVE_PL]),
     },
     Slot {
-        name: Cow::Borrowed("rest______"),
+        name: Cow::Borrowed("verb_pret_3_sg"),
         cells: Cow::Borrowed(&[PRET_1_SG, PRET_3_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("verb"),
         cells: Cow::Borrowed(&[
             PRET_1_PL, PRET_2_SG, PRET_2_PL, PRET_3_PL, SUBJ2_1_PL, SUBJ2_2_SG, SUBJ2_3_PL,
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest____"),
+        name: Cow::Borrowed("sg"),
         cells: Cow::Borrowed(&[SUBJ1_1_SG, SUBJ1_2_SG, SUBJ1_3_SG, IMPERATIVE_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("subj2"),
         cells: Cow::Borrowed(&[
             SUBJ2_1_SG,
             SUBJ2_2_PL,
@@ -99,22 +99,22 @@ pub(super) static SLOTS: [Slot<'static>; 12] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 39] = [
-    // pres_1_sg like machen: 3,521 words.
+pub(super) static TABLES: [EndingTable<'static>; 40] = [
+    // pres_1_sg like machen: 3,520 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3521,
+        words: 3520,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // rest__ like machen: 4,364 words.
+    // verb_pl like machen: 4,363 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4364,
+        words: 4363,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // rest__ like langmachen: 27 words.
+    // verb_pl like langmachen: 27 words.
     EndingTable {
         name: Cow::Borrowed("langmachen"),
         words: 27,
@@ -126,7 +126,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "machen ~\t",
         )),
     },
-    // rest__ like gegenüberstellen: 7 words.
+    // verb_pl like gegenüberstellen: 7 words.
     EndingTable {
         name: Cow::Borrowed("gegenüberstellen"),
         words: 7,
@@ -138,80 +138,87 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "stellen ~\t",
         )),
     },
-    // rest___ like machen: 4,300 words.
+    // verb_pl like gaberln: 7 words.
+    EndingTable {
+        name: Cow::Borrowed("gaberln"),
+        words: 7,
+        slot: 1,
+        table: Cow::Borrowed(concat!("~n\t", "~n\t", "~en\t", "~en\t",)),
+    },
+    // verb_pres_3_sg like machen: 4,299 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4300,
+        words: 4299,
         slot: 2,
         table: Cow::Borrowed(concat!("~st\t", "~t\t", "~st\t", "~t\t",)),
     },
-    // rest___ like schmeißen: 52 words.
+    // verb_pres_3_sg like schmeißen: 52 words.
     EndingTable {
         name: Cow::Borrowed("schmeißen"),
         words: 52,
         slot: 2,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t", "~\t",)),
     },
-    // rest___ like halten: 19 words.
+    // verb_pres_3_sg like halten: 19 words.
     EndingTable {
         name: Cow::Borrowed("halten"),
         words: 19,
         slot: 2,
         table: Cow::Borrowed(concat!("~st\t", "~\t", "~st\t", "~\t",)),
     },
-    // rest_____ like machen: 3,204 words.
+    // pl like machen: 3,203 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3204,
+        words: 3203,
         slot: 3,
         table: Cow::Borrowed(concat!("~t\t", "~et\t", "~t\t",)),
     },
-    // rest_____ like richten: 314 words.
+    // pl like richten: 314 words.
     EndingTable {
         name: Cow::Borrowed("richten"),
         words: 314,
         slot: 3,
         table: Cow::Borrowed(concat!("~\t", "~\t", "~\t",)),
     },
-    // rest_____ like langmachen: 27 words.
+    // pl like langmachen: 27 words.
     EndingTable {
         name: Cow::Borrowed("langmachen"),
         words: 27,
         slot: 3,
         table: Cow::Borrowed(concat!("macht ~\t", "machet ~\t", "macht ~\t",)),
     },
-    // rest_____ like gegenüberstellen: 7 words.
+    // pl like gegenüberstellen: 7 words.
     EndingTable {
         name: Cow::Borrowed("gegenüberstellen"),
         words: 7,
         slot: 3,
         table: Cow::Borrowed(concat!("stellt ~\t", "stellet ~\t", "stellt ~\t",)),
     },
-    // rest______ like machen: 4,373 words.
+    // verb_pret_3_sg like machen: 4,372 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4373,
+        words: 4372,
         slot: 4,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // rest______ like langmachen: 27 words.
+    // verb_pret_3_sg like langmachen: 27 words.
     EndingTable {
         name: Cow::Borrowed("langmachen"),
         words: 27,
         slot: 4,
         table: Cow::Borrowed(concat!("machte ~\t", "machte ~\t",)),
     },
-    // rest______ like gegenüberstellen: 7 words.
+    // verb_pret_3_sg like gegenüberstellen: 7 words.
     EndingTable {
         name: Cow::Borrowed("gegenüberstellen"),
         words: 7,
         slot: 4,
         table: Cow::Borrowed(concat!("stellte ~\t", "stellte ~\t",)),
     },
-    // rest_ like machen: 4,123 words.
+    // verb like machen: 4,122 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4123,
+        words: 4122,
         slot: 5,
         table: Cow::Borrowed(concat!(
             "~n\t",
@@ -222,7 +229,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~n\t",
         )),
     },
-    // rest_ like schreiben: 32 words.
+    // verb like schreiben: 32 words.
     EndingTable {
         name: Cow::Borrowed("schreiben"),
         words: 32,
@@ -236,7 +243,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~en\t",
         )),
     },
-    // rest_ like langmachen: 27 words.
+    // verb like langmachen: 27 words.
     EndingTable {
         name: Cow::Borrowed("langmachen"),
         words: 27,
@@ -250,7 +257,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "machten ~\t",
         )),
     },
-    // rest_ like schmeißen: 22 words.
+    // verb like schmeißen: 22 words.
     EndingTable {
         name: Cow::Borrowed("schmeißen"),
         words: 22,
@@ -264,7 +271,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~en\t",
         )),
     },
-    // rest_ like halten: 19 words.
+    // verb like halten: 19 words.
     EndingTable {
         name: Cow::Borrowed("halten"),
         words: 19,
@@ -278,7 +285,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~en\t",
         )),
     },
-    // rest_ like gegenüberstellen: 7 words.
+    // verb like gegenüberstellen: 7 words.
     EndingTable {
         name: Cow::Borrowed("gegenüberstellen"),
         words: 7,
@@ -292,7 +299,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "stellten ~\t",
         )),
     },
-    // rest_ like ziehen: 6 words.
+    // verb like ziehen: 6 words.
     EndingTable {
         name: Cow::Borrowed("ziehen"),
         words: 6,
@@ -306,7 +313,7 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~ögen\t",
         )),
     },
-    // rest_ like messen: 3 words.
+    // verb like messen: 3 words.
     EndingTable {
         name: Cow::Borrowed("messen"),
         words: 3,
@@ -320,35 +327,35 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~äßen\t",
         )),
     },
-    // rest____ like machen: 3,409 words.
+    // sg like machen: 3,408 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3409,
+        words: 3408,
         slot: 6,
         table: Cow::Borrowed(concat!("~e\t", "~est\t", "~e\t", "~|~e\t",)),
     },
-    // rest____ like sein: 35 words.
+    // sg like sein: 35 words.
     EndingTable {
         name: Cow::Borrowed("sein"),
         words: 35,
         slot: 6,
         table: Cow::Borrowed(concat!("~\t", "~st\t", "~\t", "~\t",)),
     },
-    // rest____ like langmachen: 27 words.
+    // sg like langmachen: 27 words.
     EndingTable {
         name: Cow::Borrowed("langmachen"),
         words: 27,
         slot: 6,
         table: Cow::Borrowed(concat!("mache ~\t", "machest ~\t", "mache ~\t", "mach ~\t",)),
     },
-    // rest____ like ziehen: 15 words.
+    // sg like ziehen: 15 words.
     EndingTable {
         name: Cow::Borrowed("ziehen"),
         words: 15,
         slot: 6,
         table: Cow::Borrowed(concat!("~e\t", "~est\t", "~e\t", "~\t",)),
     },
-    // rest____ like gegenüberstellen: 7 words.
+    // sg like gegenüberstellen: 7 words.
     EndingTable {
         name: Cow::Borrowed("gegenüberstellen"),
         words: 7,
@@ -360,10 +367,10 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "stell ~\t",
         )),
     },
-    // rest like machen: 4,178 words.
+    // subj2 like machen: 4,177 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4178,
+        words: 4177,
         slot: 7,
         table: Cow::Borrowed(concat!(
             "~\t",
@@ -374,10 +381,10 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~\t~n\t",
         )),
     },
-    // lemma like machen: 3,313 words.
+    // lemma like machen: 3,312 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3313,
+        words: 3312,
         slot: 8,
         table: Cow::Borrowed(concat!(
             "~en\t",
@@ -422,10 +429,10 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
             "~end\t",
         )),
     },
-    // subordinate_pret like machen: 4,183 words.
+    // subordinate_pret like machen: 4,182 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4183,
+        words: 4182,
         slot: 9,
         table: Cow::Borrowed(concat!("~\t~n\t", "~st\t~t\t", "~\t~n\t",)),
     },
@@ -457,17 +464,17 @@ pub(super) static TABLES: [EndingTable<'static>; 39] = [
         slot: 9,
         table: Cow::Borrowed(concat!("~\t~en\t", "~est\t~t\t", "~\t~en\t",)),
     },
-    // zu_infinitive like machen: 4,342 words.
+    // zu_infinitive like machen: 4,341 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 4342,
+        words: 4341,
         slot: 10,
         table: Cow::Borrowed("zu~\t"),
     },
-    // participle_past like machen: 3,319 words.
+    // participle_past like machen: 3,318 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3319,
+        words: 3318,
         slot: 11,
         table: Cow::Borrowed("ge~\t"),
     },

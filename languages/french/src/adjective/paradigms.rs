@@ -21,7 +21,7 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem adjective_m: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
+     $(stem adjective_f_sg: $s1:tt;)?
      $(m: $c0:tt, $c1:tt;)?
      $(f: $c2:tt, $c3:tt;)?
      $(before_vowel: $c4:tt;)?
@@ -172,15 +172,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 17] = [
     // Simple: 9,027 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
     declension!("simple", 9027, "~";
     stem adjective_m: "~- like simple";
-    stem rest: "~- like simple";
+    stem adjective_f_sg: "~- like simple";
     ),
     // Chaud: 4,603 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Simple.
     declension!("chaud", 4603, "~", like Simple;
-    stem rest: "~e- like simple";
+    stem adjective_f_sg: "~e- like simple";
     ),
     // Moyen: 1,295 words (chien, sot, moron, con, tien, mien). Like Simple.
     declension!("moyen", 1295, "~", like Simple;
-    stem rest: "~ne- like simple";
+    stem adjective_f_sg: "~ne- like simple";
     ),
     // Trivial: 888 words (adjectival, abbatial, abdominal, abnormal, abyssal, plural). Like Manuel with `` after each pattern (`l` after ~), except in 1 cell: m pl.
     declension!("trivial", 888, "~l", like Manuel with "", "l" after "~";
@@ -188,31 +188,30 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 17] = [
     ),
     // Chaleureux: 583 words (gueux, heureux, paresseux, nuageux, douteux, merdeux).
     declension!("chaleureux", 583, "~x";
-    stem rest: "~se- like simple";
+    stem adjective_f_sg: "~se- like simple";
     m: "~x", "~x";
     ),
     // Vif: 543 words (vif, neuf, massif, serf, naïf, sauf).
     declension!("vif", 543, "~f";
     stem adjective_m: "~f- like simple";
-    stem rest: "~ve- like simple";
+    stem adjective_f_sg: "~ve- like simple";
     ),
     // Manuel: 367 words (duel, cruel, éventuel, pluriel, mortel, gentil). Like Simple.
     declension!("manuel", 367, "~", like Simple;
-    stem rest: "~le- like simple";
+    stem adjective_f_sg: "~le- like simple";
     ),
-    // Dar: 236 words (orange, bio, poison, dar, nickel, cool). Like Simple, except in 1 cell: before_vowel.
+    // Dar: 236 words (orange, bio, poison, dar, nickel, cool). Like Simple.
     declension!("dar", 236, "~", like Simple as PL_AS_SG;
-    before_vowel: derived;
     ),
     // Régulier: 222 words (secret, quiet, fier, premier, cher, léger).
     declension!("régulier", 222, "~e~";
     stem adjective_m: "~e~- like simple";
-    stem rest: "~è~e- like simple";
+    stem adjective_f_sg: "~è~e- like simple";
     ),
     // Fellateur: 209 words (observateur, moteur, directeur, provocateur, transformateur, formateur).
     declension!("fellateur", 209, "~eu~";
     stem adjective_m: "~eu~- like simple";
-    stem rest: "~~ice- like simple";
+    stem adjective_f_sg: "~~ice- like simple";
     ),
     // Rageur: 143 words (poseur, bricoleur, joueur, voyageur, voleur, songeur). Like Chaleureux.
     declension!("rageur", 143, "~r", like Chaleureux;
@@ -231,19 +230,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 17] = [
     ),
     // Long: 3 words (long, oblong, barlong). Like Simple.
     declension!("long", 3, "~", like Simple;
-    stem rest: "~ue- like simple";
+    stem adjective_f_sg: "~ue- like simple";
     ),
     // Franc: 3 words (franc, blanc, antiblanc). Like Simple.
     declension!("franc", 3, "~", like Simple;
-    stem rest: "~he- like simple";
+    stem adjective_f_sg: "~he- like simple";
     ),
     // Faux: 3 words (faux, roux, archifaux). Like Chaleureux.
     declension!("faux", 3, "~x", like Chaleureux;
-    stem rest: "~sse- like simple";
+    stem adjective_f_sg: "~sse- like simple";
     ),
     // Pécheur: 3 words (pécheur, vengeur, enchanteur).
     declension!("pécheur", 3, "~u~";
     stem adjective_m: "~u~- like simple";
-    stem rest: "~~esse- like simple";
+    stem adjective_f_sg: "~~esse- like simple";
     ),
 ];

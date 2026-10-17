@@ -3,7 +3,7 @@
 
 use std::borrow::Cow;
 
-/// 41 words.
+/// 43 words.
 pub(super) static HEADS: &[Cow<'static, str>] = flexion::words![
     "ais",
     "amin",
@@ -16,6 +16,7 @@ pub(super) static HEADS: &[Cow<'static, str>] = flexion::words![
     "cystein",
     "dasein",
     "delfin",
+    "design",
     "disziplin",
     "doktrin",
     "dollarschein",
@@ -31,6 +32,7 @@ pub(super) static HEADS: &[Cow<'static, str>] = flexion::words![
     "kamin",
     "matt",
     "medizin",
+    "menü",
     "ofen",
     "pein",
     "pentin",

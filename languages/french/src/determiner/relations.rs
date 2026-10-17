@@ -42,10 +42,9 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
         "" => [1 17, 0 7, 2 2],
         "ites" => [1 13],
     } listed {
-        "ces" => 0,
-        "des" => 0,
-        "les" => 0,
-        "tes" => 0,
+        0 => [
+            "ces", "des", "les", "tes",
+        ],
     }, true, None),
     // F_SG, from M_SG.
     relation!(F_SG, [M_SG], [("~", "~e"), ("~", "~le"), ("~on", "~a")], rules {
@@ -63,6 +62,8 @@ pub(super) static RELATIONS: [Relation<'static>; 3] = [
         "s" => [8 6],
         "edit" => [9 4],
     } listed {
-        "ton" => 7,
+        7 => [
+            "ton",
+        ],
     }, true, None),
 ];

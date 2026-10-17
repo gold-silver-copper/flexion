@@ -262,7 +262,7 @@ pub fn cell_names(cells: &Cells<'_>) -> Vec<String> {
 
 /// A cell's constant: `gen_pl` → `GEN_PL`, `non_past_1_sg` → `NON_PAST_1_SG`.
 fn const_name(s: &str) -> String {
-    let mut out = underscored(s).trim_start_matches('_').to_ascii_uppercase();
+    let mut out = underscored(s).trim_start_matches('_').to_uppercase();
     if out.chars().next().is_none_or(|c| c.is_ascii_digit()) {
         out.insert(0, 'C');
     }
@@ -315,6 +315,12 @@ fn variant(name: &str) -> String {
         out.push('_');
     }
     out
+}
+
+/// A part of speech's word type: its name in camel case (`proper_noun` →
+/// `ProperNoun`).
+fn word_type(part: &str) -> String {
+    part.split('_').map(variant).collect()
 }
 
 /// What a part of speech's paradigms are called: conjugations for verbs,
@@ -391,7 +397,10 @@ fn grammar_files(
         (!g.relations.is_empty(), "mod relations"),
         (g.compound.is_some(), "mod compounds"),
         (g.prefixes.is_some(), "mod prefixes"),
-        (!g.heads.words.is_empty(), "mod heads"),
+        (
+            !g.heads.words.is_empty() || !g.heads.not.is_empty(),
+            "mod heads",
+        ),
         (true, "mod irregular"),
         (!g.slots.is_empty(), "mod stems"),
         (g.laws.is_some(), "mod laws"),
@@ -429,7 +438,7 @@ fn grammar_files(
     );
     let _ = writeln!(
         m,
-        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    prefixes: {prefixes},\n    heads: {heads},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
+        "/// The grammar: paradigms, the rules choosing one, irregular forms.\npub static GRAMMAR: Grammar<'static, {ty}{generics}> = Grammar {{\n    orthography: crate::orthography::ORTHOGRAPHY,\n    cells: {},\n    lemma_cell: {:?},\n    capitalized: {},\n    paradigms: Cow::Borrowed(&paradigms::{}),\n    paradigm: rules::{},\n    relations: Cow::Borrowed(&{relations}),\n    feature: {feature},\n    compound: {compound},\n    kept: {kept},\n    prefixes: {prefixes},\n    heads: {heads},\n    accent: {accent},\n    laws: {laws},\n    spellings: Cow::Borrowed(spellings::SPELLINGS),\n    marks: {marks},\n    slots: {slots},\n    tables: {tables},\n    irregular: irregular::IRREGULAR,\n    smoothing: {:?},\n    sharpness: {:?},\n    trust: flexion::Trust {{ regular: {:?}, unsettled: {:?}, unattested: {:?} }},\n}};\n",
         g.cells,
         g.lemma_cell,
         g.capitalized,
@@ -469,6 +478,11 @@ fn grammar_files(
                 f.to_uppercase()
             )),
         compound = some(g.compound.is_some(), "compounds::COMPOUND"),
+        kept = if g.kept.is_empty() {
+            "Cow::Borrowed(&[])"
+        } else {
+            "Cow::Borrowed(&compounds::KEPT)"
+        },
         prefixes = some(g.prefixes.is_some(), "prefixes::PREFIXES"),
         heads = heads,
         accent = some(
@@ -709,10 +723,25 @@ fn grammar_files(
             .map(|m| m.iter().map(String::as_str).take(6).collect())
             .unwrap_or_default();
         let parent = par.parent.and_then(|q| variants.get(usize::from(q)));
-        // A child: like its parent, except in the cells it writes.
+        // A child: like its parent, except in the cells it writes otherwise
+        // than it would take them (from its stem slots, else its parent).
+        let family = g.paradigms.as_ref();
+        let differs = |c: usize| {
+            let mine = match par.own(c) {
+                None => return false,
+                Some(flexion::Form::Derived) => None,
+                Some(flexion::Form::Pattern(p)) => Some(p.to_string()),
+            };
+            let up = par.parent.and_then(|q| family.get(usize::from(q)));
+            let taken = par.stated(g.space(), c).or_else(|| {
+                up.and_then(|u| u.pattern_in(family, g.space(), par.read(c)))
+                    .map(|p| p.into_owned())
+            });
+            par.affix.is_some() || mine != taken
+        };
         let like = parent.map_or(String::new(), |q| {
             let own: Vec<String> = (0..g.cells)
-                .filter(|&c| par.own(c).is_some())
+                .filter(|&c| differs(c))
                 .map(|c| {
                     layout
                         .rows
@@ -926,11 +955,27 @@ fn grammar_files(
     // compounds.rs
     if let Some(c) = &g.compound {
         let r = format!(
-            "//! How a word written in parts inflects: only its last part (`Last`), or each\n//! part as the word it is (`Each`). The first part decides, by its ending\n//! (the longest rule it has), or as listed.\n\nuse flexion::Choice;\nuse flexion::Compound::{{self, *}};\n\n{}",
+            "//! How a word written in parts inflects: only its last part (`Last`), each\n//! part as the word it is (`Each`), or only its first, the rest kept\n//! (`First`). The first part decides, with what joins it (`-` or a\n//! space, last), by its ending (the longest rule it has), or as listed.\n\nuse flexion::Choice;\nuse flexion::Compound::{{self, *}};\n\n{}",
             choice_const("COMPOUND", "Compound", "first parts", c, |l| format!(
                 "{l:?}"
             ))
         );
+        let mut r = r;
+        if !g.kept.is_empty() {
+            let _ = writeln!(
+                r,
+                "\n/// Where a word that inflects its first part keeps the rest, per cell: after\n/// it, or before it.\npub(super) static KEPT: [flexion::Placement; {}] = [",
+                g.kept.len()
+            );
+            for (c, place) in g.kept.iter().enumerate() {
+                let _ = writeln!(
+                    r,
+                    "    flexion::Placement::{place:?}, // {}",
+                    layout.name(c)
+                );
+            }
+            r.push_str("];\n");
+        }
         files.push((format!("{dir}/compounds.rs"), r));
     }
 
@@ -1151,7 +1196,7 @@ fn orthography(script: &Script) -> String {
         .map(|(c, p, k)| format!("({c:?}, {p:?}, {k})"))
         .collect();
     format!(
-        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n    prosody: {},\n}};\n",
+        "//! How the language is written: its vowels, and the marks it reads and\n//! writes.\n\nuse flexion::Orthography;\n\npub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {{\n    lowercase: {},\n    vowels: {:?},\n    stress_marks: {:?},\n    stressed: &[{}],\n    implicit: {:?},\n    dropped: {:?},\n    mark_monosyllables: {},\n    folded: &[{}],\n    prosody: {},\n    initial: {:?},\n}};\n",
         script.lowercase,
         script.vowels,
         script.stress_marks,
@@ -1166,9 +1211,10 @@ fn orthography(script: &Script) -> String {
             .collect::<Vec<_>>()
             .join(", "),
         script.prosody.as_ref().map_or("None".to_string(), |p| format!(
-            "Some(flexion::Prosody {{\n        diphthongs: &{:?},\n        hiatus: {:?},\n        long: {:?},\n        short_finals: &{:?},\n        acute: {},\n        circumflex: {},\n    }})",
-            p.diphthongs, p.hiatus, p.long, p.short_finals, p.acute, p.circumflex
+            "Some(flexion::Prosody {{\n        diphthongs: &{:?},\n        hiatus: {:?},\n        long: {:?},\n        short_finals: &{:?},\n        short_endings: &{:?},\n        acute: {},\n        circumflex: {},\n    }})",
+            p.diphthongs, p.hiatus, p.long, p.short_finals, p.short_endings, p.acute, p.circumflex
         )),
+        script.initial,
     )
 }
 
@@ -1193,7 +1239,7 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     // Each part of speech's word type, unless a feature has its name
     // (French `Participle`).
     for part in parts {
-        let word = variant(part.spec.name);
+        let word = word_type(part.spec.name);
         if !lang.features.iter().any(|f| f.name == word) {
             let _ = writeln!(s, "pub use {}::{word};", part.spec.name);
         }
@@ -1212,7 +1258,7 @@ fn library(lang: &Language, parts: &[Part<'_, '_>]) -> Result<String, String> {
     for part in parts {
         let cells = Cells::new(lang, part.spec)?;
         let name = part.spec.name;
-        let word = variant(name);
+        let word = word_type(name);
         for g in &cells.groups {
             let params: String = g
                 .features
@@ -1404,14 +1450,32 @@ fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) ->
     choice.rules.iter().map(rule).collect()
 }
 
-/// A choice's listed words, a line each.
+/// A choice's listed words, grouped by what they are (each value once, its
+/// words in order after it, as many to a line as fit).
 fn listed<L: flexion::Label>(
     choice: &flexion::Choice<'_, L>,
     name: impl Fn(L) -> String,
 ) -> String {
-    let word =
-        |(w, l): &(std::borrow::Cow<'_, str>, L)| format!("        {} => {},\n", Lit(w), name(*l));
-    choice.exceptions.iter().map(word).collect()
+    let mut by: std::collections::BTreeMap<usize, (L, Vec<&str>)> = Default::default();
+    for (w, l) in choice.exceptions.iter() {
+        by.entry(l.index()).or_insert((*l, Vec::new())).1.push(w);
+    }
+    let mut out = String::new();
+    for (l, words) in by.values() {
+        let _ = writeln!(out, "        {} => [", name(*l));
+        let mut line = String::from("           ");
+        for w in words {
+            let word = format!(" {},", Lit(w));
+            if line.chars().count() + word.chars().count() > 100 {
+                let _ = writeln!(out, "{line}");
+                line = String::from("           ");
+            }
+            line.push_str(&word);
+        }
+        let _ = writeln!(out, "{line}");
+        out.push_str("        ],\n");
+    }
+    out
 }
 
 /// A choice as a constant `name` of `ty`s, saying how many rules and listed
@@ -1576,7 +1640,7 @@ fn api_code(
 ) -> String {
     let (ty, one, many) = kind(spec);
     let name = spec.name;
-    let word = variant(name);
+    let word = word_type(name);
     // The cell type.
     let mut s = format!(
         "/// A {name} form: which cell of its {one}.\n#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]\npub enum Cell {{\n"

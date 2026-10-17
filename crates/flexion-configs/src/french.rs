@@ -69,6 +69,11 @@ pub fn language() -> Language {
         version: "0.1.0",
         description: "French inflection for any word: noun plurals, adjective and participle agreement and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Number "Grammatical number." {
                 Singular "sg" [] !["plural"],
                 Plural "pl" ["plural"],
@@ -126,6 +131,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -158,6 +164,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -199,6 +206,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "participle",
@@ -219,6 +227,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "determiner",
@@ -239,7 +248,9 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,

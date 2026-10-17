@@ -320,9 +320,15 @@ pub(super) static RELATIONS: [Relation<'static>; 4] = [
         "izing" => [48 3994, 65 2],
         "n" => [43 7],
     } listed {
-        "areding" => 47,
-        "durving" => 83,
-        "shxtting" => 77,
+        47 => [
+            "areding",
+        ],
+        77 => [
+            "shxtting",
+        ],
+        83 => [
+            "durving",
+        ],
     }, true, None),
     // VERB_PRP, from VERB_INF.
     relation!(VERB_PRP, [VERB_INF], [("~", "~"), ("~", "~Sing"), ("~", "~Ting"), ("~", "~bing"), ("~", "~cing"), ("~", "~fing"), ("~", "~in"), ("~", "~ing"), ("~", "~kin"), ("~", "~king"), ("~", "~ling"), ("~", "~ng"), ("~", "~ping"), ("~", "~ring"), ("~", "~s"), ("~", "~ving"), ("~e", "~ing"), ("~i", "~yiTg"), ("~ie", "~ying")], rules {
@@ -621,21 +627,15 @@ pub(super) static RELATIONS: [Relation<'static>; 4] = [
         "tz" => [7 26],
         "zz" => [7 34],
     } listed {
-        "assoilzie" => 7,
-        "boxcar" => 13,
-        "kamikaze" => 7,
-        "lexicon" => 7,
-        "schiz" => 7,
-        "shazam" => 2,
-        "shxt" => 2,
-        "spuilzie" => 7,
-        "spulzie" => 7,
-        "tarzan" => 7,
-        "viz" => 7,
-        "xfer" => 13,
-        "xit" => 2,
-        "zed" => 2,
-        "zot" => 2,
+        2 => [
+            "shazam", "shxt", "xit", "zed", "zot",
+        ],
+        7 => [
+            "assoilzie", "kamikaze", "lexicon", "schiz", "spuilzie", "spulzie", "tarzan", "viz",
+        ],
+        13 => [
+            "boxcar", "xfer",
+        ],
     }, true, None),
     // VERB_PP, from VERB_PAST.
     relation!(VERB_PP, [VERB_PAST], [], none, false, None),

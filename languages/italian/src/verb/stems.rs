@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 6] = [
     Slot {
-        name: Cow::Borrowed("rest_"),
+        name: Cow::Borrowed("verb_pres_1_sg"),
         cells: Cow::Borrowed(&[
             PRES_1_SG,
             PRES_2_SG,
@@ -31,7 +31,7 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest__"),
+        name: Cow::Borrowed("verb_pres_1_pl"),
         cells: Cow::Borrowed(&[
             PRES_1_PL,
             SUBJ_1_PL,
@@ -63,7 +63,7 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("verb_impf_1_sg"),
         cells: Cow::Borrowed(&[
             IMPF_1_SG,
             IMPF_1_PL,
@@ -84,7 +84,7 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
         ]),
     },
     Slot {
-        name: Cow::Borrowed("rest___"),
+        name: Cow::Borrowed("verb_past_1_sg"),
         cells: Cow::Borrowed(&[PAST_1_SG, PAST_3_SG, PAST_3_PL, PARTICIPLE_PAST]),
     },
     Slot {
@@ -95,7 +95,7 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 46] = [
-    // rest_ like girare: 7,018 words.
+    // verb_pres_1_sg like girare: 7,018 words.
     EndingTable {
         name: Cow::Borrowed("girare"),
         words: 7018,
@@ -111,7 +111,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~i\t~ino\t",
         )),
     },
-    // rest_ like incattivire: 1,608 words.
+    // verb_pres_1_sg like incattivire: 1,608 words.
     EndingTable {
         name: Cow::Borrowed("incattivire"),
         words: 1608,
@@ -127,7 +127,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~a\t~ano\t",
         )),
     },
-    // rest_ like capirsi: 475 words.
+    // verb_pres_1_sg like capirsi: 475 words.
     EndingTable {
         name: Cow::Borrowed("capirsi"),
         words: 475,
@@ -143,7 +143,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~a\t~ano\t",
         )),
     },
-    // rest_ like disporre: 54 words.
+    // verb_pres_1_sg like disporre: 54 words.
     EndingTable {
         name: Cow::Borrowed("disporre"),
         words: 54,
@@ -159,7 +159,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ga\t~gano\t",
         )),
     },
-    // rest_ like muovere: 11 words.
+    // verb_pres_1_sg like muovere: 11 words.
     EndingTable {
         name: Cow::Borrowed("muovere"),
         words: 11,
@@ -175,7 +175,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~aˇ\t~anoˇ\t",
         )),
     },
-    // rest_ like decuocere: 10 words.
+    // verb_pres_1_sg like decuocere: 10 words.
     EndingTable {
         name: Cow::Borrowed("decuocere"),
         words: 10,
@@ -191,7 +191,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ia\t~iano\t",
         )),
     },
-    // rest_ like infrociare: 3 words.
+    // verb_pres_1_sg like infrociare: 3 words.
     EndingTable {
         name: Cow::Borrowed("infrociare"),
         words: 3,
@@ -207,7 +207,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~i\t~ino\t",
         )),
     },
-    // rest__ like tapparsi: 1,606 words.
+    // verb_pres_1_pl like tapparsi: 1,606 words.
     EndingTable {
         name: Cow::Borrowed("tapparsi"),
         words: 1606,
@@ -220,7 +220,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~iamoci|~iamo\t~atevi|~ate\t",
         )),
     },
-    // rest__ like volgere: 881 words.
+    // verb_pres_1_pl like volgere: 881 words.
     EndingTable {
         name: Cow::Borrowed("volgere"),
         words: 881,
@@ -233,7 +233,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~iamo\t~ete\t",
         )),
     },
-    // rest__ like incattivire: 857 words.
+    // verb_pres_1_pl like incattivire: 857 words.
     EndingTable {
         name: Cow::Borrowed("incattivire"),
         words: 857,
@@ -246,7 +246,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~amo\t~te\t",
         )),
     },
-    // rest__ like perdersi: 262 words.
+    // verb_pres_1_pl like perdersi: 262 words.
     EndingTable {
         name: Cow::Borrowed("perdersi"),
         words: 262,
@@ -259,7 +259,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~iamoci|~iamo\t~etevi|~ete\t",
         )),
     },
-    // rest__ like capirsi: 248 words.
+    // verb_pres_1_pl like capirsi: 248 words.
     EndingTable {
         name: Cow::Borrowed("capirsi"),
         words: 248,
@@ -272,14 +272,14 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~amoci|~amo\t~tevi|~te\t",
         )),
     },
-    // rest__ like noiare: 27 words.
+    // verb_pres_1_pl like noiare: 27 words.
     EndingTable {
         name: Cow::Borrowed("noiare"),
         words: 27,
         slot: 1,
         table: Cow::Borrowed(concat!("~mo\t", "~mo\t", "\t", "~mo\t~te\t", "~mo\t~te\t",)),
     },
-    // rest__ like sciogliere: 17 words.
+    // verb_pres_1_pl like sciogliere: 17 words.
     EndingTable {
         name: Cow::Borrowed("sciogliere"),
         words: 17,
@@ -292,7 +292,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~amo\t~ete\t",
         )),
     },
-    // rest__ like traggere: 4 words.
+    // verb_pres_1_pl like traggere: 4 words.
     EndingTable {
         name: Cow::Borrowed("traggere"),
         words: 4,
@@ -509,7 +509,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~iare\t",
         )),
     },
-    // rest like girare: 8,481 words.
+    // verb_impf_1_sg like girare: 8,481 words.
     EndingTable {
         name: Cow::Borrowed("girare"),
         words: 8481,
@@ -526,7 +526,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ndo\t",
         )),
     },
-    // rest like tapparsi: 2,043 words.
+    // verb_impf_1_sg like tapparsi: 2,043 words.
     EndingTable {
         name: Cow::Borrowed("tapparsi"),
         words: 2043,
@@ -543,7 +543,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ndosi\t",
         )),
     },
-    // rest like incattivire: 851 words.
+    // verb_impf_1_sg like incattivire: 851 words.
     EndingTable {
         name: Cow::Borrowed("incattivire"),
         words: 851,
@@ -560,7 +560,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~endo\t",
         )),
     },
-    // rest like muovere: 22 words.
+    // verb_impf_1_sg like muovere: 22 words.
     EndingTable {
         name: Cow::Borrowed("muovere"),
         words: 22,
@@ -577,7 +577,7 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ndoˇ\t",
         )),
     },
-    // rest like infrociare: 3 words.
+    // verb_impf_1_sg like infrociare: 3 words.
     EndingTable {
         name: Cow::Borrowed("infrociare"),
         words: 3,
@@ -594,28 +594,28 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~ndo\t",
         )),
     },
-    // rest___ like incattivire: 807 words.
+    // verb_past_1_sg like incattivire: 807 words.
     EndingTable {
         name: Cow::Borrowed("incattivire"),
         words: 807,
         slot: 4,
         table: Cow::Borrowed(concat!("~ii\t", "~ì\t~irono\t", "~ito\t",)),
     },
-    // rest___ like ardere: 240 words.
+    // verb_past_1_sg like ardere: 240 words.
     EndingTable {
         name: Cow::Borrowed("ardere"),
         words: 240,
         slot: 4,
         table: Cow::Borrowed(concat!("~i\t", "~e\t~ero\t", "~o\t",)),
     },
-    // rest___ like volgere: 179 words.
+    // verb_past_1_sg like volgere: 179 words.
     EndingTable {
         name: Cow::Borrowed("volgere"),
         words: 179,
         slot: 4,
         table: Cow::Borrowed(concat!("~si\t", "~se\t~sero\t", "~to\t",)),
     },
-    // rest___ like essere: 102 words.
+    // verb_past_1_sg like essere: 102 words.
     EndingTable {
         name: Cow::Borrowed("essere"),
         words: 102,
@@ -626,63 +626,63 @@ pub(super) static TABLES: [EndingTable<'static>; 46] = [
             "~uto\t",
         )),
     },
-    // rest___ like reggere: 83 words.
+    // verb_past_1_sg like reggere: 83 words.
     EndingTable {
         name: Cow::Borrowed("reggere"),
         words: 83,
         slot: 4,
         table: Cow::Borrowed(concat!("~ssi\t", "~sse\t~ssero\t", "~tto\t",)),
     },
-    // rest___ like perdersi: 71 words.
+    // verb_past_1_sg like perdersi: 71 words.
     EndingTable {
         name: Cow::Borrowed("perdersi"),
         words: 71,
         slot: 4,
         table: Cow::Borrowed(concat!("~i\t", "~e\t~ero\t", "~osi\t",)),
     },
-    // rest___ like disporre: 59 words.
+    // verb_past_1_sg like disporre: 59 words.
     EndingTable {
         name: Cow::Borrowed("disporre"),
         words: 59,
         slot: 4,
         table: Cow::Borrowed(concat!("~i\t", "~e\t~ero\t", "~to\t",)),
     },
-    // rest___ like tingersi: 55 words.
+    // verb_past_1_sg like tingersi: 55 words.
     EndingTable {
         name: Cow::Borrowed("tingersi"),
         words: 55,
         slot: 4,
         table: Cow::Borrowed(concat!("~si\t", "~se\t~sero\t", "~tosi\t",)),
     },
-    // rest___ like convenire: 43 words.
+    // verb_past_1_sg like convenire: 43 words.
     EndingTable {
         name: Cow::Borrowed("convenire"),
         words: 43,
         slot: 4,
         table: Cow::Borrowed(concat!("~ni\t", "~ne\t~nero\t", "~uto\t",)),
     },
-    // rest___ like cadere: 25 words.
+    // verb_past_1_sg like cadere: 25 words.
     EndingTable {
         name: Cow::Borrowed("cadere"),
         words: 25,
         slot: 4,
         table: Cow::Borrowed(concat!("~di\t", "~de\t~dero\t", "~uto\t",)),
     },
-    // rest___ like dire: 14 words.
+    // verb_past_1_sg like dire: 14 words.
     EndingTable {
         name: Cow::Borrowed("dire"),
         words: 14,
         slot: 4,
         table: Cow::Borrowed(concat!("~issi\t", "~isse\t~issero\t", "~etto\t",)),
     },
-    // rest___ like muovere: 11 words.
+    // verb_past_1_sg like muovere: 11 words.
     EndingTable {
         name: Cow::Borrowed("muovere"),
         words: 11,
         slot: 4,
         table: Cow::Borrowed(concat!("~iˇ\t", "~eˇ\t~eroˇ\t", "~oˇ\t",)),
     },
-    // rest___ like infrociare: 3 words.
+    // verb_past_1_sg like infrociare: 3 words.
     EndingTable {
         name: Cow::Borrowed("infrociare"),
         words: 3,

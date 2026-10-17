@@ -1,153 +1,149 @@
 //! What no conjugation gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`rest_____`, `bież- like baczyć`), then each listed form, by its cell's number (see
+//! built with (`impersonal`, `bież- like baczyć`), then each listed form, by its cell's number (see
 //! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 103 stems, 414 forms.
+/// 209 stems, 150 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"biec	rest_____	bież- like baczyć
+        r#"biec	impersonal	bież- like baczyć
 bożyć	38	bóżmy
-braknąć	rest	brakłoby- like mdlić	22	brakłoby	25	brakłoby
-brechać	rest__	bresz- like druzgotać	rest___	bresz- like druzgotać	rest____	breszmy- like trzymać
-brzechać	rest__	brzesz- like druzgotać	rest___	brzesz- like druzgotać	rest____	brzeszmy- like trzymać
+brechać	imperative	breszmy- like trzymać	non_past_1_sg	bresz- like druzgotać	non_past_2_sg	bresz- like druzgotać
+brzechać	imperative	brzeszmy- like trzymać	non_past_1_sg	brzesz- like druzgotać	non_past_2_sg	brzesz- like druzgotać
 być	1	jestem	2	jesteśmy	3	jesteś	5	jest	6	są	44	będący	46	będąc
-bóść	2	bodziemy	6	bodą	10	bodliśmy	43	bodzono	45	bodzony	48	bodzenie
+bóść	impersonal	bodz- like baczyć	non_past_1_sg	bod- like druzgotać	non_past_2_sg	bodzi- like druzgotać	past_1_f	bod- like przyschnąć	past_1_m	b- like zawieść	vir	bod- like blednąć
 capać	38	capajmy
 chcieć	2	chcemy	6	chcą	48	chcenie
 chlorzyć	38	chlórzmy
-chrzęsnąć	rest___	chrzęśni- like druzgotać	rest____	chrzęśnijmy- like trzymać	rest_____	chrzęśnię- like ogarnąć
-chrzęścieć	rest__	chrzęszcz- like druzgotać	48	chrzęszczenie
-ciąć	rest__	tn- like druzgotać	rest___	tni- like druzgotać	rest____	tnijmy- like trzymać
-czeznąć	2	czeźniemy	7	czeznąłem	10	czeźliśmy	38	czeźnijmy	48	czeźnięcie
+chrzęsnąć	imperative	chrzęśnijmy- like trzymać	impersonal	chrzęśnię- like ogarnąć	non_past_2_sg	chrzęśni- like druzgotać
+chrzęścieć	non_past_1_sg	chrzęszcz- like druzgotać	48	chrzęszczenie
+ciąć	imperative	tnijmy- like trzymać	non_past_1_sg	tn- like druzgotać	non_past_2_sg	tni- like druzgotać
+czeznąć	2	czeźniemy	7	czeznąłem	10	czeźliśmy	17	czeznął	38	czeźnijmy	48	czeźnięcie
 czynić	38	czyńmy
 dojść	0	dojść	6	dojdą	38	dojdźmy
 dorozumieć	38	dorozummy
-dostroić	rest___	dostroj- like druzgotać
+dostroić	non_past_2_sg	dostroj- like druzgotać
 dosłyszeć	48	dosłyszanie
-goreć	rest__	gorej- like druzgotać	rest___	gorej- like druzgotać	rest____	gorejmy- like trzymać
-grześć	2	grzebiemy	6	grzebą	10	grzebliśmy	38	grzebmy	43	grzebiono	45	grzebiony	48	grzebienie
-grząźć	2	grzęziemy	6	grzęzą	10	grzęźliśmy	43	grzęziono	48	grzęzienie
+goreć	imperative	gorejmy- like trzymać	non_past_1_sg	gorej- like druzgotać	non_past_2_sg	gorej- like druzgotać
+grześć	imperative	grzebmy- like trzymać	impersonal	grzebi- like baczyć	non_past_1_sg	grzeb- like druzgotać	non_past_2_sg	grzebi- like druzgotać	past_1_f	grzeb- like przyschnąć	past_1_m	grzeb- like trzymać	vir	grzeb- like blednąć
+grząźć	impersonal	grzęzi- like baczyć	non_past_1_sg	grzęz- like druzgotać	non_past_2_sg	grzęzi- like druzgotać	past_1_f	grzęz- like przyschnąć	vir	grzęź- like blednąć
 gzić	38	gzijmy
-głuchnąć	8	głuchnąłam
+głuchnąć	past_1_f	głuchną- like przyschnąć
 głębić	38	głąbmy
-iść	10	szliśmy	48	iście
-krzywoprzysiąc	rest_____	krzywoprzysięż- like baczyć
-kupać	7	kupåłëm	14	kupało
-kupśéć	45	kupśóny	47	kupśïwsy
-kłóć	rest__	kol- like druzgotać	rest___	kol- like druzgotać	rest____	kólmy- like trzymać
-lajsnąć	rest___	lajśni- like druzgotać	rest____	lajśnijmy- like trzymać	rest_____	lajśnię- like ogarnąć
+iść	impersonal	iś- like ogarnąć	past_1_f	sz- like przyschnąć	past_1_m	szed- like trzymać	vir	sz- like blednąć
+krzywoprzysiąc	impersonal	krzywoprzysięż- like baczyć
+kłóć	imperative	kólmy- like trzymać	non_past_1_sg	kol- like druzgotać	non_past_2_sg	kol- like druzgotać
+lajsnąć	imperative	lajśnijmy- like trzymać	impersonal	lajśnię- like ogarnąć	non_past_2_sg	lajśni- like druzgotać
 lec	43	lęgnięto
 mamlać	38	mamlajmy
-miauczeć	vir	miaucza- like przyschnąć
+miauczeć	vir	miaucza- like blednąć
 mieć	2	mamy	6	mają
 nabrzmieć	38	zabrzmijmy
-nadedrzeć	vir	nadedar- like przyschnąć	7	naddarłem	8	naddarłam	9	naddarłom	11	naddarłyśmy	12	naddarłeś	13	naddarłaś	14	naddarłoś	16	naddarłyście	17	naddarł	18	naddarła	19	naddarło	21	naddarły	22	naddarłbym	23	naddarłabym	24	naddarłobym	26	naddarłybyśmy	27	naddarłbyś	28	naddarłabyś	29	naddarłobyś	31	naddarłybyście	32	naddarłby	33	naddarłaby	34	naddarłoby	36	naddarłyby
+nadedrzeć	vir	nadedar- like blednąć
 nagiąć	47	nagnąwszy
-nagryzmolić	vir	nagryzmo- like przyschnąć	7	nagryzmoliłem	8	nagryzmoliłam	9	nagryzmoliłom	11	nagryzmoliłyśmy	12	nagryzmoliłeś	13	nagryzmoliłaś	14	nagryzmoliłoś	16	nagryzmoliłyście	17	nagryzmolił	18	nagryzmoliła	19	nagryzmoliło	21	nagryzmoliły	22	nagryzmoliłbym	23	nagryzmoliłabym	24	nagryzmoliłobym	26	nagryzmoliłybyśmy	27	nagryzmoliłbyś	28	nagryzmoliłabyś	29	nagryzmoliłobyś	31	nagryzmoliłybyście	32	nagryzmoliłby	33	nagryzmoliłaby	34	nagryzmoliłoby	36	nagryzmoliłyby
+nagryzmolić	vir	nagryzmo- like blednąć
 obciec	48	obcieknięcie
-obeschnąć	17	obsechł	47	obsechłszy
-obeżreć	10	obżarliśmy	43	obżarto	45	obżarty	47	obżarłszy	48	obżarcie
+obeschnąć	past_1_m	obsechł- like zakwitnąć	7	obeschłem
+obeżreć	impersonal	obżar- like ogarnąć	past_1_f	obżar- like przyschnąć	past_1_m	obżarł- like zakwitnąć	vir	obżar- like blednąć
 obstąpić	38	dostąpmy
 obwisnąć	38	obwisnijmy
-odewrzeć	10	otwarliśmy	45	otwarty	47	otwarłszy	48	otwarcie
+odewrzeć	impersonal	otwar- like ogarnąć	past_1_f	otwar- like przyschnąć	past_1_m	otwarł- like zakwitnąć	vir	otwar- like blednąć
 odkaszleć	10	odkaszlaliśmy	48	odkaszlanie
-odrosnąć	7	odrósłem
+odrosnąć	past_1_m	odrósł- like googlować
 odrzec	43	odrzeknięto	47	odrzeknąwszy
 okrajać	45	okrajanyy
-opleć	rest_	opełł- like zakwitnąć
+opleć	past_1_m	opełł- like zakwitnąć
 oskarżyć	47	oksarżywszy
-otworzyć	rest_____	otwar- like ogarnąć
+otworzyć	impersonal	otwar- like ogarnąć
 oślepnąć	45	oślepły
-pachnieć	rest___	pachni- like druzgotać
-podeschnąć	17	podsechł	47	podsechłszy
+pachnieć	non_past_2_sg	pachni- like druzgotać
+podeschnąć	past_1_m	podsechł- like zakwitnąć	7	podeschłem
 podżec	6	podżegnią	38	podżeżmy
 pofrunąć	38	pofrunijmy
 pogrzebać	38	pogrzebajmy
-pogrześć	2	pogrzebiemy	6	pogrzebią	10	pogrzebliśmy	38	pogrzebmy	43	pogrzebiono	45	pogrzebiony	47	pogbrzebłszy	48	pogrzebienie
+pogrześć	imperative	pogrzebmy- like trzymać	impersonal	pogrzebi- like baczyć	non_past_1_sg	pogrzebi- like baczyć	non_past_2_sg	pogrzebi- like druzgotać	past_1_f	pogrzeb- like przyschnąć	past_1_m	pogrzeb- like trzymać	vir	pogrzeb- like blednąć	47	pogbrzebłszy
 pojrzeć	38	pójrzmy
 pomrzeć	45	pomarły
-popatrzyć	7	popatrzyłem	8	popatrzyłam	9	popatrzyłom	10	popatrzaliśmy	11	popatrzyłyśmy	12	popatrzyłeś	13	popatrzyłaś	14	popatrzyłoś	16	popatrzyłyście	17	popatrzył	18	popatrzyła	19	popatrzyło	21	popatrzyły	22	popatrzyłbym	23	popatrzyłabym	24	popatrzyłobym	26	popatrzyłybyśmy	27	popatrzyłbyś	28	popatrzyłabyś	29	popatrzyłobyś	31	popatrzyłybyście	32	popatrzyłby	33	popatrzyłaby	34	popatrzyłoby	36	popatrzyłyby	43	popatrzano
+popatrzyć	impersonal	popatrz- like mieć	vir	popatrza- like blednąć
 popaść	45	popanięty
 posiąść	45	posiądniętyy
-potknąć	rest__	potkn- like baczyć	rest___	potkni- like druzgotać	rest____	potknijmy- like trzymać	rest_____	potknię- like ogarnąć	vir	potknę- like przyschnąć
+potknąć	imperative	potknijmy- like trzymać	impersonal	potknię- like ogarnąć	non_past_1_sg	potkn- like baczyć	non_past_2_sg	potkni- like druzgotać	vir	potknę- like blednąć
 powieść	47	powiódłwszy
 powydawać	47	powydawszy
-powziąć	rest__	powezm- like baczyć	rest___	poweźmi- like druzgotać	rest____	poweźmijmy- like trzymać
-połazić	vir	opłazi- like przyschnąć	7	połaziłem	8	połaziłam	9	połaziłom	11	połaziłyśmy	12	połaziłeś	13	połaziłaś	14	połaziłoś	16	połaziłyście	17	połaził	18	połaziła	19	połaziło	21	połaziły	22	połaziłbym	23	połaziłabym	24	połaziłobym	26	połaziłybyśmy	27	połaziłbyś	28	połaziłabyś	29	połaziłobyś	31	połaziłybyście	32	połaziłby	33	połaziłaby	34	połaziłoby	36	połaziłyby
-przeboleć	10	przebolałliśmy
-przebóść	2	przebodziemy	6	przebodą	10	przebodliśmy	43	przebodziono	45	przebodziony	48	przebodzenie
+powziąć	imperative	poweźmijmy- like trzymać	non_past_1_sg	powezm- like baczyć	non_past_2_sg	poweźmi- like druzgotać
+połazić	vir	opłazi- like blednąć
+przeboleć	past_1_f	przebolał- like przyschnąć	past_1_m	przebolałł- like googlować	vir	przebolał- like blednąć
+przebóść	impersonal	przebodzi- like baczyć	non_past_1_sg	przebod- like baczyć	non_past_2_sg	przebodzi- like druzgotać	past_1_f	przebod- like przyschnąć	past_1_m	przeb- like zawieść	vir	przebod- like blednąć	48	przebodzenie
 przelecieć	47	przeleciwszy
-przenieść	vir	przenios- like przyschnąć	47	preniósłszy
+przenieść	vir	przenios- like blednąć	47	preniósłszy
 przepaść	45	przepadły
-przeschnąć	17	przesechł	47	przesechłszy
+przeschnąć	past_1_m	przesechł- like zakwitnąć	7	przeschłem
 przewidzieć	43	przwidziano
 przygwoździć	38	przygwóźdźmy
 przylać	1	przeleję
-przyozdobić	7	przyozdobiłem	8	przyodzobiłam	12	przyozdobiłeś	17	przyozdobił	22	przyozdobiłbym	27	przyozdobiłbyś	32	przyozdobiłby
+przyozdobić	past_1_f	przyodzobi- like przyschnąć
 przyrównywać	45	przyrównywanyy
-przyschnąć	17	przysechł	47	przysechłszy
-przysiąc	rest_____	przysięż- like baczyć
+przyschnąć	past_1_m	przysechł- like zakwitnąć	7	przyschłem
+przysiąc	impersonal	przysięż- like baczyć
 przytaknąć	47	przytaknąwszy
 przywiązać	47	przywiązano
 przyśnić	38	śnijmy
-próć	rest__	porz- like druzgotać	rest___	porz- like druzgotać	rest____	pórzmy- like trzymać
-pójść	10	poszliśmy	47	poszedłszy
+próć	imperative	pórzmy- like trzymać	non_past_1_sg	porz- like druzgotać	non_past_2_sg	porz- like druzgotać
+pójść	past_1_f	posz- like przyschnąć	past_1_m	poszedł- like zakwitnąć	vir	posz- like blednąć
 pęknąć	47	pęknąwszy
-rozbroić	rest___	rozbroj- like druzgotać
-rozejrzeć	vir	rozejrzeli- like przyschnąć	7	rozejrzałem	8	rozejrzałam	9	rozejrzałom	11	rozejrzałyśmy	12	rozejrzałeś	13	rozejrzałaś	14	rozejrzałoś	16	rozejrzałyście	17	rozejrzał	18	rozejrzała	19	rozejrzało	21	rozejrzały	22	rozejrzałbym	23	rozejrzałabym	24	rozejrzałobym	26	rozejrzałybyśmy	27	rozejrzałbyś	28	rozejrzałabyś	29	rozejrzałobyś	31	rozejrzałybyście	32	rozejrzałby	33	rozejrzałaby	34	rozejrzałoby	36	rozejrzałyby
-rozeschnąć	17	rozsechł	47	rozsechłszy
-rozgałęzić	rest__	rozgałęzi- like baczyć
+rozbroić	non_past_2_sg	rozbroj- like druzgotać
+rozejrzeć	vir	rozejrzeli- like blednąć
+rozeschnąć	past_1_m	rozsechł- like zakwitnąć	7	rozeschłem
+rozgałęzić	non_past_1_sg	rozgałęzi- like baczyć
 rozpiąć	47	pozpiąwszy
-roztworzyć	rest_____	roztwar- like ogarnąć
-róść	1	rostę	2	rościemy	6	rostą	7	rósłem	10	rośliśmy	38	rościjmy	48	roście
+roztworzyć	impersonal	roztwar- like ogarnąć
+róść	imperative	rościjmy- like trzymać	impersonal	roś- like ogarnąć	non_past_1_sg	rost- like druzgotać	non_past_2_sg	rości- like druzgotać	past_1_f	ros- like przyschnąć	past_1_m	rós- like trzymać	vir	roś- like blednąć
 schnąć	17	sechł
-sczeznąć	8	szcezłam	10	sczeźliśmy	47	szcezłszy
+sczeznąć	past_1_f	szcez- like przyschnąć	past_1_m	szcezł- like zakwitnąć	vir	sczeź- like blednąć
 skomleć	38	skomlijmy
 skrzepnąć	38	skzrepnijmy
-snąć	rest___	śni- like druzgotać	rest____	śnijmy- like trzymać	rest_____	śnię- like ogarnąć	1	snę
+snąć	imperative	śnijmy- like trzymać	impersonal	śnię- like ogarnąć	non_past_2_sg	śni- like druzgotać	1	snę
 spać	2	śpimy	6	śpią	38	śpijmy
-spiąć	rest__	zepn- like baczyć	rest___	zepni- like druzgotać	rest____	zepnijmy- like trzymać
+spiąć	imperative	zepnijmy- like trzymać	non_past_1_sg	zepn- like baczyć	non_past_2_sg	zepni- like druzgotać
 spojrzeć	38	spójrzmy
 sprząc	47	sprzężywszy
-spuścić	10	spuszczaliśmy
+spuścić	past_1_f	spuszcza- like przyschnąć	past_1_m	spuszczał- like googlować	vir	spuszcza- like blednąć
 strząść	38	strzęśmy
-słać	rest__	śl- like druzgotać	rest___	śl- like druzgotać	rest____	ślijmy- like trzymać
+słać	imperative	ślijmy- like trzymać	non_past_1_sg	śl- like druzgotać	non_past_2_sg	śl- like druzgotać
 uaktywnić	38	impuaktywnijmy
 uchwalać	38	uchwalmy
 ugiąć	47	ugnąwszy
-ugrząźć	2	ugrzęziemy	6	ugrzęzą	10	ugrzęźliśmy	43	ugrzęziono	48	ugrzęzienie
-ukoić	rest__	ukoj- like baczyć	rest____	ukojmy- like trzymać	rest_____	ukoj- like baczyć
+ugrząźć	impersonal	ugrzęzi- like baczyć	non_past_1_sg	ugrzęz- like baczyć	non_past_2_sg	ugrzęzi- like druzgotać	past_1_f	ugrzęz- like przyschnąć	vir	ugrzęź- like blednąć
+ukoić	imperative	ukojmy- like trzymać	impersonal	ukoj- like baczyć	non_past_1_sg	ukoj- like baczyć
 ukraść	48	ukradnięcie
 umrzeć	45	umarły
 upaść	45	upadły
-uschnąć	17	usechł	47	usechłszy
-usłać	rest__	uściel- like baczyć	rest___	uściel- like druzgotać	rest____	uścielmy- like trzymać
-uwięznąć	rest___	uwięźni- like druzgotać	rest____	uwięźnijmy- like trzymać	rest_____	uwięźnię- like ogarnąć	vir	uwięź- like przyschnąć	6	uwiązną
+uschnąć	past_1_m	usechł- like zakwitnąć	7	uschłem
+usłać	imperative	uścielmy- like trzymać	non_past_1_sg	uściel- like baczyć	non_past_2_sg	uściel- like druzgotać
+uwięznąć	imperative	uwięźnijmy- like trzymać	impersonal	uwięźnię- like ogarnąć	non_past_2_sg	uwięźni- like druzgotać	vir	uwięź- like blednąć	6	uwiązną
 weselić	43	wesolono	48	wesolenie
-więznąć	rest___	więźni- like druzgotać	rest____	więźnijmy- like trzymać	rest_____	więźnię- like ogarnąć	vir	więź- like przyschnąć
-wklęsnąć	rest___	wklęśni- like druzgotać	rest____	wklęśnijmy- like trzymać	rest_____	wklęśnię- like ogarnąć	vir	wklęś- like przyschnąć
-wniść	10	weszliśmy	47	wszedłszy	48	wniście
-wrzeć	rest__	wr- like druzgotać	rest____	wrzyjmy- like trzymać
-wskrzesnąć	vir	wskrzes- like przyschnąć
-wspiąć	rest__	wespn- like baczyć	rest___	wespni- like druzgotać	rest____	wespnijmy- like trzymać
+więznąć	imperative	więźnijmy- like trzymać	impersonal	więźnię- like ogarnąć	non_past_2_sg	więźni- like druzgotać	vir	więź- like blednąć
+wklęsnąć	imperative	wklęśnijmy- like trzymać	impersonal	wklęśnię- like ogarnąć	non_past_2_sg	wklęśni- like druzgotać	vir	wklęś- like blednąć
+wniść	impersonal	wniś- like ogarnąć	past_1_f	wesz- like przyschnąć	past_1_m	wszedł- like zakwitnąć	vir	wesz- like blednąć
+wrzeć	imperative	wrzyjmy- like trzymać	non_past_1_sg	wr- like druzgotać
+wskrzesnąć	vir	wskrzes- like blednąć
+wspiąć	imperative	wespnijmy- like trzymać	non_past_1_sg	wespn- like baczyć	non_past_2_sg	wespni- like druzgotać
 wstąpić	38	spowolnijmy
 wykląć	47	wyklnąwszy
 wylesić	38	wyleśmy
 wymiętolić	38	miętolmy
 wypomnieć	45	ywomniany
-wyschnąć	rest_	wysechł- like zakwitnąć
+wyschnąć	past_1_m	wysechł- like zakwitnąć
 wyswobodzić	6	wyswobodzi
 wyszarpać	45	wyszarpanyy
-wzdąć	rest__	wezdm- like baczyć	rest___	wezdmi- like druzgotać	rest____	wezdmijmy- like trzymać
+wzdąć	imperative	wezdmijmy- like trzymać	non_past_1_sg	wezdm- like baczyć	non_past_2_sg	wezdmi- like druzgotać
 wziąć	38	weźmy
-zabraknąć	rest	zabrakłoby- like mdlić	22	zabrakłoby	25	zabrakłoby
 zachrzęścieć	1	zachrzęszczę	6	zachrzęszczą	47	zachrzęściwszy	48	zachrzęszczenie
-zaklęsnąć	rest___	zaklęśni- like druzgotać	rest____	zaklęśnijmy- like trzymać	rest_____	zaklęśnię- like ogarnąć	vir	zaklęś- like przyschnąć
+zaklęsnąć	imperative	zaklęśnijmy- like trzymać	impersonal	zaklęśnię- like ogarnąć	non_past_2_sg	zaklęśni- like druzgotać	vir	zaklęś- like blednąć
 zalesić	38	zaleśmy
 zaląc	45	zalęgnięty	48	zalęgnięcie
 zaniknąć	45	zanikły
@@ -155,28 +151,27 @@ zaplątać	43	zaplątono
 zapędzić	45	zapędzonyy
 zarzec	43	zarzeknięto	47	zarzeknąwszy
 zaschnąć	17	zasechłł	47	zasechłszy
-zawieść	7	zawiódłem
-zbladnąć	rest____	zblednijmy- like trzymać	vir	zbled- like przyschnąć	48	zblednięcie
+zawieść	past_1_m	zawiódł- like googlować
+zbladnąć	imperative	zblednijmy- like trzymać	vir	zbled- like blednąć	48	zblednięcie
 zechcieć	2	zechcemy	6	zechcą	48	zechcenie
-zemleć	2	zmielemy	6	zmielą	10	zmełliśmy	38	zmielmy	43	zmielono	45	zmielony	47	zmieliwszy	48	zmielenie
-zeprzeć	10	sparliśmy	43	sparto	45	sparty	47	sparłszy	48	sparcie
+zemleć	imperative	zmielmy- like trzymać	impersonal	zmiel- like baczyć	non_past_1_sg	zmiel- like baczyć	non_past_2_sg	zmiel- like druzgotać	past_1_f	zmeł- like przyschnąć	past_1_m	zmeł- like trzymać	vir	zmeł- like blednąć	47	zmieliwszy
+zeprzeć	impersonal	spar- like ogarnąć	past_1_f	spar- like przyschnąć	past_1_m	sparł- like zakwitnąć	vir	spar- like blednąć
 zepsuć	47	zepsuto
-zeschnąć	rest_	zsechł- like zakwitnąć
+zeschnąć	past_1_m	zsechł- like zakwitnąć
 zeszyć	1	zszyję
-zetrzeć	10	starliśmy	43	starto	45	starty	47	starłszy	48	starcie
+zetrzeć	impersonal	star- like ogarnąć	past_1_f	star- like przyschnąć	past_1_m	starł- like zakwitnąć	vir	star- like blednąć
 zgnić	45	zgniły
-zgromadzić	0	zgromadzic	1	zgromadzę	2	zgromadzimy	3	zgromadzisz	4	zgromadzicie	5	zgromadzi	7	zgromadziłem	8	zgromadziłam	9	zgromadziłom	10	zgromadziliśmy	11	zgromadziłyśmy	12	zgromadziłeś	13	zgromadziłaś	14	zgromadziłoś	15	zgromadziliście	16	zgromadziłyście	17	zgromadził	18	zgromadziła	19	zgromadziło	20	zgromadzili	21	zgromadziły	22	zgromadziłbym	23	zgromadziłabym	24	zgromadziłobym	25	zgromadzilibyśmy	26	zgromadziłybyśmy	27	zgromadziłbyś	28	zgromadziłabyś	29	zgromadziłobyś	30	zgromadzilibyście	31	zgromadziłybyście	32	zgromadziłby	33	zgromadziłaby	34	zgromadziłoby	35	zgromadziliby	36	zgromadziłyby	47	zgromadziwszy	48	zgromadzenie
-zląc	2	zlękniemy	6	zlękną	10	zlękliśmy	38	zlęknijmy	43	zlęknięto	45	zlęknięty	48	zlęknięcie
+zgromadzić	0	zgromadzic	1	zgromadzę	2	zgromadzimy	3	zgromadzisz	4	zgromadzicie	5	zgromadzi	7	zgromadziłem	10	zgromadziliśmy	12	zgromadziłeś	15	zgromadziliście	20	zgromadzili	25	zgromadzilibyśmy	30	zgromadzilibyście	35	zgromadziliby	47	zgromadziwszy	48	zgromadzenie
+zląc	imperative	zlęknijmy- like trzymać	impersonal	zlęknię- like ogarnąć	non_past_1_sg	zlękn- like baczyć	non_past_2_sg	zlękni- like druzgotać	past_1_f	zlęk- like przyschnąć	vir	zlęk- like blednąć
 zmartwychpowstać	6	powstaną
-zmoknąć	7	zmókłem
-zolić	rest_____	zol- like baczyć
+zmoknąć	past_1_m	zmókł- like googlować
+zolić	impersonal	zol- like baczyć
 zrozumieć	38	zrozummy
-zżąć	rest__	zeżn- like baczyć	rest___	zeżni- like druzgotać	rest____	zeżnijmy- like trzymać
-łómać	rest__	łóń- like druzgotać	7	łómåłëm	14	łómało
-ściąć	rest__	zetn- like baczyć	rest___	zetni- like druzgotać	rest____	zetnijmy- like trzymać
+zżąć	imperative	zeżnijmy- like trzymać	non_past_1_sg	zeżn- like baczyć	non_past_2_sg	zeżni- like druzgotać
+ściąć	imperative	zetnijmy- like trzymać	non_past_1_sg	zetn- like baczyć	non_past_2_sg	zetni- like druzgotać
 śmieć	6	śmią
-świerzbić	10	świerzbieliśmy	43	świerzbiano
-żec	2	żżemy	6	żgą	7	żegłem	10	żgliśmy	12	żegłeś	17	żegł	22	żegłbym	27	żegłbyś	32	żegłby	38	żżyjmy	43	żżono	45	żżony	48	żżenie
+świerzbić	impersonal	świerzbi- like mieć	past_1_f	świerzbia- like przyschnąć	past_1_m	świerzbia- like trzymać	vir	świerzbie- like blednąć
+żec	2	żżemy	6	żgą	8	żgłam	10	żgliśmy	38	żżyjmy	43	żżono	45	żżony	48	żżenie
 "#,
     ),
 };

@@ -14,13 +14,25 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    numerals(crate::with_proper_nouns(Language {
         name: "sanskrit",
         display: "Sanskrit",
         wiktionary: "sa",
         version: "0.1.0",
         description: "Sanskrit inflection for any word, in Devanagari: declension and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            PresentClass "The present class, how a verb makes its present stem (Whitney §§ 602ff)." {
+                Class1 "1" ["class-1"],
+                Class2 "2" ["class-2"],
+                Class3 "3" ["class-3"],
+                Class4 "4" ["class-4"],
+                Class5 "5" ["class-5"],
+                Class6 "6" ["class-6"],
+                Class7 "7" ["class-7"],
+                Class8 "8" ["class-8"],
+                Class9 "9" ["class-9"],
+                Class10 "10" ["class-10"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Accusative "acc" ["accusative"],
@@ -82,6 +94,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -120,6 +133,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -186,10 +200,11 @@ pub fn language() -> Language {
                     ("perfect", vec!["Active", "Third", "Singular"]),
                     ("aorist", vec!["Active", "Third", "Singular"]),
                 ],
-                inherent: vec![],
+                inherent: vec!["PresentClass"],
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -210,6 +225,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {
@@ -245,7 +261,19 @@ pub fn language() -> Language {
             ("verb", "imperfect", "ग्लोर्पति"),
         ],
         editions: vec![],
-    }
+    }))
+}
+
+/// The numerals, declined in an adjective's cells (`द्वि`, `त्रि`).
+fn numerals(lang: Language) -> Language {
+    crate::with_small(
+        lang,
+        "adjective",
+        "numeral",
+        "Numerals (`द्वि`, `त्रि`).",
+        &["num"],
+        &["sa-decl-adj*", "sa-decl-num*", "sa-decl-noun*"],
+    )
 }
 
 fn group(
@@ -303,6 +331,16 @@ const TENSES: [&str; 6] = [
 ];
 const GENDERS: [&str; 3] = ["masculine", "feminine", "neuter"];
 
+/// Tables whose template is given a misspelt stem, as `(word, the
+/// misspelling, the stem)`, read by the classicists: अयोग्य's neuter
+/// (`ayógam`, 6 forms), अदनीय's feminine (`adaniyā`, 29), अन्यतर's neuter
+/// nominative (`anytarát`, 1).
+const TYPOS: [(&str, &str, &str); 3] = [
+    ("अयोग्य", "अ॒योग", "अ॒योग्य"),
+    ("अदनीय", "अदनि", "अदनी"),
+    ("अन्यतर", "अ॒न्य्त॒र", "अ॒न्य॒त॒र"),
+];
+
 impl Hooks for SanskritHooks {
     fn lemma_ok(&self, _pos: &str, lemma: &str) -> bool {
         devanagari(lemma)
@@ -326,6 +364,12 @@ impl Hooks for SanskritHooks {
     fn repair(&self, pos: &str, entry: &mut Entry) {
         let has = |tags: &[String], t: &str| tags.iter().any(|x| x == t);
         for f in entry.forms.iter_mut() {
+            if let Some(&(_, typo, stem)) = TYPOS.iter().find(|t| t.0 == entry.word)
+                && let Some(rest) = f.form.strip_prefix(typo)
+                && !f.form.starts_with(stem)
+            {
+                f.form = format!("{stem}{rest}");
+            }
             let trimmed = f.form.trim_end_matches(|c: char| c.is_ascii_digit());
             if trimmed.len() != f.form.len() {
                 f.form = trimmed.to_string();
@@ -353,6 +397,26 @@ impl Hooks for SanskritHooks {
                     && let Some(g) = table.and_then(|t| GENDERS.get(t))
                 {
                     f.tags.push((*g).to_string());
+                }
+            }
+        }
+        // A numeral's tables name their gender in the template only
+        // (`sa-decl-noun-m`); `sa-decl-num`'s forms are every gender's.
+        if pos == "numeral" {
+            let mut genders: &[&str] = &[];
+            for f in entry.forms.iter_mut() {
+                if has(&f.tags, "inflection-template") {
+                    genders = match f.form.as_str() {
+                        "sa-decl-noun-m" => &["masculine"],
+                        "sa-decl-noun-f" => &["feminine"],
+                        "sa-decl-noun-n" => &["neuter"],
+                        "sa-decl-num" => &GENDERS,
+                        _ => &[],
+                    };
+                    continue;
+                }
+                if f.source.is_some() && !GENDERS.iter().any(|g| has(&f.tags, g)) {
+                    f.tags.extend(genders.iter().map(|g| (*g).to_string()));
                 }
             }
         }
@@ -418,7 +482,14 @@ impl Hooks for SanskritHooks {
             "n" => Some("neuter"),
             _ => None,
         };
-        tag.map(|t| vec![t.to_string()]).unwrap_or_default()
+        // A verb's present class, from its senses (`class-6`).
+        let classes = entry
+            .senses
+            .iter()
+            .flat_map(|s| &s.tags)
+            .filter(|t| t.starts_with("class-"))
+            .cloned();
+        tag.map(str::to_string).into_iter().chain(classes).collect()
     }
 }
 

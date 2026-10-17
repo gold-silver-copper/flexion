@@ -13,4 +13,5 @@ pub(crate) const ORTHOGRAPHY: Orthography<'static> = Orthography {
     mark_monosyllables: false,
     folded: &[],
     prosody: None,
+    initial: "",
 };

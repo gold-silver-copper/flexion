@@ -57,10 +57,8 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
     relation!(NOM_F_PL, [NOM_M_DU], [("~ौ", "~ाः")], rules {
         "" => [0 14],
     } listed {}, true, None),
-    // NOM_N_SG, from ACC_N_SG.
-    relation!(NOM_N_SG, [ACC_N_SG], [("~", "~")], rules {
-        "" => [0 13],
-    } listed {}, true, None),
+    // NOM_N_SG, from NOM_M_SG.
+    relation!(NOM_N_SG, [NOM_M_SG], [], none, true, None),
     // NOM_N_DU, from NOM_F_DU.
     relation!(NOM_N_DU, [NOM_F_DU], [], none, true, None),
     // NOM_N_PL, from NOM_M_DU.
@@ -85,8 +83,8 @@ pub(super) static RELATIONS: [Relation<'static>; 71] = [
     relation!(ACC_F_DU, [NOM_F_DU], [], none, true, None),
     // ACC_F_PL, from NOM_F_PL.
     relation!(ACC_F_PL, [NOM_F_PL], [], none, true, None),
-    // ACC_N_SG, from NOM_M_SG.
-    relation!(ACC_N_SG, [NOM_M_SG], [], none, true, None),
+    // ACC_N_SG, from NOM_N_SG.
+    relation!(ACC_N_SG, [NOM_N_SG], [], none, true, None),
     // ACC_N_DU, from NOM_F_DU.
     relation!(ACC_N_DU, [NOM_F_DU], [], none, true, None),
     // ACC_N_PL, from NOM_N_PL.

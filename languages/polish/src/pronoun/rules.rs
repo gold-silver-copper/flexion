@@ -18,23 +18,18 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "y" => [Który 6] regular,
     }
     listed {
-        "#czyj" => On,
-        "#czyjkolwiek" => On,
-        "#czyjś" => On,
-        "#ile" => Ile,
-        "#ilekolwiek" => Ilekolwiek,
-        "#jakikolwiek" => On,
-        "#każdy" => Który,
-        "#ki" => On,
-        "#którykolwiek" => On,
-        "#nasz" => On,
-        "#niczyj" => On,
-        "#niejeden" => On,
-        "#owy" => Który,
-        "#pewien" => On,
-        "#takowy" => Który,
-        "#tamten" => On,
-        "#wasz" => On,
-        "#ów" => On,
+        On => [
+            "#czyj", "#czyjkolwiek", "#czyjś", "#jakikolwiek", "#ki", "#którykolwiek", "#nasz",
+            "#niczyj", "#niejeden", "#pewien", "#tamten", "#wasz", "#ów",
+        ],
+        Który => [
+            "#każdy", "#owy", "#takowy",
+        ],
+        Ile => [
+            "#ile",
+        ],
+        Ilekolwiek => [
+            "#ilekolwiek",
+        ],
     }
 };

@@ -71,7 +71,7 @@ pub enum Declension {
     Suo,
     /// Like `diversi`: 3 words.
     Diversi,
-    /// Like `nessun`: 1 words.
+    /// Like `nessun`: 2 words.
     Nessun,
 }
 
@@ -103,18 +103,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     // Nullo: 37 words (tanto, uno, nessuno, molto, tutto, questo).
     declension!("nullo", 37, "~o";
     m: "~o", "~i";
-    f: _, "~e";
     ),
     // Suo: 3 words (so, tuo, suo). Like Nullo, except in 1 cell: m pl.
     declension!("suo", 3, "~o", like Nullo;
     m: _, "~oi";
     ),
-    // Diversi: 3 words (diversi, entrambi, svariati). Like Nullo, except in 2 cells: m sg, m pl.
-    declension!("diversi", 3, "~i", like Nullo;
-    m: "~i", derived;
+    // Diversi: 3 words (diversi, entrambi, svariati).
+    declension!("diversi", 3, "~i";
+    m: "~i", _;
+    f: _, "~e";
     ),
-    // Nessun: 1 words (nessun).
-    declension!("nessun", 1, "~";
+    // Nessun: 2 words (il, nessun).
+    declension!("nessun", 2, "~";
     m: "~", _;
     f: "~a", _;
     ),

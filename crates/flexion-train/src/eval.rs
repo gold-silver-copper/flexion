@@ -3,6 +3,7 @@
 //! probabilities match how often the answers are right is measured.
 
 use crate::extract::Lexeme;
+use crate::measure::{self, Kind};
 use flexion::Label;
 
 /// The tenth the READMEs report: scored once per build, never trained on,
@@ -70,6 +71,11 @@ pub struct Score {
     pub lemma: (usize, usize),
     /// Top candidate is one of the forms the dictionary lists, any of them.
     pub any: usize,
+    /// The wrong forms by what went wrong, in [`Kind::ALL`]'s order.
+    pub errors: [usize; Kind::ALL.len()],
+    /// First candidates without the stress mark the right answer writes
+    /// (Greek `ὀστουν` for `ὀστοῦν`).
+    pub accentless: usize,
     /// The right answer among the candidates at all, at any place.
     pub among: usize,
     /// Summed over forms: −log₂ of the probability the grammar gives the
@@ -108,6 +114,11 @@ pub struct Outcome {
     /// cost: [`LETTER_BITS`] per letter and one more for its end. A form no
     /// candidate writes costs its listing.
     pub bits: f64,
+    /// What went wrong, if the first candidate isn't right.
+    pub error: Option<Kind>,
+    /// The first candidate, a word, has no stress mark where the right
+    /// answer has one.
+    pub accentless: bool,
 }
 
 impl Outcome {
@@ -185,6 +196,14 @@ impl Score {
                 s.lemma.1 += usize::from(right);
             }
             s.any += usize::from(o.any);
+            s.accentless += usize::from(o.accentless);
+            if let Some(slot) = o
+                .error
+                .and_then(|e| Kind::ALL.iter().position(|&k| k == e))
+                .and_then(|i| s.errors.get_mut(i))
+            {
+                *slot += 1;
+            }
             s.bits += o.bits;
             s.calibrate(f64::from(o.top), right);
             word = match word {
@@ -203,6 +222,34 @@ impl Score {
             s.whole += usize::from(all);
         }
         s
+    }
+
+    /// The wrong forms by what went wrong, as `kind count, …` with each
+    /// kind's share of the wrong forms, commonest first (kinds with none
+    /// left out).
+    pub fn census(&self) -> String {
+        let wrong: usize = self.errors.iter().sum();
+        let mut kinds: Vec<(Kind, usize)> = Kind::ALL
+            .iter()
+            .copied()
+            .zip(self.errors)
+            .filter(|&(_, n)| n > 0)
+            .collect();
+        kinds.sort_by_key(|k| std::cmp::Reverse(k.1));
+        kinds
+            .iter()
+            .map(|(k, n)| {
+                #[allow(clippy::cast_precision_loss)]
+                let share = 100.0 * *n as f64 / wrong.max(1) as f64;
+                format!("{k} {n} ({share:.0}%)")
+            })
+            .collect::<Vec<_>>()
+            .join(", ")
+            + &if self.accentless > 0 {
+                format!("; {} without the accent they need", self.accentless)
+            } else {
+                String::new()
+            }
     }
 
     /// The mean reciprocal rank of the right answer.
@@ -255,10 +302,40 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
     x.letters == y.letters && x.stress == y.stress
 }
 
+/// What a table's first answer `top` is against the dictionary's forms of
+/// the cell (`listed`, the first the one scored), compared as
+/// [`same_form`] compares them, as `try` scores it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Verdict {
+    /// No answer: a gap.
+    Gap,
+    /// The dictionary has no form to score it against.
+    Unlisted,
+    Right,
+    /// Another of the forms the dictionary lists.
+    Listed,
+    Wrong,
+}
+
+/// See [`Verdict`].
+pub fn verdict(
+    orthography: &flexion::Orthography<'_>,
+    top: Option<&str>,
+    listed: &[String],
+) -> Verdict {
+    match (top, listed.first()) {
+        (None, _) => Verdict::Gap,
+        (Some(_), None) => Verdict::Unlisted,
+        (Some(t), Some(want)) if same_form(orthography, t, want) => Verdict::Right,
+        (Some(t), _) if listed.iter().any(|f| same_form(orthography, t, f)) => Verdict::Listed,
+        _ => Verdict::Wrong,
+    }
+}
+
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`. `seen`: per paradigm, the
 /// cells its training words have forms in.
-pub fn score<P: Label, A: Label, F: Label>(
+pub fn score<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
@@ -322,16 +399,24 @@ pub fn typed_back(
 /// lemma's cell only where its form isn't what was typed (see
 /// [`typed_back`]). `seen`: per paradigm, the cells its training words have
 /// forms in (empty: every cell counts as seen).
-pub fn outcomes<P: Label, A: Label, F: Label>(
+pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     lexemes: &[&Lexeme],
     input: Input<'_>,
     seen: &[Vec<bool>],
-    scored: impl Fn(usize) -> bool,
+    scored: impl Fn(usize) -> bool + Sync,
 ) -> Vec<Outcome> {
-    let mut out = Vec::new();
-    for (word, l) in lexemes.iter().enumerate() {
+    // Words spelled alike, for the homographs: per key, the scored words.
+    let mut alike: crate::HashMap<&str, Vec<&Lexeme>> = crate::HashMap::default();
+    for l in lexemes {
+        alike.entry(l.key.as_str()).or_default().push(l);
+    }
+    let numbered: Vec<(usize, &&Lexeme)> = lexemes.iter().enumerate().collect();
+    let each = crate::par::map(&numbered, |&(word, l)| {
+        let mut out = Vec::new();
+        let firsts: Vec<String> = l.cells.iter().filter_map(|f| f.first().cloned()).collect();
+        let stem = measure::word_stem(&l.full, &firsts);
         let typed = match input {
             Input::Full | Input::Citation(_) | Input::Given(_) => l.full.clone(),
             Input::Headword | Input::Features => l.lemma.clone(),
@@ -347,7 +432,7 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
             Input::Citation(parts) => parts.to_vec(),
             Input::Given(k) => match given_cells(l, k, grammar.lemma_cell) {
                 Some(cells) => cells,
-                None => continue,
+                None => return out,
             },
             _ => Vec::new(),
         };
@@ -388,22 +473,106 @@ pub fn outcomes<P: Label, A: Label, F: Label>(
                 listing
             };
             let first = candidates.first();
+            let rank = candidates.iter().position(|c| same(&c.form));
+            let any =
+                first.is_some_and(|c| forms.iter().any(|f| same_form(orthography, &c.form, f)));
+            let error = match first {
+                _ if rank == Some(0) => None,
+                None => Some(Kind::Gap),
+                Some(_) if any => Some(Kind::Variant),
+                Some(c)
+                    if alike.get(l.key.as_str()).is_some_and(|ws| {
+                        ws.iter().any(|w| {
+                            !std::ptr::eq(*w, *l)
+                                && w.cells
+                                    .get(cell)
+                                    .and_then(|f| f.first())
+                                    .is_some_and(|f| same_form(orthography, &c.form, f))
+                        })
+                    }) =>
+                {
+                    Some(Kind::Homograph)
+                }
+                Some(c) => Some(measure::kind(
+                    want,
+                    &c.form,
+                    letters(&c.form) == letters(want),
+                    rank.is_some(),
+                    stem,
+                )),
+            };
             out.push(Outcome {
                 word,
                 cell,
-                rank: candidates.iter().position(|c| same(&c.form)),
+                rank,
                 top: first.map_or(0.0, |c| c.probability),
                 probability,
                 letters: first.is_some_and(|c| letters(&c.form) == letters(want)),
                 seen: has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)),
                 lemma: grammar.lemma_cell == Some(cell),
-                any: first
-                    .is_some_and(|c| forms.iter().any(|f| same_form(orthography, &c.form, f))),
+                any,
                 bits,
+                error,
+                // A phrase's words carry their own (`μεμιασμένος ὦ`).
+                accentless: first.is_some_and(|c| {
+                    !c.form.contains(' ')
+                        && orthography.read(&c.form).stress.is_none()
+                        && orthography.read(want).stress.is_some()
+                }),
             });
         }
-    }
-    out
+        out
+    });
+    each.into_iter().flatten().collect()
+}
+
+/// Top-1 by block of cells (`blocks`, the part's groups of cells: a
+/// Turkish verb's negative abilitative forms, its participles): each
+/// block's score, and their mean over the blocks with forms, so that a
+/// block of many cells can't outweigh the rest.
+pub fn by_block(outcomes: &[Outcome], blocks: &[std::ops::Range<usize>]) -> (f64, Vec<Score>) {
+    let scores: Vec<Score> = blocks
+        .iter()
+        .map(|b| {
+            let mine: Vec<Outcome> = outcomes
+                .iter()
+                .filter(|o| b.contains(&o.cell))
+                .cloned()
+                .collect();
+            Score::of(&mine)
+        })
+        .collect();
+    let scored: Vec<f64> = scores
+        .iter()
+        .filter(|s| s.forms > 0)
+        .map(Score::accuracy)
+        .collect();
+    #[allow(clippy::cast_precision_loss)]
+    let mean = scored.iter().sum::<f64>() / scored.len().max(1) as f64;
+    (mean, scores)
+}
+
+/// How complete `grammar`'s tables are for `lexemes` typed as their
+/// headwords: every cell, the dictionary's or not, `(cells, with a form)`,
+/// and the first few gaps (`word cell`). A cell without a form is a gap: no
+/// way of building it gave one.
+pub fn completion<P: Label, A: Label, F: Label>(
+    grammar: &flexion::Grammar<'_, P, A, F>,
+    lexemes: &[&Lexeme],
+) -> (usize, usize, Vec<String>) {
+    let known = flexion::Known::default();
+    let mut gaps = Vec::new();
+    let (cells, filled) = lexemes.iter().fold((0, 0), |(cells, filled), l| {
+        let table = grammar.table(&l.lemma, &known);
+        for cell in (0..grammar.cells).filter(|&c| table.get(c).is_none_or(Vec::is_empty)) {
+            if gaps.len() < 6 {
+                gaps.push(format!("{} {cell}", l.lemma));
+            }
+        }
+        let with = table.iter().filter(|c| !c.is_empty()).count();
+        (cells + grammar.cells, filled + with.min(grammar.cells))
+    });
+    (cells, filled, gaps)
 }
 
 /// One held-out form the floor was asked for: the word (its place among
@@ -440,21 +609,25 @@ pub fn floor(
             .collect();
         let baseline =
             crate::baseline::Baseline::learn(forms.iter().map(|(l, f)| (*l, f.as_str())));
-        for (word, (l, lemma)) in test.iter().zip(&tests).enumerate() {
-            let Some(want) = l
+        let asked: Vec<(usize, &&Lexeme, &String)> = test
+            .iter()
+            .zip(&tests)
+            .enumerate()
+            .map(|(word, (l, lemma))| (word, l, lemma))
+            .collect();
+        let found = crate::par::map(&asked, |&(word, l, lemma)| {
+            let want = l
                 .cells
                 .get(cell)
                 .and_then(|forms| forms.first())
-                .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))
-            else {
-                continue;
-            };
-            out.push(FloorOutcome {
+                .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))?;
+            Some(FloorOutcome {
                 word,
                 cell,
                 right: baseline.inflect(lemma) == letters(want),
-            });
-        }
+            })
+        });
+        out.extend(found.into_iter().flatten());
     }
     out.sort_unstable_by_key(|o| (o.word, o.cell));
     out
@@ -562,15 +735,15 @@ pub fn by_word(outcomes: &[Outcome]) -> Vec<(usize, usize)> {
 /// headwords): the power, of a grid from 0.5 to 4, by calibration error;
 /// then each status's trust, where at least [`TRUSTED`] of the forms have
 /// an answer of that status first (else all of it).
-pub fn fit_sharpness<P: Label, A: Label, F: Label>(
+pub fn fit_sharpness<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
     words: &[&Lexeme],
 ) -> (f32, flexion::Trust) {
     // Every scored form's answers: (probability, right, status) each.
-    let mut forms: Vec<Vec<(f32, bool, flexion::Status)>> = Vec::new();
     // From the headword, as the grammar is most often asked (and scored).
-    for l in words {
+    let each = crate::par::map(words, |l| {
+        let mut forms: Vec<Vec<(f32, bool, flexion::Status)>> = Vec::new();
         let table = grammar.table(&l.lemma, &flexion::Known::default());
         for (cell, fs) in l.cells.iter().enumerate() {
             let Some(want) = fs.first() else {
@@ -589,7 +762,9 @@ pub fn fit_sharpness<P: Label, A: Label, F: Label>(
             });
             forms.push(scored.collect());
         }
-    }
+        forms
+    });
+    let forms: Vec<Vec<(f32, bool, flexion::Status)>> = each.into_iter().flatten().collect();
     // The power: of a grid, the one whose answers' stated probabilities are
     // nearest how often they are right (calibration error).
     let sharpened = |f: &[(f32, bool, flexion::Status)], power: f32| -> Vec<f32> {
@@ -784,4 +959,41 @@ pub fn phrases(outcomes: &[Outcome], lexemes: &[&Lexeme]) -> Vec<Outcome> {
         })
         .cloned()
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_form_is_scored_as_the_orthography_reads_it() {
+        // Russian as shipped: the dictionary writes stress, the grammar
+        // doesn't, and the orthography drops the acute when it reads.
+        let russian = flexion::Orthography {
+            lowercase: true,
+            vowels: "аеиоуыэюяё",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "\u{301}\u{300}",
+            mark_monosyllables: false,
+            folded: &[('ё', 'е')],
+            prosody: None,
+            initial: "",
+        };
+        let listed = |forms: &[&str]| forms.iter().map(ToString::to_string).collect::<Vec<_>>();
+        assert_eq!(
+            verdict(&russian, Some("оный"), &listed(&["о\u{301}ный"])),
+            Verdict::Right
+        );
+        assert_eq!(
+            verdict(
+                &russian,
+                Some("ко\u{301}нь"),
+                &listed(&["кон", "ко\u{301}нь"])
+            ),
+            Verdict::Listed
+        );
+        assert_eq!(verdict(&russian, None, &listed(&["конь"])), Verdict::Gap);
+    }
 }

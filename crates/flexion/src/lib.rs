@@ -10,6 +10,8 @@ mod stems;
 mod stress;
 
 pub use choice::{Choice, DISCOUNT, Reading, Rule, Side, Status, blend, by_ending, tolerates};
+#[doc(hidden)]
+pub use flexion_macros::listed as __listed;
 pub use grammar::{
     Compound, FRONT_LETTERS, Grammar, Heads, Irregular, Known, ListedStem, Marks, Placement,
     Prefix, Prefixes, READINGS, ROOT_LETTERS, Separation, Trust, WORD_END, restore, sharpen,
@@ -173,7 +175,8 @@ impl std::error::Error for UnknownValue {}
 
 /// A [`Choice`] written as data: its rules (`ending => [value count, …]`,
 /// sorted by ending read backwards; or `starts { beginning => … }`, sorted)
-/// and its listed words (`word => value`, sorted).
+/// and its listed words, grouped by value (`value => [word, …]`; sorted
+/// into one list when the crate is built).
 ///
 /// ```
 /// use flexion::{Choice, choice};
@@ -183,29 +186,30 @@ impl std::error::Error for UnknownValue {}
 ///         "а" => [1 75, 0 5],
 ///     }
 ///     listed {
-///         "папа" => 0,
+///         0 => ["папа", "дядя"],
 ///     }
 /// };
 /// assert_eq!(GENDER.read("мама", 2.0, |_| true)[0].value, 1);
 /// assert_eq!(GENDER.read("папа", 2.0, |_| true)[0].value, 0);
+/// assert_eq!(GENDER.read("дядя", 2.0, |_| true)[0].value, 0);
 /// ```
 #[macro_export]
 macro_rules! choice {
     (
         rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
-        listed { $( $word:literal => $listed:tt ),* $(,)? }
+        listed { $( $listed:tt => [ $( $word:literal ),* $(,)? ] ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $listed => [ $( $word ),* ] ),*)
     };
     (
         starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
-        listed { $( $word:literal => $listed:tt ),* $(,)? }
+        listed { $( $listed:tt => [ $( $word:literal ),* $(,)? ] ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $word => $listed ),*)
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $listed => [ $( $word ),* ] ),*)
     };
     (@regular regular) => { true };
     (@regular) => { false };
-    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($regular:ident)?) ),*; $( $word:literal => $listed:tt ),*) => {
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($regular:ident)?) ),*; $( $listed:tt => [ $( $word:literal ),* ] ),*) => {
         $crate::Choice {
             side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
@@ -215,9 +219,7 @@ macro_rules! choice {
                     regular: $crate::choice!(@regular $($regular)?),
                 }
             ),* ]),
-            exceptions: ::std::borrow::Cow::Borrowed(&[ $(
-                (::std::borrow::Cow::Borrowed($word), $listed)
-            ),* ]),
+            exceptions: ::std::borrow::Cow::Borrowed($crate::__listed!( $( $listed => [ $( $word ),* ] ),* )),
         }
     };
 }

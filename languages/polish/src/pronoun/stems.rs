@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         cells: Cow::Borrowed(&[NOM_M_ANIM, NOM_M_INAN, ACC_M_INAN]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("nom_f_anim"),
         cells: Cow::Borrowed(&[
             NOM_F_ANIM,
             NOM_F_INAN,

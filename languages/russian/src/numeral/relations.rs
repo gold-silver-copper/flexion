@@ -64,7 +64,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "х" => [0 3],
         "ь" => [3 18],
     } listed {
-        "одного" => 0,
+        0 => [
+            "одного",
+        ],
     }, true, None),
     // GEN_M_INAN, from GEN_M_ANIM.
     relation!(GEN_M_INAN, [GEN_M_ANIM], [], none, true, None),
@@ -88,7 +90,9 @@ pub(super) static RELATIONS: [Relation<'static>; 47] = [
         "и" => [0 23],
         "х" => [2 3],
     } listed {
-        "тысяче" => 0,
+        0 => [
+            "тысяче",
+        ],
     }, true, None),
     // DAT_M_INAN, from DAT_M_ANIM.
     relation!(DAT_M_INAN, [DAT_M_ANIM], [], none, true, None),

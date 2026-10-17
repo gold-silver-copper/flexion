@@ -149,10 +149,19 @@ pub fn adjective(entry: &mut Entry, register: &[&str]) {
         }
     }
     keep_inflected(entry, register);
+    // A plural of no gender is both, unless a feminine plural is listed too:
+    // then it is the headword's, the masculine (Spanish `poco`, `el`,
+    // `otro`: `los` was the feminine plural's first form; 26 entries).
+    let feminine_plural = entry
+        .forms
+        .iter()
+        .any(|f| head(f) && has(f, "plural") && has(f, "feminine"));
     for f in entry.forms.iter_mut().filter(|f| head(f)) {
         if has(f, "plural") && !has(f, "masculine") && !has(f, "feminine") {
             f.tags.push("masculine".to_string());
-            f.tags.push("feminine".to_string());
+            if !feminine_plural {
+                f.tags.push("feminine".to_string());
+            }
         }
     }
     let gendered = |e: &Entry| {

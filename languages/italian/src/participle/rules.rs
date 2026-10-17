@@ -18,7 +18,11 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "o" => [Casso 7984] regular,
     }
     listed {
-        "#affidatole" => Andatosene,
-        "#vendico" => Casso,
+        Casso => [
+            "#vendico",
+        ],
+        Andatosene => [
+            "#affidatole",
+        ],
     }
 };

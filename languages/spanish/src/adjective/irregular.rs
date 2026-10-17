@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 15 stems, 41 forms.
+/// 15 stems, 39 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aborigen	adjective_pl	aborígenes- like natural
@@ -59,7 +59,6 @@ veloz	4	velocísimo
 viceprimer	1	viceprimeros
 viejoven	adjective_pl	viejóvenes- like natural
 virgen	adjective_pl	vírgenes- like natural
-weón	2	weona	3	weones
 áspero	4	asperísimo
 íntegro	4	integrísimo
 último	4	ultimísimo

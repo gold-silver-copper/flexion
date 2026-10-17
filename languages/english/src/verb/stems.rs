@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
         cells: Cow::Borrowed(&[VERB_INF, VERB_3SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("past"),
         cells: Cow::Borrowed(&[VERB_PAST, VERB_PP]),
     },
     Slot {
@@ -42,35 +42,35 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
         slot: 0,
         table: Cow::Borrowed("~\t~es\t"),
     },
-    // rest like settle: 37,493 words.
+    // past like settle: 37,493 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
         words: 37493,
         slot: 1,
         table: Cow::Borrowed("~\t~\t"),
     },
-    // rest like break: 74 words.
+    // past like break: 74 words.
     EndingTable {
         name: Cow::Borrowed("break"),
         words: 74,
         slot: 1,
         table: Cow::Borrowed("~\t~n\t"),
     },
-    // rest like wear: 28 words.
+    // past like wear: 28 words.
     EndingTable {
         name: Cow::Borrowed("wear"),
         words: 28,
         slot: 1,
         table: Cow::Borrowed("~e\t~n\t"),
     },
-    // rest like overgo: 16 words.
+    // past like overgo: 16 words.
     EndingTable {
         name: Cow::Borrowed("overgo"),
         words: 16,
         slot: 1,
         table: Cow::Borrowed("~went\t~gone\t"),
     },
-    // rest like lie: 9 words.
+    // past like lie: 9 words.
     EndingTable {
         name: Cow::Borrowed("lie"),
         words: 9,

@@ -49,6 +49,7 @@ pub static GRAMMAR: Grammar<'static, Declension, u8, crate::Gender> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: Some((0, gender::GENDER)),
     compound: Some(compounds::COMPOUND),
+    kept: Cow::Borrowed(&[]),
     prefixes: None,
     heads: flexion::Heads {
         least: None,

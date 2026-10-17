@@ -16,13 +16,18 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "latin",
         display: "Latin",
         wiktionary: "la",
         version: "0.1.0",
         description: "Latin inflection for any word: declension, conjugation and vowel length, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Case "Grammatical case." {
                 Nominative "nom" ["nominative"],
                 Genitive "gen" ["genitive"],
@@ -40,10 +45,6 @@ pub fn language() -> Language {
                 Feminine "f" ["feminine"],
                 Neuter "n" ["neuter"],
             }
-            Mood "Mood of a finite verb." {
-                Indicative "ind" ["indicative"],
-                Subjunctive "subj" ["subjunctive"],
-            }
             Voice "Voice." {
                 Active "act" ["active"],
                 Passive "pass" ["passive"],
@@ -56,9 +57,15 @@ pub fn language() -> Language {
                 Pluperfect "plup" ["pluperfect"],
                 FuturePerfect "futp" ["future", "perfect"],
             }
-            ImperativeTense "Tense of an imperative." {
-                Present "pres" ["present"],
-                Future "fut" ["future"],
+            SubjunctiveTense "Tense of a subjunctive: Latin has no future one (A&G §§ 184–196)." {
+                Present "pres" ["present"] !["perfect"],
+                Imperfect "impf" ["imperfect"],
+                Perfect "perf" ["perfect"] !["pluperfect"],
+                Pluperfect "plup" ["pluperfect"],
+            }
+            ImperativePerson "Person of a future imperative: the second or third (A&G § 163)." {
+                Second "2" ["second-person"],
+                Third "3" ["third-person"],
             }
             InfinitiveTense "Tense of an infinitive." {
                 Present "pres" ["present"] !["perfect", "future"],
@@ -100,6 +107,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -136,6 +144,7 @@ pub fn language() -> Language {
                 // A participle is a verb's form too, written in full there.
                 lemmas_from: vec![("verb", "participle")],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -145,17 +154,31 @@ pub fn language() -> Language {
                 forms: FormSource::Tables,
                 groups: vec![
                     group(
-                        "verb",
-                        "A finite form.",
-                        &["Mood", "Voice", "Tense", "Person", "Number"],
-                        &[],
+                        "indicative",
+                        "An indicative.",
+                        &["Voice", "Tense", "Person", "Number"],
+                        &["indicative"],
                         &["participle", "infinitive", "imperative", "gerund", "supine", "potential"],
                     ),
                     group(
-                        "imperative",
-                        "An imperative.",
-                        &["Voice", "ImperativeTense", "Person", "Number"],
-                        &["imperative"],
+                        "subjunctive",
+                        "A subjunctive.",
+                        &["Voice", "SubjunctiveTense", "Person", "Number"],
+                        &["subjunctive"],
+                        &["participle", "infinitive", "imperative", "gerund", "supine", "potential"],
+                    ),
+                    group(
+                        "present_imperative",
+                        "A present imperative (the second person only).",
+                        &["Voice", "Number"],
+                        &["imperative", "present", "second-person"],
+                        &["future"],
+                    ),
+                    group(
+                        "future_imperative",
+                        "A future imperative.",
+                        &["Voice", "ImperativePerson", "Number"],
+                        &["imperative", "future"],
                         &[],
                     ),
                     group(
@@ -175,16 +198,17 @@ pub fn language() -> Language {
                     group("gerund", "The gerund (genitive, dative, accusative, ablative).", &["Case"], &["gerund"], &[]),
                     group("supine", "The supine (accusative and ablative).", &["Case"], &["supine"], &[]),
                 ],
-                lemma: Some(("verb", vec!["Indicative", "Active", "Present", "First", "Singular"])),
+                lemma: Some(("indicative", vec!["Active", "Present", "First", "Singular"])),
                 citation: vec![
                     ("infinitive", vec!["Active", "Present"]),
-                    ("verb", vec!["Indicative", "Active", "Perfect", "First", "Singular"]),
+                    ("indicative", vec!["Active", "Perfect", "First", "Singular"]),
                     ("supine", vec!["Accusative"]),
                 ],
                 inherent: vec![],
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -199,6 +223,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "numeral",
@@ -213,7 +238,9 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -256,12 +283,12 @@ pub fn language() -> Language {
             ("noun", "noun", "glorpa"),
             ("noun", "noun", "blicitudo"),
             ("adjective", "adjective", "glorpidus"),
-            ("verb", "verb", "glorpo"),
+            ("verb", "indicative", "glorpo"),
             ("verb", "infinitive", "glorpo"),
             ("verb", "participle", "blicio"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(

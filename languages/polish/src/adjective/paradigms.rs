@@ -52,7 +52,7 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
+     $(stem adjective_nom_vir_anim: $s1:tt;)?
      $(nom_m: $c0:tt, $c1:tt;)?
      $(nom_f: $c2:tt, $c3:tt;)?
      $(nom_n: $c4:tt, $c5:tt;)?
@@ -294,7 +294,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     // Wolny: 8,195 words (wolny, jenny, bury, bezwstydny, homoseksualny, uszny).
     declension!("wolny", 8195, "~y";
     stem lemma: "~- like wolny";
-    stem rest: "~i- like wolny";
+    stem adjective_nom_vir_anim: "~i- like wolny";
     nom_f: _, derived;
     nom_n: _, derived;
     nom_vir: _, derived;
@@ -371,7 +371,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     ),
     // Odpowiedni: 238 words (psi, kani, babi, kuni, tani, dropi). Like Wolny, except in 18 cells: nom_m inan, nom_vir inan, gen_vir anim, dat_vir inan, dat_nvir anim, dat_nvir inan, ….
     declension!("odpowiedni", 238, "~", like Wolny;
-    stem rest: "~- like wolny";
+    stem adjective_nom_vir_anim: "~- like wolny";
     nom_m: _, "~";
     nom_vir: _, derived;
     gen_vir: "~ch", _;
@@ -412,7 +412,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     // Mały: 30 words (zwykły, ciekły, niezwykły, ścisły, nikły, smukły). Like Wolny, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("mały", 30, "~ły", like Wolny;
     stem lemma: "~ł- like wolny";
-    stem rest: "~l- like mały";
+    stem adjective_nom_vir_anim: "~l- like mały";
     nom_f: _, derived;
     nom_n: _, derived;
     nom_vir: _, derived;
@@ -476,7 +476,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     ),
     // Stały: 19 words (miły, były, dojrzały, stały, doskonały, czuły). Like Mały, except in 1 cell: nom_vir inan.
     declension!("stały", 19, "~ły", like Mały;
-    stem rest: "~l- like słaby";
+    stem adjective_nom_vir_anim: "~l- like słaby";
     nom_vir: _, derived;
     ),
     // Herbaciany: 14 words (słony, jasnozielony, ciemnoczerwony, biało-czerwony, podczerwony, infraczerwony). Like Wolny, except in 31 cells: nom_f inan, nom_n inan, nom_vir anim, nom_nvir anim, nom_nvir inan, gen_m inan, ….
@@ -523,7 +523,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     // Zwięzły: 6 words (zwięzły, rozwiązły, niezły, spełzły, wypełzły, sczezły). Like Wolny, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("zwięzły", 6, "~zły", like Wolny;
     stem lemma: "~zł- like wolny";
-    stem rest: "~źl- like mały";
+    stem adjective_nom_vir_anim: "~źl- like mały";
     nom_f: _, derived;
     nom_n: _, derived;
     nom_vir: _, derived;
@@ -595,7 +595,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 20] = [
     // Żyzny: 3 words (przyjazny, żyzny, nieprzyjazny). Like Niski, except in 30 cells: nom_f inan, nom_n inan, nom_vir inan, nom_nvir anim, nom_nvir inan, gen_m inan, ….
     declension!("żyzny", 3, "~z~y", like Niski;
     stem lemma: "~z~- like wolny";
-    stem rest: "~ź~i- like wolny";
+    stem adjective_nom_vir_anim: "~ź~i- like wolny";
     nom_f: _, derived;
     nom_n: _, derived;
     nom_vir: _, derived;

@@ -28,17 +28,17 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 2] = [
-    // lemma like natural: 8,480 words.
+    // lemma like natural: 8,479 words.
     EndingTable {
         name: Cow::Borrowed("natural"),
-        words: 8480,
+        words: 8479,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t", "\t",)),
     },
-    // adjective_pl like natural: 8,480 words.
+    // adjective_pl like natural: 8,479 words.
     EndingTable {
         name: Cow::Borrowed("natural"),
-        words: 8480,
+        words: 8479,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },

@@ -107,13 +107,13 @@ const F_AS_M: [u16; 6] = [0, 1, 0, 1, 4, 5];
 pub enum Declension {
     /// Like `duro`: 14,448 words.
     Duro,
-    /// Like `natural`: 6,614 words.
+    /// Like `natural`: 6,613 words.
     Natural,
     /// Like `simple`: 1,149 words.
     Simple,
     /// Like `entrador`: 983 words.
     Entrador,
-    /// Like `santiagués`: 551 words.
+    /// Like `santiagués`: 552 words.
     Santiagués,
     /// Like `tuanis`: 492 words.
     Tuanis,
@@ -179,8 +179,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     f: "~a", "~as";
     superlative: "~ísimo";
     ),
-    // Natural: 6,614 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
-    declension!("natural", 6614, "~";
+    // Natural: 6,613 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
+    declension!("natural", 6613, "~";
     stem lemma: "~- like natural";
     stem adjective_pl: "~es- like natural";
     superlative: "~ísimo";
@@ -196,22 +196,20 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     m: "~", "~es";
     superlative: derived;
     ),
-    // Santiagués: 551 words (chingón, catalán, japonés, luxemburgués, inglés, francés). Like Entrador with `ˇ` after each pattern.
-    declension!("santiagués", 551, "~ˇ", like Entrador with "ˇ";
+    // Santiagués: 552 words (chingón, catalán, japonés, luxemburgués, inglés, francés). Like Entrador with `ˇ` after each pattern.
+    declension!("santiagués", 552, "~ˇ", like Entrador with "ˇ";
     ),
-    // Tuanis: 492 words (gratis, acid, tao, bio, beige, magenta). Like Natural, except in 1 cell: before_noun.
+    // Tuanis: 492 words (gratis, acid, tao, bio, beige, magenta). Like Natural.
     declension!("tuanis", 492, "~", like Natural as PL_AS_SG;
-    before_noun: derived;
     ),
     // Piola: 119 words (touch, fit, heavy, teen, gourmet, pop). Like Natural, except in 1 cell: superlative.
     declension!("piola", 119, "~", like Natural;
     stem adjective_pl: "~s- like natural";
     superlative: "~lísimo";
     ),
-    // Rapaz: 65 words (rapaz, fugaz, feliz, locuaz, capaz, cortés). Like Santiagués, except in 2 cells: superlative, before_noun.
+    // Rapaz: 65 words (rapaz, fugaz, feliz, locuaz, capaz, cortés). Like Santiagués, except in 1 cell: superlative.
     declension!("rapaz", 65, "~ˇ", like Santiagués as F_AS_M;
     superlative: "~ísimoˇ";
-    before_noun: derived;
     ),
     // Catrín: 31 words (parlanchín, chiquitín, comodín, bailarín, borrachín, pequeñín).
     declension!("catrín", 31, "~í~";

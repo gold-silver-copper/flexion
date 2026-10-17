@@ -12,7 +12,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the conjugation it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem rest____: \"~e- like passer\"`: the slot's cells are `passer`'s table's patterns
+/// (`stem verb_pres_1_sg: \"~e- like passer\"`: the slot's cells are `passer`'s table's patterns
 /// with `~e` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the conjugation's it is
@@ -43,11 +43,11 @@ use flexion::Paradigm;
 /// `participle` (pres, past)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem rest____: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
-     $(stem rest___: $s2:tt;)?
-     $(stem rest_: $s3:tt;)?
-     $(stem rest__: $s4:tt;)?
+     $(stem verb_pres_1_sg: $s0:tt;)?
+     $(stem verb_pres_1_pl: $s1:tt;)?
+     $(stem verb_: $s2:tt;)?
+     $(stem verb_past_1_sg: $s3:tt;)?
+     $(stem verb: $s4:tt;)?
      $(stem infinitive: $s5:tt;)?
      $(pres_1: $c0:tt, $c1:tt;)?
      $(pres_2: $c2:tt, $c3:tt;)?
@@ -378,11 +378,11 @@ impl flexion::Label for Conjugation {
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     // Passer: 5,867 words (abhorrer, abjurer, absconder, absenter, absorber, abuser).
     conjugation!("passer", 5867, "~er";
-    stem rest____: "~e- like passer";
-    stem rest: "~- like passer";
-    stem rest___: "~e- like passer";
-    stem rest_: "~- like passer";
-    stem rest__: "~er- like passer";
+    stem verb_pres_1_sg: "~e- like passer";
+    stem verb_pres_1_pl: "~- like passer";
+    stem verb_: "~e- like passer";
+    stem verb_past_1_sg: "~- like passer";
+    stem verb: "~er- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -394,11 +394,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Établir: 326 words (pleuvoir, avoir, polir, abolir, tapir, approfondir).
     conjugation!("établir", 326, "~ir";
-    stem rest____: "~i- like établir";
-    stem rest: "~iss- like passer";
-    stem rest___: "~isse- like passer";
-    stem rest_: "~- like établir";
-    stem rest__: "~ir- like passer";
+    stem verb_pres_1_sg: "~i- like établir";
+    stem verb_pres_1_pl: "~iss- like passer";
+    stem verb_: "~isse- like passer";
+    stem verb_past_1_sg: "~- like établir";
+    stem verb: "~ir- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -407,19 +407,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Rendre: 60 words (être, vendre, mordre, descendre, entendre, vaincre). Like Passer, except in 2 cells: imperative tu, infinitive.
     conjugation!("rendre", 60, "~re", like Passer;
-    stem rest____: "~- like rendre";
-    stem rest_: "~- like rendre";
-    stem rest__: "~r- like passer";
+    stem verb_pres_1_sg: "~- like rendre";
+    stem verb_past_1_sg: "~- like rendre";
+    stem verb: "~r- like passer";
     imperative: derived, _, _;
     infinitive: "~re";
     ),
     // Appuyer: 59 words (tutoyer, vouvoyer, flyer, nettoyer, employer, envoyer).
     conjugation!("appuyer", 59, "~yer";
-    stem rest____: "~ie- like passer";
-    stem rest: "~y- like passer";
-    stem rest___: "~ie- like passer";
-    stem rest_: "~y- like passer";
-    stem rest__: "~ier- like passer";
+    stem verb_pres_1_sg: "~ie- like passer";
+    stem verb_pres_1_pl: "~y- like passer";
+    stem verb_: "~ie- like passer";
+    stem verb_past_1_sg: "~y- like passer";
+    stem verb: "~ier- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -428,9 +428,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Réduire: 48 words (construire, cuire, écrire, traduire, produire, détruire). Like Rendre, except in 16 cells: impf_2 sg, past_1 sg, past_1 pl, past_2 sg, past_2 pl, past_3 sg, ….
     conjugation!("réduire", 48, "~re", like Rendre;
-    stem rest____: "~- like établir";
-    stem rest: "~s- like passer";
-    stem rest___: "~se- like passer";
+    stem verb_pres_1_sg: "~- like établir";
+    stem verb_pres_1_pl: "~s- like passer";
+    stem verb_: "~se- like passer";
     impf_2: derived, _;
     past_1: "~sis", "~sîmes";
     past_2: "~sis", "~sîtes";
@@ -444,8 +444,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Appeler: 41 words (épeler, appeler, modeler, rappeler, renouveler, ficeler).
     conjugation!("appeler", 41, "~~ler";
-    stem rest: "~~l- like passer";
-    stem rest_: "~~l- like passer";
+    stem verb_pres_1_pl: "~~l- like passer";
+    stem verb_past_1_sg: "~~l- like passer";
     pres_1: "~~lle|~èl~", _;
     pres_2: "~~lles|~èl~s", _;
     pres_3: "~~lle|~èl~", "~~llent|~èl~nt";
@@ -463,8 +463,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Jeter: 35 words (jeter, banqueter, décolleter, riveter, feuilleter, projeter).
     conjugation!("jeter", 35, "~~ter";
-    stem rest: "~~t- like passer";
-    stem rest_: "~~t- like passer";
+    stem verb_pres_1_pl: "~~t- like passer";
+    stem verb_past_1_sg: "~~t- like passer";
     pres_1: "~~tte|~èt~", _;
     pres_2: "~~ttes|~èt~s", _;
     pres_3: "~~tte|~èt~", "~~ttent|~èt~nt";
@@ -482,10 +482,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Tenir: 31 words (souvenir, devenir, venir, obtenir, tenir, intervenir).
     conjugation!("tenir", 31, "~e~ir";
-    stem rest____: "~ie~- like établir";
-    stem rest: "~e~- like passer";
-    stem rest___: "~ie~ne- like passer";
-    stem rest__: "~ie~dr- like passer";
+    stem verb_pres_1_sg: "~ie~- like établir";
+    stem verb_pres_1_pl: "~e~- like passer";
+    stem verb_: "~ie~ne- like passer";
+    stem verb: "~ie~dr- like passer";
     impf_2: derived, _;
     past_1: "~i~s", "~î~mes";
     past_2: "~i~s", "~î~tes";
@@ -500,10 +500,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Poindre: 30 words (plaindre, éteindre, joindre, craindre, peindre, atteindre).
     conjugation!("poindre", 30, "~~dre";
-    stem rest____: "~~- like établir";
-    stem rest: "~g~- like passer";
-    stem rest___: "~g~e- like passer";
-    stem rest__: "~~dr- like passer";
+    stem verb_pres_1_sg: "~~- like établir";
+    stem verb_pres_1_pl: "~g~- like passer";
+    stem verb_: "~g~e- like passer";
+    stem verb: "~~dr- like passer";
     impf_2: derived, _;
     past_1: "~g~is", "~g~îmes";
     past_2: "~g~is", "~g~îtes";
@@ -518,10 +518,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Remettre: 18 words (remettre, mettre, émettre, promettre, permettre, commettre). Like Établir, except in 9 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("remettre", 18, "~ettre", like Établir;
-    stem rest____: "~et- like rendre";
-    stem rest: "~ett- like passer";
-    stem rest___: "~ette- like passer";
-    stem rest__: "~ettr- like passer";
+    stem verb_pres_1_sg: "~et- like rendre";
+    stem verb_pres_1_pl: "~ett- like passer";
+    stem verb_: "~ette- like passer";
+    stem verb: "~ettr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -531,10 +531,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Récupérer: 16 words (persévérer, célébrer, aérer, zébrer, décérébrer, révéler).
     conjugation!("récupérer", 16, "~é~er";
-    stem rest____: "~è~e- like passer";
-    stem rest: "~é~- like passer";
-    stem rest___: "~è~e- like passer";
-    stem rest_: "~é~- like passer";
+    stem verb_pres_1_sg: "~è~e- like passer";
+    stem verb_pres_1_pl: "~é~- like passer";
+    stem verb_: "~è~e- like passer";
+    stem verb_past_1_sg: "~é~- like passer";
     impf_2: derived, _;
     fut_1: "~è~erai|~é~erai", "~è~erons|~é~erons";
     fut_2: "~è~eras|~é~eras", "~è~erez|~é~erez";
@@ -549,11 +549,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Connaître: 15 words (naître, renaître, connaître, reconnaître, paraître, disparaître). Like Rendre, except in 8 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("connaître", 15, "~aître", like Rendre;
-    stem rest____: "~a- like connaître";
-    stem rest: "~aiss- like passer";
-    stem rest___: "~aisse- like passer";
-    stem rest_: "~- like paitre";
-    stem rest__: "~aîtr- like passer";
+    stem verb_pres_1_sg: "~a- like connaître";
+    stem verb_pres_1_pl: "~aiss- like passer";
+    stem verb_: "~aisse- like passer";
+    stem verb_past_1_sg: "~- like paitre";
+    stem verb: "~aîtr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -562,8 +562,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Paitre: 15 words (naitre, reconnaitre, paraitre, disparaitre, connaitre, paitre). Like Connaître, except in 2 cells: imperative tu, infinitive.
     conjugation!("paitre", 15, "~aitre", like Connaître;
-    stem rest____: "~ai- like établir";
-    stem rest__: "~aitr- like passer";
+    stem verb_pres_1_sg: "~ai- like établir";
+    stem verb: "~aitr- like passer";
     imperative: derived, _, _;
     infinitive: "~aitre";
     ),
@@ -579,8 +579,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Faire: 12 words (faire, refaire, contrefaire, défaire, satisfaire, parfaire). Like Établir, except in 14 cells: pres_1 pl, pres_2 pl, pres_3 pl, impf_1 sg, impf_1 pl, subj_1 sg, ….
     conjugation!("faire", 12, "~aire", like Établir;
-    stem rest____: "~ai- like établir";
-    stem rest__: "~er- like passer";
+    stem verb_pres_1_sg: "~ai- like établir";
+    stem verb: "~er- like passer";
     pres_1: _, "~aisons";
     pres_2: _, "~aites";
     pres_3: _, "~ont";
@@ -603,10 +603,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Prendre: 12 words (prendre, comprendre, apprendre, surprendre, reprendre, entreprendre). Like Remettre, except in 8 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("prendre", 12, "~endre", like Remettre;
-    stem rest____: "~end- like rendre";
-    stem rest: "~en- like passer";
-    stem rest___: "~enne- like passer";
-    stem rest__: "~endr- like passer";
+    stem verb_pres_1_sg: "~end- like rendre";
+    stem verb_pres_1_pl: "~en- like passer";
+    stem verb_: "~enne- like passer";
+    stem verb: "~endr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -615,10 +615,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Rabattre: 12 words (foutre, battre, croître, abattre, combattre, rabattre). Like Rendre, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("rabattre", 12, "~tre", like Rendre;
-    stem rest: "~t- like passer";
-    stem rest___: "~te- like passer";
-    stem rest_: "~t- like rendre";
-    stem rest__: "~tr- like passer";
+    stem verb_pres_1_pl: "~t- like passer";
+    stem verb_: "~te- like passer";
+    stem verb_past_1_sg: "~t- like rendre";
+    stem verb: "~tr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -627,17 +627,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Courir: 11 words (mourir, courir, secourir, recourir, accourir, encourir). Like Rendre, except in 2 cells: imperative tu, infinitive.
     conjugation!("courir", 11, "~ir", like Rendre;
-    stem rest____: "~- like établir";
-    stem rest_: "~- like paitre";
+    stem verb_pres_1_sg: "~- like établir";
+    stem verb_past_1_sg: "~- like paitre";
     imperative: derived, _, _;
     infinitive: "~ir";
     ),
     // Ouvrir: 10 words (découvrir, ouvrir, offrir, souffrir, couvrir, rouvrir).
     conjugation!("ouvrir", 10, "~~ir";
-    stem rest____: "~~e- like passer";
-    stem rest: "~~- like passer";
-    stem rest___: "~~e- like passer";
-    stem rest__: "~~ir- like passer";
+    stem verb_pres_1_sg: "~~e- like passer";
+    stem verb_pres_1_pl: "~~- like passer";
+    stem verb_: "~~e- like passer";
+    stem verb: "~~ir- like passer";
     impf_2: derived, _;
     past_1: "~~is", "~~îmes";
     past_2: "~~is", "~~îtes";
@@ -652,13 +652,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Revêtir: 10 words (partir, sortir, repartir, issir, vêtir, ressortir). Like Rendre, except in 1 cell: infinitive.
     conjugation!("revêtir", 10, "~ir", like Rendre;
-    stem rest__: "~ir- like passer";
+    stem verb: "~ir- like passer";
     infinitive: "~ir";
     ),
     // Recueillir: 9 words (accueillir, faillir, cueillir, recueillir, tressaillir, défaillir). Like Revêtir, except in 13 cells: fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, fut_3 sg, fut_3 pl, ….
     conjugation!("recueillir", 9, "~ir", like Revêtir;
-    stem rest____: "~e- like passer";
-    stem rest_: "~- like établir";
+    stem verb_pres_1_sg: "~e- like passer";
+    stem verb_past_1_sg: "~- like établir";
     fut_1: "~irai|~erai", "~irons|~erons";
     fut_2: "~iras|~eras", "~irez|~erez";
     fut_3: "~ira|~era", "~iront|~eront";
@@ -669,19 +669,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Sentir: 8 words (mentir, sentir, repentir, consentir, démentir, ressentir). Like Rabattre, except in 2 cells: imperative tu, infinitive.
     conjugation!("sentir", 8, "~tir", like Rabattre;
-    stem rest____: "~- like établir";
-    stem rest_: "~t- like établir";
-    stem rest__: "~tir- like passer";
+    stem verb_pres_1_sg: "~- like établir";
+    stem verb_past_1_sg: "~t- like établir";
+    stem verb: "~tir- like passer";
     imperative: derived, _, _;
     infinitive: "~tir";
     ),
     // Concevoir: 7 words (recevoir, apercevoir, décevoir, concevoir, percevoir, repercevoir).
     conjugation!("concevoir", 7, "~cevoir";
-    stem rest____: "~çoi- like établir";
-    stem rest: "~cev- like passer";
-    stem rest___: "~çoive- like passer";
-    stem rest_: "~ç- like paitre";
-    stem rest__: "~cevr- like passer";
+    stem verb_pres_1_sg: "~çoi- like établir";
+    stem verb_pres_1_pl: "~cev- like passer";
+    stem verb_: "~çoive- like passer";
+    stem verb_past_1_sg: "~ç- like paitre";
+    stem verb: "~cevr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -690,10 +690,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Dissoudre: 7 words (résoudre, absoudre, dissoudre, autodissoudre, soudre, resoudre).
     conjugation!("dissoudre", 7, "~udre";
-    stem rest____: "~u- like établir";
-    stem rest: "~lv- like passer";
-    stem rest___: "~lve- like passer";
-    stem rest__: "~udr- like passer";
+    stem verb_pres_1_sg: "~u- like établir";
+    stem verb_pres_1_pl: "~lv- like passer";
+    stem verb_: "~lve- like passer";
+    stem verb: "~udr- like passer";
     impf_2: derived, _;
     past_1: "~lus", "~lûmes";
     past_2: "~lus", "~lûtes";
@@ -708,9 +708,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Éclore: 6 words (clore, éclore, déclore, enclore, forclore, reclore).
     conjugation!("éclore", 6, "~ore";
-    stem rest: "~os- like éclore";
-    stem rest___: "~ose- like passer";
-    stem rest__: "~or- like passer";
+    stem verb_pres_1_pl: "~os- like éclore";
+    stem verb_: "~ose- like passer";
+    stem verb: "~or- like passer";
     pres_1: "~os", _;
     pres_2: "~os", _;
     pres_3: "~ôt", _;
@@ -721,10 +721,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Requérir: 6 words (requérir, acquérir, conquérir, enquérir, reconquérir, quérir). Like Remettre, except in 8 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("requérir", 6, "~érir", like Remettre;
-    stem rest____: "~ier- like établir";
-    stem rest: "~ér- like passer";
-    stem rest___: "~ière- like passer";
-    stem rest__: "~err- like passer";
+    stem verb_pres_1_sg: "~ier- like établir";
+    stem verb_pres_1_pl: "~ér- like passer";
+    stem verb_: "~ière- like passer";
+    stem verb: "~err- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -742,10 +742,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Promouvoir: 6 words (pouvoir, mouvoir, émouvoir, promouvoir, repouvoir, remouvoir). Like Connaître, except in 8 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("promouvoir", 6, "~ouvoir", like Connaître;
-    stem rest____: "~eu- like établir";
-    stem rest: "~ouv- like passer";
-    stem rest___: "~euve- like passer";
-    stem rest__: "~ouvr- like passer";
+    stem verb_pres_1_sg: "~eu- like établir";
+    stem verb_pres_1_pl: "~ouv- like passer";
+    stem verb_: "~euve- like passer";
+    stem verb: "~ouvr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -754,10 +754,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Prévoir: 5 words (voir, soir, revoir, prévoir, entrevoir). Like Requérir, except in 8 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("prévoir", 5, "~oir", like Requérir;
-    stem rest____: "~oi- like établir";
-    stem rest: "~oy- like passer";
-    stem rest___: "~oie- like passer";
-    stem rest_: "~- like rendre";
+    stem verb_pres_1_sg: "~oi- like établir";
+    stem verb_pres_1_pl: "~oy- like passer";
+    stem verb_: "~oie- like passer";
+    stem verb_past_1_sg: "~- like rendre";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -766,10 +766,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Valoir: 5 words (valoir, falloir, prévaloir, équivaloir, revaloir). Like Dissoudre, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, imperative tu, imperative nous, imperative vous, ….
     conjugation!("valoir", 5, "~loir", like Dissoudre;
-    stem rest____: "~u- like valoir";
-    stem rest: "~l- like passer";
-    stem rest___: "~- like valoir";
-    stem rest_: "~l- like paitre";
+    stem verb_pres_1_sg: "~u- like valoir";
+    stem verb_pres_1_pl: "~l- like passer";
+    stem verb_: "~- like valoir";
+    stem verb_past_1_sg: "~l- like paitre";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, _;
@@ -778,20 +778,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Pourvoir: 5 words (choir, pourvoir, déchoir, dépourvoir, échoir). Like Prévoir.
     conjugation!("pourvoir", 5, "~oir", like Prévoir;
-    stem rest_: "~- like paitre";
-    stem rest__: "~oir- like passer";
+    stem verb_past_1_sg: "~- like paitre";
+    stem verb: "~oir- like passer";
     ),
     // Rompre: 5 words (rire, rompre, sourire, interrompre, corrompre). Like Rendre, except in 1 cell: imperative tu.
     conjugation!("rompre", 5, "~re", like Rendre;
-    stem rest____: "~- like établir";
+    stem verb_pres_1_sg: "~- like établir";
     imperative: derived, _, _;
     ),
     // Inclure: 5 words (inclure, conclure, exclure, transclure, occlure). Like Connaître, except in 9 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative tu, imperative nous, ….
     conjugation!("inclure", 5, "~ure", like Connaître;
-    stem rest____: "~u- like établir";
-    stem rest: "~u- like passer";
-    stem rest___: "~ue- like passer";
-    stem rest__: "~ur- like passer";
+    stem verb_pres_1_sg: "~u- like établir";
+    stem verb_pres_1_pl: "~u- like passer";
+    stem verb_: "~ue- like passer";
+    stem verb: "~ur- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -801,8 +801,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Havoir: 5 words (savoir, assavoir, ravoir, havoir, réavoir).
     conjugation!("havoir", 5, "~avoir";
-    stem rest_: "~e- like paitre";
-    stem rest__: "~aur- like passer";
+    stem verb_past_1_sg: "~e- like paitre";
+    stem verb: "~aur- like passer";
     pres_1: "~ai", "~avons";
     pres_2: "~as", "~avez";
     pres_3: "~a", "~ont";
@@ -816,10 +816,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Endormir: 4 words (dormir, endormir, rendormir, redormir). Like Réduire, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("endormir", 4, "~mir", like Réduire;
-    stem rest: "~m- like passer";
-    stem rest___: "~me- like passer";
-    stem rest_: "~m- like établir";
-    stem rest__: "~mir- like passer";
+    stem verb_pres_1_pl: "~m- like passer";
+    stem verb_: "~me- like passer";
+    stem verb_past_1_sg: "~m- like établir";
+    stem verb: "~mir- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -828,13 +828,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Lire: 4 words (lire, relire, élire, réélire). Like Confire.
     conjugation!("lire", 4, "~ire", like Confire;
-    stem rest_: "~- like paitre";
+    stem verb_past_1_sg: "~- like paitre";
     ),
     // Plaire: 4 words (plaire, taire, déplaire, complaire). Like Connaître, except in 8 cells: pres_3 sg, impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, ….
     conjugation!("plaire", 4, "~aire", like Connaître;
-    stem rest: "~ais- like passer";
-    stem rest___: "~aise- like passer";
-    stem rest__: "~air- like passer";
+    stem verb_pres_1_pl: "~ais- like passer";
+    stem verb_: "~aise- like passer";
+    stem verb: "~air- like passer";
     pres_3: "~aît|~ait", _;
     impf_2: derived, _;
     subj_1: _, derived;
@@ -844,11 +844,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Vouloir: 4 words (vouloir, revouloir, douloir, souloir).
     conjugation!("vouloir", 4, "~o~loir";
-    stem rest____: "~e~- like valoir";
-    stem rest: "~o~l- like passer";
-    stem rest___: "~e~- like valoir";
-    stem rest_: "~o~l- like paitre";
-    stem rest__: "~o~dr- like passer";
+    stem verb_pres_1_sg: "~e~- like valoir";
+    stem verb_pres_1_pl: "~o~l- like passer";
+    stem verb_: "~e~- like valoir";
+    stem verb_past_1_sg: "~o~l- like paitre";
+    stem verb: "~o~dr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, _;
@@ -857,16 +857,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Moudre: 4 words (moudre, remoudre, émoudre, vermoudre). Like Valoir, except in 4 cells: subj_3 sg, subj_3 pl, imperative tu, infinitive.
     conjugation!("moudre", 4, "~dre", like Valoir;
-    stem rest____: "~d- like rendre";
-    stem rest___: "~le- like passer";
-    stem rest__: "~dr- like passer";
+    stem verb_pres_1_sg: "~d- like rendre";
+    stem verb_: "~le- like passer";
+    stem verb: "~dr- like passer";
     subj_3: derived, derived;
     imperative: derived, _, _;
     infinitive: "~dre";
     ),
     // Ouïr: 4 words (ouïr, amuïr, réouïr, inouïr).
     conjugation!("ouïr", 4, "~uïr";
-    stem rest_: "~uï- like ouïr";
+    stem verb_past_1_sg: "~uï- like ouïr";
     pres_1: "~uïs|~is", "~uïssons|~yons";
     pres_2: "~uïs|~is", "~uïssez|~yez";
     pres_3: "~uït|~it", "~uïssent|~ient";
@@ -886,9 +886,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Accroitre: 4 words (croitre, décroitre, accroitre, recroitre). Like Pourvoir, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("accroitre", 4, "~oitre", like Pourvoir;
-    stem rest: "~oiss- like passer";
-    stem rest___: "~oisse- like passer";
-    stem rest__: "~oitr- like passer";
+    stem verb_pres_1_pl: "~oiss- like passer";
+    stem verb_: "~oisse- like passer";
+    stem verb: "~oitr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -897,7 +897,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Asseoir: 4 words (seoir, asseoir, rasseoir, surseoir).
     conjugation!("asseoir", 4, "~eoir";
-    stem rest____: "~- like asseoir";
+    stem verb_pres_1_sg: "~- like asseoir";
     pres_1: _, "~oyons|~eyons";
     pres_2: _, "~oyez|~eyez";
     pres_3: _, "~oient|~eyent";
@@ -933,10 +933,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Survivre: 3 words (vivre, survivre, revivre). Like Établir, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("survivre", 3, "~ivre", like Établir;
-    stem rest: "~iv- like passer";
-    stem rest___: "~ive- like passer";
-    stem rest_: "~éc- like paitre";
-    stem rest__: "~ivr- like passer";
+    stem verb_pres_1_pl: "~iv- like passer";
+    stem verb_: "~ive- like passer";
+    stem verb_past_1_sg: "~éc- like paitre";
+    stem verb: "~ivr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -945,10 +945,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Servir: 3 words (servir, resservir, desservir). Like Réduire, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("servir", 3, "~vir", like Réduire;
-    stem rest: "~v- like passer";
-    stem rest___: "~ve- like passer";
-    stem rest_: "~v- like établir";
-    stem rest__: "~vir- like passer";
+    stem verb_pres_1_pl: "~v- like passer";
+    stem verb_: "~ve- like passer";
+    stem verb_past_1_sg: "~v- like établir";
+    stem verb: "~vir- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -957,8 +957,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Fuir: 3 words (fuir, enfuir, refuir). Like Établir, except in 6 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous.
     conjugation!("fuir", 3, "~ir", like Établir;
-    stem rest: "~y- like passer";
-    stem rest___: "~ie- like passer";
+    stem verb_pres_1_pl: "~y- like passer";
+    stem verb_: "~ie- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -966,7 +966,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Poursuivre: 3 words (suivre, poursuivre, ensuivre). Like Servir, except in 1 cell: infinitive.
     conjugation!("poursuivre", 3, "~vre", like Servir;
-    stem rest__: "~vr- like passer";
+    stem verb: "~vr- like passer";
     infinitive: "~vre";
     ),
     // Croire: 3 words (croire, recroire, mécroire). Like Pourvoir with `` after each pattern (`e` after r).
@@ -974,18 +974,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Recoudre: 3 words (coudre, recoudre, découdre). Like Réduire, except in 2 cells: imperative tu, infinitive.
     conjugation!("recoudre", 3, "~dre", like Réduire;
-    stem rest____: "~d- like rendre";
-    stem rest_: "~s- like rendre";
-    stem rest__: "~dr- like passer";
+    stem verb_pres_1_sg: "~d- like rendre";
+    stem verb_past_1_sg: "~s- like rendre";
+    stem verb: "~dr- like passer";
     imperative: derived, _, _;
     infinitive: "~dre";
     ),
     // Bouillir: 3 words (bouillir, rebouillir, débouillir). Like Réduire, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("bouillir", 3, "~illir", like Réduire;
-    stem rest: "~ill- like passer";
-    stem rest___: "~ille- like passer";
-    stem rest_: "~ill- like établir";
-    stem rest__: "~illir- like passer";
+    stem verb_pres_1_pl: "~ill- like passer";
+    stem verb_: "~ille- like passer";
+    stem verb_past_1_sg: "~ill- like établir";
+    stem verb: "~illir- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -1003,8 +1003,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Redevoir: 3 words (devoir, redevoir, ramentevoir). Like Emboire, except in 5 cells: impf_2 sg, subj_1 pl, imperative nous, imperative vous, infinitive.
     conjugation!("redevoir", 3, "~evoir", like Emboire;
-    stem rest: "~ev- like passer";
-    stem rest__: "~evr- like passer";
+    stem verb_pres_1_pl: "~ev- like passer";
+    stem verb: "~evr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     imperative: _, derived, derived;
@@ -1012,10 +1012,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Haïr: 1 words (haïr). Like Établir, except in 7 cells: impf_2 sg, subj_1 pl, subj_3 sg, subj_3 pl, imperative nous, imperative vous, ….
     conjugation!("haïr", 1, "~ïr", like Établir;
-    stem rest: "~ïss- like passer";
-    stem rest___: "~ïsse- like passer";
-    stem rest_: "~ï- like ouïr";
-    stem rest__: "~ïr- like passer";
+    stem verb_pres_1_pl: "~ïss- like passer";
+    stem verb_: "~ïsse- like passer";
+    stem verb_past_1_sg: "~ï- like ouïr";
+    stem verb: "~ïr- like passer";
     impf_2: derived, _;
     subj_1: _, derived;
     subj_3: derived, derived;
@@ -1024,9 +1024,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     ),
     // Arguër: 1 words (arguër).
     conjugation!("arguër", 1, "~uër";
-    stem rest____: "~uë- like passer";
-    stem rest___: "~uë- like passer";
-    stem rest__: "~uër- like passer";
+    stem verb_pres_1_sg: "~uë- like passer";
+    stem verb_: "~uë- like passer";
+    stem verb: "~uër- like passer";
     pres_1: _, "~üons";
     pres_2: _, "~uëz";
     impf_1: "~üais", "~uïons|~üions";

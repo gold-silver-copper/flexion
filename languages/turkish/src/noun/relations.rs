@@ -139,7 +139,9 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ığım" => [0 267],
         "şım" => [0 89, 1 3],
     } listed {
-        "haccım" => 0,
+        0 => [
+            "haccım",
+        ],
     }, true, None),
     // ACC_PL, from NOM_PL.
     relation!(ACC_PL, [NOM_PL], [("~", "~I")], rules {
@@ -245,7 +247,9 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ığım" => [5 267],
         "şım" => [5 89, 1 3],
     } listed {
-        "haccım" => 5,
+        5 => [
+            "haccım",
+        ],
     }, true, None),
     // DAT_PL, from NOM_PL.
     relation!(DAT_PL, [NOM_PL], [("~", "~A")], rules {
@@ -406,7 +410,9 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ığın" => [0 267],
         "şın" => [0 89, 1 3],
     } listed {
-        "haccın" => 0,
+        0 => [
+            "haccın",
+        ],
     }, true, None),
     // GEN_PL, from NOM_PL.
     relation!(GEN_PL, [NOM_PL], [("~", "~In")], rules {
@@ -497,35 +503,12 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ı" => [3 425, 0 2],
         "ş" => [0 186, 3 2, 7 1],
     } listed {
-        "belagat" => 1,
-        "biat" => 1,
-        "cemaat" => 1,
-        "cerahat" => 1,
-        "dikkat" => 1,
-        "feragat" => 1,
-        "helak" => 1,
-        "hilkat" => 1,
-        "hâk" => 1,
-        "idrak" => 1,
-        "imsak" => 1,
-        "iştirak" => 1,
-        "kabahat" => 1,
-        "kanaat" => 1,
-        "kıraat" => 1,
-        "liyakat" => 1,
-        "lügat" => 1,
-        "menfaat" => 1,
-        "nasihat" => 1,
-        "podcast" => 1,
-        "refakat" => 1,
-        "saat" => 1,
-        "sadakat" => 1,
-        "seyahat" => 1,
-        "sürat" => 1,
-        "sıhhat" => 1,
-        "takat" => 1,
-        "vals" => 1,
-        "şefkat" => 1,
+        1 => [
+            "belagat", "biat", "cemaat", "cerahat", "dikkat", "feragat", "helak", "hilkat", "hâk",
+            "idrak", "imsak", "iştirak", "kabahat", "kanaat", "kıraat", "liyakat", "lügat",
+            "menfaat", "nasihat", "podcast", "refakat", "saat", "sadakat", "seyahat", "sürat",
+            "sıhhat", "takat", "vals", "şefkat",
+        ],
     }, true, None),
     // POSSESSIVE_NOM_ONE_2SG, from POSSESSIVE_NOM_ONE_1SG.
     relation!(POSSESSIVE_NOM_ONE_2SG, [POSSESSIVE_NOM_ONE_1SG], [("~m", "~n")], rules {
@@ -610,9 +593,9 @@ pub(super) static RELATIONS: [Relation<'static>; 83] = [
         "ğı" => [0 445],
         "şı" => [0 89],
     } listed {
-        "aksuyu" => 0,
-        "olmayı" => 0,
-        "suyu" => 0,
+        0 => [
+            "aksuyu", "olmayı", "suyu",
+        ],
     }, true, None),
     // POSSESSIVE_NOM_ONE_1PL, from POSSESSIVE_NOM_ONE_1SG.
     relation!(POSSESSIVE_NOM_ONE_1PL, [POSSESSIVE_NOM_ONE_1SG], [("~", "~Iz"), ("~", "~iz"), ("~", "~ız")], rules {

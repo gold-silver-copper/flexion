@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 243 forms.
+/// 0 stems, 242 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aandblom	1	aandblomme
@@ -251,7 +251,6 @@ wommin	1	wimmin
 wommon	1	womyn
 yid	1	yidden
 zimrah	1	zemirot
-zulm	1	zulmumuz
 zveno	1	zvenya
 "#,
     ),

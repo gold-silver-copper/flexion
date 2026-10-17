@@ -6,10 +6,79 @@
 pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 pub mod adjective;
+pub mod adverb;
 pub mod noun;
+pub mod numeral;
 mod orthography;
+pub mod postposition;
+pub mod pronoun;
+pub mod proper_noun;
+pub mod verb;
 pub use adjective::Adjective;
+pub use adverb::Adverb;
 pub use noun::Noun;
+pub use numeral::Numeral;
+pub use postposition::Postposition;
+pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
+pub use verb::Verb;
+
+/// Degree of comparison.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Degree {
+    Positive,
+    Comparative,
+    Superlative,
+}
+
+impl Degree {
+    /// Every value, in order.
+    pub const ALL: [Degree; 3] = [Degree::Positive, Degree::Comparative, Degree::Superlative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Degree::Positive => "pos",
+            Degree::Comparative => "comp",
+            Degree::Superlative => "sup",
+        }
+    }
+}
+
+impl std::fmt::Display for Degree {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Degree::Positive => "positive",
+            Degree::Comparative => "comparative",
+            Degree::Superlative => "superlative",
+        })
+    }
+}
+
+impl std::str::FromStr for Degree {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Degree",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Degree {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -239,6 +308,663 @@ impl flexion::Label for Possessor {
     }
 }
 
+/// A postposition's possessive suffix, or none.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Suffix {
+    Plain,
+    FirstSingular,
+    SecondSingular,
+    FirstPlural,
+    SecondPlural,
+    Third,
+}
+
+impl Suffix {
+    /// Every value, in order.
+    pub const ALL: [Suffix; 6] = [
+        Suffix::Plain,
+        Suffix::FirstSingular,
+        Suffix::SecondSingular,
+        Suffix::FirstPlural,
+        Suffix::SecondPlural,
+        Suffix::Third,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Suffix::Plain => "plain",
+            Suffix::FirstSingular => "1sg",
+            Suffix::SecondSingular => "2sg",
+            Suffix::FirstPlural => "1pl",
+            Suffix::SecondPlural => "2pl",
+            Suffix::Third => "3",
+        }
+    }
+}
+
+impl std::fmt::Display for Suffix {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Suffix::Plain => "plain",
+            Suffix::FirstSingular => "firstsingular",
+            Suffix::SecondSingular => "secondsingular",
+            Suffix::FirstPlural => "firstplural",
+            Suffix::SecondPlural => "secondplural",
+            Suffix::Third => "third",
+        })
+    }
+}
+
+impl std::str::FromStr for Suffix {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Suffix",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Suffix {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// An indicative's tense.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Tense {
+    Present,
+    Past,
+    Perfect,
+    Pluperfect,
+}
+
+impl Tense {
+    /// Every value, in order.
+    pub const ALL: [Tense; 4] = [
+        Tense::Present,
+        Tense::Past,
+        Tense::Perfect,
+        Tense::Pluperfect,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Tense::Present => "pres",
+            Tense::Past => "past",
+            Tense::Perfect => "perf",
+            Tense::Pluperfect => "plup",
+        }
+    }
+}
+
+impl std::fmt::Display for Tense {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Tense::Present => "present",
+            Tense::Past => "past",
+            Tense::Perfect => "perfect",
+            Tense::Pluperfect => "pluperfect",
+        })
+    }
+}
+
+impl std::str::FromStr for Tense {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Tense",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Tense {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Simple or perfect (`olisin tullut`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Aspect {
+    Present,
+    Perfect,
+}
+
+impl Aspect {
+    /// Every value, in order.
+    pub const ALL: [Aspect; 2] = [Aspect::Present, Aspect::Perfect];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Aspect::Present => "pres",
+            Aspect::Perfect => "perf",
+        }
+    }
+}
+
+impl std::fmt::Display for Aspect {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Aspect::Present => "present",
+            Aspect::Perfect => "perfect",
+        })
+    }
+}
+
+impl std::str::FromStr for Aspect {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Aspect",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Aspect {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Affirmative, or negated with the negative verb (`en tule`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Polarity {
+    Affirmative,
+    Negative,
+}
+
+impl Polarity {
+    /// Every value, in order.
+    pub const ALL: [Polarity; 2] = [Polarity::Affirmative, Polarity::Negative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Polarity::Affirmative => "aff",
+            Polarity::Negative => "neg",
+        }
+    }
+}
+
+impl std::fmt::Display for Polarity {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Polarity::Affirmative => "affirmative",
+            Polarity::Negative => "negative",
+        })
+    }
+}
+
+impl std::str::FromStr for Polarity {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Polarity",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Polarity {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A finite verb's person and number, or the passive.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Person {
+    FirstSingular,
+    SecondSingular,
+    ThirdSingular,
+    FirstPlural,
+    SecondPlural,
+    ThirdPlural,
+    Passive,
+}
+
+impl Person {
+    /// Every value, in order.
+    pub const ALL: [Person; 7] = [
+        Person::FirstSingular,
+        Person::SecondSingular,
+        Person::ThirdSingular,
+        Person::FirstPlural,
+        Person::SecondPlural,
+        Person::ThirdPlural,
+        Person::Passive,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Person::FirstSingular => "1sg",
+            Person::SecondSingular => "2sg",
+            Person::ThirdSingular => "3sg",
+            Person::FirstPlural => "1pl",
+            Person::SecondPlural => "2pl",
+            Person::ThirdPlural => "3pl",
+            Person::Passive => "pass",
+        }
+    }
+}
+
+impl std::fmt::Display for Person {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Person::FirstSingular => "firstsingular",
+            Person::SecondSingular => "secondsingular",
+            Person::ThirdSingular => "thirdsingular",
+            Person::FirstPlural => "firstplural",
+            Person::SecondPlural => "secondplural",
+            Person::ThirdPlural => "thirdplural",
+            Person::Passive => "passive",
+        })
+    }
+}
+
+impl std::str::FromStr for Person {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Person",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Person {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// An imperative's person: none of the first singular.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum ImperativePerson {
+    SecondSingular,
+    ThirdSingular,
+    FirstPlural,
+    SecondPlural,
+    ThirdPlural,
+    Passive,
+}
+
+impl ImperativePerson {
+    /// Every value, in order.
+    pub const ALL: [ImperativePerson; 6] = [
+        ImperativePerson::SecondSingular,
+        ImperativePerson::ThirdSingular,
+        ImperativePerson::FirstPlural,
+        ImperativePerson::SecondPlural,
+        ImperativePerson::ThirdPlural,
+        ImperativePerson::Passive,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            ImperativePerson::SecondSingular => "2sg",
+            ImperativePerson::ThirdSingular => "3sg",
+            ImperativePerson::FirstPlural => "1pl",
+            ImperativePerson::SecondPlural => "2pl",
+            ImperativePerson::ThirdPlural => "3pl",
+            ImperativePerson::Passive => "pass",
+        }
+    }
+}
+
+impl std::fmt::Display for ImperativePerson {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            ImperativePerson::SecondSingular => "secondsingular",
+            ImperativePerson::ThirdSingular => "thirdsingular",
+            ImperativePerson::FirstPlural => "firstplural",
+            ImperativePerson::SecondPlural => "secondplural",
+            ImperativePerson::ThirdPlural => "thirdplural",
+            ImperativePerson::Passive => "passive",
+        })
+    }
+}
+
+impl std::str::FromStr for ImperativePerson {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "ImperativePerson",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for ImperativePerson {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A perfect imperative's person: the third, or the passive.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum PerfectImperativePerson {
+    ThirdSingular,
+    ThirdPlural,
+    Passive,
+}
+
+impl PerfectImperativePerson {
+    /// Every value, in order.
+    pub const ALL: [PerfectImperativePerson; 3] = [
+        PerfectImperativePerson::ThirdSingular,
+        PerfectImperativePerson::ThirdPlural,
+        PerfectImperativePerson::Passive,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            PerfectImperativePerson::ThirdSingular => "3sg",
+            PerfectImperativePerson::ThirdPlural => "3pl",
+            PerfectImperativePerson::Passive => "pass",
+        }
+    }
+}
+
+impl std::fmt::Display for PerfectImperativePerson {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            PerfectImperativePerson::ThirdSingular => "thirdsingular",
+            PerfectImperativePerson::ThirdPlural => "thirdplural",
+            PerfectImperativePerson::Passive => "passive",
+        })
+    }
+}
+
+impl std::str::FromStr for PerfectImperativePerson {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "PerfectImperativePerson",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for PerfectImperativePerson {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Active or passive.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Voice {
+    Active,
+    Passive,
+}
+
+impl Voice {
+    /// Every value, in order.
+    pub const ALL: [Voice; 2] = [Voice::Active, Voice::Passive];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Voice::Active => "act",
+            Voice::Passive => "pass",
+        }
+    }
+}
+
+impl std::fmt::Display for Voice {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Voice::Active => "active",
+            Voice::Passive => "passive",
+        })
+    }
+}
+
+impl std::str::FromStr for Voice {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Voice",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Voice {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A case of the third infinitive (`tulemassa`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum ThirdCase {
+    Inessive,
+    Elative,
+    Illative,
+    Adessive,
+    Abessive,
+    Instructive,
+}
+
+impl ThirdCase {
+    /// Every value, in order.
+    pub const ALL: [ThirdCase; 6] = [
+        ThirdCase::Inessive,
+        ThirdCase::Elative,
+        ThirdCase::Illative,
+        ThirdCase::Adessive,
+        ThirdCase::Abessive,
+        ThirdCase::Instructive,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            ThirdCase::Inessive => "ine",
+            ThirdCase::Elative => "ela",
+            ThirdCase::Illative => "ill",
+            ThirdCase::Adessive => "ade",
+            ThirdCase::Abessive => "abe",
+            ThirdCase::Instructive => "ins",
+        }
+    }
+}
+
+impl std::fmt::Display for ThirdCase {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            ThirdCase::Inessive => "inessive",
+            ThirdCase::Elative => "elative",
+            ThirdCase::Illative => "illative",
+            ThirdCase::Adessive => "adessive",
+            ThirdCase::Abessive => "abessive",
+            ThirdCase::Instructive => "instructive",
+        })
+    }
+}
+
+impl std::str::FromStr for ThirdCase {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "ThirdCase",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for ThirdCase {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// A participle.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Participle {
+    PresentActive,
+    PresentPassive,
+    PastActive,
+    PastPassive,
+    Agent,
+    Negative,
+}
+
+impl Participle {
+    /// Every value, in order.
+    pub const ALL: [Participle; 6] = [
+        Participle::PresentActive,
+        Participle::PresentPassive,
+        Participle::PastActive,
+        Participle::PastPassive,
+        Participle::Agent,
+        Participle::Negative,
+    ];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Participle::PresentActive => "pres.act",
+            Participle::PresentPassive => "pres.pass",
+            Participle::PastActive => "past.act",
+            Participle::PastPassive => "past.pass",
+            Participle::Agent => "agent",
+            Participle::Negative => "neg",
+        }
+    }
+}
+
+impl std::fmt::Display for Participle {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Participle::PresentActive => "presentactive",
+            Participle::PresentPassive => "presentpassive",
+            Participle::PastActive => "pastactive",
+            Participle::PastPassive => "pastpassive",
+            Participle::Agent => "agent",
+            Participle::Negative => "negative",
+        })
+    }
+}
+
+impl std::str::FromStr for Participle {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Participle",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Participle {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
 /// A noun in a case and number.
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
@@ -249,6 +975,35 @@ pub fn noun(lemma: &str, case: Case, number: Number) -> String {
 #[must_use]
 pub fn possessive(lemma: &str, case: Case, number: Number, possessor: Possessor) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Possessive(case, number, possessor))
+}
+
+/// A noun in a case and number.
+#[must_use]
+pub fn pronoun(lemma: &str, case: Case, number: Number) -> String {
+    pronoun::Pronoun::new(lemma).form(pronoun::Cell::Form(case, number))
+}
+
+/// A noun in a case and number.
+#[must_use]
+pub fn numeral(lemma: &str, case: Case, number: Number) -> String {
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, number))
+}
+
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
+/// A noun in a case and number, with a possessive suffix.
+#[must_use]
+pub fn proper_noun_possessive(
+    lemma: &str,
+    case: Case,
+    number: Number,
+    possessor: Possessor,
+) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Possessive(case, number, possessor))
 }
 
 /// An adjective in a case and number.
@@ -267,4 +1022,113 @@ pub fn comparative(lemma: &str) -> String {
 #[must_use]
 pub fn superlative(lemma: &str) -> String {
     adjective::Adjective::new(lemma).form(adjective::Cell::Superlative)
+}
+
+/// The indicative.
+#[must_use]
+pub fn indicative(lemma: &str, tense: Tense, polarity: Polarity, person: Person) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Indicative(tense, polarity, person))
+}
+
+/// The conditional (`-isi-`).
+#[must_use]
+pub fn conditional(lemma: &str, aspect: Aspect, polarity: Polarity, person: Person) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Conditional(aspect, polarity, person))
+}
+
+/// The imperative.
+#[must_use]
+pub fn imperative(lemma: &str, polarity: Polarity, imperative_person: ImperativePerson) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Imperative(polarity, imperative_person))
+}
+
+/// The perfect imperative (`olkoon tullut`).
+#[must_use]
+pub fn perfect_imperative(
+    lemma: &str,
+    polarity: Polarity,
+    perfect_imperative_person: PerfectImperativePerson,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::PerfectImperative(
+        polarity,
+        perfect_imperative_person,
+    ))
+}
+
+/// The potential (`-ne-`).
+#[must_use]
+pub fn potential(lemma: &str, aspect: Aspect, polarity: Polarity, person: Person) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Potential(aspect, polarity, person))
+}
+
+/// The first infinitive.
+#[must_use]
+pub fn infinitive(lemma: &str) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Infinitive)
+}
+
+/// The first infinitive's long form, with a possessive (`tullakseni`).
+#[must_use]
+pub fn long_infinitive(lemma: &str, possessor: Possessor) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::LongInfinitive(possessor))
+}
+
+/// The second infinitive's inessive (`tullessa`).
+#[must_use]
+pub fn second_infinitive(lemma: &str, voice: Voice) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::SecondInfinitive(voice))
+}
+
+/// The second infinitive's inessive, with a possessive (`tullessani`).
+#[must_use]
+pub fn second_infinitive_possessive(lemma: &str, possessor: Possessor) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::SecondInfinitivePossessive(possessor))
+}
+
+/// The second infinitive's instructive (`tullen`).
+#[must_use]
+pub fn second_infinitive_instructive(lemma: &str) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::SecondInfinitiveInstructive)
+}
+
+/// The third infinitive in a case (`tulemassa`).
+#[must_use]
+pub fn third_infinitive(lemma: &str, third_case: ThirdCase) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::ThirdInfinitive(third_case))
+}
+
+/// The third infinitive's passive instructive (`tultaman`).
+#[must_use]
+pub fn third_infinitive_passive(lemma: &str) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::ThirdInfinitivePassive)
+}
+
+/// The fourth infinitive (`tuleminen`).
+#[must_use]
+pub fn fourth_infinitive(lemma: &str) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::FourthInfinitive)
+}
+
+/// The fifth infinitive, with a possessive (`tulemaisillani`).
+#[must_use]
+pub fn fifth_infinitive(lemma: &str, possessor: Possessor) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::FifthInfinitive(possessor))
+}
+
+/// A participle's citation form; decline it as an adjective.
+#[must_use]
+pub fn participle(lemma: &str, participle: Participle) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::Participle(participle))
+}
+
+/// An adverb in a degree.
+#[must_use]
+pub fn adverb(lemma: &str, degree: Degree) -> String {
+    adverb::Adverb::new(lemma).form(adverb::Cell::Form(degree))
+}
+
+/// A postposition, plain or with a possessive suffix.
+#[must_use]
+pub fn postposition(lemma: &str, suffix: Suffix) -> String {
+    postposition::Postposition::new(lemma).form(postposition::Cell::Form(suffix))
 }

@@ -26,17 +26,12 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "ndit" => [Mondit 3] regular,
     }
     listed {
-        "#ce" => Aucun,
-        "#du" => Aucun,
-        "#le" => Aucun,
-        "#ledit" => Aucun,
-        "#leurdit" => Aucun,
-        "#leurdite" => Leurdite,
-        "#notredit" => Aucun,
-        "#tes" => Aucun,
-        "#tesdites" => Aucun,
-        "#tout" => Aucun,
-        "#un" => Aucun,
-        "#votredit" => Aucun,
+        Aucun => [
+            "#ce", "#du", "#le", "#ledit", "#leurdit", "#notredit", "#tes", "#tesdites", "#tout",
+            "#un", "#votredit",
+        ],
+        Leurdite => [
+            "#leurdite",
+        ],
     }
 };

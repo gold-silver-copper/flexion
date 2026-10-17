@@ -4,16 +4,19 @@
 
 use std::borrow::Cow;
 
-/// 16 words.
+/// 19 words.
 pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
     "complusculi" => "complūsculī",
     "ecquinam" => "ecquīnam",
-    "egomet" => "egomet",
     "hice" => "hice",
     "idem" => "īdem",
+    "ille" => "ille",
+    "ipse" => "ipse",
     "ipsemet" => "ipsemet",
     "iste" => "iste",
+    "nemo" => "nēmō",
     "nequis" => "nēquis",
+    "olle" => "olle",
     "quidam" => "quīdam",
     "quilibet" => "quīlibet",
     "quilubet" => "quīlubet",

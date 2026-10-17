@@ -63,6 +63,11 @@ pub fn language() -> Language {
         version: "0.1.0",
         description: "Spanish inflection for any word: noun plurals, adjective agreement and conjugation, with confidence scores, learned from Wiktionary",
         features: features! {
+            Degree "Degree of comparison." {
+                Positive "pos" ["positive"],
+                Comparative "comp" ["comparative"],
+                Superlative "sup" ["superlative"],
+            }
             Number "Grammatical number." {
                 Singular "sg" [] !["plural"],
                 Plural "pl" ["plural"],
@@ -125,6 +130,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -164,6 +170,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -232,11 +239,12 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "determiner",
                 doc: "Determiners and numerals that agree in gender and number (`este`, `alguno`, `doscientos`).",
-                wiktionary: vec!["det", "num", "article"],
+                wiktionary: vec!["det", "num", "article", "pron"],
                 templates: vec![],
                 forms: FormSource::All,
                 groups: vec![group(
@@ -252,7 +260,9 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
+            crate::adverb(),
         ],
         spelling: Spelling {
             fold_case: true,
@@ -317,6 +327,7 @@ impl Hooks for SpanishHooks {
             "noun" => romance::noun(entry, &register),
             "adjective" => romance::adjective(entry, &register),
             "determiner" => {
+                own_row(entry);
                 if romance::agrees(entry) {
                     romance::adjective(entry, &register);
                 } else {
@@ -341,6 +352,24 @@ impl Hooks for SpanishHooks {
     fn adapt(&self, edition: &str, pos: &str, entry: &mut Entry) -> bool {
         edition == "es" && pos == "verb" && edition_verb(entry)
     }
+}
+
+/// A demonstrative's table lists its siblings' rows too (`ése`'s: `éste`,
+/// `ése`, `aquél`, tagged proximal, medial and distal): the headword's only.
+fn own_row(entry: &mut Entry) {
+    let rows = ["proximal", "medial", "distal"];
+    let tagged = |f: &flexion_train::kaikki::Form, r: &str| f.tags.iter().any(|t| t == r);
+    let Some(row) = entry
+        .forms
+        .iter()
+        .filter(|f| f.form == entry.word)
+        .find_map(|f| rows.into_iter().find(|r| tagged(f, r)))
+    else {
+        return;
+    };
+    entry
+        .forms
+        .retain(|f| !rows.iter().any(|r| *r != row && tagged(f, r)));
 }
 
 /// Whether a form of the imperfect subjunctive is the one in `-se`

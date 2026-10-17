@@ -12,7 +12,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the conjugation it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem rest_: \"~- like echar\"`: the slot's cells are `echar`'s table's patterns
+/// (`stem verb_pres_1_sg: \"~- like echar\"`: the slot's cells are `echar`'s table's patterns
 /// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the conjugation's it is
@@ -53,11 +53,11 @@ use flexion::Paradigm;
 /// `participle_f` (sg, pl)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem rest_: $s0:tt;)?
+     $(stem verb_pres_1_sg: $s0:tt;)?
      $(stem lemma: $s1:tt;)?
-     $(stem rest: $s2:tt;)?
-     $(stem rest__: $s3:tt;)?
-     $(stem rest___: $s4:tt;)?
+     $(stem verb_pret_1_sg: $s2:tt;)?
+     $(stem verb: $s3:tt;)?
+     $(stem verb_subj_1_pl: $s4:tt;)?
      $(stem gerund: $s5:tt;)?
      $(stem participle: $s6:tt;)?
      $(pres_1: $c0:tt, $c1:tt;)?
@@ -735,11 +735,11 @@ impl flexion::Label for Conjugation {
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Echar: 9,689 words (estar, amar, generar, crear, dar, abandonar).
     conjugation!("echar", 9689, "~ar";
-    stem rest_: "~- like echar";
+    stem verb_pres_1_sg: "~- like echar";
     stem lemma: "~- like echar";
-    stem rest: "~- like echar";
-    stem rest__: "~ar- like echar";
-    stem rest___: "~- like echar";
+    stem verb_pret_1_sg: "~- like echar";
+    stem verb: "~ar- like echar";
+    stem verb_subj_1_pl: "~- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -748,11 +748,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Realizar: 1,200 words (profundizar, utilizar, realzar, avergonzar, lanzar, alcanzar). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("realizar", 1200, "~zar", like Echar;
-    stem rest_: "~- like realizar";
+    stem verb_pres_1_sg: "~- like realizar";
     stem lemma: "~z- like echar";
-    stem rest: "~- like realizar";
-    stem rest__: "~zar- like echar";
-    stem rest___: "~c- like echar";
+    stem verb_pret_1_sg: "~- like realizar";
+    stem verb: "~zar- like echar";
+    stem verb_subj_1_pl: "~c- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -762,9 +762,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Incautarse: 724 words (llamarse, jambarse, amoratarse, infartarse, autoengañarse, ahorcajarse).
     conjugation!("incautarse", 724, "~a~arse";
     stem lemma: "~a~- like incautarse";
-    stem rest: "~a~- like echar";
-    stem rest__: "~a~ar- like echar";
-    stem rest___: "~a~- like incautarse";
+    stem verb_pret_1_sg: "~a~- like echar";
+    stem verb: "~a~ar- like echar";
+    stem verb_subj_1_pl: "~a~- like incautarse";
     pres_1: "~a~o", _;
     pres_2: "~a~as", _;
     impf_3: derived, _;
@@ -779,9 +779,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Acomodarse: 591 words (acodarse, acomodarse, endrogarse, personarse, autocontrolarse, amonarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("acomodarse", 591, "~o~arse", like Incautarse;
     stem lemma: "~o~- like incautarse";
-    stem rest: "~o~- like echar";
-    stem rest__: "~o~ar- like echar";
-    stem rest___: "~o~- like incautarse";
+    stem verb_pret_1_sg: "~o~- like echar";
+    stem verb: "~o~ar- like echar";
+    stem verb_subj_1_pl: "~o~- like incautarse";
     pres_1: "~o~o", _;
     pres_2: "~o~as", _;
     impf_3: derived, _;
@@ -796,9 +796,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Quejarse: 564 words (quejarse, querellarse, despertarse, pegarse, autocremarse, afiebrarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("quejarse", 564, "~e~arse", like Incautarse;
     stem lemma: "~e~- like incautarse";
-    stem rest: "~e~- like echar";
-    stem rest__: "~e~ar- like echar";
-    stem rest___: "~e~- like incautarse";
+    stem verb_pret_1_sg: "~e~- like echar";
+    stem verb: "~e~ar- like echar";
+    stem verb_subj_1_pl: "~e~- like incautarse";
     pres_1: "~e~o", _;
     pres_2: "~e~as", _;
     impf_3: derived, _;
@@ -813,9 +813,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Rilarse: 548 words (fijarse, chisparse, ababillarse, agüitarse, refanfinflarse, encapricharse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("rilarse", 548, "~i~arse", like Incautarse;
     stem lemma: "~i~- like incautarse";
-    stem rest: "~i~- like echar";
-    stem rest__: "~i~ar- like echar";
-    stem rest___: "~i~- like incautarse";
+    stem verb_pret_1_sg: "~i~- like echar";
+    stem verb: "~i~ar- like echar";
+    stem verb_subj_1_pl: "~i~- like incautarse";
     pres_1: "~i~o", _;
     pres_2: "~i~as", _;
     impf_3: derived, _;
@@ -830,9 +830,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Atipujarse: 398 words (acalenturarse, emputarse, confabularse, autoinculparse, enfurruñarse, despreocuparse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("atipujarse", 398, "~u~arse", like Incautarse;
     stem lemma: "~u~- like incautarse";
-    stem rest: "~u~- like echar";
-    stem rest__: "~u~ar- like echar";
-    stem rest___: "~u~- like incautarse";
+    stem verb_pret_1_sg: "~u~- like echar";
+    stem verb: "~u~ar- like echar";
+    stem verb_subj_1_pl: "~u~- like incautarse";
     pres_1: "~u~o", _;
     pres_2: "~u~as", _;
     impf_3: derived, _;
@@ -847,9 +847,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Regodearse: 358 words (carcajearse, petatearse, autobombearse, regodearse, mamonearse, cachiporrearse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("regodearse", 358, "~~arse", like Incautarse;
     stem lemma: "~~- like incautarse";
-    stem rest: "~~- like echar";
-    stem rest__: "~~ar- like echar";
-    stem rest___: "~~- like incautarse";
+    stem verb_pret_1_sg: "~~- like echar";
+    stem verb: "~~ar- like echar";
+    stem verb_subj_1_pl: "~~- like incautarse";
     pres_1: "~~o", _;
     pres_2: "~~as", _;
     impf_3: derived, _;
@@ -864,9 +864,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Conocer: 330 words (conocer, tender, placer, perder, encender, nacer). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("conocer", 330, "~~er", like Incautarse;
     stem lemma: "~~- like conocer";
-    stem rest: "~~- like conocer";
-    stem rest__: "~~er- like echar";
-    stem rest___: "~z~- like conocer";
+    stem verb_pret_1_sg: "~~- like conocer";
+    stem verb: "~~er- like echar";
+    stem verb_subj_1_pl: "~z~- like conocer";
     pres_1: "~z~o", _;
     pres_2: "~~es", _;
     impf_3: derived, _;
@@ -880,11 +880,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Curtir: 328 words (partir, polir, abolir, cumplir, finir, vivir). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("curtir", 328, "~ir", like Echar;
-    stem rest_: "~- like curtir";
+    stem verb_pres_1_sg: "~- like curtir";
     stem lemma: "~- like curtir";
-    stem rest: "~- like conocer";
-    stem rest__: "~ir- like echar";
-    stem rest___: "~- like conocer";
+    stem verb_pret_1_sg: "~- like conocer";
+    stem verb: "~ir- like echar";
+    stem verb_subj_1_pl: "~- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -893,11 +893,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Sacar: 249 words (buscar, sacar, rascar, pecar, tocar, atacar). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("sacar", 249, "~car", like Echar;
-    stem rest_: "~- like sacar";
+    stem verb_pres_1_sg: "~- like sacar";
     stem lemma: "~c- like echar";
-    stem rest: "~- like sacar";
-    stem rest__: "~car- like echar";
-    stem rest___: "~qu- like echar";
+    stem verb_pret_1_sg: "~- like sacar";
+    stem verb: "~car- like echar";
+    stem verb_subj_1_pl: "~qu- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -907,9 +907,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Fosilizarse: 249 words (fosilizarse, autorrealizarse, autobautizarse, autoanalizarse, autopolinizarse, autoorganizarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("fosilizarse", 249, "~izarse", like Echar;
     stem lemma: "~iz- like incautarse";
-    stem rest: "~i- like realizar";
-    stem rest__: "~izar- like echar";
-    stem rest___: "~ic- like incautarse";
+    stem verb_pret_1_sg: "~i- like realizar";
+    stem verb: "~izar- like echar";
+    stem verb_subj_1_pl: "~ic- like incautarse";
     pres_1: "~izo", _;
     pres_2: "~izas", _;
     impf_3: derived, _;
@@ -924,9 +924,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Autoabastecerse: 176 words (autoabastecerse, entrometerse, entremeterse, autoprotegerse, entigrecerse, ensilvecerse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("autoabastecerse", 176, "~e~erse", like Incautarse;
     stem lemma: "~e~- like autoabastecerse";
-    stem rest: "~e~- like conocer";
-    stem rest__: "~e~er- like echar";
-    stem rest___: "~ez~- like autoabastecerse";
+    stem verb_pret_1_sg: "~e~- like conocer";
+    stem verb: "~e~er- like echar";
+    stem verb_subj_1_pl: "~ez~- like autoabastecerse";
     pres_1: "~ez~o", _;
     pres_2: "~e~es", _;
     impf_3: derived, _;
@@ -941,15 +941,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Meter: 145 words (absconder, absorber, her, meter, acceder, beber). Like Curtir, except in 1 cell: impf_3 sg.
     conjugation!("meter", 145, "~er", like Curtir;
     stem lemma: "~- like conocer";
-    stem rest__: "~er- like echar";
+    stem verb: "~er- like echar";
     impf_3: derived, _;
     ),
     // Osificarse: 134 words (gelificarse, automedicarse, autocalificarse, autoaplicarse, osificarse, autoidentificarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("osificarse", 134, "~icarse", like Echar;
     stem lemma: "~ic- like incautarse";
-    stem rest: "~i- like sacar";
-    stem rest__: "~icar- like echar";
-    stem rest___: "~iqu- like incautarse";
+    stem verb_pret_1_sg: "~i- like sacar";
+    stem verb: "~icar- like echar";
+    stem verb_subj_1_pl: "~iqu- like incautarse";
     pres_1: "~ico", _;
     pres_2: "~icas", _;
     impf_3: derived, _;
@@ -963,9 +963,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Recalentar: 132 words (pensar, quebrar, helar, gobernar, confesar, atestar). Like Regodearse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("recalentar", 132, "~~ar", like Regodearse;
-    stem rest_: "~i~- like echar";
+    stem verb_pres_1_sg: "~i~- like echar";
     stem lemma: "~~- like echar";
-    stem rest___: "~~- like echar";
+    stem verb_subj_1_pl: "~~- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -984,11 +984,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Desviar: 109 words (enviar, enfriar, ampliar, aviar, confiar, agriar). Like Curtir, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("desviar", 109, "~iar", like Curtir;
-    stem rest_: "~í- like echar";
+    stem verb_pres_1_sg: "~í- like echar";
     stem lemma: "~i- like echar";
-    stem rest: "~i- like echar";
-    stem rest__: "~iar- like echar";
-    stem rest___: "~i- like echar";
+    stem verb_pret_1_sg: "~i- like echar";
+    stem verb: "~iar- like echar";
+    stem verb_subj_1_pl: "~i- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -997,9 +997,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Instruir: 105 words (construir, destruir, bullir, incluir, excluir, sustituir). Like Curtir, except in 7 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, negative_imperative ustedes, ….
     conjugation!("instruir", 105, "~ir", like Curtir;
-    stem rest_: "~y- like curtir";
-    stem rest: "~- like instruir";
-    stem rest___: "~y- like conocer";
+    stem verb_pres_1_sg: "~y- like curtir";
+    stem verb_pret_1_sg: "~- like instruir";
+    stem verb_subj_1_pl: "~y- like conocer";
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
     gerund: "~yendo";
@@ -1018,10 +1018,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Sentir: 56 words (mentir, sentir, zaherir, herir, advertir, sugerir). Like Autoabastecerse, except in 14 cells: impf_3 sg, pret_3 sg, pret_3 pl, subj_3 sg, subj_impf_1 pl, subj_impf_3 sg, ….
     conjugation!("sentir", 56, "~e~ir", like Autoabastecerse;
-    stem rest_: "~ie~- like curtir";
+    stem verb_pres_1_sg: "~ie~- like curtir";
     stem lemma: "~e~- like curtir";
-    stem rest__: "~e~ir- like echar";
-    stem rest___: "~i~- like conocer";
+    stem verb: "~e~ir- like echar";
+    stem verb_subj_1_pl: "~i~- like conocer";
     impf_3: derived, _;
     pret_3: "~i~ió", "~i~ieron";
     subj_3: derived, _;
@@ -1034,11 +1034,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Situar: 56 words (puntuar, continuar, efectuar, actuar, situar, menstruar). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("situar", 56, "~uar", like Echar;
-    stem rest_: "~ú- like echar";
+    stem verb_pres_1_sg: "~ú- like echar";
     stem lemma: "~u- like echar";
-    stem rest: "~u- like echar";
-    stem rest__: "~uar- like echar";
-    stem rest___: "~u- like echar";
+    stem verb_pret_1_sg: "~u- like echar";
+    stem verb: "~uar- like echar";
+    stem verb_subj_1_pl: "~u- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1057,9 +1057,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Musirse: 54 words (desnutrirse, musirse, entumirse, ocurrirse, consumirse, eludirse). Like Atipujarse, except in 12 cells: pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("musirse", 54, "~u~irse", like Atipujarse;
     stem lemma: "~u~- like musirse";
-    stem rest: "~u~- like conocer";
-    stem rest__: "~u~ir- like echar";
-    stem rest___: "~u~- like autoabastecerse";
+    stem verb_pret_1_sg: "~u~- like conocer";
+    stem verb: "~u~ir- like echar";
+    stem verb_subj_1_pl: "~u~- like autoabastecerse";
     pres_2: "~u~es", _;
     impf_3: derived, _;
     subj_1: "~u~a", _;
@@ -1072,11 +1072,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Dirigir: 46 words (urgir, mugir, exigir, fingir, agir, dirigir). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("dirigir", 46, "~gir", like Echar;
-    stem rest_: "~- like dirigir";
+    stem verb_pres_1_sg: "~- like dirigir";
     stem lemma: "~g- like curtir";
-    stem rest: "~g- like conocer";
-    stem rest__: "~gir- like echar";
-    stem rest___: "~j- like conocer";
+    stem verb_pret_1_sg: "~g- like conocer";
+    stem verb: "~gir- like echar";
+    stem verb_subj_1_pl: "~j- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1085,9 +1085,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Volar: 40 words (soltar, encontrar, demostrar, soñar, mostrar, colgar). Like Desencontrarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("volar", 40, "~o~ar", like Desencontrarse;
-    stem rest_: "~ue~- like echar";
+    stem verb_pres_1_sg: "~ue~- like echar";
     stem lemma: "~o~- like echar";
-    stem rest___: "~o~- like echar";
+    stem verb_subj_1_pl: "~o~- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1107,9 +1107,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Suponer: 37 words (poner, yuxtaponer, imponer, suponer, exponer, posponer). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("suponer", 37, "~oner", like Echar;
     stem lemma: "~on- like conocer";
-    stem rest: "~us- like poner";
-    stem rest__: "~ondr- like echar";
-    stem rest___: "~ong- like conocer";
+    stem verb_pret_1_sg: "~us- like poner";
+    stem verb: "~ondr- like echar";
+    stem verb_subj_1_pl: "~ong- like conocer";
     pres_1: "~ongo", _;
     pres_2: "~ones", _;
     impf_3: derived, _;
@@ -1123,8 +1123,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Fraguar: 32 words (averiguar, atestiguar, menguar, aguar, testiguar, apaciguar). Like Situar, except in 10 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("fraguar", 32, "~uar", like Situar;
-    stem rest: "~- like fraguar";
-    stem rest___: "~ü- like echar";
+    stem verb_pret_1_sg: "~- like fraguar";
+    stem verb_subj_1_pl: "~ü- like echar";
     pres_1: "~uo", _;
     pres_2: "~uas", _;
     subj_1: "~üe", _;
@@ -1135,16 +1135,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Rendir: 32 words (pedir, servir, despedir, vestir, investir, medir). Like Sentir, except in 4 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative ustedes.
     conjugation!("rendir", 32, "~e~ir", like Sentir;
-    stem rest_: "~i~- like curtir";
+    stem verb_pres_1_sg: "~i~- like curtir";
     subj_3: derived, _;
     negative_imperative: derived, derived, _, _, derived;
     ),
     // Descocarse: 31 words (autoconvocarse, descocarse, abocarse, apocarse, equivocarse, enfocarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("descocarse", 31, "~ocarse", like Echar;
     stem lemma: "~oc- like incautarse";
-    stem rest: "~o- like sacar";
-    stem rest__: "~ocar- like echar";
-    stem rest___: "~oqu- like incautarse";
+    stem verb_pret_1_sg: "~o- like sacar";
+    stem verb: "~ocar- like echar";
+    stem verb_subj_1_pl: "~oqu- like incautarse";
     pres_1: "~oco", _;
     pres_2: "~ocas", _;
     impf_3: derived, _;
@@ -1159,9 +1159,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Desvivirse: 30 words (desvivirse, autodefinirse, autopercibirse, inhibirse, extinguirse, distinguirse). Like Rendir, except in 8 cells: impf_3 sg, imperative tu, imperative usted, imperative ustedes, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("desvivirse", 30, "~i~irse", like Rendir;
     stem lemma: "~i~- like musirse";
-    stem rest: "~i~- like conocer";
-    stem rest__: "~i~ir- like echar";
-    stem rest___: "~i~- like autoabastecerse";
+    stem verb_pret_1_sg: "~i~- like conocer";
+    stem verb: "~i~ir- like echar";
+    stem verb_subj_1_pl: "~i~- like autoabastecerse";
     impf_3: derived, _;
     imperative: "~í~ete", "~í~ase", _, _, "~í~anse";
     negative_imperative: _, _, derived, derived, _;
@@ -1182,9 +1182,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Embazarse: 27 words (embazarse, abrazarse, acarrazarse, amostazarse, desplazarse, tarazarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("embazarse", 27, "~azarse", like Echar;
     stem lemma: "~az- like incautarse";
-    stem rest: "~a- like realizar";
-    stem rest__: "~azar- like echar";
-    stem rest___: "~ac- like incautarse";
+    stem verb_pret_1_sg: "~a- like realizar";
+    stem verb: "~azar- like echar";
+    stem verb_subj_1_pl: "~ac- like incautarse";
     pres_1: "~azo", _;
     pres_2: "~azas", _;
     impf_3: derived, _;
@@ -1199,9 +1199,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Destoserse: 27 words (destoserse, correrse, coserse, corresponderse, dolerse, carcomerse). Like Acomodarse, except in 12 cells: pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("destoserse", 27, "~o~erse", like Acomodarse;
     stem lemma: "~o~- like autoabastecerse";
-    stem rest: "~o~- like conocer";
-    stem rest__: "~o~er- like echar";
-    stem rest___: "~o~- like autoabastecerse";
+    stem verb_pret_1_sg: "~o~- like conocer";
+    stem verb: "~o~er- like echar";
+    stem verb_subj_1_pl: "~o~- like autoabastecerse";
     pres_2: "~o~es", _;
     impf_3: derived, _;
     subj_1: "~o~a", _;
@@ -1223,9 +1223,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Convenir: 24 words (devenir, venir, intervenir, avenir, revenir, convenir). Like Sentir, except in 9 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, imperative usted, ….
     conjugation!("convenir", 24, "~e~ir", like Sentir;
-    stem rest: "~i~- like poner";
-    stem rest__: "~e~dr- like echar";
-    stem rest___: "~e~g- like conocer";
+    stem verb_pret_1_sg: "~i~- like poner";
+    stem verb: "~e~dr- like echar";
+    stem verb_subj_1_pl: "~e~g- like conocer";
     pres_1: "~e~go", _;
     subj_1: "~e~ga", _;
     subj_2: "~e~gas", _;
@@ -1236,9 +1236,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Reducir: 24 words (traducir, producir, reducir, conducir, introducir, inducir). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("reducir", 24, "~cir", like Echar;
     stem lemma: "~c- like curtir";
-    stem rest: "~j- like reducir";
-    stem rest__: "~cir- like echar";
-    stem rest___: "~zc- like conocer";
+    stem verb_pret_1_sg: "~j- like reducir";
+    stem verb: "~cir- like echar";
+    stem verb_subj_1_pl: "~zc- like conocer";
     pres_1: "~zco", _;
     pres_2: "~ces", _;
     impf_3: derived, _;
@@ -1252,11 +1252,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Escribir: 23 words (escribir, describir, inscribir, transcribir, prescribir, proscribir). Like Echar, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("escribir", 23, "~bir", like Echar;
-    stem rest_: "~b- like curtir";
+    stem verb_pres_1_sg: "~b- like curtir";
     stem lemma: "~b- like curtir";
-    stem rest: "~b- like conocer";
-    stem rest__: "~bir- like echar";
-    stem rest___: "~b- like conocer";
+    stem verb_pret_1_sg: "~b- like conocer";
+    stem verb: "~bir- like echar";
+    stem verb_subj_1_pl: "~b- like conocer";
     stem participle: "~- like escribir";
     impf_3: derived, _;
     subj_3: derived, _;
@@ -1266,9 +1266,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Sacarse: 23 words (abarracarse, abellacarse, desajacarse, trelacarse, atracarse, enflacarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("sacarse", 23, "~acarse", like Echar;
     stem lemma: "~ac- like incautarse";
-    stem rest: "~a- like sacar";
-    stem rest__: "~acar- like echar";
-    stem rest___: "~aqu- like incautarse";
+    stem verb_pret_1_sg: "~a- like sacar";
+    stem verb: "~acar- like echar";
+    stem verb_subj_1_pl: "~aqu- like incautarse";
     pres_1: "~aco", _;
     pres_2: "~acas", _;
     impf_3: derived, _;
@@ -1282,14 +1282,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Meliar: 23 words (gilidiar, chalequiar, meliar, cangrejiar, jariniar, jonjoliar). Like Desviar, except in 4 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative ustedes.
     conjugation!("meliar", 23, "~iar", like Desviar;
-    stem rest_: "~e- like echar";
+    stem verb_pres_1_sg: "~e- like echar";
     subj_3: derived, _;
     negative_imperative: derived, derived, _, _, derived;
     ),
     // Recoger: 22 words (proteger, coger, recoger, escoger, acoger, emerger). Like Dirigir, except in 1 cell: impf_3 sg.
     conjugation!("recoger", 22, "~ger", like Dirigir;
     stem lemma: "~g- like conocer";
-    stem rest__: "~ger- like echar";
+    stem verb: "~ger- like echar";
     impf_3: derived, _;
     ),
     // Descomponerse: 22 words (autoimponerse, ponerse, imponerse, disponerse, exponerse, reponerse). Like Suponer with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
@@ -1300,9 +1300,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Ahijar: 22 words (prohijar, descafeinar, aislar, ahincar, amohinar, cabrahigar). Like Rilarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("ahijar", 22, "~i~ar", like Rilarse;
-    stem rest_: "~í~- like echar";
+    stem verb_pres_1_sg: "~í~- like echar";
     stem lemma: "~i~- like echar";
-    stem rest___: "~i~- like echar";
+    stem verb_subj_1_pl: "~i~- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1311,9 +1311,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Enderezarse: 22 words (emperezarse, esperezarse, alzarse, vezarse, avezarse, avergonzarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("enderezarse", 22, "~~zarse", like Incautarse;
     stem lemma: "~~z- like incautarse";
-    stem rest: "~~- like realizar";
-    stem rest__: "~~zar- like echar";
-    stem rest___: "~~c- like incautarse";
+    stem verb_pret_1_sg: "~~- like realizar";
+    stem verb: "~~zar- like echar";
+    stem verb_subj_1_pl: "~~c- like incautarse";
     pres_1: "~~zo", _;
     pres_2: "~~zas", _;
     impf_3: derived, _;
@@ -1327,7 +1327,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Entremeterse: 21 words (prenderse, comprenderse, tejerse, sorprenderse, emperescerse, venderse). Like Autoabastecerse, except in 8 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative usted, imperative ustedes, ….
     conjugation!("entremeterse", 21, "~e~erse", like Autoabastecerse;
-    stem rest___: "~e~- like autoabastecerse";
+    stem verb_subj_1_pl: "~e~- like autoabastecerse";
     pres_1: "~e~o", _;
     subj_1: "~e~a", _;
     subj_2: "~e~as", _;
@@ -1338,9 +1338,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Inmiscuirse: 21 words (autodestruirse, inmiscuirse, autoexcluirse, autoconstruirse, rehuirse, atribuirse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("inmiscuirse", 21, "~uirse", like Echar;
     stem lemma: "~u- like musirse";
-    stem rest: "~u- like instruir";
-    stem rest__: "~uir- like echar";
-    stem rest___: "~uy- like autoabastecerse";
+    stem verb_pret_1_sg: "~u- like instruir";
+    stem verb: "~uir- like echar";
+    stem verb_subj_1_pl: "~uy- like autoabastecerse";
     pres_1: "~uyo", _;
     pres_2: "~uyes", _;
     impf_3: derived, _;
@@ -1354,9 +1354,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Aunar: 20 words (aunar, rehusar, ahumar, maullar, aupar, aullar). Like Atipujarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("aunar", 20, "~u~ar", like Atipujarse;
-    stem rest_: "~ú~- like echar";
+    stem verb_pres_1_sg: "~ú~- like echar";
     stem lemma: "~u~- like echar";
-    stem rest___: "~u~- like echar";
+    stem verb_subj_1_pl: "~u~- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1365,9 +1365,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Abatirse: 20 words (batirse, partirse, persuadirse, abatirse, debatirse, expandirse). Like Incautarse, except in 12 cells: pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("abatirse", 20, "~a~irse", like Incautarse;
     stem lemma: "~a~- like musirse";
-    stem rest: "~a~- like conocer";
-    stem rest__: "~a~ir- like echar";
-    stem rest___: "~a~- like autoabastecerse";
+    stem verb_pret_1_sg: "~a~- like conocer";
+    stem verb: "~a~ir- like echar";
+    stem verb_subj_1_pl: "~a~- like autoabastecerse";
     pres_2: "~a~es", _;
     impf_3: derived, _;
     subj_1: "~a~a", _;
@@ -1381,9 +1381,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Chuzarse: 19 words (chapuzarse, abruzarse, abuzarse, escagarruzarse, aliruzarse, atapuzarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("chuzarse", 19, "~uzarse", like Echar;
     stem lemma: "~uz- like incautarse";
-    stem rest: "~u- like realizar";
-    stem rest__: "~uzar- like echar";
-    stem rest___: "~uc- like incautarse";
+    stem verb_pret_1_sg: "~u- like realizar";
+    stem verb: "~uzar- like echar";
+    stem verb_subj_1_pl: "~uc- like incautarse";
     pres_1: "~uzo", _;
     pres_2: "~uzas", _;
     impf_3: derived, _;
@@ -1403,18 +1403,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Fruncir: 18 words (zurcir, uncir, surcir, esparcir, resarcir, fruncir). Like Reducir, except in 6 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, negative_imperative ustedes.
     conjugation!("fruncir", 18, "~cir", like Reducir;
-    stem rest_: "~- like fruncir";
-    stem rest: "~c- like conocer";
-    stem rest___: "~z- like conocer";
+    stem verb_pres_1_sg: "~- like fruncir";
+    stem verb_pret_1_sg: "~c- like conocer";
+    stem verb_subj_1_pl: "~z- like conocer";
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
     ),
     // Calzarse: 18 words (abalanzarse, ensalzarse, esperanzarse, alianzarse, alcanzarse, desalzarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("calzarse", 18, "~a~zarse", like Incautarse;
     stem lemma: "~a~z- like incautarse";
-    stem rest: "~a~- like realizar";
-    stem rest__: "~a~zar- like echar";
-    stem rest___: "~a~c- like incautarse";
+    stem verb_pret_1_sg: "~a~- like realizar";
+    stem verb: "~a~zar- like echar";
+    stem verb_subj_1_pl: "~a~c- like incautarse";
     pres_1: "~a~zo", _;
     pres_2: "~a~zas", _;
     impf_3: derived, _;
@@ -1437,14 +1437,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Creer: 17 words (peer, creer, leer, veer, seer, roer). Like Meter, except in 2 cells: gerund, participle_m sg.
     conjugation!("creer", 17, "~er", like Meter;
-    stem rest: "~- like creer";
+    stem verb_pret_1_sg: "~- like creer";
     gerund: "~yendo";
     participle_m: "~ído", _;
     ),
     // Traer: 16 words (traer, contraer, atraer, extraer, substraer, abstraer). Like Creer, except in 8 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative usted, imperative ustedes, ….
     conjugation!("traer", 16, "~er", like Creer;
-    stem rest: "~j- like reducir";
-    stem rest___: "~ig- like conocer";
+    stem verb_pret_1_sg: "~j- like reducir";
+    stem verb_subj_1_pl: "~ig- like conocer";
     pres_1: "~igo", _;
     subj_1: "~iga", _;
     subj_2: "~igas", _;
@@ -1455,9 +1455,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Entecarse: 16 words (entecarse, enchuecarse, obcecarse, intersecarse, ahuecarse, deprecarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("entecarse", 16, "~~carse", like Incautarse;
     stem lemma: "~~c- like incautarse";
-    stem rest: "~~- like sacar";
-    stem rest__: "~~car- like echar";
-    stem rest___: "~~qu- like incautarse";
+    stem verb_pret_1_sg: "~~- like sacar";
+    stem verb: "~~car- like echar";
+    stem verb_subj_1_pl: "~~qu- like incautarse";
     pres_1: "~~co", _;
     pres_2: "~~cas", _;
     impf_3: derived, _;
@@ -1472,9 +1472,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Aborrascarse: 14 words (aborrascarse, atascarse, rascarse, achubascarse, enfrascarse, emborrascarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("aborrascarse", 14, "~a~carse", like Incautarse;
     stem lemma: "~a~c- like incautarse";
-    stem rest: "~a~- like sacar";
-    stem rest__: "~a~car- like echar";
-    stem rest___: "~a~qu- like incautarse";
+    stem verb_pret_1_sg: "~a~- like sacar";
+    stem verb: "~a~car- like echar";
+    stem verb_subj_1_pl: "~a~qu- like incautarse";
     pres_1: "~a~co", _;
     pres_2: "~a~cas", _;
     impf_3: derived, _;
@@ -1488,11 +1488,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Revolver: 14 words (absolver, revolver, resolver, disolver, volver, solver). Like Incautarse, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("revolver", 14, "~o~ver", like Incautarse;
-    stem rest_: "~ue~v- like curtir";
+    stem verb_pres_1_sg: "~ue~v- like curtir";
     stem lemma: "~o~v- like conocer";
-    stem rest: "~o~v- like conocer";
-    stem rest__: "~o~ver- like echar";
-    stem rest___: "~o~v- like conocer";
+    stem verb_pret_1_sg: "~o~v- like conocer";
+    stem verb: "~o~ver- like echar";
+    stem verb_subj_1_pl: "~o~v- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1502,9 +1502,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Rozarse: 14 words (apozarse, escozarse, arrebozarse, empozarse, alborozarse, desarrebozarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("rozarse", 14, "~ozarse", like Echar;
     stem lemma: "~oz- like incautarse";
-    stem rest: "~o- like realizar";
-    stem rest__: "~ozar- like echar";
-    stem rest___: "~oc- like incautarse";
+    stem verb_pret_1_sg: "~o- like realizar";
+    stem verb: "~ozar- like echar";
+    stem verb_subj_1_pl: "~oc- like incautarse";
     pres_1: "~ozo", _;
     pres_2: "~ozas", _;
     impf_3: derived, _;
@@ -1519,15 +1519,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Vencer: 13 words (coercer, vencer, ejercer, convencer, mecer, mulcer). Like Fruncir, except in 1 cell: impf_3 sg.
     conjugation!("vencer", 13, "~cer", like Fruncir;
     stem lemma: "~c- like conocer";
-    stem rest__: "~cer- like echar";
+    stem verb: "~cer- like echar";
     impf_3: derived, _;
     ),
     // Mantener: 13 words (tener, sostener, obtener, detener, mantener, retener). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("mantener", 13, "~ener", like Echar;
     stem lemma: "~en- like conocer";
-    stem rest: "~uv- like poner";
-    stem rest__: "~endr- like echar";
-    stem rest___: "~eng- like conocer";
+    stem verb_pret_1_sg: "~uv- like poner";
+    stem verb: "~endr- like echar";
+    stem verb_subj_1_pl: "~eng- like conocer";
     pres_1: "~engo", _;
     pres_2: "~ienes", _;
     impf_3: derived, _;
@@ -1541,10 +1541,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Ceñir: 13 words (teñir, reñir, ceñir, desteñir, estreñir, astreñir). Like Echar, except in 17 cells: impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, pret_3 pl, subj_3 sg, ….
     conjugation!("ceñir", 13, "~eñir", like Echar;
-    stem rest_: "~iñ- like curtir";
+    stem verb_pres_1_sg: "~iñ- like curtir";
     stem lemma: "~eñ- like curtir";
-    stem rest__: "~eñir- like echar";
-    stem rest___: "~iñ- like conocer";
+    stem verb: "~eñir- like echar";
+    stem verb_subj_1_pl: "~iñ- like conocer";
     impf_3: derived, _;
     pret_1: "~eñí", "~eñimos";
     pret_3: "~iñó", "~iñeron";
@@ -1560,9 +1560,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Enfoscarse: 12 words (enfoscarse, afoscarse, coscarse, desemboscarse, enfroscarse, trasroscarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("enfoscarse", 12, "~o~carse", like Incautarse;
     stem lemma: "~o~c- like incautarse";
-    stem rest: "~o~- like sacar";
-    stem rest__: "~o~car- like echar";
-    stem rest___: "~o~qu- like incautarse";
+    stem verb_pret_1_sg: "~o~- like sacar";
+    stem verb: "~o~car- like echar";
+    stem verb_subj_1_pl: "~o~qu- like incautarse";
     pres_1: "~o~co", _;
     pres_2: "~o~cas", _;
     impf_3: derived, _;
@@ -1576,9 +1576,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Enraizar: 12 words (enraizar, europeizar, arcaizar, descorreizar, judaizar, raizar). Like Fosilizarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("enraizar", 12, "~izar", like Fosilizarse;
-    stem rest_: "~í- like realizar";
+    stem verb_pres_1_sg: "~í- like realizar";
     stem lemma: "~iz- like echar";
-    stem rest___: "~ic- like echar";
+    stem verb_subj_1_pl: "~ic- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1620,7 +1620,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Hacer: 12 words (hacer, satisfacer, facer, deshacer, rehacer, contrahacer). Like Echar, except in 21 cells: pres_1 sg, pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, ….
     conjugation!("hacer", 12, "~acer", like Echar;
     stem lemma: "~ac- like conocer";
-    stem rest___: "~ag- like conocer";
+    stem verb_subj_1_pl: "~ag- like conocer";
     pres_1: "~ago", _;
     pres_2: "~aces", _;
     impf_3: derived, _;
@@ -1643,15 +1643,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Escabullirse: 11 words (escabullirse, zambullirse, rebullirse, tullirse, escullirse, descabullirse). Like Musirse, except in 1 cell: gerund.
     conjugation!("escabullirse", 11, "~u~irse", like Musirse;
-    stem rest: "~u~- like escabullirse";
+    stem verb_pret_1_sg: "~u~- like escabullirse";
     gerund: "~u~éndose";
     ),
     // Apanucarse: 11 words (acurrucarse, acorrucarse, embejucarse, apitucarse, emborucarse, desnucarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("apanucarse", 11, "~ucarse", like Echar;
     stem lemma: "~uc- like incautarse";
-    stem rest: "~u- like sacar";
-    stem rest__: "~ucar- like echar";
-    stem rest___: "~uqu- like incautarse";
+    stem verb_pret_1_sg: "~u- like sacar";
+    stem verb: "~ucar- like echar";
+    stem verb_subj_1_pl: "~uqu- like incautarse";
     pres_1: "~uco", _;
     pres_2: "~ucas", _;
     impf_3: derived, _;
@@ -1666,9 +1666,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Suscribirse: 10 words (autodescribirse, escribirse, adscribirse, inscribirse, subscribirse, suscribirse). Like Echar, except in 12 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("suscribirse", 10, "~ibirse", like Echar;
     stem lemma: "~ib- like musirse";
-    stem rest: "~ib- like conocer";
-    stem rest__: "~ibir- like echar";
-    stem rest___: "~ib- like autoabastecerse";
+    stem verb_pret_1_sg: "~ib- like conocer";
+    stem verb: "~ibir- like echar";
+    stem verb_subj_1_pl: "~ib- like autoabastecerse";
     stem participle: "~i- like escribir";
     pres_1: "~ibo", _;
     pres_2: "~ibes", _;
@@ -1683,9 +1683,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Retraerse: 10 words (contraerse, traerse, atraerse, sustraerse, retrotraerse, retraerse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("retraerse", 10, "~aerse", like Echar;
     stem lemma: "~a- like autoabastecerse";
-    stem rest: "~aj- like reducir";
-    stem rest__: "~aer- like echar";
-    stem rest___: "~aig- like autoabastecerse";
+    stem verb_pret_1_sg: "~aj- like reducir";
+    stem verb: "~aer- like echar";
+    stem verb_subj_1_pl: "~aig- like autoabastecerse";
     pres_1: "~aigo", _;
     pres_2: "~aes", _;
     impf_3: derived, _;
@@ -1700,15 +1700,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Lucir: 10 words (lucir, relucir, deslucir, enlucir, hendir, traslucir). Like Conocer, except in 1 cell: impf_3 sg.
     conjugation!("lucir", 10, "~~ir", like Conocer;
     stem lemma: "~~- like curtir";
-    stem rest__: "~~ir- like echar";
+    stem verb: "~~ir- like echar";
     impf_3: derived, _;
     ),
     // Enamoriscarse: 9 words (enamoriscarse, ciscarse, ariscarse, enriscarse, apriscarse, arriscarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("enamoriscarse", 9, "~i~carse", like Incautarse;
     stem lemma: "~i~c- like incautarse";
-    stem rest: "~i~- like sacar";
-    stem rest__: "~i~car- like echar";
-    stem rest___: "~i~qu- like incautarse";
+    stem verb_pret_1_sg: "~i~- like sacar";
+    stem verb: "~i~car- like echar";
+    stem verb_subj_1_pl: "~i~qu- like incautarse";
     pres_1: "~i~co", _;
     pres_2: "~i~cas", _;
     impf_3: derived, _;
@@ -1723,9 +1723,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Apuñuscarse: 9 words (apuñuscarse, buscarse, rebuscarse, zurruscarse, enfurruscarse, apeñuscarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("apuñuscarse", 9, "~u~carse", like Incautarse;
     stem lemma: "~u~c- like incautarse";
-    stem rest: "~u~- like sacar";
-    stem rest__: "~u~car- like echar";
-    stem rest___: "~u~qu- like incautarse";
+    stem verb_pret_1_sg: "~u~- like sacar";
+    stem verb: "~u~car- like echar";
+    stem verb_subj_1_pl: "~u~qu- like incautarse";
     pres_1: "~u~co", _;
     pres_2: "~u~cas", _;
     impf_3: derived, _;
@@ -1739,17 +1739,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Abrir: 9 words (cubrir, abrir, reabrir, descubrir, encubrir, entreabrir). Like Lucir, except in 7 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, negative_imperative ustedes, ….
     conjugation!("abrir", 9, "~~ir", like Lucir;
-    stem rest_: "~~- like curtir";
-    stem rest___: "~~- like conocer";
+    stem verb_pres_1_sg: "~~- like curtir";
+    stem verb_subj_1_pl: "~~- like conocer";
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
     participle_m: "~ie~to", _;
     ),
     // Trocar: 9 words (trocar, trastrocar, clocar, retrocar, destrocar, aclocar). Like Descocarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("trocar", 9, "~ocar", like Descocarse;
-    stem rest_: "~ue- like sacar";
+    stem verb_pres_1_sg: "~ue- like sacar";
     stem lemma: "~oc- like echar";
-    stem rest___: "~oqu- like echar";
+    stem verb_subj_1_pl: "~oqu- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1770,9 +1770,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Santiguarse: 9 words (achiguarse, apaciguarse, santiguarse, enmaniguarse, amortiguarse, averiguarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("santiguarse", 9, "~i~uarse", like Incautarse;
     stem lemma: "~i~u- like incautarse";
-    stem rest: "~i~- like fraguar";
-    stem rest__: "~i~uar- like echar";
-    stem rest___: "~i~ü- like incautarse";
+    stem verb_pret_1_sg: "~i~- like fraguar";
+    stem verb: "~i~uar- like echar";
+    stem verb_subj_1_pl: "~i~ü- like incautarse";
     pres_1: "~i~uo", _;
     pres_2: "~i~uas", _;
     impf_3: derived, _;
@@ -1786,10 +1786,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Refreír: 9 words (reír, freír, sonreír, engreír, desleír, esleír). Like Curtir, except in 10 cells: impf_3 sg, pret_1 sg, pret_1 pl, subj_3 sg, negative_imperative tu, negative_imperative usted, ….
     conjugation!("refreír", 9, "~eír", like Curtir;
-    stem rest_: "~í- like curtir";
+    stem verb_pres_1_sg: "~í- like curtir";
     stem lemma: "~eí- like refreír";
-    stem rest__: "~eir- like echar";
-    stem rest___: "~i- like conocer";
+    stem verb: "~eir- like echar";
+    stem verb_subj_1_pl: "~i- like conocer";
     impf_3: derived, _;
     pret_1: "~eí", "~eímos";
     subj_3: derived, _;
@@ -1799,7 +1799,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Guiar: 8 words (liar, fiar, criar, guiar, ciar, piar). Like Desviar, except in 5 cells: impf_3 sg, pret_1 sg, pret_3 sg, negative_imperative nosotros, negative_imperative vosotros.
     conjugation!("guiar", 8, "~iar", like Desviar;
     stem lemma: "~i- like guiar";
-    stem rest___: "~ie- like guiar";
+    stem verb_subj_1_pl: "~ie- like guiar";
     impf_3: derived, _;
     pret_1: "~ie", _;
     pret_3: "~io", _;
@@ -1808,9 +1808,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Reducirse: 8 words (autorreproducirse, autoconducirse, autoproducirse, reducirse, reproducirse, introducirse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("reducirse", 8, "~ucirse", like Echar;
     stem lemma: "~uc- like musirse";
-    stem rest: "~uj- like reducir";
-    stem rest__: "~ucir- like echar";
-    stem rest___: "~uzc- like autoabastecerse";
+    stem verb_pret_1_sg: "~uj- like reducir";
+    stem verb: "~ucir- like echar";
+    stem verb_subj_1_pl: "~uzc- like autoabastecerse";
     pres_1: "~uzco", _;
     pres_2: "~uces", _;
     impf_3: derived, _;
@@ -1825,8 +1825,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Desmedirse: 8 words (descomedirse, desmedirse, despedirse, acomedirse, medirse, expedirse). Like Echar, except in 21 cells: pres_1 sg, pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, ….
     conjugation!("desmedirse", 8, "~edirse", like Echar;
     stem lemma: "~ed- like musirse";
-    stem rest__: "~edir- like echar";
-    stem rest___: "~id- like autoabastecerse";
+    stem verb: "~edir- like echar";
+    stem verb_subj_1_pl: "~id- like autoabastecerse";
     pres_1: "~ido", _;
     pres_2: "~ides", _;
     impf_3: derived, _;
@@ -1847,9 +1847,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Creerse: 8 words (caerse, creerse, peerse, proveerse, corroerse, desposeerse). Like Abrir, except in 8 cells: impf_3 sg, imperative tu, imperative usted, imperative ustedes, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("creerse", 8, "~~erse", like Abrir;
     stem lemma: "~~- like autoabastecerse";
-    stem rest: "~~- like creer";
-    stem rest__: "~~er- like echar";
-    stem rest___: "~~- like autoabastecerse";
+    stem verb_pret_1_sg: "~~- like creer";
+    stem verb: "~~er- like echar";
+    stem verb_subj_1_pl: "~~- like autoabastecerse";
     impf_3: derived, _;
     imperative: "~é~te", "~éas~", _, _, "~éans~";
     negative_imperative: _, _, derived, derived, _;
@@ -1858,9 +1858,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Empezar: 7 words (empezar, tropezar, despezar, entropezar, trompezar, desentropezar). Like Enderezarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("empezar", 7, "~~zar", like Enderezarse;
-    stem rest_: "~i~- like realizar";
+    stem verb_pres_1_sg: "~i~- like realizar";
     stem lemma: "~~z- like echar";
-    stem rest___: "~~c- like echar";
+    stem verb_subj_1_pl: "~~c- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1868,10 +1868,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Regir: 7 words (elegir, corregir, colegir, reelegir, regir, recolegir). Like Echar, except in 17 cells: impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, pret_3 pl, subj_3 sg, ….
     conjugation!("regir", 7, "~egir", like Echar;
-    stem rest_: "~i- like dirigir";
+    stem verb_pres_1_sg: "~i- like dirigir";
     stem lemma: "~eg- like curtir";
-    stem rest__: "~egir- like echar";
-    stem rest___: "~ij- like conocer";
+    stem verb: "~egir- like echar";
+    stem verb_subj_1_pl: "~ij- like conocer";
     impf_3: derived, _;
     pret_1: "~egí", "~egimos";
     pret_3: "~igió", "~igieron";
@@ -1886,7 +1886,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Prever: 7 words (ver, ser, prever, entrever, antever, rever). Like Meter, except in 15 cells: pres_1 sg, pres_2 sg, impf_1 sg, impf_1 pl, subj_1 sg, subj_2 sg, ….
     conjugation!("prever", 7, "~er", like Meter;
-    stem rest___: "~e- like conocer";
+    stem verb_subj_1_pl: "~e- like conocer";
     pres_1: "~eo", _;
     pres_2: "~és", _;
     impf_1: "~eía", "~eíamos";
@@ -1900,7 +1900,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Tañer: 7 words (jier, atañer, tañer, empeller, toller, creyer). Like Meter, except in 1 cell: gerund.
     conjugation!("tañer", 7, "~er", like Meter;
-    stem rest: "~- like escabullirse";
+    stem verb_pret_1_sg: "~- like escabullirse";
     gerund: "~endo";
     ),
     // Ahumarse: 7 words (ahusarse, ahumarse, aunarse, rehusarse, rehurtarse, sahumarse). Like Aunar with `` after each pattern (`se` after e, n, r), except in 10 cells: pret_3 pl, subj_1 sg, subj_3 pl, subj_impf_se_3 sg, subj_fut_3 sg, vos imp, ….
@@ -1923,7 +1923,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Aterirse: 7 words (aterirse, empedernirse, arrecirse, hespirse, denegrirse, sumergirse). Like Entremeterse, except in 1 cell: impf_3 sg.
     conjugation!("aterirse", 7, "~e~irse", like Entremeterse;
     stem lemma: "~e~- like musirse";
-    stem rest__: "~e~ir- like echar";
+    stem verb: "~e~ir- like echar";
     impf_3: derived, _;
     ),
     // Jetiarse: 7 words (mamoniarse, patrasiarse, friquiarse, paniquiarse, jetiarse, penquiarse). Like Meliar with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
@@ -1941,16 +1941,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Relamerse: 7 words (valerse, prevalerse, relamerse, lamerse, precaverse, barrerse). Like Abatirse, except in 1 cell: impf_3 sg.
     conjugation!("relamerse", 7, "~a~erse", like Abatirse;
     stem lemma: "~a~- like autoabastecerse";
-    stem rest__: "~a~er- like echar";
+    stem verb: "~a~er- like echar";
     impf_3: derived, _;
     ),
     // Mover: 6 words (promover, mover, remover, conmover, amover, commover). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("mover", 6, "~over", like Echar;
-    stem rest_: "~uev- like curtir";
+    stem verb_pres_1_sg: "~uev- like curtir";
     stem lemma: "~ov- like conocer";
-    stem rest: "~ov- like conocer";
-    stem rest__: "~over- like echar";
-    stem rest___: "~ov- like conocer";
+    stem verb_pret_1_sg: "~ov- like conocer";
+    stem verb: "~over- like echar";
+    stem verb_subj_1_pl: "~ov- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -1960,7 +1960,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Seguir: 6 words (proseguir, perseguir, seguir, conseguir, subseguir, reseguir). Like Traer, except in 13 cells: pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, pret_3 pl, ….
     conjugation!("seguir", 6, "~eguir", like Traer;
     stem lemma: "~egu- like curtir";
-    stem rest__: "~eguir- like echar";
+    stem verb: "~eguir- like echar";
     pres_2: "~igues", _;
     impf_3: derived, _;
     pret_1: "~eguí", "~eguimos";
@@ -1976,9 +1976,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Recogerse: 6 words (encogerse, desencogerse, sobrecogerse, recogerse, cogerse, acogerse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("recogerse", 6, "~ogerse", like Echar;
     stem lemma: "~og- like autoabastecerse";
-    stem rest: "~og- like conocer";
-    stem rest__: "~oger- like echar";
-    stem rest___: "~oj- like autoabastecerse";
+    stem verb_pret_1_sg: "~og- like conocer";
+    stem verb: "~oger- like echar";
+    stem verb_subj_1_pl: "~oj- like autoabastecerse";
     pres_1: "~ojo", _;
     pres_2: "~oges", _;
     impf_3: derived, _;
@@ -1993,8 +1993,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Oír: 6 words (oír, embaír, desvaír, desoír, trasoír, entreoír). Like Instruir, except in 10 cells: pres_1 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative usted, ….
     conjugation!("oír", 6, "~ír", like Instruir;
     stem lemma: "~í- like refreír";
-    stem rest: "~- like creer";
-    stem rest___: "~ig- like conocer";
+    stem verb_pret_1_sg: "~- like creer";
+    stem verb_subj_1_pl: "~ig- like conocer";
     pres_1: "~igo", _;
     impf_3: derived, _;
     subj_1: "~iga", _;
@@ -2007,7 +2007,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Desdecir: 6 words (bendecir, maldecir, contradecir, desdecir, predecir, condecir). Like Traer, except in 17 cells: pres_2 sg, impf_3 sg, fut_1 sg, fut_1 pl, fut_2 sg, fut_2 pl, ….
     conjugation!("desdecir", 6, "~ecir", like Traer;
     stem lemma: "~ec- like curtir";
-    stem rest: "~ij- like reducir";
+    stem verb_pret_1_sg: "~ij- like reducir";
     pres_2: "~ices", _;
     impf_3: derived, _;
     fut_1: "~eciré|~iré", "~eciremos|~iremos";
@@ -2023,7 +2023,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Entredormirse: 6 words (entredormirse, podrirse, adormirse, dormirse, morirse, repodrirse). Like Musirse, except in 12 cells: pres_1 sg, pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, subj_1 sg, ….
     conjugation!("entredormirse", 6, "~o~irse", like Musirse;
     stem lemma: "~o~- like musirse";
-    stem rest__: "~o~ir- like echar";
+    stem verb: "~o~ir- like echar";
     pres_1: "~ue~o", _;
     pres_2: "~ue~es", _;
     impf_3: derived, _;
@@ -2036,22 +2036,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Tender: 5 words (discerner, cerner, jerver, herver, jerber). Like Conocer, except in 6 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, negative_imperative ustedes.
     conjugation!("tender", 5, "~~er", like Conocer;
-    stem rest_: "~i~- like curtir";
-    stem rest___: "~~- like conocer";
+    stem verb_pres_1_sg: "~i~- like curtir";
+    stem verb_subj_1_pl: "~~- like conocer";
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
     ),
     // Caer: 5 words (caer, raer, recaer, decaer, descaer). Like Traer.
     conjugation!("caer", 5, "~er", like Traer;
-    stem rest: "~- like creer";
+    stem verb_pret_1_sg: "~- like creer";
     ),
     // Querer: 5 words (querer, malquerer, bienquerer, desquerer, requerer). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("querer", 5, "~erer", like Echar;
-    stem rest_: "~ier- like curtir";
+    stem verb_pres_1_sg: "~ier- like curtir";
     stem lemma: "~er- like conocer";
-    stem rest: "~is- like poner";
-    stem rest__: "~err- like echar";
-    stem rest___: "~er- like conocer";
+    stem verb_pret_1_sg: "~is- like poner";
+    stem verb: "~err- like echar";
+    stem verb_subj_1_pl: "~er- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2066,11 +2066,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Cocer: 5 words (cocer, escocer, recocer, descocer, precocer). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("cocer", 5, "~ocer", like Echar;
-    stem rest_: "~ue- like fruncir";
+    stem verb_pres_1_sg: "~ue- like fruncir";
     stem lemma: "~oc- like conocer";
-    stem rest: "~oc- like conocer";
-    stem rest__: "~ocer- like echar";
-    stem rest___: "~oz- like conocer";
+    stem verb_pret_1_sg: "~oc- like conocer";
+    stem verb: "~ocer- like echar";
+    stem verb_subj_1_pl: "~oz- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2080,9 +2080,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Delinquir: 5 words (delinquir, derelinquir, jaquir, derrelinquir, relinquir). Like Sacar, except in 12 cells: pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("delinquir", 5, "~quir", like Sacar;
     stem lemma: "~qu- like curtir";
-    stem rest: "~qu- like conocer";
-    stem rest__: "~quir- like echar";
-    stem rest___: "~c- like conocer";
+    stem verb_pret_1_sg: "~qu- like conocer";
+    stem verb: "~quir- like echar";
+    stem verb_subj_1_pl: "~c- like conocer";
     pres_2: "~ques", _;
     impf_3: derived, _;
     subj_1: "~ca", _;
@@ -2096,9 +2096,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Afligirse: 5 words (autoexigirse, afligirse, arrigirse, dirigirse, erigirse). Like Regir, except in 8 cells: impf_3 sg, imperative tu, imperative usted, imperative ustedes, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("afligirse", 5, "~igirse", like Regir;
     stem lemma: "~ig- like musirse";
-    stem rest: "~ig- like conocer";
-    stem rest__: "~igir- like echar";
-    stem rest___: "~ij- like autoabastecerse";
+    stem verb_pret_1_sg: "~ig- like conocer";
+    stem verb: "~igir- like echar";
+    stem verb_subj_1_pl: "~ij- like autoabastecerse";
     impf_3: derived, _;
     imperative: "~ígete", "~íjase", _, _, "~íjanse";
     negative_imperative: _, _, derived, derived, _;
@@ -2107,7 +2107,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Reconocerse: 5 words (autoreconocerse, autorreconocerse, conocerse, desconocerse, reconocerse). Like Destoserse, except in 8 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative usted, imperative ustedes, ….
     conjugation!("reconocerse", 5, "~o~erse", like Destoserse;
-    stem rest___: "~oz~- like autoabastecerse";
+    stem verb_subj_1_pl: "~oz~- like autoabastecerse";
     pres_1: "~oz~o", _;
     subj_1: "~oz~a", _;
     subj_2: "~oz~as", _;
@@ -2130,8 +2130,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Revestirse: 5 words (desvestirse, revestirse, sobrevestirse, travestirse, vestirse). Like Incautarse, except in 21 cells: pres_1 sg, pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, ….
     conjugation!("revestirse", 5, "~e~tirse", like Incautarse;
     stem lemma: "~e~t- like musirse";
-    stem rest__: "~e~tir- like echar";
-    stem rest___: "~i~t- like autoabastecerse";
+    stem verb: "~e~tir- like echar";
+    stem verb_subj_1_pl: "~i~t- like autoabastecerse";
     pres_1: "~i~to", _;
     pres_2: "~i~tes", _;
     impf_3: derived, _;
@@ -2163,9 +2163,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Dormir: 5 words (dormir, adormir, maldormir, podrir, repodrir). Like Entredormirse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("dormir", 5, "~o~ir", like Entredormirse;
-    stem rest_: "~ue~- like curtir";
+    stem verb_pres_1_sg: "~ue~- like curtir";
     stem lemma: "~o~- like curtir";
-    stem rest___: "~u~- like conocer";
+    stem verb_subj_1_pl: "~u~- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2173,8 +2173,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Salir: 5 words (salir, asir, desasir, sobresalir, resalir). Like Curtir, except in 9 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, imperative usted, ….
     conjugation!("salir", 5, "~ir", like Curtir;
-    stem rest__: "~dr- like echar";
-    stem rest___: "~g- like conocer";
+    stem verb: "~dr- like echar";
+    stem verb_subj_1_pl: "~g- like conocer";
     pres_1: "~go", _;
     subj_1: "~ga", _;
     subj_2: "~gas", _;
@@ -2184,7 +2184,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Interdecir: 5 words (decir, antedecir, redecir, interdecir, entredecir). Like Desdecir, except in 10 cells: fut_1 pl, fut_2 sg, fut_2 pl, fut_3 sg, fut_3 pl, cond_1 sg, ….
     conjugation!("interdecir", 5, "~ecir", like Desdecir;
-    stem rest__: "~ir- like echar";
+    stem verb: "~ir- like echar";
     fut_1: _, derived;
     fut_2: derived, derived;
     fut_3: derived, derived;
@@ -2194,16 +2194,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Agorar: 4 words (agorar, engorar, cogolmar, gorar). Like Volar, except in 4 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative ustedes.
     conjugation!("agorar", 4, "~o~ar", like Volar;
-    stem rest_: "~üe~- like echar";
+    stem verb_pres_1_sg: "~üe~- like echar";
     subj_3: derived, _;
     negative_imperative: derived, derived, _, _, derived;
     ),
     // Saber: 4 words (saber, caber, haber, resaber). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("saber", 4, "~aber", like Echar;
     stem lemma: "~ab- like conocer";
-    stem rest: "~up- like poner";
-    stem rest__: "~abr- like echar";
-    stem rest___: "~ep- like conocer";
+    stem verb_pret_1_sg: "~up- like poner";
+    stem verb: "~abr- like echar";
+    stem verb_subj_1_pl: "~ep- like conocer";
     pres_1: "~é", _;
     pres_2: "~abes", _;
     impf_3: derived, _;
@@ -2217,11 +2217,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Forzar: 4 words (almorzar, forzar, esforzar, reforzar). Like Incautarse, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("forzar", 4, "~o~zar", like Incautarse;
-    stem rest_: "~ue~- like realizar";
+    stem verb_pres_1_sg: "~ue~- like realizar";
     stem lemma: "~o~z- like echar";
-    stem rest: "~o~- like realizar";
-    stem rest__: "~o~zar- like echar";
-    stem rest___: "~o~c- like echar";
+    stem verb_pret_1_sg: "~o~- like realizar";
+    stem verb: "~o~zar- like echar";
+    stem verb_subj_1_pl: "~o~c- like echar";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2230,16 +2230,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Adquirir: 4 words (adquirir, inquirir, perquirir, readquirir). Like Abrir, except in 5 cells: subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative ustedes, participle_m sg.
     conjugation!("adquirir", 4, "~~ir", like Abrir;
-    stem rest_: "~e~- like curtir";
+    stem verb_pres_1_sg: "~e~- like curtir";
     subj_3: derived, _;
     negative_imperative: derived, derived, _, _, derived;
     participle_m: "~~ido", _;
     ),
     // Cohibir: 4 words (prohibir, cohibir, rehinchir, desprohibir). Like Desvivirse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("cohibir", 4, "~i~ir", like Desvivirse;
-    stem rest_: "~í~- like curtir";
+    stem verb_pres_1_sg: "~í~- like curtir";
     stem lemma: "~i~- like curtir";
-    stem rest___: "~i~- like conocer";
+    stem verb_subj_1_pl: "~i~- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2252,8 +2252,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Distinguir: 4 words (distinguir, extinguir, subdistinguir, desextinguir). Like Curtir, except in 5 cells: pres_2 sg, impf_3 sg, imperative tu, gerund, participle_m sg.
     conjugation!("distinguir", 4, "~uir", like Curtir;
     stem lemma: "~u- like curtir";
-    stem rest: "~u- like conocer";
-    stem rest__: "~uir- like echar";
+    stem verb_pret_1_sg: "~u- like conocer";
+    stem verb: "~uir- like echar";
     pres_2: "~ues", _;
     impf_3: derived, _;
     imperative: "~ue", _, _, _, _;
@@ -2262,11 +2262,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Torcer: 4 words (torcer, retorcer, destorcer, contorcer). Like Forzar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("torcer", 4, "~o~cer", like Forzar;
-    stem rest_: "~ue~- like fruncir";
+    stem verb_pres_1_sg: "~ue~- like fruncir";
     stem lemma: "~o~c- like conocer";
-    stem rest: "~o~c- like conocer";
-    stem rest__: "~o~cer- like echar";
-    stem rest___: "~o~z- like conocer";
+    stem verb_pret_1_sg: "~o~c- like conocer";
+    stem verb: "~o~cer- like echar";
+    stem verb_subj_1_pl: "~o~z- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2288,9 +2288,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Fraguarse: 4 words (paniaguarse, sobreaguarse, desaguarse, fraguarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("fraguarse", 4, "~a~uarse", like Incautarse;
     stem lemma: "~a~u- like incautarse";
-    stem rest: "~a~- like fraguar";
-    stem rest__: "~a~uar- like echar";
-    stem rest___: "~a~ü- like incautarse";
+    stem verb_pret_1_sg: "~a~- like fraguar";
+    stem verb: "~a~uar- like echar";
+    stem verb_subj_1_pl: "~a~ü- like incautarse";
     pres_1: "~a~uo", _;
     pres_2: "~a~uas", _;
     impf_3: derived, _;
@@ -2329,9 +2329,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Punzarse: 4 words (anarquizarse, barroquizarse, endulzarse, punzarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("punzarse", 4, "~u~zarse", like Incautarse;
     stem lemma: "~u~z- like incautarse";
-    stem rest: "~u~- like realizar";
-    stem rest__: "~u~zar- like echar";
-    stem rest___: "~u~c- like incautarse";
+    stem verb_pret_1_sg: "~u~- like realizar";
+    stem verb: "~u~zar- like echar";
+    stem verb_subj_1_pl: "~u~c- like incautarse";
     pres_1: "~u~zo", _;
     pres_2: "~u~zas", _;
     impf_3: derived, _;
@@ -2345,7 +2345,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Traslucirse: 4 words (traslucirse, translucirse, deslucirse, lucirse). Like Musirse, except in 8 cells: pres_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative usted, imperative ustedes, ….
     conjugation!("traslucirse", 4, "~u~irse", like Musirse;
-    stem rest___: "~uz~- like autoabastecerse";
+    stem verb_subj_1_pl: "~uz~- like autoabastecerse";
     pres_1: "~uz~o", _;
     subj_1: "~uz~a", _;
     subj_2: "~uz~as", _;
@@ -2377,9 +2377,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Vencerse: 4 words (remecerse, convencerse, vencerse, desconvencerse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("vencerse", 4, "~e~cerse", like Incautarse;
     stem lemma: "~e~c- like autoabastecerse";
-    stem rest: "~e~c- like conocer";
-    stem rest__: "~e~cer- like echar";
-    stem rest___: "~e~z- like autoabastecerse";
+    stem verb_pret_1_sg: "~e~c- like conocer";
+    stem verb: "~e~cer- like echar";
+    stem verb_subj_1_pl: "~e~z- like autoabastecerse";
     pres_1: "~e~zo", _;
     pres_2: "~e~ces", _;
     impf_3: derived, _;
@@ -2403,10 +2403,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Argüir: 3 words (argüir, reargüir, redargüir). Like Inmiscuirse, except in 11 cells: impf_3 sg, pret_1 sg, pret_1 pl, subj_3 sg, negative_imperative tu, negative_imperative usted, ….
     conjugation!("argüir", 3, "~üir", like Inmiscuirse;
-    stem rest_: "~uy- like curtir";
+    stem verb_pres_1_sg: "~uy- like curtir";
     stem lemma: "~ü- like curtir";
-    stem rest__: "~üir- like echar";
-    stem rest___: "~uy- like conocer";
+    stem verb: "~üir- like echar";
+    stem verb_subj_1_pl: "~uy- like conocer";
     impf_3: derived, _;
     pret_1: "~üí", "~üimos";
     subj_3: derived, _;
@@ -2416,7 +2416,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Jugar: 3 words (jugar, rejugar, sobrejugar). Like Recalentar, except in 11 cells: pres_1 sg, pres_2 sg, pret_1 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("jugar", 3, "~~ar", like Recalentar;
-    stem rest___: "~~u- like echar";
+    stem verb_subj_1_pl: "~~u- like echar";
     pres_1: "~e~o", _;
     pres_2: "~e~as", _;
     pret_1: "~~ué", _;
@@ -2428,11 +2428,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Romper: 3 words (romper, derromper, arromper). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("romper", 3, "~mper", like Echar;
-    stem rest_: "~mp- like curtir";
+    stem verb_pres_1_sg: "~mp- like curtir";
     stem lemma: "~mp- like conocer";
-    stem rest: "~mp- like conocer";
-    stem rest__: "~mper- like echar";
-    stem rest___: "~mp- like conocer";
+    stem verb_pret_1_sg: "~mp- like conocer";
+    stem verb: "~mper- like echar";
+    stem verb_subj_1_pl: "~mp- like conocer";
     impf_3: derived, _;
     subj_3: derived, _;
     negative_imperative: derived, derived, derived, derived, derived;
@@ -2473,9 +2473,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Azoarse: 3 words (abarloarse, azoarse, barloarse). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("azoarse", 3, "~oarse", like Echar;
     stem lemma: "~o- like incautarse";
-    stem rest: "~o- like echar";
-    stem rest__: "~oar- like echar";
-    stem rest___: "~o- like incautarse";
+    stem verb_pret_1_sg: "~o- like echar";
+    stem verb: "~oar- like echar";
+    stem verb_subj_1_pl: "~o- like incautarse";
     pres_1: "~oo", _;
     pres_2: "~oas", _;
     impf_3: derived, _;
@@ -2489,8 +2489,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     ),
     // Nacerse: 3 words (complacerse, aplacerse, nacerse). Like Deshacerse, except in 18 cells: pres_1 sg, pret_1 sg, pret_1 pl, pret_3 sg, pret_3 pl, subj_1 sg, ….
     conjugation!("nacerse", 3, "~acerse", like Deshacerse;
-    stem rest__: "~acer- like echar";
-    stem rest___: "~azc- like autoabastecerse";
+    stem verb: "~acer- like echar";
+    stem verb_subj_1_pl: "~azc- like autoabastecerse";
     pres_1: "~azco", _;
     pret_1: "~ací", "~acimos";
     pret_3: "~ació|~ugo", "~acieron|~uguieron";
@@ -2508,9 +2508,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Trenzarse: 3 words (trenzarse, destrenzarse, homogeneizarse). Like Vencerse, except in 12 cells: pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("trenzarse", 3, "~e~zarse", like Vencerse;
     stem lemma: "~e~z- like incautarse";
-    stem rest: "~e~- like realizar";
-    stem rest__: "~e~zar- like echar";
-    stem rest___: "~e~c- like incautarse";
+    stem verb_pret_1_sg: "~e~- like realizar";
+    stem verb: "~e~zar- like echar";
+    stem verb_subj_1_pl: "~e~c- like incautarse";
     pres_2: "~e~zas", _;
     impf_3: derived, _;
     subj_1: "~e~ce", _;
@@ -2524,9 +2524,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Cubrirse: 3 words (descubrirse, cubrirse, encubrirse).
     conjugation!("cubrirse", 3, "~u~~irse";
     stem lemma: "~u~~- like musirse";
-    stem rest: "~u~~- like conocer";
-    stem rest__: "~u~~ir- like echar";
-    stem rest___: "~u~~- like autoabastecerse";
+    stem verb_pret_1_sg: "~u~~- like conocer";
+    stem verb: "~u~~ir- like echar";
+    stem verb_subj_1_pl: "~u~~- like autoabastecerse";
     pres_1: "~u~~o", _;
     pres_2: "~u~~es", _;
     impf_3: derived, _;
@@ -2541,8 +2541,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Derretirse: 3 words (derretirse, competirse, repetirse). Like Echar, except in 21 cells: pres_1 sg, pres_2 sg, impf_3 sg, pret_1 sg, pret_1 pl, pret_3 sg, ….
     conjugation!("derretirse", 3, "~etirse", like Echar;
     stem lemma: "~et- like musirse";
-    stem rest__: "~etir- like echar";
-    stem rest___: "~it- like autoabastecerse";
+    stem verb: "~etir- like echar";
+    stem verb_subj_1_pl: "~it- like autoabastecerse";
     pres_1: "~ito", _;
     pres_2: "~ites", _;
     impf_3: derived, _;
@@ -2563,9 +2563,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Fingirse: 3 words (refringirse, fingirse, atingirse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("fingirse", 3, "~i~girse", like Incautarse;
     stem lemma: "~i~g- like musirse";
-    stem rest: "~i~g- like conocer";
-    stem rest__: "~i~gir- like echar";
-    stem rest___: "~i~j- like autoabastecerse";
+    stem verb_pret_1_sg: "~i~g- like conocer";
+    stem verb: "~i~gir- like echar";
+    stem verb_subj_1_pl: "~i~j- like autoabastecerse";
     pres_1: "~i~jo", _;
     pres_2: "~i~ges", _;
     impf_3: derived, _;
@@ -2613,7 +2613,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     // Reírse: 1 words (embaírse). Like Creerse, except in 20 cells: pres_3 sg, pres_3 pl, impf_3 sg, subj_impf_1 sg, subj_impf_2 sg, subj_impf_2 pl, ….
     conjugation!("reírse", 1, "~~írse", like Creerse;
     stem lemma: "~~í- like freírse";
-    stem rest__: "~~ir- like echar";
+    stem verb: "~~ir- like echar";
     pres_3: "~~e", "~~en";
     impf_3: derived, _;
     subj_impf_1: "~~yera", _;

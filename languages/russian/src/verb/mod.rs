@@ -53,6 +53,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: Some(compounds::COMPOUND),
+    kept: Cow::Borrowed(&[]),
     prefixes: None,
     heads: flexion::Heads {
         least: None,
@@ -69,8 +70,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 1.25,
     trust: flexion::Trust {
-        regular: 0.99647987,
-        unsettled: 0.9889322,
+        regular: 0.9964744,
+        unsettled: 0.9889323,
         unattested: 1.0,
     },
 };

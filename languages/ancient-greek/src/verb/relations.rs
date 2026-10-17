@@ -36,7 +36,7 @@ macro_rules! relation {
     };
 }
 
-pub(super) static RELATIONS: [Relation<'static>; 623] = [
+pub(super) static RELATIONS: [Relation<'static>; 488] = [
     // IND_ACT_1_DU, from IND_ACT_1_PL. Few or no words have it: changed as IND_ACT_2_PL is into IND_ACT_2_DU.
     relation!(IND_ACT_1_DU, [IND_ACT_1_PL], [("~ε", "~ον")], rules {
         "" => [0 1855],
@@ -90,22 +90,18 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "υν" => [6 100],
         "ᾱν" => [8 118],
     } listed {
-        "ζειν" => 4,
-        "θωειν" => 4,
-        "μωλειν" => 4,
-        "νειν" => 4,
-        "ξειν" => 4,
-        "πνειν" => 4,
-        "προϊεναι" => 2,
-        "προϊεναι" => 7,
-        "στερειν" => 1,
-        "χειν" => 4,
-        "ἀπῐεναι" => 2,
-        "ἐκρειν" => 4,
-        "ἐκχειν" => 4,
-        "ἐξῐεναι" => 2,
-        "ἐπεξῐεναι" => 2,
-        "ῥειν" => 4,
+        1 => [
+            "στερειν",
+        ],
+        2 => [
+            "προϊεναι", "ἀπῐεναι", "ἐξῐεναι", "ἐπεξῐεναι",
+        ],
+        4 => [
+            "ζειν", "θωειν", "μωλειν", "νειν", "ξειν", "πνειν", "χειν", "ἐκρειν", "ἐκχειν", "ῥειν",
+        ],
+        7 => [
+            "προϊεναι",
+        ],
     }, true, None),
     // IND_ACT_2_SG, from SUBJ_ACT_2_SG.
     relation!(IND_ACT_2_SG, [SUBJ_ACT_2_SG], [("~", "~"), ("~ειδῃς", "~οισθᾰ"), ("~ῃρ", "~ειρ"), ("~ῃς", "~ει"), ("~ῃς", "~εις"), ("~ῃς", "~ης"), ("~ῃς", "~ις"), ("~ῐῃς", "~ει"), ("~ῠῃς", "~ῡς"), ("~ῳς", "~ως")], rules {
@@ -134,22 +130,16 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "νῠῃς" => [8 34, 4 7],
         "ῳς" => [9 4],
     } listed {
-        "διατιθῃς" => 5,
-        "κᾰθῑῃς" => 5,
-        "ξῠνειδῃς" => 1,
-        "ξῠνῑῃς" => 5,
-        "προειδῃς" => 1,
-        "προϊῃς" => 5,
-        "σῠνῑῃς" => 5,
-        "φῃς" => 0,
-        "χρῃς" => 0,
-        "ἀφῑῃς" => 5,
-        "ἐκτιθῃς" => 5,
-        "ἐνῑῃς" => 5,
-        "ἐξῑῃς" => 5,
-        "ἐπᾰνῐῃς" => 5,
-        "ἐφῑῃς" => 5,
-        "ἱῃς" => 5,
+        0 => [
+            "φῃς", "χρῃς",
+        ],
+        1 => [
+            "ξῠνειδῃς", "προειδῃς",
+        ],
+        5 => [
+            "διατιθῃς", "κᾰθῑῃς", "προϊῃς", "ἀφῑῃς", "ἐκτιθῃς", "ἐνῑῃς", "ἐξῑῃς", "ἐπᾰνῐῃς",
+            "ἐφῑῃς", "ἱῃς",
+        ],
     }, true, None),
     // IND_ACT_2_DU, from INFINITIVE_PRES_ACT.
     relation!(IND_ACT_2_DU, [INFINITIVE_PRES_ACT], [("~εναι", "~τον"), ("~ην", "~ετον"), ("~ιν", "~τον"), ("~ιναι", "~στον"), ("~ν", "~τον"), ("~ναι", "~τον")], rules {
@@ -199,25 +189,19 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "υν" => [4 100],
         "ᾱν" => [4 118],
     } listed {
-        "ζειν" => 4,
-        "θναισκην" => 1,
-        "θωειν" => 4,
-        "λᾰτρειην" => 1,
-        "μωλειν" => 4,
-        "νειν" => 4,
-        "ξειν" => 4,
-        "πλειν" => 4,
-        "πνειν" => 4,
-        "προϊεναι" => 0,
-        "προϊεναι" => 5,
-        "στερειν" => 4,
-        "χειν" => 4,
-        "ἀντεπιπλειν" => 4,
-        "ἀπῐεναι" => 0,
-        "ἐκχειν" => 4,
-        "ἐξῐεναι" => 0,
-        "ἐπεξῐεναι" => 0,
-        "ῥειν" => 4,
+        0 => [
+            "προϊεναι", "ἀπῐεναι", "ἐξῐεναι", "ἐπεξῐεναι",
+        ],
+        1 => [
+            "θναισκην", "λᾰτρειην",
+        ],
+        4 => [
+            "ζειν", "θωειν", "μωλειν", "νειν", "ξειν", "πλειν", "πνειν", "στερειν", "χειν",
+            "ἀντεπιπλειν", "ἐκχειν", "ῥειν",
+        ],
+        5 => [
+            "προϊεναι",
+        ],
     }, true, None),
     // IND_ACT_2_PL, from IND_ACT_2_DU.
     relation!(IND_ACT_2_PL, [IND_ACT_2_DU], [("~ον", "~ε")], rules {
@@ -236,9 +220,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡς" => [5 36],
         "ᾰ" => [6 2],
     } listed {
-        "μετει" => 1,
-        "πᾰρει" => 1,
-        "ἐνει" => 2,
+        1 => [
+            "μετει", "πᾰρει",
+        ],
+        2 => [
+            "ἐνει",
+        ],
     }, true, None),
     // IND_ACT_3_DU, from IND_ACT_2_DU.
     relation!(IND_ACT_3_DU, [IND_ACT_2_DU], [], none, true, None),
@@ -261,18 +248,20 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱς" => [4 26],
         "ῡς" => [11 36],
     } listed {
-        "παρορων" => 3,
-        "περιων" => 6,
-        "προϊων" => 10,
-        "ἀπῐων" => 10,
-        "ἐξῐων" => 10,
-        "ἐπεξῐων" => 10,
-        "ὠχρῐων" => 3,
+        3 => [
+            "παρορων", "ὠχρῐων",
+        ],
+        6 => [
+            "περιων",
+        ],
+        10 => [
+            "προϊων", "ἀπῐων", "ἐξῐων", "ἐπεξῐων",
+        ],
     }, true, None),
-    // IND_MID_1_SG, from IMP_ACT_3_PL.
-    relation!(IND_MID_1_SG, [IMP_ACT_3_PL], [("~ντων", "~μαι")], rules {
+    // IND_MID_1_SG, from PRESENT_IMPERATIVE_ACT_3_PL.
+    relation!(IND_MID_1_SG, [PRESENT_IMPERATIVE_ACT_3_PL], [("~ντων", "~μαι")], rules {
         "" => [0 1683],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // IND_MID_1_DU, from IND_MID_1_SG. Few or no words have it: changed as IND_MID_3_SG is into IND_MID_3_DU.
     relation!(IND_MID_1_DU, [IND_MID_1_SG], [("~ται", "~σθον")], rules {
         "" => [0 1906],
@@ -281,9 +270,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(IND_MID_1_PL, [IND_MID_1_SG], [("~αι", "~εθα"), ("~αι", "~εθᾰ")], rules {
         "" => [1 1899, 0 5],
         "ιμαι" => [0 5],
-    } listed {}, true, None),
-    // IND_MID_2_SG, from IMP_ACT_2_SG.
-    relation!(IND_MID_2_SG, [IMP_ACT_2_SG], [("~", "~"), ("~", "~αι"), ("~ε", "~ῃ"), ("~ει", "~ῃ"), ("~η", "~ᾰσαι"), ("~η", "~ῃ"), ("~ι", "~σαι"), ("~ι", "~ῃ"), ("~υ", "~ι"), ("~υ", "~σαι"), ("~ᾱ", "~ᾳ"), ("~ῡ", "~ῠσαι"), ("~ῡζε", "~υζῃ")], rules {
+    } listed {}, false, None),
+    // IND_MID_2_SG, from PRESENT_IMPERATIVE_ACT_2_SG.
+    relation!(IND_MID_2_SG, [PRESENT_IMPERATIVE_ACT_2_SG], [("~", "~"), ("~", "~αι"), ("~ε", "~ῃ"), ("~ει", "~ῃ"), ("~η", "~ᾰσαι"), ("~η", "~ῃ"), ("~ι", "~σαι"), ("~ι", "~ῃ"), ("~υ", "~ι"), ("~υ", "~σαι"), ("~ᾱ", "~ᾳ"), ("~ῡ", "~ῠσαι"), ("~ῡζε", "~υζῃ")], rules {
         "" => [2 1011, 0 342, 10 108, 8 95, 11 36, 4 26, 6 18, 1 17, 7 8, 9 4, 5 3, 12 3, 3 2],
         "ε" => [2 1011, 1 17, 12 3],
         "δδε" => [1 2],
@@ -305,13 +294,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡ" => [11 36],
         "νῡ" => [11 34],
     } listed {
-        "δῐδου" => 9,
-        "προδῐδου" => 9,
-        "πᾰρᾰδιδου" => 9,
-        "ἀντᾰποδῐδου" => 9,
+        9 => [
+            "δῐδου", "προδῐδου", "πᾰρᾰδιδου", "ἀντᾰποδῐδου",
+        ],
     }, false, None),
-    // IND_MID_2_DU, from IMP_MID_3_SG.
-    relation!(IND_MID_2_DU, [IMP_MID_3_SG], [("~ω", "~ον")], rules {
+    // IND_MID_2_DU, from PRESENT_IMPERATIVE_MID_3_SG.
+    relation!(IND_MID_2_DU, [PRESENT_IMPERATIVE_MID_3_SG], [("~ω", "~ον")], rules {
         "" => [0 1901],
     } listed {}, true, None),
     // IND_MID_2_PL, from IND_MID_2_DU.
@@ -375,10 +363,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "δωτον" => [3 4, 2 3],
         "ᾱτον" => [4 118],
     } listed {
-        "δῐδωτον" => 3,
-        "προδῐδωτον" => 3,
-        "πᾰρᾰδιδωτον" => 3,
-        "ἀντᾰποδῐδωτον" => 3,
+        3 => [
+            "δῐδωτον", "προδῐδωτον", "πᾰρᾰδιδωτον", "ἀντᾰποδῐδωτον",
+        ],
     }, true, None),
     // SUBJ_ACT_2_DU, from SUBJ_MID_2_DU.
     relation!(SUBJ_ACT_2_DU, [SUBJ_MID_2_DU], [("~σθον", "~τον")], rules {
@@ -435,12 +422,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῳο" => [8 123, 7 4],
         "ς" => [6 2],
     } listed {
-        "δῐδοιο" => 4,
-        "δῐδοιο" => 5,
-        "προδῐδοιο" => 5,
-        "πᾰρᾰδιδοιο" => 5,
-        "ἀντᾰποδῐδοιο" => 5,
-        "ἀροιο" => 5,
+        4 => [
+            "δῐδοιο",
+        ],
+        5 => [
+            "δῐδοιο", "προδῐδοιο", "πᾰρᾰδιδοιο", "ἀντᾰποδῐδοιο", "ἀροιο",
+        ],
     }, true, None),
     // SUBJ_MID_2_PL, from SUBJ_MID_2_DU.
     relation!(SUBJ_MID_2_PL, [SUBJ_MID_2_DU], [("~ον", "~ε")], rules {
@@ -479,8 +466,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(SUBJ_PASS_3_DU, [SUBJ_MID_2_DU], [], none, true, None),
     // SUBJ_PASS_3_PL, from SUBJ_MID_3_PL.
     relation!(SUBJ_PASS_3_PL, [SUBJ_MID_3_PL], [], none, true, None),
-    // OPT_ACT_1_SG, from IMP_ACT_2_SG.
-    relation!(OPT_ACT_1_SG, [IMP_ACT_2_SG], [("~", "~ην"), ("~ε", "~οιμῐ"), ("~ει", "~οιην"), ("~η", "~αιην"), ("~η", "~εοιμῐ"), ("~η", "~ῳην"), ("~θῐ", "~οιμῐ"), ("~ι", "~οιμῐ"), ("~ισθι", "~ειην"), ("~υ", "~ιην"), ("~ᾱ", "~ῳην"), ("~ῐσθῐ", "~ειην"), ("~ῡ", "~ῠοιμῐ"), ("~ῡζε", "~υζοιμῐ")], rules {
+    // OPT_ACT_1_SG, from PRESENT_IMPERATIVE_ACT_2_SG.
+    relation!(OPT_ACT_1_SG, [PRESENT_IMPERATIVE_ACT_2_SG], [("~", "~ην"), ("~ε", "~οιμῐ"), ("~ει", "~οιην"), ("~η", "~αιην"), ("~η", "~εοιμῐ"), ("~η", "~ῳην"), ("~θῐ", "~οιμῐ"), ("~ι", "~οιμῐ"), ("~ισθι", "~ειην"), ("~υ", "~ιην"), ("~ᾱ", "~ῳην"), ("~ῐσθῐ", "~ειην"), ("~ῡ", "~ῠοιμῐ"), ("~ῡζε", "~υζοιμῐ")], rules {
         "" => [1 1126, 2 376, 10 117, 9 103, 12 36, 3 26, 0 19, 7 14, 5 8, 6 5, 8 4, 13 3, 4 2, 11 2],
         "ε" => [1 1126, 13 3],
         "ῡζε" => [13 3, 1 1],
@@ -526,11 +513,15 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱς" => [9 27],
         "ῡς" => [10 36],
     } listed {
-        "παρορων" => 7,
-        "περιων" => 2,
-        "ἱνων" => 4,
-        "ἱνων" => 7,
-        "ὠχρῐων" => 7,
+        2 => [
+            "περιων",
+        ],
+        4 => [
+            "ἱνων",
+        ],
+        7 => [
+            "παρορων", "ἱνων", "ὠχρῐων",
+        ],
     }, true, None),
     // OPT_ACT_2_SG, from OPT_ACT_1_SG.
     relation!(OPT_ACT_2_SG, [OPT_ACT_1_SG], [("~μῐ", "~ρ"), ("~μῐ", "~ς"), ("~ν", "~ς")], rules {
@@ -574,7 +565,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ρ" => [3 2],
         "ς" => [4 2],
     } listed {
-        "περιειημεν" => 2,
+        2 => [
+            "περιειημεν",
+        ],
     }, true, None),
     // OPT_MID_1_SG, from OPT_MID_2_SG.
     relation!(OPT_MID_1_SG, [OPT_MID_2_SG], [("~ο", "~μην"), ("~ο", "~μᾱν"), ("~ς", "~μῐ")], rules {
@@ -608,11 +601,18 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῠωμαι" => [3 63],
         "ω" => [0 2],
     } listed {
-        "δῠνωμαι" => 1,
-        "παρορωμαι" => 4,
-        "προϊωμαι" => 2,
-        "ἱνωμαι" => 3,
-        "ἱνωμαι" => 4,
+        1 => [
+            "δῠνωμαι",
+        ],
+        2 => [
+            "προϊωμαι",
+        ],
+        3 => [
+            "ἱνωμαι",
+        ],
+        4 => [
+            "παρορωμαι", "ἱνωμαι",
+        ],
     }, true, None),
     // OPT_MID_2_DU, from OPT_MID_2_SG.
     relation!(OPT_MID_2_DU, [OPT_MID_2_SG], [("~ο", "~σθον"), ("~ς", "~τον")], rules {
@@ -662,27 +662,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(OPT_PASS_3_DU, [OPT_MID_3_DU], [], none, true, None),
     // OPT_PASS_3_PL, from OPT_MID_3_PL.
     relation!(OPT_PASS_3_PL, [OPT_MID_3_PL], [], none, true, None),
-    // IMP_ACT_1_SG, from IMP_ACT_3_SG. Few or no words have it: changed as OPT_ACT_3_SG is into OPT_ACT_1_SG.
-    relation!(IMP_ACT_1_SG, [IMP_ACT_3_SG], [("~", "~μῐ"), ("~", "~ν")], rules {
-        "" => [0 1195, 1 659],
-        "η" => [1 659],
-        "ι" => [0 1195],
-    } listed {}, true, Some((OPT_ACT_3_SG, OPT_ACT_1_SG))),
-    // IMP_ACT_1_DU, from IMP_ACT_2_DU. Few or no words have it: changed as OPT_ACT_2_PL is into OPT_ACT_1_PL.
-    relation!(IMP_ACT_1_DU, [IMP_ACT_2_DU], [("~τε", "~μεν"), ("~τε", "~μερ"), ("~τε", "~μες")], rules {
-        "" => [0 1851, 1 2, 2 2],
-    } listed {}, true, Some((OPT_ACT_2_PL, OPT_ACT_1_PL))),
-    // IMP_ACT_1_PL, from IND_ACT_1_PL. Few or no words have it: changed as IND_ACT_2_PL is into IMP_ACT_2_PL.
-    relation!(
-        IMP_ACT_1_PL,
-        [IND_ACT_1_PL],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_PL, IMP_ACT_2_PL))
-    ),
-    // IMP_ACT_2_SG, from IMP_ACT_3_SG.
-    relation!(IMP_ACT_2_SG, [IMP_ACT_3_SG], [("~εστω", "~ισθι"), ("~εστω", "~ῐσθῐ"), ("~τω", "~"), ("~τω", "~θῐ"), ("~τω", "~ι"), ("~τω", "~υ"), ("~υζετω", "~ῡζε"), ("~ᾰτω", "~η"), ("~ῠτω", "~ῡ")], rules {
+    // PRESENT_IMPERATIVE_ACT_2_SG, from PRESENT_IMPERATIVE_ACT_3_SG.
+    relation!(PRESENT_IMPERATIVE_ACT_2_SG, [PRESENT_IMPERATIVE_ACT_3_SG], [("~εστω", "~ισθι"), ("~εστω", "~ῐσθῐ"), ("~τω", "~"), ("~τω", "~θῐ"), ("~τω", "~ι"), ("~τω", "~υ"), ("~υζετω", "~ῡζε"), ("~ᾰτω", "~η"), ("~ῠτω", "~ῡ")], rules {
         "" => [2 1744, 8 36, 7 26, 4 19, 3 8, 0 4, 5 4, 1 2, 6 2],
         "ετω" => [2 1127, 4 19, 6 2],
         "ζετω" => [2 287, 6 2],
@@ -699,35 +680,45 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῐτω" => [3 4],
         "ῠτω" => [8 36],
     } listed {
-        "διατιθετω" => 4,
-        "κᾰθῑετω" => 4,
-        "ξῠνῑετω" => 4,
-        "προϊετω" => 4,
-        "προϊτω" => 3,
-        "σῠνῑετω" => 4,
-        "ἀφῑετω" => 4,
-        "ἐκτιθετω" => 4,
-        "ἐνῑετω" => 4,
-        "ἐξῑετω" => 4,
-        "ἐπεστω" => 1,
-        "ἐπᾰνῐετω" => 4,
-        "ἐφῑετω" => 4,
-        "ἱετω" => 4,
+        1 => [
+            "ἐπεστω",
+        ],
+        3 => [
+            "προϊτω",
+        ],
+        4 => [
+            "διατιθετω", "κᾰθῑετω", "προϊετω", "ἀφῑετω", "ἐκτιθετω", "ἐνῑετω", "ἐξῑετω", "ἐπᾰνῐετω",
+            "ἐφῑετω", "ἱετω",
+        ],
     }, true, None),
-    // IMP_ACT_2_DU, from IND_ACT_2_DU.
-    relation!(IMP_ACT_2_DU, [IND_ACT_2_DU], [], none, true, None),
-    // IMP_ACT_2_PL, from IND_ACT_2_PL.
-    relation!(IMP_ACT_2_PL, [IND_ACT_2_PL], [], none, true, None),
-    // IMP_ACT_3_SG, from IND_ACT_2_DU.
-    relation!(IMP_ACT_3_SG, [IND_ACT_2_DU], [("~ον", "~ω")], rules {
+    // PRESENT_IMPERATIVE_ACT_2_DU, from IND_ACT_2_DU.
+    relation!(
+        PRESENT_IMPERATIVE_ACT_2_DU,
+        [IND_ACT_2_DU],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_ACT_2_PL, from IND_ACT_2_PL.
+    relation!(
+        PRESENT_IMPERATIVE_ACT_2_PL,
+        [IND_ACT_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_ACT_3_SG, from IND_ACT_2_DU.
+    relation!(PRESENT_IMPERATIVE_ACT_3_SG, [IND_ACT_2_DU], [("~ον", "~ω")], rules {
         "" => [0 1854],
     } listed {}, true, None),
-    // IMP_ACT_3_DU, from IMP_ACT_3_SG.
-    relation!(IMP_ACT_3_DU, [IMP_ACT_3_SG], [("~", "~ν")], rules {
+    // PRESENT_IMPERATIVE_ACT_3_DU, from PRESENT_IMPERATIVE_ACT_3_SG.
+    relation!(PRESENT_IMPERATIVE_ACT_3_DU, [PRESENT_IMPERATIVE_ACT_3_SG], [("~", "~ν")], rules {
         "" => [0 1856],
     } listed {}, true, None),
-    // IMP_ACT_3_PL, from IND_ACT_1_PL.
-    relation!(IMP_ACT_3_PL, [IND_ACT_1_PL], [("~μεν", "~ντον"), ("~μεν", "~ντων"), ("~μεν", "~οντων"), ("~μεν", "~των"), ("~μερ", "~ντων")], rules {
+    // PRESENT_IMPERATIVE_ACT_3_PL, from IND_ACT_1_PL.
+    relation!(PRESENT_IMPERATIVE_ACT_3_PL, [IND_ACT_1_PL], [("~μεν", "~ντον"), ("~μεν", "~ντων"), ("~μεν", "~οντων"), ("~μεν", "~των"), ("~μερ", "~ντων")], rules {
         "" => [1 1834, 3 7, 2 6, 0 2, 4 2],
         "ομεν" => [1 1150, 0 2],
         "σμεν" => [3 7],
@@ -735,33 +726,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῐμεν" => [2 5],
         "ρ" => [4 2],
     } listed {
-        "προϊμεν" => 2,
+        2 => [
+            "προϊμεν",
+        ],
     }, true, None),
-    // IMP_MID_1_SG, from IMP_MID_2_SG. Few or no words have it: changed as OPT_MID_2_SG is into OPT_MID_1_SG.
-    relation!(
-        IMP_MID_1_SG,
-        [IMP_MID_2_SG],
-        [],
-        none,
-        true,
-        Some((OPT_MID_2_SG, OPT_MID_1_SG))
-    ),
-    // IMP_MID_1_DU, from IMP_MID_2_DU. Few or no words have it: changed as OPT_MID_2_SG is into OPT_MID_1_SG.
-    relation!(
-        IMP_MID_1_DU,
-        [IMP_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((OPT_MID_2_SG, OPT_MID_1_SG))
-    ),
-    // IMP_MID_1_PL, from IMP_MID_2_PL. Few or no words have it: changed as OPT_MID_2_PL is into OPT_MID_1_PL.
-    relation!(IMP_MID_1_PL, [IMP_MID_2_PL], [("~σθε", "~μεθᾰ"), ("~τε", "~μεν")], rules {
-        "" => [0 1900, 1 2],
-        "τε" => [1 2],
-    } listed {}, true, Some((OPT_MID_2_PL, OPT_MID_1_PL))),
-    // IMP_MID_2_SG, from OPT_MID_2_SG.
-    relation!(IMP_MID_2_SG, [OPT_MID_2_SG], [("~αιο", "~ᾰσο"), ("~ιο", "~σο"), ("~ιο", "~υ"), ("~οιο", "~εισο"), ("~οιο", "~εο"), ("~οιο", "~σο"), ("~οις", "~θῐ"), ("~ῳο", "~ω")], rules {
+    // PRESENT_IMPERATIVE_MID_2_SG, from OPT_MID_2_SG.
+    relation!(PRESENT_IMPERATIVE_MID_2_SG, [OPT_MID_2_SG], [("~αιο", "~ᾰσο"), ("~ιο", "~σο"), ("~ιο", "~υ"), ("~οιο", "~εισο"), ("~οιο", "~εο"), ("~οιο", "~σο"), ("~οις", "~θῐ"), ("~ῳο", "~ω")], rules {
         "" => [2 1653, 7 127, 5 40, 0 34, 1 23, 4 19, 3 4, 6 2],
         "ιο" => [2 1653, 5 40, 0 34, 1 23, 4 19, 3 4],
         "αιο" => [0 34],
@@ -776,53 +746,105 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῳο" => [7 127],
         "ς" => [6 2],
     } listed {
-        "αἰδοιο" => 2,
-        "αἰδοιο" => 4,
-        "δειλοιο" => 4,
-        "δῐδοιο" => 1,
-        "δῐδοιο" => 2,
-        "προδῐδοιο" => 1,
-        "πᾰρᾰδιδοιο" => 1,
-        "ἀντᾰποδῐδοιο" => 1,
+        1 => [
+            "δῐδοιο", "προδῐδοιο", "πᾰρᾰδιδοιο", "ἀντᾰποδῐδοιο",
+        ],
+        2 => [
+            "αἰδοιο", "δῐδοιο",
+        ],
+        4 => [
+            "αἰδοιο", "δειλοιο",
+        ],
     }, true, None),
-    // IMP_MID_2_DU, from IND_MID_2_DU.
-    relation!(IMP_MID_2_DU, [IND_MID_2_DU], [], none, true, None),
-    // IMP_MID_2_PL, from IND_MID_2_PL.
-    relation!(IMP_MID_2_PL, [IND_MID_2_PL], [], none, true, None),
-    // IMP_MID_3_SG, from IMP_ACT_3_SG.
-    relation!(IMP_MID_3_SG, [IMP_ACT_3_SG], [("~τω", "~σθω")], rules {
+    // PRESENT_IMPERATIVE_MID_2_DU, from IND_MID_2_DU.
+    relation!(
+        PRESENT_IMPERATIVE_MID_2_DU,
+        [IND_MID_2_DU],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_MID_2_PL, from IND_MID_2_PL.
+    relation!(
+        PRESENT_IMPERATIVE_MID_2_PL,
+        [IND_MID_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_MID_3_SG, from PRESENT_IMPERATIVE_ACT_3_SG.
+    relation!(PRESENT_IMPERATIVE_MID_3_SG, [PRESENT_IMPERATIVE_ACT_3_SG], [("~τω", "~σθω")], rules {
         "" => [0 1684],
     } listed {}, true, None),
-    // IMP_MID_3_DU, from IMP_MID_3_SG.
-    relation!(IMP_MID_3_DU, [IMP_MID_3_SG], [("~", "~ν")], rules {
+    // PRESENT_IMPERATIVE_MID_3_DU, from PRESENT_IMPERATIVE_MID_3_SG.
+    relation!(PRESENT_IMPERATIVE_MID_3_DU, [PRESENT_IMPERATIVE_MID_3_SG], [("~", "~ν")], rules {
         "" => [0 1905],
     } listed {}, true, None),
-    // IMP_MID_3_PL, from IMP_MID_3_DU.
-    relation!(IMP_MID_3_PL, [IMP_MID_3_DU], [], none, false, None),
-    // IMP_PASS_1_SG, from IND_PASS_1_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
-    relation!(IMP_PASS_1_SG, [IND_PASS_1_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_SG, IMP_PASS_3_SG))),
-    // IMP_PASS_1_DU, from IMP_PASS_2_DU. Few or no words have it: changed as OPT_PASS_2_PL is into OPT_PASS_1_PL.
-    relation!(IMP_PASS_1_DU, [IMP_PASS_2_DU], [("~σθε", "~μεθᾰ")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((OPT_PASS_2_PL, OPT_PASS_1_PL))),
-    // IMP_PASS_1_PL, from IMP_PASS_2_PL. Few or no words have it: changed as OPT_PASS_2_PL is into OPT_PASS_1_PL.
-    relation!(IMP_PASS_1_PL, [IMP_PASS_2_PL], [("~σθε", "~μεθᾰ")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((OPT_PASS_2_PL, OPT_PASS_1_PL))),
-    // IMP_PASS_2_SG, from IMP_MID_2_SG.
-    relation!(IMP_PASS_2_SG, [IMP_MID_2_SG], [], none, true, None),
-    // IMP_PASS_2_DU, from IND_MID_2_DU.
-    relation!(IMP_PASS_2_DU, [IND_MID_2_DU], [], none, true, None),
-    // IMP_PASS_2_PL, from IND_MID_2_PL.
-    relation!(IMP_PASS_2_PL, [IND_MID_2_PL], [], none, true, None),
-    // IMP_PASS_3_SG, from IMP_MID_3_SG.
-    relation!(IMP_PASS_3_SG, [IMP_MID_3_SG], [], none, true, None),
-    // IMP_PASS_3_DU, from IMP_MID_3_DU.
-    relation!(IMP_PASS_3_DU, [IMP_MID_3_DU], [], none, true, None),
-    // IMP_PASS_3_PL, from IMP_MID_3_DU.
-    relation!(IMP_PASS_3_PL, [IMP_MID_3_DU], [], none, false, None),
+    // PRESENT_IMPERATIVE_MID_3_PL, from PRESENT_IMPERATIVE_MID_3_DU.
+    relation!(
+        PRESENT_IMPERATIVE_MID_3_PL,
+        [PRESENT_IMPERATIVE_MID_3_DU],
+        [],
+        none,
+        false,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_2_SG, from PRESENT_IMPERATIVE_MID_2_SG.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_2_SG,
+        [PRESENT_IMPERATIVE_MID_2_SG],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_2_DU, from IND_MID_2_DU.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_2_DU,
+        [IND_MID_2_DU],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_2_PL, from IND_MID_2_PL.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_2_PL,
+        [IND_MID_2_PL],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_3_SG, from PRESENT_IMPERATIVE_MID_3_SG.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_3_SG,
+        [PRESENT_IMPERATIVE_MID_3_SG],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_3_DU, from PRESENT_IMPERATIVE_MID_3_DU.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_3_DU,
+        [PRESENT_IMPERATIVE_MID_3_DU],
+        [],
+        none,
+        true,
+        None
+    ),
+    // PRESENT_IMPERATIVE_PASS_3_PL, from PRESENT_IMPERATIVE_MID_3_DU.
+    relation!(
+        PRESENT_IMPERATIVE_PASS_3_PL,
+        [PRESENT_IMPERATIVE_MID_3_DU],
+        [],
+        none,
+        false,
+        None
+    ),
     // IMPERFECT_ACT_1_SG, from IMPERFECT_ACT_1_PL.
     relation!(IMPERFECT_ACT_1_SG, [IMPERFECT_ACT_1_PL], [("~εμεν", "~ην"), ("~μεν", "~"), ("~μεν", "~ν"), ("~μεν", "~υν"), ("~μεν", "~ᾰ"), ("~σμεν", "~δη"), ("~ᾰμεν", "~ην"), ("~ῠμεν", "~ῡν")], rules {
         "" => [2 1511, 7 35, 6 26, 0 16, 4 6, 1 5, 3 3, 5 2],
@@ -837,7 +859,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῃμεν" => [4 6],
         "ῠμεν" => [7 35],
     } listed {
-        "ἀντᾰπεδῐδομεν" => 3,
+        3 => [
+            "ἀντᾰπεδῐδομεν",
+        ],
     }, true, None),
     // IMPERFECT_ACT_1_DU, from IMPERFECT_ACT_1_PL. Few or no words have it: changed as IMPERFECT_ACT_2_PL is into IMPERFECT_ACT_2_DU.
     relation!(
@@ -867,15 +891,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῃτον" => [1 6],
         "ῠτον" => [8 35],
     } listed {
-        "διετιθετον" => 4,
-        "κατετῐθετον" => 4,
-        "κᾰθῑετον" => 4,
-        "ξῠνῑετον" => 4,
-        "προϊετον" => 4,
-        "σῠνῑετον" => 4,
-        "ἐνηστον" => 3,
-        "ἐξετιθετον" => 4,
-        "ἱετον" => 4,
+        3 => [
+            "ἐνηστον",
+        ],
+        4 => [
+            "διετιθετον", "κατετῐθετον", "προϊετον", "ἐξετιθετον", "ἱετον",
+        ],
     }, true, None),
     // IMPERFECT_ACT_2_DU, from IMPERFECT_ACT_2_PL.
     relation!(IMPERFECT_ACT_2_DU, [IMPERFECT_ACT_2_PL], [("~ε", "~ον"), ("~τε", "~στον")], rules {
@@ -883,8 +904,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ετε" => [0 992],
         "ητε" => [0 7, 1 5],
     } listed {
-        "ἐνητε" => 1,
-        "ἠτε" => 1,
+        1 => [
+            "ἐνητε", "ἠτε",
+        ],
     }, true, None),
     // IMPERFECT_ACT_2_PL, from IMPERFECT_ACT_3_PL.
     relation!(IMPERFECT_ACT_2_PL, [IMPERFECT_ACT_3_PL], [("~ν", "~τε"), ("~ον", "~ετε"), ("~ον", "~ιτε"), ("~ουν", "~ειτε"), ("~σαν", "~τε"), ("~σᾰν", "~τε"), ("~ων", "~ητε"), ("~ων", "~ᾱτε"), ("~ᾰν", "~τε")], rules {
@@ -901,16 +923,15 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ζων" => [6 3, 7 1],
         "ᾰν" => [5 89, 8 2],
     } listed {
-        "ἀπεζων" => 6,
-        "ἀπελῠτρουν" => 0,
-        "ἀπηλευθερουν" => 0,
-        "ἐζεον" => 2,
-        "ἐθεον" => 2,
-        "ἐκελῠτρουν" => 0,
-        "ἐπεινων" => 6,
-        "ἐπλεον" => 2,
-        "ἐχεον" => 2,
-        "ἠρουν" => 0,
+        0 => [
+            "ἀπελῠτρουν", "ἀπηλευθερουν", "ἐκελῠτρουν", "ἠρουν",
+        ],
+        2 => [
+            "ἐζεον", "ἐθεον", "ἐπλεον", "ἐχεον",
+        ],
+        6 => [
+            "ἀπεζων",
+        ],
     }, true, None),
     // IMPERFECT_ACT_3_SG, from IMPERFECT_ACT_2_SG.
     relation!(IMPERFECT_ACT_3_SG, [IMPERFECT_ACT_2_SG], [("~ησθᾰ", "~ει"), ("~ς", "~"), ("~σθα", "~ν"), ("~σθᾰ", "~ν")], rules {
@@ -939,11 +960,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡν" => [8 35],
         "ᾰ" => [7 6],
     } listed {
-        "προυδῐδουν" => 6,
-        "προϊην" => 4,
-        "ἀντᾰπεδῐδουν" => 6,
-        "ἐδῐδουν" => 6,
-        "ἱην" => 4,
+        4 => [
+            "προϊην", "ἱην",
+        ],
+        6 => [
+            "προυδῐδουν", "ἀντᾰπεδῐδουν", "ἐδῐδουν",
+        ],
     }, true, None),
     // IMPERFECT_MID_1_SG, from IMPERFECT_MID_1_PL.
     relation!(IMPERFECT_MID_1_SG, [IMPERFECT_MID_1_PL], [("~εθα", "~ην"), ("~εθᾰ", "~ην"), ("~μεν", "~ᾰ")], rules {
@@ -992,34 +1014,13 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾰμεθᾰ" => [3 8, 39 8, 0 4, 13 2, 50 1, 59 1, 62 1, 70 1],
         "ῠμεθᾰ" => [3 17, 80 4, 0 3, 19 2, 85 2, 44 1, 49 1, 65 1, 73 1],
     } listed {
-        "δεχομεθᾰ" => 3,
-        "διατιθεμεθᾰ" => 44,
-        "κᾰθορωμεθᾰ" => 20,
-        "λεχομεθᾰ" => 3,
-        "μωμᾰομεθᾰ" => 34,
-        "οἰομεθᾰ" => 49,
-        "σκεδᾰννῠμεθᾰ" => 0,
-        "σῠνοικῐζομεθᾰ" => 18,
-        "τερσομεθᾰ" => 4,
-        "ἀγᾰλλομεθᾰ" => 50,
-        "ἀναινομεθᾰ" => 50,
-        "ἀρουμεθᾰ" => 50,
-        "ἀστειευομεθᾰ" => 50,
-        "ἐκπλεομεθᾰ" => 64,
-        "ἐκτιθεμεθᾰ" => 64,
-        "ἐκχεομεθᾰ" => 64,
-        "ἐμπῐμπρωμεθᾰ" => 65,
-        "ἐξῐκνουμεθᾰ" => 70,
-        "ἐπορνῠμεθᾰ" => 73,
-        "ἰχθῠᾰζομεθᾰ" => 0,
-        "ἱλᾰσκομεθᾰ" => 0,
-        "ὀλλῠμεθᾰ" => 80,
-        "ὀλοφῡρομεθᾰ" => 80,
-        "ὑπογιγνομεθᾰ" => 82,
-        "ὠχρῐωμεθᾰ" => 84,
-        "ῥεομεθᾰ" => 85,
-        "ῥωομεθᾰ" => 85,
-    }, true, None),
+        20 => [
+            "κᾰθορωμεθᾰ",
+        ],
+        80 => [
+            "ὀλλῠμεθᾰ",
+        ],
+    }, false, None),
     // IMPERFECT_MID_2_SG, from IMPERFECT_ACT_3_PL.
     relation!(IMPERFECT_MID_2_SG, [IMPERFECT_ACT_3_PL], [("~ν", "~"), ("~ν", "~υ"), ("~ᾰν", "~ο")], rules {
         "" => [1 904, 0 472, 2 79],
@@ -1027,7 +1028,7 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "υν" => [0 377],
         "ων" => [0 95],
         "ᾰν" => [2 79],
-    } listed {}, true, None),
+    } listed {}, false, None),
     // IMPERFECT_MID_2_DU, from IMPERFECT_ACT_2_PL.
     relation!(IMPERFECT_MID_2_DU, [IMPERFECT_ACT_2_PL], [("~τε", "~σθον")], rules {
         "" => [0 1456],
@@ -1134,10 +1135,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱσεις" => [0 9, 1 4],
         "ᾳς" => [2 2],
     } listed {
-        "κᾰτᾰστᾱσεις" => 1,
-        "ἐκστᾱσεις" => 1,
-        "ἐνστᾱσεις" => 1,
-        "ἐπῐστᾱσεις" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεις", "ἐκστᾱσεις", "ἐνστᾱσεις", "ἐπῐστᾱσεις",
+        ],
     }, true, None),
     // FUTURE_IND_ACT_1_DU, from FUTURE_IND_ACT_1_PL. Few or no words have it: changed as FUTURE_IND_ACT_2_PL is into FUTURE_IND_ACT_2_DU.
     relation!(FUTURE_IND_ACT_1_DU, [FUTURE_IND_ACT_1_PL], [("~ε", "~ον")], rules {
@@ -1153,10 +1153,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "εοι" => [0 5, 1 4],
         "σοι" => [0 848],
     } listed {
-        "κᾰτᾰστᾱσεοι" => 1,
-        "ἐκστᾱσεοι" => 1,
-        "ἐνστᾱσεοι" => 1,
-        "ἐπῐστᾱσεοι" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεοι", "ἐκστᾱσεοι", "ἐνστᾱσεοι", "ἐπῐστᾱσεοι",
+        ],
     }, true, None),
     // FUTURE_IND_ACT_2_SG, from FUTURE_IND_ACT_3_SG.
     relation!(FUTURE_IND_ACT_2_SG, [FUTURE_IND_ACT_3_SG], [("~", "~ς")], rules {
@@ -1220,8 +1219,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ψῃ" => [25 72],
         "ῳ" => [33 6],
     } listed {
-        "λεσῃ" => 19,
-        "ὀλεσῃ" => 19,
+        19 => [
+            "λεσῃ", "ὀλεσῃ",
+        ],
     }, false, None),
     // FUTURE_IND_ACT_3_DU, from FUTURE_IND_ACT_2_DU.
     relation!(
@@ -1238,10 +1238,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱσεις" => [0 9, 1 4],
         "ᾳς" => [2 2],
     } listed {
-        "κᾰτᾰστᾱσεις" => 1,
-        "ἐκστᾱσεις" => 1,
-        "ἐνστᾱσεις" => 1,
-        "ἐπῐστᾱσεις" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεις", "ἐκστᾱσεις", "ἐνστᾱσεις", "ἐπῐστᾱσεις",
+        ],
     }, true, None),
     // FUTURE_IND_MID_1_SG, from FUTURE_OPT_ACT_1_SG.
     relation!(FUTURE_IND_MID_1_SG, [FUTURE_OPT_ACT_1_SG], [("~ιην", "~υμαι"), ("~ιμῐ", "~μαι"), ("~ιμῐ", "~υμαι"), ("~ῑψοιμῐ", "~ῐφησομαι")], rules {
@@ -1279,7 +1278,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(FUTURE_IND_MID_3_SG, [FUTURE_IND_MID_2_DU], [("~εσθον", "~ται"), ("~σθον", "~ται")], rules {
         "" => [1 1521, 0 3],
     } listed {
-        "ἐσεσθον" => 0,
+        0 => [
+            "ἐσεσθον",
+        ],
     }, true, None),
     // FUTURE_IND_MID_3_DU, from FUTURE_IND_MID_2_DU.
     relation!(
@@ -1309,7 +1310,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾰθω" => [9 8, 10 6],
         "λω" => [8 2, 9 2],
     } listed {
-        "ἐξενεχθω" => 0,
+        0 => [
+            "ἐξενεχθω",
+        ],
     }, false, None),
     // FUTURE_IND_PASS_1_DU, from FUTURE_IND_PASS_1_SG. Few or no words have it: changed as FUTURE_IND_PASS_2_SG is into FUTURE_IND_PASS_2_DU.
     relation!(FUTURE_IND_PASS_1_DU, [FUTURE_IND_PASS_1_SG], [("~ῃ", "~εσθον")], rules {
@@ -1348,132 +1351,6 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(FUTURE_IND_PASS_3_PL, [FUTURE_IND_PASS_1_SG], [("~μαι", "~νται")], rules {
         "" => [0 1058],
     } listed {}, true, None),
-    // FUTURE_SUBJ_ACT_1_SG, from FUTURE_IND_ACT_1_SG. Few or no words have it: changed as PERFECT_IND_ACT_1_SG is into PERFECT_SUBJ_ACT_1_SG.
-    relation!(FUTURE_SUBJ_ACT_1_SG, [FUTURE_IND_ACT_1_SG], [("~ᾰ", "~ω")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_1_SG, PERFECT_SUBJ_ACT_1_SG))),
-    // FUTURE_SUBJ_ACT_1_DU, from SUBJ_ACT_1_SG. Few or no words have it: as it is.
-    relation!(
-        FUTURE_SUBJ_ACT_1_DU,
-        [SUBJ_ACT_1_SG],
-        [],
-        none,
-        true,
-        Some((SUBJ_ACT_1_SG, SUBJ_ACT_1_SG))
-    ),
-    // FUTURE_SUBJ_ACT_1_PL, from FUTURE_OPT_ACT_1_PL. Few or no words have it: changed as PERFECT_OPT_ACT_1_PL is into PERFECT_SUBJ_ACT_1_PL.
-    relation!(FUTURE_SUBJ_ACT_1_PL, [FUTURE_OPT_ACT_1_PL], [("~αιμεν", "~ωμεν"), ("~οιμεν", "~ωμεν")], rules {
-        "" => [1 1124, 0 2],
-        "αιμεν" => [0 2],
-    } listed {}, true, Some((PERFECT_OPT_ACT_1_PL, PERFECT_SUBJ_ACT_1_PL))),
-    // FUTURE_SUBJ_ACT_2_SG, from FUTURE_IND_ACT_2_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_SUBJ_ACT_2_SG.
-    relation!(FUTURE_SUBJ_ACT_2_SG, [FUTURE_IND_ACT_2_SG], [("~ᾰς", "~ῃς")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_SUBJ_ACT_2_SG))),
-    // FUTURE_SUBJ_ACT_2_DU, from FUTURE_OPT_ACT_2_DU. Few or no words have it: changed as PERFECT_OPT_ACT_2_DU is into PERFECT_SUBJ_ACT_2_DU.
-    relation!(FUTURE_SUBJ_ACT_2_DU, [FUTURE_OPT_ACT_2_DU], [("~αιτον", "~ητον"), ("~οιτον", "~ητον")], rules {
-        "" => [1 1124, 0 2],
-        "αιτον" => [0 2],
-    } listed {}, true, Some((PERFECT_OPT_ACT_2_DU, PERFECT_SUBJ_ACT_2_DU))),
-    // FUTURE_SUBJ_ACT_2_PL, from FUTURE_IND_ACT_2_PL. Few or no words have it: changed as PERFECT_IND_ACT_2_PL is into PERFECT_SUBJ_ACT_2_PL.
-    relation!(FUTURE_SUBJ_ACT_2_PL, [FUTURE_IND_ACT_2_PL], [("~υτε", "~ῠθητε"), ("~ᾰτε", "~ητε")], rules {
-        "" => [1 1124, 0 2],
-        "υτε" => [0 2],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_PL, PERFECT_SUBJ_ACT_2_PL))),
-    // FUTURE_SUBJ_ACT_3_SG, from FUTURE_IND_ACT_3_SG. Few or no words have it: changed as PERFECT_IND_ACT_3_SG is into PERFECT_SUBJ_ACT_3_SG.
-    relation!(FUTURE_SUBJ_ACT_3_SG, [FUTURE_IND_ACT_3_SG], [("~ε", "~ῃ")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_SG, PERFECT_SUBJ_ACT_3_SG))),
-    // FUTURE_SUBJ_ACT_3_DU, from FUTURE_IND_ACT_3_DU. Few or no words have it: changed as PERFECT_IND_ACT_3_DU is into PERFECT_SUBJ_ACT_3_DU.
-    relation!(FUTURE_SUBJ_ACT_3_DU, [FUTURE_IND_ACT_3_DU], [("~ᾰτον", "~ητον")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_DU, PERFECT_SUBJ_ACT_3_DU))),
-    // FUTURE_SUBJ_ACT_3_PL, from FUTURE_IND_ACT_3_PL. Few or no words have it: changed as PERFECT_IND_ACT_3_PL is into PERFECT_SUBJ_ACT_3_PL.
-    relation!(FUTURE_SUBJ_ACT_3_PL, [FUTURE_IND_ACT_3_PL], [("~ᾱσῐ", "~ωσῐ")], rules {
-        "" => [0 1125],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_PL, PERFECT_SUBJ_ACT_3_PL))),
-    // FUTURE_SUBJ_MID_1_SG, from FUTURE_OPT_MID_1_SG. Few or no words have it: changed as PERFECT_OPT_MID_1_SG is into PERFECT_SUBJ_MID_1_SG.
-    relation!(FUTURE_SUBJ_MID_1_SG, [FUTURE_OPT_MID_1_SG], [("~εἴην", "~ὦ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_1_SG, PERFECT_SUBJ_MID_1_SG))),
-    // FUTURE_SUBJ_MID_1_DU, from SUBJ_MID_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_SUBJ_MID_1_DU,
-        [SUBJ_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((SUBJ_MID_2_DU, SUBJ_MID_2_DU))
-    ),
-    // FUTURE_SUBJ_MID_1_PL, from FUTURE_OPT_MID_1_PL. Few or no words have it: changed as PERFECT_OPT_MID_1_PL is into PERFECT_SUBJ_MID_1_PL.
-    relation!(FUTURE_SUBJ_MID_1_PL, [FUTURE_OPT_MID_1_PL], [("~εἴημεν", "~ὦμεν")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_1_PL, PERFECT_SUBJ_MID_1_PL))),
-    // FUTURE_SUBJ_MID_2_SG, from FUTURE_OPT_MID_2_SG. Few or no words have it: changed as PERFECT_OPT_MID_2_SG is into PERFECT_SUBJ_MID_2_SG.
-    relation!(FUTURE_SUBJ_MID_2_SG, [FUTURE_OPT_MID_2_SG], [("~εἴης", "~ᾖς")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_SG, PERFECT_SUBJ_MID_2_SG))),
-    // FUTURE_SUBJ_MID_2_DU, from FUTURE_OPT_MID_2_DU. Few or no words have it: changed as PERFECT_OPT_MID_2_DU is into PERFECT_SUBJ_MID_2_DU.
-    relation!(FUTURE_SUBJ_MID_2_DU, [FUTURE_OPT_MID_2_DU], [("~εἴητον", "~ἦτον")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_DU, PERFECT_SUBJ_MID_2_DU))),
-    // FUTURE_SUBJ_MID_2_PL, from FUTURE_OPT_MID_2_PL. Few or no words have it: changed as PERFECT_OPT_MID_2_PL is into PERFECT_SUBJ_MID_2_PL.
-    relation!(FUTURE_SUBJ_MID_2_PL, [FUTURE_OPT_MID_2_PL], [("~εἴητε", "~ἦτε")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_PL, PERFECT_SUBJ_MID_2_PL))),
-    // FUTURE_SUBJ_MID_3_SG, from FUTURE_OPT_MID_3_SG. Few or no words have it: changed as PERFECT_OPT_MID_3_SG is into PERFECT_SUBJ_MID_3_SG.
-    relation!(FUTURE_SUBJ_MID_3_SG, [FUTURE_OPT_MID_3_SG], [("~εἴη", "~ᾖ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_SG, PERFECT_SUBJ_MID_3_SG))),
-    // FUTURE_SUBJ_MID_3_DU, from FUTURE_OPT_MID_3_DU. Few or no words have it: changed as PERFECT_OPT_MID_3_DU is into PERFECT_SUBJ_MID_3_DU.
-    relation!(FUTURE_SUBJ_MID_3_DU, [FUTURE_OPT_MID_3_DU], [("~εἰήτην", "~ἦτον")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_DU, PERFECT_SUBJ_MID_3_DU))),
-    // FUTURE_SUBJ_MID_3_PL, from FUTURE_OPT_MID_3_PL. Few or no words have it: changed as PERFECT_OPT_MID_3_PL is into PERFECT_SUBJ_MID_3_PL.
-    relation!(FUTURE_SUBJ_MID_3_PL, [FUTURE_OPT_MID_3_PL], [("~εἴησᾰν", "~ὦσῐ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_PL, PERFECT_SUBJ_MID_3_PL))),
-    // FUTURE_SUBJ_PASS_1_SG, from FUTURE_OPT_PASS_1_SG. Few or no words have it: changed as AORIST_OPT_PASS_1_SG is into AORIST_SUBJ_PASS_1_SG.
-    relation!(FUTURE_SUBJ_PASS_1_SG, [FUTURE_OPT_PASS_1_SG], [("~ειην", "~ω")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_1_SG, AORIST_SUBJ_PASS_1_SG))),
-    // FUTURE_SUBJ_PASS_1_DU, from SUBJ_PASS_1_SG. Few or no words have it: as it is.
-    relation!(
-        FUTURE_SUBJ_PASS_1_DU,
-        [SUBJ_PASS_1_SG],
-        [],
-        none,
-        true,
-        Some((SUBJ_PASS_1_SG, SUBJ_PASS_1_SG))
-    ),
-    // FUTURE_SUBJ_PASS_1_PL, from FUTURE_OPT_PASS_1_PL. Few or no words have it: changed as AORIST_OPT_PASS_1_PL is into AORIST_SUBJ_PASS_1_PL.
-    relation!(FUTURE_SUBJ_PASS_1_PL, [FUTURE_OPT_PASS_1_PL], [("~ειμεν", "~ωμεν")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_1_PL, AORIST_SUBJ_PASS_1_PL))),
-    // FUTURE_SUBJ_PASS_2_SG, from FUTURE_OPT_PASS_2_SG. Few or no words have it: changed as AORIST_OPT_PASS_2_SG is into AORIST_SUBJ_PASS_2_SG.
-    relation!(FUTURE_SUBJ_PASS_2_SG, [FUTURE_OPT_PASS_2_SG], [("~ειης", "~ῃς")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_SG, AORIST_SUBJ_PASS_2_SG))),
-    // FUTURE_SUBJ_PASS_2_DU, from FUTURE_OPT_PASS_2_DU. Few or no words have it: changed as AORIST_OPT_PASS_2_DU is into AORIST_SUBJ_PASS_2_DU.
-    relation!(FUTURE_SUBJ_PASS_2_DU, [FUTURE_OPT_PASS_2_DU], [("~ειτον", "~ητον")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_DU, AORIST_SUBJ_PASS_2_DU))),
-    // FUTURE_SUBJ_PASS_2_PL, from FUTURE_OPT_PASS_2_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_SUBJ_PASS_2_PL.
-    relation!(FUTURE_SUBJ_PASS_2_PL, [FUTURE_OPT_PASS_2_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_SUBJ_PASS_2_PL))),
-    // FUTURE_SUBJ_PASS_3_SG, from FUTURE_OPT_PASS_3_SG. Few or no words have it: changed as AORIST_OPT_PASS_3_SG is into AORIST_SUBJ_PASS_3_SG.
-    relation!(FUTURE_SUBJ_PASS_3_SG, [FUTURE_OPT_PASS_3_SG], [("~ειη", "~ῃ")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_SG, AORIST_SUBJ_PASS_3_SG))),
-    // FUTURE_SUBJ_PASS_3_DU, from FUTURE_OPT_PASS_3_DU. Few or no words have it: changed as AORIST_OPT_PASS_3_DU is into AORIST_SUBJ_PASS_3_DU.
-    relation!(FUTURE_SUBJ_PASS_3_DU, [FUTURE_OPT_PASS_3_DU], [("~ειτην", "~ητον")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_DU, AORIST_SUBJ_PASS_3_DU))),
-    // FUTURE_SUBJ_PASS_3_PL, from FUTURE_OPT_PASS_3_PL. Few or no words have it: changed as AORIST_OPT_PASS_3_PL is into AORIST_SUBJ_PASS_3_PL.
-    relation!(FUTURE_SUBJ_PASS_3_PL, [FUTURE_OPT_PASS_3_PL], [("~ειεν", "~ωσῐ")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_PL, AORIST_SUBJ_PASS_3_PL))),
     // FUTURE_OPT_ACT_1_SG, from FUTURE_IND_ACT_1_SG.
     relation!(FUTURE_OPT_ACT_1_SG, [FUTURE_IND_ACT_1_SG], [("~ω", "~οιην"), ("~ω", "~οιμῐ"), ("~ω", "~ῳην")], rules {
         "" => [1 1111, 0 256, 2 2],
@@ -1488,9 +1365,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ϊω" => [0 3],
         "ῐω" => [0 108, 2 1],
     } listed {
-        "δῐᾰχεω" => 0,
-        "σκεδω" => 2,
-        "σκῐω" => 2,
+        0 => [
+            "δῐᾰχεω",
+        ],
+        2 => [
+            "σκεδω", "σκῐω",
+        ],
     }, true, None),
     // FUTURE_OPT_ACT_1_DU, from FUTURE_OPT_ACT_1_PL. Few or no words have it: changed as FUTURE_OPT_ACT_2_PL is into FUTURE_OPT_ACT_2_DU.
     relation!(FUTURE_OPT_ACT_1_DU, [FUTURE_OPT_ACT_1_PL], [("~ε", "~ον")], rules {
@@ -1502,10 +1382,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱσεις" => [0 9, 1 4],
         "ᾳς" => [2 2],
     } listed {
-        "κᾰτᾰστᾱσεις" => 1,
-        "ἐκστᾱσεις" => 1,
-        "ἐνστᾱσεις" => 1,
-        "ἐπῐστᾱσεις" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεις", "ἐκστᾱσεις", "ἐνστᾱσεις", "ἐπῐστᾱσεις",
+        ],
     }, true, None),
     // FUTURE_OPT_ACT_2_SG, from FUTURE_OPT_ACT_1_SG.
     relation!(FUTURE_OPT_ACT_2_SG, [FUTURE_OPT_ACT_1_SG], [("~μῐ", "~ς"), ("~ν", "~ς")], rules {
@@ -1517,8 +1396,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(FUTURE_OPT_ACT_2_DU, [FUTURE_IND_ACT_1_SG], [("~ω", "~οιτον"), ("~ω", "~ῳτον")], rules {
         "" => [0 1367, 1 2],
     } listed {
-        "σκεδω" => 1,
-        "σκῐω" => 1,
+        1 => [
+            "σκεδω", "σκῐω",
+        ],
     }, true, None),
     // FUTURE_OPT_ACT_2_PL, from FUTURE_OPT_ACT_2_DU.
     relation!(FUTURE_OPT_ACT_2_PL, [FUTURE_OPT_ACT_2_DU], [("~ον", "~ε")], rules {
@@ -1536,10 +1416,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾱσεις" => [0 9, 1 4],
         "ᾳς" => [2 2],
     } listed {
-        "κᾰτᾰστᾱσεις" => 1,
-        "ἐκστᾱσεις" => 1,
-        "ἐνστᾱσεις" => 1,
-        "ἐπῐστᾱσεις" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεις", "ἐκστᾱσεις", "ἐνστᾱσεις", "ἐπῐστᾱσεις",
+        ],
     }, true, None),
     // FUTURE_OPT_ACT_3_PL, from FUTURE_OPT_ACT_2_DU.
     relation!(FUTURE_OPT_ACT_3_PL, [FUTURE_OPT_ACT_2_DU], [("~τον", "~εν")], rules {
@@ -1550,10 +1429,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "" => [0 1520, 1 4],
         "εοιτο" => [0 6, 1 4],
     } listed {
-        "κᾰτᾰστᾱσεοιτο" => 1,
-        "ἐκστᾱσεοιτο" => 1,
-        "ἐνστᾱσεοιτο" => 1,
-        "ἐπῐστᾱσεοιτο" => 1,
+        1 => [
+            "κᾰτᾰστᾱσεοιτο", "ἐκστᾱσεοιτο", "ἐνστᾱσεοιτο", "ἐπῐστᾱσεοιτο",
+        ],
     }, true, None),
     // FUTURE_OPT_MID_1_DU, from FUTURE_OPT_MID_1_SG. Few or no words have it: changed as FUTURE_OPT_MID_2_SG is into FUTURE_OPT_MID_2_DU.
     relation!(FUTURE_OPT_MID_1_DU, [FUTURE_OPT_MID_1_SG], [("~ο", "~σθον")], rules {
@@ -1628,174 +1506,6 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(FUTURE_OPT_PASS_3_PL, [FUTURE_IND_PASS_1_SG], [("~μαι", "~ιντο")], rules {
         "" => [0 1058],
     } listed {}, true, None),
-    // FUTURE_IMP_ACT_1_SG, from FUTURE_IND_ACT_1_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_IMP_ACT_2_SG.
-    relation!(FUTURE_IMP_ACT_1_SG, [FUTURE_IND_ACT_1_SG], [("~ᾰς", "~ε")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_IMP_ACT_2_SG))),
-    // FUTURE_IMP_ACT_1_DU, from IMP_ACT_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_IMP_ACT_1_DU,
-        [IMP_ACT_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_ACT_2_DU, IMP_ACT_2_DU))
-    ),
-    // FUTURE_IMP_ACT_1_PL, from FUTURE_IND_ACT_1_PL. Few or no words have it: changed as IND_ACT_2_PL is into IMP_ACT_2_PL.
-    relation!(
-        FUTURE_IMP_ACT_1_PL,
-        [FUTURE_IND_ACT_1_PL],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_PL, IMP_ACT_2_PL))
-    ),
-    // FUTURE_IMP_ACT_2_SG, from FUTURE_IND_ACT_2_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_IMP_ACT_2_SG.
-    relation!(FUTURE_IMP_ACT_2_SG, [FUTURE_IND_ACT_2_SG], [("~ᾰς", "~ε")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_IMP_ACT_2_SG))),
-    // FUTURE_IMP_ACT_2_DU, from FUTURE_IND_ACT_2_DU. Few or no words have it: changed as IND_ACT_2_DU is into IMP_ACT_2_DU.
-    relation!(
-        FUTURE_IMP_ACT_2_DU,
-        [FUTURE_IND_ACT_2_DU],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_DU, IMP_ACT_2_DU))
-    ),
-    // FUTURE_IMP_ACT_2_PL, from FUTURE_IND_ACT_2_PL. Few or no words have it: changed as IND_ACT_2_PL is into IMP_ACT_2_PL.
-    relation!(
-        FUTURE_IMP_ACT_2_PL,
-        [FUTURE_IND_ACT_2_PL],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_PL, IMP_ACT_2_PL))
-    ),
-    // FUTURE_IMP_ACT_3_SG, from FUTURE_IND_ACT_3_SG. Few or no words have it: changed as PERFECT_IND_ACT_3_SG is into PERFECT_IMP_ACT_3_SG.
-    relation!(FUTURE_IMP_ACT_3_SG, [FUTURE_IND_ACT_3_SG], [("~", "~τω")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_SG, PERFECT_IMP_ACT_3_SG))),
-    // FUTURE_IMP_ACT_3_DU, from FUTURE_IND_ACT_3_DU. Few or no words have it: changed as IND_ACT_3_DU is into IMP_ACT_3_DU.
-    relation!(FUTURE_IMP_ACT_3_DU, [FUTURE_IND_ACT_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1854],
-    } listed {}, true, Some((IND_ACT_3_DU, IMP_ACT_3_DU))),
-    // FUTURE_IMP_ACT_3_PL, from FUTURE_IND_ACT_3_PL. Few or no words have it: changed as PERFECT_IND_ACT_3_PL is into PERFECT_IMP_ACT_3_PL.
-    relation!(FUTURE_IMP_ACT_3_PL, [FUTURE_IND_ACT_3_PL], [("~ᾱσῐ", "~οντων"), ("~ᾱσῐ", "~ᾰντων")], rules {
-        "" => [0 1123, 1 2],
-        "τᾱσῐ" => [1 2, 0 1],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_PL, PERFECT_IMP_ACT_3_PL))),
-    // FUTURE_IMP_MID_1_SG, from FUTURE_IND_MID_1_SG. Few or no words have it: changed as PERFECT_IND_MID_2_SG is into PERFECT_IMP_MID_2_SG.
-    relation!(
-        FUTURE_IMP_MID_1_SG,
-        [FUTURE_IND_MID_1_SG],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_SG, PERFECT_IMP_MID_2_SG))
-    ),
-    // FUTURE_IMP_MID_1_DU, from IMP_MID_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_IMP_MID_1_DU,
-        [IMP_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_MID_2_DU, IMP_MID_2_DU))
-    ),
-    // FUTURE_IMP_MID_1_PL, from FUTURE_IND_MID_1_PL. Few or no words have it: changed as PERFECT_IND_MID_2_PL is into PERFECT_IMP_MID_2_PL.
-    relation!(
-        FUTURE_IMP_MID_1_PL,
-        [FUTURE_IND_MID_1_PL],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_PL, PERFECT_IMP_MID_2_PL))
-    ),
-    // FUTURE_IMP_MID_2_SG, from FUTURE_IND_MID_2_SG. Few or no words have it: changed as PERFECT_IND_MID_2_SG is into PERFECT_IMP_MID_2_SG.
-    relation!(
-        FUTURE_IMP_MID_2_SG,
-        [FUTURE_IND_MID_2_SG],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_SG, PERFECT_IMP_MID_2_SG))
-    ),
-    // FUTURE_IMP_MID_2_DU, from FUTURE_IND_MID_2_DU. Few or no words have it: changed as PERFECT_IND_MID_2_DU is into PERFECT_IMP_MID_2_DU.
-    relation!(
-        FUTURE_IMP_MID_2_DU,
-        [FUTURE_IND_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_DU, PERFECT_IMP_MID_2_DU))
-    ),
-    // FUTURE_IMP_MID_2_PL, from FUTURE_IND_MID_2_PL. Few or no words have it: changed as PERFECT_IND_MID_2_PL is into PERFECT_IMP_MID_2_PL.
-    relation!(
-        FUTURE_IMP_MID_2_PL,
-        [FUTURE_IND_MID_2_PL],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_PL, PERFECT_IMP_MID_2_PL))
-    ),
-    // FUTURE_IMP_MID_3_SG, from FUTURE_IND_MID_3_SG. Few or no words have it: changed as IND_MID_3_SG is into IMP_MID_3_SG.
-    relation!(FUTURE_IMP_MID_3_SG, [FUTURE_IND_MID_3_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1901],
-    } listed {}, true, Some((IND_MID_3_SG, IMP_MID_3_SG))),
-    // FUTURE_IMP_MID_3_DU, from FUTURE_IND_MID_3_DU. Few or no words have it: changed as PERFECT_IND_MID_3_DU is into PERFECT_IMP_MID_3_DU.
-    relation!(FUTURE_IMP_MID_3_DU, [FUTURE_IND_MID_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1166],
-    } listed {}, true, Some((PERFECT_IND_MID_3_DU, PERFECT_IMP_MID_3_DU))),
-    // FUTURE_IMP_MID_3_PL, from FUTURE_OPT_MID_3_PL. Few or no words have it: changed as AORIST_OPT_MID_3_PL is into AORIST_IMP_MID_3_PL.
-    relation!(FUTURE_IMP_MID_3_PL, [FUTURE_OPT_MID_3_PL], [("~αιντο", "~ᾰσθων"), ("~ιντο", "~σθων"), ("~οιντο", "~εσθων"), ("αιντο~", "ᾰσθων~")], rules {
-        "" => [0 1368, 2 132, 1 13, 3 2],
-        "αιντο" => [0 1368, 3 2],
-        "ειντο" => [1 8],
-        "οιντο" => [2 132, 1 5],
-        "δοιντο" => [2 9, 1 5],
-    } listed {}, true, Some((AORIST_OPT_MID_3_PL, AORIST_IMP_MID_3_PL))),
-    // FUTURE_IMP_PASS_1_SG, from FUTURE_IND_PASS_1_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
-    relation!(FUTURE_IMP_PASS_1_SG, [FUTURE_IND_PASS_1_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_SG, IMP_PASS_3_SG))),
-    // FUTURE_IMP_PASS_1_DU, from IMP_PASS_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_IMP_PASS_1_DU,
-        [IMP_PASS_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_PASS_2_DU, IMP_PASS_2_DU))
-    ),
-    // FUTURE_IMP_PASS_1_PL, from FUTURE_OPT_PASS_1_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_IMP_PASS_2_PL.
-    relation!(FUTURE_IMP_PASS_1_PL, [FUTURE_OPT_PASS_1_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_IMP_PASS_2_PL))),
-    // FUTURE_IMP_PASS_2_SG, from FUTURE_IND_PASS_2_SG. Few or no words have it: changed as PERFECT_IND_PASS_2_SG is into PERFECT_IMP_PASS_2_SG.
-    relation!(FUTURE_IMP_PASS_2_SG, [FUTURE_IND_PASS_2_SG], [("~αι", "~ο")], rules {
-        "" => [0 1137],
-    } listed {}, true, Some((PERFECT_IND_PASS_2_SG, PERFECT_IMP_PASS_2_SG))),
-    // FUTURE_IMP_PASS_2_DU, from FUTURE_IND_PASS_2_DU. Few or no words have it: changed as IND_PASS_2_DU is into IMP_PASS_2_DU.
-    relation!(FUTURE_IMP_PASS_2_DU, [FUTURE_IND_PASS_2_DU], [("~", "~")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_2_DU, IMP_PASS_2_DU))),
-    // FUTURE_IMP_PASS_2_PL, from FUTURE_OPT_PASS_2_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_IMP_PASS_2_PL.
-    relation!(FUTURE_IMP_PASS_2_PL, [FUTURE_OPT_PASS_2_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_IMP_PASS_2_PL))),
-    // FUTURE_IMP_PASS_3_SG, from FUTURE_IND_PASS_3_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
-    relation!(FUTURE_IMP_PASS_3_SG, [FUTURE_IND_PASS_3_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_SG, IMP_PASS_3_SG))),
-    // FUTURE_IMP_PASS_3_DU, from FUTURE_IND_PASS_3_DU. Few or no words have it: changed as IND_PASS_3_DU is into IMP_PASS_3_DU.
-    relation!(FUTURE_IMP_PASS_3_DU, [FUTURE_IND_PASS_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_DU, IMP_PASS_3_DU))),
-    // FUTURE_IMP_PASS_3_PL, from FUTURE_OPT_PASS_3_PL. Few or no words have it: changed as AORIST_OPT_PASS_3_PL is into AORIST_IMP_PASS_3_PL.
-    relation!(FUTURE_IMP_PASS_3_PL, [FUTURE_OPT_PASS_3_PL], [("~ιεν", "~ντων")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_PL, AORIST_IMP_PASS_3_PL))),
     // AORIST_IND_ACT_1_SG, from AORIST_IND_ACT_3_PL.
     relation!(AORIST_IND_ACT_1_SG, [AORIST_IND_ACT_3_PL], [("~", "~"), ("~εσᾰν", "~ηκᾰ"), ("~ν", "~"), ("~οσᾰν", "~ωκᾰ"), ("~σᾰν", "~ν")], rules {
         "" => [2 1390, 0 143, 4 17, 1 2, 3 2],
@@ -1807,27 +1517,23 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ωσᾰν" => [2 100, 4 6],
         "γνωσᾰν" => [4 4],
     } listed {
-        "εἰσᾰνεβησᾰν" => 4,
-        "κᾰτεβησᾰν" => 4,
-        "πᾰρεβησᾰν" => 4,
-        "ἀμφεστησᾰν" => 4,
-        "ἀντᾰπεδοσᾰν" => 3,
-        "ἀπᾰνεστησᾰν" => 4,
-        "ἐβῐωσᾰν" => 4,
-        "ἐδοσᾰν" => 3,
-        "ἐθεσᾰν" => 1,
-        "ἐπενεθεσᾰν" => 1,
-        "ἐπεξεβησᾰν" => 4,
-        "ἐτλησᾰν" => 4,
-        "ἐφῡσᾰν" => 4,
-        "ἑᾱλωσᾰν" => 4,
+        1 => [
+            "ἐθεσᾰν", "ἐπενεθεσᾰν",
+        ],
+        3 => [
+            "ἀντᾰπεδοσᾰν", "ἐδοσᾰν",
+        ],
+        4 => [
+            "εἰσᾰνεβησᾰν", "κᾰτεβησᾰν", "πᾰρεβησᾰν", "ἀμφεστησᾰν", "ἀπᾰνεστησᾰν", "ἐβῐωσᾰν",
+            "ἐπεξεβησᾰν", "ἐτλησᾰν", "ἐφῡσᾰν", "ἑᾱλωσᾰν",
+        ],
     }, true, None),
     // AORIST_IND_ACT_1_DU, from AORIST_IND_ACT_1_PL. Few or no words have it: changed as AORIST_IND_ACT_2_PL is into AORIST_IND_ACT_2_DU.
     relation!(AORIST_IND_ACT_1_DU, [AORIST_IND_ACT_1_PL], [("~ε", "~ον")], rules {
         "" => [0 1558],
     } listed {}, true, Some((AORIST_IND_ACT_2_PL, AORIST_IND_ACT_2_DU))),
-    // AORIST_IND_ACT_1_PL, from AORIST_IMP_ACT_2_SG.
-    relation!(AORIST_IND_ACT_1_PL, [AORIST_IMP_ACT_2_SG], [("~αινεσον", "~ῃνεσᾰμεν"), ("~αιτησον", "~ῃτησᾰμεν"), ("~αλῡσον", "~ελῡσᾰμεν"), ("~αρον", "~ηρᾰμεν"), ("~γκινδῡνευσον", "~νεκινδῡνευσᾰμεν"), ("~ε", "~ομεν"), ("~ε", "ε~ομεν"), ("~ε", "ἐ~ομεν"), ("~ελθε", "~ηλθομεν"), ("~ελῠθε", "~ηλῠθομεν"), ("~ενεγκον", "~ηνεγκᾰμεν"), ("~ες", "~ηκᾰμεν"), ("~θῐ", "ἐ~μεν"), ("~ιδε", "~ειδομεν"), ("~λε", "~ιλομεν"), ("~λκυσον", "~ιλκυσᾰμεν"), ("~λᾰβε", "~ελᾰβομεν"), ("~μπολεμησον", "~νεπολεμησᾰμεν"), ("~ναυμᾰχησον", "~εναυμᾰχησᾰμεν"), ("~ξον", "ἐ~χᾰμεν"), ("~οικησον", "~ῳκησᾰμεν"), ("~οικοδομησον", "~ῳκοδομησᾰμεν"), ("~οικῐσον", "~ῳκῐσᾰμεν"), ("~ομοσον", "~ωμοσᾰμεν"), ("~ον", "~ᾰμεν"), ("~ον", "ε~ᾰμεν"), ("~ον", "ἐ~ᾰμεν"), ("~ον", "ἑ~ᾰμεν"), ("~ον", "ἠ~ᾰμεν"), ("~ς", "ἐ~μεν"), ("~ωσον", "~εωσᾰμεν"), ("~ᾰβηθῐ", "~εβημεν"), ("~ᾰγᾰγε", "~ηγαγομεν"), ("~ᾰγᾰγε", "~ηγᾰγομεν"), ("~ᾰδῐκησον", "~ηδῐκησᾰμεν"), ("~ᾰκᾰλεσον", "~εκᾰλεσᾰμεν"), ("~ᾰλλᾰξον", "~ηλλᾰξᾰμεν"), ("~ᾰλᾰβε", "~ελᾰβομεν"), ("~ᾰλῡσον", "~ελῡσᾰμεν"), ("~ᾰξον", "~ηξᾰμεν"), ("~ᾰρξον", "~ηρξᾰμεν"), ("~ᾰρον", "~ηρᾰμεν"), ("~ᾰσκευᾰσον", "~εσκευᾰσᾰμεν"), ("~ᾰστησον", "~εστησᾰμεν"), ("~ᾰστρεψον", "~εστρεψᾰμεν"), ("~ᾰσχε", "~εσχομεν"), ("~ᾰψον", "~ηψᾰμεν"), ("~ᾱϊξον", "~ηϊξᾰμεν"), ("~ῐδε", "~ειδομεν"), ("~ῐθηκον", "~εθηκᾰμεν"), ("~ῑψον", "ἐ~ιψᾰμεν"), ("~ῡξον", "ἐ~υξᾰμεν"), ("α~ον", "η~ᾰμεν"), ("αἰ~ον", "ᾐ~ᾰμεν"), ("δῐε~ον", "δῐη~ᾰμεν"), ("δῐᾰ~ον", "δῐε~ᾰμεν"), ("δῐᾰ~ον", "δῐη~ᾰμεν"), ("ε~ον", "η~ᾰμεν"), ("λᾰ~ον", "ἐλα~ᾰμεν"), ("οἰ~ον", "ᾠ~ᾰμεν"), ("ἀ~ον", "ἠ~ᾰμεν"), ("ἀνᾰ~ε", "ἀνε~ομεν"), ("ἀνᾰ~ον", "ἀνε~ᾰμεν"), ("ἀπα~ον", "ἀπη~ᾰμεν"), ("ἀπο~ον", "ἀπε~ᾰμεν"), ("ἀπᾰ~ον", "ἀπη~ᾰμεν"), ("ἁ~ον", "ἡ~ᾰμεν"), ("ἐ~ε", "ἠ~ομεν"), ("ἐ~ον", "εἰ~ᾰμεν"), ("ἐ~ον", "ἠ~ᾰμεν"), ("ἐκ~ον", "ἐκε~ᾰμεν"), ("ἐκ~ον", "ἐξε~ᾰμεν"), ("ἐν~ον", "ἐνε~ᾰμεν"), ("ἐξε~ον", "ἐξη~ᾰμεν"), ("ἐξο~ον", "ἐξω~ᾰμεν"), ("ἐξᾰ~ον", "ἐξη~ᾰμεν"), ("ἐπε~ον", "ἐπη~ᾰμεν"), ("ἐπι~ον", "ἐπε~ᾰμεν"), ("ἐπᾰ~ον", "ἐπη~ᾰμεν"), ("ἐπῐ~ον", "ἐπε~ᾰμεν"), ("ἐφο~ον", "ἐφω~ᾰμεν"), ("ἑ~ον", "εἱ~ᾰμεν"), ("ἑ~ον", "ἡ~ᾰμεν"), ("ἑπῐ~ον", "ἑπε~ᾰμεν"), ("ὀ~ον", "ὠ~ᾰμεν"), ("ὁ~ον", "ὡ~ᾰμεν"), ("ὑπο~ον", "ὑπε~ᾰμεν"), ("ὑπᾰ~ον", "ὑπη~ᾰμεν"), ("ὠ~ον", "ἐω~ᾰμεν"), ("ῥ~ον", "ἐρρ~ᾰμεν")], rules {
+    // AORIST_IND_ACT_1_PL, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_IND_ACT_1_PL, [AORIST_IMPERATIVE_ACT_2_SG], [("~αινεσον", "~ῃνεσᾰμεν"), ("~αιτησον", "~ῃτησᾰμεν"), ("~αλῡσον", "~ελῡσᾰμεν"), ("~αρον", "~ηρᾰμεν"), ("~γκινδῡνευσον", "~νεκινδῡνευσᾰμεν"), ("~ε", "~ομεν"), ("~ε", "ε~ομεν"), ("~ε", "ἐ~ομεν"), ("~ελθε", "~ηλθομεν"), ("~ελῠθε", "~ηλῠθομεν"), ("~ενεγκον", "~ηνεγκᾰμεν"), ("~ες", "~ηκᾰμεν"), ("~θῐ", "ἐ~μεν"), ("~ιδε", "~ειδομεν"), ("~λε", "~ιλομεν"), ("~λκυσον", "~ιλκυσᾰμεν"), ("~λᾰβε", "~ελᾰβομεν"), ("~μπολεμησον", "~νεπολεμησᾰμεν"), ("~ναυμᾰχησον", "~εναυμᾰχησᾰμεν"), ("~ξον", "ἐ~χᾰμεν"), ("~οικησον", "~ῳκησᾰμεν"), ("~οικοδομησον", "~ῳκοδομησᾰμεν"), ("~οικῐσον", "~ῳκῐσᾰμεν"), ("~ομοσον", "~ωμοσᾰμεν"), ("~ον", "~ᾰμεν"), ("~ον", "ε~ᾰμεν"), ("~ον", "ἐ~ᾰμεν"), ("~ον", "ἑ~ᾰμεν"), ("~ον", "ἠ~ᾰμεν"), ("~ς", "ἐ~μεν"), ("~ωσον", "~εωσᾰμεν"), ("~ᾰβηθῐ", "~εβημεν"), ("~ᾰγᾰγε", "~ηγαγομεν"), ("~ᾰγᾰγε", "~ηγᾰγομεν"), ("~ᾰδῐκησον", "~ηδῐκησᾰμεν"), ("~ᾰκᾰλεσον", "~εκᾰλεσᾰμεν"), ("~ᾰλλᾰξον", "~ηλλᾰξᾰμεν"), ("~ᾰλᾰβε", "~ελᾰβομεν"), ("~ᾰλῡσον", "~ελῡσᾰμεν"), ("~ᾰξον", "~ηξᾰμεν"), ("~ᾰρξον", "~ηρξᾰμεν"), ("~ᾰρον", "~ηρᾰμεν"), ("~ᾰσκευᾰσον", "~εσκευᾰσᾰμεν"), ("~ᾰστησον", "~εστησᾰμεν"), ("~ᾰστρεψον", "~εστρεψᾰμεν"), ("~ᾰσχε", "~εσχομεν"), ("~ᾰψον", "~ηψᾰμεν"), ("~ᾱϊξον", "~ηϊξᾰμεν"), ("~ῐδε", "~ειδομεν"), ("~ῐθηκον", "~εθηκᾰμεν"), ("~ῑψον", "ἐ~ιψᾰμεν"), ("~ῡξον", "ἐ~υξᾰμεν"), ("α~ον", "η~ᾰμεν"), ("αἰ~ον", "ᾐ~ᾰμεν"), ("δῐε~ον", "δῐη~ᾰμεν"), ("δῐᾰ~ον", "δῐε~ᾰμεν"), ("δῐᾰ~ον", "δῐη~ᾰμεν"), ("ε~ον", "η~ᾰμεν"), ("λᾰ~ον", "ἐλα~ᾰμεν"), ("οἰ~ον", "ᾠ~ᾰμεν"), ("ἀ~ον", "ἠ~ᾰμεν"), ("ἀνᾰ~ε", "ἀνε~ομεν"), ("ἀνᾰ~ον", "ἀνε~ᾰμεν"), ("ἀπα~ον", "ἀπη~ᾰμεν"), ("ἀπο~ον", "ἀπε~ᾰμεν"), ("ἀπᾰ~ον", "ἀπη~ᾰμεν"), ("ἁ~ον", "ἡ~ᾰμεν"), ("ἐ~ε", "ἠ~ομεν"), ("ἐ~ον", "εἰ~ᾰμεν"), ("ἐ~ον", "ἠ~ᾰμεν"), ("ἐκ~ον", "ἐκε~ᾰμεν"), ("ἐκ~ον", "ἐξε~ᾰμεν"), ("ἐν~ον", "ἐνε~ᾰμεν"), ("ἐξε~ον", "ἐξη~ᾰμεν"), ("ἐξο~ον", "ἐξω~ᾰμεν"), ("ἐξᾰ~ον", "ἐξη~ᾰμεν"), ("ἐπε~ον", "ἐπη~ᾰμεν"), ("ἐπι~ον", "ἐπε~ᾰμεν"), ("ἐπᾰ~ον", "ἐπη~ᾰμεν"), ("ἐπῐ~ον", "ἐπε~ᾰμεν"), ("ἐφο~ον", "ἐφω~ᾰμεν"), ("ἑ~ον", "εἱ~ᾰμεν"), ("ἑ~ον", "ἡ~ᾰμεν"), ("ἑπῐ~ον", "ἑπε~ᾰμεν"), ("ὀ~ον", "ὠ~ᾰμεν"), ("ὁ~ον", "ὡ~ᾰμεν"), ("ὑπο~ον", "ὑπε~ᾰμεν"), ("ὑπᾰ~ον", "ὑπη~ᾰμεν"), ("ὠ~ον", "ἐω~ᾰμεν"), ("ῥ~ον", "ἐρρ~ᾰμεν")], rules {
         "" => [26 757, 24 96, 60 88, 7 36, 69 28, 84 26, 5 19, 89 15, 8 12, 85 10, 57 9, 59 9, 14 8, 55 8, 71 8, 11 7, 20 7, 64 7, 66 7, 10 6, 12 6, 65 6, 75 6, 22 5, 37 5, 62 5, 77 5, 21 4, 43 4, 53 4, 79 4, 1 3, 25 3, 28 3, 31 3, 33 3, 40 3, 46 3, 52 3, 56 3, 67 3, 68 3, 72 3, 73 3, 74 3, 78 3, 86 3, 0 2, 2 2, 3 2, 4 2, 6 2, 9 2, 13 2, 15 2, 16 2, 17 2, 18 2, 19 2, 23 2, 27 2, 29 2, 30 2, 32 2, 34 2, 35 2, 36 2, 38 2, 39 2, 41 2, 42 2, 44 2, 45 2, 47 2, 48 2, 49 2, 50 2, 51 2, 54 2, 58 2, 61 2, 63 2, 70 2, 76 2, 80 2, 81 2, 82 2, 83 2, 87 2, 88 2],
         "ε" => [7 36, 5 19, 8 12, 14 8, 37 5, 33 3, 67 3, 6 2, 9 2, 13 2, 16 2, 32 2, 45 2, 48 2, 61 2],
         "βε" => [37 5, 16 2, 5 1, 7 1, 61 1],
@@ -1866,11 +1572,15 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ς" => [11 7, 29 2],
         "ῐ" => [12 6, 31 3],
     } listed {
-        "εἰξον" => 24,
-        "ἐλθε" => 67,
-        "ἐρυγε" => 67,
-        "ἐτεκτηνον" => 24,
-        "ὀλεσον" => 84,
+        24 => [
+            "εἰξον", "ἐτεκτηνον",
+        ],
+        67 => [
+            "ἐλθε", "ἐρυγε",
+        ],
+        84 => [
+            "ὀλεσον",
+        ],
     }, false, None),
     // AORIST_IND_ACT_2_SG, from AORIST_IND_ACT_1_SG.
     relation!(AORIST_IND_ACT_2_SG, [AORIST_IND_ACT_1_SG], [("~", "~ς"), ("~ν", "~ς"), ("~ον", "~ες")], rules {
@@ -1886,10 +1596,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "" => [1 1550, 0 2, 2 2],
         "κᾰς" => [1 24, 0 2, 2 2],
     } listed {
-        "ἀντᾰπεδωκᾰς" => 2,
-        "ἐδωκᾰς" => 2,
-        "ἐθηκᾰς" => 0,
-        "ἐπενεθηκᾰς" => 0,
+        0 => [
+            "ἐθηκᾰς", "ἐπενεθηκᾰς",
+        ],
+        2 => [
+            "ἀντᾰπεδωκᾰς", "ἐδωκᾰς",
+        ],
     }, true, None),
     // AORIST_IND_ACT_2_PL, from AORIST_IND_ACT_2_DU.
     relation!(AORIST_IND_ACT_2_PL, [AORIST_IND_ACT_2_DU], [("~ον", "~ε")], rules {
@@ -1917,12 +1629,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ωμεν" => [1 6],
         "ᾰμεν" => [0 1390],
     } listed {
-        "εἱμεν" => 1,
-        "προυδομεν" => 1,
-        "πᾰρεδομεν" => 1,
-        "ἀντᾰπεδομεν" => 1,
-        "ἐδομεν" => 1,
-        "ἐφῡμεν" => 1,
+        1 => [
+            "εἱμεν", "προυδομεν", "πᾰρεδομεν", "ἀντᾰπεδομεν", "ἐδομεν", "ἐφῡμεν",
+        ],
     }, true, None),
     // AORIST_IND_MID_1_SG, from AORIST_IND_ACT_1_PL.
     relation!(AORIST_IND_MID_1_SG, [AORIST_IND_ACT_1_PL], [("~εν", "~ην"), ("~ημεν", "~ᾰμην"), ("~μεν", "~σᾰμην")], rules {
@@ -1930,12 +1639,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ημεν" => [1 3, 2 3],
         "ᾰμεν" => [0 1254],
     } listed {
-        "κᾰτεβημεν" => 2,
-        "πᾰρεβημεν" => 2,
-        "ἀμφεστημεν" => 1,
-        "ἀπᾰνεστημεν" => 1,
-        "ἐγνωμεν" => 2,
-        "ἐφῡμεν" => 2,
+        1 => [
+            "ἀμφεστημεν", "ἀπᾰνεστημεν",
+        ],
+        2 => [
+            "κᾰτεβημεν", "πᾰρεβημεν", "ἐγνωμεν", "ἐφῡμεν",
+        ],
     }, true, None),
     // AORIST_IND_MID_1_DU, from AORIST_IND_MID_1_SG. Few or no words have it: changed as AORIST_IND_MID_3_SG is into AORIST_IND_MID_3_DU.
     relation!(AORIST_IND_MID_1_DU, [AORIST_IND_MID_1_SG], [("~το", "~σθην")], rules {
@@ -1959,11 +1668,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "δομην" => [1 9, 0 5],
         "ᾰμην" => [0 1376],
     } listed {
-        "προυδομην" => 0,
-        "πᾰρεδομην" => 0,
-        "ἀντᾰπεδομην" => 0,
-        "ἀπεδομην" => 0,
-        "ἐδομην" => 0,
+        0 => [
+            "προυδομην", "πᾰρεδομην", "ἀντᾰπεδομην", "ἀπεδομην", "ἐδομην",
+        ],
     }, true, None),
     // AORIST_IND_MID_2_PL, from AORIST_IND_MID_2_DU.
     relation!(AORIST_IND_MID_2_PL, [AORIST_IND_MID_2_DU], [("~ον", "~ε")], rules {
@@ -2045,15 +1752,18 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "μνῡ" => [40 3],
         "ννῡ" => [39 6],
     } listed {
-        "διεβαλλε" => 4,
-        "προυδῐδου" => 59,
-        "ἀντᾰπεδῐδου" => 59,
-        "ἐδῐδου" => 59,
-        "ἐνεβαλλε" => 4,
-        "ἐπεκε" => 36,
-        "ἐπλεκε" => 36,
-        "ἐτηκε" => 36,
-        "ἐτῐλλε" => 37,
+        4 => [
+            "διεβαλλε", "ἐνεβαλλε",
+        ],
+        36 => [
+            "ἐπεκε", "ἐπλεκε", "ἐτηκε",
+        ],
+        37 => [
+            "ἐτῐλλε",
+        ],
+        59 => [
+            "προυδῐδου", "ἀντᾰπεδῐδου", "ἐδῐδου",
+        ],
     }, false, None),
     // AORIST_IND_PASS_1_DU, from AORIST_IND_PASS_1_SG. Few or no words have it: changed as AORIST_IND_PASS_2_SG is into AORIST_IND_PASS_2_DU.
     relation!(AORIST_IND_PASS_1_DU, [AORIST_IND_PASS_1_SG], [("~ς", "~τον")], rules {
@@ -2107,8 +1817,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ητον" => [0 1547, 2 2],
         "ωτον" => [1 10],
     } listed {}, true, None),
-    // AORIST_SUBJ_ACT_2_DU, from AORIST_IMP_ACT_2_SG.
-    relation!(AORIST_SUBJ_ACT_2_DU, [AORIST_IMP_ACT_2_SG], [("~", "ητ~"), ("~ε", "~ητον"), ("~ες", "~ητον"), ("~θῐ", "~τον"), ("~ον", "~ητον"), ("~ος", "~ωτον"), ("~ῑψον", "~ιψητον"), ("~ῡθῐ", "~ῠητον"), ("~ῡξον", "~υξητον")], rules {
+    // AORIST_SUBJ_ACT_2_DU, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_SUBJ_ACT_2_DU, [AORIST_IMPERATIVE_ACT_2_SG], [("~", "ητ~"), ("~ε", "~ητον"), ("~ες", "~ητον"), ("~θῐ", "~τον"), ("~ον", "~ητον"), ("~ος", "~ωτον"), ("~ῑψον", "~ιψητον"), ("~ῡθῐ", "~ῠητον"), ("~ῡξον", "~υξητον")], rules {
         "" => [4 1374, 1 134, 3 16, 2 14, 5 4, 0 2, 6 2, 7 2, 8 2],
         "ε" => [1 134],
         "ν" => [4 1374, 0 2, 6 2, 8 2],
@@ -2120,8 +1830,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ος" => [5 4],
         "ῐ" => [3 16, 7 2],
     } listed {
-        "σφῡξον" => 8,
-        "φῡθῐ" => 7,
+        7 => [
+            "φῡθῐ",
+        ],
+        8 => [
+            "σφῡξον",
+        ],
     }, true, None),
     // AORIST_SUBJ_ACT_2_PL, from AORIST_SUBJ_ACT_2_DU.
     relation!(AORIST_SUBJ_ACT_2_PL, [AORIST_SUBJ_ACT_2_DU], [("~ον", "~ε")], rules {
@@ -2158,8 +1872,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "βω" => [0 13, 2 3],
         "εσω" => [0 29, 1 2],
     } listed {
-        "λεσω" => 1,
-        "ὀλεσω" => 1,
+        1 => [
+            "λεσω", "ὀλεσω",
+        ],
     }, true, None),
     // AORIST_SUBJ_MID_2_SG, from AORIST_SUBJ_ACT_3_SG.
     relation!(
@@ -2175,11 +1890,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "" => [1 1509, 0 5, 2 2],
         "δωμεθᾰ" => [1 9, 0 5],
     } listed {
-        "δωμεθᾰ" => 0,
-        "προδωμεθᾰ" => 0,
-        "πᾰρᾰδωμεθᾰ" => 0,
-        "ωμεθᾰ" => 2,
-        "ἀντᾰποδωμεθᾰ" => 0,
+        0 => [
+            "δωμεθᾰ", "προδωμεθᾰ", "πᾰρᾰδωμεθᾰ", "ἀντᾰποδωμεθᾰ",
+        ],
+        2 => [
+            "ωμεθᾰ",
+        ],
     }, true, None),
     // AORIST_SUBJ_MID_2_PL, from AORIST_SUBJ_MID_2_DU.
     relation!(AORIST_SUBJ_MID_2_PL, [AORIST_SUBJ_MID_2_DU], [("~ον", "~ε")], rules {
@@ -2265,22 +1981,39 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῠῃ" => [72 4, 63 3, 62 2, 65 1],
         "ῡῃ" => [75 16, 62 7, 63 1],
     } listed {
-        "διαβαλλῃ" => 5,
-        "δῐᾰχεῃ" => 19,
-        "καταχρᾳ" => 57,
-        "μετᾰλαμβᾰνῃ" => 6,
-        "παρορᾳ" => 44,
-        "προδῐδοσαι" => 67,
-        "προσλαμβᾰνῃ" => 6,
-        "πῐμπλᾰσαι" => 78,
-        "πῐμπρᾰσαι" => 78,
-        "τῐλλῃ" => 35,
-        "χρῃ" => 61,
-        "ἀντᾰποδῐδοσαι" => 67,
-        "ἀροι" => 27,
-        "ἐκρεῃ" => 20,
-        "ἐμβαλλῃ" => 5,
-        "ῥεῃ" => 20,
+        5 => [
+            "διαβαλλῃ", "ἐμβαλλῃ",
+        ],
+        6 => [
+            "μετᾰλαμβᾰνῃ", "προσλαμβᾰνῃ",
+        ],
+        19 => [
+            "δῐᾰχεῃ",
+        ],
+        20 => [
+            "ἐκρεῃ", "ῥεῃ",
+        ],
+        27 => [
+            "ἀροι",
+        ],
+        35 => [
+            "τῐλλῃ",
+        ],
+        44 => [
+            "παρορᾳ",
+        ],
+        57 => [
+            "καταχρᾳ",
+        ],
+        61 => [
+            "χρῃ",
+        ],
+        67 => [
+            "προδῐδοσαι", "ἀντᾰποδῐδοσαι",
+        ],
+        78 => [
+            "πῐμπλᾰσαι", "πῐμπρᾰσαι",
+        ],
     }, true, None),
     // AORIST_SUBJ_PASS_1_DU, from AORIST_SUBJ_PASS_1_SG. Few or no words have it: changed as AORIST_SUBJ_PASS_2_SG is into AORIST_SUBJ_PASS_2_DU.
     relation!(AORIST_SUBJ_PASS_1_DU, [AORIST_SUBJ_PASS_1_SG], [("~ῃς", "~ητον")], rules {
@@ -2331,9 +2064,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "βᾱς" => [3 5, 4 1],
         "τᾱς" => [3 2, 4 1],
     } listed {
-        "τλᾱς" => 3,
-        "ἀμφιστησᾱς" => 3,
-        "ἀπᾰνᾰστᾱς" => 3,
+        3 => [
+            "τλᾱς", "ἀμφιστησᾱς", "ἀπᾰνᾰστᾱς",
+        ],
     }, true, None),
     // AORIST_OPT_ACT_1_DU, from AORIST_OPT_ACT_1_PL. Few or no words have it: changed as AORIST_OPT_ACT_2_PL is into AORIST_OPT_ACT_2_DU.
     relation!(AORIST_OPT_ACT_1_DU, [AORIST_OPT_ACT_1_PL], [("~ε", "~ον")], rules {
@@ -2377,9 +2110,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "βᾱς" => [3 5, 4 1],
         "τᾱς" => [3 2, 4 1],
     } listed {
-        "τλᾱς" => 3,
-        "ἀμφιστησᾱς" => 3,
-        "ἀπᾰνᾰστᾱς" => 3,
+        3 => [
+            "τλᾱς", "ἀμφιστησᾱς", "ἀπᾰνᾰστᾱς",
+        ],
     }, true, None),
     // AORIST_OPT_ACT_3_DU, from AORIST_OPT_ACT_1_PL.
     relation!(AORIST_OPT_ACT_3_DU, [AORIST_OPT_ACT_1_PL], [("~μεν", "~την")], rules {
@@ -2397,16 +2130,18 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "βᾱς" => [3 5, 4 1],
         "τᾱς" => [3 2, 4 1],
     } listed {
-        "τλᾱς" => 3,
-        "ἀμφιστησᾱς" => 3,
+        3 => [
+            "τλᾱς", "ἀμφιστησᾱς",
+        ],
     }, true, None),
     // AORIST_OPT_MID_1_SG, from AORIST_OPT_ACT_1_PL.
     relation!(AORIST_OPT_MID_1_SG, [AORIST_OPT_ACT_1_PL], [("~αιμεν", "~ησαιμην"), ("~εν", "~ην"), ("~εσαιμεν", "~οιμην")], rules {
         "" => [1 1372, 0 2, 2 2],
         "βαιμεν" => [0 2, 1 1],
     } listed {
-        "λεσαιμεν" => 2,
-        "ὀλεσαιμεν" => 2,
+        2 => [
+            "λεσαιμεν", "ὀλεσαιμεν",
+        ],
     }, true, None),
     // AORIST_OPT_MID_1_DU, from AORIST_OPT_MID_1_SG. Few or no words have it: changed as AORIST_OPT_MID_2_SG is into AORIST_OPT_MID_2_DU.
     relation!(AORIST_OPT_MID_1_DU, [AORIST_OPT_MID_1_SG], [("~ο", "~σθον")], rules {
@@ -2476,24 +2211,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(AORIST_OPT_PASS_3_PL, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ειεν")], rules {
         "" => [0 1200],
     } listed {}, true, None),
-    // AORIST_IMP_ACT_1_SG, from AORIST_IMP_ACT_2_SG. Few or no words have it: changed as AORIST_IND_ACT_2_SG is into AORIST_IND_ACT_1_SG.
-    relation!(AORIST_IMP_ACT_1_SG, [AORIST_IMP_ACT_2_SG], [("~ες", "~ον"), ("~ς", "~"), ("~ς", "~ν")], rules {
-        "" => [1 1395, 0 143, 2 17],
-        "ες" => [0 143],
-        "ης" => [2 9],
-        "ως" => [2 6],
-        "ᾰς" => [1 1395],
-    } listed {}, true, Some((AORIST_IND_ACT_2_SG, AORIST_IND_ACT_1_SG))),
-    // AORIST_IMP_ACT_1_DU, from AORIST_IMP_ACT_2_DU. Few or no words have it: changed as AORIST_OPT_ACT_2_PL is into AORIST_OPT_ACT_1_PL.
-    relation!(AORIST_IMP_ACT_1_DU, [AORIST_IMP_ACT_2_DU], [("~τε", "~μεν")], rules {
-        "" => [0 1563],
-    } listed {}, true, Some((AORIST_OPT_ACT_2_PL, AORIST_OPT_ACT_1_PL))),
-    // AORIST_IMP_ACT_1_PL, from AORIST_IMP_ACT_2_PL. Few or no words have it: changed as AORIST_OPT_ACT_2_PL is into AORIST_OPT_ACT_1_PL.
-    relation!(AORIST_IMP_ACT_1_PL, [AORIST_IMP_ACT_2_PL], [("~τε", "~μεν")], rules {
-        "" => [0 1563],
-    } listed {}, true, Some((AORIST_OPT_ACT_2_PL, AORIST_OPT_ACT_1_PL))),
-    // AORIST_IMP_ACT_2_SG, from IMP_ACT_2_SG.
-    relation!(AORIST_IMP_ACT_2_SG, [IMP_ACT_2_SG], [("~", "~σον"), ("~αζε", "~ᾰσον"), ("~αινε", "~ηθῐ"), ("~αινε", "~ηνον"), ("~αινε", "~ᾰνον"), ("~αινε", "~ᾱνον"), ("~αιρε", "~ᾰρον"), ("~αιρει", "~ελε"), ("~αμβᾰνε", "~ᾰβε"), ("~αυνε", "~ᾰσον"), ("~βε", "~ψον"), ("~γε", "~ξον"), ("~γνῡ", "~ξον"), ("~γχᾰνε", "~χε"), ("~δε", "~σον"), ("~ε", "~ησον"), ("~ε", "~ον"), ("~ε", "~σον"), ("~ε", "~υσον"), ("~ε", "~ᾰγε"), ("~εε", "~ησον"), ("~ει", "~ησον"), ("~ειπε", "~ῐπε"), ("~εχε", "~ᾰσχε"), ("~ζε", "~γξον"), ("~ζε", "~ξον"), ("~ζε", "~σον"), ("~θε", "~σον"), ("~θει", "~σον"), ("~θῐστη", "~τᾰστησον"), ("~ι", "~ον"), ("~ι", "~σον"), ("~ι", "~υσον"), ("~ιγνωσκε", "~νωθῐ"), ("~ιε", "~υσον"), ("~ιζε", "~ῐσον"), ("~ινε", "~νον"), ("~ιρε", "~ρον"), ("~κε", "~ξον"), ("~κε", "~ον"), ("~λε", "~ε"), ("~λε", "~ον"), ("~λλε", "~ιλον"), ("~λῡ", "~εσον"), ("~μβᾰνε", "~βε"), ("~με", "~ιμον"), ("~μφερε", "~νενεγκον"), ("~νε", "~ε"), ("~νε", "~σον"), ("~νθᾰνε", "~θε"), ("~ννῡ", "~σον"), ("~νῡ", "~οσον"), ("~νῡ", "~σον"), ("~ορᾱ", "~ιδε"), ("~ου", "~ωσον"), ("~πε", "~ψον"), ("~πτε", "~ψον"), ("~σε", "~ον"), ("~σκε", "~ξον"), ("~σσε", "~ξε"), ("~σσε", "~ξον"), ("~τρεχε", "~θρεξον"), ("~ττε", "~ξον"), ("~τῐθει", "~θηκον"), ("~υ", "~σον"), ("~υγχᾰνε", "~ῠχε"), ("~φε", "~ψον"), ("~φερε", "~ενεγκον"), ("~χε", "~ξον"), ("~ᾰε", "~ησον"), ("~ᾰλλε", "~ηλον"), ("~ᾰνε", "~ε"), ("~ᾰνε", "~ησον"), ("~ᾱ", "~ησον"), ("~ᾱ", "~ᾰσον"), ("~ῐδου", "~ος"), ("~ῐσκε", "~ε"), ("~ῑει", "~ες"), ("~ῠε", "~ῡθῐ"), ("~ῠε", "~ῡσον"), ("~ῠνε", "~ῡνον"), ("~ῡε", "~ῠσον"), ("~ῳζε", "~ωσον"), ("πῐμ~", "~σον"), ("τ~φε", "θ~ψον"), ("ἀ~σσε", "~ξον")], rules {
+    // AORIST_IMPERATIVE_ACT_2_SG, from PRESENT_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_IMPERATIVE_ACT_2_SG, [PRESENT_IMPERATIVE_ACT_2_SG], [("~", "~σον"), ("~αζε", "~ᾰσον"), ("~αινε", "~ηθῐ"), ("~αινε", "~ηνον"), ("~αινε", "~ᾰνον"), ("~αινε", "~ᾱνον"), ("~αιρε", "~ᾰρον"), ("~αιρει", "~ελε"), ("~αμβᾰνε", "~ᾰβε"), ("~αυνε", "~ᾰσον"), ("~βε", "~ψον"), ("~γε", "~ξον"), ("~γνῡ", "~ξον"), ("~γχᾰνε", "~χε"), ("~δε", "~σον"), ("~ε", "~ησον"), ("~ε", "~ον"), ("~ε", "~σον"), ("~ε", "~υσον"), ("~ε", "~ᾰγε"), ("~εε", "~ησον"), ("~ει", "~ησον"), ("~ειπε", "~ῐπε"), ("~εχε", "~ᾰσχε"), ("~ζε", "~γξον"), ("~ζε", "~ξον"), ("~ζε", "~σον"), ("~θε", "~σον"), ("~θει", "~σον"), ("~θῐστη", "~τᾰστησον"), ("~ι", "~ον"), ("~ι", "~σον"), ("~ι", "~υσον"), ("~ιγνωσκε", "~νωθῐ"), ("~ιε", "~υσον"), ("~ιζε", "~ῐσον"), ("~ινε", "~νον"), ("~ιρε", "~ρον"), ("~κε", "~ξον"), ("~κε", "~ον"), ("~λε", "~ε"), ("~λε", "~ον"), ("~λλε", "~ιλον"), ("~λῡ", "~εσον"), ("~μβᾰνε", "~βε"), ("~με", "~ιμον"), ("~μφερε", "~νενεγκον"), ("~νε", "~ε"), ("~νε", "~σον"), ("~νθᾰνε", "~θε"), ("~ννῡ", "~σον"), ("~νῡ", "~οσον"), ("~νῡ", "~σον"), ("~ορᾱ", "~ιδε"), ("~ου", "~ωσον"), ("~πε", "~ψον"), ("~πτε", "~ψον"), ("~σε", "~ον"), ("~σκε", "~ξον"), ("~σσε", "~ξε"), ("~σσε", "~ξον"), ("~τρεχε", "~θρεξον"), ("~ττε", "~ξον"), ("~τῐθει", "~θηκον"), ("~υ", "~σον"), ("~υγχᾰνε", "~ῠχε"), ("~φε", "~ψον"), ("~φερε", "~ενεγκον"), ("~χε", "~ξον"), ("~ᾰε", "~ησον"), ("~ᾰλλε", "~ηλον"), ("~ᾰνε", "~ε"), ("~ᾰνε", "~ησον"), ("~ᾱ", "~ησον"), ("~ᾱ", "~ᾰσον"), ("~ῐδου", "~ος"), ("~ῐσκε", "~ε"), ("~ῑει", "~ες"), ("~ῠε", "~ῡθῐ"), ("~ῠε", "~ῡσον"), ("~ῠνε", "~ῡνον"), ("~ῡε", "~ῠσον"), ("~ῳζε", "~ωσον"), ("πῐμ~", "~σον"), ("τ~φε", "θ~ψον"), ("ἀ~σσε", "~ξον")], rules {
         "" => [21 274, 26 213, 17 136, 54 79, 73 62, 16 42, 56 37, 60 35, 11 26, 25 24, 31 22, 0 20, 55 18, 68 17, 15 16, 38 15, 5 13, 3 11, 50 11, 66 11, 44 10, 12 9, 19 9, 27 9, 7 8, 79 8, 10 7, 42 7, 57 7, 70 7, 14 6, 20 6, 32 6, 36 6, 2 5, 63 5, 74 5, 77 5, 80 5, 1 4, 47 4, 48 4, 61 4, 67 4, 71 4, 82 4, 8 3, 18 3, 24 3, 28 3, 29 3, 30 3, 35 3, 39 3, 40 3, 52 3, 62 3, 69 3, 76 3, 81 3, 4 2, 6 2, 9 2, 13 2, 22 2, 23 2, 33 2, 34 2, 37 2, 41 2, 43 2, 45 2, 46 2, 49 2, 51 2, 53 2, 58 2, 59 2, 64 2, 65 2, 72 2, 75 2, 78 2, 83 2, 84 2, 85 2],
         "ε" => [26 213, 17 136, 16 42, 56 37, 60 35, 11 26, 25 24, 55 18, 68 17, 15 16, 38 15, 5 13, 3 11, 66 11, 44 10, 19 9, 27 9, 79 8, 10 7, 42 7, 57 7, 70 7, 14 6, 20 6, 36 6, 2 5, 80 5, 1 4, 47 4, 48 4, 61 4, 67 4, 71 4, 82 4, 8 3, 18 3, 24 3, 35 3, 39 3, 40 3, 62 3, 69 3, 76 3, 81 3, 4 2, 6 2, 9 2, 13 2, 22 2, 23 2, 33 2, 34 2, 37 2, 41 2, 45 2, 46 2, 49 2, 58 2, 59 2, 65 2, 72 2, 78 2, 84 2, 85 2, 0 1],
         "βε" => [10 7],
@@ -2572,33 +2291,52 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "μνῡ" => [51 2],
         "ννῡ" => [50 11],
     } listed {
-        "ζει" => 31,
-        "κᾰτᾰδῡνε" => 48,
-        "λᾰνθᾰνε" => 49,
-        "μειδιᾱ" => 0,
-        "μετᾰλαμβᾰνε" => 8,
-        "νει" => 32,
-        "ξει" => 31,
-        "παρορᾱ" => 53,
-        "πνει" => 32,
-        "προδῐδου" => 75,
-        "προσλαμβᾰνε" => 8,
-        "πῐμπλη" => 83,
-        "πῐμπρη" => 83,
-        "σπᾱ" => 74,
-        "σφῡζε" => 25,
-        "χει" => 30,
-        "ἀντᾰποδῐδου" => 75,
-        "ἀρου" => 64,
-        "ἐκρει" => 32,
-        "ἐκχει" => 30,
+        0 => [
+            "μειδιᾱ",
+        ],
+        8 => [
+            "μετᾰλαμβᾰνε", "προσλαμβᾰνε",
+        ],
+        25 => [
+            "σφῡζε",
+        ],
+        30 => [
+            "χει", "ἐκχει",
+        ],
+        31 => [
+            "ζει", "ξει",
+        ],
+        32 => [
+            "νει", "πνει", "ἐκρει",
+        ],
+        48 => [
+            "κᾰτᾰδῡνε",
+        ],
+        49 => [
+            "λᾰνθᾰνε",
+        ],
+        53 => [
+            "παρορᾱ",
+        ],
+        64 => [
+            "ἀρου",
+        ],
+        74 => [
+            "σπᾱ", "ἀντῐᾱ",
+        ],
+        75 => [
+            "προδῐδου", "ἀντᾰποδῐδου",
+        ],
+        83 => [
+            "πῐμπλη", "πῐμπρη",
+        ],
     }, true, None),
-    // AORIST_IMP_ACT_2_DU, from AORIST_IMP_ACT_2_PL.
-    relation!(AORIST_IMP_ACT_2_DU, [AORIST_IMP_ACT_2_PL], [("~ε", "~ον")], rules {
+    // AORIST_IMPERATIVE_ACT_2_DU, from AORIST_IMPERATIVE_ACT_2_PL.
+    relation!(AORIST_IMPERATIVE_ACT_2_DU, [AORIST_IMPERATIVE_ACT_2_PL], [("~ε", "~ον")], rules {
         "" => [0 1560],
     } listed {}, true, None),
-    // AORIST_IMP_ACT_2_PL, from AORIST_IMP_ACT_2_SG.
-    relation!(AORIST_IMP_ACT_2_PL, [AORIST_IMP_ACT_2_SG], [("~", "~τε"), ("~θῐ", "~τε"), ("~ον", "~ᾰτε"), ("~ς", "~τε"), ("~ῑψον", "~ιψᾰτε"), ("~ῡξον", "~υξᾰτε"), ("ον~", "ᾰτε~")], rules {
+    // AORIST_IMPERATIVE_ACT_2_PL, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_IMPERATIVE_ACT_2_PL, [AORIST_IMPERATIVE_ACT_2_SG], [("~", "~τε"), ("~θῐ", "~τε"), ("~ον", "~ᾰτε"), ("~ς", "~τε"), ("~ῑψον", "~ιψᾰτε"), ("~ῡξον", "~υξᾰτε"), ("ον~", "ᾰτε~")], rules {
         "" => [2 1375, 0 133, 3 19, 1 18, 4 2, 5 2, 6 2],
         "ε" => [0 133],
         "ν" => [2 1375, 4 2, 5 2, 6 2],
@@ -2608,18 +2346,20 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ς" => [3 19],
         "ῐ" => [1 18],
     } listed {
-        "σφῡξον" => 5,
+        5 => [
+            "σφῡξον",
+        ],
     }, true, None),
-    // AORIST_IMP_ACT_3_SG, from AORIST_IMP_ACT_2_DU.
-    relation!(AORIST_IMP_ACT_3_SG, [AORIST_IMP_ACT_2_DU], [("~ον", "~ω")], rules {
+    // AORIST_IMPERATIVE_ACT_3_SG, from AORIST_IMPERATIVE_ACT_2_DU.
+    relation!(AORIST_IMPERATIVE_ACT_3_SG, [AORIST_IMPERATIVE_ACT_2_DU], [("~ον", "~ω")], rules {
         "" => [0 1562],
     } listed {}, true, None),
-    // AORIST_IMP_ACT_3_DU, from AORIST_IMP_ACT_2_DU.
-    relation!(AORIST_IMP_ACT_3_DU, [AORIST_IMP_ACT_2_DU], [("~ον", "~ων")], rules {
+    // AORIST_IMPERATIVE_ACT_3_DU, from AORIST_IMPERATIVE_ACT_2_DU.
+    relation!(AORIST_IMPERATIVE_ACT_3_DU, [AORIST_IMPERATIVE_ACT_2_DU], [("~ον", "~ων")], rules {
         "" => [0 1562],
     } listed {}, true, None),
-    // AORIST_IMP_ACT_3_PL, from AORIST_IMP_ACT_2_SG.
-    relation!(AORIST_IMP_ACT_3_PL, [AORIST_IMP_ACT_2_SG], [("~ε", "~οντων"), ("~ες", "~οντων"), ("~ηθῐ", "~ᾰντων"), ("~θῐ", "~ντων"), ("~ον", "~ᾰντων"), ("~ς", "~ντων"), ("~ωθῐ", "~οντων"), ("~ῑψον", "~ιψᾰντων"), ("~ῡξον", "~υξᾰντων"), ("ο~", "ᾰ~των")], rules {
+    // AORIST_IMPERATIVE_ACT_3_PL, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_IMPERATIVE_ACT_3_PL, [AORIST_IMPERATIVE_ACT_2_SG], [("~ε", "~οντων"), ("~ες", "~οντων"), ("~ηθῐ", "~ᾰντων"), ("~θῐ", "~ντων"), ("~ον", "~ᾰντων"), ("~ς", "~ντων"), ("~ωθῐ", "~οντων"), ("~ῑψον", "~ιψᾰντων"), ("~ῡξον", "~υξᾰντων"), ("ο~", "ᾰ~των")], rules {
         "" => [4 1375, 0 134, 5 14, 2 9, 6 6, 1 5, 3 2, 7 2, 8 2, 9 2],
         "ε" => [0 134],
         "ν" => [4 1375, 7 2, 8 2, 9 2],
@@ -2632,20 +2372,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ηθῐ" => [2 9],
         "ωθῐ" => [6 6],
     } listed {}, false, None),
-    // AORIST_IMP_MID_1_SG, from AORIST_IMP_MID_2_SG. Few or no words have it: changed as AORIST_OPT_MID_2_SG is into AORIST_OPT_MID_1_SG.
-    relation!(AORIST_IMP_MID_1_SG, [AORIST_IMP_MID_2_SG], [("~ο", "~μην")], rules {
-        "" => [0 1517],
-    } listed {}, true, Some((AORIST_OPT_MID_2_SG, AORIST_OPT_MID_1_SG))),
-    // AORIST_IMP_MID_1_DU, from AORIST_IMP_MID_2_DU. Few or no words have it: changed as AORIST_OPT_MID_2_SG is into AORIST_OPT_MID_1_SG.
-    relation!(AORIST_IMP_MID_1_DU, [AORIST_IMP_MID_2_DU], [("~ο", "~μην")], rules {
-        "" => [0 1517],
-    } listed {}, true, Some((AORIST_OPT_MID_2_SG, AORIST_OPT_MID_1_SG))),
-    // AORIST_IMP_MID_1_PL, from AORIST_IMP_MID_2_PL. Few or no words have it: changed as AORIST_OPT_MID_2_PL is into AORIST_OPT_MID_1_PL.
-    relation!(AORIST_IMP_MID_1_PL, [AORIST_IMP_MID_2_PL], [("~σθε", "~μεθᾰ")], rules {
-        "" => [0 1517],
-    } listed {}, true, Some((AORIST_OPT_MID_2_PL, AORIST_OPT_MID_1_PL))),
-    // AORIST_IMP_MID_2_SG, from AORIST_IMP_ACT_2_SG.
-    relation!(AORIST_IMP_MID_2_SG, [AORIST_IMP_ACT_2_SG], [("~ε", "~ου"), ("~ες", "~ου"), ("~εσον", "~ου"), ("~ηθῐ", "~ω"), ("~θῐ", "~σαι"), ("~ον", "~αι"), ("~ς", "~υ"), ("ον~", "αι~")], rules {
+    // AORIST_IMPERATIVE_MID_2_SG, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(AORIST_IMPERATIVE_MID_2_SG, [AORIST_IMPERATIVE_ACT_2_SG], [("~ε", "~ου"), ("~ες", "~ου"), ("~εσον", "~ου"), ("~ηθῐ", "~ω"), ("~θῐ", "~σαι"), ("~ον", "~αι"), ("~ς", "~υ"), ("ον~", "αι~")], rules {
         "" => [5 1250, 0 96, 1 13, 4 5, 6 4, 3 3, 2 2, 7 2],
         "ε" => [0 96],
         "ν" => [5 1250, 2 2, 7 2],
@@ -2655,63 +2383,46 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ος" => [6 4],
         "ῐ" => [4 5, 3 3],
     } listed {
-        "λεσον" => 2,
-        "ἀμφιστησηθῐ" => 3,
-        "ἀπᾰνᾰστηθῐ" => 3,
-        "ὀλεσον" => 2,
+        2 => [
+            "λεσον", "ὀλεσον",
+        ],
+        3 => [
+            "ἀμφιστησηθῐ", "ἀπᾰνᾰστηθῐ",
+        ],
     }, true, None),
-    // AORIST_IMP_MID_2_DU, from PARTICIPLE_AOR_MID.
-    relation!(AORIST_IMP_MID_2_DU, [PARTICIPLE_AOR_MID], [("~μενος", "~σθον"), ("~ομενος", "~εσθον")], rules {
+    // AORIST_IMPERATIVE_MID_2_DU, from PARTICIPLE_AOR_MID.
+    relation!(AORIST_IMPERATIVE_MID_2_DU, [PARTICIPLE_AOR_MID], [("~μενος", "~σθον"), ("~ομενος", "~εσθον")], rules {
         "" => [0 1386, 1 131],
         "ομενος" => [1 131, 0 5],
         "ᾰμενος" => [0 1371],
     } listed {
-        "δομενος" => 0,
-        "προδομενος" => 0,
-        "πᾰρᾰδομενος" => 0,
-        "ἀντᾰποδομενος" => 0,
-        "ἀποδομενος" => 0,
+        0 => [
+            "δομενος", "προδομενος", "πᾰρᾰδομενος", "ἀντᾰποδομενος", "ἀποδομενος",
+        ],
     }, true, None),
-    // AORIST_IMP_MID_2_PL, from AORIST_IMP_MID_2_DU.
-    relation!(AORIST_IMP_MID_2_PL, [AORIST_IMP_MID_2_DU], [("~ον", "~ε")], rules {
+    // AORIST_IMPERATIVE_MID_2_PL, from AORIST_IMPERATIVE_MID_2_DU.
+    relation!(AORIST_IMPERATIVE_MID_2_PL, [AORIST_IMPERATIVE_MID_2_DU], [("~ον", "~ε")], rules {
         "" => [0 1517],
     } listed {}, true, None),
-    // AORIST_IMP_MID_3_SG, from AORIST_IMP_MID_2_DU.
-    relation!(AORIST_IMP_MID_3_SG, [AORIST_IMP_MID_2_DU], [("~ον", "~ω")], rules {
+    // AORIST_IMPERATIVE_MID_3_SG, from AORIST_IMPERATIVE_MID_2_DU.
+    relation!(AORIST_IMPERATIVE_MID_3_SG, [AORIST_IMPERATIVE_MID_2_DU], [("~ον", "~ω")], rules {
         "" => [0 1517],
     } listed {}, true, None),
-    // AORIST_IMP_MID_3_DU, from AORIST_IMP_MID_2_DU.
-    relation!(AORIST_IMP_MID_3_DU, [AORIST_IMP_MID_2_DU], [("~ον", "~ων")], rules {
+    // AORIST_IMPERATIVE_MID_3_DU, from AORIST_IMPERATIVE_MID_2_DU.
+    relation!(AORIST_IMPERATIVE_MID_3_DU, [AORIST_IMPERATIVE_MID_2_DU], [("~ον", "~ων")], rules {
         "" => [0 1517],
     } listed {}, true, None),
-    // AORIST_IMP_MID_3_PL, from AORIST_IMP_MID_3_DU.
+    // AORIST_IMPERATIVE_MID_3_PL, from AORIST_IMPERATIVE_MID_3_DU.
     relation!(
-        AORIST_IMP_MID_3_PL,
-        [AORIST_IMP_MID_3_DU],
+        AORIST_IMPERATIVE_MID_3_PL,
+        [AORIST_IMPERATIVE_MID_3_DU],
         [],
         none,
         true,
         None
     ),
-    // AORIST_IMP_PASS_1_SG, from AORIST_SUBJ_PASS_1_SG. Few or no words have it: changed as AORIST_SUBJ_PASS_3_SG is into AORIST_IMP_PASS_3_SG.
-    relation!(AORIST_IMP_PASS_1_SG, [AORIST_SUBJ_PASS_1_SG], [("~ῃ", "~ητω")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_SUBJ_PASS_3_SG, AORIST_IMP_PASS_3_SG))),
-    // AORIST_IMP_PASS_1_DU, from AORIST_IMP_PASS_2_DU. Few or no words have it: changed as AORIST_SUBJ_PASS_2_SG is into AORIST_SUBJ_PASS_1_SG.
-    relation!(AORIST_IMP_PASS_1_DU, [AORIST_IMP_PASS_2_DU], [("~ῃς", "~ω")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_SUBJ_PASS_2_SG, AORIST_SUBJ_PASS_1_SG))),
-    // AORIST_IMP_PASS_1_PL, from AORIST_SUBJ_PASS_1_PL. Few or no words have it: changed as AORIST_SUBJ_PASS_2_PL is into AORIST_IMP_PASS_2_PL.
-    relation!(
-        AORIST_IMP_PASS_1_PL,
-        [AORIST_SUBJ_PASS_1_PL],
-        [],
-        none,
-        true,
-        Some((AORIST_SUBJ_PASS_2_PL, AORIST_IMP_PASS_2_PL))
-    ),
-    // AORIST_IMP_PASS_2_SG, from AORIST_SUBJ_PASS_1_SG.
-    relation!(AORIST_IMP_PASS_2_SG, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ηθῐ"), ("~ω", "~ητῐ"), ("~ῠφθω", "~υφθητῐ")], rules {
+    // AORIST_IMPERATIVE_PASS_2_SG, from AORIST_SUBJ_PASS_1_SG.
+    relation!(AORIST_IMPERATIVE_PASS_2_SG, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ηθῐ"), ("~ω", "~ητῐ"), ("~ῠφθω", "~υφθητῐ")], rules {
         "" => [1 1139, 0 57, 2 2],
         "βω" => [0 2],
         "γω" => [0 9],
@@ -2729,46 +2440,39 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "φω" => [0 9],
         "ῠω" => [0 4],
     } listed {
-        "δοθω" => 0,
-        "προδοθω" => 0,
-        "πᾰρᾰδοθω" => 0,
-        "τεθω" => 0,
-        "τρῐβω" => 0,
-        "ἀμφιστᾰθω" => 0,
-        "ἀντᾰποδοθω" => 0,
-        "ἀπορηθησω" => 0,
-        "ἀφεθω" => 0,
-        "ἐκτεθω" => 0,
-        "ἐπεντεθω" => 0,
+        0 => [
+            "δοθω", "προδοθω", "πᾰρᾰδοθω", "τεθω", "τρῐβω", "ἀμφιστᾰθω", "ἀντᾰποδοθω", "ἀπορηθησω",
+            "ἀφεθω", "ἐκτεθω", "ἐπεντεθω",
+        ],
     }, true, None),
-    // AORIST_IMP_PASS_2_DU, from AORIST_SUBJ_PASS_2_DU.
+    // AORIST_IMPERATIVE_PASS_2_DU, from AORIST_SUBJ_PASS_2_DU.
     relation!(
-        AORIST_IMP_PASS_2_DU,
+        AORIST_IMPERATIVE_PASS_2_DU,
         [AORIST_SUBJ_PASS_2_DU],
         [],
         none,
         true,
         None
     ),
-    // AORIST_IMP_PASS_2_PL, from AORIST_SUBJ_PASS_2_PL.
+    // AORIST_IMPERATIVE_PASS_2_PL, from AORIST_SUBJ_PASS_2_PL.
     relation!(
-        AORIST_IMP_PASS_2_PL,
+        AORIST_IMPERATIVE_PASS_2_PL,
         [AORIST_SUBJ_PASS_2_PL],
         [],
         none,
         true,
         None
     ),
-    // AORIST_IMP_PASS_3_SG, from AORIST_SUBJ_PASS_1_SG.
-    relation!(AORIST_IMP_PASS_3_SG, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ητω")], rules {
+    // AORIST_IMPERATIVE_PASS_3_SG, from AORIST_SUBJ_PASS_1_SG.
+    relation!(AORIST_IMPERATIVE_PASS_3_SG, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ητω")], rules {
         "" => [0 1200],
     } listed {}, true, None),
-    // AORIST_IMP_PASS_3_DU, from AORIST_SUBJ_PASS_1_SG.
-    relation!(AORIST_IMP_PASS_3_DU, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ητων")], rules {
+    // AORIST_IMPERATIVE_PASS_3_DU, from AORIST_SUBJ_PASS_1_SG.
+    relation!(AORIST_IMPERATIVE_PASS_3_DU, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ητων")], rules {
         "" => [0 1200],
     } listed {}, true, None),
-    // AORIST_IMP_PASS_3_PL, from AORIST_SUBJ_PASS_1_SG.
-    relation!(AORIST_IMP_PASS_3_PL, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~εντων")], rules {
+    // AORIST_IMPERATIVE_PASS_3_PL, from AORIST_SUBJ_PASS_1_SG.
+    relation!(AORIST_IMPERATIVE_PASS_3_PL, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~εντων")], rules {
         "" => [0 1200],
     } listed {}, true, None),
     // PERFECT_IND_ACT_1_SG, from PERFECT_IND_ACT_2_DU.
@@ -2823,20 +2527,33 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "η" => [4 3, 0 1, 41 1],
         "ω" => [0 4, 41 1],
     } listed {
-        "ξῠνωμοσε" => 39,
-        "σῠνωμοσε" => 39,
-        "ἐδειξε" => 46,
-        "ἐδεισε" => 45,
-        "ἐδωκε" => 42,
-        "ἐδῐψησε" => 56,
-        "ἐκρεμᾰσε" => 57,
-        "ἐκᾰλῠψε" => 65,
-        "ἐπεισε" => 61,
-        "ἐπετᾰσε" => 61,
-        "ἐπλησε" => 61,
-        "ἐπλᾰσε" => 61,
-        "ἐπρησε" => 61,
-        "ἐσπευσε" => 35,
+        35 => [
+            "ἐσπευσε",
+        ],
+        39 => [
+            "ξῠνωμοσε", "σῠνωμοσε",
+        ],
+        42 => [
+            "ἐδωκε",
+        ],
+        45 => [
+            "ἐδεισε",
+        ],
+        46 => [
+            "ἐδειξε",
+        ],
+        56 => [
+            "ἐδῐψησε",
+        ],
+        57 => [
+            "ἐκρεμᾰσε",
+        ],
+        61 => [
+            "ἐπεισε", "ἐπετᾰσε", "ἐπλησε", "ἐπλᾰσε", "ἐπρησε",
+        ],
+        65 => [
+            "ἐκᾰλῠψε",
+        ],
     }, false, None),
     // PERFECT_IND_ACT_2_PL, from PERFECT_IND_ACT_1_PL.
     relation!(PERFECT_IND_ACT_2_PL, [PERFECT_IND_ACT_1_PL], [("~μεν", "~τε")], rules {
@@ -2906,12 +2623,15 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "οχω" => [14 10, 15 2, 19 1],
         "ᾰχω" => [19 9],
     } listed {
-        "δεδωκω" => 23,
-        "ἀντᾰποδεδωκω" => 23,
-        "ἐξενηνεικω" => 7,
+        7 => [
+            "ἐξενηνεικω",
+        ],
+        23 => [
+            "δεδωκω", "ἀντᾰποδεδωκω",
+        ],
     }, false, None),
-    // PERFECT_IND_MID_2_DU, from PERFECT_IMP_MID_2_SG.
-    relation!(PERFECT_IND_MID_2_DU, [PERFECT_IMP_MID_2_SG], [("~ξο", "~χθον"), ("~ο", "~θον"), ("~σο", "~θον"), ("~ψο", "~φθον")], rules {
+    // PERFECT_IND_MID_2_DU, from PERFECT_IMPERATIVE_MID_2_SG.
+    relation!(PERFECT_IND_MID_2_DU, [PERFECT_IMPERATIVE_MID_2_SG], [("~ξο", "~χθον"), ("~ο", "~θον"), ("~σο", "~θον"), ("~ψο", "~φθον")], rules {
         "" => [1 936, 0 106, 3 68, 2 55],
         "ξο" => [0 106],
         "σο" => [1 936, 2 55],
@@ -2929,8 +2649,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(PERFECT_IND_MID_2_PL, [PERFECT_IND_MID_2_DU], [("~ον", "~ε")], rules {
         "" => [0 1166],
     } listed {}, true, None),
-    // PERFECT_IND_MID_3_SG, from PERFECT_IMP_MID_2_SG.
-    relation!(PERFECT_IND_MID_3_SG, [PERFECT_IMP_MID_2_SG], [("~ξο", "~κται"), ("~ο", "~ται"), ("~σο", "~ται"), ("~ψο", "~πται")], rules {
+    // PERFECT_IND_MID_3_SG, from PERFECT_IMPERATIVE_MID_2_SG.
+    relation!(PERFECT_IND_MID_3_SG, [PERFECT_IMPERATIVE_MID_2_SG], [("~ξο", "~κται"), ("~ο", "~ται"), ("~σο", "~ται"), ("~ψο", "~πται")], rules {
         "" => [2 717, 1 274, 0 106, 3 68],
         "ξο" => [0 106],
         "σο" => [2 717, 1 274],
@@ -2950,17 +2670,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡσο" => [2 19, 1 1],
         "ψο" => [3 68],
     } listed {
-        "δῐᾰλελοιπσο" => 1,
-        "κεκῠλῑσο" => 1,
-        "πεπλησο" => 1,
-        "πεπρησο" => 1,
-        "πεφᾰσο" => 2,
-        "ἐγνωσο" => 1,
-        "ἐδηδεσο" => 1,
-        "ἐμπεπρησο" => 1,
-        "ἑστᾰσο" => 2,
-        "ἡρμοσο" => 1,
-        "ᾐδεσο" => 1,
+        1 => [
+            "κεκῠλῑσο", "πεπλησο", "πεπρησο", "ἐγνωσο", "ἐδηδεσο", "ἐμπεπρησο", "ἡρμοσο", "ᾐδεσο",
+        ],
+        2 => [
+            "πεφᾰσο", "ἑστᾰσο",
+        ],
     }, true, None),
     // PERFECT_IND_MID_3_DU, from PERFECT_IND_MID_2_DU.
     relation!(
@@ -2971,8 +2686,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         true,
         None
     ),
-    // PERFECT_IND_MID_3_PL, from PERFECT_IMP_MID_2_SG.
-    relation!(PERFECT_IND_MID_3_PL, [PERFECT_IMP_MID_2_SG], [("~ξο", "~γᾰται"), ("~ξο", "~κᾰται"), ("~ξο", "~χᾰται"), ("~ο", "~ᾰται"), ("~σο", "~δᾰται"), ("~σο", "~ζᾰται"), ("~σο", "~θᾰται"), ("~σο", "~νται"), ("~σο", "~τᾰται"), ("~σο", "~ᾰται"), ("~ψο", "~βᾰται"), ("~ψο", "~πᾰται"), ("~ψο", "~φᾰται")], rules {
+    // PERFECT_IND_MID_3_PL, from PERFECT_IMPERATIVE_MID_2_SG.
+    relation!(PERFECT_IND_MID_3_PL, [PERFECT_IMPERATIVE_MID_2_SG], [("~ξο", "~γᾰται"), ("~ξο", "~κᾰται"), ("~ξο", "~χᾰται"), ("~ο", "~ᾰται"), ("~σο", "~δᾰται"), ("~σο", "~ζᾰται"), ("~σο", "~θᾰται"), ("~σο", "~νται"), ("~σο", "~τᾰται"), ("~σο", "~ᾰται"), ("~ψο", "~βᾰται"), ("~ψο", "~πᾰται"), ("~ψο", "~φᾰται")], rules {
         "" => [7 662, 4 165, 3 94, 0 62, 9 54, 11 33, 2 32, 12 32, 1 12, 6 7, 5 4, 8 4, 10 3],
         "ξο" => [0 62, 2 32, 1 12],
         "λᾰξο" => [2 6, 1 1],
@@ -2998,25 +2713,27 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ψο" => [11 33, 12 32, 10 3],
         "ληψο" => [12 9, 10 2],
     } listed {
-        "δεδειξο" => 1,
-        "δῐᾰλελοιπσο" => 8,
-        "κεκῠλῑσο" => 3,
-        "κᾰτᾰδεδιωξο" => 2,
-        "λελᾰσο" => 6,
-        "πεπλησο" => 3,
-        "πεπρησο" => 3,
-        "πεπῐεξο" => 1,
-        "πεφᾰσο" => 7,
-        "τετρῐψο" => 10,
-        "ἀπηυξο" => 2,
-        "ἐγνωσο" => 3,
-        "ἐδηδεσο" => 3,
-        "ἐκδεδιωξο" => 2,
-        "ἐμπεπρησο" => 4,
-        "ἐξενηνειξο" => 1,
-        "ἠρᾰσο" => 3,
-        "ὑσο" => 3,
-        "ᾐδεσο" => 3,
+        1 => [
+            "δεδειξο", "πεπῐεξο", "ἐξενηνειξο",
+        ],
+        2 => [
+            "ἀπηυξο",
+        ],
+        3 => [
+            "κεκῠλῑσο", "πεπλησο", "πεπρησο", "ἐγνωσο", "ἐδηδεσο", "ἠρᾰσο", "ὑσο", "ᾐδεσο",
+        ],
+        4 => [
+            "ἐμπεπρησο",
+        ],
+        6 => [
+            "λελᾰσο",
+        ],
+        7 => [
+            "πεφᾰσο",
+        ],
+        10 => [
+            "τετρῐψο",
+        ],
     }, true, None),
     // PERFECT_IND_PASS_1_SG, from PERFECT_IND_MID_1_SG.
     relation!(
@@ -3257,8 +2974,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "" => [1 1124, 0 2],
         "τᾰτον" => [0 2, 1 1],
     } listed {
-        "ἀμφεστᾰτον" => 0,
-        "ἐγκᾰθεστᾰτον" => 0,
+        0 => [
+            "ἀμφεστᾰτον", "ἐγκᾰθεστᾰτον",
+        ],
     }, true, None),
     // PERFECT_OPT_ACT_1_DU, from PERFECT_OPT_ACT_1_PL. Few or no words have it: changed as PERFECT_OPT_ACT_2_PL is into PERFECT_OPT_ACT_2_DU.
     relation!(PERFECT_OPT_ACT_1_DU, [PERFECT_OPT_ACT_1_PL], [("~ε", "~ον")], rules {
@@ -3418,170 +3136,130 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         true,
         None
     ),
-    // PERFECT_IMP_ACT_1_SG, from PERFECT_IMP_ACT_2_SG. Few or no words have it: changed as PERFECT_SUBJ_ACT_2_SG is into PERFECT_SUBJ_ACT_1_SG.
-    relation!(PERFECT_IMP_ACT_1_SG, [PERFECT_IMP_ACT_2_SG], [("~ῃς", "~ω")], rules {
-        "" => [0 1126],
-    } listed {}, true, Some((PERFECT_SUBJ_ACT_2_SG, PERFECT_SUBJ_ACT_1_SG))),
-    // PERFECT_IMP_ACT_1_DU, from PERFECT_IMP_ACT_2_DU. Few or no words have it: changed as PERFECT_IND_ACT_2_PL is into PERFECT_IND_ACT_1_PL.
-    relation!(PERFECT_IMP_ACT_1_DU, [PERFECT_IMP_ACT_2_DU], [("~τε", "~μεν")], rules {
-        "" => [0 1126],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_PL, PERFECT_IND_ACT_1_PL))),
-    // PERFECT_IMP_ACT_1_PL, from PERFECT_IMP_ACT_2_PL. Few or no words have it: changed as PERFECT_IND_ACT_2_PL is into PERFECT_IND_ACT_1_PL.
-    relation!(PERFECT_IMP_ACT_1_PL, [PERFECT_IMP_ACT_2_PL], [("~τε", "~μεν")], rules {
-        "" => [0 1126],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_PL, PERFECT_IND_ACT_1_PL))),
-    // PERFECT_IMP_ACT_2_SG, from PERFECT_IND_ACT_3_SG.
+    // PERFECT_IMPERATIVE_ACT_2_SG, from PERFECT_IND_ACT_3_SG.
     relation!(
-        PERFECT_IMP_ACT_2_SG,
+        PERFECT_IMPERATIVE_ACT_2_SG,
         [PERFECT_IND_ACT_3_SG],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_ACT_2_DU, from PERFECT_IND_ACT_2_DU.
-    relation!(PERFECT_IMP_ACT_2_DU, [PERFECT_IND_ACT_2_DU], [("~", "~"), ("~ᾰτον", "~ετον")], rules {
+    // PERFECT_IMPERATIVE_ACT_2_DU, from PERFECT_IND_ACT_2_DU.
+    relation!(PERFECT_IMPERATIVE_ACT_2_DU, [PERFECT_IND_ACT_2_DU], [("~", "~"), ("~ᾰτον", "~ετον")], rules {
         "" => [1 1122, 0 2],
         "τᾰτον" => [0 2, 1 1],
     } listed {
-        "ἀμφεστᾰτον" => 0,
-        "ἐγκᾰθεστᾰτον" => 0,
+        0 => [
+            "ἀμφεστᾰτον", "ἐγκᾰθεστᾰτον",
+        ],
     }, true, None),
-    // PERFECT_IMP_ACT_2_PL, from PERFECT_IMP_ACT_2_DU.
-    relation!(PERFECT_IMP_ACT_2_PL, [PERFECT_IMP_ACT_2_DU], [("~ον", "~ε")], rules {
+    // PERFECT_IMPERATIVE_ACT_2_PL, from PERFECT_IMPERATIVE_ACT_2_DU.
+    relation!(PERFECT_IMPERATIVE_ACT_2_PL, [PERFECT_IMPERATIVE_ACT_2_DU], [("~ον", "~ε")], rules {
         "" => [0 1126],
     } listed {}, true, None),
-    // PERFECT_IMP_ACT_3_SG, from PERFECT_IMP_ACT_2_DU.
-    relation!(PERFECT_IMP_ACT_3_SG, [PERFECT_IMP_ACT_2_DU], [("~ον", "~ω")], rules {
+    // PERFECT_IMPERATIVE_ACT_3_SG, from PERFECT_IMPERATIVE_ACT_2_DU.
+    relation!(PERFECT_IMPERATIVE_ACT_3_SG, [PERFECT_IMPERATIVE_ACT_2_DU], [("~ον", "~ω")], rules {
         "" => [0 1126],
     } listed {}, true, None),
-    // PERFECT_IMP_ACT_3_DU, from PERFECT_IMP_ACT_2_DU.
-    relation!(PERFECT_IMP_ACT_3_DU, [PERFECT_IMP_ACT_2_DU], [("~ον", "~ων")], rules {
+    // PERFECT_IMPERATIVE_ACT_3_DU, from PERFECT_IMPERATIVE_ACT_2_DU.
+    relation!(PERFECT_IMPERATIVE_ACT_3_DU, [PERFECT_IMPERATIVE_ACT_2_DU], [("~ον", "~ων")], rules {
         "" => [0 1126],
     } listed {}, true, None),
-    // PERFECT_IMP_ACT_3_PL, from PERFECT_OPT_ACT_1_SG.
-    relation!(PERFECT_IMP_ACT_3_PL, [PERFECT_OPT_ACT_1_SG], [("~αιην", "~ᾰντων"), ("~ιμῐ", "~ντων")], rules {
+    // PERFECT_IMPERATIVE_ACT_3_PL, from PERFECT_OPT_ACT_1_SG.
+    relation!(PERFECT_IMPERATIVE_ACT_3_PL, [PERFECT_OPT_ACT_1_SG], [("~αιην", "~ᾰντων"), ("~ιμῐ", "~ντων")], rules {
         "" => [1 1123, 0 2],
         "ν" => [0 2],
         "ῐ" => [1 1123],
     } listed {}, true, None),
-    // PERFECT_IMP_MID_1_SG, from PERFECT_IMP_MID_2_SG. Few or no words have it: changed as PERFECT_SUBJ_MID_2_SG is into PERFECT_SUBJ_MID_1_SG.
-    relation!(PERFECT_IMP_MID_1_SG, [PERFECT_IMP_MID_2_SG], [("~ᾖς", "~ὦ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_SUBJ_MID_2_SG, PERFECT_SUBJ_MID_1_SG))),
-    // PERFECT_IMP_MID_1_DU, from PERFECT_IMP_MID_2_DU. Few or no words have it: changed as PERFECT_SUBJ_MID_2_SG is into PERFECT_SUBJ_MID_1_SG.
-    relation!(PERFECT_IMP_MID_1_DU, [PERFECT_IMP_MID_2_DU], [("~ᾖς", "~ὦ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_SUBJ_MID_2_SG, PERFECT_SUBJ_MID_1_SG))),
-    // PERFECT_IMP_MID_1_PL, from PERFECT_IND_MID_1_PL. Few or no words have it: changed as PERFECT_IND_MID_2_PL is into PERFECT_IMP_MID_2_PL.
-    relation!(
-        PERFECT_IMP_MID_1_PL,
-        [PERFECT_IND_MID_1_PL],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_PL, PERFECT_IMP_MID_2_PL))
-    ),
-    // PERFECT_IMP_MID_2_SG, from PERFECT_IND_MID_2_SG.
-    relation!(PERFECT_IMP_MID_2_SG, [PERFECT_IND_MID_2_SG], [("~αι", "~ο")], rules {
+    // PERFECT_IMPERATIVE_MID_2_SG, from PERFECT_IND_MID_2_SG.
+    relation!(PERFECT_IMPERATIVE_MID_2_SG, [PERFECT_IND_MID_2_SG], [("~αι", "~ο")], rules {
         "" => [0 1164],
     } listed {}, true, None),
-    // PERFECT_IMP_MID_2_DU, from PERFECT_IND_MID_2_DU.
+    // PERFECT_IMPERATIVE_MID_2_DU, from PERFECT_IND_MID_2_DU.
     relation!(
-        PERFECT_IMP_MID_2_DU,
+        PERFECT_IMPERATIVE_MID_2_DU,
         [PERFECT_IND_MID_2_DU],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_MID_2_PL, from PERFECT_IND_MID_2_PL.
+    // PERFECT_IMPERATIVE_MID_2_PL, from PERFECT_IND_MID_2_PL.
     relation!(
-        PERFECT_IMP_MID_2_PL,
+        PERFECT_IMPERATIVE_MID_2_PL,
         [PERFECT_IND_MID_2_PL],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_MID_3_SG, from PERFECT_IND_MID_2_DU.
-    relation!(PERFECT_IMP_MID_3_SG, [PERFECT_IND_MID_2_DU], [("~ον", "~ω")], rules {
+    // PERFECT_IMPERATIVE_MID_3_SG, from PERFECT_IND_MID_2_DU.
+    relation!(PERFECT_IMPERATIVE_MID_3_SG, [PERFECT_IND_MID_2_DU], [("~ον", "~ω")], rules {
         "" => [0 1166],
     } listed {}, true, None),
-    // PERFECT_IMP_MID_3_DU, from PERFECT_IND_MID_2_DU.
-    relation!(PERFECT_IMP_MID_3_DU, [PERFECT_IND_MID_2_DU], [("~ον", "~ων")], rules {
+    // PERFECT_IMPERATIVE_MID_3_DU, from PERFECT_IND_MID_2_DU.
+    relation!(PERFECT_IMPERATIVE_MID_3_DU, [PERFECT_IND_MID_2_DU], [("~ον", "~ων")], rules {
         "" => [0 1166],
     } listed {}, true, None),
-    // PERFECT_IMP_MID_3_PL, from PERFECT_IMP_MID_3_DU.
+    // PERFECT_IMPERATIVE_MID_3_PL, from PERFECT_IMPERATIVE_MID_3_DU.
     relation!(
-        PERFECT_IMP_MID_3_PL,
-        [PERFECT_IMP_MID_3_DU],
+        PERFECT_IMPERATIVE_MID_3_PL,
+        [PERFECT_IMPERATIVE_MID_3_DU],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_PASS_1_SG, from PERFECT_IMP_PASS_2_SG. Few or no words have it: changed as PERFECT_SUBJ_PASS_2_SG is into PERFECT_SUBJ_PASS_1_SG.
-    relation!(PERFECT_IMP_PASS_1_SG, [PERFECT_IMP_PASS_2_SG], [("~ᾖς", "~ὦ")], rules {
-        "" => [0 1138],
-    } listed {}, true, Some((PERFECT_SUBJ_PASS_2_SG, PERFECT_SUBJ_PASS_1_SG))),
-    // PERFECT_IMP_PASS_1_DU, from PERFECT_IMP_PASS_2_DU. Few or no words have it: changed as PERFECT_SUBJ_PASS_2_SG is into PERFECT_SUBJ_PASS_1_SG.
-    relation!(PERFECT_IMP_PASS_1_DU, [PERFECT_IMP_PASS_2_DU], [("~ᾖς", "~ὦ")], rules {
-        "" => [0 1138],
-    } listed {}, true, Some((PERFECT_SUBJ_PASS_2_SG, PERFECT_SUBJ_PASS_1_SG))),
-    // PERFECT_IMP_PASS_1_PL, from PERFECT_IND_PASS_1_PL. Few or no words have it: changed as PERFECT_IND_PASS_2_PL is into PERFECT_IMP_PASS_2_PL.
-    relation!(PERFECT_IMP_PASS_1_PL, [PERFECT_IND_PASS_1_PL], [("~", "~")], rules {
-        "" => [0 1139],
-    } listed {}, true, Some((PERFECT_IND_PASS_2_PL, PERFECT_IMP_PASS_2_PL))),
-    // PERFECT_IMP_PASS_2_SG, from PERFECT_IMP_MID_2_SG.
+    // PERFECT_IMPERATIVE_PASS_2_SG, from PERFECT_IMPERATIVE_MID_2_SG.
     relation!(
-        PERFECT_IMP_PASS_2_SG,
-        [PERFECT_IMP_MID_2_SG],
+        PERFECT_IMPERATIVE_PASS_2_SG,
+        [PERFECT_IMPERATIVE_MID_2_SG],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_PASS_2_DU, from PERFECT_IND_MID_2_DU.
+    // PERFECT_IMPERATIVE_PASS_2_DU, from PERFECT_IND_MID_2_DU.
     relation!(
-        PERFECT_IMP_PASS_2_DU,
+        PERFECT_IMPERATIVE_PASS_2_DU,
         [PERFECT_IND_MID_2_DU],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_PASS_2_PL, from PERFECT_IND_MID_2_PL.
+    // PERFECT_IMPERATIVE_PASS_2_PL, from PERFECT_IND_MID_2_PL.
     relation!(
-        PERFECT_IMP_PASS_2_PL,
+        PERFECT_IMPERATIVE_PASS_2_PL,
         [PERFECT_IND_MID_2_PL],
         [],
         none,
         true,
         None
     ),
-    // PERFECT_IMP_PASS_3_SG, from PERFECT_IMP_MID_3_SG.
+    // PERFECT_IMPERATIVE_PASS_3_SG, from PERFECT_IMPERATIVE_MID_3_SG.
     relation!(
-        PERFECT_IMP_PASS_3_SG,
-        [PERFECT_IMP_MID_3_SG],
+        PERFECT_IMPERATIVE_PASS_3_SG,
+        [PERFECT_IMPERATIVE_MID_3_SG],
         [],
         none,
         false,
         None
     ),
-    // PERFECT_IMP_PASS_3_DU, from PERFECT_IMP_MID_3_DU.
+    // PERFECT_IMPERATIVE_PASS_3_DU, from PERFECT_IMPERATIVE_MID_3_DU.
     relation!(
-        PERFECT_IMP_PASS_3_DU,
-        [PERFECT_IMP_MID_3_DU],
+        PERFECT_IMPERATIVE_PASS_3_DU,
+        [PERFECT_IMPERATIVE_MID_3_DU],
         [],
         none,
         false,
         None
     ),
-    // PERFECT_IMP_PASS_3_PL, from PERFECT_IMP_MID_3_DU.
+    // PERFECT_IMPERATIVE_PASS_3_PL, from PERFECT_IMPERATIVE_MID_3_DU.
     relation!(
-        PERFECT_IMP_PASS_3_PL,
-        [PERFECT_IMP_MID_3_DU],
+        PERFECT_IMPERATIVE_PASS_3_PL,
+        [PERFECT_IMPERATIVE_MID_3_DU],
         [],
         none,
         false,
@@ -3602,10 +3280,18 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ψο" => [13 17, 2 3, 1 2],
         "ιψο" => [2 3],
     } listed {
-        "ἐλελησο" => 10,
-        "ἐπελελησο" => 8,
-        "ὀρωρεσο" => 11,
-        "ὑφᾰνσο" => 5,
+        5 => [
+            "ὑφᾰνσο",
+        ],
+        8 => [
+            "ἐπελελησο",
+        ],
+        10 => [
+            "ἐλελησο",
+        ],
+        11 => [
+            "ὀρωρεσο",
+        ],
     }, false, None),
     // PLUPERFECT_ACT_1_DU, from PLUPERFECT_ACT_1_SG. Few or no words have it: changed as PLUPERFECT_ACT_2_SG is into PLUPERFECT_ACT_2_DU.
     relation!(PLUPERFECT_ACT_1_DU, [PLUPERFECT_ACT_1_SG], [("~ις", "~τον")], rules {
@@ -3650,7 +3336,9 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "υτο" => [4 34],
         "ωτο" => [4 60],
     } listed {
-        "ἐπεφορπτο" => 2,
+        2 => [
+            "ἐπεφορπτο",
+        ],
     }, true, None),
     // PLUPERFECT_MID_1_DU, from PLUPERFECT_MID_1_PL. Few or no words have it: changed as PLUPERFECT_MID_2_PL is into PLUPERFECT_MID_2_DU.
     relation!(PLUPERFECT_MID_1_DU, [PLUPERFECT_MID_1_PL], [("~ε", "~ον")], rules {
@@ -3660,8 +3348,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(PLUPERFECT_MID_1_PL, [PLUPERFECT_MID_1_SG], [("~ην", "~εθᾰ")], rules {
         "" => [0 741],
     } listed {}, true, None),
-    // PLUPERFECT_MID_2_SG, from PERFECT_IMP_MID_2_SG.
-    relation!(PLUPERFECT_MID_2_SG, [PERFECT_IMP_MID_2_SG], [("~", "~"), ("~", "ἐ~"), ("~αλελῠσο", "~ελελῠσο"), ("~ᾰκεκλησο", "~εκεκλησο"), ("~ᾰλελῠσο", "~ελελῠσο"), ("δῐᾰ~", "δῐε~"), ("κε~", "ἐ~"), ("με~", "ἐ~"), ("πε~", "ἐ~"), ("τε~", "ἐ~"), ("ἀ~", "ἠ~"), ("ἀπο~", "ἀπε~"), ("ἐκ~", "ἐξε~"), ("ἐμ~", "ἐνε~"), ("ἐπι~", "ἐπε~"), ("ἑπῐ~", "ἑπε~"), ("ὑπο~", "ὑπε~")], rules {
+    // PLUPERFECT_MID_2_SG, from PERFECT_IMPERATIVE_MID_2_SG.
+    relation!(PLUPERFECT_MID_2_SG, [PERFECT_IMPERATIVE_MID_2_SG], [("~", "~"), ("~", "ἐ~"), ("~αλελῠσο", "~ελελῠσο"), ("~ᾰκεκλησο", "~εκεκλησο"), ("~ᾰλελῠσο", "~ελελῠσο"), ("δῐᾰ~", "δῐε~"), ("κε~", "ἐ~"), ("με~", "ἐ~"), ("πε~", "ἐ~"), ("τε~", "ἐ~"), ("ἀ~", "ἠ~"), ("ἀπο~", "ἀπε~"), ("ἐκ~", "ἐξε~"), ("ἐμ~", "ἐνε~"), ("ἐπι~", "ἐπε~"), ("ἑπῐ~", "ἑπε~"), ("ὑπο~", "ὑπε~")], rules {
         "" => [1 333, 0 318, 8 5, 11 4, 5 3, 6 3, 9 3, 12 3, 2 2, 3 2, 4 2, 7 2, 10 2, 13 2, 14 2, 15 2, 16 2],
         "γησο" => [1 23, 0 8],
         "κλησο" => [3 2, 1 1, 14 1],
@@ -3670,44 +3358,27 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "λῠσο" => [1 3, 2 2, 4 2, 5 1, 11 1, 15 1],
         "ηψο" => [0 9],
     } listed {
-        "δῐειλεξο" => 0,
-        "δῐᾰμεμηνῡσο" => 5,
-        "δῐῃρησο" => 0,
-        "εἰλεξο" => 0,
-        "εἱλκῠσο" => 0,
-        "εἱσο" => 0,
-        "κεκᾰλῠψο" => 0,
-        "κεκᾰσο" => 1,
-        "κᾰθεωρᾱσο" => 0,
-        "πεπᾰσο" => 0,
-        "πεπᾰσο" => 1,
-        "πᾰρῃτησο" => 0,
-        "τετρησο" => 0,
-        "ἀλᾰλησο" => 0,
-        "ἀνεῳξο" => 0,
-        "ἀπολελῠτρωσο" => 11,
-        "ἀποτεθραυσο" => 11,
-        "ἀφεισο" => 0,
-        "ἐζευξο" => 0,
-        "ἐκτεθεισο" => 12,
-        "ἐμβεβλησο" => 13,
-        "ἐμπεπαιξο" => 13,
-        "ἐξηρανσο" => 0,
-        "ἐρξο" => 0,
-        "ἐστηρῐξο" => 0,
-        "ἐστρωσο" => 0,
-        "ἐστᾰξο" => 0,
-        "ἐφωρμησο" => 0,
-        "ἠκροασο" => 0,
-        "ἡσσησο" => 0,
-        "ὀρωρεσο" => 0,
-        "ὑπεσχησο" => 0,
-        "ὑφᾰνσο" => 0,
-        "ὑφῃρησο" => 0,
-        "ὠμορξο" => 0,
-        "ὠργησο" => 0,
-        "ὡρμησο" => 0,
-        "ᾐδεσο" => 0,
+        0 => [
+            "δῐειλεξο", "δῐῃρησο", "εἰλεξο", "εἱλκῠσο", "εἱσο", "κεκᾰλῠψο", "κᾰθεωρᾱσο", "πεπᾰσο",
+            "πᾰρῃτησο", "τετρησο", "ἀλᾰλησο", "ἀνεῳξο", "ἀφεισο", "ἐζευξο", "ἐξηρανσο", "ἐρξο",
+            "ἐστηρῐξο", "ἐστρωσο", "ἐστᾰξο", "ἐφωρμησο", "ἠκροασο", "ἡσσησο", "ὀρωρεσο", "ὑπεσχησο",
+            "ὑφᾰνσο", "ὑφῃρησο", "ὠμορξο", "ὠργησο", "ὡρμησο", "ᾐδεσο",
+        ],
+        1 => [
+            "κεκᾰσο", "πεπᾰσο",
+        ],
+        5 => [
+            "δῐᾰμεμηνῡσο",
+        ],
+        11 => [
+            "ἀπολελῠτρωσο", "ἀποτεθραυσο",
+        ],
+        12 => [
+            "ἐκτεθεισο",
+        ],
+        13 => [
+            "ἐμβεβλησο", "ἐμπεπαιξο",
+        ],
     }, false, None),
     // PLUPERFECT_MID_2_DU, from PLUPERFECT_MID_2_SG.
     relation!(PLUPERFECT_MID_2_DU, [PLUPERFECT_MID_2_SG], [("~ξο", "~χθον"), ("~ο", "~θον"), ("~σο", "~θον"), ("~ψο", "~φθον")], rules {
@@ -3739,20 +3410,13 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῐσο" => [1 105, 2 3],
         "ψο" => [3 40],
     } listed {
-        "εἱλκῠσο" => 1,
-        "κεκῠλῑσο" => 1,
-        "περιεκεκλεισο" => 1,
-        "συνετεθραυσο" => 1,
-        "ἀπετεθραυσο" => 1,
-        "ἐγνωσο" => 1,
-        "ἐκεκρῐσο" => 2,
-        "ἐλελησο" => 1,
-        "ἐπεπλησο" => 1,
-        "ἐπεπῠσο" => 1,
-        "ἐρρᾰσο" => 2,
-        "ἐσπᾰσο" => 2,
-        "ὀμωμοσο" => 1,
-        "ᾐδεσο" => 1,
+        1 => [
+            "εἱλκῠσο", "κεκῠλῑσο", "περιεκεκλεισο", "συνετεθραυσο", "ἀπετεθραυσο", "ἐγνωσο",
+            "ἐλελησο", "ἐπεπλησο", "ἐπεπῠσο", "ὀμωμοσο", "ᾐδεσο",
+        ],
+        2 => [
+            "ἐρρᾰσο", "ἐσπᾰσο",
+        ],
     }, true, None),
     // PLUPERFECT_MID_3_DU, from PLUPERFECT_MID_2_DU.
     relation!(PLUPERFECT_MID_3_DU, [PLUPERFECT_MID_2_DU], [("~ον", "~ην")], rules {
@@ -3779,27 +3443,31 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡσο" => [7 9],
         "ψο" => [11 18, 12 18, 10 4],
     } listed {
-        "διεβεβληξο" => 1,
-        "εἱλκῠσο" => 3,
-        "κεκᾰλῠψο" => 12,
-        "πεπᾰσο" => 3,
-        "περιεκεκλεισο" => 3,
-        "προσειληψο" => 12,
-        "συνετεθραυσο" => 3,
-        "ἀνεῳξο" => 2,
-        "ἀπετεθραυσο" => 3,
-        "ἐδεδειξο" => 1,
-        "ἐπειληψο" => 12,
-        "ἐπεπλησο" => 3,
-        "ἐπεπῠσο" => 3,
-        "ἐρρᾰσο" => 7,
-        "ἐσπᾰσο" => 7,
-        "ἐτετῠψο" => 11,
-        "ἐτετῠψο" => 12,
-        "ἡρπᾰσο" => 5,
-        "ὀμωμοσο" => 3,
-        "ὑπειληψο" => 10,
-        "ᾐδεσο" => 3,
+        1 => [
+            "διεβεβληξο", "ἐδεδειξο",
+        ],
+        2 => [
+            "ἀνεῳξο",
+        ],
+        3 => [
+            "εἱλκῠσο", "πεπᾰσο", "περιεκεκλεισο", "συνετεθραυσο", "ἀπετεθραυσο", "ἐπεπλησο",
+            "ἐπεπῠσο", "ὀμωμοσο", "ᾐδεσο",
+        ],
+        5 => [
+            "ἡρπᾰσο",
+        ],
+        7 => [
+            "ἐρρᾰσο", "ἐσπᾰσο",
+        ],
+        10 => [
+            "ὑπειληψο",
+        ],
+        11 => [
+            "ἐτετῠψο",
+        ],
+        12 => [
+            "κεκᾰλῠψο", "προσειληψο", "ἐπειληψο", "ἐτετῠψο",
+        ],
     }, false, None),
     // PLUPERFECT_PASS_1_SG, from PLUPERFECT_MID_1_SG.
     relation!(
@@ -3925,9 +3593,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ᾰσαι" => [1 5, 0 3],
         "ῠσαι" => [3 8, 2 2],
     } listed {
-        "πεπᾰσαι" => 0,
-        "συγκεκρῠσαι" => 2,
-        "ἐκκεκρῠσαι" => 2,
+        0 => [
+            "πεπᾰσαι",
+        ],
+        2 => [
+            "συγκεκρῠσαι", "ἐκκεκρῠσαι",
+        ],
     }, true, None),
     // FUTURE_PERFECT_IND_MID_1_DU, from FUTURE_PERFECT_IND_MID_1_SG. Few or no words have it: changed as FUTURE_PERFECT_IND_MID_2_SG is into FUTURE_PERFECT_IND_MID_2_DU.
     relation!(FUTURE_PERFECT_IND_MID_1_DU, [FUTURE_PERFECT_IND_MID_1_SG], [("~ῃ", "~εσθον")], rules {
@@ -4042,132 +3713,6 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         true,
         None
     ),
-    // FUTURE_PERFECT_SUBJ_ACT_1_SG, from FUTURE_PERFECT_IND_ACT_1_SG. Few or no words have it: changed as PERFECT_IND_ACT_1_SG is into PERFECT_SUBJ_ACT_1_SG.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_1_SG, [FUTURE_PERFECT_IND_ACT_1_SG], [("~ᾰ", "~ω")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_1_SG, PERFECT_SUBJ_ACT_1_SG))),
-    // FUTURE_PERFECT_SUBJ_ACT_1_DU, from SUBJ_ACT_1_SG. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_SUBJ_ACT_1_DU,
-        [SUBJ_ACT_1_SG],
-        [],
-        none,
-        true,
-        Some((SUBJ_ACT_1_SG, SUBJ_ACT_1_SG))
-    ),
-    // FUTURE_PERFECT_SUBJ_ACT_1_PL, from FUTURE_PERFECT_OPT_ACT_1_PL. Few or no words have it: changed as PERFECT_OPT_ACT_1_PL is into PERFECT_SUBJ_ACT_1_PL.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_1_PL, [FUTURE_PERFECT_OPT_ACT_1_PL], [("~αιμεν", "~ωμεν"), ("~οιμεν", "~ωμεν")], rules {
-        "" => [1 1124, 0 2],
-        "αιμεν" => [0 2],
-    } listed {}, true, Some((PERFECT_OPT_ACT_1_PL, PERFECT_SUBJ_ACT_1_PL))),
-    // FUTURE_PERFECT_SUBJ_ACT_2_SG, from FUTURE_PERFECT_IND_ACT_2_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_SUBJ_ACT_2_SG.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_2_SG, [FUTURE_PERFECT_IND_ACT_2_SG], [("~ᾰς", "~ῃς")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_SUBJ_ACT_2_SG))),
-    // FUTURE_PERFECT_SUBJ_ACT_2_DU, from FUTURE_PERFECT_OPT_ACT_2_DU. Few or no words have it: changed as PERFECT_OPT_ACT_2_DU is into PERFECT_SUBJ_ACT_2_DU.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_2_DU, [FUTURE_PERFECT_OPT_ACT_2_DU], [("~αιτον", "~ητον"), ("~οιτον", "~ητον")], rules {
-        "" => [1 1124, 0 2],
-        "αιτον" => [0 2],
-    } listed {}, true, Some((PERFECT_OPT_ACT_2_DU, PERFECT_SUBJ_ACT_2_DU))),
-    // FUTURE_PERFECT_SUBJ_ACT_2_PL, from FUTURE_PERFECT_IND_ACT_2_PL. Few or no words have it: changed as PERFECT_IND_ACT_2_PL is into PERFECT_SUBJ_ACT_2_PL.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_2_PL, [FUTURE_PERFECT_IND_ACT_2_PL], [("~υτε", "~ῠθητε"), ("~ᾰτε", "~ητε")], rules {
-        "" => [1 1124, 0 2],
-        "υτε" => [0 2],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_PL, PERFECT_SUBJ_ACT_2_PL))),
-    // FUTURE_PERFECT_SUBJ_ACT_3_SG, from FUTURE_PERFECT_IND_ACT_3_SG. Few or no words have it: changed as PERFECT_IND_ACT_3_SG is into PERFECT_SUBJ_ACT_3_SG.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_3_SG, [FUTURE_PERFECT_IND_ACT_3_SG], [("~ε", "~ῃ")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_SG, PERFECT_SUBJ_ACT_3_SG))),
-    // FUTURE_PERFECT_SUBJ_ACT_3_DU, from FUTURE_PERFECT_IND_ACT_3_DU. Few or no words have it: changed as PERFECT_IND_ACT_3_DU is into PERFECT_SUBJ_ACT_3_DU.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_3_DU, [FUTURE_PERFECT_IND_ACT_3_DU], [("~ᾰτον", "~ητον")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_DU, PERFECT_SUBJ_ACT_3_DU))),
-    // FUTURE_PERFECT_SUBJ_ACT_3_PL, from FUTURE_PERFECT_IND_ACT_3_PL. Few or no words have it: changed as PERFECT_IND_ACT_3_PL is into PERFECT_SUBJ_ACT_3_PL.
-    relation!(FUTURE_PERFECT_SUBJ_ACT_3_PL, [FUTURE_PERFECT_IND_ACT_3_PL], [("~ᾱσῐ", "~ωσῐ")], rules {
-        "" => [0 1125],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_PL, PERFECT_SUBJ_ACT_3_PL))),
-    // FUTURE_PERFECT_SUBJ_MID_1_SG, from FUTURE_PERFECT_OPT_MID_1_SG. Few or no words have it: changed as PERFECT_OPT_MID_1_SG is into PERFECT_SUBJ_MID_1_SG.
-    relation!(FUTURE_PERFECT_SUBJ_MID_1_SG, [FUTURE_PERFECT_OPT_MID_1_SG], [("~εἴην", "~ὦ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_1_SG, PERFECT_SUBJ_MID_1_SG))),
-    // FUTURE_PERFECT_SUBJ_MID_1_DU, from SUBJ_MID_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_SUBJ_MID_1_DU,
-        [SUBJ_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((SUBJ_MID_2_DU, SUBJ_MID_2_DU))
-    ),
-    // FUTURE_PERFECT_SUBJ_MID_1_PL, from FUTURE_PERFECT_OPT_MID_1_PL. Few or no words have it: changed as PERFECT_OPT_MID_1_PL is into PERFECT_SUBJ_MID_1_PL.
-    relation!(FUTURE_PERFECT_SUBJ_MID_1_PL, [FUTURE_PERFECT_OPT_MID_1_PL], [("~εἴημεν", "~ὦμεν")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_1_PL, PERFECT_SUBJ_MID_1_PL))),
-    // FUTURE_PERFECT_SUBJ_MID_2_SG, from FUTURE_PERFECT_OPT_MID_2_SG. Few or no words have it: changed as PERFECT_OPT_MID_2_SG is into PERFECT_SUBJ_MID_2_SG.
-    relation!(FUTURE_PERFECT_SUBJ_MID_2_SG, [FUTURE_PERFECT_OPT_MID_2_SG], [("~εἴης", "~ᾖς")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_SG, PERFECT_SUBJ_MID_2_SG))),
-    // FUTURE_PERFECT_SUBJ_MID_2_DU, from FUTURE_PERFECT_OPT_MID_2_DU. Few or no words have it: changed as PERFECT_OPT_MID_2_DU is into PERFECT_SUBJ_MID_2_DU.
-    relation!(FUTURE_PERFECT_SUBJ_MID_2_DU, [FUTURE_PERFECT_OPT_MID_2_DU], [("~εἴητον", "~ἦτον")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_DU, PERFECT_SUBJ_MID_2_DU))),
-    // FUTURE_PERFECT_SUBJ_MID_2_PL, from FUTURE_PERFECT_OPT_MID_2_PL. Few or no words have it: changed as PERFECT_OPT_MID_2_PL is into PERFECT_SUBJ_MID_2_PL.
-    relation!(FUTURE_PERFECT_SUBJ_MID_2_PL, [FUTURE_PERFECT_OPT_MID_2_PL], [("~εἴητε", "~ἦτε")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_2_PL, PERFECT_SUBJ_MID_2_PL))),
-    // FUTURE_PERFECT_SUBJ_MID_3_SG, from FUTURE_PERFECT_OPT_MID_3_SG. Few or no words have it: changed as PERFECT_OPT_MID_3_SG is into PERFECT_SUBJ_MID_3_SG.
-    relation!(FUTURE_PERFECT_SUBJ_MID_3_SG, [FUTURE_PERFECT_OPT_MID_3_SG], [("~εἴη", "~ᾖ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_SG, PERFECT_SUBJ_MID_3_SG))),
-    // FUTURE_PERFECT_SUBJ_MID_3_DU, from FUTURE_PERFECT_OPT_MID_3_DU. Few or no words have it: changed as PERFECT_OPT_MID_3_DU is into PERFECT_SUBJ_MID_3_DU.
-    relation!(FUTURE_PERFECT_SUBJ_MID_3_DU, [FUTURE_PERFECT_OPT_MID_3_DU], [("~εἰήτην", "~ἦτον")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_DU, PERFECT_SUBJ_MID_3_DU))),
-    // FUTURE_PERFECT_SUBJ_MID_3_PL, from FUTURE_PERFECT_OPT_MID_3_PL. Few or no words have it: changed as PERFECT_OPT_MID_3_PL is into PERFECT_SUBJ_MID_3_PL.
-    relation!(FUTURE_PERFECT_SUBJ_MID_3_PL, [FUTURE_PERFECT_OPT_MID_3_PL], [("~εἴησᾰν", "~ὦσῐ")], rules {
-        "" => [0 1165],
-    } listed {}, true, Some((PERFECT_OPT_MID_3_PL, PERFECT_SUBJ_MID_3_PL))),
-    // FUTURE_PERFECT_SUBJ_PASS_1_SG, from FUTURE_PERFECT_OPT_PASS_1_SG. Few or no words have it: changed as AORIST_OPT_PASS_1_SG is into AORIST_SUBJ_PASS_1_SG.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_1_SG, [FUTURE_PERFECT_OPT_PASS_1_SG], [("~ειην", "~ω")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_1_SG, AORIST_SUBJ_PASS_1_SG))),
-    // FUTURE_PERFECT_SUBJ_PASS_1_DU, from SUBJ_PASS_1_SG. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_SUBJ_PASS_1_DU,
-        [SUBJ_PASS_1_SG],
-        [],
-        none,
-        true,
-        Some((SUBJ_PASS_1_SG, SUBJ_PASS_1_SG))
-    ),
-    // FUTURE_PERFECT_SUBJ_PASS_1_PL, from FUTURE_PERFECT_OPT_PASS_1_PL. Few or no words have it: changed as AORIST_OPT_PASS_1_PL is into AORIST_SUBJ_PASS_1_PL.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_1_PL, [FUTURE_PERFECT_OPT_PASS_1_PL], [("~ειμεν", "~ωμεν")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_1_PL, AORIST_SUBJ_PASS_1_PL))),
-    // FUTURE_PERFECT_SUBJ_PASS_2_SG, from FUTURE_PERFECT_OPT_PASS_2_SG. Few or no words have it: changed as AORIST_OPT_PASS_2_SG is into AORIST_SUBJ_PASS_2_SG.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_2_SG, [FUTURE_PERFECT_OPT_PASS_2_SG], [("~ειης", "~ῃς")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_SG, AORIST_SUBJ_PASS_2_SG))),
-    // FUTURE_PERFECT_SUBJ_PASS_2_DU, from FUTURE_PERFECT_OPT_PASS_2_DU. Few or no words have it: changed as AORIST_OPT_PASS_2_DU is into AORIST_SUBJ_PASS_2_DU.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_2_DU, [FUTURE_PERFECT_OPT_PASS_2_DU], [("~ειτον", "~ητον")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_DU, AORIST_SUBJ_PASS_2_DU))),
-    // FUTURE_PERFECT_SUBJ_PASS_2_PL, from FUTURE_PERFECT_OPT_PASS_2_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_SUBJ_PASS_2_PL.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_2_PL, [FUTURE_PERFECT_OPT_PASS_2_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_SUBJ_PASS_2_PL))),
-    // FUTURE_PERFECT_SUBJ_PASS_3_SG, from FUTURE_PERFECT_OPT_PASS_3_SG. Few or no words have it: changed as AORIST_OPT_PASS_3_SG is into AORIST_SUBJ_PASS_3_SG.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_3_SG, [FUTURE_PERFECT_OPT_PASS_3_SG], [("~ειη", "~ῃ")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_SG, AORIST_SUBJ_PASS_3_SG))),
-    // FUTURE_PERFECT_SUBJ_PASS_3_DU, from FUTURE_PERFECT_OPT_PASS_3_DU. Few or no words have it: changed as AORIST_OPT_PASS_3_DU is into AORIST_SUBJ_PASS_3_DU.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_3_DU, [FUTURE_PERFECT_OPT_PASS_3_DU], [("~ειτην", "~ητον")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_DU, AORIST_SUBJ_PASS_3_DU))),
-    // FUTURE_PERFECT_SUBJ_PASS_3_PL, from FUTURE_PERFECT_OPT_PASS_3_PL. Few or no words have it: changed as AORIST_OPT_PASS_3_PL is into AORIST_SUBJ_PASS_3_PL.
-    relation!(FUTURE_PERFECT_SUBJ_PASS_3_PL, [FUTURE_PERFECT_OPT_PASS_3_PL], [("~ειεν", "~ωσῐ")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_PL, AORIST_SUBJ_PASS_3_PL))),
     // FUTURE_PERFECT_OPT_ACT_1_SG, from FUTURE_PERFECT_IND_MID_1_SG.
     relation!(FUTURE_PERFECT_OPT_ACT_1_SG, [FUTURE_PERFECT_IND_MID_1_SG], [("~μαι", "~ιμῐ")], rules {
         "" => [0 7],
@@ -4316,174 +3861,6 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         true,
         None
     ),
-    // FUTURE_PERFECT_IMP_ACT_1_SG, from FUTURE_PERFECT_IND_ACT_1_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_IMP_ACT_2_SG.
-    relation!(FUTURE_PERFECT_IMP_ACT_1_SG, [FUTURE_PERFECT_IND_ACT_1_SG], [("~ᾰς", "~ε")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_IMP_ACT_2_SG))),
-    // FUTURE_PERFECT_IMP_ACT_1_DU, from IMP_ACT_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_IMP_ACT_1_DU,
-        [IMP_ACT_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_ACT_2_DU, IMP_ACT_2_DU))
-    ),
-    // FUTURE_PERFECT_IMP_ACT_1_PL, from FUTURE_PERFECT_IND_ACT_1_PL. Few or no words have it: changed as IND_ACT_2_PL is into IMP_ACT_2_PL.
-    relation!(
-        FUTURE_PERFECT_IMP_ACT_1_PL,
-        [FUTURE_PERFECT_IND_ACT_1_PL],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_PL, IMP_ACT_2_PL))
-    ),
-    // FUTURE_PERFECT_IMP_ACT_2_SG, from FUTURE_PERFECT_IND_ACT_2_SG. Few or no words have it: changed as PERFECT_IND_ACT_2_SG is into PERFECT_IMP_ACT_2_SG.
-    relation!(FUTURE_PERFECT_IMP_ACT_2_SG, [FUTURE_PERFECT_IND_ACT_2_SG], [("~ᾰς", "~ε")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_2_SG, PERFECT_IMP_ACT_2_SG))),
-    // FUTURE_PERFECT_IMP_ACT_2_DU, from FUTURE_PERFECT_IND_ACT_2_DU. Few or no words have it: changed as IND_ACT_2_DU is into IMP_ACT_2_DU.
-    relation!(
-        FUTURE_PERFECT_IMP_ACT_2_DU,
-        [FUTURE_PERFECT_IND_ACT_2_DU],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_DU, IMP_ACT_2_DU))
-    ),
-    // FUTURE_PERFECT_IMP_ACT_2_PL, from FUTURE_PERFECT_IND_ACT_2_PL. Few or no words have it: changed as IND_ACT_2_PL is into IMP_ACT_2_PL.
-    relation!(
-        FUTURE_PERFECT_IMP_ACT_2_PL,
-        [FUTURE_PERFECT_IND_ACT_2_PL],
-        [],
-        none,
-        true,
-        Some((IND_ACT_2_PL, IMP_ACT_2_PL))
-    ),
-    // FUTURE_PERFECT_IMP_ACT_3_SG, from FUTURE_PERFECT_IND_ACT_3_SG. Few or no words have it: changed as PERFECT_IND_ACT_3_SG is into PERFECT_IMP_ACT_3_SG.
-    relation!(FUTURE_PERFECT_IMP_ACT_3_SG, [FUTURE_PERFECT_IND_ACT_3_SG], [("~", "~τω")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_SG, PERFECT_IMP_ACT_3_SG))),
-    // FUTURE_PERFECT_IMP_ACT_3_DU, from FUTURE_PERFECT_IND_ACT_3_DU. Few or no words have it: changed as IND_ACT_3_DU is into IMP_ACT_3_DU.
-    relation!(FUTURE_PERFECT_IMP_ACT_3_DU, [FUTURE_PERFECT_IND_ACT_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1854],
-    } listed {}, true, Some((IND_ACT_3_DU, IMP_ACT_3_DU))),
-    // FUTURE_PERFECT_IMP_ACT_3_PL, from FUTURE_PERFECT_IND_ACT_3_PL. Few or no words have it: changed as PERFECT_IND_ACT_3_PL is into PERFECT_IMP_ACT_3_PL.
-    relation!(FUTURE_PERFECT_IMP_ACT_3_PL, [FUTURE_PERFECT_IND_ACT_3_PL], [("~ᾱσῐ", "~οντων"), ("~ᾱσῐ", "~ᾰντων")], rules {
-        "" => [0 1123, 1 2],
-        "τᾱσῐ" => [1 2, 0 1],
-    } listed {}, true, Some((PERFECT_IND_ACT_3_PL, PERFECT_IMP_ACT_3_PL))),
-    // FUTURE_PERFECT_IMP_MID_1_SG, from FUTURE_PERFECT_IND_MID_1_SG. Few or no words have it: changed as PERFECT_IND_MID_2_SG is into PERFECT_IMP_MID_2_SG.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_1_SG,
-        [FUTURE_PERFECT_IND_MID_1_SG],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_SG, PERFECT_IMP_MID_2_SG))
-    ),
-    // FUTURE_PERFECT_IMP_MID_1_DU, from IMP_MID_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_1_DU,
-        [IMP_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_MID_2_DU, IMP_MID_2_DU))
-    ),
-    // FUTURE_PERFECT_IMP_MID_1_PL, from FUTURE_PERFECT_IND_MID_1_PL. Few or no words have it: changed as PERFECT_IND_MID_2_PL is into PERFECT_IMP_MID_2_PL.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_1_PL,
-        [FUTURE_PERFECT_IND_MID_1_PL],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_PL, PERFECT_IMP_MID_2_PL))
-    ),
-    // FUTURE_PERFECT_IMP_MID_2_SG, from FUTURE_PERFECT_IND_MID_2_SG. Few or no words have it: changed as PERFECT_IND_MID_2_SG is into PERFECT_IMP_MID_2_SG.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_2_SG,
-        [FUTURE_PERFECT_IND_MID_2_SG],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_SG, PERFECT_IMP_MID_2_SG))
-    ),
-    // FUTURE_PERFECT_IMP_MID_2_DU, from FUTURE_PERFECT_IND_MID_2_DU. Few or no words have it: changed as PERFECT_IND_MID_2_DU is into PERFECT_IMP_MID_2_DU.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_2_DU,
-        [FUTURE_PERFECT_IND_MID_2_DU],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_DU, PERFECT_IMP_MID_2_DU))
-    ),
-    // FUTURE_PERFECT_IMP_MID_2_PL, from FUTURE_PERFECT_IND_MID_2_PL. Few or no words have it: changed as PERFECT_IND_MID_2_PL is into PERFECT_IMP_MID_2_PL.
-    relation!(
-        FUTURE_PERFECT_IMP_MID_2_PL,
-        [FUTURE_PERFECT_IND_MID_2_PL],
-        [],
-        none,
-        true,
-        Some((PERFECT_IND_MID_2_PL, PERFECT_IMP_MID_2_PL))
-    ),
-    // FUTURE_PERFECT_IMP_MID_3_SG, from FUTURE_PERFECT_IND_MID_3_SG. Few or no words have it: changed as IND_MID_3_SG is into IMP_MID_3_SG.
-    relation!(FUTURE_PERFECT_IMP_MID_3_SG, [FUTURE_PERFECT_IND_MID_3_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1901],
-    } listed {}, true, Some((IND_MID_3_SG, IMP_MID_3_SG))),
-    // FUTURE_PERFECT_IMP_MID_3_DU, from FUTURE_PERFECT_IND_MID_3_DU. Few or no words have it: changed as PERFECT_IND_MID_3_DU is into PERFECT_IMP_MID_3_DU.
-    relation!(FUTURE_PERFECT_IMP_MID_3_DU, [FUTURE_PERFECT_IND_MID_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1166],
-    } listed {}, true, Some((PERFECT_IND_MID_3_DU, PERFECT_IMP_MID_3_DU))),
-    // FUTURE_PERFECT_IMP_MID_3_PL, from FUTURE_PERFECT_OPT_MID_3_PL. Few or no words have it: changed as AORIST_OPT_MID_3_PL is into AORIST_IMP_MID_3_PL.
-    relation!(FUTURE_PERFECT_IMP_MID_3_PL, [FUTURE_PERFECT_OPT_MID_3_PL], [("~αιντο", "~ᾰσθων"), ("~ιντο", "~σθων"), ("~οιντο", "~εσθων"), ("αιντο~", "ᾰσθων~")], rules {
-        "" => [0 1368, 2 132, 1 13, 3 2],
-        "αιντο" => [0 1368, 3 2],
-        "ειντο" => [1 8],
-        "οιντο" => [2 132, 1 5],
-        "δοιντο" => [2 9, 1 5],
-    } listed {}, true, Some((AORIST_OPT_MID_3_PL, AORIST_IMP_MID_3_PL))),
-    // FUTURE_PERFECT_IMP_PASS_1_SG, from FUTURE_PERFECT_IND_PASS_1_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
-    relation!(FUTURE_PERFECT_IMP_PASS_1_SG, [FUTURE_PERFECT_IND_PASS_1_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_SG, IMP_PASS_3_SG))),
-    // FUTURE_PERFECT_IMP_PASS_1_DU, from IMP_PASS_2_DU. Few or no words have it: as it is.
-    relation!(
-        FUTURE_PERFECT_IMP_PASS_1_DU,
-        [IMP_PASS_2_DU],
-        [],
-        none,
-        true,
-        Some((IMP_PASS_2_DU, IMP_PASS_2_DU))
-    ),
-    // FUTURE_PERFECT_IMP_PASS_1_PL, from FUTURE_PERFECT_OPT_PASS_1_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_IMP_PASS_2_PL.
-    relation!(FUTURE_PERFECT_IMP_PASS_1_PL, [FUTURE_PERFECT_OPT_PASS_1_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_IMP_PASS_2_PL))),
-    // FUTURE_PERFECT_IMP_PASS_2_SG, from FUTURE_PERFECT_IND_PASS_2_SG. Few or no words have it: changed as PERFECT_IND_PASS_2_SG is into PERFECT_IMP_PASS_2_SG.
-    relation!(FUTURE_PERFECT_IMP_PASS_2_SG, [FUTURE_PERFECT_IND_PASS_2_SG], [("~αι", "~ο")], rules {
-        "" => [0 1137],
-    } listed {}, true, Some((PERFECT_IND_PASS_2_SG, PERFECT_IMP_PASS_2_SG))),
-    // FUTURE_PERFECT_IMP_PASS_2_DU, from FUTURE_PERFECT_IND_PASS_2_DU. Few or no words have it: changed as IND_PASS_2_DU is into IMP_PASS_2_DU.
-    relation!(FUTURE_PERFECT_IMP_PASS_2_DU, [FUTURE_PERFECT_IND_PASS_2_DU], [("~", "~")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_2_DU, IMP_PASS_2_DU))),
-    // FUTURE_PERFECT_IMP_PASS_2_PL, from FUTURE_PERFECT_OPT_PASS_2_PL. Few or no words have it: changed as AORIST_OPT_PASS_2_PL is into AORIST_IMP_PASS_2_PL.
-    relation!(FUTURE_PERFECT_IMP_PASS_2_PL, [FUTURE_PERFECT_OPT_PASS_2_PL], [("~ειτε", "~ητε")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_2_PL, AORIST_IMP_PASS_2_PL))),
-    // FUTURE_PERFECT_IMP_PASS_3_SG, from FUTURE_PERFECT_IND_PASS_3_SG. Few or no words have it: changed as IND_PASS_3_SG is into IMP_PASS_3_SG.
-    relation!(FUTURE_PERFECT_IMP_PASS_3_SG, [FUTURE_PERFECT_IND_PASS_3_SG], [("~ται", "~σθω")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_SG, IMP_PASS_3_SG))),
-    // FUTURE_PERFECT_IMP_PASS_3_DU, from FUTURE_PERFECT_IND_PASS_3_DU. Few or no words have it: changed as IND_PASS_3_DU is into IMP_PASS_3_DU.
-    relation!(FUTURE_PERFECT_IMP_PASS_3_DU, [FUTURE_PERFECT_IND_PASS_3_DU], [("~ον", "~ων")], rules {
-        "" => [0 1825],
-    } listed {}, true, Some((IND_PASS_3_DU, IMP_PASS_3_DU))),
-    // FUTURE_PERFECT_IMP_PASS_3_PL, from FUTURE_PERFECT_OPT_PASS_3_PL. Few or no words have it: changed as AORIST_OPT_PASS_3_PL is into AORIST_IMP_PASS_3_PL.
-    relation!(FUTURE_PERFECT_IMP_PASS_3_PL, [FUTURE_PERFECT_OPT_PASS_3_PL], [("~ιεν", "~ντων")], rules {
-        "" => [0 1200],
-    } listed {}, true, Some((AORIST_OPT_PASS_3_PL, AORIST_IMP_PASS_3_PL))),
     // INFINITIVE_PRES_ACT, from IND_ACT_3_SG.
     relation!(INFINITIVE_PRES_ACT, [IND_ACT_3_SG], [("~", "~ν"), ("~ει", "~ην"), ("~εισῐ", "~ῐεναι"), ("~ησῐ", "~εναι"), ("~ησῐ", "~ᾰναι"), ("~ι", "~υν"), ("~οιδε", "~ειδεναι"), ("~στι", "~ιναι"), ("~στῐ", "~ιναι"), ("~ωσῐ", "~οναι"), ("~ᾳ", "~ᾱν"), ("~ῃ", "~ην"), ("~ῡσῐ", "~ῠναι")], rules {
         "" => [0 1523, 10 118, 5 100, 12 36, 4 26, 3 19, 11 8, 2 5, 1 4, 8 4, 9 4, 7 3, 6 2],
@@ -4506,10 +3883,15 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ῡσῐ" => [12 36],
         "τῐ" => [8 4],
     } listed {
-        "λᾰτρειει" => 1,
-        "ξῠνοιδε" => 6,
-        "προοιδε" => 6,
-        "ἱησῐ" => 3,
+        1 => [
+            "λᾰτρειει",
+        ],
+        3 => [
+            "ἱησῐ",
+        ],
+        6 => [
+            "ξῠνοιδε", "προοιδε",
+        ],
     }, true, None),
     // INFINITIVE_PRES_MID, from IND_MID_2_DU.
     relation!(INFINITIVE_PRES_MID, [IND_MID_2_DU], [("~ον", "~αι")], rules {
@@ -4538,8 +3920,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(INFINITIVE_FUT_PASS, [FUTURE_IND_PASS_1_SG], [("~ομαι", "~εσθαι")], rules {
         "" => [0 1058],
     } listed {}, true, None),
-    // INFINITIVE_AOR_ACT, from AORIST_IMP_ACT_2_SG.
-    relation!(INFINITIVE_AOR_ACT, [AORIST_IMP_ACT_2_SG], [("~", "~ιν"), ("~ανον", "~ᾱναι"), ("~αξον", "~ᾱξαι"), ("~αρον", "~ᾱραι"), ("~ασον", "~ᾱσαι"), ("~αψον", "~ᾱψαι"), ("~θῐ", "~ναι"), ("~ισον", "~ῑσαι"), ("~ον", "~αι"), ("~ς", "~ιν"), ("~ς", "~ιναι"), ("~ς", "~υναι"), ("~υσον", "~ῡσαι"), ("~υψον", "~ῡψαι"), ("ον~", "αι~")], rules {
+    // INFINITIVE_AOR_ACT, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(INFINITIVE_AOR_ACT, [AORIST_IMPERATIVE_ACT_2_SG], [("~", "~ιν"), ("~ανον", "~ᾱναι"), ("~αξον", "~ᾱξαι"), ("~αρον", "~ᾱραι"), ("~ασον", "~ᾱσαι"), ("~αψον", "~ᾱψαι"), ("~θῐ", "~ναι"), ("~ισον", "~ῑσαι"), ("~ον", "~αι"), ("~ς", "~ιν"), ("~ς", "~ιναι"), ("~ς", "~υναι"), ("~υσον", "~ῡσαι"), ("~υψον", "~ῡψαι"), ("ον~", "αι~")], rules {
         "" => [8 1349, 0 133, 6 17, 10 10, 7 9, 1 6, 4 5, 9 5, 11 4, 2 2, 3 2, 5 2, 12 2, 13 2, 14 2],
         "ε" => [0 133],
         "ν" => [8 1349, 7 9, 1 6, 4 5, 2 2, 3 2, 5 2, 12 2, 13 2, 14 2],
@@ -4562,18 +3944,20 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ος" => [11 4],
         "ῐ" => [6 17],
     } listed {
-        "καθισον" => 7,
+        7 => [
+            "καθισον",
+        ],
     }, true, None),
-    // INFINITIVE_AOR_MID, from AORIST_IMP_MID_2_DU.
-    relation!(INFINITIVE_AOR_MID, [AORIST_IMP_MID_2_DU], [("~ον", "~αι")], rules {
+    // INFINITIVE_AOR_MID, from AORIST_IMPERATIVE_MID_2_DU.
+    relation!(INFINITIVE_AOR_MID, [AORIST_IMPERATIVE_MID_2_DU], [("~ον", "~αι")], rules {
         "" => [0 1517],
     } listed {}, true, None),
     // INFINITIVE_AOR_PASS, from AORIST_SUBJ_PASS_1_SG.
     relation!(INFINITIVE_AOR_PASS, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~ηναι")], rules {
         "" => [0 1200],
     } listed {}, true, None),
-    // INFINITIVE_PERF_ACT, from PERFECT_IMP_ACT_2_DU.
-    relation!(INFINITIVE_PERF_ACT, [PERFECT_IMP_ACT_2_DU], [("~τον", "~ναι")], rules {
+    // INFINITIVE_PERF_ACT, from PERFECT_IMPERATIVE_ACT_2_DU.
+    relation!(INFINITIVE_PERF_ACT, [PERFECT_IMPERATIVE_ACT_2_DU], [("~τον", "~ναι")], rules {
         "" => [0 1125],
     } listed {}, true, None),
     // INFINITIVE_PERF_MID, from PERFECT_IND_MID_2_DU.
@@ -4589,8 +3973,12 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "φθον" => [5 59, 3 3],
         "αφθον" => [3 3],
     } listed {
-        "μεμιανθον" => 5,
-        "ἐκκεχυσθον" => 6,
+        5 => [
+            "μεμιανθον",
+        ],
+        6 => [
+            "ἐκκεχυσθον",
+        ],
     }, true, None),
     // INFINITIVE_PERF_PASS, from INFINITIVE_PERF_MID.
     relation!(
@@ -4657,8 +4045,8 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
     relation!(PARTICIPLE_FUT_PASS, [FUTURE_IND_PASS_1_SG], [("~αι", "~ενος")], rules {
         "" => [0 1058],
     } listed {}, true, None),
-    // PARTICIPLE_AOR_ACT, from AORIST_IMP_ACT_2_SG.
-    relation!(PARTICIPLE_AOR_ACT, [AORIST_IMP_ACT_2_SG], [("~ε", "~ων"), ("~ες", "~ων"), ("~ηθῐ", "~ᾱς"), ("~θῐ", "~ς"), ("~ον", "~ᾱς"), ("~ς", "~ις"), ("~ς", "~υς"), ("~ωθῐ", "~ους"), ("~ῑψον", "~ιψᾱς"), ("~ῡξον", "~υξᾱς"), ("ον~", "ᾱς~")], rules {
+    // PARTICIPLE_AOR_ACT, from AORIST_IMPERATIVE_ACT_2_SG.
+    relation!(PARTICIPLE_AOR_ACT, [AORIST_IMPERATIVE_ACT_2_SG], [("~ε", "~ων"), ("~ες", "~ων"), ("~ηθῐ", "~ᾱς"), ("~θῐ", "~ς"), ("~ον", "~ᾱς"), ("~ς", "~ις"), ("~ς", "~υς"), ("~ωθῐ", "~ους"), ("~ῑψον", "~ιψᾱς"), ("~ῡξον", "~υξᾱς"), ("ον~", "ᾱς~")], rules {
         "" => [4 1375, 0 134, 5 11, 2 9, 7 6, 1 5, 6 4, 3 2, 8 2, 9 2, 10 2],
         "ε" => [0 134],
         "ν" => [4 1375, 8 2, 9 2, 10 2],
@@ -4673,13 +4061,14 @@ pub(super) static RELATIONS: [Relation<'static>; 623] = [
         "ηθῐ" => [2 9],
         "ωθῐ" => [7 6],
     } listed {}, false, None),
-    // PARTICIPLE_AOR_MID, from AORIST_IMP_ACT_3_PL.
-    relation!(PARTICIPLE_AOR_MID, [AORIST_IMP_ACT_3_PL], [("~εσᾰντων", "~ομενος"), ("~ντων", "~μενος"), ("~ᾰντων", "~ησᾰμενος")], rules {
+    // PARTICIPLE_AOR_MID, from AORIST_IMPERATIVE_ACT_3_PL.
+    relation!(PARTICIPLE_AOR_MID, [AORIST_IMPERATIVE_ACT_3_PL], [("~εσᾰντων", "~ομενος"), ("~ντων", "~μενος"), ("~ᾰντων", "~ησᾰμενος")], rules {
         "" => [1 1372, 2 3, 0 2],
         "βᾰντων" => [2 3, 1 1],
     } listed {
-        "λεσᾰντων" => 0,
-        "ὀλεσᾰντων" => 0,
+        0 => [
+            "λεσᾰντων", "ὀλεσᾰντων",
+        ],
     }, true, None),
     // PARTICIPLE_AOR_PASS, from AORIST_SUBJ_PASS_1_SG.
     relation!(PARTICIPLE_AOR_PASS, [AORIST_SUBJ_PASS_1_SG], [("~ω", "~εις")], rules {

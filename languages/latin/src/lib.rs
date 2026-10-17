@@ -6,17 +6,78 @@
 pub use flexion::{Candidate, Reading, Status, UnknownValue};
 
 pub mod adjective;
+pub mod adverb;
 mod marks;
 pub mod noun;
 pub mod numeral;
 mod orthography;
 pub mod pronoun;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
+pub use adverb::Adverb;
 pub use noun::Noun;
 pub use numeral::Numeral;
 pub use pronoun::Pronoun;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
+
+/// Degree of comparison.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum Degree {
+    Positive,
+    Comparative,
+    Superlative,
+}
+
+impl Degree {
+    /// Every value, in order.
+    pub const ALL: [Degree; 3] = [Degree::Positive, Degree::Comparative, Degree::Superlative];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            Degree::Positive => "pos",
+            Degree::Comparative => "comp",
+            Degree::Superlative => "sup",
+        }
+    }
+}
+
+impl std::fmt::Display for Degree {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Degree::Positive => "positive",
+            Degree::Comparative => "comparative",
+            Degree::Superlative => "superlative",
+        })
+    }
+}
+
+impl std::str::FromStr for Degree {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "Degree",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for Degree {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
 
 /// Grammatical case.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
@@ -202,60 +263,6 @@ impl flexion::Label for Gender {
     }
 }
 
-/// Mood of a finite verb.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub enum Mood {
-    Indicative,
-    Subjunctive,
-}
-
-impl Mood {
-    /// Every value, in order.
-    pub const ALL: [Mood; 2] = [Mood::Indicative, Mood::Subjunctive];
-
-    /// Short name, as in cell names.
-    pub const fn short(self) -> &'static str {
-        match self {
-            Mood::Indicative => "ind",
-            Mood::Subjunctive => "subj",
-        }
-    }
-}
-
-impl std::fmt::Display for Mood {
-    /// Its name in lowercase: `genitive`.
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(match self {
-            Mood::Indicative => "indicative",
-            Mood::Subjunctive => "subjunctive",
-        })
-    }
-}
-
-impl std::str::FromStr for Mood {
-    type Err = flexion::UnknownValue;
-
-    /// By its name (`genitive`) or its short name (`gen`).
-    fn from_str(name: &str) -> Result<Self, Self::Err> {
-        Self::ALL
-            .into_iter()
-            .find(|v| v.short() == name || v.to_string() == name)
-            .ok_or_else(|| flexion::UnknownValue {
-                feature: "Mood",
-                name: name.to_string(),
-            })
-    }
-}
-
-impl flexion::Label for Mood {
-    fn index(self) -> usize {
-        self as usize
-    }
-    fn from_index(index: usize) -> Option<Self> {
-        Self::ALL.get(index).copied()
-    }
-}
-
 /// Voice.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Voice {
@@ -383,37 +390,48 @@ impl flexion::Label for Tense {
     }
 }
 
-/// Tense of an imperative.
+/// Tense of a subjunctive: Latin has no future one (A&G §§ 184–196).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub enum ImperativeTense {
+pub enum SubjunctiveTense {
     Present,
-    Future,
+    Imperfect,
+    Perfect,
+    Pluperfect,
 }
 
-impl ImperativeTense {
+impl SubjunctiveTense {
     /// Every value, in order.
-    pub const ALL: [ImperativeTense; 2] = [ImperativeTense::Present, ImperativeTense::Future];
+    pub const ALL: [SubjunctiveTense; 4] = [
+        SubjunctiveTense::Present,
+        SubjunctiveTense::Imperfect,
+        SubjunctiveTense::Perfect,
+        SubjunctiveTense::Pluperfect,
+    ];
 
     /// Short name, as in cell names.
     pub const fn short(self) -> &'static str {
         match self {
-            ImperativeTense::Present => "pres",
-            ImperativeTense::Future => "fut",
+            SubjunctiveTense::Present => "pres",
+            SubjunctiveTense::Imperfect => "impf",
+            SubjunctiveTense::Perfect => "perf",
+            SubjunctiveTense::Pluperfect => "plup",
         }
     }
 }
 
-impl std::fmt::Display for ImperativeTense {
+impl std::fmt::Display for SubjunctiveTense {
     /// Its name in lowercase: `genitive`.
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
-            ImperativeTense::Present => "present",
-            ImperativeTense::Future => "future",
+            SubjunctiveTense::Present => "present",
+            SubjunctiveTense::Imperfect => "imperfect",
+            SubjunctiveTense::Perfect => "perfect",
+            SubjunctiveTense::Pluperfect => "pluperfect",
         })
     }
 }
 
-impl std::str::FromStr for ImperativeTense {
+impl std::str::FromStr for SubjunctiveTense {
     type Err = flexion::UnknownValue;
 
     /// By its name (`genitive`) or its short name (`gen`).
@@ -422,13 +440,67 @@ impl std::str::FromStr for ImperativeTense {
             .into_iter()
             .find(|v| v.short() == name || v.to_string() == name)
             .ok_or_else(|| flexion::UnknownValue {
-                feature: "ImperativeTense",
+                feature: "SubjunctiveTense",
                 name: name.to_string(),
             })
     }
 }
 
-impl flexion::Label for ImperativeTense {
+impl flexion::Label for SubjunctiveTense {
+    fn index(self) -> usize {
+        self as usize
+    }
+    fn from_index(index: usize) -> Option<Self> {
+        Self::ALL.get(index).copied()
+    }
+}
+
+/// Person of a future imperative: the second or third (A&G § 163).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum ImperativePerson {
+    Second,
+    Third,
+}
+
+impl ImperativePerson {
+    /// Every value, in order.
+    pub const ALL: [ImperativePerson; 2] = [ImperativePerson::Second, ImperativePerson::Third];
+
+    /// Short name, as in cell names.
+    pub const fn short(self) -> &'static str {
+        match self {
+            ImperativePerson::Second => "2",
+            ImperativePerson::Third => "3",
+        }
+    }
+}
+
+impl std::fmt::Display for ImperativePerson {
+    /// Its name in lowercase: `genitive`.
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            ImperativePerson::Second => "second",
+            ImperativePerson::Third => "third",
+        })
+    }
+}
+
+impl std::str::FromStr for ImperativePerson {
+    type Err = flexion::UnknownValue;
+
+    /// By its name (`genitive`) or its short name (`gen`).
+    fn from_str(name: &str) -> Result<Self, Self::Err> {
+        Self::ALL
+            .into_iter()
+            .find(|v| v.short() == name || v.to_string() == name)
+            .ok_or_else(|| flexion::UnknownValue {
+                feature: "ImperativePerson",
+                name: name.to_string(),
+            })
+    }
+}
+
+impl flexion::Label for ImperativePerson {
     fn index(self) -> usize {
         self as usize
     }
@@ -632,6 +704,18 @@ pub fn noun_locative(lemma: &str, number: Number) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Locative(number))
 }
 
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
+}
+
+/// The locative (`Rōmae`, `domī`).
+#[must_use]
+pub fn proper_noun_locative(lemma: &str, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Locative(number))
+}
+
 /// An adjective agreeing in case, gender and number.
 #[must_use]
 pub fn adjective(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
@@ -650,32 +734,52 @@ pub fn superlative(lemma: &str) -> String {
     adjective::Adjective::new(lemma).form(adjective::Cell::Superlative)
 }
 
-/// A finite form.
+/// An indicative.
 #[must_use]
-pub fn verb(
+pub fn indicative(
     lemma: &str,
-    mood: Mood,
     voice: Voice,
     tense: Tense,
     person: Person,
     number: Number,
 ) -> String {
-    verb::Verb::new(lemma).form(verb::Cell::Form(mood, voice, tense, person, number))
+    verb::Verb::new(lemma).form(verb::Cell::Indicative(voice, tense, person, number))
 }
 
-/// An imperative.
+/// A subjunctive.
 #[must_use]
-pub fn imperative(
+pub fn subjunctive(
     lemma: &str,
     voice: Voice,
-    imperative_tense: ImperativeTense,
+    subjunctive_tense: SubjunctiveTense,
     person: Person,
     number: Number,
 ) -> String {
-    verb::Verb::new(lemma).form(verb::Cell::Imperative(
+    verb::Verb::new(lemma).form(verb::Cell::Subjunctive(
         voice,
-        imperative_tense,
+        subjunctive_tense,
         person,
+        number,
+    ))
+}
+
+/// A present imperative (the second person only).
+#[must_use]
+pub fn present_imperative(lemma: &str, voice: Voice, number: Number) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::PresentImperative(voice, number))
+}
+
+/// A future imperative.
+#[must_use]
+pub fn future_imperative(
+    lemma: &str,
+    voice: Voice,
+    imperative_person: ImperativePerson,
+    number: Number,
+) -> String {
+    verb::Verb::new(lemma).form(verb::Cell::FutureImperative(
+        voice,
+        imperative_person,
         number,
     ))
 }
@@ -714,4 +818,10 @@ pub fn pronoun(lemma: &str, case: Case, gender: Gender, number: Number) -> Strin
 #[must_use]
 pub fn numeral(lemma: &str, case: Case, gender: Gender, number: Number) -> String {
     numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, gender, number))
+}
+
+/// An adverb in a degree.
+#[must_use]
+pub fn adverb(lemma: &str, degree: Degree) -> String {
+    adverb::Adverb::new(lemma).form(adverb::Cell::Form(degree))
 }

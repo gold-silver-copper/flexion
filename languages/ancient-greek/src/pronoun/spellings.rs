@@ -4,11 +4,12 @@
 
 use std::borrow::Cow;
 
-/// 19 words.
+/// 20 words.
 pub(super) static SPELLINGS: &[(Cow<'static, str>, Cow<'static, str>)] = flexion::spellings! {
     "απασ" => "ἁπᾱς",
     "αυτου" => "αὑτου",
     "εαυτου" => "ἑαυτου",
+    "εκαστοσ" => "ἑκᾰστος",
     "εοσ" => "ἑος",
     "ι" => "ἱ",
     "ο" => "ὁ",

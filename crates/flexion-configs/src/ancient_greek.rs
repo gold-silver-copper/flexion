@@ -14,7 +14,7 @@ use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spel
 use unicode_normalization::UnicodeNormalization;
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "ancient-greek",
         display: "Ancient Greek",
         wiktionary: "grc",
@@ -38,11 +38,18 @@ pub fn language() -> Language {
                 Feminine "f" ["feminine"],
                 Neuter "n" ["neuter"],
             }
-            Mood "Mood." {
+            Mood "Mood (the imperative is a group of its own)." {
                 Indicative "ind" ["indicative"],
                 Subjunctive "subj" ["subjunctive"],
                 Optative "opt" ["optative"],
-                Imperative "imp" ["imperative"],
+            }
+            FutureMood "Mood of a future: no subjunctive or imperative (Smyth's paradigms)." {
+                Indicative "ind" ["indicative"],
+                Optative "opt" ["optative"],
+            }
+            ImperativePerson "Person of an imperative: the second or third." {
+                Second "2" ["second-person"],
+                Third "3" ["third-person"],
             }
             Voice "Voice (the present and perfect systems share one form for middle and passive)." {
                 Active "act" ["active"],
@@ -82,6 +89,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -129,6 +137,7 @@ pub fn language() -> Language {
                 // A participle is a verb's form too, written in full there.
                 lemmas_from: vec![("verb", "participle")],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -138,6 +147,12 @@ pub fn language() -> Language {
                 forms: FormSource::Tables,
                 groups: vec![
                     finite("present", "The present.", &["present"], &[]),
+                    imperative(
+                        "present_imperative",
+                        "The present imperative.",
+                        &["present"],
+                        &[],
+                    ),
                     group(
                         "imperfect",
                         "The imperfect (indicative only).",
@@ -145,16 +160,28 @@ pub fn language() -> Language {
                         &["imperfect", "indicative"],
                         &["participle", "infinitive"],
                     ),
-                    finite(
+                    future(
                         "future",
                         "The future (no subjunctive or imperative).",
                         &["future"],
                         &["perfect"],
                     ),
                     finite("aorist", "The aorist.", &["aorist"], &[]),
+                    imperative(
+                        "aorist_imperative",
+                        "The aorist imperative.",
+                        &["aorist"],
+                        &[],
+                    ),
                     finite(
                         "perfect",
                         "The perfect.",
+                        &["perfect"],
+                        &["future", "pluperfect"],
+                    ),
+                    imperative(
+                        "perfect_imperative",
+                        "The perfect imperative.",
                         &["perfect"],
                         &["future", "pluperfect"],
                     ),
@@ -165,9 +192,9 @@ pub fn language() -> Language {
                         &["pluperfect", "indicative"],
                         &["participle", "infinitive"],
                     ),
-                    finite(
+                    future(
                         "future_perfect",
-                        "The future perfect.",
+                        "The future perfect (no subjunctive or imperative).",
                         &["future", "perfect"],
                         &[],
                     ),
@@ -198,6 +225,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "pronoun",
@@ -218,6 +246,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "numeral",
@@ -238,6 +267,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {
@@ -266,6 +296,7 @@ pub fn language() -> Language {
             long_vowels: "ηω",
             long_marks: "\u{304}\u{345}",
             short_finals: vec!["αι", "οι"],
+            short_endings: vec!["εως", "εων"],
             circumflex: Some('\u{342}'),
             stress_setting: "accents",
             marks_setting: "length_marks",
@@ -303,7 +334,7 @@ pub fn language() -> Language {
             ("verb", "aorist", "ἀπογλορπίζω"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(
@@ -332,13 +363,57 @@ fn finite(
     all: &[&'static str],
     none: &[&'static str],
 ) -> Group {
+    tense(name, doc, "Mood", all, none)
+}
+
+/// A future tense: the indicative and the optative.
+fn future(
+    name: &'static str,
+    doc: &'static str,
+    all: &[&'static str],
+    none: &[&'static str],
+) -> Group {
+    tense(name, doc, "FutureMood", all, none)
+}
+
+/// A tense's moods (`moods`, the imperative aside), voice, person and
+/// number.
+fn tense(
+    name: &'static str,
+    doc: &'static str,
+    moods: &'static str,
+    all: &[&'static str],
+    none: &[&'static str],
+) -> Group {
+    let mut none = none.to_vec();
+    none.extend(["participle", "infinitive", "imperative"]);
+    Group {
+        name,
+        doc,
+        features: vec![moods, "Voice", "Person", "Number"],
+        all: all.to_vec(),
+        any: vec![],
+        none,
+        from_head: false,
+    }
+}
+
+/// A tense's imperative: the second and third persons.
+fn imperative(
+    name: &'static str,
+    doc: &'static str,
+    all: &[&'static str],
+    none: &[&'static str],
+) -> Group {
+    let mut all = all.to_vec();
+    all.push("imperative");
     let mut none = none.to_vec();
     none.extend(["participle", "infinitive"]);
     Group {
         name,
         doc,
-        features: vec!["Mood", "Voice", "Person", "Number"],
-        all: all.to_vec(),
+        features: vec!["Voice", "ImperativePerson", "Number"],
+        all,
         any: vec![],
         none,
         from_head: false,

@@ -19,6 +19,9 @@ assert_eq!(agreeing_participle("prendre", Gender::Feminine, Number::Plural), "pr
 
 Accents and `ç` are letters: `pêcher` and `pécher` are two words.
 
+Left out: proper nouns, whose dictionary entries give no forms (a French
+name doesn't inflect).
+
 ## How it works
 
 This crate is French inflection as a grammar, learned by
@@ -55,10 +58,11 @@ reason (the rule and its counts).
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | noun | 43084 | 15 | 0 | 266 | 624 | 280 | 0 |
-| adjective | 18156 | 17 | 6 | 227 | 485 | 61 | 0 |
+| adjective | 18156 | 17 | 5 | 227 | 485 | 61 | 0 |
 | verb | 7295 | 56 | 15 | 292 | 148 | 204 | 35 |
 | participle | 6500 | 5 | 0 | 17 | 25 | 2 | 0 |
 | determiner | 49 | 9 | 1 | 14 | 12 | 14 | 5 |
+| adverb | 2 | 2 | 0 | 1 | 0 | 0 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -107,14 +111,37 @@ developed (changes are judged on another tenth since PR #16).
 | verb | 743 | 34807 | **98.70%** (98.1–99.3) | 99.81% | 99.81% | 97.04% | 0.004 | 0.157 | 98.70% | 99.48% | 99.22 / 99.40 / 99.52 |  | 98.70% (34807) |  | 99.28% (0.00%) | -0.59 (-1.06…-0.22) | 98.84% | 100.00% | 99.63% / 98.40% |  | 98.74% (724) / – / 97.08% (19) |  | 0.96% |
 | participle | 627 | 1881 | **99.84%** (99.5–100.0) | 100.00% | 100.00% | 99.84% | 0.005 | 0.011 | 99.84% |  | 100.00 / 100.00 / 0.00 |  | 99.84% (1881) |  | 99.52% (0.00%) | +0.32 (-0.32…+0.96) | 99.84% | 100.00% | 100.00% / 99.80% |  | 100.00% (1) / 99.84% (626) / – |  | 0.03% |
 | determiner | 6 | 13 | **46.15%** (14.3–85.7) | 46.15% | 46.15% | 50.00% | 0.538 | 15.385 | 46.15% |  | 57.14 / 66.67 / 0.00 |  | 46.15% (13) |  | 69.23% (0.00%) | -23.08 (-64.29…+0.00) | 46.15% | 100.00% | 0.00% / 46.15% |  | 46.15% (6) / – / – |  | 22.45% |
+| adverb | 0 | 0 | **0.00%** (0.0–0.0) | 0.00% | 0.00% | 0.00% | 0.000 | 0.000 | 0.00% |  |  |  |  |  | 0.00% (0.00%) | +0.00 (+0.00…+0.00) | 0.00% | 0.00% | 0.00% / 0.00% |  | – / – / – |  | 0.00% |
+
+## Where the errors are
+
+The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
+of them: *class*, the right form is among its answers but another paradigm's comes first;
+*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
+and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
+the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
+that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
+group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
+dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
+cells, the dictionary's or not, the share with a form.
+
+| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| noun | 104 | 75% | 0% | 0% | 5% | 1% | 16% | 3% | 0% | 97.59% | 100.00% | 100.00% |
+| adjective | 138 | 81% | 0% | 0% | 3% | 13% | 3% | 0% | 0% | 48.77% | 100.00% | 100.00% |
+| verb | 454 | 67% | 8% | 0% | 0% | 14% | 11% | 0% | 0% | 98.81% | 100.00% | 100.00% |
+| participle | 3 | 100% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 99.84% | 100.00% | 100.00% |
+| determiner | 7 | 0% | 0% | 0% | 29% | 71% | 0% | 0% | 0% | 46.15% | 100.00% | 100.00% |
+| adverb | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | -0.00% | 100.00% | 100.00% |
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 1997 | 63040 |
-| adjective | 1393 | 46841 |
-| verb | 2845 | 114542 |
-| participle | 446 | 14993 |
-| determiner | 547 | 18441 |
+| noun | 1313 | 51611 |
+| adjective | 1001 | 40110 |
+| verb | 2829 | 114803 |
+| participle | 431 | 14788 |
+| determiner | 545 | 18462 |
+| adverb | 343 | 11417 |
 
 ## Data and license
 

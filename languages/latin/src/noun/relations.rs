@@ -236,8 +236,12 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ō" => [7 5264, 0 1, 1 1],
         "ū" => [1 7],
     } listed {
-        "halō" => 0,
-        "vī" => 1,
+        0 => [
+            "halō",
+        ],
+        1 => [
+            "vī",
+        ],
     }, true, None),
     // GEN_PL, from ABL_SG.
     relation!(GEN_PL, [ABL_SG], [("~", "~"), ("~", "~n"), ("~", "~rum"), ("~", "~īm"), ("~e", "~ium"), ("~e", "~um"), ("~e", "~ōrum"), ("~le", "~ium"), ("~que", "~rumque"), ("~ā", "~ōrum"), ("~ā", "~ūm"), ("~ē", "~ium"), ("~ē", "~ārum"), ("~ī", "~ium"), ("~ō", "~ārum"), ("~ū", "~uum")], rules {
@@ -379,10 +383,12 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ūs" => [17 513],
         "ē" => [13 3],
     } listed {
-        "altāria" => 3,
-        "altāria" => 7,
-        "bōlētāria" => 7,
-        "pugillāria" => 7,
+        3 => [
+            "altāria",
+        ],
+        7 => [
+            "altāria", "bōlētāria", "pugillāria",
+        ],
     }, false, None),
     // DAT_PL, from ACC_PL.
     relation!(DAT_PL, [ACC_PL], [("~", "~"), ("~a", "~bus"), ("~a", "~ibus"), ("~a", "~īs"), ("~aque", "~īsque"), ("~as", "~ibus"), ("~s", "~bus"), ("~ua", "~ibus"), ("~ās", "~īs"), ("~ē", "~īs"), ("~ēs", "~ibus"), ("~īs", "~ibus"), ("~ōs", "~īs"), ("~ūs", "~ibus"), ("~ūs", "~ubus"), ("~ūs", "~īs")], rules {
@@ -574,11 +580,15 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "nū" => [34 3, 0 2],
         "erū" => [0 2],
     } listed {
-        "chelye" => 8,
-        "famē" => 23,
-        "plēbē" => 23,
-        "tribrachye" => 8,
-        "vī" => 26,
+        8 => [
+            "chelye", "tribrachye",
+        ],
+        23 => [
+            "famē", "plēbē",
+        ],
+        26 => [
+            "vī",
+        ],
     }, true, None),
     // ACC_PL, from NOM_PL.
     relation!(ACC_PL, [NOM_PL], [("~", "~"), ("~ae", "~ās"), ("~es", "~as"), ("~ēs", "~as"), ("~ēs", "~īs"), ("~ī", "~ōs"), ("~ī", "~ūs")], rules {
@@ -594,9 +604,12 @@ pub(super) static RELATIONS: [Relation<'static>; 13] = [
         "ūs" => [0 514],
         "ī" => [5 2484, 6 2],
     } listed {
-        "hērōidēs" => 3,
-        "lexēs" => 4,
-        "rhīnocerōtēs" => 3,
+        3 => [
+            "hērōidēs", "rhīnocerōtēs",
+        ],
+        4 => [
+            "lexēs",
+        ],
     }, true, None),
     // ABL_SG, from GEN_SG.
     relation!(ABL_SG, [GEN_SG], [("~", "~"), ("~ae", "~ā"), ("~ae", "~ē"), ("~eī", "~ē"), ("~is", "~e"), ("~is", "~ī"), ("~os", "~e"), ("~s", "~"), ("~ī", "~"), ("~ī", "~ō"), ("~īque", "~ōque")], rules {

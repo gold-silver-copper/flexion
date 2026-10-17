@@ -25,8 +25,8 @@ const KEEP: usize = 4;
 /// The paradigm readings a word's table is built from, the likeliest.
 pub const READINGS: usize = 4;
 
-/// What joins the parts of a compound written in parts.
-const JOINER: char = '-';
+/// What joins the parts of a word written in parts: a hyphen, or a space.
+const JOINERS: [char; 2] = ['-', ' '];
 
 /// The fewest letters before a compound's last part (see [`Grammar::head`]).
 pub const FRONT_LETTERS: usize = 3;
@@ -39,6 +39,9 @@ pub enum Compound {
     Last,
     /// Each part, as the word it is: `диван-кровать`, `дивана-кровати`.
     Each,
+    /// Only its first part, the rest kept, a word apart: `pyytää anteeksi`,
+    /// `en pyydä anteeksi`.
+    First,
 }
 
 impl Label for Compound {
@@ -46,7 +49,9 @@ impl Label for Compound {
         self as usize
     }
     fn from_index(index: usize) -> Option<Self> {
-        [Compound::Last, Compound::Each].get(index).copied()
+        [Compound::Last, Compound::Each, Compound::First]
+            .get(index)
+            .copied()
     }
 }
 
@@ -428,9 +433,13 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
     /// Where words inflect their last part (compounds; see
     /// [`Grammar::head`]).
     pub heads: Heads<'a>,
-    /// Which words written in parts inflect each part, read off the first
-    /// part (`диван` of `диван-кровать`).
+    /// Which words written in parts inflect each part or only the first,
+    /// read off the first part (`диван` of `диван-кровать`).
     pub compound: Option<Choice<'a, Compound>>,
+    /// Where a word that inflects its first part keeps the rest, per cell:
+    /// after it (Finnish `otan kiinni`) or before it (`kiinni ottava`).
+    /// Empty: after it in every cell.
+    pub kept: Cow<'a, [Placement]>,
     /// Mobile stress, where the language writes it.
     pub accent: Option<Accent<'a, A>>,
     /// Sound laws and spelling rules every built form goes through.
@@ -489,7 +498,12 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// caller knows (readings that disagree with it are dropped, unless all
     /// do).
     pub fn candidates(&self, lemma: &str, cell: usize, known: &Known<'_>) -> Vec<Candidate<'_>> {
-        self.sharpened(self.unsharpened(lemma, &[cell], known))
+        let given = self.informative(lemma, known);
+        let known = Known {
+            forms: &given,
+            ..*known
+        };
+        self.sharpened(self.unsharpened(lemma, &[cell], &known))
             .pop()
             .unwrap_or_default()
     }
@@ -497,8 +511,43 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The forms of every cell for `lemma`, as [`Grammar::candidates`]
     /// gives each, read once.
     pub fn table(&self, lemma: &str, known: &Known<'_>) -> Vec<Vec<Candidate<'_>>> {
+        let given = self.informative(lemma, known);
+        let known = Known {
+            forms: &given,
+            ..*known
+        };
         let cells: Vec<usize> = (0..self.cells).collect();
-        self.sharpened(self.unsharpened(lemma, &cells, known))
+        self.sharpened(self.unsharpened(lemma, &cells, &known))
+    }
+
+    /// The forms `known` gives that tell the grammar something. Of a word the
+    /// grammar lists, the dictionary's own, a form it already gives first
+    /// tells nothing, and changes nothing (Sanskrit `खादति` given its perfect
+    /// `चखाद`, which its line lists, keeps its augment: `अखादम्`). Of
+    /// another word, every given form tells which readings it can have.
+    fn informative<'k>(&self, lemma: &str, known: &Known<'k>) -> Vec<(usize, &'k str)> {
+        let o = &self.orthography;
+        let key = o.key(&o.read(lemma).letters);
+        if known.forms.is_empty() || !self.lists(&key) {
+            return known.forms.to_vec();
+        }
+        let cells: Vec<usize> = known.forms.iter().map(|&(c, _)| c).collect();
+        let bare = Known {
+            forms: &[],
+            ..*known
+        };
+        let firsts = self.sharpened(self.unsharpened(lemma, &cells, &bare));
+        let same = |a: &str, b: &str| {
+            let (a, b) = (o.read(a), o.read(b));
+            a.letters == b.letters && a.stress == b.stress
+        };
+        known
+            .forms
+            .iter()
+            .zip(&firsts)
+            .filter(|((_, form), built)| !built.first().is_some_and(|c| same(&c.form, form)))
+            .map(|(&given, _)| given)
+            .collect()
     }
 
     /// Each list of candidates sharpened and sorted, likeliest first.
@@ -588,6 +637,28 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             };
             inflections = self.inflections(&word.letters, &key, &none);
         }
+        // A word no paradigm's lemma fits (Greek `ἵ`, one letter): the
+        // commonest paradigm's forms, the word its one stem, unsure. Every
+        // word has every form.
+        if inflections.is_empty()
+            && let Some((value, paradigm)) = self
+                .paradigms
+                .iter()
+                .enumerate()
+                .max_by_key(|(i, p)| (p.words, std::cmp::Reverse(*i)))
+                .and_then(|(i, p)| Some((P::from_index(i)?, p)))
+        {
+            inflections.push(Inflection {
+                reading: Reading {
+                    value,
+                    probability: 1.0,
+                    status: Status::Unsettled,
+                    rule: None,
+                },
+                paradigm,
+                stems: vec![word.letters.as_str()],
+            });
+        }
         // The likeliest few readings, each with its accent classes and its
         // forms, cell by cell, built once.
         let mut readings: Vec<_> = inflections
@@ -602,25 +673,47 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 (inf, classes, built)
             })
             .collect();
-        // A word written in parts: as one word, or part by part.
-        let (whole, each) = match (&self.compound, lemma.split_once(JOINER)) {
-            (Some(compound), Some((first, rest))) => {
+        // A word written in parts: as one word, part by part, or its first
+        // part with the rest kept.
+        let parted = JOINERS
+            .iter()
+            .filter_map(|&j| Some((lemma.find(j)?, j)))
+            .min()
+            .and_then(|(_, j)| Some((lemma.split_once(j)?, j)));
+        let (whole, parts) = match (&self.compound, parted) {
+            (Some(compound), Some(((first, rest), joiner))) => {
                 let first_key = self.orthography.key(&self.orthography.read(first).letters);
-                let readings = compound.read(&first_key, self.smoothing, |_| true);
+                let key = format!("{first_key}{joiner}");
+                let readings = compound.read(&key, self.smoothing, |_| true);
                 let p = |c: Compound| {
                     readings
                         .iter()
                         .find(|r| r.value == c)
                         .map_or(0.0, |r| r.probability)
                 };
-                let each = p(Compound::Each);
-                let parts = (each > 0.0).then(|| {
-                    (
-                        top(self.unsharpened(first, cells, &Known::default())),
-                        top(self.unsharpened(rest, cells, known)),
-                    )
+                let (each, kept) = (p(Compound::Each), p(Compound::First));
+                // The forms given, of the first part: without the rest.
+                let (tail, head) = (format!("{joiner}{rest}"), format!("{rest}{joiner}"));
+                let given: Vec<(usize, &str)> = known
+                    .forms
+                    .iter()
+                    .filter_map(|&(c, f)| {
+                        Some((c, f.strip_suffix(&tail).or_else(|| f.strip_prefix(&head))?))
+                    })
+                    .collect();
+                let base = Known {
+                    forms: &given,
+                    ..*known
+                };
+                let firsts = (each + kept > 0.0).then(|| {
+                    let known = if kept > 0.0 { &base } else { &Known::default() };
+                    top(self.unsharpened(first, cells, known))
                 });
-                (p(Compound::Last), parts.map(|parts| (parts, each)))
+                let rests = (each > 0.0).then(|| top(self.unsharpened(rest, cells, known)));
+                (
+                    p(Compound::Last),
+                    firsts.map(|firsts| (firsts, rests, joiner, rest, each, kept)),
+                )
             }
             _ => (1.0, None),
         };
@@ -742,6 +835,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         prefix,
                         rest,
                         c.form.strip_prefix(drop).unwrap_or(&c.form),
+                        cell,
                     );
                     for (form, p) in [(separated, *separable), (kept, *inseparable)] {
                         if p <= 0.0 {
@@ -757,13 +851,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     }
                 }
             }
-            if let Some(((firsts, rests), p)) = &each {
+            if let Some((firsts, rests, joiner, rest, each, kept)) = &parts {
                 for a in firsts.get(i).into_iter().flatten() {
-                    for b in rests.get(i).into_iter().flatten() {
+                    if *kept > 0.0 {
+                        let with = |f: &str| match self.kept.get(cell) {
+                            Some(Placement::Before) => format!("{rest}{joiner}{f}"),
+                            _ => format!("{f}{joiner}{rest}"),
+                        };
+                        add(
+                            &mut out,
+                            Candidate {
+                                form: with(&a.form),
+                                also: a.also.iter().map(|f| with(f)).collect(),
+                                probability: kept * a.probability,
+                                ..a.clone()
+                            },
+                        );
+                    }
+                    let rests = rests.as_ref().and_then(|r| r.get(i)).into_iter().flatten();
+                    for b in rests {
                         out.push(Candidate {
-                            form: format!("{}{JOINER}{}", a.form, b.form),
+                            form: format!("{}{joiner}{}", a.form, b.form),
                             also: Vec::new(),
-                            probability: p * a.probability * b.probability,
+                            probability: each * a.probability * b.probability,
                             status: b.status,
                             paradigm: b.paradigm,
                             evidence: b.evidence,
@@ -818,11 +928,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 ..*known
             };
             for (out, more) in lists.iter_mut().zip(self.unsharpened(&typed, cells, &full)) {
-                // A listed form is the answer however the word is spelled.
-                if out
-                    .iter()
-                    .any(|c| c.status == Status::Listed && c.paradigm.is_empty())
-                {
+                // A listed form, or one built on a stem the word lists, is the
+                // answer however the word is spelled.
+                if out.iter().any(|c| {
+                    c.status == Status::Listed && (c.paradigm.is_empty() || c.stem.is_some())
+                }) {
                     continue;
                 }
                 for mut c in more {
@@ -834,12 +944,24 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         lists
     }
 
-    /// The form `form` (written) of the word `rest` with `prefix` kept in
-    /// front, as they meet. Its accent stays on the syllable it is on, counted
-    /// from the end; one as far back as the law allows on the rest goes as
-    /// far back as it allows on the whole word, but not before the prefix's
-    /// last syllable, nor before an augment (`ἀπόλυε`, `ἀπῆλθον`).
-    fn kept(&self, prefixes: &Prefixes<'_>, prefix: &str, rest: &str, form: &str) -> String {
+    /// The form `form` (written) of `cell` of the word `rest` with `prefix`
+    /// kept in front, as they meet. Its accent stays on the syllable it is
+    /// on, counted from the end; in a cell whose accent recedes, one as far
+    /// back as the law allows on the rest goes as far back as it allows on
+    /// the whole word, but not before the prefix's last syllable, nor before
+    /// an augment (`ἀπόλυε`, `ἀπῆλθον`; Smyth §§ 426, 450). How long the
+    /// last syllable counts is the cell's (the optative's `-οι` is long,
+    /// Smyth §169: `προφέροι`); a cell whose accent doesn't recede keeps it
+    /// where it is (the infinitives and participles, Smyth §425:
+    /// `προλῦσαι`).
+    fn kept(
+        &self,
+        prefixes: &Prefixes<'_>,
+        prefix: &str,
+        rest: &str,
+        form: &str,
+        cell: usize,
+    ) -> String {
         let o = &self.orthography;
         let written = o.read(form);
         let (letters, rest_at) = prefixes.join(&o.key(prefix), prefix, &written.letters);
@@ -854,15 +976,23 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 ..written.stress?
             })
         });
-        if let (Some(p), Some(s)) = (&o.prosody, written.stress) {
+        // The cell's accent: whether it recedes (as the commonest pattern
+        // places it), and whether its final `-αι`, `-οι` counts as long.
+        let accent = self.accent.as_ref();
+        let recedes = accent
+            .and_then(|a| a.usual(cell))
+            .is_none_or(|place| place == crate::Place::Recessive);
+        let long = accent.is_some_and(|a| {
+            a.long_finals
+                .binary_search(&u16::try_from(cell).unwrap_or(u16::MAX))
+                .is_ok()
+        });
+        if let (Some(p), Some(s), true) = (&o.prosody, written.stress, recedes) {
             let recessive = |letters: &str, long: bool, wall: usize| {
                 let syllables = p.syllables(o, letters, long);
                 p.accent(&syllables, wall, p.acute)
             };
-            let long = [false, true]
-                .into_iter()
-                .find(|&long| recessive(&written.letters, long, 0) == Some(s));
-            if let Some(long) = long {
+            if recessive(&written.letters, long, 0) == Some(s) {
                 // The augment: the form begins otherwise than the word.
                 let augmented = written.letters.chars().next() != rest.chars().next();
                 let syllables = p.syllables(o, &letters, long);
@@ -992,8 +1122,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     ) -> Vec<(usize, String, String)> {
         let mut out: Vec<(usize, String, String)> = Vec::new();
         for (cell, form) in given {
-            // A word written in parts has no one stem.
-            if lemma.contains(JOINER) || form.contains(JOINER) {
+            // A word written in parts has no one stem; nor has a form written
+            // in two words where the paradigm writes one (a separated prefix:
+            // German `richtete zugrunde` fixes no stem `zugrunderichtete` is
+            // built on).
+            let phrase = paradigm
+                .pattern_in(&self.paradigms, self.space(), *cell)
+                .is_some_and(|p| p.contains(' '));
+            if lemma.contains('-') || form.contains('-') || (form.contains(' ') && !phrase) {
                 continue;
             }
             // A form the paradigm builds fixes nothing it doesn't.
@@ -1264,8 +1400,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// for a word a prefix splits (see [`Prefixes`]): the prefix decides
     /// where its letters go.
     pub fn head<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
+        if self.lists(key) {
+            return None;
+        }
+        self.head_unlisted(key, letters)
+    }
+
+    /// The head [`Grammar::head`] gives the word `key` once the grammar
+    /// doesn't list it (the trainer asks before it stops listing a word).
+    pub fn head_unlisted<'w>(&self, key: &str, letters: &'w str) -> Option<(&'w str, &'w str)> {
         if self.heads.is_empty()
-            || self.lists(key)
             || self
                 .prefixes
                 .as_ref()
@@ -1315,14 +1459,29 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .iter()
             .map(|&(c, f)| (c, self.orthography.read(f).letters))
             .collect();
+        // A form the word's own line gives (listed, or built on a stem it
+        // lists) agrees with any paradigm: German `geschehen` lists
+        // `geschieh-`, which its paradigm alone doesn't build.
+        let line = self.irregular.line(key);
+        let lines = |cell: usize, form: &str| {
+            line.is_some_and(|l| {
+                let listed = u16::try_from(cell).ok().and_then(|c| listed_in(l, c));
+                listed.is_some_and(|f| self.orthography.read(f).letters == form)
+                    || self
+                        .stem_built(l, cell)
+                        .is_some_and(|(forms, ..)| forms.iter().any(|(f, _)| f == form))
+            })
+        };
         let agrees = |p: &Paradigm<'a>| {
             let Some(stems) = p.stems(&self.orthography, letters) else {
                 return false;
             };
             given.iter().all(|(cell, form)| {
-                self.build(p, &stems, key, inherent, *cell, &mut Built::default())
-                    .iter()
-                    .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
+                lines(*cell, form)
+                    || self
+                        .build(p, &stems, key, inherent, *cell, &mut Built::default())
+                        .iter()
+                        .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
             })
         };
         let fits = |p: P| self.paradigms.get(p.index()).is_some_and(agrees);
@@ -1474,8 +1633,14 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 None => out.push((s, *p)),
             }
         }
+        // A cell none of the word's classes places: where most words have
+        // it, else as far back as the law allows. A form that needs an accent
+        // never goes without one (Greek `ὀστοῦν`, not `ὀστουν`).
         if out.is_empty() {
-            out.push((None, 1.0));
+            let place = accent.usual(cell).unwrap_or(crate::Place::Recessive);
+            let stem = classes.first().map_or(0, |c| c.2);
+            let s = stress::place(&self.orthography, form, ending, finals, place, stem);
+            out.push((s, 1.0));
         }
         out
     }

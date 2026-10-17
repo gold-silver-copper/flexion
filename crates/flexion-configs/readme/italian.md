@@ -18,3 +18,6 @@ assert_eq!(before_noun("bello", Gender::Masculine, Number::Plural, "occhi").as_d
 Forms are written in standard spelling, with an accent only on a final
 stressed vowel (`città`, `prenderò`) and on the monosyllables that take one
 (`dà`, `può`).
+
+Left out: pronouns. Their dictionary entries give no forms but the
+possessive (`io`, `mio`), which the determiners already decline.

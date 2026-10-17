@@ -7,7 +7,7 @@ use flexion_train::kaikki::Entry;
 use flexion_train::spec::{FormSource, Group, Hooks, Language, PartOfSpeech, Spelling, TagPolicy};
 
 pub fn language() -> Language {
-    Language {
+    crate::with_proper_nouns(Language {
         name: "english",
         display: "English",
         wiktionary: "en",
@@ -45,6 +45,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -59,6 +60,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -80,6 +82,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adverb",
@@ -101,6 +104,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {
@@ -149,7 +153,7 @@ pub fn language() -> Language {
             ("adverb", "adverb", "glorpily"),
         ],
         editions: vec![],
-    }
+    })
 }
 
 fn group(name: &'static str, doc: &'static str, features: &[&'static str]) -> Group {

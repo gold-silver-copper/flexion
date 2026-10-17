@@ -157,9 +157,12 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "üe" => [23 47],
         "é" => [21 3, 22 3],
     } listed {
-        "desdé" => 22,
-        "esté" => 22,
-        "proteja" => 15,
+        15 => [
+            "proteja",
+        ],
+        22 => [
+            "desdé", "esté",
+        ],
     }, true, None),
     // PRES_2_PL, from VOS_IND.
     relation!(PRES_2_PL, [VOS_IND], [("~", "~"), ("~s", "~is")], rules {
@@ -330,7 +333,9 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "uí" => [0 78],
         "ñí" => [0 38],
     } listed {
-        "estate" => 8,
+        8 => [
+            "estate",
+        ],
     }, true, None),
     // PRET_1_PL, from INFINITIVE.
     relation!(PRET_1_PL, [INFINITIVE], [("~aber", "~upimos"), ("~acer", "~icimos"), ("~acerse", "~icimos"), ("~ar", "~imos"), ("~ar", "~uvimos"), ("~arse", "~uvimos"), ("~cir", "~jimos"), ("~cirse", "~jimos"), ("~ecir", "~ijimos"), ("~ecirse", "~ijimos"), ("~ener", "~uvimos"), ("~enerse", "~uvimos"), ("~enir", "~inimos"), ("~enirse", "~inimos"), ("~er", "~imos"), ("~er", "~jimos"), ("~er", "~ímos"), ("~erer", "~isimos"), ("~erse", "~imos"), ("~erse", "~jimos"), ("~erse", "~ímos"), ("~oder", "~udimos"), ("~oner", "~usimos"), ("~onerse", "~usimos"), ("~r", "~mos"), ("~rse", "~mos")], rules {
@@ -523,9 +528,15 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "uñí" => [68 13],
         "üí" => [70 3],
     } listed {
-        "estate" => 13,
-        "rendite" => 2,
-        "servite" => 3,
+        2 => [
+            "rendite",
+        ],
+        3 => [
+            "servite",
+        ],
+        13 => [
+            "estate",
+        ],
     }, true, None),
     // PRET_3_PL, from GERUND.
     relation!(PRET_3_PL, [GERUND], [("~aciendo", "~icieron"), ("~aciéndose", "~icieron"), ("~ando", "~ieron"), ("~ando", "~uvieron"), ("~ciendo", "~jeron"), ("~ciéndose", "~jeron"), ("~eniendo", "~uvieron"), ("~eniéndose", "~uvieron"), ("~eriendo", "~isieron"), ("~ndo", "~ron"), ("~oniendo", "~usieron"), ("~oniéndose", "~usieron"), ("~yendo", "~jeron"), ("~yéndose", "~jeron"), ("~ándose", "~aron"), ("~ándose", "~uvieron"), ("~éndose", "~eron")], rules {
@@ -618,8 +629,9 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "e" => [0 15857],
         "é" => [0 3, 1 3],
     } listed {
-        "dé" => 1,
-        "té" => 1,
+        1 => [
+            "dé", "té",
+        ],
     }, true, None),
     // SUBJ_2_PL, from PRET_1_SG.
     relation!(SUBJ_2_PL, [PRET_1_SG], [], none, false, None),
@@ -631,8 +643,9 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "e" => [0 15857],
         "é" => [0 3, 1 3],
     } listed {
-        "dé" => 1,
-        "té" => 1,
+        1 => [
+            "dé", "té",
+        ],
     }, true, None),
     // SUBJ_IMPF_1_SG, from PRET_3_PL.
     relation!(SUBJ_IMPF_1_SG, [PRET_3_PL], [("~on", "~a")], rules {
@@ -713,7 +726,9 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "é" => [0 670],
         "í" => [0 757],
     } listed {
-        "date" => 4,
+        4 => [
+            "date",
+        ],
     }, true, None),
     // VOS_SUBJ, from SUBJ_2_PL.
     relation!(VOS_SUBJ, [SUBJ_2_PL], [("~is", "~s"), ("~zcáis", "~gás"), ("~áis", "~yás")], rules {
@@ -1034,56 +1049,71 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "üe" => [118 32, 268 7, 134 3, 285 2, 35 1],
         "é" => [118 4, 414 2],
     } listed {
-        "abra" => 35,
-        "abra" => 118,
-        "agüe" => 35,
-        "agüe" => 118,
-        "arda" => 35,
-        "arda" => 118,
-        "caiga" => 39,
-        "caiga" => 118,
-        "cierna" => 42,
-        "cierna" => 118,
-        "distinga" => 118,
-        "distinga" => 283,
-        "duela" => 118,
-        "duela" => 203,
-        "dé" => 118,
-        "dé" => 414,
-        "engüere" => 118,
-        "engüere" => 228,
-        "esparza" => 118,
-        "esparza" => 171,
-        "esté" => 118,
-        "esté" => 414,
-        "extinga" => 118,
-        "extinga" => 283,
-        "frunza" => 54,
-        "frunza" => 118,
-        "meza" => 73,
-        "meza" => 118,
-        "muerda" => 76,
-        "muerda" => 118,
-        "proteja" => 118,
-        "proteja" => 201,
-        "pudra" => 88,
-        "pudra" => 118,
-        "rea" => 186,
-        "rehúya" => 118,
-        "rehúya" => 119,
-        "repudra" => 118,
-        "repudra" => 365,
-        "resarza" => 118,
-        "resarza" => 171,
-        "salga" => 95,
-        "salga" => 118,
-        "tropiece" => 118,
-        "tropiece" => 190,
-        "valga" => 111,
-        "valga" => 118,
-        "yerga" => 115,
-        "yerre" => 115,
-        "yerre" => 118,
+        35 => [
+            "abra", "agüe", "arda",
+        ],
+        39 => [
+            "caiga",
+        ],
+        42 => [
+            "cierna",
+        ],
+        54 => [
+            "frunza",
+        ],
+        73 => [
+            "meza",
+        ],
+        76 => [
+            "muerda",
+        ],
+        88 => [
+            "pudra",
+        ],
+        95 => [
+            "salga",
+        ],
+        111 => [
+            "valga",
+        ],
+        115 => [
+            "yerga", "yerre",
+        ],
+        118 => [
+            "abra", "agüe", "arda", "caiga", "cierna", "distinga", "duela", "dé", "engüere",
+            "esparza", "esté", "extinga", "frunza", "meza", "muerda", "proteja", "pudra", "rehúya",
+            "repudra", "resarza", "salga", "tropiece", "valga", "yerre",
+        ],
+        119 => [
+            "rehúya",
+        ],
+        171 => [
+            "esparza", "resarza",
+        ],
+        186 => [
+            "rea",
+        ],
+        190 => [
+            "tropiece",
+        ],
+        201 => [
+            "proteja",
+        ],
+        203 => [
+            "duela",
+        ],
+        228 => [
+            "engüere",
+        ],
+        283 => [
+            "distinga", "extinga",
+        ],
+        365 => [
+            "repudra",
+        ],
+        414 => [
+            "dé", "esté",
+        ],
     }, true, None),
     // IMPERATIVE_NOSOTROS, from SUBJ_1_PL.
     relation!(IMPERATIVE_NOSOTROS, [SUBJ_1_PL], [("~", "~"), ("~amos", "~ámonos"), ("~emos", "~émonos")], rules {
@@ -1094,43 +1124,19 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "eemos" => [0 2177, 2 351],
         "uemos" => [0 1238, 2 549],
     } listed {
-        "abramos" => 0,
-        "abramos" => 1,
-        "agüemos" => 0,
-        "agüemos" => 2,
-        "ardamos" => 0,
-        "ardamos" => 1,
-        "caigamos" => 0,
-        "caigamos" => 1,
-        "compunjamos" => 0,
-        "compunjamos" => 1,
-        "deslengüemos" => 0,
-        "deslengüemos" => 2,
-        "distingamos" => 0,
-        "distingamos" => 1,
-        "esparzamos" => 0,
-        "esparzamos" => 1,
-        "extingamos" => 0,
-        "extingamos" => 1,
-        "frunzamos" => 0,
-        "frunzamos" => 1,
-        "irgamos" => 0,
-        "irgamos" => 1,
-        "mezamos" => 0,
-        "mezamos" => 1,
-        "prevalgamos" => 0,
-        "prevalgamos" => 1,
-        "protejamos" => 0,
-        "protejamos" => 1,
-        "reamos" => 1,
-        "resarzamos" => 0,
-        "resarzamos" => 1,
-        "salgamos" => 0,
-        "salgamos" => 1,
-        "sumerjamos" => 0,
-        "sumerjamos" => 1,
-        "valgamos" => 0,
-        "valgamos" => 1,
+        0 => [
+            "abramos", "agüemos", "ardamos", "caigamos", "compunjamos", "deslengüemos",
+            "distingamos", "esparzamos", "extingamos", "frunzamos", "irgamos", "mezamos",
+            "prevalgamos", "protejamos", "resarzamos", "salgamos", "sumerjamos", "valgamos",
+        ],
+        1 => [
+            "abramos", "ardamos", "caigamos", "compunjamos", "distingamos", "esparzamos",
+            "extingamos", "frunzamos", "irgamos", "mezamos", "prevalgamos", "protejamos", "reamos",
+            "resarzamos", "salgamos", "sumerjamos", "valgamos",
+        ],
+        2 => [
+            "agüemos", "deslengüemos",
+        ],
     }, true, None),
     // IMPERATIVE_VOSOTROS, from INFINITIVE.
     relation!(IMPERATIVE_VOSOTROS, [INFINITIVE], [("~irse", "~íos"), ("~r", "~d"), ("~rse", "~os")], rules {
@@ -1397,43 +1403,56 @@ pub(super) static RELATIONS: [Relation<'static>; 72] = [
         "úen" => [157 55, 158 27],
         "üen" => [157 32, 305 7, 172 3, 322 2, 51 1],
     } listed {
-        "abran" => 51,
-        "abran" => 157,
-        "agüen" => 51,
-        "agüen" => 157,
-        "ardan" => 51,
-        "ardan" => 157,
-        "caigan" => 57,
-        "caigan" => 157,
-        "ciernan" => 62,
-        "ciernan" => 157,
-        "distingan" => 157,
-        "distingan" => 320,
-        "duelan" => 70,
-        "duelan" => 157,
-        "engüeren" => 157,
-        "engüeren" => 265,
-        "esparzan" => 157,
-        "esparzan" => 208,
-        "extingan" => 157,
-        "extingan" => 320,
-        "frunzan" => 79,
-        "frunzan" => 157,
-        "mezan" => 105,
-        "mezan" => 157,
-        "muerdan" => 108,
-        "muerdan" => 157,
-        "protejan" => 157,
-        "protejan" => 238,
-        "pudran" => 123,
-        "pudran" => 157,
-        "salgan" => 132,
-        "salgan" => 157,
-        "valgan" => 150,
-        "valgan" => 157,
-        "yergan" => 154,
-        "yerren" => 154,
-        "yerren" => 157,
+        51 => [
+            "abran", "agüen", "ardan",
+        ],
+        57 => [
+            "caigan",
+        ],
+        62 => [
+            "ciernan",
+        ],
+        70 => [
+            "duelan",
+        ],
+        79 => [
+            "frunzan",
+        ],
+        105 => [
+            "mezan",
+        ],
+        108 => [
+            "muerdan",
+        ],
+        123 => [
+            "pudran",
+        ],
+        132 => [
+            "salgan",
+        ],
+        150 => [
+            "valgan",
+        ],
+        154 => [
+            "yergan", "yerren",
+        ],
+        157 => [
+            "abran", "agüen", "ardan", "caigan", "ciernan", "distingan", "duelan", "engüeren",
+            "esparzan", "extingan", "frunzan", "mezan", "muerdan", "protejan", "pudran", "salgan",
+            "valgan", "yerren",
+        ],
+        208 => [
+            "esparzan",
+        ],
+        238 => [
+            "protejan",
+        ],
+        265 => [
+            "engüeren",
+        ],
+        320 => [
+            "distingan", "extingan",
+        ],
     }, true, None),
     // NEGATIVE_IMPERATIVE_TU, from SUBJ_2_SG.
     relation!(NEGATIVE_IMPERATIVE_TU, [SUBJ_2_SG], [], none, true, None),

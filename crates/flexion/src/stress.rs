@@ -169,6 +169,17 @@ impl<'a, A: Label> Accent<'a, A> {
     pub fn place(&self, pattern: u16, cell: usize) -> Option<Place> {
         self.line(pattern).find_map(|p| p.own(cell))
     }
+
+    /// The place of `cell`'s accent in the pattern most words follow.
+    pub fn usual(&self, cell: usize) -> Option<Place> {
+        let commonest = (0..self.patterns.len()).max_by_key(|&i| {
+            (
+                self.patterns.get(i).map_or(0, |p| p.words),
+                std::cmp::Reverse(i),
+            )
+        })?;
+        self.place(u16::try_from(commonest).ok()?, cell)
+    }
 }
 
 /// A language's law of limitation (Ancient Greek). The accent falls on one of
@@ -187,6 +198,9 @@ pub struct Prosody<'a> {
     pub long: &'a str,
     /// Diphthongs that count as short at a word's end (`αι`, `οι`).
     pub short_finals: &'a [&'a str],
+    /// Endings whose last syllable counts short, long as it is: Greek
+    /// `-εως`, `-εων` (`πόλεως`, Smyth §163a).
+    pub short_endings: &'a [&'a str],
     /// The kinds of stress mark (see [`Orthography::stress_marks`]) of the
     /// acute and the circumflex.
     pub acute: u8,
@@ -253,8 +267,12 @@ impl Prosody<'_> {
             vowel = vowel.saturating_add(1);
         }
         // A final -αι, -οι is short (consonants after it don't count: the
-        // flag is cleared by any consonant).
-        if short_final
+        // flag is cleared by any consonant), and so are the short endings'.
+        let ends = |e: &&str| {
+            let mut mine = letters.chars().rev().map(|c| orthography.fold(c));
+            e.chars().rev().all(|c| mine.next() == Some(c))
+        };
+        if (short_final || self.short_endings.iter().any(ends))
             && !long_final
             && let Some(last) = out.last_mut()
         {
@@ -404,9 +422,11 @@ mod tests {
             hiatus: "ϊϋ",
             long: "ηωᾱῑῡἠἡὠὡᾳῃῳ",
             short_finals: &["αι", "οι"],
+            short_endings: &[],
             acute: 0,
             circumflex: 1,
         }),
+        initial: "",
     };
 
     fn at(letters: &str, place_: Place, stem: usize) -> String {
@@ -419,6 +439,46 @@ mod tests {
             stem,
         );
         GREEK.write(letters, s, crate::Casing::Lower)
+    }
+
+    #[test]
+    fn the_genitive_in_εως_keeps_the_accent_on_the_third_syllable_from_the_end() {
+        // Smyth §163a: `πόλεως`, `πόλεων`; `βασιλέως` and `νεώς` where their
+        // accents are; not other long finals (`ἀνθρώπων`).
+        let mut greek = GREEK;
+        greek.prosody = greek.prosody.map(|p| Prosody {
+            short_endings: &["εως", "εων"],
+            ..p
+        });
+        let at = |letters: &str, place_: Place| {
+            let s = place(&greek, letters, letters.len(), Finals::default(), place_, 0);
+            greek.write(letters, s, crate::Casing::Lower)
+        };
+        assert_eq!(
+            [
+                at("πολεως", Place::Recessive),
+                at("πολεων", Place::Recessive),
+                at("βασιλεως", Place::NextToLast),
+                at("νεως", Place::Last),
+                at("ανθρωπων", Place::Recessive),
+            ],
+            ["πόλεως", "πόλεων", "βασιλέως", "νεώς", "ανθρώπων"]
+        );
+    }
+
+    #[test]
+    fn a_capital_keeps_its_accent() {
+        // A name's first letter, capital and accented (`Ἄδωνις`), is read
+        // as the lowercase letter is: the accent on the first vowel.
+        let mut greek = GREEK;
+        greek.stressed = &[('ἄ', 'ἀ', 0)];
+        greek.vowels = "αεηιουωἀ";
+        let capital = greek.read("Ἄδωνις");
+        assert_eq!(
+            (capital.letters.as_str(), capital.stress),
+            ("ἀδωνις", greek.read("ἄδωνις").stress)
+        );
+        assert!(capital.stress.is_some());
     }
 
     #[test]

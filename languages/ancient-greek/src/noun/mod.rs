@@ -49,6 +49,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     relations: Cow::Borrowed(&relations::RELATIONS),
     feature: None,
     compound: None,
+    kept: Cow::Borrowed(&[]),
     prefixes: None,
     heads: flexion::Heads {
         least: None,
@@ -73,10 +74,10 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 1.0,
+    sharpness: 1.25,
     trust: flexion::Trust {
-        regular: 1.0,
-        unsettled: 0.8809749,
+        regular: 0.9883387,
+        unsettled: 0.84959954,
         unattested: 1.0,
     },
 };

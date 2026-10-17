@@ -54,7 +54,20 @@ pub struct Measured {
     /// The share of the dictionary's words the shipped grammar lists a form
     /// or a stem of (an irregular line).
     pub irregular_share: f64,
+    /// From the headword, the mean of each block's top-1 (see
+    /// [`eval::by_block`]).
+    pub by_block: f64,
+    /// The shipped grammar on a sample of its own words, from the headword:
+    /// how well it reproduces the dictionary's tables.
+    pub reproduced: Score,
+    /// On the same words, every cell: `(cells, with a form)` (see
+    /// [`eval::completion`]).
+    pub complete: (usize, usize),
 }
+
+/// The most of a part's own words its shipped grammar is asked for again
+/// (see [`Measured::reproduced`]).
+const REPRODUCED: usize = 3000;
 
 /// Learn every part of speech of `lang` (the shipped grammars) and measure
 /// each on its held-out tenth.
@@ -79,8 +92,9 @@ pub fn build<'s>(
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let parts = crate::parts(lang, part)?;
-        let train: Vec<Lexeme> = d
-            .lexemes
+        let taught = crate::teachers(lang, part, data, |_| true);
+        let every: Vec<Lexeme> = d.lexemes.iter().chain(taught).cloned().collect();
+        let train: Vec<Lexeme> = every
             .iter()
             .filter(|l| eval::bucket(&l.key) != eval::TEST)
             .cloned()
@@ -140,7 +154,7 @@ pub fn build<'s>(
         let ceiling = eval::ceiling(&orthography, &test, &outcomes);
         let (on_training, new_root) = strata(&train, g, &test, &outcomes);
         let scoring = at.elapsed().as_secs_f64() - sharpening - scored.trace.total().0;
-        let mut shipped = learned(&d.lexemes, &all_marks);
+        let mut shipped = learned(&every, &all_marks);
         shipped.grammar.sharpness = sharpness;
         shipped.grammar.trust = trust;
         let by_entry = [Of::Own, Of::Form, Of::Spelling].map(|of| {
@@ -152,6 +166,29 @@ pub fn build<'s>(
             Score::of(&mine)
         });
         let phrases = Score::of(&eval::phrases(&outcomes, &test));
+        let cells = crate::cells::Cells::new(lang, part)?;
+        let blocks: Vec<std::ops::Range<usize>> = cells
+            .groups
+            .iter()
+            .map(|g| g.offset..g.offset + g.len())
+            .collect();
+        let (by_block, _) = eval::by_block(&outcomes, &blocks);
+        let mut seen = crate::HashSet::default();
+        let own: Vec<&Lexeme> = d
+            .lexemes
+            .iter()
+            .filter(|l| l.source == 0 && seen.insert(l.key.as_str()))
+            .take(REPRODUCED)
+            .collect();
+        let reproduced = eval::score(
+            &shipped.grammar,
+            &orthography,
+            &own,
+            Input::Headword,
+            &shipped.seen,
+        );
+        let (all, filled, _) = eval::completion(&shipped.grammar, &own);
+        let complete = (all, filled);
         #[allow(clippy::cast_precision_loss)]
         let irregular_share =
             shipped.stats.irregular_words as f64 / shipped.stats.words.max(1) as f64;
@@ -193,6 +230,9 @@ pub fn build<'s>(
             by_entry,
             phrases,
             irregular_share,
+            by_block,
+            reproduced,
+            complete,
         });
         grammars.push(shipped);
     }
@@ -309,7 +349,7 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             .filter(|s| s.forms > 0)
             .map_or(String::new(), |s| format!("{:.2}%", 100.0 * s.accuracy()))
     };
-    for m in measured {
+    for m in measured.iter() {
         let p = m.headword.accuracy();
         let given = if m.given.iter().all(|s| s.forms == 0) {
             String::new()
@@ -362,6 +402,53 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
                 .join(" / "),
             share((m.phrases.forms, m.phrases.right)),
             100.0 * m.irregular_share,
+        );
+    }
+    s.push_str(
+        "\n## Where the errors are\n\n\
+         The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share\n\
+         of them: *class*, the right form is among its answers but another paradigm's comes first;\n\
+         *length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*\n\
+         and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms\n\
+         the dictionary lists comes first; *homograph*, another dictionary word spelled the same has\n\
+         that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a\n\
+         group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the\n\
+         dictionary's own words (at most 3,000), from the headword; *complete*: of those words'\n\
+         cells, the dictionary's or not, the share with a form.\n\n\
+         | | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |\n\
+         |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+    );
+    for m in measured {
+        let errors = &m.headword.errors;
+        let wrong: usize = errors.iter().sum();
+        let of = |k: crate::measure::Kind| {
+            let n = crate::measure::Kind::ALL
+                .iter()
+                .position(|&x| x == k)
+                .and_then(|i| errors.get(i))
+                .copied()
+                .unwrap_or(0);
+            #[allow(clippy::cast_precision_loss)]
+            let share = 100.0 * n as f64 / wrong.max(1) as f64;
+            format!("{share:.0}%")
+        };
+        use crate::measure::Kind as K;
+        #[allow(clippy::cast_precision_loss)]
+        let complete = 100.0 * m.complete.1 as f64 / m.complete.0.max(1) as f64;
+        let _ = writeln!(
+            s,
+            "| {} | {wrong} | {} | {} | {} | {} | {} | {} | {} | {} | {:.2}% | {:.2}% | {complete:.2}% |",
+            m.name,
+            of(K::Paradigm),
+            of(K::Length),
+            of(K::Accent),
+            of(K::Stem),
+            of(K::Ending),
+            of(K::Variant),
+            of(K::Homograph),
+            of(K::Gap),
+            100.0 * m.by_block,
+            100.0 * m.reproduced.accuracy(),
         );
     }
     s.push('\n');

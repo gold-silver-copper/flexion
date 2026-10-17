@@ -14,6 +14,7 @@ flexion = { path = "crates/flexion", version = "0.2.0" }
 flexion-train = { path = "crates/flexion-train", version = "0.2.0" }
 sound-law = { path = "crates/sound-law", version = "0.1.0" }
 sound-law-macros = { path = "crates/sound-law-macros", version = "0.1.0" }
+flexion-macros = { path = "crates/flexion-macros", version = "0.1.0" }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 flate2 = "1"

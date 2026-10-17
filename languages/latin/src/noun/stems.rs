@@ -17,7 +17,7 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
         cells: Cow::Borrowed(&[NOM_SG, VOC_SG]),
     },
     Slot {
-        name: Cow::Borrowed("rest"),
+        name: Cow::Borrowed("gen_sg"),
         cells: Cow::Borrowed(&[
             NOM_PL,
             GEN_SG,
@@ -44,7 +44,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // rest like ratiō: 4,121 words.
+    // gen_sg like ratiō: 4,121 words.
     EndingTable {
         name: Cow::Borrowed("ratiō"),
         words: 4121,
@@ -59,7 +59,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like iugum: 2,610 words.
+    // gen_sg like iugum: 2,610 words.
     EndingTable {
         name: Cow::Borrowed("iugum"),
         words: 2610,
@@ -74,7 +74,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~ī\t\t",
         )),
     },
-    // rest like cōs: 863 words.
+    // gen_sg like cōs: 863 words.
     EndingTable {
         name: Cow::Borrowed("cōs"),
         words: 863,
@@ -89,7 +89,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like fīnis: 228 words.
+    // gen_sg like fīnis: 228 words.
     EndingTable {
         name: Cow::Borrowed("fīnis"),
         words: 228,
@@ -104,7 +104,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~ī\t~ibus\t",
         )),
     },
-    // rest like lēmma: 148 words.
+    // gen_sg like lēmma: 148 words.
     EndingTable {
         name: Cow::Borrowed("lēmma"),
         words: 148,
@@ -119,7 +119,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like mōlēs: 116 words.
+    // gen_sg like mōlēs: 116 words.
     EndingTable {
         name: Cow::Borrowed("mōlēs"),
         words: 116,
@@ -134,7 +134,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like commūne: 111 words.
+    // gen_sg like commūne: 111 words.
     EndingTable {
         name: Cow::Borrowed("commūne"),
         words: 111,
@@ -149,7 +149,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like hospitālia: 45 words.
+    // gen_sg like hospitālia: 45 words.
     EndingTable {
         name: Cow::Borrowed("hospitālia"),
         words: 45,
@@ -158,7 +158,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~a\t", "\t~um\t", "\t~bus\t", "\t~a\t", "\t~bus\t", "~a\t", "\t\t",
         )),
     },
-    // rest like vās: 41 words.
+    // gen_sg like vās: 41 words.
     EndingTable {
         name: Cow::Borrowed("vās"),
         words: 41,
@@ -173,7 +173,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like trēsvirī: 40 words.
+    // gen_sg like trēsvirī: 40 words.
     EndingTable {
         name: Cow::Borrowed("trēsvirī"),
         words: 40,
@@ -188,7 +188,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like ōs: 32 words.
+    // gen_sg like ōs: 32 words.
     EndingTable {
         name: Cow::Borrowed("ōs"),
         words: 32,
@@ -203,7 +203,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like corpus: 22 words.
+    // gen_sg like corpus: 22 words.
     EndingTable {
         name: Cow::Borrowed("corpus"),
         words: 22,
@@ -218,7 +218,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~orī\t~oribus\t",
         )),
     },
-    // rest like aegis: 20 words.
+    // gen_sg like aegis: 20 words.
     EndingTable {
         name: Cow::Borrowed("aegis"),
         words: 20,
@@ -233,7 +233,7 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // rest like tetraedrum: 1 words.
+    // gen_sg like tetraedrum: 1 words.
     EndingTable {
         name: Cow::Borrowed("tetraedrum"),
         words: 1,

@@ -30,9 +30,10 @@
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
-//! - `inspect`: a word's readings and forms (`--word a,b`; `--parts`: typed in full
-//!   with the dictionary's principal parts given; `--holdout`: learned without the
-//!   tenth `try` scores), and a sample of irregular forms.
+//! - `inspect`: a word's readings and its table as `try` scores it, each cell
+//!   marked right or wrong (`--word a,b`; `--parts`: also typed in full with the
+//!   dictionary's principal parts given; `--holdout`: learned without the tenth
+//!   `try` scores), and a sample of irregular forms.
 
 mod audit;
 mod bench;
@@ -451,7 +452,8 @@ fn score_line(label: &str, words: usize, s: &eval::Score) -> String {
 fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(), String> {
     let data = load(lang)?;
     let mut saved = outcomes::Saved::default();
-    try_tenth(lang, &data, only, o, &mut saved)?;
+    let mut marks = Marks::new();
+    try_tenth(lang, &data, only, o, &mut saved, &mut marks)?;
     // A small part of speech, on more tenths: their outcomes saved together
     // (compare pools them).
     if o.pool {
@@ -466,7 +468,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                     save: None,
                     ..o.clone()
                 };
-                try_tenth(lang, &data, Some(part.name), &tenth, &mut saved)?;
+                try_tenth(lang, &data, Some(part.name), &tenth, &mut saved, &mut marks)?;
             }
         }
     }
@@ -477,6 +479,17 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
     Ok(())
 }
 
+/// The language's marks models per tenth held out: learned on the other
+/// tenths, and on those less the dev tenth (none with `--quick`); learned
+/// once per tenth, for every part of speech scored on it.
+type Marks = std::collections::BTreeMap<
+    u64,
+    (
+        Option<flexion::Marks<'static>>,
+        Option<flexion::Marks<'static>>,
+    ),
+>;
+
 /// `try` on one tenth (`o.fold`), its outcomes added to `saved`.
 fn try_tenth(
     lang: &Language,
@@ -484,6 +497,7 @@ fn try_tenth(
     only: Option<&str>,
     o: &TryOptions,
     saved: &mut outcomes::Saved,
+    models: &mut Marks,
 ) -> Result<(), String> {
     let fold = o.fold;
     let settings = o.settings;
@@ -499,7 +513,26 @@ fn try_tenth(
     let marks = |keep: &dyn Fn(&Lexeme) -> bool| {
         flexion_train::marks(lang, &script.orthography(), data, keep, settings)
     };
-    let train_marks = marks(&trained)?;
+    let (train_marks, fit_marks) = match models.get(&fold) {
+        Some(m) => m.clone(),
+        None => {
+            let train_marks = marks(&trained)?;
+            if let Some(m) = &train_marks {
+                println!(
+                    "  marks: {} rules, {} roots",
+                    m.rules.rules.len(),
+                    m.roots.len()
+                );
+            }
+            let fit_marks = if o.quick {
+                None
+            } else {
+                marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
+            };
+            models.insert(fold, (train_marks.clone(), fit_marks.clone()));
+            (train_marks, fit_marks)
+        }
+    };
     if o.diagnose && train_marks.is_some() {
         length(
             lang,
@@ -512,11 +545,6 @@ fn try_tenth(
             settings,
         );
     }
-    let fit_marks = if o.quick {
-        None
-    } else {
-        marks(&|l| trained(l) && eval::bucket(&l.key) != dev)?
-    };
     for (part, d) in lang.parts.iter().zip(data) {
         if only.is_some_and(|o| o != part.name) {
             continue;
@@ -524,6 +552,17 @@ fn try_tenth(
         let mut shape = flexion_train::shape(lang, part)?;
         let names = cell_names(lang, part)?;
         let mut train = training(d, o, shape.lemma_cell);
+        let taught = flexion_train::teachers(lang, part, data, |l| {
+            eval::bucket(&l.key) != o.fold && (!o.main_only || l.source == 0)
+        });
+        if !taught.is_empty() {
+            println!(
+                "  learning from {} words of {} too",
+                taught.len(),
+                part.learns_from.unwrap_or_default()
+            );
+            train.extend(taught.into_iter().cloned());
+        }
         if o.share < 100 || o.thin > 0 {
             println!(
                 "  training on {}% of the words ({}), {}% of each table's cells taken out",
@@ -606,6 +645,19 @@ fn try_tenth(
             st.irregular_forms,
         );
         println!("  stages: {}", learned.trace.line());
+        let j = &learn::judge(g, &train, &shape.parts);
+        let pct = |n: usize| 100.0 * n as f64 / j.forms.max(1) as f64;
+        println!(
+            "  the dictionary's words through the runtime ({} words, {} forms): wrong from the headword {:.2}%, in full {:.2}%, given the principal parts {:.2}%; {} broken by the given parts{}{}",
+            j.words,
+            j.forms,
+            pct(j.headword),
+            pct(j.full),
+            pct(j.given),
+            j.broken,
+            if j.examples.is_empty() { "" } else { ": " },
+            j.examples.join("; ")
+        );
         let bytes = flexion_train::print::part_bytes(lang, part, &learned)?;
         let total: usize = bytes.iter().map(|b| b.1).sum();
         let shown: Vec<String> = bytes.iter().map(|(f, n)| format!("{f} {n}")).collect();
@@ -863,6 +915,12 @@ fn try_tenth(
         if !o.quick || o.given {
             inputs.extend((1..=3).map(eval::Input::Given));
         }
+        let cells = flexion_train::cells::Cells::new(lang, part)?;
+        let blocks: Vec<std::ops::Range<usize>> = cells
+            .groups
+            .iter()
+            .map(|g| g.offset..g.offset + g.len())
+            .collect();
         let ids = outcomes::word_ids(&test);
         let on = flexion_train::pipeline::on_training(&train, g, &test);
         let groups = outcomes::groups(&test, &on);
@@ -883,6 +941,22 @@ fn try_tenth(
                 "{}",
                 score_line(&format!("held-out {input:?}"), s.words, &s)
             );
+            println!("    errors: {}", s.census());
+            if blocks.len() > 1 {
+                let (mean, scores) = eval::by_block(&out, &blocks);
+                let each: Vec<String> = cells
+                    .groups
+                    .iter()
+                    .zip(&scores)
+                    .filter(|(_, s)| s.forms > 0)
+                    .map(|(g, s)| format!("{} {:.2}% ({})", g.name, 100.0 * s.accuracy(), s.forms))
+                    .collect();
+                println!(
+                    "    by block: mean {:.2}%; {}",
+                    100.0 * mean,
+                    each.join(", ")
+                );
+            }
             let bins: Vec<String> = s
                 .bins
                 .iter()
@@ -960,10 +1034,14 @@ fn try_tenth(
             eval::Input::Headword,
             &learned.seen,
         );
+        let (all, filled, gaps) = eval::completion(g, &train_refs);
         println!(
-            "  attested (sample of {}): top-1 {:.2}%",
+            "  attested (sample of {}): top-1 {:.2}%; every cell (the dictionary's or not) has a form in {filled} of {all}, {} gaps{}{}",
             train_refs.len(),
-            100.0 * s.accuracy()
+            100.0 * s.accuracy(),
+            all - filled,
+            if gaps.is_empty() { "" } else { ": " },
+            gaps.join(", ")
         );
         // What the runtime reads of the relations, unchanged by pruning the
         // rest: the same words' every answer with the relations whole.
@@ -1546,10 +1624,6 @@ fn inspect(
     if let Some(words) = word {
         for word in words.split(',') {
             println!("{word}");
-            let bare = flexion::Grammar {
-                irregular: flexion::Irregular::default(),
-                ..g.clone()
-            };
             let key = script
                 .orthography()
                 .key(&script.orthography().read(word).letters);
@@ -1560,7 +1634,8 @@ fn inspect(
                 .map(|l| format!("{:?}", l.cells))
                 .collect();
             println!("dictionary: {listed:?}");
-            // With `--parts`: the dictionary's principal parts given too.
+            // The first entry spelled so is the one scored; with `--parts`,
+            // its principal parts are given too.
             let entry = d.lexemes.iter().find(|l| l.key == key);
             let parts = if given {
                 flexion_train::parts(lang, part)?
@@ -1571,12 +1646,18 @@ fn inspect(
                 .iter()
                 .filter_map(|&c| Some((c, entry?.cells.get(c)?.first()?.as_str())))
                 .collect();
-            let typed = entry.filter(|_| given).map_or(word, |l| l.full.as_str());
-            let known = flexion::Known {
-                forms: &forms,
-                full: given,
-                ..flexion::Known::default()
-            };
+            let names = cell_names(lang, part)?;
+            let headword = entry.map_or(word, |l| l.lemma.as_str());
+            let full = entry.map_or(word, |l| l.full.as_str());
+            println!(
+                "entry: headword {headword}, in full {full}, held out {}; given: {}",
+                entry.is_some_and(|l| !kept(l)),
+                forms
+                    .iter()
+                    .map(|(c, f)| format!("{} {f}", names.get(*c).map_or("?", String::as_str)))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
             println!(
                 "paradigm readings: {:?}",
                 g.paradigm
@@ -1615,25 +1696,63 @@ fn inspect(
                     );
                 }
             }
-            let names = cell_names(lang, part)?;
-            // Given its principal parts, the whole table as `try` scores it.
-            let table = if given {
-                g.table(typed, &known)
-            } else {
-                Vec::new()
+            // Both tables as `try` scores them: from the headword, and with
+            // the principal parts given (typed in full).
+            let from_headword = g.table(headword, &flexion::Known::default());
+            let known = flexion::Known {
+                forms: &forms,
+                full: true,
+                ..flexion::Known::default()
             };
+            let with_parts = given.then(|| g.table(full, &known));
+            let o = &g.orthography;
             for cell in 0..g.cells {
-                let c: Vec<String> = match table.get(cell) {
-                    Some(forms) => forms.iter().take(3).map(ToString::to_string).collect(),
-                    None => bare
-                        .candidates(typed, cell, &known)
-                        .iter()
-                        .take(3)
-                        .map(ToString::to_string)
-                        .collect(),
+                let gold: &[String] = entry
+                    .and_then(|l| l.cells.get(cell))
+                    .map_or(&[], Vec::as_slice);
+                let mark = |table: &[Vec<flexion::Candidate<'_>>]| {
+                    let top = table.get(cell).and_then(|c| c.first());
+                    let verdict = eval::verdict(o, top.map(|t| t.form.as_str()), gold);
+                    let shown: Vec<String> = table
+                        .get(cell)
+                        .map(|c| c.iter().take(3).map(ToString::to_string).collect())
+                        .unwrap_or_default();
+                    format!("[{verdict:?}] {}", shown.join(" | "))
                 };
                 let name = names.get(cell).map_or("", String::as_str);
-                println!("cell {cell} ({name}): {}", c.join(" | "));
+                println!("cell {cell} ({name}): dictionary {gold:?}");
+                println!("    from the headword {}", mark(&from_headword));
+                // A gap: the way the likeliest paradigm would build the cell.
+                if from_headword.get(cell).is_none_or(Vec::is_empty) {
+                    let paradigm = g
+                        .readings(headword, &flexion::Known::default())
+                        .first()
+                        .and_then(|r| g.paradigms.get(usize::from(r.value)));
+                    let mut chain = Vec::new();
+                    let mut c = cell;
+                    for _ in 0..6 {
+                        let own = paradigm.and_then(|p| p.own(c));
+                        let relation = g.relation(c);
+                        chain.push(format!(
+                            "{c} {own:?} {}",
+                            relation.map_or("no relation".to_string(), |r| format!(
+                                "from {:?}{}",
+                                r.from,
+                                if r.listed { " (listed)" } else { "" }
+                            ))
+                        ));
+                        match relation.and_then(flexion::Relation::source) {
+                            Some(from) if !matches!(own, Some(flexion::Form::Pattern(_))) => {
+                                c = from;
+                            }
+                            _ => break,
+                        }
+                    }
+                    println!("    gap: {}", chain.join("; "));
+                }
+                if let Some(t) = &with_parts {
+                    println!("    principal parts given {}", mark(t));
+                }
             }
         }
         return Ok(());

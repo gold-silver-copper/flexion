@@ -14,7 +14,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the declension it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem rest: \"~s- like purkaminen\"`: the slot's cells are `purkaminen`'s table's patterns
+/// (`stem noun_gen_sg: \"~s- like purkaminen\"`: the slot's cells are `purkaminen`'s table's patterns
 /// with `~s` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the declension's it is
@@ -64,8 +64,8 @@ use flexion::Paradigm;
 macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
-     $(stem rest: $s1:tt;)?
-     $(stem rest_: $s2:tt;)?
+     $(stem noun_gen_sg: $s1:tt;)?
+     $(stem noun_par_pl: $s2:tt;)?
      $(nom: $c0:tt, $c1:tt;)?
      $(gen_: $c2:tt, $c3:tt;)?
      $(par: $c4:tt, $c5:tt;)?
@@ -662,8 +662,8 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Purkaminen: 733 words (nainen, suomalainen, valkoinen, punainen, hevonen, lautanen).
     declension!("purkaminen", 733, "~nen";
-    stem rest: "~s- like purkaminen";
-    stem rest_: "~s- like purkaminen";
+    stem noun_gen_sg: "~s- like purkaminen";
+    stem noun_par_pl: "~s- like purkaminen";
     nom: "~nen", _;
     par: "~stA", _;
     possessive_nom_pl: derived, _, _, _, derived;
@@ -673,7 +673,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Taso: 603 words (baby, tempo, indigo, sombrero, ajo, dodo). Like Purkaminen, except in 47 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("taso", 603, "~", like Purkaminen;
     stem lemma: "~- like taso";
-    stem rest_: "~- like taso";
+    stem noun_par_pl: "~- like taso";
     nom: _, "~t";
     ine: "~ssA", "~issA";
     ela: "~stA", "~istA";
@@ -707,7 +707,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Tunnus: 500 words (genus, ape, atlas, opus, kehys, tytär).
     declension!("tunnus", 500, "~~";
     stem lemma: "~~- like tunnus";
-    stem rest: "~k~- like purkaminen";
+    stem noun_gen_sg: "~k~- like purkaminen";
     gen_: _, "~~ten|~k~ien";
     par: _, "~k~iA";
     ill: _, "~k~iin";
@@ -794,8 +794,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Sarja: 311 words (lama, salsa, matka, kara, sana, gamma). Like Osa, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("sarja", 311, "~a", like Osa;
-    stem rest: "~- like sarja";
-    stem rest_: "~o- like sarja";
+    stem noun_gen_sg: "~- like sarja";
+    stem noun_par_pl: "~o- like sarja";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
@@ -814,7 +814,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Oikeus: 193 words (nopeus, tilavuus, pituus, hiljaisuus, vinous, avaruus). Like Taso, except in 47 cells: nom sg, nom pl, par sg, ine sg, ine pl, ela sg, ….
     declension!("oikeus", 193, "~s", like Taso;
-    stem rest_: "~ksi- like oikeus";
+    stem noun_par_pl: "~ksi- like oikeus";
     nom: "~s", "~det";
     par: "~tTA", _;
     ine: "~dessA", "~ksissA";
@@ -849,19 +849,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Erä: 170 words (päivä, pitkä, isä, kynä, vihreä, kesä). Like Osa, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("erä", 170, "~ä", like Osa;
     stem lemma: "~ä- like osa";
-    stem rest: "~- like erä";
-    stem rest_: "~i- like erä";
+    stem noun_gen_sg: "~- like erä";
+    stem noun_par_pl: "~i- like erä";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Nappula: 161 words (tortilla, harmonia, porkkana, ikkuna, gemena, vasara). Like Sarja.
     declension!("nappula", 161, "~a", like Sarja;
-    stem rest_: "~oi- like nappula";
+    stem noun_par_pl: "~oi- like nappula";
     ),
     // Keri: 121 words (keksi, peili, väri, seksi, peli, viini). Like Pari, except in 6 cells: par sg, possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3, possessive_par_sg _3.
     declension!("keri", 121, "~i", like Pari;
-    stem rest: "~- like keri";
-    stem rest_: "~- like keri";
+    stem noun_gen_sg: "~- like keri";
+    stem noun_par_pl: "~- like keri";
     par: "~iä", _;
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
@@ -870,15 +870,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Aste: 111 words (kale, tietokone, purse, sane, huone, aave). Like Taso, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("aste", 111, "~", like Taso;
     stem lemma: "~- like aste";
-    stem rest: "~- like aste";
-    stem rest_: "~i- like aste";
+    stem noun_gen_sg: "~- like aste";
+    stem noun_par_pl: "~i- like aste";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Konversio: 107 words (radio, valtio, tau, video, olio, sikiö). Like Taso, except in 7 cells: possessive_ine_pl _3, possessive_ela_pl _3, possessive_ade_pl _3, possessive_abl_pl _3, possessive_all_pl _3, possessive_tra_pl _3, ….
     declension!("konversio", 107, "~", like Taso;
     stem lemma: "~- like tunnus";
-    stem rest_: "~- like konversio";
+    stem noun_par_pl: "~- like konversio";
     possessive_ine_pl: _, _, _, _, "~issAVn|~ÄssAnsV";
     possessive_ela_pl: _, _, _, _, "~istAVn|~ÄstAnsV";
     possessive_ade_pl: _, _, _, _, "~illAVn|~ÄllAnsV";
@@ -901,15 +901,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Piste: 56 words (sine, piste, herne, hie, este, neste). Like Erä, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("piste", 56, "~", like Erä;
     stem lemma: "~- like piste";
-    stem rest: "~- like piste";
-    stem rest_: "~i- like piste";
+    stem noun_gen_sg: "~- like piste";
+    stem noun_par_pl: "~i- like piste";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Silmukka: 52 words (lusikka, haarukka, harakka, mustikka, puolukka, tupakka). Like Sarja, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
     declension!("silmukka", 52, "~ka", like Sarja;
     stem lemma: "~ka- like osa";
-    stem rest_: "~- like silmukka";
+    stem noun_par_pl: "~- like silmukka";
     ill: "~kaVn", _;
     ess: "~kanV", _;
     possessive_nom_sg: "~kani", _, _, _, "~kansV";
@@ -921,8 +921,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Avain: 46 words (puhelin, kasvain, valaisin, morsian, avain, vahvistin). Like Purkaminen, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("avain", 46, "~n", like Purkaminen;
     stem lemma: "~n- like tunnus";
-    stem rest: "~m- like avain";
-    stem rest_: "~- like avain";
+    stem noun_gen_sg: "~m- like avain";
+    stem noun_par_pl: "~- like avain";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
@@ -988,7 +988,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Tekijä: 31 words (päärynä, ympyrä, pähkinä, tekijä, kylpylä, näsiä). Like Erä, except in 19 cells: ine pl, ela pl, ade pl, abl pl, all pl, abe pl, ….
     declension!("tekijä", 31, "~ä", like Erä;
-    stem rest_: "~öi- like nappula";
+    stem noun_par_pl: "~öi- like nappula";
     ine: _, "~öissA";
     ela: _, "~öistA";
     ade: _, "~öillA";
@@ -1083,7 +1083,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Osoitin: 25 words (ääretön, nimetön, tuntematon, viivoitin, osoitin, soitin). Like Tunnus, except in 21 cells: gen_ pl, par pl, ill pl, ess pl, possessive_nom_pl _1sg, possessive_nom_pl _3, ….
     declension!("osoitin", 25, "~~n", like Tunnus;
     stem lemma: "~~n- like tunnus";
-    stem rest: "~t~m- like avain";
+    stem noun_gen_sg: "~t~m- like avain";
     gen_: _, "~t~mVen|~~nTen";
     par: _, "~t~mVA";
     ill: _, "~t~miin";
@@ -1099,16 +1099,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Kate: 23 words (ote, kate, aate, vaate, uute, toimintaperiaate). Like Tunnus, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("kate", 23, "~~", like Tunnus;
     stem lemma: "~~- like aste";
-    stem rest: "~t~- like kate";
-    stem rest_: "~t~i- like kate";
+    stem noun_gen_sg: "~t~- like kate";
+    stem noun_par_pl: "~t~i- like kate";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Liike: 21 words (rike, säie, pyyhe, liike, ärsyke, levyke). Like Tunnus, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("liike", 21, "~~", like Tunnus;
     stem lemma: "~~- like piste";
-    stem rest: "~k~- like liike";
-    stem rest_: "~k~i- like liike";
+    stem noun_gen_sg: "~k~- like liike";
+    stem noun_par_pl: "~k~i- like liike";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
@@ -1124,7 +1124,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Kytkin: 18 words (sydän, elin, eläin, kavioeläin, pistin, koiraeläin). Like Avain.
     declension!("kytkin", 18, "~n", like Avain;
-    stem rest_: "~- like kytkin";
+    stem noun_par_pl: "~- like kytkin";
     ),
     // Puu: 17 words (luu, kuu, suu, puu, puolikuu, havupuu). Like Aste with `` after each pattern (`u` after ~), except in 33 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
     declension!("puu", 17, "~u", like Aste with "", "u" after "~";
@@ -1155,15 +1155,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Etumies: 17 words (mies, luottamusmies, jousimies, sotamies, pursimies, perämies). Like Oikeus, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("etumies", 17, "~s", like Oikeus;
     stem lemma: "~s- like etumies";
-    stem rest: "~h- like etumies";
-    stem rest_: "~- like etumies";
+    stem noun_gen_sg: "~h- like etumies";
+    stem noun_par_pl: "~- like etumies";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Luku: 17 words (suku, puku, luku, alkuluku, kyky, oikoluku). Like Tunnus, except in 47 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("luku", 17, "~k~", like Tunnus;
     stem lemma: "~k~- like taso";
-    stem rest_: "~k~- like taso";
+    stem noun_par_pl: "~k~- like taso";
     nom: _, "~v~t";
     ine: "~v~ssA", "~v~issA";
     ela: "~v~stA", "~v~istA";
@@ -1196,7 +1196,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Käsi: 17 words (vesi, käsi, mesi, hiisi, hirsi, reisi). Like Kausi, except in 35 cells: par sg, ine sg, ine pl, ela sg, ela pl, ade sg, ….
     declension!("käsi", 17, "~si", like Kausi;
-    stem rest_: "~si- like erä";
+    stem noun_par_pl: "~si- like erä";
     par: "~tTä", _;
     ine: "~dessä", "~sissä";
     ela: "~destä", "~sistä";
@@ -1226,8 +1226,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Peite: 16 words (jännite, hete, heikkojännite, viite, liite, väite). Like Kate, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("peite", 16, "~~", like Kate;
     stem lemma: "~~- like piste";
-    stem rest: "~t~- like liike";
-    stem rest_: "~t~i- like liike";
+    stem noun_gen_sg: "~t~- like liike";
+    stem noun_par_pl: "~t~i- like liike";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
@@ -1247,7 +1247,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Istukas: 15 words (ies, ruis, asiakas, osterivinokas, ehdokas, sokerijuurikas). Like Tunnus, except in 32 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
     declension!("istukas", 15, "~~s", like Tunnus;
     stem lemma: "~~s- like tunnus";
-    stem rest_: "~k~i- like ruis";
+    stem noun_par_pl: "~k~i- like ruis";
     nom: _, "~k~Vt";
     ine: "~k~VssV", _;
     ela: "~k~VstV", _;
@@ -1279,7 +1279,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Lehti: 14 words (tähti, aamutähti, käärmetähti, lehti, vyyhti, iltatähti). Like Käsi, except in 19 cells: ine pl, ela pl, ade pl, abl pl, all pl, abe pl, ….
     declension!("lehti", 14, "~ti", like Käsi;
     stem lemma: "~t- like kivi";
-    stem rest_: "~ti- like erä";
+    stem noun_par_pl: "~ti- like erä";
     ine: _, "~dissä";
     ela: _, "~distä";
     ade: _, "~dillä";
@@ -1321,7 +1321,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Aika: 13 words (aika, vuodenaika, kesäaika, talviaika, keskiaika, kiertoaika). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("aika", 13, "~ika", like Taso;
     stem lemma: "~ika- like aika";
-    stem rest_: "~iko- like aika";
+    stem noun_par_pl: "~iko- like aika";
     nom: _, "~jVt";
     ine: "~jVssV", "~joissa";
     ela: "~jVstV", "~joista";
@@ -1381,7 +1381,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Siemen: 12 words (siemen, ahven, nivel, paimen, jäsen, höyhen). Like Aste, except in 5 cells: ill sg, possessive_ill_sg _3, possessive_ill_pl _2sg, possessive_ill_pl _1pl, possessive_ill_pl _2pl.
     declension!("siemen", 12, "~", like Aste;
     stem lemma: "~- like tunnus";
-    stem rest_: "~- like siemen";
+    stem noun_par_pl: "~- like siemen";
     ill: "~VVn", _;
     possessive_ill_sg: _, _, _, _, "~VVnsA";
     possessive_ill_pl: _, derived, derived, derived, _;
@@ -1421,14 +1421,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Koi: 11 words (tie, thai, pii, vuo, koi, täi). Like Konversio, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("koi", 11, "~", like Konversio;
-    stem rest: "~- like koi";
-    stem rest_: "~- like koi";
+    stem noun_gen_sg: "~- like koi";
+    stem noun_par_pl: "~- like koi";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Hattara: 10 words (granaattiomena, maruna, ohrana, harava, korona, hattara). Like Osa, except in 43 cells: ine pl, ela pl, ade pl, abl pl, all pl, tra pl, ….
     declension!("hattara", 10, "~a", like Osa;
-    stem rest_: "~- like hattara";
+    stem noun_par_pl: "~- like hattara";
     ine: _, "~oissA|~issA";
     ela: _, "~oistA|~istA";
     ade: _, "~oillA|~illA";
@@ -1448,7 +1448,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Perintä: 10 words (yhdyntä, kysyntä, itsehillintä, hyväksyntä, häirintä, liitäntä). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("perintä", 10, "~tä", like Taso;
     stem lemma: "~tä- like osa";
-    stem rest_: "~tö- like taso";
+    stem noun_par_pl: "~tö- like taso";
     nom: _, "~nAt";
     ine: "~nAssV", "~nöissA";
     ela: "~nAstV", "~nöistA";
@@ -1537,7 +1537,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Työ: 9 words (vyö, työ, keskiyö, lapsityö, käsityö, päivätyö). Like Verkko, except in 28 cells: nom sg, nom pl, par sg, ine sg, ela sg, ill sg, ….
     declension!("työ", 9, "~y~", like Verkko;
-    stem rest_: "~~i- like työ";
+    stem noun_par_pl: "~~i- like työ";
     nom: "~y~", "~y~t";
     par: "~y~tä", _;
     ine: "~y~ssä", _;
@@ -1696,15 +1696,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Kuve: 8 words (rove, leve, helve, tarve, taive, lieve). Like Tunnus, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("kuve", 8, "~v~", like Tunnus;
     stem lemma: "~v~- like aste";
-    stem rest: "~p~- like kate";
-    stem rest_: "~p~i- like kate";
+    stem noun_gen_sg: "~p~- like kate";
+    stem noun_par_pl: "~p~i- like kate";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
     // Siipi: 8 words (siipi, korpi, kilpi, rupi, läpi, koipi). Like Taso, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("siipi", 8, "~pi", like Taso;
     stem lemma: "~p- like parvi";
-    stem rest_: "~pi- like osa";
+    stem noun_par_pl: "~pi- like osa";
     nom: _, "~vet";
     ine: "~vessA", "~vissA";
     ela: "~vestA", "~vistA";
@@ -1772,7 +1772,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Veto: 6 words (vety, lyhty, hyöty, yty, sääty, pääty). Like Luku, except in 44 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("veto", 6, "~t~", like Luku;
     stem lemma: "~t~- like taso";
-    stem rest_: "~t~- like taso";
+    stem noun_par_pl: "~t~- like taso";
     nom: _, "~d~t";
     ine: "~d~ssA", "~d~issA";
     ela: "~d~stA", "~d~istA";
@@ -1805,7 +1805,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Kupu: 6 words (riepu, hepo, virtahepo, käpy, häpy, ropo). Like Luku, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
     declension!("kupu", 6, "~p~", like Luku;
     stem lemma: "~p~- like taso";
-    stem rest_: "~p~- like taso";
+    stem noun_par_pl: "~p~- like taso";
     ill: "~p~Vn", _;
     ess: "~p~nA", _;
     possessive_nom_sg: "~p~ni", _, _, _, "~p~nsA";
@@ -1927,7 +1927,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Lippu: 5 words (ryyppy, hyppy, ryöppy, syrjähyppy, nyppy). Like Verkko, except in 12 cells: ill sg, ess sg, possessive_nom_sg _1sg, possessive_nom_sg _3, possessive_nom_pl _2sg, possessive_nom_pl _1pl, ….
     declension!("lippu", 5, "~p~", like Verkko;
     stem lemma: "~p~- like taso";
-    stem rest_: "~p~- like taso";
+    stem noun_par_pl: "~p~- like taso";
     ill: "~p~Vn", _;
     ess: "~p~nA", _;
     possessive_nom_sg: "~p~ni", _, _, _, "~p~nsA";
@@ -1939,8 +1939,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Koe: 5 words (koe, rae, eläinkoe, jae, hajukoe). Like Tunnus, except in 4 cells: possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3.
     declension!("koe", 5, "~~", like Tunnus;
     stem lemma: "~~- like aste";
-    stem rest: "~k~- like kate";
-    stem rest_: "~k~i- like kate";
+    stem noun_gen_sg: "~k~- like kate";
+    stem noun_par_pl: "~k~i- like kate";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
     ),
@@ -1977,8 +1977,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Askel: 5 words (sammal, askel, lehtisammal, kivisammal, harmosammal).
     declension!("askel", 5, "~";
-    stem rest: "~- like askel";
-    stem rest_: "~- like askel";
+    stem noun_gen_sg: "~- like askel";
+    stem noun_par_pl: "~- like askel";
     nom: "~|~e", _;
     par: "~tA|~etta", _;
     possessive_nom_pl: _, _, _, _, derived;
@@ -2038,7 +2038,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Paikka: 4 words (jalka, taka, nahka, oravannahka). Like Silmukka, except in 14 cells: ins sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_pl _2sg, possessive_par_pl _1pl, ….
     declension!("paikka", 4, "~ka", like Silmukka;
-    stem rest_: "~ko- like taso";
+    stem noun_par_pl: "~ko- like taso";
     ins: "~an", _;
     possessive_gen_pl: _, derived, derived, derived, _;
     possessive_par_pl: _, derived, derived, derived, _;
@@ -2074,7 +2074,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Poika: 4 words (poika, talonpoika, rattopoika, sulhaspoika). Like Kärki, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
     declension!("poika", 4, "~ika", like Kärki;
     stem lemma: "~ika- like aika";
-    stem rest_: "~ik- like poika";
+    stem noun_par_pl: "~ik- like poika";
     nom: _, "~jAt";
     ine: "~jAssV", _;
     ela: "~jAstV", _;
@@ -2126,7 +2126,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Ydin: 4 words (ydin, säädin, vedin, ulosvedin). Like Osoitin, except in 18 cells: gen_ pl, par pl, ess pl, possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, ….
     declension!("ydin", 4, "~d~n", like Osoitin;
     stem lemma: "~d~n- like etumies";
-    stem rest: "~t~m- like ydin";
+    stem noun_gen_sg: "~t~m- like ydin";
     gen_: _, "~t~mVen|~d~nten";
     par: _, "~t~mVä";
     ess: _, "~t~minä";
@@ -2153,7 +2153,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Rättänä: 4 words (äpärä, käpälä, kissankäpälä, rättänä). Like Erä, except in 43 cells: ine pl, ela pl, ade pl, abl pl, all pl, tra pl, ….
     declension!("rättänä", 4, "~ä", like Erä;
-    stem rest_: "~- like rättänä";
+    stem noun_par_pl: "~- like rättänä";
     ine: _, "~öissA|~issA";
     ela: _, "~öistA|~istA";
     ade: _, "~öillA|~illA";
@@ -2226,7 +2226,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Vehje: 4 words (hylje, vehje, sulje, rahje). Like Koe, except in 24 cells: possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_pl _3, possessive_ine_sg _3, possessive_ine_pl _3, ….
     declension!("vehje", 4, "~j~", like Koe;
     stem lemma: "~j~- like aste";
-    stem rest_: "~k~i- like vehje";
+    stem noun_par_pl: "~k~i- like vehje";
     possessive_gen_pl: _, derived, derived, derived, _;
     possessive_par_pl: _, _, _, _, derived;
     possessive_ine_sg: _, _, _, _, derived;
@@ -2278,7 +2278,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Leipä: 3 words (syöpä, verisyöpä, sepä). Like Siipi, except in 42 cells: nom pl, ine sg, ine pl, ela sg, ela pl, ill sg, ….
     declension!("leipä", 3, "~pä", like Siipi;
     stem lemma: "~pä- like osa";
-    stem rest_: "~pi- like erä";
+    stem noun_par_pl: "~pi- like erä";
     nom: _, "~vät";
     ine: "~vässV", "~vissä";
     ela: "~västV", "~vistä";
@@ -2368,7 +2368,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     ),
     // Komme: 3 words (komme, lumme, ommel). Like Kuve, except in 27 cells: nom sg, par sg, possessive_gen_pl _2sg, possessive_gen_pl _1pl, possessive_gen_pl _2pl, possessive_par_sg _3, ….
     declension!("komme", 3, "~m~", like Kuve;
-    stem rest_: "~p~i- like vehje";
+    stem noun_par_pl: "~p~i- like vehje";
     nom: "~m~", _;
     par: "~m~tta", _;
     possessive_gen_pl: _, derived, derived, derived, _;
@@ -2422,7 +2422,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Opas: 3 words (opas, lipas, matkaopas). Like Hammas, except in 13 cells: par pl, ess pl, possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3, ….
     declension!("opas", 3, "~~s", like Hammas;
     stem lemma: "~~s- like tarvas";
-    stem rest: "~p~- like opas";
+    stem noun_gen_sg: "~p~- like opas";
     par: _, "~p~ita";
     ess: _, "~p~ina";
     possessive_nom_pl: derived, _, _, _, derived;
@@ -2473,7 +2473,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Ahdin: 3 words (kudin, johdin, ahdin). Like Osoitin, except in 10 cells: gen_ pl, possessive_nom_pl _1sg, possessive_nom_pl _3, possessive_gen_sg _1sg, possessive_gen_sg _3, possessive_gen_pl _1sg, ….
     declension!("ahdin", 3, "~d~n", like Osoitin;
     stem lemma: "~d~n- like tunnus";
-    stem rest: "~t~m- like purkaminen";
+    stem noun_gen_sg: "~t~m- like purkaminen";
     gen_: _, "~t~mVen|~d~nten";
     possessive_nom_pl: derived, _, _, _, derived;
     possessive_gen_sg: derived, _, _, _, derived;
@@ -2482,7 +2482,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 100] = [
     // Hässäkkä: 3 words (lehdykkä, hässäkkä, räpäkkä). Like Tekijä, except in 25 cells: nom pl, ine sg, ela sg, ill sg, ade sg, abl sg, ….
     declension!("hässäkkä", 3, "~kä", like Tekijä;
     stem lemma: "~kä- like osa";
-    stem rest_: "~- like hässäkkä";
+    stem noun_par_pl: "~- like hässäkkä";
     nom: _, "~At";
     ine: "~AssV", _;
     ela: "~AstV", _;

@@ -7,12 +7,13 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 638 stems, 126 forms.
+/// 642 stems, 149 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aast	pl	äster- like lager
 abbruchstein	pl	abbruchsteine- like lager
 abendmagazin	pl	abendmagazine- like lager
+abi	5	abis
 abrin	pl	abrine- like lager
 abscisin	pl	abscisine- like lager
 abszisin	pl	abszisine- like lager
@@ -38,6 +39,7 @@ alanin	pl	alanine- like lager
 alaunstein	pl	alaunsteine- like lager
 albumin	pl	albumine- like lager
 alexin	pl	alexine- like lager
+alibi	5	alibis
 aliud	pl	alia- like platte
 alkin	pl	alkine- like lager
 almandin	pl	almandine- like lager
@@ -82,6 +84,7 @@ auxin	pl	auxine- like lager
 aventurin	pl	aventurine- like lager
 axt	2	axt
 azin	pl	azine- like lager
+azubi	5	azubis
 azymon	2	azymon
 bachelor	5	bachelorn
 backstein	pl	backsteine- like lager
@@ -92,6 +95,7 @@ bakteriolysin	pl	bakteriolysine- like lager
 baldachin	pl	baldachine- like lager
 ballerina	pl	ballerinen- like platte
 balley	pl	balleyen- like platte
+bambi	5	bambis
 bambushain	pl	bambushaine- like lager
 bamia	pl	bamien- like platte
 bananenhain	pl	bananenhaine- like lager
@@ -115,6 +119,7 @@ betondamm	5	betondämme	7	betondämmen
 betonstein	pl	betonsteine- like lager
 beutelbuch	4	beutelbuche
 bey	pl	beye- like lager
+bhikschu	5	bhikschus
 bibliotheksmagazin	pl	bibliotheksmagazine- like lager
 bigfoot	pl	bigfeet- like platte
 billigwein	pl	billigweine- like lager
@@ -135,6 +140,7 @@ brauneisenstein	pl	brauneisensteine- like lager
 braunstein	pl	braunsteine- like lager
 brač	pl	bračevi- like platte
 bruchstein	pl	bruchsteine- like lager
+bubi	5	bubis
 buchenhain	pl	buchenhaine- like lager
 bullenschwein	pl	bullenschweine- like lager
 buschschwein	pl	buschschweine- like lager
@@ -179,6 +185,7 @@ dattelwein	pl	dattelweine- like lager
 deckstein	pl	decksteine- like lager
 delfin	pl	delfine- like lager
 delphin	pl	delphine- like lager
+design	5	designs
 dexiosis	pl	dexioseis- like platte
 dextrin	pl	dextrine- like lager
 dibenzodioxin	pl	dibenzodioxine- like lager
@@ -291,6 +298,7 @@ grundstein	pl	grundsteine- like lager
 grunzschwein	pl	grunzschweine- like lager
 gutschein	pl	gutscheine- like lager
 habenichts	pl	habenichtse- like lager
+habibi	5	habibis
 hain	pl	haine- like lager
 halbedelstein	pl	halbedelsteine- like lager
 halsbandfrankolin	pl	halsbandfrankoline- like lager
@@ -311,6 +319,7 @@ hohlblockstein	pl	hohlblocksteine- like lager
 hondsschwanz	2	hondsschwanzes
 hook	2	hookes
 hornstein	pl	hornsteine- like lager
+hottehü	5	hottehüs
 hrywnja	pl	hrywni- like platte
 hungerstein	pl	hungersteine- like lager
 hydrazin	pl	hydrazine- like lager
@@ -325,6 +334,7 @@ inquilin	pl	inquilinen- like platte	sg	inquiline- like hausgenosse	0	inquilin
 intrusivgestein	pl	intrusivgesteine- like lager
 inuk	pl	inuit- like platte
 iodthyronin	pl	iodthyronine- like lager
+jalebi	pl	jalebis- like platte
 jasmin	pl	jasmine- like lager
 jugendmagazin	pl	jugendmagazine- like lager
 kadaverin	pl	kadaverine- like lager
@@ -354,7 +364,9 @@ kirmes	pl	kirmessen- like platte
 klatschmagazin	pl	klatschmagazine- like lager
 klumpenrisiko	pl	klumpenrisikoe- like lager
 kodex	2	kodexes
+kohlrabi	5	kohlrabis
 koine	pl	koinai- like platte
+kombi	5	kombis
 koog	2	koogs
 kopfstein	pl	kopfsteine- like lager
 kothsaß	sg	kothsass- like pilot	0	kothsaß
@@ -415,10 +427,12 @@ meilenstein	pl	meilensteine- like lager
 melanin	pl	melanine- like lager
 melanopsin	pl	melanopsine- like lager
 meningitis	pl	meningitden- like platte
+menü	5	menüs
 merlin	pl	merline- like lager
 messalina	pl	messalinen- like platte
 metallothionein	pl	metallothioneine- like lager
 mezzanin	pl	mezzanine- like lager
+milchbubi	5	milchbubis
 miß	1	misses	3	misses	5	misses	7	misses
 modemagazin	pl	modemagazine- like lager
 mohel	pl	mohalim- like platte
@@ -455,6 +469,7 @@ nudistenmagazin	pl	nudistenmagazine- like lager
 nullmeilenstein	pl	nullmeilensteine- like lager
 o-bein	5	o-beinen
 obazda	sg	obazd- like pilot	0	obazda
+obi	pl	obis- like platte
 obstbaumhain	pl	obstbaumhaine- like lager
 obsthain	pl	obsthaine- like lager
 ofen	pl	öfen- like platte
@@ -486,6 +501,7 @@ pankreas	pl	pankreaten- like platte
 panz	2	panz
 pappelhain	pl	pappelhaine- like lager
 paraffin	pl	paraffine- like lager
+parvenü	5	parvenüs
 patronenmagazin	pl	patronenmagazine- like lager
 pechölstein	pl	pechölsteine- like lager
 pein	pl	peinen- like platte
@@ -543,6 +559,7 @@ pyrrhotin	pl	pyrrhotine- like lager
 qark	pl	qarqe- like lager
 qindar	pl	qindarka- like platte
 quaderstein	pl	quadersteine- like lager
+rabbi	5	rabbis
 radix	pl	radizes- like platte
 rah	pl	rahen- like platte
 rain	pl	raine- like lager
@@ -556,6 +573,7 @@ reinraum	4	reinraume
 reitstein	pl	reitsteine- like lager
 relativitätsprinzip	pl	relativitätsprinzipe- like lager
 rendzina	pl	rendzinen- like platte
+renminbi	5	renminbis
 reporterurgestein	pl	reporterurgesteine- like lager
 reservemagazin	pl	reservemagazine- like lager
 retardationsprinzip	pl	retardationsprinzipe- like lager
@@ -573,6 +591,7 @@ ruhestein	pl	ruhesteine- like lager
 runenstein	pl	runensteine- like lager
 russenmagazin	pl	russenmagazine- like lager
 rutheniridosmin	pl	rutheniridosmine- like lager
+sadhu	pl	sadhus- like platte
 salzgestein	pl	salzgesteine- like lager
 sandstein	pl	sandsteine- like lager
 sannyasi	pl	sannyasin- like platte
@@ -618,6 +637,7 @@ sporn	2	sporns
 sportmagazin	pl	sportmagazine- like lager
 spülstein	pl	spülsteine- like lager
 staatsbauamt	4	staatsbauamte
+stabi	pl	stabis- like platte
 stachelschwein	pl	stachelschweine- like lager
 stangenmagazin	pl	stangenmagazine- like lager
 statin	pl	statine- like lager
@@ -629,6 +649,7 @@ strafjustizakt	2	strafjustizakten
 strahlstein	pl	strahlsteine- like lager
 straßenrain	pl	straßenraine- like lager
 strophanthin	pl	strophanthine- like lager
+stubbi	5	stubbis
 studentenmagazin	pl	studentenmagazine- like lager
 stundenstein	pl	stundensteine- like lager
 städtetag	3	städtetag
@@ -651,11 +672,14 @@ theremin	pl	theremine- like lager
 thioredoxin	pl	thioredoxine- like lager
 tierurin	pl	tierurine- like lager
 tittenmagazin	pl	tittenmagazine- like lager
+tohuwabohu	5	tohuwabohus
 tomatenstock	5	tomatenstöcke	7	tomatenstöcken
 tonstein	pl	tonsteine- like lager
 topfstein	pl	topfsteine- like lager
 topotaxis	pl	topotaxien- like platte
 totenraststein	pl	totenraststeine- like lager
+trabbi	5	trabbis
+trabi	5	trabis
 trampolin	pl	trampoline- like lager
 transferrin	pl	transferrine- like lager
 travertin	pl	travertine- like lager
@@ -669,6 +693,7 @@ tuberositas	pl	tuberositae- like platte
 tuffstein	pl	tuffsteine- like lager
 tupperparty	2	tupperparty
 turmalin	pl	turmaline- like lager
+uhu	5	uhus
 ulkus	pl	ulzera- like platte
 ulmenhain	pl	ulmenhaine- like lager
 umweltauto	pl	umweltautoe- like lager
@@ -689,6 +714,8 @@ vertrauensfrau	pl	vertrauens- like landsmann
 verwaltungsrat	2	verwaltungsräte
 verwertungsrisiko	pl	verwertungsrisikoen- like platte
 vinophiler	pl	vinophilen- like platte	2	vinophilen
+virginia-uhu	5	virginia-uhus
+virginiauhu	5	virginiauhus
 vo	pl	voen- like platte
 votivstein	pl	votivsteine- like lager
 vulkangestein	pl	vulkangesteine- like lager

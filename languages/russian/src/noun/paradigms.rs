@@ -26,7 +26,7 @@ macro_rules! declension {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
      $(stem lemma: $s0:tt;)?
      $(stem pl: $s1:tt;)?
-     $(stem rest: $s2:tt;)?
+     $(stem gen_sg: $s2:tt;)?
      $(nom: $c0:tt, $c1:tt;)?
      $(gen_: $c2:tt, $c3:tt;)?
      $(dat: $c4:tt, $c5:tt;)?
@@ -278,8 +278,6 @@ pub enum Declension {
     Верея,
     /// Like `егерь`: 27 words.
     Егерь,
-    /// Like `пол-литра`: 26 words.
-    Поллитра,
     /// Like `голец`: 24 words.
     Голец,
     /// Like `звезда`: 23 words.
@@ -380,8 +378,6 @@ pub enum Declension {
     Полгода,
     /// Like `любовь`: 7 words.
     Любовь,
-    /// Like `пол-июля`: 7 words.
-    Полиюля,
     /// Like `усадьба`: 6 words.
     Усадьба,
     /// Like `плечо`: 6 words.
@@ -398,10 +394,6 @@ pub enum Declension {
     Зеленя,
     /// Like `исайя`: 6 words.
     Исайя,
-    /// Like `пол-избы`: 6 words.
-    Полизбы,
-    /// Like `пол-лета`: 6 words.
-    Поллета,
     /// Like `юноша`: 5 words.
     Юноша,
     /// Like `огонь`: 5 words.
@@ -422,8 +414,6 @@ pub enum Declension {
     Полкроны,
     /// Like `тиса`: 5 words.
     Тиса,
-    /// Like `пол-осени`: 5 words.
-    Полосени,
     /// Like `семя`: 4 words.
     Семя,
     /// Like `кухня`: 4 words.
@@ -486,10 +476,6 @@ pub enum Declension {
     Морячка,
     /// Like `бий`: 3 words.
     Бий,
-    /// Like `пол-леса`: 3 words.
-    Поллеса,
-    /// Like `пол-осьмухи`: 3 words.
-    Полосьмухи,
     /// Like `талдыченье`: 3 words.
     Талдыченье,
     /// Like `оладий`: 1 words.
@@ -500,7 +486,7 @@ pub enum Declension {
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 188] = [
+    pub const ALL: [Declension; 181] = [
         Declension::Приём,
         Declension::Полнота,
         Declension::Скопление,
@@ -580,7 +566,6 @@ impl Declension {
         Declension::Деревня,
         Declension::Верея,
         Declension::Егерь,
-        Declension::Поллитра,
         Declension::Голец,
         Declension::Звезда,
         Declension::Божество,
@@ -631,7 +616,6 @@ impl Declension {
         Declension::Осётр,
         Declension::Полгода,
         Declension::Любовь,
-        Declension::Полиюля,
         Declension::Усадьба,
         Declension::Плечо,
         Declension::Горе,
@@ -640,8 +624,6 @@ impl Declension {
         Declension::Чечётка,
         Declension::Зеленя,
         Declension::Исайя,
-        Declension::Полизбы,
-        Declension::Поллета,
         Declension::Юноша,
         Declension::Огонь,
         Declension::Боец,
@@ -652,7 +634,6 @@ impl Declension {
         Declension::Ботиночек,
         Declension::Полкроны,
         Declension::Тиса,
-        Declension::Полосени,
         Declension::Семя,
         Declension::Кухня,
         Declension::Небо,
@@ -684,8 +665,6 @@ impl Declension {
         Declension::Получеловек,
         Declension::Морячка,
         Declension::Бий,
-        Declension::Поллеса,
-        Declension::Полосьмухи,
         Declension::Талдыченье,
         Declension::Оладий,
         Declension::Проводины,
@@ -706,18 +685,18 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
+pub(super) static DECLENSIONS: [Paradigm<'static>; 181] = [
     // Приём: 37,690 words (указ, зонт, кот, зонтик, бортник, бочаг).
     declension!("приём", 37690, "~", [gender: Masculine];
     stem pl: "~- like приём";
-    stem rest: "~- like приём";
+    stem gen_sg: "~- like приём";
     nom: "~", _;
     noun_second_case: derived, _;
     ),
     // Полнота: 12,546 words (собака, буява, былица, масленица, царица, вата). Like Приём, except in 2 cells: gen_ pl, noun_second_case loc.
     declension!("полнота", 12546, "~а", [gender: Feminine], like Приём;
     stem lemma: "~- like полнота";
-    stem rest: "~- like полнота";
+    stem gen_sg: "~- like полнота";
     gen_: _, "~";
     noun_second_case: _, derived;
     ),
@@ -725,18 +704,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     declension!("скопление", 9052, "~е", [gender: Neuter, animacy: Inanimate];
     stem lemma: "~е- like скопление";
     stem pl: "~- like скопление";
-    stem rest: "~- like скопление";
+    stem gen_sg: "~- like скопление";
     ),
     // Склонность: 7,532 words (знать, весь, гласность, деревянность, дверь, ртуть).
     declension!("склонность", 7532, "~ь", [gender: Feminine, animacy: Inanimate];
     stem pl: "~- like склонность";
-    stem rest: "~- like склонность";
+    stem gen_sg: "~- like склонность";
     nom: "~ь", _;
     ),
     // Стрелка: 6,674 words (водка, цыпка, жилка, деревянка, лесопилка, доска).
     declension!("стрелка", 6674, "~~а", [gender: Feminine];
     stem lemma: "~~- like полнота";
-    stem rest: "~~- like стрелка";
+    stem gen_sg: "~~- like стрелка";
     nom: _, "~~и";
     gen_: _, "~о~";
     dat: _, "~~ам";
@@ -752,7 +731,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Какао: 3,419 words (пальто, все, брачущиеся, брачующиеся, адажио, какао).
     declension!("какао", 3419, "~";
-    stem rest: "~- like какао";
+    stem gen_sg: "~- like какао";
     nom: "~", "~";
     gen_: _, "~";
     dat: _, "~";
@@ -761,7 +740,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Хлопанье: 2,643 words (запястье, воскресенье, варенье, воспитанье, отчаянье, уединенье).
     declension!("хлопанье", 2643, "~ье", [gender: Neuter, animacy: Inanimate];
-    stem rest: "~ь- like медведь";
+    stem gen_sg: "~ь- like медведь";
     nom: "~ье", "~ья";
     gen_: _, "~ий";
     dat: _, "~ьям";
@@ -781,21 +760,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Агнец: 2,159 words (левантинец, древоточец, марганец, самозванец, разночинец, ньюйоркец). Like Стрелка, except in 2 cells: nom sg, acc sg.
     declension!("агнец", 2159, "~е~", [gender: Masculine], like Стрелка;
     stem pl: "~~- like агнец";
-    stem rest: "~~- like агнец";
+    stem gen_sg: "~~- like агнец";
     nom: "~е~", _;
     acc: derived, _;
     ),
     // Медведь: 1,980 words (сшиватель, апрель, июнь, июль, олень, автомобиль). Like Скопление, except in 3 cells: nom sg, acc sg, noun_second_case part.
     declension!("медведь", 1980, "~ь", [gender: Masculine], like Скопление;
     stem pl: "~- like склонность";
-    stem rest: "~- like медведь";
+    stem gen_sg: "~- like медведь";
     nom: "~ь", _;
     acc: derived, _;
     noun_second_case: derived, _;
     ),
     // Щиток: 1,052 words (щенок, бесёнок, лесок, замок, носок, подросток). Like Агнец, except in 4 cells: nom sg, nom pl, gen_ pl, noun_second_case part.
     declension!("щиток", 1052, "~о~", [gender: Masculine], like Агнец;
-    stem rest: "~~- like приём";
+    stem gen_sg: "~~- like приём";
     nom: "~о~", "~~и";
     gen_: _, "~~ов";
     noun_second_case: derived, _;
@@ -803,7 +782,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Товарищ: 932 words (харч, туш, треш, товарищ, дервиш, путч). Like Приём, except in 1 cell: noun_second_case loc.
     declension!("товарищ", 932, "~", [gender: Masculine], like Приём;
     stem pl: "~- like товарищ";
-    stem rest: "~- like агнец";
+    stem gen_sg: "~- like агнец";
     noun_second_case: _, derived;
     ),
     // Змей: 650 words (май, гей, вертухай, елей, герой, случай). Like Медведь, except in 2 cells: nom sg, gen_ pl.
@@ -813,7 +792,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Гений: 649 words (калий, меркурий, гений, гравий, бериллий, гелий). Like Змей.
     declension!("гений", 649, "~й", [gender: Masculine], like Змей;
-    stem rest: "~- like скопление";
+    stem gen_sg: "~- like скопление";
     ),
     // Барашек: 493 words (горошек, излишек, камешек, гривенничек, кусочек, орешек). Like Щиток, except in 2 cells: nom sg, noun_second_case loc.
     declension!("барашек", 493, "~е~", [gender: Masculine], like Щиток;
@@ -823,7 +802,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Чайка: 474 words (копейка, скамейка, перестройка, ищейка, лайка, австрийка).
     declension!("чайка", 474, "~й~а", [gender: Feminine];
     stem lemma: "~й~- like полнота";
-    stem rest: "~й~- like стрелка";
+    stem gen_sg: "~й~- like стрелка";
     nom: _, "~й~и";
     gen_: _, "~е~";
     dat: _, "~й~ам";
@@ -833,13 +812,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Накладная: 415 words (деревообделочная, детская, гостиная, ванная, кладовая, уборная).
     declension!("накладная", 415, "~ая", [gender: Feminine];
     stem pl: "~ы- like накладная";
-    stem rest: "~о- like накладная";
+    stem gen_sg: "~о- like накладная";
     nom: "~ая", _;
     acc: "~ую", _;
     ),
     // Мещанин: 395 words (господин, англичанин, россиянин, опочанин, гражданин, новоангличанин). Like Сходство, except in 2 cells: nom sg, nom pl.
     declension!("мещанин", 395, "~ин", [gender: Masculine, animacy: Animate], like Сходство;
-    stem rest: "~ин- like сходство";
+    stem gen_sg: "~ин- like сходство";
     nom: "~ин", "~е";
     ),
     // Постав: 391 words (дом, лес, город, пояс, гидраргирум, адрес). Like Приём, except in 1 cell: nom pl.
@@ -862,17 +841,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Ключ: 276 words (борщ, карандаш, врач, сыч, нож, меч). Like Товарищ.
     declension!("ключ", 276, "~", [gender: Masculine], like Товарищ;
-    stem rest: "~- like сходство";
+    stem gen_sg: "~- like сходство";
     ),
     // Баня: 265 words (братыня, неделя, буря, няня, княгиня, тётя). Like Химия, except in 1 cell: gen_ pl.
     declension!("баня", 265, "~я", like Химия;
-    stem rest: "~- like баня";
+    stem gen_sg: "~- like баня";
     gen_: _, "~ь";
     ),
     // Люлька: 261 words (пенька, пиписька, кухонька, батенька, калька, свистулька).
     declension!("люлька", 261, "~ь~а";
     stem lemma: "~ь~- like полнота";
-    stem rest: "~ь~- like стрелка";
+    stem gen_sg: "~ь~- like стрелка";
     nom: _, "~ь~и";
     gen_: _, "~е~";
     dat: _, "~ь~ам";
@@ -882,13 +861,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Аниец: 250 words (австриец, австралиец, ариец, белогвардеец, китаец, византиец). Like Чайка, except in 2 cells: nom sg, acc sg.
     declension!("аниец", 250, "~е~", [gender: Masculine, animacy: Animate], like Чайка;
     stem pl: "~й~- like агнец";
-    stem rest: "~й~- like агнец";
+    stem gen_sg: "~й~- like агнец";
     nom: "~е~", _;
     acc: derived, _;
     ),
     // Червь: 232 words (царь, рубль, кремль, дождь, январь, февраль). Like Медведь, except in 1 cell: noun_second_case part.
     declension!("червь", 232, "~ь", [gender: Masculine], like Медведь;
-    stem rest: "~- like червь";
+    stem gen_sg: "~- like червь";
     noun_second_case: derived, _;
     ),
     // Шоколадница: 218 words (пицца, кожа, мульча, грыжа, мрежа, туча). Like Полнота, except in 1 cell: ins sg.
@@ -930,7 +909,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Умелец: 174 words (палец, комсомолец, земледелец, бразилец, владелец, анголец). Like Люлька, except in 2 cells: nom sg, acc sg.
     declension!("умелец", 174, "~е~", [gender: Masculine], like Люлька;
     stem pl: "~ь~- like агнец";
-    stem rest: "~ь~- like агнец";
+    stem gen_sg: "~ь~- like агнец";
     nom: "~е~", _;
     acc: derived, _;
     ),
@@ -945,31 +924,31 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Мостки: 147 words (древпластики, духи, щипчики, мозги, падонки, очки). Like Товарищ, except in 2 cells: nom sg, gen_ pl.
     declension!("мостки", 147, "~и", [gender: Masculine, animacy: Inanimate], like Товарищ;
-    stem rest: "~и- like какао";
+    stem gen_sg: "~и- like какао";
     nom: "~и", _;
     gen_: _, "~ов";
     ),
     // Сватья: 146 words (гостья, авиаэскадрилья, эскадрилья, келья, тортилья, колдунья). Like Хлопанье, except in 1 cell: nom pl.
     declension!("сватья", 146, "~ья", [gender: Feminine], like Хлопанье;
     stem lemma: "~ь- like химия";
-    stem rest: "~ь- like баня";
+    stem gen_sg: "~ь- like баня";
     nom: _, "~ьи";
     ),
     // Фигня: 131 words (ступня, стезя, простыня, тля, хуйня, броня). Like Баня.
     declension!("фигня", 131, "~я", [gender: Feminine], like Баня;
     stem pl: "~- like склонность";
-    stem rest: "~- like заря";
+    stem gen_sg: "~- like заря";
     ),
     // Орлёнок: 124 words (телёнок, октябрёнок, поросёнок, жеребёнок, ягнёнок, козлёнок).
     declension!("орлёнок", 124, "~ёнок", [gender: Masculine, animacy: Animate];
     stem pl: "~ят- like сходство";
-    stem rest: "~ёнк- like сходство";
+    stem gen_sg: "~ёнк- like сходство";
     nom: "~ёнок", _;
     ),
     // Подворотня: 122 words (вишня, песня, бушня, пригоршня, башня, пекарня). Like Дорожка, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("подворотня", 122, "~~я", [gender: Feminine, animacy: Inanimate], like Дорожка;
     stem lemma: "~~- like химия";
-    stem rest: "~~- like баня";
+    stem gen_sg: "~~- like баня";
     dat: _, "~~ям";
     ins: _, "~~ями";
     prep: _, "~~ях";
@@ -981,7 +960,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Гривна: 114 words (овца, сосна, домна, царевна, гривна, кошма). Like Дорожка, except in 1 cell: nom pl.
     declension!("гривна", 114, "~~а", [gender: Feminine], like Дорожка;
-    stem rest: "~~- like полнота";
+    stem gen_sg: "~~- like полнота";
     nom: _, "~~ы";
     ),
     // Ясли: 113 words (люди, кости, черви, внутренности, вожжи, ясли). Like Медведь, except in 5 cells: nom sg, gen_ sg, dat sg, ins sg, prep sg.
@@ -994,12 +973,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Кормчий: 107 words (лесничий, посторонний, нищий, военнослужащий, домашний, желающий). Like Русский.
     declension!("кормчий", 107, "~ий", [gender: Masculine, animacy: Animate], like Русский;
-    stem rest: "~- like кормчий";
+    stem gen_sg: "~- like кормчий";
     ),
     // Камень: 107 words (бредень, оборотень, камень, парень, полдень, кашель). Like Подворотня, except in 3 cells: nom sg, acc sg, noun_second_case part.
     declension!("камень", 107, "~е~ь", [gender: Masculine], like Подворотня;
     stem pl: "~~- like склонность";
-    stem rest: "~~- like медведь";
+    stem gen_sg: "~~- like медведь";
     nom: "~е~ь", _;
     acc: derived, _;
     noun_second_case: derived, _;
@@ -1015,19 +994,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Гусёк: 89 words (мотылёк, хорёк, кошелёк, королёк, огонёк, уголёк). Like Умелец, except in 3 cells: nom sg, nom pl, gen_ pl.
     declension!("гусёк", 89, "~ё~", [gender: Masculine], like Умелец;
-    stem rest: "~ь~- like сходство";
+    stem gen_sg: "~ь~- like сходство";
     nom: "~ё~", "~ь~и";
     gen_: _, "~ь~ов";
     ),
     // Выдача: 85 words (тёща, пища, вельможа, гуща, роща, толща). Like Шоколадница, except in 1 cell: nom pl.
     declension!("выдача", 85, "~а", like Шоколадница;
-    stem rest: "~- like баня";
+    stem gen_sg: "~- like баня";
     nom: _, "~и";
     ),
     // Спальня: 85 words (лесопильня, спальня, читальня, колокольня, коптильня, наковальня). Like Люлька, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("спальня", 85, "~ь~я", [gender: Feminine, animacy: Inanimate], like Люлька;
     stem lemma: "~ь~- like химия";
-    stem rest: "~ь~- like баня";
+    stem gen_sg: "~ь~- like баня";
     dat: _, "~ь~ям";
     ins: _, "~ь~ями";
     prep: _, "~ь~ях";
@@ -1057,7 +1036,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Внучонок: 57 words (медвежонок, индюшонок, крольчонок, внучонок, волчонок, мышонок).
     declension!("внучонок", 57, "~онок", [gender: Masculine, animacy: Animate];
     stem pl: "~ат- like сходство";
-    stem rest: "~онк- like сходство";
+    stem gen_sg: "~онк- like сходство";
     nom: "~онок", _;
     ),
     // Ядро: 54 words (брашно, говно, деревцо, ядро, масло, число). Like Молочко, except in 1 cell: nom pl.
@@ -1077,7 +1056,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Свеча: 45 words (левша, ханжа, вожжа, свеча, юноша, саранча). Like Выдача.
     declension!("свеча", 45, "~а", like Выдача;
     stem pl: "~- like товарищ";
-    stem rest: "~- like стрелка";
+    stem gen_sg: "~- like стрелка";
     ),
     // Каракуля: 45 words (постеля, батя, дядя, доля, ходуля, сводня). Like Баня.
     declension!("каракуля", 45, "~я", like Баня;
@@ -1095,12 +1074,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Делёж: 38 words (падёж, пиздёж, чертёж, грабёж, платёж, мухлёж).
     declension!("делёж", 38, "~ё~", [gender: Masculine, animacy: Inanimate];
     stem pl: "~е~- like товарищ";
-    stem rest: "~е~- like сходство";
+    stem gen_sg: "~е~- like сходство";
     nom: "~ё~", _;
     ),
     // Съезжая: 37 words (прихожая, телеведущая, неверующая, купчая, составляющая, заведующая). Like Русский, except in 2 cells: nom sg, acc sg.
     declension!("съезжая", 37, "~ая", [gender: Feminine], like Русский;
-    stem rest: "~е- like накладная";
+    stem gen_sg: "~е- like накладная";
     nom: "~ая", _;
     acc: "~ую", _;
     ),
@@ -1141,7 +1120,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Ладья: 28 words (семья, ладья, статья, судья, скамья, голья). Like Сватья, except in 1 cell: gen_ pl.
     declension!("ладья", 28, "~ья", like Сватья;
-    stem rest: "~ь- like заря";
+    stem gen_sg: "~ь- like заря";
     gen_: _, "~ей";
     ),
     // Деревня: 28 words (торговля, сабля, капля, туфля, чапля, цапля). Like Подворотня, except in 1 cell: gen_ pl.
@@ -1150,28 +1129,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Верея: 27 words (змея, колея, чешуя, швея, струя, ворожея). Like Батарея.
     declension!("верея", 27, "~я", [gender: Feminine], like Батарея;
-    stem rest: "~- like заря";
+    stem gen_sg: "~- like заря";
     ),
     // Егерь: 27 words (учитель, якорь, флигель, лагерь, тополь, соболь). Like Медведь, except in 1 cell: nom pl.
     declension!("егерь", 27, "~ь", [gender: Masculine], like Медведь;
     nom: _, "~я";
     ),
-    // Поллитра: 26 words (пол-очка, пол-литра, пол-оборота, пол-августа, пол-автобуса, пол-аршина).
-    declension!("пол-литра", 26, "~-~а";
-    stem pl: "~у~- like приём";
-    stem rest: "~у~- like сходство";
-    nom: "~-~а", _;
-    ),
     // Голец: 24 words (лев, телец, стрелец, жилец, делец, малец). Like Умелец.
     declension!("голец", 24, "~е~", [gender: Masculine], like Умелец;
     stem pl: "~ь~- like приём";
-    stem rest: "~ь~- like сходство";
+    stem gen_sg: "~ь~- like сходство";
     ),
     // Звезда: 23 words (звезда, пчела, жена, сестра, медсестра, береста).
     declension!("звезда", 23, "~е~а", [gender: Feminine];
     stem lemma: "~е~- like полнота";
     stem pl: "~ё~- like полнота";
-    stem rest: "~е~- like полнота";
+    stem gen_sg: "~е~- like полнота";
     ),
     // Божество: 23 words (существо, лицо, божество, чадо, чмо, падло). Like Глаз with `` after each pattern (`о` after ~), except in 2 cells: gen_ pl, acc sg.
     declension!("божество", 23, "~о", [gender: Neuter, animacy: Animate], like Глаз with "", "о" after "~";
@@ -1184,7 +1157,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Ребро: 22 words (сребро, серебро, ведро, ребро, весло, зерно).
     declension!("ребро", 22, "~е~~о", [gender: Neuter, animacy: Inanimate];
-    stem rest: "~е~~- like сходство";
+    stem gen_sg: "~е~~- like сходство";
     nom: "~е~~о", "~ё~~а";
     gen_: _, "~ё~е~";
     dat: _, "~ё~~ам";
@@ -1217,7 +1190,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Боёк: 18 words (паёк, чаёк, ручеёк, кофеёк, боёк, буёк). Like Аниец, except in 3 cells: nom sg, nom pl, gen_ pl.
     declension!("боёк", 18, "~ё~", [gender: Masculine], like Аниец;
-    stem rest: "~й~- like сходство";
+    stem gen_sg: "~й~- like сходство";
     nom: "~ё~", "~й~и";
     gen_: _, "~й~ов";
     ),
@@ -1234,7 +1207,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Ружьё: 15 words (копьё, питьё, ружьё, забытьё, жнивьё, вторсырьё). Like Хлопанье, except in 2 cells: nom sg, noun_second_case part.
     declension!("ружьё", 15, "~ьё", [gender: Neuter, animacy: Inanimate], like Хлопанье;
     stem pl: "~- like жнивьё";
-    stem rest: "~ь- like червь";
+    stem gen_sg: "~ь- like червь";
     nom: "~ьё", _;
     noun_second_case: derived, _;
     ),
@@ -1258,7 +1231,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Бойня: 15 words (кофейня, бойня, водогрейня, воскобойня, двойня, маслобойня). Like Чайка, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("бойня", 15, "~й~я", [gender: Feminine, animacy: Inanimate], like Чайка;
     stem lemma: "~й~- like химия";
-    stem rest: "~й~- like баня";
+    stem gen_sg: "~й~- like баня";
     dat: _, "~й~ям";
     ins: _, "~й~ями";
     prep: _, "~й~ях";
@@ -1294,7 +1267,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Котёночек: 13 words (цыплёночек, котёночек, жеребёночек, козлёночек, утёночек, ягнёночек).
     declension!("котёночек", 13, "~ёноче~", [gender: Masculine];
-    stem rest: "~ёноч~- like сходство";
+    stem gen_sg: "~ёноч~- like сходство";
     nom: "~ёноче~", "~ят~и";
     gen_: _, "~ято~";
     dat: _, "~ят~ам";
@@ -1320,7 +1293,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Рыльце: 12 words (зеркальце, щупальце, дельце, рыльце, сальце, мыльце). Like Кольцо, except in 1 cell: nom sg.
     declension!("рыльце", 12, "~ь~е", [gender: Neuter, animacy: Inanimate], like Кольцо;
-    stem rest: "~ь~- like агнец";
+    stem gen_sg: "~ь~- like агнец";
     nom: "~ь~е", _;
     ),
     // Мощи: 11 words (щи, клещи, мощи, беруши, марши, кириши). Like Счёты, except in 1 cell: nom sg.
@@ -1368,7 +1341,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Герц: 8 words (герц, гигагерц, килогерц, мегагерц, миллигерц, кольбац). Like Раз.
     declension!("герц", 8, "~", [gender: Masculine, animacy: Inanimate], like Раз;
-    stem rest: "~- like агнец";
+    stem gen_sg: "~- like агнец";
     ),
     // Калашников: 8 words (калашников, басков, топтыгин, обещалкин, сердечкин, собакин). Like Зелёный, except in 5 cells: nom sg, nom pl, gen_ sg, dat sg, prep sg.
     declension!("калашников", 8, "~", [gender: Masculine], like Зелёный;
@@ -1409,15 +1382,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Весна: 7 words (десна, весна, метла, ветла, гидрометла, блесна). Like Ребро, except in 1 cell: nom pl.
     declension!("весна", 7, "~е~~а", [gender: Feminine, animacy: Inanimate], like Ребро;
     stem lemma: "~е~~- like полнота";
-    stem rest: "~е~~- like полнота";
+    stem gen_sg: "~е~~- like полнота";
     nom: _, "~ё~~ы";
     ),
     // Осётр: 7 words (ксёндз, чёлн, осётр, черёд, перёд, клёст). Like Делёж.
     declension!("осётр", 7, "~ё~", [gender: Masculine], like Делёж;
     stem pl: "~е~- like приём";
     ),
-    // Полгода: 7 words (полчаса, полгода, полметра, полмиллиона, полкилометра, поллитра). Like Поллитра, except in 1 cell: nom sg.
-    declension!("полгода", 7, "~~а", [animacy: Inanimate], like Поллитра;
+    // Полгода: 7 words (полчаса, полгода, полметра, полмиллиона, полкилометра, поллитра).
+    declension!("полгода", 7, "~~а", [animacy: Inanimate];
+    stem pl: "~у~- like приём";
+    stem gen_sg: "~у~- like сходство";
     nom: "~~а", _;
     ),
     // Любовь: 7 words (церковь, рожь, вошь, ложь, любовь, нелюбовь). Like Лапоть, except in 4 cells: gen_ sg, dat sg, ins sg, prep sg.
@@ -1427,16 +1402,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ins: "~о~ью", _;
     prep: "~~и", _;
     ),
-    // Полиюля: 7 words (пол-апреля, пол-имения, пол-июля, пол-июня, пол-лагеря, пол-октября).
-    declension!("пол-июля", 7, "~-~я";
-    stem pl: "~у~- like склонность";
-    stem rest: "~у~- like медведь";
-    nom: "~-~я", _;
-    noun_second_case: derived, _;
-    ),
     // Усадьба: 6 words (тьма, тюрьма, пыльца, сольца, гнильца, потьма). Like Люлька, except in 1 cell: nom pl.
     declension!("усадьба", 6, "~ь~а", [gender: Feminine, animacy: Inanimate], like Люлька;
-    stem rest: "~ь~- like полнота";
+    stem gen_sg: "~ь~- like полнота";
     nom: _, "~ь~ы";
     ),
     // Плечо: 6 words (яблоко, веко, плечо, брюхо, лыко, амбаришко). Like Ключ with `` after each pattern (`о` after ~), except in 1 cell: gen_ pl.
@@ -1467,24 +1435,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     declension!("исайя", 6, "~я", like Батарея;
     acc: _, "~й";
     ),
-    // Полизбы: 6 words (пол-избы, пол-луковицы, пол-юрты, пол-ягоды, пол-луны, пол-обоймы). Like Поллитра, except in 5 cells: nom sg, gen_ sg, gen_ pl, dat sg, ins sg.
-    declension!("пол-избы", 6, "~-~ы", like Поллитра;
-    nom: "~-~ы", _;
-    gen_: "~у~ы", "~у~";
-    dat: "~у~е", _;
-    ins: "~у~ой", _;
-    ),
-    // Поллета: 6 words (пол-лета, пол-лица, пол-лота, пол-окна, пол-училища, пол-ящика). Like Поллитра.
-    declension!("пол-лета", 6, "~-~а", like Поллитра;
-    stem pl: "~у~- like сходство";
-    ),
     // Юноша: 5 words (чукча, раджа, обжа, корча, магараджа). Like Выдача.
     declension!("юноша", 5, "~а", like Выдача;
     stem pl: "~- like товарищ";
     ),
     // Огонь: 5 words (огонь, угорь, ломоть, артогонь, стоп-огонь). Like Лапоть, except in 1 cell: noun_second_case part.
     declension!("огонь", 5, "~о~ь", [gender: Masculine], like Лапоть;
-    stem rest: "~~- like червь";
+    stem gen_sg: "~~- like червь";
     noun_second_case: derived, _;
     ),
     // Боец: 5 words (боец, хуец, политбоец, гаец, экс-боец). Like Перешеек.
@@ -1512,20 +1469,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     declension!("ботиночек", 5, "~е~", [gender: Masculine, animacy: Inanimate], like Барашек;
     gen_: _, "~е~";
     ),
-    // Полкроны: 5 words (полкроны, полстраны, полшколы, ползалупы, полпланеты). Like Полизбы, except in 1 cell: nom sg.
-    declension!("полкроны", 5, "~~ы", like Полизбы;
+    // Полкроны: 5 words (полкроны, полстраны, полшколы, ползалупы, полпланеты). Like Полгода, except in 5 cells: nom sg, gen_ sg, gen_ pl, dat sg, ins sg.
+    declension!("полкроны", 5, "~~ы", like Полгода;
     nom: "~~ы", _;
+    gen_: "~у~ы", "~у~";
+    dat: "~у~е", _;
+    ins: "~у~ой", _;
     ),
     // Тиса: 5 words (линда, шила, тиса, драва, пуста). Like Недра, except in 3 cells: dat pl, ins pl, prep pl.
     declension!("тиса", 5, "~а", [gender: Feminine], like Недра;
     dat: _, "~а";
     ins: _, "~а";
     prep: _, "~а";
-    ),
-    // Полосени: 5 words (пол-ёмкости, пол-линии, пол-области, пол-епархии, пол-осени). Like Полиюля, except in 1 cell: nom sg.
-    declension!("пол-осени", 5, "~-~и", like Полиюля;
-    stem rest: "~у~- like достопримечательность";
-    nom: "~-~и", _;
     ),
     // Семя: 4 words (темя, семя, стремя, льносемя). Like Племя, except in 1 cell: gen_ pl.
     declension!("семя", 4, "~я", [gender: Neuter, animacy: Inanimate], like Племя;
@@ -1541,12 +1496,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Судно: 4 words (судно, агитсудно, авиасудно, фальшдно). Like Бега, except in 1 cell: nom sg.
     declension!("судно", 4, "~но", [gender: Neuter, animacy: Inanimate], like Бега;
-    stem rest: "~н- like сходство";
+    stem gen_sg: "~н- like сходство";
     nom: "~но", _;
     ),
     // Улей: 4 words (улей, жеребей, чирей, ирей). Like Репей, except in 2 cells: gen_ pl, noun_second_case part.
     declension!("улей", 4, "~ей", [gender: Masculine, animacy: Inanimate], like Репей;
-    stem rest: "~ь- like медведь";
+    stem gen_sg: "~ь- like медведь";
     gen_: _, "~ьев";
     noun_second_case: derived, _;
     ),
@@ -1555,7 +1510,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Лишай: 4 words (холуй, лишай, бугай, валуй). Like Бой, except in 1 cell: noun_second_case part.
     declension!("лишай", 4, "~й", [gender: Masculine], like Бой;
-    stem rest: "~- like червь";
+    stem gen_sg: "~- like червь";
     noun_second_case: derived, _;
     ),
     // Капли: 4 words (грабли, капли, чапли, велотуфли). Like Нападки, except in 4 cells: gen_ pl, dat pl, ins pl, prep pl.
@@ -1602,13 +1557,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Земля: 3 words (земля, петля, полупетля). Like Деревня.
     declension!("земля", 3, "~~я", [gender: Feminine, animacy: Inanimate], like Деревня;
-    stem rest: "~~- like заря";
+    stem gen_sg: "~~- like заря";
     ),
     // Мать: 3 words (дочь, мать, яжмать).
     declension!("мать", 3, "~ь", [gender: Feminine, animacy: Animate];
     stem lemma: "~ь- like скопление";
     stem pl: "~ер- like склонность";
-    stem rest: "~ер- like достопримечательность";
+    gen_: "~ери", _;
+    dat: "~ери", _;
+    ins: "~ерью", _;
+    prep: "~ери", _;
     ),
     // Путь: 3 words (путь, автопуть, севморпуть). Like Склонность, except in 2 cells: ins sg, noun_second_case loc.
     declension!("путь", 3, "~ь", [gender: Masculine, animacy: Inanimate], like Склонность;
@@ -1618,7 +1576,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Лёд: 3 words (лёд, лён, снеголёд). Like Гусёк, except in 1 cell: noun_second_case part.
     declension!("лёд", 3, "~ё~", [gender: Masculine, animacy: Inanimate], like Гусёк;
     stem pl: "~ь~- like приём";
-    stem rest: "~ь~- like приём";
+    stem gen_sg: "~ь~- like приём";
     noun_second_case: derived, _;
     ),
     // Сколько: 3 words (сколько, столько, несколько). Like Домашние, except in 6 cells: nom sg, nom pl, gen_ pl, dat pl, ins pl, prep pl.
@@ -1654,7 +1612,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     ),
     // Епитимья: 3 words (ектенья, паремья, епитимья). Like Сватья.
     declension!("епитимья", 3, "~ья", [gender: Feminine, animacy: Inanimate], like Сватья;
-    stem rest: "~ь- like заря";
+    stem gen_sg: "~ь- like заря";
     ),
     // Дверца: 3 words (дверца, шпорца, мадерца). Like Гривна, except in 1 cell: ins sg.
     declension!("дверца", 3, "~~а", [gender: Feminine, animacy: Inanimate], like Гривна;
@@ -1667,7 +1625,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     // Получеловек: 3 words (получеловек, обезьяночеловек, первочеловек).
     declension!("получеловек", 3, "~че~овек", [gender: Masculine, animacy: Animate];
     stem pl: "~~юд- like получеловек";
-    stem rest: "~че~овек- like сходство";
+    stem gen_sg: "~че~овек- like сходство";
     nom: "~че~овек", _;
     ),
     // Морячка: 3 words (морячка, рыбачка, тестюшка). Like Дорожка, except in 1 cell: acc pl.
@@ -1678,15 +1636,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 188] = [
     declension!("бий", 3, "~й", [gender: Masculine, animacy: Animate], like Змей;
     acc: "~й", "~и";
     prep: "~и|~е", _;
-    ),
-    // Поллеса: 3 words (пол-леса, пол-округа, пол-острова). Like Поллитра, except in 1 cell: nom pl.
-    declension!("пол-леса", 3, "~-~а", like Поллитра;
-    nom: _, "~у~а";
-    ),
-    // Полосьмухи: 3 words (пол-ложки, пол-юбки, пол-осьмухи). Like Полизбы, except in 3 cells: nom sg, nom pl, gen_ sg.
-    declension!("пол-осьмухи", 3, "~-~и", like Полизбы;
-    nom: "~-~и", "~у~и";
-    gen_: "~у~и", _;
     ),
     // Талдыченье: 3 words (средостение, благоусмотренье, талдыченье). Like Устье.
     declension!("талдыченье", 3, "~е", [gender: Neuter, animacy: Inanimate], like Устье;

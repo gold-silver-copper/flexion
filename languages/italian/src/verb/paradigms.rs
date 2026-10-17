@@ -12,7 +12,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the conjugation it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem rest_: \"~- like girare\"`: the slot's cells are `girare`'s table's patterns
+/// (`stem verb_pres_1_sg: \"~- like girare\"`: the slot's cells are `girare`'s table's patterns
 /// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the conjugation's it is
@@ -45,11 +45,11 @@ use flexion::Paradigm;
 /// `participle` (pres, past)
 macro_rules! conjugation {
     ($name:literal, $words:literal, $lemma:literal $(, [$($f:ident: $v:ident),*])? $(, like $parent:ident $(as $view:ident)? $(with $affix:literal $(, $other:literal after $letters:literal)?)?)?;
-     $(stem rest_: $s0:tt;)?
-     $(stem rest__: $s1:tt;)?
+     $(stem verb_pres_1_sg: $s0:tt;)?
+     $(stem verb_pres_1_pl: $s1:tt;)?
      $(stem lemma: $s2:tt;)?
-     $(stem rest: $s3:tt;)?
-     $(stem rest___: $s4:tt;)?
+     $(stem verb_impf_1_sg: $s3:tt;)?
+     $(stem verb_past_1_sg: $s4:tt;)?
      $(stem participle_pres: $s5:tt;)?
      $(pres_1: $c0:tt, $c1:tt;)?
      $(pres_2: $c2:tt, $c3:tt;)?
@@ -577,9 +577,9 @@ impl flexion::Label for Conjugation {
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Girare: 7,014 words (accusare, accreditare, vulnerare, lavare, nuotare, odiare).
     conjugation!("girare", 7014, "~are", [auxiliary: Avere];
-    stem rest_: "~- like girare";
+    stem verb_pres_1_sg: "~- like girare";
     stem lemma: "~- like girare";
-    stem rest: "~a- like girare";
+    stem verb_impf_1_sg: "~a- like girare";
     pres_1: _, "~iamo";
     past_1: "~ai", _;
     past_3: "~ò", "~arono";
@@ -592,8 +592,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Tapparsi: 1,599 words (lavarsi, abbandonarsi, abbassarsi, tirarsi, abbronzarsi, ossidarsi). Like Girare, except in 8 cells: subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, imperative tu, negative_imperative tu, infinitive, ….
     conjugation!("tapparsi", 1599, "~arsi", [auxiliary: Essere], like Girare;
-    stem rest__: "~- like tapparsi";
-    stem rest: "~a- like tapparsi";
+    stem verb_pres_1_pl: "~- like tapparsi";
+    stem verb_impf_1_sg: "~a- like tapparsi";
     subj_1: _, derived;
     subj_impf_2: derived, derived;
     imperative: "~ati", _, _, _, _;
@@ -603,11 +603,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Incattivire: 725 words (fire, fallire, finire, punire, approfondire, zittire).
     conjugation!("incattivire", 725, "~ire";
-    stem rest_: "~isc- like incattivire";
-    stem rest__: "~i- like incattivire";
+    stem verb_pres_1_sg: "~isc- like incattivire";
+    stem verb_pres_1_pl: "~i- like incattivire";
     stem lemma: "~i- like incattivire";
-    stem rest: "~- like incattivire";
-    stem rest___: "~- like incattivire";
+    stem verb_impf_1_sg: "~- like incattivire";
+    stem verb_past_1_sg: "~- like incattivire";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -631,8 +631,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Capirsi: 215 words (ferirsi, stupirsi, trasferirsi, unirsi, costituirsi, garantirsi). Like Incattivire, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, imperative lei, negative_imperative lei, gerund, ….
     conjugation!("capirsi", 215, "~irsi", [auxiliary: Essere], like Incattivire;
-    stem rest_: "~isc- like capirsi";
-    stem rest__: "~i- like capirsi";
+    stem verb_pres_1_sg: "~isc- like capirsi";
+    stem verb_pres_1_pl: "~i- like capirsi";
     stem lemma: "~i- like capirsi";
     subj_1: _, derived;
     subj_2: derived, _;
@@ -644,7 +644,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Imboscarsi: 139 words (coniugarsi, impiegarsi, obbligarsi, asciugarsi, impiccarsi, spiegarsi). Like Giocare, except in 11 cells: subj_impf_2 sg, subj_impf_2 pl, imperative tu, imperative noi, imperative voi, negative_imperative tu, ….
     conjugation!("imboscarsi", 139, "~arsi", [auxiliary: Essere], like Giocare;
-    stem rest: "~a- like tapparsi";
+    stem verb_impf_1_sg: "~a- like tapparsi";
     subj_impf_2: derived, derived;
     imperative: "~ati", _, "~hiamoci", "~atevi", _;
     negative_imperative: "~arti|~are", _, "~hiamoci|~hiamo", "~atevi|~ate", _;
@@ -653,11 +653,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Volgere: 106 words (dipingere, piangere, giungere, fingere, volgere, ungere).
     conjugation!("volgere", 106, "~gere";
-    stem rest_: "~g- like incattivire";
-    stem rest__: "~g- like volgere";
+    stem verb_pres_1_sg: "~g- like incattivire";
+    stem verb_pres_1_pl: "~g- like volgere";
     stem lemma: "~ge- like incattivire";
-    stem rest: "~ge- like girare";
-    stem rest___: "~- like volgere";
+    stem verb_impf_1_sg: "~ge- like girare";
+    stem verb_past_1_sg: "~- like volgere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -668,11 +668,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Ardere: 100 words (chiudere, dividere, perdere, rodere, ardere, decidere).
     conjugation!("ardere", 100, "~dere", [auxiliary: Avere];
-    stem rest_: "~d- like incattivire";
-    stem rest__: "~d- like volgere";
+    stem verb_pres_1_sg: "~d- like incattivire";
+    stem verb_pres_1_pl: "~d- like volgere";
     stem lemma: "~de- like incattivire";
-    stem rest: "~de- like girare";
-    stem rest___: "~s- like ardere";
+    stem verb_impf_1_sg: "~de- like girare";
+    stem verb_past_1_sg: "~s- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -683,11 +683,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Gemere: 99 words (essere, piovere, colere, serpere, nascere, temere). Like Girare, except in 10 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("gemere", 99, "~ere", like Girare;
-    stem rest_: "~- like incattivire";
-    stem rest__: "~- like volgere";
+    stem verb_pres_1_sg: "~- like incattivire";
+    stem verb_pres_1_pl: "~- like volgere";
     stem lemma: "~e- like incattivire";
-    stem rest: "~e- like girare";
-    stem rest___: "~- like essere";
+    stem verb_impf_1_sg: "~e- like girare";
+    stem verb_past_1_sg: "~- like essere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -698,11 +698,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Scendere: 60 words (prendere, dipendere, offendere, accendere, contundere, tendere).
     conjugation!("scendere", 60, "~ndere";
-    stem rest_: "~nd- like incattivire";
-    stem rest__: "~nd- like volgere";
+    stem verb_pres_1_sg: "~nd- like incattivire";
+    stem verb_pres_1_pl: "~nd- like volgere";
     stem lemma: "~nde- like incattivire";
-    stem rest: "~nde- like girare";
-    stem rest___: "~s- like ardere";
+    stem verb_impf_1_sg: "~nde- like girare";
+    stem verb_past_1_sg: "~s- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -713,7 +713,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Partire: 52 words (dormire, sentire, partire, salire, fuggire, divertire). Like Incattivire, except in 4 cells: subj_2 sg, subj_3 sg, imperative lei, negative_imperative lei.
     conjugation!("partire", 52, "~ire", like Incattivire;
-    stem rest_: "~- like incattivire";
+    stem verb_pres_1_sg: "~- like incattivire";
     subj_2: derived, _;
     subj_3: derived, _;
     imperative: _, derived, _, _, _;
@@ -721,10 +721,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Immettere: 48 words (mettere, smettere, commettere, promettere, ammettere, dimettere).
     conjugation!("immettere", 48, "~ettere", [auxiliary: Avere];
-    stem rest_: "~ett- like incattivire";
-    stem rest__: "~ett- like volgere";
+    stem verb_pres_1_sg: "~ett- like incattivire";
+    stem verb_pres_1_pl: "~ett- like volgere";
     stem lemma: "~ette- like incattivire";
-    stem rest: "~ette- like girare";
+    stem verb_impf_1_sg: "~ette- like girare";
     past_1: "~isi", _;
     past_3: "~ise", "~isero";
     subj_1: _, derived;
@@ -737,11 +737,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Disporre: 45 words (porre, deporre, decomporre, comporre, opporre, proporre).
     conjugation!("disporre", 45, "~rre", [auxiliary: Avere];
-    stem rest_: "~n- like disporre";
-    stem rest__: "~n- like volgere";
+    stem verb_pres_1_sg: "~n- like disporre";
+    stem verb_pres_1_pl: "~n- like volgere";
     stem lemma: "~- like disporre";
-    stem rest: "~ne- like girare";
-    stem rest___: "~s- like disporre";
+    stem verb_impf_1_sg: "~ne- like girare";
+    stem verb_past_1_sg: "~s- like disporre";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -752,11 +752,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Perdersi: 37 words (concludersi, diffondersi, dividersi, chiedersi, concedersi, perdersi). Like Ardere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("perdersi", 37, "~dersi", [auxiliary: Essere], like Ardere;
-    stem rest_: "~d- like capirsi";
-    stem rest__: "~d- like perdersi";
+    stem verb_pres_1_sg: "~d- like capirsi";
+    stem verb_pres_1_pl: "~d- like perdersi";
     stem lemma: "~de- like capirsi";
-    stem rest: "~de- like tapparsi";
-    stem rest___: "~s- like perdersi";
+    stem verb_impf_1_sg: "~de- like tapparsi";
+    stem verb_past_1_sg: "~s- like perdersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -767,11 +767,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Tingersi: 33 words (accorgersi, aggiungersi, dirigersi, spingersi, raggiungersi, dipingersi). Like Volgere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("tingersi", 33, "~gersi", [auxiliary: Essere], like Volgere;
-    stem rest_: "~g- like capirsi";
-    stem rest__: "~g- like perdersi";
+    stem verb_pres_1_sg: "~g- like capirsi";
+    stem verb_pres_1_pl: "~g- like perdersi";
     stem lemma: "~ge- like capirsi";
-    stem rest: "~ge- like tapparsi";
-    stem rest___: "~- like tingersi";
+    stem verb_impf_1_sg: "~ge- like tapparsi";
+    stem verb_past_1_sg: "~- like tingersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -782,11 +782,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Reggere: 28 words (leggere, friggere, proteggere, figgere, struggere, correggere).
     conjugation!("reggere", 28, "~ggere", [auxiliary: Avere];
-    stem rest_: "~gg- like incattivire";
-    stem rest__: "~gg- like volgere";
+    stem verb_pres_1_sg: "~gg- like incattivire";
+    stem verb_pres_1_pl: "~gg- like volgere";
     stem lemma: "~gge- like incattivire";
-    stem rest: "~gge- like girare";
-    stem rest___: "~- like reggere";
+    stem verb_impf_1_sg: "~gge- like girare";
+    stem verb_past_1_sg: "~- like reggere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -797,10 +797,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Compiersi: 28 words (abbattersi, assumersi, imbattersi, battersi, sbattersi, fottersi). Like Gemere, except in 12 cells: past_1 sg, past_3 sg, past_3 pl, subj_1 pl, subj_2 sg, subj_3 sg, ….
     conjugation!("compiersi", 28, "~ersi", [auxiliary: Essere], like Gemere;
-    stem rest_: "~- like capirsi";
-    stem rest__: "~- like perdersi";
+    stem verb_pres_1_sg: "~- like capirsi";
+    stem verb_pres_1_pl: "~- like perdersi";
     stem lemma: "~e- like capirsi";
-    stem rest: "~e- like tapparsi";
+    stem verb_impf_1_sg: "~e- like tapparsi";
     past_1: "~ei", _;
     past_3: "~é", "~erono";
     subj_1: _, derived;
@@ -813,7 +813,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Spargere: 27 words (aspergere, immergere, detergere, emergere, reimmergere, sommergere). Like Volgere.
     conjugation!("spargere", 27, "~gere", [auxiliary: Avere], like Volgere;
-    stem rest___: "~s- like ardere";
+    stem verb_past_1_sg: "~s- like ardere";
     ),
     // Battere: 25 words (battere, fottere, abbattere, vertere, combattere, competere). Like Gemere, except in 3 cells: past_1 sg, past_3 sg, past_3 pl.
     conjugation!("battere", 25, "~ere", [auxiliary: Avere], like Gemere;
@@ -823,14 +823,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Cadere: 25 words (cadere, avere, potere, tangere, parere, convergere). Like Gemere.
     conjugation!("cadere", 25, "~ere", like Gemere;
     stem lemma: "~- like cadere";
-    stem rest___: "~- like cadere";
+    stem verb_past_1_sg: "~- like cadere";
     ),
     // Convenire: 24 words (venire, avvenire, convenire, pervenire, divenire, provenire).
     conjugation!("convenire", 24, "~~nire";
-    stem rest__: "~~ni- like incattivire";
+    stem verb_pres_1_pl: "~~ni- like incattivire";
     stem lemma: "~~- like convenire";
-    stem rest: "~~n- like incattivire";
-    stem rest___: "~~n- like convenire";
+    stem verb_impf_1_sg: "~~n- like incattivire";
+    stem verb_past_1_sg: "~~n- like convenire";
     pres_1: "~~ngo", _;
     pres_2: "~i~ni", _;
     pres_3: "~i~ne", "~~ngono";
@@ -842,11 +842,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Scrivere: 24 words (scrivere, iscrivere, volvere, descrivere, prescrivere, evolvere).
     conjugation!("scrivere", 24, "~vere", [auxiliary: Avere];
-    stem rest_: "~v- like incattivire";
-    stem rest__: "~v- like volgere";
+    stem verb_pres_1_sg: "~v- like incattivire";
+    stem verb_pres_1_pl: "~v- like volgere";
     stem lemma: "~ve- like incattivire";
-    stem rest: "~ve- like girare";
-    stem rest___: "~- like reggere";
+    stem verb_impf_1_sg: "~ve- like girare";
+    stem verb_past_1_sg: "~- like reggere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -857,11 +857,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Torcere: 23 words (vincere, dicere, benedicere, convincere, torcere, attorcere).
     conjugation!("torcere", 23, "~cere", [auxiliary: Avere];
-    stem rest_: "~c- like incattivire";
-    stem rest__: "~c- like volgere";
+    stem verb_pres_1_sg: "~c- like incattivire";
+    stem verb_pres_1_pl: "~c- like volgere";
     stem lemma: "~ce- like incattivire";
-    stem rest: "~ce- like girare";
-    stem rest___: "~- like volgere";
+    stem verb_impf_1_sg: "~ce- like girare";
+    stem verb_past_1_sg: "~- like volgere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -872,7 +872,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Dipartirsi: 22 words (vestirsi, nutrirsi, divertirsi, sentirsi, servirsi, convertirsi). Like Capirsi, except in 4 cells: subj_2 sg, subj_3 sg, imperative lei, negative_imperative lei.
     conjugation!("dipartirsi", 22, "~irsi", [auxiliary: Essere], like Capirsi;
-    stem rest_: "~- like capirsi";
+    stem verb_pres_1_sg: "~- like capirsi";
     subj_2: derived, _;
     subj_3: derived, _;
     imperative: _, derived, _, _, _;
@@ -880,10 +880,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Condurre: 21 words (dedurre, condurre, sedurre, tradurre, produrre, introdurre).
     conjugation!("condurre", 21, "~urre", [auxiliary: Avere];
-    stem rest_: "~uc- like incattivire";
-    stem rest__: "~uc- like volgere";
+    stem verb_pres_1_sg: "~uc- like incattivire";
+    stem verb_pres_1_pl: "~uc- like volgere";
     stem lemma: "~u- like condurre";
-    stem rest: "~uce- like girare";
+    stem verb_impf_1_sg: "~uce- like girare";
     past_1: "~ussi", _;
     past_3: "~usse", "~ussero";
     subj_1: _, derived;
@@ -897,7 +897,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Contraffare: 21 words (fare, tumefare, contraffare, stupefare, sopraffare, artefare).
     conjugation!("contraffare", 21, "~are", [auxiliary: Avere];
     stem lemma: "~a- like incattivire";
-    stem rest: "~ace- like girare";
+    stem verb_impf_1_sg: "~ace- like girare";
     pres_1: "~accio", "~acciamo";
     pres_2: "~ai", _;
     pres_3: "~à", "~anno";
@@ -911,11 +911,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Prendersi: 20 words (sorprendersi, intendersi, difendersi, prendersi, arrendersi, offendersi). Like Scendere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("prendersi", 20, "~ndersi", [auxiliary: Essere], like Scendere;
-    stem rest_: "~nd- like capirsi";
-    stem rest__: "~nd- like perdersi";
+    stem verb_pres_1_sg: "~nd- like capirsi";
+    stem verb_pres_1_pl: "~nd- like perdersi";
     stem lemma: "~nde- like capirsi";
-    stem rest: "~nde- like tapparsi";
-    stem rest___: "~s- like perdersi";
+    stem verb_impf_1_sg: "~nde- like tapparsi";
+    stem verb_past_1_sg: "~s- like perdersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -926,8 +926,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Tenere: 19 words (tenere, contenere, appartenere, mantenere, ottenere, trattenere). Like Convenire, except in 9 cells: pres_2 pl, subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, negative_imperative tu, negative_imperative noi, ….
     conjugation!("tenere", 19, "~~nere", like Convenire;
-    stem rest__: "~~n- like volgere";
-    stem rest: "~~ne- like girare";
+    stem verb_pres_1_pl: "~~n- like volgere";
+    stem verb_impf_1_sg: "~~ne- like girare";
     pres_2: _, "~~nete";
     subj_1: _, derived;
     subj_impf_2: derived, derived;
@@ -941,10 +941,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Crescere: 18 words (cognoscere, crescere, conoscere, decrescere, anticonoscere, disconoscere).
     conjugation!("crescere", 18, "~scere";
-    stem rest_: "~sc- like incattivire";
-    stem rest__: "~sc- like volgere";
+    stem verb_pres_1_sg: "~sc- like incattivire";
+    stem verb_pres_1_pl: "~sc- like volgere";
     stem lemma: "~sce- like incattivire";
-    stem rest: "~sce- like girare";
+    stem verb_impf_1_sg: "~sce- like girare";
     past_1: "~bbi", _;
     past_3: "~bbe", "~bbero";
     subj_1: _, derived;
@@ -957,8 +957,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Imporsi: 18 words (porsi, disporsi, esporsi, imporsi, bersi, opporsi). Like Disporre, except in 8 cells: subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, imperative tu, negative_imperative tu, infinitive, ….
     conjugation!("imporsi", 18, "~rsi", [auxiliary: Essere], like Disporre;
-    stem rest__: "~n- like perdersi";
-    stem rest: "~ne- like tapparsi";
+    stem verb_pres_1_pl: "~n- like perdersi";
+    stem verb_impf_1_sg: "~ne- like tapparsi";
     subj_1: _, derived;
     subj_impf_2: derived, derived;
     imperative: "~niti", _, _, _, _;
@@ -969,7 +969,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Assuefarsi: 18 words (farsi, disfarsi, confarsi, putrefarsi, rarefarsi, sfarsi). Like Contraffare, except in 9 cells: subj_impf_2 sg, subj_impf_2 pl, imperative tu, imperative noi, imperative voi, negative_imperative noi, ….
     conjugation!("assuefarsi", 18, "~arsi", [auxiliary: Essere], like Contraffare;
     stem lemma: "~a- like capirsi";
-    stem rest: "~ace- like tapparsi";
+    stem verb_impf_1_sg: "~ace- like tapparsi";
     subj_impf_2: derived, derived;
     imperative: "~atti", _, "~acciamoci", "~atevi", _;
     negative_imperative: _, _, "~acciamoci|~acciamo", "~atevi|~ate", _;
@@ -977,11 +977,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Trascorrere: 17 words (correre, scorrere, trascorrere, occorrere, decorrere, concorrere).
     conjugation!("trascorrere", 17, "~rere";
-    stem rest_: "~r- like incattivire";
-    stem rest__: "~r- like volgere";
+    stem verb_pres_1_sg: "~r- like incattivire";
+    stem verb_pres_1_pl: "~r- like volgere";
     stem lemma: "~re- like incattivire";
-    stem rest: "~re- like girare";
-    stem rest___: "~s- like ardere";
+    stem verb_impf_1_sg: "~re- like girare";
+    stem verb_past_1_sg: "~s- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -996,7 +996,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Noiare: 15 words (sciare, spiare, sdraiare, sviare, spaiare, piare). Like Girare, except in 8 cells: pres_2 sg, past_3 sg, subj_1 sg, subj_1 pl, imperative loro, negative_imperative noi, ….
     conjugation!("noiare", 15, "~are", like Girare;
-    stem rest__: "~a- like noiare";
+    stem verb_pres_1_pl: "~a- like noiare";
     pres_2: "~", _;
     past_3: "~o", _;
     subj_1: "~", derived;
@@ -1005,9 +1005,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Disdire: 14 words (dire, benedire, interdire, predire, maledire, contraddire). Like Incattivire, except in 9 cells: pres_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("disdire", 14, "~ire", [auxiliary: Avere], like Incattivire;
-    stem rest_: "~ic- like incattivire";
-    stem rest: "~ice- like girare";
-    stem rest___: "~- like dire";
+    stem verb_pres_1_sg: "~ic- like incattivire";
+    stem verb_impf_1_sg: "~ice- like girare";
+    stem verb_past_1_sg: "~- like dire";
     pres_1: _, "~iciamo";
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1018,10 +1018,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Sciogliere: 13 words (sciogliere, cogliere, scegliere, togliere, accogliere, raccogliere).
     conjugation!("sciogliere", 13, "~g~iere", [auxiliary: Avere];
-    stem rest__: "~g~i- like sciogliere";
+    stem verb_pres_1_pl: "~g~i- like sciogliere";
     stem lemma: "~g~ie- like incattivire";
-    stem rest: "~g~ie- like girare";
-    stem rest___: "~~- like volgere";
+    stem verb_impf_1_sg: "~g~ie- like girare";
+    stem verb_past_1_sg: "~~- like volgere";
     pres_1: "~~go", _;
     pres_2: "~g~i", _;
     pres_3: "~g~ie", "~~gono";
@@ -1033,10 +1033,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Mettersi: 13 words (mettersi, dimettersi, permettersi, trasmettersi, sottomettersi, immettersi). Like Immettere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("mettersi", 13, "~ettersi", [auxiliary: Essere], like Immettere;
-    stem rest_: "~ett- like capirsi";
-    stem rest__: "~ett- like perdersi";
+    stem verb_pres_1_sg: "~ett- like capirsi";
+    stem verb_pres_1_pl: "~ett- like perdersi";
     stem lemma: "~ette- like capirsi";
-    stem rest: "~ette- like tapparsi";
+    stem verb_impf_1_sg: "~ette- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1059,7 +1059,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Contrarre: 12 words (trarre, attrarre, distrarre, detrarre, estrarre, contrarre). Like Gemere, except in 16 cells: pres_1 sg, pres_3 pl, fut_1 sg, fut_1 pl, fut_3 pl, cond_1 sg, ….
     conjugation!("contrarre", 12, "~rre", [auxiliary: Avere], like Gemere;
-    stem rest___: "~- like reggere";
+    stem verb_past_1_sg: "~- like reggere";
     pres_1: "~ggo", _;
     pres_3: _, "~ggono";
     fut_1: "~rrò", "~rremo";
@@ -1074,11 +1074,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Imprimere: 12 words (opprimere, esprimere, deprimere, imprimere, comprimere, decomprimere).
     conjugation!("imprimere", 12, "~imere", [auxiliary: Avere];
-    stem rest_: "~im- like incattivire";
-    stem rest__: "~im- like volgere";
+    stem verb_pres_1_sg: "~im- like incattivire";
+    stem verb_pres_1_pl: "~im- like volgere";
     stem lemma: "~ime- like incattivire";
-    stem rest: "~ime- like girare";
-    stem rest___: "~ess- like ardere";
+    stem verb_impf_1_sg: "~ime- like girare";
+    stem verb_past_1_sg: "~ess- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1089,10 +1089,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Reggersi: 12 words (reggersi, proteggersi, leggersi, distruggersi, correggersi, affliggersi). Like Reggere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("reggersi", 12, "~ggersi", [auxiliary: Essere], like Reggere;
-    stem rest_: "~gg- like capirsi";
-    stem rest__: "~gg- like perdersi";
+    stem verb_pres_1_sg: "~gg- like capirsi";
+    stem verb_pres_1_pl: "~gg- like perdersi";
     stem lemma: "~gge- like capirsi";
-    stem rest: "~gge- like tapparsi";
+    stem verb_impf_1_sg: "~gge- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1108,9 +1108,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Spegnere: 11 words (spegnere, dispegnere, accignere, strignere, impignere, pignere). Like Sciogliere, except in 7 cells: pres_3 sg, subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, negative_imperative noi, negative_imperative voi, ….
     conjugation!("spegnere", 11, "~g~ere", [auxiliary: Avere], like Sciogliere;
-    stem rest__: "~g~- like volgere";
+    stem verb_pres_1_pl: "~g~- like volgere";
     stem lemma: "~g~e- like incattivire";
-    stem rest: "~g~e- like girare";
+    stem verb_impf_1_sg: "~g~e- like girare";
     pres_3: "~g~e", _;
     subj_1: _, derived;
     subj_impf_2: derived, derived;
@@ -1119,10 +1119,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Connettere: 10 words (flettere, annettere, connettere, disconnettere, sconnettere, interconnettere).
     conjugation!("connettere", 10, "~ttere", [auxiliary: Avere];
-    stem rest_: "~tt- like incattivire";
-    stem rest__: "~tt- like volgere";
+    stem verb_pres_1_sg: "~tt- like incattivire";
+    stem verb_pres_1_pl: "~tt- like volgere";
     stem lemma: "~tte- like incattivire";
-    stem rest: "~tte- like girare";
+    stem verb_impf_1_sg: "~tte- like girare";
     past_1: "~ttei", _;
     past_3: "~tté", "~tterono";
     subj_1: _, derived;
@@ -1135,11 +1135,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Presumere: 10 words (consumere, presumere, assumere, sumere, desumere, prosumere).
     conjugation!("presumere", 10, "~mere", [auxiliary: Avere];
-    stem rest_: "~m- like incattivire";
-    stem rest__: "~m- like volgere";
+    stem verb_pres_1_sg: "~m- like incattivire";
+    stem verb_pres_1_pl: "~m- like volgere";
     stem lemma: "~me- like incattivire";
-    stem rest: "~me- like girare";
-    stem rest___: "~n- like volgere";
+    stem verb_impf_1_sg: "~me- like girare";
+    stem verb_past_1_sg: "~n- like volgere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1150,8 +1150,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Trattenersi: 10 words (tenersi, trattenersi, sostenersi, astenersi, mantenersi, attenersi). Like Tenere, except in 8 cells: subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, imperative tu, negative_imperative tu, infinitive, ….
     conjugation!("trattenersi", 10, "~~nersi", [auxiliary: Essere], like Tenere;
-    stem rest__: "~~n- like perdersi";
-    stem rest: "~~ne- like tapparsi";
+    stem verb_pres_1_pl: "~~n- like perdersi";
+    stem verb_impf_1_sg: "~~ne- like tapparsi";
     subj_1: _, derived;
     subj_impf_2: derived, derived;
     imperative: "~i~niti", _, _, _, _;
@@ -1161,9 +1161,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Prodursi: 10 words (condursi, dedursi, indursi, introdursi, reintrodursi, tradursi). Like Condurre, except in 11 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("prodursi", 10, "~ursi", [auxiliary: Essere], like Condurre;
-    stem rest_: "~uc- like capirsi";
-    stem rest__: "~uc- like perdersi";
-    stem rest: "~uce- like tapparsi";
+    stem verb_pres_1_sg: "~uc- like capirsi";
+    stem verb_pres_1_pl: "~uc- like perdersi";
+    stem verb_impf_1_sg: "~uce- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1175,10 +1175,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Rompere: 9 words (rompere, interrompere, corrompere, dirompere, disrompere, prorompere).
     conjugation!("rompere", 9, "~ompere", [auxiliary: Avere];
-    stem rest_: "~omp- like incattivire";
-    stem rest__: "~omp- like volgere";
+    stem verb_pres_1_sg: "~omp- like incattivire";
+    stem verb_pres_1_pl: "~omp- like volgere";
     stem lemma: "~ompe- like incattivire";
-    stem rest: "~ompe- like girare";
+    stem verb_impf_1_sg: "~ompe- like girare";
     past_1: "~uppi", _;
     past_3: "~uppe", "~uppero";
     subj_1: _, derived;
@@ -1191,8 +1191,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Contrarsi: 9 words (distrarsi, sottrarsi, trarsi, protrarsi, contrarsi, astrarsi). Like Contrarre, except in 8 cells: subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, imperative tu, negative_imperative tu, infinitive, ….
     conjugation!("contrarsi", 9, "~rsi", [auxiliary: Essere], like Contrarre;
-    stem rest__: "~- like perdersi";
-    stem rest: "~e- like tapparsi";
+    stem verb_pres_1_pl: "~- like perdersi";
+    stem verb_impf_1_sg: "~e- like tapparsi";
     subj_1: _, derived;
     subj_impf_2: derived, derived;
     imperative: "~iti", _, _, _, _;
@@ -1202,11 +1202,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Valere: 9 words (valere, dolere, sdolere, contravvalere, disvalere, equivalere).
     conjugation!("valere", 9, "~lere";
-    stem rest_: "~l- like disporre";
-    stem rest__: "~l- like volgere";
+    stem verb_pres_1_sg: "~l- like disporre";
+    stem verb_pres_1_pl: "~l- like volgere";
     stem lemma: "~- like valere";
-    stem rest: "~le- like girare";
-    stem rest___: "~ls- like ardere";
+    stem verb_impf_1_sg: "~le- like girare";
+    stem verb_past_1_sg: "~ls- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1217,10 +1217,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Aprire: 9 words (offrire, scoprire, aprire, coprire, soffrire, discoprire).
     conjugation!("aprire", 9, "~~ire";
-    stem rest_: "~~- like incattivire";
-    stem rest__: "~~i- like incattivire";
+    stem verb_pres_1_sg: "~~- like incattivire";
+    stem verb_pres_1_pl: "~~i- like incattivire";
     stem lemma: "~~i- like incattivire";
-    stem rest: "~~- like incattivire";
+    stem verb_impf_1_sg: "~~- like incattivire";
     past_1: "~~ii|~e~si", _;
     past_3: "~~ì|~e~se", "~~irono|~e~sero";
     subj_1: _, derived;
@@ -1233,10 +1233,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Vedere: 8 words (vedere, prevedere, disvedere, intravedere, intravvedere, malvedere).
     conjugation!("vedere", 8, "~edere", [auxiliary: Avere];
-    stem rest_: "~ed- like incattivire";
-    stem rest__: "~ed- like volgere";
+    stem verb_pres_1_sg: "~ed- like incattivire";
+    stem verb_pres_1_pl: "~ed- like volgere";
     stem lemma: "~ed- like cadere";
-    stem rest: "~ede- like girare";
+    stem verb_impf_1_sg: "~ede- like girare";
     past_1: "~idi", _;
     past_3: "~ide", "~idero";
     subj_1: _, derived;
@@ -1249,11 +1249,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Vincersi: 8 words (convincersi, vincersi, contorcersi, autoconvincersi, torcersi, distorcersi). Like Torcere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("vincersi", 8, "~cersi", [auxiliary: Essere], like Torcere;
-    stem rest_: "~c- like capirsi";
-    stem rest__: "~c- like perdersi";
+    stem verb_pres_1_sg: "~c- like capirsi";
+    stem verb_pres_1_pl: "~c- like perdersi";
     stem lemma: "~ce- like capirsi";
-    stem rest: "~ce- like tapparsi";
-    stem rest___: "~- like tingersi";
+    stem verb_impf_1_sg: "~ce- like tapparsi";
+    stem verb_past_1_sg: "~- like tingersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1271,11 +1271,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Decuocere: 7 words (cuocere, concuocere, decuocere, incuocere, stracuocere, scuocere).
     conjugation!("decuocere", 7, "~u~cere", [auxiliary: Avere];
-    stem rest_: "~u~c- like decuocere";
-    stem rest__: "~u~c- like volgere";
+    stem verb_pres_1_sg: "~u~c- like decuocere";
+    stem verb_pres_1_pl: "~u~c- like volgere";
     stem lemma: "~u~ce- like incattivire";
-    stem rest: "~u~ce- like girare";
-    stem rest___: "~~- like reggere";
+    stem verb_impf_1_sg: "~u~ce- like girare";
+    stem verb_past_1_sg: "~~- like reggere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1286,14 +1286,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Corrispondere: 7 words (corrispondere, nascondere, respondere, disascondere, controrispondere, ascondere). Like Scendere.
     conjugation!("corrispondere", 7, "~ndere", [auxiliary: Avere], like Scendere;
-    stem rest___: "~s- like disporre";
+    stem verb_past_1_sg: "~s- like disporre";
     ),
     // Flettersi: 7 words (connettersi, disconnettersi, interconnettersi, annettersi, genuflettersi, introflettersi). Like Connettere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("flettersi", 7, "~ttersi", [auxiliary: Essere], like Connettere;
-    stem rest_: "~tt- like capirsi";
-    stem rest__: "~tt- like perdersi";
+    stem verb_pres_1_sg: "~tt- like capirsi";
+    stem verb_pres_1_pl: "~tt- like perdersi";
     stem lemma: "~tte- like capirsi";
-    stem rest: "~tte- like tapparsi";
+    stem verb_impf_1_sg: "~tte- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1305,8 +1305,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Sciogliersi: 7 words (togliersi, scegliersi, accogliersi, disciogliersi, sciogliersi, raccogliersi). Like Sciogliere, except in 8 cells: subj_impf_2 sg, subj_impf_2 pl, imperative tu, imperative noi, imperative voi, negative_imperative noi, ….
     conjugation!("sciogliersi", 7, "~g~iersi", [auxiliary: Essere], like Sciogliere;
     stem lemma: "~g~ie- like capirsi";
-    stem rest: "~g~ie- like tapparsi";
-    stem rest___: "~~- like tingersi";
+    stem verb_impf_1_sg: "~g~ie- like tapparsi";
+    stem verb_past_1_sg: "~~- like tingersi";
     subj_impf_2: derived, derived;
     imperative: "~g~iti", _, "~g~iamoci", "~g~ietevi", _;
     negative_imperative: _, _, "~g~iamoci|~g~iamo", "~g~ietevi|~g~iete", _;
@@ -1314,10 +1314,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Scriversi: 7 words (iscriversi, evolversi, viversi, scriversi, descriversi, prescriversi). Like Scrivere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("scriversi", 7, "~versi", [auxiliary: Essere], like Scrivere;
-    stem rest_: "~v- like capirsi";
-    stem rest__: "~v- like perdersi";
+    stem verb_pres_1_sg: "~v- like capirsi";
+    stem verb_pres_1_pl: "~v- like perdersi";
     stem lemma: "~ve- like capirsi";
-    stem rest: "~ve- like tapparsi";
+    stem verb_impf_1_sg: "~ve- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1328,10 +1328,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Stringere: 6 words (stringere, costringere, astringere, constringere, distringere, restringere).
     conjugation!("stringere", 6, "~ingere", [auxiliary: Avere];
-    stem rest_: "~ing- like incattivire";
-    stem rest__: "~ing- like volgere";
+    stem verb_pres_1_sg: "~ing- like incattivire";
+    stem verb_pres_1_pl: "~ing- like volgere";
     stem lemma: "~inge- like incattivire";
-    stem rest: "~inge- like girare";
+    stem verb_impf_1_sg: "~inge- like girare";
     past_1: "~insi", _;
     past_3: "~inse", "~insero";
     subj_1: _, derived;
@@ -1344,9 +1344,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Sedere: 6 words (sedere, possedere, ossedere, presedere, soprassedere, spossedere).
     conjugation!("sedere", 6, "~~dere";
-    stem rest_: "~i~d- like incattivire";
-    stem rest__: "~~d- like volgere";
-    stem rest: "~~de- like girare";
+    stem verb_pres_1_sg: "~i~d- like incattivire";
+    stem verb_pres_1_pl: "~~d- like volgere";
+    stem verb_impf_1_sg: "~~de- like girare";
     pres_2: _, "~~dete";
     past_1: "~~detti", _;
     past_3: "~~dette", "~~dettero";
@@ -1370,9 +1370,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Disdirsi: 6 words (addirsi, dirsi, contraddirsi, maledirsi, autocontraddirsi, disdirsi).
     conjugation!("disdirsi", 6, "~~rsi", [auxiliary: Essere];
-    stem rest_: "~~c- like capirsi";
+    stem verb_pres_1_sg: "~~c- like capirsi";
     stem lemma: "~~- like capirsi";
-    stem rest: "~~ce- like tapparsi";
+    stem verb_impf_1_sg: "~~ce- like tapparsi";
     pres_1: _, "~~ciamo";
     past_1: "~~ssi", _;
     past_3: "~~sse", "~~ssero";
@@ -1385,11 +1385,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Espellere: 6 words (espellere, depellere, propellere, repellere, impellere, evellere).
     conjugation!("espellere", 6, "~e~lere", [auxiliary: Avere];
-    stem rest_: "~e~l- like incattivire";
-    stem rest__: "~e~l- like volgere";
+    stem verb_pres_1_sg: "~e~l- like incattivire";
+    stem verb_pres_1_pl: "~e~l- like volgere";
     stem lemma: "~e~le- like incattivire";
-    stem rest: "~e~le- like girare";
-    stem rest___: "~u~s- like ardere";
+    stem verb_impf_1_sg: "~e~le- like girare";
+    stem verb_past_1_sg: "~u~s- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1413,13 +1413,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Immergersi: 6 words (immergersi, crocifiggersi, spargersi, reimmergersi, prefiggersi, cospargersi). Like Tingersi.
     conjugation!("immergersi", 6, "~gersi", [auxiliary: Essere], like Tingersi;
-    stem rest___: "~s- like perdersi";
+    stem verb_past_1_sg: "~s- like perdersi";
     ),
     // Volere: 5 words (volere, disvolere, stravolere, svolere, solere).
     conjugation!("volere", 5, "~~lere", [auxiliary: Avere];
-    stem rest__: "~~glia- like noiare";
+    stem verb_pres_1_pl: "~~glia- like noiare";
     stem lemma: "~~- like valere";
-    stem rest: "~~le- like girare";
+    stem verb_impf_1_sg: "~~le- like girare";
     pres_1: "~~glio", _;
     pres_2: "~u~i", _;
     pres_3: "~u~le", "~~gliono";
@@ -1433,9 +1433,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Apparire: 5 words (apparire, comparire, scomparire, disparire, trasparire).
     conjugation!("apparire", 5, "~rire", [auxiliary: Essere];
-    stem rest__: "~ri- like incattivire";
+    stem verb_pres_1_pl: "~ri- like incattivire";
     stem lemma: "~ri- like incattivire";
-    stem rest: "~r- like incattivire";
+    stem verb_impf_1_sg: "~r- like incattivire";
     pres_1: "~io|~risco", _;
     pres_2: "~ri|~risci", _;
     pres_3: "~re|~risce", "~iono|~riscono";
@@ -1450,11 +1450,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Estinguere: 5 words (distinguere, contraddistinguere, suddistinguere, estinguere, stinguere).
     conjugation!("estinguere", 5, "~guere", [auxiliary: Avere];
-    stem rest_: "~gu- like incattivire";
-    stem rest__: "~gu- like volgere";
+    stem verb_pres_1_sg: "~gu- like incattivire";
+    stem verb_pres_1_pl: "~gu- like volgere";
     stem lemma: "~gue- like incattivire";
-    stem rest: "~gue- like girare";
-    stem rest___: "~- like volgere";
+    stem verb_impf_1_sg: "~gue- like girare";
+    stem verb_past_1_sg: "~- like volgere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1465,11 +1465,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Dirigere: 5 words (prediligere, dirigere, diligere, erigere, negligere).
     conjugation!("dirigere", 5, "~igere", [auxiliary: Avere];
-    stem rest_: "~ig- like incattivire";
-    stem rest__: "~ig- like volgere";
+    stem verb_pres_1_sg: "~ig- like incattivire";
+    stem verb_pres_1_pl: "~ig- like volgere";
     stem lemma: "~ige- like incattivire";
-    stem rest: "~ige- like girare";
-    stem rest___: "~e- like reggere";
+    stem verb_impf_1_sg: "~ige- like girare";
+    stem verb_past_1_sg: "~e- like reggere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1480,11 +1480,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Escutere: 5 words (discutere, escutere, incutere, percotere, scotere).
     conjugation!("escutere", 5, "~tere", [auxiliary: Avere];
-    stem rest_: "~t- like incattivire";
-    stem rest__: "~t- like volgere";
+    stem verb_pres_1_sg: "~t- like incattivire";
+    stem verb_pres_1_pl: "~t- like volgere";
     stem lemma: "~te- like incattivire";
-    stem rest: "~te- like girare";
-    stem rest___: "~ss- like ardere";
+    stem verb_impf_1_sg: "~te- like girare";
+    stem verb_past_1_sg: "~ss- like ardere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1495,7 +1495,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Consentire: 5 words (consentire, acconsentire, assentire, dissentire, sconsentire). Like Aprire, except in 1 cell: participle pres.
     conjugation!("consentire", 5, "~~ire", [auxiliary: Avere], like Aprire;
-    stem rest___: "~~- like incattivire";
+    stem verb_past_1_sg: "~~- like incattivire";
     participle: "~zien~e", _;
     ),
     // Travedere: 5 words (antivedere, stravedere, transvedere, travedere, trasvedere). Like Vedere, except in 1 cell: participle past.
@@ -1521,8 +1521,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Dolersi: 5 words (volersi, avvalersi, valersi, dolersi, condolersi). Like Volere, except in 17 cells: pres_1 sg, pres_2 sg, pres_3 pl, past_1 sg, past_3 sg, past_3 pl, ….
     conjugation!("dolersi", 5, "~~lersi", [auxiliary: Essere], like Volere;
-    stem rest__: "~~l- like perdersi";
-    stem rest: "~~le- like tapparsi";
+    stem verb_pres_1_pl: "~~l- like perdersi";
+    stem verb_impf_1_sg: "~~le- like tapparsi";
     pres_1: "~~lgo", _;
     pres_2: "~u~li", _;
     pres_3: _, "~~lgono";
@@ -1537,7 +1537,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Evolversi: 4 words (dissolversi, autoassolversi, assolversi, solversi). Like Scriversi.
     conjugation!("evolversi", 4, "~versi", [auxiliary: Essere], like Scriversi;
-    stem rest___: "~- like tingersi";
+    stem verb_past_1_sg: "~- like tingersi";
     ),
     // Ducere: 4 words (ducere, conducere, educere, reducere). Like Condurre, except in 2 cells: negative_imperative tu, infinitive.
     conjugation!("ducere", 4, "~ucere", [auxiliary: Avere], like Condurre;
@@ -1546,12 +1546,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Chiedere: 4 words (chiedere, dischiedere, inchiedere, nchiedere). Like Ardere.
     conjugation!("chiedere", 4, "~dere", [auxiliary: Avere], like Ardere;
-    stem rest___: "~s- like disporre";
+    stem verb_past_1_sg: "~s- like disporre";
     ),
     // Divellere: 4 words (svellere, eccellere, divellere, disvellere). Like Valere, except in 6 cells: pres_1 sg, pres_3 pl, subj_1 sg, subj_3 pl, imperative loro, negative_imperative loro.
     conjugation!("divellere", 4, "~lere", [auxiliary: Avere], like Valere;
     stem lemma: "~le- like incattivire";
-    stem rest___: "~- like volgere";
+    stem verb_past_1_sg: "~- like volgere";
     pres_1: "~lo|~go", _;
     pres_3: _, "~lono|~gono";
     subj_1: "~la|~ga", _;
@@ -1571,10 +1571,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Muoversi: 4 words (commuoversi, muoversi, smuoversi, autopromuoversi).
     conjugation!("muoversi", 4, "~u~versi", [auxiliary: Essere];
-    stem rest_: "~u~v- like capirsi";
+    stem verb_pres_1_sg: "~u~v- like capirsi";
     stem lemma: "~u~ve- like capirsi";
-    stem rest: "~u~ve- like tapparsi";
-    stem rest___: "~~ss- like perdersi";
+    stem verb_impf_1_sg: "~u~ve- like tapparsi";
+    stem verb_past_1_sg: "~~ss- like perdersi";
     pres_1: _, "~u~viamo";
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1585,13 +1585,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Scindere: 4 words (scindere, prescindere, rescindere, piroscindere). Like Scendere.
     conjugation!("scindere", 4, "~ndere", [auxiliary: Avere], like Scendere;
-    stem rest___: "~ss- like ardere";
+    stem verb_past_1_sg: "~ss- like ardere";
     ),
     // Presapere: 4 words (sapere, strasapere, soprassapere, presapere).
     conjugation!("presapere", 4, "~apere", [auxiliary: Avere];
-    stem rest__: "~appia- like noiare";
+    stem verb_pres_1_pl: "~appia- like noiare";
     stem lemma: "~ap- like cadere";
-    stem rest: "~ape- like girare";
+    stem verb_impf_1_sg: "~ape- like girare";
     pres_1: "~ò", _;
     pres_2: "~ai", _;
     pres_3: "~à", "~anno";
@@ -1609,9 +1609,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Vedersi: 4 words (vedersi, ravvedersi, avvedersi, intravedersi). Like Vedere, except in 11 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("vedersi", 4, "~edersi", [auxiliary: Essere], like Vedere;
-    stem rest_: "~ed- like capirsi";
-    stem rest__: "~ed- like perdersi";
-    stem rest: "~ede- like tapparsi";
+    stem verb_pres_1_sg: "~ed- like capirsi";
+    stem verb_pres_1_pl: "~ed- like perdersi";
+    stem verb_impf_1_sg: "~ede- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1623,8 +1623,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Coprirsi: 4 words (aprirsi, offrirsi, coprirsi, scoprirsi). Like Aprire, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, imperative lei, negative_imperative lei, gerund, ….
     conjugation!("coprirsi", 4, "~~irsi", [auxiliary: Essere], like Aprire;
-    stem rest_: "~~- like capirsi";
-    stem rest__: "~~i- like capirsi";
+    stem verb_pres_1_sg: "~~- like capirsi";
+    stem verb_pres_1_pl: "~~i- like capirsi";
     stem lemma: "~~i- like capirsi";
     subj_1: _, derived;
     subj_2: derived, _;
@@ -1637,7 +1637,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     // Piacersi: 4 words (piacersi, dispiacersi, compiacersi, spiacersi). Like Tacere, except in 10 cells: subj_2 pl, subj_impf_2 sg, subj_impf_2 pl, imperative tu, imperative noi, imperative voi, ….
     conjugation!("piacersi", 4, "~ersi", [auxiliary: Essere], like Tacere;
     stem lemma: "~e- like capirsi";
-    stem rest: "~e- like tapparsi";
+    stem verb_impf_1_sg: "~e- like tapparsi";
     subj_2: _, derived;
     subj_impf_2: derived, derived;
     imperative: "~iti", _, "~ciamoci", "~etevi", _;
@@ -1646,11 +1646,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Imprimersi: 4 words (esprimersi, deprimersi, reprimersi, imprimersi). Like Imprimere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("imprimersi", 4, "~imersi", [auxiliary: Essere], like Imprimere;
-    stem rest_: "~im- like capirsi";
-    stem rest__: "~im- like perdersi";
+    stem verb_pres_1_sg: "~im- like capirsi";
+    stem verb_pres_1_pl: "~im- like perdersi";
     stem lemma: "~ime- like capirsi";
-    stem rest: "~ime- like tapparsi";
-    stem rest___: "~ess- like perdersi";
+    stem verb_impf_1_sg: "~ime- like tapparsi";
+    stem verb_past_1_sg: "~ess- like perdersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1665,8 +1665,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Traggere: 4 words (sottraggere, astraggere, distraggere, traggere). Like Contrarre, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, imperative lei, negative_imperative tu, negative_imperative lei, ….
     conjugation!("traggere", 4, "~ggere", [auxiliary: Avere], like Contrarre;
-    stem rest_: "~gg- like incattivire";
-    stem rest__: "~- like traggere";
+    stem verb_pres_1_sg: "~gg- like incattivire";
+    stem verb_pres_1_pl: "~- like traggere";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1680,9 +1680,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Torre: 4 words (torre, accorre, sciorre, disverre). Like Valere, except in 12 cells: pres_2 sg, pres_2 pl, pres_3 sg, subj_1 pl, subj_impf_2 sg, subj_impf_2 pl, ….
     conjugation!("torre", 4, "~rre", [auxiliary: Avere], like Valere;
-    stem rest__: "~gli- like sciogliere";
-    stem rest: "~glie- like girare";
-    stem rest___: "~l- like volgere";
+    stem verb_pres_1_pl: "~gli- like sciogliere";
+    stem verb_impf_1_sg: "~glie- like girare";
+    stem verb_past_1_sg: "~l- like volgere";
     pres_2: "~gli", "~gliete";
     pres_3: "~glie", _;
     subj_1: _, derived;
@@ -1694,11 +1694,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Assolvere: 3 words (resolvere, dissolvere, assolvere). Like Scrivere.
     conjugation!("assolvere", 3, "~vere", [auxiliary: Avere], like Scrivere;
-    stem rest___: "~- like volgere";
+    stem verb_past_1_sg: "~- like volgere";
     ),
     // Adempiere: 3 words (compiere, empiere, adempiere). Like Battere, except in 6 cells: pres_2 sg, pres_2 pl, subj_1 pl, imperative tu, negative_imperative noi, negative_imperative voi.
     conjugation!("adempiere", 3, "~ere", [auxiliary: Avere], like Battere;
-    stem rest__: "~- like incattivire";
+    stem verb_pres_1_pl: "~- like incattivire";
     pres_2: "~", "~te";
     subj_1: _, derived;
     imperative: "~", _, _, _, _;
@@ -1716,9 +1716,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Morire: 3 words (morire, premorire, smorire).
     conjugation!("morire", 3, "~~rire";
-    stem rest__: "~~ri- like incattivire";
+    stem verb_pres_1_pl: "~~ri- like incattivire";
     stem lemma: "~~ri- like incattivire";
-    stem rest: "~~r- like incattivire";
+    stem verb_impf_1_sg: "~~r- like incattivire";
     pres_1: "~u~io", _;
     pres_2: "~u~ri", _;
     pres_3: "~u~re", "~u~iono";
@@ -1737,12 +1737,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Godere: 3 words (dovere, godere, stragodere). Like Cadere.
     conjugation!("godere", 3, "~ere", [auxiliary: Avere], like Cadere;
-    stem rest___: "~- like essere";
+    stem verb_past_1_sg: "~- like essere";
     ),
     // Cucire: 3 words (cucire, scucire, discucire). Like Empire, except in 7 cells: subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, negative_imperative lei, ….
     conjugation!("cucire", 3, "~ire", [auxiliary: Avere], like Empire;
-    stem rest_: "~- like decuocere";
-    stem rest: "~- like incattivire";
+    stem verb_pres_1_sg: "~- like decuocere";
+    stem verb_impf_1_sg: "~- like incattivire";
     subj_2: derived, _;
     subj_3: derived, _;
     subj_impf_2: derived, derived;
@@ -1766,14 +1766,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Redigere: 3 words (redigere, esigere, transigere). Like Dirigere.
     conjugation!("redigere", 3, "~igere", [auxiliary: Avere], like Dirigere;
-    stem rest___: "~a- like reggere";
+    stem verb_past_1_sg: "~a- like reggere";
     ),
     // Conoscersi: 3 words (conoscersi, accrescersi, ncrescersi). Like Crescere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("conoscersi", 3, "~scersi", [auxiliary: Essere], like Crescere;
-    stem rest_: "~sc- like capirsi";
-    stem rest__: "~sc- like perdersi";
+    stem verb_pres_1_sg: "~sc- like capirsi";
+    stem verb_pres_1_pl: "~sc- like perdersi";
     stem lemma: "~sce- like capirsi";
-    stem rest: "~sce- like tapparsi";
+    stem verb_impf_1_sg: "~sce- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1784,10 +1784,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Rompersi: 3 words (interrompersi, rompersi, corrompersi). Like Rompere, except in 9 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("rompersi", 3, "~ompersi", [auxiliary: Essere], like Rompere;
-    stem rest_: "~omp- like capirsi";
-    stem rest__: "~omp- like perdersi";
+    stem verb_pres_1_sg: "~omp- like capirsi";
+    stem verb_pres_1_pl: "~omp- like perdersi";
     stem lemma: "~ompe- like capirsi";
-    stem rest: "~ompe- like tapparsi";
+    stem verb_impf_1_sg: "~ompe- like tapparsi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1803,10 +1803,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Stringersi: 3 words (costringersi, stringersi, restringersi).
     conjugation!("stringersi", 3, "~~ngersi", [auxiliary: Essere];
-    stem rest_: "~~ng- like capirsi";
-    stem rest__: "~~ng- like perdersi";
+    stem verb_pres_1_sg: "~~ng- like capirsi";
+    stem verb_pres_1_pl: "~~ng- like perdersi";
     stem lemma: "~~nge- like capirsi";
-    stem rest: "~~nge- like tapparsi";
+    stem verb_impf_1_sg: "~~nge- like tapparsi";
     past_1: "~~nsi", _;
     past_3: "~~nse", "~~nsero";
     subj_1: _, derived;
@@ -1819,11 +1819,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Estinguersi: 3 words (distinguersi, estinguersi, contraddistinguersi). Like Estinguere, except in 8 cells: subj_1 pl, subj_2 sg, subj_3 sg, subj_impf_2 sg, subj_impf_2 pl, imperative lei, ….
     conjugation!("estinguersi", 3, "~guersi", [auxiliary: Essere], like Estinguere;
-    stem rest_: "~gu- like capirsi";
-    stem rest__: "~gu- like perdersi";
+    stem verb_pres_1_sg: "~gu- like capirsi";
+    stem verb_pres_1_pl: "~gu- like perdersi";
     stem lemma: "~gue- like capirsi";
-    stem rest: "~gue- like tapparsi";
-    stem rest___: "~- like tingersi";
+    stem verb_impf_1_sg: "~gue- like tapparsi";
+    stem verb_past_1_sg: "~- like tingersi";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;
@@ -1839,7 +1839,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Convenirsi: 3 words (convenirsi, sovvenirsi, nvenirsi). Like Convenire, except in 7 cells: subj_1 pl, imperative tu, negative_imperative tu, infinitive, gerund, participle pres, ….
     conjugation!("convenirsi", 3, "~~nirsi", [auxiliary: Essere], like Convenire;
-    stem rest__: "~~ni- like capirsi";
+    stem verb_pres_1_pl: "~~ni- like capirsi";
     subj_1: _, derived;
     imperative: "~i~niti", _, _, _, _;
     negative_imperative: "~~nirti|~~nire", _, _, _, _;
@@ -1849,7 +1849,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Addarsi: 3 words (darsi, starsi, addarsi). Like Sottostare, except in 8 cells: past_1 sg, past_3 sg, past_3 pl, subj_1 pl, imperative tu, gerund, ….
     conjugation!("addarsi", 3, "~arsi", [auxiliary: Essere], like Sottostare;
-    stem rest__: "~- like tapparsi";
+    stem verb_pres_1_pl: "~- like tapparsi";
     stem lemma: "~a- like capirsi";
     past_1: "~iedi|~etti", _;
     past_3: "~iede|~ette", "~iedero|~ettero";
@@ -1860,15 +1860,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 116] = [
     ),
     // Cherere: 3 words (comburere, cherere, chierere). Like Trascorrere.
     conjugation!("cherere", 3, "~rere", [auxiliary: Avere], like Trascorrere;
-    stem rest___: "~s- like disporre";
+    stem verb_past_1_sg: "~s- like disporre";
     ),
     // Infrociare: 3 words (infrociare, arissomigliare, ramacciare).
     conjugation!("infrociare", 3, "~iare";
-    stem rest_: "~- like infrociare";
-    stem rest__: "~ia- like noiare";
+    stem verb_pres_1_sg: "~- like infrociare";
+    stem verb_pres_1_pl: "~ia- like noiare";
     stem lemma: "~- like infrociare";
-    stem rest: "~ia- like infrociare";
-    stem rest___: "~i- like infrociare";
+    stem verb_impf_1_sg: "~ia- like infrociare";
+    stem verb_past_1_sg: "~i- like infrociare";
     subj_1: _, derived;
     subj_2: derived, _;
     subj_3: derived, _;

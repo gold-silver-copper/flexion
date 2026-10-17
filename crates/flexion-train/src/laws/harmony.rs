@@ -1033,6 +1033,7 @@ mod tests {
             mark_monosyllables: false,
             folded: &[],
             prosody: None,
+            initial: "",
         };
         let consonants = ["k", "t", "p", "m", "s", "n", "h", "v", "l", "r"];
         // Fewer front words than back, as in Finnish: the tier is the back

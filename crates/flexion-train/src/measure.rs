@@ -444,6 +444,13 @@ pub fn agreement<A: Ord + Clone, B: Ord + Clone>(pairs: &[(A, B)]) -> Agreement 
 /// What kind of error a wrong answer is.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Kind {
+    /// No answer at all: no way of building the cell gave a form.
+    Gap,
+    /// Another of the forms the dictionary lists in the cell, first.
+    Variant,
+    /// Another dictionary word spelled the same has this answer in the
+    /// cell: no grammar could tell the two apart.
+    Homograph,
     /// The right letters, the stress or accent elsewhere.
     Accent,
     /// The same letters once marks are taken off: vowel length (or another
@@ -461,6 +468,9 @@ pub enum Kind {
 impl std::fmt::Display for Kind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(match self {
+            Kind::Gap => "gap",
+            Kind::Variant => "variant",
+            Kind::Homograph => "homograph",
             Kind::Accent => "accent",
             Kind::Length => "length",
             Kind::Paradigm => "paradigm",
@@ -468,6 +478,20 @@ impl std::fmt::Display for Kind {
             Kind::Ending => "ending",
         })
     }
+}
+
+impl Kind {
+    /// Every kind, in the order they are told apart (see [`crate::eval::outcomes`]).
+    pub const ALL: [Kind; 8] = [
+        Kind::Gap,
+        Kind::Variant,
+        Kind::Homograph,
+        Kind::Accent,
+        Kind::Length,
+        Kind::Paradigm,
+        Kind::Stem,
+        Kind::Ending,
+    ];
 }
 
 /// The kind of a wrong `answer` for `gold`: `same_letters` says whether the

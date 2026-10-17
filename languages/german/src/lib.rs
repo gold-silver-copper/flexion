@@ -10,11 +10,15 @@ pub use extra::*;
 pub mod adjective;
 pub mod determiner;
 pub mod noun;
+pub mod numeral;
 mod orthography;
+pub mod proper_noun;
 pub mod verb;
 pub use adjective::Adjective;
 pub use determiner::Determiner;
 pub use noun::Noun;
+pub use numeral::Numeral;
+pub use proper_noun::ProperNoun;
 pub use verb::Verb;
 
 /// Grammatical case.
@@ -606,6 +610,18 @@ impl flexion::Label for Auxiliary {
 #[must_use]
 pub fn noun(lemma: &str, case: Case, number: Number) -> String {
     noun::Noun::new(lemma).form(noun::Cell::Form(case, number))
+}
+
+/// A noun in a case and number.
+#[must_use]
+pub fn numeral(lemma: &str, case: Case, number: Number) -> String {
+    numeral::Numeral::new(lemma).form(numeral::Cell::Form(case, number))
+}
+
+/// A noun in a case and number.
+#[must_use]
+pub fn proper_noun(lemma: &str, case: Case, number: Number) -> String {
+    proper_noun::ProperNoun::new(lemma).form(proper_noun::Cell::Form(case, number))
 }
 
 /// An adjective before a noun: its declension (which article, if any, comes before it), case and agreement.

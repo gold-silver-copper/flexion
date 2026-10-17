@@ -130,6 +130,39 @@ impl Editors {
 #[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct PosData {
     pub lexemes: Vec<Lexeme>,
+    /// What reading the tables left out (see [`Audit`]).
+    #[serde(skip)]
+    pub audit: Audit,
+}
+
+/// The data gate on a part's repaired tables: forms that map to no cell
+/// (their tags, how often, a word), and cells one table gives two forms
+/// (how many, a few `word cell: a, b`). Printed after every extraction.
+#[derive(Debug, Clone, Default)]
+pub struct Audit {
+    pub unmapped: BTreeMap<String, (usize, String)>,
+    pub doubled: (usize, Vec<String>),
+}
+
+impl Audit {
+    fn report(&self, part: &str) -> String {
+        let total: usize = self.unmapped.values().map(|(n, _)| n).sum();
+        let mut tags: Vec<_> = self.unmapped.iter().collect();
+        tags.sort_by_key(|(_, (n, _))| std::cmp::Reverse(*n));
+        let tags: Vec<String> = tags
+            .iter()
+            .take(8)
+            .map(|(t, (n, w))| format!("{n} [{t}] ({w})"))
+            .collect();
+        format!(
+            "  {part}: {total} table forms in no cell{}{}; {} cells with two forms from one table{}{}",
+            if tags.is_empty() { "" } else { ": " },
+            tags.join(", "),
+            self.doubled.0,
+            if self.doubled.1.is_empty() { "" } else { ": " },
+            self.doubled.1.join("; ")
+        )
+    }
 }
 
 /// Read every configured part of speech from a dump in one pass.
@@ -145,6 +178,9 @@ pub fn extract(
         stats.failures,
         summary(lang, &out)
     );
+    for (part, d) in lang.parts.iter().zip(&out) {
+        eprintln!("{}", d.audit.report(part.name));
+    }
     foreign(lang, spelling, &mut out)?;
     Ok(out)
 }
@@ -368,27 +404,43 @@ fn read_entry(
                     .iter()
                     .find(|f| f.tags.iter().any(|t| t == "inflection-template"));
                 // A template name ending in `*` matches by prefix.
-                let matches = |t: &str| {
-                    part.templates.iter().any(|p| match p.strip_suffix('*') {
+                let reads = |p: &PartOfSpeech, t: &str| {
+                    p.templates.iter().any(|p| match p.strip_suffix('*') {
                         Some(prefix) => t.starts_with(prefix),
                         None => t == *p,
                     })
+                };
+                let matches = |t: &str| reads(part, t);
+                // A table is the part's whose template it is, and the
+                // language's its template is named for: not an English
+                // noun's with Turkish `tr-infl-noun-c` (`zulm`), nor a
+                // Spanish noun's with the verbs' `es-conj` (`bebotear`).
+                let ours = |t: &str| {
+                    let language = t.split_once('-').is_none_or(|(code, _)| {
+                        code == lang.wiktionary
+                            || code.len() > 3
+                            || !code.chars().all(|c| c.is_ascii_lowercase())
+                    });
+                    let part_of = if part.templates.is_empty() {
+                        !lang.parts.iter().any(|p| reads(p, t))
+                    } else {
+                        matches(t)
+                    };
+                    language && part_of
                 };
                 let read = part.templates.is_empty() || template.is_some_and(|t| matches(&t.form));
                 if read {
                     // An entry may have more than one table (Polish: a Middle
                     // Polish one after the modern one): each table's forms
                     // come after its template's name; those of a template
-                    // the part of speech doesn't read go.
-                    if !part.templates.is_empty() {
-                        let mut reading = true;
-                        repaired.forms.retain(|f| {
-                            if f.tags.iter().any(|t| t == "inflection-template") {
-                                reading = matches(&f.form);
-                            }
-                            f.source.is_none() || reading
-                        });
-                    }
+                    // that isn't the part's go.
+                    let mut reading = true;
+                    repaired.forms.retain(|f| {
+                        if f.tags.iter().any(|t| t == "inflection-template") {
+                            reading = ours(&f.form);
+                        }
+                        f.source.is_none() || reading
+                    });
                     lang.hooks.repair(part.name, &mut repaired);
                 }
                 read
@@ -397,7 +449,7 @@ fn read_entry(
         if !read {
             continue;
         }
-        if let Some(mut lex) = lexeme(lang, spelling, part, c, &repaired, order) {
+        if let Some(mut lex) = lexeme(lang, spelling, part, c, &repaired, order, &mut sink.audit) {
             lex.source = edition.map_or(0, |(s, _)| s);
             sink.lexemes.push(lex);
         }
@@ -411,6 +463,7 @@ fn lexeme(
     cells: &Cells,
     entry: &Entry,
     order: usize,
+    audit: &mut Audit,
 ) -> Option<Lexeme> {
     let fold = |s: &str| {
         let s = if lang.spelling.fold_case {
@@ -418,7 +471,7 @@ fn lexeme(
         } else {
             s.to_string()
         };
-        initial_marks_only(&s, lang.spelling.initial_marks, lang.spelling.vowels)
+        spelling.initial_only(&s)
     };
     let lemma = fold(&entry.word);
     // The model writes an edit's strings' lengths in a byte, and no word
@@ -430,6 +483,8 @@ fn lexeme(
     let tables = part.forms == FormSource::Tables && entry.forms.iter().any(|f| f.source.is_some());
     let mut forms: Vec<Vec<String>> = vec![Vec::new(); cells.total];
     let mut inherent_tags: Vec<String> = lang.hooks.inherent_tags(entry);
+    let mut unmapped: Vec<String> = Vec::new();
+    let mut doubled: Vec<String> = Vec::new();
     for f in &entry.forms {
         let has = |t: &str| f.tags.iter().any(|x| x == t);
         if f.source.is_none() && has("canonical") {
@@ -450,10 +505,19 @@ fn lexeme(
         // forms only the groups that come from the head line.
         let head = f.source.is_none();
         let wanted = |g: &crate::spec::Group| !tables || g.from_head == head;
-        for cell in cells.match_tags(&f.tags, &wanted) {
+        let matched = cells.match_tags(&f.tags, &wanted);
+        if !head && matched.is_empty() {
+            let mut tags = f.tags.clone();
+            tags.sort();
+            unmapped.push(tags.join(" "));
+        }
+        for cell in matched {
             if let Some(slot) = forms.get_mut(cell)
                 && !slot.contains(&form)
             {
+                if !head && !slot.is_empty() {
+                    doubled.push(format!("{cell}: {}, {form}", slot.join(", ")));
+                }
                 slot.push(form.clone());
             }
         }
@@ -544,6 +608,19 @@ fn lexeme(
         })
         .collect();
 
+    for tags in unmapped {
+        let (n, word) = audit.unmapped.entry(tags).or_default();
+        *n += 1;
+        if word.is_empty() {
+            word.clone_from(&lemma);
+        }
+    }
+    audit.doubled.0 += doubled.len();
+    for d in doubled {
+        if audit.doubled.1.len() < 6 {
+            audit.doubled.1.push(format!("{lemma} {d}"));
+        }
+    }
     Some(Lexeme {
         key,
         full: written,
@@ -565,32 +642,6 @@ fn lexeme(
 
 /// The cells in which, by its senses, an entry is a form of another word:
 /// none unless every sense says it is one.
-/// `word` with the marks of `marks` that stand after a consonant of their
-/// word (not on its first letter nor its first vowels) dropped.
-fn initial_marks_only(word: &str, marks: &str, vowels: &str) -> String {
-    if marks.is_empty() || !word.nfd().any(|c| marks.contains(c)) {
-        return word.to_string();
-    }
-    let (mut letters, mut consonant) = (0, false);
-    let mut out = String::with_capacity(word.len());
-    for c in word.nfd() {
-        if unicode_normalization::char::is_combining_mark(c) {
-            if !(marks.contains(c) && consonant && letters > 1) {
-                out.push(c);
-            }
-            continue;
-        }
-        if c.is_alphabetic() {
-            letters += 1;
-            consonant |= !vowels.contains(c);
-        } else {
-            (letters, consonant) = (0, false);
-        }
-        out.push(c);
-    }
-    out.nfc().collect()
-}
-
 /// What a dictionary entry is: a word of its own, or, by every sense's tags,
 /// another word's form (`form-of`: a participle, a comparative) or another
 /// word's spelling (`alt-of`).
@@ -629,19 +680,4 @@ fn form_of_cells(entry: &Entry, cells: &Cells) -> Vec<usize> {
         .iter()
         .flat_map(|s| cells.match_tags(&s.tags, &|_| true))
         .collect()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::initial_marks_only;
-
-    #[test]
-    fn a_breathing_after_a_consonant_of_the_word_is_dropped() {
-        let breathings = "\u{313}\u{314}";
-        let keep = |w: &str| initial_marks_only(w, breathings, "αεηιουω");
-        assert_eq!(keep("ὑπἔκρυπτον"), "ὑπέκρυπτον");
-        assert_eq!(keep("αἰτέω"), "αἰτέω");
-        assert_eq!(keep("ῥήτωρ"), "ῥήτωρ");
-        assert_eq!(keep("ὁ ἀνήρ"), "ὁ ἀνήρ");
-    }
 }

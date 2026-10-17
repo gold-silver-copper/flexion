@@ -17,7 +17,7 @@ use flexion_train::spec::{
 };
 
 pub fn language() -> Language {
-    Language {
+    numerals(crate::with_proper_nouns(Language {
         name: "german",
         display: "German",
         wiktionary: "de",
@@ -98,6 +98,7 @@ pub fn language() -> Language {
                 capitalized: true,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "adjective",
@@ -144,6 +145,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "verb",
@@ -210,6 +212,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
             PartOfSpeech {
                 name: "determiner",
@@ -230,6 +233,7 @@ pub fn language() -> Language {
                 capitalized: false,
                 lemmas_from: vec![],
                 max_words: None,
+                learns_from: None,
             },
         ],
         spelling: Spelling {
@@ -291,7 +295,20 @@ pub fn language() -> Language {
             dump: "Deutsch",
             merge: Merge::All,
         }],
-    }
+    }))
+}
+
+/// The numerals that decline as nouns (`Million`, `Millionen`; `de-ndecl`
+/// is the German noun's declension, not "indeclinable").
+fn numerals(lang: Language) -> Language {
+    crate::with_small(
+        lang,
+        "noun",
+        "numeral",
+        "Numerals that decline (`Million`, `Nonillion`).",
+        &["num"],
+        &[],
+    )
 }
 
 fn group(

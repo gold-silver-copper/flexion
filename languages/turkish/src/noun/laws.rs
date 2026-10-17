@@ -26,9 +26,7 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law1: "{x:[g|k|p|t|ç]}" => "{x|law1[l]}" / "{l:[a|e|i|n|o|r|u|ü|ı]}" _ "+{![+|ˇ|¦|°|‹]}ˇ$" | "+{![+|ˇ|¦|°|‹]}{![+|ˇ|¦|°|‹|a|e|i|o|u|â|î|ö|û|ü|ı]}{![ˇ]*}ˇ$";
         // n+ğ → n+g: 12 words (renk, cenk, pelenk, denk), 0 forms wrong.
         law2: "n+ğ" => "n+g";
-        // ol+i → ol+ü: 5 words (alkol, metropol, alveol, megapol), 0 forms wrong.
-        law3: "ol+i" => "ol+ü";
-        // ul+i → ul+ü: 5 words (kabul, usul, maktul, meful), 0 forms wrong.
-        law4: "ul+i" => "ul+ü";
+        // [ol|ul]+i → +ü: 10 words (alkol, metropol, alveol, megapol), 0 forms wrong.
+        law3: "{x:[ol|ul]}+i" => "{x}+ü";
     }
 };

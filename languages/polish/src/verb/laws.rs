@@ -21,11 +21,11 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law12 = [("w", "a") => "j¦", ("w", "i") => "w", ("w", "o") => "w", ("w", "ą") => "w", ("w", "ę") => "w", ("z", "a") => "ż¦", ("z", "i") => "ż¦", ("z", "o") => "ż¦", ("z", "ą") => "ż¦", ("z", "ę") => "ż¦"];
     }
     rules {
-        // ow+e → +uje: 2,652 words (googlować, mulczować, dziękować, potrzebować), 9 forms wrong.
+        // ow+e → +uje: 2,653 words (googlować, mulczować, dziękować, potrzebować), 9 forms wrong.
         law0: "ow+e" => "+uje";
-        // ow+ą → +ują: 2,652 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
+        // ow+ą → +ują: 2,653 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
         law1: "ow+ą" => "+ują";
-        // ow → uj after [b|c|d|f|g|h|i|j|k|l|m|n|p|r|s|t|u|w|z|ł|ż]; yw → uj after [b|c|d|m|n|p|r|s|t|w|z|ł]; n → ń after [a|e|i|o|t|y]; iw → uj after [g|h|k]; t → cz after [o|p|ą]; k → cz after [a|u] in alternating stems (ˇ), before +$, +[c|m|ę]: 3,043 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
+        // ow → uj after [b|c|d|f|g|h|i|j|k|l|m|n|p|r|s|t|u|w|z|ł|ż]; yw → uj after [b|c|d|m|n|p|r|s|t|w|z|ł]; n → ń after [a|e|i|o|t|y]; iw → uj after [g|h|k]; t → cz after [o|p|ą]; k → cz after [a|u] in alternating stems (ˇ), before +$, +[c|m|ę]: 3,044 words (googlować, mulczować, dziękować, potrzebować), 0 forms wrong.
         law2: "{x:[iw|k|n|ow|t|yw]}" => "{x|law2[l]}" / "{l:[a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|r|s|t|u|w|y|z|ą|ł|ż]}" _ "+ˇ$" | "+{[c|m|ę]}{![ˇ]*}ˇ$";
         // a+e → a+: 197 words (wychowywać, wylogowywać, przygotowywać, opodatkowywać), 0 forms wrong.
         law3: "a+e" => "a+";
@@ -57,31 +57,29 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law16: "{x:[s|r]}+ej" => "{x}+z";
         // s+c → s+zc: 5 words (świstać, chłostać, chlastać, zaświstać), 0 forms wrong.
         law17: "s+c" => "s+zc";
-        // e → a after [i|l] in alternating stems (ˇ), before +ł, [^a|e|i|o|u|y|ó|ą|ę]+ł: 7 words (dnieć, blednąć, odechcieć, zachcieć), 0 forms wrong.
-        law18: "e" => "a¦" / "{[i|l]}" _ "+{[ł]}{![ˇ]*}ˇ$" | "{![+|ˇ|¦|°|‹|a|e|i|o|u|y|ó|ą|ę]}+{[ł]}{![ˇ]*}ˇ$";
         // j+i → j+: 12 words (łajać, tajać, krajać, złajać), 0 forms wrong.
-        law19: "j+i" => "j+";
+        law18: "j+i" => "j+";
         // un+ij → u+ń: 21 words (usunąć, sunąć, splunąć, runąć), 3 forms wrong.
-        law20: "un+ij" => "u+ń";
+        law19: "un+ij" => "u+ń";
         // k+z → +cz: 15 words (płakać, gdakać, skakać, krakać), 0 forms wrong.
-        law21: "k+z" => "+cz";
+        law20: "k+z" => "+cz";
         // zy+n → zy+t: 12 words (przyszyć, uszyć, doszyć, naszyć), 0 forms wrong.
-        law22: "zy+n" => "zy+t";
+        law21: "zy+n" => "zy+t";
         // źd+ż → +żdż: 13 words (jeździć, ujeździć, gnieździć, zagnieździć), 0 forms wrong.
-        law23: "źd+ż" => "+żdż";
+        law22: "źd+ż" => "+żdż";
         // c+n → +tn: 9 words (przeciąć, naciąć, wyciąć, pociąć), 0 forms wrong.
-        law24: "c+n" => "+tn";
+        law23: "c+n" => "+tn";
         // [i|z|l]+z → +ej: 7 words (piać, śmiać, siać, wiać), 0 forms wrong.
-        law25: "{x:[i|z|l]}+z" => "{x}+ej";
+        law24: "{x:[i|z|l]}+z" => "{x}+ej";
         // ss+z → ss+: 7 words (ssać, wyssać, wessać, przyssać), 0 forms wrong.
-        law26: "ss+z" => "ss+";
+        law25: "ss+z" => "ss+";
         // [d|z|w|b]+t → +et: 6 words (odciąć, rozciąć, wciąć, obciąć), 0 forms wrong.
-        law27: "{x:[d|z|w|b]}+t" => "{x}+et";
+        law26: "{x:[d|z|w|b]}+t" => "{x}+et";
         // fi+j → f+: 5 words (trafić, trefić, przytrafić, natrafić), 0 forms wrong.
-        law28: "fi+j" => "f+";
+        law27: "fi+j" => "f+";
         // y+cz → y+ż: 5 words (strzyc, ostrzyc, podstrzyc, przystrzyc), 0 forms wrong.
-        law29: "y+cz" => "y+ż";
+        law28: "y+cz" => "y+ż";
         // y+k → y+g: 5 words (strzyc, ostrzyc, podstrzyc, przystrzyc), 0 forms wrong.
-        law30: "y+k" => "y+g";
+        law29: "y+k" => "y+g";
     }
 };
