@@ -747,3 +747,30 @@ fn the_augment_is_one_law_whatever_vowel_it_meets() {
     assert_eq!(g.best("αἰνέω", 99, &Known::default()), "ᾔνουν");
     assert_eq!(g.best("αὐδάω", 99, &Known::default()), "ηὔδαον");
 }
+
+#[test]
+fn a_word_typed_with_its_accent_before_its_head_keeps_it() {
+    // A word ending in a listed word others inflect as (its head) takes the
+    // head's forms, but not its accent where it is typed with its own
+    // before the head: `Τιμόθεος` isn't accented as `θεός`.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let mut grammars = grammars(&lang, &script, &data);
+    let at = lang
+        .parts
+        .iter()
+        .position(|p| p.name == "noun")
+        .expect("nouns");
+    let g = &mut grammars[at].grammar;
+    let o = script.orthography();
+    let head = o.key(&o.read("θεός").letters);
+    assert!(g.lists(&head));
+    g.heads.words = std::borrow::Cow::Owned(vec![head.into()]);
+    for (typed, as_head) in [("τιμόθεος", false), ("τιμοθεός", true)] {
+        let lemma = g.candidates(typed, 0, &Known::default());
+        let first = lemma.first().expect("an answer");
+        assert_eq!(o.read(&first.form).stress, o.read(typed).stress, "{typed}");
+        assert_eq!(first.status == Status::Listed, as_head, "{typed}");
+    }
+}

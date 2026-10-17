@@ -307,6 +307,21 @@ pub fn learn<'s>(
         }
     };
     trace.mark("rehome and inherent");
+    // A word several paradigms fit votes by what the words ending as it
+    // does have (see [`Evidence::vote`]).
+    let evidence = Evidence::new(&words, &assignment);
+    let (mut paradigms, assignment) = {
+        let now: Vec<((&Word, &crate::laws::Word<'_>), u16)> = words
+            .iter()
+            .zip(&law_words)
+            .zip(assignment.iter().copied())
+            .collect();
+        let voted = crate::par::map(&now, |&(w, p)| {
+            evidence.vote(&orthography, &paradigms, program.as_ref(), w, p)
+        });
+        crate::laws::drop_empty(paradigms, voted)
+    };
+    inherent(&words, &assignment, &mut paradigms);
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their
     // cells' place.
@@ -347,7 +362,13 @@ pub fn learn<'s>(
     // The words the structure wasn't learned from: each takes the paradigm
     // that builds the most of its forms (none, written in parts that each
     // inflect).
-    let rest_assignment = fit(&orthography, &paradigms, program.as_ref(), rest_words);
+    let rest_assignment = fit(
+        &orthography,
+        &paradigms,
+        program.as_ref(),
+        rest_words,
+        &evidence,
+    );
     trace.mark("fit");
     let assigned: Vec<(&Word, u16)> = words
         .iter()
@@ -3150,18 +3171,107 @@ fn builds(
         .count()
 }
 
+/// The training words by paradigm and by each of their endings (their last
+/// letter, two, and so on to all of them), with the cells each has.
+struct Evidence {
+    words: HashMap<String, BTreeMap<u16, Vec<usize>>>,
+    has: Vec<Vec<bool>>,
+}
+
+impl Evidence {
+    fn new(words: &[Word], assignment: &[u16]) -> Self {
+        let mut by: HashMap<String, BTreeMap<u16, Vec<usize>>> = HashMap::default();
+        for (i, (w, &p)) in words.iter().zip(assignment).enumerate() {
+            for n in 1..=w.letters.chars().count() {
+                let mine = by.entry(last(&w.letters, n)).or_default();
+                mine.entry(p).or_default().push(i);
+            }
+        }
+        let has = words
+            .iter()
+            .map(|w| {
+                (0..w.cells.len())
+                    .map(|c| first_form(w, c).is_some())
+                    .collect()
+            })
+            .collect();
+        Self { words: by, has }
+    }
+
+    /// The paradigm a word (`w`, its forms as `forms`) of paradigm `now`
+    /// votes for. A word the dictionary gives some cells of fits every
+    /// paradigm that builds those (German `Monotheismus`, singular only,
+    /// fits `Minderung`'s and `Chauvinismus`'s): it goes to the one whose
+    /// words ending as it does (the most letters any such word shares)
+    /// most often have the cells it lacks, as `Chauvinismus`'s have their
+    /// plural (`Chauvinismen`); with no such words, it stays.
+    fn vote(
+        &self,
+        orthography: &Orthography<'_>,
+        paradigms: &[Paradigm<'_>],
+        laws: Option<&sound_law::Program<'_>>,
+        (w, forms): (&Word, &crate::laws::Word<'_>),
+        now: u16,
+    ) -> u16 {
+        let lacks: Vec<usize> = (0..w.cells.len())
+            .filter(|&c| first_form(w, c).is_none())
+            .collect();
+        let has = forms.forms.iter().flatten().count();
+        let builds_all = |p: u16| {
+            paradigms
+                .get(usize::from(p))
+                .is_some_and(|par| builds(orthography, paradigms, laws, par, forms) == has)
+        };
+        if lacks.is_empty() || has == 0 || !builds_all(now) {
+            return now;
+        }
+        // How many of the cells the word lacks words `of` have.
+        let cells = |of: &[usize]| -> usize {
+            of.iter()
+                .filter_map(|&v| self.has.get(v))
+                .map(|has| lacks.iter().filter(|&&c| has.get(c) == Some(&true)).count())
+                .sum()
+        };
+        for n in (1..=w.letters.chars().count()).rev() {
+            let Some(of) = self.words.get(&last(&w.letters, n)) else {
+                continue;
+            };
+            let mut by: Vec<(usize, u16)> = of
+                .iter()
+                .map(|(&p, words)| (cells(words), p))
+                .filter(|&(n, _)| n > 0)
+                .collect();
+            by.sort_by_key(|&(n, p)| (std::cmp::Reverse(n), p));
+            let mine = by.iter().find(|e| e.1 == now).map_or(0, |e| e.0);
+            if let Some(&(_, p)) = by
+                .iter()
+                .take_while(|e| e.0 > mine)
+                .find(|e| builds_all(e.1))
+            {
+                return p;
+            }
+            if mine > 0 {
+                return now;
+            }
+        }
+        now
+    }
+}
+
 /// Per word, the paradigm that builds the most of its forms (the first of
-/// those that build as many), if any builds one.
+/// those that build as many, or the one its `evidence` votes for), if any
+/// builds one.
 fn fit(
     orthography: &Orthography<'_>,
     paradigms: &[Paradigm<'_>],
     laws: Option<&sound_law::Program<'_>>,
     words: &[Word],
+    evidence: &Evidence,
 ) -> Vec<Option<u16>> {
-    let best = |w: &Word| {
-        let forms: Vec<Option<&str>> = (0..w.cells.len()).map(|c| first_form(w, c)).collect();
+    let best = |word: &Word| {
+        let forms: Vec<Option<&str>> = (0..word.cells.len()).map(|c| first_form(word, c)).collect();
         let w = crate::laws::Word {
-            letters: &w.letters,
+            letters: &word.letters,
             forms,
         };
         paradigms
@@ -3176,6 +3286,7 @@ fn fit(
             .max()
             .filter(|&(n, _)| n > 0)
             .and_then(|(_, std::cmp::Reverse(p))| u16::try_from(p).ok())
+            .map(|p| evidence.vote(orthography, paradigms, laws, (word, &w), p))
     };
     crate::par::map(words, best)
 }
@@ -4080,5 +4191,63 @@ mod tests {
             grammar.paradigm.exceptions.to_vec(),
             vec![(anchored("lis"), 3), (anchored("noga"), 2)]
         );
+    }
+
+    #[test]
+    fn a_word_without_some_cells_votes_for_the_paradigm_its_likes_have_them_in() {
+        // German `Monotheismus` has no plural in the dictionary: both
+        // paradigms build its singular, but the words in `-mus` that have a
+        // plural are `Kapitalismus`'s (`Kapitalismen`), not `Minderung`'s.
+        // A word no word ends like (`Zebra`) stays where it is.
+        let paradigm = |name: &str, lemma: &str, cells: &[&str]| Paradigm {
+            name: Cow::Owned(name.to_string()),
+            words: 3,
+            lemma: Cow::Owned(lemma.to_string()),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Owned(cells.iter().map(|c| format!("{c}\t")).collect()),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let paradigms = [
+            paradigm("minderung", "~", &["~", "~en"]),
+            paradigm("kapitalismus", "~us", &["~us", "~en"]),
+        ];
+        let orthography = Orthography {
+            lowercase: true,
+            vowels: "aeiou",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+            initial: "",
+        };
+        let singular = |key: &str| {
+            let mut w = word(key, &[key]);
+            w.cells.push(Vec::new());
+            w
+        };
+        let words = [
+            word("minderung", &["minderung", "minderungen"]),
+            word("wohnung", &["wohnung", "wohnungen"]),
+            word("kapitalismus", &["kapitalismus", "kapitalismen"]),
+            word("rassismus", &["rassismus", "rassismen"]),
+            singular("monotheismus"),
+            singular("zebra"),
+        ];
+        let evidence = Evidence::new(&words, &[0, 0, 1, 1, 0, 0]);
+        let vote = |w: &Word| {
+            let forms = crate::laws::Word {
+                letters: &w.letters,
+                forms: vec![first_form(w, 0), None],
+            };
+            evidence.vote(&orthography, &paradigms, None, (w, &forms), 0)
+        };
+        assert_eq!(vote(&singular("monotheismus")), 1);
+        assert_eq!(vote(&singular("zebra")), 0);
     }
 }
