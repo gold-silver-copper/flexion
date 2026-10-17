@@ -220,6 +220,7 @@ pub fn shape(lang: &Language, part: &PartOfSpeech) -> Result<learn::Shape, Strin
         marks: None,
         part: part.name.to_string(),
         parts: parts(lang, part)?,
+        stated_length: lang.spelling.stated_length,
         inherent: part
             .inherent
             .iter()
