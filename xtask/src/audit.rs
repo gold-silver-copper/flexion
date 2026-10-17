@@ -114,8 +114,7 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
             let gold_paradigm = rank
                 .and_then(|r| candidates.get(r))
                 .map_or("", |c| c.paradigm);
-            let same_letters = orth.read(answer).letters == orth.read(gold).letters;
-            let kind = measure::kind(gold, answer, same_letters, rank.is_some(), stem);
+            let kind = measure::kind(orth, gold, answer, rank.is_some(), stem);
             let direction = match rank {
                 Some(_) if gold_paradigm == paradigm => "-",
                 Some(_) if size(paradigm) > size(gold_paradigm) => "over-regular",

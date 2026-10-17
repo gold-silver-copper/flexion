@@ -63,9 +63,10 @@ pub struct Words<'a> {
 /// The rows of a run, as written: a header, then per form `part of speech,
 /// mode, word, cell, right (1/0), the right answer's place (1 first; `-`
 /// if no candidate), the first candidate's probability, the right
-/// answer's, its bits, the word's group, the cell's name, and what went
-/// wrong if anything (see [`flexion_train::measure::Kind`])`,
-/// tab-separated.
+/// answer's, its bits, the word's group, the cell's name, what went wrong
+/// if anything (see [`flexion_train::measure::Kind`]), and whether the
+/// first answer is compatible with the length the dictionary states (1/0;
+/// see [`flexion_train::eval::TableLength`])`, tab-separated.
 #[derive(Debug, Default)]
 pub struct Saved {
     text: String,
@@ -83,7 +84,7 @@ pub fn bytes_path(path: &Path) -> std::path::PathBuf {
 }
 
 const HEADER: &str =
-    "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\tgroup\tname\terror\n";
+    "pos\tmode\tword\tcell\tright\trank\ttop\tprobability\tbits\tgroup\tname\terror\tcompatible\n";
 
 impl Saved {
     pub fn add(&mut self, pos: &str, mode: &str, words: &Words<'_>, outcomes: &[Outcome]) {
@@ -95,12 +96,13 @@ impl Saved {
             let error = o.error.map_or(String::new(), |e| e.to_string());
             let _ = writeln!(
                 self.text,
-                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}\t{group}\t{name}\t{error}",
+                "{pos}\t{mode}\t{word}\t{}\t{}\t{rank}\t{:.4}\t{:.4}\t{:.3}\t{group}\t{name}\t{error}\t{}",
                 o.cell,
                 u8::from(o.right()),
                 o.top,
                 o.probability,
-                o.bits
+                o.bits,
+                u8::from(o.compatible)
             );
         }
     }
@@ -122,16 +124,18 @@ impl Saved {
 }
 
 /// A scored word: its group, if saved (see [`groups`]), and per cell
-/// whether it is right, with the cell's name if saved.
+/// whether it is right and whether compatible with stated length (right,
+/// in a run saved without it), with the cell's name if saved.
 #[derive(Default)]
 struct Scored {
     group: Option<String>,
-    cells: BTreeMap<usize, (bool, Option<String>)>,
+    cells: BTreeMap<usize, (bool, bool, Option<String>)>,
 }
 
-/// A cell both runs scored: right in the first, right in the second, and
-/// whether it is one of those `--apart` names.
-type Both = (bool, bool, bool);
+/// A cell both runs scored: right in the first and in the second, whether
+/// it is one of those `--apart` names, and compatible with stated length in
+/// the first and in the second.
+type Both = (bool, bool, bool, (bool, bool));
 
 /// `(pos, mode)` → word → its scored cells.
 type Run = BTreeMap<(String, String), BTreeMap<String, Scored>>;
@@ -156,7 +160,9 @@ fn read(path: &Path) -> Result<Run, String> {
             .or_default();
         scored.group = f.get(9).map(|g| (*g).to_string());
         let name = f.get(10).map(|n| (*n).to_string());
-        scored.cells.insert(cell, (*right == "1", name));
+        let right = *right == "1";
+        let compatible = f.get(12).map_or(right, |c| *c == "1");
+        scored.cells.insert(cell, (right, compatible, name));
     }
     Ok(run)
 }
@@ -197,15 +203,15 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
             };
             let group = cb.group.clone().or_else(|| ca.group.clone());
             let cells: Vec<Both> = (ca.cells.iter())
-                .filter_map(|(cell, (x, na))| {
-                    let (y, nb) = cb.cells.get(cell)?;
+                .filter_map(|(cell, (x, cx, na))| {
+                    let (y, cy, nb) = cb.cells.get(cell)?;
                     let name = nb.as_deref().or(na.as_deref()).unwrap_or("");
-                    Some((*x, *y, apart.is_some_and(|p| name.contains(p))))
+                    Some((*x, *y, apart.is_some_and(|p| name.contains(p)), (*cx, *cy)))
                 })
                 .collect();
             words.push((group.unwrap_or_else(|| "?".into()), cells));
         }
-        let row = |label: &str, keep: &dyn Fn(&str, bool) -> bool| {
+        let row = |label: &str, keep: &dyn Fn(&str, bool) -> bool, compatible: bool| {
             let paired: Vec<Paired> = (words.iter())
                 .map(|(g, cells)| {
                     let mine = cells.iter().filter(|c| keep(g, c.2));
@@ -215,10 +221,13 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
                             a: 0,
                             b: 0,
                         },
-                        |p, &(x, y, _)| Paired {
-                            forms: p.forms + 1,
-                            a: p.a + usize::from(x),
-                            b: p.b + usize::from(y),
+                        |p, &(x, y, _, (cx, cy))| {
+                            let (x, y) = if compatible { (cx, cy) } else { (x, y) };
+                            Paired {
+                                forms: p.forms + 1,
+                                a: p.a + usize::from(x),
+                                b: p.b + usize::from(y),
+                            }
                         },
                     )
                 })
@@ -245,16 +254,24 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
                 c.p
             );
         };
-        row("all", &|_, _| true);
+        row("all", &|_, _| true, false);
+        // A second score where a run has one: compatible with stated length.
+        if words
+            .iter()
+            .flat_map(|(_, cells)| cells)
+            .any(|&(x, y, _, (cx, cy))| x != cx || y != cy)
+        {
+            row("compatible", &|_, _| true, true);
+        }
         if let Some(p) = apart {
-            row(&format!("cells {p}"), &|_, a| a);
-            row("other cells", &|_, a| !a);
+            row(&format!("cells {p}"), &|_, a| a, false);
+            row("other cells", &|_, a| !a, false);
         }
         let groups: std::collections::BTreeSet<&str> =
             words.iter().map(|(g, _)| g.as_str()).collect();
         if groups.len() > 1 {
             for group in groups {
-                row(group, &|g, _| g == group);
+                row(group, &|g, _| g == group, false);
             }
         }
     }

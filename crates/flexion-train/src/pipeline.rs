@@ -55,8 +55,21 @@ pub struct Measured {
     /// or a stem of (an irregular line).
     pub irregular_share: f64,
     /// From the headword, the mean of each block's top-1 (see
-    /// [`eval::by_block`]).
-    pub by_block: f64,
+    /// [`eval::by_block`]): none where no block has enough forms.
+    pub by_block: Option<f64>,
+    /// Each block of cells by name, from the headword.
+    pub blocks: Vec<(String, Score)>,
+    /// Where the spelling marks vowel length both ways, the scores
+    /// compatible with the length the dictionary states (see
+    /// [`eval::TableLength`]).
+    pub compatible: Option<Compatible>,
+    /// A closed class, or a part of speech with fewer than [`SMALL`]
+    /// held-out words: how a new word does, each left out in turn.
+    pub small: Option<Small>,
+    /// The scored grammar's (learned on all but the held-out tenth) sound
+    /// laws, as stated, and irregular forms: beside the shipped grammar's.
+    pub scored_laws: Vec<String>,
+    pub scored_irregular: usize,
     /// The shipped grammar on a sample of its own words, from the headword:
     /// how well it reproduces the dictionary's tables.
     pub reproduced: Score,
@@ -68,6 +81,90 @@ pub struct Measured {
 /// The most of a part's own words its shipped grammar is asked for again
 /// (see [`Measured::reproduced`]).
 const REPRODUCED: usize = 3000;
+
+/// Compatible with stated length (see [`eval::TableLength`]): the floor's
+/// share, and the grammar against it, both so scored. The grammar's own is
+/// [`Score::compatible`].
+#[derive(Debug, Clone)]
+pub struct Compatible {
+    pub floor: f64,
+    pub against_floor: crate::measure::Comparison,
+}
+
+/// A small part of speech (see [`small`]): how a word it hasn't seen does.
+#[derive(Debug, Clone)]
+pub struct Small {
+    pub closed: bool,
+    /// Each of its words left out in turn, from the headword (see
+    /// [`left_out`]).
+    pub left_out: Score,
+    /// Left out a tenth at a time, the part's training being large.
+    pub by_tenth: bool,
+}
+
+/// Fewer held-out words than this make a part of speech small.
+pub const SMALL: usize = 30;
+
+/// Whether a part of speech is judged first on its own words (reproduced),
+/// a new word's score beside: a closed class, or fewer than [`SMALL`]
+/// held-out words (a handful of words is no score).
+pub fn small(part: &crate::spec::PartOfSpeech, held_out: usize) -> bool {
+    part.closed() || held_out < SMALL
+}
+
+/// The most training words a part of speech is learned from once per word
+/// left out (see [`left_out`]); more (another part's words teach it), once
+/// per tenth.
+const LEAVE_ONE: usize = 2000;
+
+/// How a new word of a small part of speech does: each of its own words
+/// (`own`) left out of `every` in turn (each tenth, where `every` has more
+/// than [`LEAVE_ONE`] words), the grammar learned on the rest and asked for
+/// the word's forms from the headword. Its outcomes, by place in `own`, and
+/// whether a tenth was left out at a time. No sharpness is fitted: it
+/// doesn't move top-1.
+pub fn left_out(
+    orthography: flexion::Orthography<'_>,
+    stated: &str,
+    shape: &learn::Shape,
+    every: &[Lexeme],
+    own: &[&Lexeme],
+    settings: Settings,
+) -> (Vec<eval::Outcome>, bool) {
+    let by_tenth = every.len() > LEAVE_ONE;
+    let fold = |l: &Lexeme| {
+        if by_tenth {
+            eval::bucket(&l.key).to_string()
+        } else {
+            l.key.clone()
+        }
+    };
+    let mut folds: std::collections::BTreeMap<String, Vec<usize>> = Default::default();
+    for (i, l) in own.iter().enumerate() {
+        folds.entry(fold(l)).or_default().push(i);
+    }
+    let mut out = Vec::new();
+    for (key, words) in &folds {
+        let rest: Vec<Lexeme> = every.iter().filter(|l| fold(l) != *key).cloned().collect();
+        let learned = learn::learn(orthography, shape, &rest, settings);
+        let left: Vec<&Lexeme> = words.iter().filter_map(|&i| own.get(i).copied()).collect();
+        let outcomes = eval::outcomes(
+            &learned.grammar,
+            &orthography,
+            stated,
+            &left,
+            Input::Headword,
+            &learned.seen,
+            |_| true,
+        );
+        out.extend(outcomes.into_iter().filter_map(|mut o| {
+            o.word = *words.get(o.word)?;
+            Some(o)
+        }));
+    }
+    out.sort_by_key(|o| o.word);
+    (out, by_tenth)
+}
 
 /// Learn every part of speech of `lang` (the shipped grammars) and measure
 /// each on its held-out tenth.
@@ -130,11 +227,13 @@ pub fn build<'s>(
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::TEST && l.source == 0)
             .collect();
-        let score = |input| eval::score(g, &orthography, &test, input, &scored.seen);
+        let stated = script.stated_length.as_str();
+        let score = |input| eval::score(g, &orthography, stated, &test, input, &scored.seen);
         let full = score(Input::Full);
         let outcomes = eval::outcomes(
             g,
             &orthography,
+            stated,
             &test,
             Input::Headword,
             &scored.seen,
@@ -147,10 +246,19 @@ pub fn build<'s>(
         let given = (1..=3).map(|k| score(Input::Given(k))).collect();
         // The floor learns from the same words as the grammar, every edition's.
         let main: Vec<&Lexeme> = train.iter().collect();
-        let floored = eval::floor(&orthography, &main, &test, g.lemma_cell);
+        let floored = eval::floor(&orthography, stated, &main, &test, g.lemma_cell);
         let (floor, floor_unseen) = eval::floor_shares(&outcomes, &floored);
         let against_floor =
-            crate::measure::compare(&eval::against_floor(&outcomes, &floored, |_| true));
+            crate::measure::compare(&eval::against_floor(&outcomes, &floored, |_| true, false));
+        let compatible = (!stated.is_empty()).then(|| Compatible {
+            floor: eval::floor_compatible(&floored),
+            against_floor: crate::measure::compare(&eval::against_floor(
+                &outcomes,
+                &floored,
+                |_| true,
+                true,
+            )),
+        });
         let ceiling = eval::ceiling(&orthography, &test, &outcomes);
         let (on_training, new_root) = strata(&train, g, &test, &outcomes);
         let scoring = at.elapsed().as_secs_f64() - sharpening - scored.trace.total().0;
@@ -172,7 +280,13 @@ pub fn build<'s>(
             .iter()
             .map(|g| g.offset..g.offset + g.len())
             .collect();
-        let (by_block, _) = eval::by_block(&outcomes, &blocks);
+        let (by_block, block_scores) = eval::by_block(&outcomes, &blocks);
+        let blocks: Vec<(String, Score)> = cells
+            .groups
+            .iter()
+            .map(|g| g.name.to_string())
+            .zip(block_scores)
+            .collect();
         let mut seen = crate::HashSet::default();
         let own: Vec<&Lexeme> = d
             .lexemes
@@ -183,10 +297,24 @@ pub fn build<'s>(
         let reproduced = eval::score(
             &shipped.grammar,
             &orthography,
+            stated,
             &own,
             Input::Headword,
             &shipped.seen,
         );
+        let small = small(part, test.len()).then(|| {
+            let shape = learn::Shape {
+                marks: all_marks.clone(),
+                ..shape.clone()
+            };
+            let (outcomes, by_tenth) =
+                left_out(orthography, stated, &shape, &every, &own, settings);
+            Small {
+                closed: part.closed(),
+                left_out: Score::of(&outcomes),
+                by_tenth,
+            }
+        });
         let (all, filled, _) = eval::completion(&shipped.grammar, &own);
         let complete = (all, filled);
         #[allow(clippy::cast_precision_loss)]
@@ -211,6 +339,18 @@ pub fn build<'s>(
             took(&shipped)
         );
         eprintln!("  stages: {}", shipped.trace.line());
+        let scored_laws: Vec<String> = scored.laws.iter().map(ToString::to_string).collect();
+        eprintln!(
+            "  shipped against scored: {} against {} sound laws, {} against {} irregular forms",
+            shipped.laws.len(),
+            scored_laws.len(),
+            shipped.stats.irregular_forms,
+            scored.stats.irregular_forms
+        );
+        let shipped_laws: Vec<String> = shipped.laws.iter().map(ToString::to_string).collect();
+        for (mark, law) in law_sides(&shipped_laws, &scored_laws) {
+            eprintln!("    {mark} {law}");
+        }
         measured.push(Measured {
             name: part.name.to_string(),
             sharpness,
@@ -231,12 +371,31 @@ pub fn build<'s>(
             phrases,
             irregular_share,
             by_block,
+            blocks,
+            compatible,
+            small,
+            scored_laws,
+            scored_irregular: scored.stats.irregular_forms,
             reproduced,
             complete,
         });
         grammars.push(shipped);
     }
     Ok((grammars, measured))
+}
+
+/// The shipped grammar's sound laws beside the scored one's, each as
+/// stated (its tier with it): `=` where both have it, `+` where only the
+/// shipped grammar does, `−` where only the scored one does.
+pub fn law_sides<'a>(shipped: &'a [String], scored: &'a [String]) -> Vec<(char, &'a str)> {
+    let mine = shipped
+        .iter()
+        .map(|l| (if scored.contains(l) { '=' } else { '+' }, l.as_str()));
+    let theirs = scored
+        .iter()
+        .filter(|l| !shipped.contains(l))
+        .map(|l| ('−', l.as_str()));
+    mine.chain(theirs).collect()
 }
 
 /// `outcomes` of the held-out `test` words split into those built on a
@@ -327,7 +486,12 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
          word's spelling, with their number of words. *Phrases*: top-1 on the forms the dictionary\n\
          writes as phrases (the Latin perfect passive, `amātus sum`). *Irregular lines*: the share of the\n\
          dictionary's words the grammar lists a form or a stem of. The held-out tenth was looked at while the trainer was being\n\
-         developed (changes are judged on another tenth since PR #16).\n\n",
+         developed (changes are judged on another tenth since PR #16). A closed class (pronouns,\n\
+         numerals, determiners, adpositions) and a part of speech with fewer than 30 held-out words\n\
+         is judged first on its own words: its top-1 is *reproduced*, the shipped grammar's right\n\
+         forms of the forms of its own words, then *a new word*, top-1 with each word left out of\n\
+         training in turn (a tenth at a time where another part of speech's words teach it). A part\n\
+         with no held-out words has no other score (–).\n\n",
     );
     s.push_str(
         "| | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |\n|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
@@ -351,6 +515,41 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
     };
     for m in measured.iter() {
         let p = m.headword.accuracy();
+        let headline = match &m.small {
+            Some(_) if m.reproduced.forms == 0 => "–".to_string(),
+            Some(small) => format!(
+                "**reproduced {} of {}**; a new word {}",
+                m.reproduced.right,
+                m.reproduced.forms,
+                match small.left_out.forms {
+                    0 => "–".to_string(),
+                    _ => format!(
+                        "{:.2}% ({} word{}{})",
+                        100.0 * small.left_out.accuracy(),
+                        small.left_out.words,
+                        if small.left_out.words == 1 { "" } else { "s" },
+                        if small.by_tenth { ", by tenth" } else { "" }
+                    ),
+                }
+            ),
+            None => format!(
+                "**{:.2}%** ({:.1}–{:.1})",
+                100.0 * p,
+                100.0 * m.interval.0,
+                100.0 * m.interval.1
+            ),
+        };
+        if m.headword.forms == 0 {
+            let none = vec!["–"; 19].join(" | ");
+            let _ = writeln!(
+                s,
+                "| {} | {} | 0 | {headline} | {none} | {:.2}% |",
+                m.name,
+                m.test_words,
+                100.0 * m.irregular_share
+            );
+            continue;
+        }
         let given = if m.given.iter().all(|s| s.forms == 0) {
             String::new()
         } else {
@@ -363,13 +562,10 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
         let f = &m.against_floor;
         let _ = writeln!(
             s,
-            "| {} | {} | {} | **{:.2}%** ({:.1}–{:.1}) | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:+.2} ({:+.2}…{:+.2}) | {:.2}% | {:.2}% | {:.2}% / {:.2}% | {} | {} | {} | {:.2}% |",
+            "| {} | {} | {} | {headline} | {:.2}% | {:.2}% | {:.2}% | {:.3} | {:.3} | {:.2}% | {} | {} | {} | {} | {} | {:.2}% ({:.2}%) | {:+.2} ({:+.2}…{:+.2}) | {:.2}% | {:.2}% | {:.2}% / {:.2}% | {} | {} | {} | {:.2}% |",
             m.name,
             m.test_words,
             m.headword.forms,
-            100.0 * p,
-            100.0 * m.interval.0,
-            100.0 * m.interval.1,
             100.0 * m.headword.top3_accuracy(),
             100.0 * m.headword.among_accuracy(),
             100.0 * m.headword.whole_words(),
@@ -404,24 +600,63 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             100.0 * m.irregular_share,
         );
     }
+    let compatible: Vec<(&Measured, &Compatible)> = measured
+        .iter()
+        .filter(|m| m.headword.forms > 0)
+        .filter_map(|m| Some((m, m.compatible.as_ref()?)))
+        .collect();
+    if !compatible.is_empty() {
+        s.push_str(
+            "\n*Compatible with stated length*: the dictionary marks a vowel's length both ways,\n\
+             long and short, so a vowel it writes with neither has its length unstated where the\n\
+             word's table leaves that vowel bare in every form, and stated where the table marks it\n\
+             elsewhere (a circumflex marks it long). An answer that is the dictionary's form but for a\n\
+             length mark on a vowel the form leaves bare is compatible with it where the table never\n\
+             states that vowel's length otherwise. A second score, for the grammar and the floor alike,\n\
+             beside top-1, which stays the score: the forms it adds are not more forms right.\n\n\
+             | | top-1 | compatible with stated length | floor | floor, compatible | against the floor, compatible |\n\
+             |---|---:|---:|---:|---:|---:|\n",
+        );
+        for (m, c) in compatible {
+            let f = &c.against_floor;
+            let _ = writeln!(
+                s,
+                "| {} | {:.2}% | {:.2}% | {:.2}% | {:.2}% | {:+.2} ({:+.2}…{:+.2}) |",
+                m.name,
+                100.0 * m.headword.accuracy(),
+                100.0 * m.headword.compatible_accuracy(),
+                100.0 * m.floor,
+                100.0 * c.floor,
+                100.0 * (f.b - f.a),
+                100.0 * f.low,
+                100.0 * f.high,
+            );
+        }
+    }
     s.push_str(
         "\n## Where the errors are\n\n\
          The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share\n\
          of them: *class*, the right form is among its answers but another paradigm's comes first;\n\
-         *length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*\n\
-         and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms\n\
-         the dictionary lists comes first; *homograph*, another dictionary word spelled the same has\n\
-         that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a\n\
-         group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the\n\
-         dictionary's own words (at most 3,000), from the headword; *complete*: of those words'\n\
-         cells, the dictionary's or not, the share with a form.\n\n\
-         | | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |\n\
+         *marks*, the right letters but for a mark the spelling folds (a vowel's length, a\n\
+         breathing; not a letter written with a combining mark, as a Devanagari vowel sign);\n\
+         *accent*, the right letters with the accent wrong; *stem* and *ending*, wrong letters\n\
+         inside the stem or after it; *variant*, another of the forms the dictionary lists comes\n\
+         first; *homograph*, another dictionary word spelled the same has that form; *gap*, no form\n\
+         at all. *By block*: the mean of each group of cells' top-1, so a group of many cells\n\
+         doesn't outweigh the rest; a group with fewer than 30 held-out forms is left out of it and\n\
+         named below. *Reproduced*: the shipped grammar on the dictionary's own words (at most\n\
+         3,000), from the headword; *complete*: of those words' cells, the dictionary's or not, the\n\
+         share with a form.\n\n\
+         | | wrong forms | class | marks | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |\n\
          |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
     );
     for m in measured {
         let errors = &m.headword.errors;
         let wrong: usize = errors.iter().sum();
         let of = |k: crate::measure::Kind| {
+            if wrong == 0 {
+                return "–".to_string();
+            }
             let n = crate::measure::Kind::ALL
                 .iter()
                 .position(|&x| x == k)
@@ -433,24 +668,130 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             format!("{share:.0}%")
         };
         use crate::measure::Kind as K;
-        #[allow(clippy::cast_precision_loss)]
-        let complete = 100.0 * m.complete.1 as f64 / m.complete.0.max(1) as f64;
+        // `part` of `all`, as a percentage; – where there is none.
+        let percent = |part: usize, all: usize| {
+            #[allow(clippy::cast_precision_loss)]
+            let p = 100.0 * part as f64 / all.max(1) as f64;
+            if all == 0 {
+                "–".to_string()
+            } else {
+                format!("{p:.2}%")
+            }
+        };
+        let wrong = if m.headword.forms == 0 {
+            "–".to_string()
+        } else {
+            wrong.to_string()
+        };
         let _ = writeln!(
             s,
-            "| {} | {wrong} | {} | {} | {} | {} | {} | {} | {} | {} | {:.2}% | {:.2}% | {complete:.2}% |",
+            "| {} | {wrong} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
             m.name,
             of(K::Paradigm),
-            of(K::Length),
+            of(K::Marks),
             of(K::Accent),
             of(K::Stem),
             of(K::Ending),
             of(K::Variant),
             of(K::Homograph),
             of(K::Gap),
-            100.0 * m.by_block,
-            100.0 * m.reproduced.accuracy(),
+            m.by_block
+                .map_or("–".to_string(), |b| format!("{:.2}%", 100.0 * b)),
+            percent(m.reproduced.right, m.reproduced.forms),
+            percent(m.complete.1, m.complete.0),
         );
+    }
+    let blocks: Vec<String> = measured
+        .iter()
+        .filter(|m| m.blocks.iter().filter(|(_, b)| b.forms > 0).count() > 1)
+        .map(|m| format!("- {}: {}", m.name, blocks(&m.blocks)))
+        .collect();
+    if !blocks.is_empty() {
+        s.push_str("\n*By block*, each group of cells' top-1 and held-out forms:\n\n");
+        s.push_str(&blocks.join("\n"));
+        s.push('\n');
+    }
+    s.push_str(
+        "\n## The shipped grammar and the scored one\n\n\
+         The grammar shipped is learned from every word; the one scored above from all but the\n\
+         held-out tenth. Their sound laws (each with its tier) and irregular forms, side by side;\n\
+         a law one has and the other doesn't is listed below the table.\n\n\
+         | | sound laws, shipped / scored | the same laws | irregular forms, shipped / scored |\n\
+         |---|---:|---:|---:|\n",
+    );
+    let mut differ = Vec::new();
+    for (m, g) in measured.iter().zip(learned) {
+        let shipped: Vec<String> = g.laws.iter().map(ToString::to_string).collect();
+        let sides = law_sides(&shipped, &m.scored_laws);
+        let same = sides.iter().filter(|(mark, _)| *mark == '=').count();
+        let _ = writeln!(
+            s,
+            "| {} | {} / {} | {same} | {} / {} |",
+            m.name,
+            shipped.len(),
+            m.scored_laws.len(),
+            g.stats.irregular_forms,
+            m.scored_irregular,
+        );
+        let only = |side: char| -> Vec<String> {
+            sides
+                .iter()
+                .filter(|(mark, _)| *mark == side)
+                .map(|(_, law)| format!("`{law}`"))
+                .collect()
+        };
+        let (shipped_only, scored_only) = (only('+'), only('−'));
+        if !shipped_only.is_empty() || !scored_only.is_empty() {
+            let mut line = format!("- {}:", m.name);
+            if !shipped_only.is_empty() {
+                let _ = write!(
+                    line,
+                    " only the shipped grammar's: {}.",
+                    shipped_only.join(", ")
+                );
+            }
+            if !scored_only.is_empty() {
+                let _ = write!(
+                    line,
+                    " Only the scored grammar's: {}.",
+                    scored_only.join(", ")
+                );
+            }
+            differ.push(line);
+        }
+    }
+    if !differ.is_empty() {
+        s.push('\n');
+        s.push_str(&differ.join("\n"));
+        s.push('\n');
     }
     s.push('\n');
     s
+}
+
+/// Each block of cells' top-1 and forms, those with fewer than
+/// [`eval::BLOCK_FORMS`] (not in the mean) apart: `name 93.10% (2000), …;
+/// under 30 forms: name 50.00% (4)`.
+pub fn blocks(blocks: &[(String, Score)]) -> String {
+    let each = |few: bool| -> Vec<String> {
+        blocks
+            .iter()
+            .filter(|(_, b)| b.forms > 0 && (b.forms < eval::BLOCK_FORMS) == few)
+            .map(|(name, b)| format!("{name} {:.2}% ({})", 100.0 * b.accuracy(), b.forms))
+            .collect()
+    };
+    let (enough, few) = (each(false), each(true));
+    let mut out = enough.join(", ");
+    if !few.is_empty() {
+        if !out.is_empty() {
+            out.push_str("; ");
+        }
+        let _ = write!(
+            out,
+            "under {} forms (not in the mean): {}",
+            eval::BLOCK_FORMS,
+            few.join(", ")
+        );
+    }
+    out
 }
