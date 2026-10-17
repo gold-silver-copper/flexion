@@ -420,7 +420,16 @@ pub(super) fn learn<'s>(
     // Whether each is a copy: a law of its own.
     let mut copying: Vec<bool> = Vec::new();
     let mut claimed: BTreeSet<Spot> = BTreeSet::new();
-    for (letters, _) in candidates.into_iter().take(CANDIDATES) {
+    // A class is of one kind, vowels or not: an alternation of both (Turkish
+    // verbs' `a`, `e`, `t`, where some paradigms write a `t`) is no class, and
+    // its vowels are one of their own.
+    let one_kind =
+        |letters: &[char]| letters.iter().all(|&c| vowel(c)) || letters.iter().all(|&c| !vowel(c));
+    for (letters, _) in candidates
+        .into_iter()
+        .filter(|(l, _)| one_kind(l))
+        .take(CANDIDATES)
+    {
         // The places writing these letters or fewer; failing that, those
         // writing just these (a copy of every vowel, `-Vn`, is no law of the
         // places writing `a` or `ä` after any, `-ssA`).
