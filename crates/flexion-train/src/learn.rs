@@ -2131,9 +2131,10 @@ fn spell_out(
                 l.cells.iter().flatten().map(String::as_str),
             );
             let same = |a: &str, b: &str| {
+                let (got, want) = (orthography.read(a), orthography.read(b));
                 crate::eval::same_form(orthography, a, b)
-                    || unstated
-                        .compatible(&orthography.read(b).letters, &orthography.read(a).letters)
+                    || (got.stress == want.stress
+                        && unstated.compatible(&want.letters, &got.letters))
             };
             // Right: the first form, and where the dictionary has more, all
             // of them in order.
@@ -3897,8 +3898,10 @@ fn misbuilt(
             let read = orthography.read(want);
             for top in tops {
                 right &= top.is_some_and(|t| {
+                    let got = orthography.read(t);
                     crate::eval::same_form(orthography, t, want)
-                        || unstated.compatible(&read.letters, &orthography.read(t).letters)
+                        || (got.stress == read.stress
+                            && unstated.compatible(&read.letters, &got.letters))
                 });
                 letters |= top.is_none_or(|t| orthography.read(t).letters != read.letters);
             }
