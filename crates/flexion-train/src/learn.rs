@@ -434,6 +434,7 @@ pub fn learn<'s>(
                     owner,
                     part,
                     key: w.key.clone(),
+                    lemma: w.letters.clone(),
                     spellings: std::iter::once(&w.letters)
                         .chain(w.cells.iter().flatten().map(|f| &f.letters))
                         .cloned()

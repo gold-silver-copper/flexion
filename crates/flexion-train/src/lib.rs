@@ -143,6 +143,7 @@ pub fn marks(
                 owner,
                 part,
                 key: key.clone(),
+                lemma: letters.clone(),
                 spellings: spellings.into_iter().collect(),
             });
         }

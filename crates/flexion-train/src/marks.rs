@@ -19,8 +19,9 @@ pub struct Voter<'p> {
     pub owner: usize,
     /// Its part of speech, as the marks read it.
     pub part: &'p str,
-    /// Its lemma's key.
+    /// Its lemma's key and spelling.
     pub key: String,
+    pub lemma: String,
     /// Every spelling of its forms, once each.
     pub spellings: Vec<String>,
 }
@@ -132,8 +133,12 @@ fn unstated(orthography: &Orthography<'_>, c: char) -> bool {
 /// mark and two letters past it, whose words (each once, at least
 /// [`ROOT_WORDS`]; a bare letter whose length is [`unstated`] none, nor a
 /// word whose forms write the letter both ways) write that letter one way,
-/// [`ROOT_SHARE`] of them, where the rules write it otherwise in one of
-/// those spellings. Sorted.
+/// [`ROOT_SHARE`] of them; where they don't decide, the voters' lemmas
+/// beginning so, each spelling once, all one way (at least [`ROOT_WORDS`]:
+/// a verb's participles the dictionary lists as headwords of their own
+/// tell its root, `perstīllō`, `perstīllāns`).
+/// Listed where the rules write the letter otherwise in one of those
+/// spellings. Sorted.
 pub fn roots<'v, 'p: 'v>(
     orthography: &Orthography<'_>,
     voters: impl Iterator<Item = &'v Voter<'p>>,
@@ -193,7 +198,7 @@ pub fn roots<'v, 'p: 'v>(
             }
         }
     }
-    let decided: HashMap<String, char> = votes
+    let mut decided: HashMap<String, char> = votes
         .into_iter()
         .filter_map(|(root, ways)| {
             let total: u32 = ways.values().sum();
@@ -202,6 +207,24 @@ pub fn roots<'v, 'p: 'v>(
                 .then_some((root, l))
         })
         .collect();
+    let spelled: BTreeSet<&str> = voters.iter().map(|v| v.lemma.as_str()).collect();
+    let mut seen: HashMap<String, BTreeMap<char, u32>> = HashMap::default();
+    for place in spelled.into_iter().flat_map(|s| places(s).1) {
+        if let (Some(root), Some(l)) = (place.root, place.letter)
+            && !decided.contains_key(&root)
+        {
+            *seen.entry(root).or_default().entry(l).or_default() += 1;
+        }
+    }
+    decided.extend(seen.into_iter().filter_map(|(root, ways)| {
+        match ways.len() {
+            1 => ways
+                .into_iter()
+                .find(|w| w.1 >= ROOT_WORDS)
+                .map(|w| (root, w.0)),
+            _ => None,
+        }
+    }));
     // The spellings a decided root reads (with the part of speech they are
     // read as, and where), as the rules alone write them.
     let mut read: BTreeMap<(String, &str), Vec<(usize, &str)>> = BTreeMap::new();
@@ -217,6 +240,18 @@ pub fn roots<'v, 'p: 'v>(
             if !mine.is_empty() {
                 read.entry((key, v.part)).or_default().extend(mine);
             }
+        }
+    }
+    for v in &voters {
+        let (key, places) = places(&v.lemma);
+        let mine: Vec<(usize, &str)> = (places.into_iter())
+            .filter_map(|p| {
+                let (root, _) = decided.get_key_value(p.root.as_deref()?)?;
+                Some((p.at, root.as_str()))
+            })
+            .collect();
+        if !mine.is_empty() {
+            read.entry((key, v.part)).or_default().extend(mine);
         }
     }
     let read: Vec<Read<'_>> = read.into_iter().collect();
@@ -334,6 +369,7 @@ mod tests {
             owner,
             part,
             key: LATIN.key(spellings.first().copied().unwrap_or_default()),
+            lemma: spellings.first().copied().unwrap_or_default().to_string(),
             spellings: spellings.iter().map(|s| (*s).to_string()).collect(),
         }
     }
@@ -373,7 +409,7 @@ mod tests {
         // forms `vīvis`, `vīvit`, `vīvī`) is listed, though no lemma begins
         // so; `fīgō`'s many forms are one word's, which alone decides
         // nothing; words whose forms write `sali-` both ways tell nothing of
-        // `salīmu-`.
+        // `salīmu-`; where the words don't decide, the headwords do.
         let words: Vec<(&str, &str, &str)> = ["video", "vinco", "vigeo", "libet", "dico"]
             .into_iter()
             .map(|w| (w, w, "verb"))
@@ -385,12 +421,17 @@ mod tests {
             voter(2, "verb", &["fīgo", "fīgis", "fīgit", "fīgimus"]),
             voter(3, "verb", &["salio", "salīmus"]),
             voter(4, "verb", &["salit", "salīmur"]),
+            // `perstīllō` and its participle, listed as a headword of its
+            // own: one word's vote, but two headwords.
+            voter(5, "verb", &["perstīllo", "perstīllat"]),
+            voter(5, "adjective", &["perstīllans", "perstīllantis"]),
         ];
         let roots = roots(&LATIN, voters.iter(), &rules, 1.0);
         let has = |r: &str| roots.iter().any(|(root, v)| root == r && *v == 'ī');
         assert!(has("vivi"), "{roots:?}");
         assert!(!has("figi"), "{roots:?}");
         assert!(!has("salimu"), "{roots:?}");
+        assert!(has("perstill"), "{roots:?}");
     }
 
     #[test]
@@ -420,6 +461,7 @@ mod tests {
                 owner,
                 part: "noun",
                 key: greek.key(s),
+                lemma: s.to_string(),
                 spellings: vec![s.to_string()],
             })
             .collect();
