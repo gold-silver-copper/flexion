@@ -130,9 +130,10 @@ fn unstated(orthography: &Orthography<'_>, c: char) -> bool {
 /// The roots the marks `rules` don't tell (see [`flexion::Marks::roots`]):
 /// the beginnings of the voters' spellings through a letter that may take a
 /// mark and two letters past it, whose words (each once, at least
-/// [`ROOT_WORDS`]; a bare letter whose length is [`unstated`] none) write
-/// that letter one way, [`ROOT_SHARE`] of them, where the rules write it
-/// otherwise in one of those spellings. Sorted.
+/// [`ROOT_WORDS`]; a bare letter whose length is [`unstated`] none, nor a
+/// word whose forms write the letter both ways) write that letter one way,
+/// [`ROOT_SHARE`] of them, where the rules write it otherwise in one of
+/// those spellings. Sorted.
 pub fn roots<'v, 'p: 'v>(
     orthography: &Orthography<'_>,
     voters: impl Iterator<Item = &'v Voter<'p>>,
@@ -140,10 +141,11 @@ pub fn roots<'v, 'p: 'v>(
     smoothing: f32,
 ) -> Vec<(Cow<'static, str>, char)> {
     let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
-    // Each place a spelling may hold a root's letter: where, the root, and
-    // how the spelling writes the letter (`None`: its length unstated).
-    // A phrase's words are other spellings' (`amātus sum`).
-    let places = |letters: &str| -> (String, Vec<(usize, String, Option<char>)>) {
+    // Each place a spelling may hold a root's letter: where, the letters
+    // through it, the root (if the spelling is long enough to hold it), and
+    // how the spelling writes the letter (`None`: its length unstated). A
+    // phrase's words are other spellings' (`amātus sum`).
+    let places = |letters: &str| -> (String, Vec<Place>) {
         let key = orthography.key(letters);
         if letters.contains(char::is_whitespace) {
             return (key, Vec::new());
@@ -152,24 +154,43 @@ pub fn roots<'v, 'p: 'v>(
         let places = (k.iter().zip(letters.chars()).enumerate())
             .filter(|&(n, (&c, _))| n + 3 >= flexion::ROOT_LETTERS && markable(c))
             .filter_map(|(n, (&c, l))| {
-                let root: String = k.get(..n + 3)?.iter().collect();
-                Some((n, root, (l != c || !unstated(orthography, c)).then_some(l)))
+                Some(Place {
+                    at: n,
+                    through: k.get(..=n)?.iter().collect(),
+                    root: k.get(..n + 3).map(|r| r.iter().collect()),
+                    letter: (l != c || !unstated(orthography, c)).then_some(l),
+                })
             })
             .collect();
         (key, places)
     };
     let mut voters: Vec<&Voter<'_>> = voters.collect();
     voters.sort_by_key(|v| v.owner);
-    // How many words write each root's letter each way.
+    // How many words write each root's letter each way. A word whose forms
+    // beginning with the same letters write the letter both ways casts no
+    // vote on it: its length goes with the ending, not the root (`saliō`,
+    // `salīmus`; `stat`, `stātō`).
     let mut votes: HashMap<String, BTreeMap<char, u32>> = HashMap::default();
     for word in voters.chunk_by(|a, b| a.owner == b.owner) {
-        let mine: BTreeSet<(String, char)> = (word.iter())
+        let mut ways: HashMap<String, BTreeSet<char>> = HashMap::default();
+        let mut mine: BTreeSet<(String, String, char)> = BTreeSet::new();
+        for place in word
+            .iter()
             .flat_map(|v| &v.spellings)
             .flat_map(|s| places(s).1)
-            .filter_map(|(_, root, l)| Some((root, l?)))
-            .collect();
-        for (root, l) in mine {
-            *votes.entry(root).or_default().entry(l).or_default() += 1;
+        {
+            let Some(letter) = place.letter else { continue };
+            ways.entry(place.through.clone())
+                .or_default()
+                .insert(letter);
+            if let Some(root) = place.root {
+                mine.insert((root, place.through, letter));
+            }
+        }
+        for (root, through, l) in mine {
+            if ways.get(&through).is_some_and(|w| w.len() == 1) {
+                *votes.entry(root).or_default().entry(l).or_default() += 1;
+            }
         }
     }
     let decided: HashMap<String, char> = votes
@@ -187,9 +208,11 @@ pub fn roots<'v, 'p: 'v>(
     for v in &voters {
         for s in &v.spellings {
             let (key, places) = places(s);
-            let mine: Vec<(usize, &str)> = places
-                .into_iter()
-                .filter_map(|(n, root, _)| decided.get_key_value(&root).map(|e| (n, e.0.as_str())))
+            let mine: Vec<(usize, &str)> = (places.into_iter())
+                .filter_map(|p| {
+                    let (root, _) = decided.get_key_value(p.root.as_deref()?)?;
+                    Some((p.at, root.as_str()))
+                })
                 .collect();
             if !mine.is_empty() {
                 read.entry((key, v.part)).or_default().extend(mine);
@@ -216,6 +239,14 @@ pub fn roots<'v, 'p: 'v>(
     out.into_iter()
         .map(|(r, v)| (Cow::Owned(r.to_string()), v))
         .collect()
+}
+
+/// A place in a spelling that may hold a root's letter (see [`roots`]).
+struct Place {
+    at: usize,
+    through: String,
+    root: Option<String>,
+    letter: Option<char>,
 }
 
 /// A spelling's key and part of speech, and where it holds a decided
@@ -341,7 +372,8 @@ mod tests {
         // and `vīvus`'s forms write `vīv-` long. The root `vivi` (of the
         // forms `vīvis`, `vīvit`, `vīvī`) is listed, though no lemma begins
         // so; `fīgō`'s many forms are one word's, which alone decides
-        // nothing.
+        // nothing; words whose forms write `sali-` both ways tell nothing of
+        // `salīmu-`.
         let words: Vec<(&str, &str, &str)> = ["video", "vinco", "vigeo", "libet", "dico"]
             .into_iter()
             .map(|w| (w, w, "verb"))
@@ -351,11 +383,14 @@ mod tests {
             voter(0, "verb", &["vīvo", "vīvis", "vīvit"]),
             voter(1, "adjective", &["vīvus", "vīvī"]),
             voter(2, "verb", &["fīgo", "fīgis", "fīgit", "fīgimus"]),
+            voter(3, "verb", &["salio", "salīmus"]),
+            voter(4, "verb", &["salit", "salīmur"]),
         ];
         let roots = roots(&LATIN, voters.iter(), &rules, 1.0);
         let has = |r: &str| roots.iter().any(|(root, v)| root == r && *v == 'ī');
         assert!(has("vivi"), "{roots:?}");
         assert!(!has("figi"), "{roots:?}");
+        assert!(!has("salimu"), "{roots:?}");
     }
 
     #[test]
