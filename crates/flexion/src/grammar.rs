@@ -307,6 +307,12 @@ fn stem_in<'l>(line: &'l str, slot: &str) -> Option<(&'l str, &'l str)> {
 
 /// The form of `cell` in a word's line of the irregular table, if listed.
 fn listed_in(line: &str, cell: u16) -> Option<&str> {
+    spellings_in(line, cell).and_then(|f| pattern::variants(f).next())
+}
+
+/// The forms `line` lists of `cell`, as the dictionary spells them: the
+/// usual one first, others after `|` (Italian `i|gli`).
+fn spellings_in(line: &str, cell: u16) -> Option<&str> {
     let mut parts = line.split('\t').skip(1);
     while let (Some(c), Some(f)) = (parts.next(), parts.next()) {
         if c.parse::<u16>().ok() == Some(cell) {
@@ -770,11 +776,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             None => vec![(None, 1.0)],
         };
         for (i, &cell) in cells.iter().enumerate() {
-            let listed_form = line
+            let listed_forms = line
                 .zip(u16::try_from(cell).ok())
-                .and_then(|(l, c)| listed_in(l, c));
-            if let Some(form) = listed_form {
-                lists.push(vec![listed(crate::recase(form, casing), 1.0)]);
+                .and_then(|(l, c)| spellings_in(l, c));
+            if let Some(forms) = listed_forms {
+                let mut spellings = pattern::variants(forms).map(|f| crate::recase(f, casing));
+                let form = spellings.next().unwrap_or_default();
+                lists.push(vec![Candidate {
+                    also: spellings.collect(),
+                    ..listed(form, 1.0)
+                }]);
                 continue;
             }
             // A cell of a slot whose stem the word lists: built on it, with
