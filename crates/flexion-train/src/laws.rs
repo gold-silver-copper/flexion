@@ -70,10 +70,13 @@ pub enum Change {
     },
     /// Harmony: each class letter an ending writes (`A` of `-lAr`) is,
     /// after the nearest of `tier` before it as written (or none), what
-    /// `map` says: `(class letter, tier letter, value)`.
+    /// `map` says: `(class letter, tier letter, value)`. An `adjacent` law
+    /// reads only the letter just before it (a copy of consonants: `S` of
+    /// English `quizzes`, never the `x` of `foxproof`).
     Harmony {
         tier: Vec<char>,
         map: Vec<(char, Option<char>, char)>,
+        adjacent: bool,
     },
     /// A copy of `letter` (see [`pattern::COPY`]) is `to`.
     Copy { letter: char, to: char },
@@ -174,7 +177,11 @@ impl std::fmt::Display for Law {
                 Ok(())
             }
             // `A → a after a, ı, o, u; e after e, i, ö, ü, none`.
-            Change::Harmony { tier, map } => {
+            Change::Harmony {
+                tier,
+                map,
+                adjacent,
+            } => {
                 let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
                 classes.dedup();
                 for (k, class) in classes.iter().enumerate() {
@@ -203,7 +210,11 @@ impl std::fmt::Display for Law {
                         .collect();
                     write!(f, "{sep}{class} → {}", values.join("; "))?;
                 }
-                write!(f, " (the nearest of {} before it, as written)", list(tier))
+                if *adjacent {
+                    write!(f, " (the letter just before it, if one of {})", list(tier))
+                } else {
+                    write!(f, " (the nearest of {} before it, as written)", list(tier))
+                }
             }
             Change::Copy { letter, to } => write!(f, "copy of {letter} → {to}"),
             // `t → d after [a|o|u|h], before [o|u]+n$, [o|u]+ss`.
@@ -373,14 +384,22 @@ impl Change {
             }
             // The class letter, the nearest tier letter before it as
             // written (or none), and the gap between: read on the output.
-            Change::Harmony { tier, map } => {
+            Change::Harmony {
+                tier,
+                map,
+                adjacent,
+            } => {
                 let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
                 classes.dedup();
                 let t = list(tier);
                 return Stated {
                     target: format!("{{x:[{}]}}", list(&classes)),
                     to: format!("{{x|{name}[t]}}"),
-                    before: format!("{{t:[{t}]?}}{{g:![{t}]*}}"),
+                    before: if *adjacent {
+                        format!("{{t:[{t}]?}}")
+                    } else {
+                        format!("{{t:[{t}]?}}{{g:![{t}]*}}")
+                    },
                     agree: map
                         .iter()
                         .map(|(x, t, v)| {

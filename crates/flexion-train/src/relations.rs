@@ -665,6 +665,7 @@ mod tests {
         let harmony = crate::laws::Change::Harmony {
             tier: "eiıaöüou".chars().collect(),
             map,
+            adjacent: false,
         };
         let laws = crate::laws::compile(&[harmony]).expect("a program");
         let classes = [('I', "iıüu".chars().collect())];
