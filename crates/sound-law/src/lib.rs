@@ -119,6 +119,7 @@ pub mod compiled {
 
 /// The direction in which a rule selects non-overlapping matches.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Direction {
     /// Select the leftmost remaining match first.
     #[default]
@@ -130,6 +131,7 @@ pub enum Direction {
 /// How many matches one rule applies to in a word, and what their contexts
 /// read.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Application {
     /// Apply to every non-overlapping match selected in the rule's direction,
     /// all of them found in the rule's input.

@@ -6,7 +6,7 @@ use unicode_normalization::UnicodeNormalization;
 /// A language's writing conventions, as far as inflection needs them.
 ///
 /// Built as a `const` in a generated crate; nothing is computed before use.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Orthography<'a> {
     /// Look words up in lowercase and give answers the caller's casing.
     pub lowercase: bool,

@@ -702,7 +702,11 @@ as the grammars they were printed from.
 cd flexion
 cargo xtask extract russian   # read ~/.cache/flexion/dumps/Russian.jsonl
 cargo xtask build russian     # learn, measure, and write languages/russian
+cargo xtask build all --lanes 2   # every language, two at a time
 ```
+
+A build saves what it learned and measured in `target/build-cache/`: built again with only
+the printer changed, it reprints from there without learning again.
 
 ## License
 

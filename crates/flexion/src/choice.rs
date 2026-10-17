@@ -10,6 +10,7 @@ use std::borrow::Cow;
 /// the words the rules get wrong. A choice can read beginnings instead (see
 /// [`Side`]).
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Choice<'a, L: Label> {
     /// Which end of a word its rules read.
     pub side: Side,
@@ -22,6 +23,7 @@ pub struct Choice<'a, L: Label> {
 
 /// Which end of a word a choice's rules read.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Side {
     /// Its ending (the paradigm of `книга` is told by `-а`).
     #[default]
@@ -33,6 +35,7 @@ pub enum Side {
 
 /// One rule: the words with this ending (or beginning), and how they split.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Rule<'a, L: Label> {
     pub ending: Cow<'a, str>,
     /// How many of the dictionary's words with this ending take each value,

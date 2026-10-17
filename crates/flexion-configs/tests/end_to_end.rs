@@ -563,3 +563,101 @@ fn the_perfect_passive_is_the_participle_and_sum() {
         }
     }
 }
+
+/// The crate's files printed from `learned` and `measured`, with their
+/// report.
+fn printed(
+    lang: &Language,
+    script: &Script,
+    learned: &[Learned<'_>],
+    measured: &[flexion_train::pipeline::Measured],
+) -> Vec<(String, String)> {
+    let report = flexion_train::report::report(lang, learned, measured);
+    let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
+        .parts
+        .iter()
+        .zip(learned)
+        .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
+        .collect();
+    flexion_train::print::files(lang, script, &parts, &report).expect("printed")
+}
+
+#[test]
+fn a_saved_build_prints_the_crate_its_learning_printed_and_rewrites_nothing() {
+    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join("saved");
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).expect("dir");
+    // Other data, a letter apart, is another key.
+    let english = flexion_configs::english::language();
+    let key = |path: &Path| {
+        flexion_train::saved::key(&english, Settings::default(), &[path]).expect("key")
+    };
+    let text = std::fs::read_to_string(fixture("english")).expect("fixture");
+    let other = dir.join("english.jsonl");
+    let changed = text.replacen("walk", "wolk", 1);
+    assert_ne!(changed, text, "the fixture has `walk`");
+    std::fs::write(&other, changed).expect("written");
+    assert_ne!(key(&fixture("english")), key(&other));
+    for lang in flexion_configs::all() {
+        let script = Script::new(&lang.spelling);
+        let data = data(&lang, &script);
+        // Turkish, whose harmony laws no other fixture has, learns slowly:
+        // its shipped grammars alone.
+        let (learned, measured) = if lang.name == "turkish" {
+            (grammars(&lang, &script, &data), Vec::new())
+        } else {
+            flexion_train::pipeline::build(&lang, &script, &data, Settings::default())
+                .expect("built")
+        };
+        saved_and_printed(&lang, &script, &learned, &measured, &dir);
+    }
+}
+
+/// Save `learned` and `measured`, load them, and check that they print the
+/// same crate; that writing it again over the first touches no file; and
+/// that a file it no longer has goes.
+fn saved_and_printed(
+    lang: &Language,
+    script: &Script,
+    learned: &[Learned<'_>],
+    measured: &[flexion_train::pipeline::Measured],
+    dir: &Path,
+) {
+    use flexion_train::saved;
+    let key = saved::key(lang, Settings::default(), &[&fixture(lang.name)]).expect("key");
+    saved::save(dir, lang.name, key, script, learned, measured).expect("saved");
+    let (kept, kept_measured) = saved::load(dir, lang.name, key, script)
+        .expect("readable")
+        .expect("kept");
+    let fresh = printed(lang, script, learned, measured);
+    let again = printed(lang, script, &kept, &kept_measured);
+    assert_eq!(fresh.len(), again.len(), "{}: the files", lang.name);
+    for ((path, a), (_, b)) in fresh.iter().zip(&again) {
+        assert!(
+            a == b,
+            "{}: {path} differs printed from the saved build",
+            lang.name
+        );
+    }
+    let crate_dir = dir.join(lang.name);
+    flexion_train::print::write(&crate_dir, &fresh).expect("written");
+    let stale = crate_dir.join("src/stale.rs");
+    std::fs::write(&stale, "").expect("stale file");
+    let then = std::time::SystemTime::UNIX_EPOCH + std::time::Duration::from_secs(86_400);
+    for (path, _) in &fresh {
+        let file = std::fs::File::options()
+            .write(true)
+            .open(crate_dir.join(path))
+            .expect("printed file");
+        file.set_modified(then).expect("set its time");
+    }
+    let written = flexion_train::print::write(&crate_dir, &again).expect("written again");
+    assert_eq!(written, 0, "{}: files written again", lang.name);
+    for (path, _) in &fresh {
+        let modified = std::fs::metadata(crate_dir.join(path))
+            .and_then(|m| m.modified())
+            .expect("its time");
+        assert_eq!(modified, then, "{}: {path} touched", lang.name);
+    }
+    assert!(!stale.exists(), "{}: a stale file kept", lang.name);
+}

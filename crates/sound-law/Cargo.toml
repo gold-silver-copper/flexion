@@ -9,6 +9,11 @@ repository.workspace = true
 description = "A declarative, capture-aware sound-change engine"
 
 [dependencies]
+serde = { workspace = true, optional = true }
+
+[features]
+# Serialize compiled programs (for a trainer that keeps what it learned).
+serde = ["dep:serde"]
 
 [lints]
 workspace = true

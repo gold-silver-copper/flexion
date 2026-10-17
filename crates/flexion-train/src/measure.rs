@@ -258,7 +258,7 @@ pub struct Paired {
 }
 
 /// A paired comparison of two runs on the same words.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Comparison {
     pub words: usize,
     pub forms: usize,

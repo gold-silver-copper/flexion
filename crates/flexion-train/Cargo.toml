@@ -10,10 +10,11 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-flexion = { workspace = true }
-sound-law = { workspace = true }
+flexion = { workspace = true, features = ["serde"] }
+sound-law = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
-serde_json = { workspace = true }
+# Floats read back exactly as written: a saved build reprints byte for byte.
+serde_json = { workspace = true, features = ["float_roundtrip"] }
 flate2 = { workspace = true }
 unicode-normalization = { workspace = true }
 

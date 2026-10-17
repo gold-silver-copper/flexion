@@ -11,6 +11,7 @@ use std::borrow::Cow;
 /// *like* another (its parent): the cells its own table leaves empty are the
 /// parent's.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Paradigm<'a> {
     /// The commonest word that inflects this way (`книга`).
     pub name: Cow<'a, str>,
@@ -48,6 +49,7 @@ pub struct Paradigm<'a> {
 /// What a paradigm adds after each of its parent's patterns: `pattern`, or
 /// `other` where the parent's pattern ends in one of `letters`.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Affix<'a> {
     pub pattern: Cow<'a, str>,
     pub other: Cow<'a, str>,
@@ -105,6 +107,7 @@ pub enum Form<'t> {
 /// paradigm derives the cell, and where the word's form of that cell is
 /// listed (a principal part) but this one isn't.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Relation<'a> {
     pub cell: u16,
     /// The cell it comes from: one, or one per value of the feature (the

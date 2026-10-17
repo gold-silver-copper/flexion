@@ -109,18 +109,44 @@ fn marks_file(marks: &flexion::Marks<'_>) -> String {
     )
 }
 
-/// Write the crate into `dir`, replacing its `src/`.
-pub fn write(dir: &Path, files: &[(String, String)]) -> Result<(), String> {
-    let src = dir.join("src");
-    if src.exists() {
-        std::fs::remove_dir_all(&src).map_err(|e| format!("{}: {e}", src.display()))?;
-    }
+/// Write the crate into `dir`: each file whose bytes differ from what is
+/// there (the rest are left as they are, their times too), and nothing else
+/// in its `src/`. Gives how many files it wrote.
+pub fn write(dir: &Path, files: &[(String, String)]) -> Result<usize, String> {
+    let mut written = 0;
     for (path, text) in files {
         let path = dir.join(path);
+        if std::fs::read(&path).is_ok_and(|old| old == text.as_bytes()) {
+            continue;
+        }
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
         }
         std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))?;
+        written += 1;
+    }
+    let keep: std::collections::HashSet<std::path::PathBuf> =
+        files.iter().map(|(path, _)| dir.join(path)).collect();
+    prune(&dir.join("src"), &keep)?;
+    Ok(written)
+}
+
+/// Remove what under `dir` isn't in `keep`, and the directories that leaves
+/// empty.
+fn prune(dir: &Path, keep: &std::collections::HashSet<std::path::PathBuf>) -> Result<(), String> {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return Ok(());
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            prune(&path, keep)?;
+            if std::fs::read_dir(&path).is_ok_and(|mut d| d.next().is_none()) {
+                std::fs::remove_dir(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+            }
+        } else if !keep.contains(&path) {
+            std::fs::remove_file(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        }
     }
     Ok(())
 }

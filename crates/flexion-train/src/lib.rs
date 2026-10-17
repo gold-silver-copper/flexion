@@ -52,6 +52,38 @@ pub fn reseed(seed: u64) {
     SEED.store(seed, Ordering::Relaxed);
 }
 
+/// The hash a cache is kept under, written to as text or bytes: [`Fnv`] from FNV's
+/// own offset basis, whatever a test reseeded.
+pub(crate) struct Hashing(Fnv);
+
+impl Hashing {
+    pub(crate) fn new() -> Hashing {
+        Hashing(Fnv(0xcbf2_9ce4_8422_2325))
+    }
+
+    pub(crate) fn finish(&self) -> u64 {
+        std::hash::Hasher::finish(&self.0)
+    }
+}
+
+impl std::fmt::Write for Hashing {
+    fn write_str(&mut self, s: &str) -> std::fmt::Result {
+        std::hash::Hasher::write(&mut self.0, s.as_bytes());
+        Ok(())
+    }
+}
+
+impl std::io::Write for Hashing {
+    fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+        std::hash::Hasher::write(&mut self.0, bytes);
+        Ok(bytes.len())
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        Ok(())
+    }
+}
+
 pub mod baseline;
 pub mod bits;
 pub mod ceiling;
@@ -68,6 +100,8 @@ pub mod par;
 pub mod pipeline;
 pub mod print;
 pub mod relations;
+pub mod report;
+pub mod saved;
 pub mod script;
 pub mod skeleton;
 pub mod spec;

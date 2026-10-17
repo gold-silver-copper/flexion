@@ -46,7 +46,7 @@ pub enum Input<'p> {
 }
 
 /// Scores for one input mode.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct Score {
     /// Forms scored.
     pub forms: usize,

@@ -14,6 +14,12 @@ sound-law = { workspace = true }
 sound-law-macros = { workspace = true }
 flexion-macros = { workspace = true }
 unicode-normalization = { workspace = true }
+serde = { workspace = true, optional = true }
+
+[features]
+# Serialize a learned grammar (for a trainer that keeps what it learned);
+# generated crates don't need it.
+serde = ["dep:serde", "sound-law/serde"]
 
 [lints]
 workspace = true
