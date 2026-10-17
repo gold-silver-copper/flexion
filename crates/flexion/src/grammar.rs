@@ -338,11 +338,13 @@ pub struct Known<'q> {
     pub full: bool,
 }
 
-/// Which listed words a word ending in one inflects as (compounds, Finnish
-/// `aavameri` as `meri`): every one of at least `least` letters, where the
-/// language's compounds do, but those `not`, whose own words don't (Latin
-/// `capitālis`, `digitālis` don't inflect as `Ītalis`); and those `words`,
-/// whose own compounds do.
+/// Which words a word ending in one inflects as (compounds, Finnish
+/// `aavameri` as `meri`): every listed one of at least `least` letters,
+/// where the language's compounds do, but those `not`, whose own words
+/// don't (Latin `capitālis`, `digitālis` don't inflect as `Ītalis`); and
+/// those `words`, whose own compounds do, listed or not (one not listed
+/// inflects as a word of its own: Finnish `arvomerkintä` as `merkintä`,
+/// `arvomerkinnät`, its last member deciding its harmony).
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Heads<'a> {
     pub least: Option<u8>,
@@ -360,11 +362,21 @@ impl Heads<'_> {
 
     /// Whether a word ending in `head` (a listed word) inflects as it.
     pub fn inflects(&self, head: &str) -> bool {
-        let has = |words: &[Cow<'_, str>]| words.binary_search_by(|w| w.as_ref().cmp(head)).is_ok();
-        self.least
-            .is_some_and(|least| head.chars().count() >= usize::from(least) && !has(&self.not))
-            || has(&self.words)
+        self.least.is_some_and(|least| {
+            head.chars().count() >= usize::from(least) && !has(&self.not, head)
+        }) || self.names(head)
     }
+
+    /// Whether `head` is one of `words`: a word ending in it inflects as
+    /// it, listed or not.
+    pub fn names(&self, head: &str) -> bool {
+        has(&self.words, head)
+    }
+}
+
+/// Whether the sorted `words` have `word`.
+fn has(words: &[Cow<'_, str>], word: &str) -> bool {
+    words.binary_search_by(|w| w.as_ref().cmp(word)).is_ok()
 }
 
 /// How a letter typed without its mark is written: rules on the letter
@@ -1406,8 +1418,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .is_some()
     }
 
-    /// The listed word a word the grammar doesn't list ends in (its head;
-    /// one whose compounds inflect as it, see [`Heads`]), the longest,
+    /// The word a word the grammar doesn't list ends in (its head: a listed
+    /// one whose compounds inflect as it, or one named, see [`Heads`]), the
+    /// longest,
     /// behind at least [`FRONT_LETTERS`] letters: the letters before it and
     /// its letters (`letters` the word's, `key` how it is looked up). None
     /// for a word a prefix splits (see [`Prefixes`]): the prefix decides
@@ -1436,7 +1449,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             key.char_indices()
                 .nth(i)
                 .and_then(|(b, _)| key.get(b..))
-                .is_some_and(|head| self.heads.inflects(head) && self.lists(head))
+                .is_some_and(|head| {
+                    self.heads.names(head) || (self.heads.inflects(head) && self.lists(head))
+                })
         })?;
         let (b, _) = letters.char_indices().nth(at)?;
         Some(letters.split_at(b))

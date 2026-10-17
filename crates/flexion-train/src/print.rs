@@ -984,8 +984,8 @@ fn grammar_files(
         let mut r = format!(
             "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): {}.\n\nuse std::borrow::Cow;\n",
             g.heads.least.map_or(
-                "those whose own compounds in the dictionary do".to_string(),
-                |l| format!("every listed word of {l} letters or more, but those in `NOT`,\n//! whose own words in the dictionary don't; and the shorter ones in `HEADS`,\n//! whose own compounds do")
+                "those whose own compounds in the dictionary do, listed or not (one not\n//! listed inflects as a word of its own, its last member deciding its harmony)".to_string(),
+                |l| format!("every listed word of {l} letters or more, but those in `NOT`,\n//! whose own words in the dictionary don't; and those in `HEADS`, whose own\n//! compounds do, listed or not (one not listed inflects as a word of its own,\n//! its last member deciding its harmony)")
             ),
         );
         for (name, words) in [("NOT", &g.heads.not), ("HEADS", &g.heads.words)] {
