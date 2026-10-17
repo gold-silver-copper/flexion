@@ -711,6 +711,8 @@ pub struct Word<'w> {
 
 /// The fewest words a law must give forms of.
 pub(crate) const MIN_WORDS: usize = 5;
+/// The fewest cells a law must give forms in.
+const MIN_CELLS: usize = 2;
 /// The most forms a law may break, as a share of the forms it fixes.
 const BREAKS: f64 = 0.05;
 /// The more general paradigms a word's paradigm is compared with.
@@ -890,6 +892,7 @@ pub fn learn<'s>(
         &candidates,
         readings,
         &forms,
+        &cells_of,
         assignment.clone(),
         &rank,
         &Halves {
@@ -1467,6 +1470,7 @@ fn greedy(
     candidates: &[(Change, u32)],
     mut readings: Vec<Vec<Reading>>,
     forms: &[Vec<&str>],
+    cells_of: &[Vec<usize>],
     mut assignment: Vec<u16>,
     rank: &dyn Fn(usize) -> (usize, usize),
     halves: &Halves<'_>,
@@ -1526,7 +1530,7 @@ fn greedy(
                 let own = context(&change, &found, &readings, forms, halves);
                 let gives = own.as_ref().map_or(0, |own| {
                     try_law(own, &found, &readings, forms, &assignment)
-                        .filter(|t| t.kept(held))
+                        .filter(|t| t.kept(cells_of, held))
                         .map_or(0, |t| t.fixed.len())
                 });
                 for (j, (law, _)) in laws.iter().enumerate() {
@@ -1552,7 +1556,7 @@ fn greedy(
                     let t = try_law(&trial, &found, &readings, forms, &assignment);
                     #[allow(clippy::cast_precision_loss)]
                     let enough = |t: &Tried| t.fixed.len() as f64 >= (1.0 - BREAKS) * gives as f64;
-                    if let Some(t) = t.filter(|t| t.kept(held) && enough(t)) {
+                    if let Some(t) = t.filter(|t| t.kept(cells_of, held) && enough(t)) {
                         (into, tried, change) = (Some(j), Some((t, true)), trial);
                         break;
                     }
@@ -1579,7 +1583,7 @@ fn greedy(
                 let Some(t) = try_law(&change, &found, &readings, forms, &assignment) else {
                     break;
                 };
-                let kept = t.kept(held);
+                let kept = t.kept(cells_of, held);
                 let grown = (!kept && growing)
                     .then(|| grow(&change, &t, &readings, halves))
                     .flatten();
@@ -1589,7 +1593,7 @@ fn greedy(
                     None => break,
                 }
             }
-            let growable = |t: &Tried| t.growable();
+            let growable = |t: &Tried| t.growable(cells_of);
             if !growing
                 && matches!(&tried, Some((t, false)) if growable(t))
                 && matches!(change, Change::Edge { .. })
@@ -1809,16 +1813,16 @@ struct Tried {
 }
 
 impl Tried {
-    /// Whether the law is kept: it pays for itself, and on the words held
-    /// out (see [`held_out`]) breaks no more forms than the tolerance allows.
-    /// A law of one cell is a law too (Spanish `grande`, `grandísimo`: the
-    /// stem's last vowel goes before the superlative's `í`).
-    fn kept(&self, held: &[bool]) -> bool {
-        let words = self.gives();
+    /// Whether the law is kept: it gives forms in more than one cell, pays
+    /// for itself, and on the words held out (see [`held_out`]) breaks no
+    /// more forms than the tolerance allows.
+    fn kept(&self, cells_of: &[Vec<usize>], held: &[bool]) -> bool {
+        let (words, cells) = self.gives(cells_of);
         let breaks = u32::try_from(self.broken.len()).unwrap_or(u32::MAX);
         let dev = |l: &[At]| l.iter().filter(|a| held.get(a.0) == Some(&true)).count();
         let (fixed, broken) = (dev(&self.fixed), dev(&self.broken));
-        pays(words, breaks, self.fixed.len())
+        cells >= MIN_CELLS
+            && pays(words, breaks, self.fixed.len())
             && harmony::tolerated(
                 u32::try_from(fixed + broken).unwrap_or(u32::MAX),
                 u32::try_from(broken).unwrap_or(u32::MAX),
@@ -1827,17 +1831,25 @@ impl Tried {
 }
 
 impl Tried {
-    /// How many words it gives forms of.
-    fn gives(&self) -> usize {
+    /// How many words and cells it gives forms of.
+    fn gives(&self, cells_of: &[Vec<usize>]) -> (usize, usize) {
         let mut words: Vec<usize> = self.fixed.iter().map(|a| a.0).collect();
         words.dedup();
-        words.len()
+        let mut cells: Vec<usize> = self
+            .fixed
+            .iter()
+            .filter_map(|&(w, _, k)| cells_of.get(w)?.get(k).copied())
+            .collect();
+        cells.sort_unstable();
+        cells.dedup();
+        (words.len(), cells.len())
     }
 
     /// Whether context could make it a law: it gives enough forms, and
     /// breaks some (context only ever gives fewer).
-    fn growable(&self) -> bool {
-        self.gives() >= MIN_WORDS && !self.broken.is_empty()
+    fn growable(&self, cells_of: &[Vec<usize>]) -> bool {
+        let (words, cells) = self.gives(cells_of);
+        words >= MIN_WORDS && cells >= MIN_CELLS && !self.broken.is_empty()
     }
 }
 
