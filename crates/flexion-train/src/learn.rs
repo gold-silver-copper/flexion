@@ -202,12 +202,6 @@ pub fn learn<'s>(
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
     let (prefixes, bases) = prefixes(all_words);
-    // The words made of two, validated on the words alone: their last
-    // member decides their harmony (see `heads`).
-    let lasts = members(&everyone, shape.cells, &|key| {
-        (prefixes.as_ref().and_then(|p| p.split(key)))
-            .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
-    });
     let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
     let mut words: Vec<Word> = all_words
         .iter()
@@ -285,7 +279,6 @@ pub fn learn<'s>(
                 .zip(&a.cells)
                 .map(|(f, p)| f.filter(|_| p.as_deref() != Some(DERIVED)))
                 .collect(),
-            front: lasts.of.get(w.key.as_str()).map_or(0, |m| m.1),
         })
         .collect();
     // Kept from a run with the same input, for experiments (see
@@ -549,6 +542,8 @@ pub fn learn<'s>(
             .and_then(|p| p.split(key))
             .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
+    // The words made of two, validated on the words alone.
+    let lasts = last_members(&everyone, shape.cells, &split);
     let missed = missed(&grammar, &everyone, &lasts);
     let missed = |head: &str| missed.contains(head);
     grammar.heads = heads(
@@ -3137,7 +3132,7 @@ const HEAD_OWN: usize = 2;
 /// [`HEAD_SHARE`] of the words ending in it, at least [`HEAD_OWN`], inflect
 /// as (German `Schein`: `Fahrschein`, `Führerschein`).
 ///
-/// Of the other last members (see [`members`]), those `missed` (the rules
+/// Of the other last members (see [`last_members`]), those `missed` (the rules
 /// would build a new compound of one wrong as a word of its own, see
 /// [`missed`]) are `words` too: a word ending in one inflects as it,
 /// listed or not (Finnish `arvomerkintä` as `merkintä`, its last member
@@ -3271,7 +3266,7 @@ const FRONTS: usize = 8;
 
 /// The words' last members (see [`Members`]); words a prefix splits
 /// (`split`) or written in parts aren't made of them.
-fn members<'w>(
+fn last_members<'w>(
     words: &'w [Word],
     cells: usize,
     split: &(dyn Fn(&str) -> bool + Sync),
@@ -3405,7 +3400,6 @@ fn fit(
         let w = crate::laws::Word {
             letters: &w.letters,
             forms,
-            front: 0,
         };
         paradigms
             .iter()
@@ -4117,7 +4111,7 @@ mod tests {
             &|_| true,
             &|_| true,
             &|_| false,
-            &members(&words, 3, &|_| false),
+            &last_members(&words, 3, &|_| false),
             &|_| true,
         );
         assert_eq!(
@@ -4144,7 +4138,7 @@ mod tests {
                 &|_| true,
                 &|_| true,
                 &|_| false,
-                &members(&words, 3, &|_| false),
+                &last_members(&words, 3, &|_| false),
                 &|_| true,
             )
             .is_empty()
@@ -4162,7 +4156,7 @@ mod tests {
             &|_| true,
             &|_| true,
             &|_| false,
-            &members(&words, 3, &|_| false),
+            &last_members(&words, 3, &|_| false),
             &|_| true,
         );
         assert_eq!(
@@ -4175,7 +4169,7 @@ mod tests {
     fn a_last_member_its_compounds_bear_out_is_a_head_where_the_rules_miss_them() {
         // Finnish `arvomerkintä`, `laatumerkintä`, `lokimerkintä` have
         // `merkintä`'s forms behind their first member: it is their last
-        // member (harmony reads from it), and a head, not listed, where the
+        // member, and a head, not listed, where the
         // rules would build a new one wrong as a word of its own.
         // Superlatives only happen to end in `isin`: theirs aren't its
         // forms.
@@ -4190,7 +4184,7 @@ mod tests {
             let forms = ["in", "immat", "inta"].map(|f| format!("{front}is{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let members = members(&words, 3, &|_| false);
+        let members = last_members(&words, 3, &|_| false);
         let of: Vec<(&str, &str, usize)> = (members.of.iter())
             .map(|(w, (head, front))| (*w, *head, *front))
             .collect();

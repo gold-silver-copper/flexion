@@ -694,15 +694,11 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
 }
 
 /// A word, as the learner sees it: its letters, and per cell its usual form
-/// (`None` where the dictionary has none, or the cell is derived); and the
-/// bytes before its last member, where it is made of two (see
-/// `learn::members`), which every form begins with: harmony reads what
-/// comes after them.
+/// (`None` where the dictionary has none, or the cell is derived).
 #[derive(Debug)]
 pub struct Word<'w> {
     pub letters: &'w str,
     pub forms: Vec<Option<&'w str>>,
-    pub front: usize,
 }
 
 /// The fewest words a law must give forms of.

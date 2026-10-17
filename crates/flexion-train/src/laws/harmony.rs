@@ -27,10 +27,6 @@
 //! gives its words' letter, breaking few; a class that makes no two endings
 //! one goes; paradigms then alike are one.
 //!
-//! A word made of two (see `learn::members`) is read from its last member:
-//! in a compound the last member decides (Karlsson, *Finnish: An Essential
-//! Grammar*, vowel harmony; `arvo|merkinnät`, as `merkinnät`).
-//!
 //! A class whose value is the tier letter itself is a copy (the Finnish
 //! illative `-Vn`: `taloon`, `kylään`, `maahan`), a law however near its
 //! letter is (no law at the stem's edge states it once): it copies each of
@@ -237,13 +233,10 @@ fn other_spellings(
                     .into_iter()
                     .flatten()
                     .filter_map(|&w| {
-                        let word = words.get(w)?;
-                        let stems = par.stems(orthography, word.letters)?;
+                        let stems = par.stems(orthography, words.get(w)?.letters)?;
                         let form: Vec<char> = pattern::fill(&spelling, &stems).chars().collect();
                         let before = form.len().checked_sub(len - at)?;
-                        // A word made of two: its last member.
-                        let front = word.letters.get(..word.front)?.chars().count();
-                        Some(form.get(front.min(before)..before)?.iter().collect())
+                        Some(form.get(..before)?.iter().collect())
                     })
                     .collect();
                 if befores.is_empty() {
@@ -402,12 +395,10 @@ pub(super) fn learn<'s>(
             }
         }
     }
-    // A word made of two reads its last member (`arvo|merkinnät`).
     let seen = |spot: &Spot, e: &Example| -> Option<Seen<'_>> {
-        let word = words.get(e.0)?;
-        let form: &str = word.forms.get(spot.1)?.as_ref()?;
+        let form: &str = words.get(e.0)?.forms.get(spot.1)?.as_ref()?;
         let at = form.get(e.1..)?.chars().next()?;
-        Some((form.get(word.front.min(e.1)..e.1)?, at, e.0))
+        Some((form.get(..e.1)?, at, e.0))
     };
     // The alternations, those whose letters cover the most examples first:
     // a class is the widest set one law decides (`ı i u ü`, not `ı i`).
@@ -1172,7 +1163,6 @@ mod tests {
             .map(|(w, forms, _)| Word {
                 letters: w,
                 forms: forms.iter().map(|f| Some(f.as_str())).collect(),
-                front: 0,
             })
             .collect();
         let paradigm = |name: &'static str, table: &'static str| Paradigm {
@@ -1286,87 +1276,5 @@ mod tests {
         for v in vowels {
             assert_eq!(map.get(&Some(v)), Some(&v), "{map:?}");
         }
-    }
-
-    #[test]
-    fn a_compound_s_last_member_decides_and_harmony_twins_are_one() {
-        // Finnish `-ssA` after a back vowel, a front one, or neither (`-ssä`):
-        // `kahvissa`, `tyylissä`, `piirissä`. A compound with a back first
-        // member and a neutral last one takes the last member's value
-        // (`vaalipiirissä`): read from its last member, the two paradigms
-        // writing `-ssa` and `-ssä` are one; read whole, one in eight of the
-        // front paradigm's words breaks the law and they stay two.
-        let orthography = Orthography {
-            lowercase: true,
-            vowels: "aeiouyäö",
-            stress_marks: "",
-            stressed: &[],
-            implicit: "",
-            dropped: "",
-            mark_monosyllables: false,
-            folded: &[],
-            prosody: None,
-            initial: "",
-        };
-        let consonants = ["k", "t", "p", "m", "s", "n", "h", "v", "l", "r"];
-        // A word, its front's bytes, its paradigm (0 back, 1 front).
-        let mut lexicon: Vec<(String, usize, u16)> = Vec::new();
-        for c in consonants {
-            for d in consonants {
-                for (v, p) in [('a', 0), ('o', 0), ('u', 0), ('ä', 1), ('i', 1)] {
-                    lexicon.push((format!("{c}{v}{d}i"), 0, p));
-                }
-            }
-        }
-        // The compounds: `kaka|kiki`.
-        for c in consonants {
-            for d in &consonants[..3] {
-                let front = format!("{c}a{d}a");
-                lexicon.push((format!("{front}{c}i{d}i"), front.len(), 1));
-            }
-        }
-        let forms: Vec<[String; 2]> = lexicon
-            .iter()
-            .map(|(w, _, p)| {
-                [
-                    w.clone(),
-                    format!("{w}ss{}", if *p == 0 { 'a' } else { 'ä' }),
-                ]
-            })
-            .collect();
-        let paradigm = |name: &'static str, table: &'static str| Paradigm {
-            name: Cow::Borrowed(name),
-            words: 0,
-            lemma: Cow::Borrowed("~"),
-            parent: None,
-            inherent: Cow::Borrowed(&[]),
-            table: Cow::Borrowed(table),
-            stems: Cow::Borrowed(""),
-            reads: None,
-            affix: None,
-        };
-        let assignment: Vec<u16> = lexicon.iter().map(|w| w.2).collect();
-        let tables = |read_whole: bool| {
-            let words: Vec<Word<'_>> = lexicon
-                .iter()
-                .zip(&forms)
-                .map(|((w, front, _), forms)| Word {
-                    letters: w,
-                    forms: forms.iter().map(|f| Some(f.as_str())).collect(),
-                    front: if read_whole { 0 } else { *front },
-                })
-                .collect();
-            let paradigms = vec![
-                paradigm("kahvi", "~\t~ssa\t"),
-                paradigm("tyyli", "~\t~ssä\t"),
-            ];
-            let (_, paradigms, _) = learn(&orthography, &words, paradigms, assignment.clone());
-            paradigms
-                .iter()
-                .map(|p| p.table.to_string())
-                .collect::<Vec<String>>()
-        };
-        assert_eq!(tables(false), ["~\t~ssA\t"]);
-        assert_eq!(tables(true).len(), 2);
     }
 }
