@@ -281,6 +281,47 @@ pub fn language() -> Language {
 
 struct FrenchHooks;
 
+/// Adjectives whose head line says one form for both genders
+/// (`fr-adj|mf`, `obstiné (plural obstinés)`) while the same word's past
+/// participle entry gives a feminine in -ée (`obstinée`): an editors' error,
+/// since an adjective in -é is a participle's and agrees like it. These are
+/// every word with both entries in the dump of 2026-10 (an `mf` adjective
+/// whose participle entry lists a distinct feminine).
+const MF_PARTICIPLES: &[&str] = &[
+    "branché",
+    "commissionné",
+    "couché",
+    "déterminé",
+    "énervé",
+    "fâché",
+    "fauché",
+    "frustré",
+    "irrité",
+    "motivé",
+    "obstiné",
+    "parfumé",
+    "remonté",
+    "salé",
+];
+
+/// One of [`MF_PARTICIPLES`] marked `mf`: the participle's feminine forms,
+/// so the plural is the masculine's alone.
+fn participle_feminine(entry: &mut Entry) {
+    let mf = entry
+        .head_templates
+        .first()
+        .is_some_and(|h| h.name == "fr-adj" && h.args.get("1").is_some_and(|a| a == "mf"));
+    if mf && MF_PARTICIPLES.contains(&entry.word.as_str()) {
+        let w = entry.word.clone();
+        entry
+            .forms
+            .push(romance::form(&format!("{w}e"), &["feminine"]));
+        entry
+            .forms
+            .push(romance::form(&format!("{w}es"), &["feminine", "plural"]));
+    }
+}
+
 /// Letters, with hyphens between them for nouns, adjectives and numerals
 /// (`porte-monnaie`, `vingt-et-un`).
 fn french_word(pos: &str, w: &str) -> bool {
@@ -296,8 +337,14 @@ impl Hooks for FrenchHooks {
         french_word(pos, lemma)
     }
 
+    /// A word; of an adverb, also the superlative's phrase with the article
+    /// (`le mieux`, `le moins`).
     fn form_ok(&self, pos: &str, _lemma: &str, form: &str) -> bool {
-        french_word(pos, form)
+        let word = match pos {
+            "adverb" => form.strip_prefix("le ").unwrap_or(form),
+            _ => form,
+        };
+        french_word(pos, word)
     }
 
     /// Head lines for nouns, adjectives, participles and determiners (see
@@ -307,7 +354,10 @@ impl Hooks for FrenchHooks {
         let register = [SOFT, EXCLUDE].concat();
         match pos {
             "noun" => romance::noun(entry, &register),
-            "adjective" => romance::adjective(entry, &register),
+            "adjective" => {
+                participle_feminine(entry);
+                romance::adjective(entry, &register);
+            }
             "participle" => {
                 if entry
                     .head_templates

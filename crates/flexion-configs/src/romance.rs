@@ -30,7 +30,8 @@ fn head(f: &Form) -> bool {
     f.source.is_none() && !has(f, "canonical")
 }
 
-fn form(word: &str, tags: &[&str]) -> Form {
+/// A head-line form with these tags.
+pub fn form(word: &str, tags: &[&str]) -> Form {
     Form {
         form: word.to_string(),
         tags: tags.iter().map(|t| t.to_string()).collect(),
