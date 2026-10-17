@@ -479,11 +479,19 @@ pub(super) fn learn<'s>(
     }
     // Classes one tier decides are one law, written in one pass: what one
     // writes the next reads (`-lArI`: `I` reads the `a` or `e` just written).
+    // Of one kind only: a class of vowels reads vowels, so it is no law
+    // with a class that writes a consonant too (Turkish verbs' `T`, `t` after
+    // a space), whose tier starts from every letter.
     let mut laws_of: Vec<Vec<usize>> = Vec::new();
     let copy = |k: &usize| copying.get(*k).copied().unwrap_or(false);
+    let of_vowels = |k: &usize| {
+        pools
+            .get(*k)
+            .is_some_and(|p| p.letters.iter().all(|&c| vowel(c)))
+    };
     for k in 0..pools.len() {
         let joins = laws_of.iter().position(|ks| {
-            if copy(&k) || ks.iter().any(copy) {
+            if copy(&k) || ks.iter().any(copy) || ks.iter().any(|j| of_vowels(j) != of_vowels(&k)) {
                 return false;
             }
             let together: Vec<&Pool<'_>> = ks
