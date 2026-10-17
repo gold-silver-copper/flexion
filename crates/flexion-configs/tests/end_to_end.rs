@@ -105,6 +105,18 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                 // spells it, its other spellings too (English `sang|sung`).
                 let listed = g.irregular.has(&l.key);
                 let table = g.table(&l.full, &Known::default());
+                // A form compatible with the length its table states is the
+                // dictionary's (Greek bare dichrona; see `TableLength`).
+                let unstated = flexion_train::eval::TableLength::of(
+                    &g.orthography,
+                    lang.spelling.stated_length,
+                    l.cells.iter().flatten().map(String::as_str),
+                );
+                let same = |got: &str, want: &str| {
+                    let (a, b) = (g.orthography.read(got), g.orthography.read(want));
+                    same_form(&g.orthography, got, want)
+                        || (a.stress == b.stress && unstated.compatible(&b.letters, &a.letters))
+                };
                 for (cell, forms) in l.cells.iter().enumerate() {
                     let Some(want) = forms.first() else { continue };
                     for (known, how) in [
@@ -113,7 +125,7 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     ] {
                         let got = g.best(&l.full, cell, &known);
                         assert!(
-                            same_form(&g.orthography, &got, want),
+                            same(&got, want),
                             "{} {}: {} cell {cell} is {want}, the grammar says {got}{how}",
                             lang.name,
                             part.name,
@@ -277,7 +289,14 @@ fn harmony_is_one_law_and_endings_name_its_class_letters() {
         .iter()
         .map(|p| p.table.as_ref())
         .collect();
-    assert!(tables.iter().any(|t| t.contains("~lAr")), "{tables:?}");
+    // The plural ending written once, its vowel a class letter (named after
+    // the class's commonest letter).
+    assert!(
+        tables
+            .iter()
+            .any(|t| t.contains("~lAr") || t.contains("~lEr")),
+        "{tables:?}"
+    );
     // Words the dictionary lacks: locative plural with `our` (cell 57).
     let g = &noun.grammar;
     assert_eq!(g.best("gölüm", 57, &Known::default()), "gölümlerimizde");

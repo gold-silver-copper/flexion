@@ -3355,7 +3355,8 @@ fn missed<'w>(
     members: &Members<'w>,
 ) -> crate::HashSet<&'w str> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
-    let heads: BTreeSet<&str> = members.of.values().map(|(head, _)| *head).collect();
+    let heads: std::collections::BTreeSet<&str> =
+        members.of.values().map(|(head, _)| *head).collect();
     let heads: Vec<&str> = heads.into_iter().collect();
     let o = &grammar.orthography;
     let wrong = crate::par::map(&heads, |head| {
