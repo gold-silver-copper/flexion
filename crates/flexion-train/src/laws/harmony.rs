@@ -852,13 +852,12 @@ fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>, adjacent: bool) -> bool {
 /// letters, and is not local (see the module documentation).
 ///
 /// A class of vowels (`vowel` says which letters are) reads vowels: its
-/// tier starts from the vowels and the marks between words (a space, a
-/// hyphen) its words show, not from every letter, since on enough words a
-/// consonant passes for a trigger by chance (Turkish verbs' `b`, `d`, `g`,
-/// `v`, which took the place of `e` and `ö`). A consonant comes back only as
-/// a blocker its words show deciding: on enough words, within the
-/// tolerance, and with fewer wrong than without it on the words learned
-/// from and no more on those held out. A copy of consonants (English `S`,
+/// tier is of the vowels and the marks between words (a space, a hyphen)
+/// its words show, never a consonant. On enough words a consonant passes
+/// for a trigger by chance: Turkish verbs' `b`, `d`, `g`, `v` took the place
+/// of `e`, `ö` and the space, 7,470 forms wrong. Taken back as blockers
+/// where they lowered the errors of the words learned from, they came back
+/// the same. A copy of consonants (English `S`,
 /// `quizzes`) reads only the letter just before it: what it copies is the
 /// stem's last letter, never one further back (`foxproofs`). (Tried first
 /// as such a copy, a class of consonants made new laws of Finnish verbs'
@@ -990,51 +989,6 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
         let e = wrong(&bys);
         if e <= errors {
             (tier, errors, none) = (fewer, e, now);
-        }
-    }
-    // The blockers: consonants back on a tier of vowels where their words
-    // show them deciding (the commonest first).
-    if vowels && !copy {
-        let held = |tier: &BTreeSet<char>| -> u32 {
-            pools
-                .iter()
-                .filter_map(|p| {
-                    let map = values(&units(&p.learned, tier, false))?;
-                    Some(judged(&units(&p.held, tier, false), &map).1)
-                })
-                .sum()
-        };
-        let mut blockers: Vec<(u32, char)> = seen
-            .iter()
-            .filter(|&&c| !tier.contains(&c))
-            .map(|&c| {
-                let mut more = tier.clone();
-                more.insert(c);
-                let n = after(&more)
-                    .iter()
-                    .filter_map(|by| by.get(&Some(c)))
-                    .flat_map(|v| v.values())
-                    .sum::<u32>();
-                (n, c)
-            })
-            .collect();
-        blockers.sort_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
-        let mut missed = held(&tier);
-        for (_, c) in blockers {
-            let mut more = tier.clone();
-            more.insert(c);
-            let bys = after(&more);
-            let mine: Vec<&BTreeMap<char, u32>> =
-                bys.iter().filter_map(|by| by.get(&Some(c))).collect();
-            let n: u32 = mine.iter().flat_map(|v| v.values()).sum();
-            let decides = mine.iter().all(|v| {
-                let n: u32 = v.values().sum();
-                tolerated(n, n - v.values().max().copied().unwrap_or(0))
-            });
-            let (e, m) = (wrong(&bys), held(&more));
-            if decides && n as usize >= MIN_WORDS && e < errors && m <= missed {
-                (tier, errors, missed) = (more, e, m);
-            }
         }
     }
     // A law is along a tier where a letter further back than the one just
