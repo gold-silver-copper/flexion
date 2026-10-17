@@ -420,15 +420,14 @@ pub(super) fn learn<'s>(
     // Whether each is a copy: a law of its own.
     let mut copying: Vec<bool> = Vec::new();
     let mut claimed: BTreeSet<Spot> = BTreeSet::new();
-    // A class is of one kind, vowels or not: an alternation of both (Turkish
-    // verbs' `a`, `e`, `t`, where some paradigms write a `t`) is no class, and
-    // its vowels are one of their own, if among the widest.
+    // A class is of one kind, vowels or not: an alternation of both is a copy
+    // (Finnish `Ä` of `a`, `t`, `ä`) or the class of its vowels (Turkish
+    // verbs' `a`, `e`, `t`, where some paradigms write a `t`: read as one of
+    // every letter, it took `b`, `d`, `g`, `v` for triggers).
     let one_kind =
         |letters: &[char]| letters.iter().all(|&c| vowel(c)) || letters.iter().all(|&c| !vowel(c));
     for (letters, _) in candidates.into_iter().take(CANDIDATES) {
-        if !one_kind(letters) {
-            continue;
-        }
+        let mixed = !one_kind(letters);
         // The places writing these letters or fewer; failing that, those
         // writing just these (a copy of every vowel, `-Vn`, is no law of the
         // places writing `a` or `ä` after any, `-ssA`).
@@ -475,8 +474,19 @@ pub(super) fn learn<'s>(
                 }
             }
             // Just these letters: only as a copy.
-            let copy = fit(&[&candidate], vowel)
+            let mut copy = fit(&[&candidate], vowel)
                 .map(|(tier, adjacent)| copies(&candidate, &tier, adjacent));
+            // Of vowels and consonants and no copy: the class of its vowels,
+            // on the places they are written.
+            if mixed && copy != Some(true) {
+                candidate.letters.retain(|&c| vowel(c));
+                candidate.learned.retain(|x| vowel(x.1));
+                candidate.held.retain(|x| vowel(x.1));
+                copy = (candidate.letters.len() > 1)
+                    .then(|| fit(&[&candidate], vowel))
+                    .flatten()
+                    .map(|(tier, adjacent)| copies(&candidate, &tier, adjacent));
+            }
             if copy.is_some_and(|copy| !exact || copy) {
                 claimed.extend(pool.into_iter().copied());
                 pools.push(candidate);
@@ -507,7 +517,15 @@ pub(super) fn learn<'s>(
                 .chain([&k])
                 .filter_map(|&i| pools.get(i))
                 .collect();
-            fit(&together, vowel).is_some()
+            // One tier decides them: the one each learns alone (a class
+            // whose tier the other's words would move is a law of its own:
+            // Finnish names' `A` loses `y` beside `I`).
+            let alone = |ks: &[usize]| {
+                let pools: Vec<&Pool<'_>> = ks.iter().filter_map(|&i| pools.get(i)).collect();
+                fit(&pools, vowel)
+            };
+            let both = fit(&together, vowel);
+            both.is_some() && both == alone(&[k]) && both == alone(ks)
         });
         match joins.and_then(|j| laws_of.get_mut(j)) {
             Some(ks) => ks.push(k),
