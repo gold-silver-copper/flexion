@@ -599,8 +599,21 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             word.casing
         };
         // A word ending in a listed one (its head, `meri` of Finnish
-        // `aavameri`): the head's forms, behind the letters before it.
-        if let Some((front, head)) = self.head(&key, &word.letters) {
+        // `aavameri`): the head's forms, behind the letters before it. Not
+        // where the word is typed with an accent its head's lemma doesn't
+        // have there (`κατάβασις`, `βάσις`; `συναγωγή`, `γῆ`): its own
+        // reading.
+        let headed = self.head(&key, &word.letters).and_then(|(front, head)| {
+            let Some(stress) = word.stress else {
+                return Some((front, head.to_string(), None));
+            };
+            let before = u8::try_from(self.orthography.vowel_count(front)).ok()?;
+            let vowel = stress.vowel.checked_sub(before)?;
+            let stress = crate::Stress { vowel, ..stress };
+            let typed = self.orthography.write(head, Some(stress), Casing::Lower);
+            Some((front, typed, Some(stress)))
+        });
+        if let Some((front, head, typed)) = headed {
             let given: Vec<(usize, String)> = known
                 .forms
                 .iter()
@@ -614,21 +627,37 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 forms: &given,
                 ..*known
             };
-            let joined =
-                |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
-            return self
-                .unsharpened(head, cells, &base)
-                .into_iter()
-                .map(|list| {
-                    list.into_iter()
-                        .map(|c| Candidate {
-                            form: joined(&c.form),
-                            also: c.also.iter().map(|a| joined(a)).collect(),
-                            ..c
-                        })
-                        .collect()
-                })
-                .collect();
+            let lists = self.unsharpened(&head, cells, &base);
+            let stress = |lists: &[Vec<Candidate<'_>>], at: usize| {
+                let first = lists.get(at)?.first()?;
+                Some(self.orthography.read(&first.form).stress)
+            };
+            let keeps = match (typed, self.lemma_cell) {
+                (Some(typed), Some(lemma)) => {
+                    let first = match cells.iter().position(|&c| c == lemma) {
+                        Some(at) => stress(&lists, at),
+                        None => stress(&self.unsharpened(&head, &[lemma], &base), 0),
+                    };
+                    first == Some(Some(typed))
+                }
+                _ => true,
+            };
+            if keeps {
+                let joined =
+                    |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
+                return lists
+                    .into_iter()
+                    .map(|list| {
+                        list.into_iter()
+                            .map(|c| Candidate {
+                                form: joined(&c.form),
+                                also: c.also.iter().map(|a| joined(a)).collect(),
+                                ..c
+                            })
+                            .collect()
+                    })
+                    .collect();
+            }
         }
         // The forms the caller gives, as letters.
         let given: Vec<(usize, String)> = known
