@@ -41,6 +41,11 @@ pub struct Shape {
     pub part: String,
     /// The dictionary's principal parts: the cells it gives a word by.
     pub parts: Vec<usize>,
+    /// The marks of a vowel's length the dictionary may leave off (see
+    /// [`crate::spec::Spelling::stated_length`]): a training word's form the
+    /// grammar gives but for such a mark, compatible with the length its
+    /// table states, isn't listed (see [`crate::eval::TableLength`]).
+    pub stated_length: &'static str,
 }
 
 /// A learned part of speech, ready to be printed.
@@ -565,10 +570,11 @@ pub fn learn<'s>(
     // one the rules build wrong (those whose listing a compound would
     // take); a longer one listed for its paradigm only is none where its
     // own words say so.
-    let ruled_wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |_| true)
-        .into_iter()
-        .map(|(k, _, _)| k)
-        .collect();
+    let ruled_wrong: crate::HashSet<String> =
+        irregular(&grammar, &every, &everyone, |_| true, shape.stated_length)
+            .into_iter()
+            .map(|(k, _, _)| k)
+            .collect();
     let wrong = |key: &str| ruled_wrong.contains(key);
     let listed = |key: &str| wrong(key) || grammar.lists(key);
     let split = |key: &str| {
@@ -617,9 +623,13 @@ pub fn learn<'s>(
     // its stress pattern and stem vowel; a word made of others, or a
     // compound, once those are. Forms still wrong are irregular.
     for words_made in [false, true] {
-        let wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |w| {
-            (made(w) || compound(w)) == words_made
-        })
+        let wrong: crate::HashSet<String> = irregular(
+            &grammar,
+            &every,
+            &everyone,
+            |w| (made(w) || compound(w)) == words_made,
+            shape.stated_length,
+        )
         .into_iter()
         .map(|(k, _, _)| k)
         .collect();
@@ -642,7 +652,13 @@ pub fn learn<'s>(
         }
     }
     trace.mark("heads and exceptions");
-    let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
+    let checked = misbuilt(
+        &grammar,
+        &every,
+        &everyone,
+        |w| !made(w),
+        shape.stated_length,
+    );
     // The stem slots: learned from the words' own analyses, and the forms
     // the grammar builds with the wrong letters.
     let keys: Vec<&str> = words.iter().map(|w| w.key.as_str()).collect();
@@ -689,7 +705,13 @@ pub fn learn<'s>(
             paradigm.table = Cow::Owned(table);
         }
     }
-    let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
+    let checked = misbuilt(
+        &grammar,
+        &every,
+        &everyone,
+        |w| !made(w),
+        shape.stated_length,
+    );
     let wrong: Vec<(String, usize, String)> = checked
         .iter()
         .map(|(k, c, f, _)| (k.clone(), *c, f.clone()))
@@ -742,7 +764,16 @@ pub fn learn<'s>(
         }
     }
     let words_of = (every.as_slice(), everyone.as_slice());
-    let forms_only = listing(&mut grammar, &[], &wrong, words_of, &made, &mut unsure);
+    let stated = shape.stated_length;
+    let forms_only = listing(
+        &mut grammar,
+        &[],
+        &wrong,
+        words_of,
+        &made,
+        &mut unsure,
+        stated,
+    );
     let on_stems = listing(
         &mut grammar,
         &candidates,
@@ -750,6 +781,7 @@ pub fn learn<'s>(
         words_of,
         &made,
         &mut unsure,
+        stated,
     );
     let prefixes = grammar.prefixes.clone();
     let base_of = |key: &str| -> String {
@@ -768,10 +800,25 @@ pub fn learn<'s>(
         &prices,
         &base_of,
     );
-    let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
-    let (mut irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound);
+    let irregular = listing(
+        &mut grammar,
+        &stems,
+        &wrong,
+        words_of,
+        &made,
+        &mut unsure,
+        stated,
+    );
+    let (mut irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound, stated);
     untie(&mut grammar, &everyone);
-    spell_out(&mut grammar, &mut irregular, &stems, &every, &everyone);
+    spell_out(
+        &mut grammar,
+        &mut irregular,
+        &stems,
+        &every,
+        &everyone,
+        stated,
+    );
     trace.mark("listing");
     // The ending tables listed stems are built with; paradigms stated
     // through stem slots where that pays; the tables either uses are the
@@ -1957,6 +2004,7 @@ fn spell_out(
     stems: &[(String, String, String, String)],
     lexemes: &[Lexeme],
     words: &[Word],
+    stated: &str,
 ) {
     let listed: crate::HashSet<&str> = irregular
         .iter()
@@ -1984,21 +2032,28 @@ fn spell_out(
                 };
                 grammar.table(input, &known)
             });
+            let unstated = crate::eval::TableLength::of(
+                orthography,
+                stated,
+                l.cells.iter().flatten().map(String::as_str),
+            );
+            let same = |a: &str, b: &str| {
+                let (got, want) = (orthography.read(a), orthography.read(b));
+                crate::eval::same_form(orthography, a, b)
+                    || (got.stress == want.stress
+                        && unstated.compatible(&want.letters, &got.letters))
+            };
             // Right: the first form, and where the dictionary has more, all
             // of them in order.
             let right = |cell: usize, forms: &[String]| {
                 tables.iter().all(|t| {
                     t.get(cell).and_then(|c| c.first()).is_some_and(|top| {
                         let given = std::iter::once(&top.form).chain(&top.also);
-                        let first = forms
-                            .first()
-                            .is_some_and(|f| crate::eval::same_form(orthography, &top.form, f));
+                        let first = forms.first().is_some_and(|f| same(&top.form, f));
                         first
                             && (forms.len() < 2
                                 || (given.clone().count() == forms.len()
-                                    && given
-                                        .zip(forms)
-                                        .all(|(g, f)| crate::eval::same_form(orthography, g, f))))
+                                    && given.zip(forms).all(|(g, f)| same(g, f))))
                     })
                 })
             };
@@ -2598,16 +2653,33 @@ fn listing(
     (lexemes, words): (&[Lexeme], &[Word]),
     made: &dyn Fn(&Word) -> bool,
     unsure: &mut crate::HashSet<String>,
+    stated: &str,
 ) -> Vec<(String, usize, String)> {
     grammar.irregular = flexion::Irregular::new(&[], stems);
     let wrong = rebuilt(grammar, words, stems, wrong.to_vec());
     unsure.extend(wrong.iter().map(|(k, _, _)| k.clone()));
     let mut irregular = roots(grammar, &wrong);
-    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
-    let made_wrong = self::irregular(grammar, lexemes, words, made);
+    settle(
+        grammar,
+        &mut irregular,
+        stems,
+        lexemes,
+        words,
+        unsure,
+        stated,
+    );
+    let made_wrong = self::irregular(grammar, lexemes, words, made, stated);
     unsure.extend(made_wrong.iter().map(|(k, _, _)| k.clone()));
     irregular.extend(made_wrong);
-    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
+    settle(
+        grammar,
+        &mut irregular,
+        stems,
+        lexemes,
+        words,
+        unsure,
+        stated,
+    );
     irregular
 }
 
@@ -2620,6 +2692,7 @@ fn prune(
     stems: Vec<flexion::ListedStem>,
     (lexemes, words): (&[Lexeme], &[Word]),
     compound: &dyn Fn(&Word) -> bool,
+    stated: &str,
 ) -> (Vec<(String, usize, String)>, Vec<flexion::ListedStem>) {
     let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
     let listed: crate::HashSet<&str> = irregular
@@ -2652,7 +2725,7 @@ fn prune(
     grammar.irregular = flexion::Irregular::new(&kept, &kept_stems);
     // Those its last part builds wrong keep their listing.
     let wrong: crate::HashSet<String> =
-        self::irregular(grammar, lexemes, words, |w| tried.contains(&w.key))
+        self::irregular(grammar, lexemes, words, |w| tried.contains(&w.key), stated)
             .into_iter()
             .map(|(k, _, _)| k)
             .collect();
@@ -2806,11 +2879,12 @@ fn settle(
     lexemes: &[Lexeme],
     words: &[Word],
     keys: &crate::HashSet<String>,
+    stated: &str,
 ) {
     for _ in 0..ROUNDS {
         irregular.sort();
         grammar.irregular = flexion::Irregular::new(irregular, stems);
-        let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key));
+        let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key), stated);
         if more.is_empty() {
             return;
         }
@@ -3677,8 +3751,9 @@ fn irregular(
     lexemes: &[Lexeme],
     words: &[Word],
     only: impl Fn(&Word) -> bool,
+    stated: &str,
 ) -> Vec<(String, usize, String)> {
-    misbuilt(grammar, lexemes, words, only)
+    misbuilt(grammar, lexemes, words, only, stated)
         .into_iter()
         .map(|(k, c, f, _)| (k, c, f))
         .collect()
@@ -3792,9 +3867,15 @@ fn misbuilt(
     lexemes: &[Lexeme],
     words: &[Word],
     only: impl Fn(&Word) -> bool,
+    stated: &str,
 ) -> Vec<(String, usize, String, bool)> {
     let orthography = &grammar.orthography;
     let wrong = |l: &Lexeme, w: &Word| {
+        let unstated = crate::eval::TableLength::of(
+            orthography,
+            stated,
+            l.cells.iter().flatten().map(String::as_str),
+        );
         let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
         let tables = [(l.full.as_str(), true), (plain.as_str(), false)].map(|(input, full)| {
             let known = flexion::Known {
@@ -3813,7 +3894,12 @@ fn misbuilt(
             let mut letters = false;
             let read = orthography.read(want);
             for top in tops {
-                right &= top.is_some_and(|t| crate::eval::same_form(orthography, t, want));
+                right &= top.is_some_and(|t| {
+                    let got = orthography.read(t);
+                    crate::eval::same_form(orthography, t, want)
+                        || (got.stress == read.stress
+                            && unstated.compatible(&read.letters, &got.letters))
+                });
                 letters |= top.is_none_or(|t| orthography.read(t).letters != read.letters);
             }
             if !right {
@@ -4106,6 +4192,7 @@ mod tests {
             names: vec![String::new(); 3],
             marks: None,
             part: "verb".to_string(),
+            stated_length: "",
         };
         assert!(referrals(&words, &shape).is_none());
     }
