@@ -156,7 +156,8 @@ impl Relation<'_> {
 
     /// The forms `form` gives (its letters), each with where its change
     /// starts and how likely it is: the change's new ending put where the
-    /// old one was; one that writes a class letter (a capital, `~Im`) is
+    /// old one was; one that writes a class letter (a capital, `~Im`), or a
+    /// literal meeting the form's front (`अ‹~म्`, see [`pattern::FRONT`]), is
     /// run through `laws`, as a paradigm's form is.
     pub fn apply(
         &self,
@@ -184,7 +185,8 @@ impl Relation<'_> {
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
                 let stems = pattern::bind(old, form)?;
-                let (told, at) = match laws.filter(|_| new.chars().any(char::is_uppercase)) {
+                let lawful = |c: char| c.is_uppercase() || c == pattern::FRONT;
+                let (told, at) = match laws.filter(|_| new.chars().any(lawful)) {
                     None => (
                         pattern::fill(new, &stems),
                         pattern::ending_start(new, &stems),
@@ -218,7 +220,8 @@ impl Relation<'_> {
         }
         let mut out: Vec<String> = Vec::new();
         for (old, new) in self.changes.iter() {
-            let Some(pieces) = pattern::bind(new, form) else {
+            let new = new.replace(pattern::FRONT, "");
+            let Some(pieces) = pattern::bind(&new, form) else {
                 continue;
             };
             let source = pattern::fill(old, &pieces);

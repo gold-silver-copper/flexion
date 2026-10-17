@@ -711,3 +711,39 @@ fn saved_and_printed(
     }
     assert!(!stale.exists(), "{}: a stale file kept", lang.name);
 }
+
+#[test]
+fn the_augment_is_one_law_whatever_vowel_it_meets() {
+    // Of the verbs, five begin with a vowel their class's augment lengthens
+    // (ἀκούω, αἰτέω, οἰκέω, ὀνομάζω, αὐλέω): no vowel has the five words a
+    // law needs, the five together do, and the augment is one law (Smyth
+    // §§ 428–438). It lengthens a vowel no verb begins with too: αἰνέω, and
+    // through `α` the `αὐ` of αὐδάω.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let grammars = grammars(&lang, &script, &data);
+    let (at, _) = lang
+        .parts
+        .iter()
+        .enumerate()
+        .find(|(_, p)| p.name == "verb")
+        .expect("verbs");
+    let verb = &grammars[at];
+    let augments: Vec<&flexion_train::laws::Law> = verb
+        .laws
+        .iter()
+        .filter(|l| {
+            matches!(&l.change, flexion_train::laws::Change::Front { literal, .. } if literal == "ἐ")
+        })
+        .collect();
+    assert_eq!(augments.len(), 1, "{:?}", verb.laws);
+    let flexion_train::laws::Change::Front { map, .. } = &augments[0].change else {
+        unreachable!()
+    };
+    assert!(map.len() >= 4, "{map:?}");
+    // The imperfect active, 1st singular.
+    let g = &verb.grammar;
+    assert_eq!(g.best("αἰνέω", 99, &Known::default()), "ᾔνουν");
+    assert_eq!(g.best("αὐδάω", 99, &Known::default()), "ηὔδαον");
+}
