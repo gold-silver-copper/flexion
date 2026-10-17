@@ -14,6 +14,7 @@ const MAX_PATTERN_ATOMS: usize = 256;
 /// static data. Rules written by hand need not keep the compiler's
 /// invariants; the engine never panics on them, but may not match.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct CompiledRule<'a> {
     pub name: Cow<'a, str>,
     pub left: Pattern<'a>,
@@ -32,6 +33,7 @@ pub struct CompiledRule<'a> {
 
 /// A compiled pattern: atoms matched in order.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Pattern<'a> {
     pub atoms: Cow<'a, [Atom<'a>]>,
     pub anchored_at_start: bool,
@@ -40,6 +42,7 @@ pub struct Pattern<'a> {
 
 /// One matcher, how often it repeats, and the capture it fills.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Atom<'a> {
     pub matcher: Matcher<'a>,
     pub quantifier: Quantifier,
@@ -48,6 +51,7 @@ pub struct Atom<'a> {
 
 /// What one atom matches. Class members are tried longest first.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Matcher<'a> {
     Literal(Cow<'a, str>),
     Class(Cow<'a, [Cow<'a, str>]>),
@@ -64,6 +68,7 @@ pub enum Matcher<'a> {
 
 /// How many times an atom matches: once, `?`, `*` or `+`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Quantifier {
     One,
     Optional,
@@ -74,6 +79,7 @@ pub enum Quantifier {
 /// One piece of a replacement: literal text, a capture, or a capture put
 /// through a map, or through an agreement map by another capture (`key`).
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum ReplacementPart<'a> {
     Literal(Cow<'a, str>),
     Capture(usize),

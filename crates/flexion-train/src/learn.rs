@@ -44,7 +44,7 @@ pub struct Shape {
 }
 
 /// A learned part of speech, ready to be printed.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Learned<'s> {
     pub grammar: Grammar<'s, u16, u16, u8>,
     /// The inherent feature (its place among the part of speech's) the
@@ -64,7 +64,8 @@ pub struct Learned<'s> {
     pub stability: f64,
     /// The views paradigms may read their parents through (see [`View`]).
     pub views: Vec<View>,
-    /// Each stage's time and peak memory.
+    /// Each stage's time and peak memory (not kept: see [`crate::saved`]).
+    #[serde(skip)]
     pub trace: crate::trace::Trace,
     /// The relations before what the runtime can't read of them went (see
     /// [`Read`]): for checking that nothing it reads changed.
@@ -72,7 +73,7 @@ pub struct Learned<'s> {
 }
 
 /// Counts for the report.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct Stats {
     /// Words the relations list (their exceptions), over every relation.
     pub relation_listed: usize,

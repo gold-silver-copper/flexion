@@ -10,6 +10,7 @@ use std::borrow::Cow;
 /// cells on `λυσ-`), learned from the words that place different stems in
 /// different cells.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Slot<'a> {
     /// What every one of its cells' names has and no other cell's has all
     /// of (`aorist_pass`); else `lemma`, the slot of the lemma's cell, or
@@ -32,6 +33,7 @@ impl Slot<'_> {
 /// shared by the paradigms that build the slot alike; named after its
 /// commonest word.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct EndingTable<'a> {
     /// The commonest word built with it (`λυω`).
     pub name: Cow<'a, str>,

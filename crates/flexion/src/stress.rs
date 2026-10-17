@@ -53,6 +53,7 @@ pub struct Finals {
 /// can be *like* another (its parent): the cells it leaves empty are the
 /// parent's.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct AccentPattern<'a> {
     pub name: Cow<'a, str>,
     /// How many of the dictionary's words follow it.
@@ -93,6 +94,7 @@ impl std::str::FromStr for Place {
 /// stem, counted from the lemma's end (0 is the last); `None` for a pattern
 /// that never puts it on the stem.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct StressClass<'a> {
     /// Named after its commonest word.
     pub name: Cow<'a, str>,
@@ -107,6 +109,7 @@ pub struct StressClass<'a> {
 /// accented stem syllable), which class a word is of, and what endings say
 /// about the last syllable.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Accent<'a, A: Label> {
     pub patterns: Cow<'a, [AccentPattern<'a>]>,
     /// Indexed by `A`.

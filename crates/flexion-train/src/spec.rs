@@ -34,6 +34,7 @@ pub struct Language {
 
 /// Another Wiktionary edition's entries for the language (the Russian
 /// Wiktionary's Russian entries), from its own Kaikki dump.
+#[derive(Debug)]
 pub struct Edition {
     /// Kaikki's edition code: `ru` for ru.wiktionary.org.
     pub code: &'static str,
@@ -64,6 +65,7 @@ impl Edition {
 }
 
 /// A grammatical feature and its values.
+#[derive(Debug)]
 pub struct Feature {
     pub name: &'static str,
     pub doc: &'static str,
@@ -75,6 +77,7 @@ pub struct Feature {
 }
 
 /// One feature value and the Wiktionary tags that mean it.
+#[derive(Debug)]
 pub struct Value {
     pub name: &'static str,
     /// Short name for cell names (`gen`, `pl`).
@@ -96,7 +99,7 @@ pub enum FormSource {
 
 /// A part of speech: the Wiktionary parts of speech it reads and the cell
 /// groups it generates.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct PartOfSpeech {
     pub name: &'static str,
     pub doc: &'static str,
@@ -152,7 +155,7 @@ impl PartOfSpeech {
 
 /// A group of cells that is one generated function: the product of its
 /// features' values.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Group {
     /// Function name in the generated crate.
     pub name: &'static str,
@@ -247,6 +250,7 @@ pub struct Spelling {
 }
 
 /// How form tags rank forms.
+#[derive(Debug)]
 pub struct TagPolicy {
     /// Forms carrying any of these are dropped.
     pub exclude: Vec<&'static str>,

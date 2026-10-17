@@ -33,6 +33,7 @@ pub const FRONT_LETTERS: usize = 3;
 
 /// How a word written in parts (`диван-кровать`) inflects.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Compound {
     /// Only its last part, like a word of its own: `интернет-магазин`,
     /// `интернет-магазина`.
@@ -61,6 +62,7 @@ impl Label for Compound {
 /// inseparable one stays in front, and takes off the rest's form what the
 /// cell says (`verhindert`, not `vergehindert`).
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Prefixes<'a> {
     /// Sorted by their letters.
     pub prefixes: Cow<'a, [Prefix<'a>]>,
@@ -85,6 +87,7 @@ type Junction<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
 /// A prefix, and of the dictionary's words that begin with it, how many
 /// separate it, how many keep it in front, of how many.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Prefix<'a> {
     pub letters: Cow<'a, str>,
     pub separable: u32,
@@ -94,6 +97,7 @@ pub struct Prefix<'a> {
 
 /// What a word does with the prefix it begins with.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Separation {
     /// Separates it (`räuchre aus`).
     Separable,
@@ -105,6 +109,7 @@ pub enum Separation {
 
 /// Where a separable prefix goes in a cell.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Placement {
     /// Before the rest, written together: `ausgeräuchert`.
     Before,
@@ -183,6 +188,7 @@ impl Prefixes<'_> {
 /// [`crate::LIKE`]), then each listed cell's number and form, all
 /// tab-separated, slots and cells in order.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Irregular<'a> {
     pub table: Cow<'a, str>,
 }
@@ -344,6 +350,7 @@ pub struct Known<'q> {
 /// `capitālis`, `digitālis` don't inflect as `Ītalis`); and those `words`,
 /// whose own compounds do.
 #[derive(Debug, Clone, Default, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Heads<'a> {
     pub least: Option<u8>,
     /// Sorted.
@@ -376,6 +383,7 @@ impl Heads<'_> {
 /// part of speech, each read with its `part`. A root the rules don't tell
 /// comes first (see [`Marks::roots`]).
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Marks<'a> {
     pub rules: Choice<'a, char>,
     /// Word beginnings whose letter third from their end the dictionary's
@@ -414,7 +422,11 @@ impl Marks<'_> {
 
 /// The inflection of one part of speech, as learned from the dictionary.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
+    /// Not serialized: it borrows the language's script, so whoever loads a
+    /// grammar sets it again (it loads as [`Orthography::default`]).
+    #[cfg_attr(feature = "serde", serde(skip))]
     pub orthography: Orthography<'a>,
     /// How many cells a word has.
     pub cells: usize,
@@ -1786,6 +1798,7 @@ fn top(mut lists: Vec<Vec<Candidate<'_>>>) -> Vec<Vec<Candidate<'_>>> {
 /// less than one, where answers of that kind are often wrong). A listed form
 /// keeps all of it.
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Trust {
     pub regular: f32,
     pub unsettled: f32,

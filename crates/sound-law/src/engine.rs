@@ -12,6 +12,7 @@ use crate::{Application, Direction};
 /// [`Program::from_rules`] makes one as static data, from rules
 /// [`Program::to_rust`] wrote, with no compile step.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Program<'a> {
     rules: Cow<'a, [CompiledRule<'a>]>,
 }
