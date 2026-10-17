@@ -584,7 +584,19 @@ pub fn learn<'s>(
             .and_then(|p| p.split(key))
             .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
-    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed, &split);
+    // The words made of two, validated on the words alone.
+    let lasts = last_members(&everyone, shape.cells, &split);
+    let missed = missed(&grammar, &everyone, &lasts);
+    let missed = |head: &str| missed.contains(head);
+    grammar.heads = heads(
+        &everyone,
+        shape.cells,
+        &wrong,
+        &listed,
+        &split,
+        &lasts,
+        &missed,
+    );
     // Compounds: words ending in another (`aavameri` in `meri`), where
     // words inflect their last part.
     let keys: crate::HashSet<&str> = everyone.iter().map(|w| w.key.as_str()).collect();
@@ -3134,12 +3146,20 @@ const HEAD_OWN: usize = 2;
 /// shorter ones (or all, where no length does), each word that
 /// [`HEAD_SHARE`] of the words ending in it, at least [`HEAD_OWN`], inflect
 /// as (German `Schein`: `Fahrschein`, `Führerschein`).
+///
+/// Of the other last members (see [`last_members`]), those `missed` (the rules
+/// would build a new compound of one wrong as a word of its own, see
+/// [`missed`]) are `words` too: a word ending in one inflects as it,
+/// listed or not (Finnish `arvomerkintä` as `merkintä`, its last member
+/// deciding its harmony).
 fn heads<'a>(
     words: &[Word],
     cells: usize,
     irregular: &dyn Fn(&str) -> bool,
     listed: &dyn Fn(&str) -> bool,
     split: &dyn Fn(&str) -> bool,
+    members: &Members<'_>,
+    missed: &dyn Fn(&str) -> bool,
 ) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
     // Per word ending in a listed one: the longest such, its letters,
@@ -3217,11 +3237,148 @@ fn heads<'a>(
             list.push(Cow::Owned(head.to_string()));
         }
     }
-    flexion::Heads {
+    let mut heads = flexion::Heads {
         least,
         not: Cow::Owned(not),
         words: Cow::Owned(words),
+    };
+    // The last members missed, that aren't heads already.
+    let mut more: Vec<Cow<'a, str>> = (members.of.values())
+        .filter(|(head, _)| {
+            missed(head) && !(heads.inflects(head) && listed(head)) && !heads.names(head)
+        })
+        .map(|(head, _)| Cow::Owned(head.to_string()))
+        .collect();
+    if !more.is_empty() {
+        more.extend(heads.words.iter().cloned());
+        more.sort();
+        more.dedup();
+        heads.words = Cow::Owned(more);
     }
+    heads
+}
+
+/// The last members of the words made of two (compounds, Finnish
+/// `arvomerkintä` of `arvo` and `merkintä`), validated on the words alone:
+/// a word that words end in behind at least [`flexion::FRONT_LETTERS`]
+/// letters, at least [`HEAD_OWN`] of them, [`HEAD_SHARE`] of which have
+/// its forms, their front kept, in every cell both have. Not a word that
+/// words only happen to end in (`isin` of superlatives, `punaisin`: theirs
+/// aren't its forms).
+#[derive(Debug, Default)]
+pub(crate) struct Members<'w> {
+    /// Per word made of one (it has its forms), by key: its last member's
+    /// key (the longest), and the bytes of its front, which every form of
+    /// it begins with.
+    pub of: BTreeMap<&'w str, (&'w str, usize)>,
+    /// The fronts most of them have (at most [`FRONTS`], the commonest
+    /// first): what a new compound may begin with.
+    pub fronts: Vec<&'w str>,
+}
+
+/// The most fronts a last member is tried behind (see [`missed`]).
+const FRONTS: usize = 8;
+
+/// The words' last members (see [`Members`]); words a prefix splits
+/// (`split`) or written in parts aren't made of them.
+fn last_members<'w>(
+    words: &'w [Word],
+    cells: usize,
+    split: &(dyn Fn(&str) -> bool + Sync),
+) -> Members<'w> {
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    // Per word, each word it ends in: its key, the letters before it, and
+    // whether the word has its forms, its front kept.
+    let ends: Vec<Vec<(&str, usize, bool)>> = crate::par::map(words, |w| {
+        if w.key.contains(['-', ' ']) || split(&w.key) {
+            return Vec::new();
+        }
+        let n = w.key.chars().count();
+        (flexion::FRONT_LETTERS..n)
+            .filter_map(|at| {
+                let (b, _) = w.key.char_indices().nth(at)?;
+                let head = *by_key.get(w.key.get(b..)?)?;
+                let front: String = w.letters.chars().take(at).collect();
+                let pairs: Vec<(&str, &str)> = (0..cells)
+                    .filter_map(|c| Some((first_form(w, c)?, first_form(head, c)?)))
+                    .collect();
+                let same = !pairs.is_empty()
+                    && pairs
+                        .iter()
+                        .all(|(mine, theirs)| mine.strip_prefix(front.as_str()) == Some(*theirs));
+                Some((head.key.as_str(), at, same))
+            })
+            .collect()
+    });
+    let mut counts: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
+    for &(head, _, same) in ends.iter().flatten() {
+        let slot = counts.entry(head).or_default();
+        *slot = (slot.0 + 1, slot.1 + usize::from(same));
+    }
+    // Counts of words; exact as floats.
+    #[allow(clippy::cast_precision_loss)]
+    let validated = |head: &str| {
+        counts
+            .get(head)
+            .is_some_and(|&(n, same)| n >= HEAD_OWN && same as f64 >= HEAD_SHARE * n as f64)
+    };
+    let of: BTreeMap<&str, (&str, usize)> = words
+        .iter()
+        .zip(&ends)
+        .filter_map(|(w, ends)| {
+            let &(head, at, _) = ends.iter().find(|e| e.2 && validated(e.0))?;
+            let front = w.letters.char_indices().nth(at)?.0;
+            Some((w.key.as_str(), (head, front)))
+        })
+        .collect();
+    let mut fronts: BTreeMap<&str, usize> = BTreeMap::new();
+    for (w, &(_, front)) in &of {
+        if let Some(f) = by_key.get(w).and_then(|w| w.letters.get(..front)) {
+            *fronts.entry(f).or_default() += 1;
+        }
+    }
+    let mut fronts: Vec<(&str, usize)> = fronts.into_iter().collect();
+    fronts.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+    Members {
+        of,
+        fronts: fronts.into_iter().take(FRONTS).map(|(f, _)| f).collect(),
+    }
+}
+
+/// The last members (see [`Members`]) whose new compounds the grammar
+/// builds wrong as words of their own: behind one of the commonest fronts,
+/// a form that isn't the front before the member's own. (The compounds the
+/// grammar has seen tell little: its rules may name their very endings.)
+fn missed<'w>(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    words: &'w [Word],
+    members: &Members<'w>,
+) -> crate::HashSet<&'w str> {
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    let heads: BTreeSet<&str> = members.of.values().map(|(head, _)| *head).collect();
+    let heads: Vec<&str> = heads.into_iter().collect();
+    let o = &grammar.orthography;
+    let wrong = crate::par::map(&heads, |head| {
+        let Some(w) = by_key.get(head) else {
+            return false;
+        };
+        members.fronts.iter().any(|front| {
+            let word = format!("{front}{}", w.letters);
+            let table = grammar.table(&word, &flexion::Known::default());
+            (0..w.cells.len()).any(|c| {
+                let top = table.get(c).and_then(|c| c.first());
+                first_form(w, c).is_some_and(|form| {
+                    let want = format!("{front}{form}");
+                    !top.is_some_and(|t| crate::eval::same_form(o, &t.form, &want))
+                })
+            })
+        })
+    });
+    heads
+        .into_iter()
+        .zip(wrong)
+        .filter_map(|(head, wrong)| wrong.then_some(head))
+        .collect()
 }
 
 /// How many of `w`'s forms `par` builds right.
@@ -4070,7 +4227,15 @@ mod tests {
         for key in ["pohjoiskala", "sisäkala"] {
             words.push(word(key, &[key, &format!("{key}in"), &format!("{key}ta")]));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
+        let found = heads(
+            &words,
+            3,
+            &|_| true,
+            &|_| true,
+            &|_| false,
+            &last_members(&words, 3, &|_| false),
+            &|_| true,
+        );
         assert_eq!(
             (found.least, found.not.to_vec()),
             (Some(1), vec![Cow::from("kala")])
@@ -4088,7 +4253,18 @@ mod tests {
                 ));
             }
         }
-        assert!(heads(&words, 3, &|_| true, &|_| true, &|_| false).is_empty());
+        assert!(
+            heads(
+                &words,
+                3,
+                &|_| true,
+                &|_| true,
+                &|_| false,
+                &last_members(&words, 3, &|_| false),
+                &|_| true,
+            )
+            .is_empty()
+        );
         // Among them, a word whose own compounds inflect as it (Italian
         // `fare`): it alone is a head.
         words.push(word("fare", &["fare", "faccio", "fatto"]));
@@ -4096,11 +4272,68 @@ mod tests {
             let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
+        let found = heads(
+            &words,
+            3,
+            &|_| true,
+            &|_| true,
+            &|_| false,
+            &last_members(&words, 3, &|_| false),
+            &|_| true,
+        );
         assert_eq!(
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])
         );
+    }
+
+    #[test]
+    fn a_last_member_its_compounds_bear_out_is_a_head_where_the_rules_miss_them() {
+        // Finnish `arvomerkintä`, `laatumerkintä`, `lokimerkintä` have
+        // `merkintä`'s forms behind their first member: it is their last
+        // member, and a head, not listed, where the
+        // rules would build a new one wrong as a word of its own.
+        // Superlatives only happen to end in `isin`: theirs aren't its
+        // forms.
+        let merkinta = ["merkintä", "merkinnät", "merkintää"];
+        let mut words = vec![word("merkintä", &merkinta)];
+        for front in ["arvo", "laatu", "loki"] {
+            let forms = merkinta.map(|f| format!("{front}{f}"));
+            words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
+        }
+        words.push(word("isin", &["isin", "isit", "isiä"]));
+        for front in ["puna", "kuulu", "kaune"] {
+            let forms = ["in", "immat", "inta"].map(|f| format!("{front}is{f}"));
+            words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
+        }
+        let members = last_members(&words, 3, &|_| false);
+        let of: Vec<(&str, &str, usize)> = (members.of.iter())
+            .map(|(w, (head, front))| (*w, *head, *front))
+            .collect();
+        assert_eq!(
+            of,
+            [
+                ("arvomerkintä", "merkintä", 4),
+                ("laatumerkintä", "merkintä", 5),
+                ("lokimerkintä", "merkintä", 4)
+            ]
+        );
+        assert_eq!(members.fronts, ["arvo", "laatu", "loki"]);
+        let named = |missed: &str| {
+            let missed = |head: &str| head == missed;
+            let found = heads(
+                &words,
+                3,
+                &|_| false,
+                &|_| false,
+                &|_| false,
+                &members,
+                &missed,
+            );
+            found.words.to_vec()
+        };
+        assert_eq!(named("merkintä"), [Cow::from("merkintä")]);
+        assert!(named("isin").is_empty());
     }
 
     #[test]
