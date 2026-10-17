@@ -2039,7 +2039,10 @@ fn analyze(w: &Word) -> Analyzed {
 /// A listed word's line gives its cells as the dictionary spells them, the
 /// other spellings too where the grammar doesn't give them in order (the
 /// Italian article: `il|lo|l'`, `i|gli`): a word already listed lists
-/// those cells whole.
+/// those cells whole. A cell newly listed may change what other cells of the
+/// word are told from (a listed word's cells come from its listed ones,
+/// English `sing`'s past participle from its past): those words are checked
+/// again, every cell, until none changes.
 fn spell_out(
     grammar: &mut Grammar<'_, u16, u16, u8>,
     irregular: &mut Vec<(String, usize, String)>,
@@ -2052,56 +2055,69 @@ fn spell_out(
         .map(|(k, _, _)| k.as_str())
         .chain(stems.iter().map(|(k, _, _, _)| k.as_str()))
         .collect();
-    let orthography = &grammar.orthography;
-    let mine: Vec<(&Lexeme, &Word)> = lexemes
+    let mut mine: Vec<(&Lexeme, &Word)> = lexemes
         .iter()
         .zip(words)
         .filter(|(l, w)| listed.contains(w.key.as_str()) && l.cells.iter().any(|f| f.len() > 1))
         .collect();
-    let spelled: Vec<(String, usize, String)> = crate::par::map(&mine, |&(l, w)| {
-        let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
-        let tables = [(l.full.as_str(), true), (plain.as_str(), false)].map(|(input, full)| {
-            let known = flexion::Known {
-                full,
-                ..flexion::Known::default()
-            };
-            grammar.table(input, &known)
-        });
+    // At most a few rounds: each lists more of the same words' cells.
+    for _ in 0..4 {
+        let orthography = &grammar.orthography;
         let written = |f: &str| {
             let read = orthography.read(f);
             orthography.write(&read.letters, read.stress, flexion::Casing::Lower)
         };
-        l.cells
-            .iter()
-            .enumerate()
-            .filter(|(_, forms)| forms.len() > 1)
-            .filter(|&(cell, forms)| {
-                !tables.iter().all(|t| {
+        let spelled: Vec<(String, usize, String)> = crate::par::map(&mine, |&(l, w)| {
+            let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
+            let tables = [(l.full.as_str(), true), (plain.as_str(), false)].map(|(input, full)| {
+                let known = flexion::Known {
+                    full,
+                    ..flexion::Known::default()
+                };
+                grammar.table(input, &known)
+            });
+            // Right: the first form, and where the dictionary has more, all
+            // of them in order.
+            let right = |cell: usize, forms: &[String]| {
+                tables.iter().all(|t| {
                     t.get(cell).and_then(|c| c.first()).is_some_and(|top| {
                         let given = std::iter::once(&top.form).chain(&top.also);
-                        given.clone().count() == forms.len()
-                            && given
-                                .zip(forms)
-                                .all(|(g, f)| crate::eval::same_form(orthography, g, f))
+                        let first = forms
+                            .first()
+                            .is_some_and(|f| crate::eval::same_form(orthography, &top.form, f));
+                        first
+                            && (forms.len() < 2
+                                || (given.clone().count() == forms.len()
+                                    && given
+                                        .zip(forms)
+                                        .all(|(g, f)| crate::eval::same_form(orthography, g, f))))
                     })
                 })
-            })
-            .map(|(cell, forms)| {
-                let whole: Vec<String> = forms.iter().map(|f| written(f)).collect();
-                (w.key.clone(), cell, whole.join("|"))
-            })
-            .collect::<Vec<_>>()
-    })
-    .into_iter()
-    .flatten()
-    .collect();
-    if spelled.is_empty() {
-        return;
+            };
+            l.cells
+                .iter()
+                .enumerate()
+                .filter(|(cell, forms)| !forms.is_empty() && !right(*cell, forms))
+                .map(|(cell, forms)| {
+                    let whole: Vec<String> = forms.iter().map(|f| written(f)).collect();
+                    (w.key.clone(), cell, whole.join("|"))
+                })
+                .collect::<Vec<_>>()
+        })
+        .into_iter()
+        .flatten()
+        .filter(|e| !irregular.contains(e))
+        .collect();
+        if spelled.is_empty() {
+            return;
+        }
+        let touched: crate::HashSet<&str> = spelled.iter().map(|(k, _, _)| k.as_str()).collect();
+        mine.retain(|(_, w)| touched.contains(w.key.as_str()));
+        irregular.retain(|(k, c, _)| !spelled.iter().any(|(sk, sc, _)| sk == k && sc == c));
+        irregular.extend(spelled);
+        irregular.sort();
+        grammar.irregular = flexion::Irregular::new(irregular, stems);
     }
-    irregular.retain(|(k, c, _)| !spelled.iter().any(|(sk, sc, _)| sk == k && sc == c));
-    irregular.extend(spelled);
-    irregular.sort();
-    grammar.irregular = flexion::Irregular::new(irregular, stems);
 }
 
 /// Two stem pieces the lemma writes side by side (`pensar` as `p` and `ens`,

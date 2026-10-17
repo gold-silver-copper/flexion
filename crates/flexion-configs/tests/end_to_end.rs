@@ -101,6 +101,10 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     full: true,
                     ..Known::default()
                 };
+                // A word the grammar lists gives each cell as the dictionary
+                // spells it, its other spellings too (English `sang|sung`).
+                let listed = g.irregular.has(&l.key);
+                let table = g.table(&l.full, &Known::default());
                 for (cell, forms) in l.cells.iter().enumerate() {
                     let Some(want) = forms.first() else { continue };
                     for (known, how) in [
@@ -111,6 +115,26 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                         assert!(
                             same_form(&g.orthography, &got, want),
                             "{} {}: {} cell {cell} is {want}, the grammar says {got}{how}",
+                            lang.name,
+                            part.name,
+                            l.full
+                        );
+                    }
+                    let top = table.get(cell).and_then(|c| c.first());
+                    if listed
+                        && forms.len() > 1
+                        && let Some(top) = top
+                    {
+                        let also: Vec<&str> = top.also.iter().map(String::as_str).collect();
+                        let others: Vec<&str> = forms.iter().skip(1).map(String::as_str).collect();
+                        assert!(
+                            also.len() == others.len()
+                                && also.iter().zip(&others).all(|(a, o)| same_form(
+                                    &g.orthography,
+                                    a,
+                                    o
+                                )),
+                            "{} {}: {} cell {cell} is also {others:?}, the grammar says {also:?}",
                             lang.name,
                             part.name,
                             l.full
