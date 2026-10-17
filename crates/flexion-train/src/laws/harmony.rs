@@ -863,6 +863,35 @@ fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>, adjacent: bool) -> bool {
 /// stem's last letter, never one further back (`foxproofs`).
 fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<char>, bool)> {
     let vowels = pools.iter().all(|p| p.letters.iter().all(|&c| vowel(c)));
+    // Whether one law on `tier` (read just before where `adjacent`) decides
+    // every class within the tolerance, learned and held out, writing at
+    // least two of each one's letters.
+    let decides = |tier: &BTreeSet<char>, adjacent: bool| {
+        pools.iter().all(|pool| {
+            let Some(map) = values(&units(&pool.learned, tier, adjacent)) else {
+                return false;
+            };
+            let outputs: BTreeSet<&char> = map.values().collect();
+            let fits = |seen: &[Seen<'_>]| {
+                let (n, wrong) = judged(&units(seen, tier, adjacent), &map);
+                n > 0 && tolerated(n, wrong)
+            };
+            outputs.len() > 1
+                && outputs.iter().all(|c| pool.letters.contains(c))
+                && fits(&pool.learned)
+                && fits(&pool.held)
+        })
+    };
+    // A class of consonants that is the letter just before it.
+    let consonants = pools.iter().all(|p| p.letters.iter().all(|&c| !vowel(c)));
+    if let [pool] = pools
+        && consonants
+    {
+        let letters: BTreeSet<char> = pool.letters.iter().copied().collect();
+        if copies(pool, &letters, true) && decides(&letters, true) {
+            return Some((letters, true));
+        }
+    }
     let seen: BTreeSet<char> = pools
         .iter()
         .flat_map(|p| p.learned.iter().flat_map(|s| s.0.chars()))
@@ -908,7 +937,10 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
     if copy && pools.len() > 1 {
         return None;
     }
-    let adjacent = copy && pools.iter().all(|p| p.letters.iter().all(|&c| !vowel(c)));
+    // A copy of consonants copies the letter just before it, or is none.
+    if copy && consonants {
+        return None;
+    }
     if copy {
         tier = pools
             .iter()
@@ -1020,22 +1052,7 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
     if tier.is_empty() || (!copy && ((local && !vowels) || 2 * far <= n)) {
         return None;
     }
-    let maps: Vec<BTreeMap<Option<char>, char>> = pools
-        .iter()
-        .map(|p| values(&units(&p.learned, &tier, adjacent)))
-        .collect::<Option<Vec<_>>>()?;
-    let decides = pools.iter().zip(&maps).all(|(pool, map)| {
-        let outputs: BTreeSet<&char> = map.values().collect();
-        let fits = |seen: &[Seen<'_>]| {
-            let (n, wrong) = judged(&units(seen, &tier, adjacent), map);
-            n > 0 && tolerated(n, wrong)
-        };
-        outputs.len() > 1
-            && outputs.iter().all(|c| pool.letters.contains(c))
-            && fits(&pool.learned)
-            && fits(&pool.held)
-    });
-    decides.then_some((tier, adjacent))
+    decides(&tier, false).then_some((tier, false))
 }
 
 #[cfg(test)]
@@ -1169,6 +1186,58 @@ mod tests {
         let tables: Vec<&str> = paradigms.iter().map(|p| p.table.as_ref()).collect();
         assert_eq!(tables, ["~\t~ssA\t~lleen|~llensA\t"]);
         assert!(assignment.iter().all(|&a| a == 0));
+    }
+
+    #[test]
+    fn a_copy_of_consonants_reads_the_letter_just_before() {
+        // English `S` (`quizzes`, `boxes`): a stem's last `s`, `x` or `z`
+        // is copied; a word ending in another letter takes `s` however near
+        // an `x` is before it (`foxproofs`, not `*foxproofx`).
+        let mut forms: Vec<(String, char)> = Vec::new();
+        for c in ['s', 'x', 'z'] {
+            for v in ['a', 'e', 'i', 'o', 'u'] {
+                for b in ["b", "d", "k", "m", "p", "t"] {
+                    forms.push((format!("{b}{v}{c}"), c));
+                }
+            }
+        }
+        for v in ['a', 'e', 'i', 'o', 'u'] {
+            for b in ["b", "d", "k", "m", "p", "t", "l", "r"] {
+                forms.push((format!("{b}{v}n"), 's'));
+            }
+        }
+        for w in ["foxproof", "wizen", "boxcar"] {
+            forms.push((w.to_string(), 's'));
+        }
+        let letters = vec!['s', 'x', 'z'];
+        let mut pool = Pool {
+            letters,
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for (i, (form, value)) in forms.iter().enumerate() {
+            let seen = (form.as_str(), *value, i);
+            if i % 3 == 0 {
+                pool.held.push(seen);
+            } else {
+                pool.learned.push(seen);
+            }
+        }
+        let vowel = |c: char| "aeiou".contains(c);
+        let (tier, adjacent) = fit(&[&pool], &vowel).expect("a copy");
+        assert!(adjacent, "a copy of consonants reads just before it");
+        let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
+        let map = values(&units(&all, &tier, adjacent)).expect("values");
+        let class = Class {
+            letters: pool.letters.clone(),
+            tier,
+            adjacent,
+            map,
+            common: Vec::new(),
+        };
+        assert_eq!(class.value("foxproof"), Some('s'));
+        assert_eq!(class.value("wizen"), Some('s'));
+        assert_eq!(class.value("quiz"), Some('z'));
     }
 
     #[test]
