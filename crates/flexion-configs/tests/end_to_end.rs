@@ -204,25 +204,33 @@ fn every_word_has_every_form_with_a_probability_and_a_reason() {
                     if l.cells.get(cell).is_none_or(Vec::is_empty) {
                         unattested += 1;
                     }
-                    let candidates = g.candidates(&l.full, cell, &Known::default());
-                    let what = format!("{} {}: {} cell {cell}", lang.name, part.name, l.full);
-                    assert!(!candidates.is_empty(), "{what}: no form");
-                    let total: f32 = candidates.iter().map(|c| c.probability).sum();
-                    assert!(total <= 1.001, "{what}: probabilities sum to {total}");
-                    for pair in candidates.windows(2) {
-                        assert!(
-                            pair[0].probability >= pair[1].probability,
-                            "{what}: not likeliest first"
-                        );
-                    }
-                    for c in &candidates {
-                        assert!(c.probability > 0.0 && c.probability <= 1.001, "{what}: {c}");
-                        // A reason: the word is listed, or a paradigm (and,
-                        // when a rule chose it, the rule's evidence).
-                        assert!(
-                            c.status == Status::Listed || !c.paradigm.is_empty(),
-                            "{what}: {c} gives no reason"
-                        );
+                    // Typed in full, and as its headword (marks left off:
+                    // the spellings it may have share its probability).
+                    for typed in [&l.full, &l.lemma] {
+                        let candidates = g.candidates(typed, cell, &Known::default());
+                        let what = format!("{} {}: {typed} cell {cell}", lang.name, part.name);
+                        assert!(!candidates.is_empty(), "{what}: no form");
+                        // At most one, up to rounding.
+                        let total: f32 = candidates.iter().map(|c| c.probability).sum();
+                        assert!(total <= 1.0001, "{what}: probabilities sum to {total}");
+                        for pair in candidates.windows(2) {
+                            assert!(
+                                pair[0].probability >= pair[1].probability,
+                                "{what}: not likeliest first"
+                            );
+                        }
+                        for c in &candidates {
+                            assert!(
+                                c.probability > 0.0 && c.probability <= 1.0001,
+                                "{what}: {c}"
+                            );
+                            // A reason: the word is listed, or a paradigm
+                            // (and, when a rule chose it, the rule's evidence).
+                            assert!(
+                                c.status == Status::Listed || !c.paradigm.is_empty(),
+                                "{what}: {c} gives no reason"
+                            );
+                        }
                     }
                 }
             }

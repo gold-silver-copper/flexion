@@ -807,7 +807,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let rests = top(self.unsharpened(rest, cells, &base));
             Some((prefixes, prefix, rest, separable, inseparable, rests))
         });
-        let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
+        // What the word's spelling is likely to be is shared out: to the
+        // prefix it may begin with, and the rest to its parts and to it as
+        // one word, so that a cell's answers sum to at most one.
+        let alone = spelled * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
+        let whole = whole * alone;
         let line = self.irregular.line(&key);
         let mut lists = Vec::with_capacity(cells.len());
         // Where a word's line lists a form, or a stem the cell is built on:
@@ -907,7 +911,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         }
                         let candidate = Candidate {
                             form,
-                            probability: p * c.probability,
+                            probability: spelled * p * c.probability,
                             also: Vec::new(),
                             ..c
                         };
@@ -927,7 +931,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             Candidate {
                                 form: with(&a.form),
                                 also: a.also.iter().map(|f| with(f)).collect(),
-                                probability: kept * a.probability,
+                                probability: alone * kept * a.probability,
                                 ..a.clone()
                             },
                         );
@@ -937,7 +941,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                         out.push(Candidate {
                             form: format!("{}{joiner}{}", a.form, b.form),
                             also: Vec::new(),
-                            probability: each * a.probability * b.probability,
+                            probability: alone * each * a.probability * b.probability,
                             status: b.status,
                             paradigm: b.paradigm,
                             evidence: b.evidence,
@@ -959,7 +963,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     let Some(((first, ending), also)) = forms.split_first() else {
                         continue;
                     };
-                    let p = spelled * whole * p_cell * inf.reading.probability;
+                    let p = whole * p_cell * inf.reading.probability;
                     for (stress, p_stress) in
                         self.stresses(inf.reading.value, classes, cell, first, *ending)
                     {
