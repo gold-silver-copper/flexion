@@ -42,11 +42,9 @@ What a grammar is made of:
 - **Irregular forms**: the forms no rule gives, listed.
 
 Every answer is a list of [`Candidate`]s, likeliest first, each with a
-calibrated probability, a status and its evidence:
-
-```text
-книги (97%, regular): like книга; 1203 of 1210 words in -га
-```
+calibrated probability, a status and its evidence, printed as `form
+(probability, status): reason`: the paradigm the word is like, and how many of
+the dictionary's words with its ending take it.
 
 What the caller knows ([`Known`]: a principal part, the word's gender or
 animacy, that the lemma is spelled in full) weighs the readings: forms that
