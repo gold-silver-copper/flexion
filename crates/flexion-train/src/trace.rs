@@ -3,6 +3,7 @@
 //! start; none elsewhere). The allocator keeps memory a stage freed, so a
 //! stage's peak is at least what the stages before it left in use.
 
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::Instant;
 
 /// One stage: its name, seconds, and the peak resident memory over it, in
@@ -63,10 +64,23 @@ impl Trace {
     }
 }
 
+/// The process's highest peak before the last reset, in MB.
+static EARLIER_PEAK: AtomicU64 = AtomicU64::new(0);
+
 /// Start measuring the process's peak memory afresh (Linux: writing 5 to
-/// `clear_refs` resets `VmHWM` to the memory in use).
+/// `clear_refs` resets `VmHWM` to the memory in use), keeping the peak so
+/// far for [`process_peak_mb`].
 pub fn reset_peak() {
+    if let Some(mb) = peak_mb() {
+        EARLIER_PEAK.fetch_max(mb, Ordering::Relaxed);
+    }
     let _ = std::fs::write("/proc/self/clear_refs", "5");
+}
+
+/// The process's peak resident memory since it started, through every
+/// reset, in MB.
+pub fn process_peak_mb() -> Option<u64> {
+    Some(peak_mb()?.max(EARLIER_PEAK.load(Ordering::Relaxed)))
 }
 
 /// The process's peak resident memory since it was last reset, in MB.

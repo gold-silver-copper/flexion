@@ -1,0 +1,13 @@
+language	build seconds	`.rlib` MB	one call, nouns	one call, verbs
+english	2	52	9 / 9 µs	10 / 10 µs
+russian	6	86	16 / 17 µs	36 / 38 µs
+latin	5	94	21 / 23 µs	32 / 40 µs
+ancient-greek	4	86	44 / 81 µs	52 / 146 µs
+sanskrit	2	55	5 / 7 µs	19 / 25 µs
+polish	4	76	13 / 25 µs	13 / 17 µs
+german	5	69	12 / 22 µs	16 / 24 µs
+spanish	2	48	4 / 4 µs	9 / 12 µs
+french	1	53	4 / 4 µs	6 / 6 µs
+italian	2	55	4 / 4 µs	6 / 11 µs
+finnish	5	84	16 / 16 µs	–
+turkish	3	56	8 / 9 µs	–

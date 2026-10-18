@@ -9,11 +9,21 @@
 //!   whose key is saved only reprints (`--relearn`: learn afresh all the
 //!   same). `build all` or `build a,b`: those languages, each in a process
 //!   of its own, its output in `target/build-cache/logs/`
-//!   (`--lanes N`: N at once, longest first, never two that need much
-//!   memory, Finnish and Turkish; `--wrap "<command>"`: each run behind
-//!   that command, split at spaces, as `systemd-run --user --scope -q -p
-//!   MemoryMax=16G -p MemorySwapMax=0`);
-//! - `readme`: rewrite a built crate's README, keeping its report;
+//!   (`--lanes N`: N at once, longest first by their last recorded time,
+//!   as many as their recorded peak memory lets, one never recorded alone
+//!   (see `lanes`); `--wrap "<command>"`: each run behind that command,
+//!   split at spaces, as `systemd-run --user --scope -q -p MemoryMax=20G
+//!   -p MemorySwapMax=0`). A build that learns, and every `try`, records
+//!   its time and peak memory in `target/build-cache/runs.tsv`;
+//! - `schedule build|sweep`: the order and times `build all` or `sweep`
+//!   would keep by those records (`--lanes N`, `--only a,b`);
+//! - `readme` (no language): write the root README from its text,
+//!   `xtask/src/readme.md`, the builds kept in `target/build-cache/` and the
+//!   crates (see `readme`); `build all` writes it when every language is
+//!   built;
+//! - `bytes` (no language): the generated crates' source on disk, per crate,
+//!   file kind and part of speech (`--against <git revision>`: beside that
+//!   revision's, with the change);
 //! - `try`: learn on nine tenths of the words and score the held-out tenth,
 //!   the development tenth (`--final`: the tenth the READMEs report; it
 //!   isn't what changes are judged on) (`--quick`: without fitting the
@@ -30,8 +40,10 @@
 //!   `--without-editions`: learn from the main dump's words only);
 //! - `compare <a> <b>`: two saved `try` runs, paired word by word, in all
 //!   and by word group (`--apart <text>`: the cells whose name has it
-//!   apart from the rest) (or two sweeps: every language's, with their time
-//!   and memory);
+//!   apart from the rest), each row's verdict (LOSS or GAIN where its 95%
+//!   interval excludes 0), then a line per part of speech; two directories
+//!   of saved runs (screens, sweeps): that line for every run both have
+//!   (and for sweeps every language's time and memory);
 //! - `sweep <dir>`: `try --quick` for every language, each in a process of
 //!   its own, its outcomes saved in `<dir>` with its output (`<language>.log`),
 //!   its time and peak memory in `<dir>/summary.tsv` (`--only a,b`: those
@@ -49,9 +61,11 @@
 
 mod audit;
 mod bench;
+mod bytes;
 mod editors;
 mod lanes;
 mod outcomes;
+mod readme;
 mod yardsticks;
 
 use flexion_train::extract::{self, Lexeme, PosData};
@@ -60,7 +74,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
+const USAGE: &str = "usage: cargo xtask <extract|build|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--only <a,b>] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]; cargo xtask readme; cargo xtask bytes [--against <revision>]; cargo xtask schedule <build|sweep> [--lanes N] [--only <a,b>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -71,14 +85,19 @@ fn main() {
 
 fn run() -> Result<(), String> {
     let args: Vec<String> = std::env::args().skip(1).collect();
-    let (Some(command), Some(name)) = (args.first(), args.get(1)) else {
-        return Err(USAGE.into());
-    };
     let flag = |f: &str| {
         args.windows(2)
             .find(|w| w.first().is_some_and(|x| x == f))
             .and_then(|w| w.get(1))
             .cloned()
+    };
+    match args.first().map(String::as_str) {
+        Some("readme") => return readme::write(&workspace(), &build_cache()),
+        Some("bytes") => return bytes::report(&workspace(), flag("--against").as_deref()),
+        _ => {}
+    }
+    let (Some(command), Some(name)) = (args.first(), args.get(1)) else {
+        return Err(USAGE.into());
     };
     if command == "compare" {
         let b = args.get(2).ok_or(USAGE)?;
@@ -97,6 +116,11 @@ fn run() -> Result<(), String> {
             .ok_or("bad --lanes")
     })?;
     let wrap = flag("--wrap");
+    let only = flag("--only");
+    let only: Option<Vec<&str>> = only.as_deref().map(|o| o.split(',').collect());
+    if command == "schedule" {
+        return schedule(name, only.as_deref(), lanes);
+    }
     if command == "sweep" {
         let run = Sweep {
             dir: name.into(),
@@ -108,8 +132,6 @@ fn run() -> Result<(), String> {
             let lang = flexion_configs::by_name(&one).ok_or(format!("no language {one}"))?;
             return sweep_one(&run, &lang);
         }
-        let only = flag("--only");
-        let only: Option<Vec<&str>> = only.as_deref().map(|o| o.split(',').collect());
         return sweep(&run, only.as_deref(), lanes, wrap.as_deref());
     }
     if command == "build" {
@@ -148,7 +170,6 @@ fn run() -> Result<(), String> {
             flag("--to").map(PathBuf::from),
             args.iter().any(|a| a == "--editors"),
         ),
-        "readme" => readme(&lang),
         "try" => {
             let mut settings = choose::Settings::default();
             if let Some(g) = flag("--min-gain") {
@@ -179,7 +200,13 @@ fn run() -> Result<(), String> {
                 main_only: args.iter().any(|a| a == "--without-editions"),
                 again: false,
             };
-            try_language(&lang, flag("--pos").as_deref(), &options)
+            let part = flag("--pos");
+            let t = Instant::now();
+            try_language(&lang, part.as_deref(), &options)?;
+            let part = part.as_deref().unwrap_or(lanes::ALL);
+            let secs = t.elapsed().as_secs_f64();
+            lanes::record(&runs_file(), &options.what(), lang.name, part, secs);
+            Ok(())
         }
         "audit" => {
             let data = load(&lang)?;
@@ -358,6 +385,34 @@ struct TryOptions {
     /// depend on the tenth (a small part's words left out in turn) isn't
     /// measured again.
     again: bool,
+}
+
+impl TryOptions {
+    /// The run as its records name it (see [`lanes`]): `try` and the flags
+    /// that change what it costs.
+    fn what(&self) -> String {
+        let mut what = String::from("try");
+        let flags = [
+            ("--quick", self.quick),
+            ("--given", self.given),
+            ("--diagnose", self.diagnose),
+            ("--pool", self.pool),
+            ("--without-editions", self.main_only),
+        ];
+        for (flag, _) in flags.iter().filter(|f| f.1) {
+            what = format!("{what} {flag}");
+        }
+        if let Some(cells) = &self.hold {
+            what = format!("{what} --hold-cells {cells}");
+        }
+        if self.share != 100 {
+            what = format!("{what} --train-share {}", self.share);
+        }
+        if self.thin > 0 {
+            what = format!("{what} --drop-cells {}", self.thin);
+        }
+        what
+    }
 }
 
 /// A part of speech with fewer words is scored on several development
@@ -1254,12 +1309,76 @@ fn floor_cells(out: &[eval::Outcome], floored: &[eval::FloorOutcome], names: &[S
 }
 
 /// What a sweep runs: a quick `try` of each language, saved in `dir`.
+#[derive(Default)]
 struct Sweep {
     dir: PathBuf,
     /// On the READMEs' tenth.
     last: bool,
     diagnose: bool,
     pool: bool,
+}
+
+impl Sweep {
+    /// A language's `try`, its outcomes saved in `save`.
+    fn options(&self, save: PathBuf) -> TryOptions {
+        TryOptions {
+            quick: true,
+            fold: if self.last { eval::TEST } else { eval::DEVELOP },
+            save: Some(save),
+            share: 100,
+            diagnose: self.diagnose,
+            pool: self.pool,
+            ..TryOptions::default()
+        }
+    }
+}
+
+/// The languages' names, in their configs' order, those in `only` if
+/// given.
+fn languages(only: Option<&[&str]>) -> Vec<&'static str> {
+    flexion_configs::all()
+        .into_iter()
+        .map(|l| l.name)
+        .filter(|l| only.is_none_or(|o| o.contains(l)))
+        .collect()
+}
+
+/// `cargo xtask schedule build|sweep`: the order and times `build all` or
+/// `sweep` would keep, `lanes` at once, by the latest records (see
+/// [`lanes::simulate`]).
+fn schedule(what: &str, only: Option<&[&str]>, lanes: usize) -> Result<(), String> {
+    let what = match what {
+        "build" => "build".to_string(),
+        "sweep" => Sweep::default().options(PathBuf::new()).what(),
+        _ => return Err(USAGE.into()),
+    };
+    let file = runs_file();
+    let records = lanes::Records::read(&file);
+    let langs = languages(only);
+    let costs: Vec<Option<lanes::Cost>> = langs
+        .iter()
+        .map(|l| records.cost(&what, l, lanes::ALL))
+        .collect();
+    println!("`{what}`, {lanes} at once, by {}:", file.display());
+    let plan = lanes::simulate(&costs, lanes);
+    for &(i, lane, start, end) in &plan {
+        let lang = langs.get(i).copied().unwrap_or("");
+        match costs.get(i).copied().flatten() {
+            Some(c) => println!(
+                "  lane {lane}  {lang:<14} {start:>6.0} – {end:>6.0} s  ({} MB)",
+                c.peak_mb
+            ),
+            None => println!("  lane {lane}  {lang:<14} no record: runs alone, time unknown"),
+        }
+    }
+    let end = plan.iter().map(|p| p.3).fold(0.0, f64::max);
+    let busy: f64 = costs.iter().flatten().map(|c| c.secs).sum();
+    println!(
+        "  done at {end:.0} s ({:.1} h); {busy:.0} s of runs; {} without a record",
+        end / 3600.0,
+        costs.iter().filter(|c| c.is_none()).count()
+    );
+    Ok(())
 }
 
 /// `cargo xtask sweep <dir>`: a quick `try` of every language (or those
@@ -1273,19 +1392,7 @@ fn sweep(
     wrap: Option<&str>,
 ) -> Result<(), String> {
     let dir = &run.dir;
-    let langs: Vec<&'static str> = flexion_configs::all()
-        .into_iter()
-        .map(|l| l.name)
-        .filter(|l| only.is_none_or(|o| o.contains(l)))
-        .collect();
-    let minutes: f64 = langs
-        .iter()
-        .map(|l| lanes::cost(l, lanes::Kind::Try).0)
-        .sum();
-    eprintln!(
-        "sweeping {} languages, about {minutes:.0} minutes of runs on {lanes} lanes",
-        langs.len()
-    );
+    let langs = languages(only);
     std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
     let flags = [
         ("--final", run.last),
@@ -1306,7 +1413,9 @@ fn sweep(
         .collect();
     // Each language's row, in the languages' order whatever order they end in.
     let mut rows: Vec<(usize, String)> = Vec::new();
-    let failed = lanes::run(jobs, lanes::Kind::Try, lanes, wrap, |lang, ok| {
+    let records = lanes::Records::read(&runs_file());
+    let what = run.options(dir.clone()).what();
+    let failed = lanes::run(jobs, &records, &what, lanes, wrap, |lang, ok| {
         if !ok {
             return;
         }
@@ -1337,20 +1446,12 @@ fn sweep(
 /// <dir> --one <language>`): its outcomes in `dir/<language>.tsv`, its
 /// seconds and peak memory in `dir/<language>.row` for the sweep's summary.
 fn sweep_one(run: &Sweep, lang: &Language) -> Result<(), String> {
-    let options = TryOptions {
-        quick: true,
-        fold: if run.last { eval::TEST } else { eval::DEVELOP },
-        save: Some(run.dir.join(format!("{}.tsv", lang.name))),
-        share: 100,
-        diagnose: run.diagnose,
-        pool: run.pool,
-        ..TryOptions::default()
-    };
-    flexion_train::trace::reset_peak();
+    let options = run.options(run.dir.join(format!("{}.tsv", lang.name)));
     let t = Instant::now();
     try_language(lang, None, &options)?;
     let secs = t.elapsed().as_secs_f64();
-    let peak = flexion_train::trace::peak_mb().unwrap_or(0);
+    let cost = lanes::record(&runs_file(), &options.what(), lang.name, lanes::ALL, secs);
+    let peak = cost.map_or(0, |c| c.peak_mb);
     eprintln!("{}: {secs:.0}s, peak {peak} MB", lang.name);
     let path = run.dir.join(format!("{}.row", lang.name));
     std::fs::write(&path, format!("{}\t{secs:.0}\t{peak}\n", lang.name))
@@ -1987,41 +2088,16 @@ fn workspace() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("..")
 }
 
-/// Rewrite a built crate's README with the current intro and text, keeping
-/// its report.
-fn readme(lang: &Language) -> Result<(), String> {
-    let path = workspace()
-        .join("languages")
-        .join(lang.name)
-        .join("README.md");
-    let old = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let (Some(a), Some(b)) = (old.find("## The grammar"), old.find("## Data and license")) else {
-        return Err(format!("{}: no report", path.display()));
-    };
-    let report = old.get(a..b).unwrap_or("").trim_end();
-    // The grammar files its parts of speech have.
-    let src = path.with_file_name("src");
-    let mut files: Vec<String> = std::fs::read_dir(&src)
-        .map_err(|e| format!("{}: {e}", src.display()))?
-        .flatten()
-        .filter_map(|part| std::fs::read_dir(part.path()).ok())
-        .flatten()
-        .flatten()
-        .filter_map(|f| f.file_name().into_string().ok())
-        .collect();
-    if src.join("marks.rs").exists() {
-        files.push("marks.rs".to_string());
-    }
-    files.sort();
-    files.dedup();
-    let text = flexion_train::print::readme(lang, &format!("{report}\n"), &files);
-    std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
-}
-
 /// Where builds keep what they learned (see `flexion_train::saved`), and
 /// their logs and formatting.
 fn build_cache() -> PathBuf {
     workspace().join("target").join("build-cache")
+}
+
+/// Where builds and tries record their time and peak memory (see
+/// [`lanes`]).
+fn runs_file() -> PathBuf {
+    build_cache().join("runs.tsv")
 }
 
 /// `cargo xtask build <language>`: learn the language's grammar and measure
@@ -2041,6 +2117,7 @@ fn build(lang: &Language, relearn: bool) -> Result<(), String> {
             None
         })
     };
+    let learned = kept.is_none();
     let (grammars, measured) = match kept {
         Some(kept) => {
             eprintln!(
@@ -2068,20 +2145,7 @@ fn build(lang: &Language, relearn: bool) -> Result<(), String> {
         .zip(&grammars)
         .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
         .collect();
-    // The code's size, per part of speech, goes into the report too.
     let files = flexion_train::print::files(lang, &script, &parts, &report)?;
-    let mut sizes = String::from("\n\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
-    for part in &lang.parts {
-        let dir = format!("src/{}/", part.name);
-        let mine = files.iter().filter(|(p, _)| p.starts_with(&dir));
-        let (lines, bytes) = mine.fold((0, 0), |(l, b), (_, t)| {
-            (l + t.lines().count(), b + t.len())
-        });
-        sizes.push_str(&format!("| {} | {lines} | {bytes} |\n", part.name));
-    }
-    let report = format!("{}{sizes}", report.trim_end());
-    let files =
-        flexion_train::print::files(lang, &script, &parts, &format!("{}\n", report.trim_end()))?;
     // Formatted apart, then written into the crate where its bytes differ.
     let stage = saved.join("stage").join(lang.name);
     flexion_train::print::write(&stage, &files)?;
@@ -2093,7 +2157,7 @@ fn build(lang: &Language, relearn: bool) -> Result<(), String> {
     if !status.success() {
         return Err("rustfmt failed on the written crate".into());
     }
-    let formatted = files
+    let mut formatted = files
         .iter()
         .map(|(path, _)| {
             let at = stage.join(path);
@@ -2102,14 +2166,38 @@ fn build(lang: &Language, relearn: bool) -> Result<(), String> {
             Ok((path.clone(), text))
         })
         .collect::<Result<Vec<_>, String>>()?;
+    // The code's size as it ships, formatted, per part of speech, goes into
+    // the report too.
+    let mut sizes = String::from("\n\n| | lines of grammar | bytes |\n|---|---:|---:|\n");
+    for part in &lang.parts {
+        let dir = format!("src/{}/", part.name);
+        let mine = formatted.iter().filter(|(p, _)| p.starts_with(&dir));
+        let (lines, bytes) = mine.fold((0, 0), |(l, b), (_, t)| {
+            (l + t.lines().count(), b + t.len())
+        });
+        sizes.push_str(&format!("| {} | {lines} | {bytes} |\n", part.name));
+    }
+    let report = format!("{}{}\n", report.trim_end(), sizes.trim_end());
+    let sized = flexion_train::print::files(lang, &script, &parts, &report)?;
+    let readme = sized
+        .into_iter()
+        .find(|(path, _)| path == "README.md")
+        .ok_or("no README printed")?;
+    if let Some(old) = formatted.iter_mut().find(|(path, _)| path == "README.md") {
+        *old = readme;
+    }
     let dir = workspace().join("languages").join(lang.name);
     let written = flexion_train::print::write(&dir, &formatted)?;
+    let secs = t.elapsed().as_secs_f64();
     eprintln!(
-        "wrote {} ({written} of {} files changed) in {:.0}s",
+        "wrote {} ({written} of {} files changed) in {secs:.0}s",
         dir.display(),
         formatted.len(),
-        t.elapsed().as_secs_f64()
     );
+    // A reprint costs nothing like a learn: only learns are recorded.
+    if learned {
+        lanes::record(&runs_file(), "build", lang.name, lanes::ALL, secs);
+    }
     Ok(())
 }
 
@@ -2135,12 +2223,16 @@ fn build_all(
             log: logs.join(format!("{}.log", l.name)),
         })
         .collect();
-    let failed = lanes::run(jobs, lanes::Kind::Build, lanes, wrap, |_, _| {})?;
-    if failed.is_empty() {
-        Ok(())
-    } else {
-        Err(format!("failed: {}", failed.join(", ")))
+    let records = lanes::Records::read(&runs_file());
+    let failed = lanes::run(jobs, &records, "build", lanes, wrap, |_, _| {})?;
+    if !failed.is_empty() {
+        return Err(format!("failed: {}", failed.join(", ")));
     }
+    // Every language built: the root README reads them.
+    if langs.len() == flexion_configs::all().len() {
+        readme::write(&workspace(), &build_cache())?;
+    }
+    Ok(())
 }
 
 /// One letter per accent place, for patterns printed in a row.

@@ -1,3 +1,4 @@
+<!-- Written by `cargo xtask readme` from `xtask/src/readme.md`: edit that, not this. -->
 # flexion
 
 Point a trainer at a language's [Kaikki](https://kaikki.org/) Wiktionary dump and get a
@@ -20,11 +21,7 @@ for c in Noun::new("бокр").candidates((Case::Accusative, Number::Singular)) 
 ```
 
 Twelve languages are built from the same trainer, with nothing language-specific in the
-trainer or the runtime: [English](languages/english), [Russian](languages/russian),
-[Latin](languages/latin), [Ancient Greek](languages/ancient-greek),
-[Sanskrit](languages/sanskrit), [Polish](languages/polish), [German](languages/german),
-[Spanish](languages/spanish), [French](languages/french), [Italian](languages/italian),
-[Finnish](languages/finnish) and [Turkish](languages/turkish). Each is a config in
+trainer or the runtime: [English](languages/english), [Russian](languages/russian), [Latin](languages/latin), [Ancient Greek](languages/ancient-greek), [Sanskrit](languages/sanskrit), [Polish](languages/polish), [German](languages/german), [Spanish](languages/spanish), [French](languages/french), [Italian](languages/italian), [Finnish](languages/finnish) and [Turkish](languages/turkish). Each is a config in
 `crates/flexion-configs`; `cargo xtask build german` rebuilds one.
 
 ## How well it does
@@ -138,7 +135,7 @@ wrong; *variant*: another of the forms the dictionary lists in the cell; *homogr
 another dictionary word spelled alike has this form; *gap*: no form at all (none, in
 every part). *By block*: top-1 averaged over the part's groups of cells (a Turkish
 verb's negative abilitative forms count as much as its plain ones). *Reproduced*: the
-shipped grammar asked again for its own words (3,000 at most), and *complete*: of their
+shipped grammar asked again for its own words (a sample of them), and *complete*: of their
 cells, those with a form. Closed classes (pronouns, numerals) are scored both ways:
 their held-out tenth is a handful of words.
 
@@ -335,21 +332,23 @@ Where the grammar is weak or below the floor, and why:
   (two or more, nine in ten) where the rules spell it otherwise is listed and read first
   (`ROOTS` in `marks.rs`). Every form of every training word votes on its root, one vote a
   word (a form-of page with the word whose table lists it), not only its lemma: on the
-  development tenth nouns +0.61, on a tenth no decision looked at +0.89; adjectives +0.2. A root no other word shares stays a
-  guess. The vowel-length rules learn from every part's words, proper nouns and adverbs
-  too, which took nouns from 70.1% to 71.1%, adjectives from 87.3% to 87.5% and verbs
-  from 76.9% to 77.5% on this tenth (on the development tenths verbs lost 0.41, within
-  chance, and on tenth 9 0.61, within chance). Typed in full the same grammars reach
-  92.9% (nouns), 99.2% (adjectives), 84.9% (verbs), and with the principal parts
-  98.6–99.5%. The perfect passive is the phrase it
-  is (`amātus sum`, `amātum esse`, `hortātus sum`), 74.6% right as typed from the headword.
+  development tenth nouns +0.61, on a tenth no decision looked at +0.89; adjectives +0.2
+  (PR #21). A root no other word shares stays a guess. The vowel-length rules learn from
+  every part's words, proper nouns and adverbs too, which took nouns from 70.1% to 71.1%,
+  adjectives from 87.3% to 87.5% and verbs from 76.9% to 77.5% on this tenth (PR #19; on
+  the development tenths verbs lost 0.41, within chance, and on tenth 9 0.61, within
+  chance). Typed in full the grammars reach 92.93% (nouns), 99.23% (adjectives)
+  and 85.45% (verbs), and with the principal parts 98.70%, 99.48% and
+  98.55%. The perfect passive is the phrase it is (`amātus sum`, `amātum esse`,
+  `hortātus sum`): the verbs' *phrases*, 73.02% right as typed from the headword.
 - **Ancient Greek.** A circumflex on a diphthong's second letter (`ἀριθμοῦ`) was read as
   vowel length, which split declensions in two; read as the diphthong's, nouns went from
-  133 to 87 declensions and +3.8 points, adjectives +3.1 (development tenth). The augment
+  133 to 87 declensions and +3.8 points, adjectives +3.1 (development tenth, PR #16). The augment
   (a law where the form's first letters meet the stem: `ἐ‹ἀ → ἠ`), the perfect's
   reduplication (`%ε~κα`) and the augment behind a preverb (`ἀπο + ἐ → ἀπε`) are laws.
   The augment is one law for every vowel it meets, those few verbs show too (`ὑστέρουν`,
-  `ηὔξανον`, `ἐνῴκουν`): verbs +1.3 points from the headword on the development tenth.
+  `ηὔξανον`, `ἐνῴκουν`): verbs +1.3 points from the headword on the development tenth
+  (PR #21).
   A dictionary leaves a short α, ι or υ bare as often as it writes its breve; a second
   score, *compatible with stated length* (its table above), counts an answer that differs
   from such a form only by a length mark the word's table never contradicts. Top-1 stays
@@ -357,44 +356,43 @@ Where the grammar is weak or below the floor, and why:
   word keeping its own accent. What's left in the verbs is mostly stems: a verb's aorist
   or perfect stem (`ἀγγέλλω` → `ἠγγέλθην`) follows from no ending, so a new verb's is a
   guess; known verbs list it with the ending table it takes, and a principal part given
-  fixes its stem (81.1%). A preverb kept in front moves the accent back only in a cell
+  fixes its stem (81.95%). A preverb kept in front moves the accent back only in a cell
   whose accent recedes, counting the optative's `-οι` long (`προφέροι`; Smyth §§ 169,
   425–426); a breathing stays at the word's start (`προοισθήσεσθαι`); `-εως`, `-εων`
   count short for the accent (`πόλεως`, § 163a); a form that needs an accent always has
-  one. With the futures' and imperatives' invented cells gone, nouns went from 71.9% to
-  74.8%, adjectives from 77.3% to 78.0%, verbs from 65.5% to 68.0%, and the verbs'
-  irregular lines from 52.4% to 46.7%.
+  one. With the futures' and imperatives' invented cells gone (PR #19), nouns went from
+  71.9% to 74.8%, adjectives from 77.3% to 78.0%, verbs from 65.5% to 68.0%, and the
+  verbs' irregular lines from 52.4% to 46.7%.
 - **Turkish verbs.** Their suffix vowels follow the vowel before them as written: one law
   on the vowels and the space (` a e i o u ö ü ı`). Learned on every word it used to take
   `b`, `d`, `g`, `v` for triggers (some paradigms write a `t` where the others write `a` or
   `e`, and a class with a consonant read every letter); 32,526 forms were listed to patch
-  it, and the grammar shipped was not the one scored. Now a class of vowels reads vowels:
-  irregular lines 59.04% → 6.33% of the verbs, 352 listed forms.
+  it, and the grammar shipped was not the one scored. Since PR #21 a class of vowels reads
+  vowels: the verbs' irregular lines went from 59.04% to 6.33% (now 6.33%, with
+  352 listed forms).
 - **Sanskrit.** The `n` → `ṇ` rule is a law (`तर्काणाम्`), and a noun's gender, given,
-  takes it from 92.1% to 97.3%. The verbs are small (a tenth is ~300 words). Reading a
-  root's tense pages (a perfect's, an aorist's) into its verb was tried: fewer classes
-  (59 → 34), but 1.9 points lost, so they stay apart.
+  takes it from 92.10% to 97.30%. The verbs are few (a tenth is
+  88 words). Reading a root's tense pages (a perfect's, an aorist's) into its verb was tried in PR #19: fewer
+  classes (59 → 34), but 1.9 points lost, so they stay apart.
 - **Closed classes** (pronouns, numerals, determiners, postpositions) and parts with fewer
   than 30 held-out words are a handful of words each, mostly listed: their headline is what
   their grammar does with its own words (*reproduced N of N*), beside a new word's score,
-  each word left out of training in turn (Turkish pronouns 14.29%, Finnish pronouns 16.51%).
+  each word left out of training in turn (Turkish pronouns 14.29%, Finnish pronouns
+  16.51%).
 - **Polish nouns** lost Middle Polish (`pl-mid-decl-noun`) tables, which aren't the modern
-  language's: on the development tenth −0.06 from the headword and −0.14 with the
+  language's (PR #18): on the development tenth −0.06 from the headword and −0.14 with the
   principal parts, the one loss this change was kept with.
 - **Below the floor, beyond chance**, the floor learning from the same words as the
-  grammar: German nouns (−1.02), Russian verbs (−0.91), English verbs (−0.56), French verbs
-  (−0.59), Spanish verbs (−0.30), Finnish nouns (−0.22), Polish adjectives (−0.05), and of
-  the newer parts Russian proper nouns (−2.83), Finnish pronouns (−3.21), Sanskrit numerals
-  (−28.79) and Turkish pronouns (one held-out word). Spanish adjectives are within chance
-  of it (−0.10), Finnish verbs above it (+0.94). It isn't the declension chosen by the
-  ending: a classifier reading endings up to eight letters chooses no better by a point on
-  German and Finnish nouns, English and French verbs or Spanish adjectives. Of 200 wrong
-  German plurals, two in three are the plural class chosen wrong (a loanword's `-s`).
+  grammar: English verbs (−0.56), Russian proper nouns (−2.83), Russian verbs (−0.91), Sanskrit numerals (−28.79), Polish adjectives (−0.05), German nouns (−1.02), Spanish verbs (−0.30), French verbs (−0.59), Finnish nouns (−0.22), Finnish pronouns (−3.21) and Turkish pronouns (−90.91). It isn't the declension chosen by the ending: in PR #18 a
+  classifier reading endings up to eight letters chose no better by a point on German and
+  Finnish nouns, English and French verbs or Spanish adjectives, and of 200 wrong German
+  plurals, two in three were the plural class chosen wrong (a loanword's `-s`).
 - **Russian** has no stress any more (stripped from input, never written).
 
 ## The generated code
 
-A language crate has a module per part of speech. Excerpts from `russian`:
+A language crate has a module per part of speech. The excerpts below are read from the
+crates by `cargo xtask readme`, which writes this README. From `russian`:
 
 A paradigm: named after its commonest word, with the gender its words share, the stem
 slots it builds through a shared ending table (`stems.rs`), then the cells that differ
@@ -402,15 +400,15 @@ from them, `~` for the stem, `derived` for a cell it takes from another. A parad
 *like* another writes only what differs (`_` for the rest):
 
 ```rust
-    // Приём: 37,690 words (указ, зонт, кот, зонтик, бортник, бочаг).
-    declension!("приём", 37690, "~", [gender: Masculine];
+    // Приём: 37,921 words (указ, зонт, кот, зонтик, бортник, бочаг).
+    declension!("приём", 37921, "~", [gender: Masculine];
     stem pl: "~- like приём";
     stem gen_sg: "~- like приём";
     nom: "~", _;
     noun_second_case: derived, _;
     ),
-    // Полнота: 12,546 words (собака, буява, былица, масленица, царица, вата). Like Приём, except in 2 cells: gen_ pl, noun_second_case loc.
-    declension!("полнота", 12546, "~а", [gender: Feminine], like Приём;
+    // Полнота: 12,531 words (собака, буява, былица, масленица, царица, вата). Like Приём, except in 2 cells: gen_ pl, noun_second_case loc.
+    declension!("полнота", 12531, "~а", [gender: Feminine], like Приём;
     stem lemma: "~- like полнота";
     stem gen_sg: "~- like полнота";
     gen_: _, "~";
@@ -450,7 +448,7 @@ An analytic form is the phrase it is, learned like any other form: a Latin depon
 perfect system (`modulātus sum` … `modulātum esse`), the participle agreeing in number:
 
 ```rust
-    // rest_ like modulor: 561 words.
+    // indicative_act_perf_1_sg like modulor: 561 words.
         table: Cow::Borrowed(concat!(
             "~us sum\t~ī sumus\t",
             "~us es\t~ī estis\t",
@@ -459,14 +457,15 @@ perfect system (`modulātus sum` … `modulātum esse`), the participle agreeing
             "~um esse\t",
 ```
 
-Where a `derived` cell comes from (`relations.rs`): the accusative is the genitive or the
-nominative, by the word's animacy. From `latin`, a relation that changes the form, with
-the rules on its ending that choose the change (`0`, `1`, `2`: the changes in order):
+Where a `derived` cell comes from (`relations.rs`): from `russian`, the accusative is the
+genitive or the nominative, by the word's animacy. From `latin`, a relation that changes
+the form, with the rules on its ending that choose the change (`0`, `1`, `2`: the changes
+in order):
 
 ```rust
     relation!(ACC_SG, [GEN_SG, NOM_SG], [], none, false, None),
 
-    relation!(IND_ACT_PERF_2_SG, [IND_ACT_PERF_1_SG], [("~iī", "~īstī"), ("~sum", "~es"), ("~ī", "~istī")], rules {
+    relation!(ACT_PERF_2_SG, [ACT_PERF_1_SG], [("~iī", "~īstī"), ("~sum", "~es"), ("~ī", "~istī")], rules {
         "" => [2 4877, 1 563, 0 30],
         "m" => [1 563],
         "um" => [1 563],
@@ -475,14 +474,14 @@ the rules on its ending that choose the change (`0`, `1`, `2`: the changes in or
 ```
 
 A cell no word (or too few) has is still built: by analogy with a pair of cells that
-differ the same way. Greek has no future subjunctive; it is made from the future
-indicative as the perfect subjunctive is from the perfect indicative:
+differ the same way. Few Greek verbs have a first person dual in the dictionary; it is
+made from the first person plural as the second person's dual is from its plural:
 
 ```rust
-    // FUTURE_SUBJ_ACT_1_SG, from FUTURE_IND_ACT_1_SG. Few or no words have it: changed as PERFECT_IND_ACT_1_SG is into PERFECT_SUBJ_ACT_1_SG.
-    relation!(FUTURE_SUBJ_ACT_1_SG, [FUTURE_IND_ACT_1_SG], [("~ᾰ", "~ω")], rules {
-        "" => [0 1124],
-    } listed {}, true, Some((PERFECT_IND_ACT_1_SG, PERFECT_SUBJ_ACT_1_SG))),
+    // IND_ACT_1_DU, from IND_ACT_1_PL. Few or no words have it: changed as IND_ACT_2_PL is into IND_ACT_2_DU.
+    relation!(IND_ACT_1_DU, [IND_ACT_1_PL], [("~ε", "~ον")], rules {
+        "" => [0 1855],
+    } listed {}, true, Some((IND_ACT_2_PL, IND_ACT_2_DU))),
 ```
 
 Sound laws (`laws.rs`) are written in `sound-law`'s notation (`"target" => "replacement"
@@ -506,18 +505,20 @@ Sanskrit `n` → `ṇ`, with what may come between and what may not follow:
 ```
 
 The start of a word too. From `ancient-greek`: the perfect copies the stem's first letter
-(`%`), the augment is a law where the form's first letters meet the stem (`‹`), its
-lengthening a map, and a preverb meets the augment as the dictionary's compounds show:
+(`%`; a copy is written `°`, and a copied `φ` is `π`), and where the form's first letters
+meet the stem (`‹`) a law lengthens the vowel, by a map; a preverb meets the augment as
+the dictionary's compounds show:
 
 ```rust
-    maps {
-        law0 = ["ἀ" => "ἠ", "ᾰ" => "η", "ᾱ" => "η", "ᾳ" => "η"];
+        law1 = ["ἀ" => "ἠ", "α" => "η"];
     ...
-        // ἐ‹ἀ → ἠ (ᾰ → η, ᾱ → η, ᾳ → η): 88 words (ἀγω, ἀγᾰπᾰω, ἀκουω, ἀγᾰθοποιεω), 0 forms wrong.
-        law0: "^ἐ‹{x:[ἀ|ᾰ|ᾱ|ᾳ]}" => "{x|law0}";
+        // %ε‹ἀ → ἠ (α → η): 16 words (ἀγω, ἀγᾰπᾰω, ἀκουω, ἀρκεω), 0 forms wrong.
+        law1: "^°ἀε‹{x:[ἀ|α]}" => "{x|law1}";
+        // copy of φ → π: 33 words (φοβεω, φῐλεω, φενᾱκῐζω, φῠω), 0 forms wrong.
+        law2: "°φ" => "π";
 
-    perfect_ind_act_1: "%ε~κᾰ", _, _;
     perfect_subj_pass_1: "%ε~γμένος ὦ", _, "%ε~γμένοι ὦμεν";
+    perfect_ind_act_1: "%ε~κᾰ", _, _;
 
         ), // ανα + ἐ → ἀνε
 ```
@@ -527,9 +528,9 @@ words with that ending take each declension), then the words no rule gets right,
 by the declension they take (sorted into one lookup array when the crate is built):
 
 ```rust
-        "ба" => [Полнота 241, Какао 10, Люлька 4, Порубка 1] regular,
-        "ьба" => [Полнота 32, Люлька 4, Порубка 1] regular,
-        "дьба" => [Полнота 6, Люлька 4] regular,
+        "ба" => [Полнота 239, Какао 10, Люлька 6, Порубка 1] regular,
+        "жба" => [Полнота 30] regular,
+        "роба" => [Полнота 13] regular,
     ...
     listed {
         Приём => [
@@ -541,7 +542,7 @@ a name in `-y` takes `-s` (`Kennedys`), where a noun takes `-ies`:
 
 ```rust
         "y" => [Hopewell 3091, Kelly 31, Douglas 1, Miles 1] regular,
-        "ey" => [Hopewell 1366] regular,
+        "ay" => [Hopewell 228] regular,
 
     // Hopewell: 39,422 words (december, april, june, september, october, november).
     declension!("hopewell", 39422, "~";
@@ -553,6 +554,7 @@ A part's cells are the language's. From `latin`, the subjunctive has no future:
 
 ```rust
 /// Tense of a subjunctive: Latin has no future one (A&G §§ 184–196).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum SubjunctiveTense {
     Present,
     Imperfect,
@@ -567,8 +569,8 @@ words whose second word is another verb's (`~ gElE`):
 
 ```rust
     // CONVERB_POS_PLAIN_DOUBLED, from OPTATIVE_POS_PLAIN___3SG.
-    relation!(CONVERB_POS_PLAIN_DOUBLED, [OPTATIVE_POS_PLAIN___3SG], [("~", "~ EdE"), ..., ("~", "~ ~"), ...], rules {
-        "" => [36 1879, 0 186, 31 33, 27 29, ...
+    relation!(CONVERB_POS_PLAIN_DOUBLED, [OPTATIVE_POS_PLAIN___3SG], [("~", "~ Ala"), ("~", "~ AldırA"), ("~", "~ AnlAyA …
+        "" => [35 1879, 4 186, 0 43, 30 33, 37 17, 33 15, 6 12, 15 12, 39 12, 19 10, 40 7, 23 6, 7 5, 17 4, 29 4, 32 4,  …
 ```
 
 From `finnish`, a verb of two words inflects its first and keeps the other, after it
@@ -587,8 +589,8 @@ and the letters after it (`#` is the word's start or end), and, read first, a ro
 words all write a vowel one way the rules don't (`ROOTS`):
 
 ```rust
-        "#a" => ['a' 6208, 'ā' 289],
-        "#act" => ['ā' 26, 'a' 11],
+        "#a" => ['a' 7368, 'ā' 338],
+        "#act" => ['ā' 28, 'a' 14],
     ...
     "abbati" => 'ā',
 ```
@@ -606,8 +608,8 @@ cell's accent goes before the law moves it):
         ...
     }),
 
-    // 1, `νῠμφη`: 1,865 words. Like 0 (`σημειον`), except in 1 cell.
-    pattern!("νῠμφη", 1865, like 0;
+    // 1, `νῠμφη`: 1,907 words. Like 0 (`σημειον`), except in 1 cell.
+    pattern!("νῠμφη", 1907, like 0;
     gen_: _, _, Ending;
     ),
 ```
@@ -622,34 +624,50 @@ adiuvo	18	adiūvī	20	adiūvistī	22	adiūvit
 
 ## What it costs
 
-A clean debug build of each crate, one at a time (one machine, `-j 4`; CI's numbers
-are in its compile-cost job; every build's compiler peaked under 0.92 GB), and one call
-(release: a word's candidates for one cell, over 30 words and their first 40 cells;
-`cargo xtask bench <language> --pos <part>`, last measured on the grammars of PR #14),
-on words the grammar was learned from and on held-out words:
+The crates' source, as they are now, per crate (MB):
 
-| crate | source MB | build seconds | `.rlib` MB | one call, nouns | one call, verbs |
-|---|---:|---:|---:|---:|---:|
-| english | 0.5 | 2 | 52 | 9 / 9 µs | 10 / 10 µs |
-| russian | 2.0 | 6 | 86 | 16 / 17 µs | 36 / 38 µs |
-| latin | 1.5 | 5 | 94 | 21 / 23 µs | 32 / 40 µs |
-| ancient-greek | 3.4 | 4 | 86 | 44 / 81 µs | 52 / 146 µs |
-| sanskrit | 0.7 | 2 | 55 | 5 / 7 µs | 19 / 25 µs |
-| polish | 1.2 | 4 | 76 | 13 / 25 µs | 13 / 17 µs |
-| german | 1.2 | 5 | 69 | 12 / 22 µs | 16 / 24 µs |
-| spanish | 0.5 | 2 | 48 | 4 / 4 µs | 9 / 12 µs |
-| french | 0.3 | 1 | 53 | 4 / 4 µs | 6 / 6 µs |
-| italian | 0.4 | 2 | 55 | 4 / 4 µs | 6 / 11 µs |
-| finnish | 2.1 | 5 | 84 | 16 / 16 µs | – |
-| turkish | 0.9 | 3 | 56 | 8 / 9 µs | – |
+| crate | MB |
+|---|---:|
+| ancient-greek | 3.35 |
+| finnish | 2.11 |
+| russian | 1.96 |
+| latin | 1.50 |
+| german | 1.23 |
+| polish | 1.19 |
+| turkish | 0.89 |
+| sanskrit | 0.65 |
+| spanish | 0.48 |
+| english | 0.46 |
+| italian | 0.42 |
+| french | 0.26 |
 
-The crates are 14.51 MB of source (15.97 before PR #21): 11.83 MB for the parts of speech
-they had before PR #19 and 2.68 MB for its new ones, most of them Finnish verbs and names
-(Turkish verbs are 0.55 MB, 1.62 before their vowel law read only vowels). Ancient Greek's
-verbs, 489 cells each, are most of its size: their paradigms (0.6 MB, 284 conjugations)
-and their irregular forms (0.9 MB: 25,869 forms no paradigm and listed stem give, 27,750
-before PR #21). Nothing is computed
-before the first answer, and the same entries always give the same crate, byte for byte.
+They are 14.51 MB in all (15.97 before PR #21), Turkish verbs 0.55 MB (1.62 before
+PR #21, when their vowel law came to read only vowels). Ancient Greek's verbs, 489 cells
+each, are most of its size: their paradigms (0.59 MB, 284 conjugations) and
+their irregular forms (0.90 MB: 25,869 forms no paradigm and listed stem
+give, 27,750 before PR #21). Nothing is computed before the first answer, and the same entries
+always give the same crate, byte for byte.
+
+A clean debug build of each crate, one at a time (one machine, `-j 4`; measured on PR
+#21's crates; CI's numbers are in its compile-cost job; every build's compiler peaked under
+0.92 GB on PR #19's), and one call (release: a word's candidates for one cell, over 30
+words and their first 40 cells; `cargo xtask bench <language> --pos <part>`, measured on
+the grammars of PR #14), on words the grammar was learned from and on held-out words:
+
+| language | build seconds | `.rlib` MB | one call, nouns | one call, verbs |
+|---|---:|---:|---:|---:|
+| english | 2 | 52 | 9 / 9 µs | 10 / 10 µs |
+| russian | 6 | 86 | 16 / 17 µs | 36 / 38 µs |
+| latin | 5 | 94 | 21 / 23 µs | 32 / 40 µs |
+| ancient-greek | 4 | 86 | 44 / 81 µs | 52 / 146 µs |
+| sanskrit | 2 | 55 | 5 / 7 µs | 19 / 25 µs |
+| polish | 4 | 76 | 13 / 25 µs | 13 / 17 µs |
+| german | 5 | 69 | 12 / 22 µs | 16 / 24 µs |
+| spanish | 2 | 48 | 4 / 4 µs | 9 / 12 µs |
+| french | 1 | 53 | 4 / 4 µs | 6 / 6 µs |
+| italian | 2 | 55 | 4 / 4 µs | 6 / 11 µs |
+| finnish | 5 | 84 | 16 / 16 µs | – |
+| turkish | 3 | 56 | 8 / 9 µs | – |
 
 ## How the grammar is learned
 
@@ -727,7 +745,7 @@ it describes (`crates/flexion-train/src/bits.rs`).
   told by analogy: from the cell that differs from it as another pair of cells does,
   with that pair's change. Every word gets a form in every cell, attested or not.
 - **Every word.** Where a part of speech has far more words than its structure needs
-  (Finnish nouns: ~114,000), its paradigms, relations and laws are learned from the
+  (Finnish nouns: 126,530), its paradigms, relations and laws are learned from the
   commonest (6,000), word by word; then every word takes the paradigm that builds the
   most of its forms, teaches the rules that choose one, and lists what the grammar still
   gets wrong. Every dictionary word gets its own forms.
@@ -784,14 +802,14 @@ as the grammars they were printed from.
 
 ## Layout
 
-- `crates/flexion`: the runtime: the grammar's types and how they answer.
-- `crates/flexion-train`: the trainer: extraction from Kaikki dumps, learning, evaluation,
-  printing.
-- `crates/flexion-configs`: what the trainer knows about each language: its features,
-  cells and Wiktionary's tags, and its README's introduction.
-- `crates/sound-law`: sound-law programs.
+- `crates/flexion`: The runtime of learned inflection grammars: paradigms, the rules that choose them, stress and sound laws, with candidates that explain themselves.
+- `crates/flexion-configs`: What flexion-train knows about each language: its features, cells and Wiktionary's tags.
+- `crates/flexion-macros`: A generated grammar's listed words, written grouped by what they are and sorted when the crate is built.
+- `crates/flexion-train`: Learn a language's inflection grammar from Wiktionary and write it as a Rust crate.
+- `crates/sound-law`: A declarative, capture-aware sound-change engine.
+- `crates/sound-law-macros`: Sound laws written in sound-law's notation, compiled when the crate that writes them is built.
+- `xtask`: Learn, write and check the language crates: cargo xtask <command>.
 - `languages/*`: the generated crates.
-- `xtask`: `cargo xtask extract|build|readme|try|inspect <language>`.
 
 ## Building a language
 
@@ -799,7 +817,8 @@ as the grammars they were printed from.
 cd flexion
 cargo xtask extract russian   # read ~/.cache/flexion/dumps/Russian.jsonl
 cargo xtask build russian     # learn, measure, and write languages/russian
-cargo xtask build all --lanes 2   # every language, two at a time
+cargo xtask build all --lanes 2   # every language, two at a time, then this README
+cargo xtask readme            # this README, from the saved builds and the crates
 ```
 
 A build saves what it learned and measured in `target/build-cache/`: built again with only

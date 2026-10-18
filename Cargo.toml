@@ -35,5 +35,26 @@ dbg_macro = "deny"
 [profile.release]
 opt-level = 3
 
+# Dependencies and the workspace's own crates are optimized in dev and test builds: the
+# end-to-end test learns real grammars, and unoptimized it took 806 of CI's 906 seconds
+# (34 seconds at opt-level 2). `"*"` reaches dependencies only.
 [profile.dev.package."*"]
+opt-level = 2
+
+[profile.dev.package.flexion]
+opt-level = 2
+
+[profile.dev.package.flexion-train]
+opt-level = 2
+
+[profile.dev.package.flexion-configs]
+opt-level = 2
+
+[profile.dev.package.flexion-macros]
+opt-level = 2
+
+[profile.dev.package.sound-law]
+opt-level = 2
+
+[profile.dev.package.sound-law-macros]
 opt-level = 2
