@@ -407,7 +407,11 @@ impl Change {
                     target: format!("{{x:[{}]}}", list(&classes)),
                     to: format!("{{x|{name}[t]}}"),
                     before: if *adjacent {
-                        format!("{{t:[{t}]?}}")
+                        // The letter just before, the build's marks aside
+                        // (`unpin+Ting`: the `n`, not the `+`).
+                        format!(
+                            "{{t:[{t}]?}}{{g:[{BOUNDARY}|{ALTERNATES}|{CHANGED}|{COPIED}|{FRONT}]*}}"
+                        )
                     } else {
                         format!("{{t:[{t}]?}}{{g:![{t}]*}}")
                     },
@@ -3069,6 +3073,26 @@ pub(crate) fn drop_empty<'s>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_copy_read_just_before_reads_past_the_build_s_marks() {
+        // English `T` (`unpinning`): the stem's last letter is copied, though
+        // the build writes the stem's end between them (`unpin+Ting`).
+        let tier = vec!['d', 'g', 'm', 'n', 't'];
+        let map = tier
+            .iter()
+            .map(|&c| ('T', Some(c), c))
+            .chain([('T', None, 't')])
+            .collect();
+        let copy = Change::Harmony {
+            tier,
+            map,
+            adjacent: true,
+        };
+        let program = compile(&[copy]).expect("a program");
+        assert_eq!(program.apply("unpin+Ting"), "unpin+ning");
+        assert_eq!(program.apply("foxproof+Ted"), "foxproof+ted");
+    }
 
     #[test]
     fn finds_the_change_at_the_stem_edge() {
