@@ -10,6 +10,11 @@ use crate::spec::{Feature, Language, PartOfSpeech, Value};
 use std::fmt::Write as _;
 use std::path::Path;
 
+/// The workspace's code licences, which every crate ships (see its
+/// manifest's `include`).
+const LICENSE_MIT: &str = include_str!("../../../LICENSE-MIT");
+const LICENSE_APACHE: &str = include_str!("../../../LICENSE-APACHE");
+
 /// One part of speech to print.
 pub struct Part<'a, 's> {
     pub spec: &'a PartOfSpeech,
@@ -26,6 +31,9 @@ pub fn files(
     let mut out = vec![
         ("Cargo.toml".to_string(), manifest(lang)),
         ("DATA-LICENSE.md".to_string(), data_license(lang)),
+        // The code's licences, as the workspace's.
+        ("LICENSE-MIT".to_string(), LICENSE_MIT.to_string()),
+        ("LICENSE-APACHE".to_string(), LICENSE_APACHE.to_string()),
         ("src/orthography.rs".to_string(), orthography(script)),
         ("src/lib.rs".to_string(), library(lang, parts)?),
     ];
