@@ -8,7 +8,6 @@
 
 use flexion::{Known, Status};
 use flexion_train::choose::Settings;
-use flexion_train::eval::same_form;
 use flexion_train::extract::{self, Lexeme, PosData};
 use flexion_train::learn::{self, Learned};
 use flexion_train::script::Script;
@@ -114,9 +113,7 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     l.cells.iter().flatten().map(String::as_str),
                 );
                 let same = |got: &str, want: &str| {
-                    let (a, b) = (g.orthography.read(got), g.orthography.read(want));
-                    same_form(&g.orthography, got, want)
-                        || (a.stress == b.stress && unstated.compatible(&b.letters, &a.letters))
+                    flexion_train::eval::accepted(&g.orthography, &unstated, got, want)
                 };
                 for (cell, forms) in l.cells.iter().enumerate() {
                     let Some(want) = forms.first() else { continue };
@@ -142,11 +139,10 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                         let others: Vec<&str> = forms.iter().skip(1).map(String::as_str).collect();
                         assert!(
                             also.len() == others.len()
-                                && also.iter().zip(&others).all(|(a, o)| same_form(
-                                    &g.orthography,
-                                    a,
-                                    o
-                                )),
+                                && also
+                                    .iter()
+                                    .zip(&others)
+                                    .all(|(a, o)| g.orthography.same_form(a, o)),
                             "{} {}: {} cell {cell} is also {others:?}, the grammar says {also:?}",
                             lang.name,
                             part.name,
@@ -181,7 +177,7 @@ fn a_word_beyond_the_words_learned_from_still_gives_its_dictionary_forms() {
             let Some(want) = forms.first() else { continue };
             let got = g.best(&l.full, cell, &Known::default());
             assert!(
-                same_form(&g.orthography, &got, want),
+                g.orthography.same_form(&got, want),
                 "{} cell {cell} is {want}, the grammar says {got}",
                 l.full
             );

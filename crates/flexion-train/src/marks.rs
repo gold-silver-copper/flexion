@@ -103,7 +103,7 @@ fn examples(
                 && let Some(rest) = key.get(i..)
             {
                 marked |= l != k;
-                examples.push((format!("{before}{rest}{}{part}", flexion::WORD_END), l));
+                examples.push((flexion::Marks::context(before, rest, part), l));
             }
             before = k;
         }
@@ -155,16 +155,13 @@ pub fn roots<'v, 'p: 'v>(
         if letters.contains(char::is_whitespace) {
             return (key, Vec::new());
         }
-        let k: Vec<char> = key.chars().collect();
-        let places = (k.iter().zip(letters.chars()).enumerate())
-            .filter(|&(n, (&c, _))| n + 3 >= flexion::ROOT_LETTERS && markable(c))
-            .filter_map(|(n, (&c, l))| {
-                Some(Place {
-                    at: n,
-                    through: k.get(..=n)?.iter().collect(),
-                    root: k.get(..n + 3).map(|r| r.iter().collect()),
-                    letter: (l != c || !unstated(orthography, c)).then_some(l),
-                })
+        let places = (key.char_indices().zip(letters.chars()).enumerate())
+            .filter(|&(_, ((_, c), _))| markable(c))
+            .map(|(n, ((at, c), l))| Place {
+                at: n,
+                through: key.get(..at + c.len_utf8()).unwrap_or_default().to_string(),
+                root: flexion::Marks::root_of(&key, n).map(str::to_string),
+                letter: (l != c || !unstated(orthography, c)).then_some(l),
             })
             .collect();
         (key, places)

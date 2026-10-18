@@ -229,6 +229,14 @@ impl Orthography<'_> {
         Some((e.1, e.2))
     }
 
+    /// Whether two written forms are the same word form: the same letters
+    /// and the same (main) stress. Marks the reading drops, and stress marks
+    /// before the main one (a compound's first part), don't count.
+    pub fn same_form(&self, a: &str, b: &str) -> bool {
+        let (x, y) = (self.read(a), self.read(b));
+        x.letters == y.letters && x.stress == y.stress
+    }
+
     /// Write `letters` with `stress` marked (if the language marks it and the
     /// word has enough syllables) in `casing`.
     pub fn write(&self, letters: &str, stress: Option<Stress>, casing: Casing) -> String {

@@ -1134,7 +1134,7 @@ fn try_tenth(
                     let Some(want) = fs.first() else { continue };
                     let c = g.candidates(typed, cell, &known);
                     if c.first()
-                        .is_some_and(|c| !eval::same_form(&g.orthography, &c.form, want))
+                        .is_some_and(|c| !g.orthography.same_form(&c.form, want))
                     {
                         let top: Vec<String> = c.iter().take(2).map(ToString::to_string).collect();
                         println!(

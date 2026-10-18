@@ -35,56 +35,11 @@ use std::fmt::Write as _;
 use std::io::{BufReader, BufWriter, Read as _};
 use std::path::{Path, PathBuf};
 
-/// Each file's path from here, with its text.
-macro_rules! sources {
-    ($($path:literal),* $(,)?) => {
-        &[$(($path, include_str!($path))),*]
-    };
-}
-
-/// The source of everything that computes what a build keeps: a change to
-/// any of it is a new key. Every source file of the trainer, the runtime and
-/// `sound-law` is here but the printer's (see the test below).
-const SOURCE: &[(&str, &str)] = sources![
-    "baseline.rs",
-    "bits.rs",
-    "ceiling.rs",
-    "cells.rs",
-    "choose.rs",
-    "eval.rs",
-    "extract.rs",
-    "kaikki.rs",
-    "laws.rs",
-    "laws/harmony.rs",
-    "learn.rs",
-    "marks.rs",
-    "length.rs",
-    "lib.rs",
-    "measure.rs",
-    "par.rs",
-    "pipeline.rs",
-    "relations.rs",
-    "saved.rs",
-    "script.rs",
-    "skeleton.rs",
-    "spec.rs",
-    "stage.rs",
-    "stems.rs",
-    "trace.rs",
-    "../../flexion/src/choice.rs",
-    "../../flexion/src/grammar.rs",
-    "../../flexion/src/lib.rs",
-    "../../flexion/src/orthography.rs",
-    "../../flexion/src/paradigm.rs",
-    "../../flexion/src/pattern.rs",
-    "../../flexion/src/stems.rs",
-    "../../flexion/src/stress.rs",
-    "../../sound-law/src/compile.rs",
-    "../../sound-law/src/engine.rs",
-    "../../sound-law/src/lib.rs",
-    "../../sound-law/src/rust.rs",
-    "../../../Cargo.lock",
-];
+/// The source of everything that computes what a build keeps, each file's
+/// path from here with its text: a change to any of it is a new key. Every
+/// source file of the trainer, the runtime and `sound-law`, and the lock
+/// file, but the printer's (listed by `build.rs`).
+pub(crate) const SOURCE: &[(&str, &str)] = include!(concat!(env!("OUT_DIR"), "/sources.rs"));
 
 /// What a build keeps: per part of speech, its shipped grammar and what was
 /// measured of it.
@@ -207,53 +162,4 @@ pub fn save(
         }
     }
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::SOURCE;
-    use std::path::Path;
-
-    /// The trainer's files left out of the key: they only format.
-    const PRINTER: &[&str] = &["print.rs", "report.rs"];
-
-    /// The `.rs` files under `dir`, by their path from `prefix`.
-    fn files(dir: &Path, prefix: &str, out: &mut Vec<String>) {
-        for entry in std::fs::read_dir(dir).expect("source dir").flatten() {
-            let name = entry.file_name().to_string_lossy().to_string();
-            let path = entry.path();
-            if path.is_dir() {
-                files(&path, &format!("{prefix}{name}/"), out);
-            } else if name.ends_with(".rs") {
-                out.push(format!("{prefix}{name}"));
-            }
-        }
-    }
-
-    #[test]
-    fn every_source_file_is_in_the_key_or_only_formats() {
-        let here = Path::new(env!("CARGO_MANIFEST_DIR")).join("src");
-        let mut all = Vec::new();
-        files(&here, "", &mut all);
-        files(
-            &here.join("../../flexion/src"),
-            "../../flexion/src/",
-            &mut all,
-        );
-        files(
-            &here.join("../../sound-law/src"),
-            "../../sound-law/src/",
-            &mut all,
-        );
-        // `sound-law`'s command-line tool computes nothing a build keeps.
-        all.retain(|f| !f.starts_with("../../sound-law/src/bin/"));
-        let missing: Vec<&String> = all
-            .iter()
-            .filter(|f| !SOURCE.iter().any(|(s, _)| s == f) && !PRINTER.contains(&f.as_str()))
-            .collect();
-        assert!(
-            missing.is_empty(),
-            "in no key and not the printer's: {missing:?}"
-        );
-    }
 }

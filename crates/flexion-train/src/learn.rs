@@ -1259,8 +1259,8 @@ fn layers(paradigms: &mut [Paradigm<'_>], space: flexion::Space<'_, '_>) {
 /// phrase puts it (`keski-ikäistyä`, `en ole keski-ikäistynyt`); else each
 /// part. A hyphened word whose first part alone changes (French
 /// `arcs-en-ciel`) is each part's: as the first part's, it would pull the
-/// many whose first part never changes (`coupe-coupes`, measured −0.12 on
-/// French nouns). `None` for a word of one part.
+/// many whose first part never changes (`coupe-coupes`; French nouns
+/// −0.12, measured in PR 19). `None` for a word of one part.
 fn compound(w: &Word) -> Option<(String, Compound)> {
     let (joiner, first, rest) = parts(w)?;
     let (first_key, _) = w.key.split_once(joiner)?;
@@ -2010,8 +2010,9 @@ fn analyze(w: &Word) -> Analyzed {
 /// Italian article: `il|lo|l'`, `i|gli`): a word already listed lists
 /// those cells whole. Only of a closed class, whose spellings are few and its
 /// own: an open class's (Greek verbs' contracted and open forms,
-/// `ἀᾰ́ομαι|ἀῶμαι`) are many, cost 2 MB and change no answer. A cell newly listed may change what other cells of the
-/// word are told from (a listed word's cells come from its listed ones,
+/// `ἀᾰ́ομαι|ἀῶμαι`) are many and change no answer (2.1 MB, measured in PR
+/// 21). A cell newly listed may change what other cells of the word are
+/// told from (a listed word's cells come from its listed ones,
 /// English `sing`'s past participle from its past): those words are checked
 /// again, every cell, until none changes.
 fn spell_out(
@@ -2053,12 +2054,7 @@ fn spell_out(
                 stated,
                 l.cells.iter().flatten().map(String::as_str),
             );
-            let same = |a: &str, b: &str| {
-                let (got, want) = (orthography.read(a), orthography.read(b));
-                crate::eval::same_form(orthography, a, b)
-                    || (got.stress == want.stress
-                        && unstated.compatible(&want.letters, &got.letters))
-            };
+            let same = |a: &str, b: &str| crate::eval::accepted(orthography, &unstated, a, b);
             // Right: the first form, and where the dictionary has more, all
             // of them in order.
             let right = |cell: usize, forms: &[String]| {
@@ -3302,7 +3298,7 @@ fn missed<'w>(
                 let top = table.get(c).and_then(|c| c.first());
                 first_form(w, c).is_some_and(|form| {
                     let want = format!("{front}{form}");
-                    !top.is_some_and(|t| crate::eval::same_form(o, &t.form, &want))
+                    !top.is_some_and(|t| o.same_form(&t.form, &want))
                 })
             })
         })
@@ -3925,7 +3921,7 @@ pub fn judge(grammar: &Grammar<'_, u16, u16, u8>, lexemes: &[Lexeme], parts: &[u
             let right = |t: &Vec<Vec<flexion::Candidate<'_>>>| {
                 t.get(cell)
                     .and_then(|c| c.first())
-                    .is_some_and(|c| crate::eval::same_form(o, &c.form, want))
+                    .is_some_and(|c| o.same_form(&c.form, want))
             };
             let [h, f, g] = &tables;
             j.forms += 1;
@@ -3996,12 +3992,8 @@ fn misbuilt(
             let mut letters = false;
             let read = orthography.read(want);
             for top in tops {
-                right &= top.is_some_and(|t| {
-                    let got = orthography.read(t);
-                    crate::eval::same_form(orthography, t, want)
-                        || (got.stress == read.stress
-                            && unstated.compatible(&read.letters, &got.letters))
-                });
+                right &=
+                    top.is_some_and(|t| crate::eval::accepted(orthography, &unstated, t, want));
                 letters |= top.is_none_or(|t| orthography.read(t).letters != read.letters);
             }
             if !right {

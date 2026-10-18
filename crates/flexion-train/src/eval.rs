@@ -311,12 +311,18 @@ fn ratio(a: usize, b: usize) -> f64 {
     r
 }
 
-/// Whether two written forms are the same word form: the same letters and
-/// the same (main) stress. Marks the language's reading drops, and stress
-/// marks before the main one (a compound's first part), don't count.
-pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bool {
-    let (x, y) = (orthography.read(a), orthography.read(b));
-    x.letters == y.letters && x.stress == y.stress
+/// Whether `got` is the dictionary's form `want`: its letters the same, or
+/// compatible with the length the word's table states (see
+/// [`TableLength`]); its stress the same, strictly. What spell_out and
+/// misbuilt count as right, and the compatible score.
+pub fn accepted(
+    orthography: &flexion::Orthography<'_>,
+    table: &TableLength<'_>,
+    got: &str,
+    want: &str,
+) -> bool {
+    let (got, want) = (orthography.read(got), orthography.read(want));
+    got.stress == want.stress && table.compatible(&want.letters, &got.letters)
 }
 
 /// The length one word's table states of each of its vowels, for a
@@ -403,10 +409,13 @@ impl<'a> TableLength<'a> {
             .fold(0, |bits, (_, i)| bits | 1u8.checked_shl(i).unwrap_or(0))
     }
 
-    /// Whether `answer` is `want` (both letters, as read) but for length
-    /// marks on vowels `want` writes bare, each compatible with the length
-    /// the table states of that vowel (see [`TableLength`]).
+    /// Whether `answer` is `want` (both letters, as read), or is but for
+    /// length marks on vowels `want` writes bare, each compatible with the
+    /// length the table states of that vowel (see [`TableLength`]).
     pub fn compatible(&self, want: &str, answer: &str) -> bool {
+        if want == answer {
+            return true;
+        }
         if self.vowels.is_empty() {
             return false;
         }
@@ -430,7 +439,7 @@ impl<'a> TableLength<'a> {
 
 /// What a table's first answer `top` is against the dictionary's forms of
 /// the cell (`listed`, the first the one scored), compared as
-/// [`same_form`] compares them, as `try` scores it.
+/// [`flexion::Orthography::same_form`] compares them, as `try` scores it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Verdict {
     /// No answer: a gap.
@@ -452,8 +461,8 @@ pub fn verdict(
     match (top, listed.first()) {
         (None, _) => Verdict::Gap,
         (Some(_), None) => Verdict::Unlisted,
-        (Some(t), Some(want)) if same_form(orthography, t, want) => Verdict::Right,
-        (Some(t), _) if listed.iter().any(|f| same_form(orthography, t, f)) => Verdict::Listed,
+        (Some(t), Some(want)) if orthography.same_form(t, want) => Verdict::Right,
+        (Some(t), _) if listed.iter().any(|f| orthography.same_form(t, f)) => Verdict::Listed,
         _ => Verdict::Wrong,
     }
 }
@@ -597,7 +606,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 continue;
             };
             let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
-            let same = |form: &str| same_form(orthography, form, want);
+            let same = |form: &str| orthography.same_form(form, want);
             let probability: f32 = candidates
                 .iter()
                 .filter(|c| same(&c.form))
@@ -614,11 +623,11 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
             let wanted = orthography.read(want);
             let answer = first.map(|c| orthography.read(&c.form));
             let letters = answer.as_ref().is_some_and(|a| a.letters == wanted.letters);
-            let compatible_letters = answer.as_ref().is_some_and(|a| {
-                a.letters == wanted.letters || unstated.compatible(&wanted.letters, &a.letters)
-            });
+            let compatible_letters = answer
+                .as_ref()
+                .is_some_and(|a| unstated.compatible(&wanted.letters, &a.letters));
             let any =
-                first.is_some_and(|c| forms.iter().any(|f| same_form(orthography, &c.form, f)));
+                first.is_some_and(|c| forms.iter().any(|f| orthography.same_form(&c.form, f)));
             let error = match first {
                 _ if rank == Some(0) => None,
                 None => Some(Kind::Gap),
@@ -630,7 +639,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                                 && w.cells
                                     .get(cell)
                                     .and_then(|f| f.first())
-                                    .is_some_and(|f| same_form(orthography, &c.form, f))
+                                    .is_some_and(|f| orthography.same_form(&c.form, f))
                         })
                     }) =>
                 {
@@ -660,8 +669,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 accentless: first.is_some_and(|c| {
                     !c.form.contains(' ') && answer.as_ref().is_some_and(|a| a.stress.is_none())
                 }) && wanted.stress.is_some(),
-                compatible: compatible_letters
-                    && answer.as_ref().is_some_and(|a| a.stress == wanted.stress),
+                compatible: first.is_some_and(|c| accepted(orthography, &unstated, &c.form, want)),
                 compatible_letters,
             });
         }
@@ -788,7 +796,7 @@ pub fn floor(
                 word,
                 cell,
                 right,
-                compatible: right || unstated.compatible(&want, &wrote),
+                compatible: unstated.compatible(&want, &wrote),
             })
         });
         out.extend(found.into_iter().flatten());
@@ -942,7 +950,7 @@ pub fn fit_sharpness<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 } else {
                     c.probability
                 };
-                (p, same_form(orthography, &c.form, want), c.status)
+                (p, orthography.same_form(&c.form, want), c.status)
             });
             forms.push(scored.collect());
         }
@@ -952,10 +960,9 @@ pub fn fit_sharpness<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     // The power: of a grid, the one whose answers' stated probabilities are
     // nearest how often they are right (calibration error).
     let sharpened = |f: &[(f32, bool, flexion::Status)], power: f32| -> Vec<f32> {
-        let total: f32 = f.iter().map(|x| x.0).sum();
-        let sharp: f32 = f.iter().map(|x| x.0.powf(power)).sum();
-        let scale = if sharp > 0.0 { total / sharp } else { 0.0 };
-        f.iter().map(|x| x.0.powf(power) * scale).collect()
+        let mut p: Vec<f32> = f.iter().map(|x| x.0).collect();
+        flexion::sharpen(p.iter_mut(), power);
+        p
     };
     let error = |power: f32| {
         let mut s = Score {

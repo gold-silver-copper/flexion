@@ -14,8 +14,6 @@ use std::hash::{Hash, Hasher};
 pub const LEFT: usize = 4;
 /// The most letters read after a letter.
 pub const RIGHT: usize = 6;
-/// The fewest letters of a root, through the letter and two past it.
-const ROOT: usize = 4;
 
 /// A word: how it is typed without marks, how the dictionary spells it,
 /// and its part of speech.
@@ -47,11 +45,11 @@ pub struct Model {
     seen: HashMap<u64, Vec<(char, u32)>>,
 }
 
-/// A context: a root (a word's beginning), or letters around a letter, with
-/// the part of speech or not.
+/// A context: a root (a word's beginning, see [`flexion::Marks::root_of`]),
+/// or letters around a letter, with the part of speech or not.
 #[derive(Hash)]
 enum Context<'a> {
-    Root(&'a [char]),
+    Root(&'a str),
     Around(&'a [char], char, &'a [char], Option<&'a str>),
 }
 
@@ -73,26 +71,26 @@ fn markable(o: &Orthography<'_>, w: &Spelled<'_>) -> Vec<(usize, char, char)> {
         .collect()
 }
 
-/// The contexts of the letter at `i` of `key` (`#` at either end), the
-/// longest first, as `without` leaves them.
+/// The contexts of the letter at `i` of `w`'s key (`ended`: the key with
+/// `#` at either end), the longest first, as `without` leaves them.
 fn contexts<'a>(
-    key: &'a [char],
+    w: &Spelled<'a>,
+    ended: &'a [char],
     i: usize,
-    part: &'a str,
     without: Option<Cue>,
 ) -> Vec<Context<'a>> {
     let mut out = Vec::new();
-    let Some(&letter) = key.get(i) else {
-        return out;
-    };
-    // `key` has `#` before its first letter: the root is its letters
-    // through two past this one.
+    let part = w.part;
     if without != Some(Cue::Root)
-        && i + 2 >= ROOT
-        && let Some(root) = key.get(..i + 3)
+        && let Some(root) = flexion::Marks::root_of(w.key, i)
     {
         out.push(Context::Root(root));
     }
+    // `ended` has `#` before the key's first letter.
+    let (i, key) = (i + 1, ended);
+    let Some(&letter) = key.get(i) else {
+        return out;
+    };
     let lefts = match without {
         Some(Cue::Left) => 0,
         Some(Cue::FarLeft) => 1,
@@ -135,7 +133,7 @@ impl Model {
         for w in words {
             let key = ended(w.key);
             for (i, _, value) in markable(o, w) {
-                for c in contexts(&key, i + 1, w.part, None) {
+                for c in contexts(w, &key, i, None) {
                     let values = model.seen.entry(hash(&c)).or_default();
                     match values.iter_mut().find(|(v, _)| *v == value) {
                         Some((_, n)) => *n += 1,
@@ -152,7 +150,7 @@ impl Model {
         let key = ended(w.key);
         let mut out: Vec<char> = w.key.chars().collect();
         for (i, typed, _) in markable(o, w) {
-            let value = contexts(&key, i + 1, w.part, without)
+            let value = contexts(w, &key, i, without)
                 .iter()
                 .find_map(|c| self.seen.get(&hash(c)))
                 .and_then(|values| {

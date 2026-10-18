@@ -416,18 +416,31 @@ pub const ROOT_LETTERS: usize = 4;
 const ROOT_TRUST: f32 = 0.97;
 
 impl Marks<'_> {
-    /// How the root of `key` through the letter at char `i` and two past it
-    /// writes that letter, if it is listed.
-    pub fn root(&self, key: &str, i: usize) -> Option<char> {
+    /// The root of the letter at char `i` of `key`: the key's letters
+    /// through it and two past it, at least [`ROOT_LETTERS`] of them.
+    pub fn root_of(key: &str, i: usize) -> Option<&str> {
         let end = i + 3;
         if end < ROOT_LETTERS {
             return None;
         }
-        let root = match key.char_indices().nth(end) {
-            Some((at, _)) => key.get(..at)?,
-            None if key.chars().count() == end => key,
-            None => return None,
-        };
+        match key.char_indices().nth(end) {
+            Some((at, _)) => key.get(..at),
+            None if key.chars().count() == end => Some(key),
+            None => None,
+        }
+    }
+
+    /// What the rules read of a letter: the letter before it (`before`),
+    /// the letters from it on (`rest`), the word's end and the part of
+    /// speech.
+    pub fn context(before: char, rest: &str, part: &str) -> String {
+        format!("{before}{rest}{WORD_END}{part}")
+    }
+
+    /// How the root of `key` through the letter at char `i` and two past it
+    /// writes that letter, if it is listed.
+    pub fn root(&self, key: &str, i: usize) -> Option<char> {
+        let root = Self::root_of(key, i)?;
         let at = self.roots.binary_search_by(|(r, _)| r.as_ref().cmp(root));
         at.ok().and_then(|at| self.roots.get(at)).map(|(_, v)| *v)
     }
@@ -569,15 +582,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             ..*known
         };
         let firsts = self.sharpened(self.unsharpened(lemma, &cells, &bare));
-        let same = |a: &str, b: &str| {
-            let (a, b) = (o.read(a), o.read(b));
-            a.letters == b.letters && a.stress == b.stress
-        };
         known
             .forms
             .iter()
             .zip(&firsts)
-            .filter(|((_, form), built)| !built.first().is_some_and(|c| same(&c.form, form)))
+            .filter(|((_, form), built)| !built.first().is_some_and(|c| o.same_form(&c.form, form)))
             .map(|(&given, _)| given)
             .collect()
     }
@@ -1753,7 +1762,7 @@ fn restorations(
     for (n, ((i, k), c)) in key.char_indices().zip(letters.chars()).enumerate() {
         let mut readings: Vec<(char, f32)> = if c == k && o.folded.iter().any(|e| e.1 == c) {
             let rest = key.get(i..).unwrap_or("");
-            let around = format!("{before}{rest}{WORD_END}{}", marks.part);
+            let around = Marks::context(before, rest, &marks.part);
             (marks
                 .rules
                 .read(&around, smoothing, |m| o.fold(m) == c)
@@ -1869,6 +1878,8 @@ impl Trust {
     }
 }
 
+/// Sharpen `probabilities` by `power`: each raised to it, then all scaled
+/// so that their sum is as before.
 pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32) {
     if (power - 1.0).abs() < f32::EPSILON {
         return;

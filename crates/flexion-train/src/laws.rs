@@ -409,9 +409,7 @@ impl Change {
                     before: if *adjacent {
                         // The letter just before, the build's marks aside
                         // (`unpin+Ting`: the `n`, not the `+`).
-                        format!(
-                            "{{t:[{t}]?}}{{g:[{BOUNDARY}|{ALTERNATES}|{CHANGED}|{COPIED}|{FRONT}]*}}"
-                        )
+                        format!("{{t:[{t}]?}}{{g:[{}]*}}", list(&pattern::MARKS))
                     } else {
                         format!("{{t:[{t}]?}}{{g:![{t}]*}}")
                     },
@@ -482,8 +480,8 @@ impl Change {
                                 ['$'] => break,
                                 [BOUNDARY] => right.push(BOUNDARY),
                                 ['!', but @ ..] => {
-                                    let marks = [BOUNDARY, ALTERNATES, CHANGED, COPIED, FRONT];
-                                    let but: Vec<char> = marks.iter().chain(but).copied().collect();
+                                    let but: Vec<char> =
+                                        pattern::MARKS.iter().chain(but).copied().collect();
                                     right.push_str(&format!("{{![{}]}}", list(&but)));
                                 }
                                 letters => right.push_str(&format!("{{[{}]}}", list(letters))),
@@ -2123,9 +2121,12 @@ fn context(
         if halves.held.get(w) == Some(&true) {
             continue;
         }
+        // Every mark but the boundary (the stem's end), the alternating
+        // stems' (the form's end, `$`) and the changed letters' (a place a
+        // law has changed is not this change's).
         let seq: Vec<char> = built
             .chars()
-            .filter(|&c| c != COPIED && c != FRONT)
+            .filter(|&c| !pattern::is_mark(c) || matches!(c, BOUNDARY | ALTERNATES | CHANGED))
             .map(|c| if c == ALTERNATES { '$' } else { c })
             .collect();
         let Some(edge) = seq.iter().position(|&c| c == BOUNDARY) else {
@@ -2370,11 +2371,13 @@ fn pays(words: usize, breaks: u32, forms: usize) -> bool {
 /// The letters of a build's stem a change inside it may touch, with the one
 /// before them: the last [`NEAR`] and four more.
 fn stem_end(built: &str) -> String {
+    // Every mark but the changed letters' (a change takes no letter a law
+    // has changed); the alternating stems' ends the form, never in its stem.
     let stem: Vec<char> = built
         .split_once(BOUNDARY)
         .map_or("", |s| s.0)
         .chars()
-        .filter(|&c| c != COPIED && c != FRONT)
+        .filter(|&c| !pattern::is_mark(c) || c == CHANGED)
         .collect();
     let skip = stem.len().saturating_sub(NEAR + 4);
     stem.get(skip..).unwrap_or_default().iter().collect()
@@ -2575,9 +2578,10 @@ fn inners(built: &str, want: &str) -> Vec<Change> {
 /// first (none to two) that turn `built` into `want`: `ε+ο → +ου`. What
 /// stays of the stem keeps the boundary after it.
 fn edits(built: &str, want: &str) -> Vec<Change> {
+    // Every mark but the boundary, where the stem ends.
     let built: String = built
         .chars()
-        .filter(|&c| c != COPIED && c != FRONT && c != ALTERNATES && c != CHANGED)
+        .filter(|&c| !pattern::is_mark(c) || c == BOUNDARY)
         .collect();
     let Some((stem, ending)) = built.split_once(BOUNDARY) else {
         return Vec::new();
@@ -2841,9 +2845,10 @@ fn tiers(readings: &[Vec<Reading>], forms: &[Vec<&str>]) -> Vec<(Change, u32)> {
         .flat_map(|(w, (rs, fs))| {
             rs.iter().flat_map(move |r| {
                 r.builds.iter().zip(fs).filter_map(move |(b, f)| {
+                    // Where the stem ends, among the letters `built` keeps.
                     let edge = b
                         .chars()
-                        .filter(|&c| c != COPIED && c != FRONT)
+                        .filter(|&c| !pattern::is_mark(c) || c == BOUNDARY)
                         .position(|c| c == BOUNDARY)?;
                     let built: Vec<char> = b.chars().filter(|&c| !pattern::is_mark(c)).collect();
                     let form: Vec<char> = f.chars().collect();

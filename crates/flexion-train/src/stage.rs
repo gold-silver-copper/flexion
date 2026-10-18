@@ -1,7 +1,7 @@
 //! The sound-law stage's results kept on disk for experiments (`xtask try`
-//! and `sweep`), by a hash of all it reads and of its own source: a rerun
-//! that changes only later stages skips it. Off unless [`keep_in`] turned
-//! it on, so never for a build.
+//! and `sweep`), by a hash of all it reads and of the source a build keys
+//! (see [`crate::saved`]): a rerun that changes only the printer skips it.
+//! Off unless [`keep_in`] turned it on, so never for a build.
 
 use crate::Hashing;
 use crate::laws::Law;
@@ -18,32 +18,16 @@ pub fn keep_in(dir: PathBuf) {
     let _ = DIR.set(dir);
 }
 
-/// The source of the stage and of all it calls: a change to any of it is a
-/// new key.
-const SOURCE: &[&str] = &[
-    include_str!("laws.rs"),
-    include_str!("laws/harmony.rs"),
-    include_str!("learn.rs"),
-    include_str!("bits.rs"),
-    include_str!("eval.rs"),
-    include_str!("par.rs"),
-    include_str!("stage.rs"),
-    include_str!("../../flexion/src/orthography.rs"),
-    include_str!("../../flexion/src/paradigm.rs"),
-    include_str!("../../flexion/src/pattern.rs"),
-    include_str!("../../flexion/src/stems.rs"),
-    include_str!("../../sound-law/src/lib.rs"),
-    include_str!("../../sound-law/src/compile.rs"),
-    include_str!("../../sound-law/src/engine.rs"),
-];
-
 /// The key of the stage's results for `inputs` (their `Debug` text), if
 /// the stage is kept at all.
 pub(crate) fn key(inputs: &[&dyn Debug]) -> Option<u64> {
     DIR.get()?;
     let mut hash = Hashing::new();
-    for source in SOURCE {
-        hash.write_str(source).ok()?;
+    // The source of all a build keeps, not only the stage's: what the
+    // stage calls (the hasher that sets `HashMap` order, the runtime) is
+    // read from it.
+    for (path, text) in crate::saved::SOURCE {
+        write!(hash, "{path}\u{1f}{text}\u{1f}").ok()?;
     }
     for input in inputs {
         write!(hash, "{input:?}\u{1f}").ok()?;

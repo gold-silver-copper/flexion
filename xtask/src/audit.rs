@@ -102,7 +102,7 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
             let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
             let rank = candidates
                 .iter()
-                .position(|c| eval::same_form(orth, &c.form, gold));
+                .position(|c| orth.same_form(&c.form, gold));
             let tally = per_cell.entry(cell).or_default();
             tally.0 += 1;
             tally.1 += usize::from(rank == Some(0));

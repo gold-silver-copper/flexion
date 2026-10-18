@@ -159,10 +159,14 @@ pub const ALTERNATES: char = 'ˇ';
 /// is not `voidon`). Never part of a word.
 pub const CHANGED: char = '¦';
 
-/// Whether `c` marks a built form (see [`fill_marked`]) rather than being a
+/// Every mark of a built form (see [`fill_marked`]), none of them a letter
+/// of it. Sound laws read them in this order (`[+|ˇ|¦|°|‹]`).
+pub const MARKS: [char; 5] = [BOUNDARY, ALTERNATES, CHANGED, COPIED, FRONT];
+
+/// Whether `c` marks a built form (one of [`MARKS`]) rather than being a
 /// letter of it.
 pub fn is_mark(c: char) -> bool {
-    c == BOUNDARY || c == COPIED || c == FRONT || c == ALTERNATES || c == CHANGED
+    MARKS.contains(&c)
 }
 
 /// [`fill`], with [`BOUNDARY`] after the last stem piece (at the start, for
@@ -224,9 +228,10 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
 /// A form built marked (see [`fill_marked`]) as a word: its marks taken
 /// out, and where its ending starts.
 pub fn unmarked(built: &str) -> (String, usize) {
+    // Every mark but the boundary, which tells where the ending starts.
     let word: String = built
         .chars()
-        .filter(|&c| c != COPIED && c != FRONT && c != ALTERNATES && c != CHANGED)
+        .filter(|&c| !is_mark(c) || c == BOUNDARY)
         .collect();
     let ending = word.find(BOUNDARY).unwrap_or(0);
     (word.replace(BOUNDARY, ""), ending)
