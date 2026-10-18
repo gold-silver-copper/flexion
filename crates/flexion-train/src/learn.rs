@@ -210,7 +210,7 @@ pub fn learn<'s>(
     let all_words = words;
     // Words that separate a particle are the grammar of the rest of them:
     // their bases are learned with the other words.
-    let (prefixes, bases) = prefixes(all_words);
+    let (prefixes, bases) = prefixes(all_words, &orthography);
     let separated: crate::HashSet<&str> = bases.iter().map(|(k, _)| k.as_str()).collect();
     let mut words: Vec<Word> = all_words
         .iter()
@@ -1588,8 +1588,13 @@ const PREFIX_LETTERS: std::ops::RangeInclusive<usize> = 2..=12;
 /// the cell's inseparable prefixes take off (the participle's `ge`), are the
 /// rest of its forms (`verhindern`, `hindern`); the cells' drops are learned
 /// from such pairs. A word's base has its forms without the prefix (and with
-/// what was taken off put back).
-fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, Word)>) {
+/// what was taken off put back). A form is compared with prefix and rest
+/// as the runtime writes them together (`ὑπ` and `ἀκούω` as `ὑπακούω`, the
+/// rest's breathing gone).
+fn prefixes<'a>(
+    words: &[Word],
+    orthography: &Orthography<'_>,
+) -> (Option<flexion::Prefixes<'a>>, Vec<(String, Word)>) {
     use flexion::Separation;
     let cells = words.first().map_or(0, |w| w.cells.len());
     let form = first_form;
@@ -1648,7 +1653,8 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     // How a prefix meets the rest's form: by the form's first letter, what
     // the two become (Greek `ἀπο` and the augment's `ἐ`: `ἀπε`), as most
     // words have it; kept where that isn't just the prefix written before
-    // the form, and MIN_WORDS words have it.
+    // the form (as the orthography writes them together), and MIN_WORDS
+    // words have it.
     let mut met: BTreeMap<(&str, char), BTreeMap<&str, crate::HashSet<&str>>> = BTreeMap::new();
     // Per prefix, the words that keep it in front of a form beginning
     // otherwise than their rest does (the augment of `ἀπ-έ-λυον`, `λύω`):
@@ -1673,7 +1679,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             if first != Some(head) && tail.chars().next() == first {
                 augmented.entry(pk).or_default().insert(&w.key);
             }
-            if joined != format!("{p}{head}") {
+            if joined != orthography.initial_only(&format!("{p}{head}")) {
                 let by = met.entry((pk, head)).or_default();
                 by.entry(joined).or_default().insert(&w.key);
             }
@@ -1720,7 +1726,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
             };
             base.and_then(|b| form(b, c)).is_none_or(|theirs| {
                 let t = theirs.strip_prefix(drop(c)).unwrap_or(theirs);
-                joining.join(pk, p, t).0 == mine || theirs == unjoined
+                orthography.initial_only(&joining.join(pk, p, t).0) == mine || theirs == unjoined
             })
         });
         let (kept, seen) = (kept.count(), mine.len());
@@ -1756,21 +1762,35 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
     if counted.is_empty() {
         return (None, Vec::new());
     }
-    // Every word that begins with a prefix: what it does with it.
+    // Every word that begins with a prefix, as the runtime splits it: what
+    // it does with it.
+    let choosing = flexion::Prefixes {
+        prefixes: counted
+            .iter()
+            .map(|p| flexion::Prefix {
+                letters: Cow::Borrowed(*p),
+                separable: 0,
+                inseparable: 0,
+                words: 0,
+            })
+            .collect(),
+        listed: Cow::Borrowed(&[]),
+        placement: Cow::Borrowed(&[]),
+        drops: Cow::Borrowed(&[]),
+        junctions: Cow::Borrowed(&[]),
+    };
     let mut bases: Vec<(String, Word)> = Vec::new();
     let mut what: Vec<(&str, &str, Separation)> = Vec::new();
     for w in words {
-        let longest = counted
-            .iter()
-            .filter(|p| w.key.starts_with(*p) && w.key.chars().count() >= p.chars().count() + 3)
-            .max_by_key(|p| p.len());
-        let Some(&pk) = longest else { continue };
-        let n = pk.chars().count();
+        let Some((n, _, _)) = choosing.split(&w.key) else {
+            continue;
+        };
+        let at = w.key.char_indices().nth(n).map_or(w.key.len(), |(i, _)| i);
+        let (pk, rest_key) = w.key.split_at(at);
         let prefix: String = w.letters.chars().take(n).collect();
-        let rest_key: String = w.key.chars().skip(n).collect();
         let separation = if separable.get(w.key.as_str()) == Some(&prefix.as_str()) {
             Separation::Separable
-        } else if keeps(w, &prefix, pk, &rest_key) {
+        } else if keeps(w, &prefix, pk, rest_key) {
             Separation::Inseparable
         } else {
             Separation::Neither
@@ -1781,7 +1801,7 @@ fn prefixes<'a>(words: &[Word]) -> (Option<flexion::Prefixes<'a>>, Vec<(String, 
         }
         let mut base = w.clone();
         base.letters = w.letters.chars().skip(n).collect();
-        base.key = rest_key;
+        base.key = rest_key.to_string();
         base.entry = false;
         // Its forms without the prefix; a cell with one that isn't, none.
         for (c, forms) in base.cells.iter_mut().enumerate() {
@@ -4066,7 +4086,7 @@ mod tests {
                 ]
             })
             .collect();
-        assert!(prefixes(&german).0.is_some());
+        assert!(prefixes(&german, &Orthography::default()).0.is_some());
         let latin: Vec<Word> = ["moveo", "muto", "murmuro", "mitto", "mergo", "mano"]
             .iter()
             .map(|r| {
@@ -4076,7 +4096,7 @@ mod tests {
                 )
             })
             .collect();
-        assert!(prefixes(&latin).0.is_none());
+        assert!(prefixes(&latin, &Orthography::default()).0.is_none());
     }
 
     #[test]
