@@ -1,5 +1,5 @@
-//! Languages run side by side (`--lanes N`), each in a process of its own:
-//! this binary again, on one language, behind a wrapper command if one is
+//! Runs side by side (`--lanes N`), a language or one of its parts each, in
+//! a process of its own: this binary again, behind a wrapper command if one is
 //! given (`--wrap "systemd-run --user --scope -q -p MemoryMax=20G -p
 //! MemorySwapMax=0"`, split at spaces).
 //!
@@ -167,17 +167,36 @@ pub fn simulate(costs: &[Option<Cost>], lanes: usize) -> Vec<(usize, usize, f64,
     }
 }
 
-/// One language's run: this binary's arguments, and where its output goes.
+/// One run, of a language's part of speech or of all of it ([`ALL`]): this
+/// binary's arguments, and where its output goes.
 pub struct Job {
     pub lang: &'static str,
+    pub part: &'static str,
     pub args: Vec<String>,
     pub log: PathBuf,
 }
 
-/// Run `jobs`, each `what` on a whole language, `lanes` at once, as their
-/// latest records in `records` admit them (see the module's comment), each
-/// with its output in its log; `done` hears of each as it ends (its
-/// language, whether it succeeded). Gives the languages that failed.
+/// A run's name: the language, and its part where it is one part's run
+/// (`german-noun`).
+pub fn name(lang: &str, part: &str) -> String {
+    if part == ALL {
+        lang.to_string()
+    } else {
+        format!("{lang}-{part}")
+    }
+}
+
+impl Job {
+    fn name(&self) -> String {
+        name(self.lang, self.part)
+    }
+}
+
+/// Run `jobs`, each `what` on its language's part (or all of it), `lanes`
+/// at once, as their latest records in `records` admit them (see the
+/// module's comment), each with its output in its log; `done` hears of each
+/// as it ends (its [`name`], whether it succeeded). Gives the names of the
+/// runs that failed.
 pub fn run(
     jobs: Vec<Job>,
     records: &Records,
@@ -185,17 +204,17 @@ pub fn run(
     lanes: usize,
     wrap: Option<&str>,
     mut done: impl FnMut(&str, bool),
-) -> Result<Vec<&'static str>, String> {
+) -> Result<Vec<String>, String> {
     let costs: Vec<Option<Cost>> = jobs
         .iter()
-        .map(|j| records.cost(what, j.lang, ALL))
+        .map(|j| records.cost(what, j.lang, j.part))
         .collect();
     let plan = simulate(&costs, lanes);
-    let unmeasured: Vec<&str> = jobs
+    let unmeasured: Vec<String> = jobs
         .iter()
         .zip(&costs)
         .filter(|(_, c)| c.is_none())
-        .map(|(j, _)| j.lang)
+        .map(|(j, _)| j.name())
         .collect();
     eprintln!(
         "{} runs on {lanes} lanes, about {:.0} minutes by their records{}",
@@ -224,7 +243,7 @@ pub fn run(
             };
             let (job, cost) = waiting.remove(next);
             let child = spawn(&job, wrap)?;
-            eprintln!("{}: started, output in {}", job.lang, job.log.display());
+            eprintln!("{}: started, output in {}", job.name(), job.log.display());
             running.push((job, cost, child, Instant::now()));
         }
         if running.is_empty() {
@@ -233,17 +252,21 @@ pub fn run(
         std::thread::sleep(Duration::from_secs(1));
         let mut still = Vec::new();
         for (job, cost, mut child, start) in running {
-            match child.try_wait().map_err(|e| format!("{}: {e}", job.lang))? {
+            match child
+                .try_wait()
+                .map_err(|e| format!("{}: {e}", job.name()))?
+            {
                 None => still.push((job, cost, child, start)),
                 Some(status) => {
                     let secs = start.elapsed().as_secs_f64();
+                    let name = job.name();
                     if status.success() {
-                        eprintln!("{}: done in {secs:.0}s", job.lang);
+                        eprintln!("{name}: done in {secs:.0}s");
                     } else {
-                        eprintln!("{}: failed ({status}), see {}", job.lang, job.log.display());
-                        failed.push(job.lang);
+                        eprintln!("{name}: failed ({status}), see {}", job.log.display());
+                        failed.push(name.clone());
                     }
-                    done(job.lang, status.success());
+                    done(&name, status.success());
                 }
             }
         }
@@ -280,7 +303,7 @@ fn spawn(job: &Job, wrap: Option<&str>) -> Result<Child, String> {
         .stdout(log)
         .stderr(err)
         .spawn()
-        .map_err(|e| format!("{}: {e}", job.lang))
+        .map_err(|e| format!("{}: {e}", job.name()))
 }
 
 #[cfg(test)]

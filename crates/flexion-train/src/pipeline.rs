@@ -183,7 +183,8 @@ pub fn build<'s>(
     let marks =
         |keep: &dyn Fn(&Lexeme) -> bool| crate::marks(lang, &orthography, data, keep, settings);
     let bucket = |l: &Lexeme| eval::bucket(&l.key);
-    let fit_marks = marks(&|l| bucket(l) != eval::TEST && bucket(l) != eval::DEV)?;
+    let dev = eval::dev_of(eval::TEST);
+    let fit_marks = marks(&|l| bucket(l) != eval::TEST && bucket(l) != dev)?;
     let train_marks = marks(&|l| bucket(l) != eval::TEST)?;
     let all_marks = marks(&|_| true)?;
     for (part, d) in lang.parts.iter().zip(data) {
@@ -196,14 +197,10 @@ pub fn build<'s>(
             .filter(|l| eval::bucket(&l.key) != eval::TEST)
             .cloned()
             .collect();
-        let fit: Vec<Lexeme> = train
-            .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::DEV)
-            .cloned()
-            .collect();
+        let fit: Vec<Lexeme> = train.iter().filter(|l| bucket(l) != dev).cloned().collect();
         let dev: Vec<&Lexeme> = train
             .iter()
-            .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
+            .filter(|l| bucket(l) == dev && l.source == 0)
             .collect();
         let learned = |lexemes: &[Lexeme], marks: &Option<crate::marks::LanguageMarks>| {
             let shape = learn::Shape {

@@ -20,9 +20,10 @@
 //! - `readme`: rewrite a built crate's README, keeping its report;
 //! - `try`: learn on nine tenths of the words and score the held-out tenth,
 //!   the development tenth (`--final`: the tenth the READMEs report; it
-//!   isn't what changes are judged on) (`--quick`: without fitting the
-//!   sharpness, from the headword and the principal parts only; `--fold N`:
-//!   score tenth N;
+//!   isn't what changes are judged on; `--confirm`: the tenth a PR's changes
+//!   are confirmed on once; `--fold N`: tenth N, neither of those; see
+//!   `flexion_train::eval::TEST`) (`--quick`: without fitting the
+//!   sharpness, from the headword and the principal parts only;
 //!   `--given`: also with 1, 2, 3 random forms given when quick;
 //!   `--save <file>`: every scored form's outcome, for `compare`;
 //!   `--hold-cells auto|<cells>`: hold those cells out of training and
@@ -39,9 +40,11 @@
 //! - `sweep <dir>`: `try --quick` for every language, each in a process of
 //!   its own, its outcomes saved in `<dir>` with its output (`<language>.log`),
 //!   its time and peak memory in `<dir>/summary.tsv` (`--only a,b`: those
-//!   languages; `--final`: the READMEs' tenth; `--pool`: small parts of
-//!   speech on four tenths, as `try --pool`; `--lanes N` and `--wrap`: as
-//!   `build`'s);
+//!   languages; `--canary`, `--heavy`: the canary set's parts, or the heavy
+//!   canary's, each in a process of its own (`<language>-<part>.tsv`);
+//!   `--final`, `--confirm`, `--fold N`: that tenth, as `try`'s; `--pool`:
+//!   small parts of speech on four tenths, as `try --pool`; `--lanes N` and
+//!   `--wrap`: as `build`'s);
 //! - `audit`: a sample of wrong answers with their kind (`--cells
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
@@ -64,7 +67,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--only <a,b>] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]; cargo xtask schedule <build|sweep> [--lanes N] [--only <a,b>]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--only <a,b>] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--confirm] [--canary] [--heavy] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]; cargo xtask schedule <build|sweep> [--lanes N] [--only <a,b>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -106,18 +109,26 @@ fn run() -> Result<(), String> {
     if command == "schedule" {
         return schedule(name, only.as_deref(), lanes);
     }
+    let fold = tenth(&args, flag("--fold").as_deref())?;
     if command == "sweep" {
+        let canary = args.iter().any(|a| a == "--canary");
+        let heavy = args.iter().any(|a| a == "--heavy");
         let run = Sweep {
             dir: name.into(),
-            last: args.iter().any(|a| a == "--final"),
+            fold,
             diagnose: args.iter().any(|a| a == "--diagnose"),
             pool: args.iter().any(|a| a == "--pool"),
         };
         if let Some(one) = flag("--one") {
             let lang = flexion_configs::by_name(&one).ok_or(format!("no language {one}"))?;
-            return sweep_one(&run, &lang);
+            return sweep_one(&run, &lang, flag("--pos").as_deref());
         }
-        return sweep(&run, only.as_deref(), lanes, wrap.as_deref());
+        let parts: Vec<(&str, &str)> = (canary.then_some(CANARY.as_slice()).into_iter())
+            .chain(heavy.then_some(HEAVY.as_slice()))
+            .flatten()
+            .copied()
+            .collect();
+        return sweep(&run, only.as_deref(), &parts, lanes, wrap.as_deref());
     }
     if command == "build" {
         let relearn = args.iter().any(|a| a == "--relearn");
@@ -142,13 +153,6 @@ fn run() -> Result<(), String> {
                 .ok_or(format!("bad {f}"))
         })
     };
-    let last = args.iter().any(|a| a == "--final");
-    let fold = flag("--fold").map_or(Ok(if last { eval::TEST } else { eval::DEVELOP }), |f| {
-        f.parse::<u64>().map_err(|_| "bad --fold")
-    })? % 10;
-    if fold == eval::TEST && !last {
-        return Err("tenth 0 is the READMEs' test tenth: score it with --final".into());
-    }
     match command.as_str() {
         "extract" => extract_dumps(
             &lang,
@@ -236,6 +240,30 @@ fn run() -> Result<(), String> {
             args.iter().any(|a| a == "--parts"),
         ),
         _ => Err(USAGE.into()),
+    }
+}
+
+/// The tenth a run scores, by its flags: `--final` the READMEs' tenth,
+/// `--confirm` the confirmation tenth, `--fold N` tenth N, else the dev
+/// tenth (see [`eval::TEST`]). A reserved tenth is scored only by its own
+/// flag.
+fn tenth(args: &[String], fold: Option<&str>) -> Result<u64, String> {
+    let roles = [("--final", eval::TEST), ("--confirm", eval::CONFIRM)];
+    let named: Vec<u64> = (roles.iter())
+        .filter(|(f, _)| args.iter().any(|a| a == f))
+        .map(|r| r.1)
+        .collect();
+    let fold = fold
+        .map(|f| f.parse::<u64>().map(|f| f % 10).map_err(|_| "bad --fold"))
+        .transpose()?;
+    match (named.as_slice(), fold) {
+        ([], None) => Ok(eval::DEVELOP),
+        ([t], None) => Ok(*t),
+        ([], Some(t)) => match roles.iter().find(|r| r.1 == t) {
+            Some((flag, _)) => Err(format!("tenth {t} is reserved: score it with {flag}")),
+            None => Ok(t),
+        },
+        _ => Err("one of --final, --confirm and --fold".into()),
     }
 }
 
@@ -406,8 +434,47 @@ impl TryOptions {
 const POOLED: usize = 50_000;
 
 /// The development tenths a small part of speech is scored on together
-/// (none the READMEs', none another's sharpness tenth).
+/// (none reserved, none another's sharpness tenth; see [`eval::plan`]).
 const POOL: [u64; 4] = [2, 4, 6, 8];
+
+/// The canary set: the parts every change is screened on, from the
+/// headword and with the principal parts given (`sweep --canary`).
+const CANARY: [(&str, &str); 24] = [
+    ("german", "noun"),
+    ("russian", "noun"),
+    ("latin", "verb"),
+    ("russian", "verb"),
+    ("spanish", "verb"),
+    ("turkish", "noun"),
+    ("latin", "adjective"),
+    ("polish", "noun"),
+    ("italian", "verb"),
+    ("ancient-greek", "adjective"),
+    ("ancient-greek", "noun"),
+    ("finnish", "adjective"),
+    ("english", "noun"),
+    ("german", "verb"),
+    ("english", "verb"),
+    ("latin", "noun"),
+    ("french", "verb"),
+    ("sanskrit", "verb"),
+    ("latin", "proper_noun"),
+    ("russian", "proper_noun"),
+    ("english", "proper_noun"),
+    ("sanskrit", "numeral"),
+    ("latin", "pronoun"),
+    ("finnish", "pronoun"),
+];
+
+/// The heavy canary: the longest parts, screened apart from the canary set
+/// (`sweep --heavy`).
+const HEAVY: [(&str, &str); 5] = [
+    ("finnish", "noun"),
+    ("finnish", "verb"),
+    ("finnish", "proper_noun"),
+    ("turkish", "verb"),
+    ("ancient-greek", "verb"),
+];
 
 /// The training words of a part of speech for a `try`: every word outside
 /// tenth `fold`, `share` percent of them, with `thin` percent of each
@@ -516,6 +583,11 @@ fn score_line(label: &str, words: usize, s: &eval::Score) -> String {
 }
 
 fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(), String> {
+    let pooled = POOL.into_iter().filter(|&f| f != o.fold);
+    let scored: Vec<u64> = std::iter::once(o.fold)
+        .chain(pooled.clone().filter(|_| o.pool))
+        .collect();
+    eval::plan(&scored, o.quick)?;
     let data = load(lang)?;
     let mut saved = outcomes::Saved::default();
     let mut marks = Marks::new();
@@ -527,7 +599,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
             if only.is_some_and(|o| o != part.name) || d.lexemes.len() >= POOLED {
                 continue;
             }
-            for fold in POOL.into_iter().filter(|&f| f != o.fold) {
+            for fold in pooled.clone() {
                 println!("{} {}: also tenth {fold}", lang.name, part.name);
                 let tenth = TryOptions {
                     fold,
@@ -1298,8 +1370,8 @@ fn floor_cells(out: &[eval::Outcome], floored: &[eval::FloorOutcome], names: &[S
 #[derive(Default)]
 struct Sweep {
     dir: PathBuf,
-    /// On the READMEs' tenth.
-    last: bool,
+    /// The tenth scored (see [`tenth`]).
+    fold: u64,
     diagnose: bool,
     pool: bool,
 }
@@ -1309,7 +1381,7 @@ impl Sweep {
     fn options(&self, save: PathBuf) -> TryOptions {
         TryOptions {
             quick: true,
-            fold: if self.last { eval::TEST } else { eval::DEVELOP },
+            fold: self.fold,
             save: Some(save),
             share: 100,
             diagnose: self.diagnose,
@@ -1368,52 +1440,83 @@ fn schedule(what: &str, only: Option<&[&str]>, lanes: usize) -> Result<(), Strin
 }
 
 /// `cargo xtask sweep <dir>`: a quick `try` of every language (or those
-/// `only` names), `lanes` at once (see [`lanes::run`]), each run's outcomes
-/// saved in `dir` as `<language>.tsv`, its output as `<language>.log`, and
-/// its seconds and peak memory in `dir/summary.tsv`.
+/// `only` names), or of each of `parts` (`(language, part)`, those of the
+/// languages `only` names) where there are any, `lanes` at once (see
+/// [`lanes::run`]), each run's outcomes saved in `dir` as `<language>.tsv`
+/// (`<language>-<part>.tsv`), its output beside it as `.log`, and its
+/// seconds and peak memory in `dir/summary.tsv`.
 fn sweep(
     run: &Sweep,
     only: Option<&[&str]>,
+    parts: &[(&'static str, &'static str)],
     lanes: usize,
     wrap: Option<&str>,
 ) -> Result<(), String> {
     let dir = &run.dir;
     let langs = languages(only);
+    let runs: Vec<(&'static str, &'static str)> = if parts.is_empty() {
+        langs.iter().map(|&l| (l, lanes::ALL)).collect()
+    } else {
+        let mut runs = Vec::new();
+        for &(l, p) in parts {
+            let lang = flexion_configs::by_name(l).ok_or(format!("no language {l}"))?;
+            if !lang.parts.iter().any(|q| q.name == p) {
+                return Err(format!("{l} has no part {p}"));
+            }
+            if langs.contains(&lang.name) && !runs.contains(&(lang.name, p)) {
+                runs.push((lang.name, p));
+            }
+        }
+        runs
+    };
     std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    let flags = [
-        ("--final", run.last),
-        ("--diagnose", run.diagnose),
-        ("--pool", run.pool),
-    ];
-    let jobs = langs
+    let fold = run.fold.to_string();
+    let tenth: &[&str] = match run.fold {
+        eval::DEVELOP => &[],
+        eval::TEST => &["--final"],
+        eval::CONFIRM => &["--confirm"],
+        _ => &["--fold", &fold],
+    };
+    let flags = [("--diagnose", run.diagnose), ("--pool", run.pool)];
+    let jobs = runs
         .iter()
-        .map(|&lang| lanes::Job {
-            lang,
-            args: ["sweep", &dir.to_string_lossy(), "--one", lang]
-                .into_iter()
-                .chain(flags.iter().filter(|f| f.1).map(|f| f.0))
-                .map(str::to_string)
-                .collect(),
-            log: dir.join(format!("{lang}.log")),
+        .map(|&(lang, part)| {
+            let pos = (part != lanes::ALL).then_some(["--pos", part]);
+            lanes::Job {
+                lang,
+                part,
+                args: ["sweep", &dir.to_string_lossy(), "--one", lang]
+                    .into_iter()
+                    .chain(pos.into_iter().flatten())
+                    .chain(tenth.iter().copied())
+                    .chain(flags.iter().filter(|f| f.1).map(|f| f.0))
+                    .map(str::to_string)
+                    .collect(),
+                log: dir.join(format!("{}.log", lanes::name(lang, part))),
+            }
         })
         .collect();
-    // Each language's row, in the languages' order whatever order they end in.
+    // Each run's row, in the runs' order whatever order they end in.
     let mut rows: Vec<(usize, String)> = Vec::new();
     let records = lanes::Records::read(&runs_file());
     let what = run.options(dir.clone()).what();
-    let failed = lanes::run(jobs, &records, &what, lanes, wrap, |lang, ok| {
+    let names: Vec<String> = runs
+        .iter()
+        .map(|&(lang, part)| lanes::name(lang, part))
+        .collect();
+    let failed = lanes::run(jobs, &records, &what, lanes, wrap, |name, ok| {
         if !ok {
             return;
         }
-        let path = dir.join(format!("{lang}.row"));
+        let path = dir.join(format!("{name}.row"));
         let row = match std::fs::read_to_string(&path) {
             Ok(row) => row,
             Err(e) => return eprintln!("{}: {e}", path.display()),
         };
         let _ = std::fs::remove_file(&path);
-        rows.push((langs.iter().position(|l| *l == lang).unwrap_or(0), row));
+        rows.push((names.iter().position(|n| n == name).unwrap_or(0), row));
         rows.sort();
-        let summary: String = std::iter::once("language\tseconds\tpeak MB\n")
+        let summary: String = std::iter::once("run\tseconds\tpeak MB\n")
             .chain(rows.iter().map(|r| r.1.as_str()))
             .collect();
         let path = dir.join("summary.tsv");
@@ -1428,19 +1531,22 @@ fn sweep(
     }
 }
 
-/// One language of a sweep, in the process the sweep started for it (`sweep
-/// <dir> --one <language>`): its outcomes in `dir/<language>.tsv`, its
-/// seconds and peak memory in `dir/<language>.row` for the sweep's summary.
-fn sweep_one(run: &Sweep, lang: &Language) -> Result<(), String> {
-    let options = run.options(run.dir.join(format!("{}.tsv", lang.name)));
+/// One run of a sweep, in the process the sweep started for it (`sweep
+/// <dir> --one <language> [--pos <part>]`): its outcomes in
+/// `dir/<name>.tsv`, its seconds and peak memory in `dir/<name>.row` for
+/// the sweep's summary.
+fn sweep_one(run: &Sweep, lang: &Language, part: Option<&str>) -> Result<(), String> {
+    let name = lanes::name(lang.name, part.unwrap_or(lanes::ALL));
+    let options = run.options(run.dir.join(format!("{name}.tsv")));
     let t = Instant::now();
-    try_language(lang, None, &options)?;
+    try_language(lang, part, &options)?;
     let secs = t.elapsed().as_secs_f64();
-    let cost = lanes::record(&runs_file(), &options.what(), lang.name, lanes::ALL, secs);
+    let recorded = part.unwrap_or(lanes::ALL);
+    let cost = lanes::record(&runs_file(), &options.what(), lang.name, recorded, secs);
     let peak = cost.map_or(0, |c| c.peak_mb);
-    eprintln!("{}: {secs:.0}s, peak {peak} MB", lang.name);
-    let path = run.dir.join(format!("{}.row", lang.name));
-    std::fs::write(&path, format!("{}\t{secs:.0}\t{peak}\n", lang.name))
+    eprintln!("{name}: {secs:.0}s, peak {peak} MB");
+    let path = run.dir.join(format!("{name}.row"));
+    std::fs::write(&path, format!("{name}\t{secs:.0}\t{peak}\n"))
         .map_err(|e| format!("{}: {e}", path.display()))
 }
 
@@ -2225,6 +2331,7 @@ fn build_all(
         .iter()
         .map(|l| lanes::Job {
             lang: l.name,
+            part: lanes::ALL,
             args: ["build", l.name]
                 .into_iter()
                 .chain(relearn.then_some("--relearn"))
@@ -2250,5 +2357,22 @@ fn place_letter(p: flexion::Place) -> char {
         flexion::Place::Recessive => 'r',
         flexion::Place::Last => 'L',
         flexion::Place::NextToLast => 'N',
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Every part the canaries name is a part of a language.
+    #[test]
+    fn the_canaries_name_parts_that_exist() {
+        for (lang, part) in CANARY.iter().chain(&HEAVY) {
+            let parts = flexion_configs::by_name(lang).map(|l| l.parts);
+            assert!(
+                parts.is_some_and(|ps| ps.iter().any(|p| p.name == *part)),
+                "{lang} {part}"
+            );
+        }
     }
 }

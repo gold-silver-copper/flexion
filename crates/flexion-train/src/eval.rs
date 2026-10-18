@@ -6,18 +6,56 @@ use crate::extract::Lexeme;
 use crate::measure::{self, Kind};
 use flexion::Label;
 
-/// The tenth the READMEs report: scored once per build, never trained on,
-/// and never what a change is judged on (see [`DEVELOP`]).
+/// What each tenth is for, every word in one by [`bucket`]. The README
+/// tenth: scored once per build (`--final`), never trained on, and never
+/// what a change is judged on (see [`DEVELOP`]).
 pub const TEST: u64 = 0;
-/// The tenth the sharpness is fitted on when [`TEST`] is scored.
-pub const DEV: u64 = 1;
-/// The tenth a change is judged on (`try` scores it unless told otherwise;
-/// its sharpness is fitted on [`dev_of`] it).
+/// The dev tenth: what a change is judged on (`try` scores it unless told
+/// otherwise).
 pub const DEVELOP: u64 = 2;
+/// The confirmation tenth: scored once per PR, before its builds
+/// (`--confirm`), so that a PR's changes are confirmed on a tenth no
+/// decision looked at.
+pub const CONFIRM: u64 = 9;
+/// The tenths kept for one run each: a run reads one only when it is the
+/// tenth the run scores (see [`plan`]).
+pub const RESERVED: [u64; 2] = [TEST, CONFIRM];
 
-/// The tenth settings are chosen on when tenth `test` is scored: the next.
-pub fn dev_of(test: u64) -> u64 {
-    (test + 1) % 10
+/// The sharpness tenth of tenth `test`: the settings chosen when `test` is
+/// scored are fitted there. The next tenth that isn't [`RESERVED`].
+pub const fn dev_of(test: u64) -> u64 {
+    let mut tenth = (test + 1) % 10;
+    while tenth == TEST || tenth == CONFIRM {
+        tenth = (tenth + 1) % 10;
+    }
+    tenth
+}
+
+/// The tenths a run reads that scores the tenths `scored`, its own first
+/// (the others pooled with it), and fits each one's sharpness on its
+/// [`dev_of`] unless `quick`. A run reading a [`RESERVED`] tenth other than
+/// its own is an error.
+pub fn plan(scored: &[u64], quick: bool) -> Result<Vec<u64>, String> {
+    let mut read: Vec<u64> = scored.to_vec();
+    if !quick {
+        read.extend(scored.iter().map(|&t| dev_of(t)));
+    }
+    let own = scored.first().copied();
+    match read
+        .iter()
+        .find(|&&t| RESERVED.contains(&t) && Some(t) != own)
+    {
+        Some(t) => Err(format!(
+            "a run scoring tenth {} would read tenth {t}, kept for {}",
+            own.map_or_else(|| "none".to_string(), |o| o.to_string()),
+            if *t == TEST {
+                "the READMEs (--final)"
+            } else {
+                "confirmation (--confirm)"
+            }
+        )),
+        None => Ok(read),
+    }
 }
 
 /// A stable tenth for a word: FNV-1a of its key, mod 10.
@@ -1148,6 +1186,23 @@ pub fn phrases(outcomes: &[Outcome], lexemes: &[&Lexeme]) -> Vec<Outcome> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A non-quick run on the dev tenths pooled fits each one's sharpness
+    /// on a tenth no other role keeps: tenth 8's on tenth 1, not on the
+    /// confirmation tenth after it. Scoring a reserved tenth beside others
+    /// is refused.
+    #[test]
+    fn a_run_reads_a_reserved_tenth_only_when_it_scores_it() {
+        let read = plan(&[DEVELOP, 4, 6, 8], false);
+        assert!(
+            read.as_ref().is_ok_and(|r| !r.contains(&CONFIRM)),
+            "{read:?}"
+        );
+        assert_eq!(dev_of(DEVELOP), 3);
+        assert_eq!(dev_of(TEST), 1);
+        assert!(plan(&[CONFIRM], false).is_ok());
+        assert!(plan(&[DEVELOP, CONFIRM], true).is_err());
+    }
 
     #[test]
     fn a_form_is_scored_as_the_orthography_reads_it() {
