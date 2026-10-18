@@ -270,10 +270,13 @@ impl Prosody<'_> {
             vowel = vowel.saturating_add(1);
         }
         // A final -αι, -οι is short (consonants after it don't count: the
-        // flag is cleared by any consonant), and so are the short endings'.
+        // flag is cleared by any consonant), and so are the short endings',
+        // both read folded (`-εως` ends `πόλεως`).
         let ends = |e: &&str| {
             let mut mine = letters.chars().rev().map(|c| orthography.fold(c));
-            e.chars().rev().all(|c| mine.next() == Some(c))
+            e.chars()
+                .rev()
+                .all(|c| mine.next() == Some(orthography.fold(c)))
         };
         if (short_final || self.short_endings.iter().any(ends))
             && !long_final
@@ -413,6 +416,7 @@ mod tests {
         dropped: "",
         mark_monosyllables: true,
         folded: &[
+            ('ς', 'σ'),
             ('ἀ', 'α'),
             ('ἁ', 'α'),
             ('ᾰ', 'α'),
