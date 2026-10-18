@@ -2,40 +2,17 @@
 //! A conjugation that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 927] = [
     // POS_PLAIN_AOR___1SG, from IMPERATIVE_POS_PLAIN_2SG.
     relation!(
@@ -75,7 +52,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR___3PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR___3PL, [POS_PLAIN_AOR___1SG], [("~im", "~ler"), ("~um", "~lEr"), ("~üm", "~lEr"), ("~ım", "~lEr")], rules {
+    relation!(POS_PLAIN_AOR___3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lEr"), ("~um", "~lEr"), ("~üm", "~ler"), ("~ım", "~lEr")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -123,7 +100,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_EVID_3PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_EVID_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lermIş"), ("~um", "~lErmIş"), ("~üm", "~lErmIş"), ("~ım", "~lErmIş")], rules {
+    relation!(POS_PLAIN_AOR_EVID_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lErmIş"), ("~um", "~lErmIş"), ("~üm", "~lermIş"), ("~ım", "~lErmIş")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -171,7 +148,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_PAST_3PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_PAST_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lerdI"), ("~um", "~lErdI"), ("~üm", "~lErdI"), ("~ım", "~lErdI")], rules {
+    relation!(POS_PLAIN_AOR_PAST_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lErdI"), ("~um", "~lErdI"), ("~üm", "~lerdI"), ("~ım", "~lErdI")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -179,7 +156,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_1SG, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_1SG, [POS_PLAIN_AOR___1SG], [("~im", "~sem"), ("~um", "~sEm"), ("~üm", "~sEm"), ("~ım", "~sEm")], rules {
+    relation!(POS_PLAIN_AOR_COND_1SG, [POS_PLAIN_AOR___1SG], [("~im", "~sEm"), ("~um", "~sEm"), ("~üm", "~sem"), ("~ım", "~sEm")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -187,7 +164,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_2SG, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_2SG, [POS_PLAIN_AOR___1SG], [("~im", "~sen"), ("~um", "~sEn"), ("~üm", "~sEn"), ("~ım", "~sEn")], rules {
+    relation!(POS_PLAIN_AOR_COND_2SG, [POS_PLAIN_AOR___1SG], [("~im", "~sEn"), ("~um", "~sEn"), ("~üm", "~sen"), ("~ım", "~sEn")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -195,7 +172,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_3SG, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_3SG, [POS_PLAIN_AOR___1SG], [("~im", "~se"), ("~um", "~sE"), ("~üm", "~sE"), ("~ım", "~sE")], rules {
+    relation!(POS_PLAIN_AOR_COND_3SG, [POS_PLAIN_AOR___1SG], [("~im", "~sE"), ("~um", "~sE"), ("~üm", "~se"), ("~ım", "~sE")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -203,7 +180,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_1PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_1PL, [POS_PLAIN_AOR___1SG], [("~im", "~sek"), ("~um", "~sEk"), ("~üm", "~sEk"), ("~ım", "~sEk")], rules {
+    relation!(POS_PLAIN_AOR_COND_1PL, [POS_PLAIN_AOR___1SG], [("~im", "~sEk"), ("~um", "~sEk"), ("~üm", "~sek"), ("~ım", "~sEk")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -211,7 +188,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_2PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_2PL, [POS_PLAIN_AOR___1SG], [("~im", "~senIz"), ("~um", "~sEnIz"), ("~üm", "~sEnIz"), ("~ım", "~sEnIz")], rules {
+    relation!(POS_PLAIN_AOR_COND_2PL, [POS_PLAIN_AOR___1SG], [("~im", "~sEnIz"), ("~um", "~sEnIz"), ("~üm", "~senIz"), ("~ım", "~sEnIz")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -219,7 +196,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // POS_PLAIN_AOR_COND_3PL, from POS_PLAIN_AOR___1SG.
-    relation!(POS_PLAIN_AOR_COND_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lerse"), ("~um", "~lErsE"), ("~üm", "~lErsE"), ("~ım", "~lErsE")], rules {
+    relation!(POS_PLAIN_AOR_COND_3PL, [POS_PLAIN_AOR___1SG], [("~im", "~lErsE"), ("~um", "~lErsE"), ("~üm", "~lersE"), ("~ım", "~lErsE")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -565,7 +542,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT___3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~kler"), ("~ğım", "~klEr")], rules {
+    relation!(POS_PLAIN_FUT___3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klEr"), ("~ğım", "~klEr")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
@@ -601,7 +578,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klermIş"), ("~ğım", "~klErmIş")], rules {
+    relation!(POS_PLAIN_FUT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klErmIş"), ("~ğım", "~klErmIş")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
@@ -637,263 +614,143 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klerdI"), ("~ğım", "~klErdI")], rules {
+    relation!(POS_PLAIN_FUT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klErdI"), ("~ğım", "~klErdI")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksem"), ("~ğım", "~ksEm")], rules {
+    relation!(POS_PLAIN_FUT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksEm"), ("~ğım", "~ksEm")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksen"), ("~ğım", "~ksEn")], rules {
+    relation!(POS_PLAIN_FUT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksEn"), ("~ğım", "~ksEn")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~kse"), ("~ğım", "~ksE")], rules {
+    relation!(POS_PLAIN_FUT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksE"), ("~ğım", "~ksE")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksek"), ("~ğım", "~ksEk")], rules {
+    relation!(POS_PLAIN_FUT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksEk"), ("~ğım", "~ksEk")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksenIz"), ("~ğım", "~ksEnIz")], rules {
+    relation!(POS_PLAIN_FUT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~ksEnIz"), ("~ğım", "~ksEnIz")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_FUT_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_PLAIN_FUT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klerse"), ("~ğım", "~klErsE")], rules {
+    relation!(POS_PLAIN_FUT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klErsE"), ("~ğım", "~klErsE")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
     } listed {}, true, None),
     // POS_PLAIN_CONT___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___1SG, [INFINITIVE_POS_PLAIN], [("~", "~tEyIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___2SG, [INFINITIVE_POS_PLAIN], [("~", "~tEsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___3SG, [INFINITIVE_POS_PLAIN], [("~", "~tE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___1PL, [INFINITIVE_POS_PLAIN], [("~", "~tEyIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___2PL, [INFINITIVE_POS_PLAIN], [("~", "~tEsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT___3PL, [INFINITIVE_POS_PLAIN], [("~", "~tElEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~", "~tEymIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~", "~tEymIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~", "~tEymIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~", "~tEymIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~", "~tEymIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~", "~tElErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~", "~tEydIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~", "~tEydIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~", "~tEydI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~", "~tEydIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~", "~tEydInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~", "~tElErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_1SG, [INFINITIVE_POS_PLAIN], [("~", "~tEysEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_2SG, [INFINITIVE_POS_PLAIN], [("~", "~tEysEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_3SG, [INFINITIVE_POS_PLAIN], [("~", "~tEysE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_1PL, [INFINITIVE_POS_PLAIN], [("~", "~tEysEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_2PL, [INFINITIVE_POS_PLAIN], [("~", "~tEysEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_CONT_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_CONT_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_CONT_COND_3PL, [INFINITIVE_POS_PLAIN], [("~", "~tElErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS___1SG, from INFINITIVE_POS_PLAIN.
     relation!(POS_PLAIN_NECESS___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIyIm")], rules {
         "" => [0 2368],
@@ -915,14 +772,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // POS_PLAIN_NECESS___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_EVID_1SG, from INFINITIVE_POS_PLAIN.
     relation!(POS_PLAIN_NECESS_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIymIşIm")], rules {
         "" => [0 2368],
@@ -944,14 +796,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // POS_PLAIN_NECESS_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIlErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_PAST_1SG, from INFINITIVE_POS_PLAIN.
     relation!(POS_PLAIN_NECESS_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIydIm")], rules {
         "" => [0 2368],
@@ -973,68 +820,33 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // POS_PLAIN_NECESS_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIlErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIysEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIysEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~lIysE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIysEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIysEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_PLAIN_NECESS_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        POS_PLAIN_NECESS_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(POS_PLAIN_NECESS_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~lIlErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // POS_ABIL_AOR___1SG, from POS_PLAIN_FUT___1SG.
     relation!(POS_ABIL_AOR___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilIrIm"), ("~ceğim", "~bIlIrIm")], rules {
         "" => [0 1208, 1 1079],
@@ -1240,7 +1052,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // POS_ABIL_PROG_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_ABIL_PROG_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilIyormIşsInIz"), ("~ceğim", "~bIlIyormIşsInIz")], rules {
+    relation!(POS_ABIL_PROG_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~biliyormuşsunuz"), ("~ceğim", "~bIlIyormIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -1318,7 +1130,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // POS_ABIL_PROG_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(POS_ABIL_PROG_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilIyorlErsE"), ("~ceğim", "~bIlIyorlErsE")], rules {
+    relation!(POS_ABIL_PROG_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~biliyorlarsa"), ("~ceğim", "~bIlIyorlErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -1920,14 +1732,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_AOR___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~zlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_EVID_1SG, from INFINITIVE_POS_PLAIN.
     relation!(NEG_PLAIN_AOR_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~zmIşIm")], rules {
         "" => [0 2368],
@@ -1949,14 +1756,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_AOR_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~zlErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_PAST_1SG, from INFINITIVE_POS_PLAIN.
     relation!(NEG_PLAIN_AOR_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~zdIm")], rules {
         "" => [0 2368],
@@ -1978,68 +1780,33 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_AOR_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~zlErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~zsEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~zsEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~zsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~zsEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~zsEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_AOR_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_AOR_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_AOR_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~zlErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_PROG___1SG, from POS_PLAIN_EVID___1SG.
     relation!(
         NEG_PLAIN_PROG___1SG,
@@ -2277,14 +2044,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_EVID___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_EVID_1SG, from INFINITIVE_POS_PLAIN.
     relation!(NEG_PLAIN_EVID_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mIşmIşIm")], rules {
         "" => [0 2368],
@@ -2306,14 +2068,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_EVID_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşlErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_PAST_1SG, from INFINITIVE_POS_PLAIN.
     relation!(NEG_PLAIN_EVID_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mIştIm")], rules {
         "" => [0 2368],
@@ -2335,856 +2092,461 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // NEG_PLAIN_EVID_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşlErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mIşsEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mIşsEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mIşsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşsEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşsEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_EVID_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_EVID_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_EVID_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mIşlErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEklEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEkmIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEkmIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEkmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEkmIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEkmIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEklErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEktIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEktIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEktI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEktIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEktInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEklErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEksEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_FUT_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_FUT_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_FUT_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEklErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEyIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEyIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktElEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEymIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEymIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEymIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEymIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEymIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktElErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEydIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEydIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEydI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEydIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEydInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktElErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEysEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEysEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEysE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEysEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktEysEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_CONT_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_CONT_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_CONT_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mEktElErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIyIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIyIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIymIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIymIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIymIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIymIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIymIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIlErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIydIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIydIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIydI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIydIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIydInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIlErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIysEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIysEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~mElIysE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIysEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIysEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_PLAIN_NECESS_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        NEG_PLAIN_NECESS_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(NEG_PLAIN_NECESS_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~mElIlErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // NEG_ABIL_AOR___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEm"), ("~ceğim", "~mem")], rules {
+    relation!(NEG_ABIL_AOR___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEm"), ("~ceğim", "~mEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsIn"), ("~ceğim", "~mezsIn")], rules {
+    relation!(NEG_ABIL_AOR___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsIn"), ("~ceğim", "~mEzsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEz"), ("~ceğim", "~mez")], rules {
+    relation!(NEG_ABIL_AOR___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEz"), ("~ceğim", "~mEz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIz"), ("~ceğim", "~meyIz")], rules {
+    relation!(NEG_ABIL_AOR___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIz"), ("~ceğim", "~mEyIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsInIz"), ("~ceğim", "~mezsInIz")], rules {
+    relation!(NEG_ABIL_AOR___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsInIz"), ("~ceğim", "~mEzsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlEr"), ("~ceğim", "~mezler")], rules {
+    relation!(NEG_ABIL_AOR___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlEr"), ("~ceğim", "~mEzlEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşIm"), ("~ceğim", "~mezmIşIm")], rules {
+    relation!(NEG_ABIL_AOR_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşIm"), ("~ceğim", "~mEzmIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşsIn"), ("~ceğim", "~mezmIşsIn")], rules {
+    relation!(NEG_ABIL_AOR_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşsIn"), ("~ceğim", "~mEzmIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIş"), ("~ceğim", "~mezmIş")], rules {
+    relation!(NEG_ABIL_AOR_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIş"), ("~ceğim", "~mEzmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşIz"), ("~ceğim", "~mezmIşIz")], rules {
+    relation!(NEG_ABIL_AOR_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşIz"), ("~ceğim", "~mEzmIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşsInIz"), ("~ceğim", "~mezmIşsInIz")], rules {
+    relation!(NEG_ABIL_AOR_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzmIşsInIz"), ("~ceğim", "~mEzmIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErmIş"), ("~ceğim", "~mezlermIş")], rules {
+    relation!(NEG_ABIL_AOR_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErmIş"), ("~ceğim", "~mEzlErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIm"), ("~ceğim", "~mezdIm")], rules {
+    relation!(NEG_ABIL_AOR_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIm"), ("~ceğim", "~mEzdIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIn"), ("~ceğim", "~mezdIn")], rules {
+    relation!(NEG_ABIL_AOR_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIn"), ("~ceğim", "~mEzdIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdI"), ("~ceğim", "~mezdI")], rules {
+    relation!(NEG_ABIL_AOR_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdI"), ("~ceğim", "~mEzdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIk"), ("~ceğim", "~mezdIk")], rules {
+    relation!(NEG_ABIL_AOR_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdIk"), ("~ceğim", "~mEzdIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdInIz"), ("~ceğim", "~mezdInIz")], rules {
+    relation!(NEG_ABIL_AOR_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzdInIz"), ("~ceğim", "~mEzdInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErdI"), ("~ceğim", "~mezlerdI")], rules {
+    relation!(NEG_ABIL_AOR_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErdI"), ("~ceğim", "~mEzlErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEm"), ("~ceğim", "~mezsem")], rules {
+    relation!(NEG_ABIL_AOR_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEm"), ("~ceğim", "~mEzsEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEn"), ("~ceğim", "~mezsen")], rules {
+    relation!(NEG_ABIL_AOR_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEn"), ("~ceğim", "~mEzsEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsE"), ("~ceğim", "~mezse")], rules {
+    relation!(NEG_ABIL_AOR_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsE"), ("~ceğim", "~mEzsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEk"), ("~ceğim", "~mezsek")], rules {
+    relation!(NEG_ABIL_AOR_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEk"), ("~ceğim", "~mEzsEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEnIz"), ("~ceğim", "~mezsenIz")], rules {
+    relation!(NEG_ABIL_AOR_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzsEnIz"), ("~ceğim", "~mEzsEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_AOR_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_AOR_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErsE"), ("~ceğim", "~mezlerse")], rules {
+    relation!(NEG_ABIL_AOR_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzlErsE"), ("~ceğim", "~mEzlErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -3334,577 +2696,577 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşIm"), ("~ceğim", "~memIşIm")], rules {
+    relation!(NEG_ABIL_EVID___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşIm"), ("~ceğim", "~mEmIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsIn"), ("~ceğim", "~memIşsIn")], rules {
+    relation!(NEG_ABIL_EVID___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsIn"), ("~ceğim", "~mEmIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIş"), ("~ceğim", "~memIş")], rules {
+    relation!(NEG_ABIL_EVID___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIş"), ("~ceğim", "~mEmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşIz"), ("~ceğim", "~memIşIz")], rules {
+    relation!(NEG_ABIL_EVID___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşIz"), ("~ceğim", "~mEmIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsInIz"), ("~ceğim", "~memIşsInIz")], rules {
+    relation!(NEG_ABIL_EVID___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsInIz"), ("~ceğim", "~mEmIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlEr"), ("~ceğim", "~memIşler")], rules {
+    relation!(NEG_ABIL_EVID___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlEr"), ("~ceğim", "~mEmIşlEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşIm"), ("~ceğim", "~memIşmIşIm")], rules {
+    relation!(NEG_ABIL_EVID_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşIm"), ("~ceğim", "~mEmIşmIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşsIn"), ("~ceğim", "~memIşmIşsIn")], rules {
+    relation!(NEG_ABIL_EVID_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşsIn"), ("~ceğim", "~mEmIşmIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIş"), ("~ceğim", "~memIşmIş")], rules {
+    relation!(NEG_ABIL_EVID_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIş"), ("~ceğim", "~mEmIşmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşIz"), ("~ceğim", "~memIşmIşIz")], rules {
+    relation!(NEG_ABIL_EVID_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşIz"), ("~ceğim", "~mEmIşmIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşsInIz"), ("~ceğim", "~memIşmIşsInIz")], rules {
+    relation!(NEG_ABIL_EVID_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşmIşsInIz"), ("~ceğim", "~mEmIşmIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErmIş"), ("~ceğim", "~memIşlermIş")], rules {
+    relation!(NEG_ABIL_EVID_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErmIş"), ("~ceğim", "~mEmIşlErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIm"), ("~ceğim", "~memIştIm")], rules {
+    relation!(NEG_ABIL_EVID_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIm"), ("~ceğim", "~mEmIştIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIn"), ("~ceğim", "~memIştIn")], rules {
+    relation!(NEG_ABIL_EVID_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIn"), ("~ceğim", "~mEmIştIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştI"), ("~ceğim", "~memIştI")], rules {
+    relation!(NEG_ABIL_EVID_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştI"), ("~ceğim", "~mEmIştI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIk"), ("~ceğim", "~memIştIk")], rules {
+    relation!(NEG_ABIL_EVID_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştIk"), ("~ceğim", "~mEmIştIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştInIz"), ("~ceğim", "~memIştInIz")], rules {
+    relation!(NEG_ABIL_EVID_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIştInIz"), ("~ceğim", "~mEmIştInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErdI"), ("~ceğim", "~memIşlerdI")], rules {
+    relation!(NEG_ABIL_EVID_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErdI"), ("~ceğim", "~mEmIşlErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEm"), ("~ceğim", "~memIşsem")], rules {
+    relation!(NEG_ABIL_EVID_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEm"), ("~ceğim", "~mEmIşsEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEn"), ("~ceğim", "~memIşsen")], rules {
+    relation!(NEG_ABIL_EVID_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEn"), ("~ceğim", "~mEmIşsEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsE"), ("~ceğim", "~memIşse")], rules {
+    relation!(NEG_ABIL_EVID_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsE"), ("~ceğim", "~mEmIşsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEk"), ("~ceğim", "~memIşsek")], rules {
+    relation!(NEG_ABIL_EVID_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEk"), ("~ceğim", "~mEmIşsEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEnIz"), ("~ceğim", "~memIşsenIz")], rules {
+    relation!(NEG_ABIL_EVID_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşsEnIz"), ("~ceğim", "~mEmIşsEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_EVID_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_EVID_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErsE"), ("~ceğim", "~memIşlerse")], rules {
+    relation!(NEG_ABIL_EVID_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmIşlErsE"), ("~ceğim", "~mEmIşlErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIm"), ("~ceğim", "~meyeceğIm")], rules {
+    relation!(NEG_ABIL_FUT___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIm"), ("~ceğim", "~mEyEcEğIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksIn"), ("~ceğim", "~meyeceksIn")], rules {
+    relation!(NEG_ABIL_FUT___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksIn"), ("~ceğim", "~mEyEcEksIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEk"), ("~ceğim", "~meyecek")], rules {
+    relation!(NEG_ABIL_FUT___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEk"), ("~ceğim", "~mEyEcEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIz"), ("~ceğim", "~meyeceğIz")], rules {
+    relation!(NEG_ABIL_FUT___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIz"), ("~ceğim", "~mEyEcEğIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksInIz"), ("~ceğim", "~meyeceksInIz")], rules {
+    relation!(NEG_ABIL_FUT___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksInIz"), ("~ceğim", "~mEyEcEksInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklEr"), ("~ceğim", "~meyecekler")], rules {
+    relation!(NEG_ABIL_FUT___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklEr"), ("~ceğim", "~mEyEcEklEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşIm"), ("~ceğim", "~meyecekmIşIm")], rules {
+    relation!(NEG_ABIL_FUT_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşIm"), ("~ceğim", "~mEyEcEkmIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşsIn"), ("~ceğim", "~meyecekmIşsIn")], rules {
+    relation!(NEG_ABIL_FUT_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşsIn"), ("~ceğim", "~mEyEcEkmIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIş"), ("~ceğim", "~meyecekmIş")], rules {
+    relation!(NEG_ABIL_FUT_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIş"), ("~ceğim", "~mEyEcEkmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşIz"), ("~ceğim", "~meyecekmIşIz")], rules {
+    relation!(NEG_ABIL_FUT_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşIz"), ("~ceğim", "~mEyEcEkmIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşsInIz"), ("~ceğim", "~meyecekmişsiniz")], rules {
+    relation!(NEG_ABIL_FUT_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEkmIşsInIz"), ("~ceğim", "~mEyEcEkmIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErmIş"), ("~ceğim", "~meyeceklermIş")], rules {
+    relation!(NEG_ABIL_FUT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErmIş"), ("~ceğim", "~mEyEcEklErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIm"), ("~ceğim", "~meyecektIm")], rules {
+    relation!(NEG_ABIL_FUT_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIm"), ("~ceğim", "~mEyEcEktIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIn"), ("~ceğim", "~meyecektIn")], rules {
+    relation!(NEG_ABIL_FUT_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIn"), ("~ceğim", "~mEyEcEktIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktI"), ("~ceğim", "~meyecektI")], rules {
+    relation!(NEG_ABIL_FUT_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktI"), ("~ceğim", "~mEyEcEktI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIk"), ("~ceğim", "~meyecektIk")], rules {
+    relation!(NEG_ABIL_FUT_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktIk"), ("~ceğim", "~mEyEcEktIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktInIz"), ("~ceğim", "~meyecektInIz")], rules {
+    relation!(NEG_ABIL_FUT_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEktInIz"), ("~ceğim", "~mEyEcEktInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErdI"), ("~ceğim", "~meyeceklerdI")], rules {
+    relation!(NEG_ABIL_FUT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErdI"), ("~ceğim", "~mEyEcEklErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEm"), ("~ceğim", "~meyeceksem")], rules {
+    relation!(NEG_ABIL_FUT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEm"), ("~ceğim", "~mEyEcEksEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEn"), ("~ceğim", "~meyeceksen")], rules {
+    relation!(NEG_ABIL_FUT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEn"), ("~ceğim", "~mEyEcEksEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksE"), ("~ceğim", "~meyecekse")], rules {
+    relation!(NEG_ABIL_FUT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksE"), ("~ceğim", "~mEyEcEksE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEk"), ("~ceğim", "~meyeceksek")], rules {
+    relation!(NEG_ABIL_FUT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEk"), ("~ceğim", "~mEyEcEksEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEnIz"), ("~ceğim", "~meyeceksenIz")], rules {
+    relation!(NEG_ABIL_FUT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEksEnIz"), ("~ceğim", "~mEyEcEksEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_FUT_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_FUT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErsE"), ("~ceğim", "~meyeceklerse")], rules {
+    relation!(NEG_ABIL_FUT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErsE"), ("~ceğim", "~mEyEcEklErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEyIm"), ("~ceğim", "~memekteyIm")], rules {
+    relation!(NEG_ABIL_CONT___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEyIm"), ("~ceğim", "~mEmEktEyIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEsIn"), ("~ceğim", "~memektesIn")], rules {
+    relation!(NEG_ABIL_CONT___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEsIn"), ("~ceğim", "~mEmEktEsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktE"), ("~ceğim", "~memekte")], rules {
+    relation!(NEG_ABIL_CONT___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktE"), ("~ceğim", "~mEmEktE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEyIz"), ("~ceğim", "~memekteyIz")], rules {
+    relation!(NEG_ABIL_CONT___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEyIz"), ("~ceğim", "~mEmEktEyIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEsInIz"), ("~ceğim", "~memektesInIz")], rules {
+    relation!(NEG_ABIL_CONT___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEsInIz"), ("~ceğim", "~mEmEktEsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElEr"), ("~ceğim", "~memekteler")], rules {
+    relation!(NEG_ABIL_CONT___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElEr"), ("~ceğim", "~mEmEktElEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşIm"), ("~ceğim", "~memekteymIşIm")], rules {
+    relation!(NEG_ABIL_CONT_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşIm"), ("~ceğim", "~mEmEktEymIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşsIn"), ("~ceğim", "~memekteymIşsIn")], rules {
+    relation!(NEG_ABIL_CONT_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşsIn"), ("~ceğim", "~mEmEktEymIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIş"), ("~ceğim", "~memekteymIş")], rules {
+    relation!(NEG_ABIL_CONT_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIş"), ("~ceğim", "~mEmEktEymIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşIz"), ("~ceğim", "~memekteymIşIz")], rules {
+    relation!(NEG_ABIL_CONT_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşIz"), ("~ceğim", "~mEmEktEymIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşsInIz"), ("~ceğim", "~memekteymişsiniz")], rules {
+    relation!(NEG_ABIL_CONT_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEymIşsInIz"), ("~ceğim", "~mEmEktEymIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErmIş"), ("~ceğim", "~memektelermIş")], rules {
+    relation!(NEG_ABIL_CONT_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErmIş"), ("~ceğim", "~mEmEktElErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIm"), ("~ceğim", "~memekteydIm")], rules {
+    relation!(NEG_ABIL_CONT_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIm"), ("~ceğim", "~mEmEktEydIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIn"), ("~ceğim", "~memekteydIn")], rules {
+    relation!(NEG_ABIL_CONT_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIn"), ("~ceğim", "~mEmEktEydIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydI"), ("~ceğim", "~memekteydI")], rules {
+    relation!(NEG_ABIL_CONT_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydI"), ("~ceğim", "~mEmEktEydI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIk"), ("~ceğim", "~memekteydIk")], rules {
+    relation!(NEG_ABIL_CONT_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydIk"), ("~ceğim", "~mEmEktEydIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydInIz"), ("~ceğim", "~memekteydInIz")], rules {
+    relation!(NEG_ABIL_CONT_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEydInIz"), ("~ceğim", "~mEmEktEydInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErdI"), ("~ceğim", "~memektelerdI")], rules {
+    relation!(NEG_ABIL_CONT_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErdI"), ("~ceğim", "~mEmEktElErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEm"), ("~ceğim", "~memekteysem")], rules {
+    relation!(NEG_ABIL_CONT_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEm"), ("~ceğim", "~mEmEktEysEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEn"), ("~ceğim", "~memekteysen")], rules {
+    relation!(NEG_ABIL_CONT_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEn"), ("~ceğim", "~mEmEktEysEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysE"), ("~ceğim", "~memekteyse")], rules {
+    relation!(NEG_ABIL_CONT_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysE"), ("~ceğim", "~mEmEktEysE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEk"), ("~ceğim", "~memekteysek")], rules {
+    relation!(NEG_ABIL_CONT_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEk"), ("~ceğim", "~mEmEktEysEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEnIz"), ("~ceğim", "~memekteysenIz")], rules {
+    relation!(NEG_ABIL_CONT_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktEysEnIz"), ("~ceğim", "~mEmEktEysEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_CONT_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_CONT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErsE"), ("~ceğim", "~memektelerse")], rules {
+    relation!(NEG_ABIL_CONT_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEktElErsE"), ("~ceğim", "~mEmEktElErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIyIm"), ("~ceğim", "~memelIyIm")], rules {
+    relation!(NEG_ABIL_NECESS___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIyIm"), ("~ceğim", "~mEmElIyIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIsIn"), ("~ceğim", "~memelIsIn")], rules {
+    relation!(NEG_ABIL_NECESS___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIsIn"), ("~ceğim", "~mEmElIsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElI"), ("~ceğim", "~memelI")], rules {
+    relation!(NEG_ABIL_NECESS___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElI"), ("~ceğim", "~mEmElI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIyIz"), ("~ceğim", "~memelIyIz")], rules {
+    relation!(NEG_ABIL_NECESS___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIyIz"), ("~ceğim", "~mEmElIyIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIsInIz"), ("~ceğim", "~memelIsInIz")], rules {
+    relation!(NEG_ABIL_NECESS___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIsInIz"), ("~ceğim", "~mEmElIsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlEr"), ("~ceğim", "~memelIler")], rules {
+    relation!(NEG_ABIL_NECESS___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlEr"), ("~ceğim", "~mEmElIlEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşIm"), ("~ceğim", "~memelIymIşIm")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşIm"), ("~ceğim", "~mEmElIymIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşsIn"), ("~ceğim", "~memelIymIşsIn")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşsIn"), ("~ceğim", "~mEmElIymIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIş"), ("~ceğim", "~memelIymIş")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIş"), ("~ceğim", "~mEmElIymIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşIz"), ("~ceğim", "~memelIymIşIz")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşIz"), ("~ceğim", "~mEmElIymIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşsInIz"), ("~ceğim", "~memeliymişsiniz")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIymIşsInIz"), ("~ceğim", "~mEmElIymIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErmIş"), ("~ceğim", "~memelIlermIş")], rules {
+    relation!(NEG_ABIL_NECESS_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErmIş"), ("~ceğim", "~mEmElIlErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIm"), ("~ceğim", "~memelIydIm")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIm"), ("~ceğim", "~mEmElIydIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIn"), ("~ceğim", "~memelIydIn")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIn"), ("~ceğim", "~mEmElIydIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydI"), ("~ceğim", "~memelIydI")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydI"), ("~ceğim", "~mEmElIydI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIk"), ("~ceğim", "~memelIydIk")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydIk"), ("~ceğim", "~mEmElIydIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydInIz"), ("~ceğim", "~memelIydInIz")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIydInIz"), ("~ceğim", "~mEmElIydInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErdI"), ("~ceğim", "~memelIlerdI")], rules {
+    relation!(NEG_ABIL_NECESS_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErdI"), ("~ceğim", "~mEmElIlErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEm"), ("~ceğim", "~memelIysem")], rules {
+    relation!(NEG_ABIL_NECESS_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEm"), ("~ceğim", "~mEmElIysEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEn"), ("~ceğim", "~memelIysen")], rules {
+    relation!(NEG_ABIL_NECESS_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEn"), ("~ceğim", "~mEmElIysEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysE"), ("~ceğim", "~memelIyse")], rules {
+    relation!(NEG_ABIL_NECESS_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysE"), ("~ceğim", "~mEmElIysE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEk"), ("~ceğim", "~memelIysek")], rules {
+    relation!(NEG_ABIL_NECESS_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEk"), ("~ceğim", "~mEmElIysEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEnIz"), ("~ceğim", "~memelIysenIz")], rules {
+    relation!(NEG_ABIL_NECESS_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIysEnIz"), ("~ceğim", "~mEmElIysEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // NEG_ABIL_NECESS_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(NEG_ABIL_NECESS_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErsE"), ("~ceğim", "~memelIlerse")], rules {
+    relation!(NEG_ABIL_NECESS_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmElIlErsE"), ("~ceğim", "~mEmElIlErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -3936,7 +3298,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
     } listed {}, true, None),
     // PAST_POS_PLAIN___3PL, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN___3PL, [PAST_POS_PLAIN___1SG], [("~m", "~lEr")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_PAST_1SG, from PAST_POS_PLAIN___2SG.
     relation!(PAST_POS_PLAIN_PAST_1SG, [PAST_POS_PLAIN___2SG], [("~n", "~ydIm")], rules {
@@ -3960,31 +3322,31 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
     } listed {}, true, None),
     // PAST_POS_PLAIN_PAST_3PL, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_PAST_3PL, [PAST_POS_PLAIN___1SG], [("~m", "~lErdI")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_1SG, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_1SG, [PAST_POS_PLAIN___1SG], [("~m", "~ysEm")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_2SG, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_2SG, [PAST_POS_PLAIN___1SG], [("~m", "~ysEn")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_3SG, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_3SG, [PAST_POS_PLAIN___1SG], [("~m", "~ysE")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_1PL, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_1PL, [PAST_POS_PLAIN___1SG], [("~m", "~ysEk")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_2PL, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_2PL, [PAST_POS_PLAIN___1SG], [("~m", "~ysEnIz")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_PLAIN_COND_3PL, from PAST_POS_PLAIN___1SG.
     relation!(PAST_POS_PLAIN_COND_3PL, [PAST_POS_PLAIN___1SG], [("~m", "~lErsE")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // PAST_POS_ABIL___1SG, from POS_PLAIN_FUT___1SG.
     relation!(PAST_POS_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~bildIm"), ("~ceğim", "~bIldIm")], rules {
@@ -4115,14 +3477,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // PAST_NEG_PLAIN___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_PAST_1SG, from INFINITIVE_POS_PLAIN.
     relation!(PAST_NEG_PLAIN_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~dIydIm")], rules {
         "" => [0 2368],
@@ -4144,172 +3501,137 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // PAST_NEG_PLAIN_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIlErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~dIysEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~dIysEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~dIysE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIysEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIysEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_PLAIN_COND_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PAST_NEG_PLAIN_COND_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PAST_NEG_PLAIN_COND_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIlErsE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PAST_NEG_ABIL___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIm"), ("~ceğim", "~medIm")], rules {
+    relation!(PAST_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIm"), ("~ceğim", "~mEdIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIn"), ("~ceğim", "~medIn")], rules {
+    relation!(PAST_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIn"), ("~ceğim", "~mEdIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdI"), ("~ceğim", "~medI")], rules {
+    relation!(PAST_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdI"), ("~ceğim", "~mEdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIk"), ("~ceğim", "~medIk")], rules {
+    relation!(PAST_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIk"), ("~ceğim", "~mEdIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdInIz"), ("~ceğim", "~medInIz")], rules {
+    relation!(PAST_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdInIz"), ("~ceğim", "~mEdInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlar"), ("~ceğim", "~medIlEr")], rules {
+    relation!(PAST_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlEr"), ("~ceğim", "~mEdIlEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIm"), ("~ceğim", "~medIydIm")], rules {
+    relation!(PAST_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIm"), ("~ceğim", "~mEdIydIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIn"), ("~ceğim", "~medIydIn")], rules {
+    relation!(PAST_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIn"), ("~ceğim", "~mEdIydIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydI"), ("~ceğim", "~medIydI")], rules {
+    relation!(PAST_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydI"), ("~ceğim", "~mEdIydI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIk"), ("~ceğim", "~medIydIk")], rules {
+    relation!(PAST_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydIk"), ("~ceğim", "~mEdIydIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydInIz"), ("~ceğim", "~medIydInIz")], rules {
+    relation!(PAST_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIydInIz"), ("~ceğim", "~mEdIydInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlardI"), ("~ceğim", "~medIlErdI")], rules {
+    relation!(PAST_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlErdI"), ("~ceğim", "~mEdIlErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysam"), ("~ceğim", "~medIysEm")], rules {
+    relation!(PAST_NEG_ABIL_COND_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysEm"), ("~ceğim", "~mEdIysEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysan"), ("~ceğim", "~medIysEn")], rules {
+    relation!(PAST_NEG_ABIL_COND_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysEn"), ("~ceğim", "~mEdIysEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysa"), ("~ceğim", "~medIysE")], rules {
+    relation!(PAST_NEG_ABIL_COND_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysE"), ("~ceğim", "~mEdIysE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysak"), ("~ceğim", "~medIysEk")], rules {
+    relation!(PAST_NEG_ABIL_COND_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysEk"), ("~ceğim", "~mEdIysEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysanIz"), ("~ceğim", "~medIysEnIz")], rules {
+    relation!(PAST_NEG_ABIL_COND_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIysEnIz"), ("~ceğim", "~mEdIysEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // PAST_NEG_ABIL_COND_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(PAST_NEG_ABIL_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlarsE"), ("~ceğim", "~medIlErsE")], rules {
+    relation!(PAST_NEG_ABIL_COND_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIlErsE"), ("~ceğim", "~mEdIlErsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -4585,271 +3907,181 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___2SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___3SG, [INFINITIVE_POS_PLAIN], [("~k", "~sE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___1PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___2PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEnIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~sElEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEymIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEymIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEymIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEymIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEymIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~sElErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEydIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEydIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~sEydI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEydIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~sEydInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_PLAIN_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONDITIONAL_NEG_PLAIN_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONDITIONAL_NEG_PLAIN_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~sElErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEm"), ("~ceğim", "~mesem")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEm"), ("~ceğim", "~mEsEm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEn"), ("~ceğim", "~mesen")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEn"), ("~ceğim", "~mEsEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsE"), ("~ceğim", "~mese")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsE"), ("~ceğim", "~mEsE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEk"), ("~ceğim", "~mesek")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEk"), ("~ceğim", "~mEsEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnIz"), ("~ceğim", "~mesenIz")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnIz"), ("~ceğim", "~mEsEnIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElEr"), ("~ceğim", "~meseler")], rules {
+    relation!(CONDITIONAL_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElEr"), ("~ceğim", "~mEsElEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşIm"), ("~ceğim", "~meseymIşIm")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşIm"), ("~ceğim", "~mEsEymIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşsIn"), ("~ceğim", "~meseymIşsIn")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşsIn"), ("~ceğim", "~mEsEymIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIş"), ("~ceğim", "~meseymIş")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIş"), ("~ceğim", "~mEsEymIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşIz"), ("~ceğim", "~meseymIşIz")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşIz"), ("~ceğim", "~mEsEymIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşsInIz"), ("~ceğim", "~meseymIşsInIz")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEymIşsInIz"), ("~ceğim", "~mEsEymIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElErmIş"), ("~ceğim", "~meselermIş")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElErmIş"), ("~ceğim", "~mEsElErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIm"), ("~ceğim", "~meseydIm")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIm"), ("~ceğim", "~mEsEydIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIn"), ("~ceğim", "~meseydIn")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIn"), ("~ceğim", "~mEsEydIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydI"), ("~ceğim", "~meseydI")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydI"), ("~ceğim", "~mEsEydI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIk"), ("~ceğim", "~meseydIk")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydIk"), ("~ceğim", "~mEsEydIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydInIz"), ("~ceğim", "~meseydInIz")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEydInIz"), ("~ceğim", "~mEsEydInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONDITIONAL_NEG_ABIL_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(CONDITIONAL_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElErdI"), ("~ceğim", "~meselerdI")], rules {
+    relation!(CONDITIONAL_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsElErdI"), ("~ceğim", "~mEsElErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -4885,7 +4117,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_POS_PLAIN___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_POS_PLAIN___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lEr"), ("~ceğim", "~ler")], rules {
+    relation!(OPTATIVE_POS_PLAIN___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lEr"), ("~ceğim", "~lEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -4921,7 +4153,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_POS_PLAIN_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_POS_PLAIN_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lErmIş"), ("~ceğim", "~lermIş")], rules {
+    relation!(OPTATIVE_POS_PLAIN_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lErmIş"), ("~ceğim", "~lErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -4957,7 +4189,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_POS_PLAIN_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_POS_PLAIN_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lErdI"), ("~ceğim", "~lerdI")], rules {
+    relation!(OPTATIVE_POS_PLAIN_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~lErdI"), ("~ceğim", "~lErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5071,271 +4303,181 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEyIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yElIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN___3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN___3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN___3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yElEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEymIşIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEymIşsIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEymIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEymIşIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEymIşsInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_EVID_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_EVID_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_EVID_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yElErmIş")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_1SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_1SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_1SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEydIm")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEydIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEydI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEydIk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEydInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_PLAIN_PAST_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        OPTATIVE_NEG_PLAIN_PAST_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(OPTATIVE_NEG_PLAIN_PAST_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yElErdI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___1SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEyIm"), ("~ceğim", "~meyeyIm")], rules {
+    relation!(OPTATIVE_NEG_ABIL___1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEyIm"), ("~ceğim", "~mEyEyIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___2SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsIn"), ("~ceğim", "~meyesIn")], rules {
+    relation!(OPTATIVE_NEG_ABIL___2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsIn"), ("~ceğim", "~mEyEsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___3SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyE"), ("~ceğim", "~meye")], rules {
+    relation!(OPTATIVE_NEG_ABIL___3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyE"), ("~ceğim", "~mEyE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___1PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElIm"), ("~ceğim", "~meyelIm")], rules {
+    relation!(OPTATIVE_NEG_ABIL___1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElIm"), ("~ceğim", "~mEyElIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___2PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsInIz"), ("~ceğim", "~meyesInIz")], rules {
+    relation!(OPTATIVE_NEG_ABIL___2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsInIz"), ("~ceğim", "~mEyEsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL___3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElEr"), ("~ceğim", "~meyeler")], rules {
+    relation!(OPTATIVE_NEG_ABIL___3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElEr"), ("~ceğim", "~mEyElEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşIm"), ("~ceğim", "~meyeymIşIm")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşIm"), ("~ceğim", "~mEyEymIşIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşsIn"), ("~ceğim", "~meyeymIşsIn")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşsIn"), ("~ceğim", "~mEyEymIşsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIş"), ("~ceğim", "~meyeymIş")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIş"), ("~ceğim", "~mEyEymIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşIz"), ("~ceğim", "~meyeymIşIz")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşIz"), ("~ceğim", "~mEyEymIşIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşsInIz"), ("~ceğim", "~meyeymIşsInIz")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEymIşsInIz"), ("~ceğim", "~mEyEymIşsInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_EVID_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElErmIş"), ("~ceğim", "~meyelermIş")], rules {
+    relation!(OPTATIVE_NEG_ABIL_EVID_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElErmIş"), ("~ceğim", "~mEyElErmIş")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIm"), ("~ceğim", "~meyeydIm")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIm"), ("~ceğim", "~mEyEydIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIn"), ("~ceğim", "~meyeydIn")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIn"), ("~ceğim", "~mEyEydIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydI"), ("~ceğim", "~meyeydI")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydI"), ("~ceğim", "~mEyEydI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIk"), ("~ceğim", "~meyeydIk")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydIk"), ("~ceğim", "~mEyEydIk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydInIz"), ("~ceğim", "~meyeydInIz")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEydInIz"), ("~ceğim", "~mEyEydInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // OPTATIVE_NEG_ABIL_PAST_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(OPTATIVE_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElErdI"), ("~ceğim", "~meyelerdI")], rules {
+    relation!(OPTATIVE_NEG_ABIL_PAST_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElErdI"), ("~ceğim", "~mEyElErdI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5471,14 +4613,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // IMPERATIVE_NEG_PLAIN_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        IMPERATIVE_NEG_PLAIN_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(IMPERATIVE_NEG_PLAIN_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~sInlEr")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // IMPERATIVE_NEG_PLAIN_2SG_FORMAL, from INFINITIVE_POS_PLAIN.
     relation!(IMPERATIVE_NEG_PLAIN_2SG_FORMAL, [INFINITIVE_POS_PLAIN], [("~k", "~yInIz")], rules {
         "" => [0 2368],
@@ -5493,49 +4630,39 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // IMPERATIVE_NEG_PLAIN_2SG_URGING, from INFINITIVE_POS_PLAIN.
-    relation!(
-        IMPERATIVE_NEG_PLAIN_2SG_URGING,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(IMPERATIVE_NEG_PLAIN_2SG_URGING, [INFINITIVE_POS_PLAIN], [("~k", "~sEnE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // IMPERATIVE_NEG_PLAIN_2PL_URGING, from INFINITIVE_POS_PLAIN.
-    relation!(
-        IMPERATIVE_NEG_PLAIN_2PL_URGING,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(IMPERATIVE_NEG_PLAIN_2PL_URGING, [INFINITIVE_POS_PLAIN], [("~k", "~sEnIzE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mE"), ("~ceğim", "~me")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mE"), ("~ceğim", "~mE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsIn"), ("~ceğim", "~mesIn")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsIn"), ("~ceğim", "~mEsIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIn"), ("~ceğim", "~meyIn")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIn"), ("~ceğim", "~mEyIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsInlEr"), ("~ceğim", "~mesInler")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsInlEr"), ("~ceğim", "~mEsInlEr")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_2SG_FORMAL, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_2SG_FORMAL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyInIz"), ("~ceğim", "~meyInIz")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_2SG_FORMAL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyInIz"), ("~ceğim", "~mEyInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5550,13 +4677,13 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // IMPERATIVE_NEG_ABIL_2SG_URGING, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_2SG_URGING, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnE"), ("~ceğim", "~mesene")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_2SG_URGING, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnE"), ("~ceğim", "~mEsEnE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // IMPERATIVE_NEG_ABIL_2PL_URGING, from POS_PLAIN_FUT___1SG.
-    relation!(IMPERATIVE_NEG_ABIL_2PL_URGING, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnIzE"), ("~ceğim", "~mesenIze")], rules {
+    relation!(IMPERATIVE_NEG_ABIL_2PL_URGING, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEsEnIzE"), ("~ceğim", "~mEsEnIzE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5568,16 +4695,11 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // INFINITIVE_NEG_PLAIN, from INFINITIVE_POS_PLAIN.
-    relation!(
-        INFINITIVE_NEG_PLAIN,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(INFINITIVE_NEG_PLAIN, [INFINITIVE_POS_PLAIN], [("~k", "~mEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // INFINITIVE_NEG_ABIL, from POS_PLAIN_FUT___1SG.
-    relation!(INFINITIVE_NEG_ABIL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEk"), ("~ceğim", "~memek")], rules {
+    relation!(INFINITIVE_NEG_ABIL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmEk"), ("~ceğim", "~mEmEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5598,16 +4720,11 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // VERBAL_NOUN_NEG_PLAIN, from INFINITIVE_POS_PLAIN.
-    relation!(
-        VERBAL_NOUN_NEG_PLAIN,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(VERBAL_NOUN_NEG_PLAIN, [INFINITIVE_POS_PLAIN], [("~k", "~mE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // VERBAL_NOUN_NEG_ABIL, from POS_PLAIN_FUT___1SG.
-    relation!(VERBAL_NOUN_NEG_ABIL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmE"), ("~ceğim", "~meme")], rules {
+    relation!(VERBAL_NOUN_NEG_ABIL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEmE"), ("~ceğim", "~mEmE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5661,14 +4778,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // PARTICIPLE_NEG_PLAIN_AN, from INFINITIVE_POS_PLAIN.
-    relation!(
-        PARTICIPLE_NEG_PLAIN_AN,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(PARTICIPLE_NEG_PLAIN_AN, [INFINITIVE_POS_PLAIN], [("~k", "~yEn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // PARTICIPLE_NEG_PLAIN_MIŞ, from NEG_PLAIN_EVID___3SG.
     relation!(
         PARTICIPLE_NEG_PLAIN_MIŞ,
@@ -5688,7 +4800,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // PARTICIPLE_NEG_ABIL_AN, from POS_PLAIN_FUT___1SG.
-    relation!(PARTICIPLE_NEG_ABIL_AN, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEn"), ("~ceğim", "~meyen")], rules {
+    relation!(PARTICIPLE_NEG_ABIL_AN, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEn"), ("~ceğim", "~mEyEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5733,7 +4845,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
     } listed {}, true, None),
     // RELATIVE_POS_PLAIN_DIK_3PL, from PAST_POS_PLAIN___1SG.
     relation!(RELATIVE_POS_PLAIN_DIK_3PL, [PAST_POS_PLAIN___1SG], [("~m", "~klErI")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // RELATIVE_POS_PLAIN_ACAK_1SG, from POS_PLAIN_FUT___1SG.
     relation!(
@@ -5761,7 +4873,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // RELATIVE_POS_PLAIN_ACAK_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_POS_PLAIN_ACAK_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klerI"), ("~ğım", "~klErI")], rules {
+    relation!(RELATIVE_POS_PLAIN_ACAK_3PL, [POS_PLAIN_FUT___1SG], [("~ğim", "~klErI"), ("~ğım", "~klErI")], rules {
         "" => [1 1283, 0 1085],
         "im" => [0 1085],
         "ım" => [1 1283],
@@ -5862,14 +4974,9 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_DIK_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_DIK_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_DIK_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~dIklErI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_ACAK_1SG, from NEG_PLAIN_FUT___1SG.
     relation!(
         RELATIVE_NEG_PLAIN_ACAK_1SG,
@@ -5880,82 +4987,57 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // RELATIVE_NEG_PLAIN_ACAK_2SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_ACAK_2SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_ACAK_2SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğIn")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_ACAK_3SG, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_ACAK_3SG,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_ACAK_3SG, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_ACAK_1PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_ACAK_1PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_ACAK_1PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğImIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_ACAK_2PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_ACAK_2PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_ACAK_2PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEğInIz")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_PLAIN_ACAK_3PL, from INFINITIVE_POS_PLAIN.
-    relation!(
-        RELATIVE_NEG_PLAIN_ACAK_3PL,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(RELATIVE_NEG_PLAIN_ACAK_3PL, [INFINITIVE_POS_PLAIN], [("~k", "~yEcEklErI")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_1SG, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğIm"), ("~ceğim", "~medIğIm")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_1SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğIm"), ("~ceğim", "~mEdIğIm")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğIn"), ("~ceğim", "~medIğIn")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğIn"), ("~ceğim", "~mEdIğIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğI"), ("~ceğim", "~medIğI")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğI"), ("~ceğim", "~mEdIğI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğImIz"), ("~ceğim", "~medIğImIz")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğImIz"), ("~ceğim", "~mEdIğImIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğInIz"), ("~ceğim", "~medIğInIz")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIğInIz"), ("~ceğim", "~mEdIğInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_DIK_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_DIK_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIklarI"), ("~ceğim", "~medIklErI")], rules {
+    relation!(RELATIVE_NEG_ABIL_DIK_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIklErI"), ("~ceğim", "~mEdIklErI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
@@ -5970,37 +5052,37 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         None
     ),
     // RELATIVE_NEG_ABIL_ACAK_2SG, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_ACAK_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIn"), ("~ceğim", "~meyeceğIn")], rules {
+    relation!(RELATIVE_NEG_ABIL_ACAK_2SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğIn"), ("~ceğim", "~mEyEcEğIn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_ACAK_3SG, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_ACAK_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğI"), ("~ceğim", "~meyeceğI")], rules {
+    relation!(RELATIVE_NEG_ABIL_ACAK_3SG, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğI"), ("~ceğim", "~mEyEcEğI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_ACAK_1PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_ACAK_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğImIz"), ("~ceğim", "~meyeceğImIz")], rules {
+    relation!(RELATIVE_NEG_ABIL_ACAK_1PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğImIz"), ("~ceğim", "~mEyEcEğImIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_ACAK_2PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_ACAK_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğInIz"), ("~ceğim", "~meyeceğInIz")], rules {
+    relation!(RELATIVE_NEG_ABIL_ACAK_2PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEğInIz"), ("~ceğim", "~mEyEcEğInIz")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // RELATIVE_NEG_ABIL_ACAK_3PL, from POS_PLAIN_FUT___1SG.
-    relation!(RELATIVE_NEG_ABIL_ACAK_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErI"), ("~ceğim", "~meyeceklerI")], rules {
+    relation!(RELATIVE_NEG_ABIL_ACAK_3PL, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEcEklErI"), ("~ceğim", "~mEyEcEklErI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_KEN, from POS_PLAIN_AOR___1SG.
-    relation!(CONVERB_POS_PLAIN_KEN, [POS_PLAIN_AOR___1SG], [("~im", "~ken"), ("~um", "~ken"), ("~üm", "~kEn"), ("~ım", "~ken")], rules {
+    relation!(CONVERB_POS_PLAIN_KEN, [POS_PLAIN_AOR___1SG], [("~im", "~kEn"), ("~um", "~ken"), ("~üm", "~ken"), ("~ım", "~ken")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -6009,7 +5091,7 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_INCE, from IMPERATIVE_POS_PLAIN_2PL.
     relation!(CONVERB_POS_PLAIN_INCE, [IMPERATIVE_POS_PLAIN_2PL], [("~", "~cE")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_IP, from IMPERATIVE_POS_PLAIN_2PL.
     relation!(CONVERB_POS_PLAIN_IP, [IMPERATIVE_POS_PLAIN_2PL], [("~n", "~p")], rules {
@@ -6022,105 +5104,101 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_ESIYE, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_POS_PLAIN_ESIYE, [POS_PLAIN_FUT___1SG], [("~cağım", "~sIyE"), ("~ceğim", "~sIye")], rules {
+    relation!(CONVERB_POS_PLAIN_ESIYE, [POS_PLAIN_FUT___1SG], [("~cağım", "~sIyE"), ("~ceğim", "~sIyE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_DIKÇE, from PAST_POS_PLAIN___1SG.
     relation!(CONVERB_POS_PLAIN_DIKÇE, [PAST_POS_PLAIN___1SG], [("~m", "~kçE")], rules {
-        "" => [0 2368],
+        "" => [0 2367],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_EREK, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_POS_PLAIN_EREK, [POS_PLAIN_FUT___1SG], [("~cağım", "~rEk"), ("~ceğim", "~rek")], rules {
+    relation!(CONVERB_POS_PLAIN_EREK, [POS_PLAIN_FUT___1SG], [("~cağım", "~rEk"), ("~ceğim", "~rEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_POS_PLAIN_DOUBLED, from OPTATIVE_POS_PLAIN___3SG.
-    relation!(CONVERB_POS_PLAIN_DOUBLED, [OPTATIVE_POS_PLAIN___3SG], [("~", "~ EdE"), ("~", "~ ElE"), ("~", "~ EldIra"), ("~", "~ EnlEyE"), ("~", "~ EtE"), ("~", "~ EçE"), ("~", "~ IçE"), ("~", "~ batE"), ("~", "~ bulE"), ("~", "~ bükE"), ("~", "~ bırEkE"), ("~", "~ dEğE"), ("~", "~ dIkE"), ("~", "~ düşE"), ("~", "~ gElE"), ("~", "~ gErE"), ("~", "~ gEçE"), ("~", "~ gIdE"), ("~", "~ gIrE"), ("~", "~ görE"), ("~", "~ kElE"), ("~", "~ kEsE"), ("~", "~ kEsIlE"), ("~", "~ kEçIrE"), ("~", "~ koyE"), ("~", "~ kılE"), ("~", "~ kırE"), ("~", "~ olE"), ("~", "~ oynEyE"), ("~", "~ sıçE"), ("~", "~ tutE"), ("~", "~ vErE"), ("~", "~ yEpE"), ("~", "~ yEtE"), ("~", "~ yIyE"), ("~", "~ yırtE"), ("~", "~ ~"), ("~", "~ çElE"), ("~", "~ çEvIrE"), ("~", "~ çeke"), ("~", "~ çıkE"), ("~", "~ çıkErE")], rules {
-        "" => [36 1879, 0 186, 31 33, 27 29, 39 17, 1 15, 32 15, 4 12, 14 12, 40 12, 18 10, 41 7, 24 6, 5 5, 16 4, 30 4, 34 4, 8 3, 10 3, 17 3, 20 3, 26 3, 28 3, 2 2, 3 2, 6 2, 7 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 21 2, 22 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2, 38 2],
-        "a" => [36 1103, 27 29, 1 15, 32 15, 4 12, 40 12, 41 7, 24 6, 5 5, 30 4, 8 3, 10 3, 20 3, 26 3, 28 3, 2 2, 3 2, 7 2, 21 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2],
-        "ka" => [36 20, 40 12, 10 3],
-        "aka" => [36 7, 10 3],
-        "ıka" => [40 12, 36 6],
-        " çıka" => [40 12],
-        "la" => [36 116, 27 29, 1 15, 8 3, 20 3, 25 2, 37 2],
-        "ala" => [36 21, 1 15, 20 3, 37 2],
-        " ala" => [1 15],
-        "kala" => [36 7, 20 3],
-        "ola" => [27 29, 36 8],
-        " ola" => [27 29],
-        "ula" => [36 26, 8 3],
-        "bula" => [8 3, 36 1],
-        "ıla" => [36 61, 25 2],
-        "na" => [36 169],
-        "pa" => [32 15, 36 9],
-        "yapa" => [32 15, 36 1],
-        "ra" => [36 189, 41 7, 26 3, 2 2, 23 2],
-        "ara" => [36 23, 41 7],
-        "kara" => [41 7, 36 3],
-        " aldıra" => [2 2],
-        "kıra" => [26 3, 36 3],
-        "tıra" => [36 59],
-        "çıra" => [23 2, 36 1],
-        "sa" => [36 9, 21 2],
-        "ta" => [36 135, 4 12, 30 4, 7 2, 33 2, 35 2],
-        " ata" => [4 12],
-        "bata" => [7 2, 36 1],
-        "lata" => [36 41],
-        "yata" => [33 2, 36 2],
-        "rta" => [36 34, 35 2],
-        "uta" => [36 10, 30 4],
-        "ya" => [36 293, 24 6, 28 3, 3 2],
-        "laya" => [36 200, 3 2],
-        " anlaya" => [3 2],
-        "naya" => [36 8, 28 3],
-        "oya" => [24 6, 36 5],
-        "ça" => [36 7, 5 5, 29 2],
-        " aça" => [5 5],
-        "şa" => [36 133],
-        "e" => [36 776, 0 186, 31 33, 39 17, 14 12, 18 10, 16 4, 34 4, 17 3, 6 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 22 2, 38 2],
-        "de" => [0 186, 36 54, 17 3],
-        " ede" => [0 186],
-        "dede" => [36 5],
-        "fede" => [36 6],
-        "lede" => [36 6],
-        "mede" => [36 5],
-        "rede" => [36 9],
-        "ide" => [17 3, 36 2],
-        "ke" => [39 17, 36 15, 9 2, 12 2],
-        "eke" => [39 17, 36 4],
-        "le" => [36 83, 14 12, 22 2],
-        "ele" => [14 12, 36 11],
-        "gele" => [14 12, 36 1],
-        "ile" => [36 52, 22 2],
-        "ne" => [36 119],
-        "re" => [36 140, 31 33, 18 10, 15 2, 19 2, 38 2],
-        "ere" => [31 33, 36 18, 15 2],
-        "vere" => [31 33, 36 3],
-        "ire" => [36 96, 18 10, 38 2],
-        "dire" => [36 34],
-        "gire" => [18 10, 36 1],
-        "tire" => [36 47],
-        "öre" => [36 4, 19 2],
-        "üre" => [36 22],
-        "te" => [36 75],
-        "ye" => [36 169, 34 4],
-        "eye" => [36 150],
-        "iye" => [36 8, 34 4],
-        "ze" => [36 12],
-        "çe" => [36 8, 16 4, 6 2],
-        "ğe" => [11 2, 36 2],
-        "şe" => [36 81, 13 2],
-        "düşe" => [13 2, 36 1],
-    } listed {
-        34 => [
-            "dayak yiye", "kazık yiye",
-        ],
-    }, true, None),
+    relation!(CONVERB_POS_PLAIN_DOUBLED, [OPTATIVE_POS_PLAIN___3SG], [("~", "~ Ala"), ("~", "~ AldırA"), ("~", "~ AnlAyA"), ("~", "~ AynayE"), ("~", "~ EdE"), ("~", "~ IçE"), ("~", "~ atE"), ("~", "~ açE"), ("~", "~ bAtA"), ("~", "~ bulA"), ("~", "~ bükE"), ("~", "~ bırAkA"), ("~", "~ dEğE"), ("~", "~ dIkE"), ("~", "~ düşE"), ("~", "~ gElE"), ("~", "~ gErE"), ("~", "~ gEçE"), ("~", "~ gIdE"), ("~", "~ gIrE"), ("~", "~ görE"), ("~", "~ kAlA"), ("~", "~ kAsA"), ("~", "~ kAya"), ("~", "~ kAçırA"), ("~", "~ kEsIlE"), ("~", "~ kılA"), ("~", "~ kırE"), ("~", "~ sıçA"), ("~", "~ tutA"), ("~", "~ vErE"), ("~", "~ yAtA"), ("~", "~ yIyE"), ("~", "~ yapE"), ("~", "~ yırtA"), ("~", "~ ~"), ("~", "~ çAlA"), ("~", "~ çEkE"), ("~", "~ çEvIrE"), ("~", "~ çıkE"), ("~", "~ çıkErE")], rules {
+        "" => [35 1879, 4 186, 0 43, 30 33, 37 17, 33 15, 6 12, 15 12, 39 12, 19 10, 40 7, 23 6, 7 5, 17 4, 29 4, 32 4, 3 3, 9 3, 11 3, 18 3, 21 3, 27 3, 1 2, 2 2, 5 2, 8 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 22 2, 24 2, 25 2, 26 2, 28 2, 31 2, 34 2, 36 2, 38 2],
+        "a" => [35 1103, 0 43, 33 15, 6 12, 39 12, 40 7, 23 6, 7 5, 29 4, 3 3, 9 3, 11 3, 21 3, 27 3, 1 2, 2 2, 8 2, 22 2, 24 2, 26 2, 28 2, 31 2, 34 2, 36 2],
+        "ka" => [35 20, 39 12, 11 3],
+        "aka" => [35 7, 11 3],
+        "ıka" => [39 12, 35 6],
+        " çıka" => [39 12],
+        "la" => [35 116, 0 43, 9 3, 21 3, 26 2, 36 2],
+        " ala" => [0 14],
+        "kala" => [35 7, 21 3],
+        "çala" => [35 2, 36 2],
+        "ola" => [0 29, 35 8],
+        " ola" => [0 29],
+        "ula" => [35 26, 9 3],
+        "bula" => [9 3, 35 1],
+        "ıla" => [35 61, 26 2],
+        "na" => [35 169],
+        "pa" => [33 15, 35 9],
+        "yapa" => [33 15, 35 1],
+        "ra" => [35 189, 40 7, 27 3, 1 2, 24 2],
+        "ara" => [35 23, 40 7],
+        "kara" => [40 7, 35 3],
+        " aldıra" => [1 2],
+        "kıra" => [27 3, 35 3],
+        "tıra" => [35 59],
+        "çıra" => [24 2, 35 1],
+        "sa" => [35 9, 22 2],
+        "ta" => [35 135, 6 12, 29 4, 8 2, 31 2, 34 2],
+        " ata" => [6 12],
+        "bata" => [8 2, 35 1],
+        "lata" => [35 41],
+        "yata" => [31 2, 35 2],
+        "rta" => [35 34, 34 2],
+        "uta" => [35 10, 29 4],
+        "ya" => [35 293, 23 6, 3 3, 2 2],
+        "laya" => [35 200, 2 2],
+        " anlaya" => [2 2],
+        "naya" => [35 8, 3 3],
+        "oya" => [23 6, 35 5],
+        "ça" => [35 7, 7 5, 28 2],
+        " aça" => [7 5],
+        "şa" => [35 133],
+        "e" => [35 776, 4 186, 30 33, 37 17, 15 12, 19 10, 17 4, 32 4, 18 3, 5 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 25 2, 38 2],
+        "de" => [4 186, 35 54, 18 3],
+        " ede" => [4 186],
+        "dede" => [35 5],
+        "fede" => [35 6],
+        "lede" => [35 6],
+        "mede" => [35 5],
+        "rede" => [35 9],
+        "ide" => [18 3, 35 2],
+        "ke" => [37 17, 35 15, 10 2, 13 2],
+        "eke" => [37 17, 35 4],
+        "le" => [35 83, 15 12, 25 2],
+        "ele" => [15 12, 35 11],
+        "gele" => [15 12, 35 1],
+        "ile" => [35 52, 25 2],
+        "ne" => [35 119],
+        "re" => [35 140, 30 33, 19 10, 16 2, 20 2, 38 2],
+        "ere" => [30 33, 35 18, 16 2],
+        "vere" => [30 33, 35 3],
+        "ire" => [35 96, 19 10, 38 2],
+        "dire" => [35 34],
+        "gire" => [19 10, 35 1],
+        "tire" => [35 47],
+        "öre" => [35 4, 20 2],
+        "üre" => [35 22],
+        "te" => [35 75],
+        "ye" => [35 169, 32 4],
+        "eye" => [35 150],
+        "iye" => [35 8, 32 4],
+        "ze" => [35 12],
+        "çe" => [35 8, 17 4, 5 2],
+        "ğe" => [12 2, 35 2],
+        "şe" => [35 81, 14 2],
+        "düşe" => [14 2, 35 1],
+    } listed {}, true, None),
     // CONVERB_POS_PLAIN_CESINE, from POS_PLAIN_AOR___1SG.
-    relation!(CONVERB_POS_PLAIN_CESINE, [POS_PLAIN_AOR___1SG], [("~im", "~cesIne"), ("~um", "~cEsInE"), ("~üm", "~cEsInE"), ("~ım", "~cEsInE")], rules {
+    relation!(CONVERB_POS_PLAIN_CESINE, [POS_PLAIN_AOR___1SG], [("~im", "~cEsInE"), ("~um", "~cEsInE"), ("~üm", "~cesInE"), ("~ım", "~cEsInE")], rules {
         "" => [3 1129, 0 1006, 1 153, 2 80],
         "im" => [0 1006],
         "um" => [1 153],
@@ -6128,18 +5206,18 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [3 1129],
     } listed {}, true, None),
     // CONVERB_POS_ABIL_KEN, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_POS_ABIL_KEN, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilIrkEn"), ("~cağım", "~bilarken"), ("~cağım", "~bilurken"), ("~cağım", "~bilırken"), ("~ceğim", "~bIlErkEn"), ("~ceğim", "~bIlIrkEn"), ("~ceğim", "~bIlürkEn")], rules {
-        "" => [0 1208, 5 1079, 2 39, 3 29, 1 7, 6 4, 4 2],
+    relation!(CONVERB_POS_ABIL_KEN, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilArkEn"), ("~cağım", "~bilIrkEn"), ("~cağım", "~bilurken"), ("~cağım", "~bilırken"), ("~ceğim", "~bIlErkEn"), ("~ceğim", "~bIlIrkEn"), ("~ceğim", "~bIlürkEn")], rules {
+        "" => [1 1208, 5 1079, 2 39, 3 29, 0 7, 6 4, 4 2],
         "im" => [5 1079, 6 4, 4 2],
         "öreceğim" => [5 3, 6 3],
-        "ım" => [0 1208, 2 39, 3 29, 1 7],
-        "lacağım" => [0 121, 2 34, 3 19],
-        "alacağım" => [0 23, 3 19],
-        "olacağım" => [2 30, 0 8],
-        "ılacağım" => [0 65],
-        "ıracağım" => [0 139],
-        "yacağım" => [0 313, 1 2],
-        "şacağım" => [0 134],
+        "ım" => [1 1208, 2 39, 3 29, 0 7],
+        "lacağım" => [1 121, 2 34, 3 19],
+        "alacağım" => [1 23, 3 19],
+        "olacağım" => [2 30, 1 8],
+        "ılacağım" => [1 65],
+        "ıracağım" => [1 139],
+        "yacağım" => [1 313, 0 2],
+        "şacağım" => [1 134],
     } listed {}, true, None),
     // CONVERB_POS_ABIL_INCE, from POS_PLAIN_FUT___1SG.
     relation!(CONVERB_POS_ABIL_INCE, [POS_PLAIN_FUT___1SG], [("~cağım", "~bilIncE"), ("~ceğim", "~bIlIncE")], rules {
@@ -6178,61 +5256,57 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_POS_ABIL_DOUBLED, from OPTATIVE_POS_ABIL___3SG.
-    relation!(CONVERB_POS_ABIL_DOUBLED, [OPTATIVE_POS_ABIL___3SG], [("~", "~ EdEbIlE"), ("~", "~ IçEbIlE"), ("~", "~ alEbilE"), ("~", "~ aldIrabilE"), ("~", "~ anlEyEbilE"), ("~", "~ atEbilE"), ("~", "~ açEbilE"), ("~", "~ batEbilE"), ("~", "~ bulEbilE"), ("~", "~ bükEbIlE"), ("~", "~ bırEkEbilE"), ("~", "~ dEğEbIlE"), ("~", "~ dIkEbIlE"), ("~", "~ düşEbIlE"), ("~", "~ gElEbIlE"), ("~", "~ gErEbIlE"), ("~", "~ gEçEbIlE"), ("~", "~ gIdEbIlE"), ("~", "~ gIrEbIlE"), ("~", "~ görEbIlE"), ("~", "~ kEsIlEbIlE"), ("~", "~ kalEbilE"), ("~", "~ kasEbilE"), ("~", "~ kaçIrEbilE"), ("~", "~ koyEbilE"), ("~", "~ kılEbilE"), ("~", "~ kırEbilE"), ("~", "~ olEbilE"), ("~", "~ oynEyEbilE"), ("~", "~ sıçEbilE"), ("~", "~ tutEbilE"), ("~", "~ vErEbIlE"), ("~", "~ yIyEbIlE"), ("~", "~ yapEbilE"), ("~", "~ yatEbilE"), ("~", "~ yırtEbilE"), ("~", "~ ~"), ("~", "~ çEkEbIlE"), ("~", "~ çEvIrEbIlE"), ("~", "~ çalEbilE"), ("~", "~ çıkEbilE"), ("~", "~ çıkErEbilE")], rules {
-        "" => [36 1879, 0 186, 31 33, 27 29, 37 17, 2 15, 33 15, 5 12, 14 12, 40 12, 18 10, 41 7, 24 6, 6 5, 16 4, 30 4, 32 4, 8 3, 10 3, 17 3, 21 3, 26 3, 28 3, 1 2, 3 2, 4 2, 7 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 20 2, 22 2, 23 2, 25 2, 29 2, 34 2, 35 2, 38 2, 39 2],
-        "abile" => [36 1103, 27 29, 2 15, 33 15, 5 12, 40 12, 41 7, 24 6, 6 5, 30 4, 8 3, 10 3, 21 3, 26 3, 28 3, 3 2, 4 2, 7 2, 22 2, 23 2, 25 2, 29 2, 34 2, 35 2, 39 2],
-        "kabile" => [36 20, 40 12, 10 3],
-        "çıkabile" => [40 12, 36 1],
-        "labile" => [36 116, 27 29, 2 15, 8 3, 21 3, 25 2, 39 2],
-        "alabile" => [36 21, 2 15, 21 3, 39 2],
-        " alabile" => [2 15],
-        "olabile" => [27 29, 36 8],
-        " olabile" => [27 29],
-        "ulabile" => [36 26, 8 3],
-        "ılabile" => [36 61, 25 2],
-        "nabile" => [36 169],
-        "pabile" => [33 15, 36 9],
-        "rabile" => [36 189, 41 7, 26 3, 3 2, 23 2],
-        "arabile" => [36 23, 41 7],
-        "kırabile" => [26 3, 36 3],
-        "sabile" => [36 9, 22 2],
-        "tabile" => [36 135, 5 12, 30 4, 7 2, 34 2, 35 2],
-        " atabile" => [5 12],
-        "utabile" => [36 10, 30 4],
-        "yabile" => [36 293, 24 6, 28 3, 4 2],
-        "nayabile" => [36 8, 28 3],
-        "oyabile" => [24 6, 36 5],
-        "çabile" => [36 7, 6 5, 29 2],
-        "şabile" => [36 133],
-        "ebile" => [36 776, 0 186, 31 33, 37 17, 14 12, 18 10, 16 4, 32 4, 17 3, 1 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 20 2, 38 2],
-        "debile" => [0 186, 36 54, 17 3],
-        " edebile" => [0 186],
-        "fedebile" => [36 6],
-        "ledebile" => [36 6],
-        "redebile" => [36 9],
-        "idebile" => [17 3, 36 2],
-        "kebile" => [37 17, 36 15, 9 2, 12 2],
-        "ekebile" => [37 17, 36 4],
-        "lebile" => [36 83, 14 12, 20 2],
-        "elebile" => [14 12, 36 11],
-        "nebile" => [36 119],
-        "rebile" => [36 140, 31 33, 18 10, 15 2, 19 2, 38 2],
-        "erebile" => [31 33, 36 18, 15 2],
-        "verebile" => [31 33, 36 3],
-        "irebile" => [36 96, 18 10, 38 2],
-        "girebile" => [18 10, 36 1],
-        "ürebile" => [36 22],
-        "tebile" => [36 75],
-        "yebile" => [36 169, 32 4],
-        "iyebile" => [36 8, 32 4],
-        "çebile" => [36 8, 16 4, 1 2],
-        "ğebile" => [11 2, 36 2],
-        "şebile" => [36 81, 13 2],
-    } listed {
-        32 => [
-            "dayak yiyebile", "kazık yiyebile",
-        ],
-    }, true, None),
+    relation!(CONVERB_POS_ABIL_DOUBLED, [OPTATIVE_POS_ABIL___3SG], [("~", "~ AlabilE"), ("~", "~ AynayEbilE"), ("~", "~ EdEbIlE"), ("~", "~ IçEbIlE"), ("~", "~ aldırabile"), ("~", "~ anlayabile"), ("~", "~ atEbilE"), ("~", "~ açEbilE"), ("~", "~ bAtAbIlE"), ("~", "~ bulAbilE"), ("~", "~ bükEbIlE"), ("~", "~ bırakabile"), ("~", "~ dEğEbIlE"), ("~", "~ dIkEbIlE"), ("~", "~ düşEbIlE"), ("~", "~ gElEbIlE"), ("~", "~ gErEbIlE"), ("~", "~ gEçEbIlE"), ("~", "~ gIdEbIlE"), ("~", "~ gIrEbIlE"), ("~", "~ görEbIlE"), ("~", "~ kAlAbIlE"), ("~", "~ kAsAbIlE"), ("~", "~ kAyabilE"), ("~", "~ kEsIlEbIlE"), ("~", "~ kaçırabile"), ("~", "~ kılAbilE"), ("~", "~ kırEbilE"), ("~", "~ sıçAbilE"), ("~", "~ tutAbilE"), ("~", "~ vErEbIlE"), ("~", "~ yAtAbIlE"), ("~", "~ yIyEbIlE"), ("~", "~ yapEbilE"), ("~", "~ yırtAbilE"), ("~", "~ ~"), ("~", "~ çAlAbIlE"), ("~", "~ çEkEbIlE"), ("~", "~ çEvIrEbIlE"), ("~", "~ çıkEbilE"), ("~", "~ çıkarabile")], rules {
+        "" => [35 1879, 2 186, 0 43, 30 33, 37 17, 33 15, 6 12, 15 12, 39 12, 19 10, 40 7, 23 6, 7 5, 17 4, 29 4, 32 4, 1 3, 9 3, 11 3, 18 3, 21 3, 27 3, 3 2, 4 2, 5 2, 8 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 22 2, 24 2, 25 2, 26 2, 28 2, 31 2, 34 2, 36 2, 38 2],
+        "abile" => [35 1103, 0 43, 33 15, 6 12, 39 12, 40 7, 23 6, 7 5, 29 4, 1 3, 9 3, 11 3, 21 3, 27 3, 4 2, 5 2, 8 2, 22 2, 25 2, 26 2, 28 2, 31 2, 34 2, 36 2],
+        "kabile" => [35 20, 39 12, 11 3],
+        "çıkabile" => [39 12, 35 1],
+        "labile" => [35 116, 0 43, 9 3, 21 3, 26 2, 36 2],
+        " alabile" => [0 14],
+        "kalabile" => [35 7, 21 3],
+        "olabile" => [0 29, 35 8],
+        " olabile" => [0 29],
+        "ulabile" => [35 26, 9 3],
+        "ılabile" => [35 61, 26 2],
+        "nabile" => [35 169],
+        "pabile" => [33 15, 35 9],
+        "rabile" => [35 189, 40 7, 27 3, 4 2, 25 2],
+        "arabile" => [35 23, 40 7],
+        "kırabile" => [27 3, 35 3],
+        "sabile" => [35 9, 22 2],
+        "tabile" => [35 135, 6 12, 29 4, 8 2, 31 2, 34 2],
+        " atabile" => [6 12],
+        "utabile" => [35 10, 29 4],
+        "yabile" => [35 293, 23 6, 1 3, 5 2],
+        "nayabile" => [35 8, 1 3],
+        "oyabile" => [23 6, 35 5],
+        "çabile" => [35 7, 7 5, 28 2],
+        "şabile" => [35 133],
+        "ebile" => [35 776, 2 186, 30 33, 37 17, 15 12, 19 10, 17 4, 32 4, 18 3, 3 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 24 2, 38 2],
+        "debile" => [2 186, 35 54, 18 3],
+        " edebile" => [2 186],
+        "fedebile" => [35 6],
+        "ledebile" => [35 6],
+        "redebile" => [35 9],
+        "idebile" => [18 3, 35 2],
+        "kebile" => [37 17, 35 15, 10 2, 13 2],
+        "ekebile" => [37 17, 35 4],
+        "lebile" => [35 83, 15 12, 24 2],
+        "elebile" => [15 12, 35 11],
+        "nebile" => [35 119],
+        "rebile" => [35 140, 30 33, 19 10, 16 2, 20 2, 38 2],
+        "erebile" => [30 33, 35 18, 16 2],
+        "verebile" => [30 33, 35 3],
+        "irebile" => [35 96, 19 10, 38 2],
+        "girebile" => [19 10, 35 1],
+        "ürebile" => [35 22],
+        "tebile" => [35 75],
+        "yebile" => [35 169, 32 4],
+        "iyebile" => [35 8, 32 4],
+        "çebile" => [35 8, 17 4, 3 2],
+        "ğebile" => [12 2, 35 2],
+        "şebile" => [35 81, 14 2],
+    } listed {}, true, None),
     // CONVERB_POS_ABIL_CESINE, from CONVERB_POS_ABIL_KEN.
     relation!(CONVERB_POS_ABIL_CESINE, [CONVERB_POS_ABIL_KEN], [("~ken", "~cEsInE")], rules {
         "" => [0 2368],
@@ -6242,222 +5316,138 @@ pub(super) static RELATIONS: [Relation<'static>; 927] = [
         "" => [0 2368],
     } listed {}, true, None),
     // CONVERB_NEG_PLAIN_INCE, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONVERB_NEG_PLAIN_INCE,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
+    relation!(CONVERB_NEG_PLAIN_INCE, [INFINITIVE_POS_PLAIN], [("~k", "~yIncE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONVERB_NEG_PLAIN_IP, from INFINITIVE_POS_PLAIN.
     relation!(CONVERB_NEG_PLAIN_IP, [INFINITIVE_POS_PLAIN], [("~k", "~yIp")], rules {
         "" => [0 2368],
     } listed {}, true, None),
     // CONVERB_NEG_PLAIN_ELI, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONVERB_NEG_PLAIN_ELI,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
-    // CONVERB_NEG_PLAIN_ESIYE, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONVERB_NEG_PLAIN_ESIYE,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
-    // CONVERB_NEG_PLAIN_DIKÇE, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONVERB_NEG_PLAIN_DIKÇE,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
-    // CONVERB_NEG_PLAIN_EREK, from INFINITIVE_POS_PLAIN.
-    relation!(
-        CONVERB_NEG_PLAIN_EREK,
-        [INFINITIVE_POS_PLAIN],
-        [],
-        none,
-        true,
-        None
-    ),
-    // CONVERB_NEG_PLAIN_DOUBLED, from OPTATIVE_NEG_PLAIN___3SG.
-    relation!(CONVERB_NEG_PLAIN_DOUBLED, [OPTATIVE_NEG_PLAIN___3SG], [("~", "~ EldIrmayE"), ("~", "~ ElmEyE"), ("~", "~ EnlEmEyE"), ("~", "~ EtmEyE"), ("~", "~ EçmEyE"), ("~", "~ IçmEyE"), ("~", "~ batmEyE"), ("~", "~ bulmEyE"), ("~", "~ bükmEyE"), ("~", "~ bırEkmEyE"), ("~", "~ dEğmEyE"), ("~", "~ dIkmEyE"), ("~", "~ düşmEyE"), ("~", "~ etmeye"), ("~", "~ gElmEyE"), ("~", "~ gErmEyE"), ("~", "~ gEçmEyE"), ("~", "~ gIrmEyE"), ("~", "~ gItmEyE"), ("~", "~ görmEyE"), ("~", "~ kElmEyE"), ("~", "~ kEsIlmEyE"), ("~", "~ kEsmEyE"), ("~", "~ kEçIrmEyE"), ("~", "~ koymEyE"), ("~", "~ kılmEyE"), ("~", "~ kırmEyE"), ("~", "~ olmEyE"), ("~", "~ oynEmEyE"), ("~", "~ sıçmEyE"), ("~", "~ tutmEyE"), ("~", "~ vErmEyE"), ("~", "~ yEpmEyE"), ("~", "~ yEtmEyE"), ("~", "~ yemeye"), ("~", "~ yırtmEyE"), ("~", "~ ~"), ("~", "~ çElmEyE"), ("~", "~ çEvIrmEyE"), ("~", "~ çekmeye"), ("~", "~ çıkErmEyE"), ("~", "~ çıkmEyE")], rules {
-        "" => [36 1879, 13 186, 31 33, 27 29, 39 17, 1 15, 32 15, 3 12, 14 12, 41 12, 17 10, 40 7, 24 6, 4 5, 16 4, 30 4, 34 4, 7 3, 9 3, 18 3, 20 3, 26 3, 28 3, 0 2, 2 2, 5 2, 6 2, 8 2, 10 2, 11 2, 12 2, 15 2, 19 2, 21 2, 22 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2, 38 2],
-        "a" => [36 1103, 27 29, 1 15, 32 15, 3 12, 41 12, 40 7, 24 6, 4 5, 30 4, 7 3, 9 3, 20 3, 26 3, 28 3, 0 2, 2 2, 6 2, 22 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2],
-        "amaya" => [36 258, 28 3, 2 2],
-        "namaya" => [36 8, 28 3],
-        "kmaya" => [36 20, 41 12, 9 3],
-        "çıkmaya" => [41 12, 36 1],
-        "lmaya" => [36 116, 27 29, 1 15, 7 3, 20 3, 25 2, 37 2],
-        "almaya" => [36 21, 1 15, 20 3, 37 2],
-        " almaya" => [1 15],
-        "olmaya" => [27 29, 36 8],
-        " olmaya" => [27 29],
-        "ulmaya" => [36 26, 7 3],
-        "ılmaya" => [36 61, 25 2],
-        "nmaya" => [36 169],
-        "pmaya" => [32 15, 36 9],
-        " yapmaya" => [32 15],
-        "rmaya" => [36 189, 40 7, 26 3, 0 2, 23 2],
-        "armaya" => [36 23, 40 7],
-        "ıkarmaya" => [40 7, 36 1],
-        "kırmaya" => [26 3, 36 3],
-        "smaya" => [36 9, 22 2],
-        "tmaya" => [36 136, 3 12, 30 4, 6 2, 33 2, 35 2],
-        " atmaya" => [3 12],
-        "utmaya" => [36 10, 30 4],
-        "ymaya" => [36 13, 24 6],
-        "çmaya" => [36 7, 4 5, 29 2],
-        "şmaya" => [36 133],
-        "e" => [36 776, 13 186, 31 33, 39 17, 14 12, 17 10, 16 4, 34 4, 18 3, 5 2, 8 2, 10 2, 11 2, 12 2, 15 2, 19 2, 21 2, 38 2],
-        "emeye" => [36 152, 34 4],
-        "yemeye" => [34 4, 36 1],
-        "kmeye" => [39 17, 36 15, 8 2, 11 2],
-        "ekmeye" => [39 17, 36 4],
-        "lmeye" => [36 83, 14 12, 21 2],
-        "elmeye" => [14 12, 36 11],
-        " gelmeye" => [14 12],
-        "ilmeye" => [36 52, 21 2],
-        "nmeye" => [36 119],
-        "rmeye" => [36 140, 31 33, 17 10, 15 2, 19 2, 38 2],
-        "ermeye" => [31 33, 36 18, 15 2],
-        "vermeye" => [31 33, 36 3],
-        "irmeye" => [36 96, 17 10, 38 2],
-        "girmeye" => [17 10, 36 1],
-        "ürmeye" => [36 22],
-        "tmeye" => [13 186, 36 128, 18 3],
-        "etmeye" => [13 186, 36 76],
-        " etmeye" => [13 186],
-        "fetmeye" => [36 6],
-        "letmeye" => [36 20],
-        "retmeye" => [36 13],
-        "itmeye" => [36 12, 18 3],
-        "ltmeye" => [36 8],
-        "rtmeye" => [36 23],
-        "ütmeye" => [36 8],
-        "çmeye" => [36 8, 16 4, 5 2],
-        "ğmeye" => [10 2, 36 2],
-        "şmeye" => [36 81, 12 2],
+    relation!(CONVERB_NEG_PLAIN_ELI, [INFINITIVE_POS_PLAIN], [("~k", "~yElI")], rules {
+        "" => [0 2368],
     } listed {}, true, None),
-    // CONVERB_NEG_PLAIN_CESINE, from INFINITIVE_POS_PLAIN.
+    // CONVERB_NEG_PLAIN_ESIYE, from INFINITIVE_POS_PLAIN.
+    relation!(CONVERB_NEG_PLAIN_ESIYE, [INFINITIVE_POS_PLAIN], [("~k", "~yEsIyE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
+    // CONVERB_NEG_PLAIN_DIKÇE, from INFINITIVE_POS_PLAIN.
+    relation!(CONVERB_NEG_PLAIN_DIKÇE, [INFINITIVE_POS_PLAIN], [("~k", "~dIkçE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
+    // CONVERB_NEG_PLAIN_EREK, from INFINITIVE_POS_PLAIN.
+    relation!(CONVERB_NEG_PLAIN_EREK, [INFINITIVE_POS_PLAIN], [("~k", "~yErEk")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
+    // CONVERB_NEG_PLAIN_DOUBLED, from OPTATIVE_NEG_PLAIN___3SG.
     relation!(
-        CONVERB_NEG_PLAIN_CESINE,
-        [INFINITIVE_POS_PLAIN],
+        CONVERB_NEG_PLAIN_DOUBLED,
+        [OPTATIVE_NEG_PLAIN___3SG],
         [],
         none,
         true,
         None
     ),
+    // CONVERB_NEG_PLAIN_CESINE, from INFINITIVE_POS_PLAIN.
+    relation!(CONVERB_NEG_PLAIN_CESINE, [INFINITIVE_POS_PLAIN], [("~k", "~zcEsInE")], rules {
+        "" => [0 2368],
+    } listed {}, true, None),
     // CONVERB_NEG_ABIL_KEN, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_KEN, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzken"), ("~ceğim", "~mezken")], rules {
+    relation!(CONVERB_NEG_ABIL_KEN, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzken"), ("~ceğim", "~mEzkEn")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_INCE, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_INCE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIncE"), ("~ceğim", "~meyInce")], rules {
+    relation!(CONVERB_NEG_ABIL_INCE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIncE"), ("~ceğim", "~mEyIncE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_IP, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_IP, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIp"), ("~ceğim", "~meyIp")], rules {
+    relation!(CONVERB_NEG_ABIL_IP, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyIp"), ("~ceğim", "~mEyIp")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_ELI, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_ELI, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElI"), ("~ceğim", "~meyelI")], rules {
+    relation!(CONVERB_NEG_ABIL_ELI, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyElI"), ("~ceğim", "~mEyElI")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_ESIYE, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_ESIYE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsIyE"), ("~ceğim", "~meyesIye")], rules {
+    relation!(CONVERB_NEG_ABIL_ESIYE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyEsIyE"), ("~ceğim", "~mEyEsIyE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_DIKÇE, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_DIKÇE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIkça"), ("~ceğim", "~medIkçE")], rules {
+    relation!(CONVERB_NEG_ABIL_DIKÇE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEdIkçE"), ("~ceğim", "~mEdIkçE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_EREK, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_EREK, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyErEk"), ("~ceğim", "~meyerek")], rules {
+    relation!(CONVERB_NEG_ABIL_EREK, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEyErEk"), ("~ceğim", "~mEyErEk")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],
     } listed {}, true, None),
     // CONVERB_NEG_ABIL_DOUBLED, from OPTATIVE_NEG_ABIL___3SG.
-    relation!(CONVERB_NEG_ABIL_DOUBLED, [OPTATIVE_NEG_ABIL___3SG], [("~", "~ EdEmEyE"), ("~", "~ ElEmEyE"), ("~", "~ EldIramEyE"), ("~", "~ EnlEyEmEyE"), ("~", "~ EtEmEyE"), ("~", "~ EçEmEyE"), ("~", "~ IçEmEyE"), ("~", "~ batEmEyE"), ("~", "~ bulEmEyE"), ("~", "~ bükEmEyE"), ("~", "~ bırEkEmEyE"), ("~", "~ dEğEmEyE"), ("~", "~ dIkEmEyE"), ("~", "~ düşEmEyE"), ("~", "~ gElEmEyE"), ("~", "~ gErEmEyE"), ("~", "~ gEçEmEyE"), ("~", "~ gIdEmEyE"), ("~", "~ gIrEmEyE"), ("~", "~ görEmEyE"), ("~", "~ kElEmEyE"), ("~", "~ kEsEmEyE"), ("~", "~ kEsIlEmEyE"), ("~", "~ kEçIrEmEyE"), ("~", "~ koyEmEyE"), ("~", "~ kılEmEyE"), ("~", "~ kırEmEyE"), ("~", "~ olEmEyE"), ("~", "~ oynEyEmEyE"), ("~", "~ sıçEmEyE"), ("~", "~ tutEmEyE"), ("~", "~ vErEmEyE"), ("~", "~ yEpEmEyE"), ("~", "~ yEtEmEyE"), ("~", "~ yIyEmEyE"), ("~", "~ yırtEmEyE"), ("~", "~ ~"), ("~", "~ çElEmEyE"), ("~", "~ çEvIrEmEyE"), ("~", "~ çekemeye"), ("~", "~ çıkEmEyE"), ("~", "~ çıkErEmEyE")], rules {
-        "" => [36 1879, 0 186, 31 33, 27 29, 39 17, 1 15, 32 15, 4 12, 14 12, 40 12, 18 10, 41 7, 24 6, 5 5, 16 4, 30 4, 34 4, 8 3, 10 3, 17 3, 20 3, 26 3, 28 3, 2 2, 3 2, 6 2, 7 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 21 2, 22 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2, 38 2],
-        "a" => [36 1103, 27 29, 1 15, 32 15, 4 12, 40 12, 41 7, 24 6, 5 5, 30 4, 8 3, 10 3, 20 3, 26 3, 28 3, 2 2, 3 2, 7 2, 21 2, 23 2, 25 2, 29 2, 33 2, 35 2, 37 2],
-        "kamaya" => [36 20, 40 12, 10 3],
+    relation!(CONVERB_NEG_ABIL_DOUBLED, [OPTATIVE_NEG_ABIL___3SG], [("~", "~ AlamEyE"), ("~", "~ EdEmEyE"), ("~", "~ IçEmEyE"), ("~", "~ alamaya"), ("~", "~ aldıramaya"), ("~", "~ anlayamaya"), ("~", "~ atamaya"), ("~", "~ açamaya"), ("~", "~ batamaya"), ("~", "~ bulEmAyA"), ("~", "~ bükEmEyE"), ("~", "~ bırakamaya"), ("~", "~ dEğEmEyE"), ("~", "~ dIkEmEyE"), ("~", "~ düşEmEyE"), ("~", "~ gElEmEyE"), ("~", "~ gErEmEyE"), ("~", "~ gEçEmEyE"), ("~", "~ gIdEmEyE"), ("~", "~ gIrEmEyE"), ("~", "~ görEmEyE"), ("~", "~ kAyamEyE"), ("~", "~ kEsIlEmEyE"), ("~", "~ kalamaya"), ("~", "~ kasamaya"), ("~", "~ kaçıramaya"), ("~", "~ kılEmAyA"), ("~", "~ kırEmEyE"), ("~", "~ oynayamaya"), ("~", "~ sıçEmAyA"), ("~", "~ tutEmAyA"), ("~", "~ vErEmEyE"), ("~", "~ yIyEmEyE"), ("~", "~ yapamaya"), ("~", "~ yatamaya"), ("~", "~ yırtEmAyA"), ("~", "~ ~"), ("~", "~ çEkEmEyE"), ("~", "~ çEvIrEmEyE"), ("~", "~ çalamaya"), ("~", "~ çıkEmEyE"), ("~", "~ çıkaramaya")], rules {
+        "" => [36 1879, 1 186, 31 33, 0 29, 37 17, 3 15, 33 15, 6 12, 15 12, 40 12, 19 10, 41 7, 21 6, 7 5, 17 4, 30 4, 32 4, 9 3, 11 3, 18 3, 23 3, 27 3, 28 3, 2 2, 4 2, 5 2, 8 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 22 2, 24 2, 25 2, 26 2, 29 2, 34 2, 35 2, 38 2, 39 2],
+        "a" => [36 1103, 0 29, 3 15, 33 15, 6 12, 40 12, 41 7, 21 6, 7 5, 30 4, 9 3, 11 3, 23 3, 27 3, 28 3, 4 2, 5 2, 8 2, 24 2, 25 2, 26 2, 29 2, 34 2, 35 2, 39 2],
+        "kamaya" => [36 20, 40 12, 11 3],
         "çıkamaya" => [40 12, 36 1],
-        "lamaya" => [36 116, 27 29, 1 15, 8 3, 20 3, 25 2, 37 2],
-        "alamaya" => [36 21, 1 15, 20 3, 37 2],
-        " alamaya" => [1 15],
-        "olamaya" => [27 29, 36 8],
-        " olamaya" => [27 29],
-        "ulamaya" => [36 26, 8 3],
-        "ılamaya" => [36 61, 25 2],
+        "lamaya" => [36 116, 0 29, 3 15, 9 3, 23 3, 26 2, 39 2],
+        "alamaya" => [36 21, 3 15, 23 3, 39 2],
+        " alamaya" => [3 15],
+        "olamaya" => [0 29, 36 8],
+        " olamaya" => [0 29],
+        "ulamaya" => [36 26, 9 3],
+        "ılamaya" => [36 61, 26 2],
         "namaya" => [36 169],
-        "pamaya" => [32 15, 36 9],
-        "ramaya" => [36 189, 41 7, 26 3, 2 2, 23 2],
+        "pamaya" => [33 15, 36 9],
+        "ramaya" => [36 189, 41 7, 27 3, 4 2, 25 2],
         "aramaya" => [36 23, 41 7],
-        "kıramaya" => [26 3, 36 3],
-        "samaya" => [36 9, 21 2],
-        "tamaya" => [36 135, 4 12, 30 4, 7 2, 33 2, 35 2],
-        " atamaya" => [4 12],
+        "kıramaya" => [27 3, 36 3],
+        "samaya" => [36 9, 24 2],
+        "tamaya" => [36 135, 6 12, 30 4, 8 2, 34 2, 35 2],
+        " atamaya" => [6 12],
         "utamaya" => [36 10, 30 4],
-        "yamaya" => [36 293, 24 6, 28 3, 3 2],
+        "yamaya" => [36 293, 21 6, 28 3, 5 2],
         "nayamaya" => [36 8, 28 3],
-        "oyamaya" => [24 6, 36 5],
-        "çamaya" => [36 7, 5 5, 29 2],
+        "oyamaya" => [21 6, 36 5],
+        "çamaya" => [36 7, 7 5, 29 2],
         "şamaya" => [36 133],
-        "e" => [36 776, 0 186, 31 33, 39 17, 14 12, 18 10, 16 4, 34 4, 17 3, 6 2, 9 2, 11 2, 12 2, 13 2, 15 2, 19 2, 22 2, 38 2],
-        "demeye" => [0 186, 36 54, 17 3],
-        " edemeye" => [0 186],
+        "e" => [36 776, 1 186, 31 33, 37 17, 15 12, 19 10, 17 4, 32 4, 18 3, 2 2, 10 2, 12 2, 13 2, 14 2, 16 2, 20 2, 22 2, 38 2],
+        "demeye" => [1 186, 36 54, 18 3],
+        " edemeye" => [1 186],
         "fedemeye" => [36 6],
         "ledemeye" => [36 6],
         "redemeye" => [36 9],
-        "idemeye" => [17 3, 36 2],
-        "kemeye" => [39 17, 36 15, 9 2, 12 2],
-        "ekemeye" => [39 17, 36 4],
-        "lemeye" => [36 83, 14 12, 22 2],
-        "elemeye" => [14 12, 36 11],
+        "idemeye" => [18 3, 36 2],
+        "kemeye" => [37 17, 36 15, 10 2, 13 2],
+        "ekemeye" => [37 17, 36 4],
+        "lemeye" => [36 83, 15 12, 22 2],
+        "elemeye" => [15 12, 36 11],
         "nemeye" => [36 119],
-        "remeye" => [36 140, 31 33, 18 10, 15 2, 19 2, 38 2],
-        "eremeye" => [31 33, 36 18, 15 2],
+        "remeye" => [36 140, 31 33, 19 10, 16 2, 20 2, 38 2],
+        "eremeye" => [31 33, 36 18, 16 2],
         "veremeye" => [31 33, 36 3],
-        "iremeye" => [36 96, 18 10, 38 2],
-        "giremeye" => [18 10, 36 1],
+        "iremeye" => [36 96, 19 10, 38 2],
+        "giremeye" => [19 10, 36 1],
         "üremeye" => [36 22],
         "temeye" => [36 75],
-        "yemeye" => [36 169, 34 4],
-        "iyemeye" => [36 8, 34 4],
-        "çemeye" => [36 8, 16 4, 6 2],
-        "ğemeye" => [11 2, 36 2],
-        "şemeye" => [36 81, 13 2],
-    } listed {
-        34 => [
-            "dayak yiyemeye", "kazık yiyemeye",
-        ],
-    }, true, None),
+        "yemeye" => [36 169, 32 4],
+        "iyemeye" => [36 8, 32 4],
+        "çemeye" => [36 8, 17 4, 2 2],
+        "ğemeye" => [12 2, 36 2],
+        "şemeye" => [36 81, 14 2],
+    } listed {}, true, None),
     // CONVERB_NEG_ABIL_CESINE, from POS_PLAIN_FUT___1SG.
-    relation!(CONVERB_NEG_ABIL_CESINE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzcEsInE"), ("~ceğim", "~mezcesIne")], rules {
+    relation!(CONVERB_NEG_ABIL_CESINE, [POS_PLAIN_FUT___1SG], [("~cağım", "~mEzcEsInE"), ("~ceğim", "~mEzcEsInE")], rules {
         "" => [0 1283, 1 1085],
         "im" => [1 1085],
         "ım" => [0 1283],

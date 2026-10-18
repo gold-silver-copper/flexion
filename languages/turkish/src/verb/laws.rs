@@ -16,37 +16,26 @@ use flexion::sound_law::Program;
 pub(super) const LAWS: Program<'static> = flexion::laws! {
     classes {}
     agreements {
-        law0 = [("E", "a") => "a", ("E", "b") => "e", ("E", "d") => "e", ("E", "g") => "e", ("E", "i") => "e", ("E", "o") => "a", ("E", "u") => "a", ("E", "v") => "e", ("E", "ü") => "e", ("E", "ı") => "a", ("E", "") => "e"];
+        law0 = [("E", " ") => "e", ("E", "a") => "a", ("E", "e") => "e", ("E", "i") => "e", ("E", "o") => "a", ("E", "u") => "a", ("E", "ı") => "a", ("E", "") => "e"];
         law1 = [("I", " ") => "i", ("I", "a") => "ı", ("I", "e") => "i", ("I", "i") => "i", ("I", "o") => "u", ("I", "u") => "u", ("I", "ö") => "ü", ("I", "ü") => "ü", ("I", "ı") => "ı", ("I", "") => "i"];
+        law2 = [("A", "o") => "o", ("A", "u") => "a", ("A", "") => "a"];
     }
     rules {
-        // E → a after a, o, u, ı; e after b, d, g, i, v, ü, none (the nearest of a, b, d, g, i, o, u, v, ü, ı before it, as written): 2,368 words (ekmek, oynamak, silmek, ezberlemek), 7,470 forms wrong.
-        law0[iterative]: "{x:[E]}" => "{x|law0[t]}" / "{t:[a|b|d|g|i|o|u|v|ü|ı]?}{g:![a|b|d|g|i|o|u|v|ü|ı]*}" _ "";
+        // E → e after  , e, i, none; a after a, o, u, ı (the nearest of  , a, e, i, o, u, ı before it, as written): 2,368 words (ekmek, oynamak, silmek, ezberlemek), 2,548 forms wrong.
+        law0[iterative]: "{x:[E]}" => "{x|law0[t]}" / "{t:[ |a|e|i|o|u|ı]?}{g:![ |a|e|i|o|u|ı]*}" _ "";
         // I → i after  , e, i, none; ı after a, ı; u after o, u; ü after ö, ü (the nearest of  , a, e, i, o, u, ö, ü, ı before it, as written): 2,368 words (ekmek, oynamak, silmek, ezberlemek), 24 forms wrong.
         law1[iterative]: "{x:[I]}" => "{x|law1[t]}" / "{t:[ |a|e|i|o|u|ö|ü|ı]?}{g:![ |a|e|i|o|u|ö|ü|ı]*}" _ "";
-        // [ş|t|k|ç|p|s]+d → +t: 152 words (tüketmek, erişmek, fotoğraf çekmek, ilerletmek), 0 forms wrong.
-        law2: "{x:[ş|t|k|ç|p|s]}+d" => "{x}+t";
-        // [y|a|r|l|ğ|z|n|ı]+tı → +dı: 79 words (yazmak, almak, acımak, kaymak), 0 forms wrong.
-        law3: "{x:[y|a|r|l|ğ|z|n|ı]}+tı" => "{x}+dı";
-        // [z|r|n|l|v|y|m|e|ğ|d]+ti → +di: 28 words (silmek, yenmek, binmek, ermek), 0 forms wrong.
-        law4: "{x:[z|r|n|l|v|y|m|e|ğ|d]}+ti" => "{x}+di";
-        // [y|r|ğ|n|m|l|z|u]+tu → +du: 63 words (kurmak, donmak, sormak, duymak), 0 forms wrong.
-        law5: "{x:[y|r|ğ|n|m|l|z|u]}+tu" => "{x}+du";
-        // [z|r|y|v|n|l|m]+tü → +dü: 22 words (gülmek, övmek, dönmek, sürmek), 0 forms wrong.
-        law6: "{x:[z|r|y|v|n|l|m]}+tü" => "{x}+dü";
-        // [a|ı|u]+a → +ya: 13 words (acımak, ağrımak, tanımak, taşımak), 0 forms wrong.
-        law7: "{x:[a|ı|u]}+a" => "{x}+ya";
-        // [a|ı]+ı → +: 13 words (acımak, ağrımak, tanımak, taşımak), 0 forms wrong.
-        law8: "{x:[a|ı]}+ı" => "{x}+";
+        // A → o after o; a after u, none (the nearest of o, u before it, as written): 56 words (pişman olmak, tıraş olmak, ıslık çalmak, kış uykusuna yatmak), 0 forms wrong.
+        law2[iterative]: "{x:[A]}" => "{x|law2[t]}" / "{t:[o|u]?}{g:![o|u]*}" _ "";
+        // [ş|t|k|p|ç|s]+d → +t: 470 words (ekmek, bitmek, vazgeçmek, yapışmak), 0 forms wrong.
+        law3: "{x:[ş|t|k|p|ç|s]}+d" => "{x}+t";
+        // [r|l|y|ğ|z|n|v|ı]+tı → +dı: 29 words (yazmak, kaymak, anmak, saymak), 0 forms wrong.
+        law4: "{x:[r|l|y|ğ|z|n|v|ı]}+tı" => "{x}+dı";
+        // [y|r|ğ|n|m|l|z|v|u]+tu → +du: 34 words (kurmak, donmak, sormak, duymak), 0 forms wrong.
+        law5: "{x:[y|r|ğ|n|m|l|z|v|u]}+tu" => "{x}+du";
         // [s|ç|ğ]+ır → +ar: 18 words (basmak, asmak, kısmak, tırsmak), 0 forms wrong.
-        law9: "{x:[s|ç|ğ]}+ır" => "{x}+ar";
+        law6: "{x:[s|ç|ğ]}+ır" => "{x}+ar";
         // z+ir → z+er: 7 words (çizmek, gezmek, altını çizmek, dizmek), 0 forms wrong.
-        law10: "z+ir" => "z+er";
-        // en+a → en+e: 5 words (sahnelenmek, yelpazelenmek, lanetlenmek, taharetlenmek), 0 forms wrong.
-        law11: "en+a" => "en+e";
-        // en+ma → en+me: 5 words (sahnelenmek, yelpazelenmek, lanetlenmek, taharetlenmek), 0 forms wrong.
-        law12: "en+ma" => "en+me";
-        // en+sa → en+se: 5 words (sahnelenmek, yelpazelenmek, lanetlenmek, taharetlenmek), 0 forms wrong.
-        law13: "en+sa" => "en+se";
+        law7: "z+ir" => "z+er";
     }
 };

@@ -1,29 +1,37 @@
 //! Words a word ending in one inflects as, its front kept (German `Fahrschein`
-//! as `Schein`): those whose own compounds in the dictionary do.
+//! as `Schein`): those whose own compounds in the dictionary do, listed or not (one not
+//! listed inflects as a word of its own, its last member deciding its harmony).
 
 use std::borrow::Cow;
 
-/// 21 words.
+/// 28 words.
 pub(super) static HEADS: &[Cow<'static, str>] = flexion::words![
     "βασισ",
+    "βατοσ",
     "γη",
     "γνωσισ",
     "δειξισ",
     "δοσισ",
     "θεσισ",
     "κλησισ",
+    "κοποσ",
     "κρισισ",
     "λεξισ",
     "ληξισ",
     "ληψισ",
     "μαντισ",
     "παραταξισ",
+    "πατοσ",
     "πτωσισ",
+    "σκοποσ",
     "σταξισ",
     "σχεσισ",
     "ταξισ",
     "τασισ",
+    "τροποσ",
+    "φθογγοσ",
     "φρονησισ",
     "φυσισ",
     "χρισισ",
+    "χρυσοσ",
 ];

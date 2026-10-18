@@ -6,6 +6,7 @@
 pub mod accent;
 mod heads;
 mod irregular;
+mod laws;
 mod paradigms;
 mod relations;
 mod rules;
@@ -62,7 +63,7 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
         circumflex: Cow::Borrowed(&accent::CIRCUMFLEX),
         long_finals: Cow::Borrowed(&accent::LONG_FINALS),
     }),
-    laws: None,
+    laws: Some(laws::LAWS),
     spellings: Cow::Borrowed(spellings::SPELLINGS),
     marks: Some(flexion::Marks {
         rules: crate::marks::MARKS,
@@ -75,8 +76,8 @@ pub static GRAMMAR: Grammar<'static, Declension, accent::AccentClass> = Grammar 
     smoothing: 2.0,
     sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.96263015,
-        unsettled: 1.0,
+        regular: 0.9683854,
+        unsettled: 0.973754,
         unattested: 1.0,
     },
 };
@@ -89,28 +90,12 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Case::*;
-        use crate::Number::*;
-        let cell = match self {
-            Cell::Form(Nominative, Singular) => cell::NOM_SG,
-            Cell::Form(Nominative, Dual) => cell::NOM_DU,
-            Cell::Form(Nominative, Plural) => cell::NOM_PL,
-            Cell::Form(Genitive, Singular) => cell::GEN_SG,
-            Cell::Form(Genitive, Dual) => cell::GEN_DU,
-            Cell::Form(Genitive, Plural) => cell::GEN_PL,
-            Cell::Form(Dative, Singular) => cell::DAT_SG,
-            Cell::Form(Dative, Dual) => cell::DAT_DU,
-            Cell::Form(Dative, Plural) => cell::DAT_PL,
-            Cell::Form(Accusative, Singular) => cell::ACC_SG,
-            Cell::Form(Accusative, Dual) => cell::ACC_DU,
-            Cell::Form(Accusative, Plural) => cell::ACC_PL,
-            Cell::Form(Vocative, Singular) => cell::VOC_SG,
-            Cell::Form(Vocative, Dual) => cell::VOC_DU,
-            Cell::Form(Vocative, Plural) => cell::VOC_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, number) => cell::NOM_SG as usize + case as usize * 3 + number as usize,
+        }
     }
 }
 

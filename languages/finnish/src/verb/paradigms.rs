@@ -4,7 +4,7 @@
 //! letters between them that other forms may drop or change.
 //! Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `olisimm% ~taneet`, of
-//! `puhaltaa`), as the copy laws in `laws.rs` change it. A capital (`A`, `T`, `U`, `O`, `V`)
+//! `puhaltaa`), as the copy laws in `laws.rs` change it. A capital (`U`, `A`, `O`, `Ä`, `V`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it. A `ˇ` ends
 //! the patterns of a conjugation whose stems alternate: the laws in `laws.rs`
@@ -322,7 +322,7 @@ pub enum Conjugation {
     Voida,
     /// Like `hiihtää`: 892 words.
     Hiihtää,
-    /// Like `ohjata`: 763 words.
+    /// Like `ohjata`: 771 words.
     Ohjata,
     /// Like `tulla`: 667 words.
     Tulla,
@@ -346,19 +346,19 @@ pub enum Conjugation {
     Kipata,
     /// Like `nousta`: 185 words.
     Nousta,
-    /// Like `kuoria`: 157 words.
+    /// Like `kuoria`: 158 words.
     Kuoria,
     /// Like `johtaa`: 149 words.
     Johtaa,
+    /// Like `määrätä`: 140 words.
+    Määrätä,
     /// Like `päästä`: 139 words.
     Päästä,
     /// Like `leikata`: 137 words.
     Leikata,
     /// Like `pyöriä`: 136 words.
     Pyöriä,
-    /// Like `määrätä`: 136 words.
-    Määrätä,
-    /// Like `hajota`: 132 words.
+    /// Like `hajota`: 124 words.
     Hajota,
     /// Like `katsoa`: 88 words.
     Katsoa,
@@ -374,20 +374,20 @@ pub enum Conjugation {
     Parata,
     /// Like `murtaa`: 51 words.
     Murtaa,
-    /// Like `yletä`: 46 words.
-    Yletä,
     /// Like `tuomita`: 45 words.
     Tuomita,
     /// Like `asioida`: 44 words.
     Asioida,
+    /// Like `yletä`: 42 words.
+    Yletä,
     /// Like `hävitä`: 41 words.
     Hävitä,
     /// Like `kiertää`: 41 words.
     Kiertää,
+    /// Like `aueta`: 39 words.
+    Aueta,
     /// Like `liukua`: 36 words.
     Liukua,
-    /// Like `aueta`: 36 words.
-    Aueta,
     /// Like `sotia`: 34 words.
     Sotia,
     /// Like `pelehtiä`: 34 words.
@@ -402,7 +402,7 @@ pub enum Conjugation {
     Puhaltaa,
     /// Like `ajaa`: 27 words.
     Ajaa,
-    /// Like `hankkia`: 26 words.
+    /// Like `hankkia`: 25 words.
     Hankkia,
     /// Like `sitoa`: 24 words.
     Sitoa,
@@ -500,8 +500,6 @@ pub enum Conjugation {
     Takuta,
     /// Like `myydä`: 3 words.
     Myydä,
-    /// Like `lotota`: 3 words.
-    Lotota,
     /// Like `nylkeä`: 3 words.
     Nylkeä,
     /// Like `lappaa`: 3 words.
@@ -524,7 +522,7 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 103] = [
+    pub const ALL: [Conjugation; 102] = [
         Conjugation::Polttaa,
         Conjugation::Purkautua,
         Conjugation::Voida,
@@ -543,10 +541,10 @@ impl Conjugation {
         Conjugation::Nousta,
         Conjugation::Kuoria,
         Conjugation::Johtaa,
+        Conjugation::Määrätä,
         Conjugation::Päästä,
         Conjugation::Leikata,
         Conjugation::Pyöriä,
-        Conjugation::Määrätä,
         Conjugation::Hajota,
         Conjugation::Katsoa,
         Conjugation::Pätevöidä,
@@ -555,13 +553,13 @@ impl Conjugation {
         Conjugation::Hylätä,
         Conjugation::Parata,
         Conjugation::Murtaa,
-        Conjugation::Yletä,
         Conjugation::Tuomita,
         Conjugation::Asioida,
+        Conjugation::Yletä,
         Conjugation::Hävitä,
         Conjugation::Kiertää,
-        Conjugation::Liukua,
         Conjugation::Aueta,
+        Conjugation::Liukua,
         Conjugation::Sotia,
         Conjugation::Pelehtiä,
         Conjugation::Paeta,
@@ -618,7 +616,6 @@ impl Conjugation {
         Conjugation::Häipyä,
         Conjugation::Takuta,
         Conjugation::Myydä,
-        Conjugation::Lotota,
         Conjugation::Nylkeä,
         Conjugation::Lappaa,
         Conjugation::Pinkoa,
@@ -645,7 +642,7 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 102] = [
     // Polttaa: 1,745 words (kirjoittaa, ottaa, erottaa, muuttaa, soittaa, maattaa). Like Nostaa with `ˇ` after each pattern.
     conjugation!("polttaa", 1745, "~aaˇ", like Nostaa with "ˇ";
     ),
@@ -663,11 +660,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Hiihtää: 892 words (hiihtää, heittää, käyttää, pitää, jättää, näyttää). Like Tiivistää with `ˇ` after each pattern.
     conjugation!("hiihtää", 892, "~ääˇ", like Tiivistää with "ˇ";
     ),
-    // Ohjata: 763 words (seurata, vastata, sahata, pelata, testata, googlata).
-    conjugation!("ohjata", 763, "~ta";
+    // Ohjata: 771 words (seurata, vastata, sahata, pelata, testata, googlata).
+    conjugation!("ohjata", 771, "~ta";
     stem indicative_pres_aff_1sg: "~- like ohjata";
     stem indicative_pres_aff_3sg: "~A- like ohjata";
-    stem participle_past_pass: "~- like ohjata";
+    stem participle_past_pass: "~t- like ohjata";
     stem indicative_past_aff_3sg: "~- like ohjata";
     stem lemma: "~- like ohjata";
     ),
@@ -706,11 +703,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem participle_past_pass: "~- like epäillä";
     stem lemma: "~- like epäillä";
     ),
-    // Tiivistää: 237 words (pyydystää, estää, pistää, elää, äänestää, yhdistää). Like Nostaa, except in 6 cells: infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, long_infinitive _3.
+    // Tiivistää: 237 words (pyydystää, estää, pistää, elää, äänestää, yhdistää). Like Nostaa.
     conjugation!("tiivistää", 237, "~ää", like Nostaa;
     stem indicative_pres_aff_3sg: "~- like tiivistää";
-    infinitive: "~ää";
-    long_infinitive: "~ääkseni", "~ääksesi", "~ääksemme", "~ääksenne", "~ääkseen|~ääksensA";
+    stem lemma: "~- like tiivistää";
     ),
     // Käsitellä: 211 words (ihmetellä, teititellä, näytellä, vältellä, vietellä, äännellä). Like Epäillä with `ˇ` after each pattern.
     conjugation!("käsitellä", 211, "~läˇ", like Epäillä with "ˇ";
@@ -750,19 +746,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     third_infinitive_passive: "~tamAn";
     participle: _, "~tavA", "~sUt", _, _, _;
     ),
-    // Kuoria: 157 words (potkia, tutkia, nussia, toimia, funtsia, matkia). Like Sammua, except in 1 cell: pres_aff _3sg.
-    conjugation!("kuoria", 157, "~a", like Sammua;
+    // Kuoria: 158 words (potkia, tutkia, nussia, toimia, funtsia, matkia). Like Sammua.
+    conjugation!("kuoria", 158, "~a", like Sammua;
     stem indicative_pres_aff_1sg: "~- like voida";
+    stem indicative_pres_aff_3sg: "~- like kuoria";
     stem indicative_past_aff_3sg: "~- like kuoria";
-    pres_aff: _, _, "~V", _, _, _, _;
     ),
     // Johtaa: 149 words (huutaa, suomentaa, ruotsintaa, parantaa, oksentaa, rakentaa).
     conjugation!("johtaa", 149, "~taa";
     stem indicative_pres_aff_1sg: "~d- like nostaa";
-    stem indicative_pres_aff_3sg: "~t- like johtaa";
+    stem indicative_pres_aff_3sg: "~t- like nostaa";
     stem participle_past_pass: "~det- like nostaa";
     stem indicative_past_aff_3sg: "~t- like nostaa";
     stem lemma: "~t- like nostaa";
+    ),
+    // Määrätä: 140 words (kerjätä, levätä, värjätä, herätä, löyhkätä, lämmetä). Like Ohjata, except in 7 cells: pres_neg pass, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
+    conjugation!("määrätä", 140, "~tä", like Ohjata;
+    pres_neg: _, _, _, _, _, _, "ei ~tä";
+    infinitive: "~tä";
+    long_infinitive: "~täkseni", "~täksesi", "~täksemme", "~täksenne", "~täkseen|~täksensA";
     ),
     // Päästä: 139 words (pestä, vikistä, syöstä, piestä, läpäistä, seistä). Like Nousta, except in 16 cells: pres_neg pass, conditional_pres_aff pass, conditional_pres_neg pass, imperative_aff pass, imperative_neg pass, potential_pres_aff pass, ….
     conjugation!("päästä", 139, "~tä", like Nousta;
@@ -783,26 +785,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     conjugation!("leikata", 137, "~~ta";
     stem indicative_pres_aff_1sg: "~k~- like ohjata";
     stem indicative_pres_aff_3sg: "~k~A- like ohjata";
-    stem participle_past_pass: "~~t- like leikata";
+    stem participle_past_pass: "~~t- like ohjata";
     stem indicative_past_aff_3sg: "~k~- like ohjata";
-    stem lemma: "~~- like leikata";
+    stem lemma: "~~- like ohjata";
     ),
     // Pyöriä: 136 words (etsiä, hässiä, vieriä, sääliä, kärsiä, siistiä). Like Kuoria.
     conjugation!("pyöriä", 136, "~ä", like Kuoria;
     stem lemma: "~- like kypsyä";
     ),
-    // Määrätä: 136 words (kerjätä, levätä, värjätä, herätä, löyhkätä, lämmetä). Like Ohjata, except in 7 cells: pres_neg pass, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
-    conjugation!("määrätä", 136, "~tä", like Ohjata;
-    pres_neg: _, _, _, _, _, _, "ei ~tä";
-    infinitive: "~tä";
-    long_infinitive: "~täkseni", "~täksesi", "~täksemme", "~täksenne", "~täkseen|~täksensA";
-    ),
-    // Hajota: 132 words (haluta, erota, kohota, tuhota, kirota, lohjeta). Like Ohjata.
-    conjugation!("hajota", 132, "~ta", like Ohjata;
+    // Hajota: 124 words (haluta, erota, kohota, tuhota, kirota, tajuta). Like Ohjata.
+    conjugation!("hajota", 124, "~ta", like Ohjata;
     stem indicative_pres_aff_3sg: "~A- like hajota";
-    stem participle_past_pass: "~t- like leikata";
     stem indicative_past_aff_3sg: "~- like hajota";
-    stem lemma: "~- like hajota";
     ),
     // Katsoa: 88 words (anoa, sanoa, katsoa, kertoa, toivoa, seisoa). Like Sammua.
     conjugation!("katsoa", 88, "~a", like Sammua;
@@ -813,11 +807,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem lemma: "~- like viedä";
     pres_neg: _, _, _, _, _, _, "ei ~dä";
     ),
-    // Kääntää: 82 words (pyytää, löytää, tietää, lentää, lyhentää, kääntää). Like Johtaa, except in 7 cells: pres_aff _3sg, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
+    // Kääntää: 82 words (pyytää, löytää, tietää, lentää, lyhentää, kääntää). Like Johtaa.
     conjugation!("kääntää", 82, "~tää", like Johtaa;
-    pres_aff: _, _, "~tää", _, _, _, _;
-    infinitive: "~tää";
-    long_infinitive: "~tääkseni", "~tääksesi", "~tääksemme", "~tääksenne", "~tääkseen|~tääksensA";
+    stem indicative_pres_aff_3sg: "~t- like tiivistää";
+    stem lemma: "~t- like tiivistää";
     ),
     // Värähdellä: 74 words (pahoinpidellä, säädellä, räjähdellä, pidellä, riidellä, vedellä).
     conjugation!("värähdellä", 74, "~d~lä";
@@ -832,30 +825,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Hylätä: 71 words (hypätä, pelätä, hyökätä, pyykätä, ryöpätä, töötätä). Like Määrätä with `ˇ` after each pattern.
     conjugation!("hylätä", 71, "~täˇ", like Määrätä with "ˇ";
     ),
-    // Parata: 56 words (kometa, parata, someta, aleta, oheta, nuoreta). Like Hajota, except in 3 cells: conditional_pres_aff _2sg, conditional_pres_aff _2pl, conditional_pres_neg _2pl.
-    conjugation!("parata", 56, "~ta", like Hajota;
+    // Parata: 56 words (kometa, parata, someta, aleta, oheta, nuoreta). Like Ohjata.
+    conjugation!("parata", 56, "~ta", like Ohjata;
     stem indicative_pres_aff_1sg: "~n- like olla";
     stem indicative_pres_aff_3sg: "~ne- like parata";
     stem indicative_past_aff_3sg: "~ni- like voida";
-    conditional_pres_aff: _, derived, _, _, derived, _, _;
-    conditional_pres_neg: _, _, _, _, derived, _, _;
     ),
-    // Murtaa: 51 words (ahertaa, kumartaa, murtaa, saartaa, kaivertaa, vaikertaa). Like Johtaa, except in 8 cells: pres_aff _1sg, pres_aff _1pl, pres_neg _1pl, pres_neg _3pl, past_aff _1sg, past_aff _3sg, ….
+    // Murtaa: 51 words (ahertaa, kumartaa, murtaa, saartaa, kaivertaa, vaikertaa). Like Johtaa, except in 2 cells: past_aff _3sg, past_aff _3pl.
     conjugation!("murtaa", 51, "~taa", like Johtaa;
+    stem indicative_pres_aff_1sg: "~- like murtaa";
     stem participle_past_pass: "~ret- like nostaa";
-    pres_aff: "~rAn", _, _, "~rAmme", _, _, _;
-    pres_neg: _, _, _, "emme ~rA", _, "eivät ~rA", _;
-    past_aff: "~sin", _, "~si", "~simme", _, "~sivAt", _;
+    past_aff: _, _, "~si", _, _, "~sivAt", _;
     ),
-    // Yletä: 46 words (edetä, revetä, yletä, tyhjetä, enetä, vähetä). Like Parata, except in 1 cell: pres_neg pass.
-    conjugation!("yletä", 46, "~tä", like Parata;
-    stem lemma: "~- like yletä";
-    pres_neg: _, _, _, _, _, _, "ei ~tä";
-    ),
-    // Tuomita: 45 words (ansaita, tarvita, valita, lukita, hallita, palkita). Like Parata.
-    conjugation!("tuomita", 45, "~ta", like Parata;
+    // Tuomita: 45 words (ansaita, tarvita, valita, lukita, hallita, palkita). Like Ohjata.
+    conjugation!("tuomita", 45, "~ta", like Ohjata;
     stem indicative_pres_aff_1sg: "~ts- like olla";
-    stem indicative_pres_aff_3sg: "~tse- like tuomita";
+    stem indicative_pres_aff_3sg: "~tse- like parata";
     stem indicative_past_aff_3sg: "~tsi- like voida";
     ),
     // Asioida: 44 words (kuutioida, tupakoida, aateloida, ahkeroida, kapinoida, asioida). Like Voida, except in 20 cells: long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, long_infinitive _3, second_infinitive act, ….
@@ -872,19 +857,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     fifth_infinitive: _, _, derived, _, _;
     participle: _, "~tsevA", "~daksensA", "~nUt", _, _;
     ),
-    // Hävitä: 41 words (hävitä, yrjötä, älytä, nimetä, öljytä, hirvetä). Like Hajota, except in 4 cells: pres_neg pass, conditional_pres_aff _2sg, conditional_pres_aff _2pl, conditional_pres_neg _2pl.
-    conjugation!("hävitä", 41, "~tä", like Hajota;
-    stem indicative_past_aff_3sg: "~- like hävitä";
-    stem lemma: "~- like yletä";
+    // Yletä: 42 words (yletä, tyhjetä, enetä, vähetä, kylmetä, syvetä). Like Parata, except in 7 cells: pres_neg pass, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
+    conjugation!("yletä", 42, "~tä", like Parata;
     pres_neg: _, _, _, _, _, _, "ei ~tä";
-    conditional_pres_aff: _, derived, _, _, derived, _, _;
-    conditional_pres_neg: _, _, _, _, derived, _, _;
+    infinitive: "~tä";
+    long_infinitive: "~täkseni", "~täksesi", "~täksemme", "~täksenne", "~täkseen|~täksensA";
     ),
-    // Kiertää: 41 words (piirtää, ymmärtää, siirtää, kiertää, hiertää, hämärtää). Like Murtaa, except in 7 cells: pres_aff _3sg, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
-    conjugation!("kiertää", 41, "~tää", like Murtaa;
-    pres_aff: _, _, "~tää", _, _, _, _;
-    infinitive: "~tää";
-    long_infinitive: "~tääkseni", "~tääksesi", "~tääksemme", "~tääksenne", "~tääkseen|~tääksensA";
+    // Hävitä: 41 words (hävitä, yrjötä, älytä, nimetä, öljytä, hirvetä). Like Määrätä.
+    conjugation!("hävitä", 41, "~tä", like Määrätä;
+    stem indicative_pres_aff_3sg: "~A- like hajota";
+    stem indicative_past_aff_3sg: "~- like hävitä";
+    ),
+    // Kiertää: 41 words (piirtää, ymmärtää, siirtää, kiertää, hiertää, hämärtää). Like Kääntää, except in 2 cells: past_aff _3sg, past_aff _3pl.
+    conjugation!("kiertää", 41, "~tää", like Kääntää;
+    stem indicative_pres_aff_1sg: "~- like murtaa";
+    stem participle_past_pass: "~ret- like nostaa";
+    past_aff: _, _, "~si", _, _, "~sivAt", _;
+    ),
+    // Aueta: 39 words (kimmota, aueta, haljeta, pudota, lotota, kadota). Like Hajota with `ˇ` after each pattern.
+    conjugation!("aueta", 39, "~taˇ", like Hajota with "ˇ";
     ),
     // Liukua: 36 words (liikkua, nukkua, hukkua, kirkua, raakkua, kukkua).
     conjugation!("liukua", 36, "~k~a";
@@ -894,13 +885,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem indicative_past_aff_3sg: "~k~i- like voida";
     stem lemma: "~k~- like sammua";
     ),
-    // Aueta: 36 words (kimmota, aueta, haljeta, pudota, kadota, juljeta). Like Hajota with `ˇ` after each pattern.
-    conjugation!("aueta", 36, "~taˇ", like Hajota with "ˇ";
-    ),
     // Sotia: 34 words (purjehtia, luutia, ahnehtia, pohtia, vaatia, sotia).
     conjugation!("sotia", 34, "~t~a";
     stem indicative_pres_aff_1sg: "~d~- like voida";
-    stem indicative_pres_aff_3sg: "~t~- like olla";
+    stem indicative_pres_aff_3sg: "~t~- like kuoria";
     stem participle_past_pass: "~d~t- like nostaa";
     stem indicative_past_aff_3sg: "~t~- like voida";
     stem lemma: "~t~- like sotia";
@@ -912,25 +900,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Paeta: 32 words (paeta, vaieta, saeta, taeta, valjeta, oieta). Like Parata with `ˇ` after each pattern.
     conjugation!("paeta", 32, "~taˇ", like Parata with "ˇ";
     ),
-    // Kieltää: 31 words (kieltää, sisältää, edeltää, yltää, viheltää, kiiltää). Like Kiertää, except in 4 cells: pres_aff _1sg, pres_aff _1pl, pres_neg _1pl, pres_neg _3pl.
+    // Kieltää: 31 words (kieltää, sisältää, edeltää, yltää, viheltää, kiiltää). Like Kiertää.
     conjugation!("kieltää", 31, "~tää", like Kiertää;
+    stem indicative_pres_aff_1sg: "~- like kieltää";
     stem participle_past_pass: "~let- like nostaa";
-    pres_aff: "~lAn", _, _, "~lAmme", _, _, _;
-    pres_neg: _, _, _, "emme ~lA", _, "eivät ~lA", _;
     ),
-    // Sykkiä: 30 words (leikkiä, sykkiä, pykiä, märkiä, pyrkiä, pyyhkiä). Like Liukua, except in 1 cell: pres_aff _3sg.
+    // Sykkiä: 30 words (leikkiä, sykkiä, pykiä, märkiä, pyrkiä, pyyhkiä). Like Liukua.
     conjugation!("sykkiä", 30, "~k~ä", like Liukua;
     stem indicative_pres_aff_1sg: "~~- like voida";
+    stem indicative_pres_aff_3sg: "~k~- like kuoria";
     stem indicative_past_aff_3sg: "~k~- like sykkiä";
     stem lemma: "~k~- like kypsyä";
-    pres_aff: _, _, "~k~V", _, _, _, _;
     ),
-    // Puhaltaa: 28 words (sukeltaa, uskaltaa, suoltaa, puoltaa, kuultaa, kimaltaa). Like Kieltää, except in 8 cells: conditional_perf_aff _1pl, conditional_perf_aff _3pl, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, ….
-    conjugation!("puhaltaa", 28, "~taa", like Kieltää;
-    stem indicative_pres_aff_3sg: "~t- like johtaa";
+    // Puhaltaa: 28 words (sukeltaa, uskaltaa, suoltaa, puoltaa, kuultaa, kimaltaa). Like Murtaa, except in 2 cells: conditional_perf_aff _1pl, conditional_perf_aff _3pl.
+    conjugation!("puhaltaa", 28, "~taa", like Murtaa;
+    stem indicative_pres_aff_1sg: "~- like kieltää";
+    stem participle_past_pass: "~let- like nostaa";
     conditional_perf_aff: _, _, _, "olisimm% ~taneet", _, "olisiva% ~taneet", _;
-    infinitive: "~taa";
-    long_infinitive: "~taakseni", "~taaksesi", "~taaksemme", "~taaksenne", "~taakseen|~taaksensA";
     ),
     // Ajaa: 27 words (ajaa, haistaa, jatkaa, jaksaa, maistaa, nauraa). Like Nostaa, except in 4 cells: past_aff _3sg, past_aff _3pl, conditional_perf_aff _1pl, conditional_perf_aff _3pl.
     conjugation!("ajaa", 27, "~aa", like Nostaa;
@@ -938,16 +924,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     past_aff: _, _, "~Oi", _, _, "~OivAt", _;
     conditional_perf_aff: _, _, _, "olisimm% ~Aneet", _, "olisiva% ~aneet", _;
     ),
-    // Hankkia: 26 words (kukkia, kakkia, sukia, noukkia, ruokkia, tukkia). Like Sykkiä.
-    conjugation!("hankkia", 26, "~k~a", like Sykkiä;
+    // Hankkia: 25 words (kukkia, kakkia, sukia, noukkia, ruokkia, tukkia). Like Sykkiä.
+    conjugation!("hankkia", 25, "~k~a", like Sykkiä;
     stem lemma: "~k~- like sammua";
     ),
-    // Sitoa: 24 words (kutoa, sitoa, kutea, nitoa, kiehtoa, huuhtoa). Like Sotia, except in 1 cell: pres_aff _3sg.
+    // Sitoa: 24 words (kutoa, sitoa, kutea, nitoa, kiehtoa, huuhtoa). Like Sotia.
     conjugation!("sitoa", 24, "~t~a", like Sotia;
     stem indicative_pres_aff_1sg: "~d~- like sammua";
+    stem indicative_pres_aff_3sg: "~t~- like katsoa";
     stem indicative_past_aff_3sg: "~t~i- like voida";
     stem lemma: "~t~- like sammua";
-    pres_aff: _, _, "~t~O", _, _, _, _;
     ),
     // Haikaa: 23 words (naksaa, napsaa, niksaa, hohkaa, tuikkaa, paukkaa).
     conjugation!("haikaa", 23, "~a";
@@ -973,17 +959,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem participle_past_pass: "~- like rundaa";
     stem indicative_past_aff_3sg: "~- like rundaa";
     stem lemma: "~- like rundaa";
-    pres_aff: "~an", _, _, "~tAAn|~aAAe", _, "~a", _;
+    pres_aff: "~an", _, _, "~tAAn|~amme", _, "~a", _;
     pres_neg: _, _, derived, "ei ~ta|emme ~a", "ette ~a", "ei ~a", _;
     past_aff: "~sin", _, _, "~ttiin|~simme", _, _, _;
     third_infinitive: "~a", "~amAAn", "~amAl", _, "~amatta", _;
-    participle: "~TA", _, _, _, _, "~amAsT";
+    participle: "~tA", _, _, _, _, "~amAst";
     ),
-    // Ojentaa: 17 words (hienontaa, huonontaa, isontaa, jalontaa, juontaa, virontaa). Like Murtaa, except in 4 cells: pres_aff _1sg, pres_aff _1pl, pres_neg _1pl, pres_neg _3pl.
+    // Ojentaa: 17 words (hienontaa, huonontaa, isontaa, jalontaa, juontaa, virontaa). Like Murtaa.
     conjugation!("ojentaa", 17, "~taa", like Murtaa;
+    stem indicative_pres_aff_1sg: "~- like ojentaa";
     stem participle_past_pass: "~net- like nostaa";
-    pres_aff: "~nAn", _, _, "~nAmme", _, _, _;
-    pres_neg: _, _, _, "emme ~nA", _, "eivät ~nA", _;
     ),
     // Merkitä: 15 words (merkitä, hillitä, häiritä, kestitä, kyyditä, lääkitä). Like Tuomita.
     conjugation!("merkitä", 15, "~tä", like Tuomita;
@@ -998,29 +983,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     pres_neg: _, _, "ei ~ä", _, _, "eivät ~ä", _;
     infinitive: "~ä";
     ),
-    // Kaataa: 14 words (antaa, sataa, kantaa, mahtaa, kaataa, ahtaa). Like Johtaa, except in 54 cells: past_aff _1sg, past_aff _1pl, past_neg _1sg, past_neg _1pl, past_neg _3pl, perf_aff _1sg, ….
+    // Kaataa: 14 words (antaa, sataa, kantaa, mahtaa, kaataa, ahtaa). Like Johtaa, except in 2 cells: past_aff _1sg, past_aff _1pl.
     conjugation!("kaataa", 14, "~taa", like Johtaa;
-    stem indicative_pres_aff_3sg: "~- like kaataa";
-    stem indicative_past_aff_3sg: "~T- like kaataa";
+    stem indicative_past_aff_3sg: "~t- like kaataa";
+    stem lemma: "~t- like kaataa";
     past_aff: "~doin", _, _, "~doimme", _, _, _;
-    past_neg: "en ~TAnUt", _, _, "emme ~TAneet", _, "eivät ~TAneet", _;
-    perf_aff: "olen ~TAnUt", "olet ~TAnUt", _, _, "olette ~TAneet", "ovat ~TAneet", _;
-    perf_neg: "en ole ~TAnUt", _, _, "emme ole ~TAneet", _, "eivät ole ~TAneet", _;
-    plup_aff: _, _, _, _, _, "olivat ~TAneet", _;
-    plup_neg: "en ollut ~TAnUt", _, _, "emme olleet ~TAneet", _, "eivät olleet ~TAneet", _;
-    conditional_perf_aff: "olisin ~TAnUt", "olisit ~TAnUt", "olisi ~TAnUt", "olisimm% ~taneet", "olisitte ~TAneet", "olisiva% ~TAneet", _;
-    conditional_perf_neg: _, _, _, "emme olisi ~TAneet", _, "eivät olisi ~TAneet", _;
-    imperative_aff: _, "~TAkOOn", "~TAkAAmme", "~TAkAA", _, _;
-    imperative_neg: _, "älköön ~TAkO", "älkäämme ~TAkO", "älkää ~TAkO", "älkööt ~TAkO", _;
-    perfect_imperative_aff: "olkoon ~TAnUt", "olkoot ~TAneet", _;
-    perfect_imperative_neg: "älköön olko ~TAnUt", "älkööt olko ~TAneet", _;
-    potential_pres_aff: "~TAnen", _, _, _, _, "~TAnevAt", _;
-    potential_perf_aff: "lienen ~TAnUt", "lienet ~TAnUt", "lienee ~TAnUt", "lienemme ~TAneet", "lienette ~TAneet", "lienevät ~TAneet", _;
-    potential_perf_neg: "en liene ~TAnUt", _, _, "emme liene ~TAneet", _, "eivät liene ~TAneet", _;
-    second_infinitive: "~TAessA", _;
-    second_infinitive_possessive: "~TAessAni", "~TAessAsi", "~TAessAmme", "~TAessAnne", "~TAessAAn|~TAessAnsA";
-    second_infinitive_instructive: "~TAen";
-    participle: _, _, "~TAnUt", _, _, _;
     ),
     // Taittaa: 13 words (auttaa, karttaa, laittaa, saattaa, kattaa, maittaa). Like Johtaa.
     conjugation!("taittaa", 13, "~taa", like Johtaa;
@@ -1048,11 +1015,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem indicative_past_aff_3sg: "~k~- like hajota";
     stem lemma: "~~- like laueta";
     ),
-    // Hiipiä: 10 words (kylpeä, hiipiä, kyrpiä, repiä, rypeä, silpiä). Like Tarpoa, except in 7 cells: pres_aff _3sg, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
+    // Hiipiä: 10 words (kylpeä, hiipiä, kyrpiä, repiä, rypeä, silpiä). Like Tarpoa, except in 6 cells: infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, long_infinitive _3.
     conjugation!("hiipiä", 10, "~p~ä", like Tarpoa;
     stem indicative_pres_aff_1sg: "~v~- like voida";
+    stem indicative_pres_aff_3sg: "~p~- like kuoria";
     stem indicative_past_aff_3sg: "~p~- like sykkiä";
-    pres_aff: _, _, "~p~V", _, _, _, _;
     infinitive: "~p~ä";
     long_infinitive: "~p~äkseni", "~p~äksesi", "~p~äksemme", "~p~äksenne", "~p~äkseen|~p~äksensA";
     ),
@@ -1067,11 +1034,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Harppia: 9 words (oppia, nauttia, tuuppia, moittia, pomppia, kalppia). Like Kuoria with `ˇ` after each pattern.
     conjugation!("harppia", 9, "~aˇ", like Kuoria with "ˇ";
     ),
-    // Kääntää2: 8 words (iirintää, filmintää, siintää, tekstintää, fäärintää, fidžintää). Like Ojentaa, except in 7 cells: pres_aff _3sg, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
-    conjugation!("kääntää", 8, "~tää", like Ojentaa;
-    pres_aff: _, _, "~tää", _, _, _, _;
-    infinitive: "~tää";
-    long_infinitive: "~tääkseni", "~tääksesi", "~tääksemme", "~tääksenne", "~tääkseen|~tääksensA";
+    // Kääntää2: 8 words (iirintää, filmintää, siintää, tekstintää, fäärintää, fidžintää). Like Kiertää.
+    conjugation!("kääntää", 8, "~tää", like Kiertää;
+    stem indicative_pres_aff_1sg: "~- like ojentaa";
+    stem participle_past_pass: "~net- like nostaa";
     ),
     // Taannehtia: 8 words (oirehtia, tohtia, tuutia, tutia, talvehtia, tuikehtia). Like Sotia, except in 1 cell: conditional_perf_aff _1pl.
     conjugation!("taannehtia", 8, "~t~a", like Sotia;
@@ -1092,7 +1058,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Lukea: 7 words (lukea, kokea, tukea, pukea, hokea, hakea).
     conjugation!("lukea", 7, "~kea";
     stem indicative_pres_aff_1sg: "~- like olla";
-    stem indicative_pres_aff_3sg: "~ke- like lukea";
+    stem indicative_pres_aff_3sg: "~ke- like parata";
     stem participle_past_pass: "~et- like nostaa";
     stem indicative_past_aff_3sg: "~ki- like voida";
     stem lemma: "~k- like lukea";
@@ -1111,7 +1077,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     conjugation!("ruveta", 7, "~v~ta";
     stem indicative_pres_aff_1sg: "~p~- like ohjata";
     stem indicative_pres_aff_3sg: "~p~A- like hajota";
-    stem participle_past_pass: "~v~t- like leikata";
+    stem participle_past_pass: "~v~t- like ohjata";
     stem indicative_past_aff_3sg: "~p~- like ruveta";
     stem lemma: "~v~- like laueta";
     ),
@@ -1132,17 +1098,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     conjugation!("ladata", 6, "~d~ta";
     stem indicative_pres_aff_1sg: "~t~- like ohjata";
     stem indicative_pres_aff_3sg: "~t~A- like ohjata";
-    stem participle_past_pass: "~d~t- like leikata";
+    stem participle_past_pass: "~d~t- like ohjata";
     stem indicative_past_aff_3sg: "~t~- like ohjata";
     stem lemma: "~d~- like laueta";
     ),
-    // Virittää: 5 words (pikaviestittää, postimerkittää, hajakeskittää, kantaesittää, jatkokehittää). Like Taittaa, except in 7 cells: pres_aff _3sg, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
-    conjugation!("virittää", 5, "~tää", like Taittaa;
+    // Virittää: 5 words (pikaviestittää, postimerkittää, hajakeskittää, kantaesittää, jatkokehittää). Like Kääntää.
+    conjugation!("virittää", 5, "~tää", like Kääntää;
     stem indicative_pres_aff_1sg: "~- like nostaa";
-    stem indicative_past_aff_3sg: "~t- like nostaa";
-    pres_aff: _, _, "~tää", _, _, _, _;
-    infinitive: "~tää";
-    long_infinitive: "~tääkseni", "~tääksesi", "~tääksemme", "~tääksenne", "~tääkseen|~tääksensA";
+    stem participle_past_pass: "~et- like nostaa";
     ),
     // Kulkea: 5 words (sulkea, kulkea, polkea, oikosulkea, poissulkea). Like Lukea.
     conjugation!("kulkea", 5, "~kea", like Lukea;
@@ -1184,12 +1147,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem indicative_pres_aff_1sg: "~m~- like voida";
     stem participle_past_pass: "~m~t- like nostaa";
     ),
-    // Siitä: 4 words (siitä, keritä, selitä, kehitä). Like Laueta, except in 10 cells: pres_neg pass, conditional_pres_aff _2sg, conditional_pres_aff _2pl, conditional_pres_neg _2pl, infinitive, long_infinitive _1sg, ….
-    conjugation!("siitä", 4, "~~tä", like Laueta;
+    // Siitä: 4 words (siitä, keritä, selitä, kehitä). Like Leikata, except in 9 cells: pres_neg pass, conditional_perf_aff _1pl, conditional_perf_aff _3pl, infinitive, long_infinitive _1sg, long_infinitive _2sg, ….
+    conjugation!("siitä", 4, "~~tä", like Leikata;
+    stem indicative_pres_aff_3sg: "~k~A- like hajota";
     stem indicative_past_aff_3sg: "~k~- like hävitä";
     pres_neg: _, _, _, _, _, _, "ei ~~tä";
-    conditional_pres_aff: _, derived, _, _, derived, _, _;
-    conditional_pres_neg: _, _, _, _, derived, _, _;
+    conditional_perf_aff: _, _, _, "olisimm% ~~nneet", _, "olisiva% ~~nneet", _;
     infinitive: "~~tä";
     long_infinitive: "~~täkseni", "~~täksesi", "~~täksemme", "~~täksenne", "~~täkseen|~~täksensA";
     ),
@@ -1205,7 +1168,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem indicative_pres_aff_3sg: "~ka- like purkaa";
     stem participle_past_pass: "~et- like nostaa";
     stem indicative_past_aff_3sg: "~k- like purkaa";
-    stem lemma: "~ka- like sotia";
+    stem lemma: "~k- like purkaa";
     pres_aff: "~an", _, _, "~amme", _, _, _;
     pres_neg: _, _, _, "emme ~a", _, "eivät ~a", _;
     past_aff: "~oin", _, _, "~oimme", _, _, _;
@@ -1216,12 +1179,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     stem participle_past_pass: "~~t- like nostaa";
     conditional_perf_aff: _, _, _, "olisimm% ~t~neet", _, "olisiva% ~t~neet", _;
     ),
-    // Dubata: 4 words (lobata, dubata, mobata, jobata). Like Leikata, except in 2 cells: conditional_perf_aff _1pl, conditional_perf_aff _3pl.
+    // Dubata: 4 words (lobata, dubata, mobata, jobata). Like Leikata, except in 6 cells: pres_aff _1sg, pres_aff _1pl, pres_neg _1pl, pres_neg _3pl, past_aff _1sg, past_aff _1pl.
     conjugation!("dubata", 4, "~~ta", like Leikata;
-    stem indicative_pres_aff_1sg: "~b~- like dubata";
     stem indicative_pres_aff_3sg: "~b~a- like luoda";
     stem indicative_past_aff_3sg: "~b~- like dubata";
-    conditional_perf_aff: _, _, _, "olisimm% ~~nneet", _, "olisiva% ~~nneet", _;
+    stem lemma: "~~- like laueta";
+    pres_aff: "~b~an", _, _, "~b~amme", _, _, _;
+    pres_neg: _, _, _, "emme ~b~a", _, "eivät ~b~a", _;
+    past_aff: "~b~sin", _, _, "~b~simme", _, _, _;
     ),
     // Tonkia: 4 words (onkia, tunkea, tonkia, sonkia). Like Kenkiä, except in 7 cells: conditional_perf_aff _1pl, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
     conjugation!("tonkia", 4, "~k~a", like Kenkiä;
@@ -1232,7 +1197,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Lähteä: 4 words (lähteä, kyteä, päteä, syteä).
     conjugation!("lähteä", 4, "~teä";
     stem indicative_pres_aff_1sg: "~d- like olla";
-    stem indicative_pres_aff_3sg: "~te- like lukea";
+    stem indicative_pres_aff_3sg: "~te- like parata";
     stem participle_past_pass: "~det- like nostaa";
     stem indicative_past_aff_3sg: "~ti- like voida";
     stem lemma: "~t- like lähteä";
@@ -1244,33 +1209,30 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     pres_aff: _, _, derived, _, _, derived, _;
     pres_neg: _, _, derived, _, _, derived, _;
     conditional_pres_aff: _, _, _, _, _, _, "~jAttAisiin";
-    conditional_pres_neg: _, _, _, _, _, _, "ei ~TtAisi";
-    conditional_perf_aff: _, _, _, _, _, _, "olisi ~TtU";
-    imperative_aff: "~jA", _, _, _, _, "~TtAkOOn";
-    imperative_neg: "älä ~jA", _, _, _, _, "älköön ~TtAkO";
-    perfect_imperative_aff: _, _, "olkoon ~TtU";
-    perfect_imperative_neg: _, _, "älköön olko ~TtU";
-    potential_pres_aff: _, _, _, _, _, _, "~TtAneen";
-    potential_pres_neg: _, _, _, _, _, _, "ei ~TtAne";
-    potential_perf_aff: _, _, _, _, _, _, "lienee ~TtU";
-    potential_perf_neg: _, _, _, _, _, _, "ei liene ~TtU";
-    second_infinitive: _, "~jAmATOn";
+    conditional_pres_neg: _, _, _, _, _, _, "ei ~ttAisi";
+    conditional_perf_aff: _, _, _, _, _, _, "olisi ~ttU";
+    imperative_aff: "~jA", _, _, _, _, "~ttAkOOn";
+    imperative_neg: "älä ~jA", _, _, _, _, "älköön ~ttAkO";
+    perfect_imperative_aff: _, _, "olkoon ~ttU";
+    perfect_imperative_neg: _, _, "älköön olko ~ttU";
+    potential_pres_aff: _, _, _, _, _, _, "~ttAneen";
+    potential_pres_neg: _, _, _, _, _, _, "ei ~ttAne";
+    potential_perf_aff: _, _, _, _, _, _, "lienee ~ttU";
+    potential_perf_neg: _, _, _, _, _, _, "ei liene ~ttU";
+    second_infinitive: _, "~jAmAtOn";
     third_infinitive: "~jAmAn", "~jAminen", _, _, _, _;
-    participle: "~tA", "~jAvA", _, "~Ten", "~jAmAssA", _;
+    participle: "~tA", "~jAvA", _, "~ten", "~jAmAssA", _;
     ),
-    // Jydätä: 4 words (jydätä, pöydätä, myödätä, töydätä). Like Ladata, except in 14 cells: pres_neg pass, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
+    // Jydätä: 4 words (jydätä, pöydätä, myödätä, töydätä). Like Ladata, except in 7 cells: pres_neg pass, infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, ….
     conjugation!("jydätä", 4, "~d~tä", like Ladata;
     pres_neg: _, _, _, _, _, _, "ei ~d~tä";
     infinitive: "~d~tä";
     long_infinitive: "~d~täkseni", "~d~täksesi", "~d~täksemme", "~d~täksenne", "~d~täkseen|~d~täksensA";
-    second_infinitive: "~d~TessA", _;
-    second_infinitive_possessive: "~d~TessAni", "~d~TessAsi", "~d~TessAmme", "~d~TessAnne", "~d~TessAAn|~d~TessAnsA";
-    second_infinitive_instructive: "~d~Ten";
     ),
     // Heiketä: 3 words (kyetä, käetä, märätä). Like Siitä.
     conjugation!("heiketä", 3, "~~tä", like Siitä;
     stem indicative_pres_aff_1sg: "~k~n- like olla";
-    stem indicative_pres_aff_3sg: "~k~ne- like tuomita";
+    stem indicative_pres_aff_3sg: "~k~ne- like parata";
     stem indicative_past_aff_3sg: "~k~ni- like voida";
     ),
     // Häipyä: 3 words (syöpyä, yöpyä, elpyä). Like Tarpoa, except in 6 cells: infinitive, long_infinitive _1sg, long_infinitive _2sg, long_infinitive _1pl, long_infinitive _2pl, long_infinitive _3.
@@ -1293,14 +1255,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     pres_neg: _, _, _, "emme ~U", _, "eivät ~U", _;
     past_aff: "~in", _, _, "~imme", _, _, _;
     ),
-    // Lotota: 3 words (lotota, netota, peitota).
-    conjugation!("lotota", 3, "~ota";
-    stem indicative_pres_aff_1sg: "~to- like dubata";
-    stem indicative_pres_aff_3sg: "~toa- like lotota";
-    stem participle_past_pass: "~ot- like leikata";
-    stem indicative_past_aff_3sg: "~to- like lotota";
-    stem lemma: "~o- like laueta";
-    ),
     // Nylkeä: 3 words (sylkeä, särkeä, nylkeä). Like Kulkea.
     conjugation!("nylkeä", 3, "~keä", like Kulkea;
     stem lemma: "~k- like lähteä";
@@ -1308,10 +1262,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 103] = [
     // Lappaa: 3 words (tappaa, appaa, lappaa).
     conjugation!("lappaa", 3, "~paa";
     stem indicative_pres_aff_1sg: "~- like ajaa";
-    stem indicative_pres_aff_3sg: "~p- like johtaa";
+    stem indicative_pres_aff_3sg: "~p- like nostaa";
     stem participle_past_pass: "~et- like nostaa";
     stem indicative_past_aff_3sg: "~p- like kaataa";
-    stem lemma: "~p- like lappaa";
+    stem lemma: "~p- like kaataa";
     ),
     // Pinkoa: 3 words (penkoa, pinkoa, rankoa). Like Tonkia.
     conjugation!("pinkoa", 3, "~k~a", like Tonkia;

@@ -126,7 +126,7 @@ pub enum Declension {
     Bannus,
     /// Like `amor`: 903 words.
     Amor,
-    /// Like `cōs`: 619 words.
+    /// Like `cōs`: 618 words.
     Cōs,
     /// Like `manus`: 510 words.
     Manus,
@@ -178,7 +178,7 @@ pub enum Declension {
     Trēsvirī,
     /// Like `tribūnal`: 34 words.
     Tribūnal,
-    /// Like `ōs`: 32 words.
+    /// Like `ōs`: 31 words.
     Ōs,
     /// Like `boreās`: 31 words.
     Boreās,
@@ -194,7 +194,7 @@ pub enum Declension {
     Auctōritās,
     /// Like `elephāns`: 21 words.
     Elephāns,
-    /// Like `pars`: 20 words.
+    /// Like `pars`: 21 words.
     Pars,
     /// Like `genius`: 19 words.
     Genius,
@@ -254,7 +254,7 @@ pub enum Declension {
     Līchēn,
     /// Like `cachrys`: 5 words.
     Cachrys,
-    /// Like `aes`: 4 words.
+    /// Like `aes`: 5 words.
     Aes,
     /// Like `canis`: 4 words.
     Canis,
@@ -461,8 +461,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 95] = [
     abl: _, derived;
     voc: _, derived;
     ),
-    // Cōs: 619 words (cōs, abbās, servitūs, kadamitās, dōs, acerbitās).
-    declension!("cōs", 619, "~ˇ";
+    // Cōs: 618 words (cōs, abbās, servitūs, kadamitās, dōs, acerbitās).
+    declension!("cōs", 618, "~ˇ";
     stem lemma: "~ˇ- like lingua";
     stem gen_sg: "~t- like cōs";
     abl: _, derived;
@@ -647,8 +647,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 95] = [
     acc: "~a~", "~ā~ia";
     abl: "~ā~ī", _;
     ),
-    // Ōs: 32 words (ōs, far, genus, onus, vulnus, opus).
-    declension!("ōs", 32, "~ˇ", [gender: Neuter];
+    // Ōs: 31 words (ōs, far, genus, onus, vulnus, opus).
+    declension!("ōs", 31, "~ˇ", [gender: Neuter];
     stem lemma: "~ˇ- like lingua";
     stem gen_sg: "~- like ōs";
     abl: _, derived;
@@ -696,8 +696,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 95] = [
     gen_: _, "~tumˇ";
     acc: _, "~tēsˇ";
     ),
-    // Pars: 20 words (ars, urbs, grȳps, līs, mors, pars). Like Auctōritās, except in 2 cells: abl pl, voc pl.
-    declension!("pars", 20, "~s", like Auctōritās;
+    // Pars: 21 words (ars, urbs, grȳps, līs, mors, pars). Like Auctōritās, except in 2 cells: abl pl, voc pl.
+    declension!("pars", 21, "~s", like Auctōritās;
     stem gen_sg: "~t- like mōlēs";
     abl: _, derived;
     voc: _, derived;
@@ -880,8 +880,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 95] = [
     abl: "~", _;
     voc: "~s|~", _;
     ),
-    // Aes: 4 words (fās, rūs, epos, nefās). Like Mōs, except in 4 cells: nom pl, acc sg, acc pl, noun_locative sg.
-    declension!("aes", 4, "~s", [gender: Neuter], like Mōs;
+    // Aes: 5 words (jūs, fās, rūs, epos, nefās). Like Mōs, except in 4 cells: nom pl, acc sg, acc pl, noun_locative sg.
+    declension!("aes", 5, "~s", [gender: Neuter], like Mōs;
     nom: _, "~ra";
     acc: "~s", "~ra";
     noun_locative: "~rī", _;

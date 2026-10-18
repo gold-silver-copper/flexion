@@ -7,11 +7,11 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 443 rules and 655 listed words.
+/// 443 rules and 652 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
-        "" => [Polttaa 1745, Purkautua 1259, Voida 935, Hiihtää 892, Ohjata 763, Tulla 667, Nostaa 562, Ajatella 512, Sammua 478, Jäätyä 462, Epäillä 278, Tiivistää 237, Käsitellä 211, Kypsyä 200, Kipata 200, Nousta 185, Kuoria 157, Johtaa 149, Päästä 139, Leikata 137, Pyöriä 136, Määrätä 136, Hajota 132, Katsoa 88, Pätevöidä 84, Kääntää 82, Värähdellä 74, Hylätä 71, Parata 56, Murtaa 51, Yletä 46, Tuomita 45, Asioida 44, Hävitä 41, Kiertää 41, Liukua 36, Aueta 36, Sotia 34, Pelehtiä 34, Paeta 32, Kieltää 31, Sykkiä 30, Puhaltaa 28, Ajaa 27, Hankkia 26, Sitoa 24, Haikaa 23, Rikkoa 22, Isännöidä 19, Rundaa 18, Ojentaa 17, Merkitä 15, Ähkää 14, Kaataa 14, Taittaa 13, Kiivetä 13, Jyrketä 12, Tarpoa 12, Laueta 10, Hiipiä 10, Hyppiä 10, Laskea 9, Harppia 9, Kääntää2 8, Taannehtia 8, Iskeä 7, Kenkiä 7, Lukea 7, Luoda 7, Ruveta 7, Julkipanna 6, Ladata 6, Virittää 5, Kulkea 5, Sopia 5, Upota 5, Lyödä 5, Tuultaa 5, Kontia 5, Empiä 5, Siitä 4, Ampua 4, Purkaa 4, Tenttiä 4, Dubata 4, Tonkia 4, Lähteä 4, Heläjää 4, Jydätä 4, Heiketä 3, Häipyä 3, Takuta 3, Myydä 3, Lotota 3, Nylkeä 3, Lappaa 3, Pinkoa 3, Halajaa 3, Nappoa 3, Vaaata 2, Tarvii 1, Tarttee 1, Bygee 1],
-        "a" => [Polttaa 1745, Purkautua 1259, Voida 935, Ohjata 763, Tulla 667, Nostaa 562, Ajatella 512, Sammua 478, Kipata 200, Nousta 185, Kuoria 157, Johtaa 149, Leikata 137, Hajota 132, Katsoa 88, Parata 56, Murtaa 51, Tuomita 45, Asioida 44, Liukua 36, Aueta 36, Sotia 34, Paeta 32, Puhaltaa 28, Ajaa 27, Hankkia 26, Sitoa 24, Haikaa 23, Rikkoa 22, Rundaa 18, Ojentaa 17, Kaataa 14, Taittaa 13, Tarpoa 12, Laueta 10, Laskea 9, Harppia 9, Taannehtia 8, Lukea 7, Luoda 7, Ruveta 7, Julkipanna 6, Ladata 6, Kulkea 5, Sopia 5, Upota 5, Tuultaa 5, Kontia 5, Ampua 4, Purkaa 4, Dubata 4, Tonkia 4, Takuta 3, Lotota 3, Lappaa 3, Pinkoa 3, Halajaa 3, Nappoa 3, Vaaata 2],
+        "" => [Polttaa 1745, Purkautua 1259, Voida 935, Hiihtää 892, Ohjata 771, Tulla 667, Nostaa 562, Ajatella 512, Sammua 478, Jäätyä 462, Epäillä 278, Tiivistää 237, Käsitellä 211, Kypsyä 200, Kipata 200, Nousta 185, Kuoria 158, Johtaa 149, Määrätä 140, Päästä 139, Leikata 137, Pyöriä 136, Hajota 124, Katsoa 88, Pätevöidä 84, Kääntää 82, Värähdellä 74, Hylätä 71, Parata 56, Murtaa 51, Tuomita 45, Asioida 44, Yletä 42, Hävitä 41, Kiertää 41, Aueta 39, Liukua 36, Sotia 34, Pelehtiä 34, Paeta 32, Kieltää 31, Sykkiä 30, Puhaltaa 28, Ajaa 27, Hankkia 25, Sitoa 24, Haikaa 23, Rikkoa 22, Isännöidä 19, Rundaa 18, Ojentaa 17, Merkitä 15, Ähkää 14, Kaataa 14, Taittaa 13, Kiivetä 13, Jyrketä 12, Tarpoa 12, Laueta 10, Hiipiä 10, Hyppiä 10, Laskea 9, Harppia 9, Kääntää2 8, Taannehtia 8, Iskeä 7, Kenkiä 7, Lukea 7, Luoda 7, Ruveta 7, Julkipanna 6, Ladata 6, Virittää 5, Kulkea 5, Sopia 5, Upota 5, Lyödä 5, Tuultaa 5, Kontia 5, Empiä 5, Siitä 4, Ampua 4, Purkaa 4, Tenttiä 4, Dubata 4, Tonkia 4, Lähteä 4, Heläjää 4, Jydätä 4, Heiketä 3, Häipyä 3, Takuta 3, Myydä 3, Nylkeä 3, Lappaa 3, Pinkoa 3, Halajaa 3, Nappoa 3, Vaaata 2, Tarvii 1, Tarttee 1, Bygee 1],
+        "a" => [Polttaa 1745, Purkautua 1259, Voida 935, Ohjata 771, Tulla 667, Nostaa 562, Ajatella 512, Sammua 478, Kipata 200, Nousta 185, Kuoria 158, Johtaa 149, Leikata 137, Hajota 124, Katsoa 88, Parata 56, Murtaa 51, Tuomita 45, Asioida 44, Aueta 39, Liukua 36, Sotia 34, Paeta 32, Puhaltaa 28, Ajaa 27, Hankkia 25, Sitoa 24, Haikaa 23, Rikkoa 22, Rundaa 18, Ojentaa 17, Kaataa 14, Taittaa 13, Tarpoa 12, Laueta 10, Laskea 9, Harppia 9, Taannehtia 8, Lukea 7, Luoda 7, Ruveta 7, Julkipanna 6, Ladata 6, Kulkea 5, Sopia 5, Upota 5, Tuultaa 5, Kontia 5, Ampua 4, Purkaa 4, Dubata 4, Tonkia 4, Takuta 3, Lappaa 3, Pinkoa 3, Halajaa 3, Nappoa 3, Vaaata 2],
         "aa" => [Polttaa 1745, Nostaa 562, Johtaa 149, Murtaa 51, Puhaltaa 28, Ajaa 27, Haikaa 23, Rundaa 18, Ojentaa 17, Kaataa 14, Taittaa 13, Tuultaa 5, Purkaa 4, Lappaa 3, Halajaa 3],
         "daa" => [Rundaa 3] regular,
         "faa" => [Rundaa 2],
@@ -87,15 +87,15 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "ukea" => [Lukea 4] regular,
         "sea" => [Laskea 3],
         "tea" => [Sitoa 2, Kontia 1] regular,
-        "ia" => [Kuoria 157, Sotia 34, Hankkia 26, Harppia 9, Taannehtia 8, Sopia 5, Kontia 3, Tonkia 3, Ampua 1],
+        "ia" => [Kuoria 158, Sotia 34, Hankkia 25, Harppia 9, Taannehtia 8, Sopia 5, Kontia 3, Tonkia 3, Ampua 1],
         "hia" => [Kuoria 9] regular,
-        "kia" => [Kuoria 30, Hankkia 26, Tonkia 3] regular,
-        "hkia" => [Kuoria 9] regular,
+        "kia" => [Kuoria 31, Hankkia 25, Tonkia 3],
+        "hkia" => [Kuoria 9],
         "kkia" => [Hankkia 21] regular,
-        "nkia" => [Tonkia 3] regular,
-        "onkia" => [Tonkia 3] regular,
+        "nkia" => [Tonkia 3],
+        "onkia" => [Tonkia 3],
         "skia" => [Kuoria 14] regular,
-        "tkia" => [Kuoria 7] regular,
+        "tkia" => [Kuoria 7],
         "lia" => [Kuoria 15] regular,
         "mia" => [Kuoria 15] regular,
         "nia" => [Kuoria 9] regular,
@@ -164,7 +164,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "ttoa" => [Katsoa 2] regular,
         "voa" => [Katsoa 13] regular,
         "ra" => [Purkautua 2],
-        "ta" => [Ohjata 763, Kipata 200, Nousta 185, Leikata 137, Hajota 132, Parata 56, Tuomita 45, Aueta 36, Paeta 32, Laueta 10, Ruveta 7, Ladata 6, Upota 5, Dubata 4, Takuta 3, Lotota 3, Vaaata 2],
+        "ta" => [Ohjata 771, Kipata 200, Nousta 185, Leikata 137, Hajota 124, Parata 56, Tuomita 45, Aueta 39, Paeta 32, Laueta 10, Ruveta 7, Ladata 6, Upota 5, Dubata 4, Takuta 3, Vaaata 2],
         "ata" => [Ohjata 759, Kipata 198, Leikata 133, Dubata 4, Ruveta 2, Ladata 2, Vaaata 2, Parata 1, Paeta 1],
         "'ata" => [Vaaata 2],
         "aata" => [Kipata 5],
@@ -220,13 +220,13 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "uutata" => [Kipata 5] regular,
         "vata" => [Ohjata 66, Kipata 4, Ruveta 2] regular,
         "rvata" => [Ohjata 11] regular,
-        "eta" => [Parata 50, Paeta 30, Aueta 13, Hajota 11, Ruveta 2, Ladata 1],
+        "eta" => [Parata 50, Paeta 30, Aueta 13, Hajota 7, Ohjata 4, Ruveta 2, Ladata 1],
         "aeta" => [Paeta 3],
         "geta" => [Aueta 2, Hajota 1],
         "heta" => [Parata 9],
         "ieta" => [Paeta 3],
         "ajeta" => [Parata 3],
-        "hjeta" => [Hajota 3] regular,
+        "hjeta" => [Ohjata 3] regular,
         "ljeta" => [Aueta 2, Paeta 1] regular,
         "rjeta" => [Paeta 4, Parata 3],
         "keta" => [Paeta 8, Hajota 3, Parata 2, Aueta 2] regular,
@@ -236,10 +236,9 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "peta" => [Paeta 3],
         "ueta" => [Aueta 3, Paeta 2] regular,
         "aueta" => [Aueta 3] regular,
-        "veta" => [Parata 6, Hajota 3, Paeta 3, Ruveta 2] regular,
-        "lveta" => [Paeta 2] regular,
+        "lveta" => [Paeta 2],
         "ita" => [Tuomita 45, Hajota 1] regular,
-        "ota" => [Hajota 62, Aueta 19, Laueta 8, Parata 4, Ohjata 3, Ruveta 3, Lotota 3, Ladata 2, Upota 2, Takuta 2, Paeta 1],
+        "ota" => [Hajota 60, Aueta 22, Laueta 8, Ohjata 5, Parata 4, Ruveta 3, Ladata 2, Upota 2, Takuta 2, Paeta 1],
         "aota" => [Aueta 3],
         "dota" => [Aueta 4, Ladata 2, Ohjata 1] regular,
         "eota" => [Laueta 2],
@@ -247,15 +246,14 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "hota" => [Hajota 14] regular,
         "iota" => [Aueta 3],
         "jota" => [Hajota 5] regular,
-        "kota" => [Hajota 5, Laueta 4] regular,
+        "kota" => [Hajota 4, Laueta 4, Ohjata 1] regular,
         "hkota" => [Hajota 3] regular,
         "mota" => [Hajota 10, Aueta 1] regular,
         "nota" => [Hajota 4, Parata 3, Aueta 2],
         "nnota" => [Aueta 2],
         "pota" => [Upota 2, Paeta 1],
         "rrota" => [Aueta 2],
-        "tota" => [Hajota 5, Lotota 3, Ohjata 1] regular,
-        "stota" => [Hajota 3] regular,
+        "stota" => [Hajota 3],
         "vota" => [Hajota 4, Ruveta 3, Ohjata 1],
         "rvota" => [Ruveta 3, Ohjata 1],
         "sta" => [Nousta 185, Leikata 4, Kipata 2, Ohjata 1] regular,
@@ -263,10 +261,12 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "laista" => [Nousta 7, Leikata 2] regular,
         "rista" => [Nousta 20] regular,
         "vista" => [Kipata 2, Nousta 1] regular,
-        "uta" => [Hajota 58, Aueta 4, Upota 3, Laueta 2, Parata 1, Ladata 1, Takuta 1] regular,
+        "uta" => [Hajota 56, Aueta 4, Upota 3, Ohjata 2, Laueta 2, Parata 1, Ladata 1, Takuta 1] regular,
         "huta" => [Hajota 10] regular,
+        "luta" => [Hajota 5] regular,
         "puta" => [Upota 3] regular,
         "ruta" => [Hajota 6] regular,
+        "tuta" => [Ohjata 2, Hajota 1] regular,
         "vuta" => [Aueta 3, Hajota 2] regular,
         "ua" => [Purkautua 1257, Sammua 478, Liukua 36, Tarpoa 2, Ampua 2],
         "hua" => [Sammua 9] regular,
@@ -300,7 +300,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "istua" => [Sammua 258] regular,
         "ttua" => [Purkautua 167] regular,
         "utua" => [Purkautua 430] regular,
-        "ä" => [Hiihtää 892, Jäätyä 462, Epäillä 278, Tiivistää 237, Käsitellä 211, Kypsyä 200, Päästä 139, Pyöriä 136, Määrätä 136, Pätevöidä 84, Kääntää 82, Värähdellä 74, Hylätä 71, Yletä 46, Hävitä 41, Kiertää 41, Pelehtiä 34, Kieltää 31, Sykkiä 30, Isännöidä 19, Merkitä 15, Ähkää 14, Kiivetä 13, Jyrketä 12, Hiipiä 10, Hyppiä 10, Kääntää2 8, Iskeä 7, Kenkiä 7, Virittää 5, Lyödä 5, Empiä 5, Siitä 4, Tenttiä 4, Lähteä 4, Heläjää 4, Jydätä 4, Heiketä 3, Häipyä 3, Myydä 3, Nylkeä 3],
+        "ä" => [Hiihtää 892, Jäätyä 462, Epäillä 278, Tiivistää 237, Käsitellä 211, Kypsyä 200, Määrätä 140, Päästä 139, Pyöriä 136, Pätevöidä 84, Kääntää 82, Värähdellä 74, Hylätä 71, Yletä 42, Hävitä 41, Kiertää 41, Pelehtiä 34, Kieltää 31, Sykkiä 30, Isännöidä 19, Merkitä 15, Ähkää 14, Kiivetä 13, Jyrketä 12, Hiipiä 10, Hyppiä 10, Kääntää2 8, Iskeä 7, Kenkiä 7, Virittää 5, Lyödä 5, Empiä 5, Siitä 4, Tenttiä 4, Lähteä 4, Heläjää 4, Jydätä 4, Heiketä 3, Häipyä 3, Myydä 3, Nylkeä 3],
         "dä" => [Pätevöidä 84, Isännöidä 19, Lyödä 5, Myydä 3] regular,
         "idä" => [Pätevöidä 78, Isännöidä 19] regular,
         "köidä" => [Pätevöidä 7] regular,
@@ -366,11 +366,11 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "illä" => [Epäillä 145] regular,
         "nä" => [Jäätyä 2],
         "rä" => [Jäätyä 2],
-        "tä" => [Päästä 139, Määrätä 136, Hylätä 71, Yletä 46, Hävitä 41, Merkitä 15, Kiivetä 13, Jyrketä 12, Siitä 4, Jydätä 4, Heiketä 3],
-        "etä" => [Yletä 45, Kiivetä 12, Jyrketä 12, Määrätä 5, Hävitä 5, Heiketä 2],
+        "tä" => [Määrätä 140, Päästä 139, Hylätä 71, Yletä 42, Hävitä 41, Merkitä 15, Kiivetä 13, Jyrketä 12, Siitä 4, Jydätä 4, Heiketä 3],
+        "etä" => [Yletä 42, Kiivetä 12, Jyrketä 12, Määrätä 8, Hävitä 5, Heiketä 2],
         "hetä" => [Yletä 9],
         "ietä" => [Jyrketä 3, Kiivetä 1],
-        "jetä" => [Kiivetä 5, Yletä 4, Jyrketä 2] regular,
+        "erjetä" => [Kiivetä 2],
         "ketä" => [Jyrketä 5, Yletä 2],
         "letä" => [Yletä 4],
         "hmetä" => [Yletä 3],
@@ -384,7 +384,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "vitä" => [Hävitä 4] regular,
         "stä" => [Päästä 139] regular,
         "istä" => [Päästä 127] regular,
-        "ytä" => [Hävitä 26, Yletä 1] regular,
+        "ytä" => [Hävitä 26, Määrätä 1] regular,
         "ätä" => [Määrätä 129, Hylätä 71, Jydätä 4, Heiketä 1],
         "dätä" => [Määrätä 4, Jydätä 4, Hylätä 2] regular,
         "hdätä" => [Hylätä 2] regular,
@@ -469,9 +469,10 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         ],
         Ohjata => [
             "#depata", "#digata", "#dokata", "#faartata", "#fatata", "#flirtata", "#futata",
-            "#hatata", "#hokata", "#jutata", "#leudota", "#loitota", "#mokata", "#paapata",
-            "#petata", "#plotata", "#praatata", "#prakata", "#rangaista", "#ruukata", "#röökata",
-            "#safkata", "#trokata", "#vatata", "#virvota", "#vlogata", "#vokata",
+            "#hatata", "#heikota", "#hokata", "#huveta", "#jutata", "#jututa", "#leudota",
+            "#lohjeta", "#loitota", "#luututa", "#mokata", "#paapata", "#petata", "#plotata",
+            "#praatata", "#prakata", "#puhjeta", "#rangaista", "#rohjeta", "#ruukata", "#röökata",
+            "#safkata", "#trokata", "#ulota", "#vatata", "#virvota", "#vlogata", "#vokata",
         ],
         Tulla => [
             "#nakella", "#olla", "#paahdella",
@@ -505,6 +506,11 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         Johtaa => [
             "#huutaa", "#taitaa",
         ],
+        Määrätä => [
+            "#edetä", "#evätä", "#hellitä", "#hävetä", "#kehjetä", "#kevetä", "#kiinnetä",
+            "#levätä", "#lystätä", "#lämmetä", "#lämmitä", "#mädätä", "#pykätä", "#revetä",
+            "#ryöpytä", "#räikätä", "#tylpetä", "#töytätä",
+        ],
         Päästä => [
             "#aivopestä", "#hiekkapestä", "#häväistä", "#konepestä", "#kuivapestä", "#piestä",
             "#seistä", "#syöstä",
@@ -516,13 +522,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         Pyöriä => [
             "#hylkiä", "#viittiä",
         ],
-        Määrätä => [
-            "#evätä", "#hellitä", "#hävetä", "#kevetä", "#kiinnetä", "#levätä", "#lystätä",
-            "#lämmetä", "#lämmitä", "#mädätä", "#pykätä", "#räikätä", "#tylpetä", "#töytätä",
-        ],
         Hajota => [
-            "#bingota", "#heikota", "#huveta", "#jututa", "#kasketa", "#lohjeta", "#loveta",
-            "#lumeta", "#luututa", "#puhjeta", "#rohjeta", "#saveta", "#solmita", "#ulota",
+            "#bingota", "#kasketa", "#loveta", "#lumeta", "#saveta", "#solmita",
         ],
         Katsoa => [
             "#hioa", "#katkoa", "#kattoa", "#kertoa", "#paapoa", "#ratkoa", "#vartoa", "#viittoa",
@@ -546,9 +547,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
             "#hienota", "#huonota", "#hurjeta", "#isota", "#kehnota", "#kuohketa", "#norjeta",
             "#notketa", "#paksuta", "#parata", "#sorjeta",
         ],
-        Yletä => [
-            "#edetä", "#kehjetä", "#liketä", "#revetä", "#ryöpytä", "#sitketä",
-        ],
         Asioida => [
             "#aateloida", "#ahkeroida", "#aprikoida", "#asioida", "#aterioida", "#haravoida",
             "#hekumoida", "#hihhuloida", "#ilakoida", "#ilkamoida", "#kapaloida", "#kapinoida",
@@ -558,6 +556,9 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
             "#sirpaloida", "#sukuloida", "#takavarikoida", "#teikaroida", "#tupakoida",
             "#vartioida", "#vihannoida",
         ],
+        Yletä => [
+            "#liketä", "#sitketä",
+        ],
         Hävitä => [
             "#eritä", "#hirvetä", "#kivetä", "#löhötä", "#nimetä", "#pehmitä", "#ristetä",
             "#rivetä", "#silitä", "#viritä",
@@ -565,12 +566,13 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         Kiertää => [
             "#kaukosiirtää",
         ],
-        Liukua => [
-            "#huokua", "#kiekua", "#raakua",
-        ],
         Aueta => [
             "#aallota", "#haleta", "#juleta", "#kammeta", "#kavuta", "#kimmota", "#kivuta",
-            "#kummuta", "#noeta", "#poiketa", "#tuketa", "#vivuta",
+            "#kummuta", "#lotota", "#netota", "#noeta", "#peitota", "#poiketa", "#tuketa",
+            "#vivuta",
+        ],
+        Liukua => [
+            "#huokua", "#kiekua", "#raakua",
         ],
         Sotia => [
             "#ahnehtia", "#ajelehtia", "#huolehtia", "#juurehtia", "#kadehtia", "#kahlehtia",
@@ -605,7 +607,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
             "#palaa", "#raastaa", "#salvaa", "#uppopaistaa", "#valaa", "#voimavaraistaa",
         ],
         Hankkia => [
-            "#naakia", "#palkia", "#poikia", "#sukia", "#sulkia",
+            "#naakia", "#palkia", "#sukia", "#sulkia",
         ],
         Sitoa => [
             "#kutea", "#potea",
@@ -636,8 +638,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
             "#palttaa", "#saattaa", "#varttaa",
         ],
         Kiivetä => [
-            "#herjetä", "#iljetä", "#jäljetä", "#kerjetä", "#pietä", "#seljitä", "#teljetä",
-            "#vyyhdetä", "#ängetä",
+            "#iljetä", "#jäljetä", "#pietä", "#seljitä", "#teljetä", "#vyyhdetä", "#ängetä",
         ],
         Jyrketä => [
             "#pidetä", "#seljetä", "#virjetä", "#yhdetä",
@@ -745,9 +746,6 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         ],
         Myydä => [
             "#alimyydä", "#loppuunmyydä", "#myydä",
-        ],
-        Lotota => [
-            "#lotota", "#netota", "#peitota",
         ],
         Nylkeä => [
             "#nylkeä", "#sylkeä", "#särkeä",

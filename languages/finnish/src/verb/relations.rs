@@ -2,40 +2,17 @@
 //! A conjugation that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 162] = [
     // PRES_AFF_1SG, from THIRD_INFINITIVE_INE.
     relation!(PRES_AFF_1SG, [THIRD_INFINITIVE_INE], [("~", "~n"), ("~kamassa", "~an"), ("~kemassa", "~en"), ("~kemassa", "~jen"), ("~kemässä", "~en"), ("~kemässä", "~jen"), ("~kimassa", "~gin"), ("~kimassa", "~in"), ("~kimässä", "~gin"), ("~kimässä", "~in"), ("~komassa", "~gon"), ("~komassa", "~on"), ("~kumassa", "~gun"), ("~kumassa", "~un"), ("~kymässä", "~Un"), ("~massa", "~n"), ("~mässä", "~n"), ("~pamassa", "~An"), ("~pemässä", "~ven"), ("~pimassa", "~in"), ("~pimassa", "~vin"), ("~pimässä", "~in"), ("~pimässä", "~min"), ("~pimässä", "~vin"), ("~pomassa", "~On"), ("~pomassa", "~von"), ("~pumassa", "~mUn"), ("~pumassa", "~un"), ("~pumassa", "~vun"), ("~pymässä", "~vUn"), ("~tamassa", "~An"), ("~tamassa", "~dan"), ("~tamassa", "~lAn"), ("~tamassa", "~nAn"), ("~tamassa", "~rAn"), ("~temassa", "~den"), ("~temässä", "~den"), ("~timassa", "~din"), ("~timassa", "~in"), ("~timassa", "~nin"), ("~timässä", "~din"), ("~timässä", "~in"), ("~timässä", "~nin"), ("~tomassa", "~don"), ("~tomassa", "~on"), ("~tomassa", "~ron"), ("~tsematon", "~n"), ("~tsemätön", "~n"), ("~tumassa", "~Un"), ("~tumassa", "~dun"), ("~tumassa", "~lUn"), ("~tumassa", "~nUn"), ("~tumassa", "~rUn"), ("~tymässä", "~Un"), ("~tymässä", "~dUn"), ("~tymässä", "~lUn"), ("~tymässä", "~nyn"), ("~tymässä", "~ryn"), ("~tämässä", "~dän"), ("~tämässä", "~lAn"), ("~tämässä", "~nän"), ("~tämässä", "~rän"), ("~tämässä", "~än")], rules {
@@ -168,7 +145,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11995],
     } listed {}, true, None),
     // PRES_AFF_3SG, from INFINITIVE.
-    relation!(PRES_AFF_3SG, [INFINITIVE], [("~", "~"), ("~a", "~V"), ("~a", "~see"), ("~aista", "~kAiseV"), ("~ata", "~bAA"), ("~ata", "~gaA"), ("~ata", "~kaA"), ("~ata", "~paA"), ("~ata", "~taA"), ("~da", "~"), ("~data", "~taA"), ("~della", "~telVV"), ("~dellä", "~telVV"), ("~detä", "~tenVV"), ("~dota", "~toaa"), ("~dä", "~"), ("~dätä", "~tAA"), ("~ella", "~kelVV"), ("~ella", "~telVV"), ("~ellä", "~telVV"), ("~eta", "~keAA"), ("~eta", "~kenVV"), ("~eta", "~penVV"), ("~etä", "~keAA"), ("~etä", "~kenVV"), ("~gata", "~kaA"), ("~geta", "~keAA"), ("~gota", "~koaa"), ("~gätä", "~kAA"), ("~hdä", "~keV"), ("~itä", "~kiAA"), ("~jeta", "~keAA"), ("~jeta", "~kenVV"), ("~jetä", "~keAA"), ("~jetä", "~kenVV"), ("~jätä", "~kAA"), ("~la", "~eV"), ("~lata", "~taA"), ("~lella", "~telVV"), ("~lellä", "~telVV"), ("~lä", "~eV"), ("~mata", "~paA"), ("~mella", "~pelVV"), ("~na", "~eV"), ("~nata", "~tAA"), ("~nella", "~telVV"), ("~nellä", "~telVV"), ("~nota", "~toaa"), ("~nä", "~VV"), ("~nätä", "~tAA"), ("~ota", "~koaa"), ("~ota", "~koneV"), ("~ota", "~poaa"), ("~ota", "~toaa"), ("~ra", "~eV"), ("~rata", "~taA"), ("~rella", "~telVV"), ("~rellä", "~telVV"), ("~rota", "~toaa"), ("~rä", "~VV"), ("~stä", "~kseV"), ("~ta", "~A"), ("~ta", "~AA"), ("~ta", "~eV"), ("~ta", "~neV"), ("~tä", "~A"), ("~tä", "~AA"), ("~tä", "~eV"), ("~tä", "~nVV"), ("~uta", "~kUAA"), ("~uta", "~puaa"), ("~uta", "~tuaa"), ("~vata", "~paA"), ("~veta", "~peAA"), ("~veta", "~penVV"), ("~vetä", "~peAA"), ("~vista", "~piseV"), ("~vota", "~poaa"), ("~vuta", "~puaa"), ("~vätä", "~pAA"), ("~ä", "~V"), ("~ä", "~see"), ("~ätä", "~kAA"), ("~ätä", "~pAA"), ("~ätä", "~tAA")], rules {
+    relation!(PRES_AFF_3SG, [INFINITIVE], [("~", "~"), ("~a", "~V"), ("~a", "~see"), ("~aista", "~kAiseV"), ("~ata", "~bAA"), ("~ata", "~gaA"), ("~ata", "~kaA"), ("~ata", "~paA"), ("~ata", "~taA"), ("~da", "~"), ("~data", "~taA"), ("~della", "~telVV"), ("~dellä", "~telVV"), ("~detä", "~tenVV"), ("~dota", "~toaa"), ("~dä", "~"), ("~dätä", "~tAA"), ("~ella", "~kelVV"), ("~ella", "~telVV"), ("~ellä", "~telVV"), ("~eta", "~keAA"), ("~eta", "~kenVV"), ("~eta", "~penVV"), ("~etä", "~keAA"), ("~etä", "~kenVV"), ("~gata", "~kaA"), ("~geta", "~keAA"), ("~gota", "~koaa"), ("~gätä", "~kAA"), ("~hdä", "~keV"), ("~itä", "~kiää"), ("~jeta", "~keAA"), ("~jeta", "~kenVV"), ("~jetä", "~keAA"), ("~jetä", "~kenVV"), ("~jätä", "~kAA"), ("~la", "~eV"), ("~lata", "~taA"), ("~lella", "~telVV"), ("~lellä", "~telVV"), ("~lä", "~eV"), ("~mata", "~paA"), ("~mella", "~pelVV"), ("~na", "~eV"), ("~nata", "~tAA"), ("~nella", "~telVV"), ("~nellä", "~telVV"), ("~nota", "~toaa"), ("~nä", "~VV"), ("~nätä", "~tAA"), ("~ota", "~koaa"), ("~ota", "~koneV"), ("~ota", "~poaa"), ("~ota", "~toaa"), ("~ra", "~eV"), ("~rata", "~taA"), ("~rella", "~telVV"), ("~rellä", "~telVV"), ("~rota", "~toaa"), ("~rä", "~VV"), ("~stä", "~kseV"), ("~ta", "~A"), ("~ta", "~AA"), ("~ta", "~eV"), ("~ta", "~neV"), ("~tä", "~A"), ("~tä", "~AA"), ("~tä", "~eV"), ("~tä", "~nVV"), ("~uta", "~kUAA"), ("~uta", "~puaa"), ("~uta", "~tUAA"), ("~vata", "~paA"), ("~veta", "~peAA"), ("~veta", "~penVV"), ("~vetä", "~peAA"), ("~vista", "~piseV"), ("~vota", "~poaa"), ("~vuta", "~puaa"), ("~vätä", "~pAA"), ("~ä", "~V"), ("~ä", "~see"), ("~ätä", "~kAA"), ("~ätä", "~pAA"), ("~ätä", "~tAA")], rules {
         "" => [0 3932, 1 2196, 9 986, 80 910, 61 757, 36 663, 18 316, 40 275, 63 185, 19 166, 6 138, 67 135, 11 131, 65 126, 62 124, 15 109, 7 80, 12 74, 8 73, 64 56, 2 45, 68 42, 66 41, 82 32, 46 31, 45 26, 56 26, 10 21, 21 19, 83 17, 50 16, 81 15, 84 13, 24 10, 38 9, 57 9, 20 8, 14 6, 16 6, 32 6, 33 6, 43 6, 72 6, 37 5, 39 5, 4 4, 25 4, 30 4, 31 4, 74 4, 75 4, 3 3, 22 3, 23 3, 27 3, 53 3, 55 3, 69 3, 70 3, 77 3, 78 3, 79 3, 5 2, 13 2, 17 2, 26 2, 28 2, 29 2, 34 2, 35 2, 41 2, 42 2, 44 2, 47 2, 48 2, 49 2, 51 2, 52 2, 54 2, 58 2, 59 2, 60 2, 71 2, 73 2, 76 2],
         "a" => [0 2636, 1 2196, 9 986, 61 757, 36 663, 18 316, 63 185, 6 138, 11 131, 62 124, 7 80, 8 73, 64 56, 2 45, 45 26, 56 26, 10 21, 21 19, 50 16, 38 9, 20 8, 14 6, 32 6, 43 6, 72 6, 37 5, 4 4, 25 4, 31 4, 74 4, 3 3, 22 3, 27 3, 53 3, 55 3, 69 3, 70 3, 77 3, 78 3, 5 2, 17 2, 26 2, 41 2, 42 2, 44 2, 47 2, 51 2, 52 2, 54 2, 58 2, 71 2, 73 2, 76 2],
         "aa" => [0 2636],
@@ -297,18 +274,15 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "yä" => [80 661],
         "ää" => [0 1296],
     } listed {
-        24 => [
-            "kyetä",
+        4 => [
+            "dubata", "jobata", "lobata", "mobata",
         ],
-        30 => [
-            "kehitä", "keritä", "selitä", "siitä",
+        10 => [
+            "luodata", "pedata",
         ],
         50 => [
             "kaikota", "karkota", "keota", "koota", "liuota", "poukota", "ruokota", "seota",
             "virota",
-        ],
-        53 => [
-            "lotota", "netota", "peitota",
         ],
         69 => [
             "koukuta", "ruikuta",
@@ -321,7 +295,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         ],
     }, true, None),
     // PRES_AFF_1PL, from PRES_AFF_1SG.
-    relation!(PRES_AFF_1PL, [PRES_AFF_1SG], [("~an", "~TAAn"), ("~kaan", "~ataan"), ("~n", "~mme")], rules {
+    relation!(PRES_AFF_1PL, [PRES_AFF_1SG], [("~an", "~tAAn"), ("~kaan", "~ataan"), ("~n", "~mme")], rules {
         "" => [2 11976, 0 15, 1 2],
         "an" => [2 3914, 0 15, 1 2],
         "aan" => [2 1103, 0 15, 1 2],
@@ -342,7 +316,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11994],
     } listed {}, true, None),
     // PRES_AFF_3PL, from THIRD_INFINITIVE_INE.
-    relation!(PRES_AFF_3PL, [THIRD_INFINITIVE_INE], [("~", "~"), ("~massa", "~vAT"), ("~mässä", "~väT"), ("~tsematon", "~vAT"), ("~tsemätön", "~vAT")], rules {
+    relation!(PRES_AFF_3PL, [THIRD_INFINITIVE_INE], [("~", "~"), ("~massa", "~vAt"), ("~mässä", "~vät"), ("~tsematon", "~vAt"), ("~tsemätön", "~vAt")], rules {
         "" => [1 8567, 2 3347, 3 44, 4 19, 0 18],
         "a" => [1 8567, 0 18],
         "aa" => [0 18],
@@ -369,7 +343,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11995],
     } listed {}, false, None),
     // PRES_NEG_1PL, from PRES_NEG_1SG.
-    relation!(PRES_NEG_1PL, [PRES_NEG_1SG], [("en~a", "ei~TA"), ("en~kaa", "ei~aTA"), ("~n ammu", "~mmV ammU"), ("~n dubbaa", "~mme dubbaa"), ("~n futaa", "~mme futaa"), ("~n halkaise", "~mme halkaise"), ("~n halkea", "~mmV halkeA"), ("~n herkeä", "~mmV hVrkVA"), ("~n hylkää", "~mmV hUlkAA"), ("~n häpäise", "~mmV hApAise"), ("~n julkaise", "~mme julkaise"), ("~n julkea", "~mmV julkeA"), ("~n jutaa", "~mme jutaa"), ("~n kaitse", "~mmV kaiTse"), ("~n kerkeä", "~mmV kVrkVA"), ("~n könni", "~mmV kOnni"), ("~n laukaise", "~mme laukaise"), ("~n likene", "~mmV likenV"), ("~n pelkää", "~mmV pVlkAA"), ("~n petaa", "~mmV pVtaA"), ("~n rankaise", "~mme rankaise"), ("~n rapise", "~mmV rapise"), ("~n runno", "~mmV runnO"), ("~n seiso", "~mmV sViso"), ("~n selkiä", "~mmV sVlkiA"), ("~n tarkene", "~mmV tarkenV"), ("~n töytää", "~mme töytää"), ("~n vapise", "~mmV vapise"), ("~n vetoa", "~mmV vVtoA"), ("~n virkoa", "~mmV virkoA")], rules {
+    relation!(PRES_NEG_1PL, [PRES_NEG_1SG], [("en~a", "ei~tA"), ("en~kaa", "ei~atA"), ("~n ammu", "~mmV ammU"), ("~n dubbaa", "~mme dubbaa"), ("~n futaa", "~mme futaa"), ("~n halkaise", "~mme halkaise"), ("~n halkea", "~mmV halkeA"), ("~n herkeä", "~mmV hVrkVA"), ("~n hylkää", "~mmV hUlkAA"), ("~n häpäise", "~mmV hApAise"), ("~n julkaise", "~mme julkaise"), ("~n julkea", "~mmV julkeA"), ("~n jutaa", "~mme jutaa"), ("~n kaitse", "~mmV kaitse"), ("~n kerkeä", "~mmV kVrkVA"), ("~n könni", "~mmV kOnni"), ("~n laukaise", "~mme laukaise"), ("~n likene", "~mmV likenV"), ("~n pelkää", "~mmV pVlkAA"), ("~n petaa", "~mmV pVtaA"), ("~n rankaise", "~mme rankaise"), ("~n rapise", "~mmV rapise"), ("~n runno", "~mmV runnO"), ("~n seiso", "~mmV sViso"), ("~n selkiä", "~mmV sVlkiA"), ("~n tarkene", "~mmV tarkenV"), ("~n töytää", "~mmV tOUtAA"), ("~n vapise", "~mmV vapise"), ("~n vetoa", "~mmV vVtoA"), ("~n virkoa", "~mme virkoa")], rules {
         "" => [0 15, 1 2, 2 2, 3 2, 4 2, 5 2, 6 2, 7 2, 8 2, 9 2, 10 2, 11 2, 12 2, 13 2, 14 2, 15 2, 16 2, 17 2, 18 2, 19 2, 20 2, 21 2, 22 2, 23 2, 24 2, 25 2, 26 2, 27 2, 28 2, 29 2],
         "a" => [0 15, 1 2, 3 2, 4 2, 6 2, 11 2, 12 2, 19 2, 28 2, 29 2],
         "baa" => [3 2],
@@ -403,7 +377,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [6 2, 7 2, 13 2, 17 2, 23 2, 25 2],
     } listed {}, true, None),
     // PRES_NEG_PASS, from INFINITIVE.
-    relation!(PRES_NEG_PASS, [INFINITIVE], [("~", "ei ~"), ("~a", "ei ~tA"), ("~aa", "ei ~etA"), ("~kaa", "ei ~aTA"), ("~kaa", "ei ~etA"), ("~kea", "ei ~etA"), ("~kea", "ei ~jetA"), ("~keä", "ei ~jetA"), ("~kia", "ei ~gitA"), ("~kia", "ei ~ita"), ("~kiä", "ei ~gitA"), ("~kiä", "ei ~itA"), ("~koa", "ei ~gotA"), ("~koa", "ei ~otA"), ("~kua", "ei ~gutA"), ("~kua", "ei ~utA"), ("~kyä", "ei ~UtA"), ("~paa", "ei ~eTA"), ("~peä", "ei ~vetA"), ("~pia", "ei ~itA"), ("~pia", "ei ~vitA"), ("~piä", "ei ~itA"), ("~piä", "ei ~mitA"), ("~piä", "ei ~vitA"), ("~poa", "ei ~OtA"), ("~poa", "ei ~votA"), ("~pua", "ei ~mUtA"), ("~pua", "ei ~utA"), ("~pua", "ei ~vutA"), ("~pyä", "ei ~vUtA"), ("~taa", "ei ~deta"), ("~taa", "ei ~etA"), ("~taa", "ei ~letA"), ("~taa", "ei ~netA"), ("~taa", "ei ~retA"), ("~tea", "ei ~detA"), ("~teä", "ei ~detA"), ("~tia", "ei ~dita"), ("~tia", "ei ~itA"), ("~tia", "ei ~nitA"), ("~tiä", "ei ~ditä"), ("~tiä", "ei ~itA"), ("~tiä", "ei ~nitA"), ("~toa", "ei ~dotA"), ("~toa", "ei ~otA"), ("~toa", "ei ~rotA"), ("~tua", "ei ~UtA"), ("~tua", "ei ~dutA"), ("~tua", "ei ~lUtA"), ("~tua", "ei ~nUtA"), ("~tua", "ei ~rUtA"), ("~tyä", "ei ~UtA"), ("~tyä", "ei ~dUtA"), ("~tyä", "ei ~lUtA"), ("~tyä", "ei ~nytA"), ("~tyä", "ei ~rytA"), ("~tää", "ei ~detä"), ("~tää", "ei ~etä"), ("~tää", "ei ~letA"), ("~tää", "ei ~netä"), ("~tää", "ei ~retä"), ("~ä", "ei ~tA"), ("~ää", "ei ~etA")], rules {
+    relation!(PRES_NEG_PASS, [INFINITIVE], [("~", "ei ~"), ("~a", "ei ~tA"), ("~aa", "ei ~etA"), ("~kaa", "ei ~atA"), ("~kaa", "ei ~etA"), ("~kea", "ei ~etA"), ("~kea", "ei ~jetA"), ("~keä", "ei ~jetA"), ("~kia", "ei ~gitA"), ("~kia", "ei ~ita"), ("~kiä", "ei ~gitA"), ("~kiä", "ei ~itA"), ("~koa", "ei ~gotA"), ("~koa", "ei ~otA"), ("~kua", "ei ~gutA"), ("~kua", "ei ~utA"), ("~kyä", "ei ~UtA"), ("~paa", "ei ~etA"), ("~peä", "ei ~vetA"), ("~pia", "ei ~itA"), ("~pia", "ei ~vitA"), ("~piä", "ei ~itA"), ("~piä", "ei ~mitA"), ("~piä", "ei ~vitA"), ("~poa", "ei ~OtA"), ("~poa", "ei ~votA"), ("~pua", "ei ~mUtA"), ("~pua", "ei ~utA"), ("~pua", "ei ~vutA"), ("~pyä", "ei ~vUtA"), ("~taa", "ei ~deta"), ("~taa", "ei ~etA"), ("~taa", "ei ~letA"), ("~taa", "ei ~netA"), ("~taa", "ei ~retA"), ("~tea", "ei ~detA"), ("~teä", "ei ~detA"), ("~tia", "ei ~dita"), ("~tia", "ei ~itA"), ("~tia", "ei ~nitA"), ("~tiä", "ei ~ditä"), ("~tiä", "ei ~itA"), ("~tiä", "ei ~nitA"), ("~toa", "ei ~dotA"), ("~toa", "ei ~otA"), ("~toa", "ei ~rotA"), ("~tua", "ei ~UtA"), ("~tua", "ei ~dutA"), ("~tua", "ei ~lUtA"), ("~tua", "ei ~nUtA"), ("~tua", "ei ~rUtA"), ("~tyä", "ei ~UtA"), ("~tyä", "ei ~dUtA"), ("~tyä", "ei ~lUtA"), ("~tyä", "ei ~nytA"), ("~tyä", "ei ~rytA"), ("~tää", "ei ~detä"), ("~tää", "ei ~etä"), ("~tää", "ei ~letA"), ("~tää", "ei ~netä"), ("~tää", "ei ~retä"), ("~ä", "ei ~tA"), ("~ää", "ei ~etA")], rules {
         "" => [0 4959, 31 1511, 57 747, 1 743, 47 738, 2 588, 61 342, 49 292, 30 259, 62 237, 52 195, 33 167, 46 167, 56 154, 54 127, 59 85, 51 82, 34 52, 37 42, 60 41, 32 33, 40 33, 15 31, 58 31, 11 29, 9 25, 55 25, 13 22, 50 22, 43 21, 16 15, 28 14, 53 12, 48 11, 25 10, 27 10, 21 8, 23 8, 5 7, 19 7, 10 6, 6 5, 14 5, 20 5, 22 5, 29 5, 4 4, 36 4, 41 4, 7 3, 8 3, 12 3, 17 3, 39 3, 3 2, 18 2, 24 2, 26 2, 35 2, 38 2, 42 2, 44 2, 45 2],
         "a" => [0 3797, 31 1511, 1 743, 47 738, 2 588, 49 292, 30 259, 33 167, 46 167, 34 52, 37 42, 32 33, 15 31, 9 25, 13 22, 50 22, 43 21, 28 14, 48 11, 25 10, 27 10, 5 7, 19 7, 6 5, 14 5, 20 5, 4 4, 8 3, 12 3, 17 3, 39 3, 3 2, 24 2, 26 2, 35 2, 38 2, 44 2, 45 2],
         "aa" => [31 1511, 2 588, 30 259, 33 167, 34 52, 32 33, 1 15, 4 4, 17 3, 3 2],
@@ -746,7 +720,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ö" => [16 5],
     } listed {}, false, None),
     // PAST_AFF_1PL, from PAST_AFF_1SG.
-    relation!(PAST_AFF_1PL, [PAST_AFF_1SG], [("~kasin", "~attiin"), ("~n", "~mme"), ("~sin", "~TTiVn")], rules {
+    relation!(PAST_AFF_1PL, [PAST_AFF_1SG], [("~kasin", "~attiin"), ("~n", "~mme"), ("~sin", "~ttiVn")], rules {
         "" => [1 11975, 2 15, 0 2],
         "sin" => [1 2465, 2 15, 0 2],
         "dasin" => [1 20, 2 3],
@@ -758,7 +732,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11993],
     } listed {}, true, None),
     // PAST_AFF_3PL, from PAST_AFF_3SG.
-    relation!(PAST_AFF_3PL, [PAST_AFF_3SG], [("~", "~"), ("~", "~vAT"), ("~", "~väT")], rules {
+    relation!(PAST_AFF_3PL, [PAST_AFF_3SG], [("~", "~"), ("~", "~vAt"), ("~", "~vät")], rules {
         "" => [1 11961, 2 21, 0 18],
         "i" => [1 11961, 2 21],
         "eili" => [1 76, 2 3],
@@ -847,68 +821,68 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11998],
     } listed {}, true, None),
     // PAST_NEG_1PL, from PRES_NEG_1PL.
-    relation!(PAST_NEG_1PL, [PRES_NEG_1PL], [("~", "~neVt"), ("~a", "~TU"), ("~a", "~kaneVT"), ("~a", "~nneVt"), ("~a", "~pAneVT"), ("~a", "~taneet"), ("~baa", "~AnneVT"), ("~da", "~taneet"), ("~de", "~tenVVt"), ("~di", "~tineVt"), ("~do", "~toneet"), ("~du", "~tuneet"), ("~dy", "~tUneVt"), ("~dä", "~täneet"), ("~e", "~hneVt"), ("~e", "~kenVVt"), ("~e", "~leVt"), ("~e", "~neVt"), ("~e", "~reVt"), ("~e", "~seVt"), ("~gaa", "~anneVT"), ("~ge", "~kenVVt"), ("~gi", "~kineVt"), ("~go", "~koneVt"), ("~gu", "~kuneVt"), ("~i", "~kineVt"), ("~i", "~pineVt"), ("~i", "~tineVt"), ("~je", "~kenVVt"), ("~kaa", "~anneVT"), ("~kaa", "~ganneVT"), ("~kaise", "~AisseVT"), ("~kea", "~ennVVt"), ("~kea", "~gennVVT"), ("~kea", "~jennVVt"), ("~kele", "~ellVVt"), ("~kene", "~ennVVt"), ("~kene", "~jennVVt"), ("~keä", "~ennVVt"), ("~keä", "~jennVVt"), ("~kiä", "~inneVt"), ("~koa", "~gonneVt"), ("~koa", "~onneVt"), ("~kone", "~onneVt"), ("~kse", "~sseVt"), ("~kua", "~UnneVt"), ("~kää", "~AnneVT"), ("~kää", "~gAnneVT"), ("~kää", "~jAnneVT"), ("~la", "~taneet"), ("~lu", "~tUneVt"), ("~ly", "~tUneVt"), ("~lä", "~täneet"), ("~mi", "~pineVt"), ("~mu", "~pUneVt"), ("~na", "~taneet"), ("~ni", "~tineet"), ("~nu", "~tUneVt"), ("~ny", "~tyneet"), ("~nä", "~täneet"), ("~o", "~koneVt"), ("~o", "~pOneVt"), ("~o", "~toneet"), ("~paa", "~anneVT"), ("~paa", "~manneVT"), ("~paa", "~vanneVT"), ("~pea", "~vennVVt"), ("~pele", "~ellVVt"), ("~pele", "~mellVVt"), ("~pene", "~ennVVt"), ("~pene", "~vennVVt"), ("~peä", "~vennVVt"), ("~pise", "~visseVT"), ("~poa", "~onneVt"), ("~poa", "~vonneVt"), ("~pua", "~unneVt"), ("~pua", "~vunneVt"), ("~pää", "~AnneVT"), ("~pää", "~vAnneVT"), ("~ra", "~taneet"), ("~ro", "~toneet"), ("~ru", "~tUneVt"), ("~ry", "~tyneet"), ("~rä", "~täneet"), ("~taa", "~anneVT"), ("~taa", "~danneVT"), ("~taa", "~lanneVT"), ("~taa", "~nAnneVT"), ("~taa", "~ranneVT"), ("~tele", "~dellVVt"), ("~tele", "~ellVVt"), ("~tele", "~lellVVt"), ("~tele", "~nellVVt"), ("~tele", "~rellVVt"), ("~tene", "~dennVVt"), ("~toa", "~donneVt"), ("~toa", "~nonneVt"), ("~toa", "~onneVt"), ("~toa", "~ronneVt"), ("~tse", "~nneVt"), ("~tua", "~UnneVt"), ("~tää", "~AnneVT"), ("~tää", "~dAnneVT"), ("~tää", "~nAnneVT"), ("~u", "~kuneVt"), ("~u", "~puneVt"), ("~u", "~tUneVt"), ("~ve", "~penVVt"), ("~vi", "~pineVt"), ("~vo", "~poneVt"), ("~vu", "~puneVt"), ("~vy", "~pUneVt"), ("~y", "~kUneVt"), ("~y", "~tUneVt"), ("~ä", "~nneVt"), ("~ä", "~täneet")], rules {
-        "" => [0 2990, 5 1511, 16 939, 3 881, 115 747, 11 738, 90 483, 19 320, 57 292, 7 259, 89 206, 12 195, 55 167, 106 167, 114 167, 13 155, 29 138, 58 127, 17 106, 59 85, 113 82, 63 80, 9 75, 84 73, 99 60, 92 57, 25 54, 79 52, 83 41, 93 35, 49 33, 46 32, 52 31, 104 31, 36 29, 82 25, 10 22, 60 22, 81 22, 85 22, 1 18, 77 17, 42 16, 26 15, 112 15, 91 14, 110 14, 101 13, 108 13, 51 12, 50 11, 105 10, 109 10, 22 9, 28 8, 32 8, 37 8, 15 7, 8 6, 27 6, 39 6, 53 6, 65 6, 95 6, 102 6, 24 5, 56 5, 70 5, 86 5, 111 5, 2 4, 6 4, 18 4, 30 4, 34 4, 40 4, 69 4, 71 4, 4 3, 23 3, 31 3, 35 3, 38 3, 41 3, 44 3, 45 3, 68 3, 74 3, 75 3, 76 3, 78 3, 88 3, 94 3, 97 3, 14 2, 20 2, 21 2, 33 2, 43 2, 47 2, 48 2, 54 2, 61 2, 62 2, 64 2, 66 2, 67 2, 72 2, 73 2, 80 2, 87 2, 96 2, 98 2, 100 2, 103 2, 107 2],
-        "a" => [5 1511, 3 881, 0 590, 7 259, 55 167, 29 138, 63 80, 84 73, 79 52, 49 33, 85 22, 1 18, 42 16, 32 8, 65 6, 95 6, 86 5, 2 4, 6 4, 30 4, 34 4, 4 3, 41 3, 45 3, 74 3, 75 3, 76 3, 88 3, 97 3, 20 2, 33 2, 64 2, 66 2, 73 2, 87 2, 96 2, 98 2, 100 2],
-        "aa" => [3 757, 29 138, 63 80, 84 73, 85 22, 65 6, 86 5, 6 4, 30 4, 88 3, 0 2, 20 2, 64 2, 87 2, 2 1],
-        "baa" => [3 11, 6 4],
-        "daa" => [3 20],
-        "faa" => [3 10],
-        "gaa" => [3 8, 20 2],
-        "haa" => [3 23],
-        "jaa" => [3 38, 2 1],
-        "kaa" => [29 138, 3 48, 30 4],
-        "hkaa" => [3 8, 29 1],
+    relation!(PAST_NEG_1PL, [PRES_NEG_1PL], [("~", "~neVt"), ("~a", "~kaneVt"), ("~a", "~nneVt"), ("~a", "~pAneVt"), ("~a", "~tAneVt"), ("~a", "~tU"), ("~baa", "~AnneVt"), ("~da", "~taneVt"), ("~de", "~tenVVt"), ("~di", "~tineVt"), ("~do", "~toneVt"), ("~du", "~tuneVt"), ("~dy", "~tUneVt"), ("~dä", "~täneVt"), ("~e", "~hneVt"), ("~e", "~kenVVt"), ("~e", "~leVt"), ("~e", "~neVt"), ("~e", "~reVt"), ("~e", "~seVt"), ("~gaa", "~anneVt"), ("~ge", "~kenVVt"), ("~gi", "~kineVt"), ("~go", "~koneVt"), ("~gu", "~kuneVt"), ("~i", "~kineVt"), ("~i", "~pineVt"), ("~i", "~tineVt"), ("~je", "~kenVVt"), ("~kaa", "~anneVt"), ("~kaa", "~ganneVt"), ("~kaise", "~AisseVt"), ("~kea", "~ennVVt"), ("~kea", "~gennVVt"), ("~kea", "~jennVVt"), ("~kele", "~ellVVt"), ("~kene", "~ennVVt"), ("~kene", "~jennVVt"), ("~keä", "~ennVVt"), ("~keä", "~jennVVt"), ("~kiä", "~inneVt"), ("~koa", "~gonneVt"), ("~koa", "~onneVt"), ("~kone", "~onneVt"), ("~kse", "~sseVt"), ("~kua", "~UnneVt"), ("~kää", "~AnneVt"), ("~kää", "~gAnneVt"), ("~kää", "~jAnneVt"), ("~la", "~tAneVt"), ("~lu", "~tUneVt"), ("~ly", "~tUneVt"), ("~lä", "~tAneVt"), ("~mi", "~pineVt"), ("~mu", "~pUneVt"), ("~na", "~tAneVt"), ("~ni", "~tineet"), ("~nu", "~tUneVt"), ("~ny", "~tyneVt"), ("~nä", "~täneVt"), ("~o", "~koneVt"), ("~o", "~pOneVt"), ("~o", "~toneVt"), ("~paa", "~anneVt"), ("~paa", "~manneVt"), ("~paa", "~vanneVt"), ("~pea", "~vennVVt"), ("~pele", "~ellVVt"), ("~pele", "~mellVVt"), ("~pene", "~ennVVt"), ("~pene", "~vennVVt"), ("~peä", "~vennVVt"), ("~pise", "~visseVt"), ("~poa", "~onneVt"), ("~poa", "~vonneVt"), ("~pua", "~unneVt"), ("~pua", "~vunneVt"), ("~pää", "~AnneVt"), ("~pää", "~vAnneVt"), ("~ra", "~tAneVt"), ("~ro", "~toneVt"), ("~ru", "~tUneVt"), ("~ry", "~tyneVt"), ("~rä", "~täneVt"), ("~taa", "~anneVt"), ("~taa", "~danneVt"), ("~taa", "~lanneVt"), ("~taa", "~nAnneVt"), ("~taa", "~ranneVt"), ("~tele", "~dellVVt"), ("~tele", "~ellVVt"), ("~tele", "~lellVVt"), ("~tele", "~nellVVt"), ("~tele", "~rellVVt"), ("~tene", "~dennVVt"), ("~toa", "~donneVt"), ("~toa", "~nonneVt"), ("~toa", "~onneVt"), ("~toa", "~ronneVt"), ("~tse", "~nneVt"), ("~tua", "~UnneVt"), ("~tää", "~AnneVt"), ("~tää", "~dAnneVt"), ("~tää", "~nAnneVt"), ("~u", "~kuneVt"), ("~u", "~puneVt"), ("~u", "~tUneVt"), ("~ve", "~penVVt"), ("~vi", "~pineVt"), ("~vo", "~poneVt"), ("~vu", "~puneVt"), ("~vy", "~pUneVt"), ("~y", "~kUneVt"), ("~y", "~tUneVt"), ("~ä", "~nneVt"), ("~ä", "~täneVt")], rules {
+        "" => [0 2990, 4 1511, 16 939, 2 881, 115 747, 11 738, 90 483, 19 320, 57 292, 7 259, 89 206, 12 195, 55 167, 106 167, 114 167, 13 155, 29 138, 58 127, 17 106, 59 85, 113 82, 63 80, 9 75, 84 73, 99 60, 92 57, 25 54, 79 52, 83 41, 93 35, 49 33, 46 32, 52 31, 104 31, 36 29, 82 25, 10 22, 60 22, 81 22, 85 22, 5 18, 77 17, 42 16, 26 15, 112 15, 91 14, 110 14, 101 13, 108 13, 51 12, 50 11, 105 10, 109 10, 22 9, 28 8, 32 8, 37 8, 15 7, 8 6, 27 6, 39 6, 53 6, 65 6, 95 6, 102 6, 24 5, 56 5, 70 5, 86 5, 111 5, 1 4, 6 4, 18 4, 30 4, 34 4, 40 4, 69 4, 71 4, 3 3, 23 3, 31 3, 35 3, 38 3, 41 3, 44 3, 45 3, 68 3, 74 3, 75 3, 76 3, 78 3, 88 3, 94 3, 97 3, 14 2, 20 2, 21 2, 33 2, 43 2, 47 2, 48 2, 54 2, 61 2, 62 2, 64 2, 66 2, 67 2, 72 2, 73 2, 80 2, 87 2, 96 2, 98 2, 100 2, 103 2, 107 2],
+        "a" => [4 1511, 2 881, 0 590, 7 259, 55 167, 29 138, 63 80, 84 73, 79 52, 49 33, 85 22, 5 18, 42 16, 32 8, 65 6, 95 6, 86 5, 1 4, 6 4, 30 4, 34 4, 3 3, 41 3, 45 3, 74 3, 75 3, 76 3, 88 3, 97 3, 20 2, 33 2, 64 2, 66 2, 73 2, 87 2, 96 2, 98 2, 100 2],
+        "aa" => [2 757, 29 138, 63 80, 84 73, 85 22, 65 6, 86 5, 6 4, 30 4, 88 3, 0 2, 20 2, 64 2, 87 2, 1 1],
+        "baa" => [2 11, 6 4],
+        "daa" => [2 20],
+        "faa" => [2 10],
+        "gaa" => [2 8, 20 2],
+        "haa" => [2 23],
+        "jaa" => [2 38, 1 1],
+        "kaa" => [29 138, 2 48, 30 4],
+        "hkaa" => [2 8, 29 1],
         "kkaa" => [29 124],
         "nkaa" => [30 4],
-        "skaa" => [3 27],
-        "tkaa" => [3 4],
-        "laa" => [3 126],
-        "maa" => [3 48],
-        "naa" => [3 52],
-        "paa" => [63 80, 65 6, 3 5, 64 2],
+        "skaa" => [2 27],
+        "tkaa" => [2 4],
+        "laa" => [2 126],
+        "maa" => [2 48],
+        "naa" => [2 52],
+        "paa" => [63 80, 65 6, 2 5, 64 2],
         "mpaa" => [64 2],
         "ppaa" => [63 80],
-        "spaa" => [3 3],
-        "raa" => [3 163],
-        "saa" => [3 89, 0 2],
-        "taa" => [84 73, 3 44, 85 22, 86 5, 88 3, 87 2],
+        "spaa" => [2 3],
+        "raa" => [2 163],
+        "saa" => [2 89, 0 2],
+        "taa" => [84 73, 2 44, 85 22, 86 5, 88 3, 87 2],
         "htaa" => [85 13],
         "ltaa" => [86 5],
         "ntaa" => [87 2],
-        "rtaa" => [88 3, 3 2],
-        "staa" => [3 26],
+        "rtaa" => [88 3, 2 2],
+        "staa" => [2 26],
         "ttaa" => [84 73],
-        "vaa" => [3 66],
+        "vaa" => [2 66],
         "da" => [7 259],
-        "ea" => [32 8, 3 7, 34 4, 33 2, 66 2],
+        "ea" => [32 8, 2 7, 34 4, 33 2, 66 2],
         "ja" => [0 3],
-        "la" => [49 33, 0 4, 2 1],
+        "la" => [49 33, 0 4, 1 1],
         "lla" => [49 33],
         "na" => [55 167, 0 1],
         "nna" => [55 167],
-        "oa" => [3 60, 42 16, 95 6, 41 3, 74 3, 97 3, 73 2, 96 2, 98 2],
-        "hoa" => [3 14],
-        "koa" => [42 16, 3 4, 41 3],
+        "oa" => [2 60, 42 16, 95 6, 41 3, 74 3, 97 3, 73 2, 96 2, 98 2],
+        "hoa" => [2 14],
+        "koa" => [42 16, 2 4, 41 3],
         "nkoa" => [41 3],
-        "moa" => [3 10],
+        "moa" => [2 10],
         "poa" => [74 3, 73 2],
-        "toa" => [95 6, 3 5, 97 3, 96 2, 98 2],
+        "toa" => [95 6, 2 5, 97 3, 96 2, 98 2],
         "ttoa" => [97 3],
-        "pa" => [4 3],
-        "ra" => [79 52, 0 1, 2 1],
+        "pa" => [3 3],
+        "ra" => [79 52, 0 1, 1 1],
         "rra" => [79 52],
-        "ta" => [5 1511, 0 570, 1 18],
-        "ata" => [5 74, 1 18],
-        "eta" => [5 61],
-        "ita" => [5 328],
-        "ota" => [5 223],
+        "ta" => [4 1511, 0 570, 5 18],
+        "ata" => [4 74, 5 18],
+        "eta" => [4 61],
+        "ita" => [4 328],
+        "ota" => [4 223],
         "sta" => [0 570],
-        "uta" => [5 815],
-        "ua" => [3 56, 45 3, 75 3, 76 3, 100 2],
-        "kua" => [3 7, 45 3],
+        "uta" => [4 815],
+        "ua" => [2 56, 45 3, 75 3, 76 3, 100 2],
+        "kua" => [2 7, 45 3],
         "pua" => [75 3, 76 3],
-        "tua" => [100 2, 3 1],
+        "tua" => [100 2, 2 1],
         "va" => [0 5],
         "e" => [16 939, 90 483, 19 320, 89 206, 17 106, 99 60, 92 57, 93 35, 36 29, 0 17, 91 14, 28 8, 37 8, 15 7, 8 6, 70 5, 18 4, 69 4, 31 3, 35 3, 44 3, 68 3, 94 3, 14 2, 21 2, 43 2, 67 2, 72 2, 107 2],
         "de" => [8 6],
@@ -1111,6 +1085,9 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         67 => [
             "emme hyppele", "emme tappele",
         ],
+        69 => [
+            "emme tylppene",
+        ],
         72 => [
             "emme rapise", "emme vapise",
         ],
@@ -1132,7 +1109,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11978],
     } listed {}, true, None),
     // PAST_NEG_3PL, from PRES_NEG_3PL.
-    relation!(PAST_NEG_3PL, [PRES_NEG_3PL], [("~", "~neVt"), ("~a", "~kaneVT"), ("~a", "~nnU"), ("~a", "~nneVt"), ("~a", "~pAneVT"), ("~a", "~taneet"), ("~baa", "~AnneVT"), ("~da", "~taneet"), ("~de", "~tenVVt"), ("~di", "~tineVt"), ("~do", "~toneet"), ("~du", "~tuneet"), ("~dy", "~tUneVt"), ("~dä", "~täneet"), ("~e", "~hneVt"), ("~e", "~kenVVt"), ("~e", "~leVt"), ("~e", "~neVt"), ("~e", "~reVt"), ("~e", "~seVt"), ("~gaa", "~anneVT"), ("~ge", "~kenVVt"), ("~gi", "~kineVt"), ("~go", "~koneVt"), ("~gu", "~kuneVt"), ("~i", "~kineVt"), ("~i", "~pineVt"), ("~i", "~tineVt"), ("~je", "~kenVVt"), ("~kaa", "~annU"), ("~kaa", "~anneVT"), ("~kaa", "~ganneVT"), ("~kaise", "~AisseVT"), ("~kea", "~ennVVt"), ("~kea", "~gennVVT"), ("~kea", "~jennVVt"), ("~kele", "~ellVVt"), ("~kene", "~ennVVt"), ("~kene", "~jennVVt"), ("~keä", "~ennVVt"), ("~keä", "~jennVVt"), ("~kiä", "~inneVt"), ("~koa", "~gonneVt"), ("~koa", "~onneVt"), ("~kone", "~onneVt"), ("~kse", "~sseVt"), ("~kua", "~UnneVt"), ("~kää", "~AnneVT"), ("~kää", "~gAnneVT"), ("~kää", "~jAnneVT"), ("~la", "~taneet"), ("~lu", "~tUneVt"), ("~ly", "~tUneVt"), ("~lä", "~täneet"), ("~mi", "~pineVt"), ("~mu", "~pUneVt"), ("~na", "~taneet"), ("~ni", "~tineet"), ("~nu", "~tUneVt"), ("~ny", "~tyneet"), ("~nä", "~täneet"), ("~o", "~koneVt"), ("~o", "~pOneVt"), ("~o", "~toneet"), ("~paa", "~anneVT"), ("~paa", "~manneVT"), ("~paa", "~vanneVT"), ("~pea", "~vennVVt"), ("~pele", "~ellVVt"), ("~pele", "~mellVVt"), ("~pene", "~ennVVt"), ("~pene", "~vennVVt"), ("~peä", "~vennVVt"), ("~pise", "~visseVT"), ("~poa", "~onneVt"), ("~poa", "~vonneVt"), ("~pua", "~unneVt"), ("~pua", "~vunneVt"), ("~pää", "~AnneVT"), ("~pää", "~vAnneVT"), ("~ra", "~taneet"), ("~ro", "~toneet"), ("~ru", "~tUneVt"), ("~ry", "~tyneet"), ("~rä", "~täneet"), ("~taa", "~anneVT"), ("~taa", "~danneVT"), ("~taa", "~lanneVT"), ("~taa", "~nAnneVT"), ("~taa", "~ranneVT"), ("~tele", "~dellVVt"), ("~tele", "~ellVVt"), ("~tele", "~lellVVt"), ("~tele", "~nellVVt"), ("~tele", "~rellVVt"), ("~tene", "~dennVVt"), ("~toa", "~donneVt"), ("~toa", "~nonneVt"), ("~toa", "~onneVt"), ("~toa", "~ronneVt"), ("~tse", "~nneVt"), ("~tua", "~UnneVt"), ("~tää", "~AnneVT"), ("~tää", "~dAnneVT"), ("~tää", "~nAnneVT"), ("~u", "~kuneVt"), ("~u", "~puneVt"), ("~u", "~tUneVt"), ("~ve", "~penVVt"), ("~vi", "~pineVt"), ("~vo", "~poneVt"), ("~vu", "~puneVt"), ("~vy", "~pUneVt"), ("~y", "~kUneVt"), ("~y", "~tUneVt"), ("~ä", "~nneVt"), ("~ä", "~täneet")], rules {
+    relation!(PAST_NEG_3PL, [PRES_NEG_3PL], [("~", "~neVt"), ("~a", "~kaneVt"), ("~a", "~nnU"), ("~a", "~nneVt"), ("~a", "~pAneVt"), ("~a", "~tAneVt"), ("~baa", "~AnneVt"), ("~da", "~taneVt"), ("~de", "~tenVVt"), ("~di", "~tineVt"), ("~do", "~toneVt"), ("~du", "~tuneVt"), ("~dy", "~tUneVt"), ("~dä", "~täneVt"), ("~e", "~hneVt"), ("~e", "~kenVVt"), ("~e", "~leVt"), ("~e", "~neVt"), ("~e", "~reVt"), ("~e", "~seVt"), ("~gaa", "~anneVt"), ("~ge", "~kenVVt"), ("~gi", "~kineVt"), ("~go", "~koneVt"), ("~gu", "~kuneVt"), ("~i", "~kineVt"), ("~i", "~pineVt"), ("~i", "~tineVt"), ("~je", "~kenVVt"), ("~kaa", "~annU"), ("~kaa", "~anneVt"), ("~kaa", "~ganneVt"), ("~kaise", "~AisseVt"), ("~kea", "~ennVVt"), ("~kea", "~gennVVt"), ("~kea", "~jennVVt"), ("~kele", "~ellVVt"), ("~kene", "~ennVVt"), ("~kene", "~jennVVt"), ("~keä", "~ennVVt"), ("~keä", "~jennVVt"), ("~kiä", "~inneVt"), ("~koa", "~gonneVt"), ("~koa", "~onneVt"), ("~kone", "~onneVt"), ("~kse", "~sseVt"), ("~kua", "~UnneVt"), ("~kää", "~AnneVt"), ("~kää", "~gAnneVt"), ("~kää", "~jAnneVt"), ("~la", "~tAneVt"), ("~lu", "~tUneVt"), ("~ly", "~tUneVt"), ("~lä", "~tAneVt"), ("~mi", "~pineVt"), ("~mu", "~pUneVt"), ("~na", "~tAneVt"), ("~ni", "~tineet"), ("~nu", "~tUneVt"), ("~ny", "~tyneVt"), ("~nä", "~täneVt"), ("~o", "~koneVt"), ("~o", "~pOneVt"), ("~o", "~toneVt"), ("~paa", "~anneVt"), ("~paa", "~manneVt"), ("~paa", "~vanneVt"), ("~pea", "~vennVVt"), ("~pele", "~ellVVt"), ("~pele", "~mellVVt"), ("~pene", "~ennVVt"), ("~pene", "~vennVVt"), ("~peä", "~vennVVt"), ("~pise", "~visseVt"), ("~poa", "~onneVt"), ("~poa", "~vonneVt"), ("~pua", "~unneVt"), ("~pua", "~vunneVt"), ("~pää", "~AnneVt"), ("~pää", "~vAnneVt"), ("~ra", "~tAneVt"), ("~ro", "~toneVt"), ("~ru", "~tUneVt"), ("~ry", "~tyneVt"), ("~rä", "~täneVt"), ("~taa", "~anneVt"), ("~taa", "~danneVt"), ("~taa", "~lanneVt"), ("~taa", "~nAnneVt"), ("~taa", "~ranneVt"), ("~tele", "~dellVVt"), ("~tele", "~ellVVt"), ("~tele", "~lellVVt"), ("~tele", "~nellVVt"), ("~tele", "~rellVVt"), ("~tene", "~dennVVt"), ("~toa", "~donneVt"), ("~toa", "~nonneVt"), ("~toa", "~onneVt"), ("~toa", "~ronneVt"), ("~tse", "~nneVt"), ("~tua", "~UnneVt"), ("~tää", "~AnneVt"), ("~tää", "~dAnneVt"), ("~tää", "~nAnneVt"), ("~u", "~kuneVt"), ("~u", "~puneVt"), ("~u", "~tUneVt"), ("~ve", "~penVVt"), ("~vi", "~pineVt"), ("~vo", "~poneVt"), ("~vu", "~puneVt"), ("~vy", "~pUneVt"), ("~y", "~kUneVt"), ("~y", "~tUneVt"), ("~ä", "~nneVt"), ("~ä", "~täneVt")], rules {
         "" => [0 2991, 5 1511, 16 939, 3 881, 116 747, 11 738, 91 483, 19 320, 58 292, 7 259, 90 206, 12 195, 56 167, 107 167, 115 167, 13 155, 30 138, 59 127, 17 106, 60 85, 114 82, 64 80, 9 75, 85 73, 100 60, 93 57, 25 54, 80 52, 84 41, 94 35, 50 33, 47 32, 53 31, 105 31, 37 29, 83 25, 10 22, 61 22, 82 22, 86 22, 78 17, 43 16, 2 15, 26 15, 113 15, 92 14, 111 14, 102 13, 109 13, 52 12, 51 11, 106 10, 110 10, 22 9, 28 8, 33 8, 38 8, 15 7, 8 6, 27 6, 40 6, 54 6, 66 6, 96 6, 103 6, 24 5, 57 5, 71 5, 87 5, 112 5, 1 4, 6 4, 18 4, 31 4, 35 4, 41 4, 70 4, 72 4, 4 3, 23 3, 32 3, 36 3, 39 3, 42 3, 45 3, 46 3, 69 3, 75 3, 76 3, 77 3, 79 3, 89 3, 95 3, 98 3, 14 2, 20 2, 21 2, 29 2, 34 2, 44 2, 48 2, 49 2, 55 2, 62 2, 63 2, 65 2, 67 2, 68 2, 73 2, 74 2, 81 2, 88 2, 97 2, 99 2, 101 2, 104 2, 108 2],
         "a" => [5 1511, 3 881, 0 591, 7 259, 56 167, 30 138, 64 80, 85 73, 80 52, 50 33, 86 22, 43 16, 2 15, 33 8, 66 6, 96 6, 87 5, 1 4, 6 4, 31 4, 35 4, 4 3, 42 3, 46 3, 75 3, 76 3, 77 3, 89 3, 98 3, 20 2, 29 2, 34 2, 65 2, 67 2, 74 2, 88 2, 97 2, 99 2, 101 2],
         "aa" => [3 757, 30 138, 64 80, 85 73, 86 22, 2 15, 66 6, 87 5, 6 4, 31 4, 89 3, 0 2, 20 2, 29 2, 65 2, 88 2, 1 1],
@@ -1397,6 +1374,9 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         68 => [
             "eivät hyppele", "eivät tappele",
         ],
+        70 => [
+            "eivät tylppene",
+        ],
         73 => [
             "eivät rapise", "eivät vapise",
         ],
@@ -1417,7 +1397,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         ],
     }, true, None),
     // PAST_NEG_PASS, from PRES_NEG_PASS.
-    relation!(PAST_NEG_PASS, [PRES_NEG_PASS], [("~a", "~U"), ("~a", "~tu"), ("~da", "~tU"), ("~dä", "~tU"), ("~la", "~tU"), ("~lä", "~ty"), ("~na", "~TU"), ("~nä", "~tU"), ("~ra", "~tU"), ("~rä", "~tU"), ("~ä", "~ty"), ("~ä", "~y")], rules {
+    relation!(PAST_NEG_PASS, [PRES_NEG_PASS], [("~a", "~U"), ("~a", "~tu"), ("~da", "~tU"), ("~dä", "~tU"), ("~la", "~tU"), ("~lä", "~ty"), ("~na", "~tU"), ("~nä", "~tU"), ("~ra", "~tU"), ("~rä", "~tU"), ("~ä", "~ty"), ("~ä", "~y")], rules {
         "" => [1 6256, 10 2552, 4 1179, 2 986, 5 563, 0 192, 11 139, 3 111, 6 6, 7 2, 8 2, 9 2],
         "a" => [1 6256, 4 1179, 2 986, 0 192, 6 6, 8 2],
         "da" => [2 986],
@@ -1486,8 +1466,8 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11991],
     } listed {}, true, None),
     // PERF_NEG_1SG, from PERF_NEG_PASS.
-    relation!(PERF_NEG_1SG, [PERF_NEG_PASS], [("ei~dettu", "en~tanut"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänyt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tonUt"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~AnUt"), ("ei~etty", "en~tänyt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~konUt"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tAnUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänyt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~konUt"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tonUt"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänyt"), ("ei~rottu", "en~tonUt"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~ponUt"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
-        "" => [13 1511, 49 1432, 52 1179, 53 992, 15 747, 7 738, 48 728, 9 588, 56 563, 51 345, 50 342, 38 292, 0 259, 14 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
+    relation!(PERF_NEG_1SG, [PERF_NEG_PASS], [("ei~dettu", "en~tAnut"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänUt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tOnut"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~tänUt"), ("ei~etty", "en~änUt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~kOnut"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tänUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänUt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~kOnut"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tOnut"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänUt"), ("ei~rottu", "en~tOnut"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~pOnut"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
+        "" => [13 1511, 49 1432, 52 1179, 53 992, 14 747, 7 738, 48 728, 9 588, 56 563, 51 345, 50 342, 38 292, 0 259, 15 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
         "u" => [13 1511, 49 1432, 52 1179, 53 992, 7 738, 48 728, 9 588, 38 292, 0 259, 55 192, 34 167, 62 167, 43 52, 4 42, 28 33, 60 31, 20 25, 6 22, 40 22, 46 22, 67 14, 30 11, 61 10, 66 10, 11 7, 21 7, 19 5, 26 5, 64 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 54 2],
         "itu" => [53 977],
         "ltu" => [52 1179],
@@ -1574,34 +1554,34 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "stuttu" => [48 360, 49 1],
         "ututtu" => [62 21, 49 2],
         "vuttu" => [67 14, 49 5, 48 1],
-        "y" => [15 747, 56 563, 51 345, 50 342, 14 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
+        "y" => [14 747, 56 563, 51 345, 50 342, 15 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
         "hty" => [57 2],
         "ity" => [57 97],
         "lty" => [56 563],
         "nty" => [57 2],
         "rty" => [58 2],
         "sty" => [59 139],
-        "tty" => [15 747, 51 345, 50 342, 14 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
-        "etty" => [15 747, 14 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
+        "tty" => [14 747, 51 345, 50 342, 15 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
+        "etty" => [14 747, 15 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
         "detty" => [3 155, 2 4, 51 4],
         "hetty" => [51 9],
         "ietty" => [51 4],
         "jetty" => [51 11, 27 3],
         "ketty" => [51 7, 50 6],
-        "letty" => [29 31, 51 4, 14 2],
+        "letty" => [29 31, 51 4, 15 2],
         "metty" => [51 10, 50 1],
         "netty" => [35 85, 51 3],
         "retty" => [44 41, 51 4],
         "rretty" => [44 41],
-        "setty" => [51 4, 14 2],
-        "tetty" => [15 747, 14 231, 51 1],
-        "etetty" => [15 45],
-        "itetty" => [15 180],
-        "stetty" => [14 231, 51 1],
-        "ytetty" => [15 379],
-        "ätetty" => [15 62],
-        "ötetty" => [15 74],
-        "vetty" => [51 16, 14 2, 63 2],
+        "setty" => [51 4, 15 2],
+        "tetty" => [14 747, 15 231, 51 1],
+        "etetty" => [14 45],
+        "itetty" => [14 180],
+        "stetty" => [15 231, 51 1],
+        "ytetty" => [14 379],
+        "ätetty" => [14 62],
+        "ötetty" => [14 74],
+        "vetty" => [51 16, 15 2, 63 2],
         "itty" => [50 135, 5 33, 51 30, 23 29, 24 8, 65 8, 17 6, 32 5, 25 4, 37 2],
         "ditty" => [5 33, 51 1],
         "gitty" => [17 6, 50 1],
@@ -1712,8 +1692,8 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11991],
     } listed {}, true, None),
     // PLUP_NEG_1SG, from PLUP_NEG_PASS.
-    relation!(PLUP_NEG_1SG, [PLUP_NEG_PASS], [("ei~dettu", "en~tanut"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänyt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tonUt"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~AnUt"), ("ei~etty", "en~tänyt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~konUt"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tAnUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänyt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~konUt"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tonUt"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänyt"), ("ei~rottu", "en~tonUt"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnU"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~ponUt"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
-        "" => [13 1511, 50 1432, 53 1179, 54 992, 15 747, 7 738, 48 728, 9 588, 57 563, 52 345, 51 342, 38 292, 0 259, 14 237, 8 195, 56 192, 34 167, 63 167, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 61 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 49 18, 70 15, 68 14, 31 12, 30 11, 62 10, 67 10, 24 8, 66 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 65 5, 69 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 55 2, 59 2, 64 2],
+    relation!(PLUP_NEG_1SG, [PLUP_NEG_PASS], [("ei~dettu", "en~tAnut"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänUt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tOnut"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~tänUt"), ("ei~etty", "en~änUt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~kOnut"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tänUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänUt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~kOnut"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tOnut"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänUt"), ("ei~rottu", "en~tOnut"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnU"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~pOnut"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
+        "" => [13 1511, 50 1432, 53 1179, 54 992, 14 747, 7 738, 48 728, 9 588, 57 563, 52 345, 51 342, 38 292, 0 259, 15 237, 8 195, 56 192, 34 167, 63 167, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 61 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 49 18, 70 15, 68 14, 31 12, 30 11, 62 10, 67 10, 24 8, 66 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 65 5, 69 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 55 2, 59 2, 64 2],
         "u" => [13 1511, 50 1432, 53 1179, 54 992, 7 738, 48 728, 9 588, 38 292, 0 259, 56 192, 34 167, 63 167, 43 52, 4 42, 28 33, 61 31, 20 25, 6 22, 40 22, 46 22, 49 18, 68 14, 30 11, 62 10, 67 10, 11 7, 21 7, 19 5, 26 5, 65 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 55 2],
         "itu" => [54 977],
         "ltu" => [53 1179],
@@ -1800,34 +1780,34 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "stuttu" => [48 360, 50 1],
         "ututtu" => [63 21, 50 2],
         "vuttu" => [68 14, 50 5, 48 1],
-        "y" => [15 747, 57 563, 52 345, 51 342, 14 237, 8 195, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 59 2, 64 2],
+        "y" => [14 747, 57 563, 52 345, 51 342, 15 237, 8 195, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 59 2, 64 2],
         "hty" => [58 2],
         "ity" => [58 97],
         "lty" => [57 563],
         "nty" => [58 2],
         "rty" => [59 2],
         "sty" => [60 139],
-        "tty" => [15 747, 52 345, 51 342, 14 237, 8 195, 3 155, 39 127, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 64 2],
-        "etty" => [15 747, 14 237, 3 155, 35 85, 52 81, 44 41, 29 31, 51 7, 2 4, 27 3, 64 2],
+        "tty" => [14 747, 52 345, 51 342, 15 237, 8 195, 3 155, 39 127, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 64 2],
+        "etty" => [14 747, 15 237, 3 155, 35 85, 52 81, 44 41, 29 31, 51 7, 2 4, 27 3, 64 2],
         "detty" => [3 155, 2 4, 52 4],
         "hetty" => [52 9],
         "ietty" => [52 4],
         "jetty" => [52 11, 27 3],
         "ketty" => [52 7, 51 6],
-        "letty" => [29 31, 52 4, 14 2],
+        "letty" => [29 31, 52 4, 15 2],
         "metty" => [52 10, 51 1],
         "netty" => [35 85, 52 3],
         "retty" => [44 41, 52 4],
         "rretty" => [44 41],
-        "setty" => [52 4, 14 2],
-        "tetty" => [15 747, 14 231, 52 1],
-        "etetty" => [15 45],
-        "itetty" => [15 180],
-        "stetty" => [14 231, 52 1],
-        "ytetty" => [15 379],
-        "ätetty" => [15 62],
-        "ötetty" => [15 74],
-        "vetty" => [52 16, 14 2, 64 2],
+        "setty" => [52 4, 15 2],
+        "tetty" => [14 747, 15 231, 52 1],
+        "etetty" => [14 45],
+        "itetty" => [14 180],
+        "stetty" => [15 231, 52 1],
+        "ytetty" => [14 379],
+        "ätetty" => [14 62],
+        "ötetty" => [14 74],
+        "vetty" => [52 16, 15 2, 64 2],
         "itty" => [51 135, 5 33, 52 30, 23 29, 24 8, 66 8, 17 6, 32 5, 25 4, 37 2],
         "ditty" => [5 33, 52 1],
         "gitty" => [17 6, 51 1],
@@ -1901,8 +1881,8 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 2, 1 2, 2 2],
     } listed {}, true, None),
     // CONDITIONAL_PRES_AFF_1SG, from INFINITIVE.
-    relation!(CONDITIONAL_PRES_AFF_1SG, [INFINITIVE], [("~a", "~isVn"), ("~a", "~sVn"), ("~a", "~sisin"), ("~ada", "~isVn"), ("~aista", "~kAisVsVn"), ("~ata", "~bAisVn"), ("~ata", "~gaisVn"), ("~ata", "~kaisVn"), ("~ata", "~paisVn"), ("~ata", "~taisVn"), ("~da", "~sVn"), ("~data", "~taisVn"), ("~della", "~telisVn"), ("~dellä", "~telisVn"), ("~detä", "~tenisVn"), ("~dota", "~toaisin"), ("~dä", "~sVn"), ("~dätä", "~tAisVn"), ("~ea", "~isVn"), ("~ella", "~kelisVn"), ("~ella", "~telisVn"), ("~ellä", "~telisVn"), ("~eta", "~keAisVn"), ("~eta", "~kenisVn"), ("~eta", "~penisVn"), ("~etä", "~keAisVn"), ("~etä", "~kenisVn"), ("~eä", "~isVn"), ("~gata", "~kaisVn"), ("~geta", "~keAisVn"), ("~gota", "~koaisin"), ("~gätä", "~kAisVn"), ("~hdä", "~kisVn"), ("~itä", "~kiAisVn"), ("~jeta", "~keAisVn"), ("~jeta", "~kenisVn"), ("~jetä", "~keAisVn"), ("~jetä", "~kenisVn"), ("~jätä", "~kAisVn"), ("~la", "~isVn"), ("~lata", "~taisVn"), ("~lella", "~telisVn"), ("~lellä", "~telisVn"), ("~lä", "~isVn"), ("~mata", "~paisVn"), ("~mella", "~pelisVn"), ("~na", "~isVn"), ("~nata", "~tAisVn"), ("~nella", "~telisVn"), ("~nellä", "~telisVn"), ("~nota", "~toaisin"), ("~nä", "~isVn"), ("~nätä", "~tAisVn"), ("~ota", "~koaisin"), ("~ota", "~konisVn"), ("~ota", "~poaisin"), ("~ota", "~toaisin"), ("~ra", "~isVn"), ("~rata", "~taisVn"), ("~rella", "~telisVn"), ("~rellä", "~telisVn"), ("~rota", "~toaisin"), ("~rä", "~isVn"), ("~stä", "~ksisVn"), ("~ta", "~AisVn"), ("~ta", "~isVn"), ("~ta", "~nisVn"), ("~tä", "~AisVn"), ("~tä", "~isVn"), ("~tä", "~nisVn"), ("~uoda", "~oisVn"), ("~uta", "~kUAisVn"), ("~uta", "~puaisin"), ("~uta", "~tuaisin"), ("~vata", "~paisVn"), ("~veta", "~peAisVn"), ("~veta", "~penisVn"), ("~vetä", "~peAisVn"), ("~vista", "~pisVsVn"), ("~vota", "~poaisin"), ("~vuta", "~puaisin"), ("~vätä", "~pAisVn"), ("~ydä", "~isVn"), ("~ydä", "~visVn"), ("~yödä", "~öisVn"), ("~ä", "~isVn"), ("~ä", "~sVn"), ("~ä", "~sisin"), ("~ätä", "~kAisVn"), ("~ätä", "~pAisVn"), ("~ätä", "~tAisVn")], rules {
-        "" => [0 4562, 85 1962, 10 977, 65 942, 39 664, 20 316, 43 275, 68 261, 1 246, 86 231, 21 166, 7 138, 12 131, 64 124, 16 97, 8 80, 13 74, 9 73, 66 56, 2 45, 69 42, 67 41, 88 32, 49 31, 18 26, 48 26, 59 26, 11 21, 23 19, 27 17, 89 17, 53 16, 87 15, 90 13, 26 10, 41 9, 60 9, 22 8, 70 7, 15 6, 17 6, 35 6, 36 6, 46 6, 74 6, 40 5, 42 5, 84 5, 5 4, 28 4, 33 4, 34 4, 76 4, 77 4, 4 3, 24 3, 25 3, 30 3, 56 3, 58 3, 71 3, 72 3, 79 3, 80 3, 81 3, 82 3, 3 2, 6 2, 14 2, 19 2, 29 2, 31 2, 32 2, 37 2, 38 2, 44 2, 45 2, 47 2, 50 2, 51 2, 52 2, 54 2, 55 2, 57 2, 61 2, 62 2, 63 2, 73 2, 75 2, 78 2, 83 2],
+    relation!(CONDITIONAL_PRES_AFF_1SG, [INFINITIVE], [("~a", "~isVn"), ("~a", "~sVn"), ("~a", "~sisin"), ("~ada", "~isVn"), ("~aista", "~kAisVsVn"), ("~ata", "~bAisVn"), ("~ata", "~gaisin"), ("~ata", "~kaisin"), ("~ata", "~paisin"), ("~ata", "~taisin"), ("~da", "~sVn"), ("~data", "~taisin"), ("~della", "~telisVn"), ("~dellä", "~telisVn"), ("~detä", "~tenisVn"), ("~dota", "~toaisin"), ("~dä", "~sVn"), ("~dätä", "~tAisVn"), ("~ea", "~isVn"), ("~ella", "~kelisVn"), ("~ella", "~telisVn"), ("~ellä", "~telisVn"), ("~eta", "~keaisin"), ("~eta", "~kenisVn"), ("~eta", "~penisVn"), ("~etä", "~kenisVn"), ("~etä", "~keäisin"), ("~eä", "~isVn"), ("~gata", "~kaisin"), ("~geta", "~keaisin"), ("~gota", "~koaisin"), ("~gätä", "~kAisVn"), ("~hdä", "~kisVn"), ("~itä", "~kiäisin"), ("~jeta", "~keaisin"), ("~jeta", "~kenisVn"), ("~jetä", "~kenisVn"), ("~jetä", "~keäisin"), ("~jätä", "~kAisVn"), ("~la", "~isVn"), ("~lata", "~taisin"), ("~lella", "~telisVn"), ("~lellä", "~telisVn"), ("~lä", "~isVn"), ("~mata", "~paisin"), ("~mella", "~pelisVn"), ("~na", "~isVn"), ("~nata", "~tAisVn"), ("~nella", "~telisVn"), ("~nellä", "~telisVn"), ("~nota", "~toaisin"), ("~nä", "~isVn"), ("~nätä", "~tAisVn"), ("~ota", "~koaisin"), ("~ota", "~konisVn"), ("~ota", "~poaisin"), ("~ota", "~toaisin"), ("~ra", "~isVn"), ("~rata", "~taisin"), ("~rella", "~telisVn"), ("~rellä", "~telisVn"), ("~rota", "~toaisin"), ("~rä", "~isVn"), ("~stä", "~ksisVn"), ("~ta", "~AisVn"), ("~ta", "~isVn"), ("~ta", "~nisVn"), ("~tä", "~AisVn"), ("~tä", "~isVn"), ("~tä", "~nisVn"), ("~uoda", "~oisVn"), ("~uta", "~kUAisVn"), ("~uta", "~puaisin"), ("~uta", "~tUAisVn"), ("~vata", "~paisin"), ("~veta", "~peaisin"), ("~veta", "~penisVn"), ("~vetä", "~peäisin"), ("~vista", "~pisVsVn"), ("~vota", "~poaisin"), ("~vuta", "~puaisin"), ("~vätä", "~pAisVn"), ("~ydä", "~isVn"), ("~ydä", "~visVn"), ("~yödä", "~öisVn"), ("~ä", "~isVn"), ("~ä", "~sVn"), ("~ä", "~sisin"), ("~ätä", "~kAisVn"), ("~ätä", "~pAisVn"), ("~ätä", "~tAisVn")], rules {
+        "" => [0 4562, 85 1962, 10 977, 65 942, 39 664, 20 316, 43 275, 68 261, 1 246, 86 231, 21 166, 7 138, 12 131, 64 124, 16 97, 8 80, 13 74, 9 73, 66 56, 2 45, 69 42, 67 41, 88 32, 49 31, 18 26, 48 26, 59 26, 11 21, 23 19, 27 17, 89 17, 53 16, 87 15, 90 13, 25 10, 41 9, 60 9, 22 8, 70 7, 15 6, 17 6, 35 6, 37 6, 46 6, 74 6, 40 5, 42 5, 84 5, 5 4, 28 4, 33 4, 34 4, 76 4, 77 4, 4 3, 24 3, 26 3, 30 3, 56 3, 58 3, 71 3, 72 3, 79 3, 80 3, 81 3, 82 3, 3 2, 6 2, 14 2, 19 2, 29 2, 31 2, 32 2, 36 2, 38 2, 44 2, 45 2, 47 2, 50 2, 51 2, 52 2, 54 2, 55 2, 57 2, 61 2, 62 2, 63 2, 73 2, 75 2, 78 2, 83 2],
         "a" => [0 4562, 10 977, 65 942, 39 664, 20 316, 1 246, 7 138, 12 131, 64 124, 8 80, 9 73, 66 56, 2 45, 18 26, 48 26, 59 26, 11 21, 23 19, 53 16, 41 9, 22 8, 70 7, 15 6, 35 6, 46 6, 74 6, 40 5, 5 4, 28 4, 34 4, 76 4, 4 3, 24 3, 30 3, 56 3, 58 3, 71 3, 72 3, 79 3, 80 3, 3 2, 6 2, 19 2, 29 2, 44 2, 45 2, 47 2, 50 2, 54 2, 55 2, 57 2, 61 2, 73 2, 75 2, 78 2],
         "aa" => [0 2638],
         "da" => [10 977, 70 7, 3 2],
@@ -1984,7 +1964,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ututa" => [73 2],
         "vuta" => [80 3, 64 2],
         "ua" => [0 1775],
-        "ä" => [85 1962, 43 275, 68 261, 86 231, 21 166, 16 97, 13 74, 69 42, 67 41, 88 32, 49 31, 27 17, 89 17, 87 15, 90 13, 26 10, 60 9, 17 6, 36 6, 42 5, 84 5, 33 4, 77 4, 25 3, 81 3, 82 3, 14 2, 31 2, 32 2, 37 2, 38 2, 51 2, 52 2, 62 2, 63 2, 83 2],
+        "ä" => [85 1962, 43 275, 68 261, 86 231, 21 166, 16 97, 13 74, 69 42, 67 41, 88 32, 49 31, 27 17, 89 17, 87 15, 90 13, 25 10, 60 9, 17 6, 37 6, 42 5, 84 5, 33 4, 77 4, 26 3, 81 3, 82 3, 14 2, 31 2, 32 2, 36 2, 38 2, 51 2, 52 2, 62 2, 63 2, 83 2],
         "dä" => [16 97, 84 5, 82 3, 32 2, 83 2],
         "hdä" => [32 2],
         "idä" => [16 97],
@@ -2008,12 +1988,12 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "illä" => [43 145],
         "nä" => [51 2],
         "rä" => [62 2],
-        "tä" => [68 261, 69 42, 67 41, 88 32, 89 17, 87 15, 90 13, 26 10, 17 6, 36 6, 33 4, 77 4, 25 3, 81 3, 14 2, 31 2, 37 2, 38 2, 52 2, 63 2],
-        "etä" => [69 42, 26 10, 36 6, 67 5, 77 4, 25 3, 14 2, 37 2],
+        "tä" => [68 261, 69 42, 67 41, 88 32, 89 17, 87 15, 90 13, 25 10, 17 6, 37 6, 33 4, 77 4, 26 3, 81 3, 14 2, 31 2, 36 2, 38 2, 52 2, 63 2],
+        "etä" => [69 42, 25 10, 37 6, 67 5, 77 4, 26 3, 14 2, 36 2],
         "detä" => [14 2],
         "hetä" => [69 9],
-        "jetä" => [36 6, 69 3, 37 2],
-        "ketä" => [26 5, 69 2],
+        "jetä" => [37 6, 69 3, 36 2],
+        "ketä" => [25 5, 69 2],
         "vetä" => [69 8, 77 4, 67 3],
         "itä" => [87 15, 67 8, 33 4],
         "kitä" => [87 9],
@@ -2034,18 +2014,15 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "yä" => [85 661],
         "ää" => [85 1300],
     } listed {
-        26 => [
-            "kyetä",
+        5 => [
+            "dubata", "jobata", "lobata", "mobata",
         ],
-        33 => [
-            "kehitä", "keritä", "selitä", "siitä",
+        11 => [
+            "luodata", "pedata",
         ],
         53 => [
             "kaikota", "karkota", "keota", "koota", "liuota", "poukota", "ruokota", "seota",
             "virota",
-        ],
-        56 => [
-            "lotota", "netota", "peitota",
         ],
         71 => [
             "koukuta", "ruikuta",
@@ -2074,7 +2051,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         None
     ),
     // CONDITIONAL_PRES_AFF_1PL, from CONDITIONAL_PRES_AFF_1SG.
-    relation!(CONDITIONAL_PRES_AFF_1PL, [CONDITIONAL_PRES_AFF_1SG], [("~isin", "~TTAis"), ("~kaisin", "~attais"), ("~n", "~mme")], rules {
+    relation!(CONDITIONAL_PRES_AFF_1PL, [CONDITIONAL_PRES_AFF_1SG], [("~isin", "~ttAis"), ("~kaisin", "~attais"), ("~n", "~mme")], rules {
         "" => [2 11989, 0 15, 1 2],
         "aisin" => [2 3918, 0 15, 1 2],
         "daisin" => [2 20, 0 3],
@@ -2090,7 +2067,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 12007],
     } listed {}, true, None),
     // CONDITIONAL_PRES_AFF_3PL, from INFINITIVE.
-    relation!(CONDITIONAL_PRES_AFF_3PL, [INFINITIVE], [("~a", "~is"), ("~a", "~isVvAT"), ("~a", "~sVvAT"), ("~a", "~sisivat"), ("~ada", "~isVvAT"), ("~aista", "~kaisisivat"), ("~ata", "~bAisVvAT"), ("~ata", "~gaisivat"), ("~ata", "~kaisivat"), ("~ata", "~paisivat"), ("~ata", "~taisivat"), ("~da", "~sVvAT"), ("~data", "~taisivat"), ("~della", "~telisivat"), ("~dellä", "~telisivät"), ("~detä", "~tenisivät"), ("~dota", "~toaisivat"), ("~dä", "~sVvAT"), ("~dätä", "~täisivät"), ("~ea", "~isVvAT"), ("~ella", "~kelisivat"), ("~ella", "~telisivat"), ("~ellä", "~telisivät"), ("~eta", "~keaisivat"), ("~eta", "~kenisivat"), ("~eta", "~penisivat"), ("~etä", "~kenisivät"), ("~etä", "~keäisivät"), ("~eä", "~isVvAT"), ("~gata", "~kaisivat"), ("~geta", "~keaisivat"), ("~gota", "~koaisivat"), ("~gätä", "~kAisVvAT"), ("~hdä", "~kisVvAT"), ("~itä", "~kiäisivät"), ("~jeta", "~keaisivat"), ("~jeta", "~kenisivat"), ("~jetä", "~kenisivät"), ("~jetä", "~keäisivät"), ("~jätä", "~kAisVvAT"), ("~la", "~isVvAT"), ("~lata", "~taisivat"), ("~lella", "~telisivat"), ("~lellä", "~telisivät"), ("~lä", "~isVväT"), ("~mata", "~paisivat"), ("~mella", "~pelisivat"), ("~na", "~isVvAT"), ("~nata", "~taisivat"), ("~nella", "~telisivat"), ("~nellä", "~telisivät"), ("~nota", "~toaisivat"), ("~nä", "~isVvAT"), ("~nätä", "~täisivät"), ("~ota", "~koaisivat"), ("~ota", "~konisivat"), ("~ota", "~poaisivat"), ("~ota", "~toaisivat"), ("~ra", "~isVvAT"), ("~rata", "~taisivat"), ("~rella", "~telisivat"), ("~rellä", "~telisivät"), ("~rota", "~toaisivat"), ("~rä", "~isVvAT"), ("~stä", "~ksisVvAT"), ("~ta", "~AisVvAT"), ("~ta", "~isVvAT"), ("~ta", "~nisVvAT"), ("~tä", "~AisVvAT"), ("~tä", "~isVväT"), ("~tä", "~nisVvAT"), ("~uoda", "~oisivat"), ("~uta", "~kUAisVvAT"), ("~uta", "~puaisivat"), ("~uta", "~tuaisivat"), ("~vata", "~paisivat"), ("~veta", "~peaisivat"), ("~veta", "~penisivat"), ("~vetä", "~peäisivät"), ("~vista", "~pisisivat"), ("~vota", "~poaisivat"), ("~vuta", "~puaisivat"), ("~vätä", "~pAisVvAT"), ("~ydä", "~isVvAT"), ("~ydä", "~visVvAT"), ("~yödä", "~öisivät"), ("~ä", "~isVvAT"), ("~ä", "~sVvAT"), ("~ä", "~sisivät"), ("~ätä", "~kAisVvAT"), ("~ätä", "~pAisVvAT"), ("~ätä", "~täisivät")], rules {
+    relation!(CONDITIONAL_PRES_AFF_3PL, [INFINITIVE], [("~a", "~is"), ("~a", "~isVvAt"), ("~a", "~sVvAt"), ("~a", "~sisivat"), ("~ada", "~isVvAt"), ("~aista", "~kaisisivat"), ("~ata", "~bAisVvAt"), ("~ata", "~gaisivat"), ("~ata", "~kaisivat"), ("~ata", "~paisivat"), ("~ata", "~taisivat"), ("~da", "~sVvAt"), ("~data", "~taisivat"), ("~della", "~telisivat"), ("~dellä", "~telisivät"), ("~detä", "~tenisivät"), ("~dota", "~toaisivat"), ("~dä", "~sVvAt"), ("~dätä", "~tAisVvAt"), ("~ea", "~isVvAt"), ("~ella", "~kelisivat"), ("~ella", "~telisivat"), ("~ellä", "~telisivät"), ("~eta", "~keaisivat"), ("~eta", "~kenisivat"), ("~eta", "~penisivat"), ("~etä", "~kenisivät"), ("~etä", "~keäisivät"), ("~eä", "~isVvAt"), ("~gata", "~kaisivat"), ("~geta", "~keaisivat"), ("~gota", "~koaisivat"), ("~gätä", "~kAisVvAt"), ("~hdä", "~kisVvAt"), ("~itä", "~kiäisivät"), ("~jeta", "~keaisivat"), ("~jeta", "~kenisivat"), ("~jetä", "~kenisivät"), ("~jetä", "~keäisivät"), ("~jätä", "~kAisVvAt"), ("~la", "~isVvAt"), ("~lata", "~taisivat"), ("~lella", "~telisivat"), ("~lellä", "~telisivät"), ("~lä", "~isVvät"), ("~mata", "~paisivat"), ("~mella", "~pelisivat"), ("~na", "~isVvAt"), ("~nata", "~tAisVvAt"), ("~nella", "~telisivat"), ("~nellä", "~telisivät"), ("~nota", "~toaisivat"), ("~nä", "~isVvAt"), ("~nätä", "~tAisVvAt"), ("~ota", "~koaisivat"), ("~ota", "~konisivat"), ("~ota", "~poaisivat"), ("~ota", "~toaisivat"), ("~ra", "~isVvAt"), ("~rata", "~taisivat"), ("~rella", "~telisivat"), ("~rellä", "~telisivät"), ("~rota", "~toaisivat"), ("~rä", "~isVvAt"), ("~stä", "~ksisVvAt"), ("~ta", "~AisVvAt"), ("~ta", "~isVvAt"), ("~ta", "~nisVvAt"), ("~tä", "~AisVvAt"), ("~tä", "~isVvät"), ("~tä", "~nisVvAt"), ("~uoda", "~oisivat"), ("~uta", "~kUAisVvAt"), ("~uta", "~puaisivat"), ("~uta", "~tUAisVvAt"), ("~vata", "~paisivat"), ("~veta", "~peaisivat"), ("~veta", "~penisivat"), ("~vetä", "~peäisivät"), ("~vista", "~pisisivat"), ("~vota", "~poaisivat"), ("~vuta", "~puaisivat"), ("~vätä", "~pAisVvAt"), ("~ydä", "~isVvAt"), ("~ydä", "~visVvAt"), ("~yödä", "~öisivät"), ("~ä", "~isVvAt"), ("~ä", "~sVvAt"), ("~ä", "~sisivät"), ("~ätä", "~kAisVvAt"), ("~ätä", "~pAisVvAt"), ("~ätä", "~tAisVvAt")], rules {
         "" => [1 4545, 86 1962, 11 977, 66 942, 40 664, 21 316, 44 275, 69 261, 2 246, 87 231, 22 166, 8 138, 13 131, 65 124, 17 97, 9 80, 14 74, 10 73, 67 56, 3 45, 70 42, 68 41, 89 32, 50 31, 19 26, 49 26, 60 26, 12 21, 24 19, 0 18, 28 17, 90 17, 54 16, 88 15, 91 13, 26 10, 42 9, 61 9, 23 8, 71 7, 16 6, 18 6, 36 6, 38 6, 47 6, 75 6, 41 5, 43 5, 85 5, 6 4, 29 4, 34 4, 35 4, 77 4, 78 4, 5 3, 25 3, 27 3, 31 3, 57 3, 59 3, 72 3, 73 3, 80 3, 81 3, 82 3, 83 3, 4 2, 7 2, 15 2, 20 2, 30 2, 32 2, 33 2, 37 2, 39 2, 45 2, 46 2, 48 2, 51 2, 52 2, 53 2, 55 2, 56 2, 58 2, 62 2, 63 2, 64 2, 74 2, 76 2, 79 2, 84 2],
         "a" => [1 4545, 11 977, 66 942, 40 664, 21 316, 2 246, 8 138, 13 131, 65 124, 9 80, 10 73, 67 56, 3 45, 19 26, 49 26, 60 26, 12 21, 24 19, 0 18, 54 16, 42 9, 23 8, 71 7, 16 6, 36 6, 47 6, 75 6, 41 5, 6 4, 29 4, 35 4, 77 4, 5 3, 25 3, 31 3, 57 3, 59 3, 72 3, 73 3, 80 3, 81 3, 4 2, 7 2, 20 2, 30 2, 45 2, 46 2, 48 2, 51 2, 55 2, 56 2, 58 2, 62 2, 74 2, 76 2, 79 2],
         "aa" => [1 2621, 0 18],
@@ -2234,18 +2211,15 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         0 => [
             "bunkkaa", "pull uppaa", "stikkaa",
         ],
-        26 => [
-            "kyetä",
+        6 => [
+            "dubata", "jobata", "lobata", "mobata",
         ],
-        34 => [
-            "kehitä", "keritä", "selitä", "siitä",
+        12 => [
+            "luodata", "pedata",
         ],
         54 => [
             "kaikota", "karkota", "keota", "koota", "liuota", "poukota", "ruokota", "seota",
             "virota",
-        ],
-        57 => [
-            "lotota", "netota", "peitota",
         ],
         72 => [
             "koukuta", "ruikuta",
@@ -2261,7 +2235,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         ],
     }, true, None),
     // CONDITIONAL_PRES_AFF_PASS, from PAST_NEG_PASS.
-    relation!(CONDITIONAL_PRES_AFF_PASS, [PAST_NEG_PASS], [("ei ~u", "~Ais"), ("ei ~u", "~aisVVn"), ("ei ~y", "~äisVVn")], rules {
+    relation!(CONDITIONAL_PRES_AFF_PASS, [PAST_NEG_PASS], [("ei ~u", "~Ais"), ("ei ~u", "~aisiin"), ("ei ~y", "~äisiin")], rules {
         "" => [1 8603, 2 3369, 0 18],
         "u" => [1 8603, 0 18],
         "attu" => [1 1100, 0 18],
@@ -2295,23 +2269,23 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         None
     ),
     // CONDITIONAL_PRES_NEG_1PL, from PRES_NEG_1PL.
-    relation!(CONDITIONAL_PRES_NEG_1PL, [PRES_NEG_1PL], [("~", "~isV"), ("~", "~sV"), ("~a", "~TAis"), ("~a", "~isV"), ("~a", "~kaisV"), ("~a", "~pAisV"), ("~a", "~tAisV"), ("~da", "~taisV"), ("~de", "~tisV"), ("~di", "~tisV"), ("~do", "~toisV"), ("~du", "~tuisV"), ("~dy", "~tUisV"), ("~dä", "~täisV"), ("~e", "~isi"), ("~e", "~kisV"), ("~ge", "~kisV"), ("~gi", "~kisV"), ("~go", "~koisV"), ("~gu", "~kuisV"), ("~i", "~kisV"), ("~i", "~pisV"), ("~i", "~tisV"), ("~je", "~kisV"), ("~la", "~tAisV"), ("~lu", "~tUisV"), ("~ly", "~tUisV"), ("~lä", "~tAisV"), ("~mi", "~pisV"), ("~mu", "~pUisV"), ("~na", "~tAisV"), ("~ni", "~tisi"), ("~nu", "~tUisV"), ("~ny", "~tyisV"), ("~nä", "~täisV"), ("~o", "~koisV"), ("~o", "~pOisV"), ("~o", "~toisV"), ("~ra", "~tAisV"), ("~ro", "~toisV"), ("~ru", "~tUisV"), ("~ry", "~tyisV"), ("~rä", "~täisV"), ("~u", "~kuisV"), ("~u", "~puisV"), ("~u", "~tUisV"), ("~uo", "~oisV"), ("~ve", "~pisV"), ("~vi", "~pisV"), ("~vo", "~poisV"), ("~vu", "~puisV"), ("~vy", "~pUisV"), ("~y", "~isV"), ("~y", "~kUisV"), ("~y", "~tUisV"), ("~y", "~visV"), ("~yö", "~öisV"), ("~ä", "~isV"), ("~ä", "~täisV")], rules {
-        "" => [14 2318, 0 1847, 6 1511, 1 1366, 3 1102, 58 747, 11 738, 32 292, 7 259, 57 204, 12 196, 30 167, 45 167, 13 155, 33 127, 34 85, 54 82, 9 75, 20 54, 38 52, 42 41, 24 33, 27 31, 43 31, 41 25, 10 22, 35 22, 40 22, 2 18, 21 15, 53 15, 50 14, 48 13, 26 12, 25 11, 44 10, 49 10, 15 9, 17 9, 23 8, 46 7, 8 6, 22 6, 28 6, 19 5, 31 5, 51 5, 56 5, 4 4, 5 3, 18 3, 52 3, 16 2, 29 2, 36 2, 37 2, 39 2, 47 2, 55 2],
-        "a" => [6 1511, 3 1102, 0 783, 7 259, 30 167, 38 52, 24 33, 2 18, 4 4, 5 3],
-        "aa" => [3 1102, 4 1],
+    relation!(CONDITIONAL_PRES_NEG_1PL, [PRES_NEG_1PL], [("~", "~isV"), ("~", "~sV"), ("~a", "~isV"), ("~a", "~kaisi"), ("~a", "~pAisV"), ("~a", "~tAis"), ("~a", "~tAisV"), ("~da", "~taisi"), ("~de", "~tisV"), ("~di", "~tisV"), ("~do", "~toisV"), ("~du", "~tuisV"), ("~dy", "~tUisV"), ("~dä", "~täisi"), ("~e", "~isi"), ("~e", "~kisV"), ("~ge", "~kisV"), ("~gi", "~kisV"), ("~go", "~koisV"), ("~gu", "~kuisV"), ("~i", "~kisV"), ("~i", "~pisV"), ("~i", "~tisV"), ("~je", "~kisV"), ("~la", "~tAisV"), ("~lu", "~tUisV"), ("~ly", "~tUisV"), ("~lä", "~tAisV"), ("~mi", "~pisV"), ("~mu", "~pUisV"), ("~na", "~tAisV"), ("~ni", "~tisi"), ("~nu", "~tUisV"), ("~ny", "~tyisV"), ("~nä", "~täisi"), ("~o", "~koisV"), ("~o", "~pOisV"), ("~o", "~toisV"), ("~ra", "~tAisV"), ("~ro", "~toisV"), ("~ru", "~tUisV"), ("~ry", "~tyisV"), ("~rä", "~täisi"), ("~u", "~kuisV"), ("~u", "~puisV"), ("~u", "~tUisV"), ("~uo", "~oisV"), ("~ve", "~pisV"), ("~vi", "~pisV"), ("~vo", "~poisV"), ("~vu", "~puisV"), ("~vy", "~pUisV"), ("~y", "~isV"), ("~y", "~kUisV"), ("~y", "~tUisV"), ("~y", "~visV"), ("~yö", "~öisV"), ("~ä", "~isV"), ("~ä", "~täisi")], rules {
+        "" => [14 2318, 0 1847, 6 1511, 1 1366, 2 1102, 58 747, 11 738, 32 292, 7 259, 57 204, 12 196, 30 167, 45 167, 13 155, 33 127, 34 85, 54 82, 9 75, 20 54, 38 52, 42 41, 24 33, 27 31, 43 31, 41 25, 10 22, 35 22, 40 22, 5 18, 21 15, 53 15, 50 14, 48 13, 26 12, 25 11, 44 10, 49 10, 15 9, 17 9, 23 8, 46 7, 8 6, 22 6, 28 6, 19 5, 31 5, 51 5, 56 5, 3 4, 4 3, 18 3, 52 3, 16 2, 29 2, 36 2, 37 2, 39 2, 47 2, 55 2],
+        "a" => [6 1511, 2 1102, 0 783, 7 259, 30 167, 38 52, 24 33, 5 18, 3 4, 4 3],
+        "aa" => [2 1102, 3 1],
         "da" => [7 259],
         "ea" => [0 25],
         "ja" => [0 3],
-        "la" => [24 33, 0 4, 4 1],
+        "la" => [24 33, 0 4, 3 1],
         "lla" => [24 33],
         "na" => [30 167, 0 1],
         "nna" => [30 167],
         "oa" => [0 100],
-        "pa" => [5 3],
-        "ra" => [38 52, 0 1, 4 1],
+        "pa" => [4 3],
+        "ra" => [38 52, 0 1, 3 1],
         "rra" => [38 52],
-        "ta" => [6 1511, 0 570, 2 18],
-        "ata" => [6 74, 2 18],
+        "ta" => [6 1511, 0 570, 5 18],
+        "ata" => [6 74, 5 18],
         "eta" => [6 61],
         "ita" => [6 328],
         "ota" => [6 223],
@@ -2435,7 +2409,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         1 => [
             "emme könni",
         ],
-        2 => [
+        5 => [
             "ei bunkata", "ei pull upata", "ei stikata",
         ],
         22 => [
@@ -2456,7 +2430,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11989],
     } listed {}, false, None),
     // CONDITIONAL_PRES_NEG_3PL, from PRES_NEG_3PL.
-    relation!(CONDITIONAL_PRES_NEG_3PL, [PRES_NEG_3PL], [("~", "~isV"), ("~", "~sV"), ("~a", "~is"), ("~a", "~isV"), ("~a", "~kaisV"), ("~a", "~pAisV"), ("~a", "~tAisV"), ("~da", "~taisV"), ("~de", "~tisV"), ("~di", "~tisV"), ("~do", "~toisV"), ("~du", "~tuisV"), ("~dy", "~tUisV"), ("~dä", "~täisV"), ("~e", "~isi"), ("~e", "~kisV"), ("~ge", "~kisV"), ("~gi", "~kisV"), ("~go", "~koisV"), ("~gu", "~kuisV"), ("~i", "~kisV"), ("~i", "~pisV"), ("~i", "~tisV"), ("~je", "~kisV"), ("~la", "~tAisV"), ("~lu", "~tUisV"), ("~ly", "~tUisV"), ("~lä", "~tAisV"), ("~mi", "~pisV"), ("~mu", "~pUisV"), ("~na", "~tAisV"), ("~ni", "~tisi"), ("~nu", "~tUisV"), ("~ny", "~tyisV"), ("~nä", "~täisV"), ("~o", "~koisV"), ("~o", "~pOisV"), ("~o", "~toisV"), ("~ra", "~tAisV"), ("~ro", "~toisV"), ("~ru", "~tUisV"), ("~ry", "~tyisV"), ("~rä", "~täisV"), ("~u", "~kuisV"), ("~u", "~puisV"), ("~u", "~tUisV"), ("~uo", "~oisV"), ("~ve", "~pisV"), ("~vi", "~pisV"), ("~vo", "~poisV"), ("~vu", "~puisV"), ("~vy", "~pUisV"), ("~y", "~isV"), ("~y", "~kUisV"), ("~y", "~tUisV"), ("~y", "~visV"), ("~yö", "~öisV"), ("~ä", "~isV"), ("~ä", "~täisV")], rules {
+    relation!(CONDITIONAL_PRES_NEG_3PL, [PRES_NEG_3PL], [("~", "~isV"), ("~", "~sV"), ("~a", "~is"), ("~a", "~isV"), ("~a", "~kaisi"), ("~a", "~pAisV"), ("~a", "~tAisV"), ("~da", "~taisi"), ("~de", "~tisV"), ("~di", "~tisV"), ("~do", "~toisV"), ("~du", "~tuisV"), ("~dy", "~tUisV"), ("~dä", "~täisi"), ("~e", "~isi"), ("~e", "~kisV"), ("~ge", "~kisV"), ("~gi", "~kisV"), ("~go", "~koisV"), ("~gu", "~kuisV"), ("~i", "~kisV"), ("~i", "~pisV"), ("~i", "~tisV"), ("~je", "~kisV"), ("~la", "~tAisV"), ("~lu", "~tUisV"), ("~ly", "~tUisV"), ("~lä", "~tAisV"), ("~mi", "~pisV"), ("~mu", "~pUisV"), ("~na", "~tAisV"), ("~ni", "~tisi"), ("~nu", "~tUisV"), ("~ny", "~tyisV"), ("~nä", "~täisi"), ("~o", "~koisV"), ("~o", "~pOisV"), ("~o", "~toisV"), ("~ra", "~tAisV"), ("~ro", "~toisV"), ("~ru", "~tUisV"), ("~ry", "~tyisV"), ("~rä", "~täisi"), ("~u", "~kuisV"), ("~u", "~puisV"), ("~u", "~tUisV"), ("~uo", "~oisV"), ("~ve", "~pisV"), ("~vi", "~pisV"), ("~vo", "~poisV"), ("~vu", "~puisV"), ("~vy", "~pUisV"), ("~y", "~isV"), ("~y", "~kUisV"), ("~y", "~tUisV"), ("~y", "~visV"), ("~yö", "~öisV"), ("~ä", "~isV"), ("~ä", "~täisi")], rules {
         "" => [14 2318, 0 1848, 6 1511, 1 1366, 3 1125, 58 747, 11 738, 32 292, 7 259, 57 218, 12 196, 30 167, 45 167, 13 155, 33 127, 34 85, 54 82, 9 75, 20 54, 38 52, 42 41, 24 33, 27 31, 43 31, 41 25, 10 22, 35 22, 40 22, 2 18, 21 15, 53 15, 50 14, 48 13, 26 12, 25 11, 44 10, 49 10, 15 9, 17 9, 23 8, 46 7, 8 6, 22 6, 28 6, 19 5, 31 5, 51 5, 56 5, 4 4, 5 3, 18 3, 52 3, 16 2, 29 2, 36 2, 37 2, 39 2, 47 2, 55 2],
         "a" => [6 1511, 3 1125, 0 784, 7 259, 30 167, 38 52, 24 33, 2 18, 4 4, 5 3],
         "aa" => [3 1125, 2 18, 4 1],
@@ -2612,7 +2586,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         ],
     }, true, None),
     // CONDITIONAL_PRES_NEG_PASS, from PAST_NEG_PASS.
-    relation!(CONDITIONAL_PRES_NEG_PASS, [PAST_NEG_PASS], [("~u", "~Ais"), ("~u", "~aisV"), ("~y", "~äisV")], rules {
+    relation!(CONDITIONAL_PRES_NEG_PASS, [PAST_NEG_PASS], [("~u", "~Ais"), ("~u", "~aisi"), ("~y", "~äisi")], rules {
         "" => [1 8603, 2 3369, 0 18],
         "u" => [1 8603, 0 18],
         "attu" => [1 1100, 0 18],
@@ -2634,8 +2608,8 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         Some((CONDITIONAL_PRES_AFF_1SG, CONDITIONAL_PRES_AFF_2SG))
     ),
     // CONDITIONAL_PERF_AFF_3SG, from CONDITIONAL_PERF_AFF_PASS.
-    relation!(CONDITIONAL_PERF_AFF_3SG, [CONDITIONAL_PERF_AFF_PASS], [("~dettu", "~tanut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänyt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tonUt"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~AnUt"), ("~etty", "~tänyt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~konUt"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tAnUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänyt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~konUt"), ("~ottu", "~pOnUt"), ("~ottu", "~tonUt"), ("~rettu", "~tAnUt"), ("~retty", "~tänyt"), ("~rottu", "~tonUt"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnU"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~ponUt"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
-        "" => [13 1511, 50 1435, 53 1179, 54 992, 15 747, 7 738, 48 728, 9 588, 57 563, 52 349, 51 342, 38 292, 0 259, 14 237, 8 195, 56 192, 34 167, 63 167, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 61 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 49 18, 70 15, 68 14, 31 12, 30 11, 62 10, 67 10, 24 8, 66 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 65 5, 69 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 55 2, 59 2, 64 2],
+    relation!(CONDITIONAL_PERF_AFF_3SG, [CONDITIONAL_PERF_AFF_PASS], [("~dettu", "~tAnut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänUt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tOnut"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~tänUt"), ("~etty", "~änUt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~kOnut"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tänUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänUt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~kOnut"), ("~ottu", "~pOnUt"), ("~ottu", "~tOnut"), ("~rettu", "~tAnUt"), ("~retty", "~tänUt"), ("~rottu", "~tOnut"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnU"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~pOnut"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
+        "" => [13 1511, 50 1435, 53 1179, 54 992, 14 747, 7 738, 48 728, 9 588, 57 563, 52 349, 51 342, 38 292, 0 259, 15 237, 8 195, 56 192, 34 167, 63 167, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 61 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 49 18, 70 15, 68 14, 31 12, 30 11, 62 10, 67 10, 24 8, 66 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 65 5, 69 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 55 2, 59 2, 64 2],
         "u" => [13 1511, 50 1435, 53 1179, 54 992, 7 738, 48 728, 9 588, 38 292, 0 259, 56 192, 34 167, 63 167, 43 52, 4 42, 28 33, 61 31, 20 25, 6 22, 40 22, 46 22, 49 18, 68 14, 30 11, 62 10, 67 10, 11 7, 21 7, 19 5, 26 5, 65 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 55 2],
         "itu" => [54 977],
         "ltu" => [53 1179],
@@ -2722,34 +2696,34 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "stuttu" => [48 360, 50 1],
         "ututtu" => [63 21, 50 2],
         "vuttu" => [68 14, 50 5, 48 1],
-        "y" => [15 747, 57 563, 52 349, 51 342, 14 237, 8 195, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 59 2, 64 2],
+        "y" => [14 747, 57 563, 52 349, 51 342, 15 237, 8 195, 3 155, 60 139, 39 127, 58 113, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 59 2, 64 2],
         "hty" => [58 2],
         "ity" => [58 97],
         "lty" => [57 563],
         "nty" => [58 2],
         "rty" => [59 2],
         "sty" => [60 139],
-        "tty" => [15 747, 52 349, 51 342, 14 237, 8 195, 3 155, 39 127, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 64 2],
-        "etty" => [15 747, 14 237, 3 155, 35 85, 52 81, 44 41, 29 31, 51 7, 2 4, 27 3, 64 2],
+        "tty" => [14 747, 52 349, 51 342, 15 237, 8 195, 3 155, 39 127, 35 85, 71 82, 44 41, 5 33, 29 31, 23 29, 47 25, 70 15, 31 12, 24 8, 66 8, 17 6, 32 5, 69 5, 2 4, 25 4, 27 3, 37 2, 64 2],
+        "etty" => [14 747, 15 237, 3 155, 35 85, 52 81, 44 41, 29 31, 51 7, 2 4, 27 3, 64 2],
         "detty" => [3 155, 2 4, 52 4],
         "hetty" => [52 9],
         "ietty" => [52 4],
         "jetty" => [52 11, 27 3],
         "ketty" => [52 7, 51 6],
-        "letty" => [29 31, 52 4, 14 2],
+        "letty" => [29 31, 52 4, 15 2],
         "metty" => [52 10, 51 1],
         "netty" => [35 85, 52 3],
         "retty" => [44 41, 52 4],
         "rretty" => [44 41],
-        "setty" => [52 4, 14 2],
-        "tetty" => [15 747, 14 231, 52 1],
-        "etetty" => [15 45],
-        "itetty" => [15 180],
-        "stetty" => [14 231, 52 1],
-        "ytetty" => [15 379],
-        "ätetty" => [15 62],
-        "ötetty" => [15 74],
-        "vetty" => [52 16, 14 2, 64 2],
+        "setty" => [52 4, 15 2],
+        "tetty" => [14 747, 15 231, 52 1],
+        "etetty" => [14 45],
+        "itetty" => [14 180],
+        "stetty" => [15 231, 52 1],
+        "ytetty" => [14 379],
+        "ätetty" => [14 62],
+        "ötetty" => [14 74],
+        "vetty" => [52 16, 15 2, 64 2],
         "itty" => [51 135, 5 33, 52 30, 23 29, 24 8, 66 8, 17 6, 32 5, 25 4, 37 2],
         "ditty" => [5 33, 52 1],
         "gitty" => [17 6, 51 1],
@@ -2812,7 +2786,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         Some((CONDITIONAL_PRES_AFF_1SG, CONDITIONAL_PRES_AFF_2PL))
     ),
     // CONDITIONAL_PERF_AFF_3PL, from CONDITIONAL_PERF_AFF_3SG. Few or no words have it: changed as CONDITIONAL_PRES_AFF_3SG is into CONDITIONAL_PRES_AFF_3PL.
-    relation!(CONDITIONAL_PERF_AFF_3PL, [CONDITIONAL_PERF_AFF_3SG], [("~", "~"), ("~", "~vAT"), ("~", "~väT")], rules {
+    relation!(CONDITIONAL_PERF_AFF_3PL, [CONDITIONAL_PERF_AFF_3SG], [("~", "~"), ("~", "~vAt"), ("~", "~vät")], rules {
         "" => [1 12015, 0 18, 2 12],
         "i" => [1 12015, 2 12],
         "aisi" => [1 3942],
@@ -2825,7 +2799,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "is" => [0 18],
     } listed {}, false, Some((CONDITIONAL_PRES_AFF_3SG, CONDITIONAL_PRES_AFF_3PL))),
     // CONDITIONAL_PERF_AFF_PASS, from PRES_NEG_1SG.
-    relation!(CONDITIONAL_PERF_AFF_PASS, [PRES_NEG_1SG], [("en ammu~", "olisi ammuttu~"), ("en könni~", "olisi könnitty~"), ("en runno~", "olisi runnottu~"), ("en~a", "ois~TTU"), ("en~kaa", "ois~attu")], rules {
+    relation!(CONDITIONAL_PERF_AFF_PASS, [PRES_NEG_1SG], [("en ammu~", "olisi ammuttu~"), ("en könni~", "olisi könnitty~"), ("en runno~", "olisi runnottu~"), ("en~a", "ois~ttU"), ("en~kaa", "ois~Attu")], rules {
         "" => [3 15, 0 2, 1 2, 2 2, 4 2],
         "a" => [3 15, 4 2],
         "i" => [1 2],
@@ -2875,7 +2849,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11994],
     } listed {}, false, None),
     // IMPERATIVE_AFF_3SG, from INFINITIVE.
-    relation!(IMPERATIVE_AFF_3SG, [INFINITIVE], [("~a", "~kOOn"), ("~da", "~kOOn"), ("~dä", "~kOOn"), ("~jaa", "~TkOOn"), ("~jää", "~TkOOn"), ("~la", "~kOOn"), ("~lä", "~köOn"), ("~na", "~kOOn"), ("~nä", "~kOOn"), ("~ra", "~kOOn"), ("~rä", "~kOOn"), ("~ta", "~kOOn"), ("~tä", "~köOn"), ("~ä", "~köOn")], rules {
+    relation!(IMPERATIVE_AFF_3SG, [INFINITIVE], [("~a", "~kOOn"), ("~da", "~kOOn"), ("~dä", "~kOOn"), ("~jaa", "~tkOOn"), ("~jää", "~tkOOn"), ("~la", "~kOOn"), ("~lä", "~köOn"), ("~na", "~kOOn"), ("~nä", "~kOOn"), ("~ra", "~kOOn"), ("~rä", "~kOOn"), ("~ta", "~kOOn"), ("~tä", "~köOn"), ("~ä", "~köOn")], rules {
         "" => [0 6246, 13 2551, 5 1179, 1 986, 6 563, 11 192, 12 139, 2 111, 7 6, 4 4, 3 3, 8 2, 9 2, 10 2],
         "a" => [0 6246, 5 1179, 1 986, 11 192, 7 6, 3 3, 9 2],
         "aa" => [0 2618, 3 3],
@@ -3100,12 +3074,12 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         Some((IMPERATIVE_AFF_3SG, IMPERATIVE_AFF_3PL))
     ),
     // IMPERATIVE_NEG_PASS, from PRES_NEG_1SG.
-    relation!(IMPERATIVE_NEG_PASS, [PRES_NEG_1SG], [("en ammu~", "älköön ammuttako~"), ("en runno~", "älköön runnottako~"), ("en ~nni", "äl~ön könnittäkö")], rules {
+    relation!(IMPERATIVE_NEG_PASS, [PRES_NEG_1SG], [("en ammu~", "älköön ammuttako~"), ("en runno~", "älköön runnottako~"), ("en ~nni", "äl~On kOnnittAkO")], rules {
         "" => [0 2, 1 2, 2 2],
     } listed {}, true, None),
     // PERFECT_IMPERATIVE_AFF_3SG, from PERFECT_IMPERATIVE_AFF_PASS.
-    relation!(PERFECT_IMPERATIVE_AFF_3SG, [PERFECT_IMPERATIVE_AFF_PASS], [("~dettu", "~tanut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänyt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tonUt"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~AnUt"), ("~etty", "~tänyt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~konUt"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tAnUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänyt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~konUt"), ("~ottu", "~pOnUt"), ("~ottu", "~tonUt"), ("~rettu", "~tAnUt"), ("~retty", "~tänyt"), ("~rottu", "~tonUt"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~ponUt"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
-        "" => [13 1511, 49 1435, 52 1179, 53 992, 15 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 14 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
+    relation!(PERFECT_IMPERATIVE_AFF_3SG, [PERFECT_IMPERATIVE_AFF_PASS], [("~dettu", "~tAnut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänUt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tOnut"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~tänUt"), ("~etty", "~änUt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~kOnut"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tänUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänUt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~kOnut"), ("~ottu", "~pOnUt"), ("~ottu", "~tOnut"), ("~rettu", "~tAnUt"), ("~retty", "~tänUt"), ("~rottu", "~tOnut"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~pOnut"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
+        "" => [13 1511, 49 1435, 52 1179, 53 992, 14 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 15 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
         "u" => [13 1511, 49 1435, 52 1179, 53 992, 7 738, 48 728, 9 588, 38 292, 0 259, 55 192, 34 167, 62 167, 43 52, 4 42, 28 33, 60 31, 20 25, 6 22, 40 22, 46 22, 67 14, 30 11, 61 10, 66 10, 11 7, 21 7, 19 5, 26 5, 64 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 54 2],
         "itu" => [53 977],
         "ltu" => [52 1179],
@@ -3192,34 +3166,34 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "stuttu" => [48 360, 49 1],
         "ututtu" => [62 21, 49 2],
         "vuttu" => [67 14, 49 5, 48 1],
-        "y" => [15 747, 56 563, 51 349, 50 342, 14 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
+        "y" => [14 747, 56 563, 51 349, 50 342, 15 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
         "hty" => [57 2],
         "ity" => [57 97],
         "lty" => [56 563],
         "nty" => [57 2],
         "rty" => [58 2],
         "sty" => [59 139],
-        "tty" => [15 747, 51 349, 50 342, 14 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
-        "etty" => [15 747, 14 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
+        "tty" => [14 747, 51 349, 50 342, 15 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
+        "etty" => [14 747, 15 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
         "detty" => [3 155, 2 4, 51 4],
         "hetty" => [51 9],
         "ietty" => [51 4],
         "jetty" => [51 11, 27 3],
         "ketty" => [51 7, 50 6],
-        "letty" => [29 31, 51 4, 14 2],
+        "letty" => [29 31, 51 4, 15 2],
         "metty" => [51 10, 50 1],
         "netty" => [35 85, 51 3],
         "retty" => [44 41, 51 4],
         "rretty" => [44 41],
-        "setty" => [51 4, 14 2],
-        "tetty" => [15 747, 14 231, 51 1],
-        "etetty" => [15 45],
-        "itetty" => [15 180],
-        "stetty" => [14 231, 51 1],
-        "ytetty" => [15 379],
-        "ätetty" => [15 62],
-        "ötetty" => [15 74],
-        "vetty" => [51 16, 14 2, 63 2],
+        "setty" => [51 4, 15 2],
+        "tetty" => [14 747, 15 231, 51 1],
+        "etetty" => [14 45],
+        "itetty" => [14 180],
+        "stetty" => [15 231, 51 1],
+        "ytetty" => [14 379],
+        "ätetty" => [14 62],
+        "ötetty" => [14 74],
+        "vetty" => [51 16, 15 2, 63 2],
         "itty" => [50 135, 5 33, 51 30, 23 29, 24 8, 65 8, 17 6, 32 5, 25 4, 37 2],
         "ditty" => [5 33, 51 1],
         "gitty" => [17 6, 50 1],
@@ -3268,12 +3242,12 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 2, 1 2],
     } listed {}, true, Some((PERFECT_IMPERATIVE_NEG_PASS, PERFECT_IMPERATIVE_NEG_3PL))),
     // PERFECT_IMPERATIVE_AFF_PASS, from PRES_NEG_1SG.
-    relation!(PERFECT_IMPERATIVE_AFF_PASS, [PRES_NEG_1SG], [("en ammu~", "olkoon ammuttu~"), ("en runno~", "olkoon runnottu~"), ("en ~önni", "ol~OOn kOnnittU")], rules {
+    relation!(PERFECT_IMPERATIVE_AFF_PASS, [PRES_NEG_1SG], [("en ammu~", "olkoon ammuttu~"), ("en runno~", "olkoon runnottu~"), ("en ~önni", "ol~OOn könnittU")], rules {
         "" => [0 2, 1 2, 2 2],
     } listed {}, true, None),
     // PERFECT_IMPERATIVE_NEG_3SG, from PERFECT_IMPERATIVE_NEG_PASS.
-    relation!(PERFECT_IMPERATIVE_NEG_3SG, [PERFECT_IMPERATIVE_NEG_PASS], [("~dettu", "~tanut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänyt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tonUt"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~AnUt"), ("~etty", "~tänyt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~konUt"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tAnUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänyt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~konUt"), ("~ottu", "~pOnUt"), ("~ottu", "~tonUt"), ("~rettu", "~tAnUt"), ("~retty", "~tänyt"), ("~rottu", "~tonUt"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~ponUt"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
-        "" => [13 1511, 49 1435, 52 1179, 53 992, 15 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 14 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
+    relation!(PERFECT_IMPERATIVE_NEG_3SG, [PERFECT_IMPERATIVE_NEG_PASS], [("~dettu", "~tAnut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänUt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tOnut"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~tänUt"), ("~etty", "~änUt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~kOnut"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tänUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänUt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~kOnut"), ("~ottu", "~pOnUt"), ("~ottu", "~tOnut"), ("~rettu", "~tAnUt"), ("~retty", "~tänUt"), ("~rottu", "~tOnut"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~pOnut"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
+        "" => [13 1511, 49 1435, 52 1179, 53 992, 14 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 15 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
         "u" => [13 1511, 49 1435, 52 1179, 53 992, 7 738, 48 728, 9 588, 38 292, 0 259, 55 192, 34 167, 62 167, 43 52, 4 42, 28 33, 60 31, 20 25, 6 22, 40 22, 46 22, 67 14, 30 11, 61 10, 66 10, 11 7, 21 7, 19 5, 26 5, 64 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 54 2],
         "itu" => [53 977],
         "ltu" => [52 1179],
@@ -3360,34 +3334,34 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "stuttu" => [48 360, 49 1],
         "ututtu" => [62 21, 49 2],
         "vuttu" => [67 14, 49 5, 48 1],
-        "y" => [15 747, 56 563, 51 349, 50 342, 14 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
+        "y" => [14 747, 56 563, 51 349, 50 342, 15 237, 8 195, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 58 2, 63 2],
         "hty" => [57 2],
         "ity" => [57 97],
         "lty" => [56 563],
         "nty" => [57 2],
         "rty" => [58 2],
         "sty" => [59 139],
-        "tty" => [15 747, 51 349, 50 342, 14 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
-        "etty" => [15 747, 14 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
+        "tty" => [14 747, 51 349, 50 342, 15 237, 8 195, 3 155, 39 127, 35 85, 70 82, 44 41, 5 33, 29 31, 23 29, 47 25, 69 15, 31 12, 24 8, 65 8, 17 6, 32 5, 68 5, 2 4, 25 4, 27 3, 37 2, 63 2],
+        "etty" => [14 747, 15 237, 3 155, 35 85, 51 81, 44 41, 29 31, 50 7, 2 4, 27 3, 63 2],
         "detty" => [3 155, 2 4, 51 4],
         "hetty" => [51 9],
         "ietty" => [51 4],
         "jetty" => [51 11, 27 3],
         "ketty" => [51 7, 50 6],
-        "letty" => [29 31, 51 4, 14 2],
+        "letty" => [29 31, 51 4, 15 2],
         "metty" => [51 10, 50 1],
         "netty" => [35 85, 51 3],
         "retty" => [44 41, 51 4],
         "rretty" => [44 41],
-        "setty" => [51 4, 14 2],
-        "tetty" => [15 747, 14 231, 51 1],
-        "etetty" => [15 45],
-        "itetty" => [15 180],
-        "stetty" => [14 231, 51 1],
-        "ytetty" => [15 379],
-        "ätetty" => [15 62],
-        "ötetty" => [15 74],
-        "vetty" => [51 16, 14 2, 63 2],
+        "setty" => [51 4, 15 2],
+        "tetty" => [14 747, 15 231, 51 1],
+        "etetty" => [14 45],
+        "itetty" => [14 180],
+        "stetty" => [15 231, 51 1],
+        "ytetty" => [14 379],
+        "ätetty" => [14 62],
+        "ötetty" => [14 74],
+        "vetty" => [51 16, 15 2, 63 2],
         "itty" => [50 135, 5 33, 51 30, 23 29, 24 8, 65 8, 17 6, 32 5, 25 4, 37 2],
         "ditty" => [5 33, 51 1],
         "gitty" => [17 6, 50 1],
@@ -3468,7 +3442,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 11985],
     } listed {}, true, None),
     // POTENTIAL_PRES_AFF_3PL, from PAST_NEG_1SG.
-    relation!(POTENTIAL_PRES_AFF_3PL, [PAST_NEG_1SG], [("en ~ut", "~evAT"), ("en ~yt", "~eväT")], rules {
+    relation!(POTENTIAL_PRES_AFF_3PL, [PAST_NEG_1SG], [("en ~ut", "~evAt"), ("en ~yt", "~evät")], rules {
         "" => [0 8609, 1 3368],
         "ut" => [0 8609],
         "yt" => [1 3368],
@@ -3523,7 +3497,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         Some((POTENTIAL_PERF_NEG_1SG, POTENTIAL_PERF_NEG_2SG))
     ),
     // POTENTIAL_PERF_AFF_3SG, from POTENTIAL_PERF_AFF_PASS.
-    relation!(POTENTIAL_PERF_AFF_3SG, [POTENTIAL_PERF_AFF_PASS], [("~dettu", "~tanut"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänyt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tonUt"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~AnUt"), ("~etty", "~tänyt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~konUt"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tAnUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänyt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~konUt"), ("~ottu", "~pOnUt"), ("~ottu", "~tonUt"), ("~rettu", "~tAnUt"), ("~retty", "~tänyt"), ("~rottu", "~tonUt"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~ponUt"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
+    relation!(POTENTIAL_PERF_AFF_3SG, [POTENTIAL_PERF_AFF_PASS], [("~dettu", "~tanUt"), ("~dettu", "~tenUt"), ("~detty", "~tenUt"), ("~detty", "~tänUt"), ("~dittu", "~tinUt"), ("~ditty", "~tinUt"), ("~dottu", "~tonUt"), ("~duttu", "~tunUt"), ("~dytty", "~tUnUt"), ("~ettu", "~AnUt"), ("~ettu", "~kAnUt"), ("~ettu", "~kenUt"), ("~ettu", "~pAnUt"), ("~ettu", "~tAnUt"), ("~etty", "~AnUt"), ("~etty", "~tänUt"), ("~gittu", "~kinUt"), ("~gitty", "~kinUt"), ("~gottu", "~konUt"), ("~guttu", "~kunUt"), ("~ittu", "~kinUt"), ("~ittu", "~pinUt"), ("~ittu", "~tinUt"), ("~itty", "~kinUt"), ("~itty", "~pinUt"), ("~itty", "~tinUt"), ("~jettu", "~kenUt"), ("~jetty", "~kenUt"), ("~lettu", "~tAnUt"), ("~letty", "~tAnUt"), ("~luttu", "~tUnUt"), ("~lytty", "~tUnUt"), ("~mitty", "~pinUt"), ("~muttu", "~pUnUt"), ("~nettu", "~tAnUt"), ("~netty", "~tänUt"), ("~nittu", "~tinut"), ("~nitty", "~tinyt"), ("~nuttu", "~tUnUt"), ("~nytty", "~tynUt"), ("~ottu", "~konUt"), ("~ottu", "~pOnUt"), ("~ottu", "~tonUt"), ("~rettu", "~tAnUt"), ("~retty", "~tänUt"), ("~rottu", "~tonUt"), ("~ruttu", "~tUnUt"), ("~rytty", "~tynUt"), ("~ttu", "~nUt"), ("~ttu", "~nnUt"), ("~tty", "~nUt"), ("~tty", "~nnyt"), ("~tu", "~lUt"), ("~tu", "~nUt"), ("~tu", "~rUt"), ("~tu", "~sUt"), ("~ty", "~lyt"), ("~ty", "~nUt"), ("~ty", "~rUt"), ("~ty", "~syt"), ("~uttu", "~kunUt"), ("~uttu", "~punUt"), ("~uttu", "~tUnUt"), ("~vetty", "~penUt"), ("~vittu", "~pinUt"), ("~vitty", "~pinUt"), ("~vottu", "~ponUt"), ("~vuttu", "~punUt"), ("~vytty", "~pUnUt"), ("~ytty", "~kUnUt"), ("~ytty", "~tUnUt")], rules {
         "" => [13 1511, 49 1435, 52 1179, 53 992, 15 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 14 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
         "u" => [13 1511, 49 1435, 52 1179, 53 992, 7 738, 48 728, 9 588, 38 292, 0 259, 55 192, 34 167, 62 167, 43 52, 4 42, 28 33, 60 31, 20 25, 6 22, 40 22, 46 22, 67 14, 30 11, 61 10, 66 10, 11 7, 21 7, 19 5, 26 5, 64 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 54 2],
         "itu" => [53 977],
@@ -3701,7 +3675,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         Some((POTENTIAL_PERF_NEG_1PL, POTENTIAL_PERF_NEG_2PL))
     ),
     // POTENTIAL_PERF_AFF_3PL, from POTENTIAL_PERF_AFF_3SG. Few or no words have it: changed as POTENTIAL_PRES_AFF_3SG is into POTENTIAL_PRES_AFF_3PL.
-    relation!(POTENTIAL_PERF_AFF_3PL, [POTENTIAL_PERF_AFF_3SG], [("~e", "~vAT"), ("~e", "~väT")], rules {
+    relation!(POTENTIAL_PERF_AFF_3PL, [POTENTIAL_PERF_AFF_3SG], [("~e", "~vAt"), ("~e", "~vät")], rules {
         "" => [0 11974, 1 12],
         "eillee" => [0 76, 1 3],
         "innee" => [0 72, 1 4],
@@ -3709,11 +3683,11 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "essee" => [0 6, 1 4],
     } listed {}, false, Some((POTENTIAL_PRES_AFF_3SG, POTENTIAL_PRES_AFF_3PL))),
     // POTENTIAL_PERF_AFF_PASS, from PRES_NEG_1SG.
-    relation!(POTENTIAL_PERF_AFF_PASS, [PRES_NEG_1SG], [("~ ammu", "li~ee ammuttu"), ("~ könni", "li~VV kOnnittU"), ("~ runno", "li~ee runnottu")], rules {
+    relation!(POTENTIAL_PERF_AFF_PASS, [PRES_NEG_1SG], [("~ ammu", "li~VV ammUttU"), ("~ könni", "li~VV kOnnittU"), ("~ runno", "li~VV runnOttU")], rules {
         "" => [0 2, 1 2, 2 2],
     } listed {}, true, None),
     // POTENTIAL_PERF_NEG_1SG, from POTENTIAL_PERF_NEG_PASS.
-    relation!(POTENTIAL_PERF_NEG_1SG, [POTENTIAL_PERF_NEG_PASS], [("ei~dettu", "en~tanut"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänyt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tonUt"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~AnUt"), ("ei~etty", "en~tänyt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~konUt"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tAnUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänyt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~konUt"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tonUt"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänyt"), ("ei~rottu", "en~tonUt"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~ponUt"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
+    relation!(POTENTIAL_PERF_NEG_1SG, [POTENTIAL_PERF_NEG_PASS], [("ei~dettu", "en~tanUt"), ("ei~dettu", "en~tenUt"), ("ei~detty", "en~tenUt"), ("ei~detty", "en~tänUt"), ("ei~dittu", "en~tinUt"), ("ei~ditty", "en~tinUt"), ("ei~dottu", "en~tonUt"), ("ei~duttu", "en~tunUt"), ("ei~dytty", "en~tUnUt"), ("ei~ettu", "en~AnUt"), ("ei~ettu", "en~kAnUt"), ("ei~ettu", "en~kenUt"), ("ei~ettu", "en~pAnUt"), ("ei~ettu", "en~tAnUt"), ("ei~etty", "en~AnUt"), ("ei~etty", "en~tänUt"), ("ei~gittu", "en~kinUt"), ("ei~gitty", "en~kinUt"), ("ei~gottu", "en~konUt"), ("ei~guttu", "en~kunUt"), ("ei~ittu", "en~kinUt"), ("ei~ittu", "en~pinUt"), ("ei~ittu", "en~tinUt"), ("ei~itty", "en~kinUt"), ("ei~itty", "en~pinUt"), ("ei~itty", "en~tinUt"), ("ei~jettu", "en~kenUt"), ("ei~jetty", "en~kenUt"), ("ei~lettu", "en~tAnUt"), ("ei~letty", "en~tAnUt"), ("ei~luttu", "en~tUnUt"), ("ei~lytty", "en~tUnUt"), ("ei~mitty", "en~pinUt"), ("ei~muttu", "en~pUnUt"), ("ei~nettu", "en~tAnUt"), ("ei~netty", "en~tänUt"), ("ei~nittu", "en~tinut"), ("ei~nitty", "en~tinyt"), ("ei~nuttu", "en~tUnUt"), ("ei~nytty", "en~tynUt"), ("ei~ottu", "en~konUt"), ("ei~ottu", "en~pOnUt"), ("ei~ottu", "en~tonUt"), ("ei~rettu", "en~tAnUt"), ("ei~retty", "en~tänUt"), ("ei~rottu", "en~tonUt"), ("ei~ruttu", "en~tUnUt"), ("ei~rytty", "en~tynUt"), ("ei~ttu", "en~nUt"), ("ei~ttu", "en~nnUt"), ("ei~tty", "en~nUt"), ("ei~tty", "en~nnyt"), ("ei~tu", "en~lUt"), ("ei~tu", "en~nUt"), ("ei~tu", "en~rUt"), ("ei~tu", "en~sUt"), ("ei~ty", "en~lyt"), ("ei~ty", "en~nUt"), ("ei~ty", "en~rUt"), ("ei~ty", "en~syt"), ("ei~uttu", "en~kunUt"), ("ei~uttu", "en~punUt"), ("ei~uttu", "en~tUnUt"), ("ei~vetty", "en~penUt"), ("ei~vittu", "en~pinUt"), ("ei~vitty", "en~pinUt"), ("ei~vottu", "en~ponUt"), ("ei~vuttu", "en~punUt"), ("ei~vytty", "en~pUnUt"), ("ei~ytty", "en~kUnUt"), ("ei~ytty", "en~tUnUt")], rules {
         "" => [13 1511, 49 1435, 52 1179, 53 992, 15 747, 7 738, 48 728, 9 588, 56 563, 51 349, 50 342, 38 292, 0 259, 14 237, 8 195, 55 192, 34 167, 62 167, 3 155, 59 139, 39 127, 57 113, 35 85, 70 82, 43 52, 4 42, 44 41, 5 33, 28 33, 29 31, 60 31, 23 29, 20 25, 47 25, 6 22, 40 22, 46 22, 69 15, 67 14, 31 12, 30 11, 61 10, 66 10, 24 8, 65 8, 11 7, 21 7, 17 6, 19 5, 26 5, 32 5, 64 5, 68 5, 2 4, 25 4, 10 3, 12 3, 16 3, 18 3, 27 3, 36 3, 1 2, 22 2, 33 2, 37 2, 41 2, 42 2, 45 2, 54 2, 58 2, 63 2],
         "u" => [13 1511, 49 1435, 52 1179, 53 992, 7 738, 48 728, 9 588, 38 292, 0 259, 55 192, 34 167, 62 167, 43 52, 4 42, 28 33, 60 31, 20 25, 6 22, 40 22, 46 22, 67 14, 30 11, 61 10, 66 10, 11 7, 21 7, 19 5, 26 5, 64 5, 10 3, 12 3, 16 3, 18 3, 36 3, 1 2, 22 2, 33 2, 41 2, 42 2, 45 2, 54 2],
         "itu" => [53 977],
@@ -4172,7 +4146,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "" => [0 2, 1 2, 2 2],
     } listed {}, true, None),
     // LONG_INFINITIVE_1SG, from INFINITIVE.
-    relation!(LONG_INFINITIVE_1SG, [INFINITIVE], [("~", "~kseni"), ("~a", "~TTAvA"), ("~da", "~tAvA"), ("~dä", "~tAvA"), ("~jaa", "~TTAvA"), ("~jää", "~TTAvA"), ("~kaa", "~attava")], rules {
+    relation!(LONG_INFINITIVE_1SG, [INFINITIVE], [("~", "~kseni"), ("~a", "~ttAvA"), ("~da", "~tAvA"), ("~dä", "~tAvA"), ("~jaa", "~ttAvA"), ("~jää", "~ttAvA"), ("~kaa", "~attava")], rules {
         "" => [0 11915, 2 44, 3 19, 1 15, 5 4, 4 3, 6 2],
         "a" => [0 8566, 2 44, 1 15, 4 3, 6 2],
         "aa" => [0 2617, 1 15, 4 3, 6 2],
@@ -4233,7 +4207,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "tää" => [1 1290],
     } listed {}, true, None),
     // LONG_INFINITIVE_1PL, from INFINITIVE.
-    relation!(LONG_INFINITIVE_1PL, [INFINITIVE], [("~", "~ksemmV"), ("~", "~kseni"), ("~jaa", "~TAkseVn"), ("~jää", "~TAkseVn")], rules {
+    relation!(LONG_INFINITIVE_1PL, [INFINITIVE], [("~", "~ksemmV"), ("~", "~kseni"), ("~jaa", "~tAkseVn"), ("~jää", "~tAkseVn")], rules {
         "" => [0 11915, 1 63, 3 4, 2 3],
         "aa" => [0 2617, 2 3],
         "jaa" => [0 3, 2 3],
@@ -4255,7 +4229,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "tää" => [0 1290],
     } listed {}, true, None),
     // LONG_INFINITIVE_2PL, from INFINITIVE.
-    relation!(LONG_INFINITIVE_2PL, [INFINITIVE], [("~", "~ksennV"), ("~", "~ksesi"), ("~a", "~TTU"), ("~jaa", "~TTU"), ("~jää", "~TTU"), ("~kaa", "~attu")], rules {
+    relation!(LONG_INFINITIVE_2PL, [INFINITIVE], [("~", "~ksennV"), ("~", "~ksesi"), ("~a", "~ttU"), ("~jaa", "~ttU"), ("~jää", "~ttU"), ("~kaa", "~attU")], rules {
         "" => [0 11915, 1 63, 2 15, 4 4, 3 3, 5 2],
         "aa" => [0 2617, 2 15, 3 3, 5 2],
         "daa" => [2 3],
@@ -4285,7 +4259,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "tää" => [0 1290],
     } listed {}, true, None),
     // LONG_INFINITIVE_3, from INFINITIVE.
-    relation!(LONG_INFINITIVE_3, [INFINITIVE], [("~", "~kseVn"), ("~", "~ksennV"), ("~a", "~Tes"), ("~jaa", "~TessA"), ("~jää", "~TessA"), ("~kaa", "~aTes")], rules {
+    relation!(LONG_INFINITIVE_3, [INFINITIVE], [("~", "~kseVn"), ("~", "~ksennV"), ("~a", "~tes"), ("~jaa", "~tessA"), ("~jää", "~tessA"), ("~kaa", "~ates")], rules {
         "" => [0 11915, 1 63, 2 15, 4 4, 3 3, 5 2],
         "aa" => [0 2617, 2 15, 3 3, 5 2],
         "daa" => [2 3],
@@ -4368,16 +4342,16 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "tty" => [4 2551],
     } listed {}, true, None),
     // SECOND_INFINITIVE_POSSESSIVE_1SG, from SECOND_INFINITIVE_ACT.
-    relation!(SECOND_INFINITIVE_POSSESSIVE_1SG, [SECOND_INFINITIVE_ACT], [("~", "~TOn"), ("~", "~ni"), ("~tu", "~mA"), ("~ty", "~mA")], rules {
-        "" => [1 11913, 2 44, 3 19, 0 18],
-        "a" => [1 8565, 0 18],
-        "ma" => [0 18],
-        "sa" => [1 8565],
+    relation!(SECOND_INFINITIVE_POSSESSIVE_1SG, [SECOND_INFINITIVE_ACT], [("~", "~ni"), ("~", "~tOn"), ("~tu", "~mA"), ("~ty", "~mA")], rules {
+        "" => [0 11913, 2 44, 3 19, 1 18],
+        "a" => [0 8565, 1 18],
+        "ma" => [1 18],
+        "sa" => [0 8565],
         "u" => [2 44],
         "tu" => [2 44],
         "y" => [3 19],
         "ty" => [3 19],
-        "ä" => [1 3348],
+        "ä" => [0 3348],
     } listed {}, true, None),
     // SECOND_INFINITIVE_POSSESSIVE_2SG, from SECOND_INFINITIVE_ACT.
     relation!(SECOND_INFINITIVE_POSSESSIVE_2SG, [SECOND_INFINITIVE_ACT], [("~", "~si"), ("~ma", "~n"), ("~tu", "~dessAni"), ("~ty", "~dessAni")], rules {
@@ -4428,7 +4402,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [0 3348],
     } listed {}, true, None),
     // SECOND_INFINITIVE_INSTRUCTIVE, from SECOND_INFINITIVE_ACT.
-    relation!(SECOND_INFINITIVE_INSTRUCTIVE, [SECOND_INFINITIVE_ACT], [("~", "~sTA"), ("~ssa", "~n"), ("~ssä", "~n"), ("~tu", "~dessAnsA"), ("~ty", "~dessAnsA")], rules {
+    relation!(SECOND_INFINITIVE_INSTRUCTIVE, [SECOND_INFINITIVE_ACT], [("~", "~stA"), ("~ssa", "~n"), ("~ssä", "~n"), ("~tu", "~dessAnsA"), ("~ty", "~dessAnsA")], rules {
         "" => [1 8565, 2 3348, 3 44, 4 19, 0 18],
         "a" => [1 8565, 0 18],
         "ma" => [0 18],
@@ -4440,7 +4414,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [2 3348],
     } listed {}, true, None),
     // THIRD_INFINITIVE_INE, from INFINITIVE.
-    relation!(THIRD_INFINITIVE_INE, [INFINITIVE], [("~", "~"), ("~a", "~mAn"), ("~a", "~mAssA"), ("~a", "~semassa"), ("~aista", "~kaisemassa"), ("~ata", "~bAAmAssA"), ("~ata", "~gaamassa"), ("~ata", "~kaamassa"), ("~ata", "~paamassa"), ("~ata", "~taamassa"), ("~da", "~mAssA"), ("~da", "~tsematon"), ("~data", "~taamassa"), ("~della", "~telemassa"), ("~dellä", "~telemässä"), ("~detä", "~tenemässä"), ("~dota", "~toamassa"), ("~dä", "~mAssA"), ("~dä", "~tsemätön"), ("~dätä", "~täämässä"), ("~ella", "~kelemassa"), ("~ella", "~telemassa"), ("~ellä", "~telemässä"), ("~eta", "~keamassa"), ("~eta", "~kenemassa"), ("~eta", "~penemassa"), ("~etä", "~kenemässä"), ("~etä", "~keämässä"), ("~gata", "~kaamassa"), ("~geta", "~keamassa"), ("~gota", "~koamassa"), ("~gätä", "~kAAmAssA"), ("~hdä", "~kemAssA"), ("~itä", "~kiämässä"), ("~jeta", "~keamassa"), ("~jeta", "~kenemassa"), ("~jetä", "~kenemässä"), ("~jetä", "~keämässä"), ("~jätä", "~kAAmAssA"), ("~la", "~emAssA"), ("~lata", "~taamassa"), ("~lella", "~telemassa"), ("~lellä", "~telemässä"), ("~lä", "~emässA"), ("~mata", "~paamassa"), ("~mella", "~pelemassa"), ("~na", "~emAssA"), ("~nata", "~taamassa"), ("~nella", "~telemassa"), ("~nellä", "~telemässä"), ("~nota", "~toamassa"), ("~nä", "~VmAssA"), ("~nätä", "~täämässä"), ("~ota", "~koamassa"), ("~ota", "~konemassa"), ("~ota", "~poamassa"), ("~ota", "~toamassa"), ("~ra", "~emAssA"), ("~rata", "~taamassa"), ("~rella", "~telemassa"), ("~rellä", "~telemässä"), ("~rota", "~toamassa"), ("~rä", "~VmAssA"), ("~stä", "~ksemAssA"), ("~ta", "~AmAssA"), ("~ta", "~emAssA"), ("~ta", "~nemAssA"), ("~tä", "~AmAssA"), ("~tä", "~emässA"), ("~tä", "~nVmAssA"), ("~uta", "~kUAmAssA"), ("~uta", "~puamassa"), ("~uta", "~tuamassa"), ("~vata", "~paamassa"), ("~veta", "~peamassa"), ("~veta", "~penemassa"), ("~vetä", "~peämässä"), ("~vista", "~pisemassa"), ("~vota", "~poamassa"), ("~vuta", "~puamassa"), ("~vätä", "~pAAmAssA"), ("~ä", "~mAn"), ("~ä", "~mAssA"), ("~ä", "~semässä"), ("~ätä", "~kAAmAssA"), ("~ätä", "~pAAmAssA"), ("~ätä", "~täämässä")], rules {
+    relation!(THIRD_INFINITIVE_INE, [INFINITIVE], [("~", "~"), ("~a", "~mAn"), ("~a", "~mAssA"), ("~a", "~semassa"), ("~aista", "~kaisemassa"), ("~ata", "~bAAmAssA"), ("~ata", "~gaamassa"), ("~ata", "~kaamassa"), ("~ata", "~paamassa"), ("~ata", "~taamassa"), ("~da", "~mAssA"), ("~da", "~tsemAtOn"), ("~data", "~taamassa"), ("~della", "~telemassa"), ("~dellä", "~telemässä"), ("~detä", "~tenemässä"), ("~dota", "~toamassa"), ("~dä", "~mAssA"), ("~dä", "~tsemAtOn"), ("~dätä", "~tAAmAssA"), ("~ella", "~kelemassa"), ("~ella", "~telemassa"), ("~ellä", "~telemässä"), ("~eta", "~keamassa"), ("~eta", "~kenemassa"), ("~eta", "~penemassa"), ("~etä", "~kenemässä"), ("~etä", "~keämässä"), ("~gata", "~kaamassa"), ("~geta", "~keamassa"), ("~gota", "~koamassa"), ("~gätä", "~kAAmAssA"), ("~hdä", "~kemAssA"), ("~itä", "~kiämässä"), ("~jeta", "~keamassa"), ("~jeta", "~kenemassa"), ("~jetä", "~kenemässä"), ("~jetä", "~keämässä"), ("~jätä", "~kAAmAssA"), ("~la", "~emAssA"), ("~lata", "~taamassa"), ("~lella", "~telemassa"), ("~lellä", "~telemässä"), ("~lä", "~emässA"), ("~mata", "~paamassa"), ("~mella", "~pelemassa"), ("~na", "~emAssA"), ("~nata", "~tAAmAssA"), ("~nella", "~telemassa"), ("~nellä", "~telemässä"), ("~nota", "~toamassa"), ("~nä", "~VmAssA"), ("~nätä", "~tAAmAssA"), ("~ota", "~koamassa"), ("~ota", "~konemassa"), ("~ota", "~poamassa"), ("~ota", "~toamassa"), ("~ra", "~emAssA"), ("~rata", "~taamassa"), ("~rella", "~telemassa"), ("~rellä", "~telemässä"), ("~rota", "~toamassa"), ("~rä", "~VmAssA"), ("~stä", "~ksemAssA"), ("~ta", "~AmAssA"), ("~ta", "~emAssA"), ("~ta", "~nemAssA"), ("~tä", "~AmAssA"), ("~tä", "~emässA"), ("~tä", "~nVmAssA"), ("~uta", "~kUAmAssA"), ("~uta", "~puamassa"), ("~uta", "~tUAmAssA"), ("~vata", "~paamassa"), ("~veta", "~peamassa"), ("~veta", "~penemassa"), ("~vetä", "~peämässä"), ("~vista", "~pisemassa"), ("~vota", "~poamassa"), ("~vuta", "~puamassa"), ("~vätä", "~pAAmAssA"), ("~ä", "~mAn"), ("~ä", "~mAssA"), ("~ä", "~semässä"), ("~ätä", "~kAAmAssA"), ("~ätä", "~pAAmAssA"), ("~ätä", "~tAAmAssA")], rules {
         "" => [2 4812, 82 2205, 10 942, 64 881, 39 664, 21 316, 43 275, 65 185, 67 167, 22 166, 7 138, 68 135, 13 131, 17 90, 8 80, 14 74, 9 73, 66 56, 3 45, 11 44, 69 42, 84 32, 49 31, 48 26, 59 26, 12 21, 18 19, 24 19, 0 18, 85 17, 53 16, 83 15, 86 13, 26 10, 41 9, 60 9, 23 8, 16 6, 19 6, 35 6, 37 6, 46 6, 73 6, 40 5, 42 5, 5 4, 28 4, 33 4, 34 4, 75 4, 76 4, 81 4, 1 3, 4 3, 25 3, 27 3, 30 3, 56 3, 58 3, 70 3, 71 3, 78 3, 79 3, 80 3, 6 2, 15 2, 20 2, 29 2, 31 2, 32 2, 36 2, 38 2, 44 2, 45 2, 47 2, 50 2, 51 2, 52 2, 54 2, 55 2, 57 2, 61 2, 62 2, 63 2, 72 2, 74 2, 77 2],
         "a" => [2 4812, 10 942, 64 881, 39 664, 21 316, 65 185, 7 138, 13 131, 8 80, 9 73, 66 56, 3 45, 11 44, 48 26, 59 26, 12 21, 24 19, 0 18, 53 16, 41 9, 23 8, 16 6, 35 6, 46 6, 73 6, 40 5, 5 4, 28 4, 34 4, 75 4, 1 3, 4 3, 25 3, 30 3, 56 3, 58 3, 70 3, 71 3, 78 3, 79 3, 6 2, 20 2, 29 2, 44 2, 45 2, 47 2, 50 2, 54 2, 55 2, 57 2, 61 2, 72 2, 74 2, 77 2],
         "aa" => [2 2616, 0 18, 1 3],
@@ -4586,18 +4560,15 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         0 => [
             "bunkkaa", "pull uppaa", "stikkaa",
         ],
-        26 => [
-            "kyetä",
+        5 => [
+            "dubata", "jobata", "lobata", "mobata",
         ],
-        33 => [
-            "kehitä", "keritä", "selitä", "siitä",
+        12 => [
+            "luodata", "pedata",
         ],
         53 => [
             "kaikota", "karkota", "keota", "koota", "liuota", "poukota", "ruokota", "seota",
             "virota",
-        ],
-        56 => [
-            "lotota", "netota", "peitota",
         ],
         70 => [
             "koukuta", "ruikuta",
@@ -4610,7 +4581,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         ],
     }, true, None),
     // THIRD_INFINITIVE_ELA, from THIRD_INFINITIVE_INE.
-    relation!(THIRD_INFINITIVE_ELA, [THIRD_INFINITIVE_INE], [("~", "~mAAn"), ("~an", "~inen"), ("~sa", "~TA"), ("~sä", "~TA"), ("~än", "~inen")], rules {
+    relation!(THIRD_INFINITIVE_ELA, [THIRD_INFINITIVE_INE], [("~", "~mAAn"), ("~an", "~inen"), ("~sa", "~tA"), ("~sä", "~tA"), ("~än", "~inen")], rules {
         "" => [2 8568, 3 3347, 0 18, 4 4, 1 3],
         "a" => [2 8568, 0 18],
         "aa" => [0 18],
@@ -4631,7 +4602,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [2 3347],
     } listed {}, true, None),
     // THIRD_INFINITIVE_ADE, from THIRD_INFINITIVE_INE.
-    relation!(THIRD_INFINITIVE_ADE, [THIRD_INFINITIVE_INE], [("~ssa", "~llA"), ("~ssä", "~llA"), ("~tsematon", "~mAsTA"), ("~tsemätön", "~mAsTA")], rules {
+    relation!(THIRD_INFINITIVE_ADE, [THIRD_INFINITIVE_INE], [("~ssa", "~llA"), ("~ssä", "~llA"), ("~tsematon", "~mAstA"), ("~tsemätön", "~mAstA")], rules {
         "" => [0 8568, 1 3347, 2 44, 3 19],
         "a" => [0 8568],
         "n" => [2 44, 3 19],
@@ -4640,7 +4611,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [1 3347],
     } listed {}, true, None),
     // THIRD_INFINITIVE_ABE, from THIRD_INFINITIVE_INE.
-    relation!(THIRD_INFINITIVE_ABE, [THIRD_INFINITIVE_INE], [("~", "~mATTA"), ("~ssa", "~TTA"), ("~ssä", "~TTA")], rules {
+    relation!(THIRD_INFINITIVE_ABE, [THIRD_INFINITIVE_INE], [("~", "~mAttA"), ("~ssa", "~ttA"), ("~ssä", "~ttA")], rules {
         "" => [1 8568, 2 3347, 0 18],
         "a" => [1 8568, 0 18],
         "aa" => [0 18],
@@ -4672,7 +4643,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [3 3347],
     } listed {}, true, None),
     // FIFTH_INFINITIVE_1SG, from THIRD_INFINITIVE_INE.
-    relation!(FIFTH_INFINITIVE_1SG, [THIRD_INFINITIVE_INE], [("~ssa", "~isVllAni"), ("~ssä", "~isVllAni"), ("~ton", "~llA"), ("~tön", "~llA")], rules {
+    relation!(FIFTH_INFINITIVE_1SG, [THIRD_INFINITIVE_INE], [("~ssa", "~isillani"), ("~ssä", "~isilläni"), ("~ton", "~llA"), ("~tön", "~llA")], rules {
         "" => [0 8568, 1 3347, 2 44, 3 19],
         "a" => [0 8568],
         "n" => [2 44, 3 19],
@@ -4681,7 +4652,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [1 3347],
     } listed {}, true, None),
     // FIFTH_INFINITIVE_2SG, from THIRD_INFINITIVE_INE.
-    relation!(FIFTH_INFINITIVE_2SG, [THIRD_INFINITIVE_INE], [("~ssa", "~isVllAsi"), ("~ssä", "~isVllAsi"), ("~tsematon", "~mATTA"), ("~tsemätön", "~mATTA")], rules {
+    relation!(FIFTH_INFINITIVE_2SG, [THIRD_INFINITIVE_INE], [("~ssa", "~isillasi"), ("~ssä", "~isilläsi"), ("~tsematon", "~mAttA"), ("~tsemätön", "~mAttA")], rules {
         "" => [0 8568, 1 3347, 2 44, 3 19],
         "a" => [0 8568],
         "n" => [2 44, 3 19],
@@ -4690,13 +4661,13 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [1 3347],
     } listed {}, true, None),
     // FIFTH_INFINITIVE_1PL, from THIRD_INFINITIVE_INE.
-    relation!(FIFTH_INFINITIVE_1PL, [THIRD_INFINITIVE_INE], [("~ssa", "~isVllAmme"), ("~ssä", "~isVllAmme")], rules {
+    relation!(FIFTH_INFINITIVE_1PL, [THIRD_INFINITIVE_INE], [("~ssa", "~isillamme"), ("~ssä", "~isillämme")], rules {
         "" => [0 8568, 1 3347],
         "a" => [0 8568],
         "ä" => [1 3347],
     } listed {}, true, None),
     // FIFTH_INFINITIVE_2PL, from THIRD_INFINITIVE_INE.
-    relation!(FIFTH_INFINITIVE_2PL, [THIRD_INFINITIVE_INE], [("~on", "~TA"), ("~ssa", "~isVllAnne"), ("~ssä", "~isVllAnne"), ("~ön", "~TA")], rules {
+    relation!(FIFTH_INFINITIVE_2PL, [THIRD_INFINITIVE_INE], [("~on", "~tA"), ("~ssa", "~isillanne"), ("~ssä", "~isillänne"), ("~ön", "~tA")], rules {
         "" => [1 8568, 2 3347, 0 44, 3 19],
         "a" => [1 8568],
         "n" => [0 44, 3 19],
@@ -4714,7 +4685,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [1 3347],
     } listed {}, true, None),
     // PARTICIPLE_PRES_ACT, from THIRD_INFINITIVE_INE.
-    relation!(PARTICIPLE_PRES_ACT, [THIRD_INFINITIVE_INE], [("~a", "~TA"), ("~jaman", "~TA"), ("~jämän", "~TA"), ("~kaa", "~aTA"), ("~massa", "~vA"), ("~mässä", "~vä"), ("~tsematon", "~vA"), ("~tsemätön", "~vA")], rules {
+    relation!(PARTICIPLE_PRES_ACT, [THIRD_INFINITIVE_INE], [("~a", "~tA"), ("~jaman", "~tA"), ("~jämän", "~tA"), ("~kaa", "~atA"), ("~massa", "~vA"), ("~mässä", "~vä"), ("~tsematon", "~vA"), ("~tsemätön", "~vA")], rules {
         "" => [4 8568, 5 3347, 6 44, 7 19, 0 15, 2 4, 1 3, 3 2],
         "a" => [4 8568, 0 15, 3 2],
         "aa" => [0 15, 3 2],
@@ -4747,7 +4718,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "tty" => [5 2552],
     } listed {}, false, None),
     // PARTICIPLE_PAST_ACT, from PAST_NEG_1SG.
-    relation!(PARTICIPLE_PAST_ACT, [PAST_NEG_1SG], [("en ~", "~"), ("en ~nnu", "~TTAes"), ("en ~nut", "~dAksensA"), ("en ~nyt", "~dAksensA")], rules {
+    relation!(PARTICIPLE_PAST_ACT, [PAST_NEG_1SG], [("en ~", "~"), ("en ~nnu", "~ttAes"), ("en ~nut", "~dAksensA"), ("en ~nyt", "~dAksensA")], rules {
         "" => [0 11915, 2 44, 3 19, 1 18],
         "t" => [0 11915, 2 44, 3 19],
         "ut" => [0 8566, 2 44],
@@ -4800,7 +4771,7 @@ pub(super) static RELATIONS: [Relation<'static>; 162] = [
         "ä" => [4 3347],
     } listed {}, false, None),
     // PARTICIPLE_NEG, from THIRD_INFINITIVE_INE.
-    relation!(PARTICIPLE_NEG, [THIRD_INFINITIVE_INE], [("~", "~mAsT"), ("~ssa", "~TOn"), ("~ssä", "~TOn"), ("~tsematon", "~dessAAn"), ("~tsemätön", "~dessAAn")], rules {
+    relation!(PARTICIPLE_NEG, [THIRD_INFINITIVE_INE], [("~", "~mAst"), ("~ssa", "~tOn"), ("~ssä", "~tOn"), ("~tsematon", "~dessAAn"), ("~tsemätön", "~dessAAn")], rules {
         "" => [1 8568, 2 3347, 3 44, 4 19, 0 18],
         "a" => [1 8568, 0 18],
         "aa" => [0 18],

@@ -66,17 +66,14 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Gender::*;
-        use crate::Number::*;
-        let cell = match self {
-            Cell::PastParticiple(Masculine, Singular) => cell::M_SG,
-            Cell::PastParticiple(Masculine, Plural) => cell::M_PL,
-            Cell::PastParticiple(Feminine, Singular) => cell::F_SG,
-            Cell::PastParticiple(Feminine, Plural) => cell::F_PL,
-        };
-        cell as usize
+        match self {
+            Cell::PastParticiple(gender, number) => {
+                cell::M_SG as usize + gender as usize * 2 + number as usize
+            }
+        }
     }
 }
 

@@ -43,14 +43,13 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
             VOC_N_PL,
             COMPARATIVE,
             SUPERLATIVE,
-            ADVERB,
         ]),
     },
     Slot {
         name: Cow::Borrowed("adjective_nom_f_sg"),
         cells: Cow::Borrowed(&[
             NOM_F_SG, NOM_F_DU, NOM_F_PL, GEN_F_SG, GEN_F_DU, GEN_F_PL, DAT_F_SG, DAT_F_DU,
-            ACC_F_SG, ACC_F_DU, ACC_F_PL, VOC_F_SG, VOC_F_DU, VOC_F_PL,
+            ACC_F_SG, ACC_F_DU, ACC_F_PL, VOC_F_SG, VOC_F_DU, VOC_F_PL, ADVERB,
         ]),
     },
     Slot {
@@ -60,7 +59,7 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 13] = [
+pub(super) static TABLES: [EndingTable<'static>; 12] = [
     // lemma like μᾰλᾰκος: 3,448 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
@@ -89,10 +88,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "ᾰ\u{313}~ον\t",
         )),
     },
-    // adjective_nom_m_du like μᾰλᾰκος: 2,849 words.
+    // adjective_nom_m_du like μᾰλᾰκος: 2,863 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
-        words: 2849,
+        words: 2863,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ω\t~οι\t",
@@ -107,7 +106,6 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ω\t~ᾰ\t",
             "~ωτερος\t",
             "~ωτᾰτος\t",
-            "~ως\t",
         )),
     },
     // adjective_nom_m_du like προσηκων: 772 words.
@@ -128,13 +126,12 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ε\t~ᾰ\t",
             "\t",
             "\t",
-            "~ως\t",
         )),
     },
-    // adjective_nom_f_sg like μᾰλᾰκος: 1,747 words.
+    // adjective_nom_f_sg like μᾰλᾰκος: 1,628 words.
     EndingTable {
         name: Cow::Borrowed("μᾰλᾰκος"),
-        words: 1747,
+        words: 1628,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~η\t~ᾱ\t~αι\t",
@@ -142,25 +139,27 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ῃ\t~αιν\t",
             "~ην\t~ᾱ\t~ᾱς\t",
             "~η\t~ᾱ\t~αι\t",
+            "~ως\t",
         )),
     },
-    // adjective_nom_f_sg like προσηκων: 713 words.
+    // adjective_nom_f_sg like προσηκων: 331 words.
     EndingTable {
         name: Cow::Borrowed("προσηκων"),
-        words: 713,
+        words: 331,
         slot: 2,
         table: Cow::Borrowed(concat!(
-            "~ᾰ\t~ᾱ\t~αι\t",
-            "~ης\t~αιν\t~ων\t",
-            "~ῃ\t~αιν\t",
-            "~ᾰν\t~ᾱ\t~ᾱς\t",
-            "~ᾰ\t~ᾱ\t~αι\t",
+            "~υσᾰ\t~υσᾱ\t~υσαι\t",
+            "~υσης\t~υσαιν\t~υσων\t",
+            "~υσῃ\t~υσαιν\t",
+            "~υσᾰν\t~υσᾱ\t~υσᾱς\t",
+            "~υσᾰ\t~υσᾱ\t~υσαι\t",
+            "~ντως\t",
         )),
     },
-    // adjective_nom_f_sg like τελειος: 624 words.
+    // adjective_nom_f_sg like ὑστερος: 133 words.
     EndingTable {
-        name: Cow::Borrowed("τελειος"),
-        words: 624,
+        name: Cow::Borrowed("ὑστερος"),
+        words: 133,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ᾱ\t~ᾱ\t~αι\t",
@@ -168,19 +167,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "~ᾳ\t~αιν\t",
             "~ᾱν\t~ᾱ\t~ᾱς\t",
             "~ᾱ\t~ᾱ\t~αι\t",
-        )),
-    },
-    // adjective_nom_f_sg like εἰκως: 77 words.
-    EndingTable {
-        name: Cow::Borrowed("εἰκως"),
-        words: 77,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~ᾰ\t~ᾱ\t~αι\t",
-            "~ᾱς\t~αιν\t~ων\t",
-            "~ᾳ\t~αιν\t",
-            "~ᾰν\t~ᾱ\t~ᾱς\t",
-            "~ᾰ\t~ᾱ\t~αι\t",
+            "~ον\t",
         )),
     },
     // adjective_nom_f_sg like ἀειμακαριστος: 1 words.
@@ -194,6 +181,7 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "ᾰ\u{313}~ῃ\tᾰ\u{313}~αιν\t",
             "ᾰ\u{313}~ην\tᾰ\u{313}~ᾱ\tᾰ\u{313}~ᾱς\t",
             "ᾰ\u{313}~η\tᾰ\u{313}~ᾱ\tᾰ\u{313}~αι\t",
+            "ᾰ\u{313}~ως\t",
         )),
     },
     // adjective_dat_pl like μᾰλᾰκος: 2,371 words.

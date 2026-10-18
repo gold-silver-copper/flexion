@@ -71,10 +71,10 @@ pub(super) static SLOTS: [Slot<'static>; 6] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 16] = [
-    // verb_pres_1_sg like passer: 5,968 words.
+    // verb_pres_1_sg like passer: 5,967 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 5968,
+        words: 5967,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~s\t", "~\t", "~\t",)),
     },
@@ -118,10 +118,10 @@ pub(super) static TABLES: [EndingTable<'static>; 16] = [
             "~ois|~ieds\t",
         )),
     },
-    // verb_pres_1_pl like passer: 6,766 words.
+    // verb_pres_1_pl like passer: 6,765 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6766,
+        words: 6765,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ons\t",
@@ -152,10 +152,10 @@ pub(super) static TABLES: [EndingTable<'static>; 16] = [
             "~ant\t",
         )),
     },
-    // verb_ like passer: 6,694 words.
+    // verb_ like passer: 6,693 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6694,
+        words: 6693,
         slot: 2,
         table: Cow::Borrowed(concat!("~nt\t", "~\t", "~s\t", "~\t~nt\t",)),
     },
@@ -171,10 +171,10 @@ pub(super) static TABLES: [EndingTable<'static>; 16] = [
             "~ille\t~illent\t",
         )),
     },
-    // verb_past_1_sg like passer: 6,018 words.
+    // verb_past_1_sg like passer: 6,017 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6018,
+        words: 6017,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~ai\t~âmes\t",
@@ -246,10 +246,10 @@ pub(super) static TABLES: [EndingTable<'static>; 16] = [
             "~\t",
         )),
     },
-    // verb like passer: 6,689 words.
+    // verb like passer: 6,688 words.
     EndingTable {
         name: Cow::Borrowed("passer"),
-        words: 6689,
+        words: 6688,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "~ai\t~ons\t",

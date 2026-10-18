@@ -110,10 +110,10 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 11] = [
-    // lemma like makas: 815 words.
+    // lemma like makas: 818 words.
     EndingTable {
         name: Cow::Borrowed("makas"),
-        words: 815,
+        words: 818,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~\t~lAr\t",
@@ -231,10 +231,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~nIn\t\t\t~nIzIn\t",
         )),
     },
-    // noun_acc_sg like sav: 3,757 words.
+    // noun_acc_sg like sav: 3,760 words.
     EndingTable {
         name: Cow::Borrowed("sav"),
-        words: 3757,
+        words: 3760,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~I\t",
@@ -248,10 +248,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InIn\t\t\t~InIzIn\t",
         )),
     },
-    // noun_acc_sg like ant: 1,734 words.
+    // noun_acc_sg like ant: 1,733 words.
     EndingTable {
         name: Cow::Borrowed("ant"),
-        words: 1734,
+        words: 1733,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~Iˇ\t",
@@ -265,10 +265,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~InInˇ\t\t\t~InIzInˇ\t",
         )),
     },
-    // noun_acc_sg like yer: 167 words.
+    // noun_acc_sg like yer: 159 words.
     EndingTable {
         name: Cow::Borrowed("yer"),
-        words: 167,
+        words: 159,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~i\t",
@@ -282,10 +282,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t~inIn\t\t\t~inIzIn\t",
         )),
     },
-    // noun_acc_sg like göz: 37 words.
+    // noun_acc_sg like göz: 45 words.
     EndingTable {
         name: Cow::Borrowed("göz"),
-        words: 37,
+        words: 45,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ü\t",

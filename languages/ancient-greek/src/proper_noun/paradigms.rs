@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes (`~ος`, `μαρῑνος`: the stem and `ος`). A stem in two pieces (`~ω~`, `μεντωρ`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first.
+//! Alternatives are separated by `|`, the usual one first. A capital (`Ε`)
+//! is a class letter: a harmony law in `laws.rs` writes it, by the
+//! letter before it.
 
 use flexion::Paradigm;
 
@@ -126,16 +128,16 @@ pub enum Declension {
     Λᾰδων,
     /// Like `μῐθρᾱς`: 110 words.
     Μῐθρᾱς,
-    /// Like `βεροιᾰ`: 107 words.
+    /// Like `βεροιᾰ`: 103 words.
     Βεροιᾰ,
     /// Like `σῑναι`: 97 words.
     Σῑναι,
+    /// Like `σουσᾰ`: 95 words.
+    Σουσᾰ,
     /// Like `ἀρῐοβαρζανης`: 91 words.
     Ἀρῐοβαρζανης,
-    /// Like `ὀλβᾰσᾰ`: 89 words.
+    /// Like `ὀλβᾰσᾰ`: 63 words.
     Ὀλβᾰσᾰ,
-    /// Like `σουσᾰ`: 69 words.
-    Σουσᾰ,
     /// Like `μεγαβατης`: 59 words.
     Μεγαβατης,
     /// Like `κᾰλλῐπολῐς`: 56 words.
@@ -172,6 +174,8 @@ pub enum Declension {
     Φᾰεθων,
     /// Like `μῐμᾱς`: 18 words.
     Μῐμᾱς,
+    /// Like `δωρᾰ`: 16 words.
+    Δωρᾰ,
     /// Like `ἰτῠς`: 15 words.
     Ἰτῠς,
     /// Like `βῠζηρες`: 14 words.
@@ -186,8 +190,6 @@ pub enum Declension {
     Κᾰλῠδων,
     /// Like `οὐρᾰνιωνες`: 12 words.
     Οὐρᾰνιωνες,
-    /// Like `δωρᾰ`: 12 words.
-    Δωρᾰ,
     /// Like `καισᾰρ`: 6 words.
     Καισᾰρ,
     /// Like `κῠρβεις`: 5 words.
@@ -262,9 +264,9 @@ impl Declension {
         Declension::Μῐθρᾱς,
         Declension::Βεροιᾰ,
         Declension::Σῑναι,
+        Declension::Σουσᾰ,
         Declension::Ἀρῐοβαρζανης,
         Declension::Ὀλβᾰσᾰ,
-        Declension::Σουσᾰ,
         Declension::Μεγαβατης,
         Declension::Κᾰλλῐπολῐς,
         Declension::Ζᾰγρευς,
@@ -283,6 +285,7 @@ impl Declension {
         Declension::Λᾱοκοων,
         Declension::Φᾰεθων,
         Declension::Μῐμᾱς,
+        Declension::Δωρᾰ,
         Declension::Ἰτῠς,
         Declension::Βῠζηρες,
         Declension::Ἐρως,
@@ -290,7 +293,6 @@ impl Declension {
         Declension::Ἀθως,
         Declension::Κᾰλῠδων,
         Declension::Οὐρᾰνιωνες,
-        Declension::Δωρᾰ,
         Declension::Καισᾰρ,
         Declension::Κῠρβεις,
         Declension::Γαδατᾱς,
@@ -387,8 +389,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     gen_: "~ου", _, _;
     voc: "~ᾱ", _, _;
     ),
-    // Βεροιᾰ: 107 words (φῐλᾰδελφειᾰ, σᾰμᾰρειᾰ, λᾱοδῐκειᾰ, σελευκειᾰ, ἀντῐοχειᾰ, μοιρᾰ). Like Ἡρᾱ, except in 1 cell: acc sg.
-    declension!("βεροιᾰ", 107, "~ᾰ", [gender: Feminine], like Ἡρᾱ;
+    // Βεροιᾰ: 103 words (φῐλᾰδελφειᾰ, σᾰμᾰρειᾰ, λᾱοδῐκειᾰ, σελευκειᾰ, ἀντῐοχειᾰ, μοιρᾰ). Like Ἡρᾱ, except in 1 cell: acc sg.
+    declension!("βεροιᾰ", 103, "~ᾰ", [gender: Feminine], like Ἡρᾱ;
     stem lemma: "~ᾰ- like μεθωνη";
     acc: "~ᾰν", _, _;
     ),
@@ -400,43 +402,46 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     acc: derived, _, _;
     voc: derived, _, _;
     ),
+    // Σουσᾰ: 95 words (γᾰζᾰ, σοδομᾰ, ἀβδηρᾰ, αἰγῑνᾰ, ἀναιᾰ, καρνειᾰ). Like Μεδῐολᾱνον, except in 5 cells: nom du, gen_ sg, gen_ du, dat sg, acc sg.
+    declension!("σουσᾰ", 95, "~ᾰ", like Μεδῐολᾱνον;
+    stem lemma: "~ᾰ- like μεθωνη";
+    nom: _, derived, _;
+    gen_: "~ης", derived, _;
+    dat: "~ῃ", _, _;
+    acc: "~ᾰν", _, _;
+    ),
     // Ἀρῐοβαρζανης: 91 words (ἀχαιμενης, ἀλκᾰμενης, ἀντῐσθενης, ἀρχῐμηδης, ἀρης, ἀρῐοβαρζανης).
     declension!("ἀρῐοβαρζανης", 91, "~ης", [gender: Masculine];
-    nom: "~ης", "~ει", "~εις";
+    nom: "~ης", "~Ει", "~Εις";
     gen_: "~ους", "~οιν", "~ων";
-    dat: "~ει", _, "~εσῐ";
-    acc: "~η", _, "~εις";
-    voc: "~ες", _, _;
+    dat: "~Ει", _, "~Εσῐ";
+    acc: "~η", _, "~Εις";
+    voc: "~Ες", _, _;
     ),
-    // Ὀλβᾰσᾰ: 89 words (γεεννᾰ, γᾰζᾰ, μουσᾰ, προυσᾰ, αἰγῑνᾰ, ἀμφισσᾰ). Like Βεροιᾰ, except in 2 cells: gen_ sg, dat sg.
-    declension!("ὀλβᾰσᾰ", 89, "~ᾰ", [gender: Feminine], like Βεροιᾰ;
+    // Ὀλβᾰσᾰ: 63 words (γεεννᾰ, μουσᾰ, προυσᾰ, ἀμφισσᾰ, ἀρεθουσᾰ, ἀτοσσᾰ). Like Βεροιᾰ, except in 2 cells: gen_ sg, dat sg.
+    declension!("ὀλβᾰσᾰ", 63, "~ᾰ", [gender: Feminine], like Βεροιᾰ;
     gen_: "~ης", _, _;
     dat: "~ῃ", _, _;
-    ),
-    // Σουσᾰ: 69 words (σοδομᾰ, ἀβδηρᾰ, ἀναιᾰ, καρνειᾰ, κῠθηρᾰ, ἀντῐκῠθηρᾰ). Like Ὀλβᾰσᾰ, except in 5 cells: nom du, nom pl, gen_ du, dat pl, acc pl.
-    declension!("σουσᾰ", 69, "~ᾰ", [gender: Neuter], like Ὀλβᾰσᾰ;
-    nom: _, derived, "~ᾰ";
-    gen_: _, derived, _;
-    dat: _, _, "~οις";
-    acc: _, _, "~ᾰ";
     ),
     // Μεγαβατης: 59 words (εὐφρᾱτης, αἰητης, ἀλυαττης, βελλεροφοντης, ἐφῐαλτης, ἰθωμητης). Like Μεθωνη with `` after each pattern (`ς` after η), except in 2 cells: gen_ sg, voc sg.
     declension!("μεγαβατης", 59, "~ης", [gender: Masculine], like Μεθωνη with "", "ς" after "η";
     gen_: "~ου", _, _;
     voc: "~ᾰ", _, _;
     ),
-    // Κᾰλλῐπολῐς: 56 words (ἱερᾱπολῐς, δεκᾰπολῐς, νῑκοπολῐς, σῠβᾰρῐς, ἁδριανουπολῐς, τραϊᾱνουπολῐς). Like Ἀρῐοβαρζανης, except in 4 cells: gen_ sg, gen_ du, gen_ pl, acc sg.
+    // Κᾰλλῐπολῐς: 56 words (ἱερᾱπολῐς, δεκᾰπολῐς, νῑκοπολῐς, σῠβᾰρῐς, ἁδριανουπολῐς, τραϊᾱνουπολῐς). Like Ἀρῐοβαρζανης, except in 5 cells: gen_ sg, gen_ du, gen_ pl, dat sg, acc sg.
     declension!("κᾰλλῐπολῐς", 56, "~ῐς", like Ἀρῐοβαρζανης;
     stem lemma: "~ῐ- like ἀρτεμβᾰρης";
-    gen_: "~εως", "~εοιν", "~εων";
+    gen_: "~εως", "~Εοιν", "~Εων";
+    dat: "~ει", _, _;
     acc: "~ῐν", _, _;
     ),
-    // Ζᾰγρευς: 53 words (ζευς, ἀχῐλλευς, αἰγευς, αἰγῐᾰλευς, ἀρῐστευς, ἀταρνευς). Like Κᾰλλῐπολῐς, except in 5 cells: nom du, nom pl, dat pl, acc sg, acc pl.
-    declension!("ζᾰγρευς", 53, "~ευς", [gender: Masculine], like Κᾰλλῐπολῐς;
+    // Ζᾰγρευς: 53 words (ζευς, ἀχῐλλευς, αἰγευς, αἰγῐᾰλευς, ἀρῐστευς, ἀταρνευς).
+    declension!("ζᾰγρευς", 53, "~ευς", [gender: Masculine];
     stem lemma: "~ευ- like ἀρτεμβᾰρης";
     nom: _, "~η", "~ης";
-    dat: _, _, "~ευσῐ";
-    acc: "~εᾱ", _, "~εᾱς";
+    gen_: "~εως", "~εοιν", "~Εων";
+    dat: "~ει", _, "~Ευσῐ";
+    acc: "~εᾱ", _, "~Εᾱς";
     ),
     // Δωρῐς: 52 words (λευϊς, ἀρτεμῐς, κολχῐς, χαλκῐς, αἰολῐς, ἀργολῐς).
     declension!("δωρῐς", 52, "~ς";
@@ -487,9 +492,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     // Περῐκλης: 34 words (ἀμεινοκλης, ἀνδροκλης, χᾰρῐκλης, ἐμπεδοκλης, ἐτεοκλης, εὐκλης). Like Ἐφραιμ, except in 5 cells: nom sg, gen_ sg, dat sg, acc sg, voc sg.
     declension!("περῐκλης", 34, "~ης", [gender: Masculine], like Ἐφραιμ;
     nom: "~ης", _, _;
-    gen_: "~εους", _, _;
-    dat: "~ει", _, _;
-    acc: "~εᾱ", _, _;
+    gen_: "~Εους", _, _;
+    dat: "~Ει", _, _;
+    acc: "~Εᾱ", _, _;
     voc: "~εις", _, _;
     ),
     // Γλισας: 30 words (ἐμμαους, τρᾰπεζους, κερᾰσους, ἀμᾰθους, ἀνθεμους, ἐλαιους).
@@ -542,6 +547,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     acc: "~ᾰντᾰ", _, "~ᾰντᾰς";
     voc: "~ᾰν", _, _;
     ),
+    // Δωρᾰ: 16 words (γομορρᾰ, γᾱδειρᾰ, δῃᾰνειρᾰ, λευκτρᾰ, στατειρᾰ, σταγειρᾰ). Like Σουσᾰ, except in 2 cells: gen_ sg, dat sg.
+    declension!("δωρᾰ", 16, "~ᾰ", like Σουσᾰ;
+    gen_: "~ᾱς", _, _;
+    dat: "~ᾳ", _, _;
+    ),
     // Ἰτῠς: 15 words (κοτῠς, τηθῠς, ἰτῠς, ὀθρῠς, ῥᾰδᾰμανθῠς, νεφθῠς). Like Ἐφραιμ, except in 3 cells: gen_ sg, dat sg, acc sg.
     declension!("ἰτῠς", 15, "~ῠς", like Ἐφραιμ;
     stem lemma: "~ῠ- like ἀρτεμβᾰρης";
@@ -582,11 +592,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     stem gen_sg: "~- like οὐρᾰνιωνες";
     nom: "~νες", _, _;
     voc: _, _, derived;
-    ),
-    // Δωρᾰ: 12 words (γομορρᾰ, γᾱδειρᾰ, λευκτρᾰ, σταγειρᾰ, λῠστρᾱ, βοστρᾰ). Like Σουσᾰ, except in 2 cells: gen_ sg, dat sg.
-    declension!("δωρᾰ", 12, "~ᾰ", like Σουσᾰ;
-    gen_: "~ᾱς", _, _;
-    dat: "~ᾳ", _, _;
     ),
     // Καισᾰρ: 6 words (ἀραρ, καισᾰρ, κηρ, λειγηρ, ἰβηρ, βαλδῐμερ).
     declension!("καισᾰρ", 6, "~";
@@ -672,9 +677,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 68] = [
     // Ἁλῡς: 3 words (ἐρῑνῡς, ἁλῡς, φορκῡς).
     declension!("ἁλῡς", 3, "~ῡς";
     stem lemma: "~ῡ- like ἀρτεμβᾰρης";
-    nom: _, "~ῠε", "~ῠες";
-    gen_: "~ῠος", "~ῠοιν", "~ῠων";
-    dat: "~ῠϊ|~υι", _, "~ῠσῐ";
+    nom: _, "~Εε", "~Εες";
+    gen_: "~ῠος", "~Εοιν", "~Εων";
+    dat: "~ῠϊ|~υι", _, "~Εσῐ";
     acc: "~ῡν", _, "~ῡς";
     ),
     // Ποσειδων: 3 words (ἀπολλων, ποσειδων, ποσειδᾱων). Like Ἐφραιμ, except in 2 cells: nom sg, voc sg.

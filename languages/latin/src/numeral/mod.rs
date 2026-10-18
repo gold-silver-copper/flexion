@@ -88,7 +88,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     smoothing: 2.0,
     sharpness: 1.5,
     trust: flexion::Trust {
-        regular: 0.9828527,
+        regular: 0.98076534,
         unsettled: 1.0,
         unattested: 1.0,
     },
@@ -102,50 +102,16 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Case::*;
-        use crate::Gender::*;
-        use crate::Number::*;
-        let cell = match self {
-            Cell::Form(Nominative, Masculine, Singular) => cell::NOM_M_SG,
-            Cell::Form(Nominative, Masculine, Plural) => cell::NOM_M_PL,
-            Cell::Form(Nominative, Feminine, Singular) => cell::NOM_F_SG,
-            Cell::Form(Nominative, Feminine, Plural) => cell::NOM_F_PL,
-            Cell::Form(Nominative, Neuter, Singular) => cell::NOM_N_SG,
-            Cell::Form(Nominative, Neuter, Plural) => cell::NOM_N_PL,
-            Cell::Form(Genitive, Masculine, Singular) => cell::GEN_M_SG,
-            Cell::Form(Genitive, Masculine, Plural) => cell::GEN_M_PL,
-            Cell::Form(Genitive, Feminine, Singular) => cell::GEN_F_SG,
-            Cell::Form(Genitive, Feminine, Plural) => cell::GEN_F_PL,
-            Cell::Form(Genitive, Neuter, Singular) => cell::GEN_N_SG,
-            Cell::Form(Genitive, Neuter, Plural) => cell::GEN_N_PL,
-            Cell::Form(Dative, Masculine, Singular) => cell::DAT_M_SG,
-            Cell::Form(Dative, Masculine, Plural) => cell::DAT_M_PL,
-            Cell::Form(Dative, Feminine, Singular) => cell::DAT_F_SG,
-            Cell::Form(Dative, Feminine, Plural) => cell::DAT_F_PL,
-            Cell::Form(Dative, Neuter, Singular) => cell::DAT_N_SG,
-            Cell::Form(Dative, Neuter, Plural) => cell::DAT_N_PL,
-            Cell::Form(Accusative, Masculine, Singular) => cell::ACC_M_SG,
-            Cell::Form(Accusative, Masculine, Plural) => cell::ACC_M_PL,
-            Cell::Form(Accusative, Feminine, Singular) => cell::ACC_F_SG,
-            Cell::Form(Accusative, Feminine, Plural) => cell::ACC_F_PL,
-            Cell::Form(Accusative, Neuter, Singular) => cell::ACC_N_SG,
-            Cell::Form(Accusative, Neuter, Plural) => cell::ACC_N_PL,
-            Cell::Form(Ablative, Masculine, Singular) => cell::ABL_M_SG,
-            Cell::Form(Ablative, Masculine, Plural) => cell::ABL_M_PL,
-            Cell::Form(Ablative, Feminine, Singular) => cell::ABL_F_SG,
-            Cell::Form(Ablative, Feminine, Plural) => cell::ABL_F_PL,
-            Cell::Form(Ablative, Neuter, Singular) => cell::ABL_N_SG,
-            Cell::Form(Ablative, Neuter, Plural) => cell::ABL_N_PL,
-            Cell::Form(Vocative, Masculine, Singular) => cell::VOC_M_SG,
-            Cell::Form(Vocative, Masculine, Plural) => cell::VOC_M_PL,
-            Cell::Form(Vocative, Feminine, Singular) => cell::VOC_F_SG,
-            Cell::Form(Vocative, Feminine, Plural) => cell::VOC_F_PL,
-            Cell::Form(Vocative, Neuter, Singular) => cell::VOC_N_SG,
-            Cell::Form(Vocative, Neuter, Plural) => cell::VOC_N_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, gender, number) => {
+                cell::NOM_M_SG as usize
+                    + (case as usize * 3 + gender as usize) * 2
+                    + number as usize
+            }
+        }
     }
 }
 

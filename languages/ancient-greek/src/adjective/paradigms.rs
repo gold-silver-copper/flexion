@@ -150,23 +150,23 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `μᾰλᾰκος`: 1,454 words.
+    /// Like `μᾰλᾰκος`: 1,461 words.
     Μᾰλᾰκος,
-    /// Like `ἐμπεδος`: 931 words.
+    /// Like `ἐμπεδος`: 940 words.
     Ἐμπεδος,
-    /// Like `λᾰμπρος`: 464 words.
+    /// Like `λᾰμπρος`: 462 words.
     Λᾰμπρος,
     /// Like `προσηκων`: 327 words.
     Προσηκων,
     /// Like `ἀτελης`: 286 words.
     Ἀτελης,
-    /// Like `ψῑλος`: 168 words.
-    Ψῑλος,
     /// Like `προπᾱς`: 168 words.
     Προπᾱς,
-    /// Like `ἀσημος`: 152 words.
+    /// Like `ψῑλος`: 161 words.
+    Ψῑλος,
+    /// Like `ἀσημος`: 143 words.
     Ἀσημος,
-    /// Like `ὑστερος`: 127 words.
+    /// Like `ὑστερος`: 129 words.
     Ὑστερος,
     /// Like `ἀρῐστος`: 112 words.
     Ἀρῐστος,
@@ -252,8 +252,8 @@ impl Declension {
         Declension::Λᾰμπρος,
         Declension::Προσηκων,
         Declension::Ἀτελης,
-        Declension::Ψῑλος,
         Declension::Προπᾱς,
+        Declension::Ψῑλος,
         Declension::Ἀσημος,
         Declension::Ὑστερος,
         Declension::Ἀρῐστος,
@@ -311,8 +311,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
-    // Μᾰλᾰκος: 1,454 words (ἐρωμενος, παιδῐκος, γᾰλᾰκτῐκος, ὀλῐγος, λευκος, ὁλος).
-    declension!("μᾰλᾰκος", 1454, "~ος";
+    // Μᾰλᾰκος: 1,461 words (ἐρωμενος, παιδῐκος, γᾰλᾰκτῐκος, ὀλῐγος, λευκος, ὁλος).
+    declension!("μᾰλᾰκος", 1461, "~ος";
     stem lemma: "~- like μᾰλᾰκος";
     stem adjective_nom_m_du: "~- like μᾰλᾰκος";
     stem adjective_nom_f_sg: "~- like μᾰλᾰκος";
@@ -329,25 +329,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_f: _, derived, derived;
     voc_n: derived, derived, derived;
     ),
-    // Ἐμπεδος: 931 words (δῐᾰβολος, βᾰρβᾰρος, ἀνᾰπολογητος, πρωτοτοκος, μᾰγος, ἀκᾰθᾰρτος). Like Μᾰλᾰκος, except in 10 cells: nom_f sg, nom_f du, nom_f pl, gen_f sg, gen_f du, dat_f sg, ….
-    declension!("ἐμπεδος", 931, "~ος", like Μᾰλᾰκος;
+    // Ἐμπεδος: 940 words (δῐᾰβολος, βᾰρβᾰρος, ἀνᾰπολογητος, πρωτοτοκος, μᾰγος, ἀκᾰθᾰρτος). Like Μᾰλᾰκος, except in 10 cells: nom_f sg, nom_f du, nom_f pl, gen_f sg, gen_f du, dat_f sg, ….
+    declension!("ἐμπεδος", 940, "~ος", like Μᾰλᾰκος;
     nom_f: "~ος", "~ω", "~οι";
     gen_f: "~ου", "~οιν", _;
     dat_f: "~ῳ", _, "~οις";
     acc_f: "~ον", _, "~ους";
     voc_f: "~ε", _, _;
     ),
-    // Λᾰμπρος: 464 words (μῑκρος, κῡρῐος, ἁγῐος, νεος, ἐρῠθρος, χλωρος). Like Μᾰλᾰκος, except in 4 cells: dat_f du, acc_f du, voc_f du, voc_f pl.
-    declension!("λᾰμπρος", 464, "~ος", like Μᾰλᾰκος;
-    stem adjective_nom_f_sg: "~- like τελειος";
-    dat_f: _, derived, _;
-    acc_f: _, derived, _;
-    voc_f: _, derived, derived;
+    // Λᾰμπρος: 462 words (μῑκρος, κῡρῐος, ἁγῐος, νεος, ἐρῠθρος, χλωρος). Like Μᾰλᾰκος, except in 5 cells: nom_f sg, gen_f sg, dat_f sg, acc_f sg, voc_f sg.
+    declension!("λᾰμπρος", 462, "~ος", like Μᾰλᾰκος;
+    nom_f: "~ᾱ", _, _;
+    gen_f: "~ᾱς", _, _;
+    dat_f: "~ᾳ", _, _;
+    acc_f: "~ᾱν", _, _;
+    voc_f: "~ᾱ", _, _;
     ),
     // Προσηκων: 327 words (κῠων, μελλων, πᾰρων, ὀζων, νεων, γερων).
     declension!("προσηκων", 327, "~ων";
     stem adjective_nom_m_du: "~οντ- like προσηκων";
-    stem adjective_nom_f_sg: "~ουσ- like προσηκων";
+    stem adjective_nom_f_sg: "~ο- like προσηκων";
     stem adjective_dat_pl: "~ουσ- like προσηκων";
     nom_m: "~ων", _, _;
     nom_n: "~ον", derived, _;
@@ -380,38 +381,40 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     comparative: "~εστερος";
     superlative: "~εστᾰτος";
     ),
-    // Ψῑλος: 168 words (ἀλεξανδρῑνος, ἀδελφος, ὑψῐστος, ἰουδαϊκος, ξᾰνθος, σωστος). Like Μᾰλᾰκος, except in 2 cells: comparative, superlative.
-    declension!("ψῑλος", 168, "~ος", like Μᾰλᾰκος;
-    comparative: "~οτερος";
-    superlative: "~οτᾰτος";
-    ),
     // Προπᾱς: 168 words (ἀδᾰμᾱς, λῡσᾱς, ἱστᾱς, γῐγᾱς, βῐβᾱς, φωνησᾱς).
     declension!("προπᾱς", 168, "~ᾱς";
     stem adjective_nom_m_du: "~ᾰντ- like προσηκων";
-    stem adjective_nom_f_sg: "~ᾱσ- like προσηκων";
     stem adjective_dat_pl: "~ᾱσ- like προσηκων";
     nom_m: "~ᾱς", _, _;
+    nom_f: "~ᾱσᾰ", "~ᾱσᾱ", "~ᾱσαι";
     nom_n: "~ᾰν", derived, _;
+    gen_f: "~ᾱσης", "~ᾱσαιν", "~ᾱσων";
     gen_n: derived, derived, derived;
     dat_m: _, derived, _;
-    dat_f: _, derived, _;
+    dat_f: "~ᾱσῃ", _, _;
     dat_n: derived, derived, derived;
     acc_m: "~ᾰντᾰ", derived, _;
-    acc_f: _, derived, _;
+    acc_f: "~ᾱσᾰν", _, "~ᾱσᾱς";
     acc_n: _, derived, derived;
     voc_m: "~ᾱς", derived, derived;
-    voc_f: _, derived, derived;
+    voc_f: "~ᾱσᾰ", _, _;
     voc_n: _, derived, derived;
+    adverb: "~ᾰντως";
     ),
-    // Ἀσημος: 152 words (ἀκᾰρπος, εὐχᾰρῐστος, πᾰρᾰκλητος, ἀγνωστος, πᾰλῐμψηστος, πρᾱος). Like Ἐμπεδος, except in 2 cells: comparative, superlative.
-    declension!("ἀσημος", 152, "~ος", like Ἐμπεδος;
+    // Ψῑλος: 161 words (ἀλεξανδρῑνος, ἀδελφος, ὑψῐστος, ἰουδαϊκος, ξᾰνθος, σωστος). Like Μᾰλᾰκος, except in 2 cells: comparative, superlative.
+    declension!("ψῑλος", 161, "~ος", like Μᾰλᾰκος;
     comparative: "~οτερος";
     superlative: "~οτᾰτος";
     ),
-    // Ὑστερος: 127 words (ἰδῐωτερος, προτερος, βᾰθῠτερος, πρεσβῠτερος, βεβαιοτερος, ὑστερος).
-    declension!("ὑστερος", 127, "~ερος";
+    // Ἀσημος: 143 words (ἀκᾰρπος, εὐχᾰρῐστος, ἀγνωστος, πᾰλῐμψηστος, πρᾱος, χερσος). Like Ἐμπεδος, except in 2 cells: comparative, superlative.
+    declension!("ἀσημος", 143, "~ος", like Ἐμπεδος;
+    comparative: "~οτερος";
+    superlative: "~οτᾰτος";
+    ),
+    // Ὑστερος: 129 words (ἰδῐωτερος, προτερος, βᾰθῠτερος, πρεσβῠτερος, βεβαιοτερος, ἡμετερος).
+    declension!("ὑστερος", 129, "~ερος";
     stem lemma: "~ερ- like μᾰλᾰκος";
-    stem adjective_nom_f_sg: "~ερ- like τελειος";
+    stem adjective_nom_f_sg: "~ερ- like ὑστερος";
     stem adjective_dat_pl: "~ερ- like μᾰλᾰκος";
     nom_m: _, "~ερω", "~εροι";
     nom_n: _, _, "~ερᾰ";
@@ -426,7 +429,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_n: derived, _, _;
     comparative: "~ερος";
     superlative: "~ᾰτος";
-    adverb: "~ερον";
     ),
     // Ἀρῐστος: 112 words (ἰδῐωτᾰτος, μεγῐστος, ἀρῐστος, ἡκῐστος, στοιχειωδεστᾰτος, κᾰκῐστος). Like Μᾰλᾰκος, except in 3 cells: comparative, superlative, adverb.
     declension!("ἀρῐστος", 112, "~ος", like Μᾰλᾰκος;
@@ -437,22 +439,24 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     // Πληγεις: 90 words (σῠγγρᾰφεις, θεις, κοιμηθεις, νῠγεις, αὐδηθεις, κᾰλῠφεις).
     declension!("πληγεις", 90, "~ις";
     stem adjective_nom_m_du: "~ντ- like προσηκων";
-    stem adjective_nom_f_sg: "~ισ- like προσηκων";
     stem adjective_dat_pl: "~ισ- like προσηκων";
     nom_m: "~ις", _, _;
+    nom_f: "~ισᾰ", "~ισᾱ", "~ισαι";
     nom_n: "~ν", derived, _;
+    gen_f: "~ισης", "~ισαιν", "~ισων";
     gen_n: derived, derived, derived;
     dat_m: _, derived, _;
-    dat_f: _, derived, _;
+    dat_f: "~ισῃ", _, _;
     dat_n: derived, derived, derived;
     acc_m: "~ντᾰ", derived, _;
-    acc_f: _, derived, _;
+    acc_f: "~ισᾰν", _, "~ισᾱς";
     acc_n: _, derived, derived;
     voc_m: "~ις", derived, derived;
-    voc_f: _, derived, derived;
+    voc_f: "~ισᾰ", _, _;
     voc_n: _, derived, derived;
+    adverb: "~ντως";
     ),
-    // Ἀρκων: 58 words (ποιων, κυκλων, σημειων, βῐων, δηλων, γονῠπετων). Like Προσηκων, except in 16 cells: nom_n sg, nom_n du, gen_n sg, gen_n du, gen_n pl, dat_m du, ….
+    // Ἀρκων: 58 words (ποιων, κυκλων, σημειων, βῐων, δηλων, γονῠπετων). Like Προσηκων, except in 17 cells: nom_n sg, nom_n du, gen_n sg, gen_n du, gen_n pl, dat_m du, ….
     declension!("ἀρκων", 58, "~ων", like Προσηκων;
     stem adjective_nom_m_du: "~ουντ- like προσηκων";
     nom_n: "~ουν", derived, _;
@@ -463,23 +467,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     acc_n: _, derived, derived;
     voc_m: _, derived, derived;
     voc_n: _, derived, derived;
+    adverb: "~ουντως";
     ),
     // Εἰκως: 48 words (λελῠκως, κεχηνως, βεβηκως, εἰδως, πεπαιδευκως, ἠγᾰπηκως).
     declension!("εἰκως", 48, "~ως";
     stem adjective_nom_m_du: "~οτ- like προσηκων";
-    stem adjective_nom_f_sg: "~υι- like εἰκως";
     nom_m: "~ως", _, _;
+    nom_f: "~υιᾰ", "~υιᾱ", "~υιαι";
     nom_n: "~ος", derived, _;
+    gen_f: "~υιᾱς", "~υιαιν", "~υιων";
     gen_n: derived, derived, derived;
     dat_m: _, derived, "~οσῐ|~οσῐν";
-    dat_f: _, derived, "~υιαις";
+    dat_f: "~υιᾳ", _, "~υιαις";
     dat_n: derived, derived, _;
     acc_m: "~οτᾰ", derived, _;
-    acc_f: _, derived, _;
+    acc_f: "~υιᾰν", _, "~υιᾱς";
     acc_n: _, derived, derived;
     voc_m: "~ως", derived, derived;
-    voc_f: _, derived, derived;
+    voc_f: "~υιᾰ", _, _;
     voc_n: _, derived, derived;
+    adverb: "~οτως";
     ),
     // Μνημων: 39 words (σωφρων, ἀκμων, βελτῑων, κᾰκοδαιμων, ὑπερφρων, εὐφρων).
     declension!("μνημων", 39, "~ων";
@@ -500,31 +507,33 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     superlative: "~ονεστᾰτος";
     adverb: "~ονως";
     ),
-    // Φωνηεις: 30 words (ἀργῐνοεις, χᾰρῐεις, φωνηεις, αἱμᾰτοεις, ῥοδοεις, ἰχθυοεις). Like Πληγεις, except in 8 cells: dat_f du, dat_f pl, acc_f du, voc_m sg, voc_f du, voc_f pl, ….
+    // Φωνηεις: 30 words (ἀργῐνοεις, χᾰρῐεις, φωνηεις, αἱμᾰτοεις, ῥοδοεις, ἰχθυοεις). Like Πληγεις, except in 14 cells: nom_f sg, nom_f du, nom_f pl, gen_f sg, gen_f du, gen_f pl, ….
     declension!("φωνηεις", 30, "~ις", like Πληγεις;
-    stem adjective_nom_f_sg: "~σσ- like προσηκων";
-    dat_f: _, derived, "~σσαις";
-    acc_f: _, derived, _;
+    nom_f: "~σσᾰ", "~σσᾱ", "~σσαι";
+    gen_f: "~σσης", "~σσαιν", "~σσων";
+    dat_f: "~σσῃ", _, "~σσαις";
+    acc_f: "~σσᾰν", _, "~σσᾱς";
     voc_m: "~ν", _, _;
-    voc_f: _, derived, derived;
+    voc_f: "~σσᾰ", _, _;
     comparative: "~στερος";
     superlative: "~στᾰτος";
     ),
-    // Λᾰμπρος2: 26 words (ψῡχρος, ἀλβος, λυγρος, μᾰδᾰρος, νεαρος, ὑγρος). Like Λᾰμπρος, except in 2 cells: comparative, superlative.
+    // Λᾰμπρος2: 26 words (ψῡχρος, ἀλβος, λυγρος, νεαρος, ὑγρος, ἰσχῡρος). Like Λᾰμπρος, except in 2 cells: comparative, superlative.
     declension!("λᾰμπρος", 26, "~ος", like Λᾰμπρος;
     comparative: "~οτερος";
     superlative: "~οτᾰτος";
     ),
-    // Ζων: 26 words (ὠν, νῑκων, τῑμων, δῐαιτων, θεων, αὐδων). Like Πληγεις, except in 7 cells: nom_m sg, dat_f du, dat_n pl, acc_f du, voc_m sg, voc_f du, ….
+    // Ζων: 26 words (ὠν, νῑκων, τῑμων, δῐαιτων, θεων, αὐδων). Like Πληγεις, except in 13 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, gen_f sg, gen_f du, ….
     declension!("ζων", 26, "~ν", like Πληγεις;
-    stem adjective_nom_f_sg: "~σ- like προσηκων";
     stem adjective_dat_pl: "~σ- like προσηκων";
     nom_m: "~ν", _, _;
-    dat_f: _, derived, _;
+    nom_f: "~σᾰ", "~σᾱ", "~σαι";
+    gen_f: "~σης", "~σαιν", "~σων";
+    dat_f: "~σῃ", _, _;
     dat_n: _, _, derived;
-    acc_f: _, derived, _;
+    acc_f: "~σᾰν", _, "~σᾱς";
     voc_m: "~ν", _, _;
-    voc_f: _, derived, derived;
+    voc_f: "~σᾰ", _, _;
     ),
     // Πλειων: 25 words (βρᾰχῑων, μειων, μᾰσσων, μειζων, πλειων, ἐλᾰσσων). Like Μνημων, except in 10 cells: nom_m pl, nom_f pl, nom_n pl, acc_m sg, acc_m pl, acc_f sg, ….
     declension!("πλειων", 25, "~ων", like Μνημων;
@@ -537,22 +546,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     superlative: "~στος";
     adverb: "~ον";
     ),
-    // Τρᾱχῠς: 25 words (τᾰχῠς, βρᾰδῠς, πολῠς, βᾰθῠς, ὀξῠς, ὠκῠς). Like Ἀτελης, except in 14 cells: nom_n pl, gen_m sg, gen_m du, gen_m pl, dat_f du, dat_f pl, ….
+    // Τρᾱχῠς: 25 words (τᾰχῠς, βρᾰδῠς, πολῠς, βᾰθῠς, ὀξῠς, ὠκῠς). Like Ἀτελης, except in 20 cells: nom_f sg, nom_f du, nom_f pl, nom_n pl, gen_m sg, gen_m du, ….
     declension!("τρᾱχῠς", 25, "~ῠς", like Ἀτελης;
     stem lemma: "~ῠ- like τρᾱχῠς";
-    stem adjective_nom_f_sg: "~ει- like εἰκως";
+    nom_f: "~ειᾰ", "~ειᾱ", "~ειαι";
     nom_n: _, _, "~εᾰ";
     gen_m: "~εος", "~εοιν", "~εων";
-    dat_f: _, derived, "~ειαις";
-    acc_f: _, derived, _;
+    gen_f: "~ειᾱς", "~ειαιν", "~ειων";
+    dat_f: "~ειᾳ", _, "~ειαις";
+    acc_f: "~ειᾰν", _, "~ειᾱς";
     acc_n: derived, _, _;
-    voc_f: _, derived, derived;
+    voc_f: "~ειᾰ", _, _;
     voc_n: derived, _, _;
     comparative: "~ῠτερος";
     superlative: "~ῠτᾰτος";
     adverb: "~εως";
     ),
-    // Τρῐπους: 8 words (τετρᾰπους, ὀκτωπους, τρῐπους, ὀκτᾰπους, εἰλῐπους, ἐρῠθροπους). Like Ζων, except in 29 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n sg, nom_n du, ….
+    // Τρῐπους: 8 words (τετρᾰπους, ὀκτωπους, τρῐπους, ὀκτᾰπους, εἰλῐπους, ἐρῠθροπους). Like Ζων, except in 30 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n sg, nom_n du, ….
     declension!("τρῐπους", 8, "~υς", like Ζων;
     stem adjective_nom_m_du: "~δ- like προσηκων";
     stem adjective_dat_pl: "~σῐ- like ἀτελης";
@@ -570,6 +580,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_m: "~υς", derived, derived;
     voc_f: "~υς", _, _;
     voc_n: _, derived, derived;
+    adverb: "~δως";
     ),
     // Ὁμηλῐξ: 8 words (ἡλῐξ, κᾰλλῐθρῐξ, πτωξ, ὁμηλῐξ, χρῡσᾰμπῠξ, βλᾱξ).
     declension!("ὁμηλῐξ", 8, "~ξ";
@@ -641,24 +652,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_m: "~ο~", derived, derived;
     voc_f: "~ο~", _, _;
     voc_n: _, derived, derived;
+    adverb: "~ο~ως";
     ),
     // Φῡς: 6 words (δεικνῡς, κᾰτᾰδῡς, ἐπῐμειγνῡς, ἀποδῡς, ἀποδεικνῡς, φῡς).
     declension!("φῡς", 6, "~ῡς";
     stem adjective_nom_m_du: "~ῠντ- like προσηκων";
-    stem adjective_nom_f_sg: "~ῡσ- like προσηκων";
     stem adjective_dat_pl: "~ῡσ- like προσηκων";
     nom_m: "~ῡς", _, _;
+    nom_f: "~ῡσᾰ", "~ῡσᾱ", "~ῡσαι";
     nom_n: "~ῠν", derived, _;
+    gen_f: "~ῡσης", "~ῡσαιν", "~ῡσων";
     gen_n: derived, derived, derived;
     dat_m: _, derived, _;
-    dat_f: _, derived, _;
+    dat_f: "~ῡσῃ", _, _;
     dat_n: derived, derived, derived;
     acc_m: "~ῠντᾰ", derived, _;
-    acc_f: _, derived, _;
+    acc_f: "~ῡσᾰν", _, "~ῡσᾱς";
     acc_n: _, derived, derived;
     voc_m: "~ῡς", derived, derived;
-    voc_f: _, derived, derived;
+    voc_f: "~ῡσᾰ", _, _;
     voc_n: _, derived, derived;
+    adverb: "~ῠντως";
     ),
     // Δῐπλους: 6 words (δῐπλους, ἁπλους, χρῡσους, ἀργῠρους, χᾰλκους, πορφῠρους). Like Μᾰλᾰκος, except in 8 cells: nom_m sg, nom_m du, nom_n sg, nom_n pl, acc_m sg, voc_m sg, ….
     declension!("δῐπλους", 6, "~ους", like Μᾰλᾰκος;
@@ -696,6 +710,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_m: "~ψ", derived, derived;
     voc_f: "~ψ", _, _;
     voc_n: _, derived, derived;
+    adverb: "~πως";
     ),
     // Νομᾰς: 5 words (δρομᾰς, νομᾰς, ἐπηλῠς, λογᾰς, πολυδειρᾰς). Like Εὐελπῐς, except in 4 cells: acc_m sg, acc_f sg, voc_m sg, voc_f sg.
     declension!("νομᾰς", 5, "~ς", like Εὐελπῐς;
@@ -704,7 +719,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_m: "~ς", _, _;
     voc_f: "~ς", _, _;
     ),
-    // Βοτηρ: 5 words (ἀρρην, δᾰϊφρων, βοτηρ, κᾰρτεροχειρ, ἑκτωρ). Like Εὐελπῐς, except in 25 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n du, gen_f sg, ….
+    // Βοτηρ: 5 words (ἀρρην, δᾰϊφρων, βοτηρ, κᾰρτεροχειρ, ἑκτωρ). Like Εὐελπῐς, except in 26 cells: nom_m sg, nom_f sg, nom_f du, nom_f pl, nom_n du, gen_f sg, ….
     declension!("βοτηρ", 5, "~", like Εὐελπῐς;
     stem adjective_nom_m_du: "~- like προσηκων";
     nom_m: "~", _, _;
@@ -720,6 +735,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     acc_n: _, derived, derived;
     voc_m: _, derived, derived;
     voc_n: _, derived, derived;
+    adverb: "~ως";
     ),
     // Πλειστος: 4 words (πρωτος, πλειστος, κᾰλλῐστος, ἀγχιστος). Like Ἀρῐστος, except in 2 cells: superlative, adverb.
     declension!("πλειστος", 4, "~ος", like Ἀρῐστος;
@@ -728,23 +744,27 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Μελᾱς: 4 words (μελᾱς, λευκομελᾱς, τᾰλᾱς, χλωρομελᾱς).
     declension!("μελᾱς", 4, "~ᾱς";
-    stem adjective_nom_f_sg: "~αιν- like προσηκων";
     nom_m: "~ᾱς", "~ᾰνε", "~ᾰνες";
+    nom_f: "~αινᾰ", "~αινᾱ", "~αιναι";
     nom_n: "~ᾰν", _, "~ᾰνᾰ";
     gen_m: "~ᾰνος", "~ᾰνοιν", "~ᾰνων";
+    gen_f: "~αινης", "~αιναιν", "~αινων";
     dat_m: "~ᾰνῐ", _, "~ᾰσῐ|~ᾰσῐν";
-    dat_f: _, derived, "~αιναις";
+    dat_f: "~αινῃ", _, "~αιναις";
     acc_m: "~ᾰνᾰ", _, "~ᾰνᾰς";
-    acc_f: _, derived, _;
+    acc_f: "~αινᾰν", _, "~αινᾱς";
     voc_m: "~ᾰν", _, _;
-    voc_f: _, derived, derived;
+    voc_f: "~αινᾰ", _, _;
     comparative: "~ᾰντερος";
     superlative: "~ᾰντᾰτος";
     adverb: "~ᾰνως";
     ),
-    // Βαιος: 4 words (πᾰλαιος, βαιος, ἠβαιος, πᾰνημερῐος). Like Λᾰμπρος2, except in 1 cell: adverb.
+    // Βαιος: 4 words (πᾰλαιος, βαιος, ἠβαιος, πᾰνημερῐος). Like Λᾰμπρος2, except in 4 cells: dat_f du, acc_f du, voc_f du, voc_f pl.
     declension!("βαιος", 4, "~ος", like Λᾰμπρος2;
-    adverb: "~ον";
+    stem adjective_nom_f_sg: "~- like ὑστερος";
+    dat_f: _, derived, _;
+    acc_f: _, derived, _;
+    voc_f: _, derived, derived;
     ),
     // Θηλῠς: 4 words (ἡμῐσῠς, θηλῠς, πρεσβῠς, ἀμφῐβρᾰχῠς). Like Τρᾱχῠς, except in 1 cell: nom_n pl.
     declension!("θηλῠς", 4, "~ῠς", like Τρᾱχῠς;
@@ -768,7 +788,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     ),
     // Δους: 4 words (δους, βῐους, δῐδους, γνους). Like Πληγεις, except in 7 cells: nom_m sg, dat_f du, dat_n pl, acc_f du, voc_m sg, voc_f du, ….
     declension!("δους", 4, "~υς", like Πληγεις;
-    stem adjective_nom_f_sg: "~υσ- like προσηκων";
+    stem adjective_nom_f_sg: "~- like προσηκων";
     stem adjective_dat_pl: "~υσ- like προσηκων";
     nom_m: "~υς", _, _;
     dat_f: _, derived, _;
@@ -810,7 +830,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     acc_m: "~ον~", _, "~ουσ~";
     acc_f: "~ην~", _, "~ᾱσ~";
     ),
-    // Μωνῠξ: 3 words (μωνῠξ, γᾰμψωνῠξ, κρᾰτερωνῠξ). Like Ὁμηλῐξ, except in 25 cells: nom_f du, nom_f pl, nom_n du, gen_f sg, gen_f du, gen_f pl, ….
+    // Μωνῠξ: 3 words (μωνῠξ, γᾰμψωνῠξ, κρᾰτερωνῠξ). Like Ὁμηλῐξ, except in 26 cells: nom_f du, nom_f pl, nom_n du, gen_f sg, gen_f du, gen_f pl, ….
     declension!("μωνῠξ", 3, "~ξ", like Ὁμηλῐξ;
     stem adjective_nom_m_du: "~χ- like προσηκων";
     nom_f: _, "~χε", "~χες";
@@ -827,6 +847,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_n: _, derived, derived;
     comparative: derived;
     superlative: derived;
+    adverb: "~χως";
     ),
     // Νηποινος: 3 words (νηποινος, τᾰλαυρῑνος, ἀλῐᾰστος). Like Ἀσημος, except in 1 cell: adverb.
     declension!("νηποινος", 3, "~ος", like Ἀσημος;
@@ -875,6 +896,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 46] = [
     voc_n: derived, _, _;
     comparative: "ᾰ̓~ᾰ~ᾰ~ῐ~οτερος";
     superlative: "ᾰ̓~ᾰ~ᾰ~ῐ~οτᾰτος";
-    adverb: "ᾰ̓~ᾰ~ᾰ~ῐ~ως";
     ),
 ];

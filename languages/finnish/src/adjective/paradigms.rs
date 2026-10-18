@@ -4,7 +4,7 @@
 //! letters between them that other forms may drop or change.
 //! Alternatives are separated by `|`, the usual one first. A `%`
 //! is the first letter of the stem piece after it (reduplication: `~nnes%ä~~`, of
-//! `yhdestoista`), as the copy laws in `laws.rs` change it. A capital (`A`)
+//! `yhdestoista`), as the copy laws in `laws.rs` change it. A capital (`A`, `V`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
@@ -149,24 +149,26 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `tasainen`: 8,426 words.
+    /// Like `tasainen`: 8,501 words.
     Tasainen,
-    /// Like `kansainvälinen`: 2,994 words.
+    /// Like `kansainvälinen`: 2,919 words.
     Kansainvälinen,
     /// Like `laiton`: 976 words.
     Laiton,
-    /// Like `matala`: 818 words.
+    /// Like `matala`: 809 words.
     Matala,
     /// Like `kummempi`: 479 words.
     Kummempi,
     /// Like `arin`: 459 words.
     Arin,
-    /// Like `terävä`: 428 words.
+    /// Like `terävä`: 414 words.
     Terävä,
+    /// Like `varattu`: 340 words.
+    Varattu,
     /// Like `rikas`: 276 words.
     Rikas,
-    /// Like `varattu`: 244 words.
-    Varattu,
+    /// Like `huono`: 234 words.
+    Huono,
     /// Like `oikea`: 178 words.
     Oikea,
     /// Like `pehmeä`: 167 words.
@@ -175,34 +177,26 @@ pub enum Declension {
     Sammunut,
     /// Like `paljas`: 147 words.
     Paljas,
-    /// Like `abstrakti`: 143 words.
+    /// Like `abstrakti`: 144 words.
     Abstrakti,
-    /// Like `huono`: 119 words.
-    Huono,
-    /// Like `violetti`: 89 words.
-    Violetti,
-    /// Like `kuiva`: 87 words.
+    /// Like `kuiva`: 96 words.
     Kuiva,
-    /// Like `selvä`: 87 words.
+    /// Like `selvä`: 96 words.
     Selvä,
+    /// Like `violetti`: 90 words.
+    Violetti,
     /// Like `räjähtänyt`: 85 words.
     Räjähtänyt,
-    /// Like `hylätty`: 79 words.
-    Hylätty,
-    /// Like `villi`: 63 words.
-    Villi,
     /// Like `alvari`: 63 words.
     Alvari,
+    /// Like `villi`: 62 words.
+    Villi,
+    /// Like `hopeoitu`: 58 words.
+    Hopeoitu,
     /// Like `vahva`: 56 words.
     Vahva,
-    /// Like `paksu`: 55 words.
-    Paksu,
     /// Like `vapaa`: 49 words.
     Vapaa,
-    /// Like `jörö`: 41 words.
-    Jörö,
-    /// Like `hopeoitu`: 40 words.
-    Hopeoitu,
     /// Like `tanakka`: 39 words.
     Tanakka,
     /// Like `mykkä`: 38 words.
@@ -211,7 +205,7 @@ pub enum Declension {
     Tiukka,
     /// Like `valmis`: 29 words.
     Valmis,
-    /// Like `nätti`: 27 words.
+    /// Like `nätti`: 26 words.
     Nätti,
     /// Like `sähäkkä`: 19 words.
     Sähäkkä,
@@ -219,28 +213,24 @@ pub enum Declension {
     Kahes,
     /// Like `suuri`: 17 words.
     Suuri,
+    /// Like `tuore`: 17 words.
+    Tuore,
+    /// Like `heikko`: 16 words.
+    Heikko,
     /// Like `altis`: 13 words.
     Altis,
-    /// Like `kesy`: 13 words.
-    Kesy,
     /// Like `hatara`: 12 words.
     Hatara,
-    /// Like `hotto`: 11 words.
-    Hotto,
     /// Like `voipa`: 11 words.
     Voipa,
-    /// Like `tuore`: 11 words.
-    Tuore,
     /// Like `kevyt`: 9 words.
     Kevyt,
-    /// Like `aito`: 9 words.
-    Aito,
-    /// Like `väkevöity`: 9 words.
-    Väkevöity,
     /// Like `kavokki`: 9 words.
     Kavokki,
     /// Like `puhdas`: 9 words.
     Puhdas,
+    /// Like `autio`: 9 words.
+    Autio,
     /// Like `tiivis`: 8 words.
     Tiivis,
     /// Like `tosi`: 8 words.
@@ -251,8 +241,6 @@ pub enum Declension {
     Epis,
     /// Like `haurea`: 8 words.
     Haurea,
-    /// Like `autio`: 8 words.
-    Autio,
     /// Like `käypä`: 7 words.
     Käypä,
     /// Like `kiva`: 7 words.
@@ -263,16 +251,12 @@ pub enum Declension {
     Yhdestoista,
     /// Like `veiterä`: 6 words.
     Veiterä,
-    /// Like `terve`: 6 words.
-    Terve,
     /// Like `joltinenkin`: 6 words.
     Joltinenkin,
     /// Like `mätä`: 5 words.
     Mätä,
     /// Like `hoikka`: 5 words.
     Hoikka,
-    /// Like `heikko`: 5 words.
-    Heikko,
     /// Like `kahdeskymmenes`: 5 words.
     Kahdeskymmenes,
     /// Like `ohut`: 4 words.
@@ -281,8 +265,6 @@ pub enum Declension {
     Tuhti,
     /// Like `kahdestoista`: 4 words.
     Kahdestoista,
-    /// Like `tykky`: 4 words.
-    Tykky,
     /// Like `avoin`: 4 words.
     Avoin,
     /// Like `neljäskymmenes`: 4 words.
@@ -293,12 +275,6 @@ pub enum Declension {
     Vihanta,
     /// Like `kahdessadas`: 4 words.
     Kahdessadas,
-    /// Like `kenkku`: 4 words.
-    Kenkku,
-    /// Like `söde`: 4 words.
-    Söde,
-    /// Like `lörppö`: 4 words.
-    Lörppö,
     /// Like `orpo`: 3 words.
     Orpo,
     /// Like `taaja`: 3 words.
@@ -313,15 +289,13 @@ pub enum Declension {
     Reipas,
     /// Like `vähäläntä`: 3 words.
     Vähäläntä,
-    /// Like `kökkö`: 3 words.
-    Kökkö,
     /// Like `vänkyrä`: 3 words.
     Vänkyrä,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 84] = [
+    pub const ALL: [Declension; 71] = [
         Declension::Tasainen,
         Declension::Kansainvälinen,
         Declension::Laiton,
@@ -329,26 +303,23 @@ impl Declension {
         Declension::Kummempi,
         Declension::Arin,
         Declension::Terävä,
-        Declension::Rikas,
         Declension::Varattu,
+        Declension::Rikas,
+        Declension::Huono,
         Declension::Oikea,
         Declension::Pehmeä,
         Declension::Sammunut,
         Declension::Paljas,
         Declension::Abstrakti,
-        Declension::Huono,
-        Declension::Violetti,
         Declension::Kuiva,
         Declension::Selvä,
+        Declension::Violetti,
         Declension::Räjähtänyt,
-        Declension::Hylätty,
-        Declension::Villi,
         Declension::Alvari,
-        Declension::Vahva,
-        Declension::Paksu,
-        Declension::Vapaa,
-        Declension::Jörö,
+        Declension::Villi,
         Declension::Hopeoitu,
+        Declension::Vahva,
+        Declension::Vapaa,
         Declension::Tanakka,
         Declension::Mykkä,
         Declension::Tiukka,
@@ -357,46 +328,37 @@ impl Declension {
         Declension::Sähäkkä,
         Declension::Kahes,
         Declension::Suuri,
-        Declension::Altis,
-        Declension::Kesy,
-        Declension::Hatara,
-        Declension::Hotto,
-        Declension::Voipa,
         Declension::Tuore,
+        Declension::Heikko,
+        Declension::Altis,
+        Declension::Hatara,
+        Declension::Voipa,
         Declension::Kevyt,
-        Declension::Aito,
-        Declension::Väkevöity,
         Declension::Kavokki,
         Declension::Puhdas,
+        Declension::Autio,
         Declension::Tiivis,
         Declension::Tosi,
         Declension::Lämmin,
         Declension::Epis,
         Declension::Haurea,
-        Declension::Autio,
         Declension::Käypä,
         Declension::Kiva,
         Declension::Minunlaiseni,
         Declension::Yhdestoista,
         Declension::Veiterä,
-        Declension::Terve,
         Declension::Joltinenkin,
         Declension::Mätä,
         Declension::Hoikka,
-        Declension::Heikko,
         Declension::Kahdeskymmenes,
         Declension::Ohut,
         Declension::Tuhti,
         Declension::Kahdestoista,
-        Declension::Tykky,
         Declension::Avoin,
         Declension::Neljäskymmenes,
         Declension::Neljässadas,
         Declension::Vihanta,
         Declension::Kahdessadas,
-        Declension::Kenkku,
-        Declension::Söde,
-        Declension::Lörppö,
         Declension::Orpo,
         Declension::Taaja,
         Declension::Rento,
@@ -404,7 +366,6 @@ impl Declension {
         Declension::Ehta,
         Declension::Reipas,
         Declension::Vähäläntä,
-        Declension::Kökkö,
         Declension::Vänkyrä,
     ];
 
@@ -423,16 +384,16 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
-    // Tasainen: 8,426 words (suomalainen, valkoinen, punainen, keltainen, graafinen, iloinen).
-    declension!("tasainen", 8426, "~nen";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 71] = [
+    // Tasainen: 8,501 words (suomalainen, valkoinen, punainen, keltainen, graafinen, iloinen).
+    declension!("tasainen", 8501, "~nen";
     stem adjective_nom_pl: "~s- like tasainen";
     stem adjective_pl: "~s- like tasainen";
     nom: "~nen", _;
     superlative: derived;
     ),
-    // Kansainvälinen: 2,994 words (sininen, ensimmäinen, yksinäinen, täydellinen, edellinen, öinen). Like Tasainen, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
-    declension!("kansainvälinen", 2994, "~nen", like Tasainen;
+    // Kansainvälinen: 2,919 words (sininen, ensimmäinen, yksinäinen, täydellinen, öinen, alkuperäinen). Like Tasainen, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
+    declension!("kansainvälinen", 2919, "~nen", like Tasainen;
     par: "~stä", "~siä";
     ine: "~sessä", "~sissä";
     ela: "~sestä", "~sistä";
@@ -459,8 +420,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ins: _, "~t~min";
     comparative: "~t~mAmpi";
     ),
-    // Matala: 818 words (painava, lihava, matala, avara, kamala, ankara).
-    declension!("matala", 818, "~a";
+    // Matala: 809 words (painava, lihava, matala, avara, kamala, ankara).
+    declension!("matala", 809, "~a";
     stem adjective_nom_pl: "~- like matala";
     stem adjective_pl: "~i- like laiton";
     nom: "~a", _;
@@ -476,12 +437,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     declension!("arin", 459, "~n";
     stem adjective_nom_pl: "~- like arin";
     nom: "~n", _;
-    gen_: _, "~mpien|~nten";
-    ill: _, "~mpiin";
+    gen_: _, "~mpVen|~nten";
+    ill: _, "~mpVin";
     com: _, "~mpine";
     ),
-    // Terävä: 428 words (pitkä, hyvä, terävä, säälittävä, vedenpitävä, läpinäkyvä). Like Matala, except in 14 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
-    declension!("terävä", 428, "~ä", like Matala;
+    // Terävä: 414 words (pitkä, hyvä, terävä, säälittävä, vedenpitävä, läpinäkyvä). Like Matala, except in 14 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
+    declension!("terävä", 414, "~ä", like Matala;
     nom: "~ä", "~ät";
     gen_: "~än", _;
     par: "~äA", _;
@@ -495,6 +456,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     tra: "~äksi", _;
     abe: "~ättA", _;
     comparative: "~ämpi";
+    ),
+    // Varattu: 340 words (halal, rutto, matta, poppa, loppu, haram). Like Huono with `ˇ` after each pattern.
+    declension!("varattu", 340, "~ˇ", like Huono with "ˇ";
     ),
     // Rikas: 276 words (sees, voimakas, rikas, tehokas, kirkas, mehukas).
     declension!("rikas", 276, "~~s";
@@ -514,8 +478,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ins: _, "~k~in";
     comparative: "~k~Ampi";
     ),
-    // Varattu: 244 words (halal, chic, matta, poppa, loppu, haram). Like Paksu with `ˇ` after each pattern.
-    declension!("varattu", 244, "~ˇ", like Paksu with "ˇ";
+    // Huono: 234 words (beige, indigo, iso, paksu, huono, vino).
+    declension!("huono", 234, "~";
+    stem adjective_nom_pl: "~- like huono";
+    stem adjective_pl: "~- like huono";
+    nom: "~", _;
+    superlative: derived;
     ),
     // Oikea: 178 words (valkea, ruskea, vaalea, kapea, korkea, nopea). Like Matala, except in 2 cells: par sg, par pl.
     declension!("oikea", 178, "~a", like Matala;
@@ -540,15 +508,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     nom: "~ut", _;
     superlative: derived;
     ),
-    // Paljas: 147 words (raskas, sairas, viisas, vanhurskas, kuolemansairas, kohtelias). Like Oikea, except in 14 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
+    // Paljas: 147 words (raskas, sairas, viisas, vanhurskas, kuolemansairas, kohtelias). Like Oikea, except in 15 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
     declension!("paljas", 147, "~s", like Oikea;
-    stem adjective_pl: "~i- like rikas";
     nom: "~s", "~At";
     gen_: "~An", _;
     par: "~stA", _;
     ine: "~AssA", _;
     ela: "~AstA", _;
-    ill: "~Aseen", _;
+    ill: "~AseVn", "~isVin";
     ade: "~AllA", _;
     abl: "~AltA", _;
     all: "~Alle", _;
@@ -557,41 +524,36 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     abe: "~AttA", _;
     comparative: "~Ampi";
     ),
-    // Abstrakti: 143 words (khaki, syaani, radikaali, oranssi, turski, lokaali).
-    declension!("abstrakti", 143, "~i";
+    // Abstrakti: 144 words (khaki, syaani, radikaali, oranssi, turski, lokaali).
+    declension!("abstrakti", 144, "~i";
     stem adjective_nom_pl: "~- like abstrakti";
     stem adjective_pl: "~- like abstrakti";
     nom: "~i", _;
     superlative: derived;
     ),
-    // Huono: 119 words (indigo, iso, huono, vino, ufo, mono).
-    declension!("huono", 119, "~";
-    stem adjective_nom_pl: "~- like huono";
-    stem adjective_pl: "~- like huono";
-    nom: "~", _;
-    superlative: derived;
-    ),
-    // Violetti: 89 words (violetti, akuutti, ultravioletti, elegantti, ekvivalentti, irrelevantti). Like Abstrakti with `ˇ` after each pattern.
-    declension!("violetti", 89, "~iˇ", like Abstrakti with "ˇ";
-    ),
-    // Kuiva: 87 words (musta, ruma, kuuma, kuiva, soma, kova). Like Matala, except in 1 cell: comparative.
-    declension!("kuiva", 87, "~a", like Matala;
+    // Kuiva: 96 words (musta, ruma, kuuma, kuiva, soma, kova). Like Matala, except in 1 cell: comparative.
+    declension!("kuiva", 96, "~a", like Matala;
     comparative: "~empi";
     ),
-    // Selvä: 87 words (köyhä, kylmä, väärä, tyhmä, pyhä, syvä). Like Terävä, except in 1 cell: comparative.
-    declension!("selvä", 87, "~ä", like Terävä;
+    // Selvä: 96 words (köyhä, kylmä, väärä, tyhmä, pyhä, syvä). Like Terävä, except in 1 cell: comparative.
+    declension!("selvä", 96, "~ä", like Terävä;
     comparative: "~empi";
+    ),
+    // Violetti: 90 words (violetti, akuutti, ultravioletti, elegantti, ekvivalentti, irrelevantti). Like Abstrakti with `ˇ` after each pattern.
+    declension!("violetti", 90, "~iˇ", like Abstrakti with "ˇ";
     ),
     // Räjähtänyt: 85 words (eristäytynyt, kyrpiintynyt, kyllästynyt, alikehittynyt, hävinnyt, ärsyyntynyt). Like Sammunut, except in 2 cells: nom sg, par sg.
     declension!("räjähtänyt", 85, "~yt", like Sammunut;
     nom: "~yt", _;
     par: "~yttA", _;
     ),
-    // Hylätty: 79 words (kristitty, petetty, hillitty, venytetty, väitetty, kätketty). Like Kesy with `ˇ` after each pattern.
-    declension!("hylätty", 79, "~ˇ", like Kesy with "ˇ";
+    // Alvari: 63 words (versaali, abnormaali, normaali, humaani, globaali, neutraali). Like Abstrakti, except in 2 cells: gen_ pl, par pl.
+    declension!("alvari", 63, "~i", like Abstrakti;
+    gen_: _, "~ien|~eiden|~eitten";
+    par: _, "~eitA|~ejA";
     ),
-    // Villi: 63 words (vissi, eri, villi, riski, läski, rigidi). Like Abstrakti, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
-    declension!("villi", 63, "~i", like Abstrakti;
+    // Villi: 62 words (vissi, eri, villi, riski, läski, rigidi). Like Abstrakti, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
+    declension!("villi", 62, "~i", like Abstrakti;
     par: "~iä", "~ejä";
     ine: "~issä", "~eissä";
     ela: "~istä", "~eistä";
@@ -600,10 +562,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ess: "~inä", "~einä";
     abe: "~ittä", "~eittä";
     ),
-    // Alvari: 63 words (versaali, abnormaali, normaali, humaani, globaali, neutraali). Like Abstrakti, except in 2 cells: gen_ pl, par pl.
-    declension!("alvari", 63, "~i", like Abstrakti;
-    gen_: _, "~ien|~eiden|~eitten";
-    par: _, "~eitA|~ejA";
+    // Hopeoitu: 58 words (mieto, outo, aito, panssaroitu, sertifioitu, laiminlyöty).
+    declension!("hopeoitu", 58, "~t~";
+    stem adjective_pl: "~t~- like huono";
+    nom: "~t~", "~d~t";
+    gen_: "~d~n", _;
+    par: "~t~A", "~t~jA";
+    ine: "~d~ssA", "~d~issA";
+    ela: "~d~stA", "~d~istA";
+    ill: "~t~Vn", _;
+    ade: "~d~llA", "~d~illA";
+    abl: "~d~ltA", "~d~iltA";
+    all: "~d~lle", "~d~ille";
+    ess: "~t~nA", "~t~inA";
+    tra: "~d~ksi", "~d~iksi";
+    abe: "~d~ttA", "~d~ittA";
+    ins: _, "~d~in";
+    comparative: "~d~mpi";
     ),
     // Vahva: 56 words (vanha, vahva, hauska, laiha, paha, ikivanha). Like Kuiva, except in 11 cells: par pl, ine pl, ela pl, ade pl, abl pl, all pl, ….
     declension!("vahva", 56, "~a", like Kuiva;
@@ -620,37 +595,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ins: _, "~oin";
     superlative: "~in";
     ),
-    // Paksu: 55 words (paksu, naku, hullu, tuju, kalju, karu). Like Huono, except in 1 cell: ill sg.
-    declension!("paksu", 55, "~", like Huono;
-    ill: "~un", _;
-    ),
-    // Vapaa: 49 words (vapaa, harmaa, vakaa, epävakaa, vajaa, tummanharmaa). Like Oikea, except in 2 cells: par sg, ill sg.
+    // Vapaa: 49 words (vapaa, harmaa, vakaa, epävakaa, vajaa, tummanharmaa). Like Oikea, except in 3 cells: par sg, ill sg, ill pl.
     declension!("vapaa", 49, "~a", like Oikea;
-    stem adjective_pl: "~i- like rikas";
     par: "~atA", _;
-    ill: "~aseen", _;
-    ),
-    // Jörö: 41 words (pöllö, söpö, kömpelö, hölmö, kylmähkö, lyhyehkö). Like Huono, except in 1 cell: ill sg.
-    declension!("jörö", 41, "~", like Huono;
-    ill: "~ön", _;
-    ),
-    // Hopeoitu: 40 words (panssaroitu, sertifioitu, denaturoitu, kursivoitu, pastöroitu, patentoitu).
-    declension!("hopeoitu", 40, "~t~";
-    stem adjective_pl: "~t~- like huono";
-    nom: "~t~", "~d~t";
-    gen_: "~d~n", _;
-    par: "~t~A", "~t~jA";
-    ine: "~d~ssA", "~d~issA";
-    ela: "~d~stA", "~d~istA";
-    ill: "~t~un", _;
-    ade: "~d~llA", "~d~illA";
-    abl: "~d~ltA", "~d~iltA";
-    all: "~d~lle", "~d~ille";
-    ess: "~t~nA", "~t~inA";
-    tra: "~d~ksi", "~d~iksi";
-    abe: "~d~ttA", "~d~ittA";
-    ins: _, "~d~in";
-    comparative: "~d~mpi";
+    ill: "~aseVn", "~isVin";
     ),
     // Tanakka: 39 words (terhakka, hailakka, navakka, lupsakka, solakka, tanakka).
     declension!("tanakka", 39, "~ka";
@@ -679,13 +627,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ),
     // Valmis: 29 words (kaunis, kallis, aulis, valmis, patavalmis, kullankallis).
     declension!("valmis", 29, "~~s";
-    stem adjective_pl: "~~i- like valmis";
     nom: "~~s", "~~it";
-    gen_: "~~in", _;
+    gen_: "~~in", "~~iden";
     par: "~~stA", "~~itA";
     ine: "~~issA", "~~issA";
     ela: "~~istA", "~~istA";
-    ill: "~~iseen", _;
+    ill: "~~iseen", "~~isiin";
     ade: "~~illA", "~~illA";
     abl: "~~iltA", "~~iltA";
     all: "~~ille", "~~ille";
@@ -693,11 +640,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     tra: "~~iksi", "~~iksi";
     abe: "~~ittA", "~~ittA";
     ins: _, "~~in";
+    com: _, "~~ine";
     comparative: "~~impi";
     superlative: "~e~n";
     ),
-    // Nätti: 27 words (nätti, ekstrovertti, resistentti, introvertti, definiitti, diskreetti). Like Villi with `ˇ` after each pattern.
-    declension!("nätti", 27, "~iˇ", like Villi with "ˇ";
+    // Nätti: 26 words (nätti, ekstrovertti, resistentti, introvertti, definiitti, diskreetti). Like Villi with `ˇ` after each pattern.
+    declension!("nätti", 26, "~iˇ", like Villi with "ˇ";
     ),
     // Sähäkkä: 19 words (ärhäkkä, tömäkkä, jämäkkä, räväkkä, sähäkkä, möräkkä).
     declension!("sähäkkä", 19, "~kä";
@@ -713,12 +661,55 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     stem adjective_pl: "~nsi- like laiton";
     nom: "~s", _;
     ),
-    // Suuri: 17 words (nuori, pieni, suuri, puoli, tyyni, pienenpieni). Like Kuiva, except in 2 cells: nom sg, superlative.
+    // Suuri: 17 words (nuori, pieni, suuri, puoli, tyyni, pienenpieni). Like Kuiva, except in 13 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
     declension!("suuri", 17, "~i", like Kuiva;
-    stem adjective_nom_pl: "~- like tasainen";
     stem adjective_pl: "~- like tasainen";
-    nom: "~i", _;
-    superlative: derived;
+    nom: "~i", "~et";
+    gen_: "~en", _;
+    par: "~tA", _;
+    ine: "~essA", _;
+    ela: "~estA", _;
+    ill: "~eVn", _;
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    all: "~elle", _;
+    ess: "~enA", _;
+    tra: "~eksi", _;
+    abe: "~ettA", _;
+    ),
+    // Tuore: 17 words (terve, chic, perkele, tuore, ahne, kade). Like Oikea, except in 14 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
+    declension!("tuore", 17, "~", like Oikea;
+    nom: "~", "~Vt";
+    gen_: "~Vn", _;
+    par: "~ttA", _;
+    ine: "~VssA", _;
+    ela: "~VstA", _;
+    ill: "~eseen", _;
+    ade: "~VllA", _;
+    abl: "~VltA", _;
+    all: "~Vlle", _;
+    ess: "~VnA", _;
+    tra: "~Vksi", _;
+    abe: "~VttA", _;
+    comparative: "~Vmpi";
+    ),
+    // Heikko: 16 words (heikko, välkky, kolkko, säikky, tykky, kökkö).
+    declension!("heikko", 16, "~k~";
+    stem adjective_pl: "~k~- like huono";
+    nom: "~k~", "~~t";
+    gen_: "~~n", _;
+    par: "~k~A", "~k~jA";
+    ine: "~~ssA", "~~issA";
+    ela: "~~stA", "~~istA";
+    ill: "~k~Vn", _;
+    ade: "~~llA", "~~illA";
+    abl: "~~ltA", "~~iltA";
+    all: "~~lle", "~~ille";
+    ess: "~k~nA", "~k~inA";
+    tra: "~~ksi", "~~iksi";
+    abe: "~~ttA", "~~ittA";
+    ins: _, "~~in";
+    comparative: "~~mpi";
     ),
     // Altis: 13 words (raitis, altis, rietas, riskialtis, raivoraitis, vaikutusaltis).
     declension!("altis", 13, "~~s";
@@ -739,10 +730,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     comparative: "~t~impi";
     superlative: "~te~n";
     ),
-    // Kesy: 13 words (kesy, pysty, väsy, kätsy, tyly, äksy). Like Huono, except in 1 cell: ill sg.
-    declension!("kesy", 13, "~", like Huono;
-    ill: "~yn", _;
-    ),
     // Hatara: 12 words (hatara, kihara, itara, hutera, sikkara, tomera). Like Matala, except in 14 cells: gen_ pl, par pl, ine pl, ela pl, ill pl, ade pl, ….
     declension!("hatara", 12, "~a", like Matala;
     gen_: _, "~ien|~oiden|~oitten";
@@ -760,9 +747,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     com: _, "~oine|~ine";
     superlative: "~in";
     ),
-    // Hotto: 11 words (rutto, helppo, ontto, veltto, suippo, melto). Like Huono with `ˇ` after each pattern.
-    declension!("hotto", 11, "~ˇ", like Huono with "ˇ";
-    ),
     // Voipa: 11 words (halpa, kaikkivoipa, hyvinvoipa, hyvänsuopa, hupa, aikaansaapa).
     declension!("voipa", 11, "~pa";
     stem adjective_nom_pl: "~- like voipa";
@@ -770,35 +754,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     nom: "~pa", _;
     superlative: derived;
     ),
-    // Tuore: 11 words (tuore, ahne, kade, tyven, rahanahne, paahtotuore). Like Suuri, except in 4 cells: nom sg, par sg, par pl, ill sg.
-    declension!("tuore", 11, "~", like Suuri;
+    // Kevyt: 9 words (kevyt, lyhyt, ehyt, pehmyt, höyhenenkevyt, ultrakevyt). Like Suuri, except in 2 cells: nom sg, superlative.
+    declension!("kevyt", 9, "~t", like Suuri;
+    stem adjective_nom_pl: "~- like kevyt";
     stem adjective_pl: "~i- like oikea";
-    nom: "~", _;
-    par: "~ttA", "~itA";
-    ill: "~eseen", _;
-    ),
-    // Kevyt: 9 words (kevyt, lyhyt, ehyt, pehmyt, höyhenenkevyt, ultrakevyt). Like Tuore with `` after each pattern (`t` after ~), except in 1 cell: ill sg.
-    declension!("kevyt", 9, "~t", like Tuore with "", "t" after "~";
-    ill: "~een", _;
-    ),
-    // Aito: 9 words (mieto, outo, aito, epäaito, leuto, uppo-outo). Like Hopeoitu, except in 1 cell: ill sg.
-    declension!("aito", 9, "~t~", like Hopeoitu;
-    ill: "~t~on", _;
-    ),
-    // Väkevöity: 9 words (laiminlyöty, rekisteröity, käsintehty, väkevöity, itsetehty, räätälöity). Like Hopeoitu, except in 1 cell: ill sg.
-    declension!("väkevöity", 9, "~t~", like Hopeoitu;
-    ill: "~t~yn", _;
+    nom: "~t", _;
+    superlative: derived;
     ),
     // Kavokki: 9 words (pinkki, antiikki, uniikki, opaakki, ubiikki, feikki). Like Abstrakti, except in 6 cells: nom sg, par sg, par pl, ill sg, ess sg, ess pl.
     declension!("kavokki", 9, "~ki", like Abstrakti;
     stem adjective_pl: "~k- like abstrakti";
     nom: "~ki", _;
     par: "~kiA", "~kejA";
-    ill: "~kiin", _;
+    ill: "~kiVn", _;
     ess: "~kinA", "~keinA";
     ),
     // Puhdas: 9 words (hidas, puhdas, ahdas, epäpuhdas, putipuhdas, tyylipuhdas). Like Paljas with `ˇ` after each pattern.
     declension!("puhdas", 9, "~sˇ", like Paljas with "ˇ";
+    ),
+    // Autio: 9 words (pro, tax-free, handsfree, okei, autio, gurmee). Like Huono, except in 2 cells: par sg, par pl.
+    declension!("autio", 9, "~", like Huono;
+    stem adjective_pl: "~i- like pro";
+    par: "~tA", "~itA";
     ),
     // Tiivis: 8 words (tiivis, tyyris, ilmatiivis, vesitiivis, kaasutiivis, äänitiivis). Like Valmis, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
     declension!("tiivis", 8, "~~s", like Valmis;
@@ -818,7 +795,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     par: "~ttA", _;
     ine: "~dessA", _;
     ela: "~destA", _;
-    ill: "~teen", _;
+    ill: "~teVn", _;
     ade: "~dellA", _;
     abl: "~deltA", _;
     all: "~delle", _;
@@ -853,11 +830,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     stem adjective_pl: "~oi- like pro";
     par: _, "~oitA";
     comparative: "~ampi";
-    ),
-    // Autio: 8 words (pro, tax-free, okei, autio, gurmee, mainio). Like Huono, except in 2 cells: par sg, par pl.
-    declension!("autio", 8, "~", like Huono;
-    stem adjective_pl: "~i- like pro";
-    par: "~tA", "~itA";
     ),
     // Käypä: 7 words (käypä, järkeenkäypä, päällekäypä, sydämeenkäypä, edelläkäypä, laatuunkäypä). Like Voipa, except in 4 cells: nom sg, par sg, ill sg, ess sg.
     declension!("käypä", 7, "~pä", like Voipa;
@@ -921,22 +893,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     com: _, "~öine|~ine";
     superlative: "~in";
     ),
-    // Terve: 6 words (terve, perkele, handsfree, epäterve, tiine, perusterve). Like Pehmeä, except in 14 cells: nom sg, nom pl, gen_ sg, par sg, ine sg, ela sg, ….
-    declension!("terve", 6, "~", like Pehmeä;
-    nom: "~", "~et";
-    gen_: "~en", _;
-    par: "~ttä", _;
-    ine: "~essä", _;
-    ela: "~estä", _;
-    ill: "~eseen", _;
-    ade: "~ellä", _;
-    abl: "~eltä", _;
-    all: "~elle", _;
-    ess: "~enä", _;
-    tra: "~eksi", _;
-    abe: "~että", _;
-    comparative: "~empi";
-    ),
     // Joltinenkin: 6 words (ensimmäinenkolmatta, toinenkolmatta, kulloinenkin, joltinenkin, jommoinenkin, kumpainenkin).
     declension!("joltinenkin", 6, "~nen~";
     nom: "~nen~", "~set~";
@@ -970,24 +926,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ess: "~kanA", "~kinA";
     comparative: "~empi";
     ),
-    // Heikko: 5 words (heikko, kolkko, sähköheikko, hermoheikko, vanhuudenheikko).
-    declension!("heikko", 5, "~k~";
-    stem adjective_pl: "~k~- like huono";
-    nom: "~k~", "~~t";
-    gen_: "~~n", _;
-    par: "~k~A", "~k~jA";
-    ine: "~~ssA", "~~issA";
-    ela: "~~stA", "~~istA";
-    ill: "~k~on", _;
-    ade: "~~llA", "~~illA";
-    abl: "~~ltA", "~~iltA";
-    all: "~~lle", "~~ille";
-    ess: "~k~nA", "~k~inA";
-    tra: "~~ksi", "~~iksi";
-    abe: "~~ttA", "~~ittA";
-    ins: _, "~~in";
-    comparative: "~~mpi";
-    ),
     // Kahdeskymmenes: 5 words (kahdeskymmenes, kolmaskymmenes, kahdeksaskymmenes, kuudeskymmenes, viidestuhannes).
     declension!("kahdeskymmenes", 5, "~s~s";
     nom: "~s~s", "~nnet~nnet";
@@ -1008,8 +946,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     // Ohut: 4 words (ohut, ainut, seitinohut, paperinohut).
     declension!("ohut", 4, "~ut";
     stem adjective_nom_pl: "~u- like kevyt";
-    stem adjective_pl: "~ui- like valmis";
     nom: "~ut", _;
+    gen_: _, "~uiden";
+    ill: _, "~uisVin";
+    com: _, "~uine";
     superlative: derived;
     ),
     // Tuhti: 4 words (mahti, suoti, rehti, tuhti).
@@ -1029,16 +969,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ess: "~ntena~~", "~nsina~~";
     abe: "~nnet%a~~", "~nsit%a~~";
     ),
-    // Tykky: 4 words (välkky, säikky, tykky, järkky). Like Heikko, except in 1 cell: ill sg.
-    declension!("tykky", 4, "~k~", like Heikko;
-    ill: "~k~yn", _;
-    ),
     // Avoin: 4 words (avoin, valtoin, irtain, puoliavoin).
     declension!("avoin", 4, "~n";
     stem adjective_nom_pl: "~- like avoin";
     nom: "~n", _;
-    gen_: _, "~mien|~nten";
-    ill: _, "~miin";
+    gen_: _, "~mVen|~nten";
+    ill: _, "~mVin";
     com: _, "~mine";
     superlative: derived;
     ),
@@ -1072,10 +1008,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     // Vihanta: 4 words (ikivihanta, vihanta, ainavihanta, kesävihanta).
     declension!("vihanta", 4, "~ta";
     stem adjective_nom_pl: "~- like vihanta";
+    stem adjective_pl: "~t- like vihanta";
     nom: "~ta", _;
-    gen_: _, "~tien|~tojen";
-    ill: _, "~tiin|~toihin";
-    com: _, "~tine|~toine";
     ),
     // Kahdessadas: 4 words (kolmassadas, kahdessadas, kuudessadas, kahdeksassadas). Like Neljässadas, except in 14 cells: par sg, par pl, ine sg, ine pl, ela sg, ela pl, ….
     declension!("kahdessadas", 4, "~~s~s", like Neljässadas;
@@ -1087,17 +1021,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     ess: "~ntena~~ntena", "~nsina~~nsina";
     abe: "~nnetta~~nnetta", "~nsitta~~nsitta";
     ),
-    // Kenkku: 4 words (virkku, nilkku, kenkku, torkku). Like Heikko, except in 1 cell: ill sg.
-    declension!("kenkku", 4, "~k~", like Heikko;
-    ill: "~k~un", _;
-    ),
-    // Söde: 4 words (beige, rage, söde, skrode). Like Huono, except in 1 cell: ill sg.
-    declension!("söde", 4, "~", like Huono;
-    ill: "~en", _;
-    ),
-    // Lörppö: 4 words (höttö, törppö, lörppö, tylppö). Like Jörö with `ˇ` after each pattern.
-    declension!("lörppö", 4, "~ˇ", like Jörö with "ˇ";
-    ),
     // Orpo: 3 words (orpo, epäkelpo, kelpo).
     declension!("orpo", 3, "~p~";
     stem adjective_pl: "~p~- like huono";
@@ -1106,7 +1029,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     par: "~p~A", "~p~jA";
     ine: "~v~ssa", "~v~issa";
     ela: "~v~sta", "~v~ista";
-    ill: "~p~on", _;
+    ill: "~p~Vn", _;
     ade: "~v~lla", "~v~illa";
     abl: "~v~lta", "~v~ilta";
     all: "~v~lle", "~v~ille";
@@ -1128,7 +1051,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     par: "~t~A", "~t~jA";
     ine: "~n~ssa", "~n~issa";
     ela: "~n~sta", "~n~ista";
-    ill: "~t~on", _;
+    ill: "~t~Vn", _;
     ade: "~n~lla", "~n~illa";
     abl: "~n~lta", "~n~ilta";
     all: "~n~lle", "~n~ille";
@@ -1177,10 +1100,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
     stem adjective_pl: "~ti- like laiton";
     nom: "~tä", _;
     superlative: derived;
-    ),
-    // Kökkö: 3 words (kökkö, tönkkö, könkkö). Like Heikko, except in 1 cell: ill sg.
-    declension!("kökkö", 3, "~k~", like Heikko;
-    ill: "~k~ön", _;
     ),
     // Vänkyrä: 3 words (känttyrä, vänkyrä, viheriä). Like Veiterä, except in 10 cells: par pl, ine pl, ela pl, ade pl, abl pl, all pl, ….
     declension!("vänkyrä", 3, "~ä", like Veiterä;

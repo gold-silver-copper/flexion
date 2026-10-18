@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 44 stems, 153 forms.
+/// 44 stems, 154 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"acheruns	gen_sg	acherunt- like hērōdēs
@@ -17,6 +17,7 @@ aegilops	gen_sg	aegilōp- like nephelēis
 alazon	gen_sg	alāzon- like nephelēis
 alcides	6	alcīdēm
 ali	2	alis	6	alim
+alpis	3	alpium
 anacreon	10	anacreon
 anchises	8	anchisā
 anio	gen_sg	aniēn- like hērōdēs

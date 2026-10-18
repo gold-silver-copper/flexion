@@ -61,10 +61,10 @@ reason (the rule and its counts).
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | noun | 61768 | 26 | 0 | 1021 | 2234 | 88 | 0 |
-| adjective | 26286 | 12 | 1 | 322 | 484 | 48 | 4 |
-| verb | 12955 | 116 | 18 | 452 | 416 | 737 | 56 |
+| adjective | 26286 | 12 | 1 | 322 | 483 | 48 | 4 |
+| verb | 12955 | 116 | 18 | 462 | 393 | 737 | 56 |
 | participle | 8087 | 2 | 0 | 6 | 2 | 3 | 0 |
-| determiner | 45 | 4 | 0 | 5 | 9 | 7 | 0 |
+| determiner | 45 | 4 | 0 | 5 | 9 | 8 | 0 |
 | adverb | 8 | 1 | 0 | 1 | 6 | 8 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
@@ -105,46 +105,77 @@ are words of their own, another word's form (a participle, a comparative) and an
 word's spelling, with their number of words. *Phrases*: top-1 on the forms the dictionary
 writes as phrases (the Latin perfect passive, `amātus sum`). *Irregular lines*: the share of the
 dictionary's words the grammar lists a form or a stem of. The held-out tenth was looked at while the trainer was being
-developed (changes are judged on another tenth since PR #16).
+developed (changes are judged on another tenth since PR #16). A closed class (pronouns,
+numerals, determiners, adpositions) and a part of speech with fewer than 30 held-out words
+is judged first on its own words: its top-1 is *reproduced*, the shipped grammar's right
+forms of the forms of its own words, then *a new word*, top-1 with each word left out of
+training in turn (a tenth at a time where another part of speech's words teach it). A part
+with no held-out words has no other score (–).
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | noun | 6392 | 6392 | **95.82%** (95.3–96.3) | 99.44% | 99.67% | 95.82% | 0.003 | 0.387 | 95.82% |  |  | 96.39% | 95.82% (6392) |  | 95.09% (0.00%) | +0.74 (+0.31…+1.16) | 95.96% | 99.77% | 95.91% / 95.76% |  | 95.85% (5862) / 98.57% (210) / 93.44% (320) |  | 0.19% |
 | adjective | 2631 | 7900 | **98.46%** (98.0–98.8) | 99.86% | 99.86% | 97.61% | 0.010 | 0.137 | 98.46% | 99.78% | 99.60 / 99.66 / 100.00 |  | 98.45% (7895) | 100.00% (5) | 98.46% (100.00%) | +0.00 (-0.28…+0.28) | 98.49% | 100.00% | 99.36% / 97.96% |  | 98.48% (2514) / 100.00% (42) / 96.86% (75) |  | 0.19% |
-| verb | 1286 | 70300 | **99.05%** (98.7–99.4) | 99.57% | 99.57% | 96.35% | 0.005 | 0.232 | 99.05% | 99.53% | 99.29 / 99.45 / 99.47 | 99.05% | 99.05% (70300) |  | 99.22% (0.00%) | -0.17 (-0.48…+0.13) | 99.12% | 99.96% | 98.93% / 99.12% |  | 99.34% (1188) / 100.00% (9) / 95.12% (89) |  | 1.77% |
+| verb | 1286 | 70300 | **99.05%** (98.7–99.4) | 99.57% | 99.57% | 96.35% | 0.004 | 0.233 | 99.05% | 99.53% | 99.30 / 99.45 / 99.48 | 99.05% | 99.05% (70300) |  | 99.22% (0.00%) | -0.17 (-0.48…+0.14) | 99.12% | 99.96% | 98.93% / 99.12% |  | 99.34% (1188) / 100.00% (9) / 95.12% (89) |  | 1.77% |
 | participle | 821 | 2463 | **100.00%** (100.0–100.0) | 100.00% | 100.00% | 100.00% | 0.000 | 0.000 | 100.00% |  | 100.00 / 100.00 / 0.00 |  | 100.00% (2463) |  | 100.00% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 100.00% / 100.00% |  | 100.00% (11) / 100.00% (810) / – |  | 0.02% |
-| determiner | 8 | 22 | **81.82%** (54.5–100.0) | 86.36% | 86.36% | 75.00% | 0.182 | 2.955 | 81.82% |  | 78.57 / 71.43 / 0.00 |  | 90.00% (20) | 0.00% (2) | 86.36% (0.00%) | -4.55 (-13.64…+0.00) | 81.82% | 100.00% | 100.00% / 78.95% |  | 81.82% (8) / – / – |  | 13.33% |
-| adverb | 1 | 1 | **0.00%** (0.0–0.0) | 0.00% | 0.00% | 0.00% | 1.000 | 55.000 | 0.00% | 0.00% |  |  | 0.00% (1) |  | 0.00% (0.00%) | +0.00 (+0.00…+0.00) | 0.00% | 100.00% | 0.00% / 0.00% |  | 0.00% (1) / – / – |  | 75.00% |
+| determiner | 8 | 22 | **reproduced 117 of 117**; a new word 88.03% (45 words) | 86.36% | 86.36% | 75.00% | 0.182 | 2.955 | 81.82% |  | 78.57 / 71.43 / 0.00 |  | 90.00% (20) | 0.00% (2) | 86.36% (0.00%) | -4.55 (-13.64…+0.00) | 81.82% | 100.00% | 100.00% / 78.95% |  | 81.82% (8) / – / – |  | 13.33% |
+| adverb | 1 | 1 | **reproduced 10 of 10**; a new word 0.00% (8 words) | 0.00% | 0.00% | 0.00% | 1.000 | 55.000 | 0.00% | 0.00% |  |  | 0.00% (1) |  | 0.00% (0.00%) | +0.00 (+0.00…+0.00) | 0.00% | 100.00% | 0.00% / 0.00% |  | 0.00% (1) / – / – |  | 75.00% |
 
 ## Where the errors are
 
 The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
 of them: *class*, the right form is among its answers but another paradigm's comes first;
-*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
-and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
-the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
-that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
-group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
-dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
-cells, the dictionary's or not, the share with a form.
+*marks*, the right letters but for a mark the spelling folds (a vowel's length, a
+breathing; not a letter written with a combining mark, as a Devanagari vowel sign);
+*accent*, the right letters with the accent wrong; *stem* and *ending*, wrong letters
+inside the stem or after it; *variant*, another of the forms the dictionary lists comes
+first; *homograph*, another dictionary word spelled the same has that form; *gap*, no form
+at all. *By block*: the mean of each group of cells' top-1, so a group of many cells
+doesn't outweigh the rest; a group with fewer than 30 held-out forms is left out of it and
+named below. *Reproduced*: the shipped grammar on the dictionary's own words (at most
+3,000), from the headword; *complete*: of those words' cells, the dictionary's or not, the
+share with a form.
 
-| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+| | wrong forms | class | marks | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 267 | 85% | 0% | 0% | 6% | 0% | 3% | 5% | 0% | 95.82% | 100.00% | 100.00% |
+| noun | 267 | 85% | 0% | 0% | 6% | 1% | 3% | 5% | 0% | 95.82% | 100.00% | 100.00% |
 | adjective | 122 | 90% | 0% | 0% | 3% | 4% | 2% | 0% | 0% | 96.56% | 100.00% | 100.00% |
-| verb | 667 | 48% | 1% | 0% | 22% | 19% | 7% | 4% | 0% | 99.03% | 100.00% | 100.00% |
-| participle | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 100.00% | 100.00% | 100.00% |
-| determiner | 4 | 25% | 0% | 0% | 50% | 25% | 0% | 0% | 0% | 81.82% | 100.00% | 100.00% |
-| adverb | 1 | 0% | 0% | 0% | 0% | 100% | 0% | 0% | 0% | 0.00% | 100.00% | 100.00% |
+| verb | 665 | 48% | 0% | 0% | 22% | 19% | 7% | 4% | 0% | 99.04% | 100.00% | 100.00% |
+| participle | 0 | – | – | – | – | – | – | – | – | 100.00% | 100.00% | 100.00% |
+| determiner | 4 | 25% | 0% | 0% | 50% | 25% | 0% | 0% | 0% | – | 100.00% | 100.00% |
+| adverb | 1 | 0% | 0% | 0% | 0% | 100% | 0% | 0% | 0% | – | 100.00% | 100.00% |
+
+*By block*, each group of cells' top-1 and held-out forms:
+
+- adjective: adjective 98.48% (7844), superlative 94.64% (56)
+- verb: verb 99.07% (53688), imperative 98.87% (6386), negative_imperative 99.15% (6388), gerund 99.45% (1283), participle 98.67% (2555)
+
+## The shipped grammar and the scored one
+
+The grammar shipped is learned from every word; the one scored above from all but the
+held-out tenth. Their sound laws (each with its tier) and irregular forms, side by side;
+a law one has and the other doesn't is listed below the table.
+
+| | sound laws, shipped / scored | the same laws | irregular forms, shipped / scored |
+|---|---:|---:|---:|
+| noun | 0 / 0 | 0 | 88 / 82 |
+| adjective | 1 / 3 | 1 | 48 / 41 |
+| verb | 18 / 17 | 15 | 737 / 804 |
+| participle | 0 / 0 | 0 | 3 / 3 |
+| determiner | 0 / 0 | 0 | 8 / 8 |
+| adverb | 0 / 0 | 0 | 8 / 7 |
+
+- adjective: Only the scored grammar's: `i+h → +`, `[cc|nc]+i → +hi`.
+- verb: only the shipped grammar's: `ec+e → ec+he after a vowel earlier in the stem`, `[l|n]+ss → +s`, `gl+en → gl+ien`. Only the scored grammar's: `ec+er → ec+her`, `l+ss → l+s`.
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 2153 | 112040 |
-| adjective | 1193 | 48056 |
-| verb | 4916 | 201871 |
-| participle | 410 | 14046 |
-| determiner | 396 | 12843 |
-| adverb | 346 | 11575 |
+| noun | 2128 | 111245 |
+| adjective | 1165 | 47117 |
+| verb | 4841 | 197099 |
+| participle | 382 | 13088 |
+| determiner | 368 | 11933 |
+| adverb | 320 | 10714 |
 
 ## Data and license
 

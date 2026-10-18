@@ -85,7 +85,7 @@ macro_rules! conjugation {
      $(stem lemma: $s4:tt;)?
      $(stem present_ind_mid_1_sg: $s5:tt;)?
      $(stem present: $s6:tt;)?
-     $(stem imperfect_act_1_sg: $s7:tt;)?
+     $(stem imperfect_: $s7:tt;)?
      $(stem imperfect: $s8:tt;)?
      $(ind_act_1: $c0:tt, $c1:tt, $c2:tt;)?
      $(ind_act_2: $c3:tt, $c4:tt, $c5:tt;)?
@@ -363,7 +363,7 @@ macro_rules! view {
     };
 }
 
-/// What a conjugation adds after each pattern of the one it is like (`with "ि"`: `ि` after every pattern).
+/// What a conjugation adds after each pattern of the one it is like (`with "ति"`: `ति` after every pattern).
 macro_rules! affix {
     () => {
         None
@@ -390,17 +390,17 @@ macro_rules! feature {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `वहति`: 261 words.
+    /// Like `वहति`: 219 words.
     वहति,
-    /// Like `साधयति`: 108 words.
+    /// Like `साधयति`: 157 words.
     साधयति,
-    /// Like `लभते`: 108 words.
+    /// Like `लभते`: 111 words.
     लभते,
-    /// Like `धरति`: 93 words.
+    /// Like `धरति`: 85 words.
     धरति,
     /// Like `वेश`: 43 words.
     वेश,
-    /// Like `रमते`: 41 words.
+    /// Like `रमते`: 38 words.
     रमते,
     /// Like `जेष्यति`: 36 words.
     जेषयति,
@@ -430,6 +430,8 @@ pub enum Conjugation {
     भाति,
     /// Like `पिपर्ति`: 7 words.
     पिपरति,
+    /// Like `रवति`: 7 words.
+    रवति,
     /// Like `बध्नाति`: 6 words.
     बधनाति,
     /// Like `ददौ`: 6 words.
@@ -448,16 +450,12 @@ pub enum Conjugation {
     अनिति,
     /// Like `अस्ति`: 5 words.
     असति,
-    /// Like `अवति`: 4 words.
-    अवति,
     /// Like `अनंसीत्`: 4 words.
     अनंसीत,
     /// Like `वमति`: 4 words.
     वमति,
     /// Like `वृणीते`: 4 words.
     वृणीते,
-    /// Like `रवति`: 4 words.
-    रवति,
     /// Like `जगार`: 4 words.
     जगार,
     /// Like `उवाप`: 4 words.
@@ -484,6 +482,8 @@ pub enum Conjugation {
     अचेत,
     /// Like `रौति`: 3 words.
     रौति,
+    /// Like `अवति`: 2 words.
+    अवति,
     /// Like `अवर्`: 2 words.
     अवर,
     /// Like `अतन्`: 2 words.
@@ -543,6 +543,7 @@ impl Conjugation {
         Conjugation::चकरष,
         Conjugation::भाति,
         Conjugation::पिपरति,
+        Conjugation::रवति,
         Conjugation::बधनाति,
         Conjugation::ददौ,
         Conjugation::ईळे,
@@ -552,11 +553,9 @@ impl Conjugation {
         Conjugation::अगात,
         Conjugation::अनिति,
         Conjugation::असति,
-        Conjugation::अवति,
         Conjugation::अनंसीत,
         Conjugation::वमति,
         Conjugation::वृणीते,
-        Conjugation::रवति,
         Conjugation::जगार,
         Conjugation::उवाप,
         Conjugation::आनयति,
@@ -570,6 +569,7 @@ impl Conjugation {
         Conjugation::विवेद,
         Conjugation::अचेत,
         Conjugation::रौति,
+        Conjugation::अवति,
         Conjugation::अवर,
         Conjugation::अतन,
         Conjugation::आरत,
@@ -605,12 +605,12 @@ impl flexion::Label for Conjugation {
 }
 
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
-    // वहति: 261 words (निन्दति, खादति, इच्छति, क्षालयति, वयति, बोधति).
-    conjugation!("वहति", 261, "~ति";
+    // वहति: 219 words (निन्दति, खादति, इच्छति, क्षालयति, बोधति, भवति).
+    conjugation!("वहति", 219, "~ति";
     stem lemma: "~- like वहति";
     stem present_ind_mid_1_sg: "~- like वहति";
     stem present: "~- like वहति";
-    stem imperfect_act_1_sg: "~- like वहति";
+    stem imperfect_: "~- like वहति";
     stem imperfect: "~- like वहति";
     ind_act_1: "~ामि", "~ावः", "~ामः|~ामसि";
     ind_act_2: "~सि", "~थः", "~थ";
@@ -623,7 +623,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     opt_act_3: _, _, "~ेयुः";
     subj_act_1: derived, derived, _;
     future_act_1: "~िष्यामि", _, _;
-    conditional_mid_1: "अ~िष्ये", _, _;
     conditional_mid_3: "अ~िष्यत", _, _;
     perfect_act_1: "नि~", "नि~िव", _;
     perfect_act_2: "नि~िथ", _, "नि~";
@@ -636,8 +635,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     participle_pres: "~त्", _;
     participle_perf: "नि~्वांस्", _;
     ),
-    // साधयति: 108 words (बर्हयति, दर्शयति, नाशयति, रन्धयति, धारयति, जासयति). Like वहति, except in 26 cells: future_act_1 pl, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
-    conjugation!("साधयति", 108, "~ति", [present_class: Class10], like वहति;
+    // साधयति: 157 words (वयति, बर्हयति, धयति, श्रयति, वर्णयति, दर्शयति). Like वहति, except in 26 cells: future_act_1 pl, perfect_act_1 sg, perfect_act_1 du, perfect_act_1 pl, perfect_act_2 sg, perfect_act_2 du, ….
+    conjugation!("साधयति", 157, "~ति", like वहति;
     future_act_1: _, _, "~िष्यामः|~िष्यामसि";
     perfect_act_1: "~ामास|~ांचकर", "~ामासिव|~ांचकृव", "~ामासिम|~ांचकृम";
     perfect_act_2: "~ामासिथ|~ांचकर्थ", "~ामासथुः|~ांचक्रथुः", "~ामास|~ांचक्र";
@@ -652,9 +651,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     participle_pres: _, "~माA|~ाA";
     participle_perf: "~ामासिवांस्|~ांचकृवांस्", _;
     ),
-    // लभते: 108 words (वस्ते, सचते, रोचते, मन्यते, पर्दते, लभते). Like साधयति, except in 14 cells: ind_act_1 pl, subj_act_2 sg, subj_act_3 sg, future_act_1 pl, perfect_act_1 sg, perfect_act_1 du, ….
-    conjugation!("लभते", 108, "~ते", like साधयति;
-    stem present_ind_mid_1_sg: "~- like वहति";
+    // लभते: 111 words (वस्ते, सचते, रोचते, मन्यते, पर्दते, लभते). Like साधयति, except in 15 cells: ind_act_1 pl, subj_act_2 sg, subj_act_3 sg, future_act_1 pl, perfect_act_1 sg, perfect_act_1 du, ….
+    conjugation!("लभते", 111, "~ते", like साधयति;
     ind_act_1: _, _, derived;
     subj_act_2: derived, _, _;
     subj_act_3: derived, _, _;
@@ -662,10 +660,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     perfect_act_1: "~ामास", "~ामासिव", derived;
     perfect_act_2: "~ामासिथ", derived, "~ामास";
     perfect_act_3: "~ामास", derived, derived;
+    participle_pres: _, "~माA";
     participle_perf: "~ामासिवांस्", _;
     ),
-    // धरति: 93 words (भरति, भुरति, दुष्यति, द्रायति, ओषति, द्रुह्यति).
-    conjugation!("धरति", 93, "~~ति";
+    // धरति: 85 words (भरति, भुरति, दुष्यति, द्रायति, ओषति, द्रुह्यति).
+    conjugation!("धरति", 85, "~~ति";
+    stem imperfect_: "~~- like वहति";
     stem imperfect: "~~- like वहति";
     ind_act_1: "~~ामि", "~~ावः", _;
     ind_act_2: "~~सि", "~~थः", "~~थ";
@@ -684,12 +684,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     subj_mid_1: "~~ै", "~~ावहै", "~~ामहै";
     subj_mid_2: "~~ासे", _, "~~ाध्वै";
     subj_mid_3: _, _, "~~न्त";
-    imperfect_act_1: "अ~~म्", _, _;
-    imperfect_act_2: _, "अ~~तम्", _;
-    imperfect_mid_2: "अ~~थाः", _, "अ~~ध्वम्";
-    imperfect_mid_3: "अ~~त", _, _;
     future_act_1: "~~िष्यामि", _, _;
-    conditional_mid_1: "अ~~िष्ये", _, _;
     conditional_mid_3: "अ~~िष्यत", _, _;
     perfect_act_1: "च~~", "~े~िव", _;
     perfect_act_2: "च~~्थ", _, "~े~";
@@ -706,7 +701,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     participle_pres: "~~त्", "~~माण";
     participle_perf: "~े~िवांस्", _;
     ),
-    // वेश: 43 words (आद, आप, देग्धि, द्वेष्टि, आर, आह). Like लभते, except in 54 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    // वेश: 43 words (आद, आप, देग्धि, द्वेष्टि, आर, आह). Like लभते, except in 53 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("वेश", 43, "~", like लभते;
     stem present_ind_act_2_pl: "~- like आनाश";
     ind_act_1: derived, derived, _;
@@ -732,7 +727,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_mid_2: derived, derived, derived;
     imperfect_mid_3: derived, _, derived;
     future_act_1: derived, _, _;
-    conditional_mid_1: derived, _, _;
     conditional_mid_3: derived, _, _;
     perfect_act_1: "~", _, _;
     perfect_act_2: "~िथ", _, _;
@@ -742,18 +736,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     gerund: derived;
     participle_pres: derived, derived;
     ),
-    // रमते: 41 words (म्रियते, भाषते, रमते, परीक्षते, त्रपते, ह्वरते). Like लभते, except in 1 cell: participle_pres mid.
-    conjugation!("रमते", 41, "~ते", like लभते;
+    // रमते: 38 words (म्रियते, भाषते, रमते, परीक्षते, त्रपते, ह्वरते). Like लभते, except in 1 cell: participle_pres mid.
+    conjugation!("रमते", 38, "~ते", like लभते;
     participle_pres: _, "~माण";
     ),
-    // जेषयति: 36 words (करिष्यति, गमिष्यति, पास्यति, भविष्यति, तप्स्यति, भरिष्यति). Like अमत with `ि` after each pattern, except in 11 cells: future_act_1 sg, future_act_1 pl, conditional_mid_1 sg, conditional_mid_3 sg, aorist_mid_1 sg, aorist_mid_1 du, ….
-    conjugation!("जेष्यति", 36, "~ति", like अमत with "ि";
+    // जेषयति: 36 words (करिष्यति, गमिष्यति, पास्यति, भविष्यति, तप्स्यति, भरिष्यति). Like वेश with `ति` after each pattern, except in 11 cells: future_act_1 sg, future_act_1 pl, conditional_mid_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, ….
+    conjugation!("जेष्यति", 36, "~ति", like वेश with "ति";
     future_act_1: "~ामि", _, "~ामः|~ामसि";
-    conditional_mid_1: "अ~े", _, _;
     conditional_mid_3: "अ~त", _, _;
-    aorist_mid_1: derived, derived, _;
-    aorist_mid_2: derived, derived, derived;
-    aorist_mid_3: derived, _, derived;
+    perfect_act_1: derived, derived, _;
+    perfect_act_2: derived, _, derived;
+    perfect_act_3: derived, _, _;
+    perfect_mid_1: derived, derived, _;
+    participle_perf: derived, _;
     ),
     // आपत: 22 words (अगमत्, अश्रोत्, अभूत्, अवोचत्, अशुचत्, आरत्). Like अमत with `` after each pattern (`्` after त), except in 11 cells: aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, aorist_act_3 pl, ….
     conjugation!("आपत्", 22, "~त्", like अमत with "", "्" after "त";
@@ -764,7 +759,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     aorist_mid_2: _, "~ेथाम्", _;
     aorist_mid_3: "~त", _, "~न्त";
     ),
-    // चखान: 21 words (जगाम, ससान, तताप, ततान, ददाह, जजान). Like धरति, except in 68 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
+    // चखान: 21 words (जगाम, ससान, तताप, ततान, ददाह, जजान). Like धरति, except in 67 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ind_act_3 sg, ….
     conjugation!("चखान", 21, "~ा~", like धरति;
     stem present_ind_act_2_pl: "~्~- like आनाश";
     ind_act_1: derived, derived, _;
@@ -791,7 +786,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_mid_2: derived, derived, derived;
     imperfect_mid_3: derived, _, derived;
     future_act_1: derived, _, _;
-    conditional_mid_1: derived, _, _;
     conditional_mid_3: derived, _, _;
     perfect_act_1: "~~", _, _;
     perfect_act_2: "~~्थ", _, _;
@@ -821,11 +815,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     aorist_mid_3: "~ीB्ट", _, "~ीBत";
     participle_perf: derived, _;
     ),
-    // दृणाति: 19 words (ददाति, दधाति, जानाति, श्रद्दधाति, गृणाति, जहाति). Like लभते, except in 40 cells: ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, ind_mid_1 du, ….
+    // दृणाति: 19 words (ददाति, दधाति, जानाति, श्रद्दधाति, गृणाति, जहाति). Like लभते, except in 39 cells: ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, ind_mid_1 du, ….
     conjugation!("दृणाति", 19, "~ाति", like लभते;
     stem present_: "~ी- like जानाति";
     stem present_ind_act_2_pl: "~ी- like जानाति";
-    stem imperfect_act_1_sg: "~- like जानाति";
+    stem imperfect_: "~- like जानाति";
     ind_act_1: _, "~ीवः", "~ीमः|~ीमसि";
     ind_act_2: "~ाBि", _, _;
     ind_act_3: "~ाति", _, "~A्ति";
@@ -848,7 +842,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_mid_2: _, "अ~ाथाम्", _;
     imperfect_mid_3: _, _, "अ~त";
     future_act_1: derived, _, _;
-    conditional_mid_1: derived, _, _;
     conditional_mid_3: derived, _, _;
     perfect_act_1: derived, derived, _;
     perfect_act_2: derived, _, derived;
@@ -911,8 +904,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     conjugation!("ररंह", 8, "~", like वेश;
     participle_perf: "~्वांस्", _;
     ),
-    // भिनतति: 8 words (वेत्ति, अत्ति, उनत्ति, भिनत्ति, छिनत्ति, वेवेत्ति). Like तनोति, except in 37 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("भिनत्ति", 8, "~त्ति", like तनोति;
+    // भिनतति: 8 words (वेत्ति, अत्ति, उनत्ति, भिनत्ति, छिनत्ति, वेवेत्ति). Like जेषयति, except in 38 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("भिनत्ति", 8, "~त्ति", like जेषयति;
     stem present_ind_act_2_pl: "~्त्- like जानाति";
     stem present: "~द- like वेत्ति";
     ind_act_1: "~द्मि", "~्द्वः", _;
@@ -927,14 +920,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     opt_act_3: _, _, "~्द्युः";
     opt_mid_2: _, _, "~्दीध्वम्";
     subj_act_1: derived, derived, _;
-    subj_act_2: derived, _, _;
-    subj_act_3: derived, _, _;
     imperfect_act_1: "अ~दम्", _, _;
     imperfect_act_2: "अ~त्", "अ~्त्तम्", _;
     imperfect_act_3: "अ~त्", _, "अ~्दन्";
     imperfect_mid_1: "अ~्दि", "अ~्द्वहि", _;
     imperfect_mid_2: "अ~्त्थाः", "अ~्दाथाम्", "अ~्द्ध्वम्";
     imperfect_mid_3: "अ~्त्त", _, "अ~्दत";
+    future_act_1: derived, _, derived;
+    conditional_mid_3: derived, _, _;
     participle_pres: "~्दत्", "~्दाA";
     ),
     // नकति: 8 words (रिणक्ति, वक्ति, नेनेक्ति, पृणक्ति, वृणक्ति, भिषक्ति). Like भिनतति, except in 19 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, imp_act_2 sg, ….
@@ -943,7 +936,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     stem present_ind_act_2_pl: "~क्- like जानाति";
     stem present_ind_mid_1_sg: "~B- like तक्ति";
     stem present: "~B- like वेत्ति";
-    stem imperfect_act_1_sg: "~- like तक्ति";
+    stem imperfect_: "~- like तक्ति";
     ind_act_1: "~B्मि", "~B्वः", _;
     ind_act_2: "~क्Bि", _, _;
     ind_act_3: "~क्ति", _, "~Bन्ति";
@@ -968,10 +961,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     aorist_act_3: derived, _, derived;
     participle_perf: "~ृ~्वांस्", _;
     ),
-    // भाति: 7 words (भाति, द्राति, वाति, पाति, याति, आयाति). Like दृणाति, except in 20 cells: ind_act_1 du, ind_act_1 pl, ind_act_3 pl, ind_mid_1 sg, ind_mid_1 du, ind_mid_3 pl, ….
+    // भाति: 7 words (भाति, द्राति, वाति, पाति, याति, आयाति). Like दृणाति, except in 16 cells: ind_act_1 du, ind_act_1 pl, ind_act_3 pl, ind_mid_1 sg, ind_mid_1 du, ind_mid_3 pl, ….
     conjugation!("भाति", 7, "~ाति", [present_class: Class2], like दृणाति;
     stem present_: "~ा- like जानाति";
     stem present_ind_act_2_pl: "~ा- like जानाति";
+    stem imperfect_: "~ा- like वहति";
     ind_act_1: _, "~ावः", "~ामः|~ामसि";
     ind_act_3: _, _, "~ान्ति";
     ind_mid_1: "~ै", "~ावहे", _;
@@ -980,11 +974,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     opt_act_1: "~ायाम्", "~ायाव", _;
     opt_act_3: _, _, "~ायुः";
     opt_mid_2: _, _, "~ेध्वम्";
-    imperfect_act_2: _, "अ~ातम्", _;
     imperfect_act_3: _, _, "अ~ुः|अ~ान्";
     imperfect_mid_1: "अ~े", "अ~ावहि", _;
-    imperfect_mid_2: "अ~ाथाः", _, "अ~ाध्वम्";
-    imperfect_mid_3: "अ~ात", _, "अ~ात";
+    imperfect_mid_3: _, _, "अ~ात";
     participle_pres: "~ात्", _;
     ),
     // पिपरति: 7 words (पिपर्ति, जागर्ति, बिभर्ति, जिघर्ति, इयर्ति, सिसर्ति). Like तनोति, except in 30 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_3 sg, ind_act_3 pl, ….
@@ -1011,6 +1003,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_mid_3: "अ~ृत", _, "अ~्रत";
     participle_pres: "~्रत्", "~्राA";
     ),
+    // रवति: 7 words (सुवति, धावति, जवति, द्रवति, चर्वति, तूर्वति). Like तनोति, except in 48 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("रवति", 7, "~वति", like तनोति;
+    stem present_: "~व- like जानाति";
+    stem imperfect_: "~व- like वहति";
+    stem imperfect: "~व- like वहति";
+    ind_act_1: "~वामि", "~वावः", _;
+    ind_act_2: "~वBि", _, "~वथ";
+    ind_act_3: "~वति", _, "~वन्ति";
+    ind_mid_1: "~वे", "~वावहे", _;
+    ind_mid_2: _, "~वेथे", _;
+    ind_mid_3: _, _, "~वन्ते";
+    imp_act_2: "~व", _, "~वत";
+    opt_act_1: "~वेयम्", "~वेव", _;
+    opt_act_3: _, _, "~वेयुः";
+    opt_mid_2: _, _, "~वेध्वम्";
+    subj_act_1: derived, _, _;
+    subj_act_2: derived, _, _;
+    subj_act_3: derived, _, _;
+    subj_mid_2: "~वासे", _, "~वाध्वै";
+    future_act_1: "~ोष्यामि", _, _;
+    conditional_mid_3: "अ~ोष्यत", _, _;
+    perfect_act_1: "दु~व", "दु~ुव", _;
+    perfect_act_2: "दु~ोथ", _, "दु~ुव";
+    perfect_act_3: "दु~ाव", _, _;
+    perfect_mid_1: "दु~ुवे", "दु~ुवहे", _;
+    aorist_act_1: "अ~ुद्रुवम्", "अ~ुद्रुवाव", _;
+    aorist_act_2: "अ~ुद्रुवः", "अ~ुद्रुवतम्", _;
+    aorist_act_3: "अ~ुद्रुवत्", _, "अ~ुद्रुवन्";
+    aorist_mid_1: "अ~ाविषि", "अ~ाविष्वहि", _;
+    aorist_mid_2: "अ~ाविष्ठाः", "अ~ाविषाथाम्", "अ~ाविढ्वम्";
+    aorist_mid_3: "अ~ाविष्ट", _, "अ~ाविषत";
+    infinitive: "~ोतुम्";
+    gerund: "~ुत्वा";
+    participle_pres: "~वत्", "~वमाA";
+    participle_perf: "दु~ुवांस्", _;
+    ),
     // बधनाति: 6 words (गृभ्णाति, उभ्नाति, गृह्णाति, इष्णाति, बध्नाति, तभ्नाति). Like चकरष, except in 10 cells: ind_act_1 sg, ind_act_3 sg, imp_act_2 sg, subj_act_1 du, perfect_act_1 sg, perfect_act_1 du, ….
     conjugation!("बध्नाति", 6, "~्~ाति", [present_class: Class9], like चकरष;
     stem perfect_act_3_sg: "~्~- like बध्नाति";
@@ -1018,7 +1046,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     stem present_ind_act_2_pl: "~्~ी- like जानाति";
     stem present_ind_mid_1_sg: "~्~- like बध्नाति";
     stem present: "~्~- like बध्नाति";
-    stem imperfect_act_1_sg: "~्~- like जानाति";
+    stem imperfect_: "~्~- like जानाति";
     stem imperfect: "~्~- like बध्नाति";
     ind_act_1: "~्~ामि", _, _;
     ind_act_3: "~्~ाति", _, _;
@@ -1137,50 +1165,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     participle_pres: "~Bत्", _;
     participle_perf: derived, _;
     ),
-    // अवति: 4 words (अवति, अपनह्यति, अपिनह्यति, अर्चयति). Like वहति, except in 73 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ….
-    conjugation!("अवति", 4, "अ~ति", like वहति;
-    ind_act_1: "अ~ामि", "अ~ावः", "अ~ामः|अ~ामसि";
-    ind_act_2: "अ~सि", "अ~थः", "अ~थ";
-    ind_act_3: "अ~ति", _, "अ~न्ति";
-    ind_mid_1: "अ~े", "अ~ावहे", _;
-    ind_mid_2: "अ~से", "अ~ेथे", "अ~ध्वे";
-    ind_mid_3: "अ~ते", _, "अ~न्ते";
-    imp_act_1: "अ~ाAि", "अ~ाव", _;
-    imp_act_2: "अ~", _, "अ~त";
-    imp_mid_3: "अ~ताम्", _, _;
-    opt_act_1: "अ~ेयम्", "अ~ेव", _;
-    opt_act_3: _, _, "अ~ेयुः";
-    opt_mid_2: _, _, "अ~ेध्वम्";
-    subj_act_1: _, _, "अ~ाम";
-    subj_act_2: "अ~ाः|अ~ासि", _, _;
-    subj_act_3: "अ~ात्|अ~ाति", _, _;
-    subj_mid_1: "अ~ै", "अ~ावहै", "अ~ामहै";
-    subj_mid_2: "अ~ासे|अ~ासै", _, "अ~ाध्वै";
-    subj_mid_3: "अ~ाते|अ~ातै", _, "अ~न्त|अ~ान्तै";
-    imperfect_act_1: "आ~म्", _, _;
-    imperfect_act_2: "आ~ः", "आ~तम्", _;
-    imperfect_act_3: "आ~त्", _, "आ~न्";
-    imperfect_mid_1: "आ~े", "आ~ावहि", _;
-    imperfect_mid_2: "आ~थाः", "आ~ेथाम्", "आ~ध्वम्";
-    imperfect_mid_3: "आ~त", _, "आ~न्त";
-    future_act_1: "अ~िष्यामि", _, _;
-    conditional_mid_1: "आ~िष्ये", _, _;
-    conditional_mid_3: "आ~िष्यत", _, _;
-    perfect_act_1: "आ~", "आ~िव", _;
-    perfect_act_2: "आ~िथ", _, "आ~";
-    perfect_act_3: "आ~", _, _;
-    perfect_mid_1: "आ~े", "आ~िवहे", _;
-    aorist_act_1: "आ~िषम्", "आ~िष्व", _;
-    aorist_act_2: "आ~ीः", "आ~िष्टम्", _;
-    aorist_act_3: "आ~ीत्", _, "आ~िषुः";
-    aorist_mid_1: _, "आ~िष्वहि", _;
-    aorist_mid_2: "आ~िष्ठाः", "आ~िषाथाम्", "आ~िढ्वम्";
-    aorist_mid_3: "आ~िष्ट", _, "आ~िषत";
-    infinitive: "अ~ितुम्";
-    gerund: "अ~ित्वा";
-    participle_pres: "अ~त्", "अ~माA";
-    participle_perf: "आ~िवांस्", _;
-    ),
     // अनंसीत: 4 words (अहासीत्, अतांसीत्, अयासीत्, अनंसीत्). Like वेश with `सीत्` after each pattern, except in 14 cells: perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 pl, perfect_act_3 sg, perfect_mid_1 sg, ….
     conjugation!("अनंसीत्", 4, "~सीत्", like वेश with "सीत्";
     perfect_act_1: derived, derived, _;
@@ -1192,12 +1176,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     aorist_act_3: "~सीत्", _, "~सुः";
     participle_perf: derived, _;
     ),
-    // वमति: 4 words (वमति, चमति, नमति, गमति). Like वेश, except in 36 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 pl, imp_act_1 sg, ….
+    // वमति: 4 words (वमति, चमति, नमति, गमति). Like वेश, except in 35 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 pl, imp_act_1 sg, ….
     conjugation!("वमति", 4, "~मति", [present_class: Class1], like वेश;
     stem present_: "~म- like जानाति";
     stem lemma: "~म- like वहति";
     stem present_ind_mid_1_sg: "~म- like वहति";
-    stem imperfect_act_1_sg: "~म- like वहति";
+    stem imperfect_: "~म- like वहति";
     stem imperfect: "~म- like वमति";
     ind_act_1: "~मामि", "~मावः", _;
     ind_act_2: "~मBि", _, "~मथ";
@@ -1211,7 +1195,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     subj_mid_2: "~मासे", _, "~माध्वै";
     subj_mid_3: _, _, "~मन्त";
     future_act_1: "~मिष्यामि", _, _;
-    conditional_mid_1: "अ~मिष्ये", _, _;
     conditional_mid_3: "अ~मिष्यत", _, _;
     perfect_act_1: "~चम", "~ेमिव", _;
     perfect_act_2: "~चA्थ", _, "~ेम";
@@ -1245,45 +1228,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     participle_pres: _, "~ान";
     participle_perf: derived, _;
     ),
-    // रवति: 4 words (द्रवति, चर्वति, तूर्वति, रवति). Like तनोति, except in 53 cells: ind_act_1 sg, ind_act_1 du, ind_act_2 sg, ind_act_2 pl, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("रवति", 4, "~वति", [present_class: Class1], like तनोति;
-    stem present_: "~व- like जानाति";
-    stem imperfect: "~व- like वहति";
-    ind_act_1: "~वामि", "~वावः", _;
-    ind_act_2: "~वBि", _, "~वथ";
-    ind_act_3: "~वति", _, "~वन्ति";
-    ind_mid_1: "~वे", "~वावहे", _;
-    ind_mid_2: _, "~वेथे", _;
-    ind_mid_3: _, _, "~वन्ते";
-    imp_act_2: "~व", _, "~वत";
-    opt_act_1: "~वेयम्", "~वेव", _;
-    opt_act_3: _, _, "~वेयुः";
-    opt_mid_2: _, _, "~वेध्वम्";
-    subj_act_1: derived, _, _;
-    subj_act_2: derived, _, _;
-    subj_act_3: derived, _, _;
-    subj_mid_2: "~वासे", _, "~वाध्वै";
-    imperfect_act_2: _, "अ~वतम्", _;
-    imperfect_mid_2: "अ~वथाः", _, "अ~वध्वम्";
-    imperfect_mid_3: "अ~वत", _, _;
-    future_act_1: "~ोष्यामि", _, _;
-    conditional_mid_1: "अ~ोष्ये", _, _;
-    conditional_mid_3: "अ~ोष्यत", _, _;
-    perfect_act_1: "दु~व", "दु~ुव", _;
-    perfect_act_2: "दु~ोथ", _, "दु~ुव";
-    perfect_act_3: "दु~ाव", _, _;
-    perfect_mid_1: "दु~ुवे", "दु~ुवहे", _;
-    aorist_act_1: "अ~ुद्रुवम्", "अ~ुद्रुवाव", _;
-    aorist_act_2: "अ~ुद्रुवः", "अ~ुद्रुवतम्", _;
-    aorist_act_3: "अ~ुद्रुवत्", _, "अ~ुद्रुवन्";
-    aorist_mid_1: "अ~ाविषि", "अ~ाविष्वहि", _;
-    aorist_mid_2: "अ~ाविष्ठाः", "अ~ाविषाथाम्", "अ~ाविढ्वम्";
-    aorist_mid_3: "अ~ाविष्ट", _, "अ~ाविषत";
-    infinitive: "~ोतुम्";
-    gerund: "~ुत्वा";
-    participle_pres: "~वत्", "~वमाA";
-    participle_perf: "दु~ुवांस्", _;
-    ),
     // जगार: 4 words (जहार, दधार, जगार, ममार). Like वेश, except in 9 cells: ind_act_3 sg, perfect_act_1 sg, perfect_act_1 du, perfect_act_2 sg, perfect_act_2 pl, perfect_act_3 sg, ….
     conjugation!("जगार", 4, "~ार", like वेश;
     ind_act_3: "~ार", _, _;
@@ -1302,14 +1246,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     perfect_mid_1: "ऊ~े", "ऊ~िवहे", _;
     participle_perf: "ऊ~िवांस्", _;
     ),
-    // आनयति: 4 words (आनयति, आगच्छति, आक्रोशति, आमयति). Like लभते, except in 13 cells: ind_act_1 pl, subj_act_1 sg, subj_act_1 du, conditional_mid_1 sg, conditional_mid_3 sg, perfect_act_1 sg, ….
+    // आनयति: 4 words (आनयति, आगच्छति, आक्रोशति, आमयति). Like लभते, except in 12 cells: ind_act_1 pl, subj_act_1 sg, subj_act_1 du, conditional_mid_3 sg, perfect_act_1 sg, perfect_act_1 du, ….
     conjugation!("आनयति", 4, "~ति", like लभते;
     stem present: "~- like वहति";
-    stem imperfect_act_1_sg: "~- like आनयति";
+    stem imperfect_: "~- like आनयति";
     stem imperfect: "~- like आनयति";
     ind_act_1: _, _, "~ामः|~ामसि";
     subj_act_1: derived, derived, _;
-    conditional_mid_1: derived, _, _;
     conditional_mid_3: derived, _, _;
     perfect_act_1: derived, derived, _;
     perfect_act_2: derived, _, derived;
@@ -1378,10 +1321,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_mid_3: "आर्~त", _, "आर्~न्त";
     participle_pres: "ऋ~त्", "ऋ~मान";
     ),
-    // बाधिषयते: 3 words (बाधिष्यते, श्यास्यते, रेक्ष्यते). Like अमत with `े` after each pattern, except in 10 cells: future_mid_1 sg, conditional_mid_1 sg, conditional_mid_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, ….
+    // बाधिषयते: 3 words (बाधिष्यते, श्यास्यते, रेक्ष्यते). Like अमत with `े` after each pattern, except in 9 cells: future_mid_1 sg, conditional_mid_3 sg, aorist_mid_1 sg, aorist_mid_1 du, aorist_mid_2 sg, aorist_mid_2 du, ….
     conjugation!("बाधिष्यते", 3, "~ते", like अमत with "े";
     future_mid_1: "~े", _, _;
-    conditional_mid_1: "अ~े", _, _;
     conditional_mid_3: "अ~त", _, _;
     aorist_mid_1: derived, derived, _;
     aorist_mid_2: derived, derived, derived;
@@ -1435,10 +1377,53 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 64] = [
     imperfect_act_2: "अ~ौः", _, _;
     imperfect_act_3: "अ~ौत्", _, _;
     ),
+    // अवति: 2 words (अवति, अपिनह्यति). Like वहति, except in 72 cells: ind_act_1 sg, ind_act_1 du, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_2 pl, ….
+    conjugation!("अवति", 2, "अ~ति", like वहति;
+    ind_act_1: "अ~ामि", "अ~ावः", "अ~ामः|अ~ामसि";
+    ind_act_2: "अ~सि", "अ~थः", "अ~थ";
+    ind_act_3: "अ~ति", _, "अ~न्ति";
+    ind_mid_1: "अ~े", "अ~ावहे", _;
+    ind_mid_2: "अ~से", "अ~ेथे", "अ~ध्वे";
+    ind_mid_3: "अ~ते", _, "अ~न्ते";
+    imp_act_1: "अ~ाAि", "अ~ाव", _;
+    imp_act_2: "अ~", _, "अ~त";
+    imp_mid_3: "अ~ताम्", _, _;
+    opt_act_1: "अ~ेयम्", "अ~ेव", _;
+    opt_act_3: _, _, "अ~ेयुः";
+    opt_mid_2: _, _, "अ~ेध्वम्";
+    subj_act_1: _, _, "अ~ाम";
+    subj_act_2: "अ~ाः|अ~ासि", _, _;
+    subj_act_3: "अ~ात्|अ~ाति", _, _;
+    subj_mid_1: "अ~ै", "अ~ावहै", "अ~ामहै";
+    subj_mid_2: "अ~ासे|अ~ासै", _, "अ~ाध्वै";
+    subj_mid_3: "अ~ाते|अ~ातै", _, "अ~न्त|अ~ान्तै";
+    imperfect_act_1: "आ~म्", _, _;
+    imperfect_act_2: "आ~ः", "आ~तम्", _;
+    imperfect_act_3: "आ~त्", _, "आ~न्";
+    imperfect_mid_1: "आ~े", "आ~ावहि", _;
+    imperfect_mid_2: "आ~थाः", "आ~ेथाम्", "आ~ध्वम्";
+    imperfect_mid_3: "आ~त", _, "आ~न्त";
+    future_act_1: "अ~िष्यामि", _, _;
+    conditional_mid_3: "आ~िष्यत", _, _;
+    perfect_act_1: "आ~", "आ~िव", _;
+    perfect_act_2: "आ~िथ", _, "आ~";
+    perfect_act_3: "आ~", _, _;
+    perfect_mid_1: "आ~े", "आ~िवहे", _;
+    aorist_act_1: "आ~िषम्", "आ~िष्व", _;
+    aorist_act_2: "आ~ीः", "आ~िष्टम्", _;
+    aorist_act_3: "आ~ीत्", _, "आ~िषुः";
+    aorist_mid_1: _, "आ~िष्वहि", _;
+    aorist_mid_2: "आ~िष्ठाः", "आ~िषाथाम्", "आ~िढ्वम्";
+    aorist_mid_3: "आ~िष्ट", _, "आ~िषत";
+    infinitive: "अ~ितुम्";
+    gerund: "अ~ित्वा";
+    participle_pres: "अ~त्", "अ~माA";
+    participle_perf: "आ~िवांस्", _;
+    ),
     // अवर: 2 words (अकर्, अवर्). Like आपत, except in 12 cells: ind_act_3 sg, aorist_act_1 sg, aorist_act_1 du, aorist_act_2 sg, aorist_act_2 du, aorist_act_3 sg, ….
     conjugation!("अवर्", 2, "अ~र्", like आपत;
     stem perfect_act_3_sg: "~्रन्- like अकर्";
-    stem imperfect_act_1_sg: "~ृध्वम्- like अकर्";
+    stem present_ind_mid_1_sg: "~ृध्वम्- like अकर्";
     ind_act_3: "अ~र्", _, _;
     aorist_act_1: "अ~रम्", "अ~र्व", _;
     aorist_act_2: "अ~र्", "अ~र्तम्", _;

@@ -16,10 +16,13 @@ use flexion::sound_law::Program;
 pub(super) const LAWS: Program<'static> = flexion::laws! {
     classes {}
     agreements {
-        law0 = [("A", "e") => "ä", ("A", "p") => "a", ("A", "u") => "a", ("A", "") => "a"];
+        law0 = [("A", "o") => "a", ("A", "u") => "a", ("A", "") => "ä"];
+        law1 = [("V", "a") => "a", ("V", "e") => "e", ("V", "i") => "i", ("V", "o") => "o", ("V", "u") => "u", ("V", "y") => "y", ("V", "ä") => "ä", ("V", "ö") => "ö", ("V", "") => "a"];
     }
     rules {
-        // A → ä after e; a after p, u, none (the nearest of e, p, u before it, as written): 30 words (te, he, me, sama), 0 forms wrong.
-        law0[iterative]: "{x:[A]}" => "{x|law0[t]}" / "{t:[e|p|u]?}{g:![e|p|u]*}" _ "";
+        // A → a after o, u; ä after none (the nearest of o, u before it, as written): 35 words (te, mi, he, me), 0 forms wrong.
+        law0[iterative]: "{x:[A]}" => "{x|law0[t]}" / "{t:[o|u]?}{g:![o|u]*}" _ "";
+        // V → that letter; a after none (the nearest of a, e, i, o, u, y, ä, ö before it, as written): 25 words (sama, toinen, eräs, mie), 0 forms wrong.
+        law1[iterative]: "{x:[V]}" => "{x|law1[t]}" / "{t:[a|e|i|o|u|y|ä|ö]?}{g:![a|e|i|o|u|y|ä|ö]*}" _ "";
     }
 };

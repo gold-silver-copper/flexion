@@ -4,7 +4,7 @@
 //! letters between them that other forms may drop or change.
 //! Alternatives are separated by `|`, the usual one first. A `ˇ` ends
 //! the patterns of a conjugation whose stems alternate: the laws in `laws.rs`
-//! for alternating stems change them (`~gōˇ`: `compungō`).
+//! for alternating stems change them (`~ōˇ`: `nuō`).
 
 use flexion::Paradigm;
 
@@ -381,158 +381,164 @@ macro_rules! affix {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `agitō`: 2,609 words.
+    /// Like `agitō`: 2,603 words.
     Agitō,
     /// Like `modulor`: 357 words.
     Modulor,
-    /// Like `sūmō`: 265 words.
+    /// Like `sūmō`: 290 words.
     Sūmō,
-    /// Like `habeō`: 256 words.
+    /// Like `habeō`: 235 words.
     Habeō,
-    /// Like `mūniō`: 219 words.
+    /// Like `mūniō`: 212 words.
     Mūniō,
-    /// Like `quiēscō`: 152 words.
-    Quiēscō,
-    /// Like `compercō`: 116 words.
+    /// Like `compercō`: 167 words.
     Compercō,
-    /// Like `minuō`: 62 words.
-    Minuō,
+    /// Like `quiēscō`: 77 words.
+    Quiēscō,
     /// Like `olfaciō`: 53 words.
     Olfaciō,
-    /// Like `comprehendō`: 49 words.
+    /// Like `minuō`: 52 words.
+    Minuō,
+    /// Like `comprehendō`: 47 words.
     Comprehendō,
-    /// Like `excipiō`: 44 words.
+    /// Like `excipiō`: 42 words.
     Excipiō,
-    /// Like `teneō`: 41 words.
-    Teneō,
     /// Like `cubō`: 39 words.
     Cubō,
     /// Like `compescō`: 38 words.
     Compescō,
-    /// Like `prōdō`: 34 words.
+    /// Like `prōdō`: 35 words.
     Prōdō,
+    /// Like `teneō`: 33 words.
+    Teneō,
     /// Like `circumscrībō`: 31 words.
     Circumscrībō,
-    /// Like `petō`: 29 words.
+    /// Like `petō`: 28 words.
     Petō,
     /// Like `vertō`: 28 words.
     Vertō,
     /// Like `mittō`: 28 words.
     Mittō,
-    /// Like `impleō`: 28 words.
-    Impleō,
     /// Like `labōrō`: 28 words.
     Labōrō,
     /// Like `dēfīgō`: 28 words.
     Dēfīgō,
-    /// Like `perstringō`: 27 words.
-    Perstringō,
     /// Like `obeō`: 27 words.
     Obeō,
     /// Like `mōlior`: 27 words.
     Mōlior,
+    /// Like `nuō`: 27 words.
+    Nuō,
+    /// Like `perstringō`: 26 words.
+    Perstringō,
     /// Like `dēdūcō`: 26 words.
     Dēdūcō,
     /// Like `moveō`: 26 words.
     Moveō,
     /// Like `repōnō`: 26 words.
     Repōnō,
-    /// Like `mergō`: 25 words.
-    Mergō,
     /// Like `compungō`: 25 words.
     Compungō,
-    /// Like `dēpellō`: 24 words.
-    Dēpellō,
     /// Like `tueor`: 23 words.
     Tueor,
-    /// Like `exsarciō`: 22 words.
-    Exsarciō,
     /// Like `praecīdō`: 22 words.
     Praecīdō,
-    /// Like `solvō`: 21 words.
-    Solvō,
-    /// Like `pāscor`: 21 words.
-    Pāscor,
+    /// Like `madeō`: 22 words.
+    Madeō,
+    /// Like `impleō`: 21 words.
+    Impleō,
+    /// Like `mergō`: 21 words.
+    Mergō,
     /// Like `coniciō`: 21 words.
     Coniciō,
-    /// Like `nuō`: 20 words.
-    Nuō,
+    /// Like `dēpellō`: 20 words.
+    Dēpellō,
+    /// Like `exsarciō`: 20 words.
+    Exsarciō,
+    /// Like `solvō`: 20 words.
+    Solvō,
+    /// Like `pāscor`: 20 words.
+    Pāscor,
     /// Like `cēdō`: 19 words.
     Cēdō,
     /// Like `ēgredior`: 19 words.
     Ēgredior,
+    /// Like `compingō`: 19 words.
+    Compingō,
+    /// Like `ārdeō`: 19 words.
+    Ārdeō,
     /// Like `prōferō`: 18 words.
     Prōferō,
     /// Like `gerō`: 17 words.
     Gerō,
-    /// Like `nectō`: 17 words.
-    Nectō,
     /// Like `dispiciō`: 17 words.
     Dispiciō,
     /// Like `trahō`: 17 words.
     Trahō,
-    /// Like `compingō`: 17 words.
-    Compingō,
     /// Like `exigō`: 17 words.
     Exigō,
-    /// Like `effundō`: 16 words.
+    /// Like `effundō`: 17 words.
     Effundō,
-    /// Like `corripiō`: 16 words.
+    /// Like `corripiō`: 17 words.
     Corripiō,
-    /// Like `accumbō`: 16 words.
-    Accumbō,
+    /// Like `nectō`: 16 words.
+    Nectō,
     /// Like `intersaepiō`: 16 words.
     Intersaepiō,
-    /// Like `ārdeō`: 15 words.
-    Ārdeō,
+    /// Like `tergeō`: 16 words.
+    Tergeō,
+    /// Like `accumbō`: 15 words.
+    Accumbō,
     /// Like `ērigō`: 15 words.
     Ērigō,
-    /// Like `dēsinō`: 14 words.
-    Dēsinō,
+    /// Like `micō`: 15 words.
+    Micō,
     /// Like `dīcō`: 14 words.
     Dīcō,
     /// Like `tingō`: 14 words.
     Tingō,
     /// Like `regō`: 14 words.
     Regō,
-    /// Like `struō`: 14 words.
-    Struō,
     /// Like `rumpō`: 14 words.
     Rumpō,
     /// Like `fodiō`: 14 words.
     Fodiō,
-    /// Like `asserviō`: 14 words.
-    Asserviō,
     /// Like `autumnāscit`: 14 words.
     Autumnāscit,
+    /// Like `dēsinō`: 13 words.
+    Dēsinō,
+    /// Like `struō`: 13 words.
+    Struō,
     /// Like `illābor`: 13 words.
     Illābor,
     /// Like `ēvehō`: 13 words.
     Ēvehō,
     /// Like `cōnsequor`: 13 words.
     Cōnsequor,
-    /// Like `madeō`: 13 words.
-    Madeō,
-    /// Like `excellō`: 13 words.
-    Excellō,
     /// Like `scindō`: 13 words.
     Scindō,
     /// Like `īnsistō`: 13 words.
     Īnsistō,
-    /// Like `feriō`: 12 words.
+    /// Like `feriō`: 13 words.
     Feriō,
-    /// Like `fugiō`: 12 words.
-    Fugiō,
+    /// Like `contorqueō`: 13 words.
+    Contorqueō,
     /// Like `obloquor`: 12 words.
     Obloquor,
     /// Like `possideō`: 12 words.
     Possideō,
     /// Like `intersum`: 12 words.
     Intersum,
+    /// Like `contineō`: 12 words.
+    Contineō,
+    /// Like `aperiō`: 12 words.
+    Aperiō,
+    /// Like `inoboediō`: 11 words.
+    Inoboediō,
+    /// Like `excellō`: 11 words.
+    Excellō,
     /// Like `cōnsulō`: 11 words.
     Cōnsulō,
-    /// Like `contineō`: 11 words.
-    Contineō,
     /// Like `opprimō`: 11 words.
     Opprimō,
     /// Like `incidō`: 11 words.
@@ -547,40 +553,42 @@ pub enum Conjugation {
     Abblandior,
     /// Like `attondeō`: 11 words.
     Attondeō,
-    /// Like `micō`: 11 words.
-    Micō,
     /// Like `calvor`: 11 words.
     Calvor,
-    /// Like `tergeō`: 10 words.
-    Tergeō,
+    /// Like `vīsō`: 11 words.
+    Vīsō,
+    /// Like `abnuō`: 11 words.
+    Abnuō,
+    /// Like `inveniō`: 11 words.
+    Inveniō,
+    /// Like `cēnseō`: 11 words.
+    Cēnseō,
+    /// Like `serviō`: 11 words.
+    Serviō,
+    /// Like `fugiō`: 10 words.
+    Fugiō,
     /// Like `legō`: 10 words.
     Legō,
     /// Like `terō`: 10 words.
     Terō,
     /// Like `contendō`: 10 words.
     Contendō,
-    /// Like `vīsō`: 10 words.
-    Vīsō,
-    /// Like `abnuō`: 10 words.
-    Abnuō,
-    /// Like `aperiō`: 10 words.
-    Aperiō,
-    /// Like `contorqueō`: 9 words.
-    Contorqueō,
-    /// Like `inveniō`: 9 words.
-    Inveniō,
+    /// Like `fluō`: 10 words.
+    Fluō,
+    /// Like `dēpendeō`: 10 words.
+    Dēpendeō,
     /// Like `sternō`: 9 words.
     Sternō,
     /// Like `sentiō`: 9 words.
     Sentiō,
-    /// Like `fluō`: 9 words.
-    Fluō,
     /// Like `īnsiliō`: 9 words.
     Īnsiliō,
     /// Like `interstinguō`: 9 words.
     Interstinguō,
     /// Like `dēmorior`: 9 words.
     Dēmorior,
+    /// Like `īnsīdō`: 9 words.
+    Īnsīdō,
     /// Like `pervincō`: 8 words.
     Pervincō,
     /// Like `coorior`: 8 words.
@@ -589,24 +597,24 @@ pub enum Conjugation {
     Immisceō,
     /// Like `cohaereō`: 8 words.
     Cohaereō,
-    /// Like `dēpudet`: 8 words.
-    Dēpudet,
+    /// Like `maneō`: 8 words.
+    Maneō,
+    /// Like `pergō`: 8 words.
+    Pergō,
+    /// Like `dēfluō`: 8 words.
+    Dēfluō,
+    /// Like `cōnfugiō`: 8 words.
+    Cōnfugiō,
     /// Like `gaudeō`: 7 words.
     Gaudeō,
     /// Like `comedō`: 7 words.
     Comedō,
     /// Like `capiō`: 7 words.
     Capiō,
-    /// Like `maneō`: 7 words.
-    Maneō,
     /// Like `augeō`: 7 words.
     Augeō,
     /// Like `ferveō`: 7 words.
     Ferveō,
-    /// Like `īnsīdō`: 7 words.
-    Īnsīdō,
-    /// Like `dēpendeō`: 7 words.
-    Dēpendeō,
     /// Like `peragō`: 7 words.
     Peragō,
     /// Like `cognōscō`: 7 words.
@@ -615,76 +623,70 @@ pub enum Conjugation {
     Coquō,
     /// Like `īnserō`: 7 words.
     Īnserō,
-    /// Like `cēnseō`: 6 words.
-    Cēnseō,
-    /// Like `videō`: 6 words.
+    /// Like `videō`: 7 words.
     Videō,
-    /// Like `pergō`: 6 words.
-    Pergō,
+    /// Like `cōnstō`: 7 words.
+    Cōnstō,
+    /// Like `innectō`: 7 words.
+    Innectō,
+    /// Like `exsorbeō`: 7 words.
+    Exsorbeō,
+    /// Like `ēdiscō`: 7 words.
+    Ēdiscō,
+    /// Like `decet`: 7 words.
+    Decet,
+    /// Like `ambigō`: 7 words.
+    Ambigō,
+    /// Like `colō`: 7 words.
+    Colō,
+    /// Like `adhērēscō`: 7 words.
+    Adhērēscō,
+    /// Like `dēpudet`: 6 words.
+    Dēpudet,
     /// Like `advīvō`: 6 words.
     Advīvō,
-    /// Like `cōnstō`: 6 words.
-    Cōnstō,
-    /// Like `innectō`: 6 words.
-    Innectō,
     /// Like `eximō`: 6 words.
     Eximō,
     /// Like `vinciō`: 6 words.
     Vinciō,
-    /// Like `dēfluō`: 6 words.
-    Dēfluō,
-    /// Like `exsorbeō`: 6 words.
-    Exsorbeō,
-    /// Like `cōnfugiō`: 6 words.
-    Cōnfugiō,
     /// Like `apīscor`: 6 words.
     Apīscor,
-    /// Like `ēdiscō`: 6 words.
-    Ēdiscō,
     /// Like `deicō`: 6 words.
     Deicō,
     /// Like `scandō`: 6 words.
     Scandō,
-    /// Like `occurrō`: 5 words.
-    Occurrō,
+    /// Like `adipīscor`: 6 words.
+    Adipīscor,
+    /// Like `occinō`: 6 words.
+    Occinō,
+    /// Like `contremīscō`: 6 words.
+    Contremīscō,
     /// Like `sūmō`: 5 words.
     Sūmō2,
     /// Like `vēnumdō`: 5 words.
     Vēnumdō,
-    /// Like `serviō`: 5 words.
-    Serviō,
-    /// Like `adipīscor`: 5 words.
-    Adipīscor,
     /// Like `astō`: 5 words.
     Astō,
-    /// Like `occinō`: 5 words.
-    Occinō,
-    /// Like `decet`: 5 words.
-    Decet,
     /// Like `supersedeō`: 5 words.
     Supersedeō,
-    /// Like `clueō`: 5 words.
-    Clueō,
-    /// Like `ambigō`: 5 words.
-    Ambigō,
-    /// Like `contremīscō`: 5 words.
-    Contremīscō,
-    /// Like `colō`: 5 words.
-    Colō,
     /// Like `clangō`: 5 words.
     Clangō,
-    /// Like `caveō`: 4 words.
+    /// Like `caveō`: 5 words.
     Caveō,
-    /// Like `cieō`: 4 words.
+    /// Like `cieō`: 5 words.
     Cieō,
+    /// Like `relinquō`: 5 words.
+    Relinquō,
+    /// Like `sapiō`: 5 words.
+    Sapiō,
+    /// Like `hauriō`: 5 words.
+    Hauriō,
+    /// Like `effervēscō`: 5 words.
+    Effervēscō,
     /// Like `patior`: 4 words.
     Patior,
     /// Like `fīō`: 4 words.
     Fīō,
-    /// Like `relinquō`: 4 words.
-    Relinquō,
-    /// Like `sapiō`: 4 words.
-    Sapiō,
     /// Like `abeō`: 4 words.
     Abeō,
     /// Like `ēvellō`: 4 words.
@@ -695,8 +697,6 @@ pub enum Conjugation {
     Nītor,
     /// Like `obtundō`: 4 words.
     Obtundō,
-    /// Like `hauriō`: 4 words.
-    Hauriō,
     /// Like `comperiō`: 4 words.
     Comperiō,
     /// Like `circumvehor`: 4 words.
@@ -713,16 +713,16 @@ pub enum Conjugation {
     Mulceō,
     /// Like `apage`: 4 words.
     Apage,
-    /// Like `ēvādō`: 3 words.
-    Ēvādō,
-    /// Like `coniungō`: 3 words.
-    Coniungō,
-    /// Like `quaerō`: 3 words.
-    Quaerō,
+    /// Like `stō`: 4 words.
+    Stō,
+    /// Like `dētorreō`: 4 words.
+    Dētorreō,
+    /// Like `convalēscō`: 4 words.
+    Convalēscō,
+    /// Like `clueō`: 3 words.
+    Clueō,
     /// Like `adliciō`: 3 words.
     Adliciō,
-    /// Like `stō`: 3 words.
-    Stō,
     /// Like `dīluō`: 3 words.
     Dīluō,
     /// Like `misceō`: 3 words.
@@ -753,28 +753,28 @@ pub enum Conjugation {
     Commeminī,
     /// Like `contemnō`: 3 words.
     Contemnō,
-    /// Like `dētorreō`: 3 words.
-    Dētorreō,
     /// Like `superstō`: 3 words.
     Superstō,
     /// Like `gignō`: 3 words.
     Gignō,
     /// Like `assiliō`: 3 words.
     Assiliō,
-    /// Like `convalēscō`: 3 words.
-    Convalēscō,
     /// Like `tuor`: 3 words.
     Tuor,
-    /// Like `adhērēscō`: 3 words.
-    Adhērēscō,
     /// Like `iūxtāpōnō`: 3 words.
     Iūxtāpōnō,
     /// Like `adlavō`: 3 words.
     Adlavō,
-    /// Like `effervēscō`: 3 words.
-    Effervēscō,
+    /// Like `coniungō`: 2 words.
+    Coniungō,
+    /// Like `quaerō`: 2 words.
+    Quaerō,
     /// Like `dīlūculat`: 2 words.
     Dīlūculat,
+    /// Like `occurrō`: 1 words.
+    Occurrō,
+    /// Like `ēvādō`: 1 words.
+    Ēvādō,
     /// Like `coerceo`: 1 words.
     Coerceo,
     /// Like `rēfert`: 1 words.
@@ -791,77 +791,80 @@ impl Conjugation {
         Conjugation::Sūmō,
         Conjugation::Habeō,
         Conjugation::Mūniō,
-        Conjugation::Quiēscō,
         Conjugation::Compercō,
-        Conjugation::Minuō,
+        Conjugation::Quiēscō,
         Conjugation::Olfaciō,
+        Conjugation::Minuō,
         Conjugation::Comprehendō,
         Conjugation::Excipiō,
-        Conjugation::Teneō,
         Conjugation::Cubō,
         Conjugation::Compescō,
         Conjugation::Prōdō,
+        Conjugation::Teneō,
         Conjugation::Circumscrībō,
         Conjugation::Petō,
         Conjugation::Vertō,
         Conjugation::Mittō,
-        Conjugation::Impleō,
         Conjugation::Labōrō,
         Conjugation::Dēfīgō,
-        Conjugation::Perstringō,
         Conjugation::Obeō,
         Conjugation::Mōlior,
+        Conjugation::Nuō,
+        Conjugation::Perstringō,
         Conjugation::Dēdūcō,
         Conjugation::Moveō,
         Conjugation::Repōnō,
-        Conjugation::Mergō,
         Conjugation::Compungō,
-        Conjugation::Dēpellō,
         Conjugation::Tueor,
-        Conjugation::Exsarciō,
         Conjugation::Praecīdō,
+        Conjugation::Madeō,
+        Conjugation::Impleō,
+        Conjugation::Mergō,
+        Conjugation::Coniciō,
+        Conjugation::Dēpellō,
+        Conjugation::Exsarciō,
         Conjugation::Solvō,
         Conjugation::Pāscor,
-        Conjugation::Coniciō,
-        Conjugation::Nuō,
         Conjugation::Cēdō,
         Conjugation::Ēgredior,
+        Conjugation::Compingō,
+        Conjugation::Ārdeō,
         Conjugation::Prōferō,
         Conjugation::Gerō,
-        Conjugation::Nectō,
         Conjugation::Dispiciō,
         Conjugation::Trahō,
-        Conjugation::Compingō,
         Conjugation::Exigō,
         Conjugation::Effundō,
         Conjugation::Corripiō,
-        Conjugation::Accumbō,
+        Conjugation::Nectō,
         Conjugation::Intersaepiō,
-        Conjugation::Ārdeō,
+        Conjugation::Tergeō,
+        Conjugation::Accumbō,
         Conjugation::Ērigō,
-        Conjugation::Dēsinō,
+        Conjugation::Micō,
         Conjugation::Dīcō,
         Conjugation::Tingō,
         Conjugation::Regō,
-        Conjugation::Struō,
         Conjugation::Rumpō,
         Conjugation::Fodiō,
-        Conjugation::Asserviō,
         Conjugation::Autumnāscit,
+        Conjugation::Dēsinō,
+        Conjugation::Struō,
         Conjugation::Illābor,
         Conjugation::Ēvehō,
         Conjugation::Cōnsequor,
-        Conjugation::Madeō,
-        Conjugation::Excellō,
         Conjugation::Scindō,
         Conjugation::Īnsistō,
         Conjugation::Feriō,
-        Conjugation::Fugiō,
+        Conjugation::Contorqueō,
         Conjugation::Obloquor,
         Conjugation::Possideō,
         Conjugation::Intersum,
-        Conjugation::Cōnsulō,
         Conjugation::Contineō,
+        Conjugation::Aperiō,
+        Conjugation::Inoboediō,
+        Conjugation::Excellō,
+        Conjugation::Cōnsulō,
         Conjugation::Opprimō,
         Conjugation::Incidō,
         Conjugation::Cernō,
@@ -869,81 +872,78 @@ impl Conjugation {
         Conjugation::Ūtor,
         Conjugation::Abblandior,
         Conjugation::Attondeō,
-        Conjugation::Micō,
         Conjugation::Calvor,
-        Conjugation::Tergeō,
+        Conjugation::Vīsō,
+        Conjugation::Abnuō,
+        Conjugation::Inveniō,
+        Conjugation::Cēnseō,
+        Conjugation::Serviō,
+        Conjugation::Fugiō,
         Conjugation::Legō,
         Conjugation::Terō,
         Conjugation::Contendō,
-        Conjugation::Vīsō,
-        Conjugation::Abnuō,
-        Conjugation::Aperiō,
-        Conjugation::Contorqueō,
-        Conjugation::Inveniō,
+        Conjugation::Fluō,
+        Conjugation::Dēpendeō,
         Conjugation::Sternō,
         Conjugation::Sentiō,
-        Conjugation::Fluō,
         Conjugation::Īnsiliō,
         Conjugation::Interstinguō,
         Conjugation::Dēmorior,
+        Conjugation::Īnsīdō,
         Conjugation::Pervincō,
         Conjugation::Coorior,
         Conjugation::Immisceō,
         Conjugation::Cohaereō,
-        Conjugation::Dēpudet,
+        Conjugation::Maneō,
+        Conjugation::Pergō,
+        Conjugation::Dēfluō,
+        Conjugation::Cōnfugiō,
         Conjugation::Gaudeō,
         Conjugation::Comedō,
         Conjugation::Capiō,
-        Conjugation::Maneō,
         Conjugation::Augeō,
         Conjugation::Ferveō,
-        Conjugation::Īnsīdō,
-        Conjugation::Dēpendeō,
         Conjugation::Peragō,
         Conjugation::Cognōscō,
         Conjugation::Coquō,
         Conjugation::Īnserō,
-        Conjugation::Cēnseō,
         Conjugation::Videō,
-        Conjugation::Pergō,
-        Conjugation::Advīvō,
         Conjugation::Cōnstō,
         Conjugation::Innectō,
+        Conjugation::Exsorbeō,
+        Conjugation::Ēdiscō,
+        Conjugation::Decet,
+        Conjugation::Ambigō,
+        Conjugation::Colō,
+        Conjugation::Adhērēscō,
+        Conjugation::Dēpudet,
+        Conjugation::Advīvō,
         Conjugation::Eximō,
         Conjugation::Vinciō,
-        Conjugation::Dēfluō,
-        Conjugation::Exsorbeō,
-        Conjugation::Cōnfugiō,
         Conjugation::Apīscor,
-        Conjugation::Ēdiscō,
         Conjugation::Deicō,
         Conjugation::Scandō,
-        Conjugation::Occurrō,
+        Conjugation::Adipīscor,
+        Conjugation::Occinō,
+        Conjugation::Contremīscō,
         Conjugation::Sūmō2,
         Conjugation::Vēnumdō,
-        Conjugation::Serviō,
-        Conjugation::Adipīscor,
         Conjugation::Astō,
-        Conjugation::Occinō,
-        Conjugation::Decet,
         Conjugation::Supersedeō,
-        Conjugation::Clueō,
-        Conjugation::Ambigō,
-        Conjugation::Contremīscō,
-        Conjugation::Colō,
         Conjugation::Clangō,
         Conjugation::Caveō,
         Conjugation::Cieō,
-        Conjugation::Patior,
-        Conjugation::Fīō,
         Conjugation::Relinquō,
         Conjugation::Sapiō,
+        Conjugation::Hauriō,
+        Conjugation::Effervēscō,
+        Conjugation::Patior,
+        Conjugation::Fīō,
         Conjugation::Abeō,
         Conjugation::Ēvellō,
         Conjugation::Currō,
         Conjugation::Nītor,
         Conjugation::Obtundō,
-        Conjugation::Hauriō,
         Conjugation::Comperiō,
         Conjugation::Circumvehor,
         Conjugation::Adnītor,
@@ -952,11 +952,11 @@ impl Conjugation {
         Conjugation::Fricō,
         Conjugation::Mulceō,
         Conjugation::Apage,
-        Conjugation::Ēvādō,
-        Conjugation::Coniungō,
-        Conjugation::Quaerō,
-        Conjugation::Adliciō,
         Conjugation::Stō,
+        Conjugation::Dētorreō,
+        Conjugation::Convalēscō,
+        Conjugation::Clueō,
+        Conjugation::Adliciō,
         Conjugation::Dīluō,
         Conjugation::Misceō,
         Conjugation::Iubeō,
@@ -972,17 +972,17 @@ impl Conjugation {
         Conjugation::Antecapiō,
         Conjugation::Commeminī,
         Conjugation::Contemnō,
-        Conjugation::Dētorreō,
         Conjugation::Superstō,
         Conjugation::Gignō,
         Conjugation::Assiliō,
-        Conjugation::Convalēscō,
         Conjugation::Tuor,
-        Conjugation::Adhērēscō,
         Conjugation::Iūxtāpōnō,
         Conjugation::Adlavō,
-        Conjugation::Effervēscō,
+        Conjugation::Coniungō,
+        Conjugation::Quaerō,
         Conjugation::Dīlūculat,
+        Conjugation::Occurrō,
+        Conjugation::Ēvādō,
         Conjugation::Coerceo,
         Conjugation::Rēfert,
         Conjugation::Coemo,
@@ -1004,8 +1004,8 @@ impl flexion::Label for Conjugation {
 }
 
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
-    // Agitō: 2,609 words (līberō, radiō, digitō, mundō, abaliēnō, picō).
-    conjugation!("agitō", 2609, "~ō";
+    // Agitō: 2,603 words (līberō, radiō, digitō, mundō, abaliēnō, picō).
+    conjugation!("agitō", 2603, "~ō";
     stem lemma: "~- like agitō";
     stem indicative_act_pres_1_pl: "~- like agitō";
     stem indicative_act_perf_1_sg: "~āv- like agitō";
@@ -1037,8 +1037,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     participle: _, _, _, "~andus";
     gerund: _, _, _, _, derived, _;
     ),
-    // Sūmō: 265 words (ferō, eō, sūmō, edō, agō, frīgēscō).
-    conjugation!("sūmō", 265, "~ō";
+    // Sūmō: 290 words (ferō, eō, sūmō, edō, agō, frīgēscō).
+    conjugation!("sūmō", 290, "~ō";
     stem lemma: "~- like agō";
     stem indicative_act_pres_1_pl: "~- like agō";
     stem indicative_act_perf_1_sg: "~s- like agitō";
@@ -1049,8 +1049,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Habeō: 256 words (abhorreō, moneō, aveō, oleō, stupeō, egeō).
-    conjugation!("habeō", 256, "~eō";
+    // Habeō: 235 words (abarceō, abhorreō, moneō, aveō, oleō, stupeō).
+    conjugation!("habeō", 235, "~eō";
     stem lemma: "~- like habeō";
     stem indicative_act_pres_1_pl: "~- like habeō";
     stem indicative_act_perf_1_sg: "~u- like agitō";
@@ -1061,8 +1061,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Mūniō: 219 words (fīniō, hirriō, bombiō, poliō, audiō, odiō).
-    conjugation!("mūniō", 219, "~iō";
+    // Mūniō: 212 words (fīniō, hirriō, poliō, audiō, odiō, liniō).
+    conjugation!("mūniō", 212, "~iō";
     stem lemma: "~- like mūniō";
     stem indicative_act_pres_1_pl: "~- like mūniō";
     stem indicative_act_perf_1_sg: "~īv- like mūniō";
@@ -1073,20 +1073,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Quiēscō: 152 words (albēscō, grandēscō, siccēscō, alēscō, mānēscō, cornēscō).
-    conjugation!("quiēscō", 152, "~scō";
-    stem lemma: "~sc- like agō";
-    stem indicative_act_pres_1_pl: "~sc- like agō";
-    stem indicative_act_perf_1_sg: "~v- like mūniō";
-    stem supine_acc: "~t- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Compercō: 116 words (crūdēscō, vigēscō, cānēscō, senēscō, dulcēscō, tumēscō).
-    conjugation!("compercō", 116, "~cō";
+    // Compercō: 167 words (albēscō, grandēscō, siccēscō, alēscō, mānēscō, cornēscō).
+    conjugation!("compercō", 167, "~cō";
     stem lemma: "~c- like compercō";
     stem indicative_act_pres_1_pl: "~c- like agō";
     stem indicative_act_perf_1_sg: "~s- like agitō";
@@ -1096,12 +1084,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Minuō: 62 words (futuō, spuō, luō, cōnfutuō, acuō, exuō).
-    conjugation!("minuō", 62, "~uō";
-    stem lemma: "~u- like minuō";
-    stem indicative_act_pres_1_pl: "~u- like agō";
-    stem indicative_act_perf_1_sg: "~u- like agitō";
-    stem supine_acc: "~ūt- like agitō";
+    // Quiēscō: 77 words (pāscō, tenebrēscō, celebrēscō, poscō, mātrēscō, mollēscō).
+    conjugation!("quiēscō", 77, "~scō";
+    stem lemma: "~sc- like agō";
+    stem indicative_act_pres_1_pl: "~sc- like agō";
+    stem indicative_act_perf_1_sg: "~v- like mūniō";
+    stem supine_acc: "~t- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1119,8 +1107,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_pass_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Comprehendō: 49 words (dēfendō, comprehendō, fendō, dēpendō, pendō, suspendō).
-    conjugation!("comprehendō", 49, "~e~dō";
+    // Minuō: 52 words (futuō, spuō, cōnfutuō, acuō, exuō, battuō).
+    conjugation!("minuō", 52, "~uō";
+    stem lemma: "~u- like minuō";
+    stem indicative_act_pres_1_pl: "~u- like agō";
+    stem indicative_act_perf_1_sg: "~u- like agitō";
+    stem supine_acc: "~ūt- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Comprehendō: 47 words (dēfendō, comprehendō, fendō, dēpendō, pendō, suspendō).
+    conjugation!("comprehendō", 47, "~e~dō";
     stem lemma: "~e~d- like compercō";
     stem indicative_act_pres_1_pl: "~e~d- like agō";
     stem indicative_act_perf_1_sg: "~e~d- like agitō";
@@ -1131,8 +1131,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Excipiō: 44 words (praeficiō, accipiō, excipiō, recipiō, suscipiō, prōficiō).
-    conjugation!("excipiō", 44, "~i~iō";
+    // Excipiō: 42 words (praeficiō, accipiō, excipiō, recipiō, suscipiō, prōficiō).
+    conjugation!("excipiō", 42, "~i~iō";
     stem lemma: "~i~- like excipiō";
     stem indicative_act_pres_1_pl: "~i~i- like faciō";
     stem indicative_act_perf_1_sg: "~ē~- like agitō";
@@ -1142,10 +1142,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
-    ),
-    // Teneō: 41 words (abarceō, doceō, sorbeō, teneō, taedeō, absorbeō). Like Habeō.
-    conjugation!("teneō", 41, "~eō", like Habeō;
-    stem supine_acc: "~t- like agitō";
     ),
     // Cubō: 39 words (vetō, domō, incubō, tonō, votō, cubō). Like Agitō, except in 5 cells: pass_pres_2 sg, pass_impf_2 sg, pass_fut_2 sg, subjunctive_pass_pres_2 sg, subjunctive_pass_impf_2 sg.
     conjugation!("cubō", 39, "~ō", like Agitō;
@@ -1166,9 +1162,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     ),
-    // Prōdō: 34 words (abdō, vēndō, dēdō, bibō, dīdō, condō). Like Compescō.
-    conjugation!("prōdō", 34, "~ō", like Compescō;
+    // Prōdō: 35 words (abdō, vēndō, dēdō, bibō, dīdō, condō). Like Compescō.
+    conjugation!("prōdō", 35, "~ō", like Compescō;
     stem indicative_act_perf_1_sg: "~id- like agitō";
+    ),
+    // Teneō: 33 words (doceō, sorbeō, teneō, taedeō, absorbeō, lūceō). Like Habeō.
+    conjugation!("teneō", 33, "~eō", like Habeō;
+    stem supine_acc: "~t- like agitō";
     ),
     // Circumscrībō: 31 words (prōscrībō, bubō, nūbō, scrībō, dēscrībō, trānscrībō).
     conjugation!("circumscrībō", 31, "~bō";
@@ -1182,8 +1182,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Petō: 29 words (petō, impetō, competō, rūdō, ābaetō, appetō). Like Compescō.
-    conjugation!("petō", 29, "~ō", like Compescō;
+    // Petō: 28 words (petō, impetō, competō, rūdō, ābaetō, appetō). Like Compescō.
+    conjugation!("petō", 28, "~ō", like Compescō;
     stem indicative_act_perf_1_sg: "~īv- like mūniō";
     stem supine_acc: "~īt- like agitō";
     ),
@@ -1211,15 +1211,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Impleō: 28 words (dēleō, expleō, neō, fleō, adimpleō, compleō). Like Habeō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("impleō", 28, "~eō", like Habeō;
-    stem lemma: "~- like impleō";
-    stem indicative_act_perf_1_sg: "~ēv- like mūniō";
-    stem supine_acc: "~ēt- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    ),
     // Labōrō: 28 words (abambulō, labōrō, abortō, cursō, abequitō, lāpsō). Like Agitō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
     conjugation!("labōrō", 28, "~ō", like Agitō;
     stem supine_acc: "~āt- like labōrō";
@@ -1246,18 +1237,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem indicative_act_pres_1_pl: "~g- like agō";
     stem indicative_act_perf_1_sg: "~x- like agitō";
     stem supine_acc: "~ct- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Perstringō: 27 words (cōnfingō, dēpingō, effingō, fingō, pingō, stringō).
-    conjugation!("perstringō", 27, "~ingō";
-    stem lemma: "~ing- like compercō";
-    stem indicative_act_pres_1_pl: "~ing- like agō";
-    stem indicative_act_perf_1_sg: "~īnx- like agitō";
-    stem supine_acc: "~ict- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1297,6 +1276,25 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     participle: _, _, _, "~iendus|~iundus";
     gerund: _, _, _, _, derived, _;
     ),
+    // Nuō: 27 words (nuō, sinō, minuō, innuō, luō, annuō). Like Vīsō with `ˇ` after each pattern, except in 5 cells: pass_perf_1 sg, infinitive_act fut, infinitive_pass perf, participle perf_pass, participle fut_pass.
+    conjugation!("nuō", 27, "~ōˇ", like Vīsō with "ˇ";
+    pass_perf_1: "~tus sumˇ", _;
+    infinitive_act: _, _, "~tūrum esseˇ";
+    infinitive_pass: _, "~tum esseˇ", _;
+    participle: _, "~tusˇ", _, "~endusˇ";
+    ),
+    // Perstringō: 26 words (cōnfingō, dēpingō, effingō, fingō, pingō, stringō).
+    conjugation!("perstringō", 26, "~ingō";
+    stem lemma: "~ing- like compercō";
+    stem indicative_act_pres_1_pl: "~ing- like agō";
+    stem indicative_act_perf_1_sg: "~īnx- like agitō";
+    stem supine_acc: "~ict- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
     // Dēdūcō: 26 words (abdūcō, trādūcō, prōdūcō, condūcō, ēdūcō, dēdūcō).
     conjugation!("dēdūcō", 26, "~ūcō";
     stem lemma: "~ūc- like dēdūcō";
@@ -1311,7 +1309,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     ),
     // Moveō: 26 words (foveō, moveō, voveō, removeō, admoveō, āmoveō).
     conjugation!("moveō", 26, "~oveō";
-    stem lemma: "~ov- like impleō";
+    stem lemma: "~ov- like moveō";
     stem indicative_act_pres_1_pl: "~ov- like habeō";
     stem indicative_act_perf_1_sg: "~ōv- like agitō";
     stem supine_acc: "~ōt- like agitō";
@@ -1336,25 +1334,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, _, _, _, derived, _;
     supine: _, _, _, "~ositum|~ostum", "~ositū|~ostū", _;
     ),
-    // Mergō: 25 words (mergō, dēmergō, immergō, ēmergō, spargō, cōnspargō). Like Dēfīgō.
-    conjugation!("mergō", 25, "~gō", like Dēfīgō;
-    stem indicative_act_perf_1_sg: "~s- like agitō";
-    stem supine_acc: "~s- like agitō";
-    ),
     // Compungō: 25 words (compungō, interpungō, iungō, abiungō, adiungō, sēiungō). Like Dēfīgō with `ˇ` after each pattern.
     conjugation!("compungō", 25, "~gōˇ", like Dēfīgō with "ˇ";
-    ),
-    // Dēpellō: 24 words (pellō, vellō, appellō, dēpellō, prōpellō, repellō).
-    conjugation!("dēpellō", 24, "~e~lō";
-    stem lemma: "~e~l- like compercō";
-    stem indicative_act_pres_1_pl: "~e~l- like agō";
-    stem indicative_act_perf_1_sg: "~u~- like agitō";
-    stem supine_acc: "~u~s- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
     ),
     // Tueor: 23 words (polliceor, fateor, cōnfiteor, vereor, reor, intueor). Like Modulor, except in 22 cells: act_pres_1 sg, act_pres_2 sg, act_pres_3 sg, act_pres_3 pl, act_fut_3 pl, subjunctive_act_pres_1 sg, ….
     conjugation!("tueor", 23, "~eor", like Modulor;
@@ -1377,16 +1358,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     participle: _, _, _, "~endus";
     gerund: _, _, _, _, derived, _;
     ),
-    // Exsarciō: 22 words (crociō, saciō, farciō, micciō, effarciō, sarciō). Like Sūmō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("exsarciō", 22, "~ciō", like Sūmō;
-    stem lemma: "~c- like mūniō";
-    stem indicative_act_pres_1_pl: "~c- like mūniō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Praecīdō: 22 words (sīdō, comprēndō, expandō, prēndō, reprēndō, apprēndō).
     conjugation!("praecīdō", 22, "~dō";
     stem lemma: "~d- like compercō";
@@ -1399,26 +1370,37 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Solvō: 21 words (volvō, solvō, ēvolvō, convolvō, dissolvō, resolvō).
-    conjugation!("solvō", 21, "~vō";
-    stem lemma: "~v- like minuō";
-    stem indicative_act_pres_1_pl: "~v- like agō";
-    stem indicative_act_perf_1_sg: "~v- like agitō";
-    stem supine_acc: "~ūt- like agitō";
+    // Madeō: 22 words (studeō, egeō, pāreō, horreō, doleō, vegeō). Like Habeō, except in 23 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
+    conjugation!("madeō", 22, "~eō", like Habeō;
+    stem lemma: "~- like madeō";
+    stem supine_acc: "~it- like labōrō";
+    pass_pres_1: derived, derived;
+    pass_pres_2: derived, derived;
+    pass_impf_1: derived, derived;
+    pass_impf_2: derived, derived;
+    pass_fut_1: derived, derived;
+    pass_fut_2: derived, derived;
+    pass_perf_1: derived, _;
+    subjunctive_pass_pres_1: derived, derived;
+    subjunctive_pass_pres_2: derived, derived;
+    subjunctive_pass_impf_1: derived, derived;
+    subjunctive_pass_impf_2: derived, derived;
+    present_imperative_pass: derived, _;
+    future_imperative_pass_2: derived, _;
+    ),
+    // Impleō: 21 words (dēleō, expleō, neō, fleō, adimpleō, compleō). Like Habeō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("impleō", 21, "~eō", like Habeō;
+    stem lemma: "~- like moveō";
+    stem indicative_act_perf_1_sg: "~ēv- like mūniō";
+    stem supine_acc: "~ēt- like agitō";
     present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
     ),
-    // Pāscor: 21 words (ulcīscor, īrāscor, nāscor, vēscor, aborīscor, oblīvīscor). Like Modulor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
-    conjugation!("pāscor", 21, "~scor", like Modulor;
-    stem lemma: "~sc- like nāscor";
-    stem indicative_act_pres_1_pl: "~sc- like nāscor";
-    stem indicative_act_perf_1_sg: "~t- like modulor";
-    stem supine_acc: "~t- like modulor";
-    future_imperative_act_3: derived, _;
-    gerund: _, _, _, _, derived, _;
+    // Mergō: 21 words (mergō, dēmergō, immergō, ēmergō, spargō, cōnspargō). Like Dēfīgō.
+    conjugation!("mergō", 21, "~gō", like Dēfīgō;
+    stem indicative_act_perf_1_sg: "~s- like agitō";
+    stem supine_acc: "~s- like agitō";
     ),
     // Coniciō: 21 words (rabiō, iniciō, abiciō, subiciō, adiciō, circumiciō). Like Excipiō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("coniciō", 21, "~~iō", like Excipiō;
@@ -1430,12 +1412,48 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Nuō: 20 words (nuō, sinō, minuō, innuō, annuō, dēsinō). Like Vīsō with `ˇ` after each pattern, except in 5 cells: pass_perf_1 sg, infinitive_act fut, infinitive_pass perf, participle perf_pass, participle fut_pass.
-    conjugation!("nuō", 20, "~ōˇ", like Vīsō with "ˇ";
-    pass_perf_1: "~tus sumˇ", _;
-    infinitive_act: _, _, "~tūrum esseˇ";
-    infinitive_pass: _, "~tum esseˇ", _;
-    participle: _, "~tusˇ", _, "~endusˇ";
+    // Dēpellō: 20 words (pellō, vellō, appellō, dēpellō, prōpellō, repellō).
+    conjugation!("dēpellō", 20, "~e~lō";
+    stem lemma: "~e~l- like compercō";
+    stem indicative_act_pres_1_pl: "~e~l- like agō";
+    stem indicative_act_perf_1_sg: "~u~- like agitō";
+    stem supine_acc: "~u~s- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Exsarciō: 20 words (crociō, saciō, farciō, effarciō, sarciō, suffulciō). Like Sūmō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("exsarciō", 20, "~ciō", like Sūmō;
+    stem lemma: "~c- like mūniō";
+    stem indicative_act_pres_1_pl: "~c- like mūniō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Solvō: 20 words (volvō, solvō, ēvolvō, convolvō, dissolvō, resolvō).
+    conjugation!("solvō", 20, "~vō";
+    stem lemma: "~v- like minuō";
+    stem indicative_act_pres_1_pl: "~v- like agō";
+    stem indicative_act_perf_1_sg: "~v- like agitō";
+    stem supine_acc: "~ūt- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Pāscor: 20 words (ulcīscor, īrāscor, nāscor, vēscor, aborīscor, oblīvīscor). Like Modulor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
+    conjugation!("pāscor", 20, "~scor", like Modulor;
+    stem lemma: "~sc- like nāscor";
+    stem indicative_act_pres_1_pl: "~sc- like nāscor";
+    stem indicative_act_perf_1_sg: "~t- like modulor";
+    stem supine_acc: "~t- like modulor";
+    future_imperative_act_3: derived, _;
+    gerund: _, _, _, _, derived, _;
     ),
     // Cēdō: 19 words (cēdō, discēdō, concēdō, excēdō, prōcēdō, retrōcēdō).
     conjugation!("cēdō", 19, "~ēdō";
@@ -1458,6 +1476,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
+    // Compingō: 19 words (attingō, contingō, impingō, adtingō, compingō, cōnfringō). Like Perstringō.
+    conjugation!("compingō", 19, "~ingō", like Perstringō;
+    stem indicative_act_perf_1_sg: "~ēg- like agitō";
+    stem supine_acc: "~āct- like agitō";
+    ),
+    // Ārdeō: 19 words (audeō, ārdeō, rīdeō, persuādeō, subrīdeō, suādeō). Like Mergō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("ārdeō", 19, "~deō", like Mergō;
+    stem lemma: "~d- like moveō";
+    stem indicative_act_pres_1_pl: "~d- like habeō";
+    stem indicative_act_perf_1_sg: "~s- like mūniō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
     // Prōferō: 18 words (trānsferō, praeferō, īnferō, adferō, auferō, cōnferō).
     conjugation!("prōferō", 18, "~ferō";
     stem lemma: "~fer- like referō";
@@ -1476,18 +1510,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem indicative_act_pres_1_pl: "~r- like agō";
     stem indicative_act_perf_1_sg: "~ss- like agitō";
     stem supine_acc: "~st- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Nectō: 17 words (flectō, īnflectō, genūflectō, reflectō, pectō, plectō).
-    conjugation!("nectō", 17, "~ctō";
-    stem lemma: "~ct- like compercō";
-    stem indicative_act_pres_1_pl: "~ct- like agō";
-    stem indicative_act_perf_1_sg: "~x- like agitō";
-    stem supine_acc: "~x- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1518,11 +1540,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Compingō: 17 words (attingō, contingō, impingō, adtingō, compingō, cōnfringō). Like Perstringō.
-    conjugation!("compingō", 17, "~ingō", like Perstringō;
-    stem indicative_act_perf_1_sg: "~ēg- like agitō";
-    stem supine_acc: "~āct- like agitō";
-    ),
     // Exigō: 17 words (adigō, redigō, prōdigō, abigō, trānsigō, colligō). Like Compingō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("exigō", 17, "~igō", like Compingō;
     stem lemma: "~ig- like compercō";
@@ -1533,8 +1550,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Effundō: 16 words (profundō, cōnfundō, īnfundō, tundō, effundō, circumfundō).
-    conjugation!("effundō", 16, "~undō";
+    // Effundō: 17 words (profundō, cōnfundō, īnfundō, tundō, effundō, circumfundō).
+    conjugation!("effundō", 17, "~undō";
     stem lemma: "~und- like compercō";
     stem indicative_act_pres_1_pl: "~und- like agō";
     stem indicative_act_perf_1_sg: "~ūd- like agitō";
@@ -1545,16 +1562,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Corripiō: 16 words (ēripiō, abripiō, dēripiō, alliciō, arripiō, dīripiō). Like Excipiō.
-    conjugation!("corripiō", 16, "~i~iō", like Excipiō;
+    // Corripiō: 17 words (ēripiō, abripiō, dēripiō, alliciō, arripiō, dīripiō). Like Excipiō.
+    conjugation!("corripiō", 17, "~i~iō", like Excipiō;
     stem indicative_act_perf_1_sg: "~i~u- like agitō";
     ),
-    // Accumbō: 16 words (recumbō, dēlambō, accumbō, adcumbō, succumbō, prōcumbō).
-    conjugation!("accumbō", 16, "~m~ō";
-    stem lemma: "~m~- like compercō";
-    stem indicative_act_pres_1_pl: "~m~- like agō";
-    stem indicative_act_perf_1_sg: "~~u- like agitō";
-    stem supine_acc: "~~it- like agitō";
+    // Nectō: 16 words (flectō, īnflectō, genūflectō, reflectō, pectō, plectō).
+    conjugation!("nectō", 16, "~ctō";
+    stem lemma: "~ct- like compercō";
+    stem indicative_act_pres_1_pl: "~ct- like agō";
+    stem indicative_act_perf_1_sg: "~x- like agitō";
+    stem supine_acc: "~x- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1566,11 +1583,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem indicative_act_perf_1_sg: "~s- like agitō";
     stem supine_acc: "~t- like agitō";
     ),
-    // Ārdeō: 15 words (audeō, ārdeō, rīdeō, persuādeō, subrīdeō, suādeō). Like Mergō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("ārdeō", 15, "~deō", like Mergō;
-    stem lemma: "~d- like impleō";
-    stem indicative_act_pres_1_pl: "~d- like habeō";
-    stem indicative_act_perf_1_sg: "~s- like mūniō";
+    // Tergeō: 16 words (abstergeō, algeō, mulgeō, urgeō, adurgeō, exurgeō). Like Mergō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("tergeō", 16, "~geō", like Mergō;
+    stem lemma: "~g- like habeō";
+    stem indicative_act_pres_1_pl: "~g- like habeō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Accumbō: 15 words (recumbō, dēlambō, accumbō, adcumbō, succumbō, prōcumbō).
+    conjugation!("accumbō", 15, "~m~ō";
+    stem lemma: "~m~- like compercō";
+    stem indicative_act_pres_1_pl: "~m~- like agō";
+    stem indicative_act_perf_1_sg: "~~u- like agitō";
+    stem supine_acc: "~~it- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1582,17 +1610,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem indicative_act_perf_1_sg: "~ēx- like agitō";
     stem supine_acc: "~ēct- like agitō";
     ),
-    // Dēsinō: 14 words (linō, oblinō, collinō, perlinō, circumlinō, succinō).
-    conjugation!("dēsinō", 14, "~inō";
-    stem lemma: "~in- like compercō";
-    stem indicative_act_pres_1_pl: "~in- like agō";
-    stem indicative_act_perf_1_sg: "~ēv- like agitō";
-    stem supine_acc: "~it- like agitō";
+    // Micō: 15 words (sonō, personō, micō, plicō, intonō, increpō). Like Cubō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("micō", 15, "~ō", like Cubō;
+    stem lemma: "~- like agitō";
+    stem supine_acc: "~āt- like agitō";
     present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
     ),
     // Dīcō: 14 words (abdīcō, dīcō, addīcō, interdīcō, maledīcō, benedīcō).
     conjugation!("dīcō", 14, "~īcō";
@@ -1628,11 +1652,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Struō: 14 words (dēstruō, struō, cōnstruō, īnstruō, exstruō, obstruō). Like Minuō.
-    conjugation!("struō", 14, "~uō", like Minuō;
-    stem indicative_act_perf_1_sg: "~ūx- like agitō";
-    stem supine_acc: "~ūct- like agitō";
-    ),
     // Rumpō: 14 words (irrumpō, interrumpō, abrumpō, rumpō, ērumpō, corrumpō).
     conjugation!("rumpō", 14, "~um~ō";
     stem lemma: "~um~- like compercō";
@@ -1657,15 +1676,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Asserviō: 14 words (veniō, reveniō, interveniō, perveniō, adveniō, ēveniō).
-    conjugation!("asserviō", 14, "~e~iō";
-    stem lemma: "~e~- like ēveniō";
-    stem indicative_act_pres_1_pl: "~e~- like mūniō";
-    stem indicative_act_perf_1_sg: "~ē~- like agitō";
-    stem supine_acc: "~e~t- like ēveniō";
-    future_imperative_act_3: derived, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Autumnāscit: 14 words (vesperāscit, cōnfit, pluit, advesperāscit, ningit, compluit).
     conjugation!("autumnāscit", 14, "~it";
     act_pres_1: "~it", _;
@@ -1685,6 +1695,23 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_pass: "~ī", _, _;
     participle: "~ēns", _, _, "~endum";
     gerund: _, "~endī", "~endō", "~endum", _, _;
+    ),
+    // Dēsinō: 13 words (linō, oblinō, collinō, perlinō, circumlinō, succinō).
+    conjugation!("dēsinō", 13, "~inō";
+    stem lemma: "~in- like compercō";
+    stem indicative_act_pres_1_pl: "~in- like agō";
+    stem indicative_act_perf_1_sg: "~ēv- like agitō";
+    stem supine_acc: "~it- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Struō: 13 words (dēstruō, struō, cōnstruō, īnstruō, exstruō, obstruō). Like Minuō.
+    conjugation!("struō", 13, "~uō", like Minuō;
+    stem indicative_act_perf_1_sg: "~ūx- like agitō";
+    stem supine_acc: "~ūct- like agitō";
     ),
     // Illābor: 13 words (lābor, collābor, dēlābor, conlābor, dīlābor, ēlābor). Like Modulor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
     conjugation!("illābor", 13, "~bor", like Modulor;
@@ -1718,36 +1745,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, _, _, _, derived, _;
     supine: _, _, _, "~cūtum|~quūtum", "~cūtū|~quūtū", _;
     ),
-    // Madeō: 13 words (studeō, pāreō, horreō, vegeō, sileō, affleō). Like Habeō, except in 23 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
-    conjugation!("madeō", 13, "~eō", like Habeō;
-    stem lemma: "~- like madeō";
-    stem supine_acc: "~it- like labōrō";
-    pass_pres_1: derived, derived;
-    pass_pres_2: derived, derived;
-    pass_impf_1: derived, derived;
-    pass_impf_2: derived, derived;
-    pass_fut_1: derived, derived;
-    pass_fut_2: derived, derived;
-    pass_perf_1: derived, _;
-    subjunctive_pass_pres_1: derived, derived;
-    subjunctive_pass_pres_2: derived, derived;
-    subjunctive_pass_impf_1: derived, derived;
-    subjunctive_pass_impf_2: derived, derived;
-    present_imperative_pass: derived, _;
-    future_imperative_pass_2: derived, _;
-    ),
-    // Excellō: 13 words (fallō, excellō, praecellō, extollō, attollō, adtollō).
-    conjugation!("excellō", 13, "~lō";
-    stem lemma: "~l- like agō";
-    stem indicative_act_pres_1_pl: "~l- like agō";
-    stem indicative_act_perf_1_sg: "~lu- like mūniō";
-    stem supine_acc: "~s- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Scindō: 13 words (rescindō, scindō, abscindō, pandō, interscindō, findō).
     conjugation!("scindō", 13, "~ndō";
     stem lemma: "~nd- like compercō";
@@ -1765,20 +1762,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem lemma: "~~s~- like īnsistō";
     stem indicative_act_pres_1_pl: "~~s~- like agō";
     stem indicative_act_perf_1_sg: "~t~~- like agitō";
-    stem supine_acc: "~t~~- like ēveniō";
+    stem supine_acc: "~t~~- like īnsistō";
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Feriō: 12 words (ūniō, feriō, absiliō, ambiō, salliō, lascīviō). Like Mūniō.
-    conjugation!("feriō", 12, "~iō", like Mūniō;
+    // Feriō: 13 words (bombiō, ūniō, feriō, absiliō, ambiō, salliō). Like Mūniō.
+    conjugation!("feriō", 13, "~iō", like Mūniō;
     stem indicative_act_perf_1_sg: "~i- like agitō";
     ),
-    // Fugiō: 12 words (fugiō, subterfugiō, effugiō, trānsfugiō, dēfugiō, supterfugiō).
-    conjugation!("fugiō", 12, "~u~iō";
-    stem lemma: "~u~- like fugiō";
-    stem indicative_act_pres_1_pl: "~u~i- like faciō";
-    stem indicative_act_perf_1_sg: "~ū~- like agitō";
-    stem supine_acc: "~u~it- like agitō";
+    // Contorqueō: 13 words (torqueō, extorqueō, attorqueō, circumtorqueō, dētorqueō, contorqueō). Like Sūmō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("contorqueō", 13, "~queō", like Sūmō;
+    stem lemma: "~qu- like moveō";
+    stem indicative_act_pres_1_pl: "~qu- like habeō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1825,19 +1820,44 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, derived, derived, derived, _, _;
     supine: _, _, _, derived, derived, _;
     ),
-    // Cōnsulō: 11 words (cōnsulō, incumbō, furō, occulō, dēserō, exserō). Like Compescō.
-    conjugation!("cōnsulō", 11, "~ō", like Compescō;
-    stem supine_acc: "~t- like agitō";
-    ),
-    // Contineō: 11 words (contineō, abstineō, dētineō, attineō, distineō, obtineō). Like Corripiō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("contineō", 11, "~i~eō", like Corripiō;
-    stem lemma: "~i~- like impleō";
+    // Contineō: 12 words (contineō, abstineō, dētineō, attineō, distineō, obtineō). Like Corripiō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("contineō", 12, "~i~eō", like Corripiō;
+    stem lemma: "~i~- like moveō";
     stem indicative_act_pres_1_pl: "~i~- like habeō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
+    ),
+    // Aperiō: 12 words (aperiō, rapiō, operiō, saliō, adaperiō, cooperiō). Like Intersaepiō.
+    conjugation!("aperiō", 12, "~iō", like Intersaepiō;
+    stem indicative_act_perf_1_sg: "~u- like agitō";
+    ),
+    // Inoboediō: 11 words (veniō, reveniō, interveniō, perveniō, adveniō, ēveniō).
+    conjugation!("inoboediō", 11, "~e~iō";
+    stem lemma: "~e~- like ēveniō";
+    stem indicative_act_pres_1_pl: "~e~- like mūniō";
+    stem indicative_act_perf_1_sg: "~ē~- like agitō";
+    stem supine_acc: "~e~t- like īnsistō";
+    future_imperative_act_3: derived, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Excellō: 11 words (fallō, excellō, praecellō, extollō, sustollō, antecellō).
+    conjugation!("excellō", 11, "~lō";
+    stem lemma: "~l- like agō";
+    stem indicative_act_pres_1_pl: "~l- like agō";
+    stem indicative_act_perf_1_sg: "~lu- like mūniō";
+    stem supine_acc: "~s- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Cōnsulō: 11 words (cōnsulō, incumbō, furō, occulō, dēserō, exserō). Like Compescō.
+    conjugation!("cōnsulō", 11, "~ō", like Compescō;
+    stem supine_acc: "~t- like agitō";
     ),
     // Opprimō: 11 words (dēprimō, exprimō, reprimō, comprimō, imprimō, opprimō). Like Cēdō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("opprimō", 11, "~imō", like Cēdō;
@@ -1901,7 +1921,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     ),
     // Attondeō: 11 words (tondeō, respondeō, dēspondeō, spondeō, attondeō, dētondeō).
     conjugation!("attondeō", 11, "~o~deō";
-    stem lemma: "~o~d- like impleō";
+    stem lemma: "~o~d- like moveō";
     stem indicative_act_pres_1_pl: "~o~d- like habeō";
     stem indicative_act_perf_1_sg: "~o~d- like agitō";
     stem supine_acc: "~ō~s- like agitō";
@@ -1911,14 +1931,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Micō: 11 words (sonō, personō, plicō, intonō, increpō, affricō). Like Cubō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("micō", 11, "~ō", like Cubō;
-    stem lemma: "~- like agitō";
-    stem supine_acc: "~āt- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    ),
     // Calvor: 11 words (queror, fruor, conqueror, locor, calvor, perdor). Like Tueor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
     conjugation!("calvor", 11, "~or", like Tueor;
     stem lemma: "~- like cōnsequor";
@@ -1926,10 +1938,63 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Tergeō: 10 words (abstergeō, mulgeō, urgeō, perurgeō, extergeō, tergeō). Like Mergō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("tergeō", 10, "~geō", like Mergō;
-    stem lemma: "~g- like habeō";
-    stem indicative_act_pres_1_pl: "~g- like habeō";
+    // Vīsō: 11 words (revīsō, vīsō, invīsō, incessō, praevertō, intervīsō). Like Compescō.
+    conjugation!("vīsō", 11, "~ō", like Compescō;
+    stem indicative_act_perf_1_sg: "~- like agitō";
+    stem supine_acc: "~- like agitō";
+    ),
+    // Abnuō: 11 words (ajō, uō, īcō, fervō, abscondō, abnuō). Like Vīsō.
+    conjugation!("abnuō", 11, "~ō", like Vīsō;
+    stem supine_acc: "~it- like agitō";
+    ),
+    // Inveniō: 11 words (inveniō, conveniō, circumveniō, contrāveniō, dēveniō, praeveniō). Like Inoboediō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("inveniō", 11, "~e~iō", like Inoboediō;
+    stem lemma: "~e~- like mūniō";
+    stem supine_acc: "~e~t- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    ),
+    // Cēnseō: 11 words (recēnseō, cēnseō, niteō, paeniteō, accēnseō, percēnseō). Like Habeō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("cēnseō", 11, "~eō", like Habeō;
+    stem lemma: "~- like moveō";
+    stem supine_acc: "~- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    ),
+    // Serviō: 11 words (serviō, dormiō, hymniō, saeviō, vēsāniō, īnsāniō). Like Mūniō, except in 33 cells: act_perf_1 sg, pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, ….
+    conjugation!("serviō", 11, "~iō", like Mūniō;
+    stem supine_acc: "~īt- like serviō";
+    act_perf_1: "~īvī|~iī", _;
+    pass_pres_1: derived, derived;
+    pass_pres_2: derived, derived;
+    pass_pres_3: _, derived;
+    pass_impf_1: derived, derived;
+    pass_impf_2: derived, derived;
+    pass_impf_3: _, derived;
+    pass_fut_1: derived, derived;
+    pass_fut_2: derived, derived;
+    pass_fut_3: _, derived;
+    pass_perf_1: derived, _;
+    subjunctive_pass_pres_1: derived, derived;
+    subjunctive_pass_pres_2: derived, derived;
+    subjunctive_pass_pres_3: _, derived;
+    subjunctive_pass_impf_1: derived, derived;
+    subjunctive_pass_impf_2: derived, derived;
+    subjunctive_pass_impf_3: _, derived;
+    present_imperative_pass: derived, _;
+    future_imperative_pass_2: derived, _;
+    future_imperative_pass_3: "~ītor", derived;
+    infinitive_act: "~īre", _, _;
+    participle: _, _, _, "~iendum|~iundum";
+    ),
+    // Fugiō: 10 words (fugiō, subterfugiō, effugiō, trānsfugiō, dēfugiō, supterfugiō).
+    conjugation!("fugiō", 10, "~u~iō";
+    stem lemma: "~u~- like fugiō";
+    stem indicative_act_pres_1_pl: "~u~i- like faciō";
+    stem indicative_act_perf_1_sg: "~ū~- like agitō";
+    stem supine_acc: "~u~it- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -1956,36 +2021,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     conjugation!("contendō", 10, "~dō", like Praecīdō;
     stem supine_acc: "~t- like agitō";
     ),
-    // Vīsō: 10 words (revīsō, vīsō, invīsō, incessō, praevertō, intervīsō). Like Compescō.
-    conjugation!("vīsō", 10, "~ō", like Compescō;
-    stem indicative_act_perf_1_sg: "~- like agitō";
-    stem supine_acc: "~- like agitō";
-    ),
-    // Abnuō: 10 words (ajō, uō, īcō, fervō, abscondō, abnuō). Like Vīsō.
-    conjugation!("abnuō", 10, "~ō", like Vīsō;
-    stem supine_acc: "~it- like agitō";
-    ),
-    // Aperiō: 10 words (aperiō, rapiō, operiō, saliō, adaperiō, cooperiō). Like Intersaepiō.
-    conjugation!("aperiō", 10, "~iō", like Intersaepiō;
-    stem indicative_act_perf_1_sg: "~u- like agitō";
-    ),
-    // Contorqueō: 9 words (torqueō, extorqueō, dētorqueō, contorqueō, distorqueō, intorqueō). Like Sūmō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("contorqueō", 9, "~queō", like Sūmō;
-    stem lemma: "~qu- like impleō";
-    stem indicative_act_pres_1_pl: "~qu- like habeō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Inveniō: 9 words (inveniō, conveniō, circumveniō, contrāveniō, dēveniō, praeveniō). Like Asserviō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("inveniō", 9, "~e~iō", like Asserviō;
-    stem lemma: "~e~- like mūniō";
-    stem supine_acc: "~e~t- like agitō";
+    // Fluō: 10 words (fluō, superfluō, circumfluō, interfluō, praefluō, praeterfluō). Like Struō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("fluō", 10, "~uō", like Struō;
+    stem lemma: "~u- like agō";
+    stem supine_acc: "~ūx- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
+    ),
+    // Dēpendeō: 10 words (strīdeō, commordeō, dēmordeō, immordeō, remordeō, ammordeō). Like Ārdeō.
+    conjugation!("dēpendeō", 10, "~deō", like Ārdeō;
+    stem indicative_act_perf_1_sg: "~d- like agitō";
     ),
     // Sternō: 9 words (sternō, cōnsternō, asternō, prōsternō, substernō, dēsternō). Like Cernō.
     conjugation!("sternō", 9, "~e~nō", like Cernō;
@@ -2003,14 +2049,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
-    ),
-    // Fluō: 9 words (fluō, superfluō, circumfluō, cōnfluō, diffluō, interfluō). Like Struō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("fluō", 9, "~uō", like Struō;
-    stem lemma: "~u- like agō";
-    stem supine_acc: "~ūx- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
     ),
     // Īnsiliō: 9 words (exiliō, trānsiliō, dēsiliō, exsiliō, īnsiliō, subsiliō). Like Corripiō, except in 28 cells: act_pres_2 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 sg, pass_impf_2 sg, ….
     conjugation!("īnsiliō", 9, "~i~iō", like Corripiō;
@@ -2058,6 +2096,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, _, _, _, derived, _;
     supine: _, _, _, "~tuum", "~tuū", _;
     ),
+    // Īnsīdō: 9 words (resīdō, assīdō, subsīdō, cōnsīdō, īnsīdō, circumsīdō). Like Possideō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("īnsīdō", 9, "~īdō", like Possideō;
+    stem lemma: "~īd- like agō";
+    stem indicative_act_pres_1_pl: "~īd- like agō";
+    stem indicative_act_perf_1_sg: "~ēd- like mūniō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
     // Pervincō: 8 words (vincō, convincō, ēvincō, dēvincō, prōvincō, revincō).
     conjugation!("pervincō", 8, "~in~ō";
     stem lemma: "~in~- like compercō";
@@ -2077,7 +2126,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     ),
     // Immisceō: 8 words (admisceō, commisceō, immisceō, intermisceō, ammisceō, ēmisceō).
     conjugation!("immisceō", 8, "~sceō";
-    stem lemma: "~sc- like impleō";
+    stem lemma: "~sc- like moveō";
     stem indicative_act_pres_1_pl: "~sc- like habeō";
     stem indicative_act_perf_1_sg: "~scu- like agitō";
     stem supine_acc: "~xt- like agitō";
@@ -2097,23 +2146,67 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Dēpudet: 8 words (miseret, oportet, taedet, piget, pertaedet, dēpudet). Like Autumnāscit, except in 13 cells: act_pres_1 sg, act_pres_3 sg, act_fut_3 sg, pass_pres_3 sg, pass_fut_3 sg, subjunctive_act_pres_3 sg, ….
-    conjugation!("dēpudet", 8, "~et", like Autumnāscit;
-    stem indicative_act_perf_1_sg: "~u- like dēpudet";
-    stem supine_acc: "~it- like dēpudet";
-    act_pres_1: "~et", _;
-    act_pres_3: "~et", _;
-    act_fut_3: "~ēbit", _;
-    pass_pres_3: "~ētur", _;
-    pass_fut_3: "~ēbitur", _;
-    subjunctive_act_pres_3: "~eat", _;
-    subjunctive_act_impf_3: "~ēret", _;
-    subjunctive_pass_pres_3: "~eātur", _;
-    subjunctive_pass_impf_3: "~ērētur", _;
-    future_imperative_act_3: "~ētō", _;
-    future_imperative_pass_3: "~ētor", _;
-    infinitive_act: "~ēre", _, _;
-    infinitive_pass: "~ērī", _, _;
+    // Maneō: 8 words (remaneō, maneō, permaneō, commaneō, ēmaneō, immaneō).
+    conjugation!("maneō", 8, "~a~eō";
+    stem lemma: "~a~- like habeō";
+    stem indicative_act_pres_1_pl: "~a~- like habeō";
+    stem indicative_act_perf_1_sg: "~ā~s- like agitō";
+    stem supine_acc: "~ā~s- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Pergō: 8 words (surgō, resurgō, pergō, exsurgō, corresurgō, conresurgō). Like Dēfīgō.
+    conjugation!("pergō", 8, "~gō", like Dēfīgō;
+    stem indicative_act_perf_1_sg: "~rēx- like agitō";
+    stem supine_acc: "~rēct- like agitō";
+    ),
+    // Dēfluō: 8 words (affluō, adfluō, īnfluō, cōnfluō, dēfluō, diffluō). Like Fluō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
+    conjugation!("dēfluō", 8, "~uō", like Fluō;
+    stem supine_acc: "~ūx- like labōrō";
+    pass_pres_1: derived, derived;
+    pass_pres_2: derived, derived;
+    pass_impf_1: derived, derived;
+    pass_impf_2: derived, derived;
+    pass_fut_1: derived, derived;
+    pass_fut_2: derived, derived;
+    pass_perf_1: derived, _;
+    subjunctive_pass_pres_1: derived, derived;
+    subjunctive_pass_pres_2: derived, derived;
+    subjunctive_pass_impf_1: derived, derived;
+    subjunctive_pass_impf_2: derived, derived;
+    present_imperative_pass: derived, _;
+    future_imperative_pass_2: derived, _;
+    future_imperative_pass_3: "~uitor", _;
+    infinitive_act: "~uere", _, _;
+    participle: _, _, _, "~uendum";
+    ),
+    // Cōnfugiō: 8 words (refugiō, aufugiō, perfugiō, cōnfugiō, diffugiō, profugiō). Like Fugiō, except in 32 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, pass_impf_1 sg, ….
+    conjugation!("cōnfugiō", 8, "~u~iō", like Fugiō;
+    stem supine_acc: "~u~it- like serviō";
+    pass_pres_1: derived, derived;
+    pass_pres_2: derived, derived;
+    pass_pres_3: _, derived;
+    pass_impf_1: derived, derived;
+    pass_impf_2: derived, derived;
+    pass_impf_3: _, derived;
+    pass_fut_1: derived, derived;
+    pass_fut_2: derived, derived;
+    pass_fut_3: _, derived;
+    pass_perf_1: derived, _;
+    subjunctive_pass_pres_1: derived, derived;
+    subjunctive_pass_pres_2: derived, derived;
+    subjunctive_pass_pres_3: _, derived;
+    subjunctive_pass_impf_1: derived, derived;
+    subjunctive_pass_impf_2: derived, derived;
+    subjunctive_pass_impf_3: _, derived;
+    present_imperative_pass: derived, _;
+    future_imperative_pass_2: derived, _;
+    future_imperative_pass_3: "~u~itor", derived;
+    infinitive_act: "~u~ere", _, _;
+    participle: _, _, _, "~u~iendum|~u~iundum";
     ),
     // Gaudeō: 7 words (gaudeō, aggaudeō, adgaudeō, congaudeō, pergaudeō, praegaudeō). Like Modulor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
     conjugation!("gaudeō", 7, "~audeō", like Modulor;
@@ -2158,21 +2251,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Maneō: 7 words (remaneō, maneō, permaneō, commaneō, ēmaneō, immaneō).
-    conjugation!("maneō", 7, "~a~eō";
-    stem lemma: "~a~- like habeō";
-    stem indicative_act_pres_1_pl: "~a~- like habeō";
-    stem indicative_act_perf_1_sg: "~ā~s- like agitō";
-    stem supine_acc: "~ā~s- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Augeō: 7 words (augeō, lūgeō, adaugeō, ēlūgeō, frīgeō, exaugeō). Like Tergeō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
     conjugation!("augeō", 7, "~geō", like Tergeō;
-    stem lemma: "~g- like impleō";
+    stem lemma: "~g- like moveō";
     stem indicative_act_perf_1_sg: "~x- like agitō";
     stem supine_acc: "~ct- like agitō";
     present_imperative_pass: _, derived;
@@ -2184,24 +2265,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem lemma: "~v- like ferveō";
     stem indicative_act_pres_1_pl: "~v- like habeō";
     stem indicative_act_perf_1_sg: "~bu- like agitō";
-    stem supine_acc: "~vit- like dēpudet";
+    stem supine_acc: "~vit- like serviō";
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
-    ),
-    // Īnsīdō: 7 words (resīdō, assīdō, subsīdō, cōnsīdō, īnsīdō, dēsīdō). Like Possideō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("īnsīdō", 7, "~īdō", like Possideō;
-    stem lemma: "~īd- like agō";
-    stem indicative_act_pres_1_pl: "~īd- like agō";
-    stem indicative_act_perf_1_sg: "~ēd- like mūniō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Dēpendeō: 7 words (strīdeō, commordeō, remordeō, ammordeō, dēpendeō, prōpendeō). Like Ārdeō.
-    conjugation!("dēpendeō", 7, "~deō", like Ārdeō;
-    stem indicative_act_perf_1_sg: "~d- like agitō";
     ),
     // Peragō: 7 words (peragō, satagō, reagō, circumagō, abagō, vervagō). Like Compingō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("peragō", 7, "~agō", like Compingō;
@@ -2230,32 +2296,126 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Cēnseō: 6 words (recēnseō, cēnseō, paeniteō, accēnseō, percēnseō, poeniteō). Like Habeō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("cēnseō", 6, "~eō", like Habeō;
-    stem lemma: "~- like impleō";
-    stem supine_acc: "~- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    ),
-    // Videō: 6 words (videō, invideō, revideō, prōvideō, pervideō, praevideō). Like Possideō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("videō", 6, "~ideō", like Possideō;
-    stem lemma: "~id- like impleō";
+    // Videō: 7 words (videō, invideō, revideō, prōvideō, subinvideō, pervideō). Like Possideō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("videō", 7, "~ideō", like Possideō;
+    stem lemma: "~id- like moveō";
     stem indicative_act_perf_1_sg: "~īd- like agitō";
     stem supine_acc: "~īs- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     ),
-    // Pergō: 6 words (surgō, resurgō, pergō, cōnsurgō, exsurgō, exurgō). Like Dēfīgō.
-    conjugation!("pergō", 6, "~gō", like Dēfīgō;
-    stem indicative_act_perf_1_sg: "~rēx- like agitō";
-    stem supine_acc: "~rēct- like agitō";
+    // Cōnstō: 7 words (praestō, cōnstō, distō, īnstō, prōstō, antestō). Like Cubō, except in 3 cells: infinitive_act fut, infinitive_pass perf, participle perf_pass.
+    conjugation!("cōnstō", 7, "~ō", like Cubō;
+    stem indicative_act_perf_1_sg: "~it- like agitō";
+    infinitive_act: _, _, "~ātūrum esse";
+    infinitive_pass: _, "~ātum esse", _;
+    participle: _, "~ātus", _, _;
+    ),
+    // Innectō: 7 words (cōnectō, connectō, subnectō, innectō, annectō, adnectō). Like Nectō.
+    conjugation!("innectō", 7, "~ctō", like Nectō;
+    stem indicative_act_perf_1_sg: "~xu- like agitō";
+    ),
+    // Exsorbeō: 7 words (dēsorbeō, exsorbeō, exorbeō, obsorbeō, persorbeō, resorbeō).
+    conjugation!("exsorbeō", 7, "~beō";
+    stem lemma: "~b- like moveō";
+    stem indicative_act_pres_1_pl: "~b- like habeō";
+    stem indicative_act_perf_1_sg: "~bu- like agitō";
+    stem supine_acc: "~pt- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Ēdiscō: 7 words (discō, condiscō, addiscō, ēdiscō, dēdiscō, sentiscō).
+    conjugation!("ēdiscō", 7, "~s~ō";
+    stem lemma: "~s~- like agō";
+    stem indicative_act_pres_1_pl: "~s~- like agō";
+    stem indicative_act_perf_1_sg: "~di~- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Decet: 7 words (licet, decet, addecet, miseret, oportet, dēdecet). Like Autumnāscit, except in 32 cells: act_pres_1 sg, act_pres_3 sg, act_pres_3 pl, act_impf_3 pl, act_fut_3 sg, act_fut_3 pl, ….
+    conjugation!("decet", 7, "~et", like Autumnāscit;
+    stem supine_acc: "~it- like modulor";
+    act_pres_1: "~et", _;
+    act_pres_3: "~et", "~ent";
+    act_impf_3: _, "~ēbant";
+    act_fut_3: "~ēbit", "~ēbunt";
+    act_perf_3: "~uit", "~uērunt|~uēre";
+    act_plup_3: "~uerat", "~uerant";
+    act_futp_3: "~uerit", "~uerint";
+    pass_pres_3: derived, _;
+    pass_impf_3: derived, _;
+    pass_fut_3: derived, _;
+    subjunctive_act_pres_3: "~eat", "~eant";
+    subjunctive_act_impf_3: "~ēret", "~ērent";
+    subjunctive_act_perf_3: "~uerit", "~uerint";
+    subjunctive_act_plup_3: "~uisset", "~uissent";
+    subjunctive_pass_pres_3: derived, _;
+    subjunctive_pass_impf_3: derived, _;
+    future_imperative_act_3: "~ētō", "~entō";
+    future_imperative_pass_3: derived, _;
+    infinitive_act: "~ēre", "~uisse", _;
+    infinitive_pass: derived, _, _;
+    participle: _, _, _, derived;
+    ),
+    // Ambigō: 7 words (convergō, assurgō, ambigō, cōnsurgō, īnsurgō, adsurgō). Like Pergō, except in 23 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
+    conjugation!("ambigō", 7, "~gō", like Pergō;
+    stem lemma: "~g- like ambigō";
+    stem supine_acc: "~rēct- like labōrō";
+    pass_pres_1: derived, derived;
+    pass_pres_2: derived, derived;
+    pass_impf_1: derived, derived;
+    pass_impf_2: derived, derived;
+    pass_fut_1: derived, derived;
+    pass_fut_2: derived, derived;
+    pass_perf_1: derived, _;
+    subjunctive_pass_pres_1: derived, derived;
+    subjunctive_pass_pres_2: derived, derived;
+    subjunctive_pass_impf_1: derived, derived;
+    subjunctive_pass_impf_2: derived, derived;
+    present_imperative_pass: derived, _;
+    future_imperative_pass_2: derived, _;
+    ),
+    // Colō: 7 words (colō, olō, incolō, recolō, excolō, circumcolō). Like Cōnsulō with `ˇ` after each pattern.
+    conjugation!("colō", 7, "~ōˇ", like Cōnsulō with "ˇ";
+    ),
+    // Adhērēscō: 7 words (veterēscō, adhērēscō, adhaerēscō, cinerēscō, cohaerēscō, mācerēscō).
+    conjugation!("adhērēscō", 7, "~rē~cō";
+    stem lemma: "~rē~c- like adhērēscō";
+    stem indicative_act_pres_1_pl: "~rē~c- like agō";
+    stem indicative_act_perf_1_sg: "~~- like agitō";
+    stem supine_acc: "~~- like modulor";
+    future_imperative_act_3: derived, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Dēpudet: 6 words (taedet, piget, pertaedet, dēpudet, dispudet, distaedet). Like Autumnāscit, except in 13 cells: act_pres_1 sg, act_pres_3 sg, act_fut_3 sg, pass_pres_3 sg, pass_fut_3 sg, subjunctive_act_pres_3 sg, ….
+    conjugation!("dēpudet", 6, "~et", like Autumnāscit;
+    stem indicative_act_perf_1_sg: "~u- like dēpudet";
+    stem supine_acc: "~it- like serviō";
+    act_pres_1: "~et", _;
+    act_pres_3: "~et", _;
+    act_fut_3: "~ēbit", _;
+    pass_pres_3: "~ētur", _;
+    pass_fut_3: "~ēbitur", _;
+    subjunctive_act_pres_3: "~eat", _;
+    subjunctive_act_impf_3: "~ēret", _;
+    subjunctive_pass_pres_3: "~eātur", _;
+    subjunctive_pass_impf_3: "~ērētur", _;
+    future_imperative_act_3: "~ētō", _;
+    future_imperative_pass_3: "~ētor", _;
+    infinitive_act: "~ēre", _, _;
+    infinitive_pass: "~ērī", _, _;
     ),
     // Advīvō: 6 words (vīvō, convīvō, revīvō, advīvō, supervīvō, fīvō). Like Solvō, except in 32 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, pass_impf_1 sg, ….
     conjugation!("advīvō", 6, "~vō", like Solvō;
     stem indicative_act_perf_1_sg: "~x- like agitō";
-    stem supine_acc: "~ct- like ēveniō";
+    stem supine_acc: "~ct- like īnsistō";
     pass_pres_1: derived, derived;
     pass_pres_2: derived, derived;
     pass_pres_3: _, derived;
@@ -2278,17 +2438,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: "~vere", _, _;
     participle: _, _, _, "~vendum";
     ),
-    // Cōnstō: 6 words (praestō, cōnstō, distō, īnstō, prōstō, antestō). Like Cubō, except in 3 cells: infinitive_act fut, infinitive_pass perf, participle perf_pass.
-    conjugation!("cōnstō", 6, "~ō", like Cubō;
-    stem indicative_act_perf_1_sg: "~it- like agitō";
-    infinitive_act: _, _, "~ātūrum esse";
-    infinitive_pass: _, "~ātum esse", _;
-    participle: _, "~ātus", _, _;
-    ),
-    // Innectō: 6 words (cōnectō, connectō, subnectō, innectō, annectō, adnectō). Like Nectō.
-    conjugation!("innectō", 6, "~ctō", like Nectō;
-    stem indicative_act_perf_1_sg: "~xu- like agitō";
-    ),
     // Eximō: 6 words (dirimō, eximō, redimō, adimō, interimō, perimō). Like Excipiō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("eximō", 6, "~i~ō", like Excipiō;
     stem lemma: "~i~- like compercō";
@@ -2310,79 +2459,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Dēfluō: 6 words (affluō, adfluō, īnfluō, dēfluō, effluō, perfluō). Like Fluō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
-    conjugation!("dēfluō", 6, "~uō", like Fluō;
-    stem supine_acc: "~ūx- like labōrō";
-    pass_pres_1: derived, derived;
-    pass_pres_2: derived, derived;
-    pass_impf_1: derived, derived;
-    pass_impf_2: derived, derived;
-    pass_fut_1: derived, derived;
-    pass_fut_2: derived, derived;
-    pass_perf_1: derived, _;
-    subjunctive_pass_pres_1: derived, derived;
-    subjunctive_pass_pres_2: derived, derived;
-    subjunctive_pass_impf_1: derived, derived;
-    subjunctive_pass_impf_2: derived, derived;
-    present_imperative_pass: derived, _;
-    future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~uitor", _;
-    infinitive_act: "~uere", _, _;
-    participle: _, _, _, "~uendum";
-    ),
-    // Exsorbeō: 6 words (exsorbeō, exorbeō, obsorbeō, persorbeō, resorbeō, apsorbeō).
-    conjugation!("exsorbeō", 6, "~beō";
-    stem lemma: "~b- like impleō";
-    stem indicative_act_pres_1_pl: "~b- like habeō";
-    stem indicative_act_perf_1_sg: "~bu- like agitō";
-    stem supine_acc: "~pt- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Cōnfugiō: 6 words (refugiō, aufugiō, perfugiō, cōnfugiō, diffugiō, profugiō). Like Fugiō, except in 32 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, pass_impf_1 sg, ….
-    conjugation!("cōnfugiō", 6, "~u~iō", like Fugiō;
-    stem supine_acc: "~u~it- like dēpudet";
-    pass_pres_1: derived, derived;
-    pass_pres_2: derived, derived;
-    pass_pres_3: _, derived;
-    pass_impf_1: derived, derived;
-    pass_impf_2: derived, derived;
-    pass_impf_3: _, derived;
-    pass_fut_1: derived, derived;
-    pass_fut_2: derived, derived;
-    pass_fut_3: _, derived;
-    pass_perf_1: derived, _;
-    subjunctive_pass_pres_1: derived, derived;
-    subjunctive_pass_pres_2: derived, derived;
-    subjunctive_pass_pres_3: _, derived;
-    subjunctive_pass_impf_1: derived, derived;
-    subjunctive_pass_impf_2: derived, derived;
-    subjunctive_pass_impf_3: _, derived;
-    present_imperative_pass: derived, _;
-    future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~u~itor", derived;
-    infinitive_act: "~u~ere", _, _;
-    participle: _, _, _, "~u~iendum|~u~iundum";
-    ),
     // Apīscor: 6 words (apīscor, dēpecīscor, pacīscor, compacīscor, compecīscor, dēpacīscor). Like Pāscor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
     conjugation!("apīscor", 6, "~īscor", like Pāscor;
     stem lemma: "~īsc- like nāscor";
     stem indicative_act_pres_1_pl: "~īsc- like nāscor";
     future_imperative_act_3: derived, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Ēdiscō: 6 words (discō, condiscō, addiscō, ēdiscō, dēdiscō, perdiscō).
-    conjugation!("ēdiscō", 6, "~s~ō";
-    stem lemma: "~s~- like agō";
-    stem indicative_act_pres_1_pl: "~s~- like agō";
-    stem indicative_act_perf_1_sg: "~di~- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
     // Deicō: 6 words (deicō, indeicō, addeicō, prodeicō, contrādeicō, interdeicō).
@@ -2400,14 +2481,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     // Scandō: 6 words (scandō, retundō, oppandō, superscandō, suprascandō, dispandō). Like Praecīdō with `ˇ` after each pattern.
     conjugation!("scandō", 6, "~dōˇ", like Praecīdō with "ˇ";
     ),
-    // Occurrō: 5 words (carrō, antecurrō, circumcurrō, converrō, convorrō). Like Gerō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("occurrō", 5, "~rō", like Gerō;
-    stem lemma: "~r- like agō";
-    stem indicative_act_perf_1_sg: "~r- like mūniō";
-    stem supine_acc: "~s- like occurrō";
+    // Adipīscor: 6 words (proficīscor, adipīscor, comminīscor, reminīscor, indipīscor, minīscor). Like Adhērēscō, except in 3 cells: future_imperative_act_2 pl, future_imperative_act_3 sg, gerund abl.
+    conjugation!("adipīscor", 6, "~i~īscor", like Adhērēscō;
+    stem lemma: "~i~īsc- like nāscor";
+    stem indicative_act_pres_1_pl: "~i~īsc- like nāscor";
+    stem indicative_act_perf_1_sg: "~e~t- like modulor";
+    stem supine_acc: "~e~t- like modulor";
+    future_imperative_act_2: _, derived;
+    future_imperative_act_3: derived, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Occinō: 6 words (concinō, accinō, praecinō, incinō, occinō, recinō). Like Eximō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("occinō", 6, "~i~ō", like Eximō;
+    stem lemma: "~i~- like agō";
+    stem indicative_act_perf_1_sg: "~i~u- like mūniō";
+    stem supine_acc: "~e~t- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
+    ),
+    // Contremīscō: 6 words (resipīscō, ingemīscō, dēlitīscō, conticīscō, contremīscō, tremīscō).
+    conjugation!("contremīscō", 6, "~īscō";
+    stem lemma: "~īsc- like compercō";
+    stem indicative_act_pres_1_pl: "~īsc- like agō";
+    stem indicative_act_perf_1_sg: "~u- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
     ),
     // Sūmō2: 5 words (prōmō, dēmō, cōmō, exprōmō, dēprōmō). Like Compescō.
     conjugation!("sūmō", 5, "~ō", like Compescō;
@@ -2424,41 +2526,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Serviō: 5 words (serviō, dormiō, hymniō, saeviō, īnsāniō). Like Mūniō, except in 33 cells: act_perf_1 sg, pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, ….
-    conjugation!("serviō", 5, "~iō", like Mūniō;
-    stem supine_acc: "~īt- like dēpudet";
-    act_perf_1: "~īvī|~iī", _;
-    pass_pres_1: derived, derived;
-    pass_pres_2: derived, derived;
-    pass_pres_3: _, derived;
-    pass_impf_1: derived, derived;
-    pass_impf_2: derived, derived;
-    pass_impf_3: _, derived;
-    pass_fut_1: derived, derived;
-    pass_fut_2: derived, derived;
-    pass_fut_3: _, derived;
-    pass_perf_1: derived, _;
-    subjunctive_pass_pres_1: derived, derived;
-    subjunctive_pass_pres_2: derived, derived;
-    subjunctive_pass_pres_3: _, derived;
-    subjunctive_pass_impf_1: derived, derived;
-    subjunctive_pass_impf_2: derived, derived;
-    subjunctive_pass_impf_3: _, derived;
-    present_imperative_pass: derived, _;
-    future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~ītor", derived;
-    infinitive_act: "~īre", _, _;
-    participle: _, _, _, "~iendum|~iundum";
-    ),
-    // Adipīscor: 5 words (proficīscor, adipīscor, comminīscor, indipīscor, minīscor).
-    conjugation!("adipīscor", 5, "~i~īscor";
-    stem lemma: "~i~īsc- like nāscor";
-    stem indicative_act_pres_1_pl: "~i~īsc- like nāscor";
-    stem indicative_act_perf_1_sg: "~e~t- like modulor";
-    stem supine_acc: "~e~t- like modulor";
-    future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
     // Astō: 5 words (restō, obstō, astō, perstō, adstō). Like Cōnstō, except in 34 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, pass_impf_1 sg, ….
@@ -2486,43 +2553,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_pass: _, derived, _;
     participle: _, derived, _, "~andum";
     ),
-    // Occinō: 5 words (concinō, accinō, praecinō, incinō, occinō). Like Eximō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
-    conjugation!("occinō", 5, "~i~ō", like Eximō;
-    stem lemma: "~i~- like agō";
-    stem indicative_act_perf_1_sg: "~i~u- like mūniō";
-    stem supine_acc: "~e~t- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    ),
-    // Decet: 5 words (licet, decet, addecet, dēdecet, condecet). Like Dēpudet, except in 26 cells: act_pres_3 pl, act_impf_3 pl, act_fut_3 pl, act_perf_3 pl, act_plup_3 pl, act_futp_3 pl, ….
-    conjugation!("decet", 5, "~et", like Dēpudet;
-    stem supine_acc: "~it- like modulor";
-    act_pres_3: _, "~ent";
-    act_impf_3: _, "~ēbant";
-    act_fut_3: _, "~ēbunt";
-    act_perf_3: _, "~uērunt|~uēre";
-    act_plup_3: _, "~uerant";
-    act_futp_3: _, "~uerint";
-    pass_pres_3: derived, _;
-    pass_impf_3: derived, _;
-    pass_fut_3: derived, _;
-    pass_perf_3: derived, _;
-    pass_plup_3: derived, _;
-    pass_futp_3: derived, _;
-    subjunctive_act_pres_3: _, "~eant";
-    subjunctive_act_impf_3: _, "~ērent";
-    subjunctive_act_perf_3: _, "~uerint";
-    subjunctive_act_plup_3: _, "~uissent";
-    subjunctive_pass_pres_3: derived, _;
-    subjunctive_pass_impf_3: derived, _;
-    subjunctive_pass_perf_3: derived, _;
-    subjunctive_pass_plup_3: derived, _;
-    future_imperative_act_3: _, "~entō";
-    future_imperative_pass_3: derived, _;
-    infinitive_pass: derived, derived, _;
-    participle: _, derived, _, derived;
-    ),
     // Supersedeō: 5 words (sedeō, circumsedeō, persedeō, supersedeō, suprāsedeō). Like Comedō, except in 9 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, infinitive_pass fut, participle fut_act, ….
     conjugation!("supersedeō", 5, "~edeō", like Comedō;
     stem lemma: "~ed- like habeō";
@@ -2537,46 +2567,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, _, _, _, derived, _;
     supine: _, _, _, derived, derived, _;
     ),
-    // Clueō: 5 words (clueō, langueō, abnueō, cēveō, connīveō). Like Habeō.
-    conjugation!("clueō", 5, "~eō", like Habeō;
-    stem indicative_act_perf_1_sg: "~- like mūniō";
-    ),
-    // Ambigō: 5 words (convergō, assurgō, ambigō, īnsurgō, adsurgō). Like Pergō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
-    conjugation!("ambigō", 5, "~gō", like Pergō;
-    stem supine_acc: "~rēct- like labōrō";
-    pass_pres_1: derived, derived;
-    pass_pres_2: derived, derived;
-    pass_impf_1: derived, derived;
-    pass_impf_2: derived, derived;
-    pass_fut_1: derived, derived;
-    pass_fut_2: derived, derived;
-    pass_perf_1: derived, _;
-    subjunctive_pass_pres_1: derived, derived;
-    subjunctive_pass_pres_2: derived, derived;
-    subjunctive_pass_impf_1: derived, derived;
-    subjunctive_pass_impf_2: derived, derived;
-    present_imperative_pass: derived, _;
-    future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~gitor", _;
-    infinitive_act: "~gere", _, _;
-    participle: _, _, _, "~gendum|~gundum";
-    ),
-    // Contremīscō: 5 words (resipīscō, ingemīscō, dēlitīscō, conticīscō, contremīscō).
-    conjugation!("contremīscō", 5, "~īscō";
-    stem lemma: "~īsc- like compercō";
-    stem indicative_act_pres_1_pl: "~īsc- like agō";
-    stem indicative_act_perf_1_sg: "~u- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Colō: 5 words (colō, recolō, excolō, circumcolō, accolō). Like Cōnsulō with `ˇ` after each pattern.
-    conjugation!("colō", 5, "~ōˇ", like Cōnsulō with "ˇ";
-    ),
-    // Clangō: 5 words (cadō, stertō, clangō, accanō, obtexō). Like Compescō, except in 29 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
+    // Clangō: 5 words (cadō, stertō, clangō, accanō, obtexō). Like Compescō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
     conjugation!("clangō", 5, "~ō", like Compescō;
+    stem lemma: "~- like ambigō";
     pass_pres_1: derived, derived;
     pass_pres_2: derived, derived;
     pass_impf_1: derived, derived;
@@ -2590,14 +2583,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     subjunctive_pass_impf_2: derived, derived;
     present_imperative_pass: derived, _;
     future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~itor", _;
-    infinitive_act: "~ere", _, derived;
+    infinitive_act: _, _, derived;
     infinitive_pass: _, derived, _;
-    participle: _, derived, _, "~endum|~undum";
+    participle: _, derived, _, _;
     ),
-    // Caveō: 4 words (caveō, faveō, paveō, praecaveō).
-    conjugation!("caveō", 4, "~aveō";
-    stem lemma: "~av- like impleō";
+    // Caveō: 5 words (caveō, faveō, paveō, expaveō, praecaveō).
+    conjugation!("caveō", 5, "~aveō";
+    stem lemma: "~av- like moveō";
     stem indicative_act_pres_1_pl: "~av- like habeō";
     stem indicative_act_perf_1_sg: "~ā- like caveō";
     stem supine_acc: "~aut- like agitō";
@@ -2607,11 +2599,56 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Cieō: 4 words (cieō, excieō, concieō, percieō). Like Mūniō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("cieō", 4, "~ieō", like Mūniō;
-    stem lemma: "~i- like impleō";
+    // Cieō: 5 words (cieō, excieō, accieō, concieō, percieō). Like Mūniō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("cieō", 5, "~ieō", like Mūniō;
+    stem lemma: "~i- like moveō";
     stem indicative_act_pres_1_pl: "~i- like habeō";
     stem supine_acc: "~it- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Relinquō: 5 words (dēlinquō, relinquō, linquō, dērelinquō, coinquō).
+    conjugation!("relinquō", 5, "~inquō";
+    stem lemma: "~inqu- like minuō";
+    stem indicative_act_pres_1_pl: "~inqu- like agō";
+    stem indicative_act_perf_1_sg: "~īqu- like agitō";
+    stem supine_acc: "~ict- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Sapiō: 5 words (cupiō, sapiō, concupiō, discupiō, supersapiō). Like Mūniō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
+    conjugation!("sapiō", 5, "~iō", like Mūniō;
+    stem lemma: "~- like fugiō";
+    stem indicative_act_pres_1_pl: "~i- like faciō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Hauriō: 5 words (exhauriō, hauriō, dehauriō, perhauriō, cauriō).
+    conjugation!("hauriō", 5, "~riō";
+    stem lemma: "~r- like mūniō";
+    stem indicative_act_pres_1_pl: "~r- like mūniō";
+    stem indicative_act_perf_1_sg: "~s- like agitō";
+    stem supine_acc: "~st- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Effervēscō: 5 words (effervēscō, fervēscō, dēfervēscō, cōnfervēscō, īnfervēscō).
+    conjugation!("effervēscō", 5, "~vēscō";
+    stem lemma: "~vēsc- like agō";
+    stem indicative_act_pres_1_pl: "~vēsc- like agō";
+    stem indicative_act_perf_1_sg: "~- like effervēscō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
@@ -2634,31 +2671,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Relinquō: 4 words (dēlinquō, relinquō, linquō, dērelinquō).
-    conjugation!("relinquō", 4, "~inquō";
-    stem lemma: "~inqu- like minuō";
-    stem indicative_act_pres_1_pl: "~inqu- like agō";
-    stem indicative_act_perf_1_sg: "~īqu- like agitō";
-    stem supine_acc: "~ict- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Sapiō: 4 words (cupiō, sapiō, concupiō, supersapiō). Like Mūniō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
-    conjugation!("sapiō", 4, "~iō", like Mūniō;
-    stem lemma: "~- like fugiō";
-    stem indicative_act_pres_1_pl: "~i- like faciō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Abeō: 4 words (abeō, prōdeō, pereō, redeō). Like Obeō, except in 32 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_pres_3 pl, pass_impf_1 sg, ….
     conjugation!("abeō", 4, "~eō", like Obeō;
-    stem supine_acc: "~it- like dēpudet";
+    stem supine_acc: "~it- like serviō";
     pass_pres_1: derived, derived;
     pass_pres_2: derived, derived;
     pass_pres_3: _, derived;
@@ -2706,18 +2721,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     conjugation!("obtundō", 4, "~undō", like Effundō;
     stem indicative_act_perf_1_sg: "~ud- like agitō";
     ),
-    // Hauriō: 4 words (exhauriō, hauriō, dehauriō, perhauriō).
-    conjugation!("hauriō", 4, "~riō";
-    stem lemma: "~r- like mūniō";
-    stem indicative_act_pres_1_pl: "~r- like mūniō";
-    stem indicative_act_perf_1_sg: "~s- like agitō";
-    stem supine_acc: "~st- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Comperiō: 4 words (comperiō, īciō, repperiō, conperiō). Like Intersaepiō.
     conjugation!("comperiō", 4, "~iō", like Intersaepiō;
     stem indicative_act_perf_1_sg: "~- like agitō";
@@ -2762,7 +2765,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     ),
     // Mulceō: 4 words (mulceō, commulceō, permulceō, remulceō). Like Compercō, except in 5 cells: present_imperative_pass pl, future_imperative_act_3 sg, future_imperative_pass_3 sg, infinitive_act pres, gerund abl.
     conjugation!("mulceō", 4, "~ceō", like Compercō;
-    stem lemma: "~c- like impleō";
+    stem lemma: "~c- like moveō";
     stem indicative_act_pres_1_pl: "~c- like habeō";
     stem supine_acc: "~s- like agitō";
     present_imperative_pass: _, derived;
@@ -2771,8 +2774,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Apage: 4 words (sum, inquam, apage, coest). Like Adipīscor, except in 74 cells: act_pres_1 sg, act_pres_1 pl, act_pres_2 sg, act_pres_2 pl, act_pres_3 sg, act_pres_3 pl, ….
-    conjugation!("apage", 4, "~~", like Adipīscor;
+    // Apage: 4 words (sum, inquam, apage, coest). Like Adhērēscō, except in 74 cells: act_pres_1 sg, act_pres_1 pl, act_pres_2 sg, act_pres_2 pl, act_pres_3 sg, act_pres_3 pl, ….
+    conjugation!("apage", 4, "~~", like Adhērēscō;
     act_pres_1: "~~", derived;
     act_pres_2: derived, derived;
     act_pres_3: derived, derived;
@@ -2804,40 +2807,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     subjunctive_act_plup_2: derived, derived;
     subjunctive_act_plup_3: derived, derived;
     present_imperative_act: "~~", "~it~";
-    future_imperative_act_2: derived, _;
+    future_imperative_act_2: derived, derived;
     future_imperative_act_3: _, derived;
     infinitive_act: derived, derived, derived;
-    participle: derived, _, _, derived;
+    participle: derived, _, _, _;
     gerund: _, derived, derived, derived, _, _;
     supine: _, _, _, derived, derived, _;
     ),
-    // Ēvādō: 3 words (vilipendō, circumsīdō, obsīdō). Like Praecīdō.
-    conjugation!("ēvādō", 3, "~dō", like Praecīdō;
-    stem indicative_act_perf_1_sg: "~s- like agitō";
-    ),
-    // Coniungō: 3 words (ēmungō, pungō, suffringō).
-    conjugation!("coniungō", 3, "~u~gō";
-    stem lemma: "~u~g- like compercō";
-    stem indicative_act_pres_1_pl: "~u~g- like agō";
-    stem indicative_act_perf_1_sg: "~ū~x- like agitō";
-    stem supine_acc: "~ū~ct- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Quaerō: 3 words (quaerō, conquaerō, disquīrō). Like Gerō.
-    conjugation!("quaerō", 3, "~rō", like Gerō;
-    stem indicative_act_perf_1_sg: "~sīv- like agitō";
-    stem supine_acc: "~sīt- like agitō";
-    ),
-    // Adliciō: 3 words (illiciō, inliciō, adliciō). Like Dispiciō.
-    conjugation!("adliciō", 3, "~iciō", like Dispiciō;
-    stem indicative_act_perf_1_sg: "~ēx- like agitō";
-    ),
-    // Stō: 3 words (stō, interstō, substō). Like Astō, except in 7 cells: pass_perf_3 sg, pass_plup_3 sg, pass_futp_3 sg, subjunctive_pass_perf_3 sg, subjunctive_pass_plup_3 sg, infinitive_pass perf, ….
-    conjugation!("stō", 3, "~ō", like Astō;
+    // Stō: 4 words (stō, abstō, interstō, substō). Like Astō, except in 7 cells: pass_perf_3 sg, pass_plup_3 sg, pass_futp_3 sg, subjunctive_pass_perf_3 sg, subjunctive_pass_plup_3 sg, infinitive_pass perf, ….
+    conjugation!("stō", 4, "~ō", like Astō;
     stem indicative_act_perf_1_sg: "~et- like mūniō";
     pass_perf_3: "~atum est", _;
     pass_plup_3: "~atum erat", _;
@@ -2846,6 +2824,42 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     subjunctive_pass_plup_3: "~atum esset", _;
     infinitive_pass: _, "~atum esse", _;
     participle: _, "~atum", _, _;
+    ),
+    // Dētorreō: 4 words (attorreō, contorreō, dētorreō, extorreō).
+    conjugation!("dētorreō", 4, "~orreō";
+    stem lemma: "~orr- like moveō";
+    stem indicative_act_pres_1_pl: "~orr- like habeō";
+    stem indicative_act_perf_1_sg: "~orru- like agitō";
+    stem supine_acc: "~ōst- like agitō";
+    present_imperative_pass: _, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Convalēscō: 4 words (invalēscō, convalēscō, coalēscō, tonēscō). Like Clangō, except in 16 cells: pass_pres_3 sg, pass_pres_3 pl, pass_impf_3 sg, pass_impf_3 pl, pass_fut_3 sg, pass_fut_3 pl, ….
+    conjugation!("convalēscō", 4, "~ēscō", like Clangō;
+    stem lemma: "~ēsc- like adhērēscō";
+    stem indicative_act_pres_1_pl: "~ēsc- like agō";
+    stem supine_acc: "~it- like modulor";
+    pass_pres_3: derived, derived;
+    pass_impf_3: derived, derived;
+    pass_fut_3: derived, derived;
+    subjunctive_pass_pres_3: derived, derived;
+    subjunctive_pass_impf_3: derived, derived;
+    future_imperative_act_3: derived, _;
+    future_imperative_pass_3: derived, derived;
+    infinitive_pass: derived, _, _;
+    participle: _, _, _, derived;
+    gerund: _, _, _, _, derived, _;
+    ),
+    // Clueō: 3 words (abnueō, cēveō, connīveō). Like Habeō.
+    conjugation!("clueō", 3, "~eō", like Habeō;
+    stem indicative_act_perf_1_sg: "~- like mūniō";
+    ),
+    // Adliciō: 3 words (illiciō, inliciō, adliciō). Like Dispiciō.
+    conjugation!("adliciō", 3, "~iciō", like Dispiciō;
+    stem indicative_act_perf_1_sg: "~ēx- like agitō";
     ),
     // Dīluō: 3 words (suō, tribuō, dīluō). Like Minuō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
     conjugation!("dīluō", 3, "~uō", like Minuō;
@@ -2880,8 +2894,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     stem indicative_act_perf_1_sg: "~ss- like agitō";
     stem supine_acc: "~ss- like agitō";
     ),
-    // Fundō: 3 words (fundō, refundō, praefundō). Like Effundō, except in 26 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
+    // Fundō: 3 words (fundō, refundō, praefundō). Like Effundō, except in 23 cells: pass_pres_1 sg, pass_pres_1 pl, pass_pres_2 sg, pass_pres_2 pl, pass_impf_1 sg, pass_impf_1 pl, ….
     conjugation!("fundō", 3, "~undō", like Effundō;
+    stem lemma: "~und- like ambigō";
     stem supine_acc: "~ūs- like labōrō";
     pass_pres_1: derived, derived;
     pass_pres_2: derived, derived;
@@ -2896,9 +2911,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     subjunctive_pass_impf_2: derived, derived;
     present_imperative_pass: derived, _;
     future_imperative_pass_2: derived, _;
-    future_imperative_pass_3: "~unditor", _;
-    infinitive_act: "~undere", _, _;
-    participle: _, _, _, "~undendum|~undundum";
     ),
     // Scatō: 3 words (scatō, battō, abbattō). Like Compescō.
     conjugation!("scatō", 3, "~ō", like Compescō;
@@ -3031,18 +3043,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, _, _, _, derived, _;
     supine: _, _, _, "~ptum|~tum", "~ptū|~tū", _;
     ),
-    // Dētorreō: 3 words (contorreō, dētorreō, extorreō).
-    conjugation!("dētorreō", 3, "~orreō";
-    stem lemma: "~orr- like impleō";
-    stem indicative_act_pres_1_pl: "~orr- like habeō";
-    stem indicative_act_perf_1_sg: "~orru- like agitō";
-    stem supine_acc: "~ōst- like agitō";
-    present_imperative_pass: _, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, _;
-    infinitive_act: derived, _, _;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Superstō: 3 words (superstō, circumstō, antistō). Like Cubō, except in 4 cells: pass_perf_1 sg, infinitive_act fut, infinitive_pass perf, participle perf_pass.
     conjugation!("superstō", 3, "~ō", like Cubō;
     stem indicative_act_perf_1_sg: "~et- like agitō";
@@ -3081,37 +3081,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     present_imperative_pass: derived, _;
     future_imperative_pass_2: derived, _;
     ),
-    // Convalēscō: 3 words (convalēscō, coalēscō, tonēscō). Like Clangō, except in 16 cells: pass_pres_3 sg, pass_pres_3 pl, pass_impf_3 sg, pass_impf_3 pl, pass_fut_3 sg, pass_fut_3 pl, ….
-    conjugation!("convalēscō", 3, "~ēscō", like Clangō;
-    stem lemma: "~ēsc- like convalēscō";
-    stem indicative_act_pres_1_pl: "~ēsc- like agō";
-    stem supine_acc: "~it- like modulor";
-    pass_pres_3: derived, derived;
-    pass_impf_3: derived, derived;
-    pass_fut_3: derived, derived;
-    subjunctive_pass_pres_3: derived, derived;
-    subjunctive_pass_impf_3: derived, derived;
-    future_imperative_act_3: derived, _;
-    future_imperative_pass_3: derived, derived;
-    infinitive_pass: derived, _, _;
-    participle: _, _, _, derived;
-    gerund: _, _, _, _, derived, _;
-    ),
     // Tuor: 3 words (compluor, conpluor, tuor). Like Modulor, except in 2 cells: future_imperative_act_3 sg, gerund abl.
     conjugation!("tuor", 3, "~uor", like Modulor;
     stem lemma: "~u- like cōnsequor";
     stem indicative_act_pres_1_pl: "~u- like nāscor";
     stem indicative_act_perf_1_sg: "~ūt- like modulor";
     stem supine_acc: "~ūt- like modulor";
-    future_imperative_act_3: derived, _;
-    gerund: _, _, _, _, derived, _;
-    ),
-    // Adhērēscō: 3 words (adhērēscō, adhaerēscō, cohaerēscō). Like Apage, except in 2 cells: future_imperative_act_3 sg, gerund abl.
-    conjugation!("adhērēscō", 3, "~rē~cō", like Apage;
-    stem lemma: "~rē~c- like convalēscō";
-    stem indicative_act_pres_1_pl: "~rē~c- like agō";
-    stem indicative_act_perf_1_sg: "~~- like agitō";
-    stem supine_acc: "~~- like modulor";
     future_imperative_act_3: derived, _;
     gerund: _, _, _, _, derived, _;
     ),
@@ -3135,16 +3110,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
     ),
-    // Effervēscō: 3 words (effervēscō, dēfervēscō, cōnfervēscō).
-    conjugation!("effervēscō", 3, "~vēscō";
-    stem lemma: "~vēsc- like agō";
-    stem indicative_act_pres_1_pl: "~vēsc- like agō";
-    stem indicative_act_perf_1_sg: "~- like effervēscō";
+    // Coniungō: 2 words (ēmungō, pungō).
+    conjugation!("coniungō", 2, "~u~gō";
+    stem lemma: "~u~g- like compercō";
+    stem indicative_act_pres_1_pl: "~u~g- like agō";
+    stem indicative_act_perf_1_sg: "~ū~x- like agitō";
+    stem supine_acc: "~ū~ct- like agitō";
     present_imperative_pass: _, derived;
     future_imperative_act_3: derived, _;
     future_imperative_pass_3: derived, _;
     infinitive_act: derived, _, _;
     gerund: _, _, _, _, derived, _;
+    ),
+    // Quaerō: 2 words (quaerō, conquaerō). Like Gerō.
+    conjugation!("quaerō", 2, "~rō", like Gerō;
+    stem indicative_act_perf_1_sg: "~sīv- like agitō";
+    stem supine_acc: "~sīt- like agitō";
     ),
     // Dīlūculat: 2 words (grandinat, dīlūculat). Like Libet, except in 15 cells: act_pres_1 sg, act_pres_3 sg, act_impf_3 sg, act_fut_3 sg, subjunctive_act_pres_3 sg, subjunctive_act_impf_3 sg, ….
     conjugation!("dīlūculat", 2, "~at", like Libet;
@@ -3161,9 +3142,22 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 200] = [
     gerund: _, "~andī", "~andō", "~andum", _, _;
     supine: _, _, _, derived, derived, _;
     ),
+    // Occurrō: 1 words (carrō). Like Gerō, except in 3 cells: present_imperative_pass pl, future_imperative_pass_3 sg, infinitive_act pres.
+    conjugation!("occurrō", 1, "~rō", like Gerō;
+    stem lemma: "~r- like agō";
+    stem indicative_act_perf_1_sg: "~r- like mūniō";
+    stem supine_acc: "~s- like occurrō";
+    present_imperative_pass: _, derived;
+    future_imperative_pass_3: derived, _;
+    infinitive_act: derived, _, _;
+    ),
+    // Ēvādō: 1 words (vilipendō). Like Praecīdō.
+    conjugation!("ēvādō", 1, "~dō", like Praecīdō;
+    stem indicative_act_perf_1_sg: "~s- like agitō";
+    ),
     // Coerceo: 1 words (coerceo).
     conjugation!("coerceo", 1, "~e~eo";
-    stem lemma: "~ë~- like impleō";
+    stem lemma: "~ë~- like moveō";
     stem indicative_act_pres_1_pl: "~ë~- like habeō";
     stem indicative_act_perf_1_sg: "~ë~u- like agitō";
     stem supine_acc: "~ë~it- like agitō";

@@ -37,10 +37,10 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 11] = [
-    // lemma like flāndria: 5,293 words.
+    // lemma like flāndria: 5,169 words.
     EndingTable {
         name: Cow::Borrowed("flāndria"),
-        words: 5293,
+        words: 5169,
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
@@ -58,10 +58,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~s\t", "~s|~\t",)),
     },
-    // gen_sg like hērōdēs: 950 words.
+    // gen_sg like hērōdēs: 757 words.
     EndingTable {
         name: Cow::Borrowed("hērōdēs"),
-        words: 950,
+        words: 757,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
@@ -73,10 +73,10 @@ pub(super) static TABLES: [EndingTable<'static>; 11] = [
             "\t\t",
         )),
     },
-    // gen_sg like hippō: 241 words.
+    // gen_sg like hippō: 432 words.
     EndingTable {
         name: Cow::Borrowed("hippō"),
-        words: 241,
+        words: 432,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "\t",

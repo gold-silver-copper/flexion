@@ -2,40 +2,17 @@
 //! A declension that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 167] = [
     // NOM_PL, from NOM_SG.
     relation!(NOM_PL, [NOM_SG], [], none, false, None),
@@ -46,81 +23,83 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
     // GEN_PL, from NOM_SG.
     relation!(GEN_PL, [NOM_SG], [], none, false, None),
     // PAR_SG, from NOM_SG.
-    relation!(PAR_SG, [NOM_SG], [("~", "~A"), ("~", "~a"), ("~", "~iA"), ("~", "~iä"), ("~", "~tA"), ("~", "~tTA"), ("~", "~tTä"), ("~", "~ta"), ("~", "~tä"), ("~", "~ä"), ("~i", "~eA"), ("~i", "~eä"), ("~i", "~tA"), ("~i", "~tä"), ("~mi", "~ntA"), ("~nen", "~stA"), ("~nen", "~stä"), ("~psi", "~stA"), ("~s", "~tTA"), ("~si", "~tTA"), ("~si", "~tTä")], rules {
-        "" => [0 3508, 4 878, 15 728, 5 303, 18 193, 10 91, 12 61, 2 36, 19 35, 6 24, 9 16, 8 14, 11 11, 1 10, 13 10, 14 8, 20 6, 16 5, 7 4, 17 3, 3 2],
+    relation!(PAR_SG, [NOM_SG], [("~", "~A"), ("~", "~a"), ("~", "~iA"), ("~", "~iä"), ("~", "~tA"), ("~", "~ta"), ("~", "~ttA"), ("~", "~ttÄ"), ("~", "~tÄ"), ("~", "~Ä"), ("~", "~ä"), ("~i", "~eA"), ("~i", "~eÄ"), ("~i", "~tA"), ("~i", "~tÄ"), ("~i", "~tä"), ("~mi", "~ntA"), ("~nen", "~stA"), ("~nen", "~stÄ"), ("~nen", "~stä"), ("~psi", "~stA"), ("~s", "~ttA"), ("~si", "~ttA"), ("~si", "~ttÄ"), ("~si", "~ttä")], rules {
+        "" => [0 3508, 4 878, 17 728, 6 303, 21 193, 11 91, 14 63, 2 36, 23 36, 7 24, 8 14, 9 14, 12 11, 1 9, 16 8, 13 5, 5 4, 10 3, 15 3, 18 3, 20 3, 22 3, 3 2, 19 2, 24 2],
         "a" => [0 1182, 4 9, 1 4],
         "aa" => [4 9],
         "ga" => [1 4],
         "ja" => [0 200],
         "ka" => [0 231],
-        "e" => [5 303, 6 24, 0 16, 4 7, 7 4, 8 1],
-        "ee" => [4 6, 7 3, 8 1],
+        "e" => [6 303, 7 24, 0 16, 4 7, 5 4, 8 1],
+        "ee" => [4 6, 5 3, 8 1],
         "kke" => [0 2],
-        "le" => [5 18, 0 4],
-        "re" => [5 21],
+        "le" => [6 18, 0 4],
+        "re" => [6 21],
         "sse" => [0 2],
-        "te" => [5 66, 6 12],
-        "iste" => [6 9, 5 8],
-        "ue" => [5 23],
+        "te" => [6 66, 7 12],
+        "iste" => [7 9, 6 8],
+        "ue" => [6 23],
         "g" => [2 3],
-        "i" => [0 1019, 10 91, 12 61, 19 35, 9 16, 11 11, 13 10, 14 8, 4 7, 20 6, 1 3, 17 3],
+        "i" => [0 1019, 11 91, 14 63, 23 36, 9 14, 12 11, 16 8, 4 7, 13 5, 10 3, 15 3, 20 3, 22 3, 1 2, 24 2],
         "ai" => [4 3],
         "di" => [0 16],
         "gi" => [0 14],
-        "hi" => [0 4, 12 4, 10 1],
-        "ki" => [0 111, 10 34, 9 5, 11 1],
+        "ohi" => [14 3],
+        "ki" => [0 111, 11 34, 9 5, 12 1],
         "kki" => [0 88, 9 5],
         "erkki" => [0 6, 9 4],
-        "lki" => [10 4],
-        "rki" => [10 5],
-        "tki" => [10 7, 11 1],
-        "äki" => [10 6],
-        "li" => [0 127, 12 24, 9 3, 13 2],
+        "lki" => [11 4],
+        "rki" => [11 5],
+        "tki" => [11 7, 12 1],
+        "äki" => [11 6],
+        "li" => [0 127, 14 24, 9 2, 13 2, 10 1],
         "ali" => [0 30],
-        "ieli" => [12 3, 13 2],
+        "ieli" => [14 5],
+        "peli" => [0 4, 9 2],
         "lli" => [0 27],
-        "oli" => [12 14, 0 10],
-        "uoli" => [12 14, 0 1],
-        "uuli" => [12 4, 0 1],
-        "mi" => [0 46, 10 8, 14 8, 9 2, 11 1],
-        "imi" => [14 4, 10 3, 0 1, 11 1],
-        "ni" => [0 80, 12 13, 13 5, 10 1],
+        "oli" => [14 14, 0 10],
+        "uoli" => [14 14, 0 1],
+        "uuli" => [14 4, 0 1],
+        "mi" => [0 46, 11 8, 16 8, 9 1, 10 1, 12 1],
+        "imi" => [16 4, 11 3, 0 1, 12 1],
+        "ni" => [0 80, 14 17, 11 1, 13 1],
         "ani" => [0 22],
-        "eni" => [0 7, 13 5, 12 3],
-        "ieni" => [13 5, 12 3],
-        "uoni" => [12 4],
+        "eni" => [14 8, 0 7],
+        "ieni" => [14 8],
+        "uoni" => [14 4],
         "oi" => [4 2],
-        "pi" => [0 46, 10 13],
-        "ppi" => [0 43, 10 2],
-        "ri" => [0 217, 12 15, 9 3, 13 3, 1 2],
+        "pi" => [0 46, 11 13],
+        "ppi" => [0 43, 11 2],
+        "ri" => [0 217, 14 14, 9 3, 15 3, 1 2, 13 1],
         "eri" => [0 54, 9 2],
-        "iri" => [0 6, 13 3, 12 2],
-        "uori" => [12 3, 0 2],
-        "uuri" => [0 8, 12 6],
-        "juuri" => [12 6],
+        "iri" => [0 6, 15 3, 13 1, 14 1],
+        "uori" => [14 3, 0 2],
+        "uuri" => [0 8, 14 6],
+        "juuri" => [14 6],
         "yri" => [0 2, 1 2],
-        "si" => [0 92, 19 35, 20 6, 12 5, 10 3, 17 3, 9 2],
-        "esi" => [19 5, 20 4, 0 2],
-        "ksi" => [0 7, 10 2],
-        "nsi" => [19 8, 0 1],
-        "psi" => [0 3, 17 3, 10 1],
-        "rsi" => [19 8, 20 2, 0 1],
+        "si" => [0 92, 23 36, 14 5, 11 3, 20 3, 22 3, 24 2, 9 1, 10 1],
+        "esi" => [23 9, 0 2],
+        "ksi" => [0 7, 11 2],
+        "nsi" => [23 8, 0 1],
+        "psi" => [0 3, 20 3, 11 1],
+        "rsi" => [23 6, 22 2, 24 2, 0 1],
         "ssi" => [0 50, 9 1],
-        "usi" => [19 7, 12 5, 0 1],
-        "ti" => [0 221, 10 10, 11 4, 1 1, 9 1],
-        "hti" => [0 10, 10 10, 11 4],
-        "ähti" => [10 8],
-        "vi" => [0 36, 10 21, 11 5],
+        "usi" => [23 7, 14 5, 0 1],
+        "ti" => [0 221, 11 10, 12 4, 9 2],
+        "hti" => [0 10, 11 10, 12 4],
+        "ähti" => [11 8],
+        "tti" => [0 124, 9 2],
+        "vi" => [0 36, 11 21, 12 5],
         "iivi" => [0 11],
-        "kivi" => [10 5, 11 3],
+        "kivi" => [11 5, 12 3],
         "k" => [2 3, 3 1],
         "l" => [4 10, 2 2],
         "m" => [2 4],
-        "n" => [15 728, 4 128, 2 9, 16 5, 8 2],
-        "en" => [15 728, 4 9, 16 5, 2 3],
+        "n" => [17 728, 4 128, 2 9, 18 3, 8 2, 19 2],
+        "en" => [17 728, 4 9, 2 3, 18 3, 19 2],
         "gen" => [2 2],
         "men" => [4 4],
-        "nen" => [15 728, 16 5],
+        "nen" => [17 728, 18 3, 19 2],
         "sen" => [4 2],
         "ven" => [4 2],
         "in" => [4 114, 8 2],
@@ -137,24 +116,24 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "to" => [0 171],
         "p" => [2 3],
         "r" => [4 13, 2 6],
-        "s" => [4 544, 18 193, 8 11, 2 2],
+        "s" => [4 544, 21 193, 8 11, 2 2],
         "as" => [4 61],
         "es" => [4 16, 8 11, 2 1],
         "is" => [4 20],
         "os" => [4 41],
-        "us" => [4 294, 18 137],
-        "aus" => [4 76, 18 10],
-        "eus" => [18 23, 4 1],
+        "us" => [4 294, 21 137],
+        "aus" => [4 76, 21 10],
+        "eus" => [21 23, 4 1],
         "lus" => [4 12],
         "mus" => [4 17],
         "nus" => [4 22],
         "tus" => [4 137],
-        "uus" => [18 95],
-        "ys" => [4 94, 18 56],
-        "eys" => [18 13],
+        "uus" => [21 95],
+        "ys" => [4 94, 21 56],
+        "eys" => [21 13],
         "nys" => [4 9],
         "tys" => [4 64],
-        "yys" => [18 42],
+        "yys" => [21 42],
         "äys" => [4 10],
         "äs" => [4 9],
         "ös" => [4 9],
@@ -180,8 +159,8 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
     // PAR_PL, from NOM_SG.
     relation!(PAR_PL, [NOM_SG], [], none, false, None),
     // INE_SG, from NOM_PL.
-    relation!(INE_SG, [NOM_PL], [("~t", "~ssA"), ("~t", "~ssa"), ("~t", "~ssä")], rules {
-        "" => [0 5828, 2 88, 1 19],
+    relation!(INE_SG, [NOM_PL], [("~t", "~ssA"), ("~t", "~ssa"), ("~t", "~ssÄ"), ("~t", "~ssä")], rules {
+        "" => [0 5828, 2 83, 1 19, 3 5],
         "at" => [0 1241, 1 13],
         "gat" => [1 13],
         "et" => [0 2075, 2 70],
@@ -203,22 +182,24 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ät" => [0 287],
     } listed {}, true, None),
     // INE_PL, from ALL_PL.
-    relation!(INE_PL, [ALL_PL], [("~lle", "~ssA"), ("~lle", "~ssa"), ("~lle", "~ssä")], rules {
-        "" => [0 5867, 2 105, 1 7],
-        "ehdille" => [2 4, 0 1],
-        "erkeille" => [0 6, 2 4],
+    relation!(INE_PL, [ALL_PL], [("~lle", "~ssA"), ("~lle", "~ssa"), ("~lle", "~ssÄ"), ("~lle", "~ssä")], rules {
+        "" => [0 5867, 2 89, 3 16, 1 7],
+        "dille" => [0 41, 2 5],
+        "eille" => [0 1401, 2 43, 1 3],
         "yreille" => [0 2, 1 2],
         "steille" => [0 53, 2 10],
         "hille" => [0 18, 2 14],
-        "ilmille" => [0 5, 2 4],
-        "enille" => [0 13, 2 5],
+        "lmille" => [0 36, 3 4],
+        "nille" => [0 69, 2 6],
+        "ienille" => [2 5, 0 3],
         "oille" => [0 1352],
-        "iirille" => [2 3, 0 2],
-        "sille" => [0 1469, 2 13],
+        "irille" => [0 7, 3 3],
+        "sille" => [0 1469, 2 9, 3 4],
         "esille" => [0 7, 2 6],
         "ksille" => [0 664],
+        "irsille" => [0 2, 3 2],
         "uille" => [0 383],
-        "iville" => [0 17, 2 4],
+        "iville" => [0 17, 3 3, 2 1],
         "yille" => [0 98, 1 3],
     } listed {}, true, None),
     // ELA_SG, from INE_SG.
@@ -234,19 +215,19 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ä" => [1 1479],
     } listed {}, true, None),
     // ILL_SG, from NOM_SG.
-    relation!(ILL_SG, [NOM_SG], [("~", "~VVn"), ("~", "~Vn"), ("~", "~VsVVn"), ("~", "~an"), ("~", "~eVsVVn"), ("~", "~hVn"), ("~", "~iVn"), ("~", "~in"), ("~", "~seVn"), ("~ar", "~TAreVn"), ("~as", "~kAAseVn"), ("~as", "~paaseen"), ("~din", "~timeen"), ("~e", "~TeVsVVn"), ("~e", "~keVsVVn"), ("~e", "~peVsVVn"), ("~gas", "~kaaseen"), ("~i", "~eVn"), ("~in", "~TimeVn"), ("~je", "~keVsVVn"), ("~jin", "~kimeVn"), ("~le", "~teVsVVn"), ("~mas", "~pAAseVn"), ("~me", "~peVsVVn"), ("~n", "~meVn"), ("~ne", "~teVsVVn"), ("~nen", "~seVn"), ("~ner", "~tereeseen"), ("~nin", "~timeen"), ("~ras", "~taaseen"), ("~re", "~teVsVVn"), ("~s", "~VseVn"), ("~s", "~hVVn"), ("~s", "~iseen"), ("~s", "~kseVn"), ("~s", "~teVn"), ("~si", "~teVn"), ("~t", "~eVn"), ("~ve", "~peVsVVn"), ("~yt", "~eVsVVn"), ("~är", "~TAreVn"), ("~ön", "~tömään")], rules {
-        "" => [1 2595, 7 1038, 26 733, 34 465, 2 199, 35 193, 17 185, 5 72, 24 64, 14 47, 13 41, 36 41, 6 38, 18 36, 31 31, 32 17, 25 15, 10 12, 0 11, 12 7, 16 7, 30 7, 38 7, 4 6, 9 6, 8 5, 28 5, 29 5, 3 4, 19 4, 33 4, 11 3, 21 3, 22 3, 27 3, 15 2, 20 2, 23 2, 37 2, 39 2, 40 2, 41 2],
+    relation!(ILL_SG, [NOM_SG], [("~", "~VVn"), ("~", "~Vn"), ("~", "~VsVVn"), ("~", "~an"), ("~", "~eVsVVn"), ("~", "~hVn"), ("~", "~iIn"), ("~", "~in"), ("~", "~seVn"), ("~ar", "~tAreVn"), ("~as", "~kAAseVn"), ("~as", "~paaseen"), ("~din", "~timeVn"), ("~e", "~keVsVVn"), ("~e", "~peVsVVn"), ("~e", "~teVsVVn"), ("~gas", "~kaaseen"), ("~i", "~eVn"), ("~in", "~timeVn"), ("~je", "~keVsVVn"), ("~jin", "~kimeVn"), ("~le", "~teVsVVn"), ("~mas", "~pAAseVn"), ("~me", "~peVsVVn"), ("~n", "~meVn"), ("~ne", "~teVsVVn"), ("~nen", "~seVn"), ("~ner", "~terVVsVVn"), ("~nin", "~timeVn"), ("~ras", "~tAAseVn"), ("~re", "~teVsVVn"), ("~s", "~VseVn"), ("~s", "~hVVn"), ("~s", "~iseen"), ("~s", "~kseVn"), ("~s", "~teVn"), ("~si", "~teVn"), ("~t", "~eVn"), ("~ve", "~peVsVVn"), ("~yt", "~eVsVVn"), ("~är", "~tAreVn"), ("~ön", "~tömään")], rules {
+        "" => [1 2595, 7 1038, 26 733, 34 465, 2 199, 35 193, 17 185, 5 72, 24 64, 13 47, 15 41, 36 41, 6 38, 18 36, 31 31, 32 17, 25 15, 10 12, 0 11, 12 7, 16 7, 30 7, 38 7, 4 6, 9 6, 8 5, 28 5, 29 5, 3 4, 19 4, 33 4, 11 3, 21 3, 22 3, 27 3, 14 2, 20 2, 23 2, 37 2, 39 2, 40 2, 41 2],
         "a" => [1 1181, 5 8, 3 4, 8 1],
         "aa" => [5 8, 8 1],
         "ga" => [3 4],
         "ja" => [1 200],
         "ka" => [1 231],
-        "e" => [2 199, 14 47, 13 41, 1 16, 25 15, 5 11, 30 7, 38 7, 19 4, 21 3, 15 2, 23 2],
+        "e" => [2 199, 13 47, 15 41, 1 16, 25 15, 5 11, 30 7, 38 7, 19 4, 21 3, 14 2, 23 2],
         "de" => [2 32],
         "ee" => [5 10],
-        "he" => [2 13, 14 1],
+        "he" => [2 13, 13 1],
         "je" => [2 6, 19 4],
-        "ke" => [14 39, 1 2, 2 2],
+        "ke" => [13 39, 1 2, 2 2],
         "kke" => [1 2],
         "le" => [2 15, 1 4, 21 3],
         "lle" => [21 3, 1 2],
@@ -254,14 +235,14 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ne" => [2 32, 25 15, 1 2],
         "ine" => [2 20],
         "nne" => [25 15, 1 1],
-        "oe" => [14 3],
-        "pe" => [15 2],
+        "oe" => [13 3],
+        "pe" => [14 2],
         "re" => [2 14, 30 7],
         "rre" => [30 7],
         "se" => [2 10, 1 2],
-        "te" => [13 41, 2 37],
-        "ate" => [13 7],
-        "ite" => [13 22],
+        "te" => [15 41, 2 37],
+        "ate" => [15 7],
+        "ite" => [15 22],
         "ste" => [2 37],
         "ue" => [2 23],
         "ve" => [38 7, 2 4],
@@ -424,14 +405,14 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
     // ALL_PL, from POSSESSIVE_COM_PL_1SG.
     relation!(ALL_PL, [POSSESSIVE_COM_PL_1SG], [], none, false, None),
     // ESS_SG, from PAR_SG.
-    relation!(ESS_SG, [PAR_SG], [("~a", "~na"), ("~arta", "~TArenA"), ("~asta", "~kAAnA"), ("~asta", "~paana"), ("~detta", "~teVnA"), ("~dettä", "~teenä"), ("~dinta", "~timena"), ("~dintä", "~timenä"), ("~etta", "~TeVnA"), ("~etta", "~keVnA"), ("~etta", "~peVnA"), ("~että", "~TeVnä"), ("~että", "~keVnä"), ("~gasta", "~kaana"), ("~inta", "~timena"), ("~intä", "~timenä"), ("~jetta", "~keVnA"), ("~jettä", "~keVnA"), ("~jinta", "~kimena"), ("~lettä", "~teVnA"), ("~masta", "~pAAnA"), ("~metta", "~peVnA"), ("~nerta", "~terVnA"), ("~netta", "~teVnA"), ("~nettä", "~teVnA"), ("~ninta", "~timena"), ("~nta", "~menA"), ("~ntä", "~menA"), ("~rasta", "~taana"), ("~retta", "~teVnA"), ("~rettä", "~teVnA"), ("~sta", "~AnA"), ("~sta", "~ina"), ("~sta", "~ksenA"), ("~sta", "~psenA"), ("~stä", "~VnA"), ("~stä", "~hVnä"), ("~stä", "~ksenA"), ("~ta", "~enA"), ("~ta", "~nA"), ("~tta", "~enA"), ("~ttä", "~Vnä"), ("~tä", "~enä"), ("~tä", "~nä"), ("~vetta", "~peVnA"), ("~vettä", "~pVVnA"), ("~yttä", "~eVnA"), ("~ä", "~nä"), ("~ärtä", "~TArenA"), ("~öntä", "~tömänä")], rules {
-        "" => [0 2895, 47 781, 38 739, 33 350, 42 317, 39 130, 37 115, 40 111, 41 59, 26 53, 43 53, 9 26, 31 25, 8 23, 12 21, 14 21, 4 19, 27 19, 11 18, 36 17, 15 15, 5 13, 2 12, 23 10, 13 7, 1 6, 35 6, 24 5, 28 5, 7 4, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 30 3, 34 3, 45 3, 10 2, 16 2, 17 2, 18 2, 19 2, 21 2, 22 2, 46 2, 48 2, 49 2],
-        "a" => [0 2895, 38 739, 33 350, 39 130, 40 111, 26 53, 9 26, 31 25, 8 23, 14 21, 4 19, 2 12, 23 10, 13 7, 1 6, 28 5, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 34 3, 10 2, 16 2, 18 2, 21 2, 22 2],
+    relation!(ESS_SG, [PAR_SG], [("~a", "~na"), ("~arta", "~tArenA"), ("~asta", "~kAAnA"), ("~asta", "~paana"), ("~detta", "~teVnA"), ("~dettä", "~teVnÄ"), ("~dinta", "~timena"), ("~dintä", "~timenä"), ("~etta", "~keVnA"), ("~etta", "~peVnA"), ("~etta", "~teVnA"), ("~että", "~keVnÄ"), ("~että", "~teVnÄ"), ("~gasta", "~kaana"), ("~inta", "~timena"), ("~intä", "~timenä"), ("~jetta", "~keVnA"), ("~jettä", "~keVnA"), ("~jinta", "~kimena"), ("~lettä", "~teVnA"), ("~masta", "~pAAnA"), ("~metta", "~peVnA"), ("~nerta", "~terVnA"), ("~netta", "~teVnA"), ("~nettä", "~teVnA"), ("~ninta", "~timena"), ("~nta", "~menA"), ("~ntä", "~menA"), ("~rasta", "~tAAnA"), ("~retta", "~teVnA"), ("~rettä", "~teVnA"), ("~sta", "~AnA"), ("~sta", "~ina"), ("~sta", "~ksenA"), ("~sta", "~psenA"), ("~stä", "~VnA"), ("~stä", "~hVnÄ"), ("~stä", "~ksenA"), ("~ta", "~enA"), ("~ta", "~nA"), ("~tta", "~enA"), ("~ttä", "~VnÄ"), ("~tä", "~enÄ"), ("~tä", "~nä"), ("~vetta", "~peVnA"), ("~vettä", "~pVVnA"), ("~yttä", "~eVnA"), ("~ä", "~nä"), ("~ärtä", "~tArenA"), ("~öntä", "~tömänä")], rules {
+        "" => [0 2895, 47 781, 38 739, 33 350, 42 317, 39 130, 37 115, 40 111, 41 59, 26 53, 43 53, 8 26, 31 25, 10 23, 11 21, 14 21, 4 19, 27 19, 12 18, 36 17, 15 15, 5 13, 2 12, 23 10, 13 7, 1 6, 35 6, 24 5, 28 5, 7 4, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 30 3, 34 3, 45 3, 9 2, 16 2, 17 2, 18 2, 19 2, 21 2, 22 2, 46 2, 48 2, 49 2],
+        "a" => [0 2895, 38 739, 33 350, 39 130, 40 111, 26 53, 8 26, 31 25, 10 23, 14 21, 4 19, 2 12, 23 10, 13 7, 1 6, 28 5, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 34 3, 9 2, 16 2, 18 2, 21 2, 22 2],
         "aa" => [0 1187],
         "ea" => [0 53],
         "ia" => [0 791],
         "oa" => [0 507],
-        "ta" => [38 739, 33 350, 39 130, 40 111, 26 53, 9 26, 31 25, 8 23, 14 21, 4 19, 2 12, 23 10, 13 7, 1 6, 28 5, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 34 3, 10 2, 16 2, 18 2, 21 2, 22 2],
+        "ta" => [38 739, 33 350, 39 130, 40 111, 26 53, 8 26, 31 25, 10 23, 14 21, 4 19, 2 12, 23 10, 13 7, 1 6, 28 5, 25 4, 29 4, 32 4, 44 4, 3 3, 6 3, 20 3, 34 3, 9 2, 16 2, 18 2, 21 2, 22 2],
         "ata" => [39 9],
         "eta" => [39 4],
         "ita" => [39 5],
@@ -465,19 +446,19 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "pusta" => [38 3, 33 1],
         "tusta" => [33 137],
         "uusta" => [38 4],
-        "tta" => [38 159, 40 111, 9 26, 8 23, 4 19, 23 10, 29 4, 44 4, 10 2, 16 2, 21 2],
-        "etta" => [40 109, 9 26, 8 23, 4 19, 23 10, 29 4, 44 4, 10 2, 16 2, 21 2],
+        "tta" => [38 159, 40 111, 8 26, 10 23, 4 19, 23 10, 29 4, 44 4, 9 2, 16 2, 21 2],
+        "etta" => [40 109, 8 26, 10 23, 4 19, 23 10, 29 4, 44 4, 9 2, 16 2, 21 2],
         "detta" => [4 19],
         "jetta" => [40 4, 16 2],
-        "ketta" => [9 21, 40 2],
+        "ketta" => [8 21, 40 2],
         "metta" => [21 2, 40 2],
         "netta" => [40 22, 23 10],
         "nnetta" => [23 10],
-        "petta" => [10 2],
+        "petta" => [9 2],
         "retta" => [40 9, 29 4],
         "setta" => [40 9],
-        "tetta" => [8 23, 40 19],
-        "itetta" => [8 10],
+        "tetta" => [10 23, 40 19],
+        "itetta" => [10 10],
         "stetta" => [40 19],
         "uetta" => [40 23],
         "vetta" => [40 4, 44 4],
@@ -486,10 +467,10 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "utta" => [38 144, 40 2],
         "uta" => [39 22],
         "ua" => [0 354],
-        "ä" => [47 781, 42 317, 37 115, 41 59, 43 53, 12 21, 27 19, 11 18, 36 17, 15 15, 5 13, 35 6, 24 5, 7 4, 30 3, 45 3, 17 2, 19 2, 46 2, 48 2, 49 2],
+        "ä" => [47 781, 42 317, 37 115, 41 59, 43 53, 11 21, 27 19, 12 18, 36 17, 15 15, 5 13, 35 6, 24 5, 7 4, 30 3, 45 3, 17 2, 19 2, 46 2, 48 2, 49 2],
         "eä" => [47 66],
         "iä" => [47 285],
-        "tä" => [42 317, 37 115, 41 59, 43 53, 12 21, 27 19, 11 18, 36 17, 15 15, 5 13, 35 6, 24 5, 7 4, 30 3, 45 3, 17 2, 19 2, 46 2, 48 2, 49 2],
+        "tä" => [42 317, 37 115, 41 59, 43 53, 11 21, 27 19, 12 18, 36 17, 15 15, 5 13, 35 6, 24 5, 7 4, 30 3, 45 3, 17 2, 19 2, 46 2, 48 2, 49 2],
         "etä" => [43 8],
         "ltä" => [42 10],
         "ntä" => [27 19, 42 16, 15 15, 7 4, 49 2],
@@ -508,15 +489,15 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ystä" => [37 94, 42 1],
         "ästä" => [35 5, 42 3, 37 1],
         "östä" => [37 9, 42 2],
-        "ttä" => [42 75, 41 59, 12 21, 11 18, 5 13, 24 5, 30 3, 45 3, 17 2, 19 2, 46 2],
-        "että" => [41 58, 12 21, 11 18, 5 13, 42 9, 24 5, 30 3, 45 3, 17 2, 19 2],
+        "ttä" => [42 75, 41 59, 11 21, 12 18, 5 13, 24 5, 30 3, 45 3, 17 2, 19 2, 46 2],
+        "että" => [41 58, 11 21, 12 18, 5 13, 42 9, 24 5, 30 3, 45 3, 17 2, 19 2],
         "dettä" => [5 13],
-        "kettä" => [12 18],
+        "kettä" => [11 18],
         "lettä" => [41 7, 19 2],
         "nettä" => [41 10, 24 5],
         "rettä" => [41 5, 30 3],
-        "tettä" => [11 18, 41 18],
-        "itettä" => [11 12],
+        "tettä" => [12 18, 41 18],
+        "itettä" => [12 12],
         "stettä" => [41 18],
         "vettä" => [42 7, 45 3],
         "yttä" => [42 57, 46 2],
@@ -538,26 +519,26 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         ],
     }, true, None),
     // ESS_PL, from INE_PL.
-    relation!(ESS_PL, [INE_PL], [("a~ssa", "ak~nA"), ("~deissa", "~teina"), ("~deissä", "~teinä"), ("~dissa", "~tinA"), ("~dissä", "~tinä"), ("~doissa", "~toina"), ("~duissa", "~tuina"), ("~dyissä", "~tyinä"), ("~döissä", "~töinä"), ("~eissa", "~Teina"), ("~eissa", "~keinA"), ("~eissa", "~peinA"), ("~eissä", "~Teinä"), ("~eissä", "~keinä"), ("~eissä", "~peinA"), ("~geissa", "~keinA"), ("~geissä", "~keinA"), ("~gissa", "~kinA"), ("~gissä", "~kinA"), ("~goissa", "~koinA"), ("~issa", "~TinA"), ("~issa", "~kinA"), ("~issa", "~pinA"), ("~issä", "~Tinä"), ("~issä", "~kinA"), ("~issä", "~pinä"), ("~jissa", "~ikVnA"), ("~jissa", "~kinA"), ("~jissä", "~kinA"), ("~joissa", "~ikoina"), ("~lissa", "~tinA"), ("~loissa", "~toina"), ("~missa", "~pinA"), ("~moissa", "~poinA"), ("~muissa", "~pVinA"), ("~möissä", "~pöinA"), ("~neissa", "~teina"), ("~neissä", "~teinä"), ("~nissa", "~tinA"), ("~nissä", "~tinA"), ("~noissa", "~toina"), ("~nuissa", "~tuina"), ("~nyissä", "~tyinä"), ("~nöissä", "~töinä"), ("~oissa", "~ToinA"), ("~oissa", "~koinA"), ("~oissa", "~poinA"), ("~roissa", "~toina"), ("~ssa", "~na"), ("~ssä", "~nä"), ("~uissa", "~TuinA"), ("~uissa", "~kuinA"), ("~uissa", "~puinA"), ("~vissa", "~pinA"), ("~vissä", "~pinä"), ("~voissa", "~poinA"), ("~vuissa", "~kVinA"), ("~vuissa", "~puinA"), ("~vyissä", "~kVinA"), ("~vyissä", "~pyinA"), ("~yissä", "~kyinA"), ("~yissä", "~pyinA"), ("~öissä", "~TöinA"), ("~öissä", "~köinA")], rules {
-        "" => [48 3507, 49 1214, 45 207, 9 98, 5 69, 40 69, 10 52, 51 52, 13 44, 44 43, 21 42, 12 29, 11 28, 52 25, 3 23, 50 23, 4 22, 36 22, 46 22, 19 18, 47 17, 63 17, 38 16, 43 16, 55 16, 1 15, 22 15, 24 15, 14 14, 6 13, 29 12, 37 12, 54 12, 56 12, 31 11, 62 11, 41 10, 53 10, 2 9, 20 8, 57 8, 25 7, 39 7, 7 5, 28 5, 32 5, 60 5, 61 5, 8 4, 15 4, 26 4, 27 4, 16 3, 17 3, 18 3, 23 3, 30 3, 0 2, 33 2, 34 2, 35 2, 42 2, 58 2, 59 2],
-        "a" => [48 3507, 45 207, 9 98, 5 69, 40 69, 10 52, 51 52, 44 43, 21 42, 11 28, 52 25, 3 23, 50 23, 36 22, 46 22, 19 18, 47 17, 38 16, 55 16, 1 15, 22 15, 6 13, 29 12, 56 12, 31 11, 41 10, 53 10, 20 8, 57 8, 32 5, 15 4, 26 4, 27 4, 17 3, 30 3, 0 2, 33 2, 34 2],
+    relation!(ESS_PL, [INE_PL], [("a~ssa", "ak~nA"), ("~deissa", "~teinA"), ("~deissä", "~teinA"), ("~dissa", "~tinA"), ("~dissä", "~tinä"), ("~doissa", "~toinA"), ("~duissa", "~tuinA"), ("~dyissä", "~tyinA"), ("~döissä", "~töinA"), ("~eissa", "~keinA"), ("~eissa", "~peinA"), ("~eissa", "~teina"), ("~eissä", "~keinÄ"), ("~eissä", "~peinA"), ("~eissä", "~teinÄ"), ("~geissa", "~keinA"), ("~geissä", "~keinA"), ("~gissa", "~kinA"), ("~gissä", "~kinA"), ("~goissa", "~koinA"), ("~issa", "~kinA"), ("~issa", "~pinA"), ("~issa", "~tinA"), ("~issä", "~kinA"), ("~issä", "~pinÄ"), ("~issä", "~tinÄ"), ("~jissa", "~ikVnA"), ("~jissa", "~kinA"), ("~jissä", "~kinA"), ("~joissa", "~ikoina"), ("~lissa", "~tinA"), ("~loissa", "~toinA"), ("~missa", "~pinA"), ("~moissa", "~poinA"), ("~muissa", "~pVinA"), ("~möissä", "~pöinA"), ("~neissa", "~teinA"), ("~neissä", "~teinA"), ("~nissa", "~tinA"), ("~nissä", "~tinA"), ("~noissa", "~toinA"), ("~nuissa", "~tuinA"), ("~nyissä", "~tyinA"), ("~nöissä", "~töinA"), ("~oissa", "~koinA"), ("~oissa", "~poinA"), ("~oissa", "~toinA"), ("~roissa", "~toinA"), ("~ssa", "~na"), ("~ssä", "~nä"), ("~uissa", "~kuinA"), ("~uissa", "~puinA"), ("~uissa", "~tuinA"), ("~vissa", "~pinA"), ("~vissä", "~pinä"), ("~voissa", "~poinA"), ("~vuissa", "~kVinA"), ("~vuissa", "~puinA"), ("~vyissä", "~kVinA"), ("~vyissä", "~pyinA"), ("~yissä", "~kyinA"), ("~yissä", "~pyinA"), ("~öissä", "~köinA"), ("~öissä", "~töinA")], rules {
+        "" => [48 3507, 49 1214, 44 207, 11 98, 5 69, 40 69, 9 52, 50 52, 12 44, 46 43, 20 42, 14 29, 10 28, 51 25, 3 23, 52 23, 4 22, 36 22, 45 22, 19 18, 47 17, 62 17, 38 16, 43 16, 55 16, 1 15, 21 15, 23 15, 13 14, 6 13, 29 12, 37 12, 54 12, 56 12, 31 11, 63 11, 41 10, 53 10, 2 9, 22 8, 57 8, 24 7, 39 7, 7 5, 28 5, 32 5, 60 5, 61 5, 8 4, 15 4, 26 4, 27 4, 16 3, 17 3, 18 3, 25 3, 30 3, 0 2, 33 2, 34 2, 35 2, 42 2, 58 2, 59 2],
+        "a" => [48 3507, 44 207, 11 98, 5 69, 40 69, 9 52, 50 52, 46 43, 20 42, 10 28, 51 25, 3 23, 52 23, 36 22, 45 22, 19 18, 47 17, 38 16, 55 16, 1 15, 21 15, 6 13, 29 12, 56 12, 31 11, 41 10, 53 10, 22 8, 57 8, 32 5, 15 4, 26 4, 27 4, 17 3, 30 3, 0 2, 33 2, 34 2],
         "aissa" => [48 71],
         "dissa" => [3 23, 48 1],
-        "eissa" => [48 795, 9 98, 10 52, 11 28, 36 22, 1 15, 15 4],
+        "eissa" => [48 795, 11 98, 9 52, 10 28, 36 22, 1 15, 15 4],
         "deissa" => [48 16, 1 15],
         "geissa" => [48 16, 15 4],
-        "keissa" => [10 51, 48 46],
+        "keissa" => [9 51, 48 46],
         "kkeissa" => [48 21],
         "leissa" => [48 105],
         "meissa" => [48 42],
         "neissa" => [48 97, 36 22],
         "nneissa" => [36 22, 48 10],
-        "peissa" => [11 28, 48 17],
+        "peissa" => [10 28, 48 17],
         "reissa" => [48 190],
         "seissa" => [48 78],
-        "teissa" => [48 108, 9 98],
-        "ateissa" => [9 30, 48 4],
-        "eteissa" => [9 12],
+        "teissa" => [48 108, 11 98],
+        "ateissa" => [11 30, 48 4],
+        "eteissa" => [11 12],
         "steissa" => [48 37],
         "tteissa" => [48 25],
         "ueissa" => [48 23],
@@ -566,127 +547,124 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "jissa" => [48 130, 26 4, 27 4],
         "ajissa" => [48 96],
         "pojissa" => [26 4, 48 2],
-        "kissa" => [21 31, 48 25],
+        "kissa" => [20 31, 48 25],
         "skissa" => [48 9],
         "tkissa" => [48 13],
-        "ukissa" => [21 12],
-        "lissa" => [48 44, 30 3, 21 2],
+        "ukissa" => [20 12],
+        "lissa" => [48 44, 30 3, 20 2],
         "missa" => [48 166, 32 5],
         "mmissa" => [32 5, 48 4],
         "nissa" => [48 27, 38 16],
         "nnissa" => [38 16, 48 5],
-        "oissa" => [48 857, 45 207, 5 69, 40 69, 44 43, 46 22, 19 18, 47 17, 55 16, 29 12, 31 11, 21 4, 33 2, 0 1],
-        "aoissa" => [45 7, 48 3],
+        "oissa" => [48 857, 44 207, 5 69, 40 69, 46 43, 45 22, 19 18, 47 17, 55 16, 29 12, 31 11, 20 4, 33 2, 0 1],
+        "aoissa" => [44 7, 48 3],
         "doissa" => [5 69, 48 6],
         "goissa" => [19 18, 48 9],
-        "hoissa" => [48 42, 45 3],
-        "ioissa" => [48 113, 45 6],
+        "hoissa" => [48 42, 44 3],
+        "ioissa" => [48 113, 44 6],
         "joissa" => [48 79, 29 12],
         "ajoissa" => [29 12, 48 12],
-        "koissa" => [45 171, 48 46, 0 1],
+        "koissa" => [44 171, 48 46, 0 1],
         "hkoissa" => [48 8],
-        "ikoissa" => [45 78, 48 3],
+        "ikoissa" => [44 78, 48 3],
         "skoissa" => [48 22],
         "tkoissa" => [48 7],
-        "ukoissa" => [45 26],
-        "loissa" => [48 138, 31 11, 45 8, 21 1],
-        "jaloissa" => [45 3],
+        "ukoissa" => [44 26],
+        "loissa" => [48 138, 31 11, 44 8, 20 1],
+        "jaloissa" => [44 3],
         "lloissa" => [48 30, 31 11],
         "moissa" => [48 60, 33 2],
-        "noissa" => [48 111, 40 69, 21 1],
+        "noissa" => [48 111, 40 69, 20 1],
         "anoissa" => [48 29],
         "inoissa" => [48 39],
         "nnoissa" => [40 69, 48 5],
         "unoissa" => [48 18],
-        "poissa" => [46 22, 48 5],
-        "roissa" => [48 67, 47 17, 45 5],
+        "poissa" => [45 22, 48 5],
+        "roissa" => [48 67, 47 17, 44 5],
         "rroissa" => [47 17, 48 5],
         "soissa" => [48 46],
-        "toissa" => [48 74, 44 43],
-        "itoissa" => [44 15, 48 1],
-        "otoissa" => [44 9],
+        "toissa" => [48 74, 46 43],
+        "itoissa" => [46 15, 48 1],
+        "otoissa" => [46 9],
         "stoissa" => [48 64],
-        "uoissa" => [45 3, 21 2, 48 2],
+        "uoissa" => [44 3, 20 2, 48 2],
         "voissa" => [48 46, 55 16],
-        "pissa" => [22 15],
+        "pissa" => [21 15],
         "rissa" => [48 41],
         "sissa" => [48 1062],
-        "tissa" => [20 8, 48 2],
-        "uissa" => [48 230, 51 52, 52 25, 50 23, 6 13, 56 12, 41 10, 57 8, 21 4, 34 2, 0 1],
+        "tissa" => [22 8, 48 2],
+        "uissa" => [48 230, 50 52, 51 25, 52 23, 6 13, 56 12, 41 10, 57 8, 20 4, 34 2, 0 1],
         "duissa" => [6 13, 48 2],
         "juissa" => [48 12],
-        "kuissa" => [51 41, 48 26, 0 1],
+        "kuissa" => [50 41, 48 26, 0 1],
         "skuissa" => [48 12],
-        "ukuissa" => [51 13],
-        "luissa" => [48 72, 51 6],
+        "ukuissa" => [50 13],
+        "luissa" => [48 72, 50 6],
         "muissa" => [48 17, 34 2],
         "nuissa" => [41 10, 48 8],
-        "puissa" => [52 25, 48 9],
-        "suissa" => [48 43, 21 1],
-        "tuissa" => [50 23, 48 4, 21 2],
+        "puissa" => [51 25, 48 9],
+        "suissa" => [48 43, 20 1],
+        "tuissa" => [52 23, 48 4, 20 2],
         "vuissa" => [56 12, 57 8, 48 7],
         "uvuissa" => [56 12, 57 1],
         "vissa" => [48 40, 53 10],
-        "ä" => [49 1214, 13 44, 12 29, 4 22, 63 17, 43 16, 24 15, 14 14, 37 12, 54 12, 62 11, 2 9, 25 7, 39 7, 7 5, 28 5, 60 5, 61 5, 8 4, 16 3, 18 3, 23 3, 35 2, 42 2, 58 2, 59 2],
+        "ä" => [49 1214, 12 44, 14 29, 4 22, 62 17, 43 16, 23 15, 13 14, 37 12, 54 12, 63 11, 2 9, 24 7, 39 7, 7 5, 28 5, 60 5, 61 5, 8 4, 16 3, 18 3, 25 3, 35 2, 42 2, 58 2, 59 2],
         "dissä" => [4 22],
-        "eissä" => [49 320, 13 44, 12 29, 14 14, 37 12, 2 9, 16 3],
+        "eissä" => [49 320, 12 44, 14 29, 13 14, 37 12, 2 9, 16 3],
         "deissä" => [2 9],
         "geissä" => [16 3, 49 3],
-        "keissä" => [13 44, 49 30],
+        "keissä" => [12 44, 49 30],
         "kkeissä" => [49 18],
-        "rkeissä" => [13 14],
+        "rkeissä" => [12 14],
         "leissä" => [49 50],
         "neissä" => [49 28, 37 12],
         "nneissä" => [37 12, 49 5],
-        "peissä" => [14 14, 49 4],
+        "peissä" => [13 14, 49 4],
         "reissä" => [49 56],
         "seissä" => [49 33],
-        "teissä" => [49 71, 12 29],
-        "eteissä" => [12 11, 49 1],
+        "teissä" => [49 71, 14 29],
+        "eteissä" => [14 11, 49 1],
         "steissä" => [49 26],
         "gissä" => [18 3],
         "hissä" => [49 26],
         "jissä" => [49 48, 28 5],
-        "kissä" => [49 13, 24 3],
+        "kissä" => [49 13, 23 3],
         "missä" => [49 89],
         "nissä" => [49 25, 39 7],
         "nnissä" => [39 7],
-        "pissä" => [25 7],
+        "pissä" => [24 7],
         "sissä" => [49 420],
-        "tissä" => [23 3],
+        "tissä" => [25 3],
         "vissä" => [49 32, 54 12],
         "yissä" => [49 74, 7 5, 60 5, 61 5, 42 2, 58 2, 59 2],
         "dyissä" => [7 5],
         "pyissä" => [61 5, 49 1],
-        "äissä" => [49 22, 24 9],
-        "öissä" => [49 94, 63 17, 43 16, 62 11, 8 4, 35 2],
+        "äissä" => [49 22, 23 9],
+        "öissä" => [49 94, 62 17, 43 16, 63 11, 8 4, 35 2],
         "döissä" => [8 4],
         "iöissä" => [49 20],
         "jöissä" => [49 15],
-        "köissä" => [63 16, 49 1],
+        "köissä" => [62 16, 49 1],
         "löissä" => [49 15],
         "möissä" => [35 2],
         "nöissä" => [43 16, 49 9],
         "nnöissä" => [43 16],
-        "töissä" => [49 21, 62 11],
+        "töissä" => [49 21, 63 11],
     } listed {
-        9 => [
+        11 => [
             "briteissa",
         ],
-        21 => [
+        20 => [
             "uhissa",
         ],
         32 => [
-            "sammissa", "ummissa", "vanhemmissa", "vanhimmissa",
+            "vanhimmissa",
         ],
         48 => [
-            "kalvoissa", "koissa",
+            "koissa",
         ],
         49 => [
             "ikeissä",
-        ],
-        55 => [
-            "kalvoissa", "salvoissa",
         ],
     }, true, None),
     // TRA_SG, from POSSESSIVE_TRA_SG_1SG.
@@ -694,17 +672,17 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5946],
     } listed {}, true, None),
     // TRA_PL, from ALL_PL.
-    relation!(TRA_PL, [ALL_PL], [("~lle", "~ksV")], rules {
+    relation!(TRA_PL, [ALL_PL], [("~lle", "~ksI")], rules {
         "" => [0 5979],
     } listed {}, true, None),
     // ABE_SG, from INE_SG.
-    relation!(ABE_SG, [INE_SG], [("~ssa", "~tta"), ("~ssä", "~tTä")], rules {
+    relation!(ABE_SG, [INE_SG], [("~ssa", "~tta"), ("~ssä", "~ttä")], rules {
         "" => [0 4478, 1 1467],
         "a" => [0 4478],
         "ä" => [1 1467],
     } listed {}, true, None),
     // ABE_PL, from INE_PL.
-    relation!(ABE_PL, [INE_PL], [("~ssa", "~tTa"), ("~ssä", "~tTä")], rules {
+    relation!(ABE_PL, [INE_PL], [("~ssa", "~tta"), ("~ssä", "~ttä")], rules {
         "" => [0 4500, 1 1479],
         "a" => [0 4500],
         "ä" => [1 1479],
@@ -726,15 +704,15 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "än" => [1 1482],
     } listed {}, false, Some((POSSESSIVE_ESS_PL_3, POSSESSIVE_COM_PL_3))),
     // POSSESSIVE_NOM_SG_1SG, from NOM_SG.
-    relation!(POSSESSIVE_NOM_SG_1SG, [NOM_SG], [("~", "~Vni"), ("~", "~eni"), ("~", "~inV"), ("~", "~ni"), ("~ar", "~TAreni"), ("~as", "~kAAni"), ("~as", "~paani"), ("~din", "~timeni"), ("~e", "~TeVni"), ("~e", "~keVni"), ("~e", "~peVni"), ("~gas", "~kaani"), ("~i", "~eni"), ("~i", "~jVni"), ("~in", "~timeni"), ("~je", "~keVni"), ("~jin", "~kimeni"), ("~le", "~teVni"), ("~mas", "~pAAni"), ("~me", "~peVni"), ("~n", "~meni"), ("~ne", "~teVni"), ("~nen", "~seni"), ("~ner", "~terVni"), ("~nin", "~timeni"), ("~ras", "~taani"), ("~re", "~teVni"), ("~s", "~Vni"), ("~s", "~hVni"), ("~s", "~ini"), ("~s", "~kseni"), ("~s", "~teni"), ("~si", "~teni"), ("~t", "~eni"), ("~ve", "~peVni"), ("~yt", "~eVni"), ("~är", "~TAreni"), ("~ön", "~tömäni")], rules {
-        "" => [3 3717, 22 733, 30 465, 0 214, 31 193, 12 185, 20 64, 9 47, 32 42, 8 41, 2 36, 14 36, 27 31, 28 17, 21 15, 5 12, 7 7, 11 7, 26 7, 34 7, 4 6, 24 5, 25 5, 1 4, 15 4, 29 4, 6 3, 17 3, 18 3, 23 3, 10 2, 13 2, 16 2, 19 2, 33 2, 35 2, 36 2, 37 2],
+    relation!(POSSESSIVE_NOM_SG_1SG, [NOM_SG], [("~", "~Vni"), ("~", "~eni"), ("~", "~inI"), ("~", "~ni"), ("~ar", "~tAreni"), ("~as", "~kAAni"), ("~as", "~paani"), ("~din", "~timeni"), ("~e", "~keVni"), ("~e", "~peVni"), ("~e", "~teVni"), ("~gas", "~kaani"), ("~i", "~eni"), ("~i", "~jVni"), ("~in", "~timeni"), ("~je", "~keVni"), ("~jin", "~kimeni"), ("~le", "~teVni"), ("~mas", "~pAAni"), ("~me", "~peVni"), ("~n", "~meni"), ("~ne", "~teVni"), ("~nen", "~seni"), ("~ner", "~terVni"), ("~nin", "~timeni"), ("~ras", "~tAAni"), ("~re", "~teVni"), ("~s", "~Vni"), ("~s", "~hVnI"), ("~s", "~ini"), ("~s", "~kseni"), ("~s", "~teni"), ("~si", "~teni"), ("~t", "~eni"), ("~ve", "~peVni"), ("~yt", "~eVni"), ("~är", "~tAreni"), ("~ön", "~tömäni")], rules {
+        "" => [3 3717, 22 733, 30 465, 0 214, 31 193, 12 185, 20 64, 8 47, 32 42, 10 41, 2 36, 14 36, 27 31, 28 17, 21 15, 5 12, 7 7, 11 7, 26 7, 34 7, 4 6, 24 5, 25 5, 1 4, 15 4, 29 4, 6 3, 17 3, 18 3, 23 3, 9 2, 13 2, 16 2, 19 2, 33 2, 35 2, 36 2, 37 2],
         "a" => [3 1195],
-        "e" => [0 199, 9 47, 8 41, 3 28, 21 15, 26 7, 34 7, 15 4, 17 3, 10 2, 19 2],
+        "e" => [0 199, 8 47, 10 41, 3 28, 21 15, 26 7, 34 7, 15 4, 17 3, 9 2, 19 2],
         "de" => [0 32, 3 1],
         "ee" => [3 10],
-        "he" => [0 13, 9 1],
+        "he" => [0 13, 8 1],
         "je" => [0 6, 15 4],
-        "ke" => [9 39, 0 2, 3 2],
+        "ke" => [8 39, 0 2, 3 2],
         "kke" => [3 2],
         "le" => [0 15, 3 4, 17 3],
         "lle" => [17 3, 3 2],
@@ -742,14 +720,14 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "ne" => [0 32, 21 15, 3 2],
         "ine" => [0 20],
         "nne" => [21 15, 3 1],
-        "oe" => [9 3],
-        "pe" => [10 2],
+        "oe" => [8 3],
+        "pe" => [9 2],
         "re" => [0 14, 26 7],
         "rre" => [26 7],
         "se" => [0 10, 3 2],
-        "te" => [8 41, 0 37],
-        "ate" => [8 7],
-        "ite" => [8 22],
+        "te" => [10 41, 0 37],
+        "ate" => [10 7],
+        "ite" => [10 22],
         "ste" => [0 37],
         "ue" => [0 23],
         "ve" => [34 7, 0 4],
@@ -990,7 +968,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_GEN_PL_1PL, from POSSESSIVE_GEN_PL_1SG.
-    relation!(POSSESSIVE_GEN_PL_1PL, [POSSESSIVE_GEN_PL_1SG], [("~ni", "~mmV")], rules {
+    relation!(POSSESSIVE_GEN_PL_1PL, [POSSESSIVE_GEN_PL_1SG], [("~ni", "~mIV")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_GEN_PL_2PL, from POSSESSIVE_GEN_PL_1SG.
@@ -998,7 +976,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_GEN_PL_3, from GEN_PL.
-    relation!(POSSESSIVE_GEN_PL_3, [GEN_PL], [("~", "~sA"), ("~", "~sa"), ("~", "~sä")], rules {
+    relation!(POSSESSIVE_GEN_PL_3, [GEN_PL], [("~", "~sA"), ("~", "~sa"), ("~", "~sÄ")], rules {
         "" => [0 5875, 2 106, 1 7],
         "eiden" => [0 329, 2 25],
         "steiden" => [0 28, 2 10],
@@ -1030,7 +1008,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5952],
     } listed {}, true, None),
     // POSSESSIVE_PAR_SG_1PL, from PAR_SG.
-    relation!(POSSESSIVE_PAR_SG_1PL, [PAR_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_PAR_SG_1PL, [PAR_SG], [("~", "~mIe")], rules {
         "" => [0 5952],
     } listed {}, true, None),
     // POSSESSIVE_PAR_SG_2PL, from PAR_SG.
@@ -1058,7 +1036,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "öä" => [0 72],
     } listed {}, true, None),
     // POSSESSIVE_PAR_PL_1SG, from PAR_PL.
-    relation!(POSSESSIVE_PAR_PL_1SG, [PAR_PL], [("~", "~ni"), ("~ia", "~eAni"), ("~ia", "~ettani"), ("~ita", "~AtAni"), ("~itä", "~AtAni"), ("~iä", "~ettäni")], rules {
+    relation!(POSSESSIVE_PAR_PL_1SG, [PAR_PL], [("~", "~ni"), ("~ia", "~eAni"), ("~ia", "~ettAni"), ("~ita", "~AtAni"), ("~itä", "~AtAni"), ("~iä", "~VttAni")], rules {
         "" => [0 5959, 2 10, 1 7, 3 4, 5 3, 4 2],
         "ia" => [0 1672, 2 10, 1 7],
         "lia" => [0 37, 2 7],
@@ -1078,7 +1056,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_PAR_PL_1PL, from POSSESSIVE_PAR_PL_1SG.
-    relation!(POSSESSIVE_PAR_PL_1PL, [POSSESSIVE_PAR_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_PAR_PL_1PL, [POSSESSIVE_PAR_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_PAR_PL_2PL, from POSSESSIVE_PAR_PL_1SG.
@@ -1098,7 +1076,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5948],
     } listed {}, true, None),
     // POSSESSIVE_INE_SG_1PL, from INE_SG.
-    relation!(POSSESSIVE_INE_SG_1PL, [INE_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_INE_SG_1PL, [INE_SG], [("~", "~mIe")], rules {
         "" => [0 5948],
     } listed {}, true, None),
     // POSSESSIVE_INE_SG_2PL, from INE_SG.
@@ -1125,7 +1103,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_INE_PL_1PL, from POSSESSIVE_INE_PL_1SG.
-    relation!(POSSESSIVE_INE_PL_1PL, [POSSESSIVE_INE_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_INE_PL_1PL, [POSSESSIVE_INE_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_INE_PL_2PL, from POSSESSIVE_INE_PL_1SG.
@@ -1145,7 +1123,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ELA_SG_1PL, from ELA_SG.
-    relation!(POSSESSIVE_ELA_SG_1PL, [ELA_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_ELA_SG_1PL, [ELA_SG], [("~", "~mIe")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ELA_SG_2PL, from ELA_SG.
@@ -1172,7 +1150,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ELA_PL_1PL, from POSSESSIVE_ELA_PL_1SG.
-    relation!(POSSESSIVE_ELA_PL_1PL, [POSSESSIVE_ELA_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ELA_PL_1PL, [POSSESSIVE_ELA_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ELA_PL_2PL, from POSSESSIVE_ELA_PL_1SG.
@@ -1192,7 +1170,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5951],
     } listed {}, true, None),
     // POSSESSIVE_ILL_SG_1PL, from ILL_SG.
-    relation!(POSSESSIVE_ILL_SG_1PL, [ILL_SG], [("~n", "~mme")], rules {
+    relation!(POSSESSIVE_ILL_SG_1PL, [ILL_SG], [("~n", "~mIe")], rules {
         "" => [0 5951],
     } listed {}, true, None),
     // POSSESSIVE_ILL_SG_2PL, from ILL_SG.
@@ -1200,8 +1178,8 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5951],
     } listed {}, true, None),
     // POSSESSIVE_ILL_SG_3, from ILL_SG.
-    relation!(POSSESSIVE_ILL_SG_3, [ILL_SG], [("~", "~sA"), ("~", "~sa"), ("~", "~sä")], rules {
-        "" => [0 5856, 2 89, 1 6],
+    relation!(POSSESSIVE_ILL_SG_3, [ILL_SG], [("~", "~sA"), ("~", "~sa"), ("~", "~sÄ"), ("~", "~sä")], rules {
+        "" => [0 5856, 2 84, 1 6, 3 5],
         "an" => [0 1197],
         "en" => [0 2154, 2 71],
         "heen" => [0 11, 2 11],
@@ -1226,7 +1204,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         ],
     }, true, None),
     // POSSESSIVE_ILL_PL_1SG, from ILL_PL.
-    relation!(POSSESSIVE_ILL_PL_1SG, [ILL_PL], [("~", "~V"), ("~ihin", "~VseVni")], rules {
+    relation!(POSSESSIVE_ILL_PL_1SG, [ILL_PL], [("~", "~I"), ("~ihin", "~VseVni")], rules {
         "" => [0 5980, 1 8],
         "ileihin" => [0 8, 1 2],
         "iin" => [0 2899],
@@ -1240,7 +1218,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_ILL_PL_1PL, from POSSESSIVE_ILL_PL_1SG.
-    relation!(POSSESSIVE_ILL_PL_1PL, [POSSESSIVE_ILL_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ILL_PL_1PL, [POSSESSIVE_ILL_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_ILL_PL_2PL, from POSSESSIVE_ILL_PL_1SG.
@@ -1248,23 +1226,25 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_ILL_PL_3, from ILL_PL.
-    relation!(POSSESSIVE_ILL_PL_3, [ILL_PL], [("~", "~sA"), ("~", "~sa"), ("~", "~sä")], rules {
-        "" => [0 5875, 2 106, 1 7],
+    relation!(POSSESSIVE_ILL_PL_3, [ILL_PL], [("~", "~sA"), ("~", "~sa"), ("~", "~sÄ"), ("~", "~sä")], rules {
+        "" => [0 5875, 2 90, 3 16, 1 7],
         "hin" => [0 3064, 2 19, 1 6],
         "eihin" => [0 1083, 2 19, 1 3],
         "yreihin" => [0 2, 1 2],
         "oihin" => [0 1340],
         "yihin" => [0 98, 1 3],
-        "iin" => [0 2811, 2 87, 1 1],
+        "iin" => [0 2811, 2 71, 3 16, 1 1],
         "hiin" => [0 17, 2 14],
-        "ilmiin" => [0 5, 2 4],
+        "lmiin" => [0 36, 3 4],
         "eniin" => [0 14, 2 5],
-        "iiriin" => [2 3, 0 2],
+        "iriin" => [0 7, 3 3],
         "esiin" => [0 7, 2 6],
         "eisiin" => [0 322, 2 24],
-        "misiin" => [0 606, 2 4],
+        "misiin" => [0 606, 2 2, 3 2],
         "ksiin" => [0 664],
+        "irsiin" => [0 2, 3 2],
         "ehtiin" => [2 4, 0 1],
+        "iviin" => [0 14, 3 3],
     } listed {
         2 => [
             "isoihinveljiin",
@@ -1279,7 +1259,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ADE_SG_1PL, from ADE_SG.
-    relation!(POSSESSIVE_ADE_SG_1PL, [ADE_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_ADE_SG_1PL, [ADE_SG], [("~", "~mIe")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ADE_SG_2PL, from ADE_SG.
@@ -1306,7 +1286,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ADE_PL_1PL, from POSSESSIVE_ADE_PL_1SG.
-    relation!(POSSESSIVE_ADE_PL_1PL, [POSSESSIVE_ADE_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ADE_PL_1PL, [POSSESSIVE_ADE_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ADE_PL_2PL, from POSSESSIVE_ADE_PL_1SG.
@@ -1326,7 +1306,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ABL_SG_1PL, from ABL_SG.
-    relation!(POSSESSIVE_ABL_SG_1PL, [ABL_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_ABL_SG_1PL, [ABL_SG], [("~", "~mIe")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ABL_SG_2PL, from ABL_SG.
@@ -1353,7 +1333,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ABL_PL_1PL, from POSSESSIVE_ABL_PL_1SG.
-    relation!(POSSESSIVE_ABL_PL_1PL, [POSSESSIVE_ABL_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ABL_PL_1PL, [POSSESSIVE_ABL_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ABL_PL_2PL, from POSSESSIVE_ABL_PL_1SG.
@@ -1373,7 +1353,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ALL_SG_1PL, from ALL_SG.
-    relation!(POSSESSIVE_ALL_SG_1PL, [ALL_SG], [("~", "~mmV")], rules {
+    relation!(POSSESSIVE_ALL_SG_1PL, [ALL_SG], [("~", "~mIV")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ALL_SG_2PL, from ALL_SG.
@@ -1385,7 +1365,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ALL_PL_1SG, from ALL_PL.
-    relation!(POSSESSIVE_ALL_PL_1SG, [ALL_PL], [("~", "~ni"), ("~ille", "~eVllVni"), ("~ille", "~llVni")], rules {
+    relation!(POSSESSIVE_ALL_PL_1SG, [ALL_PL], [("~", "~nI"), ("~ille", "~eVllVni"), ("~ille", "~llVni")], rules {
         "" => [0 5966, 1 13, 2 2],
         "eleille" => [0 40, 2 2],
         "lille" => [0 58, 1 8],
@@ -1397,7 +1377,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ALL_PL_1PL, from POSSESSIVE_ALL_PL_1SG.
-    relation!(POSSESSIVE_ALL_PL_1PL, [POSSESSIVE_ALL_PL_1SG], [("~ni", "~mmV")], rules {
+    relation!(POSSESSIVE_ALL_PL_1PL, [POSSESSIVE_ALL_PL_1SG], [("~ni", "~mIV")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ALL_PL_2PL, from POSSESSIVE_ALL_PL_1SG.
@@ -1417,7 +1397,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5951],
     } listed {}, true, None),
     // POSSESSIVE_ESS_SG_1PL, from ESS_SG.
-    relation!(POSSESSIVE_ESS_SG_1PL, [ESS_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_ESS_SG_1PL, [ESS_SG], [("~", "~mIe")], rules {
         "" => [0 5951],
     } listed {}, true, None),
     // POSSESSIVE_ESS_SG_2PL, from ESS_SG.
@@ -1448,7 +1428,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_ESS_PL_1PL, from POSSESSIVE_ESS_PL_1SG.
-    relation!(POSSESSIVE_ESS_PL_1PL, [POSSESSIVE_ESS_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ESS_PL_1PL, [POSSESSIVE_ESS_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_ESS_PL_2PL, from POSSESSIVE_ESS_PL_1SG.
@@ -1468,7 +1448,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_TRA_SG_1PL, from POSSESSIVE_TRA_SG_1SG.
-    relation!(POSSESSIVE_TRA_SG_1PL, [POSSESSIVE_TRA_SG_1SG], [("~ni", "~mmV")], rules {
+    relation!(POSSESSIVE_TRA_SG_1PL, [POSSESSIVE_TRA_SG_1SG], [("~ni", "~mIV")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_TRA_SG_2PL, from POSSESSIVE_TRA_SG_1SG.
@@ -1488,7 +1468,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_TRA_PL_1PL, from POSSESSIVE_TRA_PL_1SG.
-    relation!(POSSESSIVE_TRA_PL_1PL, [POSSESSIVE_TRA_PL_1SG], [("~ni", "~mmV")], rules {
+    relation!(POSSESSIVE_TRA_PL_1PL, [POSSESSIVE_TRA_PL_1SG], [("~ni", "~mIV")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_TRA_PL_2PL, from POSSESSIVE_TRA_PL_1SG.
@@ -1508,7 +1488,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ABE_SG_1PL, from ABE_SG.
-    relation!(POSSESSIVE_ABE_SG_1PL, [ABE_SG], [("~", "~mme")], rules {
+    relation!(POSSESSIVE_ABE_SG_1PL, [ABE_SG], [("~", "~mIe")], rules {
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ABE_SG_2PL, from ABE_SG.
@@ -1520,7 +1500,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5947],
     } listed {}, true, None),
     // POSSESSIVE_ABE_PL_1SG, from ABE_PL.
-    relation!(POSSESSIVE_ABE_PL_1SG, [ABE_PL], [("~", "~ni"), ("~itta", "~eettani"), ("~ittä", "~eettäni"), ("~ittä", "~ttäni")], rules {
+    relation!(POSSESSIVE_ABE_PL_1SG, [ABE_PL], [("~", "~ni"), ("~itta", "~eettani"), ("~ittä", "~VVttAni"), ("~ittä", "~ttAni")], rules {
         "" => [0 5966, 1 10, 2 3, 3 2],
         "a" => [0 4491, 1 10],
         "litta" => [0 42, 1 7],
@@ -1535,7 +1515,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ABE_PL_1PL, from POSSESSIVE_ABE_PL_1SG.
-    relation!(POSSESSIVE_ABE_PL_1PL, [POSSESSIVE_ABE_PL_1SG], [("~ni", "~mme")], rules {
+    relation!(POSSESSIVE_ABE_PL_1PL, [POSSESSIVE_ABE_PL_1SG], [("~ni", "~mIe")], rules {
         "" => [0 5981],
     } listed {}, true, None),
     // POSSESSIVE_ABE_PL_2PL, from POSSESSIVE_ABE_PL_1SG.
@@ -1632,7 +1612,7 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
         "lesi" => [0 32, 2 2],
     } listed {}, true, Some((POSSESSIVE_NOM_PL_2SG, POSSESSIVE_NOM_SG_2SG))),
     // POSSESSIVE_COM_SG_1PL, from POSSESSIVE_COM_PL_1PL. Few or no words have it: changed as POSSESSIVE_NOM_PL_1PL is into POSSESSIVE_NOM_SG_1PL.
-    relation!(POSSESSIVE_COM_SG_1PL, [POSSESSIVE_COM_PL_1PL], [("~", "~"), ("~emme", "~mmV"), ("~mme", "~VmmV")], rules {
+    relation!(POSSESSIVE_COM_SG_1PL, [POSSESSIVE_COM_PL_1PL], [("~", "~"), ("~emme", "~mIV"), ("~mme", "~VmIV")], rules {
         "" => [0 5924, 1 13, 2 2],
         "eemme" => [0 339, 1 13],
         "leemme" => [0 16, 1 8],
@@ -1654,11 +1634,11 @@ pub(super) static RELATIONS: [Relation<'static>; 167] = [
     // POSSESSIVE_COM_PL_1SG, from NOM_SG.
     relation!(POSSESSIVE_COM_PL_1SG, [NOM_SG], [], none, false, None),
     // POSSESSIVE_COM_PL_2SG, from POSSESSIVE_COM_PL_1SG.
-    relation!(POSSESSIVE_COM_PL_2SG, [POSSESSIVE_COM_PL_1SG], [("~ni", "~si")], rules {
+    relation!(POSSESSIVE_COM_PL_2SG, [POSSESSIVE_COM_PL_1SG], [("~ni", "~sI")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_COM_PL_1PL, from POSSESSIVE_COM_PL_1SG.
-    relation!(POSSESSIVE_COM_PL_1PL, [POSSESSIVE_COM_PL_1SG], [("~ni", "~mmV")], rules {
+    relation!(POSSESSIVE_COM_PL_1PL, [POSSESSIVE_COM_PL_1SG], [("~ni", "~mIV")], rules {
         "" => [0 5988],
     } listed {}, true, None),
     // POSSESSIVE_COM_PL_2PL, from POSSESSIVE_COM_PL_1SG.

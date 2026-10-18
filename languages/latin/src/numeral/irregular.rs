@@ -7,10 +7,10 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 5 forms.
+/// 0 stems, 6 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"unus	6	ūnīus	8	ūnīus	10	ūnīus	12	ūnī	14	ūnī
+        r#"unus	6	ūnīus|ūnī	8	ūnīus|ūnī	10	ūnīus|ūnī	12	ūnī|ūnō	14	ūnī|ūnae	16	ūnī|ūnō
 "#,
     ),
 };

@@ -1,10 +1,10 @@
 //! The conjugations, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes (`~ω`, `μελλω`: the stem and `ω`). A stem in two pieces (`~~πω`, `πεμπω`) has
+//! A pattern is the form with `~` where the stem goes (`~εω`, `ποιεω`: the stem and `εω`). A stem in two pieces (`~~πω`, `πεμπω`) has
 //! letters between them that other forms may drop or change.
 //! Alternatives are separated by `|`, the usual one first. A `%`
-//! is the first letter of the stem piece after it (reduplication: `%ε~ημένοι ὦσῐ|%ε~ημένοι ὦσῐν`, of
-//! `ποιεω`), as the copy laws in `laws.rs` change it. A `ˇ` ends
+//! is the first letter of the stem piece after it (reduplication: `%ε~δᾰται`, of
+//! `χρημᾰτῐζω`), as the copy laws in `laws.rs` change it. A `ˇ` ends
 //! the patterns of a conjugation whose stems alternate: the laws in `laws.rs`
 //! for alternating stems change them (`~ωˇ`: `σκᾰνδᾰλῐζω`).
 
@@ -14,7 +14,7 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the conjugation it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem lemma: \"~- like ἐχω\"`: the slot's cells are `ἐχω`'s table's patterns
+/// (`stem lemma: \"~- like ποιεω\"`: the slot's cells are `ποιεω`'s table's patterns
 /// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the conjugation's it is
@@ -920,80 +920,86 @@ macro_rules! affix {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `μελλω`: 234 words.
-    Μελλω,
-    /// Like `ποιεω`: 199 words.
+    /// Like `ποιεω`: 190 words.
     Ποιεω,
-    /// Like `βουλευω`: 129 words.
+    /// Like `μελλω`: 189 words.
+    Μελλω,
+    /// Like `βουλευω`: 138 words.
     Βουλευω,
-    /// Like `ἀξῐοω`: 80 words.
-    Ἀξῐοω,
-    /// Like `κρῑνομαι`: 63 words.
-    Κρῑνομαι,
-    /// Like `χρημᾰτῐζω`: 62 words.
+    /// Like `γῡροω`: 78 words.
+    Γῡροω,
+    /// Like `χρημᾰτῐζω`: 70 words.
     Χρημᾰτῐζω,
-    /// Like `δῐκᾰζω`: 60 words.
-    Δῐκᾰζω,
-    /// Like `φοιτᾰω`: 53 words.
-    Φοιτᾰω,
-    /// Like `σκοπεω`: 49 words.
+    /// Like `σκοπεω`: 60 words.
     Σκοπεω,
-    /// Like `τᾰσσω`: 32 words.
+    /// Like `κρῑνομαι`: 57 words.
+    Κρῑνομαι,
+    /// Like `φοιτᾰω`: 54 words.
+    Φοιτᾰω,
+    /// Like `δῐκᾰζω`: 41 words.
+    Δῐκᾰζω,
+    /// Like `τᾰσσω`: 40 words.
     Τᾰσσω,
-    /// Like `ληγω`: 29 words.
+    /// Like `ληγω`: 31 words.
     Ληγω,
-    /// Like `ψηφῐζω`: 26 words.
+    /// Like `ψηφῐζω`: 30 words.
     Ψηφῐζω,
-    /// Like `στῐζω`: 23 words.
-    Στῐζω,
-    /// Like `ποικιλλω`: 22 words.
-    Ποικιλλω,
-    /// Like `κᾰτηχεω`: 22 words.
-    Κᾰτηχεω,
-    /// Like `φᾰντᾰζω`: 21 words.
+    /// Like `φᾰντᾰζω`: 28 words.
     Φᾰντᾰζω,
-    /// Like `δᾰπτω`: 20 words.
-    Δᾰπτω,
-    /// Like `νῑκαω`: 18 words.
+    /// Like `στᾰζω`: 25 words.
+    Στᾰζω,
+    /// Like `ποικιλλω`: 21 words.
+    Ποικιλλω,
+    /// Like `νῑκαω`: 21 words.
     Νῑκαω,
-    /// Like `πεμπω`: 18 words.
+    /// Like `κᾰτηχεω`: 20 words.
+    Κᾰτηχεω,
+    /// Like `χᾰλεπτω`: 19 words.
+    Χᾰλεπτω,
+    /// Like `ἐξηγεομαι`: 19 words.
+    Ἐξηγεομαι,
+    /// Like `πεμπω`: 19 words.
     Πεμπω,
-    /// Like `ὀρχεομαι`: 18 words.
-    Ὀρχεομαι,
+    /// Like `πειρᾰζω`: 17 words.
+    Πειρᾰζω,
     /// Like `θωᾰω`: 16 words.
     Θωᾰω,
+    /// Like `πορσῡνω`: 16 words.
+    Πορσῡνω,
     /// Like `λογῐζομαι`: 15 words.
     Λογῐζομαι,
-    /// Like `πειρᾰζω`: 15 words.
-    Πειρᾰζω,
     /// Like `πᾰρῐστημῐ`: 15 words.
     Πᾰρῐστημῐ,
-    /// Like `σκᾰνδᾰλῐζω`: 13 words.
-    Σκᾰνδᾰλῐζω,
-    /// Like `μνημονευω`: 13 words.
+    /// Like `μηκᾰομαι`: 15 words.
+    Μηκᾰομαι,
+    /// Like `μνημονευω`: 15 words.
     Μνημονευω,
-    /// Like `τεχναομαι`: 13 words.
-    Τεχναομαι,
+    /// Like `αἰθω`: 14 words.
+    Αἰθω,
+    /// Like `ψῑλοω`: 13 words.
+    Ψῑλοω,
     /// Like `δῐοικεω`: 12 words.
     Δῐοικεω,
     /// Like `ῥωννῡμῐ`: 12 words.
     Ῥωννῡμῐ,
-    /// Like `πορσῡνω`: 12 words.
-    Πορσῡνω,
     /// Like `ἐπᾰϊω`: 12 words.
     Ἐπᾰϊω,
+    /// Like `βᾰδιζω`: 12 words.
+    Βᾰδιζω,
     /// Like `πῠρσαινω`: 11 words.
     Πῠρσαινω,
-    /// Like `κᾰθιδρῡω`: 11 words.
-    Κᾰθιδρῡω,
     /// Like `σαινω`: 11 words.
     Σαινω,
     /// Like `ἀνᾰγω`: 11 words.
     Ἀνᾰγω,
-    /// Like `πῡθω`: 11 words.
-    Πῡθω,
     /// Like `δαμνημῐ`: 11 words.
     Δαμνημῐ,
+    /// Like `δῐωκω`: 11 words.
+    Δῐωκω,
+    /// Like `σφᾰλλω`: 11 words.
+    Σφᾰλλω,
+    /// Like `ἀλῠω`: 11 words.
+    Ἀλῠω,
     /// Like `ζευγνῡμῐ`: 10 words.
     Ζευγνῡμῐ,
     /// Like `ὁμᾰρτεω`: 10 words.
@@ -1002,92 +1008,84 @@ pub enum Conjugation {
     Χεω,
     /// Like `ἀφῑημῐ`: 10 words.
     Ἀφῑημῐ,
+    /// Like `τειρω`: 10 words.
+    Τειρω,
+    /// Like `ψευδω`: 10 words.
+    Ψευδω,
+    /// Like `εὐφραινω`: 10 words.
+    Εὐφραινω,
     /// Like `στραγγᾰλοομαι`: 9 words.
     Στραγγᾰλοομαι,
     /// Like `ζωγρᾰφεω`: 9 words.
     Ζωγρᾰφεω,
-    /// Like `φθειρω`: 9 words.
-    Φθειρω,
     /// Like `ἐξερχομαι`: 9 words.
     Ἐξερχομαι,
     /// Like `δαινῡμῐ`: 9 words.
     Δαινῡμῐ,
     /// Like `σῑνομαι`: 9 words.
     Σῑνομαι,
-    /// Like `ἀθῡρω`: 8 words.
-    Ἀθῡρω,
-    /// Like `ψῑλοω`: 8 words.
-    Ψῑλοω,
-    /// Like `φᾰρμᾰσσω`: 8 words.
-    Φᾰρμᾰσσω,
-    /// Like `δῐωκω`: 8 words.
-    Δῐωκω,
-    /// Like `σφᾰλλω`: 8 words.
-    Σφᾰλλω,
-    /// Like `κῠω`: 8 words.
-    Κῠω,
-    /// Like `ψευδω`: 8 words.
-    Ψευδω,
+    /// Like `λῡω`: 9 words.
+    Λῡω,
+    /// Like `πρεσβευω`: 9 words.
+    Πρεσβευω,
+    /// Like `τελεω`: 9 words.
+    Τελεω,
+    /// Like `βουλομαι`: 9 words.
+    Βουλομαι,
+    /// Like `σειω`: 9 words.
+    Σειω,
+    /// Like `κᾰθιδρῡω`: 8 words.
+    Κᾰθιδρῡω,
     /// Like `πλᾰσσω`: 8 words.
     Πλᾰσσω,
-    /// Like `κερδαινω`: 8 words.
-    Κερδαινω,
-    /// Like `λῡω`: 8 words.
-    Λῡω,
     /// Like `μαχομαι`: 8 words.
     Μαχομαι,
     /// Like `λλῡμῐ`: 8 words.
     Λλῡμῐ,
-    /// Like `πρεσβευω`: 7 words.
-    Πρεσβευω,
+    /// Like `εἰρω`: 8 words.
+    Εἰρω,
+    /// Like `σκᾰνδᾰλῐζω`: 7 words.
+    Σκᾰνδᾰλῐζω,
     /// Like `σοφῐζω`: 7 words.
     Σοφῐζω,
-    /// Like `βᾰδιζω`: 7 words.
-    Βᾰδιζω,
     /// Like `ἀπειπον`: 7 words.
     Ἀπειπον,
-    /// Like `τελεω`: 7 words.
-    Τελεω,
-    /// Like `χραω`: 7 words.
-    Χραω,
-    /// Like `βουλομαι`: 7 words.
-    Βουλομαι,
-    /// Like `θλαω`: 7 words.
-    Θλαω,
     /// Like `λᾰγοθηρεω`: 7 words.
     Λᾰγοθηρεω,
-    /// Like `εἰρω`: 7 words.
-    Εἰρω,
     /// Like `λλᾰμβᾰνω`: 7 words.
     Λλᾰμβᾰνω,
-    /// Like `θρῠπτω`: 6 words.
-    Θρῠπτω,
-    /// Like `σειω`: 6 words.
-    Σειω,
-    /// Like `βαινω`: 6 words.
+    /// Like `βαινω`: 7 words.
     Βαινω,
-    /// Like `μηκᾰομαι`: 6 words.
-    Μηκᾰομαι,
-    /// Like `ἐπεξειμι`: 6 words.
-    Ἐπεξειμι,
+    /// Like `ἡκω`: 7 words.
+    Ἡκω,
+    /// Like `τελλω`: 7 words.
+    Τελλω,
+    /// Like `φειδομαι`: 7 words.
+    Φειδομαι,
+    /// Like `ποιμαινω`: 7 words.
+    Ποιμαινω,
+    /// Like `προσειμι`: 6 words.
+    Προσειμι,
     /// Like `πᾰρεχω`: 6 words.
     Πᾰρεχω,
     /// Like `θηραω`: 6 words.
     Θηραω,
+    /// Like `ρρῑπτω`: 6 words.
+    Ρρῑπτω,
     /// Like `περιειμι`: 6 words.
     Περιειμι,
     /// Like `ἀποκωλῡω`: 6 words.
     Ἀποκωλῡω,
-    /// Like `ἡκω`: 5 words.
-    Ἡκω,
-    /// Like `ἱζω`: 5 words.
-    Ἱζω,
-    /// Like `φρᾰζω`: 5 words.
-    Φρᾰζω,
+    /// Like `ἐνᾰττῐκῐζω`: 6 words.
+    Ἐνᾰττῐκῐζω,
+    /// Like `βῐᾰζομαι`: 6 words.
+    Βῐᾰζομαι,
+    /// Like `πληττω`: 6 words.
+    Πληττω,
+    /// Like `χραω`: 5 words.
+    Χραω,
     /// Like `πρεπω`: 5 words.
     Πρεπω,
-    /// Like `στερεω`: 5 words.
-    Στερεω,
     /// Like `μᾰρτῠρεω`: 5 words.
     Μᾰρτῠρεω,
     /// Like `ἐγγῐζω`: 5 words.
@@ -1096,18 +1094,14 @@ pub enum Conjugation {
     Ἀναιρεω,
     /// Like `σῠνοικῐζω`: 5 words.
     Σῠνοικῐζω,
-    /// Like `κᾰτᾰλᾰμβᾰνω`: 5 words.
-    Κᾰτᾰλᾰμβᾰνω,
+    /// Like `θρῠπτω`: 5 words.
+    Θρῠπτω,
+    /// Like `μετᾰλαμβᾰνω`: 5 words.
+    Μετᾰλαμβᾰνω,
+    /// Like `μᾰρνᾰμαι`: 5 words.
+    Μᾰρνᾰμαι,
     /// Like `μετερχομαι`: 5 words.
     Μετερχομαι,
-    /// Like `τελλω`: 5 words.
-    Τελλω,
-    /// Like `φειδομαι`: 5 words.
-    Φειδομαι,
-    /// Like `σκηπτω`: 5 words.
-    Σκηπτω,
-    /// Like `ποιμαινω`: 5 words.
-    Ποιμαινω,
     /// Like `βᾰθῠνω`: 5 words.
     Βᾰθῠνω,
     /// Like `ἐξᾰκολουθεω`: 5 words.
@@ -1116,16 +1110,24 @@ pub enum Conjugation {
     Προκᾰλεω,
     /// Like `περαινω`: 5 words.
     Περαινω,
-    /// Like `ἡγεομαι`: 4 words.
-    Ἡγεομαι,
-    /// Like `κοπτω`: 4 words.
+    /// Like `κοπτω`: 5 words.
     Κοπτω,
+    /// Like `λειβω`: 5 words.
+    Λειβω,
+    /// Like `ἐρωτᾰω`: 5 words.
+    Ἐρωτᾰω,
+    /// Like `κρουω`: 5 words.
+    Κρουω,
+    /// Like `ἀπαιτεω`: 5 words.
+    Ἀπαιτεω,
+    /// Like `κηδευω`: 5 words.
+    Κηδευω,
+    /// Like `θλαω`: 4 words.
+    Θλαω,
+    /// Like `μηκᾰομαι`: 4 words.
+    Μηκᾰομαι2,
     /// Like `ἐπᾰγγελλω`: 4 words.
     Ἐπᾰγγελλω,
-    /// Like `λειβω`: 4 words.
-    Λειβω,
-    /// Like `ἐξᾰττῐκῐζω`: 4 words.
-    Ἐξᾰττῐκῐζω,
     /// Like `προφερω`: 4 words.
     Προφερω,
     /// Like `περῐτρεχω`: 4 words.
@@ -1134,10 +1136,6 @@ pub enum Conjugation {
     Δερω,
     /// Like `γελᾰω`: 4 words.
     Γελᾰω,
-    /// Like `βῐᾰζομαι`: 4 words.
-    Βῐᾰζομαι,
-    /// Like `μᾰρνᾰμαι`: 4 words.
-    Μᾰρνᾰμαι,
     /// Like `νεκραγωγεω`: 4 words.
     Νεκραγωγεω,
     /// Like `ἀνᾰπτω`: 4 words.
@@ -1146,52 +1144,48 @@ pub enum Conjugation {
     Πειρᾰω,
     /// Like `πᾰρᾰλλᾰσσω`: 4 words.
     Πᾰρᾰλλᾰσσω,
-    /// Like `ἀμεργω`: 4 words.
-    Ἀμεργω,
     /// Like `πᾰροξῡνω`: 4 words.
     Πᾰροξῡνω,
     /// Like `ἐλᾰσσοω`: 4 words.
     Ἐλᾰσσοω,
-    /// Like `ἐρωτᾰω`: 4 words.
-    Ἐρωτᾰω,
     /// Like `πᾰρᾰγῐγνομαι`: 4 words.
     Πᾰρᾰγῐγνομαι,
-    /// Like `κρουω`: 4 words.
-    Κρουω,
-    /// Like `πλουτοκρᾰτεομαι`: 4 words.
-    Πλουτοκρᾰτεομαι,
     /// Like `κυκλοω`: 4 words.
     Κυκλοω,
     /// Like `ψᾱω`: 4 words.
     Ψᾱω,
-    /// Like `πληττω`: 4 words.
-    Πληττω,
     /// Like `ἐπαιρω`: 4 words.
     Ἐπαιρω,
-    /// Like `ἀπαιτεω`: 4 words.
-    Ἀπαιτεω,
     /// Like `ἐξορκῐζω`: 4 words.
     Ἐξορκῐζω,
     /// Like `ὑπᾰνᾰχωρεω`: 4 words.
     Ὑπᾰνᾰχωρεω,
+    /// Like `στεινω`: 4 words.
+    Στεινω,
+    /// Like `προβαλλω`: 4 words.
+    Προβαλλω,
+    /// Like `φῡρω`: 4 words.
+    Φῡρω,
+    /// Like `δηλεομαι`: 4 words.
+    Δηλεομαι,
+    /// Like `φρᾰζω`: 3 words.
+    Φρᾰζω,
+    /// Like `ἐργω`: 3 words.
+    Ἐργω,
+    /// Like `εὐλαβεομαι`: 3 words.
+    Εὐλαβεομαι,
+    /// Like `ἱζω`: 3 words.
+    Ἱζω,
     /// Like `γρᾰφω`: 3 words.
     Γρᾰφω,
-    /// Like `ἡλοω`: 3 words.
-    Ἡλοω,
+    /// Like `ἡγεομαι`: 3 words.
+    Ἡγεομαι,
     /// Like `πῑαινω`: 3 words.
     Πῑαινω,
-    /// Like `θερᾰπευω`: 3 words.
-    Θερᾰπευω,
     /// Like `ἀνᾰζω`: 3 words.
     Ἀνᾰζω,
-    /// Like `τεινω`: 3 words.
-    Τεινω,
     /// Like `πλᾰναω`: 3 words.
     Πλᾰναω,
-    /// Like `ὀμνῠω`: 3 words.
-    Ὀμνῠω,
-    /// Like `προβαλλω`: 3 words.
-    Προβαλλω,
     /// Like `ἐπῐτῐθημῐ`: 3 words.
     Ἐπῐτῐθημῐ,
     /// Like `κῠβισταω`: 3 words.
@@ -1226,24 +1220,16 @@ pub enum Conjugation {
     Κολᾰπτω,
     /// Like `ἀντῐκᾰθῐστημῐ`: 3 words.
     Ἀντῐκᾰθῐστημῐ,
-    /// Like `ἐκγᾰμῐζω`: 3 words.
-    Ἐκγᾰμῐζω,
     /// Like `ἀντελπῐζω`: 3 words.
     Ἀντελπῐζω,
     /// Like `σῠναιρεω`: 3 words.
     Σῠναιρεω,
-    /// Like `φῡρω`: 3 words.
-    Φῡρω,
     /// Like `σταθμαω`: 3 words.
     Σταθμαω,
     /// Like `κνᾰω`: 3 words.
     Κνᾰω,
-    /// Like `δηλεομαι`: 3 words.
-    Δηλεομαι,
     /// Like `τρωγλοδῠτεω`: 3 words.
     Τρωγλοδῠτεω,
-    /// Like `κηδευω`: 3 words.
-    Κηδευω,
     /// Like `λεγομαι`: 3 words.
     Λεγομαι,
     /// Like `ρρεω`: 3 words.
@@ -1256,6 +1242,14 @@ pub enum Conjugation {
     Θρεομαι,
     /// Like `κηρῡσσω`: 3 words.
     Κηρῡσσω,
+    /// Like `σειρεω`: 3 words.
+    Σειρεω,
+    /// Like `φᾰρμᾰσσω`: 2 words.
+    Φᾰρμᾰσσω,
+    /// Like `θερᾰπευω`: 2 words.
+    Θερᾰπευω,
+    /// Like `ἐκφερω`: 2 words.
+    Ἐκφερω,
     /// Like `ἐφᾰγον`: 2 words.
     Ἐφᾰγον,
     /// Like `εἰδον`: 2 words.
@@ -1274,8 +1268,6 @@ pub enum Conjugation {
     Κορινθιαζομαι,
     /// Like `στεφανοω`: 2 words.
     Στεφανοω,
-    /// Like `ἐπῐχειρεω`: 2 words.
-    Ἐπῐχειρεω,
     /// Like `συνεπομαι`: 2 words.
     Συνεπομαι,
     /// Like `λαλαγεω`: 2 words.
@@ -1288,6 +1280,12 @@ pub enum Conjugation {
     Επῐλῡω,
     /// Like `ερεω`: 2 words.
     Ερεω,
+    /// Like `ἀθῡρω`: 1 words.
+    Ἀθῡρω,
+    /// Like `στερεω`: 1 words.
+    Στερεω,
+    /// Like `ὀμνῠω`: 1 words.
+    Ὀμνῠω,
     /// Like `ἐδω`: 1 words.
     Ἐδω,
     /// Like `αἰσθᾰνομαι`: 1 words.
@@ -1438,8 +1436,6 @@ pub enum Conjugation {
     Ἀντιπαρατασσομαι,
     /// Like `ἐπᾰνερχομαι`: 1 words.
     Ἐπᾰνερχομαι,
-    /// Like `κιδνᾰμαι`: 1 words.
-    Κιδνᾰμαι,
     /// Like `ἐπισκεπτομαι`: 1 words.
     Ἐπισκεπτομαι,
     /// Like `κολυμβαω`: 1 words.
@@ -1496,143 +1492,140 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 286] = [
-        Conjugation::Μελλω,
+    pub const ALL: [Conjugation; 284] = [
         Conjugation::Ποιεω,
+        Conjugation::Μελλω,
         Conjugation::Βουλευω,
-        Conjugation::Ἀξῐοω,
-        Conjugation::Κρῑνομαι,
+        Conjugation::Γῡροω,
         Conjugation::Χρημᾰτῐζω,
-        Conjugation::Δῐκᾰζω,
-        Conjugation::Φοιτᾰω,
         Conjugation::Σκοπεω,
+        Conjugation::Κρῑνομαι,
+        Conjugation::Φοιτᾰω,
+        Conjugation::Δῐκᾰζω,
         Conjugation::Τᾰσσω,
         Conjugation::Ληγω,
         Conjugation::Ψηφῐζω,
-        Conjugation::Στῐζω,
-        Conjugation::Ποικιλλω,
-        Conjugation::Κᾰτηχεω,
         Conjugation::Φᾰντᾰζω,
-        Conjugation::Δᾰπτω,
+        Conjugation::Στᾰζω,
+        Conjugation::Ποικιλλω,
         Conjugation::Νῑκαω,
+        Conjugation::Κᾰτηχεω,
+        Conjugation::Χᾰλεπτω,
+        Conjugation::Ἐξηγεομαι,
         Conjugation::Πεμπω,
-        Conjugation::Ὀρχεομαι,
-        Conjugation::Θωᾰω,
-        Conjugation::Λογῐζομαι,
         Conjugation::Πειρᾰζω,
+        Conjugation::Θωᾰω,
+        Conjugation::Πορσῡνω,
+        Conjugation::Λογῐζομαι,
         Conjugation::Πᾰρῐστημῐ,
-        Conjugation::Σκᾰνδᾰλῐζω,
+        Conjugation::Μηκᾰομαι,
         Conjugation::Μνημονευω,
-        Conjugation::Τεχναομαι,
+        Conjugation::Αἰθω,
+        Conjugation::Ψῑλοω,
         Conjugation::Δῐοικεω,
         Conjugation::Ῥωννῡμῐ,
-        Conjugation::Πορσῡνω,
         Conjugation::Ἐπᾰϊω,
+        Conjugation::Βᾰδιζω,
         Conjugation::Πῠρσαινω,
-        Conjugation::Κᾰθιδρῡω,
         Conjugation::Σαινω,
         Conjugation::Ἀνᾰγω,
-        Conjugation::Πῡθω,
         Conjugation::Δαμνημῐ,
+        Conjugation::Δῐωκω,
+        Conjugation::Σφᾰλλω,
+        Conjugation::Ἀλῠω,
         Conjugation::Ζευγνῡμῐ,
         Conjugation::Ὁμᾰρτεω,
         Conjugation::Χεω,
         Conjugation::Ἀφῑημῐ,
+        Conjugation::Τειρω,
+        Conjugation::Ψευδω,
+        Conjugation::Εὐφραινω,
         Conjugation::Στραγγᾰλοομαι,
         Conjugation::Ζωγρᾰφεω,
-        Conjugation::Φθειρω,
         Conjugation::Ἐξερχομαι,
         Conjugation::Δαινῡμῐ,
         Conjugation::Σῑνομαι,
-        Conjugation::Ἀθῡρω,
-        Conjugation::Ψῑλοω,
-        Conjugation::Φᾰρμᾰσσω,
-        Conjugation::Δῐωκω,
-        Conjugation::Σφᾰλλω,
-        Conjugation::Κῠω,
-        Conjugation::Ψευδω,
-        Conjugation::Πλᾰσσω,
-        Conjugation::Κερδαινω,
         Conjugation::Λῡω,
+        Conjugation::Πρεσβευω,
+        Conjugation::Τελεω,
+        Conjugation::Βουλομαι,
+        Conjugation::Σειω,
+        Conjugation::Κᾰθιδρῡω,
+        Conjugation::Πλᾰσσω,
         Conjugation::Μαχομαι,
         Conjugation::Λλῡμῐ,
-        Conjugation::Πρεσβευω,
-        Conjugation::Σοφῐζω,
-        Conjugation::Βᾰδιζω,
-        Conjugation::Ἀπειπον,
-        Conjugation::Τελεω,
-        Conjugation::Χραω,
-        Conjugation::Βουλομαι,
-        Conjugation::Θλαω,
-        Conjugation::Λᾰγοθηρεω,
         Conjugation::Εἰρω,
+        Conjugation::Σκᾰνδᾰλῐζω,
+        Conjugation::Σοφῐζω,
+        Conjugation::Ἀπειπον,
+        Conjugation::Λᾰγοθηρεω,
         Conjugation::Λλᾰμβᾰνω,
-        Conjugation::Θρῠπτω,
-        Conjugation::Σειω,
         Conjugation::Βαινω,
-        Conjugation::Μηκᾰομαι,
-        Conjugation::Ἐπεξειμι,
+        Conjugation::Ἡκω,
+        Conjugation::Τελλω,
+        Conjugation::Φειδομαι,
+        Conjugation::Ποιμαινω,
+        Conjugation::Προσειμι,
         Conjugation::Πᾰρεχω,
         Conjugation::Θηραω,
+        Conjugation::Ρρῑπτω,
         Conjugation::Περιειμι,
         Conjugation::Ἀποκωλῡω,
-        Conjugation::Ἡκω,
-        Conjugation::Ἱζω,
-        Conjugation::Φρᾰζω,
+        Conjugation::Ἐνᾰττῐκῐζω,
+        Conjugation::Βῐᾰζομαι,
+        Conjugation::Πληττω,
+        Conjugation::Χραω,
         Conjugation::Πρεπω,
-        Conjugation::Στερεω,
         Conjugation::Μᾰρτῠρεω,
         Conjugation::Ἐγγῐζω,
         Conjugation::Ἀναιρεω,
         Conjugation::Σῠνοικῐζω,
-        Conjugation::Κᾰτᾰλᾰμβᾰνω,
+        Conjugation::Θρῠπτω,
+        Conjugation::Μετᾰλαμβᾰνω,
+        Conjugation::Μᾰρνᾰμαι,
         Conjugation::Μετερχομαι,
-        Conjugation::Τελλω,
-        Conjugation::Φειδομαι,
-        Conjugation::Σκηπτω,
-        Conjugation::Ποιμαινω,
         Conjugation::Βᾰθῠνω,
         Conjugation::Ἐξᾰκολουθεω,
         Conjugation::Προκᾰλεω,
         Conjugation::Περαινω,
-        Conjugation::Ἡγεομαι,
         Conjugation::Κοπτω,
-        Conjugation::Ἐπᾰγγελλω,
         Conjugation::Λειβω,
-        Conjugation::Ἐξᾰττῐκῐζω,
+        Conjugation::Ἐρωτᾰω,
+        Conjugation::Κρουω,
+        Conjugation::Ἀπαιτεω,
+        Conjugation::Κηδευω,
+        Conjugation::Θλαω,
+        Conjugation::Μηκᾰομαι2,
+        Conjugation::Ἐπᾰγγελλω,
         Conjugation::Προφερω,
         Conjugation::Περῐτρεχω,
         Conjugation::Δερω,
         Conjugation::Γελᾰω,
-        Conjugation::Βῐᾰζομαι,
-        Conjugation::Μᾰρνᾰμαι,
         Conjugation::Νεκραγωγεω,
         Conjugation::Ἀνᾰπτω,
         Conjugation::Πειρᾰω,
         Conjugation::Πᾰρᾰλλᾰσσω,
-        Conjugation::Ἀμεργω,
         Conjugation::Πᾰροξῡνω,
         Conjugation::Ἐλᾰσσοω,
-        Conjugation::Ἐρωτᾰω,
         Conjugation::Πᾰρᾰγῐγνομαι,
-        Conjugation::Κρουω,
-        Conjugation::Πλουτοκρᾰτεομαι,
         Conjugation::Κυκλοω,
         Conjugation::Ψᾱω,
-        Conjugation::Πληττω,
         Conjugation::Ἐπαιρω,
-        Conjugation::Ἀπαιτεω,
         Conjugation::Ἐξορκῐζω,
         Conjugation::Ὑπᾰνᾰχωρεω,
-        Conjugation::Γρᾰφω,
-        Conjugation::Ἡλοω,
-        Conjugation::Πῑαινω,
-        Conjugation::Θερᾰπευω,
-        Conjugation::Ἀνᾰζω,
-        Conjugation::Τεινω,
-        Conjugation::Πλᾰναω,
-        Conjugation::Ὀμνῠω,
+        Conjugation::Στεινω,
         Conjugation::Προβαλλω,
+        Conjugation::Φῡρω,
+        Conjugation::Δηλεομαι,
+        Conjugation::Φρᾰζω,
+        Conjugation::Ἐργω,
+        Conjugation::Εὐλαβεομαι,
+        Conjugation::Ἱζω,
+        Conjugation::Γρᾰφω,
+        Conjugation::Ἡγεομαι,
+        Conjugation::Πῑαινω,
+        Conjugation::Ἀνᾰζω,
+        Conjugation::Πλᾰναω,
         Conjugation::Ἐπῐτῐθημῐ,
         Conjugation::Κῠβισταω,
         Conjugation::Φλῡω,
@@ -1650,21 +1643,21 @@ impl Conjugation {
         Conjugation::Ἁμᾰρτᾰνω,
         Conjugation::Κολᾰπτω,
         Conjugation::Ἀντῐκᾰθῐστημῐ,
-        Conjugation::Ἐκγᾰμῐζω,
         Conjugation::Ἀντελπῐζω,
         Conjugation::Σῠναιρεω,
-        Conjugation::Φῡρω,
         Conjugation::Σταθμαω,
         Conjugation::Κνᾰω,
-        Conjugation::Δηλεομαι,
         Conjugation::Τρωγλοδῠτεω,
-        Conjugation::Κηδευω,
         Conjugation::Λεγομαι,
         Conjugation::Ρρεω,
         Conjugation::Σσῳζω,
         Conjugation::Ρρηγνῡμῐ,
         Conjugation::Θρεομαι,
         Conjugation::Κηρῡσσω,
+        Conjugation::Σειρεω,
+        Conjugation::Φᾰρμᾰσσω,
+        Conjugation::Θερᾰπευω,
+        Conjugation::Ἐκφερω,
         Conjugation::Ἐφᾰγον,
         Conjugation::Εἰδον,
         Conjugation::Πτᾰρνῠμαι,
@@ -1674,13 +1667,15 @@ impl Conjugation {
         Conjugation::Συγκειμαι,
         Conjugation::Κορινθιαζομαι,
         Conjugation::Στεφανοω,
-        Conjugation::Ἐπῐχειρεω,
         Conjugation::Συνεπομαι,
         Conjugation::Λαλαγεω,
         Conjugation::Ξυνναυμᾰχεω,
         Conjugation::Μετᾰκᾰλεω,
         Conjugation::Επῐλῡω,
         Conjugation::Ερεω,
+        Conjugation::Ἀθῡρω,
+        Conjugation::Στερεω,
+        Conjugation::Ὀμνῠω,
         Conjugation::Ἐδω,
         Conjugation::Αἰσθᾰνομαι,
         Conjugation::Τρυπαω,
@@ -1756,7 +1751,6 @@ impl Conjugation {
         Conjugation::Τεθνηκετων,
         Conjugation::Ἀντιπαρατασσομαι,
         Conjugation::Ἐπᾰνερχομαι,
-        Conjugation::Κιδνᾰμαι,
         Conjugation::Ἐπισκεπτομαι,
         Conjugation::Κολυμβαω,
         Conjugation::Δῐκειν,
@@ -1800,22 +1794,22 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
-    // Μελλω: 234 words (θελω, τῠγχᾰνω, δῐδᾰσκω, πῑνω, εὑρῐσκω, πληθω).
-    conjugation!("μελλω", 234, "~ω";
-    stem lemma: "~- like ἐχω";
-    stem imperfect: "~- like ἐχω";
-    stem future_ind_act_1_sg: "~ησ- like ἐχω";
-    stem pass_: "~ηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ηθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
-    stem pass: "~ηθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ηκ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~η- like ἐχω";
-    stem perfect_ind_mid_2_sg: "~η- like ἐχω";
-    stem pluperfect_act: "~ηκειν- like ἐχω";
-    stem pluperfect: "~η- like ἐχω";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 284] = [
+    // Ποιεω: 190 words (φοβεω, βλασφημεω, γᾰμεω, μῑσεω, διακονεω, ποιεω).
+    conjugation!("ποιεω", 190, "~εω";
+    stem lemma: "~- like ποιεω";
+    stem imperfect: "~- like ποιεω";
+    stem future_ind_act_1_sg: "~ησ- like ποιεω";
+    stem pass_: "~ηθησ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ησ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~ηθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ησ- like ποιεω";
+    stem pass: "~ηθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~ηκ- like ποιεω";
+    stem perfect_ind_mid_1_sg: "~η- like ποιεω";
+    stem perfect_ind_mid_2_sg: "~η- like ποιεω";
+    stem pluperfect_act: "~ηκειν- like ποιεω";
+    stem pluperfect: "~η- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -1841,6 +1835,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_ind_pass_1: derived, _, _;
     perfect_ind_pass_2: derived, derived, _;
     perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
     perfect_imperative_mid_2: _, derived, _;
     perfect_imperative_pass_2: _, derived, _;
     pluperfect_pass_1: derived, _, _;
@@ -1849,16 +1844,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     future_perfect_ind_pass_1: derived, _, _;
     infinitive_perf: _, _, derived;
     ),
-    // Ποιεω: 199 words (φοβεω, βλασφημεω, γᾰμεω, μῑσεω, διακονεω, ποιεω). Like Μελλω, except in 33 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ποιεω", 199, "~εω", like Μελλω;
-    stem lemma: "~- like ποιεω";
-    stem imperfect: "~- like ποιεω";
-    stem future_ind_act_1_sg: "~ησ- like ποιεω";
-    stem pass_: "~ηθησ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ησ- like ποιεω";
-    stem aorist_subj_act_1_sg: "~ησ- like ποιεω";
-    stem pass: "~ηθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~ηκ- like ποιεω";
+    // Μελλω: 189 words (θελω, τῠγχᾰνω, δῐδᾰσκω, πῑνω, εὑρῐσκω, πληθω). Like Ποιεω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("μελλω", 189, "~ω", like Ποιεω;
+    stem lemma: "~- like ἐχω";
+    stem imperfect: "~- like ἐχω";
+    stem future_ind_act_1_sg: "~ησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ηκ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~η- like ἐχω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -1877,27 +1871,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     imperfect_pass_3: derived, _, derived;
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
+    future_ind_pass_2: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
     aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_subj_mid_3: _, _, "%ε~ημένοι ὦσῐ|%ε~ημένοι ὦσῐν";
-    perfect_subj_pass_3: _, _, derived;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_act_3: _, _, derived;
+    perfect_subj_mid_3: _, _, derived;
+    future_perfect_ind_pass_1: derived, _, _;
     ),
-    // Βουλευω: 129 words (θερᾰπευω, ψῡχω, ἀρχω, πῐστευω, αἰθω, νηστευω). Like Μελλω, except in 65 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("βουλευω", 129, "~ω", like Μελλω;
+    // Βουλευω: 138 words (θερᾰπευω, ψῡχω, ἀρχω, πῐστευω, νηστευω, βρεχω). Like Μελλω, except in 65 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("βουλευω", 138, "~ω", like Μελλω;
     stem lemma: "~- like βουλευω";
     stem imperfect: "~- like βουλευω";
     stem future_ind_act_1_sg: "~σ- like ποιεω";
     stem pass_: "~θησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~σ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~θην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~θην- like ποιεω";
     stem aorist_subj_act_1_sg: "~σ- like ποιεω";
     stem pass: "~θ- like ἐχω";
     stem perfect_ind_act_1_sg: "~κ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~- like ἐχω";
-    stem pluperfect_act: "~κειν- like ἐχω";
-    stem pluperfect: "~- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~- like ποιεω";
+    stem pluperfect_act: "~κειν- like ποιεω";
+    stem pluperfect: "~- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -1940,21 +1942,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, derived;
     participle_futp: _, _, derived;
     ),
-    // Ἀξῐοω: 80 words (ὁμοιοω, μορφοω, ζηλοω, ναρκοω, κοινοω, ἀλλοιοω). Like Βουλευω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἀξῐοω", 80, "~οω", like Βουλευω;
+    // Γῡροω: 78 words (ὁμοιοω, μορφοω, ζηλοω, ναρκοω, κοινοω, ἀλλοιοω). Like Βουλευω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("γῡροω", 78, "~οω", like Βουλευω;
     stem lemma: "~- like γῡροω";
     stem imperfect: "~ου- like γῡροω";
     stem future_ind_act_1_sg: "~ωσ- like γῡροω";
     stem pass_: "~ωθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ωσ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ωθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ωσ- like ποιεω";
     stem pass: "~ωθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ωκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~ω- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ω- like ἐχω";
-    stem pluperfect_act: "~ωκειν- like ἐχω";
-    stem pluperfect: "~ω- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ω- like ποιεω";
+    stem pluperfect_act: "~ωκειν- like ποιεω";
+    stem pluperfect: "~ω- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -1987,8 +1989,77 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Κρῑνομαι: 63 words (ἐρχομαι, γεινομαι, γῐγνομαι, δεχομαι, δερκομαι, μεμφομαι). Like Βουλευω, except in 82 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("κρῑνομαι", 63, "~ομαι", like Βουλευω;
+    // Χρημᾰτῐζω: 70 words (κᾰθᾰρῐζω, βᾰσᾰνῐζω, κᾰπνῐζω, φενᾱκῐζω, γεμῐζω, σῐζω). Like Βουλευω, except in 38 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("χρημᾰτῐζω", 70, "~ζω", like Βουλευω;
+    stem lemma: "~ζ- like βουλευω";
+    stem imperfect: "~ζ- like βουλευω";
+    stem future_ind_act_1_sg: "~- like χρημᾰτῐζω";
+    stem pass_: "~σθησ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ποιεω";
+    stem pass: "~σθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~κ- like ποιεω";
+    stem perfect_ind_mid_1_sg: "~σ- like χρημᾰτῐζω";
+    stem pluperfect_act: "~κ- like χρημᾰτῐζω";
+    stem pluperfect: "~- like χρημᾰτῐζω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, _, "%ε~δᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_pass_3: _, _, derived;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Σκοπεω: 60 words (ἀγᾰθοποιεω, εὐχᾰρῐστεω, ἀγνοεω, ἀντλεω, φλεω, ἠθεω). Like Ποιεω, except in 36 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
+    conjugation!("σκοπεω", 60, "~εω", like Ποιεω;
+    stem perfect_ind_act_1_sg: "~ηκ- like σκοπεω";
+    stem perfect_ind_mid_1_sg: "~η- like σκοπεω";
+    stem perfect_ind_mid_2_sg: "~η- like σκοπεω";
+    stem pluperfect_act: "~ηκ- like σκοπεω";
+    stem pluperfect: "~η- like σκοπεω";
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    future_perfect_ind_mid_1: derived, _, _;
+    future_perfect_ind_mid_3: _, derived, _;
+    future_perfect_ind_pass_1: _, _, derived;
+    future_perfect_ind_pass_2: derived, derived, derived;
+    future_perfect_ind_pass_3: derived, derived, derived;
+    future_perfect_opt_pass_1: derived, _, derived;
+    future_perfect_opt_pass_2: derived, derived, derived;
+    future_perfect_opt_pass_3: derived, derived, derived;
+    infinitive_perf: _, _, derived;
+    infinitive_futp: _, _, derived;
+    participle_futp: _, _, derived;
+    ),
+    // Κρῑνομαι: 57 words (ἐρχομαι, γεινομαι, γῐγνομαι, δεχομαι, δερκομαι, μεμφομαι). Like Βουλευω, except in 82 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("κρῑνομαι", 57, "~ομαι", like Βουλευω;
     stem future_ind_act_1_sg: "~σ- like ἑπομαι";
     ind_act_1: "~ομαι", _, derived;
     ind_act_2: derived, derived, _;
@@ -2040,18 +2111,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: derived, _, _;
     participle_aor: derived, _, _;
     ),
-    // Χρημᾰτῐζω: 62 words (κᾰθᾰρῐζω, βᾰσᾰνῐζω, κᾰπνῐζω, φενᾱκῐζω, γεμῐζω, ἱζω). Like Βουλευω, except in 38 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("χρημᾰτῐζω", 62, "~ζω", like Βουλευω;
-    stem lemma: "~ζ- like βουλευω";
-    stem imperfect: "~ζ- like βουλευω";
-    stem future_ind_act_1_sg: "~- like χρημᾰτῐζω";
-    stem pass_: "~σθησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἐχω";
-    stem pass: "~σθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~κ- like ποιεω";
-    stem perfect_ind_mid_1_sg: "~σ- like χρημᾰτῐζω";
-    stem pluperfect_act: "~κ- like χρημᾰτῐζω";
-    stem pluperfect: "~- like χρημᾰτῐζω";
+    // Φοιτᾰω: 54 words (ἀγᾰπᾰω, γεννᾰω, κῠβερνᾰω, γλᾰγᾰω, σῑγᾰω, κᾰκκᾰω). Like Μελλω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("φοιτᾰω", 54, "~ᾰω", like Μελλω;
+    stem lemma: "~- like φοιτᾰω";
+    stem imperfect: "~- like φοιτᾰω";
+    stem future_ind_act_1_sg: "~ησ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ησ- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ησ- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -2070,24 +2136,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     imperfect_pass_3: derived, _, derived;
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, _, "%ε~δᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_pass_3: _, _, derived;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
     ),
-    // Δῐκᾰζω: 60 words (πυρρᾰζω, βᾰπτῐζω, δᾰμαζω, σῐζω, εὐᾱζω, ἐξῠπνῐζω). Like Χρημᾰτῐζω, except in 67 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("δῐκᾰζω", 60, "~ζω", like Χρημᾰτῐζω;
+    // Δῐκᾰζω: 41 words (πυρρᾰζω, βᾰπτῐζω, δᾰμαζω, γογγῠζω, ἐξῠπνῐζω, δοκιμᾰζω). Like Χρημᾰτῐζω, except in 67 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("δῐκᾰζω", 41, "~ζω", like Χρημᾰτῐζω;
     stem lemma: "~ζ- like βᾰπτῐζω";
     stem imperfect: "~ζ- like ἐχω";
     stem future_ind_act_1_sg: "~σ- like ἐχω";
     stem aorist_ind_act_1_sg: "~σ- like ἐχω";
     stem aorist_subj_act_1_sg: "~σ- like ἐχω";
     stem perfect_ind_act_1_sg: "~κ- like ἐχω";
-    stem pluperfect_act: "~κειν- like ἐχω";
+    stem pluperfect_act: "~κειν- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -2132,77 +2192,19 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, "%ε~σεσθαι";
     participle_futp: _, _, "%ε~σομενος";
     ),
-    // Φοιτᾰω: 53 words (ἀγᾰπᾰω, γεννᾰω, κῠβερνᾰω, γλᾰγᾰω, σῑγᾰω, κᾰκκᾰω). Like Μελλω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("φοιτᾰω", 53, "~ᾰω", like Μελλω;
-    stem lemma: "~- like φοιτᾰω";
-    stem imperfect: "~- like φοιτᾰω";
-    stem future_ind_act_1_sg: "~ησ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ησ- like ποιεω";
-    stem aorist_subj_act_1_sg: "~ησ- like ποιεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    ),
-    // Σκοπεω: 49 words (ἀγᾰθοποιεω, ἀγνοεω, ἀντλεω, ἀσκεω, οἰκεω, ἀλεω). Like Ποιεω, except in 36 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
-    conjugation!("σκοπεω", 49, "~εω", like Ποιεω;
-    stem perfect_ind_act_1_sg: "~ηκ- like σκοπεω";
-    stem perfect_ind_mid_1_sg: "~η- like σκοπεω";
-    stem perfect_ind_mid_2_sg: "~η- like σκοπεω";
-    stem pluperfect_act: "~ηκ- like σκοπεω";
-    stem pluperfect: "~η- like σκοπεω";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    future_perfect_ind_mid_1: derived, _, _;
-    future_perfect_ind_mid_3: _, derived, _;
-    future_perfect_ind_pass_1: _, _, derived;
-    future_perfect_ind_pass_2: derived, derived, derived;
-    future_perfect_ind_pass_3: derived, derived, derived;
-    future_perfect_opt_pass_1: derived, _, derived;
-    future_perfect_opt_pass_2: derived, derived, derived;
-    future_perfect_opt_pass_3: derived, derived, derived;
-    infinitive_perf: _, _, derived;
-    infinitive_futp: _, _, derived;
-    participle_futp: _, _, derived;
-    ),
-    // Τᾰσσω: 32 words (ἀϊσσω, πλησσω, τᾰσσω, μᾰσσω, φῠλᾰσσω, πτῠσσω). Like Βουλευω, except in 65 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("τᾰσσω", 32, "~σσω", like Βουλευω;
+    // Τᾰσσω: 40 words (ἀμᾰρῠσσω, ἀϊσσω, πλησσω, τᾰσσω, μᾰσσω, φῠλᾰσσω). Like Βουλευω, except in 65 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("τᾰσσω", 40, "~σσω", like Βουλευω;
     stem lemma: "~σσ- like βουλευω";
     stem imperfect: "~σσ- like βουλευω";
     stem future_ind_act_1_sg: "~ξ- like ποιεω";
     stem pass_: "~χθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ξ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~χθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~χθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ξ- like ποιεω";
     stem pass: "~χθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~χ- like ἐχω";
     stem perfect_ind_mid_2_sg: "~- like τᾰσσω";
-    stem pluperfect_act: "~χειν- like ἐχω";
+    stem pluperfect_act: "~χειν- like ποιεω";
     stem pluperfect: "~- like τᾰσσω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
@@ -2245,8 +2247,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_perf: _, _, "%ε~γμενος";
     ),
-    // Ληγω: 29 words (ἀγω, λεγω, φευγω, τρωγω, δῐᾰλεγω, φλεγω). Like Τᾰσσω, except in 54 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ληγω", 29, "~γω", like Τᾰσσω;
+    // Ληγω: 31 words (ἀγω, λεγω, φευγω, τρωγω, δῐᾰλεγω, φλεγω). Like Τᾰσσω, except in 54 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ληγω", 31, "~γω", like Τᾰσσω;
     stem lemma: "~γ- like βᾰπτῐζω";
     stem imperfect: "~γ- like ἐχω";
     stem future_ind_act_1_sg: "~ξ- like ἐχω";
@@ -2288,8 +2290,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_2: _, _, derived;
     pluperfect_pass_3: _, derived, _;
     ),
-    // Ψηφῐζω: 26 words (γνωρῐζω, ψηφῐζω, ὁρῐζω, ἁγνῐζω, σχηματῐζω, ἀτενῐζω). Like Χρημᾰτῐζω, except in 17 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
-    conjugation!("ψηφῐζω", 26, "~ζω", like Χρημᾰτῐζω;
+    // Ψηφῐζω: 30 words (γνωρῐζω, ψηφῐζω, ὁρῐζω, ἁγῐζω, ἁγνῐζω, σχηματῐζω). Like Χρημᾰτῐζω, except in 17 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
+    conjugation!("ψηφῐζω", 30, "~ζω", like Χρημᾰτῐζω;
     stem perfect_ind_act_1_sg: "~κ- like σκοπεω";
     stem perfect_ind_mid_1_sg: "~σ- like σκοπεω";
     stem perfect_ind_mid_2_sg: "~- like ψηφῐζω";
@@ -2308,8 +2310,16 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Στῐζω: 23 words (βᾰζω, ἁρπᾰζω, ἐλελῐζω, κρᾱζω, στῐζω, σφυζω). Like Ληγω, except in 56 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("στῐζω", 23, "~ζω", like Ληγω;
+    // Φᾰντᾰζω: 28 words (σχῐζω, ὀνομᾰζω, σχεδῐᾰζω, ἁρμοζω, κτῐζω, σπιζω). Like Ψηφῐζω, except in 4 cells: future_ind_act_3 du, future_ind_mid_3 du, future_opt_act_2 pl, future_opt_act_3 pl.
+    conjugation!("φᾰντᾰζω", 28, "~ζω", like Ψηφῐζω;
+    stem future_ind_act_1_sg: "~σ- like ποιεω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    ),
+    // Στᾰζω: 25 words (βᾰζω, ἁρπᾰζω, ἐλελῐζω, εὐᾱζω, κρᾱζω, στῐζω). Like Ληγω, except in 56 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("στᾰζω", 25, "~ζω", like Ληγω;
     stem lemma: "~ζ- like βᾰπτῐζω";
     stem imperfect: "~ζ- like ἐχω";
     stem perfect_ind_act_1_sg: "~χ- like στηρῐζω";
@@ -2348,8 +2358,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_perf: _, _, "ἐ~γμενος";
     ),
-    // Ποικιλλω: 22 words (ὑω, ἐλπω, ἐρδω, περικλειω, ἑλκῠω, αὐω). Like Βουλευω, except in 64 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ποικιλλω", 22, "~ω", like Βουλευω;
+    // Ποικιλλω: 21 words (ὑω, εὑω, ἐλπω, ἐρδω, περικλειω, ἑλκῠω). Like Βουλευω, except in 64 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ποικιλλω", 21, "~ω", like Βουλευω;
     stem lemma: "~- like ἐχω";
     stem imperfect: "~- like ἐλπω";
     stem future_ind_act_1_sg: "~σ- like ἐχω";
@@ -2403,8 +2413,31 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Κᾰτηχεω: 22 words (εὐλογεω, ἠθεω, κᾰτηχεω, ἠχεω, ὀλιγαρχεω, μοναρχεω). Like Σκοπεω, except in 22 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, perfect_ind_act_3 du, ….
-    conjugation!("κᾰτηχεω", 22, "~εω", like Σκοπεω;
+    // Νῑκαω: 21 words (νῑκαω, λικμαω, ὀργαω, κρεμαω, μελεταω, κομαω). Like Φοιτᾰω, except in 30 cells: future_ind_act_3 du, future_ind_mid_3 du, pluperfect_act_1 sg, pluperfect_mid_1 sg, pluperfect_mid_2 sg, pluperfect_mid_2 du, ….
+    conjugation!("νῑκαω", 21, "~αω", like Φοιτᾰω;
+    stem future_ind_act_1_sg: "~ησ- like ἐχω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    pluperfect_act_1: derived, _, _;
+    pluperfect_mid_1: derived, _, _;
+    pluperfect_mid_2: derived, derived, _;
+    pluperfect_mid_3: derived, _, derived;
+    pluperfect_pass_1: _, _, derived;
+    pluperfect_pass_2: _, _, derived;
+    pluperfect_pass_3: _, derived, _;
+    future_perfect_ind_mid_1: derived, _, _;
+    future_perfect_ind_mid_3: _, derived, _;
+    future_perfect_ind_pass_1: _, _, derived;
+    future_perfect_ind_pass_2: derived, derived, derived;
+    future_perfect_ind_pass_3: derived, derived, derived;
+    future_perfect_opt_pass_1: derived, _, derived;
+    future_perfect_opt_pass_2: derived, derived, derived;
+    future_perfect_opt_pass_3: derived, derived, derived;
+    infinitive_futp: _, _, derived;
+    participle_futp: _, _, derived;
+    ),
+    // Κᾰτηχεω: 20 words (εὐλογεω, κᾰτηχεω, εὐδοκεω, ὀλιγαρχεω, μοναρχεω, χραισμεω). Like Σκοπεω, except in 22 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, perfect_ind_act_3 du, ….
+    conjugation!("κᾰτηχεω", 20, "~εω", like Σκοπεω;
     stem imperfect: "~- like εὐλογεω";
     stem aorist_ind_act_1_sg: "~ησ- like εὐλογεω";
     stem aorist_ind_pass_1_sg: "~ηθην- like ἐλπω";
@@ -2429,26 +2462,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Φᾰντᾰζω: 21 words (σχῐζω, ὀνομᾰζω, σχεδῐᾰζω, ἁρμοζω, κτῐζω, σπιζω). Like Ψηφῐζω, except in 4 cells: future_ind_act_3 du, future_ind_mid_3 du, future_opt_act_2 pl, future_opt_act_3 pl.
-    conjugation!("φᾰντᾰζω", 21, "~ζω", like Ψηφῐζω;
-    stem future_ind_act_1_sg: "~σ- like ποιεω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    ),
-    // Δᾰπτω: 20 words (κρῠπτω, κᾰμπτω, ἁπτω, κῠπτω, θᾰπτω, ἀποκαλυπτω). Like Βουλευω, except in 56 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("δᾰπτω", 20, "~πτω", like Βουλευω;
+    // Χᾰλεπτω: 19 words (κρῠπτω, κᾰμπτω, ἁπτω, κῠπτω, θᾰπτω, ἀποκαλυπτω). Like Βουλευω, except in 56 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("χᾰλεπτω", 19, "~πτω", like Βουλευω;
     stem lemma: "~πτ- like βᾰπτῐζω";
     stem imperfect: "~πτ- like ἐχω";
     stem future_ind_act_1_sg: "~ψ- like ἐχω";
     stem pass_: "~φθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~φθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~φθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
     stem pass: "~φθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~φ- like ἐχω";
-    stem pluperfect_act: "~φειν- like ἐχω";
+    stem pluperfect_act: "~φειν- like ποιεω";
     stem pluperfect: "~- like ἁπτω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
@@ -2485,89 +2510,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, "%ε~φεσθαι";
     participle_futp: _, _, "%ε~φομενος";
     ),
-    // Νῑκαω: 18 words (νῑκαω, λικμαω, ὀργαω, μελεταω, κομαω, εἰσοραω). Like Φοιτᾰω, except in 30 cells: future_ind_act_3 du, future_ind_mid_3 du, pluperfect_act_1 sg, pluperfect_mid_1 sg, pluperfect_mid_2 sg, pluperfect_mid_2 du, ….
-    conjugation!("νῑκαω", 18, "~αω", like Φοιτᾰω;
-    stem future_ind_act_1_sg: "~ησ- like ἐχω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    pluperfect_act_1: derived, _, _;
-    pluperfect_mid_1: derived, _, _;
-    pluperfect_mid_2: derived, derived, _;
-    pluperfect_mid_3: derived, _, derived;
-    pluperfect_pass_1: _, _, derived;
-    pluperfect_pass_2: _, _, derived;
-    pluperfect_pass_3: _, derived, _;
-    future_perfect_ind_mid_1: derived, _, _;
-    future_perfect_ind_mid_3: _, derived, _;
-    future_perfect_ind_pass_1: _, _, derived;
-    future_perfect_ind_pass_2: derived, derived, derived;
-    future_perfect_ind_pass_3: derived, derived, derived;
-    future_perfect_opt_pass_1: derived, _, derived;
-    future_perfect_opt_pass_2: derived, derived, derived;
-    future_perfect_opt_pass_3: derived, derived, derived;
-    infinitive_futp: _, _, derived;
-    participle_futp: _, _, derived;
-    ),
-    // Πεμπω: 18 words (λᾰμπω, βλεπω, ἐρειπω, λειπω, ἑρπω, πεμπω).
-    conjugation!("πεμπω", 18, "~~πω";
-    stem lemma: "~~π- like βᾰπτῐζω";
-    stem imperfect: "~~π- like ἐχω";
-    stem future_ind_act_1_sg: "~~ψ- like ἐχω";
-    stem pass_: "~~φθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~~ψ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~~φθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~~ψ- like ἐχω";
-    stem pass: "~~φθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~πο~φ- like πεμπω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: "%ε~~μαι", _, _;
-    perfect_ind_mid_2: "%ε~~ψαι", "%ε~~φθον", _;
-    perfect_ind_mid_3: "%ε~~πται", _, "%ε~~πᾰται";
-    perfect_ind_pass_1: _, _, "%ε~~μεθᾰ";
-    perfect_ind_pass_2: _, _, "%ε~~φθε";
-    perfect_subj_mid_3: _, "%ε~~μένω ἦτον", _;
-    perfect_subj_pass_1: "%ε~~μένος ὦ", _, "%ε~~μένοι ὦμεν";
-    perfect_subj_pass_2: "%ε~~μένος ᾖς", "%ε~~μένω ἦτον", "%ε~~μένοι ἦτε";
-    perfect_subj_pass_3: "%ε~~μένος ᾖ", "%ε~~μένω ἦτον", "%ε~~μένοι ὦσῐ";
-    perfect_opt_pass_1: "%ε~~μένος εἴην", _, "%ε~~μένοι εἴημεν";
-    perfect_opt_pass_2: "%ε~~μένος εἴης", "%ε~~μένω εἴητον", "%ε~~μένοι εἴητε";
-    perfect_opt_pass_3: "%ε~~μένος εἴη", "%ε~~μένω εἰήτην", "%ε~~μένοι εἴησᾰν";
-    perfect_imperative_mid_2: _, _, "%ε~~φθε";
-    perfect_imperative_mid_3: _, _, "%ε~~φθων";
-    perfect_imperative_pass_2: "%ε~~ψο", _, "%ε~~φθε";
-    perfect_imperative_pass_3: "%ε~~φθω", "%ε~~φθων", "%ε~~φθων";
-    pluperfect_act_1: "ἐ~πο~φειν", _, _;
-    pluperfect_mid_1: "ἐ%ε~~μην", _, _;
-    pluperfect_mid_2: "ἐ%ε~~ψο", "ἐ%ε~~φθον", _;
-    pluperfect_mid_3: "ἐ%ε~~πτο", _, "ἐ%ε~~πᾰτο";
-    pluperfect_pass_1: _, _, "ἐ%ε~~μεθᾰ";
-    pluperfect_pass_2: _, _, "ἐ%ε~~φθε";
-    pluperfect_pass_3: _, "ἐ%ε~~φθην", _;
-    infinitive_perf: _, "%ε~~φθαι", _;
-    participle_perf: _, _, "%ε~~μενος";
-    ),
-    // Ὀρχεομαι: 18 words (ὀρχεομαι, ἀρνεομαι, ἱκνεομαι, ἐπεξηγεομαι, ἀφῐκνεομαι, ὑπῐσχνεομαι). Like Ποιεω, except in 86 cells: ind_act_3 pl, ind_pass_2 sg, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, opt_act_2 sg, ….
-    conjugation!("ὀρχεομαι", 18, "~εομαι", like Ποιεω;
+    // Ἐξηγεομαι: 19 words (ὀρχεομαι, ἀρνεομαι, ἱκνεομαι, ἐξηγεομαι, ἐπεξηγεομαι, ἀφῐκνεομαι). Like Ποιεω, except in 86 cells: ind_act_3 pl, ind_pass_2 sg, subj_act_3 pl, opt_act_1 sg, opt_act_1 pl, opt_act_2 sg, ….
+    conjugation!("ἐξηγεομαι", 19, "~εομαι", like Ποιεω;
     stem future_ind_act_1_sg: "~ησ- like ἑπομαι";
     stem perfect_ind_act_1_sg: "~ηκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~η- like βουλευω";
@@ -2625,6 +2569,77 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, derived;
     participle_aor: derived, _, _;
     participle_futp: _, _, derived;
+    ),
+    // Πεμπω: 19 words (λᾰμπω, βλεπω, ἐρειπω, λειπω, ἑρπω, πεμπω).
+    conjugation!("πεμπω", 19, "~~πω";
+    stem lemma: "~~π- like βᾰπτῐζω";
+    stem imperfect: "~~π- like ἐχω";
+    stem future_ind_act_1_sg: "~~ψ- like ἐχω";
+    stem pass_: "~~φθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~~ψ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~~φθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~~ψ- like ἐχω";
+    stem pass: "~~φθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~πο~φ- like πεμπω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_1: "%ε~~μαι", _, _;
+    perfect_ind_mid_2: "%ε~~ψαι", "%ε~~φθον", _;
+    perfect_ind_mid_3: "%ε~~πται", _, "%ε~~πᾰται";
+    perfect_ind_pass_1: _, _, "%ε~~μεθᾰ";
+    perfect_ind_pass_2: _, _, "%ε~~φθε";
+    perfect_subj_mid_3: _, "%ε~~μένω ἦτον", _;
+    perfect_subj_pass_1: "%ε~~μένος ὦ", _, "%ε~~μένοι ὦμεν";
+    perfect_subj_pass_2: "%ε~~μένος ᾖς", "%ε~~μένω ἦτον", "%ε~~μένοι ἦτε";
+    perfect_subj_pass_3: "%ε~~μένος ᾖ", "%ε~~μένω ἦτον", "%ε~~μένοι ὦσῐ";
+    perfect_opt_pass_1: "%ε~~μένος εἴην", _, "%ε~~μένοι εἴημεν";
+    perfect_opt_pass_2: "%ε~~μένος εἴης", "%ε~~μένω εἴητον", "%ε~~μένοι εἴητε";
+    perfect_opt_pass_3: "%ε~~μένος εἴη", "%ε~~μένω εἰήτην", "%ε~~μένοι εἴησᾰν";
+    perfect_imperative_mid_2: _, _, "%ε~~φθε";
+    perfect_imperative_mid_3: _, _, "%ε~~φθων";
+    perfect_imperative_pass_2: "%ε~~ψο", _, "%ε~~φθε";
+    perfect_imperative_pass_3: "%ε~~φθω", "%ε~~φθων", "%ε~~φθων";
+    pluperfect_act_1: "ἐ~πο~φειν", _, _;
+    pluperfect_mid_1: "ἐ%ε~~μην", _, _;
+    pluperfect_mid_2: "ἐ%ε~~ψο", "ἐ%ε~~φθον", _;
+    pluperfect_mid_3: "ἐ%ε~~πτο", _, "ἐ%ε~~πᾰτο";
+    pluperfect_pass_1: _, _, "ἐ%ε~~μεθᾰ";
+    pluperfect_pass_2: _, _, "ἐ%ε~~φθε";
+    pluperfect_pass_3: _, "ἐ%ε~~φθην", _;
+    infinitive_perf: _, "%ε~~φθαι", _;
+    participle_perf: _, _, "%ε~~μενος";
+    ),
+    // Πειρᾰζω: 17 words (πᾰρουσῐᾰζω, πλεονᾰζω, θειᾰζω, γυμνᾰζω, πειρᾰζω, πλησῐᾰζω). Like Χρημᾰτῐζω, except in 9 cells: future_ind_act_3 du, future_ind_mid_3 du, future_opt_act_2 pl, future_opt_act_3 pl, pluperfect_pass_1 sg, pluperfect_pass_2 sg, ….
+    conjugation!("πειρᾰζω", 17, "~ζω", like Χρημᾰτῐζω;
+    stem future_ind_act_1_sg: "~σ- like ποιεω";
+    stem pluperfect_act: "~κ- like σκοπεω";
+    stem pluperfect: "~- like ψηφῐζω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
     ),
     // Θωᾰω: 16 words (πεπτω, τᾰττω, ἀλεγω, ϝερρω, φᾱρω, θωαδδω). Like Κρῑνομαι, except in 103 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("θωᾰω", 16, "~ω", like Κρῑνομαι;
@@ -2695,7 +2710,56 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_aor: _, derived, _;
     participle_perf: _, _, derived;
     ),
-    // Λογῐζομαι: 15 words (λογῐζομαι, χᾰρῐζομαι, λᾰζομαι, δῐᾰγωνῐζομαι, λῐᾰζομαι, πλειστηρῐζομαι). Like Χρημᾰτῐζω, except in 49 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    // Πορσῡνω: 16 words (πληθῡνω, ἀμῡνω, ἰθῡνω, εὐθῡνω, αἰσχῡνω, πλῡνω). Like Ληγω, except in 49 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πορσῡνω", 16, "~ῡνω", like Ληγω;
+    stem lemma: "~ῡν- like βουλευω";
+    stem imperfect: "~ῡν- like βουλευω";
+    stem future_ind_act_1_sg: "~ῠν- like χρημᾰτῐζω";
+    stem pass_: "~ῠνθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ῡν- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~ῡνθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ῡν- like ἐχω";
+    stem pass: "~ῡνθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ῠγκ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~ῠ- like πορσῡνω";
+    stem perfect_ind_mid_2_sg: "~ῠν- like πορσῡνω";
+    stem pluperfect_act: "~ῠγκειν- like ποιεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_mid_1: "ἐ%ε~ῠσμην", _, _;
+    pluperfect_mid_2: "ἐ%ε~ῠνσο", "ἐ%ε~ῠνθον", _;
+    pluperfect_mid_3: "ἐ%ε~ῠντο", _, "ἐ%ε~ῠνᾰτο";
+    pluperfect_pass_1: _, _, "ἐ%ε~ῠσμεθᾰ";
+    pluperfect_pass_2: _, _, "ἐ%ε~ῠνθε";
+    pluperfect_pass_3: _, "ἐ%ε~ῠνθην", _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Λογῐζομαι: 15 words (λογῐζομαι, χᾰρῐζομαι, δῐᾰγωνῐζομαι, ἁζομαι, λῐᾰζομαι, πλειστηρῐζομαι). Like Χρημᾰτῐζω, except in 49 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("λογῐζομαι", 15, "~ζομαι", like Χρημᾰτῐζω;
     stem lemma: "~ζ- like βᾰπτῐζω";
     stem imperfect: "~ζ- like ἐχω";
@@ -2704,7 +2768,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_subj_act_1_sg: "~σ- like ἐχω";
     stem perfect_ind_act_1_sg: "~κ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~σ- like βουλευω";
-    stem pluperfect_act: "~κειν- like ἐχω";
+    stem pluperfect_act: "~κειν- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -2739,19 +2803,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_subj_mid_3: _, _, derived;
     pluperfect_act_2: derived, _, _;
     pluperfect_act_3: derived, _, _;
-    ),
-    // Πειρᾰζω: 15 words (πᾰρουσῐᾰζω, πλεονᾰζω, θειᾰζω, γυμνᾰζω, πειρᾰζω, πλησῐᾰζω). Like Χρημᾰτῐζω, except in 9 cells: future_ind_act_3 du, future_ind_mid_3 du, future_opt_act_2 pl, future_opt_act_3 pl, pluperfect_pass_1 sg, pluperfect_pass_2 sg, ….
-    conjugation!("πειρᾰζω", 15, "~ζω", like Χρημᾰτῐζω;
-    stem future_ind_act_1_sg: "~σ- like ποιεω";
-    stem pluperfect_act: "~κ- like σκοπεω";
-    stem pluperfect: "~- like ψηφῐζω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
     ),
     // Πᾰρῐστημῐ: 15 words (ἐξῐστημῐ, ἐπεντῐθημῐ, τῐθημῐ, πᾰρῐστημῐ, ἀνῐστημῐ, κᾰθῐστημῐ). Like Πεμπω, except in 103 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("πᾰρῐστημῐ", 15, "~ῐ~ημῐ", like Πεμπω;
@@ -2826,49 +2877,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: "~ῐ~ᾱς", _, "~ῐ~ᾰμενος";
     participle_futp: "~ε~ηξων", _, _;
     ),
-    // Σκᾰνδᾰλῐζω: 13 words (σκᾰνδᾰλῐζω, δειγμᾰτῐζω, γογγῠζω, βλυζω, τρῑζω, πλειστηριᾰζω). Like Θερᾰπευω with `ˇ` after each pattern, except in 31 cells: future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, aorist_opt_pass_3 du, ….
-    conjugation!("σκᾰνδᾰλῐζω", 13, "~ωˇ", like Θερᾰπευω with "ˇ";
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_act_3: "%ε~κεˇ", _, "%ε~κᾱσῐˇ";
-    perfect_subj_act_3: _, _, "%ε~κωσῐˇ";
-    perfect_subj_mid_3: _, _, "%ε~μένοι ὦσῐˇ";
-    perfect_opt_act_1: "%ε~κοιμῐˇ", _, _;
-    perfect_opt_act_2: "%ε~κοιςˇ", _, _;
-    perfect_opt_act_3: "%ε~κοιˇ", _, _;
-    perfect_imperative_act_2: derived, _, _;
-    pluperfect_act_1: "ἐ%ε~κεινˇ", _, "ἐ%ε~κεμενˇ";
-    pluperfect_act_2: "ἐ%ε~κειςˇ", "ἐ%ε~κετονˇ", "ἐ%ε~κετεˇ";
-    pluperfect_act_3: "ἐ%ε~κειˇ", "ἐ%ε~κετηνˇ", "ἐ%ε~κεσᾰνˇ";
-    pluperfect_mid_1: "ἐ%ε~μηνˇ", _, "ἐ%ε~μεθᾰˇ";
-    pluperfect_mid_2: "ἐ%ε~σοˇ", "ἐ%ε~σθονˇ", "ἐ%ε~σθεˇ";
-    pluperfect_mid_3: "ἐ%ε~τοˇ", "ἐ%ε~σθηνˇ", "ἐ%ε~ντοˇ";
-    ),
-    // Μνημονευω: 13 words (στεφω, ἀγχω, ἀροω, ἀρτῡω, μνημονευω, πταιω). Like Βουλευω, except in 18 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
-    conjugation!("μνημονευω", 13, "~ω", like Βουλευω;
-    stem perfect_ind_act_1_sg: "~κ- like σκοπεω";
-    stem perfect_ind_mid_1_sg: "~- like σκοπεω";
-    stem perfect_ind_mid_2_sg: "~- like σκοπεω";
-    stem pluperfect: "~- like σκοπεω";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "ἐ~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Τεχναομαι: 13 words (μναομαι, καυχᾰομαι, ἀραομαι, χρᾰομαι, κτᾰομαι, μᾰσαομαι). Like Νῑκαω, except in 93 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("τεχναομαι", 13, "~αομαι", like Νῑκαω;
+    // Μηκᾰομαι: 15 words (μναομαι, καυχᾰομαι, ἀραομαι, χρᾰομαι, κτᾰομαι, μᾰσαομαι). Like Νῑκαω, except in 93 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("μηκᾰομαι", 15, "~αομαι", like Νῑκαω;
     stem pass_: "~ησ- like ἐχω";
     ind_act_1: "~αομαι", _, derived;
     ind_act_2: derived, derived, _;
@@ -2929,6 +2939,101 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: derived, _, _;
     participle_aor: derived, _, _;
     ),
+    // Μνημονευω: 15 words (στεφω, ἀροω, ἀρτῡω, μνημονευω, πταιω, ἀγορευω). Like Βουλευω, except in 18 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
+    conjugation!("μνημονευω", 15, "~ω", like Βουλευω;
+    stem perfect_ind_act_1_sg: "~κ- like σκοπεω";
+    stem perfect_ind_mid_1_sg: "~- like σκοπεω";
+    stem perfect_ind_mid_2_sg: "~- like σκοπεω";
+    stem pluperfect: "~- like σκοπεω";
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "ἐ~κειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Αἰθω: 14 words (πειθω, αἰθω, περθω, ληθω, κλωθω, μῐνῠθω). Like Πειρᾰζω, except in 64 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("αἰθω", 14, "~θω", like Πειρᾰζω;
+    stem lemma: "~θ- like ἐχω";
+    stem imperfect: "~θ- like ἐχω";
+    stem future_ind_act_1_sg: "~σ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~σ- like βουλευω";
+    stem pluperfect: "~σ- like πειθω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_2: derived, _, _;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_act_1: _, _, derived;
+    perfect_ind_act_2: _, derived, _;
+    perfect_ind_act_3: derived, _, derived;
+    perfect_ind_mid_3: _, _, "%ε~θᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_act_3: _, derived, derived;
+    perfect_subj_mid_3: _, _, derived;
+    perfect_opt_act_1: derived, _, derived;
+    perfect_opt_act_2: derived, derived, derived;
+    perfect_opt_act_3: derived, derived, derived;
+    perfect_imperative_act_2: derived, derived, _;
+    perfect_imperative_act_3: _, _, derived;
+    pluperfect_act_1: derived, _, _;
+    pluperfect_act_2: derived, _, _;
+    pluperfect_act_3: derived, _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Ψῑλοω: 13 words (ἱδροω, φᾰνεροω, στενοω, σκοτοω, πτεροω, ὑπνοω). Like Γῡροω, except in 19 cells: future_ind_act_3 du, future_ind_mid_3 du, perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, ….
+    conjugation!("ψῑλοω", 13, "~οω", like Γῡροω;
+    stem future_ind_act_1_sg: "~ωσ- like ποιεω";
+    stem pass_: "~ωθησ- like ποιεω";
+    stem pass: "~ωθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~ωκ- like σκοπεω";
+    stem perfect_ind_mid_1_sg: "~ω- like σκοπεω";
+    stem perfect_ind_mid_2_sg: "~ω- like σκοπεω";
+    stem pluperfect_act: "~ωκ- like σκοπεω";
+    stem pluperfect: "~ω- like σκοπεω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
     // Δῐοικεω: 12 words (δῐοικοδομεω, ἐνοικεω, προσοικεω, κᾰτοικοφθορεω, κατοικονομεω, κᾰτοικοδομεω). Like Πεμπω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("δῐοικεω", 12, "~οι~εω", like Πεμπω;
     stem lemma: "~οι~- like ποιεω";
@@ -2984,7 +3089,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~σ- like ἐχω";
     stem pass_: "~σθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~σ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~σ- like ἐχω";
     stem pass: "~σθ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~- like σβεννῡμῐ";
@@ -3022,56 +3127,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_act_3: _, _, derived;
     pluperfect_act_1: derived, _, _;
     ),
-    // Πορσῡνω: 12 words (πληθῡνω, ἀμῡνω, αἰσχῡνω, πλῡνω, μολῡνω, ὀξῡνω). Like Ληγω, except in 49 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πορσῡνω", 12, "~ῡνω", like Ληγω;
-    stem lemma: "~ῡν- like βουλευω";
-    stem imperfect: "~ῡν- like βουλευω";
-    stem future_ind_act_1_sg: "~ῠν- like χρημᾰτῐζω";
-    stem pass_: "~ῠνθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ῡν- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ῡνθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ῡν- like ἐχω";
-    stem pass: "~ῡνθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ῠγκ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~ῠ- like πορσῡνω";
-    stem perfect_ind_mid_2_sg: "~ῠν- like πορσῡνω";
-    stem pluperfect_act: "~ῠγκειν- like ἐχω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_mid_1: "ἐ%ε~ῠσμην", _, _;
-    pluperfect_mid_2: "ἐ%ε~ῠνσο", "ἐ%ε~ῠνθον", _;
-    pluperfect_mid_3: "ἐ%ε~ῠντο", _, "ἐ%ε~ῠνᾰτο";
-    pluperfect_pass_1: _, _, "ἐ%ε~ῠσμεθᾰ";
-    pluperfect_pass_2: _, _, "ἐ%ε~ῠνθε";
-    pluperfect_pass_3: _, "ἐ%ε~ῠνθην", _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Ἐπᾰϊω: 12 words (ὑπᾰρχω, ὑπᾰκουω, δῐᾰνῠω, ἐξᾰρχω, ἐξᾰρτῡω, ἀπᾰρεσκω). Like Πεμπω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    // Ἐπᾰϊω: 12 words (ὑπᾰρχω, ὑπᾰκουω, δῐᾰνῠω, ἐξᾰρχω, ἐξᾰρτῡω, ἀπᾰρεσκω). Like Πεμπω, except in 54 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("ἐπᾰϊω", 12, "~ᾰ~ω", like Πεμπω;
     stem lemma: "~ᾰ~- like βουλευω";
     stem imperfect: "~η~- like ἐλπω";
@@ -3083,7 +3139,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem pass: "~ᾰ~σθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~η~κ- like πεμπω";
     stem perfect_ind_mid_1_sg: "~η~σ- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~η~- like ἐπᾰϊω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -3105,12 +3160,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     aorist_subj_act_3: _, derived, _;
     aorist_subj_mid_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_mid_2: "~η~σαι", "~η~σθον", _;
+    perfect_ind_mid_3: _, _, "~η~τᾰται";
     perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
+    perfect_ind_pass_2: _, _, "~η~σθε";
+    perfect_ind_pass_3: derived, _, _;
+    perfect_imperative_mid_2: _, _, "~η~σθε";
+    perfect_imperative_mid_3: _, _, "~η~σθων";
+    perfect_imperative_pass_2: "~η~σο", _, "~η~σθε";
+    perfect_imperative_pass_3: "~η~σθω", "~η~σθων", "~η~σθων";
     pluperfect_act_1: "~η~κειν", _, _;
     pluperfect_mid_1: "~η~σμην", _, _;
     pluperfect_mid_2: "~η~σο", "~η~σθον", _;
@@ -3118,7 +3176,68 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_1: _, _, "~η~σμεθᾰ";
     pluperfect_pass_2: _, _, "~η~σθε";
     pluperfect_pass_3: _, "~η~σθην", _;
-    infinitive_perf: _, _, derived;
+    infinitive_perf: _, "~η~σθαι", _;
+    ),
+    // Βᾰδιζω: 12 words (εὐαγγελιζω, βᾰδιζω, στρᾰβιζω, συντειχιζω, καθιζω, στιγματιζω). Like Πεμπω, except in 70 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("βᾰδιζω", 12, "~~ζω", like Πεμπω;
+    stem lemma: "~~ζ- like βουλευω";
+    stem imperfect: "~~ζ- like βουλευω";
+    stem future_ind_act_1_sg: "~~- like χρημᾰτῐζω";
+    stem pass_: "~~σθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~~σ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~~σθην- like ποιεω";
+    stem pass: "~~σθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~~κ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~~σ- like βουλευω";
+    stem pluperfect_act: "~~κειν- like ποιεω";
+    stem pluperfect: "~~σ- like πειθω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_1: "~~σω", _, _;
+    aorist_subj_act_2: "~~σῃς", "~~σητον", _;
+    aorist_subj_act_3: _, _, "~~σωσῐ|~~σωσῐν";
+    aorist_subj_mid_1: _, _, "~~σωμεθᾰ";
+    aorist_subj_mid_2: "~~σῃ", "~~σησθον", _;
+    aorist_opt_act_1: "~~σαιμῐ", _, "~~σαιμεν";
+    aorist_opt_act_2: "~~σειᾰς|~~σαις", _, _;
+    aorist_opt_act_3: "~~σειε|~~σειεν|~~σαι", _, "~~σειᾰν|~~σαιεν";
+    aorist_opt_mid_1: "~~σαιμην", _, _;
+    aorist_imperative_act_2: "~~σον", _, "~~σᾰτε";
+    aorist_imperative_act_3: _, _, "~~σᾰντων";
+    aorist_imperative_mid_2: "~~σαι", "~~σᾰσθον", _;
+    aorist_imperative_mid_3: _, _, "~~σᾰσθων";
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_2: "%ε~~σαι", "%ε~~σθον", _;
+    perfect_ind_mid_3: _, _, "%ε~~σᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: _, _, "%ε~~σθε";
+    perfect_ind_pass_3: derived, _, _;
+    perfect_imperative_mid_2: _, _, "%ε~~σθε";
+    perfect_imperative_mid_3: _, _, "%ε~~σθων";
+    perfect_imperative_pass_2: "%ε~~σο", _, "%ε~~σθε";
+    perfect_imperative_pass_3: "%ε~~σθω", "%ε~~σθων", "%ε~~σθων";
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_aor: "~ῑσα~", _, _;
+    infinitive_perf: _, "%ε~ῑσθα~", _;
+    participle_aor: "~~σᾱς", "~~σᾰμενος", _;
     ),
     // Πῠρσαινω: 11 words (ἐοικᾰ, κειμαι, δυναμαι, οἰδᾰ, δει, ἐτλην). Like Θωᾰω, except in 22 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, ….
     conjugation!("πῠρσαινω", 11, "~", like Θωᾰω;
@@ -3138,48 +3257,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     present_imperative_act_2: _, derived, _;
     present_imperative_pass_2: derived, _, _;
     ),
-    // Κᾰθιδρῡω: 11 words (ἰᾱτρευω, ἰσχῡω, ἑλκω, ἱκω, κᾰθιδρῡω, εἰκω). Like Ποικιλλω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("κᾰθιδρῡω", 11, "~ω", like Ποικιλλω;
-    stem lemma: "~- like βουλευω";
-    stem future_ind_act_1_sg: "~σ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~σ- like εὐλογεω";
-    stem aorist_subj_act_1_sg: "~σ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~κ- like εὐλογεω";
-    stem perfect_ind_mid_1_sg: "~- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~- like εὐλογεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: derived, _, _;
-    future_ind_pass_3: _, derived, _;
-    aorist_ind_pass_1: derived, _, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_1: derived, _, _;
-    aorist_subj_pass_3: _, derived, _;
-    aorist_imperative_pass_2: derived, derived, derived;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
     // Σαινω: 11 words (φαινω, ξαινω, ὑφαινω, ὁρμαινω, χᾰλεπαινω, σαινω). Like Ληγω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("σαινω", 11, "~αινω", like Ληγω;
     stem lemma: "~αιν- like βᾰπτῐζω";
@@ -3187,7 +3264,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ᾰν- like λογῐζομαι";
     stem pass_: "~ᾰνθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ην- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰνθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰνθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ην- like ἐχω";
     stem pass: "~ᾰνθ- like ἐχω";
     ind_act_3: _, derived, _;
@@ -3271,56 +3348,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Πῡθω: 11 words (πειθω, περθω, ληθω, κλωθω, κευθω, δῐᾰπερθω). Like Πειρᾰζω, except in 64 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πῡθω", 11, "~θω", like Πειρᾰζω;
-    stem lemma: "~θ- like ἐχω";
-    stem imperfect: "~θ- like ἐχω";
-    stem future_ind_act_1_sg: "~σ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~σ- like βουλευω";
-    stem pluperfect: "~σ- like πειθω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_act_1: _, _, derived;
-    perfect_ind_act_2: _, derived, _;
-    perfect_ind_act_3: derived, _, derived;
-    perfect_ind_mid_3: _, _, "%ε~θᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_act_3: _, derived, derived;
-    perfect_subj_mid_3: _, _, derived;
-    perfect_opt_act_1: derived, _, derived;
-    perfect_opt_act_2: derived, derived, derived;
-    perfect_opt_act_3: derived, derived, derived;
-    perfect_imperative_act_2: derived, derived, _;
-    perfect_imperative_act_3: _, _, derived;
-    pluperfect_act_1: derived, _, _;
-    pluperfect_act_2: derived, _, _;
-    pluperfect_act_3: derived, _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
     // Δαμνημῐ: 11 words (ἱστημῐ, ἱημῐ, δαμνημῐ, πῐμπλημῐ, φημῐ, διατιθημῐ). Like Πῠρσαινω, except in 62 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("δαμνημῐ", 11, "~ημῐ", like Πῠρσαινω;
     ind_act_1: "~ημῐ", _, "~ᾰμεν";
@@ -3355,6 +3382,155 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     imperfect_pass_3: _, "ἐ~ᾰσθην", _;
     infinitive_pres: "~ᾰναι", _, "~ᾰσθαι";
     participle_pres: "~ᾱς", _, "~ᾰμενος";
+    ),
+    // Δῐωκω: 11 words (βρῡκω, πεκω, πλεκω, τηκω, κᾰτᾰδῐωκω, δῐωκω). Like Τᾰσσω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("δῐωκω", 11, "~κω", like Τᾰσσω;
+    stem lemma: "~κ- like βᾰπτῐζω";
+    stem imperfect: "~κ- like ἐχω";
+    stem future_ind_act_1_sg: "~ξ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ξ- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ξ- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~- like δῐωκω";
+    stem pluperfect: "~- like δῐωκω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_ind_pass_1: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_1: derived, _, _;
+    aorist_subj_pass_3: _, derived, _;
+    aorist_imperative_pass_2: derived, derived, derived;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Σφᾰλλω: 11 words (βᾰλλω, θᾰλλω, πᾰλλω, βδᾰλλω, σφᾰλλω, ψᾰλλω). Like Πεμπω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("σφᾰλλω", 11, "~ᾰ~λω", like Πεμπω;
+    stem lemma: "~ᾰ~λ- like βουλευω";
+    stem imperfect: "~ᾰ~λ- like βουλευω";
+    stem future_ind_act_1_sg: "~ᾰ~- like λογῐζομαι";
+    stem pass_: "~ᾰ~ησησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~η~- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~η~- like ποιεω";
+    stem pass: "~ᾰ~- like σφᾰλλω";
+    stem perfect_ind_act_1_sg: "~ᾰ~κ- like στηρῐζω";
+    stem perfect_ind_mid_1_sg: "~ᾰ~- like σβεννῡμῐ";
+    stem perfect_ind_mid_2_sg: "~ᾰ~- like σφᾰλλω";
+    stem pluperfect: "~ᾰ~- like σφᾰλλω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "ἐ~ᾰ~κειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Ἀλῠω: 11 words (φῠω, δεικνῠω, ἐνδῠω, κῠω, κωλῠω, ὀμνῠω). Like Ληγω, except in 82 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἀλῠω", 11, "~ῠω", like Ληγω;
+    stem imperfect: "~ῠ- like ἐχω";
+    stem future_ind_act_1_sg: "~ῡσ- like ἐχω";
+    stem pass_: "~ῡθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ῡσ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῡθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ῡσ- like φῠω";
+    stem pass: "~ῡθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ῡκ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~ῡ- like βουλευω";
+    stem perfect_ind_mid_2_sg: "~ῡ- like ποιεω";
+    ind_act_1: "~ῠω", _, "~ῠομεν";
+    ind_act_2: "~ῠεις", "~ῠετον", _;
+    ind_act_3: "~ῠει", _, "~ῠουσῐ|~ῠουσῐν";
+    ind_mid_1: "~ῠομαι", _, "~ῠομεθᾰ";
+    ind_mid_2: "~ῠῃ|~ῠει", _, _;
+    ind_mid_3: _, "~ῠεσθον", _;
+    ind_pass_1: derived, _, _;
+    ind_pass_2: _, "~ῠεσθον", "~ῠεσθε";
+    ind_pass_3: "~ῠεται", "~ῠεσθον", "~ῠονται";
+    subj_act_1: "~ῠω", _, "~ῠωμεν";
+    subj_act_2: "~ῠῃς", _, _;
+    subj_act_3: "~ῠῃ", "~ῠητον", "~ῠωσῐ|~ῠωσῐν";
+    subj_mid_1: "~ῠωμαι", _, "~ῠωμεθᾰ";
+    subj_mid_2: _, "~ῠησθον", _;
+    subj_mid_3: "~ῠηται", _, "~ῠωνται";
+    subj_pass_1: derived, _, _;
+    subj_pass_2: _, _, "~ῠησθε";
+    opt_act_1: "~ῠοιμῐ", _, "~ῠοιμεν";
+    opt_act_2: "~ῠοις", "~ῠοιτον", "~ῠοιτε";
+    opt_act_3: "~ῠοι", "~ῠοιτην", "~ῠοιεν";
+    opt_mid_1: "~ῠοιμην", _, "~ῠοιμεθᾰ";
+    opt_mid_2: "~ῠοιο", "~ῠοισθον", "~ῠοισθε";
+    opt_mid_3: "~ῠοιτο", "~ῠοισθην", "~ῠοιντο";
+    present_imperative_act_2: "~ῠε", _, "~ῠετε";
+    present_imperative_act_3: _, _, "~ῠοντων";
+    present_imperative_mid_2: "~ῠου", "~ῠεσθον", "~ῠεσθε";
+    present_imperative_mid_3: "~ῠεσθω", _, "~ῠεσθων";
+    present_imperative_pass_2: _, "~ῠεσθον", "~ῠεσθε";
+    present_imperative_pass_3: derived, "~ῠεσθων", "~ῠεσθων";
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_pres: "~ῠειν", _, "~ῠεσθαι";
+    infinitive_perf: _, _, derived;
+    participle_pres: "~ῠων", _, "~ῠομενος";
     ),
     // Ζευγνῡμῐ: 10 words (πηγνῡμῐ, μῑγνῡμῐ, ζευγνῡμῐ, ἀνοιγνῡμῐ, οἰγνῡμῐ, ὀμοργνῡμῐ). Like Ληγω, except in 27 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("ζευγνῡμῐ", 10, "~γνῡμῐ", like Ληγω;
@@ -3403,7 +3579,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     // Χεω: 10 words (πνεω, θεω, πλεω, χεω, νεω, ἀγρεω). Like Πῠρσαινω, except in 58 cells: ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_mid_3 du, ind_pass_2 du, ind_pass_2 pl, ….
     conjugation!("χεω", 10, "~ω", like Πῠρσαινω;
     stem future_ind_act_1_sg: "~υσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~υσθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~υσθην- like ποιεω";
     stem pass: "~υσθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~υκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~υσ- like βουλευω";
@@ -3520,8 +3696,109 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: "~ῑεις", _, "~ῑεμενος";
     participle_aor: "~εις", "~εμενος", _;
     ),
-    // Στραγγᾰλοομαι: 9 words (στραγγᾰλοομαι, χειροομαι, ἀπῐχθῠοομαι, κᾰτοικειοομαι, ἐνᾰντῐοομαι, δεξῐοομαι). Like Ἀξῐοω, except in 89 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("στραγγᾰλοομαι", 9, "~οομαι", like Ἀξῐοω;
+    // Τειρω: 10 words (κειρω, πειρω, ἐγειρω, κτεινω, σπειρω, φθειρω). Like Σφᾰλλω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("τειρω", 10, "~ει~ω", like Σφᾰλλω;
+    stem lemma: "~ει~- like βουλευω";
+    stem imperfect: "~ει~- like βουλευω";
+    stem future_ind_act_1_sg: "~ε~- like λογῐζομαι";
+    stem pass_: "~ᾰ~ησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ει~- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ει~- like ποιεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    ),
+    // Ψευδω: 10 words (ᾀδω, ἀειδω, μεδω, δῐδω, σπευδω, ψευδω). Like Ῥωννῡμῐ, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ψευδω", 10, "~δω", like Ῥωννῡμῐ;
+    stem lemma: "~δ- like βᾰπτῐζω";
+    stem imperfect: "~δ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~σ- like σβεννῡμῐ";
+    stem perfect_ind_mid_2_sg: "~- like ψηφῐζω";
+    stem pluperfect: "~- like ψηφῐζω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Εὐφραινω: 10 words (σημαινω, ῥαινω, μιαινω, βλεμεαινω, κερδαινω, μελαινω). Like Σαινω, except in 36 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("εὐφραινω", 10, "~αινω", like Σαινω;
+    stem lemma: "~αιν- like βουλευω";
+    stem future_ind_act_1_sg: "~αν- like λογῐζομαι";
+    stem pass_: "~ανθησ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ᾱν- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ανθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ᾱν- like ἐχω";
+    stem pass: "~ανθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ᾰγκ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~ᾰ- like πορσῡνω";
+    stem perfect_ind_mid_2_sg: "~ᾰν- like πορσῡνω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Στραγγᾰλοομαι: 9 words (στραγγᾰλοομαι, χειροομαι, ἀπῐχθῠοομαι, κᾰτοικειοομαι, ἐνᾰντῐοομαι, δεξῐοομαι). Like Γῡροω, except in 89 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("στραγγᾰλοομαι", 9, "~οομαι", like Γῡροω;
     stem future_ind_act_1_sg: "~ωσ- like ἑπομαι";
     ind_act_1: "~οομαι", _, derived;
     ind_act_2: derived, derived, _;
@@ -3587,14 +3864,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~α~ησ- like ποιεω";
     stem pass_: "~α~ηθησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~α~ησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~α~ηθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~α~ηθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~α~ησ- like ποιεω";
     stem pass: "~α~ηθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~α~ηκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~α~η- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~α~η- like ἐχω";
-    stem pluperfect_act: "~α~ηκειν- like ἐχω";
-    stem pluperfect: "~α~η- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~α~η- like ποιεω";
+    stem pluperfect_act: "~α~ηκειν- like ποιεω";
+    stem pluperfect: "~α~η- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -3622,53 +3899,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_ind_pass_3: derived, derived, derived;
     perfect_imperative_mid_2: _, derived, _;
     perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Φθειρω: 9 words (κειρω, πειρω, ἐγειρω, κτεινω, σπειρω, φθειρω). Like Πεμπω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("φθειρω", 9, "~ει~ω", like Πεμπω;
-    stem lemma: "~ει~- like βουλευω";
-    stem imperfect: "~ει~- like βουλευω";
-    stem future_ind_act_1_sg: "~ε~- like λογῐζομαι";
-    stem pass_: "~ᾰ~ησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ει~- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ει~- like ποιεω";
-    stem pass: "~ᾰ~- like ἐγειρω";
-    stem perfect_ind_act_1_sg: "~ᾰ~κ- like στηρῐζω";
-    stem perfect_ind_mid_1_sg: "~ᾰ~- like σβεννῡμῐ";
-    stem perfect_ind_mid_2_sg: "~ᾰ~- like ἐγειρω";
-    stem pluperfect: "~ᾰ~- like ἐγειρω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "ἐ~ᾰ~κειν", _, _;
     pluperfect_pass_1: derived, _, _;
     pluperfect_pass_2: derived, derived, _;
     pluperfect_pass_3: derived, _, derived;
@@ -3771,7 +4001,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, derived, _;
     participle_perf: _, _, derived;
     ),
-    // Σῑνομαι: 9 words (ἑζομαι, ἐρομαι, ἁλῐσκομαι, ἁζομαι, ἁλλομαι, κᾰθεζομαι). Like Θωᾰω, except in 59 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ind_pass_1 sg, ….
+    // Σῑνομαι: 9 words (ἑζομαι, ἐρομαι, ἁλῐσκομαι, ἁλλομαι, κᾰθεζομαι, σῑνομαι). Like Θωᾰω, except in 59 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ind_pass_1 sg, ….
     conjugation!("σῑνομαι", 9, "~ομαι", like Θωᾰω;
     stem lemma: "~- like σῑνομαι";
     stem imperfect: "~- like σῑνομαι";
@@ -3812,415 +4042,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: derived, _, _;
     participle_pres: derived, _, _;
     ),
-    // Ἀθῡρω: 8 words (ἀγρευω, ἀτασθαλλω, ἀμορβευω, ἀτεμβω, ἀφραινω, ἀπῐστευω). Like Μελλω, except in 130 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἀθῡρω", 8, "ἀ~ω", like Μελλω;
-    stem imperfect: "~- like ἀθῡρω";
-    stem future_ind_act_1_sg: "~σ- like ἀθῡρω";
-    stem aorist_ind_act_1_sg: "~σ- like ἀθῡρω";
-    stem aorist_ind_pass_1_sg: "~θην- like ἀθῡρω";
-    stem aorist_subj_act_1_sg: "~σ- like ἀθῡρω";
-    stem perfect_ind_act_1_sg: "~κ- like ἀθῡρω";
-    stem perfect_ind_mid_2_sg: "~- like ἀθῡρω";
-    stem pluperfect: "~- like ἀθῡρω";
-    ind_act_1: "ἀ~ω", _, "ἀ~ομεν";
-    ind_act_2: "ἀ~εις", "ἀ~ετον", _;
-    ind_act_3: "ἀ~ει", _, "ἀ~ουσῐ|ἀ~ουσῐν";
-    ind_mid_1: _, _, "ἀ~ομεθᾰ";
-    ind_mid_2: "ἀ~ῃ", _, _;
-    ind_mid_3: _, "ἀ~εσθον", _;
-    ind_pass_1: "ἀ~ομαι", _, _;
-    ind_pass_2: _, "ἀ~εσθον", "ἀ~εσθε";
-    ind_pass_3: "ἀ~εται", "ἀ~εσθον", "ἀ~ονται";
-    subj_act_1: "ἀ~ω", _, "ἀ~ωμεν";
-    subj_act_2: "ἀ~ῃς", _, _;
-    subj_act_3: "ἀ~ῃ", "ἀ~ητον", "ἀ~ωσῐ|ἀ~ωσῐν";
-    subj_mid_1: _, _, "ἀ~ωμεθᾰ";
-    subj_mid_2: _, "ἀ~ησθον", _;
-    subj_mid_3: "ἀ~ηται", _, "ἀ~ωνται";
-    subj_pass_1: "ἀ~ωμαι", _, _;
-    subj_pass_2: _, _, "ἀ~ησθε";
-    opt_act_1: "ἀ~οιμῐ", _, "ἀ~οιμεν";
-    opt_act_2: "ἀ~οις", "ἀ~οιτον", "ἀ~οιτε";
-    opt_act_3: "ἀ~οι", "ἀ~οιτην", "ἀ~οιεν";
-    opt_mid_1: "ἀ~οιμην", _, "ἀ~οιμεθᾰ";
-    opt_mid_2: "ἀ~οιο", "ἀ~οισθον", "ἀ~οισθε";
-    opt_mid_3: "ἀ~οιτο", "ἀ~οισθην", "ἀ~οιντο";
-    present_imperative_act_2: "ἀ~ε", _, "ἀ~ετε";
-    present_imperative_act_3: _, _, "ἀ~οντων";
-    present_imperative_mid_2: "ἀ~ου", "ἀ~εσθον", "ἀ~εσθε";
-    present_imperative_mid_3: _, _, "ἀ~εσθων";
-    present_imperative_pass_2: _, "ἀ~εσθον", "ἀ~εσθε";
-    present_imperative_pass_3: "ἀ~εσθω", "ἀ~εσθων", "ἀ~εσθων";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: "ἀ~θησομαι", _, _;
-    future_ind_pass_3: _, "ἀ~θησεσθον", _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_1: "ἀ~θω", _, _;
-    aorist_subj_pass_3: _, "ἀ~θητον", _;
-    aorist_imperative_pass_2: "ἀ~θητῐ", "ἀ~θητον", "ἀ~θητε";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: "ἠ~μαι", _, _;
-    perfect_ind_mid_3: "ἠ~ται", derived, _;
-    perfect_ind_pass_1: _, _, "ἠ~μεθᾰ";
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_subj_mid_3: _, "ἠ~μένω ἦτον", _;
-    perfect_subj_pass_1: "ἠ~μένος ὦ", _, "ἠ~μένοι ὦμεν";
-    perfect_subj_pass_2: "ἠ~μένος ᾖς", "ἠ~μένω ἦτον", "ἠ~μένοι ἦτε";
-    perfect_subj_pass_3: "ἠ~μένος ᾖ", "ἠ~μένω ἦτον", "ἠ~μένοι ὦσῐ";
-    perfect_opt_pass_1: "ἠ~μένος εἴην", _, "ἠ~μένοι εἴημεν";
-    perfect_opt_pass_2: "ἠ~μένος εἴης", "ἠ~μένω εἴητον", "ἠ~μένοι εἴητε";
-    perfect_opt_pass_3: "ἠ~μένος εἴη", "ἠ~μένω εἰήτην", "ἠ~μένοι εἴησᾰν";
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "ἠ~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    future_perfect_ind_mid_1: "ἠ~σομαι", _, _;
-    future_perfect_ind_mid_3: _, "ἠ~σεσθον", _;
-    future_perfect_ind_pass_1: _, _, "ἠ~σομεθᾰ";
-    future_perfect_ind_pass_2: "ἠ~σῃ", "ἠ~σεσθον", "ἠ~σεσθε";
-    future_perfect_ind_pass_3: "ἠ~σεται", "ἠ~σεσθον", "ἠ~σονται";
-    future_perfect_opt_pass_1: "ἠ~σοιμην", _, "ἠ~σοιμεθᾰ";
-    future_perfect_opt_pass_2: "ἠ~σοιο", "ἠ~σοισθον", "ἠ~σοισθε";
-    future_perfect_opt_pass_3: "ἠ~σοιτο", "ἠ~σοισθην", "ἠ~σοιντο";
-    infinitive_pres: "ἀ~ειν", _, "ἀ~εσθαι";
-    infinitive_perf: _, _, derived;
-    infinitive_futp: _, _, "ἠ~σεσθαι";
-    participle_pres: "ἀ~ων", _, "ἀ~ομενος";
-    participle_perf: _, _, "ἠ~μενος";
-    participle_futp: _, _, "ἠ~σομενος";
-    ),
-    // Ψῑλοω: 8 words (ἱδροω, στενοω, πτεροω, ψῑλοω, κεραυνοω, φορτοω). Like Ἀξῐοω, except in 19 cells: future_ind_act_3 du, future_ind_mid_3 du, perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, ….
-    conjugation!("ψῑλοω", 8, "~οω", like Ἀξῐοω;
-    stem future_ind_act_1_sg: "~ωσ- like ποιεω";
-    stem pass_: "~ωθησ- like ποιεω";
-    stem pass: "~ωθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~ωκ- like σκοπεω";
-    stem perfect_ind_mid_1_sg: "~ω- like σκοπεω";
-    stem perfect_ind_mid_2_sg: "~ω- like σκοπεω";
-    stem pluperfect_act: "~ωκ- like σκοπεω";
-    stem pluperfect: "~ω- like σκοπεω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Φᾰρμᾰσσω: 8 words (τᾰρᾰσσω, θωρησσω, κνωσσω, θρῡλῐσσω, παιφᾰσσω, φᾰρμᾰσσω). Like Τᾰσσω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("φᾰρμᾰσσω", 8, "~σσω", like Τᾰσσω;
-    stem lemma: "~σσ- like βᾰπτῐζω";
-    stem imperfect: "~σσ- like ἐχω";
-    stem future_ind_act_1_sg: "~ξ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ξ- like φᾰρμᾰσσω";
-    stem aorist_subj_act_1_sg: "~ξ- like φᾰρμᾰσσω";
-    stem perfect_ind_mid_2_sg: "~- like φᾰρμᾰσσω";
-    stem pluperfect: "~- like φᾰρμᾰσσω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    future_perfect_ind_mid_1: "%ε~ξομαι", _, _;
-    future_perfect_ind_mid_3: _, "%ε~ξεσθον", _;
-    future_perfect_ind_pass_1: _, _, "%ε~ξομεθᾰ";
-    future_perfect_ind_pass_2: "%ε~ξῃ", "%ε~ξεσθον", "%ε~ξεσθε";
-    future_perfect_ind_pass_3: "%ε~ξεται", "%ε~ξεσθον", "%ε~ξονται";
-    future_perfect_opt_pass_1: "%ε~ξοιμην", _, "%ε~ξοιμεθᾰ";
-    future_perfect_opt_pass_2: "%ε~ξοιο", "%ε~ξοισθον", "%ε~ξοισθε";
-    future_perfect_opt_pass_3: "%ε~ξοιτο", "%ε~ξοισθην", "%ε~ξοιντο";
-    infinitive_perf: _, _, derived;
-    infinitive_futp: _, _, "%ε~ξεσθαι";
-    participle_futp: _, _, "%ε~ξομενος";
-    ),
-    // Δῐωκω: 8 words (βρῡκω, πεκω, πλεκω, τηκω, κᾰτᾰδῐωκω, δῐωκω). Like Τᾰσσω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("δῐωκω", 8, "~κω", like Τᾰσσω;
-    stem lemma: "~κ- like βᾰπτῐζω";
-    stem imperfect: "~κ- like ἐχω";
-    stem future_ind_act_1_sg: "~ξ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ξ- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ξ- like ἐχω";
-    stem perfect_ind_mid_2_sg: "~- like φᾰρμᾰσσω";
-    stem pluperfect: "~- like φᾰρμᾰσσω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_ind_pass_1: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_1: derived, _, _;
-    aorist_subj_pass_3: _, derived, _;
-    aorist_imperative_pass_2: derived, derived, derived;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Σφᾰλλω: 8 words (βᾰλλω, θᾰλλω, πᾰλλω, βδᾰλλω, σφᾰλλω, ψᾰλλω). Like Φθειρω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("σφᾰλλω", 8, "~ᾰ~λω", like Φθειρω;
-    stem lemma: "~ᾰ~λ- like βουλευω";
-    stem imperfect: "~ᾰ~λ- like βουλευω";
-    stem future_ind_act_1_sg: "~ᾰ~- like λογῐζομαι";
-    stem pass_: "~ᾰ~ησησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~η~- like ποιεω";
-    stem aorist_subj_act_1_sg: "~η~- like ποιεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    ),
-    // Κῠω: 8 words (φῠω, ἐνδῠω, κῠω, κωλῠω, προμηνῠω, δῐᾰμηνῠω). Like Ληγω, except in 44 cells: ind_act_3 du, ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, ….
-    conjugation!("κῠω", 8, "~ῠω", like Ληγω;
-    stem lemma: "~ῠ- like φῠω";
-    stem imperfect: "~ῠ- like ἐχω";
-    stem future_ind_act_1_sg: "~ῡσ- like ἐχω";
-    stem pass_: "~ῡθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ῡσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ῡθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ῡσ- like φῠω";
-    stem pass: "~ῡθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ῡκ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~ῡ- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ῡ- like ἐχω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: derived, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: derived, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    present_imperative_pass_3: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Ψευδω: 8 words (ᾀδω, ἀειδω, σπευδω, ψευδω, δειδω, ἐρειδω). Like Ῥωννῡμῐ, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ψευδω", 8, "~δω", like Ῥωννῡμῐ;
-    stem lemma: "~δ- like βᾰπτῐζω";
-    stem imperfect: "~δ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~σ- like σβεννῡμῐ";
-    stem perfect_ind_mid_2_sg: "~- like ψηφῐζω";
-    stem pluperfect: "~- like ψηφῐζω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Πλᾰσσω: 8 words (πλᾰσσω, πᾰσσω, βρᾰσσω, ἱμᾰσσω, ἐρεσσω, βλῐσσω). Like Κρῑνομαι, except in 62 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πλᾰσσω", 8, "~σω", like Κρῑνομαι;
-    stem lemma: "~σ- like βουλευω";
-    stem imperfect: "~σ- like ἐχω";
-    stem future_ind_act_1_sg: "~- like ἐχω";
-    stem aorist_ind_act_1_sg: "~- like ἐχω";
-    stem aorist_subj_act_1_sg: "~- like ποιεω";
-    stem perfect_ind_mid_2_sg: "~- like χεω";
-    stem pluperfect: "~- like πειθω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    future_perfect_ind_mid_1: "%ε~ομαι", _, _;
-    future_perfect_ind_mid_3: _, "%ε~εσθον", _;
-    future_perfect_ind_pass_1: _, _, "%ε~ομεθᾰ";
-    future_perfect_ind_pass_2: "%ε~ῃ", "%ε~εσθον", "%ε~εσθε";
-    future_perfect_ind_pass_3: "%ε~εται", "%ε~εσθον", "%ε~ονται";
-    future_perfect_opt_pass_1: "%ε~οιμην", _, "%ε~οιμεθᾰ";
-    future_perfect_opt_pass_2: "%ε~οιο", "%ε~οισθον", "%ε~οισθε";
-    future_perfect_opt_pass_3: "%ε~οιτο", "%ε~οισθην", "%ε~οιντο";
-    infinitive_perf: _, _, derived;
-    infinitive_futp: _, _, "%ε~εσθαι";
-    participle_futp: _, _, "%ε~ομενος";
-    ),
-    // Κερδαινω: 8 words (σημαινω, ῥαινω, μιαινω, κερδαινω, μελαινω, εὐφραινω). Like Σαινω, except in 36 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("κερδαινω", 8, "~αινω", like Σαινω;
-    stem lemma: "~αιν- like βουλευω";
-    stem future_ind_act_1_sg: "~αν- like λογῐζομαι";
-    stem pass_: "~ανθησ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ᾱν- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ανθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ᾱν- like ἐχω";
-    stem pass: "~ανθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ᾰγκ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~ᾰ- like πορσῡνω";
-    stem perfect_ind_mid_2_sg: "~ᾰν- like πορσῡνω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Λῡω: 8 words (λῡω, δῡω, καμμῡω, καταμῡω, κᾰσσῡω, ἐξαναλῡω). Like Κῠω, except in 88 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_1 sg, subj_mid_2 sg, ….
-    conjugation!("λῡω", 8, "~ῡω", like Κῠω;
+    // Λῡω: 9 words (λῡω, δῡω, βλῡω, καμμῡω, καταμῡω, κᾰσσῡω). Like Ἀλῠω, except in 88 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_1 sg, subj_mid_2 sg, ….
+    conjugation!("λῡω", 9, "~ῡω", like Ἀλῠω;
     stem lemma: "~ῡ- like βουλευω";
     stem imperfect: "~ῡ- like βουλευω";
     stem future_ind_act_1_sg: "~ῡσ- like ποιεω";
     stem pass_: "~ῠθησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~ῡσ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ῠθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῠθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ῡσ- like ποιεω";
     stem pass: "~ῠθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ῠκ- like ποιεω";
-    stem perfect_ind_mid_2_sg: "~ῠ- like ἐχω";
-    stem pluperfect_act: "~ῠκειν- like ἐχω";
-    stem pluperfect: "~ῠ- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ῠ- like ποιεω";
+    stem pluperfect_act: "~ῠκειν- like ποιεω";
+    stem pluperfect: "~ῠ- like ποιεω";
     ind_act_3: _, derived, _;
     ind_mid_1: derived, _, _;
     ind_pass_1: _, _, derived;
@@ -4274,6 +4109,195 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, "%ε~ῡσεσθαι";
     participle_perf: _, _, "%ε~ῠμενος";
     participle_futp: _, _, "%ε~ῡσομενος";
+    ),
+    // Πρεσβευω: 9 words (δρᾱω, χρῑω, κλειω, τῑω, πρεσβευω, μᾰθητευω). Like Βουλευω.
+    conjugation!("πρεσβευω", 9, "~ω", like Βουλευω;
+    stem pass_: "~σθησ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ποιεω";
+    stem pass: "~σθ- like ποιεω";
+    ),
+    // Τελεω: 9 words (ἐμεω, ἀρκεω, τελεω, καταπαιδεραστεω, βδεω, ἀμνηστεω). Like Ἐξηγεομαι, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("τελεω", 9, "~εω", like Ἐξηγεομαι;
+    stem lemma: "~- like τελεω";
+    stem future_ind_act_1_sg: "~- like λογῐζομαι";
+    stem pass_: "~εσθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~εσ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~εσθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~εσ- like ἐχω";
+    stem pass: "~εσθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~εκ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~εσ- like βουλευω";
+    stem perfect_ind_mid_2_sg: "~εσ- like χεω";
+    stem pluperfect_act: "~εκειν- like ποιεω";
+    stem pluperfect: "~εσ- like πειθω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Βουλομαι: 9 words (πετομαι, βουλομαι, οἰομαι, οἰχομαι, κελομαι, ἀχθομαι). Like Μηκᾰομαι, except in 39 cells: ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_3 du, subj_pass_1 sg, subj_pass_1 pl, ….
+    conjugation!("βουλομαι", 9, "~ομαι", like Μηκᾰομαι;
+    stem lemma: "~- like οἰομαι";
+    stem imperfect: "~- like σῑνομαι";
+    stem aorist_ind_pass_1_sg: "~ηθην- like ποιεω";
+    stem pass: "~ηθ- like ἐχω";
+    ind_pass_1: derived, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: derived, _, derived;
+    subj_pass_2: _, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_pass_2: derived, _, _;
+    present_imperative_pass_3: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, derived, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_pass_1: derived, _, _;
+    future_ind_pass_3: _, derived, _;
+    aorist_ind_mid_1: derived, _, _;
+    aorist_ind_mid_2: derived, derived, _;
+    aorist_subj_mid_1: _, _, derived;
+    aorist_subj_mid_2: derived, derived, _;
+    aorist_opt_mid_1: derived, _, _;
+    aorist_imperative_mid_2: derived, derived, _;
+    aorist_imperative_mid_3: _, _, derived;
+    participle_aor: _, derived, _;
+    ),
+    // Σειω: 9 words (ζεω, σειω, κελευω, παιω, ἀνῠω, πολεμησειω). Like Πρεσβευω, except in 16 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
+    conjugation!("σειω", 9, "~ω", like Πρεσβευω;
+    stem perfect_ind_act_1_sg: "~κ- like ποιεω";
+    stem perfect_ind_mid_1_sg: "~σ- like σειω";
+    stem perfect_ind_mid_2_sg: "~σ- like χεω";
+    stem pluperfect: "~σ- like πειθω";
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Κᾰθιδρῡω: 8 words (ἰᾱτρευω, ἰσχῡω, ἑλκω, κᾰθιδρῡω, εἰκω, ἐρῡκω). Like Ποικιλλω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("κᾰθιδρῡω", 8, "~ω", like Ποικιλλω;
+    stem lemma: "~- like βουλευω";
+    stem future_ind_act_1_sg: "~σ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~σ- like εὐλογεω";
+    stem aorist_subj_act_1_sg: "~σ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~κ- like εὐλογεω";
+    stem perfect_ind_mid_1_sg: "~- like εὐλογεω";
+    stem perfect_ind_mid_2_sg: "~- like εὐλογεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: derived, _, _;
+    future_ind_pass_3: _, derived, _;
+    aorist_ind_pass_1: derived, _, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_1: derived, _, _;
+    aorist_subj_pass_3: _, derived, _;
+    aorist_imperative_pass_2: derived, derived, derived;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Πλᾰσσω: 8 words (πλᾰσσω, πᾰσσω, βρᾰσσω, ἱμᾰσσω, ἐρεσσω, βλῐσσω). Like Κρῑνομαι, except in 62 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πλᾰσσω", 8, "~σω", like Κρῑνομαι;
+    stem lemma: "~σ- like βουλευω";
+    stem imperfect: "~σ- like ἐχω";
+    stem future_ind_act_1_sg: "~- like ἐχω";
+    stem aorist_ind_act_1_sg: "~- like ἐχω";
+    stem aorist_subj_act_1_sg: "~- like ποιεω";
+    stem perfect_ind_mid_2_sg: "~- like χεω";
+    stem pluperfect: "~- like πειθω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    future_perfect_ind_mid_1: "%ε~ομαι", _, _;
+    future_perfect_ind_mid_3: _, "%ε~εσθον", _;
+    future_perfect_ind_pass_1: _, _, "%ε~ομεθᾰ";
+    future_perfect_ind_pass_2: "%ε~ῃ", "%ε~εσθον", "%ε~εσθε";
+    future_perfect_ind_pass_3: "%ε~εται", "%ε~εσθον", "%ε~ονται";
+    future_perfect_opt_pass_1: "%ε~οιμην", _, "%ε~οιμεθᾰ";
+    future_perfect_opt_pass_2: "%ε~οιο", "%ε~οισθον", "%ε~οισθε";
+    future_perfect_opt_pass_3: "%ε~οιτο", "%ε~οισθην", "%ε~οιντο";
+    infinitive_perf: _, _, derived;
+    infinitive_futp: _, _, "%ε~εσθαι";
+    participle_futp: _, _, "%ε~ομενος";
     ),
     // Μαχομαι: 8 words (μαχομαι, πῠνθανομαι, σῠνεργαζομαι, κᾰτεργαζομαι, ἀπεχθανομαι, ἐξεργαζομαι). Like Ἐπᾰϊω, except in 121 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("μαχομαι", 8, "~α~ομαι", like Ἐπᾰϊω;
@@ -4404,270 +4428,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: derived, _, derived;
     participle_pres: derived, _, derived;
     ),
-    // Πρεσβευω: 7 words (δρᾱω, χρῑω, κλειω, πρεσβευω, μᾰθητευω, λαμπᾰδευω). Like Βουλευω.
-    conjugation!("πρεσβευω", 7, "~ω", like Βουλευω;
-    stem pass_: "~σθησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἐχω";
-    stem pass: "~σθ- like ποιεω";
-    ),
-    // Σοφῐζω: 7 words (σοφῐζω, σῳζω, κεᾰζω, στρουθῐζω, τῠκῐζω, μερῐζω). Like Χρημᾰτῐζω, except in 13 cells: perfect_ind_mid_3 du, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 du, perfect_ind_pass_3 pl, perfect_imperative_mid_2 du, ….
-    conjugation!("σοφῐζω", 7, "~ζω", like Χρημᾰτῐζω;
-    stem perfect_ind_mid_2_sg: "~σ- like χεω";
-    stem pluperfect: "~σ- like πειθω";
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Βᾰδιζω: 7 words (εὐαγγελιζω, βᾰδιζω, καθιζω, συνᾱλιζω, βαλλιζω, μακαριζω). Like Πεμπω, except in 70 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("βᾰδιζω", 7, "~~ζω", like Πεμπω;
-    stem lemma: "~~ζ- like βουλευω";
-    stem imperfect: "~~ζ- like βουλευω";
-    stem future_ind_act_1_sg: "~~- like χρημᾰτῐζω";
-    stem pass_: "~~σθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~~σ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~~σθην- like ἐχω";
-    stem pass: "~~σθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~~κ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~~σ- like βουλευω";
-    stem pluperfect_act: "~~κειν- like ἐχω";
-    stem pluperfect: "~~σ- like πειθω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_1: "~~σω", _, _;
-    aorist_subj_act_2: "~~σῃς", "~~σητον", _;
-    aorist_subj_act_3: _, _, "~~σωσῐ|~~σωσῐν";
-    aorist_subj_mid_1: _, _, "~~σωμεθᾰ";
-    aorist_subj_mid_2: "~~σῃ", "~~σησθον", _;
-    aorist_opt_act_1: "~~σαιμῐ", _, "~~σαιμεν";
-    aorist_opt_act_2: "~~σειᾰς|~~σαις", _, _;
-    aorist_opt_act_3: "~~σειε|~~σειεν|~~σαι", _, "~~σειᾰν|~~σαιεν";
-    aorist_opt_mid_1: "~~σαιμην", _, _;
-    aorist_imperative_act_2: "~~σον", _, "~~σᾰτε";
-    aorist_imperative_act_3: _, _, "~~σᾰντων";
-    aorist_imperative_mid_2: "~~σαι", "~~σᾰσθον", _;
-    aorist_imperative_mid_3: _, _, "~~σᾰσθων";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_2: "%ε~~σαι", "%ε~~σθον", _;
-    perfect_ind_mid_3: _, _, "%ε~~σᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: _, _, "%ε~~σθε";
-    perfect_ind_pass_3: derived, _, _;
-    perfect_imperative_mid_2: _, _, "%ε~~σθε";
-    perfect_imperative_mid_3: _, _, "%ε~~σθων";
-    perfect_imperative_pass_2: "%ε~~σο", _, "%ε~~σθε";
-    perfect_imperative_pass_3: "%ε~~σθω", "%ε~~σθων", "%ε~~σθων";
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_aor: "~ῑσα~", _, _;
-    infinitive_perf: _, "%ε~ῑσθα~", _;
-    participle_aor: "~~σᾱς", "~~σᾰμενος", _;
-    ),
-    // Ἀπειπον: 7 words (προσειπον, ἐξειπον, προειπον, ἀπειπον, ὑπειπον, ἐπειπον). Like Λλῡμῐ, except in 19 cells: ind_act_1 sg, ind_act_3 sg, imperfect_act_1 sg, imperfect_act_3 sg, future_ind_act_3 du, future_ind_mid_3 du, ….
-    conjugation!("ἀπειπον", 7, "~ειπον", like Λλῡμῐ;
-    stem future_ind_act_1_sg: "~ερ- like λογῐζομαι";
-    stem pass_: "~ορρηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ειπ- like ἀνᾰγω";
-    stem aorist_ind_pass_1_sg: "~ερρηθην- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~ειπ- like φᾰρμᾰσσω";
-    stem pass: "~ορρηθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ειρηκ- like πεμπω";
-    stem perfect_ind_mid_1_sg: "~ειρη- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~ειρη- like εὐλογεω";
-    ind_act_1: "~ειπον", _, _;
-    ind_act_3: derived, _, _;
-    imperfect_act_1: derived, _, _;
-    imperfect_act_3: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Τελεω: 7 words (ἐμεω, ἀρκεω, τελεω, καταπαιδεραστεω, βδεω, νεικεω). Like Ὀρχεομαι, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("τελεω", 7, "~εω", like Ὀρχεομαι;
-    stem lemma: "~- like τελεω";
-    stem future_ind_act_1_sg: "~- like λογῐζομαι";
-    stem pass_: "~εσθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~εσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~εσθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~εσ- like ἐχω";
-    stem pass: "~εσθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~εκ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~εσ- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~εσ- like χεω";
-    stem pluperfect_act: "~εκειν- like ἐχω";
-    stem pluperfect: "~εσ- like πειθω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Χραω: 7 words (χραω, νωμαω, σκῐαω, ἀπαγχοναω, λοχαω, πασχητῐαω). Like Νῑκαω, except in 5 cells: pluperfect_pass_1 sg, pluperfect_pass_2 sg, pluperfect_pass_2 du, pluperfect_pass_3 sg, pluperfect_pass_3 pl.
-    conjugation!("χραω", 7, "~αω", like Νῑκαω;
-    stem pass_: "~ησθησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ησθην- like ἐχω";
-    stem pass: "~ησθ- like ἐχω";
-    stem pluperfect_act: "~ηκειν- like ἐχω";
-    stem pluperfect: "~η- like ἐχω";
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
-    // Βουλομαι: 7 words (πετομαι, βουλομαι, οἰομαι, οἰχομαι, κελομαι, ἀχθομαι). Like Τεχναομαι, except in 39 cells: ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_3 du, subj_pass_1 sg, subj_pass_1 pl, ….
-    conjugation!("βουλομαι", 7, "~ομαι", like Τεχναομαι;
-    stem lemma: "~- like οἰομαι";
-    stem imperfect: "~- like σῑνομαι";
-    stem aorist_ind_pass_1_sg: "~ηθην- like ἐχω";
-    stem pass: "~ηθ- like ἐχω";
-    ind_pass_1: derived, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: derived, _, derived;
-    subj_pass_2: _, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_pass_2: derived, _, _;
-    present_imperative_pass_3: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_pass_1: derived, _, _;
-    future_ind_pass_3: _, derived, _;
-    aorist_ind_mid_1: derived, _, _;
-    aorist_ind_mid_2: derived, derived, _;
-    aorist_subj_mid_1: _, _, derived;
-    aorist_subj_mid_2: derived, derived, _;
-    aorist_opt_mid_1: derived, _, _;
-    aorist_imperative_mid_2: derived, derived, _;
-    aorist_imperative_mid_3: _, _, derived;
-    participle_aor: _, derived, _;
-    ),
-    // Θλαω: 7 words (ἀγαλλιαω, κρεμαω, θλαω, τηταω, ἐλᾰω, νεᾰω). Like Νῑκαω, except in 44 cells: future_ind_act_3 du, future_ind_mid_3 du, aorist_subj_act_1 sg, aorist_subj_act_2 sg, aorist_subj_act_2 du, aorist_subj_act_3 pl, ….
-    conjugation!("θλαω", 7, "~αω", like Νῑκαω;
-    stem future_ind_act_1_sg: "~ασ- like ἐχω";
-    stem pass_: "~ασθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ασ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ασθην- like ἐχω";
-    stem pass: "~ασθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ακ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~α- like βουλευω";
-    stem pluperfect_act: "~ακειν- like ἐχω";
-    stem pluperfect: "~α- like ἐχω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_1: "~ασω", _, _;
-    aorist_subj_act_2: "~ασῃς", "~ασητον", _;
-    aorist_subj_act_3: _, _, derived;
-    aorist_subj_mid_1: _, _, "~ασωμεθᾰ";
-    aorist_subj_mid_2: "~ασῃ", "~ασησθον", _;
-    aorist_opt_act_1: "~ασαιμῐ", _, "~ασαιμεν";
-    aorist_opt_act_2: "~ασειᾰς", _, _;
-    aorist_opt_act_3: "~ασειε", _, "~ασειᾰν";
-    aorist_opt_mid_1: "~ασαιμην", _, _;
-    aorist_imperative_act_2: "~ᾱσον", _, "~ασᾰτε";
-    aorist_imperative_act_3: _, _, "~ασᾰντων";
-    aorist_imperative_mid_2: "~ᾱσαι", "~ασᾰσθον", _;
-    aorist_imperative_mid_3: _, _, "~ασᾰσθων";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_2: "%ε~ασαι", "%ε~ασθον", _;
-    perfect_ind_mid_3: _, _, "%ε~ανται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: _, _, "%ε~ασθε";
-    perfect_ind_pass_3: derived, _, _;
-    perfect_imperative_mid_2: _, _, "%ε~ασθε";
-    perfect_imperative_mid_3: _, _, "%ε~ασθων";
-    perfect_imperative_pass_2: "%ε~ασο", _, "%ε~ασθε";
-    perfect_imperative_pass_3: "%ε~ασθω", "%ε~ασθων", "%ε~ασθων";
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_aor: "~ᾱσαι", _, _;
-    infinitive_perf: _, "%ε~ᾱσθαι", _;
-    participle_aor: "~ασᾱς", "~ασᾰμενος", _;
-    ),
-    // Λᾰγοθηρεω: 7 words (κρατεω, παιδεραστεω, φωνομᾰχεω, τερᾰτοτοκεω, λᾰγοθηρεω, λᾰβρηγορεω). Like Ζωγρᾰφεω, except in 25 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("λᾰγοθηρεω", 7, "~ᾰ~εω", like Ζωγρᾰφεω;
-    stem lemma: "~ᾰ~- like ποιεω";
-    stem future_ind_act_1_sg: "~ᾰ~ησ- like ποιεω";
-    stem pass_: "~ᾰ~ηθησ- like ποιεω";
-    stem aorist_subj_act_1_sg: "~ᾰ~ησ- like ποιεω";
-    stem pass: "~ᾰ~ηθ- like ποιεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    ),
-    // Εἰρω: 7 words (εἰρω, ἐκχεω, ἀειρω, κλῠω, δῐᾰχεω, σευω). Like Κᾰθιδρῡω, except in 69 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("εἰρω", 7, "~ω", like Κᾰθιδρῡω;
+    // Εἰρω: 8 words (εἰρω, ἐκχεω, ἀειρω, κλῠω, δῐᾰχεω, σευω). Like Κᾰθιδρῡω, except in 69 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("εἰρω", 8, "~ω", like Κᾰθιδρῡω;
     stem lemma: "~- like βᾰπτῐζω";
     stem imperfect: "~- like ἀειρω";
     stem aorist_ind_act_1_sg: "~- like ἐλπω";
@@ -4721,15 +4483,110 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_fut: derived, _, _;
     infinitive_perf: _, _, derived;
     ),
+    // Σκᾰνδᾰλῐζω: 7 words (σκᾰνδᾰλῐζω, δειγμᾰτῐζω, βλυζω, λεσβιαζω, σιφνιαζω, μῠκτηρῐζω). Like Θερᾰπευω with `ˇ` after each pattern, except in 47 cells: future_ind_pass_1 pl, future_ind_pass_2 sg, future_ind_pass_2 du, future_ind_pass_2 pl, future_ind_pass_3 sg, future_ind_pass_3 du, ….
+    conjugation!("σκᾰνδᾰλῐζω", 7, "~ωˇ", like Θερᾰπευω with "ˇ";
+    future_ind_pass_1: _, _, derived;
+    future_ind_pass_2: derived, derived, derived;
+    future_ind_pass_3: derived, "~θησεσθονˇ", derived;
+    future_opt_pass_1: derived, _, derived;
+    future_opt_pass_2: derived, derived, derived;
+    future_opt_pass_3: derived, derived, derived;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_act_3: "%ε~κεˇ", _, "%ε~κᾱσῐˇ";
+    perfect_subj_act_3: _, _, "%ε~κωσῐˇ";
+    perfect_subj_mid_3: _, _, "%ε~μένοι ὦσῐˇ";
+    perfect_opt_act_1: "%ε~κοιμῐˇ", _, _;
+    perfect_opt_act_2: "%ε~κοιςˇ", _, _;
+    perfect_opt_act_3: "%ε~κοιˇ", _, _;
+    perfect_imperative_act_2: derived, _, _;
+    pluperfect_act_1: "ἐ%ε~κεινˇ", _, "ἐ%ε~κεμενˇ";
+    pluperfect_act_2: "ἐ%ε~κειςˇ", "ἐ%ε~κετονˇ", "ἐ%ε~κετεˇ";
+    pluperfect_act_3: "ἐ%ε~κειˇ", "ἐ%ε~κετηνˇ", "ἐ%ε~κεσᾰνˇ";
+    pluperfect_mid_1: "ἐ%ε~μηνˇ", _, "ἐ%ε~μεθᾰˇ";
+    pluperfect_mid_2: "ἐ%ε~σοˇ", "ἐ%ε~σθονˇ", "ἐ%ε~σθεˇ";
+    pluperfect_mid_3: "ἐ%ε~τοˇ", "ἐ%ε~σθηνˇ", "ἐ%ε~ντοˇ";
+    infinitive_fut: _, _, derived;
+    participle_fut: _, _, derived;
+    ),
+    // Σοφῐζω: 7 words (σοφῐζω, σῳζω, κεᾰζω, στρουθῐζω, τῠκῐζω, μερῐζω). Like Χρημᾰτῐζω, except in 13 cells: perfect_ind_mid_3 du, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 du, perfect_ind_pass_3 pl, perfect_imperative_mid_2 du, ….
+    conjugation!("σοφῐζω", 7, "~ζω", like Χρημᾰτῐζω;
+    stem perfect_ind_mid_2_sg: "~σ- like χεω";
+    stem pluperfect: "~σ- like πειθω";
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Ἀπειπον: 7 words (προσειπον, ἐξειπον, προειπον, ἀπειπον, ὑπειπον, ἐπειπον). Like Λλῡμῐ, except in 19 cells: ind_act_1 sg, ind_act_3 sg, imperfect_act_1 sg, imperfect_act_3 sg, future_ind_act_3 du, future_ind_mid_3 du, ….
+    conjugation!("ἀπειπον", 7, "~ειπον", like Λλῡμῐ;
+    stem future_ind_act_1_sg: "~ερ- like λογῐζομαι";
+    stem pass_: "~ορρηθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ειπ- like ἀνᾰγω";
+    stem aorist_ind_pass_1_sg: "~ερρηθην- like ἐλπω";
+    stem aorist_subj_act_1_sg: "~ειπ- like ἐπῐλᾰμβᾰνω";
+    stem pass: "~ορρηθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ειρηκ- like πεμπω";
+    stem perfect_ind_mid_1_sg: "~ειρη- like ἐλπω";
+    stem perfect_ind_mid_2_sg: "~ειρη- like εὐλογεω";
+    ind_act_1: "~ειπον", _, _;
+    ind_act_3: derived, _, _;
+    imperfect_act_1: derived, _, _;
+    imperfect_act_3: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Λᾰγοθηρεω: 7 words (κρατεω, παιδεραστεω, φωνομᾰχεω, τερᾰτοτοκεω, λᾰγοθηρεω, λᾰβρηγορεω). Like Ζωγρᾰφεω, except in 25 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("λᾰγοθηρεω", 7, "~ᾰ~εω", like Ζωγρᾰφεω;
+    stem lemma: "~ᾰ~- like ποιεω";
+    stem future_ind_act_1_sg: "~ᾰ~ησ- like ποιεω";
+    stem pass_: "~ᾰ~ηθησ- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ᾰ~ησ- like ποιεω";
+    stem pass: "~ᾰ~ηθ- like ποιεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    ),
     // Λλᾰμβᾰνω: 7 words (ἐπῐλᾰμβᾰνω, προλᾰμβᾰνω, ὑπολᾰμβᾰνω, ἀπολᾰμβᾰνω, ξῠλλᾰμβᾰνω, προσλαμβᾰνω). Like Πῠρσαινω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("λλᾰμβᾰνω", 7, "~λᾰμβᾰνω", like Πῠρσαινω;
     stem lemma: "~λᾰμβᾰν- like βᾰπτῐζω";
     stem imperfect: "~ᾰμβᾰν- like ἐχω";
     stem future_ind_act_1_sg: "~ληψ- like ἑπομαι";
     stem pass_: "~ληφθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ᾰβ- like φᾰρμᾰσσω";
-    stem aorist_ind_pass_1_sg: "~ηφθην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~λᾰβ- like φᾰρμᾰσσω";
+    stem aorist_ind_act_1_sg: "~ᾰβ- like ἐπῐλᾰμβᾰνω";
+    stem aorist_ind_pass_1_sg: "~ηφθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~λᾰβ- like ἐπῐλᾰμβᾰνω";
     stem pass: "~ληφθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ηφ- like ἐπῐλᾰμβᾰνω";
     ind_act_3: _, derived, _;
@@ -4771,95 +4628,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, "ἐι~ηφθαι", _;
     participle_perf: _, _, "ἐι~ημμενος";
     ),
-    // Θρῠπτω: 6 words (βᾰπτω, σκηπτω, θρῠπτω, γνᾰμπτω, μᾰρπτω, δρῠπτω). Like Δᾰπτω, except in 89 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("θρῠπτω", 6, "~πτω", like Δᾰπτω;
-    stem lemma: "~πτ- like βουλευω";
-    stem imperfect: "~πτ- like βουλευω";
-    stem future_ind_act_1_sg: "~ψ- like ποιεω";
-    stem pass_: "~φησ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ψ- like ποιεω";
-    stem aorist_subj_act_1_sg: "~ψ- like ποιεω";
-    stem pass: "~φθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~πτ- like ἐχω";
-    stem perfect_ind_mid_2_sg: "~- like θρῠπτω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: "%ε~μμαι", _, _;
-    perfect_ind_mid_3: "%ε~πται", derived, _;
-    perfect_ind_pass_1: _, _, "%ε~μμεθᾰ";
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_subj_mid_3: _, "%ε~μμένω ἦτον", "%ε~μμένοι ὦσῐ|%ε~μμένοι ὦσῐν";
-    perfect_subj_pass_1: "%ε~μμένος ὦ", _, "%ε~μμένοι ὦμεν";
-    perfect_subj_pass_2: "%ε~μμένος ᾖς", "%ε~μμένω ἦτον", "%ε~μμένοι ἦτε";
-    perfect_subj_pass_3: "%ε~μμένος ᾖ", "%ε~μμένω ἦτον", derived;
-    perfect_opt_pass_1: "%ε~μμένος εἴην", _, "%ε~μμένοι εἴημεν";
-    perfect_opt_pass_2: "%ε~μμένος εἴης", "%ε~μμένω εἴητον", "%ε~μμένοι εἴητε";
-    perfect_opt_pass_3: "%ε~μμένος εἴη", "%ε~μμένω εἰήτην", "%ε~μμένοι εἴησᾰν";
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: derived, _, _;
-    pluperfect_mid_1: derived, _, _;
-    pluperfect_mid_2: derived, derived, _;
-    pluperfect_mid_3: derived, _, derived;
-    pluperfect_pass_1: _, _, derived;
-    pluperfect_pass_2: _, _, derived;
-    pluperfect_pass_3: _, derived, _;
-    future_perfect_ind_mid_1: derived, _, _;
-    future_perfect_ind_mid_3: _, derived, _;
-    future_perfect_ind_pass_1: _, _, derived;
-    future_perfect_ind_pass_2: derived, derived, derived;
-    future_perfect_ind_pass_3: derived, derived, derived;
-    future_perfect_opt_pass_1: derived, _, derived;
-    future_perfect_opt_pass_2: derived, derived, derived;
-    future_perfect_opt_pass_3: derived, derived, derived;
-    infinitive_perf: _, _, derived;
-    infinitive_futp: _, _, derived;
-    participle_perf: _, _, "%ε~μμενος";
-    participle_futp: _, _, derived;
-    ),
-    // Σειω: 6 words (ζεω, σειω, κελευω, παιω, ἀνῠω, λαυω). Like Πρεσβευω, except in 16 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_1 sg, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 sg, ….
-    conjugation!("σειω", 6, "~ω", like Πρεσβευω;
-    stem perfect_ind_act_1_sg: "~κ- like ποιεω";
-    stem perfect_ind_mid_1_sg: "~σ- like σειω";
-    stem perfect_ind_mid_2_sg: "~σ- like χεω";
-    stem pluperfect: "~σ- like πειθω";
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Βαινω: 6 words (βαινω, κᾰτᾰβαινω, ἐπεκβαινω, εἰσᾰνᾰβαινω, ἐπαλθαινω, πᾰρᾰβαινω). Like Σαινω, except in 41 cells: future_ind_act_3 du, future_ind_mid_3 du, future_ind_pass_1 sg, future_ind_pass_3 du, aorist_subj_act_1 sg, aorist_subj_act_2 sg, ….
-    conjugation!("βαινω", 6, "~αινω", like Σαινω;
+    // Βαινω: 7 words (βαινω, κᾰτᾰβαινω, βᾰμβαινω, ἐπεκβαινω, εἰσᾰνᾰβαινω, ἐπαλθαινω). Like Σαινω, except in 41 cells: future_ind_act_3 du, future_ind_mid_3 du, future_ind_pass_1 sg, future_ind_pass_3 du, aorist_subj_act_1 sg, aorist_subj_act_2 sg, ….
+    conjugation!("βαινω", 7, "~αινω", like Σαινω;
     stem future_ind_act_1_sg: "~ησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~η- like βαινω";
-    stem aorist_ind_pass_1_sg: "~ᾰθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰθην- like ποιεω";
     stem pass: "~ᾰθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~εβηκ- like πεμπω";
     stem perfect_ind_mid_1_sg: "~εβᾰ- like ἐλπω";
@@ -4895,33 +4668,215 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_aor: "~ᾱς", "~ησᾰμενος", _;
     ),
-    // Μηκᾰομαι: 6 words (ἰᾰομαι, θεᾰομαι, ἀκροᾰομαι, αἰτῐᾰομαι, ἡσσᾰομαι, μηκᾰομαι). Like Τεχναομαι, except in 19 cells: ind_act_1 sg, imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_2 du, imperfect_pass_3 sg, ….
-    conjugation!("μηκᾰομαι", 6, "~ᾰομαι", like Τεχναομαι;
-    stem imperfect: "~- like μηκᾰομαι";
-    stem future_ind_act_1_sg: "~ᾱσ- like ἑπομαι";
-    stem pass_: "~ᾱθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ᾱσ- like μηκᾰομαι";
-    stem aorist_ind_pass_1_sg: "~ᾱθην- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~ᾱσ- like ἑπομαι";
-    stem pass: "~ᾱθ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~ᾱ- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~ᾱ- like εὐλογεω";
-    ind_act_1: "~ᾰομαι", _, _;
+    // Ἡκω: 7 words (ἱληκω, ἡκω, πᾰρηκω, προσηκω, τεθνηκω, κᾰθηκω). Like Δῐωκω, except in 75 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἡκω", 7, "~κω", like Δῐωκω;
+    stem lemma: "~κ- like βουλευω";
+    stem imperfect: "~κ- like ἐλπω";
+    stem future_ind_act_1_sg: "~ξ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ξ- like εὐλογεω";
+    stem aorist_subj_act_1_sg: "~ξ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~κ- like πεμπω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: derived, _, _;
+    future_ind_pass_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_1: derived, _, _;
+    perfect_ind_mid_2: derived, derived, _;
+    perfect_ind_mid_3: derived, _, derived;
+    perfect_ind_pass_1: _, _, derived;
+    perfect_ind_pass_2: _, _, derived;
+    perfect_subj_mid_3: _, derived, _;
+    perfect_subj_pass_1: derived, _, derived;
+    perfect_subj_pass_2: derived, derived, derived;
+    perfect_subj_pass_3: derived, derived, derived;
+    perfect_opt_pass_1: derived, _, derived;
+    perfect_opt_pass_2: derived, derived, derived;
+    perfect_opt_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, _, derived;
+    perfect_imperative_mid_3: _, _, derived;
+    perfect_imperative_pass_2: derived, _, derived;
+    perfect_imperative_pass_3: derived, derived, derived;
+    pluperfect_act_1: "~κειν", _, _;
+    pluperfect_mid_1: derived, _, _;
+    pluperfect_mid_2: derived, derived, _;
+    pluperfect_mid_3: derived, _, derived;
+    pluperfect_pass_1: _, _, derived;
+    pluperfect_pass_2: _, _, derived;
+    pluperfect_pass_3: _, derived, _;
+    infinitive_perf: _, derived, _;
+    participle_perf: _, _, derived;
+    ),
+    // Τελλω: 7 words (στελλω, ἀγγελλω, ὀφελλω, τῐλλω, δενδῐλλω, τελλω). Like Βᾰδιζω, except in 60 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("τελλω", 7, "~~λω", like Βᾰδιζω;
+    stem lemma: "~~λ- like βᾰπτῐζω";
+    stem imperfect: "~~λ- like ἐχω";
+    stem future_ind_act_1_sg: "~~- like λογῐζομαι";
+    stem pass_: "~~θησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ι~- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ι~- like ἐχω";
+    stem perfect_ind_act_1_sg: "~τα~κ- like πεμπω";
+    stem perfect_ind_mid_1_sg: "~τα~- like ἐλπω";
+    stem pluperfect: "~τα~- like σφᾰλλω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    aorist_ind_pass_1: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_1: derived, _, _;
+    aorist_subj_pass_3: _, derived, _;
+    aorist_imperative_pass_2: derived, derived, derived;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_2: "~τα~σαι", "~τα~θον", _;
+    perfect_ind_mid_3: _, _, "~τα~ᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: _, _, "~τα~θε";
+    perfect_ind_pass_3: derived, _, _;
+    perfect_imperative_mid_2: _, _, "~τα~θε";
+    perfect_imperative_mid_3: _, _, "~τα~θων";
+    perfect_imperative_pass_2: "~τα~σο", _, "~τα~θε";
+    perfect_imperative_pass_3: "~τα~θω", "~τα~θων", "~τα~θων";
+    pluperfect_act_1: "ἐ~τα~κειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, "~τᾱ~θαι", _;
+    ),
+    // Φειδομαι: 7 words (εἰδομαι, ἐλδομαι, μελδομαι, ἡδομαι, μηδομαι, λῐνδομαι). Like Λλῡμῐ, except in 57 cells: ind_act_1 sg, ind_act_3 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ….
+    conjugation!("φειδομαι", 7, "~δομαι", like Λλῡμῐ;
+    stem imperfect: "~δ- like εἰσερχομαι";
+    stem future_ind_act_1_sg: "~σ- like εἰσερχομαι";
+    stem pass_: "~σθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~σ- like ἑπομαι";
+    stem aorist_subj_act_1_sg: "~σ- like ἑπομαι";
+    ind_act_1: "~δομαι", _, _;
+    ind_act_3: derived, _, _;
+    ind_mid_1: "~δομαι", _, "~δομεθᾰ";
+    ind_mid_2: "~δῃ|~δει", _, _;
+    ind_mid_3: _, "~δεσθον", _;
+    ind_pass_2: "~δῃ", "~δεσθον", "~δεσθε";
+    ind_pass_3: "~δεται", "~δεσθον", "~δονται";
+    subj_mid_1: "~δωμαι", _, "~δωμεθᾰ";
+    subj_mid_2: "~δῃ", "~δησθον", _;
+    subj_mid_3: "~δηται", _, "~δωνται";
+    subj_pass_2: "~δῃ", _, "~δησθε";
+    opt_mid_1: "~δοιμην", _, "~δοιμεθᾰ";
+    opt_mid_2: "~δοιο", "~δοισθον", "~δοισθε";
+    opt_mid_3: "~δοιτο", "~δοισθην", "~δοιντο";
+    present_imperative_mid_2: "~δου", "~δεσθον", "~δεσθε";
+    present_imperative_mid_3: "~δεσθω", _, "~δεσθων";
+    present_imperative_pass_2: _, "~δεσθον", "~δεσθε";
+    present_imperative_pass_3: _, "~δεσθων", "~δεσθων";
+    imperfect_act_1: derived, _, _;
+    imperfect_act_3: derived, _, _;
     imperfect_pass_1: derived, _, derived;
     imperfect_pass_2: derived, derived, _;
     imperfect_pass_3: derived, _, derived;
     future_ind_mid_3: _, derived, _;
     aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
+    perfect_ind_mid_1: "%ε~σμαι", _, _;
+    perfect_ind_mid_2: "%ε~σαι", "%ε~σθον", _;
+    perfect_ind_mid_3: "%ε~σται", _, "%ε~δᾰται";
+    perfect_subj_mid_3: _, "%ε~σμένω ἦτον", _;
+    perfect_imperative_mid_2: _, _, "%ε~σθε";
+    perfect_imperative_mid_3: _, _, "%ε~σθων";
+    infinitive_pres: _, _, "~δεσθαι";
+    participle_pres: _, _, "~δομενος";
     ),
-    // Ἐπεξειμι: 6 words (ἐξειμι, ἀπειμι, κᾰτειμῐ, προσειμι, προειμι, ἐπεξειμι). Like Λλῡμῐ, except in 32 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἐπεξειμι", 6, "~ειμι", like Λλῡμῐ;
+    // Ποιμαινω: 7 words (ἐπῐφαινω, ποιμαινω, σκῠδμαινω, χλῑαινω, λῑμαινω, ἀλινω). Like Μαχομαι, except in 67 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_1 sg, subj_mid_2 sg, ….
+    conjugation!("ποιμαινω", 7, "~~ινω", like Μαχομαι;
+    stem lemma: "~~ιν- like βᾰπτῐζω";
+    stem imperfect: "~~ιν- like ποιμαινω";
+    stem future_ind_act_1_sg: "~~ν- like λογῐζομαι";
+    stem aorist_ind_act_1_sg: "~~ν- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~~νθην- like ποιεω";
+    stem pass: "~~νθ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~~- like πορσῡνω";
+    ind_act_3: _, derived, _;
+    ind_mid_1: derived, _, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_1: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_mid_3: derived, _, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_mid_2: _, derived, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_1: "~~νω", _, _;
+    aorist_subj_act_2: "~~νῃς", "~~νητον", _;
+    aorist_subj_mid_1: _, _, "~~νωμεθᾰ";
+    aorist_subj_mid_2: "~~νῃ", "~~νησθον", _;
+    aorist_opt_act_1: "~~ναιμῐ", _, "~~ναιμεν";
+    aorist_opt_act_2: "~~νειᾰς", _, _;
+    aorist_opt_act_3: "~~νειε", _, "~~νειᾰν";
+    aorist_opt_mid_1: "~~ναιμην", _, _;
+    aorist_imperative_act_2: "~~νον", _, "~~νᾰτε";
+    aorist_imperative_act_3: _, _, "~~νᾰντων";
+    aorist_imperative_mid_2: "~~ναι", "~~νᾰσθον", _;
+    aorist_imperative_mid_3: _, _, "~~νᾰσθων";
+    perfect_ind_mid_2: "%ε~~νσαι", "%ε~~νθον", _;
+    perfect_ind_mid_3: _, _, "%ε~~νᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: _, _, "%ε~~νθε";
+    perfect_ind_pass_3: derived, _, _;
+    perfect_imperative_mid_2: _, _, "%ε~~νθε";
+    perfect_imperative_mid_3: _, _, "%ε~~νθων";
+    perfect_imperative_pass_2: "%ε~~νσο", _, "%ε~~νθε";
+    perfect_imperative_pass_3: "%ε~~νθω", "%ε~~νθων", "%ε~~νθων";
+    infinitive_aor: "~ᾱν~ι", _, _;
+    infinitive_perf: _, "%ε~ᾱνθ~ι", _;
+    participle_aor: "~~νᾱς", "~~νᾰμενος", _;
+    ),
+    // Προσειμι: 6 words (ἐξειμι, ἀπειμι, κᾰτειμῐ, προσειμι, προειμι, ἐπεξειμι). Like Λλῡμῐ, except in 32 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("προσειμι", 6, "~ειμι", like Λλῡμῐ;
     ind_act_1: "~ειμι", _, "~ῐμεν";
     ind_act_2: "~ει", "~ῐτον", _;
     ind_act_3: "~εισῐ|~εισῐν", _, "~ῐᾱσῐ|~ῐᾱσῐν";
@@ -4983,12 +4938,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ᾱσ- like γῡροω";
     stem pass_: "~ᾱθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾱσ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾱθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾱθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾱσ- like ποιεω";
     stem pass: "~ᾱθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ᾱκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~ᾰ- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ᾰ- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ᾰ- like ποιεω";
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
     aorist_subj_act_3: _, derived, _;
@@ -5002,8 +4957,62 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Περιειμι: 6 words (πᾰρειμι, ἐπειμι, μετειμι, περιειμι, ἐνειμι, σῠνειμῐ). Like Ἐπεξειμι, except in 37 cells: ind_act_1 pl, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, subj_act_1 sg, subj_act_1 pl, ….
-    conjugation!("περιειμι", 6, "~ειμι", like Ἐπεξειμι;
+    // Ρρῑπτω: 6 words (σκηπτω, ῥᾰπτω, ῥῑπτω, σκᾰπτω, ρρῑπτω, ρρᾰπτω). Like Χᾰλεπτω, except in 66 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ρρῑπτω", 6, "~πτω", like Χᾰλεπτω;
+    stem lemma: "~πτ- like βουλευω";
+    stem imperfect: "~πτ- like σκηπτω";
+    stem future_ind_act_1_sg: "~ψ- like ποιεω";
+    stem pass_: "~φησ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~φην- like ποιεω";
+    stem pass: "~φ- like σφᾰλλω";
+    stem perfect_ind_act_1_sg: "~φ- like σκοπεω";
+    stem perfect_ind_mid_1_sg: "~- like σκηπτω";
+    stem perfect_ind_mid_2_sg: "~- like σκηπτω";
+    stem pluperfect: "~- like σκηπτω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, derived, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "ἐ~φειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    future_perfect_ind_mid_1: derived, _, _;
+    future_perfect_ind_mid_3: _, derived, _;
+    future_perfect_ind_pass_1: _, _, derived;
+    future_perfect_ind_pass_2: derived, derived, derived;
+    future_perfect_ind_pass_3: derived, derived, derived;
+    future_perfect_opt_pass_1: derived, _, derived;
+    future_perfect_opt_pass_2: derived, derived, derived;
+    future_perfect_opt_pass_3: derived, derived, derived;
+    infinitive_perf: _, _, derived;
+    infinitive_futp: _, _, derived;
+    participle_futp: _, _, derived;
+    ),
+    // Περιειμι: 6 words (πᾰρειμι, ἐπειμι, μετειμι, περιειμι, ἐνειμι, σῠνειμῐ). Like Προσειμι, except in 37 cells: ind_act_1 pl, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, subj_act_1 sg, subj_act_1 pl, ….
+    conjugation!("περιειμι", 6, "~ειμι", like Προσειμι;
     ind_act_1: _, _, "~εσμεν";
     ind_act_2: _, "~εστον", _;
     ind_act_3: "~εστι", _, "~εισι";
@@ -5026,8 +5035,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: "~ειναι", _, _;
     participle_pres: "~ων", _, _;
     ),
-    // Ἀποκωλῡω: 6 words (ἀπολεγω, ἀποδῠω, ἐπαπολῡω, ἀποκωλῡω, ὑποφερω, ἀποθραυω). Like Μαχομαι, except in 45 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_1 sg, subj_mid_2 sg, ….
-    conjugation!("ἀποκωλῡω", 6, "~ο~ω", like Μαχομαι;
+    // Ἀποκωλῡω: 6 words (ἀπολεγω, ἀποδῠω, ἐπαπολῡω, ἀποκωλῡω, ὑποφερω, ἀποθραυω). Like Ποιμαινω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἀποκωλῡω", 6, "~ο~ω", like Ποιμαινω;
     stem lemma: "~ο~- like βᾰπτῐζω";
     stem imperfect: "~ε~- like ἀειρω";
     stem future_ind_act_1_sg: "~ο~σ- like ἐχω";
@@ -5040,10 +5049,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem perfect_ind_mid_1_sg: "~ο%ε~- like ἐλπω";
     stem perfect_ind_mid_2_sg: "~ο%ε~- like εὐλογεω";
     ind_act_3: _, derived, _;
-    ind_mid_1: derived, _, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
-    subj_mid_1: derived, _, _;
     subj_mid_2: derived, _, _;
     subj_mid_3: _, derived, _;
     subj_pass_1: _, _, derived;
@@ -5053,9 +5060,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     opt_pass_2: derived, derived, derived;
     opt_pass_3: derived, derived, derived;
     present_imperative_act_2: _, derived, _;
-    present_imperative_mid_3: derived, _, _;
     present_imperative_pass_2: derived, _, _;
-    imperfect_mid_2: _, derived, _;
     imperfect_pass_1: derived, _, derived;
     imperfect_pass_2: derived, _, _;
     imperfect_pass_3: derived, _, derived;
@@ -5072,14 +5077,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Ἡκω: 5 words (ἡκω, πᾰρηκω, προσηκω, τεθνηκω, κᾰθηκω). Like Δῐωκω, except in 75 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἡκω", 5, "~κω", like Δῐωκω;
-    stem lemma: "~κ- like βουλευω";
-    stem imperfect: "~κ- like ἐλπω";
-    stem future_ind_act_1_sg: "~ξ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ξ- like εὐλογεω";
-    stem aorist_subj_act_1_sg: "~ξ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~κ- like πεμπω";
+    // Ἐνᾰττῐκῐζω: 6 words (ἐξᾰφᾰνῐζω, σῠνᾰρπᾰζω, δῐᾰρπᾰζω, ὑπερᾰττῐκῐζω, ἐνᾰττῐκῐζω, ἐξᾰττῐκῐζω). Like Ἐπᾰϊω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἐνᾰττῐκῐζω", 6, "~ᾰ~ζω", like Ἐπᾰϊω;
+    stem lemma: "~ᾰ~ζ- like βουλευω";
+    stem imperfect: "~η~ζ- like ἐλπω";
+    stem future_ind_act_1_sg: "~ᾰ~- like λογῐζομαι";
+    stem pass_: "~ᾰ~σθησ- like ποιεω";
+    stem pass: "~ᾰ~σθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~η~κ- like εὐλογεω";
+    stem perfect_ind_mid_1_sg: "~η~σ- like εὐλογεω";
+    stem perfect_ind_mid_2_sg: "~η~- like σῠνᾰρπᾰζω";
+    stem pluperfect: "~η~- like σῠνᾰρπᾰζω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -5098,47 +5106,60 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     imperfect_pass_3: derived, _, derived;
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: derived, _, _;
-    future_ind_pass_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: derived, _, _;
-    perfect_ind_mid_2: derived, derived, _;
-    perfect_ind_mid_3: derived, _, derived;
-    perfect_ind_pass_1: _, _, derived;
-    perfect_ind_pass_2: _, _, derived;
-    perfect_subj_mid_3: _, derived, _;
-    perfect_subj_pass_1: derived, _, derived;
-    perfect_subj_pass_2: derived, derived, derived;
-    perfect_subj_pass_3: derived, derived, derived;
-    perfect_opt_pass_1: derived, _, derived;
-    perfect_opt_pass_2: derived, derived, derived;
-    perfect_opt_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, _, derived;
-    perfect_imperative_mid_3: _, _, derived;
-    perfect_imperative_pass_2: derived, _, derived;
-    perfect_imperative_pass_3: derived, derived, derived;
-    pluperfect_act_1: "~κειν", _, _;
-    pluperfect_mid_1: derived, _, _;
-    pluperfect_mid_2: derived, derived, _;
-    pluperfect_mid_3: derived, _, derived;
-    pluperfect_pass_1: _, _, derived;
-    pluperfect_pass_2: _, _, derived;
-    pluperfect_pass_3: _, derived, _;
-    infinitive_perf: _, derived, _;
-    participle_perf: _, _, derived;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
     ),
-    // Ἱζω: 5 words (ἑλληνῐζω, ἀφῠπνῐζω, ἡσῠχᾰζω, ῥωμᾱϊζω, ἐξῠβρῐζω). Like Λογῐζομαι, except in 65 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἱζω", 5, "~ζω", like Λογῐζομαι;
-    stem lemma: "~ζ- like βουλευω";
-    stem imperfect: "~ζ- like ἐλπω";
-    stem aorist_ind_act_1_sg: "~σ- like ἐλπω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~σ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~κ- like πεμπω";
-    stem perfect_ind_mid_2_sg: "~- like ἱζω";
-    stem pluperfect: "~- like ἱζω";
+    // Βῐᾰζομαι: 6 words (στοχᾰζομαι, ἐργᾰζομαι, λᾰζομαι, ἀσπᾰζομαι, βῐᾰζομαι, ἰχθῠᾰζομαι). Like Κρῑνομαι, except in 34 cells: ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_3 du, subj_pass_1 sg, subj_pass_1 pl, ….
+    conjugation!("βῐᾰζομαι", 6, "~ζομαι", like Κρῑνομαι;
+    stem lemma: "~ζ- like οἰομαι";
+    stem imperfect: "~ζ- like σῑνομαι";
+    stem pass_: "~σθησ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ποιεω";
+    stem pass: "~σθ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~σ- like βουλευω";
+    stem pluperfect: "~- like χρημᾰτῐζω";
+    ind_pass_1: derived, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: derived, _, derived;
+    subj_pass_2: _, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_pass_2: derived, _, _;
+    present_imperative_pass_3: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, derived, _;
+    imperfect_pass_3: derived, _, derived;
+    perfect_ind_mid_3: _, _, "%ε~δᾰται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Πληττω: 6 words (φῠλᾰττω, κηρῡττω, πληττω, σᾰττω, ἀλλᾰττω, ριττω). Like Ληγω, except in 33 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πληττω", 6, "~ττω", like Ληγω;
+    stem lemma: "~ττ- like βουλευω";
+    stem imperfect: "~ττ- like βουλευω";
+    stem future_ind_act_1_sg: "~ξ- like ποιεω";
+    stem pass_: "~γησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ξ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~γην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ξ- like ποιεω";
+    stem pass: "~γ- like σφᾰλλω";
+    stem perfect_ind_act_1_sg: "~γ- like ἐχω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -5155,51 +5176,38 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     imperfect_pass_1: derived, _, derived;
     imperfect_pass_2: derived, _, _;
     imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
     aorist_subj_act_3: _, derived, _;
     aorist_subj_mid_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: "~σμαι", _, _;
-    perfect_ind_mid_3: "~σται", derived, _;
-    perfect_ind_pass_1: _, _, "~σμεθᾰ";
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_subj_mid_3: _, "~σμένω ἦτον", "~σμένοι ὦσῐ|~σμένοι ὦσῐν";
-    perfect_subj_pass_1: "~σμένος ὦ", _, "~σμένοι ὦμεν";
-    perfect_subj_pass_2: "~σμένος ᾖς", "~σμένω ἦτον", "~σμένοι ἦτε";
-    perfect_subj_pass_3: "~σμένος ᾖ", "~σμένω ἦτον", "~σμένοι ὦσῐ";
-    perfect_opt_pass_1: "~σμένος εἴην", _, "~σμένοι εἴημεν";
-    perfect_opt_pass_2: "~σμένος εἴης", "~σμένω εἴητον", "~σμένοι εἴητε";
-    perfect_opt_pass_3: "~σμένος εἴη", "~σμένω εἰήτην", "~σμένοι εἴησᾰν";
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    participle_perf: _, _, "~σμενος";
+    perfect_subj_mid_3: _, _, "%ε~γμένοι ὦσῐ|%ε~γμένοι ὦσῐν";
+    perfect_subj_pass_3: _, _, derived;
     ),
-    // Φρᾰζω: 5 words (φρᾰζω, θαυμᾰζω, θοᾰζω, θωᾰζω, χειμᾰζω). Like Πειρᾰζω, except in 5 cells: pluperfect_pass_1 sg, pluperfect_pass_2 sg, pluperfect_pass_2 du, pluperfect_pass_3 sg, pluperfect_pass_3 pl.
-    conjugation!("φρᾰζω", 5, "~ζω", like Πειρᾰζω;
-    stem pluperfect_act: "~κ- like χρημᾰτῐζω";
-    stem pluperfect: "~- like χρημᾰτῐζω";
+    // Χραω: 5 words (χραω, σκῐαω, ἀπαγχοναω, πασχητῐαω, λουτῐαω). Like Νῑκαω, except in 5 cells: pluperfect_pass_1 sg, pluperfect_pass_2 sg, pluperfect_pass_2 du, pluperfect_pass_3 sg, pluperfect_pass_3 pl.
+    conjugation!("χραω", 5, "~αω", like Νῑκαω;
+    stem pass_: "~ησθησ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ησθην- like ποιεω";
+    stem pass: "~ησθ- like ἐχω";
+    stem pluperfect_act: "~ηκειν- like ποιεω";
+    stem pluperfect: "~η- like ποιεω";
     pluperfect_pass_1: derived, _, _;
     pluperfect_pass_2: derived, derived, _;
     pluperfect_pass_3: derived, _, derived;
     ),
-    // Πρεπω: 5 words (τρεπω, πρεπω, πᾰρεκτρεπω, λεπω, ρρεπω). Like Ληγω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    // Πρεπω: 5 words (τρεπω, πρεπω, πᾰρεκτρεπω, σκεπω, ρρεπω). Like Ληγω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("πρεπω", 5, "~επω", like Ληγω;
     stem lemma: "~επ- like βᾰπτῐζω";
     stem imperfect: "~επ- like ἐχω";
     stem future_ind_act_1_sg: "~εψ- like ἐχω";
     stem pass_: "~απησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~εψ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~εφθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~εφθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~εψ- like ἐχω";
     stem pass: "~εφθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~οφ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~α- like πρεπω";
-    stem pluperfect_act: "~οφειν- like ἐχω";
+    stem pluperfect_act: "~οφειν- like ποιεω";
     stem pluperfect: "~α- like πρεπω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
@@ -5236,40 +5244,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, "%ε~ᾱφθαι", _;
     ),
-    // Στερεω: 5 words (στερεω, σῐδηροφορεω, κορεω, σειρεω, γεωμετρεω). Like Σκοπεω, except in 40 cells: future_ind_act_3 du, future_ind_mid_3 du, future_ind_pass_2 sg, aorist_subj_act_3 du, aorist_subj_act_3 pl, aorist_subj_mid_3 du, ….
-    conjugation!("στερεω", 5, "~εω", like Σκοπεω;
-    stem future_ind_act_1_sg: "~- like λογῐζομαι";
-    stem pass_: "~ησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ηκ- like στηρῐζω";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_act_3: derived, derived, derived;
-    perfect_subj_act_3: _, _, derived;
-    perfect_subj_mid_3: _, _, derived;
-    perfect_subj_pass_3: _, _, "ἐ~ημένοι ὦσῐ";
-    pluperfect_act_1: "ἐ~ηκειν", _, _;
-    pluperfect_act_2: derived, _, _;
-    pluperfect_act_3: derived, _, _;
-    future_perfect_ind_mid_1: "ἐ~ησομαι", _, _;
-    future_perfect_ind_mid_3: _, "ἐ~ησεσθον", _;
-    future_perfect_ind_pass_1: _, _, "ἐ~ησομεθᾰ";
-    future_perfect_ind_pass_2: "ἐ~ησῃ", "ἐ~ησεσθον", "ἐ~ησεσθε";
-    future_perfect_ind_pass_3: "ἐ~ησεται", "ἐ~ησεσθον", "ἐ~ησονται";
-    future_perfect_opt_pass_1: "ἐ~ησοιμην", _, "ἐ~ησοιμεθᾰ";
-    future_perfect_opt_pass_2: "ἐ~ησοιο", "ἐ~ησοισθον", "ἐ~ησοισθε";
-    future_perfect_opt_pass_3: "ἐ~ησοιτο", "ἐ~ησοισθην", "ἐ~ησοιντο";
-    infinitive_futp: _, _, "ἐ~ησεσθαι";
-    participle_futp: _, _, "ἐ~ησομενος";
-    ),
     // Μᾰρτῠρεω: 5 words (μᾰρτῠρεω, λοιδορεω, μᾰραυγεω, δονεω, κερτομεω). Like Ποιεω, except in 19 cells: future_perfect_ind_mid_1 sg, future_perfect_ind_mid_3 du, future_perfect_ind_pass_1 pl, future_perfect_ind_pass_2 sg, future_perfect_ind_pass_2 du, future_perfect_ind_pass_2 pl, ….
     conjugation!("μᾰρτῠρεω", 5, "~εω", like Ποιεω;
     stem aorist_ind_pass_1_sg: "~ηθην- like ἐλπω";
@@ -5285,18 +5259,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_futp: _, _, derived;
     participle_futp: _, _, derived;
     ),
-    // Ἐγγῐζω: 5 words (ἐγγῐζω, ἐλπῐζω, ἐρεθῐζω, ἐνᾰρῐζω, ἐρῐζω). Like Ἀθῡρω, except in 96 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἐγγῐζω", 5, "ἐ~ζω", like Ἀθῡρω;
-    stem imperfect: "~ζ- like ἀθῡρω";
+    // Ἐγγῐζω: 5 words (ἐγγῐζω, ἐλπῐζω, ἐρεθῐζω, ἐνᾰρῐζω, ἐρῐζω). Like Χρημᾰτῐζω, except in 95 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἐγγῐζω", 5, "ἐ~ζω", like Χρημᾰτῐζω;
+    stem imperfect: "~ζ- like ἐλπῐζω";
     stem future_ind_act_1_sg: "~- like ἐλπῐζω";
     stem pass_: "~σθησ- like ἐλπῐζω";
     stem aorist_ind_act_1_sg: "~σ- like ἐλπῐζω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἀθῡρω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ἐρωτᾰω";
     stem aorist_subj_act_1_sg: "~σ- like ἐλπῐζω";
     stem pass: "~σθ- like ἐλπῐζω";
     stem perfect_ind_act_1_sg: "~κ- like ἐλπῐζω";
     stem perfect_ind_mid_1_sg: "~σ- like ἐλπῐζω";
-    stem pluperfect_act: "~κ- like ἐλπῐζω";
     ind_act_1: "ἐ~ζω", _, "ἐ~ζομεν";
     ind_act_2: "ἐ~ζεις", "ἐ~ζετον", _;
     ind_act_3: "ἐ~ζει", _, "ἐ~ζουσῐ|ἐ~ζουσῐν";
@@ -5334,25 +5307,28 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     aorist_subj_act_3: _, derived, _;
     aorist_subj_mid_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_2: "ἠ~σαι", "ἠ~σθον", _;
     perfect_ind_mid_3: _, _, "ἠ~δᾰται";
     perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: _, _, "ἠ~σθε";
     perfect_ind_pass_3: derived, _, _;
     perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, _, "ἠ~σθε";
+    perfect_imperative_mid_3: _, _, "ἠ~σθων";
+    perfect_imperative_pass_2: "ἠ~σο", _, "ἠ~σθε";
+    perfect_imperative_pass_3: "ἠ~σθω", "ἠ~σθων", "ἠ~σθων";
+    pluperfect_act_1: "ἠ~κειν|ἠ~κη", _, _;
+    pluperfect_act_2: "ἠ~κεις|ἠ~κης", _, _;
+    pluperfect_act_3: "ἠ~κει|ἠ~κειν", _, _;
     pluperfect_mid_1: "ἠ~σμην", _, _;
+    pluperfect_mid_2: "ἠ~σο", "ἠ~σθον", _;
     pluperfect_mid_3: "ἠ~στο", _, "ἠ~δᾰτο";
     pluperfect_pass_1: _, _, "ἠ~σμεθᾰ";
-    future_perfect_ind_mid_1: derived, _, _;
-    future_perfect_ind_mid_3: _, derived, _;
-    future_perfect_ind_pass_1: _, _, derived;
-    future_perfect_ind_pass_2: derived, derived, derived;
-    future_perfect_ind_pass_3: derived, derived, derived;
-    future_perfect_opt_pass_1: derived, _, derived;
-    future_perfect_opt_pass_2: derived, derived, derived;
-    future_perfect_opt_pass_3: derived, derived, derived;
+    pluperfect_pass_2: _, _, "ἠ~σθε";
+    pluperfect_pass_3: _, "ἠ~σθην", _;
     infinitive_pres: "ἐ~ζειν", _, "ἐ~ζεσθαι";
-    infinitive_futp: _, _, derived;
+    infinitive_perf: _, "ἠ~σθαι", _;
     participle_pres: "ἐ~ζων", _, "ἐ~ζομενος";
-    participle_futp: _, _, derived;
     ),
     // Ἀναιρεω: 5 words (ἀναιρεω, ἀφαιρεω, ἐξαιρεω, δῐαιρεω, ὑφαιρεω). Like Πῠρσαινω, except in 71 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("ἀναιρεω", 5, "~αιρεω", like Πῠρσαινω;
@@ -5421,9 +5397,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem pass: "~οι~σθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ῳ~κ- like εὐλογεω";
     stem perfect_ind_mid_1_sg: "~ῳ~σ- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~ῳ~- like ἱζω";
+    stem perfect_ind_mid_2_sg: "~ῳ~- like σῠνᾰρπᾰζω";
     stem pluperfect_act: "~ῳ~κ- like εὐλογεω";
-    stem pluperfect: "~ῳ~- like ἱζω";
+    stem pluperfect: "~ῳ~- like σῠνᾰρπᾰζω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -5457,8 +5433,50 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Κᾰτᾰλᾰμβᾰνω: 5 words (κᾰτᾰλᾰμβᾰνω, ἀνᾰλᾰμβᾰνω, προκᾰτᾰλᾰμβᾰνω, μετᾰλαμβᾰνω, ἐπᾰνᾰλᾰμβᾰνω). Like Πῠρσαινω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("κᾰτᾰλᾰμβᾰνω", 5, "~ᾰλᾰμβᾰνω", like Πῠρσαινω;
+    // Θρῠπτω: 5 words (βᾰπτω, θρῠπτω, γνᾰμπτω, μᾰρπτω, δρῠπτω). Like Ρρῑπτω, except in 50 cells: imperfect_mid_2 du, imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, ….
+    conjugation!("θρῠπτω", 5, "~πτω", like Ρρῑπτω;
+    stem imperfect: "~πτ- like βουλευω";
+    stem pass_: "~φησ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ψ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~φθην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ψ- like ποιεω";
+    stem pass: "~φθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~πτ- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~- like θρῠπτω";
+    imperfect_mid_2: _, derived, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_ind_mid_1: "%ε~μμαι", _, _;
+    perfect_ind_mid_3: "%ε~πται", derived, _;
+    perfect_ind_pass_1: _, _, "%ε~μμεθᾰ";
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_subj_act_3: _, _, derived;
+    perfect_subj_mid_3: _, "%ε~μμένω ἦτον", "%ε~μμένοι ὦσῐ|%ε~μμένοι ὦσῐν";
+    perfect_subj_pass_1: "%ε~μμένος ὦ", _, "%ε~μμένοι ὦμεν";
+    perfect_subj_pass_2: "%ε~μμένος ᾖς", "%ε~μμένω ἦτον", "%ε~μμένοι ἦτε";
+    perfect_subj_pass_3: "%ε~μμένος ᾖ", "%ε~μμένω ἦτον", _;
+    perfect_opt_pass_1: "%ε~μμένος εἴην", _, "%ε~μμένοι εἴημεν";
+    perfect_opt_pass_2: "%ε~μμένος εἴης", "%ε~μμένω εἴητον", "%ε~μμένοι εἴητε";
+    perfect_opt_pass_3: "%ε~μμένος εἴη", "%ε~μμένω εἰήτην", "%ε~μμένοι εἴησᾰν";
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: derived, _, _;
+    pluperfect_mid_1: derived, _, _;
+    pluperfect_mid_2: derived, derived, _;
+    pluperfect_mid_3: derived, _, derived;
+    pluperfect_pass_1: _, _, derived;
+    pluperfect_pass_2: _, _, derived;
+    pluperfect_pass_3: _, derived, _;
+    infinitive_perf: _, _, derived;
+    participle_perf: _, _, "%ε~μμενος";
+    ),
+    // Μετᾰλαμβᾰνω: 5 words (κᾰτᾰλᾰμβᾰνω, ἀνᾰλᾰμβᾰνω, προκᾰτᾰλᾰμβᾰνω, μετᾰλαμβᾰνω, ἐπᾰνᾰλᾰμβᾰνω). Like Πῠρσαινω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("μετᾰλαμβᾰνω", 5, "~ᾰλᾰμβᾰνω", like Πῠρσαινω;
     stem lemma: "~ᾰλᾰμβᾰν- like βουλευω";
     stem imperfect: "~ελᾰμβᾰν- like ἐλπω";
     stem future_ind_act_1_sg: "~ᾰληψ- like εἰσερχομαι";
@@ -5503,6 +5521,35 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
+    // Μᾰρνᾰμαι: 5 words (ἐρᾰμαι, μᾰρνᾰμαι, ἀγᾰμαι, κιδνᾰμαι, λῐνᾰμαι). Like Δαμνημῐ, except in 41 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("μᾰρνᾰμαι", 5, "~ᾰμαι", like Δαμνημῐ;
+    ind_act_1: "~ᾰμαι", _, derived;
+    ind_act_2: derived, derived, _;
+    ind_act_3: derived, _, derived;
+    ind_mid_1: "~ᾰμαι", _, _;
+    ind_pass_1: derived, _, _;
+    subj_act_1: derived, _, derived;
+    subj_act_2: derived, _, _;
+    subj_act_3: derived, derived, derived;
+    subj_mid_1: "~ωμαι", _, _;
+    subj_mid_2: "~ῃ", _, _;
+    subj_pass_1: derived, _, _;
+    subj_pass_2: "~ῃ", _, _;
+    opt_act_1: derived, _, derived;
+    opt_act_2: derived, derived, derived;
+    opt_act_3: derived, derived, derived;
+    present_imperative_act_2: derived, _, derived;
+    present_imperative_act_3: _, _, derived;
+    present_imperative_mid_3: "~ᾰσθω", _, _;
+    present_imperative_pass_3: derived, _, _;
+    imperfect_act_1: derived, _, _;
+    imperfect_act_2: derived, derived, derived;
+    imperfect_act_3: derived, _, derived;
+    imperfect_mid_2: _, "ἐ~ᾰσθον", _;
+    imperfect_pass_2: _, derived, _;
+    infinitive_pres: derived, _, _;
+    participle_pres: derived, _, _;
+    ),
     // Μετερχομαι: 5 words (προερχομαι, σῠνερχομαι, ἐπεξερχομαι, μετερχομαι, ξῠνερχομαι). Like Ἐξερχομαι, except in 15 cells: ind_mid_2 du, ind_mid_3 du, ind_pass_2 pl, ind_pass_3 sg, ind_pass_3 pl, subj_pass_2 sg, ….
     conjugation!("μετερχομαι", 5, "~ερχομαι", like Ἐξερχομαι;
     stem perfect_ind_act_1_sg: "~εληλῠθ- like εὐλογεω";
@@ -5519,198 +5566,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: _, _, derived;
     participle_pres: _, _, derived;
     ),
-    // Τελλω: 5 words (στελλω, ἀγγελλω, τῐλλω, τελλω, σκελλω). Like Βᾰδιζω, except in 60 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("τελλω", 5, "~~λω", like Βᾰδιζω;
-    stem lemma: "~~λ- like βᾰπτῐζω";
-    stem imperfect: "~~λ- like ἐχω";
-    stem future_ind_act_1_sg: "~~- like λογῐζομαι";
-    stem pass_: "~~θησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ι~- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ι~- like ἐχω";
-    stem perfect_ind_act_1_sg: "~τα~κ- like πεμπω";
-    stem perfect_ind_mid_1_sg: "~τα~- like ἐλπω";
-    stem pluperfect: "~τα~- like ἐγειρω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    aorist_ind_pass_1: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_1: derived, _, _;
-    aorist_subj_pass_3: _, derived, _;
-    aorist_imperative_pass_2: derived, derived, derived;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_2: "~τα~σαι", "~τα~θον", _;
-    perfect_ind_mid_3: _, _, "~τα~ᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: _, _, "~τα~θε";
-    perfect_ind_pass_3: derived, _, _;
-    perfect_imperative_mid_2: _, _, "~τα~θε";
-    perfect_imperative_mid_3: _, _, "~τα~θων";
-    perfect_imperative_pass_2: "~τα~σο", _, "~τα~θε";
-    perfect_imperative_pass_3: "~τα~θω", "~τα~θων", "~τα~θων";
-    pluperfect_act_1: "ἐ~τα~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, "~τᾱ~θαι", _;
-    ),
-    // Φειδομαι: 5 words (εἰδομαι, ἐλδομαι, ἡδομαι, μηδομαι, φειδομαι). Like Λλῡμῐ, except in 57 cells: ind_act_1 sg, ind_act_3 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ….
-    conjugation!("φειδομαι", 5, "~δομαι", like Λλῡμῐ;
-    stem imperfect: "~δ- like εἰσερχομαι";
-    stem future_ind_act_1_sg: "~σ- like εἰσερχομαι";
-    stem pass_: "~σθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~σ- like ἑπομαι";
-    stem aorist_subj_act_1_sg: "~σ- like ἑπομαι";
-    ind_act_1: "~δομαι", _, _;
-    ind_act_3: derived, _, _;
-    ind_mid_1: "~δομαι", _, "~δομεθᾰ";
-    ind_mid_2: "~δῃ|~δει", _, _;
-    ind_mid_3: _, "~δεσθον", _;
-    ind_pass_2: "~δῃ", "~δεσθον", "~δεσθε";
-    ind_pass_3: "~δεται", "~δεσθον", "~δονται";
-    subj_mid_1: "~δωμαι", _, "~δωμεθᾰ";
-    subj_mid_2: "~δῃ", "~δησθον", _;
-    subj_mid_3: "~δηται", _, "~δωνται";
-    subj_pass_2: "~δῃ", _, "~δησθε";
-    opt_mid_1: "~δοιμην", _, "~δοιμεθᾰ";
-    opt_mid_2: "~δοιο", "~δοισθον", "~δοισθε";
-    opt_mid_3: "~δοιτο", "~δοισθην", "~δοιντο";
-    present_imperative_mid_2: "~δου", "~δεσθον", "~δεσθε";
-    present_imperative_mid_3: "~δεσθω", _, "~δεσθων";
-    present_imperative_pass_2: _, "~δεσθον", "~δεσθε";
-    present_imperative_pass_3: _, "~δεσθων", "~δεσθων";
-    imperfect_act_1: derived, _, _;
-    imperfect_act_3: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_1: "%ε~σμαι", _, _;
-    perfect_ind_mid_2: "%ε~σαι", "%ε~σθον", _;
-    perfect_ind_mid_3: "%ε~σται", _, "%ε~δᾰται";
-    perfect_subj_mid_3: _, "%ε~σμένω ἦτον", _;
-    perfect_imperative_mid_2: _, _, "%ε~σθε";
-    perfect_imperative_mid_3: _, _, "%ε~σθων";
-    infinitive_pres: _, _, "~δεσθαι";
-    participle_pres: _, _, "~δομενος";
-    ),
-    // Σκηπτω: 5 words (ῥᾰπτω, ῥῑπτω, σκᾰπτω, ρρῑπτω, ρρᾰπτω). Like Θρῠπτω, except in 34 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_2 du, imperfect_pass_3 sg, imperfect_pass_3 pl, ….
-    conjugation!("σκηπτω", 5, "~πτω", like Θρῠπτω;
-    stem imperfect: "~πτ- like σκηπτω";
-    stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~φην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
-    stem pass: "~φ- like ἐγειρω";
-    stem perfect_ind_act_1_sg: "~φ- like σκοπεω";
-    stem perfect_ind_mid_1_sg: "~- like σκηπτω";
-    stem perfect_ind_mid_2_sg: "~- like σκηπτω";
-    stem pluperfect: "~- like σκηπτω";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "ἐ~φειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Ποιμαινω: 5 words (ἐπῐφαινω, ποιμαινω, χλῑαινω, λῑμαινω, ξηραινω). Like Μαχομαι, except in 67 cells: ind_act_3 du, ind_mid_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_1 sg, subj_mid_2 sg, ….
-    conjugation!("ποιμαινω", 5, "~~ινω", like Μαχομαι;
-    stem lemma: "~~ιν- like βᾰπτῐζω";
-    stem imperfect: "~~ιν- like ποιμαινω";
-    stem future_ind_act_1_sg: "~~ν- like λογῐζομαι";
-    stem aorist_ind_act_1_sg: "~~ν- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~~νθην- like ἐχω";
-    stem pass: "~~νθ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~~- like πορσῡνω";
-    ind_act_3: _, derived, _;
-    ind_mid_1: derived, _, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_1: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_mid_3: derived, _, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_mid_2: _, derived, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_1: "~~νω", _, _;
-    aorist_subj_act_2: "~~νῃς", "~~νητον", _;
-    aorist_subj_mid_1: _, _, "~~νωμεθᾰ";
-    aorist_subj_mid_2: "~~νῃ", "~~νησθον", _;
-    aorist_opt_act_1: "~~ναιμῐ", _, "~~ναιμεν";
-    aorist_opt_act_2: "~~νειᾰς", _, _;
-    aorist_opt_act_3: "~~νειε", _, "~~νειᾰν";
-    aorist_opt_mid_1: "~~ναιμην", _, _;
-    aorist_imperative_act_2: "~~νον", _, "~~νᾰτε";
-    aorist_imperative_act_3: _, _, "~~νᾰντων";
-    aorist_imperative_mid_2: "~~ναι", "~~νᾰσθον", _;
-    aorist_imperative_mid_3: _, _, "~~νᾰσθων";
-    perfect_ind_mid_2: "%ε~~νσαι", "%ε~~νθον", _;
-    perfect_ind_mid_3: _, _, "%ε~~νᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: _, _, "%ε~~νθε";
-    perfect_ind_pass_3: derived, _, _;
-    perfect_imperative_mid_2: _, _, "%ε~~νθε";
-    perfect_imperative_mid_3: _, _, "%ε~~νθων";
-    perfect_imperative_pass_2: "%ε~~νσο", _, "%ε~~νθε";
-    perfect_imperative_pass_3: "%ε~~νθω", "%ε~~νθων", "%ε~~νθων";
-    infinitive_aor: "~ᾱν~ι", _, _;
-    infinitive_perf: _, "%ε~ᾱνθ~ι", _;
-    participle_aor: "~~νᾱς", "~~νᾰμενος", _;
-    ),
     // Βᾰθῠνω: 5 words (βᾰρῠνω, βᾰθῠνω, πλᾰτῠνω, βρᾰδῠνω, βρᾰχῠνω). Like Ποιμαινω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("βᾰθῠνω", 5, "~ᾰ~ῠνω", like Ποιμαινω;
     stem lemma: "~ᾰ~ῠν- like βᾰπτῐζω";
     stem imperfect: "~ᾰ~ῠν- like ἐχω";
     stem future_ind_act_1_sg: "~ᾰ~ῠν- like λογῐζομαι";
     stem aorist_ind_act_1_sg: "~ᾰ~ῡν- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ῡνθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ῡνθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾰ~ῡν- like ἐχω";
     stem pass: "~ᾰ~ῡνθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~εβᾱ~ῠγκ- like πεμπω";
@@ -5819,13 +5681,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Περαινω: 5 words (κραινω, ὑγῐαινω, ὑδραινω, περαινω, τετραινω). Like Κερδαινω, except in 24 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, future_ind_act_3 du, ….
-    conjugation!("περαινω", 5, "~αινω", like Κερδαινω;
+    // Περαινω: 5 words (κραινω, ὑγῐαινω, ὑδραινω, περαινω, τετραινω). Like Εὐφραινω, except in 24 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, future_ind_act_3 du, ….
+    conjugation!("περαινω", 5, "~αινω", like Εὐφραινω;
     stem imperfect: "~αιν- like βουλευω";
     stem future_ind_act_1_sg: "~ᾰν- like χρημᾰτῐζω";
     stem pass_: "~ᾰνθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾱν- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾰνθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰνθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾱν- like ποιεω";
     stem pass: "~ᾰνθ- like ἐχω";
     imperfect_pass_1: derived, _, derived;
@@ -5845,47 +5707,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_act_2: derived, derived, _;
     perfect_imperative_act_3: _, _, derived;
     ),
-    // Ἡγεομαι: 4 words (ἡγεομαι, νεομαι, ἐξηγεομαι, εὐνομεομαι). Like Βουλομαι, except in 37 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 du, ….
-    conjugation!("ἡγεομαι", 4, "~εομαι", like Βουλομαι;
-    stem imperfect: "~- like ἡγεομαι";
-    stem pass_: "~ηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ησ- like μηκᾰομαι";
-    stem aorist_ind_pass_1_sg: "~ηθην- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~ησ- like ἑπομαι";
-    stem perfect_ind_mid_1_sg: "~η- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~η- like εὐλογεω";
-    ind_act_1: "~εομαι", _, _;
-    ind_mid_1: "~ουμαι", _, "~ουμεθᾰ";
-    ind_mid_2: "~ει", _, _;
-    ind_mid_3: _, "~εισθον", _;
-    ind_pass_2: _, "~εισθον", "~εισθε";
-    ind_pass_3: "~ειται", "~εισθον", "~ουνται";
-    present_imperative_mid_2: _, "~εισθον", "~εισθε";
-    present_imperative_mid_3: "~εισθω", _, "~εισθων";
-    present_imperative_pass_2: _, "~εισθον", "~εισθε";
-    present_imperative_pass_3: _, "~εισθων", "~εισθων";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_pres: _, _, "~εισθαι";
-    infinitive_perf: _, _, derived;
-    participle_pres: _, _, "~ουμενος";
-    ),
-    // Κοπτω: 4 words (κοπτω, τῠπτω, βλᾰπτω, σκωπτω). Like Θρῠπτω, except in 33 cells: future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, aorist_opt_pass_3 du, ….
-    conjugation!("κοπτω", 4, "~πτω", like Θρῠπτω;
+    // Κοπτω: 5 words (κοπτω, τῠπτω, βλᾰπτω, σκωπτω, δρωπτω). Like Θρῠπτω, except in 36 cells: future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, aorist_opt_pass_3 du, ….
+    conjugation!("κοπτω", 5, "~πτω", like Θρῠπτω;
     stem pass_: "~πησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~πην- like ἐχω";
-    stem pass: "~π- like ἐγειρω";
+    stem aorist_ind_pass_1_sg: "~πην- like ποιεω";
+    stem pass: "~π- like σφᾰλλω";
     stem perfect_ind_act_1_sg: "~φ- like ποιεω";
     stem pluperfect_act: "~φ- like χρημᾰτῐζω";
-    stem pluperfect: "~- like τῠπτω";
     future_ind_pass_2: derived, _, _;
     aorist_subj_pass_3: _, _, derived;
     aorist_opt_pass_1: _, _, derived;
@@ -5893,9 +5721,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     aorist_opt_pass_3: _, derived, derived;
     perfect_ind_act_3: _, derived, _;
     perfect_ind_mid_3: _, _, "%ε~πᾰται";
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
+    pluperfect_mid_1: "ἐ%ε~μμην", _, _;
+    pluperfect_mid_2: "ἐ%ε~ψο", "ἐ%ε~φθον", _;
+    pluperfect_mid_3: "ἐ%ε~πτο", _, "ἐ%ε~πᾰτο";
+    pluperfect_pass_1: _, _, "ἐ%ε~μμεθᾰ";
+    pluperfect_pass_2: _, _, "ἐ%ε~φθε";
+    pluperfect_pass_3: _, "ἐ%ε~φθην", _;
     future_perfect_ind_mid_1: "%ε~ψομαι", _, _;
     future_perfect_ind_mid_3: _, "%ε~ψεσθον", _;
     future_perfect_ind_pass_1: _, _, "%ε~ψομεθᾰ";
@@ -5906,6 +5737,258 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     future_perfect_opt_pass_3: "%ε~ψοιτο", "%ε~ψοισθην", "%ε~ψοιντο";
     infinitive_futp: _, _, "%ε~ψεσθαι";
     participle_futp: _, _, "%ε~ψομενος";
+    ),
+    // Λειβω: 5 words (στειβω, λειβω, ἀμειβω, σεβω, στιλβω). Like Πῠρσαινω, except in 28 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("λειβω", 5, "~βω", like Πῠρσαινω;
+    stem lemma: "~β- like βᾰπτῐζω";
+    stem imperfect: "~β- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    ),
+    // Ἐρωτᾰω: 5 words (ἐρωτᾰω, ἐπερωτᾰω, ἐρᾰω, ἐρευνᾰω, ἐμπολᾰω). Like Ληγω, except in 115 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἐρωτᾰω", 5, "ἐ~ᾰω", like Ληγω;
+    stem future_ind_act_1_sg: "~ησ- like ἐρωτᾰω";
+    stem aorist_ind_act_1_sg: "~ησ- like ἐρωτᾰω";
+    stem aorist_ind_pass_1_sg: "~ηθην- like ἐρωτᾰω";
+    stem aorist_subj_act_1_sg: "~ησ- like ἐρωτᾰω";
+    stem pass: "~ηθ- like ἐρωτᾰω";
+    stem perfect_ind_act_1_sg: "~ηκ- like ἐρωτᾰω";
+    stem perfect_ind_mid_2_sg: "~η- like ἐρωτᾰω";
+    stem pluperfect: "~η- like ἐρωτᾰω";
+    ind_act_1: "ἐ~ω", _, "ἐ~ωμεν";
+    ind_act_2: "ἐ~ᾳς", "ἐ~ᾱτον", _;
+    ind_act_3: "ἐ~ᾳ", _, "ἐ~ωσῐ|ἐ~ωσῐν";
+    ind_mid_1: _, _, "ἐ~ωμεθᾰ";
+    ind_mid_2: "ἐ~ᾳ", _, _;
+    ind_mid_3: _, "ἐ~ᾱσθον", _;
+    ind_pass_1: "ἐ~ωμαι", _, _;
+    ind_pass_2: _, "ἐ~ᾱσθον", "ἐ~ᾱσθε";
+    ind_pass_3: "ἐ~ᾱται", "ἐ~ᾱσθον", "ἐ~ωνται";
+    subj_act_1: "ἐ~ω", _, "ἐ~ωμεν";
+    subj_act_2: "ἐ~ᾳς", _, _;
+    subj_act_3: "ἐ~ᾳ", "ἐ~ᾱτον", "ἐ~ωσῐ|ἐ~ωσῐν";
+    subj_mid_1: _, _, "ἐ~ωμεθᾰ";
+    subj_mid_2: _, "ἐ~ᾱσθον", _;
+    subj_mid_3: "ἐ~ᾱται", _, "ἐ~ωνται";
+    subj_pass_1: "ἐ~ωμαι", _, _;
+    subj_pass_2: _, _, "ἐ~ᾱσθε";
+    opt_act_1: "ἐ~ῳην|ἐ~ῳμῐ", _, "ἐ~ῳμεν|ἐ~ῳημεν";
+    opt_act_2: "ἐ~ῳης|ἐ~ῳς", "ἐ~ῳτον|ἐ~ῳητον", "ἐ~ῳτε|ἐ~ῳητε";
+    opt_act_3: "ἐ~ῳη|ἐ~ῳ", "ἐ~ῳτην|ἐ~ῳητην", "ἐ~ῳεν|ἐ~ῳησᾰν";
+    opt_mid_1: "ἐ~ῳμην", _, "ἐ~ῳμεθᾰ";
+    opt_mid_2: "ἐ~ῳο", "ἐ~ῳσθον", "ἐ~ῳσθε";
+    opt_mid_3: "ἐ~ῳτο", "ἐ~ῳσθην", "ἐ~ῳντο";
+    present_imperative_act_2: "ἐ~ᾱ", _, "ἐ~ᾱτε";
+    present_imperative_act_3: _, _, "ἐ~ωντων";
+    present_imperative_mid_2: "ἐ~ω", "ἐ~ᾱσθον", "ἐ~ᾱσθε";
+    present_imperative_mid_3: _, _, "ἐ~ᾱσθων";
+    present_imperative_pass_2: _, "ἐ~ᾱσθον", "ἐ~ᾱσθε";
+    present_imperative_pass_3: "ἐ~ᾱσθω", "ἐ~ᾱσθων", "ἐ~ᾱσθων";
+    imperfect_act_1: "ἠ~ων", _, _;
+    imperfect_act_2: "ἠ~ᾱς", "ἠ~ᾱτον", "ἠ~ᾱτε";
+    imperfect_act_3: "ἠ~ᾱ", _, "ἠ~ων";
+    imperfect_mid_1: "ἠ~ωμην", _, "ἠ~ωμεθᾰ";
+    imperfect_mid_2: "ἠ~ω", _, _;
+    imperfect_mid_3: "ἠ~ᾱτο", _, "ἠ~ωντο";
+    imperfect_pass_2: _, "ἠ~ᾱσθον", "ἠ~ᾱσθε";
+    imperfect_pass_3: _, "ἠ~ᾱσθην", _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: "ἐ~ηθησομαι", _, _;
+    future_ind_pass_3: _, "ἐ~ηθησεσθον", _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_1: "ἠ~ημαι", _, _;
+    perfect_ind_mid_3: "ἠ~ηται", derived, _;
+    perfect_ind_pass_1: _, _, "ἠ~ημεθᾰ";
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_subj_mid_3: _, "ἠ~ημένω ἦτον", _;
+    perfect_subj_pass_1: "ἠ~ημένος ὦ", _, "ἠ~ημένοι ὦμεν";
+    perfect_subj_pass_2: "ἠ~ημένος ᾖς", "ἠ~ημένω ἦτον", "ἠ~ημένοι ἦτε";
+    perfect_subj_pass_3: "ἠ~ημένος ᾖ", "ἠ~ημένω ἦτον", "ἠ~ημένοι ὦσῐ";
+    perfect_opt_pass_1: "ἠ~ημένος εἴην", _, "ἠ~ημένοι εἴημεν";
+    perfect_opt_pass_2: "ἠ~ημένος εἴης", "ἠ~ημένω εἴητον", "ἠ~ημένοι εἴητε";
+    perfect_opt_pass_3: "ἠ~ημένος εἴη", "ἠ~ημένω εἰήτην", "ἠ~ημένοι εἴησᾰν";
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "ἠ~ηκειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_pres: "ἐ~ᾱν", _, "ἐ~ᾱσθαι";
+    infinitive_perf: _, _, derived;
+    participle_pres: "ἐ~ων", _, "ἐ~ωμενος";
+    participle_perf: _, _, "ἠ~ημενος";
+    ),
+    // Κρουω: 5 words (ἀκουω, κρουω, ὀρουω, κονῑω, ρουω). Like Πρεσβευω, except in 19 cells: future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, aorist_opt_pass_3 du, ….
+    conjugation!("κρουω", 5, "~ω", like Πρεσβευω;
+    stem perfect_ind_mid_1_sg: "~- like χρημᾰτῐζω";
+    future_ind_pass_2: derived, _, _;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_pass_3: _, _, derived;
+    pluperfect_act_1: "%ε~κειν", _, _;
+    pluperfect_mid_1: "%ε~σμην", _, _;
+    pluperfect_mid_2: "%ε~σο", "%ε~σθον", _;
+    pluperfect_mid_3: "%ε~στο", _, "%ε~σᾰτο";
+    pluperfect_pass_1: _, _, "%ε~σμεθᾰ";
+    pluperfect_pass_2: _, _, "%ε~σθε";
+    pluperfect_pass_3: _, "%ε~σθην", _;
+    ),
+    // Ἀπαιτεω: 5 words (ἐπαινεω, ἀπαιτεω, ἐξαιτεω, ἐπαιτεω, πᾰραινεω). Like Πεμπω, except in 48 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἀπαιτεω", 5, "~αι~εω", like Πεμπω;
+    stem lemma: "~αι~- like ποιεω";
+    stem imperfect: "~ῃ~- like εὐλογεω";
+    stem future_ind_act_1_sg: "~αι~ησ- like ἀπαιτεω";
+    stem pass_: "~αι~ηθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ῃ~ησ- like εὐλογεω";
+    stem aorist_ind_pass_1_sg: "~ῃ~ηθην- like ἐλπω";
+    stem aorist_subj_act_1_sg: "~αι~ησ- like ποιεω";
+    stem pass: "~αι~ηθ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~ῃ~ηκ- like εὐλογεω";
+    stem perfect_ind_mid_1_sg: "~ῃ~η- like εὐλογεω";
+    stem perfect_ind_mid_2_sg: "~ῃ~η- like εὐλογεω";
+    stem pluperfect: "~ῃ~η- like εὐλογεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_pass_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "~ῃ~ηκειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Κηδευω: 5 words (ἀμορβευω, σκῡλευω, κῠβευω, κηδευω, τυμβευω). Like Κᾰθιδρῡω, except in 11 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, pluperfect_act_1 sg, ….
+    conjugation!("κηδευω", 5, "~ω", like Κᾰθιδρῡω;
+    stem imperfect: "~- like βουλευω";
+    stem pass_: "~θησ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~σ- like ποιεω";
+    stem aorist_ind_pass_1_sg: "~θην- like ποιεω";
+    stem pass: "~θ- like ποιεω";
+    stem pluperfect: "~- like σκοπεω";
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    pluperfect_act_1: "ἐ~κειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Θλαω: 4 words (ἀγαλλιαω, θλαω, ἐλᾰω, νεᾰω). Like Θηραω, except in 41 cells: future_ind_act_3 du, future_ind_mid_3 du, aorist_subj_act_1 sg, aorist_subj_act_2 sg, aorist_subj_act_2 du, aorist_subj_act_3 pl, ….
+    conjugation!("θλαω", 4, "~αω", like Θηραω;
+    stem future_ind_act_1_sg: "~ασ- like ἐχω";
+    stem pass_: "~ασθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ασ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ασθην- like ποιεω";
+    stem pass: "~ασθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ακ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~α- like βουλευω";
+    stem pluperfect_act: "~ακειν- like ποιεω";
+    stem pluperfect: "~α- like ποιεω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_1: "~ασω", _, _;
+    aorist_subj_act_2: "~ασῃς", "~ασητον", _;
+    aorist_subj_act_3: _, _, derived;
+    aorist_subj_mid_1: _, _, "~ασωμεθᾰ";
+    aorist_subj_mid_2: "~ασῃ", "~ασησθον", _;
+    aorist_opt_act_1: "~ασαιμῐ", _, "~ασαιμεν";
+    aorist_opt_act_2: "~ασειᾰς", _, _;
+    aorist_opt_act_3: "~ασειε", _, "~ασειᾰν";
+    aorist_opt_mid_1: "~ασαιμην", _, _;
+    aorist_imperative_act_2: _, _, "~ασᾰτε";
+    aorist_imperative_act_3: _, _, "~ασᾰντων";
+    aorist_imperative_mid_2: _, "~ασᾰσθον", _;
+    aorist_imperative_mid_3: _, _, "~ασᾰσθων";
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_2: "%ε~ασαι", "%ε~ασθον", _;
+    perfect_ind_mid_3: _, _, "%ε~ανται";
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: _, _, "%ε~ασθε";
+    perfect_ind_pass_3: derived, _, _;
+    perfect_imperative_mid_2: _, _, "%ε~ασθε";
+    perfect_imperative_mid_3: _, _, "%ε~ασθων";
+    perfect_imperative_pass_2: "%ε~ασο", _, "%ε~ασθε";
+    perfect_imperative_pass_3: "%ε~ασθω", "%ε~ασθων", "%ε~ασθων";
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, "%ε~ᾱσθαι", _;
+    participle_aor: "~ασᾱς", "~ασᾰμενος", _;
+    ),
+    // Μηκᾰομαι2: 4 words (ἰᾰομαι, θεᾰομαι, ἀκροᾰομαι, αἰτῐᾰομαι). Like Μηκᾰομαι, except in 19 cells: ind_act_1 sg, imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_2 du, imperfect_pass_3 sg, ….
+    conjugation!("μηκᾰομαι", 4, "~ᾰομαι", like Μηκᾰομαι;
+    stem imperfect: "~- like μηκᾰομαι";
+    stem future_ind_act_1_sg: "~ᾱσ- like ἑπομαι";
+    stem pass_: "~ᾱθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ᾱσ- like μηκᾰομαι";
+    stem aorist_ind_pass_1_sg: "~ᾱθην- like ἐλπω";
+    stem aorist_subj_act_1_sg: "~ᾱσ- like ἑπομαι";
+    stem pass: "~ᾱθ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~ᾱ- like ἐλπω";
+    stem perfect_ind_mid_2_sg: "~ᾱ- like εὐλογεω";
+    ind_act_1: "~ᾰομαι", _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, derived, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
     ),
     // Ἐπᾰγγελλω: 4 words (πᾰρᾰγγελλω, ἀπᾰγγελλω, ἐπᾰγγελλω, ἀνᾰγγελλω). Like Προκᾰλεω, except in 51 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("ἐπᾰγγελλω", 4, "~ᾰ~~λω", like Προκᾰλεω;
@@ -5955,73 +6038,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_1: _, _, derived;
     pluperfect_pass_2: _, _, derived;
     pluperfect_pass_3: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Λειβω: 4 words (στειβω, λειβω, ἀμειβω, στιλβω). Like Πῠρσαινω, except in 28 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("λειβω", 4, "~βω", like Πῠρσαινω;
-    stem lemma: "~β- like βᾰπτῐζω";
-    stem imperfect: "~β- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    ),
-    // Ἐξᾰττῐκῐζω: 4 words (ἐξᾰφᾰνῐζω, σῠνᾰρπᾰζω, δῐᾰρπᾰζω, ἐξᾰττῐκῐζω). Like Ἐπᾰϊω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἐξᾰττῐκῐζω", 4, "~ᾰ~ζω", like Ἐπᾰϊω;
-    stem lemma: "~ᾰ~ζ- like βουλευω";
-    stem imperfect: "~η~ζ- like ἐλπω";
-    stem future_ind_act_1_sg: "~ᾰ~- like λογῐζομαι";
-    stem pass_: "~ᾰ~σθησ- like ποιεω";
-    stem pass: "~ᾰ~σθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~η~κ- like εὐλογεω";
-    stem perfect_ind_mid_1_sg: "~η~σ- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~η~- like ἱζω";
-    stem pluperfect: "~η~- like ἱζω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
     // Προφερω: 4 words (προφερω, προσφερω, περῐφερω, ὑπερφερω). Like Πῠρσαινω, except in 31 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
@@ -6112,8 +6128,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: _, _, derived;
     participle_perf: _, _, derived;
     ),
-    // Δερω: 4 words (τρεφω, δερω, δεμω, ξῠμμενω). Like Φθειρω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("δερω", 4, "~ε~ω", like Φθειρω;
+    // Δερω: 4 words (τρεφω, δερω, δεμω, ξῠμμενω). Like Τειρω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("δερω", 4, "~ε~ω", like Τειρω;
     stem lemma: "~ε~- like βᾰπτῐζω";
     stem imperfect: "~ε~- like ἐχω";
     stem aorist_ind_act_1_sg: "~ει~- like ἐχω";
@@ -6121,7 +6137,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem perfect_ind_act_1_sg: "~εδᾰ~κ- like πεμπω";
     stem perfect_ind_mid_1_sg: "~εδᾰ~- like ἐλπω";
     stem perfect_ind_mid_2_sg: "~εδᾰ~- like ἀειρω";
-    stem pluperfect: "~εδᾰ~- like ἐγειρω";
+    stem pluperfect: "~εδᾰ~- like σφᾰλλω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -6158,7 +6174,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ᾰσ- like ποιεω";
     stem pass_: "~ᾰσθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾰσ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾰσθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰσθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾰσ- like ποιεω";
     stem pass: "~ᾰσθ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~ᾰσ- like βουλευω";
@@ -6182,65 +6198,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_mid_2: _, derived, _;
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
-    ),
-    // Βῐᾰζομαι: 4 words (στοχᾰζομαι, ἐργᾰζομαι, ἀσπᾰζομαι, βῐᾰζομαι). Like Κρῑνομαι, except in 34 cells: ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_3 du, subj_pass_1 sg, subj_pass_1 pl, ….
-    conjugation!("βῐᾰζομαι", 4, "~ζομαι", like Κρῑνομαι;
-    stem lemma: "~ζ- like οἰομαι";
-    stem imperfect: "~ζ- like σῑνομαι";
-    stem pass_: "~σθησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~σθην- like ἐχω";
-    stem pass: "~σθ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~σ- like βουλευω";
-    stem pluperfect: "~- like χρημᾰτῐζω";
-    ind_pass_1: derived, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: derived, _, derived;
-    subj_pass_2: _, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_pass_2: derived, _, _;
-    present_imperative_pass_3: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    perfect_ind_mid_3: _, _, "%ε~δᾰται";
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
-    // Μᾰρνᾰμαι: 4 words (ἐρᾰμαι, μᾰρνᾰμαι, ἀγᾰμαι, λῐνᾰμαι). Like Δαμνημῐ, except in 41 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("μᾰρνᾰμαι", 4, "~ᾰμαι", like Δαμνημῐ;
-    ind_act_1: "~ᾰμαι", _, derived;
-    ind_act_2: derived, derived, _;
-    ind_act_3: derived, _, derived;
-    ind_mid_1: "~ᾰμαι", _, _;
-    ind_pass_1: derived, _, _;
-    subj_act_1: derived, _, derived;
-    subj_act_2: derived, _, _;
-    subj_act_3: derived, derived, derived;
-    subj_mid_1: "~ωμαι", _, _;
-    subj_mid_2: "~ῃ", _, _;
-    subj_pass_1: derived, _, _;
-    subj_pass_2: "~ῃ", _, _;
-    opt_act_1: derived, _, derived;
-    opt_act_2: derived, derived, derived;
-    opt_act_3: derived, derived, derived;
-    present_imperative_act_2: derived, _, derived;
-    present_imperative_act_3: _, _, derived;
-    present_imperative_mid_3: "~ᾰσθω", _, _;
-    present_imperative_pass_3: derived, _, _;
-    imperfect_act_1: derived, _, _;
-    imperfect_act_2: derived, derived, derived;
-    imperfect_act_3: derived, _, derived;
-    imperfect_mid_2: _, "ἐ~ᾰσθον", _;
-    imperfect_pass_2: _, derived, _;
-    infinitive_pres: derived, _, _;
-    participle_pres: derived, _, _;
     ),
     // Νεκραγωγεω: 4 words (κατοικεω, νεκραγωγεω, πᾰνηγῠρῐαρχεω, ἐξασθενεω). Like Λᾰγοθηρεω, except in 35 cells: ind_mid_2 sg, imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, ….
     conjugation!("νεκραγωγεω", 4, "~α~εω", like Λᾰγοθηρεω;
@@ -6328,7 +6285,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     conjugation!("πειρᾰω", 4, "~ᾰω", like Θηραω;
     stem future_ind_act_1_sg: "~ᾱσ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~ᾱ- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ᾱ- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ᾱ- like ποιεω";
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
     future_ind_pass_1: derived, _, _;
@@ -6344,8 +6301,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_mid_3: "ἐ%ε~ᾱτο", _, "ἐ%ε~ᾱντο";
     infinitive_perf: _, _, derived;
     ),
-    // Πᾰρᾰλλᾰσσω: 4 words (ἀπᾰλλᾰσσω, ὑπᾰλλᾰσσω, ἀντᾰλλᾰσσω, πᾰρᾰλλᾰσσω). Like Ἀποκωλῡω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πᾰρᾰλλᾰσσω", 4, "~ᾰ~σσω", like Ἀποκωλῡω;
+    // Πᾰρᾰλλᾰσσω: 4 words (ἀπᾰλλᾰσσω, ὑπᾰλλᾰσσω, ἀντᾰλλᾰσσω, πᾰρᾰλλᾰσσω). Like Ποιμαινω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πᾰρᾰλλᾰσσω", 4, "~ᾰ~σσω", like Ποιμαινω;
     stem lemma: "~ᾰ~σσ- like βουλευω";
     stem imperfect: "~η~σσ- like ἐλπω";
     stem future_ind_act_1_sg: "~ᾰ~ξ- like ποιεω";
@@ -6389,47 +6346,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Ἀμεργω: 4 words (ἐργω, εἰργω, ἀμεργω, κᾰτειργω). Like Ληγω, except in 43 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἀμεργω", 4, "~γω", like Ληγω;
-    stem lemma: "~γ- like βουλευω";
-    stem imperfect: "~γ- like ἀειρω";
-    stem future_ind_act_1_sg: "~ξ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ξ- like ἐλπω";
-    stem aorist_ind_pass_1_sg: "~χθην- like ἐλπω";
-    stem perfect_ind_mid_1_sg: "~- like ἀνᾰγω";
-    stem perfect_ind_mid_2_sg: "~- like πᾰρᾰλλᾰσσω";
-    stem pluperfect: "~- like κᾰτειργω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Πᾰροξῡνω: 4 words (παροτρῡνω, ἐποτρῡνω, πᾰροξῡνω, ἐξοτρῡνω). Like Ἀποκωλῡω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πᾰροξῡνω", 4, "~ο~ῡνω", like Ἀποκωλῡω;
+    // Πᾰροξῡνω: 4 words (παροτρῡνω, ἐποτρῡνω, πᾰροξῡνω, ἐξοτρῡνω). Like Ποιμαινω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πᾰροξῡνω", 4, "~ο~ῡνω", like Ποιμαινω;
     stem lemma: "~ο~ῡν- like βᾰπτῐζω";
     stem imperfect: "~ω~ῡν- like ἀειρω";
     stem future_ind_act_1_sg: "~ο~ῠν- like λογῐζομαι";
@@ -6470,20 +6388,20 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_pass_2: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Ἐλᾰσσοω: 4 words (ἐρημοω, ἐλᾰσσοω, ἐλευθεροω, ἐπουλοω). Like Πῠρσαινω, except in 86 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἐλᾰσσοω", 4, "ἐ~οω", like Πῠρσαινω;
+    // Ἐλᾰσσοω: 4 words (ἐρημοω, ἐλᾰσσοω, ἐλευθεροω, ἐπουλοω). Like Ἐρωτᾰω, except in 78 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ind_mid_1 pl, ….
+    conjugation!("ἐλᾰσσοω", 4, "ἐ~οω", like Ἐρωτᾰω;
     stem imperfect: "~ου- like ἐλᾰσσοω";
     stem future_ind_act_1_sg: "~ωσ- like ἐλᾰσσοω";
     stem pass_: "~ωθησ- like ἐλπῐζω";
     stem aorist_ind_act_1_sg: "~ωσ- like ἐλπῐζω";
-    stem aorist_ind_pass_1_sg: "~ωθην- like ἀθῡρω";
+    stem aorist_ind_pass_1_sg: "~ωθην- like ἐρωτᾰω";
     stem aorist_subj_act_1_sg: "~ωσ- like ἐλπῐζω";
     stem pass: "~ωθ- like ἐλπῐζω";
-    stem perfect_ind_act_1_sg: "~ωκ- like ἀθῡρω";
+    stem perfect_ind_act_1_sg: "~ωκ- like ἐρωτᾰω";
     stem perfect_ind_mid_1_sg: "~ω- like ἐλπῐζω";
-    stem perfect_ind_mid_2_sg: "~ω- like ἀθῡρω";
-    stem pluperfect: "~ω- like ἀθῡρω";
-    ind_act_1: "ἐ~ω", _, "ἐ~ουμεν";
+    stem perfect_ind_mid_2_sg: "~ω- like ἐρωτᾰω";
+    stem pluperfect: "~ω- like ἐρωτᾰω";
+    ind_act_1: _, _, "ἐ~ουμεν";
     ind_act_2: "ἐ~οις", "ἐ~ουτον", _;
     ind_act_3: "ἐ~οι", _, "ἐ~ουσῐ|ἐ~ουσῐν";
     ind_mid_1: _, _, "ἐ~ουμεθᾰ";
@@ -6492,13 +6410,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     ind_pass_1: "ἐ~ουμαι", _, _;
     ind_pass_2: _, "ἐ~ουσθον", "ἐ~ουσθε";
     ind_pass_3: "ἐ~ουται", "ἐ~ουσθον", "ἐ~ουνται";
-    subj_act_1: "ἐ~ω", _, "ἐ~ωμεν";
     subj_act_2: "ἐ~οις", _, _;
-    subj_act_3: "ἐ~οι", "ἐ~ωτον", "ἐ~ωσῐ|ἐ~ωσῐν";
-    subj_mid_1: _, _, "ἐ~ωμεθᾰ";
+    subj_act_3: "ἐ~οι", "ἐ~ωτον", _;
     subj_mid_2: _, "ἐ~ωσθον", _;
-    subj_mid_3: "ἐ~ωται", _, "ἐ~ωνται";
-    subj_pass_1: "ἐ~ωμαι", _, _;
+    subj_mid_3: "ἐ~ωται", _, _;
     subj_pass_2: _, _, "ἐ~ωσθε";
     opt_act_1: "ἐ~οιην|ἐ~οιμῐ", _, "ἐ~οιμεν|ἐ~οιημεν";
     opt_act_2: "ἐ~οιης|ἐ~οις", "ἐ~οιτον|ἐ~οιητον", "ἐ~οιτε|ἐ~οιητε";
@@ -6533,84 +6448,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_pres: "ἐ~ουν", _, "ἐ~ουσθαι";
     infinitive_perf: _, _, derived;
-    participle_pres: "ἐ~ων", _, "ἐ~ουμενος";
-    ),
-    // Ἐρωτᾰω: 4 words (ἐρωτᾰω, ἐρᾰω, ἐρευνᾰω, ἐμπολᾰω). Like Ληγω, except in 115 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἐρωτᾰω", 4, "ἐ~ᾰω", like Ληγω;
-    stem future_ind_act_1_sg: "~ησ- like ἐρωτᾰω";
-    stem aorist_ind_act_1_sg: "~ησ- like ἀθῡρω";
-    stem aorist_ind_pass_1_sg: "~ηθην- like ἀθῡρω";
-    stem aorist_subj_act_1_sg: "~ησ- like ἐρωτᾰω";
-    stem pass: "~ηθ- like ἐρωτᾰω";
-    stem perfect_ind_act_1_sg: "~ηκ- like ἀθῡρω";
-    stem perfect_ind_mid_2_sg: "~η- like ἀθῡρω";
-    stem pluperfect: "~η- like ἀθῡρω";
-    ind_act_1: "ἐ~ω", _, "ἐ~ωμεν";
-    ind_act_2: "ἐ~ᾳς", "ἐ~ᾱτον", _;
-    ind_act_3: "ἐ~ᾳ", _, "ἐ~ωσῐ|ἐ~ωσῐν";
-    ind_mid_1: _, _, "ἐ~ωμεθᾰ";
-    ind_mid_2: "ἐ~ᾳ", _, _;
-    ind_mid_3: _, "ἐ~ᾱσθον", _;
-    ind_pass_1: "ἐ~ωμαι", _, _;
-    ind_pass_2: _, "ἐ~ᾱσθον", "ἐ~ᾱσθε";
-    ind_pass_3: "ἐ~ᾱται", "ἐ~ᾱσθον", "ἐ~ωνται";
-    subj_act_1: "ἐ~ω", _, "ἐ~ωμεν";
-    subj_act_2: "ἐ~ᾳς", _, _;
-    subj_act_3: "ἐ~ᾳ", "ἐ~ᾱτον", "ἐ~ωσῐ|ἐ~ωσῐν";
-    subj_mid_1: _, _, "ἐ~ωμεθᾰ";
-    subj_mid_2: _, "ἐ~ᾱσθον", _;
-    subj_mid_3: "ἐ~ᾱται", _, "ἐ~ωνται";
-    subj_pass_1: "ἐ~ωμαι", _, _;
-    subj_pass_2: _, _, "ἐ~ᾱσθε";
-    opt_act_1: "ἐ~ῳην|ἐ~ῳμῐ", _, "ἐ~ῳμεν|ἐ~ῳημεν";
-    opt_act_2: "ἐ~ῳης|ἐ~ῳς", "ἐ~ῳτον|ἐ~ῳητον", "ἐ~ῳτε|ἐ~ῳητε";
-    opt_act_3: "ἐ~ῳη|ἐ~ῳ", "ἐ~ῳτην|ἐ~ῳητην", "ἐ~ῳεν|ἐ~ῳησᾰν";
-    opt_mid_1: "ἐ~ῳμην", _, "ἐ~ῳμεθᾰ";
-    opt_mid_2: "ἐ~ῳο", "ἐ~ῳσθον", "ἐ~ῳσθε";
-    opt_mid_3: "ἐ~ῳτο", "ἐ~ῳσθην", "ἐ~ῳντο";
-    present_imperative_act_2: "ἐ~ᾱ", _, "ἐ~ᾱτε";
-    present_imperative_act_3: _, _, "ἐ~ωντων";
-    present_imperative_mid_2: "ἐ~ω", "ἐ~ᾱσθον", "ἐ~ᾱσθε";
-    present_imperative_mid_3: _, _, "ἐ~ᾱσθων";
-    present_imperative_pass_2: _, "ἐ~ᾱσθον", "ἐ~ᾱσθε";
-    present_imperative_pass_3: "ἐ~ᾱσθω", "ἐ~ᾱσθων", "ἐ~ᾱσθων";
-    imperfect_act_1: "ἠ~ων", _, _;
-    imperfect_act_2: "ἠ~ᾱς", "ἠ~ᾱτον", "ἠ~ᾱτε";
-    imperfect_act_3: "ἠ~ᾱ", _, "ἠ~ων";
-    imperfect_mid_1: "ἠ~ωμην", _, "ἠ~ωμεθᾰ";
-    imperfect_mid_2: "ἠ~ω", _, _;
-    imperfect_mid_3: "ἠ~ᾱτο", _, "ἠ~ωντο";
-    imperfect_pass_2: _, "ἠ~ᾱσθον", "ἠ~ᾱσθε";
-    imperfect_pass_3: _, "ἠ~ᾱσθην", _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: "ἐ~ηθησομαι", _, _;
-    future_ind_pass_3: _, "ἐ~ηθησεσθον", _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_1: "ἠ~ημαι", _, _;
-    perfect_ind_mid_3: "ἠ~ηται", derived, _;
-    perfect_ind_pass_1: _, _, "ἠ~ημεθᾰ";
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: _, derived, derived;
-    perfect_subj_mid_3: _, "ἠ~ημένω ἦτον", _;
-    perfect_subj_pass_1: "ἠ~ημένος ὦ", _, "ἠ~ημένοι ὦμεν";
-    perfect_subj_pass_2: "ἠ~ημένος ᾖς", "ἠ~ημένω ἦτον", "ἠ~ημένοι ἦτε";
-    perfect_subj_pass_3: "ἠ~ημένος ᾖ", "ἠ~ημένω ἦτον", "ἠ~ημένοι ὦσῐ";
-    perfect_opt_pass_1: "ἠ~ημένος εἴην", _, "ἠ~ημένοι εἴημεν";
-    perfect_opt_pass_2: "ἠ~ημένος εἴης", "ἠ~ημένω εἴητον", "ἠ~ημένοι εἴητε";
-    perfect_opt_pass_3: "ἠ~ημένος εἴη", "ἠ~ημένω εἰήτην", "ἠ~ημένοι εἴησᾰν";
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "ἠ~ηκειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_pres: "ἐ~ᾱν", _, "ἐ~ᾱσθαι";
-    infinitive_perf: _, _, derived;
-    participle_pres: "ἐ~ων", _, "ἐ~ωμενος";
-    participle_perf: _, _, "ἠ~ημενος";
+    participle_pres: _, _, "ἐ~ουμενος";
     ),
     // Πᾰρᾰγῐγνομαι: 4 words (ὑπογῐγνομαι, πᾰρᾰγῐγνομαι, περῐγῐγνομαι, ῠγγῐγνομαι). Like Προκᾰλεω, except in 118 cells: ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ind_pass_1 sg, ….
     conjugation!("πᾰρᾰγῐγνομαι", 4, "~~γῐγ~ομαι", like Προκᾰλεω;
@@ -6698,47 +6536,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_pres: derived, _, _;
     participle_aor: derived, _, _;
     ),
-    // Κρουω: 4 words (ἀκουω, κρουω, κονῑω, ρουω). Like Πρεσβευω, except in 16 cells: future_ind_pass_2 sg, aorist_subj_pass_3 pl, aorist_opt_pass_1 pl, aorist_opt_pass_2 du, aorist_opt_pass_2 pl, aorist_opt_pass_3 du, ….
-    conjugation!("κρουω", 4, "~ω", like Πρεσβευω;
-    stem perfect_ind_mid_1_sg: "~- like χρημᾰτῐζω";
-    stem pluperfect: "~σ- like κρουω";
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_pass_3: _, _, derived;
-    pluperfect_act_1: "%ε~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
-    // Πλουτοκρᾰτεομαι: 4 words (πλουτοκρᾰτεομαι, δημοκρᾰτεομαι, εὐλαβεομαι, ἀμηχᾰνοποιεομαι). Like Λᾰγοθηρεω, except in 9 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, perfect_ind_act_3 du, ….
-    conjugation!("πλουτοκρᾰτεομαι", 4, "~ᾰ~εομαι", like Λᾰγοθηρεω;
-    stem imperfect: "~ᾰ~- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ᾰ~ησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ηθην- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ᾰ~ηκ- like ποιεω";
-    stem perfect_ind_mid_1_sg: "~α~η- like χρημᾰτῐζω";
-    stem pluperfect_act: "~ᾰ~ηκ- like χρημᾰτῐζω";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_pass_3: _, _, derived;
-    ),
-    // Κυκλοω: 4 words (κυκλοω, γυμνοω, ἀπολυτροω, ἐκλυτροω). Like Ἀποκωλῡω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("κυκλοω", 4, "~υ~οω", like Ἀποκωλῡω;
+    // Κυκλοω: 4 words (κυκλοω, γυμνοω, ἀπολυτροω, ἐκλυτροω). Like Ποιμαινω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("κυκλοω", 4, "~υ~οω", like Ποιμαινω;
     stem lemma: "~ῠ~- like γῡροω";
     stem imperfect: "~ῠ~ου- like γῡροω";
     stem future_ind_act_1_sg: "~ῠ~ωσ- like ἐχω";
     stem pass_: "~ῠ~ωθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ῠ~ωσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ῠ~ωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῠ~ωθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ῠ~ωσ- like ἐχω";
     stem pass: "~ῠ~ηθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ε%ῠ~ωκ- like πεμπω";
@@ -6775,7 +6580,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     ),
     // Ψᾱω: 4 words (δῐψᾱω, νᾱω, ψᾱω, σμᾰω). Like Νῑκαω, except in 61 cells: ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 du, ….
     conjugation!("ψᾱω", 4, "~ᾱω", like Νῑκαω;
-    stem future_ind_act_1_sg: "~ησ- like ἐπᾰνᾰχωρεω";
+    stem future_ind_act_1_sg: "~ησ- like ἀπαιτεω";
     stem perfect_ind_mid_1_sg: "~η- like σβεννῡμῐ";
     stem perfect_ind_mid_2_sg: "~η- like σκοπεω";
     ind_act_2: "~ῃς", "~ητον", _;
@@ -6818,43 +6623,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: "~ην", _, "~ησθαι";
     infinitive_perf: _, _, derived;
     ),
-    // Πληττω: 4 words (φῠλᾰττω, πληττω, σᾰττω, ἀλλᾰττω). Like Ληγω, except in 33 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πληττω", 4, "~ττω", like Ληγω;
-    stem lemma: "~ττ- like βουλευω";
-    stem imperfect: "~ττ- like βουλευω";
-    stem future_ind_act_1_sg: "~ξ- like ποιεω";
-    stem pass_: "~γησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ξ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~γην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ξ- like ποιεω";
-    stem pass: "~γ- like ἐγειρω";
-    stem perfect_ind_act_1_sg: "~γ- like ἐχω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_subj_mid_3: _, _, "%ε~γμένοι ὦσῐ|%ε~γμένοι ὦσῐν";
-    perfect_subj_pass_3: _, _, derived;
-    ),
-    // Ἐπαιρω: 4 words (κᾰθαιρω, ἐπαιρω, δῐαιρω, ῥῠπαινω). Like Ἐξᾰττῐκῐζω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἐπαιρω", 4, "~αι~ω", like Ἐξᾰττῐκῐζω;
+    // Ἐπαιρω: 4 words (κᾰθαιρω, ἐπαιρω, δῐαιρω, ῥῠπαινω). Like Ἐνᾰττῐκῐζω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἐπαιρω", 4, "~αι~ω", like Ἐνᾰττῐκῐζω;
     stem lemma: "~αι~- like βουλευω";
     stem imperfect: "~ῃ~- like ἐλπω";
     stem future_ind_act_1_sg: "~ᾰ~- like χρημᾰτῐζω";
@@ -6901,57 +6671,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Ἀπαιτεω: 4 words (ἐπαινεω, ἀπαιτεω, ἐξαιτεω, πᾰραινεω). Like Ἐπαιρω, except in 51 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἀπαιτεω", 4, "~αι~εω", like Ἐπαιρω;
-    stem lemma: "~αι~- like ποιεω";
-    stem imperfect: "~ῃ~- like εὐλογεω";
-    stem future_ind_act_1_sg: "~αι~ησ- like ἐπᾰνᾰχωρεω";
-    stem pass_: "~αι~ηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ῃ~ησ- like εὐλογεω";
-    stem aorist_ind_pass_1_sg: "~ῃ~ηθην- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~αι~ησ- like ποιεω";
-    stem pass: "~αι~ηθ- like ποιεω";
-    stem perfect_ind_act_1_sg: "~ῃ~ηκ- like εὐλογεω";
-    stem perfect_ind_mid_1_sg: "~ῃ~η- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~ῃ~η- like εὐλογεω";
-    stem pluperfect: "~ῃ~η- like εὐλογεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_2: derived, _, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "~ῃ~ηκειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
     // Ἐξορκῐζω: 4 words (ἀφορῐζω, προορῐζω, ἐξορκῐζω, ἑορτᾰζω). Like Ἀποκωλῡω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("ἐξορκῐζω", 4, "~ο~ζω", like Ἀποκωλῡω;
     stem lemma: "~ο~ζ- like βουλευω";
@@ -6964,9 +6683,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem pass: "~ο~σθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ω~κ- like εὐλογεω";
     stem perfect_ind_mid_1_sg: "~ω~σ- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~ω~- like ἱζω";
+    stem perfect_ind_mid_2_sg: "~ω~- like σῠνᾰρπᾰζω";
     stem pluperfect_act: "~ω~κ- like εὐλογεω";
-    stem pluperfect: "~ω~- like ἱζω";
+    stem pluperfect: "~ω~- like σῠνᾰρπᾰζω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -7003,7 +6722,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     // Ὑπᾰνᾰχωρεω: 4 words (ὑπᾰνᾰχωρεω, δῐασκοπεω, ἐπᾰνᾰχωρεω, κᾰτᾰπονεω). Like Νεκραγωγεω, except in 29 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, future_ind_act_3 du, ….
     conjugation!("ὑπᾰνᾰχωρεω", 4, "~ᾰ~εω", like Νεκραγωγεω;
     stem imperfect: "~ε~- like εὐλογεω";
-    stem future_ind_act_1_sg: "~ᾰ~ησ- like ἐπᾰνᾰχωρεω";
+    stem future_ind_act_1_sg: "~ᾰ~ησ- like ἀπαιτεω";
     stem aorist_ind_act_1_sg: "~ε~ησ- like εὐλογεω";
     stem aorist_ind_pass_1_sg: "~ε~ηθην- like ἐλπω";
     stem aorist_subj_act_1_sg: "~ᾰ~ησ- like ποιεω";
@@ -7033,185 +6752,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: _, derived, _;
     infinitive_perf: _, _, derived;
     ),
-    // Γρᾰφω: 3 words (γρᾰφω, ἐρεφω, γλῠφω). Like Θρῠπτω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("γρᾰφω", 3, "~φω", like Θρῠπτω;
-    stem lemma: "~φ- like ἐχω";
-    stem imperfect: "~φ- like ἐχω";
-    stem future_ind_act_1_sg: "~ψ- like ἐπᾰνᾰχωρεω";
-    stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~φην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
-    stem pass: "~φ- like ἐγειρω";
-    stem perfect_ind_act_1_sg: "~φ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~- like πρεπω";
-    stem pluperfect_act: "~φειν- like ἐχω";
-    stem pluperfect: "~- like πρεπω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_2: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_3: _, _, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_mid_3: _, _, derived;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
-    // Ἡλοω: 3 words (κᾰκοω, ἐξῐσοω, ἡλοω). Like Ἀξῐοω, except in 25 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, future_ind_act_3 du, ….
-    conjugation!("ἡλοω", 3, "~οω", like Ἀξῐοω;
-    stem imperfect: "~ου- like κᾰκοω";
-    stem future_ind_act_1_sg: "~ωσ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~ωσ- like εὐλογεω";
-    stem aorist_ind_pass_1_sg: "~ωθην- like ἐλπω";
-    stem perfect_ind_act_1_sg: "~ωκ- like εὐλογεω";
-    stem perfect_ind_mid_1_sg: "~ω- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~ω- like εὐλογεω";
-    stem pluperfect: "~ω- like εὐλογεω";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_pass_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "~ωκειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Πῑαινω: 3 words (μᾰραινω, πημαινω, πῑαινω). Like Περαινω, except in 35 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("πῑαινω", 3, "~αινω", like Περαινω;
-    stem lemma: "~αιν- like βᾰπτῐζω";
-    stem imperfect: "~αιν- like ποιμαινω";
-    stem future_ind_act_1_sg: "~ᾰν- like λογῐζομαι";
-    stem aorist_ind_act_1_sg: "~ᾱν- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ᾱν- like ἐχω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: derived, _, _;
-    future_ind_pass_3: _, derived, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    ),
-    // Θερᾰπευω: 3 words (ἱκετευω, ὀρουω, ὀπῑπευω). Like Βουλευω, except in 78 cells: perfect_ind_act_1 sg, perfect_ind_act_2 sg, perfect_ind_act_2 pl, perfect_ind_act_3 sg, perfect_ind_act_3 pl, perfect_ind_mid_1 pl, ….
-    conjugation!("θερᾰπευω", 3, "~ω", like Βουλευω;
-    stem pass_: "~θησ- like ποιεω";
-    stem pass: "~θ- like ποιεω";
-    perfect_ind_act_1: "%ε~κᾰ", _, _;
-    perfect_ind_act_2: "%ε~κᾰς", _, "%ε~κᾰτε";
-    perfect_ind_act_3: "%ε~κε|%ε~κεν", _, "%ε~κᾱσῐ|%ε~κᾱσῐν";
-    perfect_ind_mid_1: _, _, "%ε~μεθᾰ";
-    perfect_ind_mid_2: _, _, "%ε~σθε";
-    perfect_ind_pass_1: _, _, derived;
-    perfect_ind_pass_2: _, _, derived;
-    perfect_subj_act_1: "%ε~κω", _, "%ε~κωμεν";
-    perfect_subj_act_2: "%ε~κῃς", "%ε~κητον", "%ε~κητε";
-    perfect_subj_act_3: "%ε~κῃ", derived, "%ε~κωσῐ|%ε~κωσῐν";
-    perfect_subj_mid_1: "%ε~μένος ὦ", _, "%ε~μένοι ὦμεν";
-    perfect_subj_mid_2: "%ε~μένος ᾖς", "%ε~μένω ἦτον", "%ε~μένοι ἦτε";
-    perfect_subj_mid_3: "%ε~μένος ᾖ", derived, "%ε~μένοι ὦσῐ|%ε~μένοι ὦσῐν";
-    perfect_subj_pass_1: derived, _, derived;
-    perfect_subj_pass_2: derived, derived, derived;
-    perfect_subj_pass_3: derived, derived, derived;
-    perfect_opt_act_1: "%ε~κοιμῐ|%ε~κοιην", _, _;
-    perfect_opt_act_2: "%ε~κοις|%ε~κοιης", _, _;
-    perfect_opt_act_3: "%ε~κοι|%ε~κοιη", _, _;
-    perfect_opt_mid_1: "%ε~μένος εἴην", _, "%ε~μένοι εἴημεν";
-    perfect_opt_mid_2: "%ε~μένος εἴης", "%ε~μένω εἴητον", "%ε~μένοι εἴητε";
-    perfect_opt_mid_3: "%ε~μένος εἴη", "%ε~μένω εἰήτην", "%ε~μένοι εἴησᾰν";
-    perfect_opt_pass_1: derived, _, derived;
-    perfect_opt_pass_2: derived, derived, derived;
-    perfect_opt_pass_3: derived, derived, derived;
-    perfect_imperative_act_2: _, _, "%ε~κετε";
-    perfect_imperative_act_3: "%ε~κετω", "%ε~κετων", _;
-    perfect_imperative_mid_2: "%ε~σο", _, derived;
-    perfect_imperative_mid_3: "%ε~σθω", "%ε~σθων", derived;
-    perfect_imperative_pass_2: derived, _, derived;
-    perfect_imperative_pass_3: derived, derived, derived;
-    pluperfect_act_1: derived, _, _;
-    pluperfect_mid_1: derived, _, _;
-    pluperfect_mid_2: derived, derived, _;
-    pluperfect_mid_3: derived, _, derived;
-    pluperfect_pass_1: _, _, derived;
-    pluperfect_pass_2: _, _, derived;
-    pluperfect_pass_3: _, derived, _;
-    infinitive_perf: "%ε~κεναι", _, _;
-    participle_perf: "%ε~κως", "%ε~μενος", derived;
-    ),
-    // Ἀνᾰζω: 3 words (ζω, ἀποζω, ἀνᾰζω). Like Περιειμι, except in 31 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ἀνᾰζω", 3, "~ω", like Περιειμι;
-    stem future_ind_act_1_sg: "~ησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ηκ- like στηρῐζω";
-    ind_act_1: "~ω", _, "~ωμεν";
-    ind_act_2: "~ῃς", "~ητον", _;
-    ind_act_3: "~ῃ", _, "~ωσῐ|~ωσῐν";
-    subj_act_3: _, _, "~ωσῐ|~ωσῐν";
-    opt_act_1: "~ῳην|~ῳμῐ", _, "~ῳμεν|~ῳημεν";
-    opt_act_2: "~ῳης|~ῳς", "~ῳτον|~ῳητον", "~ῳτε|~ῳητε";
-    opt_act_3: "~ῳη|~ῳ", "~ῳτην|~ῳητην", "~ῳεν|~ῳησᾰν";
-    present_imperative_act_2: "~η", _, "~ητε";
-    present_imperative_act_3: _, _, "~ωντων";
-    imperfect_act_1: "ἐ~ων", _, "ἐ~ωμεν";
-    imperfect_act_2: "ἐ~ης", "ἐ~ητον", "ἐ~ητε";
-    imperfect_act_3: "ἐ~η", _, "ἐ~ων";
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: _, derived, _;
-    infinitive_pres: "~ην", _, _;
-    ),
-    // Τεινω: 3 words (ἐκτεινω, τεινω, θεινω). Like Βαινω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("τεινω", 3, "~εινω", like Βαινω;
+    // Στεινω: 4 words (ἐκτεινω, τεινω, θεινω, στεινω). Like Βαινω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("στεινω", 4, "~εινω", like Βαινω;
     stem lemma: "~ειν- like βᾰπτῐζω";
     stem imperfect: "~ειν- like ἐχω";
     stem future_ind_act_1_sg: "~εν- like λογῐζομαι";
@@ -7255,19 +6797,389 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
+    // Προβαλλω: 4 words (προβαλλω, διαβαλλω, ἀτασθαλλω, ἐμβαλλω). Like Ἐπᾰγγελλω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("προβαλλω", 4, "~~α~λω", like Ἐπᾰγγελλω;
+    stem lemma: "~~α~λ- like βᾰπτῐζω";
+    stem imperfect: "~ε~α~λ- like ἀειρω";
+    stem future_ind_act_1_sg: "~~α~- like λογῐζομαι";
+    stem aorist_ind_act_1_sg: "~ε~α~- like ἀνᾰγω";
+    stem aorist_subj_act_1_sg: "~~α~- like ἐπῐλᾰμβᾰνω";
+    stem perfect_ind_act_1_sg: "~~εβ~ηκ- like πεμπω";
+    stem perfect_ind_mid_1_sg: "~~εβ~η- like ἐλπω";
+    stem perfect_ind_mid_2_sg: "~~εβ~η- like εὐλογεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: derived, _, _;
+    future_ind_pass_2: derived, _, _;
+    future_ind_pass_3: _, derived, _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    aorist_ind_pass_1: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_1: derived, _, _;
+    aorist_subj_pass_3: _, derived, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    aorist_imperative_pass_2: derived, derived, derived;
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_act_3: _, _, derived;
+    perfect_subj_mid_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Φῡρω: 4 words (σῡρω, τῡφω, φῡρω, ἀθῡρω). Like Ποιμαινω, except in 40 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("φῡρω", 4, "~ῡ~ω", like Ποιμαινω;
+    stem lemma: "~ῡ~- like βουλευω";
+    stem imperfect: "~ῡ~- like βουλευω";
+    stem future_ind_act_1_sg: "~ῠ~σ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ῠ~σ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῠ~θην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ῠ~σ- like ἐχω";
+    stem pass: "~ῠ~θ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~ῠ~- like βουλευω";
+    stem perfect_ind_mid_2_sg: "~ῠ~- like πορσῡνω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Δηλεομαι: 4 words (δηλεομαι, μῑμεομαι, δῐηγεομαι, ὑφηγεομαι). Like Βουλομαι, except in 37 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 sg, ….
+    conjugation!("δηλεομαι", 4, "~εομαι", like Βουλομαι;
+    stem future_ind_act_1_sg: "~ησ- like εἰσερχομαι";
+    stem pass_: "~ηθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ησ- like ἑπομαι";
+    stem aorist_subj_act_1_sg: "~ησ- like ἑπομαι";
+    stem perfect_ind_mid_1_sg: "~η- like σειω";
+    stem pluperfect: "~η- like ποιεω";
+    ind_act_1: "~εομαι", _, _;
+    ind_mid_1: "~ουμαι", _, "~ουμεθᾰ";
+    ind_mid_2: "~ει|~ῃ", _, _;
+    ind_mid_3: _, "~εισθον", _;
+    ind_pass_2: "~ει", "~εισθον", "~εισθε";
+    ind_pass_3: "~ειται", "~εισθον", "~ουνται";
+    present_imperative_mid_2: _, "~εισθον", "~εισθε";
+    present_imperative_mid_3: "~εισθω", _, "~εισθων";
+    present_imperative_pass_2: _, "~εισθον", "~εισθε";
+    present_imperative_pass_3: _, "~εισθων", "~εισθων";
+    imperfect_mid_1: "ἐ~ουμην", _, "ἐ~ουμεθᾰ";
+    imperfect_mid_2: _, "ἐ~εισθον", _;
+    imperfect_mid_3: "ἐ~ειτο", _, "ἐ~ουντο";
+    imperfect_pass_2: _, _, "ἐ~εισθε";
+    imperfect_pass_3: _, "ἐ~εισθην", _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_pres: _, _, "~εισθαι";
+    participle_pres: _, _, "~ουμενος";
+    ),
+    // Φρᾰζω: 3 words (φρᾰζω, θαυμᾰζω, χειμᾰζω). Like Πειρᾰζω, except in 5 cells: pluperfect_pass_1 sg, pluperfect_pass_2 sg, pluperfect_pass_2 du, pluperfect_pass_3 sg, pluperfect_pass_3 pl.
+    conjugation!("φρᾰζω", 3, "~ζω", like Πειρᾰζω;
+    stem pluperfect_act: "~κ- like χρημᾰτῐζω";
+    stem pluperfect: "~- like χρημᾰτῐζω";
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Ἐργω: 3 words (ἐργω, εἰργω, κᾰτειργω). Like Ληγω, except in 43 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἐργω", 3, "~γω", like Ληγω;
+    stem lemma: "~γ- like βουλευω";
+    stem imperfect: "~γ- like ἀειρω";
+    stem future_ind_act_1_sg: "~ξ- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ξ- like ἐλπω";
+    stem aorist_ind_pass_1_sg: "~χθην- like ἐλπω";
+    stem perfect_ind_mid_1_sg: "~- like ἀνᾰγω";
+    stem perfect_ind_mid_2_sg: "~- like πᾰρᾰλλᾰσσω";
+    stem pluperfect: "~- like ἐπευχομαι";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Εὐλαβεομαι: 3 words (πλουτοκρᾰτεομαι, δημοκρᾰτεομαι, εὐλαβεομαι). Like Λᾰγοθηρεω, except in 9 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, perfect_ind_act_3 du, ….
+    conjugation!("εὐλαβεομαι", 3, "~ᾰ~εομαι", like Λᾰγοθηρεω;
+    stem imperfect: "~ᾰ~- like ποιεω";
+    stem aorist_ind_act_1_sg: "~ᾰ~ησ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ηθην- like ποιεω";
+    stem perfect_ind_act_1_sg: "~ᾰ~ηκ- like ποιεω";
+    stem perfect_ind_mid_1_sg: "~α~η- like χρημᾰτῐζω";
+    stem pluperfect_act: "~ᾰ~ηκ- like χρημᾰτῐζω";
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_pass_3: _, _, derived;
+    ),
+    // Ἱζω: 3 words (ἑλληνῐζω, ἀφῠπνῐζω, ῥωμᾱϊζω). Like Λογῐζομαι, except in 67 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἱζω", 3, "~ζω", like Λογῐζομαι;
+    stem lemma: "~ζ- like βουλευω";
+    stem imperfect: "~ζ- like ἐλπω";
+    stem aorist_ind_act_1_sg: "~σ- like ἐλπω";
+    stem aorist_ind_pass_1_sg: "~σθην- like ἐλπω";
+    stem aorist_subj_act_1_sg: "~σ- like ποιεω";
+    stem perfect_ind_act_1_sg: "~κ- like πεμπω";
+    stem perfect_ind_mid_2_sg: "~- like σῠνᾰρπᾰζω";
+    stem pluperfect_act: "~κε- like ἱζω";
+    stem pluperfect: "~- like ἱζω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_1: "~σμαι", _, _;
+    perfect_ind_mid_3: "~σται", derived, _;
+    perfect_ind_pass_1: _, _, "~σμεθᾰ";
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_subj_mid_3: _, "~σμένω ἦτον", "~σμένοι ὦσῐ|~σμένοι ὦσῐν";
+    perfect_subj_pass_1: "~σμένος ὦ", _, "~σμένοι ὦμεν";
+    perfect_subj_pass_2: "~σμένος ᾖς", "~σμένω ἦτον", "~σμένοι ἦτε";
+    perfect_subj_pass_3: "~σμένος ᾖ", "~σμένω ἦτον", "~σμένοι ὦσῐ";
+    perfect_opt_pass_1: "~σμένος εἴην", _, "~σμένοι εἴημεν";
+    perfect_opt_pass_2: "~σμένος εἴης", "~σμένω εἴητον", "~σμένοι εἴητε";
+    perfect_opt_pass_3: "~σμένος εἴη", "~σμένω εἰήτην", "~σμένοι εἴησᾰν";
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, derived;
+    pluperfect_pass_2: derived, derived, derived;
+    pluperfect_pass_3: derived, derived, derived;
+    infinitive_perf: _, _, derived;
+    participle_perf: _, _, "~σμενος";
+    ),
+    // Γρᾰφω: 3 words (γρᾰφω, ἐρεφω, γλῠφω). Like Θρῠπτω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("γρᾰφω", 3, "~φω", like Θρῠπτω;
+    stem lemma: "~φ- like ἐχω";
+    stem imperfect: "~φ- like ἐχω";
+    stem future_ind_act_1_sg: "~ψ- like ἀπαιτεω";
+    stem aorist_ind_act_1_sg: "~ψ- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~φην- like ποιεω";
+    stem aorist_subj_act_1_sg: "~ψ- like ἐχω";
+    stem pass: "~φ- like σφᾰλλω";
+    stem perfect_ind_act_1_sg: "~φ- like ἐχω";
+    stem perfect_ind_mid_1_sg: "~- like πρεπω";
+    stem pluperfect_act: "~φειν- like ποιεω";
+    stem pluperfect: "~- like πρεπω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_2: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_act_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_3: derived, _, _;
+    perfect_subj_mid_3: _, _, derived;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    ),
+    // Ἡγεομαι: 3 words (ἡγεομαι, νεομαι, εὐνομεομαι). Like Δηλεομαι, except in 28 cells: ind_mid_2 sg, ind_pass_2 sg, imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_2 du, ….
+    conjugation!("ἡγεομαι", 3, "~εομαι", like Δηλεομαι;
+    stem imperfect: "~- like ἡγεομαι";
+    stem future_ind_act_1_sg: "~ησ- like ἑπομαι";
+    stem aorist_ind_act_1_sg: "~ησ- like μηκᾰομαι";
+    stem aorist_ind_pass_1_sg: "~ηθην- like ἐλπω";
+    stem perfect_ind_mid_1_sg: "~η- like ἐλπω";
+    stem perfect_ind_mid_2_sg: "~η- like εὐλογεω";
+    ind_mid_2: "~ει", _, _;
+    ind_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, derived, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_mid_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_mid_1: derived, _, _;
+    pluperfect_mid_2: derived, derived, _;
+    pluperfect_mid_3: derived, _, derived;
+    pluperfect_pass_1: _, _, derived;
+    pluperfect_pass_2: _, _, derived;
+    pluperfect_pass_3: _, derived, _;
+    infinitive_perf: _, _, derived;
+    ),
+    // Πῑαινω: 3 words (μᾰραινω, πημαινω, πῑαινω). Like Περαινω, except in 35 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("πῑαινω", 3, "~αινω", like Περαινω;
+    stem lemma: "~αιν- like βᾰπτῐζω";
+    stem imperfect: "~αιν- like ποιμαινω";
+    stem future_ind_act_1_sg: "~ᾰν- like λογῐζομαι";
+    stem aorist_ind_act_1_sg: "~ᾱν- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ᾱν- like ἐχω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: derived, _, _;
+    future_ind_pass_3: _, derived, _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    ),
+    // Ἀνᾰζω: 3 words (ζω, ἀποζω, ἀνᾰζω). Like Περιειμι, except in 31 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἀνᾰζω", 3, "~ω", like Περιειμι;
+    stem future_ind_act_1_sg: "~ησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ηκ- like στηρῐζω";
+    ind_act_1: "~ω", _, "~ωμεν";
+    ind_act_2: "~ῃς", "~ητον", _;
+    ind_act_3: "~ῃ", _, "~ωσῐ|~ωσῐν";
+    subj_act_3: _, _, "~ωσῐ|~ωσῐν";
+    opt_act_1: "~ῳην|~ῳμῐ", _, "~ῳμεν|~ῳημεν";
+    opt_act_2: "~ῳης|~ῳς", "~ῳτον|~ῳητον", "~ῳτε|~ῳητε";
+    opt_act_3: "~ῳη|~ῳ", "~ῳτην|~ῳητην", "~ῳεν|~ῳησᾰν";
+    present_imperative_act_2: "~η", _, "~ητε";
+    present_imperative_act_3: _, _, "~ωντων";
+    imperfect_act_1: "ἐ~ων", _, "ἐ~ωμεν";
+    imperfect_act_2: "ἐ~ης", "ἐ~ητον", "ἐ~ητε";
+    imperfect_act_3: "ἐ~η", _, "ἐ~ων";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, _;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: _, derived, _;
+    infinitive_pres: "~ην", _, _;
+    ),
     // Πλᾰναω: 3 words (δαμναω, πλᾰναω, γαναω). Like Πῠρσαινω, except in 84 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("πλᾰναω", 3, "~ναω", like Πῠρσαινω;
     stem imperfect: "~ν- like φοιτᾰω";
     stem future_ind_act_1_sg: "~γησ- like ἑπομαι";
     stem aorist_ind_act_1_sg: "~νησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~νηθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~νηθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~νησ- like ἐχω";
     stem pass: "~νηθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~νηκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~νη- like ἐχω";
-    stem perfect_ind_mid_2_sg: "~νη- like ἐχω";
-    stem pluperfect_act: "~νηκειν- like ἐχω";
-    stem pluperfect: "~νη- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~νη- like ποιεω";
+    stem pluperfect_act: "~νηκειν- like ποιεω";
+    stem pluperfect: "~νη- like ποιεω";
     ind_act_1: "~νω", _, "~νωμεν";
     ind_act_2: "~νᾳς", "~νᾱτον", _;
     ind_act_3: "~νᾳ", _, "~νωσῐ";
@@ -7318,103 +7230,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_pres: "~νων", _, "~νωμενος";
     ),
-    // Ὀμνῠω: 3 words (ὀφελλω, ὀμνῠω, ὀρῠττω). Like Πῠρσαινω, except in 73 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("ὀμνῠω", 3, "ὀ~ω", like Πῠρσαινω;
-    ind_act_1: "ὀ~ω", _, "ὀ~ομεν";
-    ind_act_2: "ὀ~εις", "ὀ~ετον", _;
-    ind_act_3: "ὀ~ει", _, "ὀ~ουσῐ|ὀ~ουσῐν";
-    ind_mid_1: _, _, "ὀ~ομεθᾰ";
-    ind_mid_2: "ὀ~ῃ|ὀ~ει", _, _;
-    ind_mid_3: _, "ὀ~εσθον", _;
-    ind_pass_1: "ὀ~ομαι", _, _;
-    ind_pass_2: _, "ὀ~εσθον", "ὀ~εσθε";
-    ind_pass_3: "ὀ~εται", "ὀ~εσθον", "ὀ~ονται";
-    subj_act_1: "ὀ~ω", _, "ὀ~ωμεν";
-    subj_act_2: "ὀ~ῃς", _, _;
-    subj_act_3: "ὀ~ῃ", "ὀ~ητον", "ὀ~ωσῐ|ὀ~ωσῐν";
-    subj_mid_1: _, _, "ὀ~ωμεθᾰ";
-    subj_mid_2: _, "ὀ~ησθον", _;
-    subj_mid_3: "ὀ~ηται", _, "ὀ~ωνται";
-    subj_pass_1: "ὀ~ωμαι", _, _;
-    subj_pass_2: _, _, "ὀ~ησθε";
-    opt_act_1: "ὀ~οιμῐ", _, "ὀ~οιμεν";
-    opt_act_2: "ὀ~οις", "ὀ~οιτον", "ὀ~οιτε";
-    opt_act_3: "ὀ~οι", "ὀ~οιτην", "ὀ~οιεν";
-    opt_mid_1: "ὀ~οιμην", _, "ὀ~οιμεθᾰ";
-    opt_mid_2: "ὀ~οιο", "ὀ~οισθον", "ὀ~οισθε";
-    opt_mid_3: "ὀ~οιτο", "ὀ~οισθην", "ὀ~οιντο";
-    present_imperative_act_2: "ὀ~ε", _, "ὀ~ετε";
-    present_imperative_act_3: _, _, "ὀ~οντων";
-    present_imperative_mid_2: "ὀ~ου", "ὀ~εσθον", "ὀ~εσθε";
-    present_imperative_mid_3: _, _, "ὀ~εσθων";
-    present_imperative_pass_2: _, "ὀ~εσθον", "ὀ~εσθε";
-    present_imperative_pass_3: "ὀ~εσθω", "ὀ~εσθων", "ὀ~εσθων";
-    imperfect_act_1: "ὠ~ον", _, _;
-    imperfect_act_2: "ὠ~ες", "ὠ~ετον", "ὠ~ετε";
-    imperfect_act_3: "ὠ~ε|ὠ~εν", _, "ὠ~ον";
-    imperfect_mid_1: "ὠ~ομην", _, "ὠ~ομεθᾰ";
-    imperfect_mid_2: "ὠ~ου", _, _;
-    imperfect_mid_3: "ὠ~ετο", _, "ὠ~οντο";
-    imperfect_pass_2: _, "ὠ~εσθον", "ὠ~εσθε";
-    imperfect_pass_3: _, "ὠ~εσθην", _;
-    infinitive_pres: "ὀ~ειν", _, "ὀ~εσθαι";
-    participle_pres: "ὀ~ων", _, "ὀ~ομενος";
-    ),
-    // Προβαλλω: 3 words (προβαλλω, διαβαλλω, ἐμβαλλω). Like Ἐπᾰγγελλω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("προβαλλω", 3, "~~α~λω", like Ἐπᾰγγελλω;
-    stem lemma: "~~α~λ- like βᾰπτῐζω";
-    stem imperfect: "~ε~α~λ- like ἀειρω";
-    stem future_ind_act_1_sg: "~~α~- like λογῐζομαι";
-    stem aorist_ind_act_1_sg: "~ε~α~- like ἀνᾰγω";
-    stem aorist_subj_act_1_sg: "~~α~- like φᾰρμᾰσσω";
-    stem perfect_ind_act_1_sg: "~~εβ~ηκ- like πεμπω";
-    stem perfect_ind_mid_1_sg: "~~εβ~η- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~~εβ~η- like εὐλογεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    future_ind_pass_1: derived, _, _;
-    future_ind_pass_2: derived, _, _;
-    future_ind_pass_3: _, derived, _;
-    future_opt_act_2: _, _, derived;
-    future_opt_act_3: _, _, derived;
-    aorist_ind_pass_1: derived, _, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    aorist_subj_pass_1: derived, _, _;
-    aorist_subj_pass_3: _, derived, derived;
-    aorist_opt_pass_1: _, _, derived;
-    aorist_opt_pass_2: _, derived, derived;
-    aorist_opt_pass_3: _, derived, derived;
-    aorist_imperative_pass_2: derived, derived, derived;
-    perfect_ind_act_3: derived, derived, derived;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_act_3: _, _, derived;
-    perfect_subj_mid_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
-    // Ἐπῐτῐθημῐ: 3 words (ἐπῐτῐθημῐ, συνεπῐτῐθημῐ, ξυνεπῐτῐθημῐ). Like Ἀποκωλῡω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἐπῐτῐθημῐ", 3, "~ῐτῐ~ημῐ", like Ἀποκωλῡω;
+    // Ἐπῐτῐθημῐ: 3 words (ἐπῐτῐθημῐ, συνεπῐτῐθημῐ, ξυνεπῐτῐθημῐ). Like Ποιμαινω, except in 50 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἐπῐτῐθημῐ", 3, "~ῐτῐ~ημῐ", like Ποιμαινω;
     stem lemma: "~ῐ%ῐ~- like ἐπῐτῐθημῐ";
     stem imperfect: "~ε%ῐ~- like ἀφῑημῐ";
     stem future_ind_act_1_sg: "~ῐ~ησ- like ποιεω";
@@ -7469,7 +7286,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_subj_act_1_sg: "~ῐ~ησ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ῐ~ηκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~ῐ~η- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ῐ~η- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ῐ~η- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -7546,7 +7363,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_subj_act_1_sg: "~ε~ξ- like ἑπομαι";
     stem perfect_ind_mid_1_sg: "~η~- like ἀνᾰγω";
     stem perfect_ind_mid_2_sg: "~η~- like πᾰρᾰλλᾰσσω";
-    stem pluperfect: "~η~- like κᾰτειργω";
+    stem pluperfect: "~η~- like ἐπευχομαι";
     ind_pass_1: derived, _, derived;
     ind_pass_2: derived, _, _;
     subj_mid_3: _, derived, _;
@@ -7574,11 +7391,11 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Κᾰθελκω: 3 words (ἀφελκω, κᾰθελκω, ἐφελκω). Like Ἀποκωλῡω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("κᾰθελκω", 3, "~~κω", like Ἀποκωλῡω;
+    // Κᾰθελκω: 3 words (ἀφελκω, κᾰθελκω, ἐφελκω). Like Ποιμαινω, except in 41 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("κᾰθελκω", 3, "~~κω", like Ποιμαινω;
     stem lemma: "~~κ- like βουλευω";
     stem imperfect: "~ι~κ- like ἐλπω";
-    stem future_ind_act_1_sg: "~~ξ- like ἐπᾰνᾰχωρεω";
+    stem future_ind_act_1_sg: "~~ξ- like ἀπαιτεω";
     stem pass_: "~~κυσθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ι~κυσ- like εὐλογεω";
     stem aorist_ind_pass_1_sg: "~ι~κυσθην- like ἐλπω";
@@ -7623,7 +7440,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ιψ- like ποιεω";
     stem pass_: "~ῐβησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~ιψ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ιφθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ιφθην- like ποιεω";
     stem pass: "~ιφθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ῐφ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~ῑ- like πρεπω";
@@ -7681,7 +7498,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem imperfect: "~τειχ- like ἐλπω";
     stem future_ind_act_1_sg: "~θεξ- like ποιεω";
     stem aorist_ind_act_1_sg: "~τεσχ- like ἀνᾰλᾰμβᾰνω";
-    stem aorist_subj_act_1_sg: "~τᾰσχ- like φᾰρμᾰσσω";
+    stem aorist_subj_act_1_sg: "~τᾰσχ- like ἐπῐλᾰμβᾰνω";
     stem perfect_ind_act_1_sg: "~τεσχηκ- like εὐλογεω";
     stem perfect_ind_mid_1_sg: "~τεσχη- like εὐλογεω";
     stem perfect_ind_mid_2_sg: "~τεσχη- like εὐλογεω";
@@ -7723,7 +7540,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_ind_act_1_sg: "~νε~- like σῠνιστημῐ";
     stem aorist_ind_pass_1_sg: "~νε~ᾰθην- like ἐλπω";
     stem aorist_subj_act_1_sg: "~~- like σῠνιστημῐ";
-    stem pass: "~~ᾰθ- like ἐγειρω";
+    stem pass: "~~ᾰθ- like σφᾰλλω";
     stem perfect_ind_act_1_sg: "~νε~ηκ- like πεμπω";
     stem pluperfect_act: "~νει~ηκ- like εὐλογεω";
     ind_act_3: _, derived, _;
@@ -7886,7 +7703,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ξ- like εἰσερχομαι";
     stem aorist_ind_act_1_sg: "~ξ- like ἑπομαι";
     stem aorist_subj_act_1_sg: "~ξ- like ἑπομαι";
-    stem perfect_ind_mid_2_sg: "~- like φᾰρμᾰσσω";
+    stem perfect_ind_mid_2_sg: "~- like δῐωκω";
     ind_act_1: "~σσομαι", _, _;
     ind_act_3: derived, _, _;
     ind_mid_1: "~σσομαι", _, "~σσομεθᾰ";
@@ -8044,7 +7861,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     conjugation!("ἁμᾰρτᾰνω", 3, "~ᾰ~ᾰνω", like Ἰαινω;
     stem lemma: "~ᾰ~ᾰν- like ἐχω";
     stem imperfect: "~η~ᾰν- like ἀειρω";
-    stem future_ind_act_1_sg: "~ᾰ~ησ- like ἐπᾰνᾰχωρεω";
+    stem future_ind_act_1_sg: "~ᾰ~ησ- like ἀπαιτεω";
     stem pass_: "~ᾰ~ηθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~η~- like ἀνᾰγω";
     stem aorist_ind_pass_1_sg: "~η~ηθην- like ἐλπω";
@@ -8117,53 +7934,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     aorist_subj_mid_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
     ),
-    // Ἐκγᾰμῐζω: 3 words (ἐκφερω, ἐκγᾰμῐζω, ὑπεκφευγω). Like Ἰαινω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἐκγᾰμῐζω", 3, "~κ~ω", like Ἰαινω;
-    stem lemma: "~κ~- like βᾰπτῐζω";
-    stem imperfect: "~ξε~- like ἀειρω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    aorist_ind_act_1: derived, _, derived;
-    aorist_ind_act_2: derived, derived, _;
-    aorist_ind_act_3: derived, _, derived;
-    aorist_ind_mid_1: derived, _, _;
-    aorist_ind_mid_2: derived, derived, _;
-    aorist_ind_pass_1: derived, _, _;
-    aorist_subj_act_1: derived, _, _;
-    aorist_subj_act_2: derived, derived, _;
-    aorist_subj_act_3: _, _, derived;
-    aorist_subj_mid_1: _, _, derived;
-    aorist_subj_mid_2: derived, derived, _;
-    aorist_subj_pass_1: derived, _, _;
-    aorist_subj_pass_3: _, derived, _;
-    aorist_opt_act_1: derived, _, derived;
-    aorist_opt_act_2: derived, _, _;
-    aorist_opt_act_3: derived, _, derived;
-    aorist_opt_mid_1: derived, _, _;
-    aorist_imperative_act_2: derived, _, derived;
-    aorist_imperative_act_3: _, _, derived;
-    aorist_imperative_mid_2: derived, derived, _;
-    aorist_imperative_mid_3: _, _, derived;
-    aorist_imperative_pass_2: derived, derived, derived;
-    infinitive_aor: derived, _, _;
-    participle_aor: derived, derived, _;
-    ),
-    // Ἀντελπῐζω: 3 words (προετοιμᾰζω, ἐξετᾰζω, ἀντελπῐζω). Like Ἐξᾰττῐκῐζω, except in 25 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἀντελπῐζω", 3, "~ε~ζω", like Ἐξᾰττῐκῐζω;
+    // Ἀντελπῐζω: 3 words (προετοιμᾰζω, ἐξετᾰζω, ἀντελπῐζω). Like Ἐνᾰττῐκῐζω, except in 25 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἀντελπῐζω", 3, "~ε~ζω", like Ἐνᾰττῐκῐζω;
     stem lemma: "~ε~ζ- like βουλευω";
     stem future_ind_act_1_sg: "~ε~- like λογῐζομαι";
     stem pass_: "~ε~σθησ- like ποιεω";
@@ -8216,52 +7988,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     aorist_imperative_act_3: derived, derived, _;
     aorist_imperative_pass_2: derived, derived, derived;
     ),
-    // Φῡρω: 3 words (σῡρω, τῡφω, φῡρω). Like Ποιμαινω, except in 40 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("φῡρω", 3, "~ῡ~ω", like Ποιμαινω;
-    stem lemma: "~ῡ~- like βουλευω";
-    stem imperfect: "~ῡ~- like βουλευω";
-    stem future_ind_act_1_sg: "~ῠ~σ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ῠ~σ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ῠ~θην- like ἐχω";
-    stem aorist_subj_act_1_sg: "~ῠ~σ- like ἐχω";
-    stem pass: "~ῠ~θ- like ἐχω";
-    stem perfect_ind_mid_1_sg: "~ῠ~- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~ῠ~- like πορσῡνω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    infinitive_perf: _, _, derived;
-    ),
     // Σταθμαω: 3 words (χαλαω, καθοραω, σταθμαω). Like Ὑπᾰνᾰχωρεω, except in 54 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("σταθμαω", 3, "~α~αω", like Ὑπᾰνᾰχωρεω;
     stem lemma: "~ᾰ~- like φοιτᾰω";
     stem future_ind_act_1_sg: "~ᾰ~ησ- like ἐχω";
     stem pass_: "~ᾰ~ησθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾰ~ησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ησθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ησθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾰ~ησ- like ἐχω";
     stem pass: "~ᾰ~ησθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ᾰ~ηκ- like στηρῐζω";
@@ -8348,38 +8081,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: "~ᾰειν|~ᾱν", "~ᾰεσθαι|~ᾱσθαι", derived;
     participle_pres: "~ᾰων|~ων", "~ᾰομενος|~ωμενος", derived;
     ),
-    // Δηλεομαι: 3 words (δηλεομαι, μῑμεομαι, δῐηγεομαι). Like Βουλομαι, except in 36 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 sg, ….
-    conjugation!("δηλεομαι", 3, "~εομαι", like Βουλομαι;
-    stem imperfect: "~- like δηλεομαι";
-    stem future_ind_act_1_sg: "~ησ- like εἰσερχομαι";
-    stem pass_: "~ηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ησ- like ἑπομαι";
-    stem aorist_subj_act_1_sg: "~ησ- like ἑπομαι";
-    stem perfect_ind_mid_1_sg: "~η- like σειω";
-    stem pluperfect: "~η- like ἐχω";
-    ind_act_1: "~εομαι", _, _;
-    ind_mid_1: "~ουμαι", _, "~ουμεθᾰ";
-    ind_mid_2: "~ει|~ῃ", _, _;
-    ind_mid_3: _, "~εισθον", _;
-    ind_pass_2: "~ει", "~εισθον", "~εισθε";
-    ind_pass_3: "~ειται", "~εισθον", "~ουνται";
-    present_imperative_mid_2: _, "~εισθον", "~εισθε";
-    present_imperative_mid_3: "~εισθω", _, "~εισθων";
-    present_imperative_pass_2: _, "~εισθον", "~εισθε";
-    present_imperative_pass_3: _, "~εισθων", "~εισθων";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, derived, _;
-    imperfect_pass_3: derived, _, derived;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_3: derived, _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_pres: _, _, "~εισθαι";
-    participle_pres: _, _, "~ουμενος";
-    ),
     // Τρωγλοδῠτεω: 3 words (σῠνδεω, σῠμμᾰχεω, τρωγλοδῠτεω). Like Πεμπω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("τρωγλοδῠτεω", 3, "~ῠ~εω", like Πεμπω;
     stem lemma: "~υ~- like τελεω";
@@ -8387,14 +8088,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~υ~ησ- like ἐχω";
     stem pass_: "~υ~ηθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~υ~ησ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~υ~ηθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~υ~ηθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~υ~ησ- like ἐχω";
     stem pass: "~υ~ηθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~υ~ηκ- like ἐχω";
     stem perfect_ind_mid_1_sg: "~υ~η- like βουλευω";
-    stem perfect_ind_mid_2_sg: "~υ~η- like ἐχω";
-    stem pluperfect_act: "~υ~ηκειν- like ἐχω";
-    stem pluperfect: "~υ~η- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~υ~η- like ποιεω";
+    stem pluperfect_act: "~υ~ηκειν- like ποιεω";
+    stem pluperfect: "~υ~η- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -8427,22 +8128,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
     ),
-    // Κηδευω: 3 words (σκῡλευω, κηδευω, τυμβευω). Like Κᾰθιδρῡω, except in 11 cells: imperfect_pass_1 sg, imperfect_pass_1 pl, imperfect_pass_2 sg, imperfect_pass_3 sg, imperfect_pass_3 pl, pluperfect_act_1 sg, ….
-    conjugation!("κηδευω", 3, "~ω", like Κᾰθιδρῡω;
-    stem imperfect: "~- like βουλευω";
-    stem pass_: "~θησ- like ποιεω";
-    stem aorist_ind_act_1_sg: "~σ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~θην- like ἐχω";
-    stem pass: "~θ- like ποιεω";
-    stem pluperfect: "~- like σκοπεω";
-    imperfect_pass_1: derived, _, derived;
-    imperfect_pass_2: derived, _, _;
-    imperfect_pass_3: derived, _, derived;
-    pluperfect_act_1: "ἐ~κειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    ),
     // Λεγομαι: 3 words (φθεγγομαι, ἐρευγομαι, λεγομαι). Like Μᾰρνᾰμαι, except in 40 cells: ind_pass_1 sg, ind_pass_1 pl, ind_pass_2 sg, subj_mid_3 du, subj_pass_1 sg, subj_pass_1 pl, ….
     conjugation!("λεγομαι", 3, "~γομαι", like Μᾰρνᾰμαι;
     stem lemma: "~γ- like σῑνομαι";
@@ -8450,8 +8135,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ξ- like ἑπομαι";
     stem pass_: "~χθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ξ- like ἑπομαι";
-    stem aorist_ind_pass_1_sg: "~γην- like ἐχω";
-    stem pass: "~γ- like ἐγειρω";
+    stem aorist_ind_pass_1_sg: "~γην- like ποιεω";
+    stem pass: "~γ- like σφᾰλλω";
     ind_pass_1: derived, _, derived;
     ind_pass_2: derived, _, _;
     subj_mid_3: _, derived, _;
@@ -8482,9 +8167,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ευσ- like ἐχω";
     stem pass_: "~ῠησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ευσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ῠην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῠην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ευσ- like ἐχω";
-    stem pass: "~ῠ- like ἐγειρω";
+    stem pass: "~ῠ- like σφᾰλλω";
     stem perfect_ind_act_1_sg: "~υηκ- like στηρῐζω";
     ind_mid_2: "~εει", _, _;
     imperfect_pass_2: _, derived, derived;
@@ -8537,7 +8222,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~σωσ- like ἐχω";
     stem pass_: "~σωθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ωσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ωθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~σωσ- like ἐχω";
     stem pass: "~σωθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~σεσωκ- like πεμπω";
@@ -8578,9 +8263,9 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem imperfect: "~ηγν- like σβεννῡμῐ";
     stem future_ind_act_1_sg: "~ηξ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ηξ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰγην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰγην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ηξ- like ἐχω";
-    stem pass: "~ᾰγ- like ἐγειρω";
+    stem pass: "~ᾰγ- like σφᾰλλω";
     stem perfect_ind_act_1_sg: "~ωγ- like στηρῐζω";
     stem perfect_ind_mid_1_sg: "~ηρρη- like ἀνᾰγω";
     stem perfect_ind_mid_2_sg: "~ηρρη- like ἀνᾰγω";
@@ -8650,8 +8335,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     // Κηρῡσσω: 3 words (πῠρεσσω, κηρῡσσω, ἀλλᾰσσω). Like Τᾰσσω, except in 16 cells: perfect_ind_act_3 du, perfect_ind_mid_3 du, perfect_ind_pass_2 sg, perfect_ind_pass_2 du, perfect_ind_pass_3 du, perfect_ind_pass_3 pl, ….
     conjugation!("κηρῡσσω", 3, "~σσω", like Τᾰσσω;
     stem perfect_ind_act_1_sg: "~χ- like ποιεω";
-    stem perfect_ind_mid_2_sg: "~- like φᾰρμᾰσσω";
-    stem pluperfect: "~- like φᾰρμᾰσσω";
+    stem perfect_ind_mid_2_sg: "~- like δῐωκω";
+    stem pluperfect: "~- like δῐωκω";
     perfect_ind_act_3: _, derived, _;
     perfect_ind_mid_3: _, derived, _;
     perfect_ind_pass_2: derived, derived, _;
@@ -8664,6 +8349,189 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_pass_2: derived, derived, _;
     pluperfect_pass_3: derived, _, derived;
     infinitive_perf: _, _, derived;
+    ),
+    // Σειρεω: 3 words (ἀρῐθμεω, σειρεω, ἐπῐχειρεω). Like Ὑπᾰνᾰχωρεω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("σειρεω", 3, "~ῐ~εω", like Ὑπᾰνᾰχωρεω;
+    stem lemma: "~ι~- like τελεω";
+    stem future_ind_act_1_sg: "~ι~ησ- like ἐχω";
+    stem pass_: "~ι~ηθησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ε~ησ- like ἐλπω";
+    stem aorist_subj_act_1_sg: "~ι~ησ- like ἐχω";
+    stem pass: "~ι~ηθ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ε~ηκ- like πεμπω";
+    stem perfect_ind_mid_1_sg: "~ε~η- like ἐλπω";
+    stem perfect_ind_mid_2_sg: "~ε~η- like εὐλογεω";
+    stem pluperfect: "~ε~η- like εὐλογεω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: derived, derived, derived;
+    perfect_subj_act_3: _, _, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "~ε~ηκειν", _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    infinitive_perf: _, _, derived;
+    ),
+    // Φᾰρμᾰσσω: 2 words (τᾰρᾰσσω, θωρησσω). Like Τᾰσσω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("φᾰρμᾰσσω", 2, "~σσω", like Τᾰσσω;
+    stem lemma: "~σσ- like βᾰπτῐζω";
+    stem imperfect: "~σσ- like ἐχω";
+    stem future_ind_act_1_sg: "~ξ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ξ- like ἐπῐλᾰμβᾰνω";
+    stem aorist_subj_act_1_sg: "~ξ- like ἐπῐλᾰμβᾰνω";
+    stem perfect_ind_mid_2_sg: "~- like δῐωκω";
+    stem pluperfect: "~- like δῐωκω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    perfect_ind_mid_3: _, derived, _;
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    future_perfect_ind_mid_1: "%ε~ξομαι", _, _;
+    future_perfect_ind_mid_3: _, "%ε~ξεσθον", _;
+    future_perfect_ind_pass_1: _, _, "%ε~ξομεθᾰ";
+    future_perfect_ind_pass_2: "%ε~ξῃ", "%ε~ξεσθον", "%ε~ξεσθε";
+    future_perfect_ind_pass_3: "%ε~ξεται", "%ε~ξεσθον", "%ε~ξονται";
+    future_perfect_opt_pass_1: "%ε~ξοιμην", _, "%ε~ξοιμεθᾰ";
+    future_perfect_opt_pass_2: "%ε~ξοιο", "%ε~ξοισθον", "%ε~ξοισθε";
+    future_perfect_opt_pass_3: "%ε~ξοιτο", "%ε~ξοισθην", "%ε~ξοιντο";
+    infinitive_perf: _, _, derived;
+    infinitive_futp: _, _, "%ε~ξεσθαι";
+    participle_futp: _, _, "%ε~ξομενος";
+    ),
+    // Θερᾰπευω: 2 words (ἱκετευω, οἰκετευω). Like Βουλευω, except in 79 cells: future_ind_pass_3 du, perfect_ind_act_1 sg, perfect_ind_act_2 sg, perfect_ind_act_2 pl, perfect_ind_act_3 sg, perfect_ind_act_3 pl, ….
+    conjugation!("θερᾰπευω", 2, "~ω", like Βουλευω;
+    stem pass_: "~θησ- like θερᾰπευω";
+    stem pass: "~θ- like ποιεω";
+    future_ind_pass_3: _, derived, _;
+    perfect_ind_act_1: "%ε~κᾰ", _, _;
+    perfect_ind_act_2: "%ε~κᾰς", _, "%ε~κᾰτε";
+    perfect_ind_act_3: "%ε~κε|%ε~κεν", _, "%ε~κᾱσῐ|%ε~κᾱσῐν";
+    perfect_ind_mid_1: _, _, "%ε~μεθᾰ";
+    perfect_ind_mid_2: _, _, "%ε~σθε";
+    perfect_ind_pass_1: _, _, derived;
+    perfect_ind_pass_2: _, _, derived;
+    perfect_subj_act_1: "%ε~κω", _, "%ε~κωμεν";
+    perfect_subj_act_2: "%ε~κῃς", "%ε~κητον", "%ε~κητε";
+    perfect_subj_act_3: "%ε~κῃ", derived, "%ε~κωσῐ|%ε~κωσῐν";
+    perfect_subj_mid_1: "%ε~μένος ὦ", _, "%ε~μένοι ὦμεν";
+    perfect_subj_mid_2: "%ε~μένος ᾖς", "%ε~μένω ἦτον", "%ε~μένοι ἦτε";
+    perfect_subj_mid_3: "%ε~μένος ᾖ", derived, "%ε~μένοι ὦσῐ|%ε~μένοι ὦσῐν";
+    perfect_subj_pass_1: derived, _, derived;
+    perfect_subj_pass_2: derived, derived, derived;
+    perfect_subj_pass_3: derived, derived, derived;
+    perfect_opt_act_1: "%ε~κοιμῐ|%ε~κοιην", _, _;
+    perfect_opt_act_2: "%ε~κοις|%ε~κοιης", _, _;
+    perfect_opt_act_3: "%ε~κοι|%ε~κοιη", _, _;
+    perfect_opt_mid_1: "%ε~μένος εἴην", _, "%ε~μένοι εἴημεν";
+    perfect_opt_mid_2: "%ε~μένος εἴης", "%ε~μένω εἴητον", "%ε~μένοι εἴητε";
+    perfect_opt_mid_3: "%ε~μένος εἴη", "%ε~μένω εἰήτην", "%ε~μένοι εἴησᾰν";
+    perfect_opt_pass_1: derived, _, derived;
+    perfect_opt_pass_2: derived, derived, derived;
+    perfect_opt_pass_3: derived, derived, derived;
+    perfect_imperative_act_2: _, _, "%ε~κετε";
+    perfect_imperative_act_3: "%ε~κετω", "%ε~κετων", _;
+    perfect_imperative_mid_2: "%ε~σο", _, derived;
+    perfect_imperative_mid_3: "%ε~σθω", "%ε~σθων", derived;
+    perfect_imperative_pass_2: derived, _, derived;
+    perfect_imperative_pass_3: derived, derived, derived;
+    pluperfect_act_1: derived, _, _;
+    pluperfect_mid_1: derived, _, _;
+    pluperfect_mid_2: derived, derived, _;
+    pluperfect_mid_3: derived, _, derived;
+    pluperfect_pass_1: _, _, derived;
+    pluperfect_pass_2: _, _, derived;
+    pluperfect_pass_3: _, derived, _;
+    infinitive_perf: "%ε~κεναι", _, _;
+    participle_perf: "%ε~κως", "%ε~μενος", derived;
+    ),
+    // Ἐκφερω: 2 words (ἐκφερω, ὑπεκφευγω). Like Ἰαινω, except in 63 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἐκφερω", 2, "~κ~ω", like Ἰαινω;
+    stem lemma: "~κ~- like βᾰπτῐζω";
+    stem imperfect: "~ξε~- like ἀειρω";
+    ind_act_3: _, derived, _;
+    ind_pass_1: _, _, derived;
+    ind_pass_2: derived, _, _;
+    subj_mid_2: derived, _, _;
+    subj_mid_3: _, derived, _;
+    subj_pass_1: _, _, derived;
+    subj_pass_2: derived, derived, _;
+    subj_pass_3: derived, derived, derived;
+    opt_pass_1: derived, _, derived;
+    opt_pass_2: derived, derived, derived;
+    opt_pass_3: derived, derived, derived;
+    present_imperative_act_2: _, derived, _;
+    present_imperative_pass_2: derived, _, _;
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    aorist_ind_act_1: derived, _, derived;
+    aorist_ind_act_2: derived, derived, _;
+    aorist_ind_act_3: derived, _, derived;
+    aorist_ind_mid_1: derived, _, _;
+    aorist_ind_mid_2: derived, derived, _;
+    aorist_ind_pass_1: derived, _, _;
+    aorist_subj_act_1: derived, _, _;
+    aorist_subj_act_2: derived, derived, _;
+    aorist_subj_act_3: _, _, derived;
+    aorist_subj_mid_1: _, _, derived;
+    aorist_subj_mid_2: derived, derived, _;
+    aorist_subj_pass_1: derived, _, _;
+    aorist_subj_pass_3: _, derived, _;
+    aorist_opt_act_1: derived, _, derived;
+    aorist_opt_act_2: derived, _, _;
+    aorist_opt_act_3: derived, _, derived;
+    aorist_opt_mid_1: derived, _, _;
+    aorist_imperative_act_2: derived, _, derived;
+    aorist_imperative_act_3: _, _, derived;
+    aorist_imperative_mid_2: derived, derived, _;
+    aorist_imperative_mid_3: _, _, derived;
+    aorist_imperative_pass_2: derived, derived, derived;
+    infinitive_aor: derived, _, _;
+    participle_aor: derived, derived, _;
     ),
     // Ἐφᾰγον: 2 words (ἐφᾰγον, ἐπορον). Like Λλῡμῐ, except in 23 cells: ind_act_1 sg, ind_act_3 sg, imperfect_act_1 sg, imperfect_act_3 sg, aorist_ind_act_1 sg, aorist_ind_act_1 pl, ….
     conjugation!("ἐφᾰγον", 2, "ἐ~ον", like Λλῡμῐ;
@@ -8688,7 +8556,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     conjugation!("εἰδον", 2, "ε~ον", like Ἐφᾰγον;
     stem future_ind_act_1_sg: "~ησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~- like εἰδον";
-    stem aorist_subj_act_1_sg: "~- like φᾰρμᾰσσω";
+    stem aorist_subj_act_1_sg: "~- like ἐπῐλᾰμβᾰνω";
     ind_act_1: "ε~ον", _, _;
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
@@ -8767,8 +8635,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_pres: _, _, derived;
     ),
-    // Κᾰτακειμαι: 2 words (κᾰτακειμαι, δῐακειμαι). Like Ἐκγᾰμῐζω, except in 73 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
-    conjugation!("κᾰτακειμαι", 2, "~α~ειμαι", like Ἐκγᾰμῐζω;
+    // Κᾰτακειμαι: 2 words (κᾰτακειμαι, δῐακειμαι). Like Ἐκφερω, except in 73 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("κᾰτακειμαι", 2, "~α~ειμαι", like Ἐκφερω;
     stem imperfect: "~ε~ει- like δῐακειμαι";
     stem future_ind_act_1_sg: "~ᾰ~εισ- like ἑπομαι";
     ind_act_1: "~α~ειμαι", _, derived;
@@ -8894,10 +8762,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     conjugation!("στεφανοω", 2, "~α~οω", like Νεκραγωγεω;
     stem lemma: "~ᾰ~- like γῡροω";
     stem imperfect: "~ᾰ~ου- like γῡροω";
-    stem future_ind_act_1_sg: "~ᾰ~ωσ- like ἐπᾰνᾰχωρεω";
+    stem future_ind_act_1_sg: "~ᾰ~ωσ- like ἀπαιτεω";
     stem pass_: "~ᾰ~ωθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾰ~ωσ- like ἐχω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ωθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾰ~ωσ- like ποιεω";
     stem pass: "~ᾰ~ωθ- like ἐχω";
     stem perfect_ind_act_1_sg: "~ᾰ~ωκ- like στηρῐζω";
@@ -8932,49 +8800,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     perfect_imperative_mid_2: _, derived, _;
     perfect_imperative_pass_2: _, derived, _;
     pluperfect_act_1: "ἐ~ᾰ~ωκειν", _, _;
-    pluperfect_pass_1: derived, _, _;
-    pluperfect_pass_2: derived, derived, _;
-    pluperfect_pass_3: derived, _, derived;
-    infinitive_perf: _, _, derived;
-    ),
-    // Ἐπῐχειρεω: 2 words (ἀρῐθμεω, ἐπῐχειρεω). Like Ὑπᾰνᾰχωρεω, except in 46 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἐπῐχειρεω", 2, "~ῐ~εω", like Ὑπᾰνᾰχωρεω;
-    stem lemma: "~ι~- like τελεω";
-    stem future_ind_act_1_sg: "~ι~ησ- like ἐχω";
-    stem pass_: "~ι~ηθησ- like ἐχω";
-    stem aorist_ind_act_1_sg: "~ε~ησ- like ἐλπω";
-    stem aorist_subj_act_1_sg: "~ι~ησ- like ἐχω";
-    stem pass: "~ι~ηθ- like ἐχω";
-    stem perfect_ind_act_1_sg: "~ε~ηκ- like πεμπω";
-    stem perfect_ind_mid_1_sg: "~ε~η- like ἐλπω";
-    stem perfect_ind_mid_2_sg: "~ε~η- like εὐλογεω";
-    stem pluperfect: "~ε~η- like εὐλογεω";
-    ind_act_3: _, derived, _;
-    ind_pass_1: _, _, derived;
-    ind_pass_2: derived, _, _;
-    subj_mid_2: derived, _, _;
-    subj_mid_3: _, derived, _;
-    subj_pass_1: _, _, derived;
-    subj_pass_2: derived, derived, _;
-    subj_pass_3: derived, derived, derived;
-    opt_pass_1: derived, _, derived;
-    opt_pass_2: derived, derived, derived;
-    opt_pass_3: derived, derived, derived;
-    present_imperative_act_2: _, derived, _;
-    present_imperative_pass_2: derived, _, _;
-    future_ind_act_3: _, derived, _;
-    future_ind_mid_3: _, derived, _;
-    aorist_subj_act_3: _, derived, derived;
-    aorist_subj_mid_3: _, derived, _;
-    perfect_ind_act_3: derived, derived, derived;
-    perfect_ind_mid_3: _, derived, _;
-    perfect_ind_pass_1: derived, _, _;
-    perfect_ind_pass_2: derived, derived, _;
-    perfect_ind_pass_3: derived, derived, derived;
-    perfect_subj_act_3: _, _, derived;
-    perfect_imperative_mid_2: _, derived, _;
-    perfect_imperative_pass_2: _, derived, _;
-    pluperfect_act_1: "~ε~ηκειν", _, _;
     pluperfect_pass_1: derived, _, _;
     pluperfect_pass_2: derived, derived, _;
     pluperfect_pass_3: derived, _, derived;
@@ -9018,7 +8843,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ᾰ~ᾰ~ησ- like ποιεω";
     stem pass_: "~ᾰ~ᾰ~ηθησ- like ἐχω";
     stem aorist_ind_act_1_sg: "~ᾰ~ᾰ~ησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ᾰ~ηθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ᾰ~ηθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ᾰ~ᾰ~ηθ- like ἐχω";
     stem pass: "~ᾰ~ᾰ~ηθ- like ποιεω";
     ind_act_3: _, derived, _;
@@ -9247,6 +9072,176 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     future_ind_act_3: _, derived, _;
     future_ind_mid_3: _, derived, _;
     ),
+    // Ἀθῡρω: 1 words (ἀγρευω). Like Ἐγγῐζω, except in 146 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ἀθῡρω", 1, "ἀ~ω", like Ἐγγῐζω;
+    stem imperfect: "~- like ἐλπῐζω";
+    stem future_ind_act_1_sg: "~σ- like ἀθῡρω";
+    stem aorist_ind_act_1_sg: "~σ- like ἐρωτᾰω";
+    stem aorist_ind_pass_1_sg: "~θην- like ἐρωτᾰω";
+    stem aorist_subj_act_1_sg: "~σ- like ἀθῡρω";
+    stem perfect_ind_act_1_sg: "~κ- like ἐρωτᾰω";
+    stem perfect_ind_mid_2_sg: "~- like ἐρωτᾰω";
+    stem pluperfect: "~- like ἐρωτᾰω";
+    ind_act_1: "ἀ~ω", _, "ἀ~ομεν";
+    ind_act_2: "ἀ~εις", "ἀ~ετον", _;
+    ind_act_3: "ἀ~ει", _, "ἀ~ουσῐ|ἀ~ουσῐν";
+    ind_mid_1: _, _, "ἀ~ομεθᾰ";
+    ind_mid_2: "ἀ~ῃ", _, _;
+    ind_mid_3: _, "ἀ~εσθον", _;
+    ind_pass_1: "ἀ~ομαι", _, _;
+    ind_pass_2: _, "ἀ~εσθον", "ἀ~εσθε";
+    ind_pass_3: "ἀ~εται", "ἀ~εσθον", "ἀ~ονται";
+    subj_act_1: "ἀ~ω", _, "ἀ~ωμεν";
+    subj_act_2: "ἀ~ῃς", _, _;
+    subj_act_3: "ἀ~ῃ", "ἀ~ητον", "ἀ~ωσῐ|ἀ~ωσῐν";
+    subj_mid_1: _, _, "ἀ~ωμεθᾰ";
+    subj_mid_2: _, "ἀ~ησθον", _;
+    subj_mid_3: "ἀ~ηται", _, "ἀ~ωνται";
+    subj_pass_1: "ἀ~ωμαι", _, _;
+    subj_pass_2: _, _, "ἀ~ησθε";
+    opt_act_1: "ἀ~οιμῐ", _, "ἀ~οιμεν";
+    opt_act_2: "ἀ~οις", "ἀ~οιτον", "ἀ~οιτε";
+    opt_act_3: "ἀ~οι", "ἀ~οιτην", "ἀ~οιεν";
+    opt_mid_1: "ἀ~οιμην", _, "ἀ~οιμεθᾰ";
+    opt_mid_2: "ἀ~οιο", "ἀ~οισθον", "ἀ~οισθε";
+    opt_mid_3: "ἀ~οιτο", "ἀ~οισθην", "ἀ~οιντο";
+    present_imperative_act_2: "ἀ~ε", _, "ἀ~ετε";
+    present_imperative_act_3: _, _, "ἀ~οντων";
+    present_imperative_mid_2: "ἀ~ου", "ἀ~εσθον", "ἀ~εσθε";
+    present_imperative_mid_3: _, _, "ἀ~εσθων";
+    present_imperative_pass_2: _, "ἀ~εσθον", "ἀ~εσθε";
+    present_imperative_pass_3: "ἀ~εσθω", "ἀ~εσθων", "ἀ~εσθων";
+    imperfect_pass_1: derived, _, derived;
+    imperfect_pass_2: derived, _, _;
+    imperfect_pass_3: derived, _, derived;
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_1: "ἀ~θησομαι", _, _;
+    future_ind_pass_2: derived, _, _;
+    future_ind_pass_3: _, "ἀ~θησεσθον", _;
+    future_opt_act_2: _, _, derived;
+    future_opt_act_3: _, _, derived;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_1: "ἀ~θω", _, _;
+    aorist_subj_pass_3: _, "ἀ~θητον", derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    aorist_imperative_pass_2: "ἀ~θητῐ", "ἀ~θητον", "ἀ~θητε";
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_ind_mid_1: "ἠ~μαι", _, _;
+    perfect_ind_mid_3: "ἠ~ται", derived, _;
+    perfect_ind_pass_1: _, _, "ἠ~μεθᾰ";
+    perfect_ind_pass_2: derived, derived, _;
+    perfect_ind_pass_3: _, derived, derived;
+    perfect_subj_act_3: _, _, derived;
+    perfect_subj_mid_3: _, "ἠ~μένω ἦτον", derived;
+    perfect_subj_pass_1: "ἠ~μένος ὦ", _, "ἠ~μένοι ὦμεν";
+    perfect_subj_pass_2: "ἠ~μένος ᾖς", "ἠ~μένω ἦτον", "ἠ~μένοι ἦτε";
+    perfect_subj_pass_3: "ἠ~μένος ᾖ", "ἠ~μένω ἦτον", "ἠ~μένοι ὦσῐ";
+    perfect_opt_pass_1: "ἠ~μένος εἴην", _, "ἠ~μένοι εἴημεν";
+    perfect_opt_pass_2: "ἠ~μένος εἴης", "ἠ~μένω εἴητον", "ἠ~μένοι εἴητε";
+    perfect_opt_pass_3: "ἠ~μένος εἴη", "ἠ~μένω εἰήτην", "ἠ~μένοι εἴησᾰν";
+    perfect_imperative_mid_2: _, derived, _;
+    perfect_imperative_pass_2: _, derived, _;
+    pluperfect_act_1: "ἠ~κειν", _, _;
+    pluperfect_act_2: derived, _, _;
+    pluperfect_act_3: derived, _, _;
+    pluperfect_pass_1: derived, _, _;
+    pluperfect_pass_2: derived, derived, _;
+    pluperfect_pass_3: derived, _, derived;
+    future_perfect_ind_mid_1: "ἠ~σομαι", _, _;
+    future_perfect_ind_mid_3: _, "ἠ~σεσθον", _;
+    future_perfect_ind_pass_1: _, _, "ἠ~σομεθᾰ";
+    future_perfect_ind_pass_2: "ἠ~σῃ", "ἠ~σεσθον", "ἠ~σεσθε";
+    future_perfect_ind_pass_3: "ἠ~σεται", "ἠ~σεσθον", "ἠ~σονται";
+    future_perfect_opt_pass_1: "ἠ~σοιμην", _, "ἠ~σοιμεθᾰ";
+    future_perfect_opt_pass_2: "ἠ~σοιο", "ἠ~σοισθον", "ἠ~σοισθε";
+    future_perfect_opt_pass_3: "ἠ~σοιτο", "ἠ~σοισθην", "ἠ~σοιντο";
+    infinitive_pres: "ἀ~ειν", _, "ἀ~εσθαι";
+    infinitive_perf: _, _, derived;
+    infinitive_futp: _, _, "ἠ~σεσθαι";
+    participle_pres: "ἀ~ων", _, "ἀ~ομενος";
+    participle_perf: _, _, "ἠ~μενος";
+    participle_futp: _, _, "ἠ~σομενος";
+    ),
+    // Στερεω: 1 words (στερεω). Like Σκοπεω, except in 40 cells: future_ind_act_3 du, future_ind_mid_3 du, future_ind_pass_2 sg, aorist_subj_act_3 du, aorist_subj_act_3 pl, aorist_subj_mid_3 du, ….
+    conjugation!("στερεω", 1, "~εω", like Σκοπεω;
+    stem future_ind_act_1_sg: "~- like λογῐζομαι";
+    stem pass_: "~ησ- like ἐχω";
+    stem aorist_ind_act_1_sg: "~ησ- like ἐχω";
+    stem aorist_subj_act_1_sg: "~ησ- like ἐχω";
+    stem perfect_ind_act_1_sg: "~ηκ- like στηρῐζω";
+    future_ind_act_3: _, derived, _;
+    future_ind_mid_3: _, derived, _;
+    future_ind_pass_2: derived, _, _;
+    aorist_subj_act_3: _, derived, derived;
+    aorist_subj_mid_3: _, derived, _;
+    aorist_subj_pass_3: _, _, derived;
+    aorist_opt_pass_1: _, _, derived;
+    aorist_opt_pass_2: _, derived, derived;
+    aorist_opt_pass_3: _, derived, derived;
+    perfect_ind_act_3: derived, derived, derived;
+    perfect_subj_act_3: _, _, derived;
+    perfect_subj_mid_3: _, _, derived;
+    perfect_subj_pass_3: _, _, "ἐ~ημένοι ὦσῐ";
+    pluperfect_act_1: "ἐ~ηκειν", _, _;
+    pluperfect_act_2: derived, _, _;
+    pluperfect_act_3: derived, _, _;
+    future_perfect_ind_mid_1: "ἐ~ησομαι", _, _;
+    future_perfect_ind_mid_3: _, "ἐ~ησεσθον", _;
+    future_perfect_ind_pass_1: _, _, "ἐ~ησομεθᾰ";
+    future_perfect_ind_pass_2: "ἐ~ησῃ", "ἐ~ησεσθον", "ἐ~ησεσθε";
+    future_perfect_ind_pass_3: "ἐ~ησεται", "ἐ~ησεσθον", "ἐ~ησονται";
+    future_perfect_opt_pass_1: "ἐ~ησοιμην", _, "ἐ~ησοιμεθᾰ";
+    future_perfect_opt_pass_2: "ἐ~ησοιο", "ἐ~ησοισθον", "ἐ~ησοισθε";
+    future_perfect_opt_pass_3: "ἐ~ησοιτο", "ἐ~ησοισθην", "ἐ~ησοιντο";
+    infinitive_futp: _, _, "ἐ~ησεσθαι";
+    participle_futp: _, _, "ἐ~ησομενος";
+    ),
+    // Ὀμνῠω: 1 words (ὀρῠττω). Like Πῠρσαινω, except in 73 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    conjugation!("ὀμνῠω", 1, "ὀ~ω", like Πῠρσαινω;
+    ind_act_1: "ὀ~ω", _, "ὀ~ομεν";
+    ind_act_2: "ὀ~εις", "ὀ~ετον", _;
+    ind_act_3: "ὀ~ει", _, "ὀ~ουσῐ|ὀ~ουσῐν";
+    ind_mid_1: _, _, "ὀ~ομεθᾰ";
+    ind_mid_2: "ὀ~ῃ|ὀ~ει", _, _;
+    ind_mid_3: _, "ὀ~εσθον", _;
+    ind_pass_1: "ὀ~ομαι", _, _;
+    ind_pass_2: _, "ὀ~εσθον", "ὀ~εσθε";
+    ind_pass_3: "ὀ~εται", "ὀ~εσθον", "ὀ~ονται";
+    subj_act_1: "ὀ~ω", _, "ὀ~ωμεν";
+    subj_act_2: "ὀ~ῃς", _, _;
+    subj_act_3: "ὀ~ῃ", "ὀ~ητον", "ὀ~ωσῐ|ὀ~ωσῐν";
+    subj_mid_1: _, _, "ὀ~ωμεθᾰ";
+    subj_mid_2: _, "ὀ~ησθον", _;
+    subj_mid_3: "ὀ~ηται", _, "ὀ~ωνται";
+    subj_pass_1: "ὀ~ωμαι", _, _;
+    subj_pass_2: _, _, "ὀ~ησθε";
+    opt_act_1: "ὀ~οιμῐ", _, "ὀ~οιμεν";
+    opt_act_2: "ὀ~οις", "ὀ~οιτον", "ὀ~οιτε";
+    opt_act_3: "ὀ~οι", "ὀ~οιτην", "ὀ~οιεν";
+    opt_mid_1: "ὀ~οιμην", _, "ὀ~οιμεθᾰ";
+    opt_mid_2: "ὀ~οιο", "ὀ~οισθον", "ὀ~οισθε";
+    opt_mid_3: "ὀ~οιτο", "ὀ~οισθην", "ὀ~οιντο";
+    present_imperative_act_2: "ὀ~ε", _, "ὀ~ετε";
+    present_imperative_act_3: _, _, "ὀ~οντων";
+    present_imperative_mid_2: "ὀ~ου", "ὀ~εσθον", "ὀ~εσθε";
+    present_imperative_mid_3: _, _, "ὀ~εσθων";
+    present_imperative_pass_2: _, "ὀ~εσθον", "ὀ~εσθε";
+    present_imperative_pass_3: "ὀ~εσθω", "ὀ~εσθων", "ὀ~εσθων";
+    imperfect_act_1: "ὠ~ον", _, _;
+    imperfect_act_2: "ὠ~ες", "ὠ~ετον", "ὠ~ετε";
+    imperfect_act_3: "ὠ~ε|ὠ~εν", _, "ὠ~ον";
+    imperfect_mid_1: "ὠ~ομην", _, "ὠ~ομεθᾰ";
+    imperfect_mid_2: "ὠ~ου", _, _;
+    imperfect_mid_3: "ὠ~ετο", _, "ὠ~οντο";
+    imperfect_pass_2: _, "ὠ~εσθον", "ὠ~εσθε";
+    imperfect_pass_3: _, "ὠ~εσθην", _;
+    infinitive_pres: "ὀ~ειν", _, "ὀ~εσθαι";
+    participle_pres: "ὀ~ων", _, "ὀ~ομενος";
+    ),
     // Ἐδω: 1 words (ἐδω). Like Λλῡμῐ, except in 23 cells: ind_act_1 sg, ind_act_3 sg, imperfect_act_1 sg, imperfect_act_3 sg, future_ind_mid_3 du, perfect_ind_act_3 du, ….
     conjugation!("ἐδω", 1, "~ω", like Λλῡμῐ;
     stem future_ind_act_1_sg: "~- like εἰσερχομαι";
@@ -9353,17 +9348,17 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     participle_aor: _, "αἰ~ομενος|αἰ~ησᾰμενος", _;
     participle_perf: _, _, "ᾐ~ημενος";
     ),
-    // Τρυπαω: 1 words (τρυπαω). Like Ἐκγᾰμῐζω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("τρυπαω", 1, "~υ~αω", like Ἐκγᾰμῐζω;
+    // Τρυπαω: 1 words (τρυπαω). Like Ἐκφερω, except in 45 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("τρυπαω", 1, "~υ~αω", like Ἐκφερω;
     stem lemma: "~ῡ~- like φοιτᾰω";
     stem imperfect: "~ῡ~- like φοιτᾰω";
     stem aorist_ind_act_1_sg: "~ῡ~ησ- like ποιεω";
     stem aorist_subj_act_1_sg: "~ῡ~ησ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ῡ~ηκ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~ῡ~η- like χρημᾰτῐζω";
-    stem perfect_ind_mid_2_sg: "~ῡ~η- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~ῡ~η- like ποιεω";
     stem pluperfect_act: "~ῡ~ηκ- like χρημᾰτῐζω";
-    stem pluperfect: "~ῡ~η- like ἐχω";
+    stem pluperfect: "~ῡ~η- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -9416,8 +9411,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_subj_act_1_sg: "~α~σ- like ἑπομαι";
     stem pass: "~α~σθ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~α%ε~σ- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~α%ε~- like ἱζω";
-    stem pluperfect: "~ε%ε~- like ἱζω";
+    stem perfect_ind_mid_2_sg: "~α%ε~- like σῠνᾰρπᾰζω";
+    stem pluperfect: "~ε%ε~- like σῠνᾰρπᾰζω";
     ind_act_1: "~ᾰ~ζομαι", _, _;
     ind_mid_1: "~α~ζομαι", _, "~α~ζομεθᾰ";
     ind_mid_2: "~α~ζῃ|~α~ζει", _, _;
@@ -9568,10 +9563,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: "~ηναι|~ὴ εἶναι", _, _;
     infinitive_fut: "~ησειν", _, _;
     ),
-    // Ἠλθον: 1 words (ἠλθον). Like Ἐφᾰγον, except in 15 cells: ind_act_1 sg, aorist_subj_act_1 sg, aorist_subj_act_2 sg, aorist_subj_act_2 du, aorist_subj_act_3 pl, aorist_opt_act_1 sg, ….
+    // Ἠλθον: 1 words (ἠλθον). Like Ἐφᾰγον, except in 21 cells: ind_act_1 sg, aorist_ind_act_1 sg, aorist_ind_act_1 pl, aorist_ind_act_2 sg, aorist_ind_act_2 du, aorist_ind_act_3 sg, ….
     conjugation!("ἠλθον", 1, "ἠ~ον", like Ἐφᾰγον;
-    stem aorist_ind_act_1_sg: "~- like ἠλθον";
     ind_act_1: "ἠ~ον", _, _;
+    aorist_ind_act_1: "ἠ~ον", _, "ἠ~ομεν";
+    aorist_ind_act_2: "ἠ~ες", "ἠ~ετον", _;
+    aorist_ind_act_3: "ἠ~ε|ἠ~εν", _, "ἠ~ον";
     aorist_subj_act_1: "ἐ~ω", _, _;
     aorist_subj_act_2: "ἐ~ῃς", "ἐ~ητον", _;
     aorist_subj_act_3: _, _, "ἐ~ωσῐ|ἐ~ωσῐν";
@@ -9634,7 +9631,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     ),
     // Πεπνῡμαι: 1 words (πεπνῡμαι). Like Λλῡμῐ, except in 4 cells: ind_act_1 sg, ind_act_3 sg, imperfect_act_1 sg, imperfect_act_3 sg.
     conjugation!("πεπνῡμαι", 1, "πε~μαι", like Λλῡμῐ;
-    stem aorist_ind_pass_1_sg: "~θην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~θην- like ποιεω";
     stem pass: "~θ- like ποιεω";
     ind_act_1: "πε~μαι", _, _;
     ind_act_3: derived, _, _;
@@ -9654,7 +9651,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     ),
     // Ἐπῐστᾰμαι: 1 words (ἐπῐστᾰμαι). Like Κᾰτακειμαι, except in 37 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, subj_mid_1 sg, ….
     conjugation!("ἐπῐστᾰμαι", 1, "ἐ~ῐ~ᾰμαι", like Κᾰτακειμαι;
-    stem aorist_ind_pass_1_sg: "~ι~ηθην- like ἀθῡρω";
+    stem aorist_ind_pass_1_sg: "~ι~ηθην- like ἐρωτᾰω";
     stem pass: "~ι~ηθ- like ἐλπῐζω";
     ind_act_1: "ἐ~ῐ~ᾰμαι", _, _;
     ind_mid_1: "ἐ~ι~ᾰμαι", _, "ἐ~ι~ᾰμεθᾰ";
@@ -9763,14 +9760,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~α~ωσ- like ποιεω";
     stem pass_: "~α~ωθησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~α~ωσ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~α~ωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~α~ωθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~α~ωσ- like ποιεω";
     stem pass: "~α~ωθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~α~ωκ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~α~ω- like χρημᾰτῐζω";
-    stem perfect_ind_mid_2_sg: "~α~ω- like ἐχω";
+    stem perfect_ind_mid_2_sg: "~α~ω- like ποιεω";
     stem pluperfect_act: "~α~ωκ- like χρημᾰτῐζω";
-    stem pluperfect: "~α~ω- like ἐχω";
+    stem pluperfect: "~α~ω- like ποιεω";
     ind_act_3: _, derived, _;
     ind_pass_1: _, _, derived;
     ind_pass_2: derived, _, _;
@@ -9918,8 +9915,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     pluperfect_mid_2: "ἠ~ῐσο", "ἠ~ῐσθον", _;
     pluperfect_mid_3: "ἠ~ῐστο", _, "ἠ~ῐδᾰτο";
     ),
-    // Ἀπιστεω: 1 words (ἀπιστεω). Like Ἐκγᾰμῐζω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
-    conjugation!("ἀπιστεω", 1, "ἀ~ι~εω", like Ἐκγᾰμῐζω;
+    // Ἀπιστεω: 1 words (ἀπιστεω). Like Ἐκφερω, except in 30 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
+    conjugation!("ἀπιστεω", 1, "ἀ~ι~εω", like Ἐκφερω;
     stem lemma: "~ῐ~- like ᾰνθρωπεω";
     stem imperfect: "~ῐ~- like ᾰνθρωπεω";
     stem future_ind_act_1_sg: "~ῐ~ησ- like ᾰνθρωπεω";
@@ -10048,7 +10045,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem lemma: "~ῐν- like βουλευω";
     stem imperfect: "~ῐν- like βουλευω";
     stem aorist_ind_act_1_sg: "~- like φθιω";
-    stem aorist_ind_pass_1_sg: "~ῐθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ῐθην- like ποιεω";
     stem pass: "~ῐθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ῐνηκ- like σκοπεω";
     ind_act_3: _, derived, _;
@@ -10628,29 +10625,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: _, _, "~α~ρχεσθαι";
     participle_pres: _, _, "~α~ρχομενος";
     ),
-    // Κιδνᾰμαι: 1 words (κιδνᾰμαι). Like Κορινθιαζομαι, except in 37 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 du, ….
-    conjugation!("κιδνᾰμαι", 1, "~ι~ᾰμαι", like Κορινθιαζομαι;
-    ind_act_1: "~ι~ᾰμαι", _, _;
-    ind_mid_1: "~ῐ~ᾰμαι", _, "~ῐ~ᾰμεθᾰ";
-    ind_mid_2: "~ῐ~ᾰσαι", _, _;
-    ind_mid_3: _, "~ῐ~ᾰσθον", _;
-    ind_pass_2: _, "~ῐ~ᾰσθον", "~ῐ~ᾰσθε";
-    ind_pass_3: "~ῐ~ᾰται", "~ῐ~ᾰσθον", "~ῐ~ᾰνται";
-    opt_mid_1: "~ῐ~αιμην", _, "~ῐ~αιμεθᾰ";
-    opt_mid_2: "~ῐ~αιο", "~ῐ~αισθον", "~ῐ~αισθε";
-    opt_mid_3: "~ῐ~αιτο", "~ῐ~αισθην", "~ῐ~αιντο";
-    present_imperative_mid_2: "~ῐ~ᾰσο|~ῐ~ω", "~ῐ~ᾰσθον", "~ῐ~ᾰσθε";
-    present_imperative_mid_3: "~ῐ~ᾰσθω", _, "~ῐ~ᾰσθων";
-    present_imperative_pass_2: _, "~ῐ~ᾰσθον", "~ῐ~ᾰσθε";
-    present_imperative_pass_3: _, "~ῐ~ᾰσθων", "~ῐ~ᾰσθων";
-    imperfect_mid_1: "ἐ~ῐ~ᾰμην", _, "ἐ~ῐ~ᾰμεθᾰ";
-    imperfect_mid_2: "ἐ~ῐ~ᾰσο", "ἐ~ῐ~ᾰσθον", _;
-    imperfect_mid_3: "ἐ~ῐ~ᾰτο", _, "ἐ~ῐ~ᾰντο";
-    imperfect_pass_2: _, _, "ἐ~ῐ~ᾰσθε";
-    imperfect_pass_3: _, "ἐ~ῐ~ᾰσθην", _;
-    infinitive_pres: _, _, "~ῐ~ᾰσθαι";
-    participle_pres: _, _, "~ῐ~ᾰμενος";
-    ),
     // Ἐπισκεπτομαι: 1 words (ἐπισκεπτομαι). Like Κᾰτακειμαι, except in 59 cells: ind_act_1 sg, ind_mid_1 sg, ind_mid_1 pl, ind_mid_2 sg, ind_mid_3 du, ind_pass_2 du, ….
     conjugation!("ἐπισκεπτομαι", 1, "~ι~πτομαι", like Κᾰτακειμαι;
     stem imperfect: "~ε~πτ- like εἰσερχομαι";
@@ -10781,8 +10755,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem aorist_subj_act_1_sg: "~ᾰ~ῐσ- like ἑπομαι";
     stem pass: "~ᾰ~ῐσθ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~η~ῐσ- like εὐλογεω";
-    stem perfect_ind_mid_2_sg: "~η~ῐ- like ἱζω";
-    stem pluperfect: "~η~ῐ- like ἱζω";
+    stem perfect_ind_mid_2_sg: "~η~ῐ- like σῠνᾰρπᾰζω";
+    stem pluperfect: "~η~ῐ- like σῠνᾰρπᾰζω";
     ind_act_1: "~ᾰ~ιζομαι", _, _;
     ind_mid_1: "~ᾰ~ῐζομαι", _, "~ᾰ~ῐζομεθᾰ";
     ind_mid_2: "~ᾰ~ῐζῃ|~ᾰ~ῐζει", _, _;
@@ -10877,7 +10851,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     // Καταπετροω: 1 words (καταπετροω). Like Λαλαγεω, except in 47 cells: ind_act_3 du, ind_pass_1 pl, ind_pass_2 sg, subj_mid_2 sg, subj_mid_3 du, subj_pass_1 pl, ….
     conjugation!("καταπετροω", 1, "~α~α~οω", like Λαλαγεω;
     stem lemma: "~ᾰ~ᾰ~- like γῡροω";
-    stem imperfect: "~ᾰ~ε~ου- like κᾰκοω";
+    stem imperfect: "~ᾰ~ε~ου- like καταπετροω";
     stem future_ind_act_1_sg: "~ᾰ~ᾰ~ωσ- like ποιεω";
     stem pass_: "~ᾰ~ᾰ~ωθησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~ᾰ~ε~ωσ- like εὐλογεω";
@@ -10926,7 +10900,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     conjugation!("λαλαχευομαι", 1, "~α~α~ομαι", like Ἀποστατεω;
     stem imperfect: "~ᾰ~ᾰ~- like λαλαχευομαι";
     stem pass_: "~ᾰ~ᾰ~θησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ᾰ~ᾰ~θην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ᾰ~ᾰ~θην- like ποιεω";
     stem pass: "~ᾰ~ᾰ~θ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~ε~ᾰλᾰ~- like λαλαχευομαι";
     stem perfect_ind_mid_2_sg: "~ε~ᾰλᾰ~- like λαλαχευομαι";
@@ -10985,7 +10959,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     stem future_ind_act_1_sg: "~ι~α~ησ- like ποιεω";
     stem pass_: "~ι~α~ηθησ- like ποιεω";
     stem aorist_ind_act_1_sg: "~ι~α~ησ- like ποιεω";
-    stem aorist_ind_pass_1_sg: "~ι~α~ηθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~ι~α~ηθην- like ποιεω";
     stem aorist_subj_act_1_sg: "~ι~α~ησ- like ποιεω";
     stem pass: "~ι~α~ηθ- like ποιεω";
     stem perfect_ind_act_1_sg: "~ελι~α~ηκ- like εὐλογεω";
@@ -11186,7 +11160,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     ),
     // Βᾰρβᾰροομαι: 1 words (βᾰρβᾰροομαι). Like Ἀποστατεω, except in 34 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("βᾰρβᾰροομαι", 1, "~ᾰ~ᾰροομ~ι", like Ἀποστατεω;
-    stem aorist_ind_pass_1_sg: "~α~~ρωθην- like ἐχω";
+    stem aorist_ind_pass_1_sg: "~α~~ρωθην- like ποιεω";
     stem pass: "~α~~ρωθ- like ποιεω";
     stem perfect_ind_mid_1_sg: "~εβα~~ρω- like ὑποκοριζομαι";
     stem perfect_ind_mid_2_sg: "~εβα~~ρω- like δῐᾰσευομαι";
@@ -11389,14 +11363,13 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_perf: _, _, derived;
     participle_perf: _, _, "ἑ~ῳ~ημενος";
     ),
-    // Εκπλεω: 1 words (εκπλεω). Like Λλῡμῐ, except in 96 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
+    // Εκπλεω: 1 words (εκπλεω). Like Λλῡμῐ, except in 114 cells: ind_act_1 sg, ind_act_1 pl, ind_act_2 sg, ind_act_2 du, ind_act_3 sg, ind_act_3 pl, ….
     conjugation!("εκπλεω", 1, "εκ~ω", like Λλῡμῐ;
     stem aorist_ind_act_1_sg: "~υσ- like εκπλεω";
     stem aorist_ind_pass_1_sg: "~υσθην- like εκπλεω";
     stem aorist_subj_act_1_sg: "~υσ- like εκπλεω";
     stem pass: "~υσθ- like εκπλεω";
     stem perfect_ind_act_1_sg: "~υκ- like εκπλεω";
-    stem perfect_ind_mid_1_sg: "~υσ- like εκπλεω";
     ind_act_1: "ἐκ~ω", _, "ἐκ~ομεν";
     ind_act_2: "ἐκ~ις", "ἐκ~ιτον", _;
     ind_act_3: "ἐκ~ι", _, "ἐκ~ουσῐ|ἐκ~ουσῐν";
@@ -11440,12 +11413,18 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     future_opt_mid_3: "ἐκ~υσοιτο", "ἐκ~υσοισθην", _;
     aorist_subj_act_3: _, derived, _;
     perfect_ind_act_3: _, derived, _;
+    perfect_ind_mid_1: "ἐκ%ε~υσμαι", _, _;
     perfect_ind_mid_2: "ἐκ%ε~υσαι", "ἐκ%ε~υσθον", _;
-    perfect_ind_mid_3: _, _, "ἐκ%ε~υσᾰται";
-    perfect_ind_pass_1: derived, _, _;
+    perfect_ind_mid_3: "ἐκ%ε~υσται", _, "ἐκ%ε~υσᾰται";
+    perfect_ind_pass_1: _, _, "ἐκ%ε~υσμεθᾰ";
     perfect_ind_pass_2: _, _, "ἐκ%ε~υσθε";
-    perfect_ind_pass_3: derived, _, _;
-    perfect_subj_pass_3: _, _, derived;
+    perfect_subj_mid_3: _, "ἐκ%ε~υσμένω ἦτον", "ἐκ%ε~υσμένοι ὦσῐ|ἐκ%ε~υσμένοι ὦσῐν";
+    perfect_subj_pass_1: "ἐκ%ε~υσμένος ὦ", _, "ἐκ%ε~υσμένοι ὦμεν";
+    perfect_subj_pass_2: "ἐκ%ε~υσμένος ᾖς", "ἐκ%ε~υσμένω ἦτον", "ἐκ%ε~υσμένοι ἦτε";
+    perfect_subj_pass_3: "ἐκ%ε~υσμένος ᾖ", "ἐκ%ε~υσμένω ἦτον", _;
+    perfect_opt_pass_1: "ἐκ%ε~υσμένος εἴην", _, "ἐκ%ε~υσμένοι εἴημεν";
+    perfect_opt_pass_2: "ἐκ%ε~υσμένος εἴης", "ἐκ%ε~υσμένω εἴητον", "ἐκ%ε~υσμένοι εἴητε";
+    perfect_opt_pass_3: "ἐκ%ε~υσμένος εἴη", "ἐκ%ε~υσμένω εἰήτην", "ἐκ%ε~υσμένοι εἴησᾰν";
     perfect_imperative_mid_2: _, _, "ἐκ%ε~υσθε";
     perfect_imperative_mid_3: _, _, "ἐκ%ε~υσθων";
     perfect_imperative_pass_2: "ἐκ%ε~υσο", _, "ἐκ%ε~υσθε";
@@ -11453,6 +11432,7 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 286] = [
     infinitive_pres: "ἐκ~ιν", _, "ἐκ~ισθαι";
     infinitive_perf: _, "ἐκ%ε~υσθαι", _;
     participle_pres: "ἐκ~ων", _, "ἐκ~ομενος";
+    participle_perf: _, _, "ἐκ%ε~υσμενος";
     ),
     // Δειδῐᾰ: 1 words (δειδῐᾰ). Like Μετεκῑᾰθον, except in 4 cells: ind_act_1 sg, aorist_subj_act_3 du, aorist_subj_mid_3 du, perfect_ind_act_3 du.
     conjugation!("δειδῐᾰ", 1, "~~δῐᾰ", like Μετεκῑᾰθον;

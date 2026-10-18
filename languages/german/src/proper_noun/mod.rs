@@ -58,8 +58,8 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     smoothing: 2.0,
     sharpness: 0.75,
     trust: flexion::Trust {
-        regular: 1.0,
-        unsettled: 0.9278198,
+        regular: 0.998926,
+        unsettled: 0.95128304,
         unattested: 1.0,
     },
 };
@@ -72,21 +72,12 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Case::*;
-        use crate::Number::*;
-        let cell = match self {
-            Cell::Form(Nominative, Singular) => cell::NOM_SG,
-            Cell::Form(Nominative, Plural) => cell::NOM_PL,
-            Cell::Form(Genitive, Singular) => cell::GEN_SG,
-            Cell::Form(Genitive, Plural) => cell::GEN_PL,
-            Cell::Form(Dative, Singular) => cell::DAT_SG,
-            Cell::Form(Dative, Plural) => cell::DAT_PL,
-            Cell::Form(Accusative, Singular) => cell::ACC_SG,
-            Cell::Form(Accusative, Plural) => cell::ACC_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, number) => cell::NOM_SG as usize + case as usize * 2 + number as usize,
+        }
     }
 }
 

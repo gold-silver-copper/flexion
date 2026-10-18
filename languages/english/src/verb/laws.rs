@@ -20,65 +20,37 @@ pub(super) const LAWS: Program<'static> = flexion::laws! {
         law1 = [("S", "s") => "s", ("S", "x") => "x", ("S", "z") => "z", ("S", "") => "s"];
     }
     rules {
-        // T → that letter; t after none (the nearest of d, g, m, n, t before it, as written): 1,557 words (cat, abet, abut, het), 0 forms wrong.
-        law0[iterative]: "{x:[T]}" => "{x|law0[t]}" / "{t:[d|g|m|n|t]?}{g:![d|g|m|n|t]*}" _ "";
-        // S → that letter; s after none (the nearest of s, x, z before it, as written): 16,368 words (free, portmanteau, cat, word), 281 forms wrong.
-        law1[iterative]: "{x:[S]}" => "{x|law1[t]}" / "{t:[s|x|z]?}{g:![s|x|z]*}" _ "";
+        // T → that letter; t after none (the letter just before it, if one of d, g, m, n, t): 1,607 words (cat, abet, abut, het), 0 forms wrong.
+        law0[iterative]: "{x:[T]}" => "{x|law0[t]}" / "{t:[d|g|m|n|t]?}{g:[+|ˇ|¦|°|‹]*}" _ "";
+        // S → that letter; s after none (the letter just before it, if one of s, x, z): 16,457 words (free, portmanteau, cat, word), 9 forms wrong.
+        law1[iterative]: "{x:[S]}" => "{x|law1[t]}" / "{t:[s|x|z]?}{g:[+|ˇ|¦|°|‹]*}" _ "";
         // t+d → t+: 100 words (forecast, cast, broadcast, burst), 0 forms wrong.
         law2: "t+d" => "t+";
-        // b+p → b+b: 25 words (dub, dab, drib, drab), 0 forms wrong.
-        law3: "b+p" => "b+b";
-        // b+t → b+b: 103 words (ab, lob, bib, stab), 0 forms wrong.
-        law4: "b+t" => "b+b";
-        // l+p → l+l: 71 words (control, appel, halal, compel), 0 forms wrong.
-        law5: "l+p" => "l+l";
-        // p+n → p+p: 62 words (nap, nip, kneecap, snap), 0 forms wrong.
-        law6: "p+n" => "p+p";
+        // b+t → b+b: 182 words (ab, lob, dub, bib), 0 forms wrong.
+        law3: "b+t" => "b+b";
+        // l+p → l+l: 88 words (canal, control, appel, halal), 0 forms wrong.
+        law4: "l+p" => "l+l";
+        // [v|s|z|u|i]+te → +e: 35 words (arise, drive, rise, strive), 0 forms wrong.
+        law5: "{x:[v|s|z|u|i]}+te" => "{x}+e";
+        // [c|k]+d → +ked: 34 words (metric, music, hydraulic, traffic), 2 forms wrong.
+        law6: "{x:[c|k]}+d" => "{x}+ked";
+        // [c|k]+t → +k: 52 words (metric, grok, music, hydraulic), 0 forms wrong.
+        law7: "{x:[c|k]}+t" => "{x}+k";
         // nd+d → n+t: 54 words (send, bend, lend, spend), 0 forms wrong.
-        law7: "nd+d" => "n+t";
-        // p+d → p+p: 54 words (handicap, drop, dip, snowdrop), 0 forms wrong.
-        law8: "p+d" => "p+p";
-        // p+m → p+p: 34 words (map, mop, membership, mishap), 0 forms wrong.
-        law9: "p+m" => "p+p";
-        // [c|k]+t → +k: 26 words (metric, yak, traffic, kek), 0 forms wrong.
-        law10: "{x:[c|k]}+t" => "{x}+k";
-        // b+n → b+b: 27 words (nab, hobnob, nib, nob), 0 forms wrong.
-        law11: "b+n" => "b+b";
-        // b+g → b+b: 21 words (gab, grub, grab, gib), 0 forms wrong.
-        law12: "b+g" => "b+b";
-        // [v|s|z]+te → +e: 20 words (arise, rise, strive, uprise), 0 forms wrong.
-        law13: "{x:[v|s|z]}+te" => "{x}+e";
-        // iv+d → iv+: 14 words (drive, overdrive, wardrive, outdrive), 0 forms wrong.
-        law14: "iv+d" => "iv+";
-        // er+n → er+r: 13 words (infer, transfer, confer, cotransfer), 0 forms wrong.
-        law15: "er+n" => "er+r";
+        law8: "nd+d" => "n+t";
         // ld+d → l+t: 13 words (build, rebuild, jerrybuild, overbuild), 0 forms wrong.
-        law16: "ld+d" => "l+t";
-        // [c|k]+m → +k: 11 words (music, mimic, tarmac, mosaic), 0 forms wrong.
-        law17: "{x:[c|k]}+m" => "{x}+k";
-        // l+n → l+l: 11 words (canal, annul, enrol, disannul), 0 forms wrong.
-        law18: "l+n" => "l+l";
-        // [n|al]+d → +t: 18 words (born, uplean, mean, bemean), 0 forms wrong.
-        law19: "{x:[n|al]}+d" => "{x}+t";
-        // ur+n → ur+r: 10 words (incur, concur, unblur, encur), 0 forms wrong.
-        law20: "ur+n" => "ur+r";
-        // ay+ne → a+i: 9 words (gainsay, unlay, inlay, naysay), 0 forms wrong.
-        law21: "ay+ne" => "a+i";
-        // y+n → y+: 9 words (gainsay, unlay, inlay, naysay), 0 forms wrong.
-        law22: "y+n" => "y+";
-        // ar+n → ar+r: 7 words (gnar, unbar, snar, unspar), 0 forms wrong.
-        law23: "ar+n" => "ar+r";
-        // f+t → f+f: 7 words (ref, chef, crossref, coif), 0 forms wrong.
-        law24: "f+t" => "f+f";
+        law9: "ld+d" => "l+t";
+        // n+d → n+t: 11 words (born, uplean, mean, bemean), 0 forms wrong.
+        law10: "n+d" => "n+t";
+        // f+t → f+f: 10 words (ref, chef, crossref, coif), 0 forms wrong.
+        law11: "f+t" => "f+f";
         // v+p → v+v: 7 words (shiv, rev, nav, improv), 0 forms wrong.
-        law25: "v+p" => "v+v";
-        // b+m → b+b: 6 words (demob, mob, mab, simulpub), 0 forms wrong.
-        law26: "b+m" => "b+b";
-        // [c|k]+g → +k: 6 words (grok, logic, magic, garlic), 0 forms wrong.
-        law27: "{x:[c|k]}+g" => "{x}+k";
-        // [c|k]+n → +k: 5 words (panic, tonic, picnic, nuk), 0 forms wrong.
-        law28: "{x:[c|k]}+n" => "{x}+k";
+        law12: "v+p" => "v+v";
         // ll+d → l+t: 5 words (dwell, misspell, foresmell, outdwell), 0 forms wrong.
-        law29: "ll+d" => "l+t";
+        law13: "ll+d" => "l+t";
+        // p+d → p+t: 5 words (lowp, outleap, forthleap, beleap), 0 forms wrong.
+        law14: "p+d" => "p+t";
+        // ll+ → +old after [s|t]: 23 words (foretell, outsell, oversell, resell), 0 forms wrong.
+        law15: "ll+" => "+old" / "{[s|t]}" _ "";
     }
 };

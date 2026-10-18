@@ -158,16 +158,16 @@ pub enum Declension {
     Οἱος,
     /// Like `ὁσος`: 8 words.
     Ὁσος,
-    /// Like `αὑτου`: 5 words.
-    Αὑτου,
+    /// Like `ἐμαυτου`: 6 words.
+    Ἐμαυτου,
     /// Like `αὐτος`: 5 words.
     Αὐτος,
     /// Like `σφεις`: 5 words.
     Σφεις,
     /// Like `σφω`: 4 words.
     Σφω,
-    /// Like `ἐμαυτου`: 3 words.
-    Ἐμαυτου,
+    /// Like `αὑτου`: 2 words.
+    Αὑτου,
     /// Like `ἁπᾱς`: 2 words.
     Ἁπᾱς,
     /// Like `ὁδε`: 2 words.
@@ -199,11 +199,11 @@ impl Declension {
     pub const ALL: [Declension; 19] = [
         Declension::Οἱος,
         Declension::Ὁσος,
-        Declension::Αὑτου,
+        Declension::Ἐμαυτου,
         Declension::Αὐτος,
         Declension::Σφεις,
         Declension::Σφω,
-        Declension::Ἐμαυτου,
+        Declension::Αὑτου,
         Declension::Ἁπᾱς,
         Declension::Ὁδε,
         Declension::Ὁστῐς,
@@ -256,16 +256,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     dat_f: "~ῃ", _, _;
     acc_f: "~ην", _, _;
     ),
-    // Αὑτου: 5 words (ἑωυτου, αὑτου, σεαυτου, σεωυτου, σαυτου). Like Ὁσος, except in 15 cells: nom_m sg, nom_m du, nom_m pl, nom_f sg, nom_f du, nom_f pl, ….
-    declension!("αὑτου", 5, "~ου", like Ὁσος;
+    // Ἐμαυτου: 6 words (σεαυτου, σεωυτου, σαυτου, ἐμαυτου, ἐμεωυτου, ἐμωυτου). Like Ὁσος, except in 18 cells: nom_m sg, nom_m du, nom_m pl, nom_f sg, nom_f du, nom_f pl, ….
+    declension!("ἐμαυτου", 6, "~ου", like Ὁσος;
     nom_m: "~ου", derived, derived;
     nom_f: derived, derived, derived;
     nom_n: _, _, derived;
-    gen_f: _, _, "~εων";
-    dat_f: _, _, "~ῃσῐ";
-    acc_m: _, "~ω", _;
-    acc_f: _, "~ᾱ", _;
-    acc_n: "~ο", "~ω", _;
+    gen_m: _, derived, derived;
+    gen_f: _, derived, derived;
+    dat_m: _, _, derived;
+    dat_f: _, _, derived;
+    acc_m: _, _, derived;
+    acc_f: _, _, derived;
+    acc_n: _, _, derived;
     voc_m: derived, _, _;
     voc_n: derived, _, _;
     ),
@@ -275,46 +277,43 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 19] = [
     acc_n: "~ο|~ον", _, _;
     voc_n: derived, _, _;
     ),
-    // Σφεις: 5 words (οὐδεις, ἡμεις, ὑμεις, μηδεις, σφεις). Like Αὑτου, except in 21 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m du, ….
-    declension!("σφεις", 5, "~εις", like Αὑτου;
+    // Σφεις: 5 words (οὐδεις, ἡμεις, ὑμεις, μηδεις, σφεις). Like Ἐμαυτου, except in 18 cells: nom_m sg, nom_m pl, nom_f pl, nom_n pl, gen_m sg, gen_m pl, ….
+    declension!("σφεις", 5, "~εις", like Ἐμαυτου;
     nom_m: "~εις", _, "~εις";
     nom_f: _, _, "~εις";
     nom_n: _, _, "~εις";
-    gen_m: derived, derived, _;
-    gen_f: derived, derived, "~ων";
+    gen_m: derived, _, "~ων";
+    gen_f: derived, _, "~ων";
     dat_m: derived, _, "~ῑν";
     dat_f: derived, _, "~ῑν";
-    acc_m: derived, derived, "~ᾱς";
-    acc_f: derived, derived, _;
-    acc_n: derived, derived, "~ᾱς";
+    acc_m: derived, _, "~ᾱς";
+    acc_f: derived, _, "~ᾱς";
+    acc_n: derived, _, "~ᾱς";
     ),
-    // Σφω: 4 words (ἐγω, νω, σφω, ἀμφω). Like Σφεις, except in 15 cells: nom_m sg, nom_m du, nom_m pl, nom_f du, nom_f pl, nom_n pl, ….
-    declension!("σφω", 4, "~ω", like Σφεις;
-    nom_m: "~ω", "~ω", derived;
-    nom_f: _, "~ω", derived;
-    nom_n: _, _, derived;
-    gen_m: _, "~ῳν", derived;
-    gen_f: _, "~ῳν", derived;
-    dat_m: _, _, derived;
-    dat_f: _, _, derived;
-    acc_m: _, _, derived;
-    acc_f: _, _, derived;
-    acc_n: _, _, derived;
+    // Σφω: 4 words (ἐγω, νω, σφω, ἀμφω). Like Ἐμαυτου, except in 12 cells: nom_m sg, nom_m du, nom_f du, gen_m sg, gen_m du, gen_f sg, ….
+    declension!("σφω", 4, "~ω", like Ἐμαυτου;
+    nom_m: "~ω", "~ω", _;
+    nom_f: _, "~ω", _;
+    gen_m: derived, "~ῳν", _;
+    gen_f: derived, "~ῳν", _;
+    dat_m: derived, _, _;
+    dat_f: derived, _, _;
+    acc_m: derived, _, _;
+    acc_f: derived, _, _;
+    acc_n: derived, _, _;
     ),
-    // Ἐμαυτου: 3 words (ἐμαυτου, ἐμεωυτου, ἐμωυτου). Like Σφω, except in 12 cells: nom_m sg, nom_m du, nom_f du, gen_m sg, gen_m du, gen_f sg, ….
-    declension!("ἐμαυτου", 3, "~ου", like Σφω;
-    nom_m: "~ου", derived, _;
-    nom_f: _, derived, _;
-    gen_m: "~ου", derived, _;
-    gen_f: "~ης", derived, _;
-    dat_m: "~ῳ", _, _;
-    dat_f: "~ῃ", _, _;
-    acc_m: "~ον", _, _;
-    acc_f: "~ην", _, _;
-    acc_n: "~ον", _, _;
+    // Αὑτου: 2 words (ἑωυτου, αὑτου). Like Ἐμαυτου, except in 13 cells: gen_m du, gen_m pl, gen_f du, gen_f pl, dat_m pl, dat_f pl, ….
+    declension!("αὑτου", 2, "~ου", like Ἐμαυτου;
+    gen_m: _, "~οιν", "~ων";
+    gen_f: _, "~αιν", "~εων";
+    dat_m: _, _, "~οις";
+    dat_f: _, _, "~ῃσῐ";
+    acc_m: _, "~ω", "~ους";
+    acc_f: _, "~ᾱ", "~ᾱς";
+    acc_n: "~ο", "~ω", "~ᾰ";
     ),
-    // Ἁπᾱς: 2 words (πᾱς, ἁπᾱς). Like Σφεις, except in 21 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n pl, gen_m sg, ….
-    declension!("ἁπᾱς", 2, "~ᾱς", like Σφεις;
+    // Ἁπᾱς: 2 words (πᾱς, ἁπᾱς). Like Ἐμαυτου, except in 21 cells: nom_m sg, nom_m pl, nom_f sg, nom_f pl, nom_n pl, gen_m sg, ….
+    declension!("ἁπᾱς", 2, "~ᾱς", like Ἐμαυτου;
     nom_m: "~ᾱς", _, "~ᾰντες";
     nom_f: "~ᾱσᾰ", _, "~ᾱσαι";
     nom_n: _, _, "~ᾰντᾰ";

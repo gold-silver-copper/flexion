@@ -7,10 +7,10 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 292 rules and 148 listed words.
+/// 292 rules and 147 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
-        "" => [Passer 5867, Badger 491, Établir 326, Rendre 60, Appuyer 59, Réduire 48, Appeler 41, Jeter 35, Tenir 31, Poindre 30, Remettre 18, Récupérer 16, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Dissoudre 7, Éclore 6, Requérir 6, Resver 6, Promouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Rompre 5, Inclure 5, Havoir 5, Endormir 4, Lire 4, Plaire 4, Vouloir 4, Moudre 4, Ouïr 4, Accroitre 4, Asseoir 4, Emboire 3, Survivre 3, Servir 3, Fuir 3, Poursuivre 3, Croire 3, Recoudre 3, Bouillir 3, Luire 3, Redevoir 3, Haïr 1, Arguër 1],
+        "" => [Passer 5866, Badger 492, Établir 326, Rendre 60, Appuyer 59, Réduire 48, Appeler 41, Jeter 35, Tenir 31, Poindre 30, Remettre 18, Récupérer 16, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Dissoudre 7, Éclore 6, Requérir 6, Resver 6, Promouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Rompre 5, Inclure 5, Havoir 5, Endormir 4, Lire 4, Plaire 4, Vouloir 4, Moudre 4, Ouïr 4, Accroitre 4, Asseoir 4, Emboire 3, Survivre 3, Servir 3, Fuir 3, Poursuivre 3, Croire 3, Recoudre 3, Bouillir 3, Luire 3, Redevoir 3, Haïr 1, Arguër 1],
         "e" => [Rendre 60, Réduire 48, Poindre 30, Remettre 18, Connaître 15, Paitre 15, Confire 15, Faire 12, Soustraire 12, Prendre 12, Rabattre 12, Dissoudre 7, Éclore 6, Rompre 5, Inclure 5, Lire 4, Plaire 4, Moudre 4, Accroitre 4, Emboire 3, Survivre 3, Poursuivre 3, Croire 3, Recoudre 3, Luire 3],
         "cre" => [Rendre 2],
         "dre" => [Rendre 50, Poindre 30, Prendre 12, Dissoudre 7, Moudre 4, Recoudre 3],
@@ -71,8 +71,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "vre" => [Survivre 3, Poursuivre 3] regular,
         "uivre" => [Poursuivre 3] regular,
         "vivre" => [Survivre 3] regular,
-        "r" => [Passer 5867, Badger 491, Établir 326, Appuyer 59, Appeler 41, Jeter 35, Tenir 31, Récupérer 16, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Requérir 6, Resver 6, Promouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Havoir 5, Endormir 4, Vouloir 4, Ouïr 4, Asseoir 4, Servir 3, Fuir 3, Bouillir 3, Redevoir 3, Haïr 1, Arguër 1],
-        "er" => [Passer 5867, Badger 491, Appuyer 59, Appeler 41, Jeter 35, Récupérer 16, Resver 6] regular,
+        "r" => [Passer 5866, Badger 492, Établir 326, Appuyer 59, Appeler 41, Jeter 35, Tenir 31, Récupérer 16, Courir 11, Ouvrir 10, Revêtir 10, Recueillir 9, Sentir 8, Concevoir 7, Requérir 6, Resver 6, Promouvoir 6, Prévoir 5, Valoir 5, Pourvoir 5, Havoir 5, Endormir 4, Vouloir 4, Ouïr 4, Asseoir 4, Servir 3, Fuir 3, Bouillir 3, Redevoir 3, Haïr 1, Arguër 1],
+        "er" => [Passer 5866, Badger 492, Appuyer 59, Appeler 41, Jeter 35, Récupérer 16, Resver 6] regular,
         "ber" => [Passer 61] regular,
         "cer" => [Passer 122, Badger 2] regular,
         "ecer" => [Badger 2, Passer 1] regular,
@@ -87,7 +87,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "éder" => [Badger 16, Récupérer 1] regular,
         "céder" => [Badger 12] regular,
         "fer" => [Passer 54] regular,
-        "ger" => [Badger 193, Passer 4] regular,
+        "ger" => [Badger 194, Passer 3] regular,
         "ager" => [Badger 56] regular,
         "gger" => [Passer 3] regular,
         "nger" => [Badger 34] regular,
@@ -306,7 +306,7 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     listed {
         Passer => [
             "#aller", "#bugger", "#destroyer", "#débriefer", "#débugger", "#fonceder", "#jacqueter",
-            "#marketer", "#neiger", "#rapiécer", "#remodeler", "#sevrer", "#tagger", "#écher",
+            "#marketer", "#rapiécer", "#remodeler", "#sevrer", "#tagger", "#écher",
         ],
         Badger => [
             "#bégueter", "#bêcheveter", "#celer", "#ciseler", "#corseter", "#craqueter", "#duveter",

@@ -207,27 +207,27 @@ pub enum Declension {
     Dalga,
     /// Like `sav`: 2,910 words.
     Sav,
-    /// Like `ant`: 1,717 words.
+    /// Like `ant`: 1,716 words.
     Ant,
-    /// Like `makas`: 755 words.
+    /// Like `makas`: 757 words.
     Makas,
-    /// Like `kiriş`: 681 words.
+    /// Like `kiriş`: 679 words.
     Kiriş,
-    /// Like `yer`: 105 words.
+    /// Like `yer`: 97 words.
     Yer,
     /// Like `devir`: 47 words.
     Devir,
+    /// Like `göz`: 28 words.
+    Göz,
     /// Like `akıl`: 25 words.
     Akıl,
-    /// Like `göz`: 20 words.
-    Göz,
     /// Like `ekolog`: 17 words.
     Ekolog,
     /// Like `gönül`: 17 words.
     Gönül,
     /// Like `hesap`: 16 words.
     Hesap,
-    /// Like `mazak`: 13 words.
+    /// Like `mazak`: 14 words.
     Mazak,
     /// Like `kıskaç`: 13 words.
     Kıskaç,
@@ -259,8 +259,8 @@ impl Declension {
         Declension::Kiriş,
         Declension::Yer,
         Declension::Devir,
-        Declension::Akıl,
         Declension::Göz,
+        Declension::Akıl,
         Declension::Ekolog,
         Declension::Gönül,
         Declension::Hesap,
@@ -309,15 +309,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     declension!("sav", 2910, "~", like Dalga;
     stem noun_acc_sg: "~- like sav";
     ),
-    // Ant: 1,717 words (ant, art, bap, şibidak, müzik, kayak). Like Makas with `ˇ` after each pattern.
-    declension!("ant", 1717, "~ˇ", like Makas with "ˇ";
+    // Ant: 1,716 words (ant, art, bap, şibidak, müzik, kayak). Like Makas with `ˇ` after each pattern.
+    declension!("ant", 1716, "~ˇ", like Makas with "ˇ";
     ),
-    // Makas: 755 words (robot, port, bot, bank, but, mars). Like Sav.
-    declension!("makas", 755, "~", like Sav;
+    // Makas: 757 words (robot, port, bot, bank, but, mars). Like Sav.
+    declension!("makas", 757, "~", like Sav;
     stem lemma: "~- like makas";
     ),
-    // Kiriş: 681 words (abdest, lens, planet, bit, is, market). Like Makas, except in 38 cells: possessive_nom_one _1sg, possessive_nom_one _3sg, possessive_nom_one _1pl, possessive_nom_one _2pl, possessive_nom_one _3pl, possessive_nom_many _2sg, ….
-    declension!("kiriş", 681, "~", like Makas;
+    // Kiriş: 679 words (abdest, lens, planet, bit, is, market). Like Makas, except in 38 cells: possessive_nom_one _1sg, possessive_nom_one _3sg, possessive_nom_one _1pl, possessive_nom_one _2pl, possessive_nom_one _3pl, possessive_nom_many _2sg, ….
+    declension!("kiriş", 679, "~", like Makas;
     possessive_nom_one: "~im", _, "~i", "~imIz", "~inIz", "~lerI";
     possessive_nom_many: _, "~lerIn", "~lerI", _, _, "~lerI";
     possessive_acc_one: _, "~inI", _, _, "~inIzI", _;
@@ -331,8 +331,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     possessive_gen_one: _, "~inIn", _, _, "~inIzIn", _;
     possessive_gen_many: _, "~lerInIn", "~lerInIn", _, _, "~lerInIn";
     ),
-    // Yer: 105 words (general, montreal, ideal, metal, terminal, meal). Like Kiriş, except in 2 cells: nom pl, loc sg.
-    declension!("yer", 105, "~", like Kiriş;
+    // Yer: 97 words (general, montreal, ideal, metal, terminal, meal). Like Kiriş, except in 2 cells: nom pl, loc sg.
+    declension!("yer", 97, "~", like Kiriş;
     stem noun_acc_sg: "~- like yer";
     nom: _, "~ler";
     loc: "~de", _;
@@ -342,14 +342,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     stem lemma: "~i~- like devir";
     stem noun_acc_sg: "~~- like yer";
     ),
+    // Göz: 28 words (petrol, spoiler, gol, kabul, ampul, ful). Like Yer.
+    declension!("göz", 28, "~", like Yer;
+    stem noun_acc_sg: "~- like göz";
+    ),
     // Akıl: 25 words (hayır, ağız, akıl, asır, bağır, kayın).
     declension!("akıl", 25, "~ı~";
     stem lemma: "~ı~- like akıl";
     stem noun_acc_sg: "~~- like sav";
-    ),
-    // Göz: 20 words (petrol, spoiler, gol, ampul, ful, rol). Like Yer.
-    declension!("göz", 20, "~", like Yer;
-    stem noun_acc_sg: "~- like göz";
     ),
     // Ekolog: 17 words (monolog, antropolog, ekolog, klimatolog, arkeolog, katalog). Like Sav with `ˇ` after each pattern.
     declension!("ekolog", 17, "~ˇ", like Sav with "ˇ";
@@ -364,8 +364,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     stem lemma: "~p- like makas";
     stem noun_acc_sg: "~b- like sav";
     ),
-    // Mazak: 13 words (gök, olgunluk, lakayıtlık, basketbolculuk, soğukkanlılık, plâk).
-    declension!("mazak", 13, "~k";
+    // Mazak: 14 words (gök, olgunluk, lakayıtlık, yorgunluk, basketbolculuk, soğukkanlılık).
+    declension!("mazak", 14, "~k";
     stem lemma: "~k- like makas";
     stem noun_acc_sg: "~ğ- like sav";
     ),

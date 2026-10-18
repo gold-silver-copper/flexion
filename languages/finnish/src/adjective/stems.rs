@@ -53,10 +53,10 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 30] = [
-    // adjective_nom_pl like tasainen: 8,443 words.
+    // adjective_nom_pl like tasainen: 8,501 words.
     EndingTable {
         name: Cow::Borrowed("tasainen"),
-        words: 8443,
+        words: 8501,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~et\t",
@@ -76,10 +76,10 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~in\t",
         )),
     },
-    // adjective_nom_pl like matala: 818 words.
+    // adjective_nom_pl like matala: 809 words.
     EndingTable {
         name: Cow::Borrowed("matala"),
-        words: 818,
+        words: 809,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~at\t",
@@ -130,7 +130,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
         table: Cow::Borrowed(concat!(
             "~mmAt\t",
             "~mmAn\t",
-            "~ntA\t~mpiA\t",
+            "~ntA\t~mpVA\t",
             "~mmAssA\t~mmissA\t",
             "~mmAstA\t~mmistA\t",
             "~mpAAn\t",
@@ -145,10 +145,10 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "\t",
         )),
     },
-    // adjective_nom_pl like varattu: 244 words.
+    // adjective_nom_pl like varattu: 340 words.
     EndingTable {
         name: Cow::Borrowed("varattu"),
-        words: 244,
+        words: 340,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~tˇ\t",
@@ -156,7 +156,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~Aˇ\t~jAˇ\t",
             "~ssAˇ\t~issAˇ\t",
             "~stAˇ\t~istAˇ\t",
-            "~unˇ\t",
+            "~Vnˇ\t",
             "~llAˇ\t~illAˇ\t",
             "~ltAˇ\t~iltAˇ\t",
             "~lleˇ\t~illeˇ\t",
@@ -168,56 +168,10 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~inˇ\t",
         )),
     },
-    // adjective_nom_pl like sammunut: 162 words.
-    EndingTable {
-        name: Cow::Borrowed("sammunut"),
-        words: 162,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~eet\t",
-            "~een\t",
-            "~uttA\t~eitA\t",
-            "~eessA\t~eissA\t",
-            "~eestA\t~eistA\t",
-            "~eeseen\t",
-            "~eellA\t~eillA\t",
-            "~eeltA\t~eiltA\t",
-            "~eelle\t~eille\t",
-            "~eenA\t~einA\t",
-            "~eeksi\t~eiksi\t",
-            "~eettA\t~eittA\t",
-            "~ein\t",
-            "~eempi\t",
-            "~ein\t",
-        )),
-    },
-    // adjective_nom_pl like abstrakti: 143 words.
-    EndingTable {
-        name: Cow::Borrowed("abstrakti"),
-        words: 143,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~it\t",
-            "~in\t",
-            "~iA\t~ejA\t",
-            "~issA\t~eissA\t",
-            "~istA\t~eistA\t",
-            "~iin\t",
-            "~illA\t~eillA\t",
-            "~iltA\t~eiltA\t",
-            "~ille\t~eille\t",
-            "~inA\t~einA\t",
-            "~iksi\t~eiksi\t",
-            "~ittA\t~eittA\t",
-            "~ein\t",
-            "~impi\t",
-            "~ein\t",
-        )),
-    },
-    // adjective_nom_pl like huono: 119 words.
+    // adjective_nom_pl like huono: 234 words.
     EndingTable {
         name: Cow::Borrowed("huono"),
-        words: 119,
+        words: 234,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~t\t",
@@ -225,7 +179,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~A\t~jA\t",
             "~ssA\t~issA\t",
             "~stA\t~istA\t",
-            "~on\t",
+            "~Vn\t",
             "~llA\t~illA\t",
             "~ltA\t~iltA\t",
             "~lle\t~ille\t",
@@ -237,10 +191,56 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~in\t",
         )),
     },
-    // adjective_nom_pl like violetti: 89 words.
+    // adjective_nom_pl like sammunut: 162 words.
+    EndingTable {
+        name: Cow::Borrowed("sammunut"),
+        words: 162,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~eVt\t",
+            "~eVn\t",
+            "~uttA\t~eitA\t",
+            "~eVssA\t~eissA\t",
+            "~eVstA\t~eistA\t",
+            "~eeseen\t",
+            "~eVllA\t~eillA\t",
+            "~eVltA\t~eiltA\t",
+            "~eVlle\t~eille\t",
+            "~eVnA\t~einA\t",
+            "~eVksi\t~eiksi\t",
+            "~eVttA\t~eittA\t",
+            "~ein\t",
+            "~eVmpi\t",
+            "~ein\t",
+        )),
+    },
+    // adjective_nom_pl like abstrakti: 144 words.
+    EndingTable {
+        name: Cow::Borrowed("abstrakti"),
+        words: 144,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~it\t",
+            "~in\t",
+            "~iA\t~ejA\t",
+            "~issA\t~eissA\t",
+            "~istA\t~eistA\t",
+            "~iVn\t",
+            "~illA\t~eillA\t",
+            "~iltA\t~eiltA\t",
+            "~ille\t~eille\t",
+            "~inA\t~einA\t",
+            "~iksi\t~eiksi\t",
+            "~ittA\t~eittA\t",
+            "~ein\t",
+            "~impi\t",
+            "~ein\t",
+        )),
+    },
+    // adjective_nom_pl like violetti: 90 words.
     EndingTable {
         name: Cow::Borrowed("violetti"),
-        words: 89,
+        words: 90,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~itˇ\t",
@@ -248,7 +248,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~iAˇ\t~ejAˇ\t",
             "~issAˇ\t~eissAˇ\t",
             "~istAˇ\t~eistAˇ\t",
-            "~iinˇ\t",
+            "~iVnˇ\t",
             "~illAˇ\t~eillAˇ\t",
             "~iltAˇ\t~eiltAˇ\t",
             "~illeˇ\t~eilleˇ\t",
@@ -317,7 +317,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~ttA\t~nsiA\t",
             "~nnessA\t~nsissA\t",
             "~nnestA\t~nsistA\t",
-            "~nteen\t",
+            "~nteVn\t",
             "~nnellA\t~nsillA\t",
             "~nneltA\t~nsiltA\t",
             "~nnelle\t~nsille\t",
@@ -340,7 +340,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~ttA\t~itA\t",
             "~essA\t~issA\t",
             "~estA\t~istA\t",
-            "~een\t",
+            "~eVn\t",
             "~ellA\t~illA\t",
             "~eltA\t~iltA\t",
             "~elle\t~ille\t",
@@ -386,7 +386,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~stAˇ\t~itAˇ\t",
             "~AssAˇ\t~issAˇ\t",
             "~AstAˇ\t~istAˇ\t",
-            "~Aseenˇ\t",
+            "~AseVnˇ\t",
             "~AllAˇ\t~illAˇ\t",
             "~AltAˇ\t~iltAˇ\t",
             "~Alleˇ\t~illeˇ\t",
@@ -455,7 +455,7 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
             "~tiA\t~tejA\t",
             "~dissA\t~deissA\t",
             "~distA\t~deistA\t",
-            "~tiin\t",
+            "~tiVn\t",
             "~dillA\t~deillA\t",
             "~diltA\t~deiltA\t",
             "~dille\t~deille\t",
@@ -475,10 +475,10 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
         table: Cow::Borrowed(concat!(
             "~met\t",
             "~men\t",
-            "~ntA\t~miA\t",
+            "~ntA\t~mVA\t",
             "~messA\t~missA\t",
             "~mestA\t~mistA\t",
-            "~meen\t",
+            "~meVn\t",
             "~mellA\t~millA\t",
             "~meltA\t~miltA\t",
             "~melle\t~mille\t",
@@ -566,10 +566,10 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
         slot: 2,
         table: Cow::Borrowed(concat!("~ten|~ien\t", "~iin\t", "~ine\t",)),
     },
-    // adjective_pl like laiton: 2,974 words.
+    // adjective_pl like laiton: 2,969 words.
     EndingTable {
         name: Cow::Borrowed("laiton"),
-        words: 2974,
+        words: 2969,
         slot: 2,
         table: Cow::Borrowed(concat!("~en\t", "~in\t", "~ne\t",)),
     },
@@ -578,21 +578,21 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
         name: Cow::Borrowed("oikea"),
         words: 618,
         slot: 2,
-        table: Cow::Borrowed(concat!("~den|~tten\t", "~siin|~hin\t", "~ne\t",)),
+        table: Cow::Borrowed(concat!("~den|~tten\t", "~sVin|~hin\t", "~ne\t",)),
     },
-    // adjective_pl like rikas: 488 words.
-    EndingTable {
-        name: Cow::Borrowed("rikas"),
-        words: 488,
-        slot: 2,
-        table: Cow::Borrowed(concat!("~den|~tten\t", "~siin\t", "~ne\t",)),
-    },
-    // adjective_pl like huono: 419 words.
+    // adjective_pl like huono: 421 words.
     EndingTable {
         name: Cow::Borrowed("huono"),
-        words: 419,
+        words: 421,
         slot: 2,
         table: Cow::Borrowed(concat!("~jen\t", "~ihin\t", "~ine\t",)),
+    },
+    // adjective_pl like rikas: 292 words.
+    EndingTable {
+        name: Cow::Borrowed("rikas"),
+        words: 292,
+        slot: 2,
+        table: Cow::Borrowed(concat!("~den|~tten\t", "~siin\t", "~ne\t",)),
     },
     // adjective_pl like abstrakti: 219 words.
     EndingTable {
@@ -601,18 +601,18 @@ pub(super) static TABLES: [EndingTable<'static>; 30] = [
         slot: 2,
         table: Cow::Borrowed(concat!("~ien\t", "~eihin\t", "~eine\t",)),
     },
-    // adjective_pl like valmis: 41 words.
-    EndingTable {
-        name: Cow::Borrowed("valmis"),
-        words: 41,
-        slot: 2,
-        table: Cow::Borrowed(concat!("~den\t", "~siin\t", "~ne\t",)),
-    },
-    // adjective_pl like pro: 19 words.
+    // adjective_pl like pro: 20 words.
     EndingTable {
         name: Cow::Borrowed("pro"),
-        words: 19,
+        words: 20,
         slot: 2,
         table: Cow::Borrowed(concat!("~den|~tten\t", "~hin\t", "~ne\t",)),
+    },
+    // adjective_pl like vihanta: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("vihanta"),
+        words: 4,
+        slot: 2,
+        table: Cow::Borrowed(concat!("~ien|~ojen\t", "~iin|~oihin\t", "~ine|~oine\t",)),
     },
 ];

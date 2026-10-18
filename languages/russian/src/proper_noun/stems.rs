@@ -33,10 +33,10 @@ pub(super) static TABLES: [EndingTable<'static>; 4] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~а\t", "~у\t", "\t",)),
     },
-    // gen_sg like рокпорт: 1,303 words.
+    // gen_sg like рокпорт: 1,364 words.
     EndingTable {
         name: Cow::Borrowed("рокпорт"),
-        words: 1303,
+        words: 1364,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ы\t",
@@ -47,10 +47,10 @@ pub(super) static TABLES: [EndingTable<'static>; 4] = [
             "~е\t\t",
         )),
     },
-    // gen_sg like люксембург: 186 words.
+    // gen_sg like люксембург: 125 words.
     EndingTable {
         name: Cow::Borrowed("люксембург"),
-        words: 186,
+        words: 125,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~и\t",

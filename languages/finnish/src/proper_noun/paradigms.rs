@@ -1,8 +1,8 @@
 //! The declensions, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes (`~a`, `makedonia`: the stem and `a`). A stem in two pieces (`~~`, `johannes`) has
+//! A pattern is the form with `~` where the stem goes (`~nen`, `ilmarinen`: the stem and `nen`). A stem in two pieces (`~~`, `johannes`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first. A capital (`A`, `V`, `E`)
+//! Alternatives are separated by `|`, the usual one first. A capital (`A`, `I`, `V`, `E`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it. A `ˇ` ends
 //! the patterns of a declension whose stems alternate: the laws in `laws.rs`
@@ -14,8 +14,8 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the declension it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem gen_sg: \"~a- like makedonia\"`: the slot's cells are `makedonia`'s table's patterns
-/// with `~a` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`stem gen_sg: \"~se- like ilmarinen\"`: the slot's cells are `ilmarinen`'s table's patterns
+/// with `~se` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the declension's it is
 /// like, or, in a declension like no other, derived):
@@ -355,102 +355,104 @@ macro_rules! affix {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `makedonia`: 1,340 words.
-    Makedonia,
-    /// Like `ilmarinen`: 1,180 words.
+    /// Like `ilmarinen`: 1,194 words.
     Ilmarinen,
-    /// Like `salo`: 949 words.
+    /// Like `makedonia`: 1,186 words.
+    Makedonia,
+    /// Like `salo`: 921 words.
     Salo,
-    /// Like `soini`: 520 words.
+    /// Like `soini`: 501 words.
     Soini,
-    /// Like `hydra`: 397 words.
+    /// Like `hydra`: 495 words.
     Hydra,
-    /// Like `luxemburg`: 386 words.
+    /// Like `luxemburg`: 352 words.
     Luxemburg,
-    /// Like `tokelau`: 332 words.
+    /// Like `tokelau`: 333 words.
     Tokelau,
-    /// Like `kärpänen`: 330 words.
+    /// Like `kärpänen`: 316 words.
     Kärpänen,
-    /// Like `leivonmäki`: 283 words.
+    /// Like `olhava`: 279 words.
+    Olhava,
+    /// Like `leivonmäki`: 268 words.
     Leivonmäki,
     /// Like `sammatti`: 255 words.
     Sammatti,
-    /// Like `olhava`: 229 words.
-    Olhava,
-    /// Like `johannes`: 229 words.
-    Johannes,
-    /// Like `kestilä`: 227 words.
-    Kestilä,
-    /// Like `inari`: 223 words.
+    /// Like `inari`: 241 words.
     Inari,
-    /// Like `pyhäjärvi`: 193 words.
-    Pyhäjärvi,
-    /// Like `rita`: 174 words.
+    /// Like `johannes`: 230 words.
+    Johannes,
+    /// Like `kestilä`: 217 words.
+    Kestilä,
+    /// Like `rita`: 198 words.
     Rita,
+    /// Like `lahti`: 165 words.
+    Lahti,
+    /// Like `pyhäjärvi`: 164 words.
+    Pyhäjärvi,
     /// Like `tulimaa`: 161 words.
     Tulimaa,
     /// Like `hietaniemi`: 158 words.
     Hietaniemi,
-    /// Like `lahti`: 146 words.
-    Lahti,
-    /// Like `borneo`: 120 words.
-    Borneo,
+    /// Like `iniö`: 150 words.
+    Iniö,
+    /// Like `salmi`: 134 words.
+    Salmi,
+    /// Like `härmä`: 119 words.
+    Härmä,
     /// Like `saari`: 113 words.
     Saari,
-    /// Like `härmä`: 109 words.
-    Härmä,
-    /// Like `salmi`: 106 words.
-    Salmi,
-    /// Like `nutikka`: 74 words.
+    /// Like `nutikka`: 76 words.
     Nutikka,
     /// Like `opas`: 70 words.
     Opas,
-    /// Like `lotta`: 58 words.
+    /// Like `aaron`: 67 words.
+    Aaron,
+    /// Like `lotta`: 64 words.
     Lotta,
-    /// Like `kakskerta`: 57 words.
-    Kakskerta,
     /// Like `järvenpää`: 46 words.
     Järvenpää,
     /// Like `jäämeri`: 43 words.
     Jäämeri,
-    /// Like `aaron`: 41 words.
-    Aaron,
-    /// Like `roine`: 32 words.
+    /// Like `roine`: 35 words.
     Roine,
     /// Like `kärppä`: 31 words.
     Kärppä,
     /// Like `kaksoset`: 28 words.
     Kaksoset,
-    /// Like `häme`: 26 words.
-    Häme,
-    /// Like `oinas`: 23 words.
+    /// Like `oinas`: 27 words.
     Oinas,
-    /// Like `plejadit`: 20 words.
-    Plejadit,
+    /// Like `kakskerta`: 26 words.
+    Kakskerta,
+    /// Like `häme`: 23 words.
+    Häme,
     /// Like `luukas`: 19 words.
     Luukas,
-    /// Like `rinne`: 18 words.
-    Rinne,
     /// Like `orivesi`: 17 words.
     Orivesi,
+    /// Like `ahava`: 17 words.
+    Ahava,
+    /// Like `plejadit`: 16 words.
+    Plejadit,
     /// Like `vesimies`: 14 words.
     Vesimies,
     /// Like `vehmaa`: 14 words.
     Vehmaa,
     /// Like `joensuu`: 13 words.
     Joensuu,
-    /// Like `ahava`: 12 words.
-    Ahava,
     /// Like `altai`: 11 words.
     Altai,
+    /// Like `delfoi`: 11 words.
+    Delfoi,
+    /// Like `rinne`: 10 words.
+    Rinne,
+    /// Like `seem`: 10 words.
+    Seem,
     /// Like `heinisuo`: 9 words.
     Heinisuo,
-    /// Like `delfoi`: 9 words.
-    Delfoi,
+    /// Like `herkules`: 9 words.
+    Herkules,
     /// Like `okko`: 9 words.
     Okko,
-    /// Like `herkules`: 8 words.
-    Herkules,
     /// Like `pohjantähti`: 7 words.
     Pohjantähti,
     /// Like `komorit`: 7 words.
@@ -463,8 +465,6 @@ pub enum Declension {
     Kaukomieli,
     /// Like `leijonat`: 7 words.
     Leijonat,
-    /// Like `seem`: 6 words.
-    Seem,
     /// Like `ilkka`: 6 words.
     Ilkka,
     /// Like `kristillisdemokraatit`: 6 words.
@@ -475,14 +475,10 @@ pub enum Declension {
     Räty,
     /// Like `kalat`: 5 words.
     Kalat,
-    /// Like `hermes`: 5 words.
-    Hermes,
     /// Like `ilmatar`: 5 words.
     Ilmatar,
     /// Like `föglö`: 5 words.
     Föglö,
-    /// Like `ärväs`: 5 words.
-    Ärväs,
     /// Like `salokannel`: 5 words.
     Salokannel,
     /// Like `ahde`: 5 words.
@@ -493,8 +489,12 @@ pub enum Declension {
     Paasi,
     /// Like `viisut`: 5 words.
     Viisut,
+    /// Like `hermes`: 4 words.
+    Hermes,
     /// Like `lepo`: 4 words.
     Lepo,
+    /// Like `hebridit`: 4 words.
+    Hebridit,
     /// Like `marjatta`: 4 words.
     Marjatta,
     /// Like `yrjänä`: 4 words.
@@ -505,6 +505,8 @@ pub enum Declension {
     Lohi,
     /// Like `haukipudas`: 4 words.
     Haukipudas,
+    /// Like `huurre`: 4 words.
+    Huurre,
     /// Like `korkee`: 4 words.
     Korkee,
     /// Like `tehtaankatu`: 4 words.
@@ -513,101 +515,102 @@ pub enum Declension {
     Suvitie,
     /// Like `hyväkkä`: 4 words.
     Hyväkkä,
+    /// Like `selänne`: 4 words.
+    Selänne,
     /// Like `alavus`: 3 words.
     Alavus,
     /// Like `pyy`: 3 words.
     Pyy,
-    /// Like `kurki`: 3 words.
-    Kurki,
     /// Like `lähi-itä`: 3 words.
     Lähiitä,
 }
 
 impl Declension {
     /// Every declension, in order.
-    pub const ALL: [Declension; 83] = [
-        Declension::Makedonia,
+    pub const ALL: [Declension; 84] = [
         Declension::Ilmarinen,
+        Declension::Makedonia,
         Declension::Salo,
         Declension::Soini,
         Declension::Hydra,
         Declension::Luxemburg,
         Declension::Tokelau,
         Declension::Kärpänen,
+        Declension::Olhava,
         Declension::Leivonmäki,
         Declension::Sammatti,
-        Declension::Olhava,
+        Declension::Inari,
         Declension::Johannes,
         Declension::Kestilä,
-        Declension::Inari,
-        Declension::Pyhäjärvi,
         Declension::Rita,
+        Declension::Lahti,
+        Declension::Pyhäjärvi,
         Declension::Tulimaa,
         Declension::Hietaniemi,
-        Declension::Lahti,
-        Declension::Borneo,
-        Declension::Saari,
-        Declension::Härmä,
+        Declension::Iniö,
         Declension::Salmi,
+        Declension::Härmä,
+        Declension::Saari,
         Declension::Nutikka,
         Declension::Opas,
+        Declension::Aaron,
         Declension::Lotta,
-        Declension::Kakskerta,
         Declension::Järvenpää,
         Declension::Jäämeri,
-        Declension::Aaron,
         Declension::Roine,
         Declension::Kärppä,
         Declension::Kaksoset,
-        Declension::Häme,
         Declension::Oinas,
-        Declension::Plejadit,
+        Declension::Kakskerta,
+        Declension::Häme,
         Declension::Luukas,
-        Declension::Rinne,
         Declension::Orivesi,
+        Declension::Ahava,
+        Declension::Plejadit,
         Declension::Vesimies,
         Declension::Vehmaa,
         Declension::Joensuu,
-        Declension::Ahava,
         Declension::Altai,
-        Declension::Heinisuo,
         Declension::Delfoi,
-        Declension::Okko,
+        Declension::Rinne,
+        Declension::Seem,
+        Declension::Heinisuo,
         Declension::Herkules,
+        Declension::Okko,
         Declension::Pohjantähti,
         Declension::Komorit,
         Declension::Hölttä,
         Declension::Korppoo,
         Declension::Kaukomieli,
         Declension::Leijonat,
-        Declension::Seem,
         Declension::Ilkka,
         Declension::Kristillisdemokraatit,
         Declension::Kainuu,
         Declension::Räty,
         Declension::Kalat,
-        Declension::Hermes,
         Declension::Ilmatar,
         Declension::Föglö,
-        Declension::Ärväs,
         Declension::Salokannel,
         Declension::Ahde,
         Declension::Kauris,
         Declension::Paasi,
         Declension::Viisut,
+        Declension::Hermes,
         Declension::Lepo,
+        Declension::Hebridit,
         Declension::Marjatta,
         Declension::Yrjänä,
         Declension::Luopa,
         Declension::Lohi,
         Declension::Haukipudas,
+        Declension::Huurre,
         Declension::Korkee,
         Declension::Tehtaankatu,
         Declension::Suvitie,
         Declension::Hyväkkä,
+        Declension::Selänne,
         Declension::Alavus,
         Declension::Pyy,
-        Declension::Kurki,
         Declension::Lähiitä,
     ];
 
@@ -626,86 +629,101 @@ impl flexion::Label for Declension {
     }
 }
 
-pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
-    // Makedonia: 1,340 words (latvia, algeria, tunisia, libya, andorra, albania).
-    declension!("makedonia", 1340, "~a";
-    stem gen_sg: "~a- like makedonia";
-    stem par_pl: "~- like makedonia";
-    stem par_sg: "~aV- like makedonia";
-    stem ine_sg: "~- like makedonia";
-    stem ill_sg: "~aVn- like makedonia";
-    stem ade_sg: "~allV- like makedonia";
-    stem abl_sg: "~altV- like makedonia";
-    stem all_sg: "~alle- like makedonia";
-    stem ess_sg: "~anV- like makedonia";
-    stem tra_sg: "~aks- like makedonia";
-    nom: "~a", _;
-    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
-    proper_noun_possessive_gen_sg: _, "~asi", "~amme", "~anne", _;
-    ),
-    // Ilmarinen: 1,180 words (yksisarvinen, peukaloinen, virtanen, koskinen, korhonen, patronen).
-    declension!("ilmarinen", 1180, "~nen";
+pub(super) static DECLENSIONS: [Paradigm<'static>; 84] = [
+    // Ilmarinen: 1,194 words (ääninen, yksisarvinen, peukaloinen, virtanen, mäkinen, koskinen).
+    declension!("ilmarinen", 1194, "~nen";
     stem gen_sg: "~se- like ilmarinen";
     stem par_pl: "~s- like ilmarinen";
     stem par_sg: "~stA- like ilmarinen";
     stem ine_sg: "~s- like ilmarinen";
     stem ill_sg: "~seen- like ilmarinen";
-    stem ade_sg: "~sellA- like makedonia";
-    stem abl_sg: "~seltA- like makedonia";
-    stem all_sg: "~selle- like makedonia";
-    stem ess_sg: "~senA- like makedonia";
-    stem tra_sg: "~seks- like makedonia";
+    stem ade_sg: "~sellA- like ilmarinen";
+    stem abl_sg: "~seltA- like ilmarinen";
+    stem all_sg: "~selle- like ilmarinen";
+    stem ess_sg: "~senA- like ilmarinen";
+    stem tra_sg: "~seks- like ilmarinen";
     nom: "~nen", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~sesi", "~semme", "~senne", _;
     ),
-    // Salo: 949 words (belize, chile, monaco, nauru, peru, singapore).
-    declension!("salo", 949, "~";
+    // Makedonia: 1,186 words (latvia, algeria, tunisia, libya, andorra, albania).
+    declension!("makedonia", 1186, "~a";
+    stem gen_sg: "~a- like makedonia";
+    stem par_pl: "~- like makedonia";
+    stem par_sg: "~aV- like makedonia";
+    stem ine_sg: "~- like makedonia";
+    stem ill_sg: "~aVn- like makedonia";
+    stem ade_sg: "~allV- like ilmarinen";
+    stem abl_sg: "~altV- like ilmarinen";
+    stem all_sg: "~alle- like ilmarinen";
+    stem ess_sg: "~anV- like ilmarinen";
+    stem tra_sg: "~aks- like ilmarinen";
+    nom: "~a", _;
+    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
+    proper_noun_possessive_gen_sg: _, "~asi", "~amme", "~anne", _;
+    ),
+    // Salo: 921 words (belize, chile, monaco, nepal, nauru, peru).
+    declension!("salo", 921, "~";
     stem gen_sg: "~- like ilmarinen";
     stem par_pl: "~- like salo";
     stem par_sg: "~A- like ilmarinen";
     stem ine_sg: "~- like salo";
     stem ill_sg: "~Vn- like ilmarinen";
-    stem ade_sg: "~llA- like makedonia";
-    stem abl_sg: "~ltA- like makedonia";
-    stem all_sg: "~lle- like makedonia";
-    stem ess_sg: "~nA- like makedonia";
-    stem tra_sg: "~ks- like makedonia";
+    stem ade_sg: "~llA- like ilmarinen";
+    stem abl_sg: "~ltA- like ilmarinen";
+    stem all_sg: "~lle- like ilmarinen";
+    stem ess_sg: "~nA- like ilmarinen";
+    stem tra_sg: "~ks- like ilmarinen";
     nom: "~", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~si", "~mme", "~nne", _;
     ),
-    // Soini: 520 words (burundi, djibouti, haiti, kiribati, malawi, havaiji).
-    declension!("soini", 520, "~i";
+    // Soini: 501 words (burundi, djibouti, haiti, kiribati, malawi, havaiji).
+    declension!("soini", 501, "~i";
     stem gen_sg: "~i- like ilmarinen";
     stem par_pl: "~- like soini";
     stem par_sg: "~iA- like ilmarinen";
     stem ine_sg: "~- like soini";
     stem ill_sg: "~iVn- like ilmarinen";
-    stem ade_sg: "~illA- like makedonia";
-    stem abl_sg: "~iltA- like makedonia";
-    stem all_sg: "~ille- like makedonia";
-    stem ess_sg: "~inA- like makedonia";
-    stem tra_sg: "~iks- like makedonia";
+    stem ade_sg: "~illA- like ilmarinen";
+    stem abl_sg: "~iltA- like ilmarinen";
+    stem all_sg: "~ille- like ilmarinen";
+    stem ess_sg: "~inA- like ilmarinen";
+    stem tra_sg: "~iks- like ilmarinen";
     nom: "~i", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~isi", "~imme", "~inne", _;
     ),
-    // Hydra: 397 words (laura, enna, rauma, amanda, saksa, ala). Like Makedonia, except in 9 cells: gen_ pl, par pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, proper_noun_possessive_gen_pl _2pl, ….
-    declension!("hydra", 397, "~a", like Makedonia;
+    // Hydra: 495 words (uganda, burma, laura, florida, louisiana, enna). Like Makedonia, except in 9 cells: gen_ pl, par pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, proper_noun_possessive_gen_pl _2pl, ….
+    declension!("hydra", 495, "~a", like Makedonia;
     gen_: _, "~ojen";
     par: _, "~ojA";
     proper_noun_possessive_gen_pl: "~ojeni", "~ojesi", "~ojemme", "~ojenne", "~ojensA";
     proper_noun_possessive_par_pl: "~ojAni", _, _, _, "~ojAVn|~ojAnsV";
     ),
-    // Luxemburg: 386 words (israel, bangladesh, bahrain, bhutan, ecuador, gabon). Like Soini, except in 12 cells: nom sg, proper_noun_possessive_par_pl _3, proper_noun_possessive_ine_pl _3, proper_noun_possessive_ela_pl _3, proper_noun_possessive_ill_pl _1sg, proper_noun_possessive_ade_pl _3, ….
-    declension!("luxemburg", 386, "~", like Soini;
-    stem ill_sg: "~iin- like ilmarinen";
+    // Luxemburg: 352 words (israel, bangladesh, bahrain, bhutan, ecuador, gabon). Like Soini, except in 30 cells: nom sg, gen_ pl, ine sg, ill pl, proper_noun_possessive_nom_sg _1sg, proper_noun_possessive_nom_sg _3, ….
+    declension!("luxemburg", 352, "~", like Soini;
+    stem gen_sg: "~I- like ilmarinen";
+    stem par_sg: "~IA- like ilmarinen";
+    stem ill_sg: "~Iin- like ilmarinen";
+    stem ade_sg: "~IllA- like ilmarinen";
+    stem abl_sg: "~IltA- like ilmarinen";
+    stem all_sg: "~Ille- like ilmarinen";
+    stem ess_sg: "~InA- like ilmarinen";
+    stem tra_sg: "~Iks- like ilmarinen";
     nom: "~", _;
+    gen_: _, "~Ien";
+    ine: "~IssA", _;
+    ill: _, "~eIhin";
+    proper_noun_possessive_nom_sg: "~Ini", _, _, _, "~InsA";
+    proper_noun_possessive_nom_pl: _, "~Isi", "~Imme", "~Inne", _;
+    proper_noun_possessive_gen_sg: _, "~Isi", "~Imme", "~Inne", _;
+    proper_noun_possessive_gen_pl: "~Ieni", "~Iesi", "~Iemme", "~Ienne", "~IensA";
     proper_noun_possessive_par_pl: _, _, _, _, derived;
+    proper_noun_possessive_ine_sg: _, _, _, _, "~IssAVn|~IssAnsV";
     proper_noun_possessive_ine_pl: _, _, _, _, derived;
     proper_noun_possessive_ela_pl: _, _, _, _, "~eistAVn";
-    proper_noun_possessive_ill_pl: "~eihini", _, _, _, _;
+    proper_noun_possessive_ill_pl: "~eIhini", _, _, _, "~eIhinsA";
     proper_noun_possessive_ade_pl: _, _, _, _, "~eillAVn";
     proper_noun_possessive_abl_pl: _, _, _, _, "~eiltAVn";
     proper_noun_possessive_all_pl: _, _, _, _, derived;
@@ -714,20 +732,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn";
     proper_noun_possessive_com_pl: _, _, _, _, "~eineen";
     ),
-    // Tokelau: 332 words (tokelau, palau, guinea-bissau, chisinau, raamattu, ahto). Like Salo with `ˇ` after each pattern.
-    declension!("tokelau", 332, "~ˇ", like Salo with "ˇ";
+    // Tokelau: 333 words (tokelau, palau, guinea-bissau, chisinau, raamattu, ahto). Like Salo with `ˇ` after each pattern.
+    declension!("tokelau", 333, "~ˇ", like Salo with "ˇ";
     ),
-    // Kärpänen: 330 words (kyyhkynen, ääninen, väinämöinen, kärpänen, nieminen, mäkinen). Like Ilmarinen.
-    declension!("kärpänen", 330, "~nen", like Ilmarinen;
+    // Kärpänen: 316 words (kyyhkynen, väinämöinen, kärpänen, nieminen, hämäläinen, järvinen). Like Ilmarinen.
+    declension!("kärpänen", 316, "~nen", like Ilmarinen;
     ),
-    // Leivonmäki: 283 words (keltainenjoki, kilpi, tyynimeri, öljymäki, mäki, kivimäki). Like Pyhäjärvi with `ˇ` after each pattern.
-    declension!("leivonmäki", 283, "~iˇ", like Pyhäjärvi with "ˇ";
-    ),
-    // Sammatti: 255 words (helsinki, ahti, mississippi, tšekki, englanti, islanti). Like Soini with `ˇ` after each pattern.
-    declension!("sammatti", 255, "~iˇ", like Soini with "ˇ";
-    ),
-    // Olhava: 229 words (aurora, leijona, luka, luna, ora, rosa). Like Salo with `` after each pattern (`a` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
-    declension!("olhava", 229, "~a", like Salo with "", "a" after "~";
+    // Olhava: 279 words (panama, tonga, moldova, minnesota, genova, oklahoma). Like Salo with `` after each pattern (`a` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("olhava", 279, "~a", like Salo with "", "a" after "~";
     nom: _, "~at";
     gen_: _, "~ien";
     par: "~aV", "~iA";
@@ -757,49 +769,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_sg: _, _, _, _, "~akseen|~aksensA";
     proper_noun_possessive_abe_sg: _, _, _, _, "~attVVn|~attVnsV";
     ),
-    // Johannes: 229 words (mauritius, barbados, nikolas, venus, uranus, andreas).
-    declension!("johannes", 229, "~~";
-    stem gen_sg: "~k~e- like ilmarinen";
-    stem par_sg: "~~tA- like ilmarinen";
-    stem ine_sg: "~k~- like ilmarinen";
-    stem ill_sg: "~k~een- like ilmarinen";
-    stem ade_sg: "~k~ellA- like makedonia";
-    stem abl_sg: "~k~eltA- like makedonia";
-    stem all_sg: "~k~elle- like makedonia";
-    stem ess_sg: "~k~enA- like makedonia";
-    stem tra_sg: "~k~eks- like makedonia";
-    nom: "~~", _;
-    gen_: _, "~~ten|~k~ien";
-    par: _, "~k~iA";
-    ill: _, "~k~iin";
-    ess: _, "~k~inA";
-    proper_noun_possessive_nom_sg: "~k~eni", _, _, _, "~k~ensA";
-    proper_noun_possessive_nom_pl: _, "~k~esi", "~k~emme", "~k~enne", _;
-    proper_noun_possessive_gen_sg: _, "~k~esi", "~k~emme", "~k~enne", _;
-    proper_noun_possessive_gen_pl: "~~teni|~k~ieni", "~~tesi|~k~iesi", "~~temme|~k~iemme", "~~tenne|~k~ienne", "~~tensA|~k~iensA";
-    proper_noun_possessive_par_pl: "~k~iAni", _, _, _, "~k~iAVn|~k~iAnsV";
-    proper_noun_possessive_ill_pl: "~k~iini", _, _, _, "~k~iinsA";
-    proper_noun_possessive_ess_pl: "~k~inAni", "~k~inAsi", "~k~inAmme", "~k~inAnne", "~k~inAVn|~k~inAnsV";
-    proper_noun_possessive_com_pl: "~k~ineni", _, _, _, "~k~ineen|~k~inensA";
+    // Leivonmäki: 268 words (keltainenjoki, kilpi, tyynimeri, öljymäki, kaukoputki, mäki). Like Pyhäjärvi with `ˇ` after each pattern.
+    declension!("leivonmäki", 268, "~iˇ", like Pyhäjärvi with "ˇ";
     ),
-    // Kestilä: 227 words (perähikiä, jenkkilä, helinä, luoteisväylä, siviä, rysälä).
-    declension!("kestilä", 227, "~ä";
-    stem gen_sg: "~ä- like makedonia";
-    stem par_pl: "~- like kestilä";
-    stem par_sg: "~äV- like makedonia";
-    stem ine_sg: "~- like kestilä";
-    stem ill_sg: "~äVn- like makedonia";
-    stem ade_sg: "~ällV- like makedonia";
-    stem abl_sg: "~ältV- like makedonia";
-    stem all_sg: "~älle- like makedonia";
-    stem ess_sg: "~änV- like makedonia";
-    stem tra_sg: "~äks- like makedonia";
-    nom: "~ä", _;
-    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
-    proper_noun_possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
+    // Sammatti: 255 words (helsinki, ahti, mississippi, tšekki, englanti, islanti). Like Soini with `ˇ` after each pattern.
+    declension!("sammatti", 255, "~iˇ", like Soini with "ˇ";
     ),
-    // Inari: 223 words (mali, bali, bengali, portugali, pietari, inari). Like Luxemburg with `` after each pattern (`i` after ~), except in 24 cells: gen_ pl, par pl, ill sg, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, ….
-    declension!("inari", 223, "~i", like Luxemburg with "", "i" after "~";
+    // Inari: 241 words (mali, bali, japani, unkari, pietari, alttari). Like Aaron with `` after each pattern (`i` after ~), except in 24 cells: gen_ pl, par pl, ill sg, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, ….
+    declension!("inari", 241, "~i", like Aaron with "", "i" after "~";
     gen_: _, "~ien|~eiden|~eitten";
     par: _, "~eitA|~ejA";
     ill: "~iVn", _;
@@ -817,16 +794,63 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn|~eittAnsV";
     proper_noun_possessive_com_pl: _, _, _, _, "~eineen|~einensA";
     ),
-    // Pyhäjärvi: 193 words (ilmajärvi, yläjärvi, ancylusjärvi, araljärvi, pohjois-suomi, etelä-suomi). Like Olhava, except in 53 cells: nom sg, par pl, ine sg, ine pl, ela pl, ade pl, ….
-    declension!("pyhäjärvi", 193, "~i", like Olhava;
+    // Johannes: 230 words (mauritius, barbados, nikolas, venus, uranus, andreas).
+    declension!("johannes", 230, "~~";
+    stem gen_sg: "~k~e- like ilmarinen";
+    stem par_sg: "~~tA- like ilmarinen";
+    stem ine_sg: "~k~- like ilmarinen";
+    stem ill_sg: "~k~een- like ilmarinen";
+    stem ade_sg: "~k~ellA- like ilmarinen";
+    stem abl_sg: "~k~eltA- like ilmarinen";
+    stem all_sg: "~k~elle- like ilmarinen";
+    stem ess_sg: "~k~enA- like ilmarinen";
+    stem tra_sg: "~k~eks- like ilmarinen";
+    nom: "~~", _;
+    gen_: _, "~~ten|~k~ien";
+    par: _, "~k~iA";
+    ill: _, "~k~iin";
+    ess: _, "~k~inA";
+    proper_noun_possessive_nom_sg: "~k~eni", _, _, _, "~k~ensA";
+    proper_noun_possessive_nom_pl: _, "~k~esi", "~k~emme", "~k~enne", _;
+    proper_noun_possessive_gen_sg: _, "~k~esi", "~k~emme", "~k~enne", _;
+    proper_noun_possessive_gen_pl: "~~teni|~k~ieni", "~~tesi|~k~iesi", "~~temme|~k~iemme", "~~tenne|~k~ienne", "~~tensA|~k~iensA";
+    proper_noun_possessive_par_pl: "~k~iAni", _, _, _, "~k~iAVn|~k~iAnsV";
+    proper_noun_possessive_ill_pl: "~k~iini", _, _, _, "~k~iinsA";
+    proper_noun_possessive_ess_pl: "~k~inAni", "~k~inAsi", "~k~inAmme", "~k~inAnne", "~k~inAVn|~k~inAnsV";
+    proper_noun_possessive_com_pl: "~k~ineni", _, _, _, "~k~ineen|~k~inensA";
+    ),
+    // Kestilä: 217 words (perähikiä, jenkkilä, helinä, luoteisväylä, siviä, rysälä).
+    declension!("kestilä", 217, "~ä";
+    stem gen_sg: "~ä- like makedonia";
+    stem par_pl: "~- like kestilä";
+    stem par_sg: "~äV- like makedonia";
+    stem ine_sg: "~- like kestilä";
+    stem ill_sg: "~äVn- like makedonia";
+    stem ade_sg: "~ällV- like ilmarinen";
+    stem abl_sg: "~ältV- like ilmarinen";
+    stem all_sg: "~älle- like ilmarinen";
+    stem ess_sg: "~änV- like ilmarinen";
+    stem tra_sg: "~äks- like ilmarinen";
+    nom: "~ä", _;
+    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
+    proper_noun_possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
+    ),
+    // Rita: 198 words (itävalta, rita, veistotaltta, pirkka, lappeenranta, pekka). Like Hydra with `ˇ` after each pattern.
+    declension!("rita", 198, "~aˇ", like Hydra with "ˇ";
+    ),
+    // Lahti: 165 words (lahti, kurki, suomenlahti, pohjanlahti, persianlahti, meksikonlahti). Like Salmi with `ˇ` after each pattern.
+    declension!("lahti", 165, "~iˇ", like Salmi with "ˇ";
+    ),
+    // Pyhäjärvi: 164 words (ilmajärvi, yläjärvi, ancylusjärvi, araljärvi, pohjois-suomi, etelä-suomi). Like Olhava, except in 53 cells: nom sg, par pl, ine sg, ine pl, ela pl, ade pl, ….
+    declension!("pyhäjärvi", 164, "~i", like Olhava;
     stem gen_sg: "~e- like ilmarinen";
     stem par_sg: "~eA- like ilmarinen";
     stem ill_sg: "~eVn- like ilmarinen";
-    stem ade_sg: "~ellA- like makedonia";
-    stem abl_sg: "~eltA- like makedonia";
-    stem all_sg: "~elle- like makedonia";
-    stem ess_sg: "~enA- like makedonia";
-    stem tra_sg: "~eks- like makedonia";
+    stem ade_sg: "~ellA- like ilmarinen";
+    stem abl_sg: "~eltA- like ilmarinen";
+    stem all_sg: "~elle- like ilmarinen";
+    stem ess_sg: "~enA- like ilmarinen";
+    stem tra_sg: "~eks- like ilmarinen";
     nom: "~i", _;
     par: _, "~iä";
     ine: "~essA", "~issä";
@@ -848,9 +872,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abl_pl: "~iltäni", "~iltäsi", "~iltämme", "~iltänne", "~iltäVn|~iltAnsV";
     proper_noun_possessive_ess_pl: "~inäni", "~inäsi", "~inämme", "~inänne", "~inäVn|~inAnsV";
     proper_noun_possessive_abe_pl: "~ittäni", "~ittäsi", "~ittämme", "~ittänne", "~ittäVn|~ittAnsV";
-    ),
-    // Rita: 174 words (rita, pirkka, pekka, haaparanta, anitta, birgitta). Like Hydra with `ˇ` after each pattern.
-    declension!("rita", 174, "~aˇ", like Hydra with "ˇ";
     ),
     // Tulimaa: 161 words (ahvenanmaa, maa, thaimaa, swazimaa, tulimaa, hiidenmaa). Like Salo with `` after each pattern (`a` after ~), except in 39 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
     declension!("tulimaa", 161, "~a", like Salo with "", "a" after "~";
@@ -889,8 +910,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_pl: "~- like hietaniemi";
     stem ine_sg: "~m- like hietaniemi";
     stem ill_sg: "~meVn- like hietaniemi";
-    stem ade_sg: "~mVllä- like makedonia";
-    stem abl_sg: "~mVltä- like makedonia";
+    stem ade_sg: "~mVllä- like ilmarinen";
+    stem abl_sg: "~mVltä- like ilmarinen";
     stem all_sg: "~mVlle- like hietaniemi";
     stem ess_sg: "~m- like hietaniemi";
     stem tra_sg: "~mVks- like hietaniemi";
@@ -899,74 +920,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_gen_sg: _, "~mesi", "~memme", "~menne", _;
     proper_noun_possessive_par_sg: _, _, _, _, "~ntäVn|~meäVn|~ntänsä|~meänsä";
     ),
-    // Lahti: 146 words (lahti, suomenlahti, pohjanlahti, persianlahti, meksikonlahti, hudsoninlahti). Like Salmi with `ˇ` after each pattern.
-    declension!("lahti", 146, "~iˇ", like Salmi with "ˇ";
-    ),
-    // Borneo: 120 words (borneo, kuopio, tapio, ensio, päiviö, kallio). Like Salo, except in 2 cells: proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3.
-    declension!("borneo", 120, "~", like Salo;
+    // Iniö: 150 words (ontario, ohio, tokio, borneo, kuopio, kolmio). Like Salo, except in 2 cells: proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3.
+    declension!("iniö", 150, "~", like Salo;
     stem par_pl: "~- like tapio";
     stem par_sg: "~tA- like ilmarinen";
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     ),
-    // Saari: 113 words (mansaari, eteläsaari, pohjoissaari, nuoli, vesisaari, pöytävuori). Like Borneo with `` after each pattern (`i` after ~), except in 39 cells: nom pl, gen_ pl, par pl, ine sg, ela sg, ill sg, ….
-    declension!("saari", 113, "~i", like Borneo with "", "i" after "~";
-    nom: _, "~et";
-    gen_: _, "~ten|~ien";
-    par: _, "~iA";
-    ine: "~essA", _;
-    ela: "~estA", _;
-    ill: "~eVn", "~iin";
-    ade: "~ellA", _;
-    abl: "~eltA", _;
-    all: "~elle", _;
-    ess: "~enA", _;
-    tra: "~eksi", _;
-    abe: "~ettA", _;
-    proper_noun_possessive_nom_sg: "~eni", _, _, _, "~ensA";
-    proper_noun_possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
-    proper_noun_possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
-    proper_noun_possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensA|~iensA";
-    proper_noun_possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iAnsV";
-    proper_noun_possessive_ine_sg: _, _, _, _, "~essAVn|~essAnsV";
-    proper_noun_possessive_ela_sg: _, _, _, _, "~estAVn|~estAnsV";
-    proper_noun_possessive_ill_sg: _, _, _, _, "~eVnsA";
-    proper_noun_possessive_ill_pl: "~iini", _, _, _, "~iinsA";
-    proper_noun_possessive_ade_sg: _, _, _, _, "~ellAVn|~ellAnsV";
-    proper_noun_possessive_abl_sg: _, _, _, _, "~eltAVn|~eltAnsV";
-    proper_noun_possessive_all_sg: _, _, _, _, "~elleen|~ellensA";
-    proper_noun_possessive_ess_sg: _, _, _, _, "~enAVn|~enAnsV";
-    proper_noun_possessive_tra_sg: _, _, _, _, "~ekseen|~eksensA";
-    proper_noun_possessive_abe_sg: _, _, _, _, "~ettAVn|~ettAnsV";
-    ),
-    // Härmä: 109 words (venäjä, isä, valko-venäjä, jyväskylä, kuvanveistäjä, ryssä). Like Pyhäjärvi, except in 22 cells: nom sg, ine sg, proper_noun_possessive_nom_sg _1sg, proper_noun_possessive_nom_sg _3, proper_noun_possessive_nom_pl _2sg, proper_noun_possessive_nom_pl _1pl, ….
-    declension!("härmä", 109, "~ä", like Pyhäjärvi;
-    stem gen_sg: "~ä- like makedonia";
-    stem par_sg: "~äV- like makedonia";
-    stem ill_sg: "~äVn- like makedonia";
-    stem ade_sg: "~ällV- like makedonia";
-    stem abl_sg: "~ältV- like makedonia";
-    stem all_sg: "~älle- like makedonia";
-    stem ess_sg: "~änV- like makedonia";
-    stem tra_sg: "~äks- like makedonia";
-    nom: "~ä", _;
-    ine: "~ässV", _;
-    proper_noun_possessive_nom_sg: "~äni", _, _, _, "~änsV";
-    proper_noun_possessive_nom_pl: _, "~äsi", "~ämme", "~änne", derived;
-    proper_noun_possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
-    proper_noun_possessive_par_pl: _, _, _, _, "~iäVn|~iänsV";
-    proper_noun_possessive_ine_sg: _, _, _, _, "~ässVVn|~ässVnsV";
-    proper_noun_possessive_ine_pl: _, _, _, _, "~issäVn|~issänsV";
-    proper_noun_possessive_ela_pl: _, _, _, _, "~istäVn|~istänsV";
-    proper_noun_possessive_ade_pl: _, _, _, _, "~illäVn|~illänsV";
-    proper_noun_possessive_abl_pl: _, _, _, _, "~iltäVn|~iltänsV";
-    proper_noun_possessive_all_pl: _, _, _, _, "~illeen|~illensä";
-    proper_noun_possessive_ess_pl: _, _, _, _, "~inäVn|~inänsV";
-    proper_noun_possessive_tra_pl: _, _, _, _, "~ikseen|~iksensä";
-    proper_noun_possessive_abe_pl: _, _, _, _, "~ittäVn|~ittänsV";
-    proper_noun_possessive_com_pl: _, _, _, _, "~ineen|~inensä";
-    ),
-    // Salmi: 106 words (suomi, salmi, kaukoputki, vuoksi, talvi, nurmi). Like Salo with `` after each pattern (`i` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
-    declension!("salmi", 106, "~i", like Salo with "", "i" after "~";
+    // Salmi: 134 words (suomi, salmi, vuoksi, talvi, luzoninsalmi, nurmi). Like Salo with `` after each pattern (`i` after ~), except in 41 cells: nom pl, gen_ pl, par sg, par pl, ine sg, ela sg, ….
+    declension!("salmi", 134, "~i", like Salo with "", "i" after "~";
     nom: _, "~et";
     gen_: _, "~ien";
     par: "~eA", "~iA";
@@ -996,21 +957,95 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_sg: _, _, _, _, "~ekseen|~eksensA";
     proper_noun_possessive_abe_sg: _, _, _, _, "~ettAVn|~ettAnsV";
     ),
-    // Nutikka: 74 words (amerikka, riika, rebekka, annukka, marjukka, henriikka). Like Makedonia, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
-    declension!("nutikka", 74, "~ka", like Makedonia;
+    // Härmä: 119 words (venäjä, isä, valko-venäjä, jyväskylä, kuvanveistäjä, ryssä). Like Pyhäjärvi, except in 22 cells: nom sg, ine sg, proper_noun_possessive_nom_sg _1sg, proper_noun_possessive_nom_sg _3, proper_noun_possessive_nom_pl _2sg, proper_noun_possessive_nom_pl _1pl, ….
+    declension!("härmä", 119, "~ä", like Pyhäjärvi;
+    stem gen_sg: "~ä- like makedonia";
+    stem par_sg: "~äV- like makedonia";
+    stem ill_sg: "~äVn- like makedonia";
+    stem ade_sg: "~ällV- like ilmarinen";
+    stem abl_sg: "~ältV- like ilmarinen";
+    stem all_sg: "~älle- like ilmarinen";
+    stem ess_sg: "~änV- like ilmarinen";
+    stem tra_sg: "~äks- like ilmarinen";
+    nom: "~ä", _;
+    ine: "~ässV", _;
+    proper_noun_possessive_nom_sg: "~äni", _, _, _, "~änsV";
+    proper_noun_possessive_nom_pl: _, "~äsi", "~ämme", "~änne", derived;
+    proper_noun_possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
+    proper_noun_possessive_par_pl: _, _, _, _, "~iäVn|~iänsV";
+    proper_noun_possessive_ine_sg: _, _, _, _, "~ässVVn|~ässVnsV";
+    proper_noun_possessive_ine_pl: _, _, _, _, "~issäVn|~issänsV";
+    proper_noun_possessive_ela_pl: _, _, _, _, "~istäVn|~istänsV";
+    proper_noun_possessive_ade_pl: _, _, _, _, "~illäVn|~illänsV";
+    proper_noun_possessive_abl_pl: _, _, _, _, "~iltäVn|~iltänsV";
+    proper_noun_possessive_all_pl: _, _, _, _, "~illeen|~illensä";
+    proper_noun_possessive_ess_pl: _, _, _, _, "~inäVn|~inänsV";
+    proper_noun_possessive_tra_pl: _, _, _, _, "~ikseen|~iksensä";
+    proper_noun_possessive_abe_pl: _, _, _, _, "~ittäVn|~ittänsV";
+    proper_noun_possessive_com_pl: _, _, _, _, "~ineen|~inensä";
+    ),
+    // Saari: 113 words (mansaari, eteläsaari, pohjoissaari, nuoli, vesisaari, pöytävuori). Like Iniö with `` after each pattern (`i` after ~), except in 39 cells: nom pl, gen_ pl, par pl, ine sg, ela sg, ill sg, ….
+    declension!("saari", 113, "~i", like Iniö with "", "i" after "~";
+    nom: _, "~et";
+    gen_: _, "~ten|~ien";
+    par: _, "~iA";
+    ine: "~essA", _;
+    ela: "~estA", _;
+    ill: "~eVn", "~iin";
+    ade: "~ellA", _;
+    abl: "~eltA", _;
+    all: "~elle", _;
+    ess: "~enA", _;
+    tra: "~eksi", _;
+    abe: "~ettA", _;
+    proper_noun_possessive_nom_sg: "~eni", _, _, _, "~ensA";
+    proper_noun_possessive_nom_pl: _, "~esi", "~emme", "~enne", _;
+    proper_noun_possessive_gen_sg: _, "~esi", "~emme", "~enne", _;
+    proper_noun_possessive_gen_pl: "~teni|~ieni", "~tesi|~iesi", "~temme|~iemme", "~tenne|~ienne", "~tensA|~iensA";
+    proper_noun_possessive_par_pl: "~iAni", _, _, _, "~iAVn|~iAnsV";
+    proper_noun_possessive_ine_sg: _, _, _, _, "~essAVn|~essAnsV";
+    proper_noun_possessive_ela_sg: _, _, _, _, "~estAVn|~estAnsV";
+    proper_noun_possessive_ill_sg: _, _, _, _, "~eVnsA";
+    proper_noun_possessive_ill_pl: "~iini", _, _, _, "~iinsA";
+    proper_noun_possessive_ade_sg: _, _, _, _, "~ellAVn|~ellAnsV";
+    proper_noun_possessive_abl_sg: _, _, _, _, "~eltAVn|~eltAnsV";
+    proper_noun_possessive_all_sg: _, _, _, _, "~elleen|~ellensA";
+    proper_noun_possessive_ess_sg: _, _, _, _, "~enAVn|~enAnsV";
+    proper_noun_possessive_tra_sg: _, _, _, _, "~ekseen|~eksensA";
+    proper_noun_possessive_abe_sg: _, _, _, _, "~ettAVn|~ettAnsV";
+    ),
+    // Nutikka: 76 words (amerikka, riika, laatokka, rebekka, annukka, marjukka). Like Makedonia, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
+    declension!("nutikka", 76, "~ka", like Makedonia;
     stem par_pl: "~- like nutikka";
     stem par_sg: "~kaV- like makedonia";
     stem ill_sg: "~kaVn- like makedonia";
-    stem ess_sg: "~kanV- like makedonia";
+    stem ess_sg: "~kanV- like ilmarinen";
     nom: "~ka", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~kasi", "~kamme", "~kanne", _;
     ),
-    // Opas: 70 words (opas, kangas, saarikangas, isokangas, porras, haapakangas). Like Oinas with `ˇ` after each pattern.
+    // Opas: 70 words (barnabas, opas, kangas, saarikangas, isokangas, haapakangas). Like Oinas with `ˇ` after each pattern.
     declension!("opas", 70, "~sˇ", like Oinas with "ˇ";
     ),
-    // Lotta: 58 words (jukka, lotta, jutta, kolkka, mutta, kuikka). Like Vehmaa with `ˇ` after each pattern, except in 33 cells: gen_ pl, par sg, par pl, ill sg, ill pl, proper_noun_possessive_gen_pl _1sg, ….
-    declension!("lotta", 58, "~aˇ", like Vehmaa with "ˇ";
+    // Aaron: 67 words (jupiter, amsterdam, daniel, aaron, thor, oregon). Like Soini, except in 14 cells: nom sg, par pl, proper_noun_possessive_par_pl _1sg, proper_noun_possessive_par_pl _3, proper_noun_possessive_ine_pl _3, proper_noun_possessive_ela_pl _3, ….
+    declension!("aaron", 67, "~", like Soini;
+    stem ill_sg: "~iin- like ilmarinen";
+    nom: "~", _;
+    par: _, "~eitA";
+    proper_noun_possessive_par_pl: "~eitAni", _, _, _, derived;
+    proper_noun_possessive_ine_pl: _, _, _, _, derived;
+    proper_noun_possessive_ela_pl: _, _, _, _, "~eistAVn";
+    proper_noun_possessive_ill_pl: "~eihini", _, _, _, _;
+    proper_noun_possessive_ade_pl: _, _, _, _, "~eillAVn";
+    proper_noun_possessive_abl_pl: _, _, _, _, "~eiltAVn";
+    proper_noun_possessive_all_pl: _, _, _, _, derived;
+    proper_noun_possessive_ess_pl: _, _, _, _, derived;
+    proper_noun_possessive_tra_pl: _, _, _, _, derived;
+    proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn";
+    proper_noun_possessive_com_pl: _, _, _, _, "~eineen";
+    ),
+    // Lotta: 64 words (jukka, lotta, jutta, kalkutta, kolkka, jokimukka). Like Vehmaa with `ˇ` after each pattern, except in 33 cells: gen_ pl, par sg, par pl, ill sg, ill pl, proper_noun_possessive_gen_pl _1sg, ….
+    declension!("lotta", 64, "~aˇ", like Vehmaa with "ˇ";
     gen_: _, "~ienˇ";
     par: "~aVˇ", "~iAˇ";
     ill: "~aVnˇ", "~iinˇ";
@@ -1037,13 +1072,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVnˇ|~ittAnsVˇ";
     proper_noun_possessive_com_pl: _, _, _, _, "~ineenˇ|~inensAˇ";
     ),
-    // Kakskerta: 57 words (itävalta, eurooppa, kreikka, etelä-afrikka, pohjois-amerikka, etelä-amerikka). Like Makedonia with `ˇ` after each pattern.
-    declension!("kakskerta", 57, "~aˇ", like Makedonia with "ˇ";
-    ),
-    // Järvenpää: 46 words (mäenpää, järvenpää, tähkäpää, sillanpää, kankaanpää, pyhtää). Like Roine with `` after each pattern (`ä` after ~), except in 35 cells: nom pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    // Järvenpää: 46 words (mäenpää, järvenpää, tähkäpää, sillanpää, kankaanpää, pyhtää). Like Roine with `` after each pattern (`ä` after ~), except in 38 cells: nom pl, par sg, par pl, ine sg, ela sg, ill sg, ….
     declension!("järvenpää", 46, "~ä", like Roine with "", "ä" after "~";
     nom: _, "~ät";
-    par: "~ätV", _;
+    par: "~ätV", "~itA";
     ine: "~ässV", _;
     ela: "~ästV", _;
     ill: "~ähVn", "~ihin";
@@ -1057,6 +1089,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_nom_pl: _, "~äsi", "~ämme", "~änne", _;
     proper_noun_possessive_gen_sg: _, "~äsi", "~ämme", "~änne", _;
     proper_noun_possessive_par_sg: _, _, _, _, "~ätVVn|~ätVnsV";
+    proper_noun_possessive_par_pl: "~itAni", _, _, _, "~itAVn|~itAnsV";
     proper_noun_possessive_ine_sg: _, _, _, _, "~ässVVn|~ässVnsV";
     proper_noun_possessive_ela_sg: _, _, _, _, "~ästVVn|~ästVnsV";
     proper_noun_possessive_ill_sg: _, _, _, _, "~ähVnsV";
@@ -1073,10 +1106,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem gen_sg: "~V- like hietaniemi";
     stem par_sg: "~ta- like ilmarinen";
     stem ill_sg: "~VVn- like hietaniemi";
-    stem ade_sg: "~Vllä- like makedonia";
-    stem abl_sg: "~Vltä- like makedonia";
+    stem ade_sg: "~Vllä- like ilmarinen";
+    stem abl_sg: "~Vltä- like ilmarinen";
     stem all_sg: "~Vlle- like hietaniemi";
-    stem ess_sg: "~Vnä- like makedonia";
+    stem ess_sg: "~Vnä- like ilmarinen";
     stem tra_sg: "~Vks- like hietaniemi";
     ine: "~Vssä", _;
     proper_noun_possessive_nom_sg: "~Vni", _, _, _, "~Vnsä";
@@ -1094,22 +1127,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
     proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
     ),
-    // Aaron: 41 words (jupiter, daniel, aaron, simon, boston, erin). Like Luxemburg, except in 2 cells: par pl, proper_noun_possessive_par_pl _1sg.
-    declension!("aaron", 41, "~", like Luxemburg;
-    par: _, "~eitA";
-    proper_noun_possessive_par_pl: "~eitAni", _, _, _, _;
-    ),
-    // Roine: 32 words (tampere, joutsen, laine, purje, helle, halme). Like Tulimaa, except in 8 cells: nom sg, ine sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, ….
-    declension!("roine", 32, "~", like Tulimaa;
+    // Roine: 35 words (tampere, joutsen, laine, purje, helle, halme). Like Tulimaa, except in 8 cells: nom sg, ine sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, ….
+    declension!("roine", 35, "~", like Tulimaa;
     stem gen_sg: "~V- like ilmarinen";
     stem par_pl: "~- like roine";
     stem par_sg: "~ttA- like ilmarinen";
     stem ill_sg: "~eseen- like ilmarinen";
-    stem ade_sg: "~VllA- like makedonia";
-    stem abl_sg: "~VltA- like makedonia";
-    stem all_sg: "~Vlle- like makedonia";
-    stem ess_sg: "~VnA- like makedonia";
-    stem tra_sg: "~Vks- like makedonia";
+    stem ade_sg: "~VllA- like ilmarinen";
+    stem abl_sg: "~VltA- like ilmarinen";
+    stem all_sg: "~Vlle- like ilmarinen";
+    stem ess_sg: "~VnA- like ilmarinen";
+    stem tra_sg: "~Vks- like ilmarinen";
     nom: "~", _;
     ine: "~VssA", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
@@ -1148,15 +1176,51 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_sg: _, _, _, _, derived;
     proper_noun_possessive_abe_sg: _, _, _, _, derived;
     ),
-    // Häme: 26 words (käärme, pere, lohikäärme, vesikäärme, häme, filippiläiskirje). Like Härmä, except in 32 cells: nom sg, gen_ pl, par pl, ine sg, ill pl, proper_noun_possessive_nom_sg _1sg, ….
-    declension!("häme", 26, "~", like Härmä;
+    // Oinas: 27 words (valas, oinas, pythagoras, tursas, jeremias, armas). Like Roine with `` after each pattern (`s` after ~), except in 41 cells: gen_ pl, par sg, par pl, ine sg, ela sg, ill sg, ….
+    declension!("oinas", 27, "~s", like Roine with "", "s" after "~";
+    gen_: _, "~iden";
+    par: "~stV", "~itA";
+    ine: "~VssV", _;
+    ela: "~VstV", _;
+    ill: "~VseVn", "~isVin";
+    ade: "~VllV", _;
+    abl: "~VltV", _;
+    ess: "~VnV", _;
+    abe: "~VttV", _;
+    proper_noun_possessive_nom_sg: _, _, _, _, "~VnsV";
+    proper_noun_possessive_gen_pl: "~ideni", "~idesi", "~idemme", "~idenne", "~idensA";
+    proper_noun_possessive_par_sg: _, _, _, _, "~stVVn|~stVnsV";
+    proper_noun_possessive_par_pl: "~itAni", _, _, _, derived;
+    proper_noun_possessive_ine_sg: _, _, _, _, "~VssVVn|~VssVnsV";
+    proper_noun_possessive_ine_pl: _, _, _, _, derived;
+    proper_noun_possessive_ela_sg: _, _, _, _, "~VstVVn|~VstVnsV";
+    proper_noun_possessive_ela_pl: _, _, _, _, "~istAVn";
+    proper_noun_possessive_ill_sg: _, _, _, _, "~VseVnsA";
+    proper_noun_possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
+    proper_noun_possessive_ade_sg: _, _, _, _, "~VllVVn|~VllVnsV";
+    proper_noun_possessive_ade_pl: _, _, _, _, "~illAVn";
+    proper_noun_possessive_abl_sg: _, _, _, _, "~VltVVn|~VltVnsV";
+    proper_noun_possessive_abl_pl: _, _, _, _, "~iltAVn";
+    proper_noun_possessive_all_pl: _, _, _, _, derived;
+    proper_noun_possessive_ess_sg: _, _, _, _, "~VnVVn|~VnVnsV";
+    proper_noun_possessive_ess_pl: _, _, _, _, derived;
+    proper_noun_possessive_tra_pl: _, _, _, _, derived;
+    proper_noun_possessive_abe_sg: _, _, _, _, "~VttVVn|~VttVnsV";
+    proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
+    proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
+    ),
+    // Kakskerta: 26 words (eurooppa, kreikka, etelä-afrikka, pohjois-amerikka, etelä-amerikka, afrikka). Like Makedonia with `ˇ` after each pattern.
+    declension!("kakskerta", 26, "~aˇ", like Makedonia with "ˇ";
+    ),
+    // Häme: 23 words (käärme, pere, lohikäärme, vesikäärme, häme, filippiläiskirje). Like Härmä, except in 32 cells: nom sg, gen_ pl, par pl, ine sg, ill pl, proper_noun_possessive_nom_sg _1sg, ….
+    declension!("häme", 23, "~", like Härmä;
     stem gen_sg: "~V- like hietaniemi";
     stem par_sg: "~ttä- like ilmarinen";
     stem ill_sg: "~eseen- like hietaniemi";
-    stem ade_sg: "~Vllä- like makedonia";
-    stem abl_sg: "~Vltä- like makedonia";
+    stem ade_sg: "~Vllä- like ilmarinen";
+    stem abl_sg: "~Vltä- like ilmarinen";
     stem all_sg: "~Vlle- like hietaniemi";
-    stem ess_sg: "~Vnä- like makedonia";
+    stem ess_sg: "~Vnä- like ilmarinen";
     stem tra_sg: "~Vks- like hietaniemi";
     nom: "~", _;
     gen_: _, "~iden";
@@ -1179,75 +1243,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_pl: _, _, _, _, derived;
     proper_noun_possessive_abe_pl: _, _, _, _, "~ittäVn";
     proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
-    ),
-    // Oinas: 23 words (valas, oinas, pythagoras, tursas, jeremias, barnabas). Like Roine with `` after each pattern (`s` after ~), except in 39 cells: gen_ pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
-    declension!("oinas", 23, "~s", like Roine with "", "s" after "~";
-    gen_: _, "~iden";
-    par: "~stV", _;
-    ine: "~VssV", _;
-    ela: "~VstV", _;
-    ill: "~VseVn", "~isVin";
-    ade: "~VllV", _;
-    abl: "~VltV", _;
-    ess: "~VnV", _;
-    abe: "~VttV", _;
-    proper_noun_possessive_nom_sg: _, _, _, _, "~VnsV";
-    proper_noun_possessive_gen_pl: "~ideni", "~idesi", "~idemme", "~idenne", "~idensA";
-    proper_noun_possessive_par_sg: _, _, _, _, "~stVVn|~stVnsV";
-    proper_noun_possessive_par_pl: _, _, _, _, derived;
-    proper_noun_possessive_ine_sg: _, _, _, _, "~VssVVn|~VssVnsV";
-    proper_noun_possessive_ine_pl: _, _, _, _, derived;
-    proper_noun_possessive_ela_sg: _, _, _, _, "~VstVVn|~VstVnsV";
-    proper_noun_possessive_ela_pl: _, _, _, _, "~istAVn";
-    proper_noun_possessive_ill_sg: _, _, _, _, "~VseVnsA";
-    proper_noun_possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
-    proper_noun_possessive_ade_sg: _, _, _, _, "~VllVVn|~VllVnsV";
-    proper_noun_possessive_ade_pl: _, _, _, _, "~illAVn";
-    proper_noun_possessive_abl_sg: _, _, _, _, "~VltVVn|~VltVnsV";
-    proper_noun_possessive_abl_pl: _, _, _, _, "~iltAVn";
-    proper_noun_possessive_all_pl: _, _, _, _, derived;
-    proper_noun_possessive_ess_sg: _, _, _, _, "~VnVVn|~VnVnsV";
-    proper_noun_possessive_ess_pl: _, _, _, _, derived;
-    proper_noun_possessive_tra_pl: _, _, _, _, derived;
-    proper_noun_possessive_abe_sg: _, _, _, _, "~VttVVn|~VttVnsV";
-    proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
-    proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
-    ),
-    // Plejadit: 20 words (andit, alpit, skandit, molukit, plejadit, seychellit). Like Luxemburg with `` after each pattern (`it` after ~), except in 37 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
-    declension!("plejadit", 20, "~it", like Luxemburg with "", "it" after "~";
-    par: derived, _;
-    ine: derived, _;
-    ela: derived, _;
-    ill: derived, _;
-    ade: derived, _;
-    abl: derived, _;
-    all: derived, _;
-    ess: derived, _;
-    tra: derived, _;
-    abe: derived, _;
-    proper_noun_possessive_nom_sg: derived, _, _, _, derived;
-    proper_noun_possessive_nom_pl: "~ini", _, _, _, "~insA";
-    proper_noun_possessive_gen_sg: _, derived, derived, derived, _;
-    proper_noun_possessive_par_sg: _, _, _, _, derived;
-    proper_noun_possessive_par_pl: _, _, _, _, "~ejAVn|~ejAnsV";
-    proper_noun_possessive_ine_sg: _, _, _, _, derived;
-    proper_noun_possessive_ine_pl: _, _, _, _, "~eissAVn|~eissAnsV";
-    proper_noun_possessive_ela_sg: _, _, _, _, derived;
-    proper_noun_possessive_ela_pl: _, _, _, _, "~eistAVn|~eistAnsV";
-    proper_noun_possessive_ill_sg: _, _, _, _, derived;
-    proper_noun_possessive_ade_sg: _, _, _, _, derived;
-    proper_noun_possessive_ade_pl: _, _, _, _, "~eillAVn|~eillAnsV";
-    proper_noun_possessive_abl_sg: _, _, _, _, derived;
-    proper_noun_possessive_abl_pl: _, _, _, _, "~eiltAVn|~eiltAnsV";
-    proper_noun_possessive_all_sg: _, _, _, _, derived;
-    proper_noun_possessive_all_pl: _, _, _, _, "~eilleen|~eillensA";
-    proper_noun_possessive_ess_sg: _, _, _, _, derived;
-    proper_noun_possessive_ess_pl: _, _, _, _, "~einAVn|~einAnsV";
-    proper_noun_possessive_tra_sg: _, _, _, _, derived;
-    proper_noun_possessive_tra_pl: _, _, _, _, "~eikseen|~eiksensA";
-    proper_noun_possessive_abe_sg: _, _, _, _, derived;
-    proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn|~eittAnsV";
-    proper_noun_possessive_com_pl: _, _, _, _, "~eineen|~einensA";
     ),
     // Luukas: 19 words (luukas, ahokas, laukas, asukas, äikäs, kansikas). Like Johannes, except in 30 cells: nom sg, nom pl, ine sg, ela sg, ade sg, abl sg, ….
     declension!("luukas", 19, "~~s", like Johannes;
@@ -1281,14 +1276,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_sg: _, _, _, _, "~k~VttVVn|~k~attansa";
     proper_noun_possessive_abe_pl: _, _, _, _, "~k~ittAVn|~k~ittansa";
     ),
-    // Rinne: 18 words (rinne, päijänne, selänne, alanne, ylänne, kaarre). Like Roine with `ˇ` after each pattern.
-    declension!("rinne", 18, "~ˇ", like Roine with "ˇ";
-    ),
     // Orivesi: 17 words (haapavesi, kuorevesi, orivesi, ruovesi, kiuruvesi, heinävesi). Like Ilmarinen, except in 73 cells: nom sg, nom pl, gen_ pl, par pl, ine sg, ine pl, ….
     declension!("orivesi", 17, "~si", like Ilmarinen;
     stem par_sg: "~ttä- like ilmarinen";
     stem ill_sg: "~teVn- like hietaniemi";
-    stem ess_sg: "~tenä- like makedonia";
+    stem ess_sg: "~tenä- like ilmarinen";
     nom: "~si", "~dVt";
     gen_: _, "~sien";
     par: _, "~siä";
@@ -1323,28 +1315,77 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: "~sittäni", "~sittäsi", "~sittämme", "~sittänne", "~sittäVn";
     proper_noun_possessive_com_pl: _, _, _, _, "~sineen";
     ),
+    // Ahava: 17 words (ghana, formosa, joanna, juhana, ilona, mimosa). Like Makedonia, except in 29 cells: gen_ pl, par pl, ill pl, ess pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, ….
+    declension!("ahava", 17, "~a", like Makedonia;
+    stem ine_sg: "~- like ahava";
+    gen_: _, "~ien|~oiden|~oitten";
+    par: _, "~iA|~oitA";
+    ill: _, "~iin|~oihin";
+    ess: _, "~oinA|~inA";
+    proper_noun_possessive_gen_pl: "~ieni|~oideni|~oitteni", "~iesi|~oidesi|~oittesi", "~iemme|~oidemme|~oittemme", "~ienne|~oidenne|~oittenne", "~iensA|~oidensA|~oittensA";
+    proper_noun_possessive_par_pl: "~iAni|~oitAni", "~iAsi|~oitAsi", "~iAmme|~oitAmme", "~iAnne|~oitAnne", "~iAVn|~oitAVn|~iAnsV|~oitAnsV";
+    proper_noun_possessive_ill_pl: "~iini|~oihini", "~iisi|~oihisi", "~iimme|~oihimme", "~iinne|~oihinne", "~iinsA|~oihinsA";
+    proper_noun_possessive_ess_pl: "~oinAni|~inAni", "~oinAsi|~inAsi", "~oinAmme|~inAmme", "~oinAnne|~inAnne", "~oinAVn|~inAVn|~oinAnsV|~inansa";
+    proper_noun_possessive_com_pl: "~oineni|~ineni", "~oinesi|~inesi", "~oinemme|~inemme", "~oinenne|~inenne", "~oineen|~ineen|~oinensA|~inensa";
+    ),
+    // Plejadit: 16 words (andit, alpit, skandit, molukit, plejadit, baleaarit). Like Aaron with `` after each pattern (`it` after ~), except in 39 cells: par sg, par pl, ine sg, ela sg, ill sg, ade sg, ….
+    declension!("plejadit", 16, "~it", like Aaron with "", "it" after "~";
+    par: derived, "~ejA";
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    all: derived, _;
+    ess: derived, _;
+    tra: derived, _;
+    abe: derived, _;
+    proper_noun_possessive_nom_sg: derived, _, _, _, derived;
+    proper_noun_possessive_nom_pl: "~ini", _, _, _, "~insA";
+    proper_noun_possessive_gen_sg: _, derived, derived, derived, _;
+    proper_noun_possessive_par_sg: _, _, _, _, derived;
+    proper_noun_possessive_par_pl: "~ejAni", _, _, _, "~ejAVn|~ejAnsV";
+    proper_noun_possessive_ine_sg: _, _, _, _, derived;
+    proper_noun_possessive_ine_pl: _, _, _, _, "~eissAVn|~eissAnsV";
+    proper_noun_possessive_ela_sg: _, _, _, _, derived;
+    proper_noun_possessive_ela_pl: _, _, _, _, "~eistAVn|~eistAnsV";
+    proper_noun_possessive_ill_sg: _, _, _, _, derived;
+    proper_noun_possessive_ade_sg: _, _, _, _, derived;
+    proper_noun_possessive_ade_pl: _, _, _, _, "~eillAVn|~eillAnsV";
+    proper_noun_possessive_abl_sg: _, _, _, _, derived;
+    proper_noun_possessive_abl_pl: _, _, _, _, "~eiltAVn|~eiltAnsV";
+    proper_noun_possessive_all_sg: _, _, _, _, derived;
+    proper_noun_possessive_all_pl: _, _, _, _, "~eilleen|~eillensA";
+    proper_noun_possessive_ess_sg: _, _, _, _, derived;
+    proper_noun_possessive_ess_pl: _, _, _, _, "~einAVn|~einAnsV";
+    proper_noun_possessive_tra_sg: _, _, _, _, derived;
+    proper_noun_possessive_tra_pl: _, _, _, _, "~eikseen|~eiksensA";
+    proper_noun_possessive_abe_sg: _, _, _, _, derived;
+    proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn|~eittAnsV";
+    proper_noun_possessive_com_pl: _, _, _, _, "~eineen|~einensA";
+    ),
     // Vesimies: 14 words (mies, teräsmies, vesimies, ajomies, jousimies, häkämies).
     declension!("vesimies", 14, "~s";
     stem gen_sg: "~he- like hietaniemi";
     stem par_sg: "~stä- like ilmarinen";
     stem ine_sg: "~h- like vesimies";
     stem ill_sg: "~hVVn- like hietaniemi";
-    stem ade_sg: "~hellä- like makedonia";
-    stem abl_sg: "~heltä- like makedonia";
+    stem ade_sg: "~hellä- like ilmarinen";
+    stem abl_sg: "~heltä- like ilmarinen";
     stem all_sg: "~helle- like hietaniemi";
-    stem ess_sg: "~henä- like makedonia";
+    stem ess_sg: "~henä- like ilmarinen";
     stem tra_sg: "~heks- like hietaniemi";
     nom: "~s", _;
     gen_: _, "~sten|~hien";
-    par: _, "~hiä";
-    ill: _, "~hiin";
+    par: _, "~hIä";
+    ill: _, "~hIin";
     ess: _, "~hinä";
     proper_noun_possessive_nom_sg: "~heni", _, _, _, "~hensä";
     proper_noun_possessive_nom_pl: _, "~hesi", "~hemme", "~henne", _;
     proper_noun_possessive_gen_sg: _, "~hesi", "~hemme", "~henne", _;
     proper_noun_possessive_gen_pl: "~steni|~hieni", "~stesi|~hiesi", "~stemme|~hiemme", "~stenne|~hienne", "~stensä|~hiensä";
-    proper_noun_possessive_par_pl: "~hiäni", _, _, _, "~hiäVn|~hiänsV";
-    proper_noun_possessive_ill_pl: "~hiini", _, _, _, "~hiinsä";
+    proper_noun_possessive_par_pl: "~hIäni", _, _, _, "~hIäVn|~hIänsV";
+    proper_noun_possessive_ill_pl: "~hIini", _, _, _, "~hIinsä";
     proper_noun_possessive_ess_pl: "~hinäni", "~hinäsi", "~hinämme", "~hinänne", "~hinäVn|~hinänsV";
     proper_noun_possessive_com_pl: "~hineni", _, _, _, "~hineen|~hinensä";
     ),
@@ -1393,28 +1434,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_gen_sg: _, "~usi", "~umme", "~unne", _;
     proper_noun_possessive_ill_pl: "~ihini", _, _, _, "~ihinsA";
     ),
-    // Ahava: 12 words (joanna, juhana, ilona, mimosa, jesaja, ahava). Like Makedonia, except in 29 cells: gen_ pl, par pl, ill pl, ess pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, ….
-    declension!("ahava", 12, "~a", like Makedonia;
-    stem ine_sg: "~- like ahava";
-    gen_: _, "~ien|~oiden|~oitten";
-    par: _, "~iA|~oitA";
-    ill: _, "~iin|~oihin";
-    ess: _, "~oinA|~inA";
-    proper_noun_possessive_gen_pl: "~ieni|~oideni|~oitteni", "~iesi|~oidesi|~oittesi", "~iemme|~oidemme|~oittemme", "~ienne|~oidenne|~oittenne", "~iensA|~oidensA|~oittensA";
-    proper_noun_possessive_par_pl: "~iAni|~oitAni", "~iAsi|~oitAsi", "~iAmme|~oitAmme", "~iAnne|~oitAnne", "~iAVn|~oitAVn|~iAnsV|~oitAnsV";
-    proper_noun_possessive_ill_pl: "~iini|~oihini", "~iisi|~oihisi", "~iimme|~oihimme", "~iinne|~oihinne", "~iinsA|~oihinsA";
-    proper_noun_possessive_ess_pl: "~oinAni|~inAni", "~oinAsi|~inAsi", "~oinAmme|~inAmme", "~oinAnne|~inAnne", "~oinAVn|~inAVn|~oinAnsV|~inansa";
-    proper_noun_possessive_com_pl: "~oineni|~ineni", "~oinesi|~inesi", "~oinemme|~inemme", "~oinenne|~inenne", "~oineen|~ineen|~oinensA|~inensa";
-    ),
     // Altai: 11 words (paraguay, uruguay, brunei, mumbai, kai, aleksei). Like Salo, except in 29 cells: gen_ pl, par pl, ela sg, ill pl, ess pl, abe sg, ….
     declension!("altai", 11, "~", like Salo;
     stem par_sg: "~ta- like ilmarinen";
     stem ine_sg: "~- like altai";
     stem ill_sg: "~hin- like altai";
-    stem ade_sg: "~lla- like makedonia";
-    stem abl_sg: "~lta- like makedonia";
+    stem ade_sg: "~lla- like ilmarinen";
+    stem abl_sg: "~lta- like ilmarinen";
     stem all_sg: "~lle- like altai";
-    stem ess_sg: "~na- like makedonia";
+    stem ess_sg: "~na- like ilmarinen";
     stem tra_sg: "~ks- like altai";
     gen_: _, "~den";
     par: _, "~tA";
@@ -1434,6 +1462,57 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_pl: _, _, _, _, derived;
     proper_noun_possessive_abe_sg: _, _, _, _, "~ttaVn|~ttansV";
     proper_noun_possessive_com_pl: "~neni", _, _, _, "~neen";
+    ),
+    // Delfoi: 11 words (niili, delfoi, jenisei, filippoi, máni, petroskoi). Like Altai, except in 5 cells: ine sg, proper_noun_possessive_nom_sg _3, proper_noun_possessive_nom_pl _3, proper_noun_possessive_ine_sg _3, proper_noun_possessive_ill_pl _1sg.
+    declension!("delfoi", 11, "~", like Altai;
+    stem gen_sg: "~- like ilmarinen";
+    stem par_sg: "~tA- like ilmarinen";
+    stem ill_sg: "~hin- like ilmarinen";
+    stem ade_sg: "~llA- like ilmarinen";
+    stem abl_sg: "~ltA- like ilmarinen";
+    stem all_sg: "~lle- like ilmarinen";
+    stem ess_sg: "~nA- like ilmarinen";
+    stem tra_sg: "~ks- like ilmarinen";
+    ine: "~ssA", _;
+    proper_noun_possessive_nom_sg: _, _, _, _, "~nsA";
+    proper_noun_possessive_nom_pl: _, _, _, _, derived;
+    proper_noun_possessive_ine_sg: _, _, _, _, "~ssAVn|~ssAnsV";
+    proper_noun_possessive_ill_pl: "~seVni", _, _, _, _;
+    ),
+    // Rinne: 10 words (rinne, alanne, kajanne, harjanne, päivärinne, lanne). Like Roine with `ˇ` after each pattern.
+    declension!("rinne", 10, "~ˇ", like Roine with "ˇ";
+    ),
+    // Seem: 10 words (perth, antwerpen, pohjois-jemen, tšeljabinsk, mannerheim, korsnäs). Like Luxemburg, except in 51 cells: par pl, ine sg, ine pl, ela sg, ela pl, ade pl, ….
+    declension!("seem", 10, "~", like Luxemburg;
+    stem par_sg: "~iä- like ilmarinen";
+    stem ill_sg: "~iin- like hietaniemi";
+    stem ade_sg: "~illä- like ilmarinen";
+    stem abl_sg: "~iltä- like ilmarinen";
+    stem all_sg: "~ille- like hietaniemi";
+    stem ess_sg: "~inä- like ilmarinen";
+    stem tra_sg: "~iks- like hietaniemi";
+    par: _, "~ejä";
+    ine: "~issä", "~eissä";
+    ela: "~istä", "~eistä";
+    ade: _, "~eillä";
+    abl: _, "~eiltä";
+    ess: _, "~einä";
+    abe: "~ittä", "~eittä";
+    proper_noun_possessive_nom_sg: "~ini", _, _, _, "~insä";
+    proper_noun_possessive_nom_pl: "~Ini", _, _, _, "~Insä";
+    proper_noun_possessive_gen_sg: _, "~isi", "~imme", "~inne", _;
+    proper_noun_possessive_gen_pl: _, _, _, _, "~Iensä";
+    proper_noun_possessive_par_pl: "~ejäni", _, _, _, _;
+    proper_noun_possessive_ine_sg: _, _, _, _, "~issäVn|~issänsV";
+    proper_noun_possessive_ine_pl: "~eissäni", "~eissäsi", "~eissämme", "~eissänne", _;
+    proper_noun_possessive_ela_sg: _, _, _, _, "~istäVn|~istänsV";
+    proper_noun_possessive_ela_pl: "~eistäni", "~eistäsi", "~eistämme", "~eistänne", "~eistäVn";
+    proper_noun_possessive_ill_pl: _, _, _, _, "~eIhinsä";
+    proper_noun_possessive_ade_pl: "~eilläni", "~eilläsi", "~eillämme", "~eillänne", "~eilläVn";
+    proper_noun_possessive_abl_pl: "~eiltäni", "~eiltäsi", "~eiltämme", "~eiltänne", "~eiltäVn";
+    proper_noun_possessive_ess_pl: "~einäni", "~einäsi", "~einämme", "~einänne", _;
+    proper_noun_possessive_abe_sg: _, _, _, _, "~ittäVn|~ittänsV";
+    proper_noun_possessive_abe_pl: "~eittäni", "~eittäsi", "~eittämme", "~eittänne", "~eittäVn";
     ),
     // Heinisuo: 9 words (kallasvuo, salmensuo, heinisuo, lahdensuo, ruskeasuo, honkasuo).
     declension!("heinisuo", 9, "~u~";
@@ -1467,50 +1546,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: "~~ittAni", "~~ittAsi", "~~ittAmme", "~~ittAnne", "~~ittAVn";
     proper_noun_possessive_com_pl: "~~ineni", _, _, _, "~~ineen";
     ),
-    // Delfoi: 9 words (delfoi, jenisei, filippoi, petroskoi, tokoi, keto-tokoi). Like Altai, except in 5 cells: ine sg, proper_noun_possessive_nom_sg _3, proper_noun_possessive_nom_pl _3, proper_noun_possessive_ine_sg _3, proper_noun_possessive_ill_pl _1sg.
-    declension!("delfoi", 9, "~", like Altai;
-    stem gen_sg: "~- like ilmarinen";
-    stem par_sg: "~tA- like ilmarinen";
-    stem ill_sg: "~hin- like ilmarinen";
-    stem ade_sg: "~llA- like makedonia";
-    stem abl_sg: "~ltA- like makedonia";
-    stem all_sg: "~lle- like makedonia";
-    stem ess_sg: "~nA- like makedonia";
-    stem tra_sg: "~ks- like makedonia";
-    ine: "~ssA", _;
-    proper_noun_possessive_nom_sg: _, _, _, _, "~nsA";
-    proper_noun_possessive_nom_pl: _, _, _, _, derived;
-    proper_noun_possessive_ine_sg: _, _, _, _, "~ssAVn|~ssAnsV";
-    proper_noun_possessive_ill_pl: "~seVni", _, _, _, _;
-    ),
-    // Okko: 9 words (turku, kouki, kurko, haiko, pitko, louko). Like Heinisuo, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
-    declension!("okko", 9, "~k~", like Heinisuo;
-    stem gen_sg: "~~- like ilmarinen";
-    stem par_pl: "~k~- like okko";
-    stem par_sg: "~k~A- like ilmarinen";
-    stem ine_sg: "~~- like salo";
-    stem ill_sg: "~k~Vn- like ilmarinen";
-    stem ade_sg: "~~llA- like makedonia";
-    stem abl_sg: "~~ltA- like makedonia";
-    stem all_sg: "~~lle- like makedonia";
-    stem ess_sg: "~k~nA- like makedonia";
-    stem tra_sg: "~~ks- like makedonia";
-    nom: "~k~", _;
-    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
-    proper_noun_possessive_gen_sg: _, "~k~si", "~k~mme", "~k~nne", _;
-    ),
-    // Herkules: 8 words (sokrates, aristoteles, herakles, hippokrates, herkules, orestes). Like Roine with `` after each pattern (`s` after ~), except in 26 cells: gen_ pl, par sg, ill sg, ill pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, ….
-    declension!("herkules", 8, "~s", like Roine with "", "s" after "~";
-    gen_: _, "~iden";
+    // Herkules: 9 words (sokrates, aristoteles, herakles, hippokrates, kserkses, herkules). Like Roine with `` after each pattern (`s` after ~), except in 26 cells: gen_ pl, par sg, ill sg, ill pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, ….
+    declension!("herkules", 9, "~s", like Roine with "", "s" after "~";
+    gen_: _, "~Iden";
     par: "~stA", _;
-    ill: "~VsVVn", "~isVin";
-    proper_noun_possessive_gen_pl: "~ideni", "~idesi", "~idemme", "~idenne", "~idensA";
+    ill: "~VsVVn", "~IsVin";
+    proper_noun_possessive_gen_pl: "~Ideni", "~Idesi", "~Idemme", "~Idenne", "~IdensA";
     proper_noun_possessive_par_sg: _, _, _, _, "~stAVn|~stAnsV";
     proper_noun_possessive_par_pl: _, _, _, _, derived;
     proper_noun_possessive_ine_pl: _, _, _, _, derived;
     proper_noun_possessive_ela_pl: _, _, _, _, "~istAVn";
     proper_noun_possessive_ill_sg: _, _, _, _, "~VsVVnsA";
-    proper_noun_possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
+    proper_noun_possessive_ill_pl: "~IsVVni", derived, derived, derived, "~IsVinsA";
     proper_noun_possessive_ade_pl: _, _, _, _, "~illAVn";
     proper_noun_possessive_abl_pl: _, _, _, _, "~iltAVn";
     proper_noun_possessive_all_pl: _, _, _, _, derived;
@@ -1519,13 +1566,29 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
     proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
     ),
+    // Okko: 9 words (turku, kouki, kurko, haiko, pitko, louko). Like Heinisuo, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
+    declension!("okko", 9, "~k~", like Heinisuo;
+    stem gen_sg: "~~- like ilmarinen";
+    stem par_pl: "~k~- like okko";
+    stem par_sg: "~k~A- like ilmarinen";
+    stem ine_sg: "~~- like salo";
+    stem ill_sg: "~k~Vn- like ilmarinen";
+    stem ade_sg: "~~llA- like ilmarinen";
+    stem abl_sg: "~~ltA- like ilmarinen";
+    stem all_sg: "~~lle- like ilmarinen";
+    stem ess_sg: "~k~nA- like ilmarinen";
+    stem tra_sg: "~~ks- like ilmarinen";
+    nom: "~k~", _;
+    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
+    proper_noun_possessive_gen_sg: _, "~k~si", "~k~mme", "~k~nne", _;
+    ),
     // Pohjantähti: 7 words (pohjantähti, seitsentähti, aamulehti, lehti, joulutähti, tähti). Like Orivesi, except in 21 cells: nom sg, gen_ pl, par pl, ill pl, ess pl, proper_noun_possessive_gen_pl _1sg, ….
     declension!("pohjantähti", 7, "~ti", like Orivesi;
     stem gen_sg: "~de- like hietaniemi";
     stem par_sg: "~teä- like ilmarinen";
     stem ine_sg: "~d- like vesimies";
-    stem ade_sg: "~dellä- like makedonia";
-    stem abl_sg: "~deltä- like makedonia";
+    stem ade_sg: "~dellä- like ilmarinen";
+    stem abl_sg: "~deltä- like ilmarinen";
     stem all_sg: "~delle- like hietaniemi";
     stem tra_sg: "~deks- like hietaniemi";
     nom: "~ti", _;
@@ -1539,12 +1602,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_ess_pl: "~tinäni", "~tinäsi", "~tinämme", "~tinänne", "~tinäVn|~tinänsV";
     proper_noun_possessive_com_pl: "~tineni", _, _, _, "~tineen|~tinensä";
     ),
-    // Komorit: 7 words (komorit, antillit, azorit, kuriilit, helmarit, lattarit). Like Plejadit, except in 12 cells: gen_ pl, par pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, proper_noun_possessive_gen_pl _2pl, ….
+    // Komorit: 7 words (komorit, antillit, azorit, kuriilit, helmarit, lattarit). Like Plejadit, except in 20 cells: gen_ pl, par pl, ill pl, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _2sg, proper_noun_possessive_nom_pl _1pl, ….
     declension!("komorit", 7, "~it", like Plejadit;
-    gen_: _, "~ien|~eiden|~eitten";
-    par: _, "~eitA|~eja";
-    proper_noun_possessive_gen_pl: "~ieni|~eideni|~eitteni", "~iesi|~eidesi|~eittesi", "~iemme|~eidemme|~eittemme", "~ienne|~eidenne|~eittenne", "~iensA|~eidensA|~eittensa";
-    proper_noun_possessive_par_pl: "~eitAni|~ejani", "~eitAsi|~ejasi", "~eitAmme|~ejamme", "~eitAnne|~ejanne", "~eitAVn|~ejAVn|~eitAnsV|~ejansa";
+    gen_: _, "~Ien|~eIden|~eitten";
+    par: _, "~eItA|~eja";
+    ill: _, "~eIhin";
+    proper_noun_possessive_nom_pl: "~Ini", "~Isi", "~Imme", "~Inne", "~InsA";
+    proper_noun_possessive_gen_pl: "~Ieni|~eIdeni|~eitteni", "~Iesi|~eIdesi|~eittesi", "~Iemme|~eIdemme|~eittemme", "~Ienne|~eIdenne|~eittenne", "~IensA|~eIdensA|~eittensa";
+    proper_noun_possessive_par_pl: "~eItAni|~ejani", "~eItAsi|~ejasi", "~eItAmme|~ejamme", "~eItAnne|~ejanne", "~eItAVn|~ejAVn|~eitAnsV|~ejansa";
+    proper_noun_possessive_ill_pl: "~eIhini", _, _, _, "~eIhinsA";
     ),
     // Hölttä: 7 words (määttä, mänttä, kenttä, hölttä, skyttä, röyttä). Like Salo, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
     declension!("hölttä", 7, "~tä", like Salo;
@@ -1553,11 +1619,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_sg: "~täV- like makedonia";
     stem ine_sg: "~- like hölttä";
     stem ill_sg: "~täVn- like makedonia";
-    stem ade_sg: "~AllV- like makedonia";
-    stem abl_sg: "~AltV- like makedonia";
-    stem all_sg: "~Alle- like makedonia";
-    stem ess_sg: "~tänV- like makedonia";
-    stem tra_sg: "~Aks- like makedonia";
+    stem ade_sg: "~AllV- like ilmarinen";
+    stem abl_sg: "~AltV- like ilmarinen";
+    stem all_sg: "~Alle- like ilmarinen";
+    stem ess_sg: "~tänV- like ilmarinen";
+    stem tra_sg: "~Aks- like ilmarinen";
     nom: "~tä", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~täsi", "~tämme", "~tänne", _;
@@ -1584,10 +1650,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_sg: "~tä- like ilmarinen";
     stem ine_sg: "~- like vesimies";
     stem ill_sg: "~eVn- like hietaniemi";
-    stem ade_sg: "~ellä- like makedonia";
-    stem abl_sg: "~eltä- like makedonia";
+    stem ade_sg: "~ellä- like ilmarinen";
+    stem abl_sg: "~eltä- like ilmarinen";
     stem all_sg: "~elle- like hietaniemi";
-    stem ess_sg: "~enä- like makedonia";
+    stem ess_sg: "~enä- like ilmarinen";
     stem tra_sg: "~eks- like hietaniemi";
     gen_: _, "~ten|~ien";
     proper_noun_possessive_nom_sg: _, _, _, _, "~ensä";
@@ -1597,41 +1663,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_ess_pl: _, _, _, _, "~inäVn|~inänsV";
     proper_noun_possessive_com_pl: _, _, _, _, "~ineen|~inensä";
     ),
-    // Leijonat: 7 words (alankomaat, pohjoismaat, ajokoirat, arabiemiirikunnat, huuhkajat, leijonat). Like Kaksoset, except in 13 cells: nom sg, nom pl, gen_ pl, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _2sg, proper_noun_possessive_nom_pl _1pl, ….
+    // Leijonat: 7 words (alankomaat, pohjoismaat, ajokoirat, arabiemiirikunnat, huuhkajat, leijonat). Like Kaksoset, except in 14 cells: nom sg, nom pl, gen_ pl, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _2sg, proper_noun_possessive_nom_pl _1pl, ….
     declension!("leijonat", 7, "~at", like Kaksoset;
     nom: "~at", "~at";
-    gen_: _, "~ien";
+    gen_: _, "~Ien";
     proper_noun_possessive_nom_pl: "~Ani", "~Asi", "~Amme", "~Anne", "~AnsV";
-    proper_noun_possessive_gen_pl: "~ieni", "~iesi", "~iemme", "~ienne", "~iensA";
-    ),
-    // Seem: 6 words (antwerpen, pohjois-jemen, tšeljabinsk, mannerheim, lakselv, pönttö-mac). Like Luxemburg, except in 41 cells: par pl, ine sg, ine pl, ela pl, ade pl, abl pl, ….
-    declension!("seem", 6, "~", like Luxemburg;
-    stem gen_sg: "~i- like hietaniemi";
-    stem par_sg: "~iä- like ilmarinen";
-    stem ill_sg: "~iin- like hietaniemi";
-    stem ade_sg: "~illä- like makedonia";
-    stem abl_sg: "~iltä- like makedonia";
-    stem all_sg: "~ille- like hietaniemi";
-    stem ess_sg: "~inä- like makedonia";
-    stem tra_sg: "~iks- like hietaniemi";
-    par: _, "~ejä";
-    ine: "~issä", "~eissä";
-    ela: _, "~eistä";
-    ade: _, "~eillä";
-    abl: _, "~eiltä";
-    ess: _, "~einä";
-    abe: _, "~eittä";
-    proper_noun_possessive_nom_sg: _, _, _, _, "~insä";
-    proper_noun_possessive_gen_pl: _, _, _, _, "~iensä";
-    proper_noun_possessive_par_pl: "~ejäni", _, _, _, _;
-    proper_noun_possessive_ine_sg: _, _, _, _, "~issäVn|~issänsV";
-    proper_noun_possessive_ine_pl: "~eissäni", "~eissäsi", "~eissämme", "~eissänne", _;
-    proper_noun_possessive_ela_pl: "~eistäni", "~eistäsi", "~eistämme", "~eistänne", "~eistäVn";
-    proper_noun_possessive_ill_pl: _, _, _, _, "~eihinsä";
-    proper_noun_possessive_ade_pl: "~eilläni", "~eilläsi", "~eillämme", "~eillänne", "~eilläVn";
-    proper_noun_possessive_abl_pl: "~eiltäni", "~eiltäsi", "~eiltämme", "~eiltänne", "~eiltäVn";
-    proper_noun_possessive_ess_pl: "~einäni", "~einäsi", "~einämme", "~einänne", _;
-    proper_noun_possessive_abe_pl: "~eittäni", "~eittäsi", "~eittämme", "~eittänne", "~eittäVn";
+    proper_noun_possessive_gen_pl: "~Ieni", "~Iesi", "~Iemme", "~Ienne", "~IensA";
+    proper_noun_possessive_par_pl: _, _, _, _, "~iaan|~IAnsV";
     ),
     // Ilkka: 6 words (vaaka, haka, vatka, kruununhaka, kivihaka, koivuhaka). Like Nutikka, except in 18 cells: gen_ pl, par pl, ill pl, proper_noun_possessive_gen_pl _1sg, proper_noun_possessive_gen_pl _2sg, proper_noun_possessive_gen_pl _1pl, ….
     declension!("ilkka", 6, "~ka", like Nutikka;
@@ -1681,10 +1719,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_pl: "~t~- like kytö";
     stem par_sg: "~t~ä- like ilmarinen";
     stem ine_sg: "~d~- like kytö";
-    stem ade_sg: "~d~llä- like makedonia";
-    stem abl_sg: "~d~ltä- like makedonia";
+    stem ade_sg: "~d~llä- like ilmarinen";
+    stem abl_sg: "~d~ltä- like ilmarinen";
     stem all_sg: "~d~lle- like hietaniemi";
-    stem ess_sg: "~t~nä- like makedonia";
+    stem ess_sg: "~t~nä- like ilmarinen";
     stem tra_sg: "~d~ks- like hietaniemi";
     nom: "~t~", _;
     ill: "~t~Vn", _;
@@ -1692,12 +1730,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_gen_sg: _, "~t~si", "~t~mme", "~t~nne", _;
     proper_noun_possessive_ill_sg: _, _, _, _, "~t~VnsE";
     ),
-    // Kalat: 5 words (yhdysvallat, kalat, virrat, aikakirjat, linjat). Like Hydra with `` after each pattern (`t` after a), except in 28 cells: par sg, ine sg, ela sg, ill sg, ade sg, abl sg, ….
+    // Kalat: 5 words (yhdysvallat, kalat, virrat, aikakirjat, linjat). Like Hydra with `` after each pattern (`t` after a), except in 30 cells: par sg, ine sg, ela sg, ill sg, ill pl, ade sg, ….
     declension!("kalat", 5, "~at", like Hydra with "", "t" after "a";
     par: derived, _;
     ine: derived, _;
     ela: derived, _;
-    ill: derived, _;
+    ill: derived, "~oIhin";
     ade: derived, _;
     abl: derived, _;
     all: derived, _;
@@ -1711,49 +1749,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_ine_sg: _, _, _, _, derived;
     proper_noun_possessive_ela_sg: _, _, _, _, derived;
     proper_noun_possessive_ill_sg: _, _, _, _, derived;
-    proper_noun_possessive_ill_pl: "~oihini", _, _, _, _;
+    proper_noun_possessive_ill_pl: "~oIhini", _, _, _, "~oIhinsA";
     proper_noun_possessive_ade_sg: _, _, _, _, derived;
     proper_noun_possessive_abl_sg: _, _, _, _, derived;
     proper_noun_possessive_all_sg: _, _, _, _, derived;
     proper_noun_possessive_ess_sg: _, _, _, _, derived;
     proper_noun_possessive_tra_sg: _, _, _, _, derived;
     proper_noun_possessive_abe_sg: _, _, _, _, derived;
-    ),
-    // Hermes: 5 words (hermes, arkhimedes, kserkses, prokrustes, kirves). Like Roine with `` after each pattern (`s` after ~), except in 42 cells: gen_ pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
-    declension!("hermes", 5, "~s", like Roine with "", "s" after "~";
-    gen_: _, "~iden";
-    par: "~stä", _;
-    ine: "~Vssä", _;
-    ela: "~Vstä", _;
-    ill: "~VsVVn", "~isVin";
-    ade: "~Vllä", _;
-    abl: "~Vltä", _;
-    ess: "~Vnä", _;
-    abe: "~Vttä", _;
-    proper_noun_possessive_nom_sg: _, _, _, _, "~Vnsä";
-    proper_noun_possessive_nom_pl: _, _, _, _, "~VnsA";
-    proper_noun_possessive_gen_pl: "~ideni", "~idesi", "~idemme", "~idenne", "~idensA";
-    proper_noun_possessive_par_sg: _, _, _, _, "~stäVn|~stänsV";
-    proper_noun_possessive_par_pl: _, _, _, _, derived;
-    proper_noun_possessive_ine_sg: _, _, _, _, "~VssäVn|~VssänsV";
-    proper_noun_possessive_ine_pl: _, _, _, _, derived;
-    proper_noun_possessive_ela_sg: _, _, _, _, "~VstäVn|~VstänsV";
-    proper_noun_possessive_ela_pl: _, _, _, _, "~istAVn";
-    proper_noun_possessive_ill_sg: _, _, _, _, "~VsVVnsä";
-    proper_noun_possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
-    proper_noun_possessive_ade_sg: _, _, _, _, "~VlläVn|~VllänsV";
-    proper_noun_possessive_ade_pl: _, _, _, _, "~illAVn";
-    proper_noun_possessive_abl_sg: _, _, _, _, "~VltäVn|~VltänsV";
-    proper_noun_possessive_abl_pl: _, _, _, _, "~iltAVn";
-    proper_noun_possessive_all_sg: _, _, _, _, "~Vlleen|~Vllensä";
-    proper_noun_possessive_all_pl: _, _, _, _, derived;
-    proper_noun_possessive_ess_sg: _, _, _, _, "~VnäVn|~VnänsV";
-    proper_noun_possessive_ess_pl: _, _, _, _, derived;
-    proper_noun_possessive_tra_sg: _, _, _, _, "~Vkseen|~Vksensä";
-    proper_noun_possessive_tra_pl: _, _, _, _, derived;
-    proper_noun_possessive_abe_sg: _, _, _, _, "~VttäVn|~VttänsV";
-    proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
-    proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
     ),
     // Ilmatar: 5 words (aallotar, ilmatar, suometar, korte, ilpotar).
     declension!("ilmatar", 5, "~~";
@@ -1780,13 +1782,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_ess_pl: "~t~inani", "~t~inasi", "~t~inamme", "~t~inanne", "~t~inaan|~t~inansa";
     proper_noun_possessive_com_pl: "~t~ineni", _, _, _, "~t~ineen|~t~inensa";
     ),
-    // Föglö: 5 words (nönnönnöö, brändö, eckerö, föglö, vårdö). Like Joensuu, except in 16 cells: nom sg, ine sg, ade sg, abl sg, all sg, ess sg, ….
-    declension!("föglö", 5, "~ö", like Joensuu;
+    // Föglö: 5 words (nönnönnöö, brändö, eckerö, föglö, vårdö). Like Vehmaa, except in 26 cells: nom sg, gen_ pl, par pl, ine sg, ill pl, ade sg, ….
+    declension!("föglö", 5, "~ö", like Vehmaa;
     stem gen_sg: "~ö- like joensuu";
     stem par_sg: "~ötA- like vehmaa";
     stem ill_sg: "~öhVn- like ilmarinen";
     nom: "~ö", _;
+    gen_: _, "~Iden";
+    par: _, "~ItA";
     ine: "~össA", _;
+    ill: _, "~Ihin";
     ade: "~öllA", _;
     abl: "~öltA", _;
     all: "~ölle", _;
@@ -1795,28 +1800,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_nom_sg: "~öni", _, _, _, "~önsA";
     proper_noun_possessive_nom_pl: _, "~ösi", "~ömme", "~önne", _;
     proper_noun_possessive_gen_sg: _, "~ösi", "~ömme", "~önne", _;
-    proper_noun_possessive_ill_pl: "~öseVni", _, _, _, _;
-    ),
-    // Ärväs: 5 words (äyräs, keihäs, ärväs, pylväs, töyräs). Like Roine with `` after each pattern (`s` after ~), except in 23 cells: par sg, ine sg, ela sg, ill sg, ill pl, ade sg, ….
-    declension!("ärväs", 5, "~s", like Roine with "", "s" after "~";
-    par: "~stV", _;
-    ine: "~VssV", _;
-    ela: "~VstV", _;
-    ill: "~VseVn", "~isVin";
-    ade: "~VllV", _;
-    abl: "~VltV", _;
-    ess: "~VnV", _;
-    abe: "~VttV", _;
-    proper_noun_possessive_nom_sg: _, _, _, _, "~VnsV";
-    proper_noun_possessive_par_sg: _, _, _, _, "~stVVn|~stVnsV";
-    proper_noun_possessive_ine_sg: _, _, _, _, "~VssVVn|~VssVnsV";
-    proper_noun_possessive_ela_sg: _, _, _, _, "~VstVVn|~VstVnsV";
-    proper_noun_possessive_ill_sg: _, _, _, _, "~VseVnsA";
-    proper_noun_possessive_ill_pl: "~isVVni", derived, derived, derived, "~isVinsA";
-    proper_noun_possessive_ade_sg: _, _, _, _, "~VllVVn|~VllVnsV";
-    proper_noun_possessive_abl_sg: _, _, _, _, "~VltVVn|~VltVnsV";
-    proper_noun_possessive_ess_sg: _, _, _, _, "~VnVVn|~VnVnsV";
-    proper_noun_possessive_abe_sg: _, _, _, _, "~VttVVn|~VttVnsV";
+    proper_noun_possessive_gen_pl: "~Ideni", "~Idesi", "~Idemme", "~Idenne", "~IdensA";
+    proper_noun_possessive_par_pl: "~ItAni", _, _, _, _;
+    proper_noun_possessive_ill_pl: "~öseVni", _, _, _, "~IhinsA";
     ),
     // Salokannel: 5 words (etelämanner, etelänapamanner, gondwanamanner, ahvenanmanner, salokannel). Like Ilmatar, except in 8 cells: nom sg, par sg, proper_noun_possessive_par_sg _3, proper_noun_possessive_par_pl _3, proper_noun_possessive_ine_pl _3, proper_noun_possessive_all_pl _3, ….
     declension!("salokannel", 5, "~n~", like Ilmatar;
@@ -1845,9 +1831,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_sg: "~d~ttA- like ilmarinen";
     stem ine_sg: "~t~- like ilmarinen";
     stem ill_sg: "~t~eseen- like ilmarinen";
-    stem ade_sg: "~t~ellA- like makedonia";
-    stem abl_sg: "~t~eltA- like makedonia";
-    stem ess_sg: "~t~enA- like makedonia";
+    stem ade_sg: "~t~ellA- like ilmarinen";
+    stem abl_sg: "~t~eltA- like ilmarinen";
+    stem ess_sg: "~t~enA- like ilmarinen";
     nom: "~d~", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_all_sg: _, _, _, _, "~t~elleen|~t~ellVnsA";
@@ -1886,11 +1872,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem gen_sg: "~de- like ilmarinen";
     stem par_sg: "~ttE- like ilmarinen";
     stem ill_sg: "~teVn- like ilmarinen";
-    stem ade_sg: "~dellA- like makedonia";
-    stem abl_sg: "~deltA- like makedonia";
-    stem all_sg: "~delle- like makedonia";
-    stem ess_sg: "~tenA- like makedonia";
-    stem tra_sg: "~deks- like makedonia";
+    stem ade_sg: "~dellA- like ilmarinen";
+    stem abl_sg: "~deltA- like ilmarinen";
+    stem all_sg: "~delle- like ilmarinen";
+    stem ess_sg: "~tenA- like ilmarinen";
+    stem tra_sg: "~deks- like ilmarinen";
     nom: "~si", _;
     gen_: _, "~sien";
     ine: "~dessA", _;
@@ -1937,6 +1923,42 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_tra_sg: _, _, _, _, derived;
     proper_noun_possessive_abe_sg: _, _, _, _, derived;
     ),
+    // Hermes: 4 words (hermes, arkhimedes, prokrustes, kirves). Like Roine with `` after each pattern (`s` after ~), except in 42 cells: gen_ pl, par sg, ine sg, ela sg, ill sg, ill pl, ….
+    declension!("hermes", 4, "~s", like Roine with "", "s" after "~";
+    gen_: _, "~Iden";
+    par: "~stä", _;
+    ine: "~Vssä", _;
+    ela: "~Vstä", _;
+    ill: "~VsVVn", "~IsVin";
+    ade: "~Vllä", _;
+    abl: "~Vltä", _;
+    ess: "~Vnä", _;
+    abe: "~Vttä", _;
+    proper_noun_possessive_nom_sg: _, _, _, _, "~Vnsä";
+    proper_noun_possessive_nom_pl: _, _, _, _, "~VnsA";
+    proper_noun_possessive_gen_pl: "~Ideni", "~Idesi", "~Idemme", "~Idenne", "~IdensA";
+    proper_noun_possessive_par_sg: _, _, _, _, "~stäVn|~stänsV";
+    proper_noun_possessive_par_pl: _, _, _, _, derived;
+    proper_noun_possessive_ine_sg: _, _, _, _, "~VssäVn|~VssänsV";
+    proper_noun_possessive_ine_pl: _, _, _, _, derived;
+    proper_noun_possessive_ela_sg: _, _, _, _, "~VstäVn|~VstänsV";
+    proper_noun_possessive_ela_pl: _, _, _, _, "~istAVn";
+    proper_noun_possessive_ill_sg: _, _, _, _, "~VsVVnsä";
+    proper_noun_possessive_ill_pl: "~IsVVni", derived, derived, derived, "~IsVinsA";
+    proper_noun_possessive_ade_sg: _, _, _, _, "~VlläVn|~VllänsV";
+    proper_noun_possessive_ade_pl: _, _, _, _, "~illAVn";
+    proper_noun_possessive_abl_sg: _, _, _, _, "~VltäVn|~VltänsV";
+    proper_noun_possessive_abl_pl: _, _, _, _, "~iltAVn";
+    proper_noun_possessive_all_sg: _, _, _, _, "~Vlleen|~Vllensä";
+    proper_noun_possessive_all_pl: _, _, _, _, derived;
+    proper_noun_possessive_ess_sg: _, _, _, _, "~VnäVn|~VnänsV";
+    proper_noun_possessive_ess_pl: _, _, _, _, derived;
+    proper_noun_possessive_tra_sg: _, _, _, _, "~Vkseen|~Vksensä";
+    proper_noun_possessive_tra_pl: _, _, _, _, derived;
+    proper_noun_possessive_abe_sg: _, _, _, _, "~VttäVn|~VttänsV";
+    proper_noun_possessive_abe_pl: _, _, _, _, "~ittAVn";
+    proper_noun_possessive_com_pl: _, _, _, _, "~ineen";
+    ),
     // Lepo: 4 words (repo, siipo, lepo, ropo).
     declension!("lepo", 4, "~p~";
     stem gen_sg: "~v~- like ilmatar";
@@ -1947,18 +1969,55 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem ade_sg: "~v~lla- like ilmatar";
     stem abl_sg: "~v~lta- like ilmatar";
     stem all_sg: "~v~lle- like altai";
-    stem ess_sg: "~p~nA- like makedonia";
+    stem ess_sg: "~p~nA- like ilmarinen";
     stem tra_sg: "~v~ks- like altai";
     nom: "~p~", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~p~si", "~p~mme", "~p~nne", _;
+    ),
+    // Hebridit: 4 words (seychellit, filippiinit, hebridit, sisä-hebridit). Like Luxemburg with `` after each pattern (`it` after ~), except in 38 cells: nom pl, par sg, ine sg, ela sg, ill sg, ade sg, ….
+    declension!("hebridit", 4, "~it", like Luxemburg with "", "it" after "~";
+    nom: _, "~it";
+    par: derived, _;
+    ine: derived, _;
+    ela: derived, _;
+    ill: derived, _;
+    ade: derived, _;
+    abl: derived, _;
+    all: derived, _;
+    ess: derived, _;
+    tra: derived, _;
+    abe: derived, _;
+    proper_noun_possessive_nom_sg: derived, _, _, _, derived;
+    proper_noun_possessive_nom_pl: "~Ini", _, _, _, "~InsA";
+    proper_noun_possessive_gen_sg: _, derived, derived, derived, _;
+    proper_noun_possessive_par_sg: _, _, _, _, derived;
+    proper_noun_possessive_par_pl: _, _, _, _, "~ejAVn|~ejAnsV";
+    proper_noun_possessive_ine_sg: _, _, _, _, derived;
+    proper_noun_possessive_ine_pl: _, _, _, _, "~eissAVn|~eissAnsV";
+    proper_noun_possessive_ela_sg: _, _, _, _, derived;
+    proper_noun_possessive_ela_pl: _, _, _, _, "~eistAVn|~eistAnsV";
+    proper_noun_possessive_ill_sg: _, _, _, _, derived;
+    proper_noun_possessive_ade_sg: _, _, _, _, derived;
+    proper_noun_possessive_ade_pl: _, _, _, _, "~eillAVn|~eillAnsV";
+    proper_noun_possessive_abl_sg: _, _, _, _, derived;
+    proper_noun_possessive_abl_pl: _, _, _, _, "~eiltAVn|~eiltAnsV";
+    proper_noun_possessive_all_sg: _, _, _, _, derived;
+    proper_noun_possessive_all_pl: _, _, _, _, "~eilleen|~eillensA";
+    proper_noun_possessive_ess_sg: _, _, _, _, derived;
+    proper_noun_possessive_ess_pl: _, _, _, _, "~einAVn|~einAnsV";
+    proper_noun_possessive_tra_sg: _, _, _, _, derived;
+    proper_noun_possessive_tra_pl: _, _, _, _, "~eikseen|~eiksensA";
+    proper_noun_possessive_abe_sg: _, _, _, _, derived;
+    proper_noun_possessive_abe_pl: _, _, _, _, "~eittAVn|~eittAnsV";
+    proper_noun_possessive_com_pl: _, _, _, _, "~eineen|~einensA";
     ),
     // Marjatta: 4 words (maritta, marjatta, marketta, piritta). Like Makedonia, except in 6 cells: nom sg, proper_noun_possessive_nom_pl _1sg, proper_noun_possessive_nom_pl _3, proper_noun_possessive_gen_sg _2sg, proper_noun_possessive_gen_sg _1pl, proper_noun_possessive_gen_sg _2pl.
     declension!("marjatta", 4, "~ta", like Makedonia;
     stem par_pl: "~- like marjatta";
     stem par_sg: "~taV- like makedonia";
     stem ill_sg: "~taVn- like makedonia";
-    stem ess_sg: "~tanV- like makedonia";
+    stem ess_sg: "~tanV- like ilmarinen";
     nom: "~ta", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~tasi", "~tamme", "~tanne", _;
@@ -1983,11 +2042,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_sg: "~paV- like makedonia";
     stem ine_sg: "~v- like hölttä";
     stem ill_sg: "~paVn- like makedonia";
-    stem ade_sg: "~vAllV- like makedonia";
-    stem abl_sg: "~vAltV- like makedonia";
-    stem all_sg: "~vAlle- like makedonia";
-    stem ess_sg: "~panV- like makedonia";
-    stem tra_sg: "~vAks- like makedonia";
+    stem ade_sg: "~vAllV- like ilmarinen";
+    stem abl_sg: "~vAltV- like ilmarinen";
+    stem all_sg: "~vAlle- like ilmarinen";
+    stem ess_sg: "~panV- like ilmarinen";
+    stem tra_sg: "~vAks- like ilmarinen";
     nom: "~pa", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~pasi", "~pamme", "~panne", _;
@@ -2055,8 +2114,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_abe_pl: _, _, _, _, "~t~ittaan";
     proper_noun_possessive_com_pl: _, _, _, _, "~t~ineen";
     ),
-    // Korkee: 4 words (tennessee, korkee, selkee, suontee). Like Joensuu, except in 16 cells: nom sg, ine sg, ade sg, abl sg, all sg, ess sg, ….
-    declension!("korkee", 4, "~e", like Joensuu;
+    // Huurre: 4 words (kaarre, huurre, pyörre, loppukaarre). Like Ahde, except in 1 cell: nom sg.
+    declension!("huurre", 4, "~r~", like Ahde;
+    stem par_sg: "~r~ttA- like ilmarinen";
+    nom: "~r~", _;
+    ),
+    // Korkee: 4 words (tennessee, korkee, selkee, suontee). Like Föglö, except in 16 cells: nom sg, ine sg, ade sg, abl sg, all sg, ess sg, ….
+    declension!("korkee", 4, "~e", like Föglö;
     stem gen_sg: "~e- like joensuu";
     stem par_sg: "~etA- like vehmaa";
     stem ill_sg: "~ehVn- like ilmarinen";
@@ -2079,11 +2143,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_sg: "~t~A- like ilmarinen";
     stem ine_sg: "~d~- like tehtaankatu";
     stem ill_sg: "~t~Vn- like ilmarinen";
-    stem ade_sg: "~d~llA- like makedonia";
-    stem abl_sg: "~d~ltA- like makedonia";
-    stem all_sg: "~d~lle- like makedonia";
-    stem ess_sg: "~t~nA- like makedonia";
-    stem tra_sg: "~d~ks- like makedonia";
+    stem ade_sg: "~d~llA- like ilmarinen";
+    stem abl_sg: "~d~ltA- like ilmarinen";
+    stem all_sg: "~d~lle- like ilmarinen";
+    stem ess_sg: "~t~nA- like ilmarinen";
+    stem tra_sg: "~d~ks- like ilmarinen";
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_ine_pl: _, _, _, _, derived;
     proper_noun_possessive_all_pl: _, _, _, _, derived;
@@ -2132,16 +2196,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     stem par_pl: "~- like hyväkkä";
     stem par_sg: "~käV- like makedonia";
     stem ill_sg: "~käVn- like makedonia";
-    stem ade_sg: "~AllV- like makedonia";
-    stem abl_sg: "~AltV- like makedonia";
-    stem all_sg: "~Alle- like makedonia";
-    stem ess_sg: "~känV- like makedonia";
-    stem tra_sg: "~Aks- like makedonia";
+    stem ade_sg: "~AllV- like ilmarinen";
+    stem abl_sg: "~AltV- like ilmarinen";
+    stem all_sg: "~Alle- like ilmarinen";
+    stem ess_sg: "~känV- like ilmarinen";
+    stem tra_sg: "~Aks- like ilmarinen";
     nom: "~kä", _;
     ine: "~AssV", _;
     proper_noun_possessive_nom_pl: derived, _, _, _, derived;
     proper_noun_possessive_gen_sg: _, "~käsi", "~kämme", "~känne", _;
     proper_noun_possessive_ine_sg: _, _, _, _, "~AssVVn|~AssVnsV";
+    ),
+    // Selänne: 4 words (päijänne, selänne, ylänne, salorinne). Like Häme with `ˇ` after each pattern.
+    declension!("selänne", 4, "~ˇ", like Häme with "ˇ";
     ),
     // Alavus: 3 words (varkaus, alavus, warkaus). Like Kainuu with `s` after each pattern, except in 26 cells: gen_ sg, par sg, ine sg, ela sg, ill sg, ade sg, ….
     declension!("alavus", 3, "~s", like Kainuu with "s";
@@ -2184,22 +2251,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     proper_noun_possessive_nom_sg: "~yni", _, _, _, "~ynsA";
     proper_noun_possessive_nom_pl: _, "~ysi", "~ymme", "~ynne", _;
     proper_noun_possessive_gen_sg: _, "~ysi", "~ymme", "~ynne", _;
-    ),
-    // Kurki: 3 words (kurki, kärki, savikurki).
-    declension!("kurki", 3, "~ki";
-    stem gen_sg: "~je- like ilmarinen";
-    stem par_pl: "~k- like salmi";
-    stem par_sg: "~keA- like ilmarinen";
-    stem ine_sg: "~j- like ilmarinen";
-    stem ill_sg: "~keVn- like ilmarinen";
-    stem ade_sg: "~jellA- like makedonia";
-    stem abl_sg: "~jeltA- like makedonia";
-    stem all_sg: "~jelle- like makedonia";
-    stem ess_sg: "~kenA- like makedonia";
-    stem tra_sg: "~jeks- like makedonia";
-    nom: "~ki", _;
-    proper_noun_possessive_nom_pl: derived, _, _, _, derived;
-    proper_noun_possessive_gen_sg: _, "~kesi", "~kemme", "~kenne", _;
     ),
     // Lähiitä: 3 words (lähi-itä, kaukoitä, keski-itä). Like Kestilä with `ˇ` after each pattern, except in 12 cells: gen_ sg, tra pl, ins pl, proper_noun_possessive_par_pl _2sg, proper_noun_possessive_par_pl _1pl, proper_noun_possessive_par_pl _2pl, ….
     declension!("lähi-itä", 3, "~äˇ", like Kestilä with "ˇ";

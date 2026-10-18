@@ -35,37 +35,32 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 6] = [
-    // nom_pl like toinen: 15 words.
+pub(super) static TABLES: [EndingTable<'static>; 5] = [
+    // nom_pl like toinen: 7 words.
     EndingTable {
         name: Cow::Borrowed("toinen"),
-        words: 15,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~t\t", "~n\t", "~ssa\t", "~sta\t", "~lla\t", "~lta\t", "~tta\t",
-        )),
-    },
-    // nom_pl like sama: 4 words.
-    EndingTable {
-        name: Cow::Borrowed("sama"),
-        words: 4,
+        words: 7,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~t\t", "~n\t", "~ssA\t", "~stA\t", "~llA\t", "~ltA\t", "~ttA\t",
         )),
     },
-    // gen_pl like kuka: 27 words.
+    // nom_pl like sama: 3 words.
     EndingTable {
-        name: Cow::Borrowed("kuka"),
-        words: 27,
-        slot: 2,
+        name: Cow::Borrowed("sama"),
+        words: 3,
+        slot: 1,
         table: Cow::Borrowed(concat!(
-            "~n\t",
-            "~hin\t",
-            "~lle\t~lle\t",
-            "~ksi\t~ksi\t",
-            "\t",
-            "\t",
+            "~t\t", "~n\t", "~ssV\t", "~stV\t", "~llV\t", "~ltV\t", "~ttV\t",
+        )),
+    },
+    // nom_pl like jompi: 3 words.
+    EndingTable {
+        name: Cow::Borrowed("jompi"),
+        words: 3,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~At\t", "~An\t", "~assa\t", "~asta\t", "~alla\t", "~alta\t", "~atta\t",
         )),
     },
     // gen_pl like toinen: 7 words.
@@ -76,26 +71,10 @@ pub(super) static TABLES: [EndingTable<'static>; 6] = [
         table: Cow::Borrowed(concat!(
             "~ten|~ien\t",
             "~iin\t",
-            "~elle\t~ille\t",
+            "~ellV\t~ille\t",
             "~eksi\t~iksi\t",
             "~in\t",
             "~ine\t",
-        )),
-    },
-    // par_sg like kuka: 27 words.
-    EndingTable {
-        name: Cow::Borrowed("kuka"),
-        words: 27,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~tä\t~tä\t",
-            "~ssä\t",
-            "~stä\t",
-            "~hin\t",
-            "~llä\t",
-            "~ltä\t",
-            "~nä\t~nä\t",
-            "\t",
         )),
     },
     // par_sg like toinen: 7 words.
@@ -104,13 +83,13 @@ pub(super) static TABLES: [EndingTable<'static>; 6] = [
         words: 7,
         slot: 3,
         table: Cow::Borrowed(concat!(
-            "~ta\t~ia\t",
+            "~tA\t~ia\t",
             "~issa\t",
             "~ista\t",
-            "~een\t",
+            "~eVn\t",
             "~illa\t",
             "~ilta\t",
-            "~ena\t~ina\t",
+            "~enA\t~ina\t",
             "~itta\t",
         )),
     },

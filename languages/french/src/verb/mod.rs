@@ -98,7 +98,7 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.9972246,
+        regular: 0.997222,
         unsettled: 1.0,
         unattested: 1.0,
     },
@@ -118,64 +118,19 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Addressee::*;
-        use crate::Number::*;
-        use crate::Person::*;
-        let cell = match self {
-            Cell::Form(crate::Tense::Present, First, Singular) => cell::PRES_1_SG,
-            Cell::Form(crate::Tense::Present, First, Plural) => cell::PRES_1_PL,
-            Cell::Form(crate::Tense::Present, Second, Singular) => cell::PRES_2_SG,
-            Cell::Form(crate::Tense::Present, Second, Plural) => cell::PRES_2_PL,
-            Cell::Form(crate::Tense::Present, Third, Singular) => cell::PRES_3_SG,
-            Cell::Form(crate::Tense::Present, Third, Plural) => cell::PRES_3_PL,
-            Cell::Form(crate::Tense::Imperfect, First, Singular) => cell::IMPF_1_SG,
-            Cell::Form(crate::Tense::Imperfect, First, Plural) => cell::IMPF_1_PL,
-            Cell::Form(crate::Tense::Imperfect, Second, Singular) => cell::IMPF_2_SG,
-            Cell::Form(crate::Tense::Imperfect, Second, Plural) => cell::IMPF_2_PL,
-            Cell::Form(crate::Tense::Imperfect, Third, Singular) => cell::IMPF_3_SG,
-            Cell::Form(crate::Tense::Imperfect, Third, Plural) => cell::IMPF_3_PL,
-            Cell::Form(crate::Tense::PastHistoric, First, Singular) => cell::PAST_1_SG,
-            Cell::Form(crate::Tense::PastHistoric, First, Plural) => cell::PAST_1_PL,
-            Cell::Form(crate::Tense::PastHistoric, Second, Singular) => cell::PAST_2_SG,
-            Cell::Form(crate::Tense::PastHistoric, Second, Plural) => cell::PAST_2_PL,
-            Cell::Form(crate::Tense::PastHistoric, Third, Singular) => cell::PAST_3_SG,
-            Cell::Form(crate::Tense::PastHistoric, Third, Plural) => cell::PAST_3_PL,
-            Cell::Form(crate::Tense::Future, First, Singular) => cell::FUT_1_SG,
-            Cell::Form(crate::Tense::Future, First, Plural) => cell::FUT_1_PL,
-            Cell::Form(crate::Tense::Future, Second, Singular) => cell::FUT_2_SG,
-            Cell::Form(crate::Tense::Future, Second, Plural) => cell::FUT_2_PL,
-            Cell::Form(crate::Tense::Future, Third, Singular) => cell::FUT_3_SG,
-            Cell::Form(crate::Tense::Future, Third, Plural) => cell::FUT_3_PL,
-            Cell::Form(crate::Tense::Conditional, First, Singular) => cell::COND_1_SG,
-            Cell::Form(crate::Tense::Conditional, First, Plural) => cell::COND_1_PL,
-            Cell::Form(crate::Tense::Conditional, Second, Singular) => cell::COND_2_SG,
-            Cell::Form(crate::Tense::Conditional, Second, Plural) => cell::COND_2_PL,
-            Cell::Form(crate::Tense::Conditional, Third, Singular) => cell::COND_3_SG,
-            Cell::Form(crate::Tense::Conditional, Third, Plural) => cell::COND_3_PL,
-            Cell::Form(crate::Tense::PresentSubjunctive, First, Singular) => cell::SUBJ_1_SG,
-            Cell::Form(crate::Tense::PresentSubjunctive, First, Plural) => cell::SUBJ_1_PL,
-            Cell::Form(crate::Tense::PresentSubjunctive, Second, Singular) => cell::SUBJ_2_SG,
-            Cell::Form(crate::Tense::PresentSubjunctive, Second, Plural) => cell::SUBJ_2_PL,
-            Cell::Form(crate::Tense::PresentSubjunctive, Third, Singular) => cell::SUBJ_3_SG,
-            Cell::Form(crate::Tense::PresentSubjunctive, Third, Plural) => cell::SUBJ_3_PL,
-            Cell::Form(crate::Tense::ImperfectSubjunctive, First, Singular) => cell::SUBJ_IMPF_1_SG,
-            Cell::Form(crate::Tense::ImperfectSubjunctive, First, Plural) => cell::SUBJ_IMPF_1_PL,
-            Cell::Form(crate::Tense::ImperfectSubjunctive, Second, Singular) => {
-                cell::SUBJ_IMPF_2_SG
+        match self {
+            Cell::Form(tense, person, number) => {
+                cell::PRES_1_SG as usize
+                    + (tense as usize * 3 + person as usize) * 2
+                    + number as usize
             }
-            Cell::Form(crate::Tense::ImperfectSubjunctive, Second, Plural) => cell::SUBJ_IMPF_2_PL,
-            Cell::Form(crate::Tense::ImperfectSubjunctive, Third, Singular) => cell::SUBJ_IMPF_3_SG,
-            Cell::Form(crate::Tense::ImperfectSubjunctive, Third, Plural) => cell::SUBJ_IMPF_3_PL,
-            Cell::Imperative(Tu) => cell::IMPERATIVE_TU,
-            Cell::Imperative(Nous) => cell::IMPERATIVE_NOUS,
-            Cell::Imperative(Vous) => cell::IMPERATIVE_VOUS,
-            Cell::Infinitive => cell::INFINITIVE,
-            Cell::Participle(crate::Participle::Present) => cell::PARTICIPLE_PRES,
-            Cell::Participle(crate::Participle::Past) => cell::PARTICIPLE_PAST,
-        };
-        cell as usize
+            Cell::Imperative(addressee) => cell::IMPERATIVE_TU as usize + addressee as usize,
+            Cell::Infinitive => cell::INFINITIVE as usize,
+            Cell::Participle(participle) => cell::PARTICIPLE_PRES as usize + participle as usize,
+        }
     }
 }
 

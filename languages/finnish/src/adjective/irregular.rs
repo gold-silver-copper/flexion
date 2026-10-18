@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 6 stems, 680 forms.
+/// 7 stems, 662 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"aerodynaamisin	1	aerodynaamisimmät	4	aerodynaamisintä	5	aerodynaamisimpiä	10	aerodynaamisimpään
@@ -17,7 +17,6 @@ aikaavievä	5	aikaavieviä	7	aikaavievissä
 ala-	0	ala-	12	alla	14	alta	16	alle	28	alempi	29	alin
 apokalyptinen	4	apokalyptista	5	apokalyptisia	6	apokalyptisessa	7	apokalyptisissa
 arvostetumpi	1	arvostetummät	4	arvostetumpää	5	arvostetumpiä	10	arvostetumpään
-autuaaksitekevä	5	autuaaksitekeviä	7	autuaaksitekevissä
 chic	adjective_nom_pl	chic- like abstrakti	adjective_pl	chic- like abstrakti
 efferentti	4	efferenttia	5	efferentteja	6	efferentissa	7	efferenteissa
 emeettinen	4	emeettista	5	emeettisia	6	emeettisessa	7	emeettisissa
@@ -33,7 +32,7 @@ gurmee	3	gurmeiden	5	gurmeita	7	gurmeissa	10	gurmeehen	11	gurmeihin	25	gurmein	2
 halal	adjective_nom_pl	halal- like abstrakti	adjective_pl	halal- like abstrakti
 halpa	3	halpojen	5	halpoja	7	halvoissa	11	halpoihin	25	halvoin	27	halpoine	29	halvin
 halpis	4	halpista	5	halpiksia	6	halpiksessa	7	halpiksissa
-handsfree	1	handsfreet	4	handsfreetä	7	handsfreeissä	9	handsfreeistä	10	handsfreehin	11	handsfreeihin	13	handsfreeillä	15	handsfreeiltä	19	handsfreeinä	23	handsfreeittä
+handsfree	4	handsfreetä	5	handsfreeitä	6	handsfreessä	7	handsfreeissä	10	handsfreehin
 hapan	1	happamat	3	happamien	5	happamia	10	happamaan	11	happamiin	27	happamine
 hapanimelä	5	hapanimeliä	7	hapanimelissä
 haram	adjective_nom_pl	haram- like abstrakti	adjective_pl	haram- like abstrakti
@@ -62,7 +61,6 @@ kiirus	1	kiiruut	7	kiiruissa	9	kiiruista	10	kiiruuseen	13	kiiruilla	15	kiiruilta
 kiltti	1	kiltit	4	kilttiä
 kintsana	29	kintsanoin
 kivempi	1	kivemmat	4	kivempaa	5	kivempia	10	kivempaan
-kokoonpantu	10	kokoonpantuun
 kolmaskymmenes	8	kolmannestakymmenennestä	9	kolmansistakymmenensistä	14	kolmanneltakymmenenneltä	15	kolmansiltakymmenensiltä	22	kolmannettakymmenennettä	23	kolmansittakymmenensittä
 kolmastoista	1	kolmannettoista	3	kolmansientoista	4	kolmattatoista	5	kolmansiatoista	10	kolmanteentoista	11	kolmansiintoista	27	kolmansinetoista
 kompura	29	kompuroin
@@ -79,19 +77,17 @@ lenko	1	lengot	18	lenkona	19	lenkoina
 liki-	0	liki-	12	likellä	14	likeltä	16	likelle
 lyhyt	29	lyhin
 lähi-	0	lähi-	12	lähellä	14	läheltä	16	lähelle	18	läsnä	28	lähempi	29	lähin
-läppä	7	läpissä	10	läppään	11	läppiin	25	läpin	27	läppine
+läppä	7	läpissä	11	läppiin	25	läpin	27	läppine
 maataviljelevä	5	maataviljeleviä	7	maataviljelevissä
 makee	3	makeiden	5	makeita	7	makeissa	10	makeehen	11	makeihin	25	makein	27	makeine
 marras	1	martaat	3	martaiden	5	martaita	10	martaaseen	11	martaisiin	27	martaine
 marto	1	marrot
-matta	3	mattojen	5	mattoja	7	matoissa	10	mattaan	11	mattoihin	25	matoin	27	mattoine
-mukiinmenevä	5	mukiinmeneviä	7	mukiinmenevissä
+matta	3	mattojen	5	mattoja	7	matoissa	11	mattoihin	25	matoin	27	mattoine
 mustankipein	1	mustankipeimmät	4	mustankipeintä	5	mustankipeimpiä	10	mustankipeimpään
 neljäskymmenes	8	neljännestäkymmenennestä	9	neljänsistäkymmenensistä	14	neljänneltäkymmenenneltä	15	neljänsiltäkymmenensiltä	22	neljännettäkymmenennettä	23	neljänsittäkymmenensittä
 neljästoista	1	neljännettoista	3	neljänsientoista	4	neljättätoista	5	neljänsiätoista	10	neljänteentoista	11	neljänsiintoista	27	neljänsinetoista
 neuroepätyypillisyys	1	neuroepätyypillisyydet	3	neuroepätyypillisyyksien	4	neuroepätyypillisyyttä	7	neuroepätyypillisyyksissä	9	neuroepätyypillisyyksistä	10	neuroepätyypillisyyteen	13	neuroepätyypillisyyksillä	15	neuroepätyypillisyyksiltä	17	neuroepätyypillisyyksille	19	neuroepätyypillisyyksinä	21	neuroepätyypillisyyksiksi	23	neuroepätyypillisyyksittä	25	neuroepätyypillisyyksin
-nirppa	3	nirppojen	5	nirppoja	7	nirpoissa	10	nirppaan	11	nirppoihin	25	nirpoin	27	nirppoine
-ohimenevä	5	ohimeneviä	7	ohimenevissä
+nirppa	3	nirppojen	5	nirppoja	7	nirpoissa	11	nirppoihin	25	nirpoin	27	nirppoine
 okei	3	okeiden	5	okeita	7	okeissa	10	okeihin	11	okeihin	25	okein	27	okeine
 onnetoin	1	onnettomat	3	onnettomien	5	onnettomia	10	onnettomaan	11	onnettomiin	27	onnettomine
 pahaenteisempi	1	pahaenteisemmät	4	pahaenteisempää	5	pahaenteisempiä	10	pahaenteisempään
@@ -107,7 +103,7 @@ pikkusievä	5	pikkusieviä	7	pikkusievissä
 pitkä	28	pidempi	29	pisin
 poismennyt	5	poismenneitä	6	poismenneessä	7	poismenneissä
 polygeneettinen	4	polygeneettista	5	polygeneettisia	6	polygeneettisessa	7	polygeneettisissa
-poppa	3	poppien	5	poppia	7	popissa	10	poppaan	11	poppiin	19	poppina	25	popin	27	poppine	28	popempi
+poppa	3	poppien	5	poppia	7	popissa	11	poppiin	19	poppina	25	popin	27	poppine	28	popempi
 pro	10	prohon
 psykoanalyyttinen	4	psykoanalyyttista	5	psykoanalyyttisia	6	psykoanalyyttisessa	7	psykoanalyyttisissa
 pulleva	28	pullevəmpi
@@ -119,7 +115,6 @@ ravinteinen	28	raviteisempi	29	raviteisin
 rela	28	relampi
 rietas	1	riettaat	10	riettaaseen
 risa	28	risampi
-samantekevä	5	samantekeviä	7	samantekevissä
 sees	1	sekeet	10	sekeeseen
 seisminen	4	seismista	5	seismisia	6	seismisessa	7	seismisissa
 seitsemäskymmenes	8	seitsemännestäkymmenennestä	9	seitsemänsistäkymmenensistä	14	seitsemänneltäkymmenenneltä	15	seitsemänsiltäkymmenensiltä	22	seitsemännettäkymmenennettä	23	seitsemänsittäkymmenensittä
@@ -138,12 +133,13 @@ toinenkolmatta	8	toisestakolmatta	9	toisistakolmatta	14	toiseltakolmatta	15	tois
 tuliterä	5	tuliteriä	7	tuliterissä
 turta	1	turrat	18	turtana	19	turtina
 tuulenpieksemä	5	tuulenpieksemiä	7	tuulenpieksemissä
-tylppä	7	tylpissä	10	tylppään	11	tylppiin	25	tylpin	27	tylppine	28	tylpempi
+tylppä	7	tylpissä	11	tylppiin	25	tylpin	27	tylppine	28	tylpempi
 tyven	3	tyvenien	4	tyventä	5	tyveniä	10	tyveneen	11	tyveniin
 ulko-	0	ulko-	4	ulkoa	12	ulolla	14	ulolta	16	ulolle	18	ulkona	28	ulompi	29	uloin
 useanlainen	28	useammanlainen	29	useimmanlainen
 vakiotyyppinen	4	vakiotyyppista	5	vakiotyyppisia	6	vakiotyyppisessa	7	vakiotyyppisissa
 valantehnyt	5	valantehneitä	6	valantehneessä	7	valantehneissä
+vasen	adjective_pl	vasemp- like vihanta	5	vasempia
 vastenmielisin	1	vastenmielisimmät	4	vastenmielisintä	5	vastenmielisimpiä	10	vastenmielisimpään
 viheriä	29	viheriöin
 viideskymmenes	8	viidennestäkymmenennestä	9	viidensistäkymmenensistä	14	viidenneltäkymmenenneltä	15	viidensiltäkymmenensiltä	22	viidennettäkymmenennettä	23	viidensittäkymmenensittä

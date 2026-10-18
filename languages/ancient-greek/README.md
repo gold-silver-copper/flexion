@@ -70,12 +70,12 @@ reason (the rule and its counts).
 
 | | words | paradigms | sound laws | rules | listed words | irregular forms | listed by relations |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| noun | 8124 | 86 | 4 | 316 | 1710 | 1999 | 60 |
-| proper_noun | 3793 | 68 | 0 | 192 | 728 | 758 | 26 |
-| adjective | 4674 | 46 | 3 | 330 | 1027 | 3599 | 84 |
-| verb | 2655 | 286 | 26 | 234 | 1531 | 27750 | 425 |
-| pronoun | 58 | 19 | 0 | 14 | 35 | 405 | 13 |
-| numeral | 19 | 7 | 0 | 4 | 5 | 20 | 0 |
+| noun | 8124 | 86 | 5 | 316 | 1715 | 1992 | 61 |
+| proper_noun | 3793 | 68 | 1 | 200 | 702 | 680 | 27 |
+| adjective | 4674 | 46 | 3 | 330 | 1008 | 3578 | 84 |
+| verb | 2655 | 284 | 22 | 273 | 1440 | 25869 | 426 |
+| pronoun | 58 | 19 | 0 | 14 | 35 | 415 | 13 |
+| numeral | 19 | 7 | 0 | 4 | 5 | 22 | 0 |
 
 *Words*: the dictionary's words the grammar is learned from. *Sound laws*: changes
 where a stem meets its ending (or farther, along a tier). *Rules*: the endings that
@@ -115,46 +115,95 @@ are words of their own, another word's form (a participle, a comparative) and an
 word's spelling, with their number of words. *Phrases*: top-1 on the forms the dictionary
 writes as phrases (the Latin perfect passive, `amātus sum`). *Irregular lines*: the share of the
 dictionary's words the grammar lists a form or a stem of. The held-out tenth was looked at while the trainer was being
-developed (changes are judged on another tenth since PR #16).
+developed (changes are judged on another tenth since PR #16). A closed class (pronouns,
+numerals, determiners, adpositions) and a part of speech with fewer than 30 held-out words
+is judged first on its own words: its top-1 is *reproduced*, the shipped grammar's right
+forms of the forms of its own words, then *a new word*, top-1 with each word left out of
+training in turn (a tenth at a time where another part of speech's words teach it). A part
+with no held-out words has no other score (–).
 
 | | held-out words | forms | top-1 | top-3 | among the candidates | every cell right | calibration error | log loss | lemma in full | principal parts given | 1 / 2 / 3 forms given | features given | seen cells | unseen cells | floor (unseen) | against the floor | any listed form | homograph ceiling | on a training word / new root | lemma spelling | own / form-of / alt-of | phrases | irregular lines |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 809 | 11483 | **74.79%** (71.9–77.5) | 91.47% | 94.21% | 62.79% | 0.048 | 3.768 | 89.15% | 96.09% | 94.55 / 95.84 / 96.10 | 75.82% | 74.79% (11483) |  | 51.28% (0.00%) | +25.16 (+21.24…+28.91) | 74.81% | 99.55% | 81.35% / 73.25% | 78.50% (586) | 74.59% (784) / 66.67% (3) / 82.96% (22) |  | 8.64% |
-| proper_noun | 383 | 2014 | **59.73%** (54.6–64.9) | 80.54% | 83.57% | 54.31% | 0.080 | 8.602 | 86.50% | 91.00% | 94.11 / 95.82 / 96.30 | 62.07% | 59.73% (2014) |  | 47.42% (0.00%) | +13.90 (+7.80…+20.37) | 59.88% | 99.40% | 56.73% / 60.01% | 63.80% (221) | 60.11% (375) / – / 43.48% (8) |  | 5.09% |
-| adjective | 474 | 22171 | **78.02%** (74.8–81.2) | 93.37% | 95.03% | 63.71% | 0.040 | 3.396 | 90.76% | 98.02% | 94.65 / 94.93 / 97.06 |  | 78.03% (22161) | 40.00% (10) | 52.46% (40.00%) | +26.37 (+21.84…+30.57) | 78.21% | 99.17% | 82.37% / 77.17% | 84.05% (301) | 79.52% (349) / 74.20% (115) / 68.31% (10) |  | 2.91% |
-| verb | 257 | 68968 | **68.04%** (63.4–72.5) | 79.85% | 83.50% | 23.35% | 0.084 | 10.861 | 75.67% | 81.10% | 78.59 / 78.54 / 78.77 |  | 68.19% (68730) | 23.11% (238) | 44.20% (15.97%) | +25.05 (+19.23…+30.66) | 68.50% | 99.90% | 77.94% / 62.22% | 82.50% (160) | 68.66% (244) / 45.83% (3) / 53.40% (10) | 57.62% (4832) | 46.74% |
-| pronoun | 11 | 367 | **40.33%** (10.3–69.3) | 44.14% | 44.14% | 9.09% | 0.602 | 12.382 | 40.16% |  | 41.69 / 41.86 / 42.04 |  | 42.41% (349) | 0.00% (18) | 41.96% (11.11%) | +6.81 (-8.25…+30.49) | 40.33% | 99.46% | 0.00% / 40.33% | 100.00% (1) | 37.37% (8) / 88.89% (1) / 0.00% (2) |  | 51.72% |
-| numeral | 2 | 30 | **100.00%** (100.0–100.0) | 100.00% | 100.00% | 100.00% | 0.061 | 0.091 | 100.00% |  | 100.00 / 100.00 / 100.00 |  | 100.00% (30) |  | 100.00% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 0.00% / 100.00% |  | 100.00% (2) / – / – |  | 21.05% |
+| noun | 809 | 11483 | **74.96%** (72.1–77.8) | 91.35% | 94.10% | 62.92% | 0.046 | 3.790 | 89.14% | 96.10% | 94.53 / 95.81 / 96.07 | 75.96% | 74.96% (11483) |  | 51.28% (0.00%) | +25.29 (+21.30…+28.96) | 74.98% | 99.55% | 81.03% / 73.54% | 79.18% (586) | 74.79% (784) / 66.67% (3) / 82.32% (22) |  | 8.64% |
+| proper_noun | 383 | 2014 | **60.28%** (55.1–65.6) | 80.73% | 83.37% | 55.09% | 0.076 | 8.590 | 86.95% | 91.55% | 94.40 / 95.82 / 96.30 | 61.72% | 60.28% (2014) |  | 47.42% (0.00%) | +14.45 (+8.29…+20.98) | 60.43% | 99.40% | 59.65% / 60.34% | 65.16% (221) | 60.67% (375) / – / 43.48% (8) |  | 5.14% |
+| adjective | 474 | 22171 | **78.19%** (74.9–81.4) | 93.33% | 95.03% | 63.92% | 0.039 | 3.402 | 90.76% | 98.02% | 94.65 / 94.93 / 97.06 |  | 78.21% (22161) | 40.00% (10) | 52.46% (40.00%) | +26.51 (+21.96…+30.76) | 78.39% | 99.17% | 82.37% / 77.38% | 84.39% (301) | 79.52% (349) / 74.94% (115) / 68.31% (10) |  | 2.78% |
+| verb | 257 | 68968 | **68.30%** (63.8–72.7) | 81.20% | 84.33% | 24.12% | 0.072 | 10.236 | 75.88% | 81.95% | 78.99 / 78.94 / 79.29 |  | 68.43% (68730) | 29.83% (238) | 44.20% (15.97%) | +25.27 (+19.32…+30.88) | 68.65% | 99.90% | 77.29% / 63.03% | 83.12% (160) | 68.86% (244) / 45.83% (3) / 55.25% (10) | 56.29% (4832) | 44.33% |
+| pronoun | 11 | 367 | **reproduced 1771 of 1771**; a new word 53.75% (58 words) | 44.14% | 44.14% | 9.09% | 0.477 | 12.382 | 40.16% |  | 41.69 / 41.86 / 42.04 |  | 44.71% (331) | 0.00% (36) | 41.96% (50.00%) | +7.08 (-8.14…+30.97) | 40.33% | 99.46% | 0.00% / 40.33% | 100.00% (1) | 37.37% (8) / 88.89% (1) / 0.00% (2) |  | 51.72% |
+| numeral | 2 | 30 | **reproduced 301 of 301**; a new word 66.78% (19 words) | 100.00% | 100.00% | 100.00% | 0.061 | 0.091 | 100.00% |  | 100.00 / 100.00 / 100.00 |  | 100.00% (30) |  | 100.00% (0.00%) | +0.00 (+0.00…+0.00) | 100.00% | 100.00% | 0.00% / 100.00% |  | 100.00% (2) / – / – |  | 21.05% |
+
+*Compatible with stated length*: the dictionary marks a vowel's length both ways,
+long and short, so a vowel it writes with neither has its length unstated where the
+word's table leaves that vowel bare in every form, and stated where the table marks it
+elsewhere (a circumflex marks it long). An answer that is the dictionary's form but for a
+length mark on a vowel the form leaves bare is compatible with it where the table never
+states that vowel's length otherwise. A second score, for the grammar and the floor alike,
+beside top-1, which stays the score: the forms it adds are not more forms right.
+
+| | top-1 | compatible with stated length | floor | floor, compatible | against the floor, compatible |
+|---|---:|---:|---:|---:|---:|
+| noun | 74.96% | 80.97% | 51.28% | 55.25% | +27.39 (+23.79…+30.89) |
+| proper_noun | 60.28% | 78.35% | 47.42% | 58.69% | +21.45 (+16.26…+26.92) |
+| adjective | 78.19% | 84.96% | 52.46% | 57.70% | +28.08 (+23.65…+32.43) |
+| verb | 68.30% | 74.83% | 44.20% | 46.20% | +29.88 (+24.47…+35.06) |
+| pronoun | 40.33% | 40.33% | 41.96% | 41.96% | +7.08 (-8.14…+30.97) |
+| numeral | 100.00% | 100.00% | 100.00% | 100.00% | +0.00 (+0.00…+0.00) |
 
 ## Where the errors are
 
 The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share
 of them: *class*, the right form is among its answers but another paradigm's comes first;
-*length* and *accent*, the right letters with a vowel's length or the accent wrong; *stem*
-and *ending*, wrong letters inside the stem or after it; *variant*, another of the forms
-the dictionary lists comes first; *homograph*, another dictionary word spelled the same has
-that form; *gap*, no form at all. *By block*: the mean of each group of cells' top-1, so a
-group of many cells doesn't outweigh the rest. *Reproduced*: the shipped grammar on the
-dictionary's own words (at most 3,000), from the headword; *complete*: of those words'
-cells, the dictionary's or not, the share with a form.
+*marks*, the right letters but for a mark the spelling folds (a vowel's length, a
+breathing; not a letter written with a combining mark, as a Devanagari vowel sign);
+*accent*, the right letters with the accent wrong; *stem* and *ending*, wrong letters
+inside the stem or after it; *variant*, another of the forms the dictionary lists comes
+first; *homograph*, another dictionary word spelled the same has that form; *gap*, no form
+at all. *By block*: the mean of each group of cells' top-1, so a group of many cells
+doesn't outweigh the rest; a group with fewer than 30 held-out forms is left out of it and
+named below. *Reproduced*: the shipped grammar on the dictionary's own words (at most
+3,000), from the headword; *complete*: of those words' cells, the dictionary's or not, the
+share with a form.
 
-| | wrong forms | class | length | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
+| | wrong forms | class | marks | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| noun | 2895 | 27% | 59% | 6% | 2% | 6% | 0% | 1% | 0% | 74.79% | 99.67% | 100.00% |
-| proper_noun | 811 | 15% | 74% | 4% | 2% | 5% | 0% | 0% | 0% | 59.73% | 99.89% | 100.00% |
-| adjective | 4874 | 28% | 60% | 4% | 4% | 3% | 1% | 1% | 0% | 80.60% | 99.85% | 100.00% |
-| verb | 22043 | 18% | 42% | 4% | 19% | 17% | 1% | 0% | 0% | 66.21% | 99.94% | 100.00% |
-| pronoun | 219 | 6% | 0% | 14% | 1% | 78% | 0% | 0% | 0% | 40.33% | 100.00% | 100.00% |
-| numeral | 0 | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 0% | 100.00% | 100.00% | 100.00% |
+| noun | 2875 | 27% | 58% | 6% | 2% | 6% | 0% | 1% | 0% | 74.96% | 99.89% | 100.00% |
+| proper_noun | 800 | 14% | 74% | 4% | 2% | 6% | 0% | 0% | 0% | 60.28% | 99.88% | 100.00% |
+| adjective | 4835 | 28% | 58% | 3% | 4% | 4% | 1% | 1% | 0% | 80.85% | 99.84% | 100.00% |
+| verb | 21862 | 20% | 42% | 4% | 19% | 14% | 1% | 0% | 0% | 66.52% | 99.06% | 100.00% |
+| pronoun | 219 | 6% | 0% | 15% | 1% | 78% | 0% | 0% | 0% | 40.33% | 100.00% | 100.00% |
+| numeral | 0 | – | – | – | – | – | – | – | – | 100.00% | 100.00% | 100.00% |
+
+*By block*, each group of cells' top-1 and held-out forms:
+
+- adjective: adjective 78.01% (21052), comparative 82.49% (337), superlative 82.30% (339), adverb 80.59% (443)
+- verb: present 79.11% (16394), present_imperative 79.11% (4116), imperfect 64.41% (4959), future 66.33% (7824), aorist 67.11% (12765), aorist_imperative 67.92% (3192), perfect 57.13% (10464), perfect_imperative 58.14% (2616), pluperfect 54.32% (2128), future_perfect 66.67% (240), infinitive 68.85% (2135), participle 69.18% (2135)
+
+## The shipped grammar and the scored one
+
+The grammar shipped is learned from every word; the one scored above from all but the
+held-out tenth. Their sound laws (each with its tier) and irregular forms, side by side;
+a law one has and the other doesn't is listed below the table.
+
+| | sound laws, shipped / scored | the same laws | irregular forms, shipped / scored |
+|---|---:|---:|---:|
+| noun | 5 / 5 | 1 | 1992 / 1596 |
+| proper_noun | 1 / 1 | 1 | 680 / 645 |
+| adjective | 3 / 3 | 2 | 3578 / 1983 |
+| verb | 22 / 19 | 11 | 25869 / 23431 |
+| pronoun | 0 / 0 | 0 | 415 / 289 |
+| numeral | 0 / 0 | 0 | 22 / 22 |
+
+- noun: only the shipped grammar's: `Ᾰ → ᾱ after ε; ᾰ after η, ι, κ, ο, π, ω, ᾰ, ᾱ, ῐ, ῑ, ῠ, none (the nearest of ε, η, ι, κ, ο, π, ω, ᾰ, ᾱ, ῐ, ῑ, ῠ before it, as written)`, `[γ|ρῠ]+κ → +γ`, `[ῑ|ῡ|ἰ]+τ → +ν`, `[ε|ᾰ]+ν → +ς after a vowel earlier in the stem`. Only the scored grammar's: `Ᾰ → ᾱ after ε; ᾰ after η, ι, κ, ο, ω, ᾰ, ᾱ, ῐ, ῑ, ῠ, none (the nearest of ε, η, ι, κ, ο, ω, ᾰ, ᾱ, ῐ, ῑ, ῠ before it, as written)`, `ο+ες → ο+ι`, `γ+κ → γ+γ`, `[ῑ|ἰ]+τ → +ν`.
+- adjective: only the shipped grammar's: `[ι|ητ|κτ|ικ|πτ|ηρ|ιν|ωτ|ηλ|ργ|υρ|ων|δν|ωρ|δρ|κρ|υλ|λλ|ρτ|σσ|υτ|ωπ|ῡμ|ημ|ην|θρ|ιρ|μν|ντ|πν|τρ|ιμ|γγ|πρ|ρφ|υκ|ωγ|ῡσ|ιτ|λμ|μβ|νδ|χν|ωλ|ᾱτ|ῡλ|ῡχ]+ωτ → +οτ`. Only the scored grammar's: `[ι|ητ|κτ|ικ|πτ|ηρ|ιν|ωτ|ηλ|ργ|υρ|δν|ων|ωρ|κρ|δρ|σσ|υλ|λλ|ρτ|ωπ|ῡμ|ντ|πν|υτ|ημ|θρ|ιρ|μν|ην|ιμ|τρ|ῡσ|λμ|πρ|ρφ|υκ|χν|ᾱτ|ῡχ]+ωτ → +οτ`.
+- verb: only the shipped grammar's: `ἐ‹α → η, αἰ → ᾐ, αἱ → ᾑ, γῡ → ἐγυ, ε → ε, εὐ → ηὐ, κι → ἐκῐ, λῠ → ἐλυ, ο → ο, οχ → ωχ, οἰ → ᾠ, υ → υ, χυ → ἐκχυ, ἀ → ἠ, ἁ → ἡ, ἐθ → εἰθ, ἐκ → ἐξε, ἐμ → ἐνε, ἐξ → ἐξ, ἐπ → ἐπ, ἐφ → ἐφ, ἐχ → εἰχ, ἑ → εἱ, ἑρ → εἰρ, ἑψ → ἡψ, ἠ → ἠ, ἡ → ἡ, ἰ → ἰ, ἱ → ἱ, ὀ → ὠ, ὁ → ὡ, ὐ → εὐ, ὑ → ὑ, ὠ → ὠ, ὠθ → ἐωθ, ὠν → ἐων, ᾀ → ᾐ, ᾱ → ἀε, ῐ → ῑ, ῥ → ἐρρ (αι → ῃ, αϊ → ῃ, εθ → ειθ, εκ → εξε, εμ → ενε, εξ → εξ, επ → επ, ερ → εἰρ, ευ → ηυ, εφ → εφ, εχ → ειχ, εψ → ηψ, εϋ → ηυ, η → η, ι → ι, οι → ῳ, οϊ → ῳ, ω → ω, ωθ → εωθ, ων → εων, ϊ → ι, ϋ → ευ, ᾳ → ῃ)`, `ἐ%ε‹ἀ → ἠ, ἀν → ἀν, ἀτ → ητ (α → η, αν → αν, ατ → ητ)`, `%ε‹ἐ → ἠ, ἐθ → εἰθ, ἐκ → ἐκδε, ἐμ → ἐμημ, ἐν → ἐνδε, ἐξ → ἐξ, ἐχ → ἐσχ (ε → η, εθ → ειθ, εκ → εκδε, εμ → εμημ, εν → ενδε, εξ → εξ, εχ → εσχ)`, `κ+σ → +ξ`, `%ε‹ὑ → ὑ (υ → υ, ϋ → υ)`, `ζ+θ → +σθ`, `ν+σ → ν+`, `%ε‹α → η, αἰ → ᾐ, αἱ → ᾑ (αι → ῃ, αϊ → ῃ)`, `ἐ%ε‹α → η, αἰ → ᾐ, αἱ → ᾑ (αι → ῃ, αϊ → ῃ)`, `ἐ%ε‹ὑ → ὑ (υ → υ, ϋ → υ)`, `[υ|ι|ε|ῡ|ῠ|ῑ|ᾱ|ὑ|ω]+θ → +σθ after [α|ζ|ξ]`. Only the scored grammar's: `ἐ‹α → η, αἰ → ᾐ, αἱ → ᾑ, γῡ → ἐγυ, ε → ε, εὐ → ηὐ, λῠ → ἐλυ, οχ → ωχ, οἰ → ᾠ, οὐ → ἐου, υ → υ, χυ → ἐκχυ, ϊ → ϊ, ἀ → ἠ, ἀφ → ἀφ, ἁ → ἡ, ἐθ → εἰθ, ἐκ → ἐξε, ἐμ → ἐνε, ἐξ → ἐξ, ἐπ → ἐπ, ἐφ → ἐφ, ἐχ → εἰχ, ἑ → εἱ, ἑρ → εἰρ, ἑψ → ἡψ, ἠ → ἠ, ἡ → ἡ, ἰ → ἰ, ἱ → ἱ, ὀ → ὠ, ὁ → ὡ, ὐ → εὐ, ὑ → ὑ, ὠ → ὠ, ὠθ → ἐωθ, ὠν → ἐων, ᾀ → ᾐ, ῐ → ῑ, ῥ → ἐρρ, ῥῠ → ἐρρυ (αι → ῃ, αφ → αφ, εθ → ειθ, εκ → εξε, εμ → ενε, εξ → εξ, επ → επ, ερ → εἰρ, ευ → ηυ, εφ → εφ, εχ → ειχ, εψ → ηψ, η → η, ι → ι, ο → ω, οι → ῳ, ου → εου, ω → ω, ωθ → εωθ, ων → εων, ᾳ → ῃ)`, `ἐ%ε‹ἀ → ἠ (α → η)`, `%ε‹ἐ → ἠ, ἐθ → εἰθ, ἐκ → ἐκδε, ἐμ → ἐμημ, ἐν → ἐἐν, ἐξ → ἐξ, ἐχ → ἐσχ (ε → η, εθ → ειθ, εκ → εκδε, εμ → εμημ, εν → εεν, εξ → εξ, εχ → εσχ)`, `ὀ‹δ → ὁδ, χ → ὠχ, ἰ → οἰ (ι → οι)`, `ὠ‹δ → ὡδ, ἰ → ᾠ (ι → ῳ)`, `%ε‹ὑ → ὑ (υ → υ)`, `%ε‹ὁ → ὡ (ο → ω)`, `ἐ%ε‹ὑ → ὑ (υ → υ)`.
 
 | | lines of grammar | bytes |
 |---|---:|---:|
-| noun | 6154 | 340503 |
-| proper_noun | 3979 | 206010 |
-| adjective | 4368 | 253089 |
-| verb | 29239 | 2418002 |
-| pronoun | 1487 | 63454 |
-| numeral | 1012 | 39327 |
+| noun | 6168 | 341027 |
+| proper_noun | 4000 | 206885 |
+| adjective | 4325 | 250197 |
+| verb | 28565 | 2276916 |
+| pronoun | 1417 | 61373 |
+| numeral | 942 | 35864 |
 
 ## Data and license
 

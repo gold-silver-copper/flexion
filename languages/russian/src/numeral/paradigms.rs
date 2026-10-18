@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes (`~о`, `пятеро`: the stem and `о`). A stem in two pieces (`~ь~`, `пятьдесят`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first.
+//! Alternatives are separated by `|`, the usual one first. A capital (`Ы`)
+//! is a class letter: a harmony law in `laws.rs` writes it, by the
+//! letter before it.
 
 use flexion::Paradigm;
 
@@ -209,11 +211,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 4] = [
     ),
     // Пятеро: 7 words (четверо, шестеро, семеро, восьмеро, десятеро, пятеро).
     declension!("пятеро", 7, "~о";
-    stem gen_m_anim: "~ы- like пятеро";
-    stem ins: "~ыми- like пятеро";
+    stem gen_m_anim: "~Ы- like пятеро";
+    stem ins: "~Ыми- like пятеро";
     nom_m: _, "~о";
     nom_pl: "~о", "~о";
-    acc_pl: "~ых", "~о";
+    acc_pl: "~Ых", "~о";
     ),
     // Пятьсот: 5 words (пятьсот, шестьсот, семьсот, восемьсот, девятьсот).
     declension!("пятьсот", 5, "~ь~о~";

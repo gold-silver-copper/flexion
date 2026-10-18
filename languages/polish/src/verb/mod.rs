@@ -99,8 +99,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 1.5,
     trust: flexion::Trust {
-        regular: 0.9999236,
-        unsettled: 0.9605642,
+        regular: 0.99968696,
+        unsettled: 0.9622072,
         unattested: 1.0,
     },
 };
@@ -129,65 +129,30 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::AdverbialParticiple::*;
-        use crate::Agreement::*;
-        use crate::Number::*;
-        use crate::Participle::*;
-        use crate::Person::*;
-        let cell = match self {
-            Cell::Infinitive => cell::INFINITIVE,
-            Cell::NonPast(First, Singular) => cell::NON_PAST_1_SG,
-            Cell::NonPast(First, Plural) => cell::NON_PAST_1_PL,
-            Cell::NonPast(Second, Singular) => cell::NON_PAST_2_SG,
-            Cell::NonPast(Second, Plural) => cell::NON_PAST_2_PL,
-            Cell::NonPast(Third, Singular) => cell::NON_PAST_3_SG,
-            Cell::NonPast(Third, Plural) => cell::NON_PAST_3_PL,
-            Cell::Past(First, Masculine) => cell::PAST_1_M,
-            Cell::Past(First, Feminine) => cell::PAST_1_F,
-            Cell::Past(First, Neuter) => cell::PAST_1_N,
-            Cell::Past(First, Virile) => cell::PAST_1_VIR,
-            Cell::Past(First, Nonvirile) => cell::PAST_1_NVIR,
-            Cell::Past(Second, Masculine) => cell::PAST_2_M,
-            Cell::Past(Second, Feminine) => cell::PAST_2_F,
-            Cell::Past(Second, Neuter) => cell::PAST_2_N,
-            Cell::Past(Second, Virile) => cell::PAST_2_VIR,
-            Cell::Past(Second, Nonvirile) => cell::PAST_2_NVIR,
-            Cell::Past(Third, Masculine) => cell::PAST_3_M,
-            Cell::Past(Third, Feminine) => cell::PAST_3_F,
-            Cell::Past(Third, Neuter) => cell::PAST_3_N,
-            Cell::Past(Third, Virile) => cell::PAST_3_VIR,
-            Cell::Past(Third, Nonvirile) => cell::PAST_3_NVIR,
-            Cell::Conditional(First, Masculine) => cell::CONDITIONAL_1_M,
-            Cell::Conditional(First, Feminine) => cell::CONDITIONAL_1_F,
-            Cell::Conditional(First, Neuter) => cell::CONDITIONAL_1_N,
-            Cell::Conditional(First, Virile) => cell::CONDITIONAL_1_VIR,
-            Cell::Conditional(First, Nonvirile) => cell::CONDITIONAL_1_NVIR,
-            Cell::Conditional(Second, Masculine) => cell::CONDITIONAL_2_M,
-            Cell::Conditional(Second, Feminine) => cell::CONDITIONAL_2_F,
-            Cell::Conditional(Second, Neuter) => cell::CONDITIONAL_2_N,
-            Cell::Conditional(Second, Virile) => cell::CONDITIONAL_2_VIR,
-            Cell::Conditional(Second, Nonvirile) => cell::CONDITIONAL_2_NVIR,
-            Cell::Conditional(Third, Masculine) => cell::CONDITIONAL_3_M,
-            Cell::Conditional(Third, Feminine) => cell::CONDITIONAL_3_F,
-            Cell::Conditional(Third, Neuter) => cell::CONDITIONAL_3_N,
-            Cell::Conditional(Third, Virile) => cell::CONDITIONAL_3_VIR,
-            Cell::Conditional(Third, Nonvirile) => cell::CONDITIONAL_3_NVIR,
-            Cell::Imperative(First, Singular) => cell::IMPERATIVE_1_SG,
-            Cell::Imperative(First, Plural) => cell::IMPERATIVE_1_PL,
-            Cell::Imperative(Second, Singular) => cell::IMPERATIVE_2_SG,
-            Cell::Imperative(Second, Plural) => cell::IMPERATIVE_2_PL,
-            Cell::Imperative(Third, Singular) => cell::IMPERATIVE_3_SG,
-            Cell::Imperative(Third, Plural) => cell::IMPERATIVE_3_PL,
-            Cell::Impersonal => cell::IMPERSONAL,
-            Cell::Participle(Active) => cell::PARTICIPLE_ACT,
-            Cell::Participle(Passive) => cell::PARTICIPLE_PASS,
-            Cell::AdverbialParticiple(Contemporary) => cell::ADVERBIAL_PARTICIPLE_CONTEMP,
-            Cell::AdverbialParticiple(Anterior) => cell::ADVERBIAL_PARTICIPLE_ANT,
-            Cell::AlNoun => cell::VERBAL_NOUN,
-        };
-        cell as usize
+        match self {
+            Cell::Infinitive => cell::INFINITIVE as usize,
+            Cell::NonPast(person, number) => {
+                cell::NON_PAST_1_SG as usize + person as usize * 2 + number as usize
+            }
+            Cell::Past(person, agreement) => {
+                cell::PAST_1_M as usize + person as usize * 5 + agreement as usize
+            }
+            Cell::Conditional(person, agreement) => {
+                cell::CONDITIONAL_1_M as usize + person as usize * 5 + agreement as usize
+            }
+            Cell::Imperative(person, number) => {
+                cell::IMPERATIVE_1_SG as usize + person as usize * 2 + number as usize
+            }
+            Cell::Impersonal => cell::IMPERSONAL as usize,
+            Cell::Participle(participle) => cell::PARTICIPLE_ACT as usize + participle as usize,
+            Cell::AdverbialParticiple(adverbial_participle) => {
+                cell::ADVERBIAL_PARTICIPLE_CONTEMP as usize + adverbial_participle as usize
+            }
+            Cell::AlNoun => cell::VERBAL_NOUN as usize,
+        }
     }
 }
 

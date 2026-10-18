@@ -285,27 +285,25 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `veraltet`: 12,564 words.
+    /// Like `veraltet`: 13,139 words.
     Veraltet,
-    /// Like `glatt`: 1,966 words.
+    /// Like `glatt`: 1,359 words.
     Glatt,
     /// Like `edel`: 102 words.
     Edel,
-    /// Like `scharf`: 52 words.
+    /// Like `scharf`: 100 words.
     Scharf,
-    /// Like `schwarz`: 33 words.
-    Schwarz,
     /// Like `träge`: 24 words.
     Träge,
-    /// Like `zeitnah`: 11 words.
-    Zeitnah,
+    /// Like `schwarz`: 15 words.
+    Schwarz,
+    /// Like `dumm`: 13 words.
+    Dumm,
+    /// Like `kurz`: 12 words.
+    Kurz,
     /// Like `groß`: 11 words.
     Groß,
-    /// Like `kurz`: 9 words.
-    Kurz,
-    /// Like `dumm`: 9 words.
-    Dumm,
-    /// Like `unedel`: 9 words.
+    /// Like `unedel`: 10 words.
     Unedel,
     /// Like `oberer`: 8 words.
     Oberer,
@@ -319,6 +317,8 @@ pub enum Declension {
     Hoch,
     /// Like `naß`: 6 words.
     Naß,
+    /// Like `zeitnah`: 5 words.
+    Zeitnah,
     /// Like `arg`: 3 words.
     Arg,
     /// Like `gutbesucht`: 3 words.
@@ -338,12 +338,11 @@ impl Declension {
         Declension::Glatt,
         Declension::Edel,
         Declension::Scharf,
-        Declension::Schwarz,
         Declension::Träge,
-        Declension::Zeitnah,
-        Declension::Groß,
-        Declension::Kurz,
+        Declension::Schwarz,
         Declension::Dumm,
+        Declension::Kurz,
+        Declension::Groß,
         Declension::Unedel,
         Declension::Oberer,
         Declension::Roth,
@@ -351,6 +350,7 @@ impl Declension {
         Declension::Lila,
         Declension::Hoch,
         Declension::Naß,
+        Declension::Zeitnah,
         Declension::Arg,
         Declension::Gutbesucht,
         Declension::Klageweise,
@@ -374,8 +374,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
-    // Veraltet: 12,564 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
-    declension!("veraltet", 12564, "~";
+    // Veraltet: 13,139 words (frei, synonym, abaxial, abdominal, aberrant, abnormal).
+    declension!("veraltet", 13139, "~";
     stem lemma: "~- like veraltet";
     stem predicative_comp: "~er- like veraltet";
     stem predicative_sup: "~ste- like veraltet";
@@ -389,8 +389,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_strong_dat: _, derived, _, _;
     comparative_mixed_nom: derived, _, _, _;
     ),
-    // Glatt: 1,966 words (absent, abstinent, absurd, blond, hold, fluid). Like Veraltet.
-    declension!("glatt", 1966, "~", like Veraltet;
+    // Glatt: 1,359 words (absurd, blond, hold, fluid, alert, link). Like Veraltet.
+    declension!("glatt", 1359, "~", like Veraltet;
     stem predicative_sup: "~este- like veraltet";
     ),
     // Edel: 102 words (übel, nobel, dunkel, simpel, sauer, teuer).
@@ -414,8 +414,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_mixed_nom: derived, _, _, _;
     predicative: "~e~", _, _;
     ),
-    // Scharf: 52 words (warm, kalt, schwarz, stark, lang, scharf).
-    declension!("scharf", 52, "~a~";
+    // Scharf: 100 words (warm, kalt, frank, schwarz, stark, lang).
+    declension!("scharf", 100, "~a~";
     stem lemma: "~a~- like veraltet";
     stem predicative_comp: "~ä~er- like veraltet";
     stem predicative_sup: "~ä~ste- like veraltet";
@@ -428,10 +428,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_strong_gen: _, derived, _, derived;
     comparative_strong_dat: _, derived, _, _;
     comparative_mixed_nom: derived, _, _, _;
-    ),
-    // Schwarz: 33 words (hart, galt, uralt, pechschwarz, steinalt, gemalt). Like Scharf.
-    declension!("schwarz", 33, "~a~", like Scharf;
-    stem predicative_sup: "~ä~este- like veraltet";
     ),
     // Träge: 24 words (beige, broke, malle, fake, knorke, äußere).
     declension!("träge", 24, "~~";
@@ -448,9 +444,28 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_strong_dat: _, derived, _, _;
     comparative_mixed_nom: derived, _, _, _;
     ),
-    // Zeitnah: 11 words (nah, bodennah, oberflächennah, verbrauchernah, regierungsnah, berlinnah). Like Scharf.
-    declension!("zeitnah", 11, "~a~", like Scharf;
-    stem predicative_sup: "~äc~ste- like veraltet";
+    // Schwarz: 15 words (hart, schweinekalt, ultrahart, blauschwarz, diamanthart, dunkelschwarz). Like Scharf.
+    declension!("schwarz", 15, "~a~", like Scharf;
+    stem predicative_sup: "~ä~este- like veraltet";
+    ),
+    // Dumm: 13 words (dumm, jung, klug, genug, unklug, altklug).
+    declension!("dumm", 13, "~u~";
+    stem lemma: "~u~- like veraltet";
+    stem predicative_comp: "~ü~er- like veraltet";
+    stem predicative_sup: "~ü~ste- like veraltet";
+    strong_nom: _, _, _, derived;
+    strong_acc: _, derived, _, derived;
+    weak_nom: derived, derived, derived, _;
+    weak_acc: _, derived, derived, _;
+    mixed_nom: _, derived, _, _;
+    mixed_acc: _, derived, _, _;
+    comparative_strong_gen: _, derived, _, derived;
+    comparative_strong_dat: _, derived, _, _;
+    comparative_mixed_nom: derived, _, _, _;
+    ),
+    // Kurz: 12 words (kurz, gesund, schnurz, ungesund, superkurz, ultrakurz). Like Dumm.
+    declension!("kurz", 12, "~u~", like Dumm;
+    stem predicative_sup: "~ü~este- like veraltet";
     ),
     // Groß: 11 words (groß, gross, riesengroß, mittelgroß, flächengroß, übergroß).
     declension!("groß", 11, "~o~";
@@ -467,27 +482,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_strong_dat: _, derived, _, _;
     comparative_mixed_nom: derived, _, _, _;
     ),
-    // Kurz: 9 words (kurz, gesund, schnurz, ungesund, superkurz, ultrakurz).
-    declension!("kurz", 9, "~u~";
-    stem lemma: "~u~- like veraltet";
-    stem predicative_comp: "~ü~er- like veraltet";
-    stem predicative_sup: "~ü~este- like veraltet";
-    strong_nom: _, _, _, derived;
-    strong_acc: _, derived, _, derived;
-    weak_nom: derived, derived, derived, _;
-    weak_acc: _, derived, derived, _;
-    mixed_nom: _, derived, _, _;
-    mixed_acc: _, derived, _, _;
-    comparative_strong_gen: _, derived, _, derived;
-    comparative_strong_dat: _, derived, _, _;
-    comparative_mixed_nom: derived, _, _, _;
-    ),
-    // Dumm: 9 words (dumm, jung, klug, genug, unklug, altklug). Like Kurz.
-    declension!("dumm", 9, "~u~", like Kurz;
-    stem predicative_sup: "~ü~ste- like veraltet";
-    ),
-    // Unedel: 9 words (integer, schofel, illuster, makaber, speiübel, unedel). Like Edel, except in 10 cells: strong_nom pl, strong_acc f, strong_acc pl, weak_nom m, weak_nom f, weak_nom n, ….
-    declension!("unedel", 9, "~e~", like Edel;
+    // Unedel: 10 words (integer, schofel, illuster, makaber, speiübel, unedel). Like Edel, except in 10 cells: strong_nom pl, strong_acc f, strong_acc pl, weak_nom m, weak_nom f, weak_nom n, ….
+    declension!("unedel", 10, "~e~", like Edel;
     stem lemma: "~e~- like veraltet";
     strong_nom: _, _, _, derived;
     strong_acc: _, derived, _, derived;
@@ -563,6 +559,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 22] = [
     comparative_strong_dat: _, derived, _, _;
     comparative_mixed_nom: derived, _, _, _;
     predicative: "~ß", _, _;
+    ),
+    // Zeitnah: 5 words (nah, bodennah, oberflächennah, berlinnah, küstennah). Like Scharf.
+    declension!("zeitnah", 5, "~a~", like Scharf;
+    stem predicative_sup: "~äc~ste- like veraltet";
     ),
     // Arg: 3 words (arm, alt, arg).
     declension!("arg", 3, "a~";

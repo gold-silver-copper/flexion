@@ -99,37 +99,37 @@ macro_rules! feature {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `neustadt`: 2,176 words.
+    /// Like `neustadt`: 2,112 words.
     Neustadt,
-    /// Like `debes`: 324 words.
+    /// Like `debes`: 323 words.
     Debes,
     /// Like `bundesheer`: 107 words.
     Bundesheer,
     /// Like `save`: 58 words.
     Save,
+    /// Like `hirschhorn`: 54 words.
+    Hirschhorn,
     /// Like `nordholz`: 38 words.
     Nordholz,
-    /// Like `hirschhorn`: 35 words.
-    Hirschhorn,
+    /// Like `neunkirchen`: 33 words.
+    Neunkirchen,
+    /// Like `weißensee`: 27 words.
+    Weißensee,
     /// Like `latium`: 25 words.
     Latium,
+    /// Like `dornfelder`: 25 words.
+    Dornfelder,
     /// Like `heuet`: 18 words.
     Heuet,
-    /// Like `dornfelder`: 17 words.
-    Dornfelder,
     /// Like `judentum`: 14 words.
     Judentum,
-    /// Like `neunkirchen`: 13 words.
-    Neunkirchen,
     /// Like `aar`: 13 words.
     Aar,
-    /// Like `weißensee`: 10 words.
-    Weißensee,
     /// Like `pregel`: 6 words.
     Pregel,
     /// Like `urknall`: 5 words.
     Urknall,
-    /// Like `andreas`: 4 words.
+    /// Like `andreas`: 5 words.
     Andreas,
 }
 
@@ -140,15 +140,15 @@ impl Declension {
         Declension::Debes,
         Declension::Bundesheer,
         Declension::Save,
-        Declension::Nordholz,
         Declension::Hirschhorn,
-        Declension::Latium,
-        Declension::Heuet,
-        Declension::Dornfelder,
-        Declension::Judentum,
+        Declension::Nordholz,
         Declension::Neunkirchen,
-        Declension::Aar,
         Declension::Weißensee,
+        Declension::Latium,
+        Declension::Dornfelder,
+        Declension::Heuet,
+        Declension::Judentum,
+        Declension::Aar,
         Declension::Pregel,
         Declension::Urknall,
         Declension::Andreas,
@@ -170,14 +170,14 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
-    // Neustadt: 2,176 words (kiribati, nauru, vanuatu, palau, jupiter, guadeloupe).
-    declension!("neustadt", 2176, "~";
+    // Neustadt: 2,112 words (kiribati, nauru, vanuatu, palau, jupiter, guadeloupe).
+    declension!("neustadt", 2112, "~";
     nom: "~", "~s";
     gen_: "~s|~", _;
     dat: _, "~s";
     ),
-    // Debes: 324 words (nasa, nato, eu, bahamas, belarus, wales). Like Neustadt, except in 3 cells: nom pl, gen_ sg, dat pl.
-    declension!("debes", 324, "~", like Neustadt;
+    // Debes: 323 words (nasa, nato, eu, bahamas, belarus, wales). Like Neustadt, except in 3 cells: nom pl, gen_ sg, dat pl.
+    declension!("debes", 323, "~", like Neustadt;
     nom: _, "~";
     gen_: "~", _;
     dat: _, "~";
@@ -192,28 +192,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     declension!("save", 58, "~", like Neustadt;
     gen_: "~", _;
     ),
+    // Hirschhorn: 54 words (albert, zürich, alfred, arnold, ferdinand, per). Like Bundesheer, except in 2 cells: gen_ sg, dat sg.
+    declension!("hirschhorn", 54, "~", like Bundesheer;
+    gen_: "~s", _;
+    dat: derived, _;
+    ),
     // Nordholz: 38 words (eurovision, vpg, judith, antarktis, holocaust, list). Like Debes, except in 2 cells: nom pl, dat pl.
     declension!("nordholz", 38, "~", like Debes;
     nom: _, "~en";
     dat: _, "~en";
     ),
-    // Hirschhorn: 35 words (albert, alfred, arnold, ferdinand, per, adalbert). Like Bundesheer, except in 2 cells: gen_ sg, dat sg.
-    declension!("hirschhorn", 35, "~", like Bundesheer;
-    gen_: "~s", _;
-    dat: derived, _;
+    // Neunkirchen: 33 words (china, vietnam, usa, ragusa, flevoland, david). Like Debes, except in 1 cell: gen_ sg.
+    declension!("neunkirchen", 33, "~", like Debes;
+    gen_: "~s|~", _;
+    ),
+    // Weißensee: 27 words (molise, drenthe, anke, florentine, herne, adele). Like Neustadt, except in 2 cells: nom pl, dat pl.
+    declension!("weißensee", 27, "~", like Neustadt;
+    nom: _, "~n";
+    dat: _, "~n";
     ),
     // Latium: 25 words (latium, matthäusevangelium, lukasevangelium, präkambrium, siderium, rhyacium). Like Nordholz with `` after each pattern (`um` after ~), except in 1 cell: gen_ sg.
     declension!("latium", 25, "~um", [gender: Neuter], like Nordholz with "", "um" after "~";
     gen_: "~ums", _;
     ),
+    // Dornfelder: 25 words (niederlande, zwillinge, fische, christel, rainer, reiner). Like Debes, except in 2 cells: gen_ sg, dat pl.
+    declension!("dornfelder", 25, "~", like Debes;
+    gen_: "~s", _;
+    dat: _, "~n";
+    ),
     // Heuet: 18 words (asean, adrian, spd, bertram, tschad, reinhold). Like Hirschhorn, except in 1 cell: gen_ sg.
     declension!("heuet", 18, "~", like Hirschhorn;
     gen_: "~|~s", _;
-    ),
-    // Dornfelder: 17 words (niederlande, zwillinge, fische, christel, rainer, reiner). Like Debes, except in 2 cells: gen_ sg, dat pl.
-    declension!("dornfelder", 17, "~", like Debes;
-    gen_: "~s", _;
-    dat: _, "~n";
     ),
     // Judentum: 14 words (judentum, abschlussdeich, abschlußdeich, volkssturm, untermenschentum, kurfürstendamm).
     declension!("judentum", 14, "~u~";
@@ -221,22 +230,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_: "~u~es", _;
     dat: _, "~ü~ern";
     ),
-    // Neunkirchen: 13 words (china, vietnam, usa, deutschland, vsa, adelheid). Like Debes, except in 1 cell: gen_ sg.
-    declension!("neunkirchen", 13, "~", like Debes;
-    gen_: "~s|~", _;
-    ),
     // Aar: 13 words (ussr, udssr, bundeswehr, reichswehr, ddr, aar). Like Debes, except in 1 cell: dat pl.
     declension!("aar", 13, "~", like Debes;
     dat: _, "~n";
     ),
-    // Weißensee: 10 words (anke, florentine, adele, denise, susanne, agathe). Like Neustadt, except in 2 cells: nom pl, dat pl.
-    declension!("weißensee", 10, "~", like Neustadt;
-    nom: _, "~n";
-    dat: _, "~n";
-    ),
-    // Pregel: 6 words (senegal, nordhalbkugel, südhalbkugel, balkanhalbinsel, ludolfzahl, pregel). Like Aar, except in 1 cell: nom pl.
-    declension!("pregel", 6, "~", like Aar;
-    nom: _, "~n";
+    // Pregel: 6 words (senegal, nordhalbkugel, südhalbkugel, balkanhalbinsel, ludolfzahl, pregel). Like Weißensee, except in 1 cell: gen_ sg.
+    declension!("pregel", 6, "~", like Weißensee;
+    gen_: "~", _;
     ),
     // Urknall: 5 words (urknall, sejmmarschall, friedrichshall, reichenhall, niedernhall). Like Judentum, except in 4 cells: nom sg, nom pl, gen_ sg, dat pl.
     declension!("urknall", 5, "~a~", like Judentum;
@@ -244,8 +244,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 16] = [
     gen_: "~a~s", _;
     dat: _, "~ä~en";
     ),
-    // Andreas: 4 words (andreas, johannes, theophilus, vitus). Like Debes, except in 2 cells: nom pl, dat pl.
-    declension!("andreas", 4, "~", [gender: Masculine], like Debes;
+    // Andreas: 5 words (andreas, johannes, theophilus, vitus, peloponnes). Like Debes, except in 2 cells: nom pl, dat pl.
+    declension!("andreas", 5, "~", [gender: Masculine], like Debes;
     nom: _, "~se";
     dat: _, "~sen";
     ),

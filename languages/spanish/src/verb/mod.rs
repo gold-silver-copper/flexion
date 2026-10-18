@@ -123,8 +123,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.9995444,
-        unsettled: 0.9764235,
+        regular: 0.99951535,
+        unsettled: 0.97244704,
         unattested: 1.0,
     },
 };
@@ -149,90 +149,26 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Addressee::*;
-        use crate::Gender::*;
-        use crate::Mood::*;
-        use crate::Number::*;
-        use crate::Person::*;
-        use crate::Tense::*;
-        let cell = match self {
-            Cell::Form(Present, First, Singular) => cell::PRES_1_SG,
-            Cell::Form(Present, First, Plural) => cell::PRES_1_PL,
-            Cell::Form(Present, Second, Singular) => cell::PRES_2_SG,
-            Cell::Form(Present, Second, Plural) => cell::PRES_2_PL,
-            Cell::Form(Present, Third, Singular) => cell::PRES_3_SG,
-            Cell::Form(Present, Third, Plural) => cell::PRES_3_PL,
-            Cell::Form(Imperfect, First, Singular) => cell::IMPF_1_SG,
-            Cell::Form(Imperfect, First, Plural) => cell::IMPF_1_PL,
-            Cell::Form(Imperfect, Second, Singular) => cell::IMPF_2_SG,
-            Cell::Form(Imperfect, Second, Plural) => cell::IMPF_2_PL,
-            Cell::Form(Imperfect, Third, Singular) => cell::IMPF_3_SG,
-            Cell::Form(Imperfect, Third, Plural) => cell::IMPF_3_PL,
-            Cell::Form(Preterite, First, Singular) => cell::PRET_1_SG,
-            Cell::Form(Preterite, First, Plural) => cell::PRET_1_PL,
-            Cell::Form(Preterite, Second, Singular) => cell::PRET_2_SG,
-            Cell::Form(Preterite, Second, Plural) => cell::PRET_2_PL,
-            Cell::Form(Preterite, Third, Singular) => cell::PRET_3_SG,
-            Cell::Form(Preterite, Third, Plural) => cell::PRET_3_PL,
-            Cell::Form(Future, First, Singular) => cell::FUT_1_SG,
-            Cell::Form(Future, First, Plural) => cell::FUT_1_PL,
-            Cell::Form(Future, Second, Singular) => cell::FUT_2_SG,
-            Cell::Form(Future, Second, Plural) => cell::FUT_2_PL,
-            Cell::Form(Future, Third, Singular) => cell::FUT_3_SG,
-            Cell::Form(Future, Third, Plural) => cell::FUT_3_PL,
-            Cell::Form(Conditional, First, Singular) => cell::COND_1_SG,
-            Cell::Form(Conditional, First, Plural) => cell::COND_1_PL,
-            Cell::Form(Conditional, Second, Singular) => cell::COND_2_SG,
-            Cell::Form(Conditional, Second, Plural) => cell::COND_2_PL,
-            Cell::Form(Conditional, Third, Singular) => cell::COND_3_SG,
-            Cell::Form(Conditional, Third, Plural) => cell::COND_3_PL,
-            Cell::Form(PresentSubjunctive, First, Singular) => cell::SUBJ_1_SG,
-            Cell::Form(PresentSubjunctive, First, Plural) => cell::SUBJ_1_PL,
-            Cell::Form(PresentSubjunctive, Second, Singular) => cell::SUBJ_2_SG,
-            Cell::Form(PresentSubjunctive, Second, Plural) => cell::SUBJ_2_PL,
-            Cell::Form(PresentSubjunctive, Third, Singular) => cell::SUBJ_3_SG,
-            Cell::Form(PresentSubjunctive, Third, Plural) => cell::SUBJ_3_PL,
-            Cell::Form(ImperfectSubjunctive, First, Singular) => cell::SUBJ_IMPF_1_SG,
-            Cell::Form(ImperfectSubjunctive, First, Plural) => cell::SUBJ_IMPF_1_PL,
-            Cell::Form(ImperfectSubjunctive, Second, Singular) => cell::SUBJ_IMPF_2_SG,
-            Cell::Form(ImperfectSubjunctive, Second, Plural) => cell::SUBJ_IMPF_2_PL,
-            Cell::Form(ImperfectSubjunctive, Third, Singular) => cell::SUBJ_IMPF_3_SG,
-            Cell::Form(ImperfectSubjunctive, Third, Plural) => cell::SUBJ_IMPF_3_PL,
-            Cell::Form(ImperfectSubjunctiveSe, First, Singular) => cell::SUBJ_IMPF_SE_1_SG,
-            Cell::Form(ImperfectSubjunctiveSe, First, Plural) => cell::SUBJ_IMPF_SE_1_PL,
-            Cell::Form(ImperfectSubjunctiveSe, Second, Singular) => cell::SUBJ_IMPF_SE_2_SG,
-            Cell::Form(ImperfectSubjunctiveSe, Second, Plural) => cell::SUBJ_IMPF_SE_2_PL,
-            Cell::Form(ImperfectSubjunctiveSe, Third, Singular) => cell::SUBJ_IMPF_SE_3_SG,
-            Cell::Form(ImperfectSubjunctiveSe, Third, Plural) => cell::SUBJ_IMPF_SE_3_PL,
-            Cell::Form(FutureSubjunctive, First, Singular) => cell::SUBJ_FUT_1_SG,
-            Cell::Form(FutureSubjunctive, First, Plural) => cell::SUBJ_FUT_1_PL,
-            Cell::Form(FutureSubjunctive, Second, Singular) => cell::SUBJ_FUT_2_SG,
-            Cell::Form(FutureSubjunctive, Second, Plural) => cell::SUBJ_FUT_2_PL,
-            Cell::Form(FutureSubjunctive, Third, Singular) => cell::SUBJ_FUT_3_SG,
-            Cell::Form(FutureSubjunctive, Third, Plural) => cell::SUBJ_FUT_3_PL,
-            Cell::Vos(Indicative) => cell::VOS_IND,
-            Cell::Vos(Subjunctive) => cell::VOS_SUBJ,
-            Cell::Vos(Imperative) => cell::VOS_IMP,
-            Cell::Imperative(Tu) => cell::IMPERATIVE_TU,
-            Cell::Imperative(Usted) => cell::IMPERATIVE_USTED,
-            Cell::Imperative(Nosotros) => cell::IMPERATIVE_NOSOTROS,
-            Cell::Imperative(Vosotros) => cell::IMPERATIVE_VOSOTROS,
-            Cell::Imperative(Ustedes) => cell::IMPERATIVE_USTEDES,
-            Cell::NegativeImperative(Tu) => cell::NEGATIVE_IMPERATIVE_TU,
-            Cell::NegativeImperative(Usted) => cell::NEGATIVE_IMPERATIVE_USTED,
-            Cell::NegativeImperative(Nosotros) => cell::NEGATIVE_IMPERATIVE_NOSOTROS,
-            Cell::NegativeImperative(Vosotros) => cell::NEGATIVE_IMPERATIVE_VOSOTROS,
-            Cell::NegativeImperative(Ustedes) => cell::NEGATIVE_IMPERATIVE_USTEDES,
-            Cell::Infinitive => cell::INFINITIVE,
-            Cell::Gerund => cell::GERUND,
-            Cell::Participle(Masculine, Singular) => cell::PARTICIPLE_M_SG,
-            Cell::Participle(Masculine, Plural) => cell::PARTICIPLE_M_PL,
-            Cell::Participle(Feminine, Singular) => cell::PARTICIPLE_F_SG,
-            Cell::Participle(Feminine, Plural) => cell::PARTICIPLE_F_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(tense, person, number) => {
+                cell::PRES_1_SG as usize
+                    + (tense as usize * 3 + person as usize) * 2
+                    + number as usize
+            }
+            Cell::Vos(mood) => cell::VOS_IND as usize + mood as usize,
+            Cell::Imperative(addressee) => cell::IMPERATIVE_TU as usize + addressee as usize,
+            Cell::NegativeImperative(addressee) => {
+                cell::NEGATIVE_IMPERATIVE_TU as usize + addressee as usize
+            }
+            Cell::Infinitive => cell::INFINITIVE as usize,
+            Cell::Gerund => cell::GERUND as usize,
+            Cell::Participle(gender, number) => {
+                cell::PARTICIPLE_M_SG as usize + gender as usize * 2 + number as usize
+            }
+        }
     }
 }
 

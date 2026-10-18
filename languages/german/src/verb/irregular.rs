@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 470 stems, 4,489 forms.
+/// 470 stems, 4,485 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abandonnieren	0	abandonniere	1	abandonnieren	2	abandonnierst	3	abandonniert	4	abandonniert	5	abandonnieren	6	abandonnierte	7	abandonnierten	8	abandonniertest	9	abandonniertet	10	abandonnierte	11	abandonnierten	12	abandonniere	13	abandonnieren	14	abandonnierest	15	abandonnieret	16	abandonniere	17	abandonnieren	18	abandonnierte	19	abandonnierten	20	abandonniertest	21	abandonniertet	22	abandonnierte	23	abandonnierten	48	abandonnier	49	abandonniert
@@ -260,10 +260,8 @@ lügen	participle_past	logen- like machen	subj2	löge- like machen	subordinate_p
 machinieren	pl	rt ma chi nie- like richten	sg	re ma chi ni- like machen	verb_pl	ren ma chi nie- like machen	verb_pret_3_sg	rte ma chi nie- like machen	0	re ma chi nie	2	rst ma chi nie	9	rtet ma chi nie	14	rest ma chi nie	15	ret ma chi nie	18	rte ma chi nie	19	rten ma chi nie	20	rtest ma chi nie	21	rtet ma chi nie	25	machinieren	27	machiniert	28	machiniert	29	machinieren	30	machinierte	34	machinierte	36	machiniere	40	machiniere	48	r ma chi nie	51	machiniezuren
 mahlen	participle_past	mahlen- like machen
 maschineschreiben	participle_past	maschinegeschrieben- like kassieren	pl	schreibt maschine- like richten	sg	schreibe maschin- like machen	verb_pl	schreiben maschine- like machen	verb_pret_3_sg	schrieb maschine- like machen	0	schreibe maschine	2	schreibst maschine	8	schriebst maschine	9	schriebt maschine	14	schreibest maschine	15	schreibet maschine	18	schriebe maschine	19	schrieben maschine	20	schriebest maschine	21	schriebet maschine	25	maschineschreiben	27	maschineschreibt	28	maschineschreibt	29	maschineschreiben	30	maschineschrieb	34	maschineschrieb	36	maschineschreibe	40	maschineschreibe	48	schreib maschine	51	maschinezuschreiben
-massschneidern	53	massgeschneidert
 mattsetzen	participle_past	mattgesetzt- like kassieren	pl	setzt matt- like richten	sg	setze matt- like sein	verb_pl	setzen matt- like machen	verb_pret_3_sg	setzte matt- like machen	0	setze matt	9	setztet matt	14	setzest matt	15	setzet matt	18	setzte matt	19	setzten matt	20	setztest matt	21	setztet matt	25	mattsetzen	27	mattsetzt	28	mattsetzt	29	mattsetzen	30	mattsetzte	34	mattsetzte	36	mattsetze	40	mattsetze	48	setz matt	51	mattzusetzen
 mausrutschen	51	mauszurutschen	53	mausgerutscht
-maßschneidern	53	maßgeschneidert
 meßen	participle_past	meßen- like machen	subordinate_pret	maß- like schmeißen	verb	m- like messen
 mitabstimmen	participle_past	mitabgestimmt- like kassieren	pl	stimmt mit ab- like richten	sg	stimme mit ab- like sein	verb_pl	stimmen mit ab- like machen	verb_pret_3_sg	stimmte mit ab- like machen	0	stimme mit ab	2	stimmst mit ab	9	stimmtet mit ab	14	stimmest mit ab	15	stimmet mit ab	18	stimmte mit ab	19	stimmten mit ab	20	stimmtest mit ab	21	stimmtet mit ab	25	mitabstimmen	27	mitabstimmt	28	mitabstimmt	29	mitabstimmen	30	mitabstimmte	34	mitabstimmte	36	mitabstimme	40	mitabstimme	48	stimm mit ab	51	mitabzustimmen
 mitbekommen	51	mitzubekommen
@@ -334,8 +332,6 @@ stehen	participle_past	standen- like machen
 stehenbleiben	6	blieb stehen	30	stehenblieb	34	stehenblieb	48	bleib stehen
 stehenlassen	53	stehengelassen
 stehlen	participle_past	stohlen- like machen
-stosslüften	53	stossgelüftet
-stoßlüften	53	stoßgelüftet
 streiten	participle_past	stritten- like machen	subj2	stritte- like machen	subordinate_pret	stritt- like dagegenhalten	verb	stritte- like machen	verb_pret_3_sg	stritt- like machen
 stummschalten	participle_past	stummgeschaltet- like kassieren	pl	schaltet stumm- like richten	sg	schalte stumm- like sein	verb_pl	schalten stumm- like machen	verb_pret_3_sg	schaltete stumm- like machen	0	schalte stumm	2	schaltest stumm	9	schaltetet stumm	14	schaltest stumm	18	schaltete stumm	19	schalteten stumm	20	schaltetest stumm	21	schaltetet stumm	25	stummschalten	27	stummschaltet	28	stummschaltet	29	stummschalten	30	stummschaltete	34	stummschaltete	36	stummschalte	40	stummschalte	48	schalt stumm	51	stummzuschalten
 thun	lemma	thu- like wehtun	participle_past	than- like machen	subj2	thäte- like machen	subordinate_pret	that- like dagegenhalten	verb	thate- like machen	verb_pret_3_sg	that- like machen	19	thäten	20	thätest	23	thäten

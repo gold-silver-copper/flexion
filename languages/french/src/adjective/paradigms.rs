@@ -95,9 +95,9 @@ const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `simple`: 9,027 words.
+    /// Like `simple`: 9,025 words.
     Simple,
-    /// Like `chaud`: 4,603 words.
+    /// Like `chaud`: 4,607 words.
     Chaud,
     /// Like `moyen`: 1,295 words.
     Moyen,
@@ -111,7 +111,7 @@ pub enum Declension {
     Manuel,
     /// Like `dar`: 236 words.
     Dar,
-    /// Like `régulier`: 222 words.
+    /// Like `régulier`: 220 words.
     Régulier,
     /// Like `fellateur`: 209 words.
     Fellateur,
@@ -169,13 +169,13 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 17] = [
-    // Simple: 9,027 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
-    declension!("simple", 9027, "~";
+    // Simple: 9,025 words (gratis, abaxial, abominable, absorbable, acceptable, accessible).
+    declension!("simple", 9025, "~";
     stem adjective_m: "~- like simple";
     stem adjective_f_sg: "~- like simple";
     ),
-    // Chaud: 4,603 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Simple.
-    declension!("chaud", 4603, "~", like Simple;
+    // Chaud: 4,607 words (gratuit, aberrant, abject, abrupt, nu, absent). Like Simple.
+    declension!("chaud", 4607, "~", like Simple;
     stem adjective_f_sg: "~e- like simple";
     ),
     // Moyen: 1,295 words (chien, sot, moron, con, tien, mien). Like Simple.
@@ -203,8 +203,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 17] = [
     // Dar: 236 words (orange, bio, poison, dar, nickel, cool). Like Simple.
     declension!("dar", 236, "~", like Simple as PL_AS_SG;
     ),
-    // Régulier: 222 words (secret, quiet, fier, premier, cher, léger).
-    declension!("régulier", 222, "~e~";
+    // Régulier: 220 words (secret, quiet, fier, premier, cher, léger).
+    declension!("régulier", 220, "~e~";
     stem adjective_m: "~e~- like simple";
     stem adjective_f_sg: "~è~e- like simple";
     ),

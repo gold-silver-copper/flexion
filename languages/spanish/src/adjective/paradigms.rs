@@ -105,11 +105,11 @@ const F_AS_M: [u16; 6] = [0, 1, 0, 1, 4, 5];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `duro`: 14,448 words.
+    /// Like `duro`: 14,430 words.
     Duro,
-    /// Like `natural`: 6,613 words.
+    /// Like `natural`: 6,580 words.
     Natural,
-    /// Like `simple`: 1,149 words.
+    /// Like `simple`: 1,142 words.
     Simple,
     /// Like `entrador`: 983 words.
     Entrador,
@@ -117,24 +117,24 @@ pub enum Declension {
     Santiagués,
     /// Like `tuanis`: 492 words.
     Tuanis,
-    /// Like `piola`: 119 words.
+    /// Like `piola`: 126 words.
     Piola,
-    /// Like `rapaz`: 65 words.
+    /// Like `rapaz`: 61 words.
     Rapaz,
+    /// Like `verde`: 51 words.
+    Verde,
     /// Like `catrín`: 31 words.
     Catrín,
     /// Like `fácil`: 27 words.
     Fácil,
-    /// Like `verde`: 14 words.
-    Verde,
+    /// Like `loco`: 21 words.
+    Loco,
     /// Like `dejao`: 14 words.
     Dejao,
     /// Like `grandote`: 11 words.
     Grandote,
     /// Like `tontolaba`: 9 words.
     Tontolaba,
-    /// Like `loco`: 3 words.
-    Loco,
 }
 
 impl Declension {
@@ -148,13 +148,13 @@ impl Declension {
         Declension::Tuanis,
         Declension::Piola,
         Declension::Rapaz,
+        Declension::Verde,
         Declension::Catrín,
         Declension::Fácil,
-        Declension::Verde,
+        Declension::Loco,
         Declension::Dejao,
         Declension::Grandote,
         Declension::Tontolaba,
-        Declension::Loco,
     ];
 
     /// Its table.
@@ -173,20 +173,20 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
-    // Duro: 14,448 words (chiapaneco, perro, centavo, derecho, monetario, paceño).
-    declension!("duro", 14448, "~o";
+    // Duro: 14,430 words (chiapaneco, perro, centavo, derecho, monetario, paceño).
+    declension!("duro", 14430, "~o";
     m: "~o", "~os";
     f: "~a", "~as";
     superlative: "~ísimo";
     ),
-    // Natural: 6,613 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
-    declension!("natural", 6613, "~";
+    // Natural: 6,580 words (deal, abactinal, abaxial, abdominal, aboral, accidental).
+    declension!("natural", 6580, "~";
     stem lemma: "~- like natural";
     stem adjective_pl: "~es- like natural";
     superlative: "~ísimo";
     ),
-    // Simple: 1,149 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
-    declension!("simple", 1149, "~~";
+    // Simple: 1,142 words (abominable, abrogable, acceptable, viable, vegetable, habitable).
+    declension!("simple", 1142, "~~";
     stem lemma: "~~- like natural";
     stem adjective_pl: "~~es- like natural";
     superlative: "~d~ísimo";
@@ -202,14 +202,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     // Tuanis: 492 words (gratis, acid, tao, bio, beige, magenta). Like Natural.
     declension!("tuanis", 492, "~", like Natural as PL_AS_SG;
     ),
-    // Piola: 119 words (touch, fit, heavy, teen, gourmet, pop). Like Natural, except in 1 cell: superlative.
-    declension!("piola", 119, "~", like Natural;
+    // Piola: 126 words (touch, fit, heavy, teen, gourmet, pop). Like Natural, except in 1 cell: superlative.
+    declension!("piola", 126, "~", like Natural;
     stem adjective_pl: "~s- like natural";
     superlative: "~lísimo";
     ),
-    // Rapaz: 65 words (rapaz, fugaz, feliz, locuaz, capaz, cortés). Like Santiagués, except in 1 cell: superlative.
-    declension!("rapaz", 65, "~ˇ", like Santiagués as F_AS_M;
+    // Rapaz: 61 words (rapaz, fugaz, feliz, locuaz, capaz, cortés). Like Santiagués, except in 1 cell: superlative.
+    declension!("rapaz", 61, "~ˇ", like Santiagués as F_AS_M;
     superlative: "~ísimoˇ";
+    ),
+    // Verde: 51 words (padre, breve, fome, triste, grave, grande). Like Natural with `` after each pattern (`e` after ~).
+    declension!("verde", 51, "~e", like Natural with "", "e" after "~";
     ),
     // Catrín: 31 words (parlanchín, chiquitín, comodín, bailarín, borrachín, pequeñín).
     declension!("catrín", 31, "~í~";
@@ -222,8 +225,11 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     stem adjective_pl: "~á~es- like natural";
     superlative: "~a~ísimo";
     ),
-    // Verde: 14 words (padre, breve, triste, grave, grande, dulce). Like Natural with `` after each pattern (`e` after ~).
-    declension!("verde", 14, "~e", like Natural with "", "e" after "~";
+    // Loco: 21 words (loco, seco, macaco, choco, flaco, foco).
+    declension!("loco", 21, "~co";
+    m: "~co", "~cos";
+    f: "~ca", "~cas";
+    superlative: "~quísimo";
     ),
     // Dejao: 14 words (culiao, pringao, aweonao, ahueonao, deguabinao, pelao).
     declension!("dejao", 14, "~ao";
@@ -237,11 +243,5 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 15] = [
     declension!("tontolaba", 9, "~o~";
     m: "~o~", "~o~s";
     f: "~a~", "~a~s";
-    ),
-    // Loco: 3 words (loco, seco, flaco).
-    declension!("loco", 3, "~co";
-    m: "~co", "~cos";
-    f: "~ca", "~cas";
-    superlative: "~quísimo";
     ),
 ];

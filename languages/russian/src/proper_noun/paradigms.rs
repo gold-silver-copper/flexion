@@ -118,13 +118,13 @@ macro_rules! feature {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `рокпорт`: 1,293 words.
+    /// Like `рокпорт`: 1,354 words.
     Рокпорт,
-    /// Like `слава`: 590 words.
+    /// Like `слава`: 585 words.
     Слава,
     /// Like `македония`: 234 words.
     Македония,
-    /// Like `люксембург`: 186 words.
+    /// Like `люксембург`: 125 words.
     Люксембург,
     /// Like `хиль`: 84 words.
     Хиль,
@@ -148,10 +148,10 @@ pub enum Declension {
     Запорожье,
     /// Like `катюша`: 25 words.
     Катюша,
+    /// Like `камчатка`: 20 words.
+    Камчатка,
     /// Like `дарья`: 19 words.
     Дарья,
-    /// Like `камчатка`: 15 words.
-    Камчатка,
     /// Like `николаевская`: 14 words.
     Николаевская,
     /// Like `белоснежка`: 10 words.
@@ -214,8 +214,8 @@ impl Declension {
         Declension::Рея,
         Declension::Запорожье,
         Declension::Катюша,
-        Declension::Дарья,
         Declension::Камчатка,
+        Declension::Дарья,
         Declension::Николаевская,
         Declension::Белоснежка,
         Declension::Азов,
@@ -255,13 +255,13 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 38] = [
-    // Рокпорт: 1,293 words (смолян, христос, юпитер, рейн, заир, бутан).
-    declension!("рокпорт", 1293, "~", [gender: Masculine];
+    // Рокпорт: 1,354 words (смолян, христос, юпитер, ирак, рейн, заир).
+    declension!("рокпорт", 1354, "~", [gender: Masculine];
     stem gen_sg: "~- like рокпорт";
     nom: "~", _;
     ),
-    // Слава: 590 words (украина, луизиана, москва, канада, европа, герцеговина). Like Рокпорт, except in 4 cells: gen_ sg, gen_ pl, dat sg, ins sg.
-    declension!("слава", 590, "~а", like Рокпорт;
+    // Слава: 585 words (украина, луизиана, москва, канада, европа, герцеговина). Like Рокпорт, except in 4 cells: gen_ sg, gen_ pl, dat sg, ins sg.
+    declension!("слава", 585, "~а", like Рокпорт;
     stem lemma: "~- like слава";
     gen_: "~ы", "~";
     dat: "~е", _;
@@ -276,8 +276,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 38] = [
     ins: "~ей|~ею", _;
     prep: "~и", _;
     ),
-    // Люксембург: 186 words (ирак, гонконг, бог, аллах, бангкок, архангельск). Like Рокпорт.
-    declension!("люксембург", 186, "~", [gender: Masculine], like Рокпорт;
+    // Люксембург: 125 words (бангкок, архангельск, санкт-петербург, владивосток, выборг, банкок). Like Рокпорт.
+    declension!("люксембург", 125, "~", [gender: Masculine, animacy: Inanimate], like Рокпорт;
     stem gen_sg: "~- like люксембург";
     ),
     // Хиль: 84 words (израиль, господь, чернобыль, брюссель, неаполь, тайвань). Like Париж with `` after each pattern (`ь` after ~), except in 3 cells: gen_ sg, dat sg, dat pl.
@@ -344,6 +344,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 38] = [
     acc: _, "~";
     ins: "~ей|~ею", _;
     ),
+    // Камчатка: 20 words (аляска, небраска, глинка, камчатка, чукотка, находка).
+    declension!("камчатка", 20, "~~а";
+    stem lemma: "~~- like слава";
+    nom: _, "~~и";
+    gen_: "~~и", "~о~";
+    dat: "~~е", "~~ам";
+    ins: "~~ой", _;
+    prep: "~~е", _;
+    ),
     // Дарья: 19 words (ангилья, анталья, болонья, вентимилья, наталья, софья).
     declension!("дарья", 19, "~ья", [gender: Feminine];
     nom: "~ья", "~ьи";
@@ -352,15 +361,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 38] = [
     acc: "~ью", _;
     ins: "~ьей|~ьею", _;
     prep: "~ье", _;
-    ),
-    // Камчатка: 15 words (аляска, небраска, глинка, камчатка, чукотка, находка).
-    declension!("камчатка", 15, "~~а";
-    stem lemma: "~~- like слава";
-    nom: _, "~~и";
-    gen_: "~~и", "~о~";
-    dat: "~~е", "~~ам";
-    ins: "~~ой", _;
-    prep: "~~е", _;
     ),
     // Николаевская: 14 words (поднебесная, столичная, амурская, электрозаводская, киевская, новослободская).
     declension!("николаевская", 14, "~ая", [gender: Feminine, animacy: Inanimate];
