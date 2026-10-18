@@ -102,8 +102,9 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     ..Known::default()
                 };
                 // A word the grammar lists gives each cell as the dictionary
-                // spells it, its other spellings too (English `sang|sung`).
-                let listed = g.irregular.has(&l.key);
+                // spells it, its other spellings too, in a closed class (the Italian
+                // article, `il|lo|l'`).
+                let listed = part.closed() && g.irregular.has(&l.key);
                 let table = g.table(&l.full, &Known::default());
                 // A form compatible with the length its table states is the
                 // dictionary's (Greek bare dichrona; see `TableLength`).

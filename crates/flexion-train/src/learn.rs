@@ -41,6 +41,9 @@ pub struct Shape {
     pub part: String,
     /// The dictionary's principal parts: the cells it gives a word by.
     pub parts: Vec<usize>,
+    /// A closed class (pronouns, articles, numerals): its listed words give
+    /// each cell's other spellings too (see `spell_out`).
+    pub closed: bool,
     /// The marks of a vowel's length the dictionary may leave off (see
     /// [`crate::spec::Spelling::stated_length`]): a training word's form the
     /// grammar gives but for such a mark, compatible with the length its
@@ -822,14 +825,16 @@ pub fn learn<'s>(
     );
     let (mut irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound, stated);
     untie(&mut grammar, &everyone);
-    spell_out(
-        &mut grammar,
-        &mut irregular,
-        &stems,
-        &every,
-        &everyone,
-        stated,
-    );
+    if shape.closed {
+        spell_out(
+            &mut grammar,
+            &mut irregular,
+            &stems,
+            &every,
+            &everyone,
+            stated,
+        );
+    }
     trace.mark("listing");
     // The ending tables listed stems are built with; paradigms stated
     // through stem slots where that pays; the tables either uses are the
@@ -2003,7 +2008,9 @@ fn analyze(w: &Word) -> Analyzed {
 /// A listed word's line gives its cells as the dictionary spells them, the
 /// other spellings too where the grammar doesn't give them in order (the
 /// Italian article: `il|lo|l'`, `i|gli`): a word already listed lists
-/// those cells whole. A cell newly listed may change what other cells of the
+/// those cells whole. Only of a closed class, whose spellings are few and its
+/// own: an open class's (Greek verbs' contracted and open forms,
+/// `ἀᾰ́ομαι|ἀῶμαι`) are many, cost 2 MB and change no answer. A cell newly listed may change what other cells of the
 /// word are told from (a listed word's cells come from its listed ones,
 /// English `sing`'s past participle from its past): those words are checked
 /// again, every cell, until none changes.
@@ -4348,6 +4355,7 @@ mod tests {
             marks: None,
             part: "verb".to_string(),
             stated_length: "",
+            closed: false,
         };
         assert!(referrals(&words, &shape).is_none());
     }
