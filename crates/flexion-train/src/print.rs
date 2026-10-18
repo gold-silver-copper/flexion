@@ -1,5 +1,5 @@
-//! Writing a language's grammar as a Rust crate: its `Cargo.toml`, README and
-//! data license, `src/lib.rs` (the feature enums and a typed function per
+//! Writing a language's grammar as a Rust crate: its `Cargo.toml`, README,
+//! data license and code licences, `src/lib.rs` (the feature enums and a typed function per
 //! group of cells), `src/orthography.rs`, and a module per part of speech
 //! with its paradigms, the rules choosing them, and its irregular forms.
 
