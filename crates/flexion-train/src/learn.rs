@@ -1657,9 +1657,18 @@ fn prefixes<'a>(
     // words have it.
     let mut met: BTreeMap<(&str, char), BTreeMap<&str, crate::HashSet<&str>>> = BTreeMap::new();
     // Per prefix, the words that keep it in front of a form beginning
-    // otherwise than their rest does (the augment of `ἀπ-έ-λυον`, `λύω`):
-    // what a rule on a word's ending can't see.
+    // otherwise than their rest does, beyond the marks only a first letter
+    // has (the augment of `ἀπ-έ-λυον`, `λύω`; of `ὑπ-ή-κουον`, `ἀκούω`; of
+    // `συν-έ-ρραπτον`, `ῥάπτω`): what a rule on a word's ending can't see.
     let mut augmented: BTreeMap<&str, crate::HashSet<&str>> = BTreeMap::new();
+    let bare = |c: char| -> String {
+        use unicode_normalization::UnicodeNormalization;
+        std::iter::once(c)
+            .nfd()
+            .filter(|m| !orthography.initial.contains(*m))
+            .nfc()
+            .collect()
+    };
     for &(w, p, pk, base) in &pairs {
         for c in 0..cells {
             let (Some(mine), Some(theirs)) = (form(w, c), form(base, c)) else {
@@ -1673,10 +1682,7 @@ fn prefixes<'a>(
             let Some(joined) = mine.strip_suffix(tail) else {
                 continue;
             };
-            // Something put before the rest's form: it begins otherwise
-            // than the rest, and goes on as the rest begins.
-            let first = base.letters.chars().next();
-            if first != Some(head) && tail.chars().next() == first {
+            if base.letters.chars().next().map(bare) != Some(bare(head)) {
                 augmented.entry(pk).or_default().insert(&w.key);
             }
             if joined != orthography.initial_only(&format!("{p}{head}")) {
