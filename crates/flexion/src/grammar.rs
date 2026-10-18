@@ -117,7 +117,24 @@ pub enum Placement {
     After,
 }
 
+/// What a word inflected as the rest of another is behind: nothing, a prefix
+/// kept in front (`be` of `bevorzugen`), or separable prefixes written apart,
+/// their letters as the lemma has them (`hin` of `hinabklettern`).
+#[derive(Debug, Clone, Copy)]
+enum Behind<'s> {
+    Nothing,
+    Kept,
+    Separated(&'s str),
+}
+
 impl Prefixes<'_> {
+    /// Whether a cell writes a separable prefix apart, after the rest. Where
+    /// none does, a separable prefix is only written in front without
+    /// meeting the rest as a kept one does.
+    fn separates(&self) -> bool {
+        self.placement.contains(&Placement::After)
+    }
+
     /// The rest of `form` (letters) kept behind `prefix` (looked up as `key`),
     /// as it is before they meet (see [`Prefixes::join`]); `None` where it
     /// isn't.
@@ -525,6 +542,24 @@ struct Inflection<'g, 'a, 'w, P: Label> {
     stems: pattern::Stems<'w>,
 }
 
+/// A word read as a prefix and the rest of it: how likely it separates the
+/// prefix and keeps it in front, and the rest's forms, per cell.
+struct Prefixed<'g, 'a, 'w> {
+    prefixes: &'g Prefixes<'a>,
+    prefix: &'w str,
+    rest: &'w str,
+    /// The particles written apart, as the lemma has them (`hinab`).
+    span: String,
+    separable: f32,
+    inseparable: f32,
+    /// The rest's forms the prefix goes apart from.
+    apart: Vec<Vec<Candidate<'g>>>,
+    /// Where the rest separates a prefix of its own: its forms behind this
+    /// one kept, `apart` then writing the whole span already. Otherwise
+    /// `apart` serves both.
+    kept: Option<Vec<Vec<Candidate<'g>>>>,
+}
+
 impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// The forms of `cell` for `lemma`, likeliest first, given what the
     /// caller knows (readings that disagree with it are dropped, unless all
@@ -535,7 +570,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             forms: &given,
             ..*known
         };
-        self.sharpened(self.unsharpened(lemma, &[cell], &known))
+        self.sharpened(self.unsharpened(lemma, &[cell], &known, Behind::Nothing))
             .pop()
             .unwrap_or_default()
     }
@@ -549,7 +584,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             ..*known
         };
         let cells: Vec<usize> = (0..self.cells).collect();
-        self.sharpened(self.unsharpened(lemma, &cells, &known))
+        self.sharpened(self.unsharpened(lemma, &cells, &known, Behind::Nothing))
     }
 
     /// The forms `known` gives that tell the grammar something. Of a word the
@@ -568,7 +603,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             forms: &[],
             ..*known
         };
-        let firsts = self.sharpened(self.unsharpened(lemma, &cells, &bare));
+        let firsts = self.sharpened(self.unsharpened(lemma, &cells, &bare, Behind::Nothing));
         let same = |a: &str, b: &str| {
             let (a, b) = (o.read(a), o.read(b));
             a.letters == b.letters && a.stress == b.stress
@@ -595,13 +630,47 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     }
 
     /// [`Grammar::candidates`] of each of `cells`, before sharpening, in no
-    /// order.
+    /// order, with the prefixes `behind` says the word is behind.
     fn unsharpened(
         &self,
         lemma: &str,
         cells: &[usize],
         known: &Known<'_>,
+        behind: Behind<'_>,
     ) -> Vec<Vec<Candidate<'_>>> {
+        let (mut lists, spans) = self.inflected(lemma, cells, known, behind);
+        // Behind separated prefixes: they go where the cell puts them, but
+        // where the word separates a prefix of its own, the forms already
+        // write them all apart as one (`spans`).
+        if let (Behind::Separated(span), Some(prefixes)) = (behind, &self.prefixes) {
+            for ((list, spans), &cell) in lists.iter_mut().zip(spans).zip(cells) {
+                let place = |form: &str| match prefixes.placement.get(cell) {
+                    Some(Placement::After) => format!("{form} {span}"),
+                    _ => format!("{span}{form}"),
+                };
+                for c in list.iter_mut() {
+                    c.form = place(&c.form);
+                    c.also = c.also.iter().map(|a| place(a)).collect();
+                }
+                for c in spans {
+                    add(list, c);
+                }
+            }
+        }
+        lists
+    }
+
+    /// [`Grammar::unsharpened`], with the separable prefixes it is behind
+    /// written only where the word separates a prefix of its own: those
+    /// forms apart, as the second list.
+    fn inflected(
+        &self,
+        lemma: &str,
+        cells: &[usize],
+        known: &Known<'_>,
+        behind: Behind<'_>,
+    ) -> (Vec<Vec<Candidate<'_>>>, Vec<Vec<Candidate<'_>>>) {
+        let mut spans = vec![Vec::new(); cells.len()];
         let mut word = self.orthography.read(lemma);
         let key = self.orthography.key(&word.letters);
         // A word typed without some of its marks: as listed (even typed in
@@ -652,7 +721,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 forms: &given,
                 ..*known
             };
-            let lists = self.unsharpened(&head, cells, &base);
+            let lists = self.unsharpened(&head, cells, &base, Behind::Nothing);
             let stress = |lists: &[Vec<Candidate<'_>>], at: usize| {
                 let first = lists.get(at)?.first()?;
                 Some(self.orthography.read(&first.form).stress)
@@ -661,7 +730,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 (Some(typed), Some(lemma)) => {
                     let first = match cells.iter().position(|&c| c == lemma) {
                         Some(at) => stress(&lists, at),
-                        None => stress(&self.unsharpened(&head, &[lemma], &base), 0),
+                        None => stress(
+                            &self.unsharpened(&head, &[lemma], &base, Behind::Nothing),
+                            0,
+                        ),
                     };
                     first == Some(Some(typed))
                 }
@@ -670,7 +742,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             if keeps {
                 let joined =
                     |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
-                return lists
+                let lists = lists
                     .into_iter()
                     .map(|list| {
                         list.into_iter()
@@ -682,6 +754,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                             .collect()
                     })
                     .collect();
+                return (lists, spans);
             }
         }
         // The forms the caller gives, as letters.
@@ -766,9 +839,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 };
                 let firsts = (each + kept > 0.0).then(|| {
                     let known = if kept > 0.0 { &base } else { &Known::default() };
-                    top(self.unsharpened(first, cells, known))
+                    top(self.unsharpened(first, cells, known, Behind::Nothing))
                 });
-                let rests = (each > 0.0).then(|| top(self.unsharpened(rest, cells, known)));
+                let rests = (each > 0.0)
+                    .then(|| top(self.unsharpened(rest, cells, known, Behind::Nothing)));
                 (
                     p(Compound::Last),
                     firsts.map(|firsts| (firsts, rests, joiner, rest, each, kept)),
@@ -778,8 +852,13 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         };
         // A word that begins with a prefix: the rest of it, the prefix where
         // the cell puts it; or a word of its own.
-        let behind = self.prefixes.as_ref().and_then(|prefixes| {
-            let (letters, separable, inseparable) = prefixes.split(&key)?;
+        let prefixed = self.prefixes.as_ref().and_then(|prefixes| {
+            let (letters, mut separable, mut inseparable) = prefixes.split(&key)?;
+            // Behind a prefix kept in front, every prefix stays in front
+            // (`bevorzuge`, not `bezuge vor`).
+            if matches!(behind, Behind::Kept) && prefixes.separates() {
+                (separable, inseparable) = (0.0, separable + inseparable);
+            }
             if separable + inseparable <= 0.0 {
                 return None;
             }
@@ -804,10 +883,48 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 forms: &given,
                 ..*known
             };
-            let rests = top(self.unsharpened(rest, cells, &base));
-            Some((prefixes, prefix, rest, separable, inseparable, rests))
+            // The particles written apart, as the lemma has them: the
+            // separable prefixes this word is behind, then its own.
+            let span = match behind {
+                Behind::Separated(before) => format!("{before}{prefix}"),
+                _ => prefix.to_string(),
+            };
+            // A rest that separates a prefix of its own (`ab` of
+            // `abklettern`) is inflected twice: behind this prefix kept, and
+            // behind it separated, its forms writing the whole span apart
+            // (`klettre hinab`). Any other rest, once, for both.
+            let o = &self.orthography;
+            let stacks = prefixes.separates()
+                && prefixes
+                    .split(&o.key(&o.read(rest).letters))
+                    .is_some_and(|(_, separable, _)| separable > 0.0);
+            let (apart, kept) = if stacks {
+                let apart = (separable > 0.0)
+                    .then(|| top(self.unsharpened(rest, cells, &base, Behind::Separated(&span))));
+                let kept = (inseparable > 0.0)
+                    .then(|| top(self.unsharpened(rest, cells, &base, Behind::Kept)));
+                (apart.unwrap_or_default(), Some(kept.unwrap_or_default()))
+            } else {
+                (
+                    top(self.unsharpened(rest, cells, &base, Behind::Nothing)),
+                    None,
+                )
+            };
+            Some(Prefixed {
+                prefixes,
+                prefix,
+                rest,
+                span,
+                separable,
+                inseparable,
+                apart,
+                kept,
+            })
         });
-        let whole = whole * behind.as_ref().map_or(1.0, |b| 1.0 - b.3 - b.4);
+        let whole = whole
+            * prefixed
+                .as_ref()
+                .map_or(1.0, |b| 1.0 - b.separable - b.inseparable);
         let line = self.irregular.line(&key);
         let mut lists = Vec::with_capacity(cells.len());
         // Where a word's line lists a form, or a stem the cell is built on:
@@ -882,34 +999,52 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 continue;
             }
             let mut out: Vec<Candidate<'_>> = Vec::new();
-            if let Some((prefixes, prefix, rest, separable, inseparable, rests)) = &behind {
-                let placement = prefixes
+            if let Some(b) = &prefixed {
+                let placement = b
+                    .prefixes
                     .placement
                     .get(cell)
                     .copied()
                     .unwrap_or(Placement::Before);
-                let drop = prefixes.drops.get(cell).map_or("", |d| d.as_ref());
-                for c in rests.get(i).cloned().unwrap_or_default() {
-                    let separated = match placement {
-                        Placement::Before => format!("{prefix}{}", c.form),
-                        Placement::After => format!("{} {prefix}", c.form),
-                    };
-                    let kept = self.kept(
-                        prefixes,
-                        prefix,
-                        rest,
-                        c.form.strip_prefix(drop).unwrap_or(&c.form),
-                        cell,
-                    );
-                    for (form, p) in [(separated, *separable), (kept, *inseparable)] {
-                        if p <= 0.0 {
-                            continue;
-                        }
+                let drop = b.prefixes.drops.get(cell).map_or("", |d| d.as_ref());
+                let apart = b.apart.get(i).filter(|_| b.separable > 0.0);
+                let kept = b.kept.as_ref().unwrap_or(&b.apart).get(i);
+                let kept = kept.filter(|_| b.inseparable > 0.0);
+                // Behind separated prefixes, the forms that write them all
+                // apart are kept from those still to have them placed.
+                let mut spanned = match behind {
+                    Behind::Separated(_) => spans.get_mut(i),
+                    _ => None,
+                };
+                for n in 0..KEEP {
+                    if let Some(c) = apart.and_then(|l| l.get(n)) {
+                        let span = &b.span;
+                        let form = match (b.kept.is_some(), placement) {
+                            (true, _) => c.form.clone(),
+                            (false, Placement::Before) => format!("{span}{}", c.form),
+                            (false, Placement::After) => format!("{} {span}", c.form),
+                        };
                         let candidate = Candidate {
                             form,
-                            probability: p * c.probability,
+                            probability: b.separable * c.probability,
                             also: Vec::new(),
-                            ..c
+                            ..c.clone()
+                        };
+                        add(spanned.as_deref_mut().unwrap_or(&mut out), candidate);
+                    }
+                    if let Some(c) = kept.and_then(|l| l.get(n)) {
+                        let form = self.kept(
+                            b.prefixes,
+                            b.prefix,
+                            b.rest,
+                            c.form.strip_prefix(drop).unwrap_or(&c.form),
+                            cell,
+                        );
+                        let candidate = Candidate {
+                            form,
+                            probability: b.inseparable * c.probability,
+                            also: Vec::new(),
+                            ..c.clone()
                         };
                         add(&mut out, candidate);
                     }
@@ -991,7 +1126,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 full: true,
                 ..*known
             };
-            for (out, more) in lists.iter_mut().zip(self.unsharpened(&typed, cells, &full)) {
+            let more = self.unsharpened(&typed, cells, &full, behind);
+            for ((out, spanned), more) in lists.iter_mut().zip(&mut spans).zip(more) {
                 // A listed form, or one built on a stem the word lists, is the
                 // answer however the word is spelled.
                 if out.iter().any(|c| {
@@ -999,13 +1135,18 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 }) {
                     continue;
                 }
+                // Behind separated prefixes, already written with them.
+                let out = match behind {
+                    Behind::Separated(_) => spanned,
+                    _ => out,
+                };
                 for mut c in more {
                     c.probability *= p;
                     add(out, c);
                 }
             }
         }
-        lists
+        (lists, spans)
     }
 
     /// The form `form` (written) of `cell` of the word `rest` with `prefix`
@@ -1883,5 +2024,96 @@ pub fn sharpen<'p>(probabilities: impl Iterator<Item = &'p mut f32>, power: f32)
         for p in &mut all {
             **p *= before / after;
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::choice::{Rule, Side};
+
+    #[test]
+    fn stacked_prefixes_go_apart_as_one_and_stay_in_front_behind_a_kept_one() {
+        // German-like: `hin`, `ab`, `vor` separate, `be` stays in front. A
+        // stack of separable prefixes goes apart as the lemma has it
+        // (`mache hinab`, not `mache ab hin`); behind an inseparable
+        // prefix every prefix stays in front (`bevorzuge`, not `bezuge vor`).
+        let prefix = |letters: &'static str, separable: u32| Prefix {
+            letters: Cow::Borrowed(letters),
+            separable,
+            inseparable: 10 - separable,
+            words: 10,
+        };
+        let grammar: Grammar<'_, u16> = Grammar {
+            orthography: Orthography {
+                lowercase: true,
+                vowels: "aeiou",
+                stress_marks: "",
+                stressed: &[],
+                implicit: "",
+                dropped: "",
+                mark_monosyllables: false,
+                folded: &[],
+                prosody: None,
+                initial: "",
+            },
+            cells: 2,
+            lemma_cell: Some(0),
+            capitalized: false,
+            paradigms: Cow::Owned(vec![Paradigm {
+                name: Cow::Borrowed("machen"),
+                words: 10,
+                lemma: Cow::Borrowed("~en"),
+                parent: None,
+                inherent: Cow::Borrowed(&[]),
+                table: Cow::Borrowed("~en\t~e\t"),
+                stems: Cow::Borrowed(""),
+                reads: None,
+                affix: None,
+            }]),
+            paradigm: Choice {
+                side: Side::End,
+                rules: Cow::Owned(vec![Rule {
+                    ending: Cow::Borrowed(""),
+                    counts: Cow::Owned(vec![(0, 10)]),
+                    regular: true,
+                }]),
+                exceptions: Cow::Borrowed(&[]),
+            },
+            relations: Cow::Borrowed(&[]),
+            feature: None,
+            compound: None,
+            kept: Cow::Borrowed(&[]),
+            prefixes: Some(Prefixes {
+                prefixes: Cow::Owned(vec![
+                    prefix("ab", 10),
+                    prefix("be", 0),
+                    prefix("hin", 10),
+                    prefix("vor", 10),
+                ]),
+                listed: Cow::Borrowed(&[]),
+                placement: Cow::Borrowed(&[Placement::Before, Placement::After]),
+                drops: Cow::Borrowed(&[]),
+                junctions: Cow::Borrowed(&[]),
+            }),
+            heads: Heads::default(),
+            accent: None,
+            laws: None,
+            spellings: Cow::Borrowed(&[]),
+            marks: None,
+            slots: Cow::Borrowed(&[]),
+            tables: Cow::Borrowed(&[]),
+            irregular: Irregular::default(),
+            smoothing: 1.0,
+            sharpness: 1.0,
+            trust: Trust::FULL,
+        };
+        let first = |lemma: &str| {
+            let candidates = grammar.candidates(lemma, 1, &Known::default());
+            candidates.first().map(|c| c.form.clone())
+        };
+        assert_eq!(first("abmachen").as_deref(), Some("mache ab"));
+        assert_eq!(first("hinabmachen").as_deref(), Some("mache hinab"));
+        assert_eq!(first("bevorzugen").as_deref(), Some("bevorzuge"));
     }
 }
