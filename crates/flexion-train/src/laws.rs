@@ -425,7 +425,7 @@ impl Change {
                             )
                         })
                         .collect(),
-                    iterative: true,
+                    together: true,
                     ..Stated::default()
                 };
             }
@@ -547,7 +547,9 @@ impl Change {
 /// A law as `sound-law` states it: what changes into what, what must come
 /// before, and what after stops it; the letters a captured letter becomes
 /// (`{x|law}`), or becomes by the letter captured before it
-/// (`{x|law[t]}`); and whether it reads its own output.
+/// (`{x|law[t]}`); and whether it reads its own output, together with the
+/// other harmony laws (each class letter filled in the word's order, reading
+/// the letters before it as every harmony law wrote them).
 #[derive(Default)]
 struct Stated {
     target: String,
@@ -557,7 +559,7 @@ struct Stated {
     stop: String,
     map: Vec<(String, String)>,
     agree: Vec<(String, String, String)>,
-    iterative: bool,
+    together: bool,
     /// What may follow instead of `after`.
     or: Vec<String>,
 }
@@ -628,8 +630,8 @@ pub fn notation(changes: &[Change]) -> Notation {
                 .push(format!("{name} = [{}];", entries.join(", ")));
         }
         let mut line = name.clone();
-        if s.iterative {
-            line.push_str("[iterative]");
+        if s.together {
+            line.push_str("[together]");
         }
         line.push_str(&format!(": {} => {}", literal(&s.target), literal(&s.to)));
         if !s.before.is_empty() || !s.after.is_empty() || !s.or.is_empty() {
@@ -699,7 +701,7 @@ pub fn compile(changes: &[Change]) -> Option<Program<'static>> {
             } else {
                 rule.unless_context("", &s.stop)
             };
-            if s.iterative { rule.iterative() } else { rule }
+            if s.together { rule.together() } else { rule }
         })
         .collect();
     RuleSet::new_with_maps(&[], &maps, &rules).compile().ok()

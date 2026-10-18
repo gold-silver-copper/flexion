@@ -149,6 +149,7 @@ fn compile(laws: &Laws) -> Result<String, String> {
                 "rtl" => rule.right_to_left(),
                 "once" => rule.once(),
                 "iterative" => rule.iterative(),
+                "together" => rule.together(),
                 other => return Err(format!("{}: unknown option `{other}`", law.name)),
             };
         }

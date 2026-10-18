@@ -30,10 +30,15 @@
 //! A class whose value is the tier letter itself is a copy (the Finnish
 //! illative `-Vn`: `taloon`, `kylään`, `maahan`), a law however near its
 //! letter is (no law at the stem's edge states it once): it copies each of
-//! its letters (every vowel, for one of vowels), is a law of its own,
-//! written last (it reads the others' letters, `talossaan` of `~ssAVn`),
-//! and is tried on the places writing just its letters where wider ones
-//! fail (`-ssA` writes `a` or `ä` after any vowel).
+//! its letters (every vowel, for one of vowels), is a law of its own, and
+//! is tried on the places writing just its letters where wider ones fail
+//! (`-ssA` writes `a` or `ä` after any vowel).
+//!
+//! The laws fill their letters together, in the order the word has them,
+//! each reading the letters before it as the laws wrote them (`sound-law`'s
+//! `[together]`): a copy reads the others' letters (`talossaan` of
+//! `~ssAVn`, `bodyaan` of `~IVn`), and laws on two tiers read each other's
+//! whichever comes first in the word (Turkish `-IrlEr`, `-EbIl`).
 
 use super::{BREAKS, Change, Law, MIN_WORDS, Word, held_out};
 use crate::HashMap;
@@ -800,7 +805,7 @@ pub(super) fn learn<'s>(
             None => tiers.push((tier, vec![k])),
         }
     }
-    let mut laws: Vec<Law> = tiers
+    let laws: Vec<Law> = tiers
         .into_iter()
         .filter_map(|((tier, adjacent), ks)| {
             let mine: Vec<(&Spot, &(usize, u32))> =
@@ -841,13 +846,6 @@ pub(super) fn learn<'s>(
             })
         })
         .collect();
-    // A copy reads the letters before it as the other laws write them
-    // (`~ssAVn`, `talossaan`): it comes last.
-    let copies = |l: &Law| match &l.change {
-        Change::Harmony { map, .. } => map.iter().all(|&(_, t, v)| t.is_none_or(|t| t == v)),
-        _ => false,
-    };
-    laws.sort_by_key(copies);
     (laws, paradigms, assignment)
 }
 

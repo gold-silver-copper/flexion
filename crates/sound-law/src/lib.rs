@@ -145,6 +145,13 @@ pub enum Application {
     /// other side its input. Harmony runs through a chain of suffixes this
     /// way, each vowel agreeing with the one before it as written.
     Iterative,
+    /// Iterative, together with the `Together` rules next to it: the run
+    /// writes the leftmost match of any of its rules (of two at one place,
+    /// the earlier rule's) before seeking the next, so each rule's context
+    /// behind it reads what all of them wrote. Harmony laws on different
+    /// tiers fill their letters in the order the word has them (`-IrlEr`,
+    /// `-EbIl`), whatever order the laws are in.
+    Together,
 }
 
 /// A named set of possible segments.
@@ -321,6 +328,13 @@ impl<'a> Rule<'a> {
         self
     }
 
+    /// Apply iteratively, together with the `together` rules next to it
+    /// (see [`Application::Together`]).
+    pub const fn together(mut self) -> Self {
+        self.application = Application::Together;
+        self
+    }
+
     /// A stable name used by traces and diagnostics.
     pub const fn name(&self) -> &'a str {
         self.name
@@ -487,7 +501,9 @@ impl std::error::Error for CompileError {}
 /// empty target denotes insertion at a boundary rather than replacement. Add
 /// `unless "left" _ "right"` to exclude an environment. Rule options `[rtl]`,
 /// `[once]`, or `[rtl, once]` control match selection; `[iterative]` makes a
-/// rule read its own output on the side it has passed. An `agreements`
+/// rule read its own output on the side it has passed, and `[together]`
+/// makes a run of such rules write their matches in one left-to-right pass.
+/// An `agreements`
 /// block after `maps` declares maps keyed by a second capture
 /// (`V = [("A", "a") => "a", ("A", "") => "e"];`, used as `{x|V[t]}`).
 #[macro_export]
@@ -559,6 +575,9 @@ macro_rules! sound_laws {
     };
     (@options $rule:expr; iterative $(, $rest:ident)*) => {
         $crate::sound_laws!(@options $rule.iterative(); $( $rest ),*)
+    };
+    (@options $rule:expr; together $(, $rest:ident)*) => {
+        $crate::sound_laws!(@options $rule.together(); $( $rest ),*)
     };
     (@options $rule:expr; $unknown:ident $(, $rest:ident)*) => {
         compile_error!(concat!("unknown sound-law rule option `", stringify!($unknown), "`"))

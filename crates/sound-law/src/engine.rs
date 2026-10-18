@@ -176,12 +176,12 @@ impl<'a> Program<'a> {
         let mut budget = WorkBudget::unlimited();
         let mut search = Search::new(&mut budget);
 
-        for rule in self.rules.iter() {
-            if let Some(next) = apply_rule(rule, &word, &mut search)
+        for run in runs(&self.rules) {
+            if let Some(next) = apply_run(run, &word, &mut search)
                 && next != word
             {
                 trace.push(TraceStep {
-                    rule: rule.name.to_string(),
+                    rule: names(run),
                     before: word,
                     after: next.clone(),
                 });
@@ -247,18 +247,99 @@ fn apply_rules_with_budget(
 ) -> Result<String, MatchLimitError> {
     let mut word = input.to_owned();
     let mut search = Search::new(budget);
-    for rule in rules {
-        if let Some(next) = apply_rule(rule, &word, &mut search) {
+    for run in runs(rules) {
+        if let Some(next) = apply_run(run, &word, &mut search) {
             word = next;
         }
         if search.budget.exhausted {
             return Err(MatchLimitError {
                 max_steps: search.budget.max_steps,
-                rule: rule.name.to_string(),
+                rule: names(run),
             });
         }
     }
     Ok(word)
+}
+
+/// The rules as they apply: one at a time, a run of
+/// [`Application::Together`] rules at once.
+fn runs<'r, 'a>(rules: &'r [CompiledRule<'a>]) -> impl Iterator<Item = &'r [CompiledRule<'a>]> {
+    rules.chunk_by(|a, b| {
+        a.application == Application::Together && b.application == Application::Together
+    })
+}
+
+/// A run's rule names, as a trace or an error gives them.
+fn names(run: &[CompiledRule]) -> String {
+    let names: Vec<&str> = run.iter().map(|r| r.name.as_ref()).collect();
+    names.join(" + ")
+}
+
+/// The word after a run of rules, or `None` where none matches.
+fn apply_run(run: &[CompiledRule], input: &str, s: &mut Search) -> Option<String> {
+    match run {
+        [rule] if rule.application != Application::Together => apply_rule(rule, input, s),
+        _ => apply_together(run, input, s),
+    }
+}
+
+/// A run of [`Application::Together`] rules: at each step the leftmost
+/// match of any of them (the earlier rule's, of two at one place) is
+/// written, and the next is sought past it, so each rule's context behind
+/// it reads what every rule of the run wrote. Every match consumes input,
+/// so this ends.
+fn apply_together(rules: &[CompiledRule], input: &str, s: &mut Search) -> Option<String> {
+    let mut word = input.to_owned();
+    let mut changed = false;
+    let mut at = 0;
+    // Which rules the word has the required literals of.
+    let mut live: Vec<bool> = Vec::with_capacity(rules.len());
+    while !s.budget.exhausted {
+        live.clear();
+        live.extend(
+            rules
+                .iter()
+                .map(|r| r.required.iter().all(|q| word.contains(q.as_ref()))),
+        );
+        let Some((rule, found)) = next_together(rules, &live, &word, at, s) else {
+            break;
+        };
+        let mut next = String::with_capacity(word.len());
+        next.push_str(word.get(..found.start).unwrap_or_default());
+        render_replacement(rule, &word, &found.captures, &mut next);
+        at = next.len();
+        next.push_str(word.get(found.end..).unwrap_or_default());
+        changed |= next != word;
+        word = next;
+    }
+    changed.then_some(word)
+}
+
+/// The leftmost match at or after `from` of the `live` rules of a run, and
+/// its rule.
+fn next_together<'r, 'a>(
+    rules: &'r [CompiledRule<'a>],
+    live: &[bool],
+    word: &str,
+    from: usize,
+    s: &mut Search,
+) -> Option<(&'r CompiledRule<'a>, FoundMatch)> {
+    for start in boundaries(word, from..=word.len()) {
+        for (rule, _) in rules.iter().zip(live).filter(|(_, live)| **live) {
+            if s.budget.exhausted {
+                return None;
+            }
+            if rule.target.anchored_at_start && start != 0 {
+                continue;
+            }
+            s.captures.clear();
+            s.captures.resize(rule.capture_count, None);
+            if let Some(found) = match_at(rule, word, start, None, s) {
+                return Some((rule, found));
+            }
+        }
+    }
+    None
 }
 
 /// One changed intermediate form from [`Program::apply_with_trace`].

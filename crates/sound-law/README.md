@@ -43,10 +43,10 @@ tables and runs them with this crate. A built form marks where its stem meets it
 with `+`, and a law rewrites the letters around it (Greek `"ε+ο" => "+ου"`, Russian
 `"{x:[к|г|х]}+ы" => "{x}+и"`), or changes a letter of the ending by the nearest letter of a
 tier before it (Sanskrit `"न" => "ण" / "{t:[र|ष|ृ]}{a:![…]*}+{b:![…]*}" _ ""`, unless `्`
-follows). Harmony is an `[iterative]` rule with an agreement map: an ending writes a class
+follows). Harmony is a `[together]` rule with an agreement map: an ending writes a class
 letter once (Turkish `-lAr`, `-ImIz`), and the rule fills it by the nearest vowel before it as
 written (`"{x:[A|I]}" => "{x|law0[t]}" / "{t:[a|e|ı|i|o|ö|u|ü]?}{g:![…]*}" _ ""`), so
-`ev+lArImIzdA` is `evlerimizde`. The trainer builds rules at runtime and compiles them; a
+`ev+lArImIzdA` is `evlerimizde`; laws on other tiers fill their letters in the same pass. The trainer builds rules at runtime and compiles them; a
 generated crate holds the compiled program as static data (see below), so it never compiles
 anything.
 
@@ -227,6 +227,15 @@ the stem's `u` through the unwritten `A` and gives `buzlarun`.
 `[rtl, iterative]` reads its output on the right. An iterative insertion tries
 each original boundary once.
 
+`[together]` is `[iterative]` for a run of rules: consecutive `[together]` rules
+write the leftmost match of any of them (of two at one place, the earlier
+rule's) before seeking the next, so each reads what all of them wrote behind it.
+Harmony laws on two tiers then fill their letters in the word's order whatever
+the laws' order: Finnish `bodyIVn` → `bodyaan`, where `V` (a copy of the vowel
+before) reads the `a` that `I` writes; one law after the other, `V` reads the
+stem's `y` through the unwritten `I` and gives `bodyayn`. A `[together]` rule
+replaces a target, left to right.
+
 A rule can read stress written as a mark: `{?!STRESS}` after a vowel is "this
 vowel is unstressed", at the word's end too.
 
@@ -265,8 +274,8 @@ inserted result.
   branching result sets are not modeled.
 - Classes and maps are finite inventories. There is no phonological feature
   matrix, feature mutation, normalization policy, syllabifier, stress model or
-  tone-bearing-unit model; propagation (harmony) is an `[iterative]` rule on a
-  tier written as a starred gap.
+  tone-bearing-unit model; propagation (harmony) is an `[iterative]` or
+  `[together]` rule on a tier written as a starred gap.
 - Inline alternatives contain literal sequences; class expressions provide
   finite union/intersection/difference. Nested matcher groups, arbitrary
   lookaround, and quantified groups containing several matcher atoms are not

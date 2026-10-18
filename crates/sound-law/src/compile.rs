@@ -228,6 +228,14 @@ pub(crate) fn compile(spec: &RuleSet<'_>) -> Result<Program<'static>, CompileErr
                 .filter(|l| or_right.iter().all(|r| literals(r).contains(l))),
         );
         let required = required.into();
+        if rule.application() == Application::Together
+            && (target.atoms.is_empty() || rule.direction() != Direction::LeftToRight)
+        {
+            return Err(CompileError::in_rule(
+                rule.name(),
+                "a `together` rule replaces a target, left to right",
+            ));
+        }
         // Several right contexts: one, matching any of them.
         let right = if or_right.is_empty() {
             right

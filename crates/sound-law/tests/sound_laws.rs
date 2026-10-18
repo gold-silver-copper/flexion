@@ -551,6 +551,34 @@ fn iterative_rules_read_what_they_wrote_behind_them() {
 }
 
 #[test]
+fn together_rules_fill_their_letters_in_the_word_s_order() {
+    // Finnish `-IVn`: `I` reads the nearest `a` or `i` (none: `a`), and `V`
+    // copies the nearest vowel. Laws on two tiers: `V` must read the `a`
+    // that `I` writes, though its law comes first.
+    const LAWS: RuleSet<'static> = sound_laws! {
+        classes {}
+        agreements {
+            COPY = [
+                ("V", "a") => "a", ("V", "e") => "e", ("V", "i") => "i", ("V", "o") => "o",
+                ("V", "y") => "y", ("V", "") => "e",
+            ];
+            FILL = [("I", "a") => "a", ("I", "i") => "i", ("I", "") => "a"];
+        }
+        rules {
+            copy[together]: "{x:[V]}" => "{x|COPY[t]}" / "{t:[a|e|i|o|y]?}{g:![a|e|i|o|y]*}" _ "";
+            fill[together]: "{x:[I]}" => "{x|FILL[t]}" / "{t:[a|i]?}{g:![a|i]*}" _ "";
+        }
+    };
+    let program = LAWS.compile().unwrap();
+    assert_eq!(program.apply("bodyIVn"), "bodyaan");
+    assert_eq!(program.apply("taloVn"), "taloon");
+    // One law after the other, `V` reads the `y` through the unwritten `I`.
+    let apart: Vec<Rule<'_>> = LAWS.rules().iter().map(|r| r.iterative()).collect();
+    let apart = RuleSet::new_with_maps(LAWS.classes(), LAWS.maps(), &apart);
+    assert_eq!(apart.apply("bodyIVn").unwrap(), "bodyayn");
+}
+
+#[test]
 fn agreement_maps_must_cover_every_pair() {
     const GAP: RuleSet<'static> = sound_laws! {
         classes { V = ["a", "e"]; }
