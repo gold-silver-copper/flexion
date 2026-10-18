@@ -1896,6 +1896,20 @@ fn inspect(
                 };
                 let name = names.get(cell).map_or("", String::as_str);
                 println!("cell {cell} ({name}): dictionary {gold:?}");
+                // What the cell's relation tells from a given form of its
+                // source, as a listed word's form is told.
+                if let Some(r) = g.relation(cell)
+                    && let Some(from) = r.source()
+                    && let Some((_, f)) = forms.iter().find(|(c, _)| *c == from)
+                {
+                    let letters = g.orthography.read(f).letters;
+                    let told = g.changing(r).told(&letters, g.smoothing, g.laws.as_ref());
+                    println!(
+                        "    the relation tells from {}: {:?}",
+                        names.get(from).map_or("?", String::as_str),
+                        told.map(|t| t.0)
+                    );
+                }
                 println!("    from the headword {}", mark(&from_headword));
                 // A gap: the way the likeliest paradigm would build the cell.
                 if from_headword.get(cell).is_none_or(Vec::is_empty) {
