@@ -44,7 +44,8 @@
 //! - `nonce <file>`: English verbs against Albright & Hayes's nonce verbs;
 //! - `inspect`: a word's readings and its table as `try` scores it, each cell
 //!   marked right or wrong (`--word a,b`; `--parts`: also typed in full with the
-//!   dictionary's principal parts given; `--holdout`: learned without the tenth
+//!   dictionary's principal parts given; `--known a,b`: the dictionary's forms
+//!   of these cells given instead; `--holdout`: learned without the tenth
 //!   `try` scores), and a sample of irregular forms.
 
 mod audit;
@@ -60,7 +61,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--known <cells>] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -221,6 +222,7 @@ fn run() -> Result<(), String> {
             flag("--word").as_deref(),
             args.iter().any(|a| a == "--holdout").then_some(fold),
             args.iter().any(|a| a == "--parts"),
+            flag("--known").as_deref(),
         ),
         _ => Err(USAGE.into()),
     }
@@ -1763,7 +1765,8 @@ fn inspect(
     pos: &str,
     word: Option<&str>,
     holdout: Option<u64>,
-    given: bool,
+    parts: bool,
+    known: Option<&str>,
 ) -> Result<(), String> {
     let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
@@ -1805,16 +1808,20 @@ fn inspect(
             // The first entry spelled so is the one scored; with `--parts`,
             // its principal parts are given too.
             let entry = d.lexemes.iter().find(|l| l.key == key);
-            let parts = if given {
-                flexion_train::parts(lang, part)?
-            } else {
-                Vec::new()
+            let names = cell_names(lang, part)?;
+            let given = parts || known.is_some();
+            let parts: Vec<usize> = match known {
+                Some(cells) => cells
+                    .split(',')
+                    .map(|c| names.iter().position(|n| n == c).ok_or("no such cell"))
+                    .collect::<Result<_, _>>()?,
+                None if parts => flexion_train::parts(lang, part)?,
+                None => Vec::new(),
             };
             let forms: Vec<(usize, &str)> = parts
                 .iter()
                 .filter_map(|&c| Some((c, entry?.cells.get(c)?.first()?.as_str())))
                 .collect();
-            let names = cell_names(lang, part)?;
             let headword = entry.map_or(word, |l| l.lemma.as_str());
             let full = entry.map_or(word, |l| l.full.as_str());
             println!(
