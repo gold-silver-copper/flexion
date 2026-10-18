@@ -678,7 +678,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                     orthography,
                     want,
                     &c.form,
-                    rank.is_some(),
+                    measure::among(candidates, |c| same(&c.form)),
                     stem,
                 )),
             };

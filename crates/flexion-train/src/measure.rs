@@ -441,59 +441,95 @@ pub fn agreement<A: Ord + Clone, B: Ord + Clone>(pairs: &[(A, B)]) -> Agreement 
     }
 }
 
-/// What kind of error a wrong answer is.
+/// What kind of error a wrong answer is (see [`Kind::meaning`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Kind {
-    /// No answer at all: no way of building the cell gave a form.
-    Gap,
-    /// Another of the forms the dictionary lists in the cell, first.
-    Variant,
-    /// Another dictionary word spelled the same has this answer in the
-    /// cell: no grammar could tell the two apart.
-    Homograph,
-    /// The right letters, the stress or accent elsewhere.
-    Accent,
-    /// The same letters but for a mark the language's spelling folds or
-    /// drops (see [`unmarked`]): vowel length, a breathing. Not a letter of
-    /// its own that happens to be written with a combining mark (a
-    /// Devanagari vowel sign, Russian `й`, Finnish `ä`).
+    Class,
+    Reading,
     Marks,
-    /// The right form is among the candidates, from another paradigm or
-    /// reading: the grammar chose wrong.
-    Paradigm,
-    /// It goes wrong inside the word's stem.
+    Accent,
     Stem,
-    /// It goes wrong after the stem: the ending.
     Ending,
+    Variant,
+    Homograph,
+    Gap,
+}
+
+impl Kind {
+    /// Every kind, in the order the READMEs show them.
+    pub const ALL: [Kind; 9] = [
+        Kind::Class,
+        Kind::Reading,
+        Kind::Marks,
+        Kind::Accent,
+        Kind::Stem,
+        Kind::Ending,
+        Kind::Variant,
+        Kind::Homograph,
+        Kind::Gap,
+    ];
+
+    /// The kind's one name: in the census, the saved runs and the READMEs.
+    pub fn name(self) -> &'static str {
+        match self {
+            Kind::Class => "class",
+            Kind::Reading => "reading",
+            Kind::Marks => "marks",
+            Kind::Accent => "accent",
+            Kind::Stem => "stem",
+            Kind::Ending => "ending",
+            Kind::Variant => "variant",
+            Kind::Homograph => "homograph",
+            Kind::Gap => "gap",
+        }
+    }
+
+    /// What the kind is, as the READMEs say it.
+    pub fn meaning(self) -> &'static str {
+        match self {
+            Kind::Class => {
+                "the right form is among the answers, from another paradigm than the first's (or \
+                 the first is a listed form)"
+            }
+            Kind::Reading => {
+                "the right form is among the answers, only from the first answer's own paradigm \
+                 read another way (a prefix split, animacy, a second stem)"
+            }
+            Kind::Marks => {
+                "the right letters but for a mark the spelling folds (a vowel's length, a \
+                 breathing; not a letter written with a combining mark, as a Devanagari vowel \
+                 sign)"
+            }
+            Kind::Accent => "the right letters with the accent wrong",
+            Kind::Stem => "wrong letters inside the stem",
+            Kind::Ending => "wrong letters after the stem",
+            Kind::Variant => "another of the forms the dictionary lists comes first",
+            Kind::Homograph => "another dictionary word spelled the same has that form",
+            Kind::Gap => "no form at all",
+        }
+    }
 }
 
 impl std::fmt::Display for Kind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(match self {
-            Kind::Gap => "gap",
-            Kind::Variant => "variant",
-            Kind::Homograph => "homograph",
-            Kind::Accent => "accent",
-            Kind::Marks => "marks",
-            Kind::Paradigm => "paradigm",
-            Kind::Stem => "stem",
-            Kind::Ending => "ending",
-        })
+        f.write_str(self.name())
     }
 }
 
-impl Kind {
-    /// Every kind, in the order they are told apart (see [`crate::eval::outcomes`]).
-    pub const ALL: [Kind; 8] = [
-        Kind::Gap,
-        Kind::Variant,
-        Kind::Homograph,
-        Kind::Accent,
-        Kind::Marks,
-        Kind::Paradigm,
-        Kind::Stem,
-        Kind::Ending,
-    ];
+/// How the right form is among a cell's `candidates` when the first isn't
+/// it (`right` tells a candidate that writes it): a [`Kind::Reading`] where
+/// every candidate that does is of the first's paradigm (and the first
+/// isn't listed), else a [`Kind::Class`]; none where no candidate does.
+pub fn among(
+    candidates: &[flexion::Candidate<'_>],
+    right: impl Fn(&flexion::Candidate<'_>) -> bool,
+) -> Option<Kind> {
+    let first = candidates.first()?;
+    let mut writers = candidates.iter().filter(|c| right(c)).peekable();
+    writers.peek()?;
+    let own =
+        first.status != flexion::Status::Listed && writers.all(|c| c.paradigm == first.paradigm);
+    Some(if own { Kind::Reading } else { Kind::Class })
 }
 
 /// `letters` (as [`flexion::Orthography::read`] reads them) without the
@@ -531,13 +567,13 @@ fn is_combining_mark(c: char) -> bool {
 }
 
 /// The kind of a wrong `answer` for `gold`, both read as `orthography`
-/// reads them: `among` says whether `gold` is among the candidates; `stem`
-/// is the word's stem length (see [`word_stem`]).
+/// reads them: `among` is how `gold` is among the candidates, if it is
+/// (see [`among`]); `stem` is the word's stem length (see [`word_stem`]).
 pub fn kind(
     orthography: &flexion::Orthography<'_>,
     gold: &str,
     answer: &str,
-    among: bool,
+    among: Option<Kind>,
     stem: usize,
 ) -> Kind {
     let (g, a) = (
@@ -548,8 +584,8 @@ pub fn kind(
         Kind::Accent
     } else if unmarked(orthography, &g) == unmarked(orthography, &a) {
         Kind::Marks
-    } else if among {
-        Kind::Paradigm
+    } else if let Some(kind) = among {
+        kind
     } else if common_start(&plain(gold), &plain(answer)) < stem {
         Kind::Stem
     } else {
@@ -561,6 +597,37 @@ pub fn kind(
 mod tests {
     use super::*;
 
+    /// German `abonnieren`: the first answer splits a prefix off
+    /// (`onniere ab`) and the right form is the same paradigm read whole, a
+    /// *reading*; from another paradigm, or after a listed form, a *class*.
+    #[test]
+    fn a_right_form_of_the_first_answer_s_own_paradigm_is_a_reading() {
+        let candidate = |form: &str, paradigm: &'static str, status| flexion::Candidate {
+            form: form.to_string(),
+            also: Vec::new(),
+            probability: 0.5,
+            status,
+            paradigm,
+            evidence: None,
+            stem: None,
+        };
+        let regular = flexion::Status::Regular;
+        let right = |c: &flexion::Candidate<'_>| c.form == "abonniere";
+        let split = candidate("onniere ab", "Kassieren", regular);
+        let whole = |paradigm| candidate("abonniere", paradigm, regular);
+        let listed = candidate("onniere ab", "", flexion::Status::Listed);
+        assert_eq!(
+            among(&[split.clone(), whole("Kassieren")], right),
+            Some(Kind::Reading)
+        );
+        assert_eq!(
+            among(&[split.clone(), whole("Machen")], right),
+            Some(Kind::Class)
+        );
+        assert_eq!(among(&[listed, whole("")], right), Some(Kind::Class));
+        assert_eq!(among(&[split], right), None);
+    }
+
     #[test]
     fn a_word_s_stem_is_what_half_its_forms_begin_with() {
         let forms = |f: &[&str]| f.iter().map(|s| s.to_string()).collect::<Vec<_>>();
@@ -569,8 +636,8 @@ mod tests {
             "regis", "regit", "regēbam", "rēxī", "rēxit", "rēctum", "regere",
         ]);
         assert_eq!(word_stem("regō", &rego), 3);
-        assert_eq!(kind(&LATIN, "rēxī", "regī", false, 3), Kind::Stem);
-        assert_eq!(kind(&RUSSIAN, "книги", "книгы", false, 4), Kind::Ending);
+        assert_eq!(kind(&LATIN, "rēxī", "regī", None, 3), Kind::Stem);
+        assert_eq!(kind(&RUSSIAN, "книги", "книгы", None, 4), Kind::Ending);
     }
 
     const LATIN: flexion::Orthography<'static> = flexion::Orthography {
@@ -611,12 +678,12 @@ mod tests {
     fn a_mark_is_one_the_spelling_folds_not_any_combining_character() {
         // Latin: a macron the lookup folds is a mark, and so is a breve
         // reading drops, composed (`ĭ`); `j` for `i` is a letter.
-        assert_eq!(kind(&LATIN, "rēxī", "rexī", false, 3), Kind::Marks);
-        assert_eq!(kind(&LATIN, "dĭcāx", "dicāx", false, 3), Kind::Marks);
-        assert_eq!(kind(&LATIN, "iam", "jam", false, 2), Kind::Stem);
+        assert_eq!(kind(&LATIN, "rēxī", "rexī", None, 3), Kind::Marks);
+        assert_eq!(kind(&LATIN, "dĭcāx", "dicāx", None, 3), Kind::Marks);
+        assert_eq!(kind(&LATIN, "iam", "jam", None, 2), Kind::Stem);
         // Russian: `й` is a letter of its own, though it decomposes into
         // `и` and a breve.
-        assert_eq!(kind(&RUSSIAN, "клавдий", "клавдии", false, 5), Kind::Ending);
+        assert_eq!(kind(&RUSSIAN, "клавдий", "клавдии", None, 5), Kind::Ending);
         // Devanagari: a vowel sign (`ी` against `ा`) is a letter, though
         // Unicode calls it a combining mark: a feminine in -ī for one in -ā.
         let sanskrit = flexion::Orthography {
@@ -626,7 +693,7 @@ mod tests {
             dropped: "\u{951}\u{952}",
             ..LATIN
         };
-        assert_eq!(kind(&sanskrit, "भारती", "भारता", false, 3), Kind::Ending);
+        assert_eq!(kind(&sanskrit, "भारती", "भारता", None, 3), Kind::Ending);
     }
 
     #[test]

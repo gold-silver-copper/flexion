@@ -210,41 +210,41 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
             );
         }
     }
-    s.push_str(
+    use crate::measure::Kind;
+    let kinds: Vec<String> = (Kind::ALL.iter())
+        .map(|k| format!("*{}*, {}", k.name(), k.meaning()))
+        .collect();
+    let _ = write!(
+        s,
         "\n## Where the errors are\n\n\
          The held-out forms the grammar gets wrong from the headword, by what went wrong, as a share\n\
-         of them: *class*, the right form is among its answers but another paradigm's comes first;\n\
-         *marks*, the right letters but for a mark the spelling folds (a vowel's length, a\n\
-         breathing; not a letter written with a combining mark, as a Devanagari vowel sign);\n\
-         *accent*, the right letters with the accent wrong; *stem* and *ending*, wrong letters\n\
-         inside the stem or after it; *variant*, another of the forms the dictionary lists comes\n\
-         first; *homograph*, another dictionary word spelled the same has that form; *gap*, no form\n\
-         at all. *By block*: the mean of each group of cells' top-1, so a group of many cells\n\
+         of them: {}. *By block*: the mean of each group of cells' top-1, so a group of many cells\n\
          doesn't outweigh the rest; a group with fewer than 30 held-out forms is left out of it and\n\
          named below. *Reproduced*: the shipped grammar on the dictionary's own words (at most\n\
          3,000), from the headword; *complete*: of those words' cells, the dictionary's or not, the\n\
          share with a form.\n\n\
-         | | wrong forms | class | marks | accent | stem | ending | variant | homograph | gap | by block | reproduced | complete |\n\
-         |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|\n",
+         | | wrong forms | {} | by block | reproduced | complete |\n\
+         |---|---:|{}---:|---:|---:|\n",
+        kinds.join("; "),
+        Kind::ALL.map(Kind::name).join(" | "),
+        "---:|".repeat(Kind::ALL.len()),
     );
     for m in measured {
         let errors = &m.headword.errors;
         let wrong: usize = errors.iter().sum();
-        let of = |k: crate::measure::Kind| {
-            if wrong == 0 {
-                return "–".to_string();
-            }
-            let n = crate::measure::Kind::ALL
-                .iter()
-                .position(|&x| x == k)
-                .and_then(|i| errors.get(i))
-                .copied()
-                .unwrap_or(0);
-            #[allow(clippy::cast_precision_loss)]
-            let share = 100.0 * n as f64 / wrong.max(1) as f64;
-            format!("{share:.0}%")
-        };
-        use crate::measure::Kind as K;
+        // Each kind's share of the wrong forms; – where there are none.
+        let shares: Vec<String> = errors
+            .iter()
+            .map(|&n| {
+                #[allow(clippy::cast_precision_loss)]
+                let share = 100.0 * n as f64 / wrong.max(1) as f64;
+                if wrong == 0 {
+                    "–".to_string()
+                } else {
+                    format!("{share:.0}%")
+                }
+            })
+            .collect();
         // `part` of `all`, as a percentage; – where there is none.
         let percent = |part: usize, all: usize| {
             #[allow(clippy::cast_precision_loss)]
@@ -262,16 +262,9 @@ pub fn report(lang: &Language, learned: &[Learned<'_>], measured: &[Measured]) -
         };
         let _ = writeln!(
             s,
-            "| {} | {wrong} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
+            "| {} | {wrong} | {} | {} | {} | {} |",
             m.name,
-            of(K::Paradigm),
-            of(K::Marks),
-            of(K::Accent),
-            of(K::Stem),
-            of(K::Ending),
-            of(K::Variant),
-            of(K::Homograph),
-            of(K::Gap),
+            shares.join(" | "),
             m.by_block
                 .map_or("–".to_string(), |b| format!("{:.2}%", 100.0 * b)),
             percent(m.reproduced.right, m.reproduced.forms),
