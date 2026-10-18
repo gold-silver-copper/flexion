@@ -499,6 +499,7 @@ pub fn learn<'s>(
                 .collect(),
         ),
         part: Cow::Owned(shape.part.clone()),
+        root_letters: m.root_letters,
     });
     // Spellings a key doesn't show, listed: those the marks don't give (of
     // every word, those inflecting behind a prefix too, and those whose

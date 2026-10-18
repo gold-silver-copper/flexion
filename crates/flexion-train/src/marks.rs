@@ -31,10 +31,20 @@ pub struct Voter<'p> {
 #[derive(Debug, Clone)]
 pub struct LanguageMarks {
     pub marks: flexion::Marks<'static>,
-    /// Per part of speech, the lemmas the roots spelled right where the
-    /// rules alone didn't, and those they spelled wrong where the rules
-    /// alone didn't.
-    pub checked: Vec<(String, u32, u32)>,
+    /// Per part of speech, how its roots did.
+    pub checked: BTreeMap<String, Checked>,
+}
+
+/// How a part of speech's roots did on lemmas they weren't learned from
+/// (see [`check`]).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Checked {
+    /// The letters the roots decide, as [`flexion::Marks::root_letters`].
+    pub letters: (u32, u32),
+    /// The lemmas the roots spelled right where the rules alone didn't.
+    pub fixed: u32,
+    /// The lemmas they spelled wrong where the rules alone didn't.
+    pub broken: u32,
 }
 
 impl LanguageMarks {
@@ -42,8 +52,8 @@ impl LanguageMarks {
     /// they take none.
     pub fn rootless(&self) -> impl Iterator<Item = &str> {
         (self.checked.iter())
-            .filter(|(_, fixed, broken)| broken > fixed)
-            .map(|(part, _, _)| part.as_str())
+            .filter(|(_, c)| c.broken > c.fixed)
+            .map(|(part, _)| part.as_str())
     }
 
     /// The marks part of speech `part` reads.
@@ -57,6 +67,7 @@ impl LanguageMarks {
                 self.marks.roots.clone()
             },
             part: Cow::Owned(part.to_string()),
+            root_letters: self.checked.get(part).map_or((0, 0), |c| c.letters),
         }
     }
 }
@@ -82,6 +93,7 @@ pub fn learn(
             rules,
             roots: Cow::Owned(roots),
             part: Cow::Borrowed(""),
+            root_letters: (0, 0),
         },
         checked: check(orthography, words, voters, settings),
     })
@@ -253,7 +265,8 @@ pub fn roots<'v, 'p: 'v>(
     }
     let read: Vec<Read<'_>> = read.into_iter().collect();
     let ruled = |((key, part), _): &Read<'_>| {
-        flexion::restore(orthography, &marks(rules, &[], part), smoothing, key, key).0
+        let marks = marks(rules, &[], part, (0, 0));
+        flexion::restore(orthography, &marks, smoothing, key, key).0
     };
     let told: Vec<String> = crate::par::map(&read, ruled);
     let mut out: BTreeSet<(&str, char)> = BTreeSet::new();
@@ -285,11 +298,13 @@ struct Place {
 /// root's letter.
 type Read<'r> = ((String, &'r str), Vec<(usize, &'r str)>);
 
-/// The marks of `rules` and `roots`, read as part of speech `part`.
+/// The marks of `rules` and `roots`, read as part of speech `part`, its
+/// roots deciding `root_letters` (see [`flexion::Marks::root_letters`]).
 fn marks<'m>(
     rules: &'m flexion::Choice<'_, char>,
     roots: &'m [(Cow<'_, str>, char)],
     part: &'m str,
+    root_letters: (u32, u32),
 ) -> flexion::Marks<'m> {
     flexion::Marks {
         rules: flexion::Choice {
@@ -299,25 +314,25 @@ fn marks<'m>(
         },
         roots: Cow::Borrowed(roots),
         part: Cow::Borrowed(part),
+        root_letters,
     }
 }
 
 /// How the roots do per part of speech, on lemmas they weren't learned
 /// from: the words split in two halves by key, each half's lemmas spelled
-/// by the marks learned from the other half's words, with their roots and
-/// without. Per part of speech, the lemmas the roots spell right where the
-/// rules alone don't, and those they spell wrong where the rules alone
-/// don't.
+/// by the marks learned from the other half's words. Per part of speech,
+/// the letters the roots decide and those they write right; then, the
+/// roots trusted that much, the lemmas they spell right where the rules
+/// alone don't, and those they spell wrong where the rules alone don't.
 fn check(
     orthography: &Orthography<'_>,
     words: &[(&str, &str, &str)],
     voters: &[Voter<'_>],
     settings: Settings,
-) -> Vec<(String, u32, u32)> {
+) -> BTreeMap<String, Checked> {
     // Halves apart from the tenths a word is held out by (`hash % 10`).
     let half = |key: &str| crate::eval::hash(key) / 10 % 2;
-    let mut counts: BTreeMap<&str, (u32, u32)> = BTreeMap::new();
-    for h in 0..2 {
+    let halves = [0, 1].map(|h| {
         let taught: Vec<(&str, &str, &str)> =
             words.iter().filter(|w| half(w.0) != h).copied().collect();
         let (examples, _) = examples(orthography, &taught);
@@ -325,23 +340,38 @@ fn check(
         let teachers = voters.iter().filter(|v| half(&v.key) != h);
         let roots = roots(orthography, teachers, &rules, settings.smoothing);
         let tested: Vec<&(&str, &str, &str)> = words.iter().filter(|w| half(w.0) == h).collect();
-        let spelled = crate::par::map(&tested, |&&(key, letters, part)| {
-            let right = |roots: &[(Cow<'_, str>, char)]| {
-                let marks = marks(&rules, roots, part);
-                flexion::restore(orthography, &marks, settings.smoothing, key, key).0 == letters
-            };
-            (right(&roots), right(&[]))
-        });
-        for (w, (rooted, bare)) in tested.iter().zip(spelled) {
-            let (fixed, broken) = counts.entry(w.2).or_default();
-            *fixed += u32::from(rooted && !bare);
-            *broken += u32::from(bare && !rooted);
+        (rules, roots, tested)
+    });
+    let mut checked: BTreeMap<String, Checked> = BTreeMap::new();
+    for (rules, roots, tested) in &halves {
+        let rooted = marks(rules, roots, "", (0, 0));
+        for &&(key, letters, part) in tested {
+            let c = checked.entry(part.to_string()).or_default();
+            for (n, l) in letters.chars().enumerate() {
+                if let Some(v) = rooted.root(key, n) {
+                    c.letters.0 += u32::from(v == l);
+                    c.letters.1 += 1;
+                }
+            }
         }
     }
-    counts
-        .into_iter()
-        .map(|(part, (fixed, broken))| (part.to_string(), fixed, broken))
-        .collect()
+    for (rules, roots, tested) in &halves {
+        let spelled = crate::par::map(tested, |&&(key, letters, part)| {
+            let trust = checked.get(part).map_or((0, 0), |c| c.letters);
+            let right = |roots: &[(Cow<'_, str>, char)]| {
+                let marks = marks(rules, roots, part, trust);
+                flexion::restore(orthography, &marks, settings.smoothing, key, key).0 == letters
+            };
+            (right(roots), right(&[]))
+        });
+        for (w, (rooted, bare)) in tested.iter().zip(spelled) {
+            if let Some(c) = checked.get_mut(w.2) {
+                c.fixed += u32::from(rooted && !bare);
+                c.broken += u32::from(bare && !rooted);
+            }
+        }
+    }
+    checked
 }
 
 #[cfg(test)]

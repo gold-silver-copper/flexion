@@ -546,11 +546,16 @@ fn try_tenth(
             let train_marks = marks(&trained)?;
             if let Some(m) = &train_marks {
                 let checked: Vec<String> = (m.checked.iter())
-                    .map(|(part, fixed, broken)| format!("{part} +{fixed} −{broken}"))
+                    .map(|(part, c)| {
+                        format!(
+                            "{part} +{} −{} ({} of {} letters right)",
+                            c.fixed, c.broken, c.letters.0, c.letters.1
+                        )
+                    })
                     .collect();
                 let rootless: Vec<&str> = m.rootless().collect();
                 println!(
-                    "  marks: {} rules, {} roots; lemmas the roots spell right and wrong on half the words: {}; no roots for: {}",
+                    "  marks: {} rules, {} roots; lemmas the roots spell right and wrong on half the words (and the letters they decide): {}; no roots for: {}",
                     m.marks.rules.rules.len(),
                     m.marks.roots.len(),
                     checked.join(", "),

@@ -534,9 +534,10 @@ fn grammar_files(
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
         marks = g.marks.as_ref().map_or("None".to_string(), |m| format!(
-            "Some(flexion::Marks {{ rules: crate::marks::MARKS, roots: Cow::Borrowed({}), part: Cow::Borrowed({:?}) }})",
+            "Some(flexion::Marks {{ rules: crate::marks::MARKS, roots: Cow::Borrowed({}), part: Cow::Borrowed({:?}), root_letters: {:?} }})",
             if m.roots.is_empty() { "&[]" } else { "crate::marks::ROOTS" },
-            m.part
+            m.part,
+            m.root_letters,
         )),
     );
     m.push_str(&api_code(

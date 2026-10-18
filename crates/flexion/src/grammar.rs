@@ -405,15 +405,15 @@ pub struct Marks<'a> {
     /// would mislead reads none.
     pub roots: Cow<'a, [(Cow<'a, str>, char)]>,
     pub part: Cow<'a, str>,
+    /// Of the letters the roots decide in lemmas of this part of speech
+    /// they weren't learned from (half the words, by the marks learned from
+    /// the other half, each half in turn), how many they write right, and
+    /// how many they decide: `(right, decided)` (see [`Marks::root_trust`]).
+    pub root_letters: (u32, u32),
 }
 
 /// The fewest letters of a root (see [`Marks::roots`]).
 pub const ROOT_LETTERS: usize = 4;
-
-/// How likely a letter is as its root writes it: the share of the letters
-/// roots decide on held-out Latin and Greek lemmas that they get right (244
-/// of 250).
-const ROOT_TRUST: f32 = 0.97;
 
 impl Marks<'_> {
     /// The root of the letter at char `i` of `key`: the key's letters
@@ -435,6 +435,16 @@ impl Marks<'_> {
     /// speech.
     pub fn context(before: char, rest: &str, part: &str) -> String {
         format!("{before}{rest}{WORD_END}{part}")
+    }
+
+    /// How likely a letter is as its root writes it: the share of the
+    /// letters its roots decide that they write right ([`Marks::root_letters`]),
+    /// a letter right and one wrong added to them (Laplace's rule of
+    /// succession: a part of speech with few such letters says little).
+    #[allow(clippy::cast_possible_truncation)]
+    pub fn root_trust(&self) -> f32 {
+        let (right, decided) = self.root_letters;
+        ((f64::from(right) + 1.0) / (f64::from(decided) + 2.0)) as f32
     }
 
     /// How the root of `key` through the letter at char `i` and two past it
@@ -1782,16 +1792,17 @@ fn restorations(
         };
         // Its root's letter first, the rules' others after.
         if let Some(v) = marks.root(key, n).filter(|_| !readings.is_empty()) {
+            let trust = marks.root_trust();
             let others: f32 = readings.iter().filter(|r| r.0 != v).map(|r| r.1).sum();
             readings.retain(|r| r.0 != v);
             for r in &mut readings {
                 r.1 = if others > 0.0 {
-                    r.1 * (1.0 - ROOT_TRUST) / others
+                    r.1 * (1.0 - trust) / others
                 } else {
                     0.0
                 };
             }
-            let trust = if readings.is_empty() { 1.0 } else { ROOT_TRUST };
+            let trust = if readings.is_empty() { 1.0 } else { trust };
             readings.insert(0, (v, trust));
         }
         before = k;
