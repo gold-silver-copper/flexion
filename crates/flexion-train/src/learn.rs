@@ -3243,9 +3243,25 @@ fn heads<'a>(
         words: Cow::Owned(words),
     };
     // The last members missed, that aren't heads already.
+    // A last member is named only where it fixes more of the words ending
+    // in it (those the rules build wrong, it right) than it breaks (those
+    // the rules build right, it wrong).
+    let helps = |head: &str| {
+        members.ends.get(head).is_some_and(|ws| {
+            let fixed = ws.iter().filter(|&&(w, same)| same && irregular(w)).count();
+            let broken = ws
+                .iter()
+                .filter(|&&(w, same)| !same && !irregular(w))
+                .count();
+            fixed > broken
+        })
+    };
     let mut more: Vec<Cow<'a, str>> = (members.of.values())
         .filter(|(head, _)| {
-            missed(head) && !(heads.inflects(head) && listed(head)) && !heads.names(head)
+            missed(head)
+                && helps(head)
+                && !(heads.inflects(head) && listed(head))
+                && !heads.names(head)
         })
         .map(|(head, _)| Cow::Owned(head.to_string()))
         .collect();
@@ -3274,6 +3290,9 @@ pub(crate) struct Members<'w> {
     /// The fronts most of them have (at most [`FRONTS`], the commonest
     /// first): what a new compound may begin with.
     pub fronts: Vec<&'w str>,
+    /// Per validated last member, the words ending in it and whether each
+    /// has its forms, its front kept.
+    pub ends: BTreeMap<&'w str, Vec<(&'w str, bool)>>,
 }
 
 /// The most fronts a last member is tried behind (see [`missed`]).
@@ -3331,6 +3350,15 @@ fn last_members<'w>(
             Some((w.key.as_str(), (head, front)))
         })
         .collect();
+    let mut by_head: BTreeMap<&str, Vec<(&str, bool)>> = BTreeMap::new();
+    for (w, ends) in words.iter().zip(&ends) {
+        for &(head, _, same) in ends.iter().filter(|e| validated(e.0)) {
+            by_head
+                .entry(head)
+                .or_default()
+                .push((w.key.as_str(), same));
+        }
+    }
     let mut fronts: BTreeMap<&str, usize> = BTreeMap::new();
     for (w, &(_, front)) in &of {
         if let Some(f) = by_key.get(w).and_then(|w| w.letters.get(..front)) {
@@ -3342,6 +3370,7 @@ fn last_members<'w>(
     Members {
         of,
         fronts: fronts.into_iter().take(FRONTS).map(|(f, _)| f).collect(),
+        ends: by_head,
     }
 }
 
@@ -3408,6 +3437,7 @@ fn builds(
 struct Evidence {
     words: HashMap<String, BTreeMap<u16, Vec<usize>>>,
     has: Vec<Vec<bool>>,
+    keys: Vec<String>,
 }
 
 impl Evidence {
@@ -3427,7 +3457,12 @@ impl Evidence {
                     .collect()
             })
             .collect();
-        Self { words: by, has }
+        let keys = words.iter().map(|w| w.key.clone()).collect();
+        Self {
+            words: by,
+            has,
+            keys,
+        }
     }
 
     /// The paradigm a word (`w`, its forms as `forms`) of paradigm `now`
@@ -3482,7 +3517,13 @@ impl Evidence {
             {
                 return p;
             }
-            if mine > 0 {
+            // Only the words ending as it does the most letters vote: a
+            // shorter ending is another word's, not its.
+            let others = of
+                .values()
+                .flatten()
+                .any(|&v| self.keys.get(v).is_some_and(|k| *k != w.key));
+            if mine > 0 || others {
                 return now;
             }
         }
@@ -4320,12 +4361,15 @@ mod tests {
             ]
         );
         assert_eq!(members.fronts, ["arvo", "laatu", "loki"]);
-        let named = |missed: &str| {
+        // The rules build the compounds wrong; reading them through their
+        // last member builds them right.
+        let wrong = |w: &str| w != "merkintä" && w.ends_with("merkintä");
+        let named = |missed: &str, irregular: &dyn Fn(&str) -> bool| {
             let missed = |head: &str| head == missed;
             let found = heads(
                 &words,
                 3,
-                &|_| false,
+                irregular,
                 &|_| false,
                 &|_| false,
                 &members,
@@ -4333,8 +4377,11 @@ mod tests {
             );
             found.words.to_vec()
         };
-        assert_eq!(named("merkintä"), [Cow::from("merkintä")]);
-        assert!(named("isin").is_empty());
+        assert_eq!(named("merkintä", &wrong), [Cow::from("merkintä")]);
+        assert!(named("isin", &wrong).is_empty());
+        // Where the rules build its words right already, a last member is
+        // no head: it would only fix nothing (English `-se`, `japane+se`).
+        assert!(named("merkintä", &|_| false).is_empty());
     }
 
     #[test]
