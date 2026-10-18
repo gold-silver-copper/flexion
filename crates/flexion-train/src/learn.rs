@@ -237,8 +237,7 @@ pub fn learn<'s>(
         }
     }
     let found = referrals(&words, shape);
-    let vowel = |c: char| orthography.is_vowel(c);
-    let mut analyses: Vec<Analyzed> = words.iter().map(|w| analyze(w, &vowel)).collect();
+    let mut analyses: Vec<Analyzed> = words.iter().map(analyze).collect();
     reduplicate(&mut analyses, shape.cells);
     let mut feature_examples: Vec<(String, u8)> = Vec::new();
     if let Some((f, referrals)) = &found {
@@ -1977,7 +1976,7 @@ fn refer(w: &Word, a: &mut Analyzed, referrals: &[Relation<'_>], v: u8) {
 }
 
 /// A word's patterns over its own skeleton.
-fn analyze(w: &Word, vowel: &dyn Fn(char) -> bool) -> Analyzed {
+fn analyze(w: &Word) -> Analyzed {
     let forms: Vec<&str> = w
         .cells
         .iter()
@@ -1994,13 +1993,11 @@ fn analyze(w: &Word, vowel: &dyn Fn(char) -> bool) -> Analyzed {
             (!mine.is_empty()).then(|| mine.join("|"))
         })
         .collect();
-    let mut analyzed = Analyzed {
+    Analyzed {
         lemma: a.lemma,
         cells,
         stems: a.stems,
-    };
-    anchor(&mut analyzed, vowel);
-    analyzed
+    }
 }
 
 /// A listed word's line gives its cells as the dictionary spells them, the
@@ -2093,107 +2090,6 @@ fn spell_out(
         irregular.sort();
         grammar.irregular = flexion::Irregular::new(irregular, stems);
     }
-}
-
-/// Two stem pieces the lemma writes side by side (`pensar` as `p` and `ens`,
-/// `~~ar`, because `pienso` is `~i~o`) would be read off a new word wherever
-/// its letters allow, the rightmost reading first (`reasentar` as `reasen`
-/// and `t`, `*reasenito`): where the letters written between them elsewhere
-/// change a vowel, the place they meet is anchored on it. The second piece's
-/// first letter, a vowel, moves into the patterns between them where vowels
-/// are written before it (a diphthong: `~e~ar`, `~ie~o`); where that piece is
-/// one letter, the first piece's last, a vowel, does (Polish `niski`,
-/// `niższy`: `~i~ki`, `~iż~zy`, which `dziki` doesn't fit). Not elsewhere
-/// (German `anerkennen`, `anzuerkennen`: a prefix, `zu` and the verb), nor a
-/// letter a copy reads (`%`).
-fn anchor(a: &mut Analyzed, vowel: &dyn Fn(char) -> bool) {
-    let mut k = 0;
-    while k + 1 < a.stems.len() {
-        let side = side_by_side(&a.lemma, k);
-        let (first, second) = (a.stems.get(k), a.stems.get(k + 1));
-        let (Some(first), Some(second)) = (first, second) else {
-            break;
-        };
-        let patterns = || std::iter::once(&a.lemma).chain(a.cells.iter().flatten());
-        // What each pattern writes between the two pieces.
-        let between = || {
-            patterns()
-                .flat_map(|p| pattern::variants(p))
-                .filter_map(|v| {
-                    let (from, to) = (tilde(v, k)?, tilde(v, k + 1)?);
-                    v.get(from + 1..to)
-                })
-        };
-        let copied = between().any(|b| b.ends_with(pattern::COPY));
-        let diphthong = between().any(|b| !b.is_empty() && b.chars().all(vowel));
-        let moved = if !side {
-            None
-        } else if second.chars().count() > 1 && diphthong && !copied {
-            second
-                .chars()
-                .next()
-                .filter(|&c| vowel(c))
-                .map(|c| (c, k + 1, false))
-        } else if second.chars().count() == 1 && first.chars().count() > 1 {
-            first
-                .chars()
-                .next_back()
-                .filter(|&c| vowel(c))
-                .map(|c| (c, k, true))
-        } else {
-            None
-        };
-        if let Some((c, piece, after)) = moved {
-            let shift = |p: &str| -> String {
-                pattern::variants(p)
-                    .map(|v| match tilde(v, piece) {
-                        Some(at) if after => format!(
-                            "{}~{c}{}",
-                            v.get(..at).unwrap_or(""),
-                            v.get(at + 1..).unwrap_or("")
-                        ),
-                        Some(at) => format!(
-                            "{}{c}~{}",
-                            v.get(..at).unwrap_or(""),
-                            v.get(at + 1..).unwrap_or("")
-                        ),
-                        None => v.to_string(),
-                    })
-                    .collect::<Vec<_>>()
-                    .join("|")
-            };
-            a.lemma = shift(&a.lemma);
-            for cell in a.cells.iter_mut().flatten() {
-                *cell = shift(cell);
-            }
-            if let Some(stem) = a.stems.get_mut(piece) {
-                if after {
-                    stem.pop();
-                } else {
-                    *stem = stem.chars().skip(1).collect();
-                }
-            }
-        }
-        k += 1;
-    }
-}
-
-/// Whether stem pieces `k` and `k + 1` of `lemma` meet with no letter
-/// between them.
-fn side_by_side(lemma: &str, k: usize) -> bool {
-    tilde(lemma, k).is_some_and(|at| {
-        lemma
-            .get(at + 1..)
-            .is_some_and(|rest| rest.starts_with('~'))
-    })
-}
-
-/// The byte where pattern `p`'s stem piece `k` (its `k`-th `~`) is.
-fn tilde(p: &str, k: usize) -> Option<usize> {
-    p.char_indices()
-        .filter(|&(_, c)| c == '~')
-        .nth(k)
-        .map(|(i, _)| i)
 }
 
 /// Per stem piece of `pattern` (chars) after a letter that may copy it, a
@@ -4141,28 +4037,6 @@ mod tests {
                 })
                 .collect(),
         }
-    }
-
-    #[test]
-    fn stem_pieces_side_by_side_meet_at_a_letter() {
-        // Spanish `pensar`, `pienso`: the diphthong's `i` goes before the
-        // `e`, so a new word splits there, not at its last letter
-        // (`reasentar`, `reasiento`, not `*reasenito`).
-        let vowel = |c: char| "aeiouyąęó".contains(c);
-        let a = analyze(&word("pensar", &["pensar", "pienso", "pensamos"]), &vowel);
-        assert_eq!(a.lemma, "~e~ar");
-        assert_eq!(a.cells.get(1).cloned().flatten().as_deref(), Some("~ie~o"));
-        let stems = pattern::bind(&a.lemma, "reasentar").expect("binds");
-        assert_eq!(pattern::fill("~ie~o", &stems), "reasiento");
-        // Polish `niski`, `niższy`: the second piece is one letter, so the
-        // first's last anchors it, and `dziki` (`dzikszy`) doesn't fit.
-        let a = analyze(&word("niski", &["niski", "niższy"]), &vowel);
-        assert_eq!(a.lemma, "~i~ki");
-        assert_eq!(pattern::bind(&a.lemma, "dziki"), None);
-        // German `anerkennen`, `anzuerkennen`: `zu` changes no vowel, the
-        // pieces stay as they are.
-        let a = analyze(&word("anerkennen", &["anerkennen", "anzuerkennen"]), &vowel);
-        assert_eq!(a.lemma, "~~");
     }
 
     #[test]
