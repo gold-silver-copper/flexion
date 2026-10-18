@@ -91,6 +91,10 @@ pub struct Space<'s, 'a> {
 /// cell's (see [`Relation`]).
 pub const DERIVED: &str = "=";
 
+/// Screening switch: only the fitting changes with the longest literal
+/// before the stem.
+const LONGEST: bool = false;
+
 /// What a paradigm has in a cell.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Form<'t> {
@@ -118,7 +122,7 @@ pub struct Relation<'a> {
     /// they keep (`~`): `("~ī", "~istī")`; the augment, `("~", "ἐ~")`.
     pub changes: Cow<'a, [(Cow<'a, str>, Cow<'a, str>)]>,
     /// Which change, read off that form's ending (its letters), of those
-    /// fitting it with the longest beginning; `None`: the form itself.
+    /// fitting it (see [`Relation::fitting`]); `None`: the form itself.
     pub change: Option<Choice<'a, u16>>,
     /// It tells the form of a word whose form of the cell it comes from is
     /// listed (a principal part), rather than the word's paradigm.
@@ -155,28 +159,16 @@ impl Relation<'_> {
     }
 
     /// The forms `form` gives (its letters), each with where its change
-    /// starts and how likely it is: the change's new ending put where the
-    /// old one was; one that writes a class letter (a capital, `~Im`), or a
-    /// literal meeting the form's front (`अ‹~म्`, see [`pattern::FRONT`]), is
-    /// run through `laws`, as a paradigm's form is.
+    /// starts and how likely it is: the changes [`Relation::fitting`] it,
+    /// read off its ending, each made by [`Relation::changed`].
     pub fn apply(
         &self,
         form: &str,
         smoothing: f32,
         laws: Option<&sound_law::Program<'_>>,
     ) -> Vec<(String, usize, f32)> {
-        let start = |p: &str| p.split('~').next().map_or(0, str::len);
-        let fitting = |c: u16| {
-            self.changes
-                .get(usize::from(c))
-                .filter(|(old, _)| pattern::bind(old, form).is_some())
-                .map(|(old, _)| start(old))
-        };
-        // Of the changes fitting the form, those saying most of its start.
-        let longest = (0..self.changes.len())
-            .filter_map(|c| fitting(u16::try_from(c).ok()?))
-            .max();
-        let fits = |c: u16| fitting(c).is_some() && fitting(c) == longest;
+        let fitting = Self::fitting(self.changes.iter().map(|(old, _)| old.as_ref()), form);
+        let fits = |c: u16| fitting.binary_search(&c).is_ok();
         let readings = self
             .change
             .iter()
@@ -184,17 +176,7 @@ impl Relation<'_> {
         let out: Vec<(String, usize, f32)> = readings
             .filter_map(|r| {
                 let (old, new) = self.changes.get(usize::from(r.value))?;
-                let stems = pattern::bind(old, form)?;
-                let lawful = |c: char| c.is_uppercase() || c == pattern::FRONT;
-                let (told, at) = match laws.filter(|_| new.chars().any(lawful)) {
-                    None => (
-                        pattern::fill(new, &stems),
-                        pattern::ending_start(new, &stems),
-                    ),
-                    Some(laws) => {
-                        pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems)))
-                    }
-                };
+                let (told, at) = Self::changed(old, new, form, laws)?;
                 Some((told, at, r.probability))
             })
             .collect();
@@ -203,6 +185,44 @@ impl Relation<'_> {
             return vec![(form.to_string(), form.len(), 1.0)];
         }
         out
+    }
+
+    /// Which of the changes whose old patterns are `olds` fit `form` (their
+    /// places, ascending): those whose old pattern binds it. The change's
+    /// rules (see [`Relation::change`]) decide among them.
+    pub fn fitting<'o>(olds: impl IntoIterator<Item = &'o str>, form: &str) -> Vec<u16> {
+        let bound: Vec<(u16, usize)> = olds
+            .into_iter()
+            .zip(0u16..)
+            .filter(|(old, _)| pattern::bind(old, form).is_some())
+            .map(|(old, c)| (c, old.split('~').next().map_or(0, str::len)))
+            .collect();
+        let longest = bound.iter().map(|b| b.1).max();
+        bound
+            .into_iter()
+            .filter(|b| !LONGEST || Some(b.1) == longest)
+            .map(|b| b.0)
+            .collect()
+    }
+
+    /// The form the change `(old, new)` makes of `form`, and where its change
+    /// starts: `new` with the letters `old` keeps; one that writes a class
+    /// letter (a capital, `~Im`), or a literal meeting the form's front
+    /// (`अ‹~म्`, see [`pattern::FRONT`]), through `laws`, as a paradigm's
+    /// form is. `None` when `old` doesn't bind `form`.
+    pub fn changed(
+        old: &str,
+        new: &str,
+        form: &str,
+        laws: Option<&sound_law::Program<'_>>,
+    ) -> Option<(String, usize)> {
+        let stems = pattern::bind(old, form)?;
+        let lawful = |c: char| c.is_uppercase() || c == pattern::FRONT;
+        Some(pattern::make(
+            new,
+            &stems,
+            laws.filter(|_| new.chars().any(lawful)),
+        ))
     }
 
     /// The forms of the cell it comes from that it makes `form` of: a
@@ -364,10 +384,7 @@ fn filled(
     stems: &[&str],
 ) -> Vec<(String, usize)> {
     pattern::variants(pattern)
-        .map(|v| match laws {
-            None => (pattern::fill(v, stems), pattern::ending_start(v, stems)),
-            Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, stems))),
-        })
+        .map(|v| pattern::make(v, stems, laws))
         .collect()
 }
 

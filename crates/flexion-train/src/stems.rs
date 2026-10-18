@@ -133,10 +133,7 @@ impl Reading<'_> {
             .into_iter()
             .flatten()
             .take(TRIED)
-            .any(|p| {
-                let built = laws.apply(&flexion::pattern::fill_marked(p, &[stem]));
-                flexion::pattern::unmarked(&built).0 == form
-            })
+            .any(|p| flexion::pattern::make(p, &[stem], Some(laws)).0 == form)
     }
 }
 

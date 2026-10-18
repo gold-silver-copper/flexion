@@ -78,10 +78,7 @@ pub fn build(
     laws: Option<&sound_law::Program<'_>>,
 ) -> Vec<(String, usize)> {
     pattern::variants(pattern)
-        .map(|v| match laws {
-            None => (pattern::fill(v, &[stem]), pattern::ending_start(v, &[stem])),
-            Some(laws) => pattern::unmarked(&laws.apply(&pattern::fill_marked(v, &[stem]))),
-        })
+        .map(|v| pattern::make(v, &[stem], laws))
         .collect()
 }
 

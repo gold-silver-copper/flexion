@@ -221,6 +221,20 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     out
 }
 
+/// The form `pattern` (one alternative) builds on `stems`, and where its
+/// ending starts: filled, or with `laws`, filled marked (see
+/// [`fill_marked`]) and run through them.
+pub fn make(
+    pattern: &str,
+    stems: &[&str],
+    laws: Option<&sound_law::Program<'_>>,
+) -> (String, usize) {
+    match laws {
+        None => (fill(pattern, stems), ending_start(pattern, stems)),
+        Some(laws) => unmarked(&laws.apply(&fill_marked(pattern, stems))),
+    }
+}
+
 /// A form built marked (see [`fill_marked`]) as a word: its marks taken
 /// out, and where its ending starts.
 pub fn unmarked(built: &str) -> (String, usize) {

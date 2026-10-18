@@ -202,10 +202,15 @@ fn edge<'s>(
     if examples.is_empty() {
         return None;
     }
-    let fits = |word: &str, i: u16| {
-        changes
-            .get(usize::from(i))
-            .is_some_and(|(old, _)| flexion::pattern::bind(old, word).is_some())
+    // The changes fitting each form, found once per form.
+    let olds = || changes.iter().map(|(old, _)| old.as_str());
+    let fitting: HashMap<&str, Vec<u16>> = examples
+        .iter()
+        .map(|(a, _)| (a.as_str(), Relation::fitting(olds(), a)))
+        .collect();
+    let fits = |word: &str, i: u16| match fitting.get(word) {
+        Some(f) => f.binary_search(&i).is_ok(),
+        None => Relation::fitting(olds(), word).contains(&i),
     };
     let choice = choose::learn(&examples, settings.detail(), fits);
     Some(Relation {
@@ -428,13 +433,9 @@ fn through<'f>(
     laws: &sound_law::Program<'_>,
     classes: &Classes,
 ) -> Vec<(&'f str, (String, String))> {
-    use flexion::pattern::{self, FRONT};
+    use flexion::pattern::FRONT;
     let told = |a: &str, (old, new): &(String, String)| {
-        let stems = pattern::bind(old, a)?;
-        Some(match new.chars().any(|c| c.is_uppercase() || c == FRONT) {
-            true => pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems))).0,
-            false => pattern::fill(new, &stems),
-        })
+        Relation::changed(old, new, a, Some(laws)).map(|t| t.0)
     };
     // The literals pairs put before a form's front (the augment, `अ~`).
     let mut literals: Vec<String> = pairs
@@ -449,7 +450,7 @@ fn through<'f>(
     let candidates: Vec<Vec<(String, String)>> = pairs
         .iter()
         .map(|(a, ch)| {
-            let Some(b) = pattern::bind(&ch.0, a).map(|stems| pattern::fill(&ch.1, &stems)) else {
+            let Some((b, _)) = Relation::changed(&ch.0, &ch.1, a, None) else {
                 return Vec::new();
             };
             let (old_head, old_tail) = ch.0.split_once('~').unwrap_or(("", ""));
@@ -626,6 +627,37 @@ mod tests {
                 .map(|f| f.0.as_str()),
             Some("düşüne düşüne")
         );
+    }
+
+    #[test]
+    fn the_runtime_tells_every_training_pair_as_learned() {
+        // German present: the 1st singular from the 1st plural. `tun~` →
+        // `tue~` (`tun gut`, `tue gut`) binds `tunken` too, with a longer
+        // literal before the stem than `~n` → `~`; the rules on the ending
+        // decide, so `tunken` is `tunke`, not `tueken`.
+        let pairs = [
+            ("machen", "mache"),
+            ("lachen", "lache"),
+            ("sagen", "sage"),
+            ("legen", "lege"),
+            ("tunken", "tunke"),
+            ("tun gut", "tue gut"),
+            ("tun weh", "tue weh"),
+            ("tun leid", "tue leid"),
+        ];
+        let words: Vec<Vec<Option<&str>>> = pairs
+            .iter()
+            .map(|(a, b)| vec![Some(*a), Some(*b)])
+            .collect();
+        let relations = learn(&words, 2, 0, Settings::default(), None);
+        let first = relations.iter().find(|r| r.cell == 1).expect("a relation");
+        for (a, b) in pairs {
+            assert_eq!(
+                first.told(a, 2.0, None).map(|t| t.0).as_deref(),
+                Some(b),
+                "{a}"
+            );
+        }
     }
 
     #[test]
