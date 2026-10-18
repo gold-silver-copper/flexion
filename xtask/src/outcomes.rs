@@ -3,7 +3,7 @@
 
 use flexion_train::eval::{Input, Outcome};
 use flexion_train::extract::Lexeme;
-use flexion_train::measure::{self, Paired};
+use flexion_train::measure::{self, Comparison, Paired};
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::Path;
@@ -167,15 +167,40 @@ fn read(path: &Path) -> Result<Run, String> {
     Ok(run)
 }
 
+/// One row of a comparison: a part of speech, a mode, a group of words, and
+/// b against a on them.
+struct Row {
+    pos: String,
+    mode: String,
+    group: String,
+    c: Comparison,
+}
+
+/// Whether b lost or gained beyond chance: its 95% interval, as printed,
+/// excludes 0.
+fn verdict(c: &Comparison) -> &'static str {
+    let printed = |x: f64| (100.0 * 100.0 * x).round();
+    if printed(c.high) < 0.0 {
+        "LOSS"
+    } else if printed(c.low) > 0.0 {
+        "GAIN"
+    } else {
+        ""
+    }
+}
+
 /// `cargo xtask compare <a> <b>`: per part of speech and mode, top-1 of
 /// each run on the forms both scored, the paired bootstrap 95% interval of
-/// b − a (resampling words), and the sign test over words.
+/// b − a (resampling words), the sign test over words, and the verdict
+/// (LOSS or GAIN where the interval excludes 0); then a line per part of
+/// speech (see [`summary`]). Two directories: that line for every saved run
+/// both have (with each language's time and peak memory, for two sweeps).
 pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
     if a.is_dir() && b.is_dir() {
-        return sweeps(a, b);
+        return dirs(a, b);
     }
     compare_bytes(a, b);
-    let (ra, rb) = (read(a)?, read(b)?);
+    let rows = rows(a, b, apart)?;
     println!(
         "{:<10} {:<16} {:<14} {:>6} {:>7} {:>8} {:>8} {:>8} {:>18} {:>11} {:>9}",
         "pos",
@@ -190,6 +215,97 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
         "better/worse",
         "sign p"
     );
+    for r in &rows {
+        let c = &r.c;
+        println!(
+            "{:<10} {:<16} {:<14} {:>6} {:>7} {:>7.2}% {:>7.2}% {:>+7.2} {:>+8.2} … {:>+6.2} {:>6}/{:<5} {:>9.2e} {}",
+            r.pos,
+            r.mode,
+            r.group,
+            c.words,
+            c.forms,
+            100.0 * c.a,
+            100.0 * c.b,
+            100.0 * (c.b - c.a),
+            100.0 * c.low,
+            100.0 * c.high,
+            c.better,
+            c.worse,
+            c.p,
+            verdict(c)
+        );
+    }
+    println!();
+    for line in summary(a, b, &rows) {
+        println!("{line}");
+    }
+    Ok(())
+}
+
+/// Per part of speech, one line: its name (`b`'s file, and the part where
+/// the file has several), then from the headword (hw) and with the
+/// principal parts (pp), top-1 a → b, the change, its interval, the words
+/// better / worse and the verdict, then the bytes a → b.
+fn summary(a: &Path, b: &Path, rows: &[Row]) -> Vec<String> {
+    let name = b
+        .file_stem()
+        .map_or(String::new(), |n| n.to_string_lossy().to_string());
+    let parts: std::collections::BTreeSet<&str> = rows.iter().map(|r| r.pos.as_str()).collect();
+    let (ba, bb) = (read_bytes(a), read_bytes(b));
+    let total = |bytes: &BTreeMap<(String, String), usize>, pos: &str| -> usize {
+        bytes
+            .iter()
+            .filter(|((p, _), _)| p == pos)
+            .map(|(_, n)| n)
+            .sum()
+    };
+    parts
+        .iter()
+        .map(|pos| {
+            let label = if parts.len() > 1 {
+                format!("{name} {pos}")
+            } else {
+                name.clone()
+            };
+            let mut line = String::new();
+            for (mode, short) in [("headword", "hw"), ("principal-parts", "pp")] {
+                let Some(r) = rows
+                    .iter()
+                    .find(|r| r.pos == *pos && r.mode == mode && r.group == "all")
+                else {
+                    continue;
+                };
+                let c = &r.c;
+                line = line.trim_end().to_string();
+                let _ = write!(
+                    line,
+                    "  {short} {:.2}%→{:.2}% {:+.2} [{:+.2},{:+.2}] {}/{} {}",
+                    100.0 * c.a,
+                    100.0 * c.b,
+                    100.0 * (c.b - c.a),
+                    100.0 * c.low,
+                    100.0 * c.high,
+                    c.better,
+                    c.worse,
+                    verdict(c)
+                );
+            }
+            let (x, y) = (total(&ba, pos), total(&bb, pos));
+            if x > 0 || y > 0 {
+                #[allow(clippy::cast_possible_wrap)]
+                let d = y as i64 - x as i64;
+                line = line.trim_end().to_string();
+                let _ = write!(line, "  bytes {x}→{y} ({d:+})");
+            }
+            format!("{label:<30}{}", line.trim_end())
+        })
+        .collect()
+}
+
+/// The rows of a comparison of two saved runs.
+fn rows(a: &Path, b: &Path, apart: Option<&str>) -> Result<Vec<Row>, String> {
+    let (ra, rb) = (read(a)?, read(b)?);
+    let mut rows = Vec::new();
     for (key, wa) in &ra {
         let Some(wb) = rb.get(key) else {
             continue;
@@ -211,7 +327,7 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
                 .collect();
             words.push((group.unwrap_or_else(|| "?".into()), cells));
         }
-        let row = |label: &str, keep: &dyn Fn(&str, bool) -> bool, compatible: bool| {
+        let mut row = |label: &str, keep: &dyn Fn(&str, bool) -> bool, compatible: bool| {
             let paired: Vec<Paired> = (words.iter())
                 .map(|(g, cells)| {
                     let mine = cells.iter().filter(|c| keep(g, c.2));
@@ -236,23 +352,12 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
             if paired.is_empty() {
                 return;
             }
-            let c = measure::compare(&paired);
-            println!(
-                "{:<10} {:<16} {:<14} {:>6} {:>7} {:>7.2}% {:>7.2}% {:>+7.2} {:>+8.2} … {:>+6.2} {:>6}/{:<5} {:>9.2e}",
-                key.0,
-                key.1,
-                label,
-                c.words,
-                c.forms,
-                100.0 * c.a,
-                100.0 * c.b,
-                100.0 * (c.b - c.a),
-                100.0 * c.low,
-                100.0 * c.high,
-                c.better,
-                c.worse,
-                c.p
-            );
+            rows.push(Row {
+                pos: key.0.clone(),
+                mode: key.1.clone(),
+                group: label.to_string(),
+                c: measure::compare(&paired),
+            });
         };
         row("all", &|_, _| true, false);
         // A second score where a run has one: compatible with stated length.
@@ -275,13 +380,14 @@ pub fn compare(a: &Path, b: &Path, apart: Option<&str>) -> Result<(), String> {
             }
         }
     }
-    Ok(())
+    Ok(rows)
 }
 
-/// Two sweeps (`cargo xtask sweep`): every language both have, compared as
-/// two runs are, then each language's time and peak memory in b against a.
-fn sweeps(a: &Path, b: &Path) -> Result<(), String> {
-    let summary = |dir: &Path| -> BTreeMap<String, (f64, f64)> {
+/// Two directories of saved runs: [`summary`]'s line for every run both
+/// have, by name; for two sweeps (`cargo xtask sweep`), each language's
+/// time and peak memory in b against a first.
+fn dirs(a: &Path, b: &Path) -> Result<(), String> {
+    let summary_of = |dir: &Path| -> BTreeMap<String, (f64, f64)> {
         std::fs::read_to_string(dir.join("summary.tsv"))
             .unwrap_or_default()
             .lines()
@@ -295,20 +401,29 @@ fn sweeps(a: &Path, b: &Path) -> Result<(), String> {
             })
             .collect()
     };
-    let (sa, sb) = (summary(a), summary(b));
+    let (sa, sb) = (summary_of(a), summary_of(b));
     for (lang, &(secs_a, peak_a)) in &sa {
-        let file = format!("{lang}.tsv");
-        let (fa, fb) = (a.join(&file), b.join(&file));
         let Some(&(secs_b, peak_b)) = sb.get(lang) else {
             continue;
         };
         println!(
-            "\n{lang}: time {secs_a:.0}s → {secs_b:.0}s (×{:.2}), peak {peak_a:.0} → {peak_b:.0} MB (×{:.2})",
+            "{lang}: time {secs_a:.0}s → {secs_b:.0}s (×{:.2}), peak {peak_a:.0} → {peak_b:.0} MB (×{:.2})",
             secs_b / secs_a.max(1.0),
             peak_b / peak_a.max(1.0)
         );
-        if fa.exists() && fb.exists() {
-            compare(&fa, &fb, None)?;
+    }
+    let mut names: Vec<String> = std::fs::read_dir(b)
+        .map_err(|e| format!("{}: {e}", b.display()))?
+        .flatten()
+        .filter_map(|e| e.file_name().into_string().ok())
+        .filter(|n| n.ends_with(".tsv") && !n.ends_with(".forms.tsv") && n != "summary.tsv")
+        .filter(|n| a.join(n).exists())
+        .collect();
+    names.sort();
+    for name in names {
+        let (fa, fb) = (a.join(&name), b.join(&name));
+        for line in summary(&fa, &fb, &rows(&fa, &fb, None)?) {
+            println!("{line}");
         }
     }
     Ok(())
