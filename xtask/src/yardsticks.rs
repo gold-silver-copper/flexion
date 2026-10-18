@@ -7,7 +7,7 @@
 use flexion_train::cells::Cells;
 use flexion_train::extract::{Lexeme, PosData};
 use flexion_train::spec::Language;
-use flexion_train::{choose, learn, measure, script};
+use flexion_train::{choose, measure, script};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
@@ -222,24 +222,18 @@ pub fn sigmorphon(lang: &Language, data: &[PosData], file: &Path) -> Result<(), 
         let shape = flexion_train::shape(lang, part)?;
         let lemmas: BTreeSet<String> = rows.iter().map(|r| key_of(lang, &script, &r.0)).collect();
         let ours = d.lexemes.iter().filter(|l| lemmas.contains(&l.key)).count();
-        let without: Vec<Lexeme> = d
-            .lexemes
-            .iter()
-            .filter(|l| !lemmas.contains(&l.key))
-            .cloned()
-            .collect();
-        for (name, lexemes, held) in [
-            ("shipped", &d.lexemes, false),
-            ("without the test lemmas", &without, true),
-        ] {
+        for (name, held) in [("shipped", false), ("without the test lemmas", true)] {
             let settings = choose::Settings::default();
             let keep = |l: &Lexeme| !held || !lemmas.contains(&l.key);
-            let shape = learn::Shape {
-                marks: flexion_train::marks(lang, &script.orthography(), data, keep, settings)?
-                    .map(|m| m.of(part.name)),
-                ..shape.clone()
-            };
-            let learned = learn::learn(script.orthography(), &shape, lexemes, settings);
+            let marks = flexion_train::marks(lang, &script.orthography(), data, keep, settings)?;
+            let words = flexion_train::Words::of(lang, part, data, keep);
+            let learned = flexion_train::learn_part(
+                script.orthography(),
+                &shape,
+                &words,
+                marks.as_ref(),
+                settings,
+            );
             let g = &learned.grammar;
             let o = &g.orthography;
             let (mut exact, mut letters, mut length, mut plain) = (0usize, 0usize, 0usize, 0usize);
@@ -332,11 +326,8 @@ fn nfc(s: &str) -> String {
 /// dictionary verb.
 pub fn nonce(lang: &Language, data: &[PosData], file: &Path) -> Result<(), String> {
     let text = std::fs::read_to_string(file).map_err(|e| format!("{}: {e}", file.display()))?;
-    let (part, d) = lang
-        .parts
-        .iter()
-        .zip(data)
-        .find(|(p, _)| p.name == "verb")
+    let part = (lang.parts.iter())
+        .find(|p| p.name == "verb")
         .ok_or("no verbs")?;
     let cells = Cells::new(lang, part)?;
     let past = cells
@@ -345,11 +336,17 @@ pub fn nonce(lang: &Language, data: &[PosData], file: &Path) -> Result<(), Strin
         .next()
         .ok_or("no past cell")?;
     let script = script::Script::new(&lang.spelling);
-    let mut shape = flexion_train::shape(lang, part)?;
+    let shape = flexion_train::shape(lang, part)?;
     let settings = choose::Settings::default();
-    shape.marks = flexion_train::marks(lang, &script.orthography(), data, |_| true, settings)?
-        .map(|m| m.of(part.name));
-    let learned = learn::learn(script.orthography(), &shape, &d.lexemes, settings);
+    let marks = flexion_train::marks(lang, &script.orthography(), data, |_| true, settings)?;
+    let words = flexion_train::Words::of(lang, part, data, |_| true);
+    let learned = flexion_train::learn_part(
+        script.orthography(),
+        &shape,
+        &words,
+        marks.as_ref(),
+        settings,
+    );
     let g = &learned.grammar;
     // (regular, ours, production, rating)
     let mut points: Vec<(bool, f64, f64, f64)> = Vec::new();

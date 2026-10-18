@@ -10,9 +10,10 @@ use flexion::{Known, Status};
 use flexion_train::choose::Settings;
 use flexion_train::eval::same_form;
 use flexion_train::extract::{self, Lexeme, PosData};
-use flexion_train::learn::{self, Learned};
+use flexion_train::learn::Learned;
 use flexion_train::script::Script;
 use flexion_train::spec::Language;
+use flexion_train::{Words, learn_part};
 use std::collections::HashSet;
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
@@ -54,14 +55,14 @@ fn grammars<'s>(lang: &Language, script: &'s Script, data: &[PosData]) -> Vec<Le
     .expect("marks");
     lang.parts
         .iter()
-        .zip(data)
-        .map(|(part, d)| {
-            let mut shape = flexion_train::shape(lang, part).expect("shape");
-            shape.marks = marks.as_ref().map(|m| m.of(part.name));
-            learn::learn(
+        .map(|part| {
+            let shape = flexion_train::shape(lang, part).expect("shape");
+            let words = Words::of(lang, part, data, |_| true);
+            learn_part(
                 script.orthography(),
                 &shape,
-                &d.lexemes,
+                &words,
+                marks.as_ref(),
                 Settings::default(),
             )
         })
@@ -169,10 +170,12 @@ fn a_word_beyond_the_words_learned_from_still_gives_its_dictionary_forms() {
     let (part, d) = lang.parts.iter().zip(&data).next().expect("nouns");
     let mut shape = flexion_train::shape(&lang, part).expect("shape");
     shape.max_words = Some(4);
-    let learned = learn::learn(
+    let words = Words::of(&lang, part, &data, |_| true);
+    let learned = learn_part(
         script.orthography(),
         &shape,
-        &d.lexemes,
+        &words,
+        None,
         Settings::default(),
     );
     let g = &learned.grammar;

@@ -6,7 +6,7 @@ use flexion_train::eval;
 use flexion_train::extract::{Lexeme, PosData};
 use flexion_train::measure::{self, Kind};
 use flexion_train::spec::Language;
-use flexion_train::{choose, learn, script};
+use flexion_train::{choose, script};
 use std::collections::BTreeMap;
 
 /// Cells scored by at least this many forms count for `weak`.
@@ -44,32 +44,23 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
         .find(|(p, _)| p.name == o.pos)
         .ok_or("no such part of speech")?;
     let names = crate::cell_names(lang, part)?;
-    let mut shape = flexion_train::shape(lang, part)?;
+    let shape = flexion_train::shape(lang, part)?;
     let script = script::Script::new(&lang.spelling);
-    shape.marks = flexion_train::marks(
-        lang,
-        &script.orthography(),
-        data,
-        |l: &Lexeme| eval::bucket(&l.key) != o.fold,
-        choose::Settings::default(),
-    )?
-    .map(|m| m.of(part.name));
-    let train: Vec<Lexeme> = d
-        .lexemes
-        .iter()
-        .filter(|l| eval::bucket(&l.key) != o.fold)
-        .cloned()
-        .collect();
+    let trained = |l: &Lexeme| eval::bucket(&l.key) != o.fold;
+    let settings = choose::Settings::default();
+    let marks = flexion_train::marks(lang, &script.orthography(), data, trained, settings)?;
+    let train = flexion_train::Words::of(lang, part, data, trained);
     let test: Vec<&Lexeme> = d
         .lexemes
         .iter()
         .filter(|l| eval::bucket(&l.key) == o.fold && l.source == 0)
         .collect();
-    let learned = learn::learn(
+    let learned = flexion_train::learn_part(
         script.orthography(),
         &shape,
         &train,
-        choose::Settings::default(),
+        marks.as_ref(),
+        settings,
     );
     let g = &learned.grammar;
     let orth = &g.orthography;

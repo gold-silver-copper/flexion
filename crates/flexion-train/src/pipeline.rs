@@ -127,8 +127,9 @@ pub fn left_out(
     orthography: flexion::Orthography<'_>,
     stated: &str,
     shape: &learn::Shape,
-    every: &[Lexeme],
+    every: &crate::Words,
     own: &[&Lexeme],
+    marks: Option<&crate::marks::LanguageMarks>,
     settings: Settings,
 ) -> (Vec<eval::Outcome>, bool) {
     let by_tenth = every.len() > LEAVE_ONE;
@@ -145,8 +146,8 @@ pub fn left_out(
     }
     let mut out = Vec::new();
     for (key, words) in &folds {
-        let rest: Vec<Lexeme> = every.iter().filter(|l| fold(l) != *key).cloned().collect();
-        let learned = learn::learn(orthography, shape, &rest, settings);
+        let rest = every.only(|l| fold(l) != *key);
+        let learned = crate::learn_part(orthography, shape, &rest, marks, settings);
         let left: Vec<&Lexeme> = words.iter().filter_map(|&i| own.get(i).copied()).collect();
         let outcomes = eval::outcomes(
             &learned.grammar,
@@ -189,28 +190,15 @@ pub fn build<'s>(
     for (part, d) in lang.parts.iter().zip(data) {
         let shape = crate::shape(lang, part)?;
         let parts = crate::parts(lang, part)?;
-        let taught = crate::teachers(lang, part, data, |_| true);
-        let every: Vec<Lexeme> = d.lexemes.iter().chain(taught).cloned().collect();
-        let train: Vec<Lexeme> = every
-            .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::TEST)
-            .cloned()
-            .collect();
-        let fit: Vec<Lexeme> = train
-            .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::DEV)
-            .cloned()
-            .collect();
+        let every = crate::Words::of(lang, part, data, |_| true);
+        let train = every.only(|l| eval::bucket(&l.key) != eval::TEST);
+        let fit = train.only(|l| eval::bucket(&l.key) != eval::DEV);
         let dev: Vec<&Lexeme> = train
             .iter()
             .filter(|l| eval::bucket(&l.key) == eval::DEV && l.source == 0)
             .collect();
-        let learned = |lexemes: &[Lexeme], marks: &Option<crate::marks::LanguageMarks>| {
-            let shape = learn::Shape {
-                marks: marks.as_ref().map(|m| m.of(part.name)),
-                ..shape.clone()
-            };
-            learn::learn(orthography, &shape, lexemes, settings)
+        let learned = |words: &crate::Words, marks: &Option<crate::marks::LanguageMarks>| {
+            crate::learn_part(orthography, &shape, words, marks.as_ref(), settings)
         };
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
         // seen it.
@@ -303,12 +291,15 @@ pub fn build<'s>(
             &shipped.seen,
         );
         let small = small(part, test.len()).then(|| {
-            let shape = learn::Shape {
-                marks: all_marks.as_ref().map(|m| m.of(part.name)),
-                ..shape.clone()
-            };
-            let (outcomes, by_tenth) =
-                left_out(orthography, stated, &shape, &every, &own, settings);
+            let (outcomes, by_tenth) = left_out(
+                orthography,
+                stated,
+                &shape,
+                &every,
+                &own,
+                all_marks.as_ref(),
+                settings,
+            );
             Small {
                 closed: part.closed(),
                 left_out: Score::of(&outcomes),

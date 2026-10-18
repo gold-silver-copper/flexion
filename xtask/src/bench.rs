@@ -6,7 +6,7 @@
 
 use flexion_train::extract::{Lexeme, PosData};
 use flexion_train::spec::Language;
-use flexion_train::{choose, eval, learn, script};
+use flexion_train::{choose, eval, script};
 use std::fmt::Write as _;
 use std::time::Instant;
 
@@ -27,26 +27,17 @@ pub fn run(
         if pos.is_some_and(|p| p != part.name) {
             continue;
         }
-        let mut shape = flexion_train::shape(lang, part)?;
-        shape.marks = flexion_train::marks(
-            lang,
-            &script.orthography(),
-            data,
-            |l: &Lexeme| eval::bucket(&l.key) != eval::TEST,
-            choose::Settings::default(),
-        )?
-        .map(|m| m.of(part.name));
-        let train: Vec<Lexeme> = d
-            .lexemes
-            .iter()
-            .filter(|l| eval::bucket(&l.key) != eval::TEST)
-            .cloned()
-            .collect();
-        let learned = learn::learn(
+        let shape = flexion_train::shape(lang, part)?;
+        let trained = |l: &Lexeme| eval::bucket(&l.key) != eval::TEST;
+        let settings = choose::Settings::default();
+        let marks = flexion_train::marks(lang, &script.orthography(), data, trained, settings)?;
+        let train = flexion_train::Words::of(lang, part, data, trained);
+        let learned = flexion_train::learn_part(
             script.orthography(),
             &shape,
             &train,
-            choose::Settings::default(),
+            marks.as_ref(),
+            settings,
         );
         let g = &learned.grammar;
         let group = |held: bool| -> Vec<&str> {

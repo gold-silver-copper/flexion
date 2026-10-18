@@ -192,32 +192,77 @@ pub fn marks(
     Ok(marks::learn(orthography, &spelled, &voters, settings))
 }
 
-/// The words of the part of speech `part` learns from too (see
-/// [`spec::PartOfSpeech::learns_from`]) that `keep` keeps, but those it has
-/// itself.
-pub fn teachers<'d>(
-    lang: &Language,
-    part: &PartOfSpeech,
-    data: &'d [extract::PosData],
-    keep: impl Fn(&extract::Lexeme) -> bool,
-) -> Vec<&'d extract::Lexeme> {
-    let Some((_, host)) = part
-        .learns_from
-        .and_then(|h| lang.parts.iter().zip(data).find(|(p, _)| p.name == h))
-    else {
-        return Vec::new();
+/// The words a part of speech's grammar learns from, those a `keep` keeps:
+/// its own, then those of the part it learns from too (see
+/// [`spec::PartOfSpeech::learns_from`]) but those it has itself.
+/// [`learn_part`] learns from nothing else, so every grammar of a part
+/// learns from the same words the shipped one does.
+#[derive(Clone)]
+pub struct Words(Vec<extract::Lexeme>);
+
+impl Words {
+    pub fn of(
+        lang: &Language,
+        part: &PartOfSpeech,
+        data: &[extract::PosData],
+        keep: impl Fn(&extract::Lexeme) -> bool,
+    ) -> Words {
+        let lexemes = |name: &str| {
+            (lang.parts.iter().zip(data))
+                .find(|(p, _)| p.name == name)
+                .map_or(&[][..], |(_, d)| d.lexemes.as_slice())
+        };
+        let own = lexemes(part.name);
+        let keys: HashSet<&str> = own.iter().map(|l| l.key.as_str()).collect();
+        let taught = part.learns_from.map_or(&[][..], lexemes);
+        Words(
+            (own.iter().filter(|l| keep(l)))
+                .chain(
+                    taught
+                        .iter()
+                        .filter(|l| keep(l) && !keys.contains(l.key.as_str())),
+                )
+                .cloned()
+                .collect(),
+        )
+    }
+
+    /// Those of these words `keep` keeps.
+    #[must_use]
+    pub fn only(&self, keep: impl Fn(&extract::Lexeme) -> bool) -> Words {
+        Words(self.0.iter().filter(|l| keep(l)).cloned().collect())
+    }
+
+    /// Change each word (cells taken out of its table, to learn without
+    /// them).
+    pub fn edit(&mut self, edit: impl FnMut(&mut extract::Lexeme)) {
+        self.0.iter_mut().for_each(edit);
+    }
+}
+
+impl std::ops::Deref for Words {
+    type Target = [extract::Lexeme];
+
+    fn deref(&self) -> &[extract::Lexeme] {
+        &self.0
+    }
+}
+
+/// A part of speech's grammar (its `shape`), learned from `words` with the
+/// language's marks model, if it has one: the one way every grammar is
+/// learned.
+pub fn learn_part<'s>(
+    orthography: flexion::Orthography<'s>,
+    shape: &learn::Shape,
+    words: &Words,
+    marks: Option<&marks::LanguageMarks>,
+    settings: choose::Settings,
+) -> learn::Learned<'s> {
+    let shape = learn::Shape {
+        marks: marks.map(|m| m.of(&shape.part)),
+        ..shape.clone()
     };
-    let own: HashSet<&str> = lang
-        .parts
-        .iter()
-        .zip(data)
-        .find(|(p, _)| p.name == part.name)
-        .map(|(_, d)| d.lexemes.iter().map(|l| l.key.as_str()).collect())
-        .unwrap_or_default();
-    host.lexemes
-        .iter()
-        .filter(|l| keep(l) && !own.contains(l.key.as_str()))
-        .collect()
+    learn::learn(orthography, &shape, words, settings)
 }
 
 /// The cells of a part of speech's principal parts after its lemma.

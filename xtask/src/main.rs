@@ -368,24 +368,6 @@ const POOLED: usize = 50_000;
 /// (none the READMEs', none another's sharpness tenth).
 const POOL: [u64; 4] = [2, 4, 6, 8];
 
-/// The training words of a part of speech for a `try`: every word outside
-/// tenth `fold`, `share` percent of them, with `thin` percent of each
-/// table's cells taken out.
-fn training(d: &PosData, o: &TryOptions, lemma_cell: Option<usize>) -> Vec<Lexeme> {
-    d.lexemes
-        .iter()
-        .filter(|l| eval::bucket(&l.key) != o.fold && measure::kept(&l.key, o.share))
-        .filter(|l| !o.main_only || l.source == 0)
-        .cloned()
-        .map(|mut l| {
-            if o.thin > 0 {
-                measure::thin(&mut l, o.thin, lemma_cell);
-            }
-            l
-        })
-        .collect()
-}
-
 /// The cells `spec` names: `auto` (every other cell of the default probe's
 /// stem group) or `auto-all` (all of it but one witness; see
 /// [`measure::default_probe`]), or cells by number (`12`, `12-20`) or name
@@ -586,19 +568,18 @@ fn try_tenth(
         if only.is_some_and(|o| o != part.name) {
             continue;
         }
-        let mut shape = flexion_train::shape(lang, part)?;
+        let shape = flexion_train::shape(lang, part)?;
         let names = cell_names(lang, part)?;
-        let mut train = training(d, o, shape.lemma_cell);
-        let taught = flexion_train::teachers(lang, part, data, |l| {
-            eval::bucket(&l.key) != o.fold && (!o.main_only || l.source == 0)
-        });
-        if !taught.is_empty() {
+        let mut train = flexion_train::Words::of(lang, part, data, trained);
+        let taught = (train.len()).saturating_sub(d.lexemes.iter().filter(|l| trained(l)).count());
+        if taught > 0 {
             println!(
-                "  learning from {} words of {} too",
-                taught.len(),
+                "  learning from {taught} words of {} too",
                 part.learns_from.unwrap_or_default()
             );
-            train.extend(taught.into_iter().cloned());
+        }
+        if o.thin > 0 {
+            train.edit(|l| measure::thin(l, o.thin, shape.lemma_cell));
         }
         if o.share < 100 || o.thin > 0 {
             println!(
@@ -623,13 +604,13 @@ fn try_tenth(
                 held.len(),
                 shown.join(", ")
             );
-            for l in &mut train {
+            train.edit(|l| {
                 for &c in &held {
                     if let Some(f) = l.cells.get_mut(c) {
                         f.clear();
                     }
                 }
-            }
+            });
         }
         let is_held = |c: usize| held.contains(&c);
         // The sharpness, fitted on the dev tenth with a grammar that hasn't
@@ -637,20 +618,15 @@ fn try_tenth(
         let (sharpness, trust) = if o.quick {
             (1.0, flexion::Trust::FULL)
         } else {
-            let fit: Vec<Lexeme> = train
-                .iter()
-                .filter(|l| eval::bucket(&l.key) != dev)
-                .cloned()
-                .collect();
+            let fit = train.only(|l| eval::bucket(&l.key) != dev);
             let dev: Vec<&Lexeme> = train
                 .iter()
                 .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
-            let shape = learn::Shape {
-                marks: fit_marks.as_ref().map(|m| m.of(part.name)),
-                ..shape.clone()
-            };
-            let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
+            let orthography = script.orthography();
+            let fitted =
+                flexion_train::learn_part(orthography, &shape, &fit, fit_marks.as_ref(), settings);
+            let g = fitted.grammar;
             eval::fit_sharpness(&g, &g.orthography, &dev)
         };
         let test: Vec<&Lexeme> = d
@@ -659,8 +635,13 @@ fn try_tenth(
             .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
-        shape.marks = train_marks.as_ref().map(|m| m.of(part.name));
-        let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
+        let mut learned = flexion_train::learn_part(
+            script.orthography(),
+            &shape,
+            &train,
+            train_marks.as_ref(),
+            settings,
+        );
         learned.grammar.sharpness = sharpness;
         learned.grammar.trust = trust;
         let secs = t.elapsed().as_secs_f64();
@@ -1054,20 +1035,21 @@ fn try_tenth(
         if !o.again && flexion_train::pipeline::small(part, test.len()) {
             // A small part of speech is judged on its own words, learned from
             // every word, with a new word's score beside: each left out in turn.
-            let kept = |l: &Lexeme| !o.main_only || l.source == 0;
-            let mut every: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
-            every.extend(
-                flexion_train::teachers(lang, part, data, kept)
-                    .into_iter()
-                    .cloned(),
-            );
+            let every =
+                flexion_train::Words::of(lang, part, data, |l| !o.main_only || l.source == 0);
             let mut seen = std::collections::HashSet::new();
             let own: Vec<&Lexeme> = d
                 .lexemes
                 .iter()
                 .filter(|l| l.source == 0 && seen.insert(l.key.as_str()))
                 .collect();
-            let all = learn::learn(script.orthography(), &shape, &every, settings);
+            let all = flexion_train::learn_part(
+                script.orthography(),
+                &shape,
+                &every,
+                train_marks.as_ref(),
+                settings,
+            );
             let reproduced = eval::score(
                 &all.grammar,
                 &all.grammar.orthography,
@@ -1082,6 +1064,7 @@ fn try_tenth(
                 &shape,
                 &every,
                 &own,
+                train_marks.as_ref(),
                 settings,
             );
             let new = eval::Score::of(&left);
@@ -1776,17 +1759,17 @@ fn inspect(
         lang.parts.get(pi).ok_or("part")?,
         data.get(pi).ok_or("data")?,
     );
-    let mut shape = flexion_train::shape(lang, part)?;
+    let shape = flexion_train::shape(lang, part)?;
     let kept = |l: &Lexeme| holdout.is_none_or(|fold| eval::bucket(&l.key) != fold);
     let settings = choose::Settings::default();
-    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?
-        .map(|m| m.of(part.name));
-    let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
-    let learned = learn::learn(
+    let marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
+    let words = flexion_train::Words::of(lang, part, &data, kept);
+    let learned = flexion_train::learn_part(
         script.orthography(),
         &shape,
-        &lexemes,
-        choose::Settings::default(),
+        &words,
+        marks.as_ref(),
+        settings,
     );
     let g = &learned.grammar;
     if let Some(words) = word {

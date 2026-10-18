@@ -126,7 +126,7 @@ struct Analyzed {
     stems: Vec<String>,
 }
 
-pub fn learn<'s>(
+pub(crate) fn learn<'s>(
     orthography: Orthography<'s>,
     shape: &Shape,
     lexemes: &[Lexeme],
