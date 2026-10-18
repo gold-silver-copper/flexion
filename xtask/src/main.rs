@@ -1925,21 +1925,25 @@ fn inspect(
         }
         return Ok(());
     }
-    let total: u32 = g.paradigms.iter().map(|p| p.words).sum();
+    let total: u32 = g.paradigm.root().map_or(0, flexion::Rule::total);
     let mut cum = 0u32;
-    for (i, p) in g.paradigms.iter().enumerate().take(40) {
-        cum += p.words;
+    for ((i, p), words) in g.paradigms.iter().enumerate().zip(0u16..).take(40) {
+        let words = g.words(words);
+        cum += words;
         println!(
             "{:4} {:6} {:5.1}% {:16} {} | {}",
             i,
-            p.words,
+            words,
             100.0 * f64::from(cum) / f64::from(total.max(1)),
             p.name,
             p.lemma,
             p.table.replace('\t', " ")
         );
     }
-    let singles = g.paradigms.iter().filter(|p| p.words == 1).count();
+    let singles = (0..g.paradigms.len())
+        .filter_map(|p| u16::try_from(p).ok())
+        .filter(|&p| g.words(p) == 1)
+        .count();
     println!("paradigms {}, with one word {singles}", g.paradigms.len());
     if let Some(a) = &g.accent {
         for p in a.patterns.iter().take(30) {

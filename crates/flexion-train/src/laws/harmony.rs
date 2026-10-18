@@ -1202,7 +1202,6 @@ mod tests {
             .collect();
         let paradigm = |name: &'static str, table: &'static str| Paradigm {
             name: Cow::Borrowed(name),
-            words: 0,
             lemma: Cow::Borrowed("~"),
             parent: None,
             inherent: Cow::Borrowed(&[]),

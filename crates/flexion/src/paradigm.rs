@@ -13,10 +13,9 @@ use std::borrow::Cow;
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Paradigm<'a> {
-    /// The commonest word that inflects this way (`книга`).
+    /// The commonest word that inflects this way (`книга`). How many words
+    /// do is the paradigm choice's (see [`crate::Grammar::words`]).
     pub name: Cow<'a, str>,
-    /// How many of the dictionary's words inflect this way.
-    pub words: u32,
     /// The lemma's pattern: which words can inflect this way at all
     /// (`~а` takes words in `-а`).
     pub lemma: Cow<'a, str>,

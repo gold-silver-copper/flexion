@@ -539,6 +539,12 @@ struct Inflection<'g, 'a, 'w, P: Label> {
 }
 
 impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
+    /// How many of the dictionary's words follow `paradigm`: its count in
+    /// the paradigm choice's rule every word reads (the empty ending).
+    pub fn words(&self, paradigm: P) -> u32 {
+        self.paradigm.root().map_or(0, |r| r.count(paradigm))
+    }
+
     /// The forms of `cell` for `lemma`, likeliest first, given what the
     /// caller knows (readings that disagree with it are dropped, unless all
     /// do).
@@ -715,8 +721,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .paradigms
                 .iter()
                 .enumerate()
-                .max_by_key(|(i, p)| (p.words, std::cmp::Reverse(*i)))
-                .and_then(|(i, p)| Some((P::from_index(i)?, p)))
+                .filter_map(|(i, p)| Some((i, P::from_index(i)?, p)))
+                .max_by_key(|&(i, value, _)| (self.words(value), std::cmp::Reverse(i)))
+                .map(|(_, value, p)| (value, p))
         {
             inflections.push(Inflection {
                 reading: Reading {
@@ -1576,7 +1583,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .iter()
                 .enumerate()
                 .filter(|(_, p)| agrees(p))
-                .filter_map(|(i, p)| Some((P::from_index(i)?, p.words.max(1))))
+                .filter_map(|(i, _)| P::from_index(i))
+                .map(|p| (p, self.words(p).max(1)))
                 .collect();
             let total: f64 = fitting.iter().map(|&(_, n)| f64::from(n)).sum();
             readings = fitting

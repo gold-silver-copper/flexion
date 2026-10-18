@@ -263,7 +263,6 @@ mod tests {
         };
         let paradigm = |table: &'static str, stems: &'static str, parent| crate::Paradigm {
             name: Cow::Borrowed("λυω"),
-            words: 1,
             lemma: Cow::Borrowed("~ω"),
             parent,
             inherent: Cow::Borrowed(&[]),

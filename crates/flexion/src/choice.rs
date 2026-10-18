@@ -133,6 +133,12 @@ pub fn by_ending(a: &str, b: &str) -> std::cmp::Ordering {
 }
 
 impl<'a, L: Label> Choice<'a, L> {
+    /// The rule with the empty ending, which covers every word (rules are
+    /// sorted by ending: it comes first).
+    pub fn root(&self) -> Option<&Rule<'a, L>> {
+        self.rules.first().filter(|r| r.ending.is_empty())
+    }
+
     /// The values the dictionary lists for `word` (several for homographs).
     pub fn listed<'s>(&'s self, word: &'s str) -> impl Iterator<Item = L> + 's {
         let start = self.exceptions.partition_point(|(w, _)| w.as_ref() < word);

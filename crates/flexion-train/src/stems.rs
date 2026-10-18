@@ -653,10 +653,11 @@ pub struct Tables<'s> {
 
 /// The slots of `slot_of` (each cell's), named after their cells (`names`),
 /// and the ending tables of `paradigms` over them: the distinct ones, most
-/// words first, each named after the paradigm with most words building the
-/// slot with it.
+/// words first (each paradigm's `words`), each named after the paradigm
+/// with most words building the slot with it.
 pub fn tables<'s>(
     paradigms: &[flexion::Paradigm<'_>],
+    words: &[u32],
     slot_of: &[Option<u16>],
     names: &[String],
     lemma_cell: Option<usize>,
@@ -707,7 +708,7 @@ pub fn tables<'s>(
     // with most words).
     let mut found: Vec<Vec<Found<'_>>> = vec![Vec::new(); count];
     let mut of: Vec<Vec<Option<(usize, String)>>> = Vec::with_capacity(paradigms.len());
-    for p in paradigms {
+    for (p, &n) in paradigms.iter().zip(words) {
         let mut mine = Vec::with_capacity(count);
         for (s, list) in cells.iter().enumerate() {
             let patterns: Vec<Option<std::borrow::Cow<'_, str>>> =
@@ -724,8 +725,8 @@ pub fn tables<'s>(
                     }
                 };
                 let t = tables.get_mut(at)?;
-                t.1 += p.words;
-                t.2 = t.2.max((p.words, p.name.as_ref()));
+                t.1 += n;
+                t.2 = t.2.max((n, p.name.as_ref()));
                 Some((at, stem))
             });
             mine.push(entry);
@@ -1107,7 +1108,6 @@ mod tests {
         }];
         let mut paradigms = vec![flexion::Paradigm {
             name: std::borrow::Cow::Borrowed("lūx"),
-            words: 10,
             lemma: std::borrow::Cow::Borrowed("~x"),
             parent: None,
             inherent: std::borrow::Cow::Borrowed(&[]),

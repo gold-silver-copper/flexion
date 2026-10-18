@@ -1259,7 +1259,6 @@ fn twins<'s>(
         let table: Vec<String> = p.table.split('\t').map(mark).collect();
         Paradigm {
             name: Cow::Owned(format!("{}{ALTERNATES}", p.name)),
-            words: 0,
             lemma: Cow::Owned(format!("{}{ALTERNATES}", p.lemma)),
             parent: None,
             inherent: Cow::Owned(p.inherent.to_vec()),
@@ -3063,7 +3062,6 @@ pub(crate) fn drop_empty<'s>(
         .iter()
         .filter_map(|&old| {
             let mut p = kept.get_mut(old)?.take()?;
-            p.words = count.get(old).copied().unwrap_or(0);
             p.name = Cow::Owned(p.name.into_owned());
             Some(p)
         })

@@ -76,7 +76,8 @@ pub fn run(lang: &Language, data: &[PosData], o: &Options<'_>) -> Result<(), Str
     let words: BTreeMap<&str, u32> = g
         .paradigms
         .iter()
-        .map(|p| (p.name.as_ref(), p.words))
+        .zip(0u16..)
+        .map(|(p, i)| (p.name.as_ref(), g.words(i)))
         .collect();
     let size = |p: &str| words.get(p).copied().unwrap_or(0);
     // Per cell: (forms, right); and every wrong answer.

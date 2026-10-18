@@ -742,8 +742,12 @@ pub fn learn<'s>(
         }
     }
     trace.mark("derived cells");
+    let words: Vec<u32> = (0..grammar.paradigms.len())
+        .map(|p| grammar.words(u16::try_from(p).unwrap_or(u16::MAX)))
+        .collect();
     let built = crate::stems::tables(
         &grammar.paradigms,
+        &words,
         &slot_of,
         &shape.names,
         shape.lemma_cell,
@@ -2453,7 +2457,6 @@ fn paradigms<'s>(
             .collect();
         Some(Paradigm {
             name: Cow::Owned(name(words, &chosen, s)),
-            words: n,
             lemma: Cow::Owned(lemma.clone()),
             parent: None,
             inherent: Cow::Borrowed(&[]),
@@ -4263,7 +4266,6 @@ mod tests {
         // after it, `~ь` after a vowel (the stem's last piece their `с`).
         let paradigm = |name: &str, lemma: &str, cells: &[&str]| Paradigm {
             name: Cow::Owned(name.to_string()),
-            words: 10,
             lemma: Cow::Owned(lemma.to_string()),
             parent: None,
             inherent: Cow::Borrowed(&[]),
@@ -4360,7 +4362,6 @@ mod tests {
         // form of its plural.
         let paradigm = |name: &str, cells: &[&str]| Paradigm {
             name: Cow::Owned(name.to_string()),
-            words: 10,
             lemma: Cow::Borrowed("~"),
             parent: None,
             inherent: Cow::Borrowed(&[]),
@@ -4443,7 +4444,6 @@ mod tests {
         // A word no word ends like (`Zebra`) stays where it is.
         let paradigm = |name: &str, lemma: &str, cells: &[&str]| Paradigm {
             name: Cow::Owned(name.to_string()),
-            words: 3,
             lemma: Cow::Owned(lemma.to_string()),
             parent: None,
             inherent: Cow::Borrowed(&[]),

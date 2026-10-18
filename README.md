@@ -403,14 +403,14 @@ from them, `~` for the stem, `derived` for a cell it takes from another. A parad
 
 ```rust
     // Приём: 37,690 words (указ, зонт, кот, зонтик, бортник, бочаг).
-    declension!("приём", 37690, "~", [gender: Masculine];
+    declension!("приём", "~", [gender: Masculine];
     stem pl: "~- like приём";
     stem gen_sg: "~- like приём";
     nom: "~", _;
     noun_second_case: derived, _;
     ),
     // Полнота: 12,546 words (собака, буява, былица, масленица, царица, вата). Like Приём, except in 2 cells: gen_ pl, noun_second_case loc.
-    declension!("полнота", 12546, "~а", [gender: Feminine], like Приём;
+    declension!("полнота", "~а", [gender: Feminine], like Приём;
     stem lemma: "~- like полнота";
     stem gen_sg: "~- like полнота";
     gen_: _, "~";
@@ -544,7 +544,7 @@ a name in `-y` takes `-s` (`Kennedys`), where a noun takes `-ies`:
         "ey" => [Hopewell 1366] regular,
 
     // Hopewell: 39,422 words (december, april, june, september, october, november).
-    declension!("hopewell", 39422, "~";
+    declension!("hopewell", "~";
     proper_noun: "~", "~s";
     ),
 ```
