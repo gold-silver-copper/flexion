@@ -859,17 +859,6 @@ fn commonest(values: &BTreeMap<char, u32>) -> Option<char> {
         .map(|(&v, _)| v)
 }
 
-/// Whether `exceptions` in `n` are few enough to state a rule over them
-/// (Yang's tolerance: at most n/ln n; with fewer than three, none).
-#[allow(clippy::cast_precision_loss)]
-pub(super) fn tolerated(n: u32, exceptions: u32) -> bool {
-    if n < 3 {
-        exceptions == 0
-    } else {
-        f64::from(exceptions) <= f64::from(n) / f64::from(n).ln()
-    }
-}
-
 /// Whether `pool`'s class is, on `tier`, the tier letter it reads itself
 /// (of two tier letters at least).
 fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>, adjacent: bool) -> bool {
@@ -919,7 +908,7 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
                 .collect();
             let fits = |seen: &[Seen<'_>]| {
                 let (n, wrong) = judged(&units(seen, tier, adjacent), &map);
-                n > 0 && tolerated(n, wrong)
+                n > 0 && flexion::tolerates(f64::from(n), f64::from(wrong))
             };
             outputs.len() > 1
                 && outputs.iter().all(|c| pool.letters.contains(c))
@@ -954,7 +943,8 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
             .filter_map(|(t, values)| {
                 let n: u32 = values.values().sum();
                 let most = values.values().max().copied().unwrap_or(0);
-                (!tolerated(n, n - most)).then_some((n - most, (*t)?))
+                (!flexion::tolerates(f64::from(n), f64::from(n - most)))
+                    .then_some((n - most, (*t)?))
             })
             .max_by(|a, b| a.0.cmp(&b.0).then(b.1.cmp(&a.1)))
             .map(|(_, t)| t)
@@ -1063,7 +1053,10 @@ fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<ch
             let n: u32 = mine.iter().flat_map(|v| v.values()).sum();
             let decides = mine.iter().all(|v| {
                 let n: u32 = v.values().sum();
-                tolerated(n, n - v.values().max().copied().unwrap_or(0))
+                flexion::tolerates(
+                    f64::from(n),
+                    f64::from(n - v.values().max().copied().unwrap_or(0)),
+                )
             });
             let (e, m) = (wrong(&bys), held(&more));
             if decides && n as usize >= MIN_WORDS && e < errors && m <= missed {

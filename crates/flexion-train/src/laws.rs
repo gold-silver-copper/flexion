@@ -1740,7 +1740,7 @@ fn sifted(
         let keeps = |&[[fixed, held_fixed], [broken, held_broken]]: &[[u32; 2]; 2]| {
             fixed > 0
                 && f64::from(broken) <= BREAKS * f64::from(fixed)
-                && harmony::tolerated(held_fixed + held_broken, held_broken)
+                && flexion::tolerates(f64::from(held_fixed + held_broken), f64::from(held_broken))
         };
         let before = map.len();
         let mut tallies = tally.iter();
@@ -1824,9 +1824,9 @@ impl Tried {
         let (fixed, broken) = (dev(&self.fixed), dev(&self.broken));
         cells >= MIN_CELLS
             && pays(words, breaks, self.fixed.len())
-            && harmony::tolerated(
-                u32::try_from(fixed + broken).unwrap_or(u32::MAX),
-                u32::try_from(broken).unwrap_or(u32::MAX),
+            && flexion::tolerates(
+                f64::from(u32::try_from(fixed + broken).unwrap_or(u32::MAX)),
+                f64::from(u32::try_from(broken).unwrap_or(u32::MAX)),
             )
     }
 }

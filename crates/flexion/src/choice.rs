@@ -122,9 +122,11 @@ impl<'a, L: Label> Rule<'a, L> {
 }
 
 /// Whether a rule over `n` words with `exceptions` of them going against it
-/// is productive: at most `n / ln n` exceptions (Yang 2016).
+/// is productive: at most `n / ln n` exceptions (Yang 2016); under three
+/// words, none (there `n / ln n` is `n` or more: two words split one and
+/// one would be a rule).
 pub fn tolerates(n: f64, exceptions: f64) -> bool {
-    exceptions <= if n < 2.0 { 0.0 } else { n / n.ln() }
+    exceptions <= if n < 3.0 { 0.0 } else { n / n.ln() }
 }
 
 /// The order of rules: by ending, read from its last letter back.
@@ -327,5 +329,8 @@ mod tests {
         assert!(!tolerates(1000.0, 146.0));
         // Polish masculine genitives in -a and -u: neither is productive.
         assert!(!tolerates(1353.0, 516.0));
+        // Two words split one and one: no rule.
+        assert!(!tolerates(2.0, 1.0));
+        assert!(tolerates(2.0, 0.0));
     }
 }
