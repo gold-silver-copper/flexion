@@ -901,8 +901,15 @@ fn grammar_files(
         "::{self, *}"
     };
     let r = format!(
-        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides (`#` is the word's start: `#lux` is the word `lux`), giving each\n//! {one} with how many of the dictionary's words with that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
-        choice_const(&one.to_uppercase(), ty, "words", &g.paradigm, name_of)
+        "//! Which {one} a word takes. The rule with the longest ending the word has\n//! decides (`#` is the word's start: `#lux` is the word `lux`), giving each\n//! {one} with how many of the dictionary's words with that ending follow it; the words no rule gets right are listed. A rule is\n//! kept only when it pays for itself: it must describe the words it covers\n//! in fewer bits than the broader rule does, by more than the rule costs.\n//! A rule is regular (productive) unless marked `unsettled`.\n\nuse super::paradigms::{ty}{uses};\nuse flexion::Choice;\n\n{}",
+        choice_const(
+            &one.to_uppercase(),
+            ty,
+            "words",
+            REGULAR,
+            &g.paradigm,
+            name_of
+        )
     );
     files.push((format!("{dir}/rules.rs"), r));
 
@@ -925,7 +932,7 @@ fn grammar_files(
         };
         let r = format!(
             "//! A word's {lower}, which decides which cell some cells' forms come from\n//! (see `relations.rs`). The rule with the longest ending the word has\n//! decides; the words no rule gets right are listed.\n\nuse crate::{f}{uses};\nuse flexion::Choice;\n\n{}",
-            choice_const(&f.to_uppercase(), f, "words", choice, value),
+            choice_const(&f.to_uppercase(), f, "words", "rules", choice, value),
             lower = f.to_lowercase()
         );
         files.push((format!("{dir}/{}.rs", snake(f)), r));
@@ -954,7 +961,7 @@ fn grammar_files(
                 }
                 format!(
                     "rules {{\n{}    }} listed {{{listed}}}",
-                    rules(choice, |l| l.to_string())
+                    rules(choice, false, |l| l.to_string())
                 )
             });
             let (analogy, why) = rel
@@ -1000,9 +1007,14 @@ fn grammar_files(
     if let Some(c) = &g.compound {
         let r = format!(
             "//! How a word written in parts inflects: only its last part (`Last`), each\n//! part as the word it is (`Each`), or only its first, the rest kept\n//! (`First`). The first part decides, with what joins it (`-` or a\n//! space, last), by its ending (the longest rule it has), or as listed.\n\nuse flexion::Choice;\nuse flexion::Compound::{{self, *}};\n\n{}",
-            choice_const("COMPOUND", "Compound", "first parts", c, |l| format!(
-                "{l:?}"
-            ))
+            choice_const(
+                "COMPOUND",
+                "Compound",
+                "first parts",
+                "rules",
+                c,
+                |l| format!("{l:?}")
+            )
         );
         let mut r = r;
         if !g.kept.is_empty() {
@@ -1460,9 +1472,10 @@ fn accent_file(
     s
 }
 
-/// `choice` as `flexion::choice!` reads it, opening with `block` (`rules` or
-/// `starts`): its rules and its listed words, each value written by `name`,
-/// and the macro left open for the caller to close.
+/// `choice` as `flexion::choice!` reads it, opening with `block` (`rules`,
+/// `regular rules` or `starts`; see [`rules`]): its rules and its listed
+/// words, each value written by `name`, and the macro left open for the
+/// caller to close.
 fn choice_macro<L: flexion::Label>(
     block: &str,
     choice: &flexion::Choice<'_, L>,
@@ -1470,32 +1483,42 @@ fn choice_macro<L: flexion::Label>(
 ) -> String {
     format!(
         "flexion::choice! {{\n    {block} {{\n{}    }}\n    listed {{\n{}    }}\n",
-        rules(choice, &name),
+        rules(choice, block == REGULAR, &name),
         listed(choice, &name)
     )
 }
 
-/// A choice's rules as `flexion::choice!` reads them, a line each, each
-/// value written by `name`.
-fn rules<L: flexion::Label>(choice: &flexion::Choice<'_, L>, name: impl Fn(L) -> String) -> String {
+/// The block of rules that are regular unless marked `unsettled`: the
+/// paradigm choice's, where most are.
+const REGULAR: &str = "regular rules";
+
+/// A choice's rules as `flexion::choice!` reads them, a line each (flush
+/// left, as every line of a choice's payload), each value written by
+/// `name`, and marked `regular` where it is, or `unsettled` where it isn't
+/// when `regular` is the default.
+fn rules<L: flexion::Label>(
+    choice: &flexion::Choice<'_, L>,
+    regular: bool,
+    name: impl Fn(L) -> String,
+) -> String {
     let rule = |r: &flexion::Rule<'_, L>| {
         let counts: Vec<String> = r
             .counts
             .iter()
             .map(|&(l, n)| format!("{} {n}", name(l)))
             .collect();
-        let regular = if r.regular { " regular" } else { "" };
-        format!(
-            "        {} => [{}]{regular},\n",
-            Lit(&r.ending),
-            counts.join(", ")
-        )
+        let mark = match (regular, r.regular) {
+            (false, true) => " regular",
+            (true, false) => " unsettled",
+            _ => "",
+        };
+        format!("{} => [{}]{mark},\n", Lit(&r.ending), counts.join(", "))
     };
     choice.rules.iter().map(rule).collect()
 }
 
 /// A choice's listed words, grouped by what they are (each value once, its
-/// words in order after it, as many to a line as fit).
+/// words in order after it, as many to a line as fit), flush left.
 fn listed<L: flexion::Label>(
     choice: &flexion::Choice<'_, L>,
     name: impl Fn(L) -> String,
@@ -1506,28 +1529,33 @@ fn listed<L: flexion::Label>(
     }
     let mut out = String::new();
     for (l, words) in by.values() {
-        let _ = writeln!(out, "        {} => [", name(*l));
-        let mut line = String::from("           ");
+        let _ = writeln!(out, "{} => [", name(*l));
+        // A line holds what fits in 100 characters indented by 12.
+        let mut line = String::new();
+        let mut width = 11;
         for w in words {
             let word = format!(" {},", Lit(w));
-            if line.chars().count() + word.chars().count() > 100 {
-                let _ = writeln!(out, "{line}");
-                line = String::from("           ");
+            if width + word.chars().count() > 100 {
+                let _ = writeln!(out, "{}", line.trim_start());
+                line.clear();
+                width = 11;
             }
+            width += word.chars().count();
             line.push_str(&word);
         }
-        let _ = writeln!(out, "{line}");
-        out.push_str("        ],\n");
+        let _ = writeln!(out, "{}", line.trim_start());
+        out.push_str("],\n");
     }
     out
 }
 
 /// A choice as a constant `name` of `ty`s, saying how many rules and listed
-/// `words` it has.
+/// `words` it has, its rules in `block` (see [`choice_macro`]).
 fn choice_const<L: flexion::Label>(
     name: &str,
     ty: &str,
     words: &str,
+    block: &str,
     choice: &flexion::Choice<'_, L>,
     value: impl Fn(L) -> String,
 ) -> String {
@@ -1535,7 +1563,7 @@ fn choice_const<L: flexion::Label>(
         "/// {} rules and {} listed {words}.\npub(super) const {name}: Choice<'static, {ty}> = {}}};\n",
         thousands(choice.rules.len()),
         thousands(choice.exceptions.len()),
-        choice_macro("rules", choice, value)
+        choice_macro(block, choice, value)
     )
 }
 

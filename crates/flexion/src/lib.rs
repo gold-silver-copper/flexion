@@ -174,9 +174,11 @@ impl fmt::Display for UnknownValue {
 impl std::error::Error for UnknownValue {}
 
 /// A [`Choice`] written as data: its rules (`ending => [value count, …]`,
-/// sorted by ending read backwards; or `starts { beginning => … }`, sorted)
-/// and its listed words, grouped by value (`value => [word, …]`; sorted
-/// into one list when the crate is built).
+/// sorted by ending read backwards; or `starts { beginning => … }`, sorted),
+/// each marked `regular` where it is ([`Rule::regular`]; under `regular
+/// rules`, each is regular unless marked `unsettled`), and its listed
+/// words, grouped by value (`value => [word, …]`; sorted into one list when
+/// the crate is built).
 ///
 /// ```
 /// use flexion::{Choice, choice};
@@ -192,6 +194,15 @@ impl std::error::Error for UnknownValue {}
 /// assert_eq!(GENDER.read("мама", 2.0, |_| true)[0].value, 1);
 /// assert_eq!(GENDER.read("папа", 2.0, |_| true)[0].value, 0);
 /// assert_eq!(GENDER.read("дядя", 2.0, |_| true)[0].value, 0);
+///
+/// static DECLENSION: Choice<'static, u8> = choice! {
+///     regular rules {
+///         "" => [0 120, 1 80] unsettled,
+///         "а" => [1 75, 0 5],
+///     }
+///     listed {}
+/// };
+/// assert!(!DECLENSION.rules[0].regular && DECLENSION.rules[1].regular);
 /// ```
 #[macro_export]
 macro_rules! choice {
@@ -199,24 +210,32 @@ macro_rules! choice {
         rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
         listed { $( $listed:tt => [ $( $word:literal ),* $(,)? ] ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $listed => [ $( $word ),* ] ),*)
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($crate::choice!(@regular $($regular)?)) ),*; $( $listed => [ $( $word ),* ] ),*)
+    };
+    (
+        regular rules { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($unsettled:ident)? ),* $(,)? }
+        listed { $( $listed:tt => [ $( $word:literal ),* $(,)? ] ),* $(,)? }
+    ) => {
+        $crate::choice!(@ $crate::Side::End; $( $ending => [ $( $value $count ),* ] ($crate::choice!(@unsettled $($unsettled)?)) ),*; $( $listed => [ $( $word ),* ] ),*)
     };
     (
         starts { $( $ending:literal => [ $( $value:tt $count:literal ),* $(,)? ] $($regular:ident)? ),* $(,)? }
         listed { $( $listed:tt => [ $( $word:literal ),* $(,)? ] ),* $(,)? }
     ) => {
-        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ($($regular)?) ),*; $( $listed => [ $( $word ),* ] ),*)
+        $crate::choice!(@ $crate::Side::Start; $( $ending => [ $( $value $count ),* ] ($crate::choice!(@regular $($regular)?)) ),*; $( $listed => [ $( $word ),* ] ),*)
     };
     (@regular regular) => { true };
     (@regular) => { false };
-    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($($regular:ident)?) ),*; $( $listed:tt => [ $( $word:literal ),* ] ),*) => {
+    (@unsettled unsettled) => { false };
+    (@unsettled) => { true };
+    (@ $side:expr; $( $ending:literal => [ $( $value:tt $count:literal ),* ] ($regular:expr) ),*; $( $listed:tt => [ $( $word:literal ),* ] ),*) => {
         $crate::Choice {
             side: $side,
             rules: ::std::borrow::Cow::Borrowed(&[ $(
                 $crate::Rule {
                     ending: ::std::borrow::Cow::Borrowed($ending),
                     counts: ::std::borrow::Cow::Borrowed(&[ $( ($value, $count) ),* ]),
-                    regular: $crate::choice!(@regular $($regular)?),
+                    regular: $regular,
                 }
             ),* ]),
             exceptions: ::std::borrow::Cow::Borrowed($crate::__listed!( $( $listed => [ $( $word ),* ] ),* )),
