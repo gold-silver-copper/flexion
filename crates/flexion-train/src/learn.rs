@@ -4106,6 +4106,54 @@ mod tests {
     }
 
     #[test]
+    fn an_elided_preverb_is_proven_by_the_join_the_runtime_writes() {
+        // Greek `ὑπακούω`, `ὑπήκουον` (Smyth §§ 435, 450): the rest loses
+        // its breathing behind the preverb, and its augment is temporal,
+        // a vowel lengthened, not one put before it.
+        let greek = Orthography {
+            vowels: "αεηιουω",
+            initial: "\u{313}\u{314}",
+            ..Orthography::default()
+        };
+        let rests = [
+            ("ἀκουω", "ἠκουον"),
+            ("ἐλαυνω", "ἠλαυνον"),
+            ("ὀνομαζω", "ὠνομαζον"),
+            ("ὁπλιζω", "ὡπλιζον"),
+        ];
+        let key = |w: &str| -> String {
+            use unicode_normalization::UnicodeNormalization;
+            w.nfd()
+                .filter(|c| !greek.initial.contains(*c))
+                .nfc()
+                .collect()
+        };
+        let words: Vec<Word> = rests
+            .iter()
+            .flat_map(|(present, imperfect)| {
+                let compound = |f: &str| greek.initial_only(&format!("ὑπ{f}"));
+                let mut base = word(present, &[present, imperfect]);
+                base.key = key(present);
+                let mut whole = word(
+                    &compound(present),
+                    &[&compound(present), &compound(imperfect)],
+                );
+                whole.key = key(&whole.letters);
+                [base, whole]
+            })
+            .collect();
+        let (found, bases) = prefixes(&words, &greek);
+        let found = found.map(|p| {
+            p.prefixes
+                .iter()
+                .map(|p| (p.letters.to_string(), p.inseparable))
+                .collect::<Vec<_>>()
+        });
+        assert_eq!(found, Some(vec![("υπ".to_string(), 4)]));
+        assert_eq!(bases.len(), 4);
+    }
+
+    #[test]
     fn a_word_in_parts_whose_rest_stays_inflects_its_first() {
         // Finnish `pyytää anteeksi`: every form keeps `anteeksi`, after a
         // phrase (`en pyydä anteeksi`) or before a participle (`anteeksi
