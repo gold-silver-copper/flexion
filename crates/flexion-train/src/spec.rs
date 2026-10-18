@@ -34,6 +34,7 @@ pub struct Language {
 
 /// Another Wiktionary edition's entries for the language (the Russian
 /// Wiktionary's Russian entries), from its own Kaikki dump.
+#[derive(Debug)]
 pub struct Edition {
     /// Kaikki's edition code: `ru` for ru.wiktionary.org.
     pub code: &'static str,
@@ -64,6 +65,7 @@ impl Edition {
 }
 
 /// A grammatical feature and its values.
+#[derive(Debug)]
 pub struct Feature {
     pub name: &'static str,
     pub doc: &'static str,
@@ -75,6 +77,7 @@ pub struct Feature {
 }
 
 /// One feature value and the Wiktionary tags that mean it.
+#[derive(Debug)]
 pub struct Value {
     pub name: &'static str,
     /// Short name for cell names (`gen`, `pl`).
@@ -96,7 +99,7 @@ pub enum FormSource {
 
 /// A part of speech: the Wiktionary parts of speech it reads and the cell
 /// groups it generates.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct PartOfSpeech {
     pub name: &'static str,
     pub doc: &'static str,
@@ -137,9 +140,22 @@ pub struct PartOfSpeech {
     pub learns_from: Option<&'static str>,
 }
 
+impl PartOfSpeech {
+    /// Whether it is a closed class: every Wiktionary part of speech it
+    /// reads is one (pronouns, determiners, articles, numerals,
+    /// adpositions, conjunctions, particles). Its words are few and mostly
+    /// their own: it is judged on them (see [`crate::pipeline::small`]).
+    pub fn closed(&self) -> bool {
+        const CLOSED: [&str; 8] = [
+            "pron", "det", "article", "num", "postp", "prep", "conj", "particle",
+        ];
+        !self.wiktionary.is_empty() && self.wiktionary.iter().all(|p| CLOSED.contains(p))
+    }
+}
+
 /// A group of cells that is one generated function: the product of its
 /// features' values.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Group {
     /// Function name in the generated crate.
     pub name: &'static str,
@@ -209,6 +225,14 @@ pub struct Spelling {
     pub long_vowels: &'static str,
     /// Marks that make a vowel long (the macron, the iota subscript).
     pub long_marks: &'static str,
+    /// Marks that state a vowel's length both ways, long and short (Greek
+    /// macron and breve). Where the dictionary writes short vowels marked
+    /// too, a vowel it writes with neither has its length unstated: a
+    /// second score, compatible with stated length, accepts an answer that
+    /// marks it where the word's table doesn't state it otherwise (see
+    /// [`crate::eval::TableLength`]). Empty: a bare vowel is short, or
+    /// length isn't written.
+    pub stated_length: &'static str,
     /// Diphthongs short at a word's end (`αι`, `οι`).
     pub short_finals: Vec<&'static str>,
     /// Endings whose last syllable counts short, long as it is (Greek
@@ -226,6 +250,7 @@ pub struct Spelling {
 }
 
 /// How form tags rank forms.
+#[derive(Debug)]
 pub struct TagPolicy {
     /// Forms carrying any of these are dropped.
     pub exclude: Vec<&'static str>,

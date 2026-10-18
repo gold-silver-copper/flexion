@@ -78,29 +78,14 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Agreement::*;
-        use crate::Case::*;
-        let cell = match self {
-            Cell::Form(Nominative, Masculine) => cell::NOM_M,
-            Cell::Form(Nominative, Feminine) => cell::NOM_F,
-            Cell::Form(Nominative, Neuter) => cell::NOM_N,
-            Cell::Form(Nominative, Plural) => cell::NOM_PL,
-            Cell::Form(Genitive, Masculine) => cell::GEN_M,
-            Cell::Form(Genitive, Feminine) => cell::GEN_F,
-            Cell::Form(Genitive, Neuter) => cell::GEN_N,
-            Cell::Form(Genitive, Plural) => cell::GEN_PL,
-            Cell::Form(Dative, Masculine) => cell::DAT_M,
-            Cell::Form(Dative, Feminine) => cell::DAT_F,
-            Cell::Form(Dative, Neuter) => cell::DAT_N,
-            Cell::Form(Dative, Plural) => cell::DAT_PL,
-            Cell::Form(Accusative, Masculine) => cell::ACC_M,
-            Cell::Form(Accusative, Feminine) => cell::ACC_F,
-            Cell::Form(Accusative, Neuter) => cell::ACC_N,
-            Cell::Form(Accusative, Plural) => cell::ACC_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, agreement) => {
+                cell::NOM_M as usize + case as usize * 4 + agreement as usize
+            }
+        }
     }
 }
 

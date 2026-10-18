@@ -135,7 +135,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     sharpness: 0.75,
     trust: flexion::Trust {
         regular: 1.0,
-        unsettled: 0.9189271,
+        unsettled: 0.91434735,
         unattested: 1.0,
     },
 };
@@ -150,99 +150,17 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Case::*;
-        use crate::Number::*;
-        use crate::Possessed::*;
-        use crate::Possessor::*;
-        let cell = match self {
-            Cell::Form(Nominative, Singular) => cell::NOM_SG,
-            Cell::Form(Nominative, Plural) => cell::NOM_PL,
-            Cell::Form(Accusative, Singular) => cell::ACC_SG,
-            Cell::Form(Accusative, Plural) => cell::ACC_PL,
-            Cell::Form(Dative, Singular) => cell::DAT_SG,
-            Cell::Form(Dative, Plural) => cell::DAT_PL,
-            Cell::Form(Locative, Singular) => cell::LOC_SG,
-            Cell::Form(Locative, Plural) => cell::LOC_PL,
-            Cell::Form(Ablative, Singular) => cell::ABL_SG,
-            Cell::Form(Ablative, Plural) => cell::ABL_PL,
-            Cell::Form(Genitive, Singular) => cell::GEN_SG,
-            Cell::Form(Genitive, Plural) => cell::GEN_PL,
-            Cell::Possessive(Nominative, Single, FirstSingular) => cell::POSSESSIVE_NOM_ONE_1SG,
-            Cell::Possessive(Nominative, Single, SecondSingular) => cell::POSSESSIVE_NOM_ONE_2SG,
-            Cell::Possessive(Nominative, Single, ThirdSingular) => cell::POSSESSIVE_NOM_ONE_3SG,
-            Cell::Possessive(Nominative, Single, FirstPlural) => cell::POSSESSIVE_NOM_ONE_1PL,
-            Cell::Possessive(Nominative, Single, SecondPlural) => cell::POSSESSIVE_NOM_ONE_2PL,
-            Cell::Possessive(Nominative, Single, ThirdPlural) => cell::POSSESSIVE_NOM_ONE_3PL,
-            Cell::Possessive(Nominative, Many, FirstSingular) => cell::POSSESSIVE_NOM_MANY_1SG,
-            Cell::Possessive(Nominative, Many, SecondSingular) => cell::POSSESSIVE_NOM_MANY_2SG,
-            Cell::Possessive(Nominative, Many, ThirdSingular) => cell::POSSESSIVE_NOM_MANY_3SG,
-            Cell::Possessive(Nominative, Many, FirstPlural) => cell::POSSESSIVE_NOM_MANY_1PL,
-            Cell::Possessive(Nominative, Many, SecondPlural) => cell::POSSESSIVE_NOM_MANY_2PL,
-            Cell::Possessive(Nominative, Many, ThirdPlural) => cell::POSSESSIVE_NOM_MANY_3PL,
-            Cell::Possessive(Accusative, Single, FirstSingular) => cell::POSSESSIVE_ACC_ONE_1SG,
-            Cell::Possessive(Accusative, Single, SecondSingular) => cell::POSSESSIVE_ACC_ONE_2SG,
-            Cell::Possessive(Accusative, Single, ThirdSingular) => cell::POSSESSIVE_ACC_ONE_3SG,
-            Cell::Possessive(Accusative, Single, FirstPlural) => cell::POSSESSIVE_ACC_ONE_1PL,
-            Cell::Possessive(Accusative, Single, SecondPlural) => cell::POSSESSIVE_ACC_ONE_2PL,
-            Cell::Possessive(Accusative, Single, ThirdPlural) => cell::POSSESSIVE_ACC_ONE_3PL,
-            Cell::Possessive(Accusative, Many, FirstSingular) => cell::POSSESSIVE_ACC_MANY_1SG,
-            Cell::Possessive(Accusative, Many, SecondSingular) => cell::POSSESSIVE_ACC_MANY_2SG,
-            Cell::Possessive(Accusative, Many, ThirdSingular) => cell::POSSESSIVE_ACC_MANY_3SG,
-            Cell::Possessive(Accusative, Many, FirstPlural) => cell::POSSESSIVE_ACC_MANY_1PL,
-            Cell::Possessive(Accusative, Many, SecondPlural) => cell::POSSESSIVE_ACC_MANY_2PL,
-            Cell::Possessive(Accusative, Many, ThirdPlural) => cell::POSSESSIVE_ACC_MANY_3PL,
-            Cell::Possessive(Dative, Single, FirstSingular) => cell::POSSESSIVE_DAT_ONE_1SG,
-            Cell::Possessive(Dative, Single, SecondSingular) => cell::POSSESSIVE_DAT_ONE_2SG,
-            Cell::Possessive(Dative, Single, ThirdSingular) => cell::POSSESSIVE_DAT_ONE_3SG,
-            Cell::Possessive(Dative, Single, FirstPlural) => cell::POSSESSIVE_DAT_ONE_1PL,
-            Cell::Possessive(Dative, Single, SecondPlural) => cell::POSSESSIVE_DAT_ONE_2PL,
-            Cell::Possessive(Dative, Single, ThirdPlural) => cell::POSSESSIVE_DAT_ONE_3PL,
-            Cell::Possessive(Dative, Many, FirstSingular) => cell::POSSESSIVE_DAT_MANY_1SG,
-            Cell::Possessive(Dative, Many, SecondSingular) => cell::POSSESSIVE_DAT_MANY_2SG,
-            Cell::Possessive(Dative, Many, ThirdSingular) => cell::POSSESSIVE_DAT_MANY_3SG,
-            Cell::Possessive(Dative, Many, FirstPlural) => cell::POSSESSIVE_DAT_MANY_1PL,
-            Cell::Possessive(Dative, Many, SecondPlural) => cell::POSSESSIVE_DAT_MANY_2PL,
-            Cell::Possessive(Dative, Many, ThirdPlural) => cell::POSSESSIVE_DAT_MANY_3PL,
-            Cell::Possessive(Locative, Single, FirstSingular) => cell::POSSESSIVE_LOC_ONE_1SG,
-            Cell::Possessive(Locative, Single, SecondSingular) => cell::POSSESSIVE_LOC_ONE_2SG,
-            Cell::Possessive(Locative, Single, ThirdSingular) => cell::POSSESSIVE_LOC_ONE_3SG,
-            Cell::Possessive(Locative, Single, FirstPlural) => cell::POSSESSIVE_LOC_ONE_1PL,
-            Cell::Possessive(Locative, Single, SecondPlural) => cell::POSSESSIVE_LOC_ONE_2PL,
-            Cell::Possessive(Locative, Single, ThirdPlural) => cell::POSSESSIVE_LOC_ONE_3PL,
-            Cell::Possessive(Locative, Many, FirstSingular) => cell::POSSESSIVE_LOC_MANY_1SG,
-            Cell::Possessive(Locative, Many, SecondSingular) => cell::POSSESSIVE_LOC_MANY_2SG,
-            Cell::Possessive(Locative, Many, ThirdSingular) => cell::POSSESSIVE_LOC_MANY_3SG,
-            Cell::Possessive(Locative, Many, FirstPlural) => cell::POSSESSIVE_LOC_MANY_1PL,
-            Cell::Possessive(Locative, Many, SecondPlural) => cell::POSSESSIVE_LOC_MANY_2PL,
-            Cell::Possessive(Locative, Many, ThirdPlural) => cell::POSSESSIVE_LOC_MANY_3PL,
-            Cell::Possessive(Ablative, Single, FirstSingular) => cell::POSSESSIVE_ABL_ONE_1SG,
-            Cell::Possessive(Ablative, Single, SecondSingular) => cell::POSSESSIVE_ABL_ONE_2SG,
-            Cell::Possessive(Ablative, Single, ThirdSingular) => cell::POSSESSIVE_ABL_ONE_3SG,
-            Cell::Possessive(Ablative, Single, FirstPlural) => cell::POSSESSIVE_ABL_ONE_1PL,
-            Cell::Possessive(Ablative, Single, SecondPlural) => cell::POSSESSIVE_ABL_ONE_2PL,
-            Cell::Possessive(Ablative, Single, ThirdPlural) => cell::POSSESSIVE_ABL_ONE_3PL,
-            Cell::Possessive(Ablative, Many, FirstSingular) => cell::POSSESSIVE_ABL_MANY_1SG,
-            Cell::Possessive(Ablative, Many, SecondSingular) => cell::POSSESSIVE_ABL_MANY_2SG,
-            Cell::Possessive(Ablative, Many, ThirdSingular) => cell::POSSESSIVE_ABL_MANY_3SG,
-            Cell::Possessive(Ablative, Many, FirstPlural) => cell::POSSESSIVE_ABL_MANY_1PL,
-            Cell::Possessive(Ablative, Many, SecondPlural) => cell::POSSESSIVE_ABL_MANY_2PL,
-            Cell::Possessive(Ablative, Many, ThirdPlural) => cell::POSSESSIVE_ABL_MANY_3PL,
-            Cell::Possessive(Genitive, Single, FirstSingular) => cell::POSSESSIVE_GEN_ONE_1SG,
-            Cell::Possessive(Genitive, Single, SecondSingular) => cell::POSSESSIVE_GEN_ONE_2SG,
-            Cell::Possessive(Genitive, Single, ThirdSingular) => cell::POSSESSIVE_GEN_ONE_3SG,
-            Cell::Possessive(Genitive, Single, FirstPlural) => cell::POSSESSIVE_GEN_ONE_1PL,
-            Cell::Possessive(Genitive, Single, SecondPlural) => cell::POSSESSIVE_GEN_ONE_2PL,
-            Cell::Possessive(Genitive, Single, ThirdPlural) => cell::POSSESSIVE_GEN_ONE_3PL,
-            Cell::Possessive(Genitive, Many, FirstSingular) => cell::POSSESSIVE_GEN_MANY_1SG,
-            Cell::Possessive(Genitive, Many, SecondSingular) => cell::POSSESSIVE_GEN_MANY_2SG,
-            Cell::Possessive(Genitive, Many, ThirdSingular) => cell::POSSESSIVE_GEN_MANY_3SG,
-            Cell::Possessive(Genitive, Many, FirstPlural) => cell::POSSESSIVE_GEN_MANY_1PL,
-            Cell::Possessive(Genitive, Many, SecondPlural) => cell::POSSESSIVE_GEN_MANY_2PL,
-            Cell::Possessive(Genitive, Many, ThirdPlural) => cell::POSSESSIVE_GEN_MANY_3PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, number) => cell::NOM_SG as usize + case as usize * 2 + number as usize,
+            Cell::Possessive(case, possessed, possessor) => {
+                cell::POSSESSIVE_NOM_ONE_1SG as usize
+                    + (case as usize * 2 + possessed as usize) * 6
+                    + possessor as usize
+            }
+        }
     }
 }
 

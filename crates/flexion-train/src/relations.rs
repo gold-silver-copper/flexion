@@ -416,23 +416,36 @@ fn changes<'f>(
 }
 
 /// Each pair's change as the laws can say it: of its own change, that change
-/// with its new ending in class letters (`~ım` → `~Im`), and the source kept
+/// with its new ending in class letters (`~ım` → `~Im`), the source kept
 /// whole with what follows it in class letters (`kitap` → `kitabım`: `~` →
-/// `~Im`, where a law makes `p` `b`), those that make its form (one writing
-/// a class letter through the laws), the one the most pairs can say.
+/// `~Im`, where a law makes `p` `b`), and the source kept whole behind a
+/// literal some pair puts before a form, meeting it through the laws
+/// (`अविष्यध्वे` → `आविष्यध्वम्`: `~े` → `अ‹~म्`, as `भविष्यध्वे` →
+/// `अभविष्यध्वम्`), those that make its form (one writing a class letter
+/// or such a literal through the laws), the one the most pairs can say.
 fn through<'f>(
     pairs: Vec<(&'f str, (String, String))>,
     laws: &sound_law::Program<'_>,
     classes: &Classes,
 ) -> Vec<(&'f str, (String, String))> {
-    use flexion::pattern;
+    use flexion::pattern::{self, FRONT};
     let told = |a: &str, (old, new): &(String, String)| {
         let stems = pattern::bind(old, a)?;
-        Some(match new.chars().any(char::is_uppercase) {
+        Some(match new.chars().any(|c| c.is_uppercase() || c == FRONT) {
             true => pattern::unmarked(&laws.apply(&pattern::fill_marked(new, &stems))).0,
             false => pattern::fill(new, &stems),
         })
     };
+    // The literals pairs put before a form's front (the augment, `अ~`).
+    let mut literals: Vec<String> = pairs
+        .iter()
+        .filter_map(|(_, (old, new))| {
+            let (old_head, new_head) = (old.split_once('~')?.0, new.split_once('~')?.0);
+            (old_head.is_empty() && !new_head.is_empty()).then(|| new_head.to_string())
+        })
+        .collect();
+    literals.sort();
+    literals.dedup();
     let candidates: Vec<Vec<(String, String)>> = pairs
         .iter()
         .map(|(a, ch)| {
@@ -448,6 +461,18 @@ fn through<'f>(
                         .map(|t| (ch.0.clone(), format!("{new_head}~{t}"))),
                 )
                 .collect();
+            // A literal put before the form, or before a front that changes:
+            // through the laws where it meets the source.
+            let fronted: Vec<&str> = match (old_head.is_empty(), new_head.is_empty()) {
+                (true, false) => vec![new_head],
+                (false, _) => literals.iter().map(String::as_str).collect(),
+                (true, true) => Vec::new(),
+            };
+            ways.extend(
+                fronted
+                    .iter()
+                    .map(|l| (format!("~{old_tail}"), format!("{l}{FRONT}~{new_tail}"))),
+            );
             let kept = old_tail.chars().count();
             if !old_tail.is_empty() && new_tail.chars().count() >= kept {
                 let rest: String = new_tail.chars().skip(kept).collect();
@@ -634,6 +659,36 @@ mod tests {
     }
 
     #[test]
+    fn an_augment_meets_the_form_through_the_front_laws() {
+        // Sanskrit: the conditional is the future behind the augment `अ`,
+        // which a vowel-initial form meets through the laws (`अविष्यति`,
+        // `आविष्यत्`): one change, where a vowel no word showed goes too.
+        let words: Vec<Vec<Option<&str>>> = [
+            ["भविष्यति", "अभविष्यत्"],
+            ["करिष्यति", "अकरिष्यत्"],
+            ["गमिष्यति", "अगमिष्यत्"],
+            ["अविष्यति", "आविष्यत्"],
+            ["अशिष्यति", "आशिष्यत्"],
+        ]
+        .iter()
+        .map(|w| w.iter().map(|f| Some(*f)).collect())
+        .collect();
+        let augment = crate::laws::Change::Front {
+            literal: "अ".into(),
+            map: vec![("अ".into(), "आ".into()), ("उ".into(), "औ".into())],
+            plain: Vec::new(),
+        };
+        let laws = crate::laws::compile(&[augment]).expect("a program");
+        let relations = learn(&words, 2, 0, Settings::default(), Some((&laws, &[])));
+        let conditional = relations.iter().find(|r| r.cell == 1).expect("a relation");
+        assert_eq!(conditional.changes.as_ref(), [("~ि".into(), "अ‹~्".into())]);
+        assert_eq!(
+            conditional.told("उक्ष्यति", 2.0, Some(&laws)).map(|t| t.0),
+            Some("औक्ष्यत्".to_string())
+        );
+    }
+
+    #[test]
     fn a_change_is_said_through_the_harmony() {
         // Turkish `-Im` "my": one ending, its vowel the harmony's.
         let words: Vec<Vec<Option<&str>>> = [
@@ -665,6 +720,7 @@ mod tests {
         let harmony = crate::laws::Change::Harmony {
             tier: "eiıaöüou".chars().collect(),
             map,
+            adjacent: false,
         };
         let laws = crate::laws::compile(&[harmony]).expect("a program");
         let classes = [('I', "iıüu".chars().collect())];

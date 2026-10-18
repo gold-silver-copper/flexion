@@ -203,7 +203,7 @@ pub(super) static SLOTS: [Slot<'static>; 5] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 100] = [
+pub(super) static TABLES: [EndingTable<'static>; 95] = [
     // indicative_pres_aff_1sg like polttaa: 2,637 words.
     EndingTable {
         name: Cow::Borrowed("polttaa"),
@@ -243,10 +243,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "\t",
         )),
     },
-    // indicative_pres_aff_1sg like olla: 1,476 words.
+    // indicative_pres_aff_1sg like olla: 1,472 words.
     EndingTable {
         name: Cow::Borrowed("olla"),
-        words: 1476,
+        words: 1472,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~en\t\t~emme\t\t",
@@ -256,10 +256,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "\t",
         )),
     },
-    // indicative_pres_aff_1sg like ohjata: 1,250 words.
+    // indicative_pres_aff_1sg like ohjata: 1,254 words.
     EndingTable {
         name: Cow::Borrowed("ohjata"),
-        words: 1250,
+        words: 1254,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~An\t\t~Amme\t\t",
@@ -308,6 +308,32 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "\t",
         )),
     },
+    // indicative_pres_aff_1sg like murtaa: 92 words.
+    EndingTable {
+        name: Cow::Borrowed("murtaa"),
+        words: 92,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~rAn\t\t~rAmme\t\t",
+            "\t\t\temme ~rA\t\teivät ~rA\t",
+            "~sin\t\t~simme\t\t",
+            "\t",
+            "\t",
+        )),
+    },
+    // indicative_pres_aff_1sg like kieltää: 64 words.
+    EndingTable {
+        name: Cow::Borrowed("kieltää"),
+        words: 64,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~lAn\t\t~lAmme\t\t",
+            "\t\t\temme ~lA\t\teivät ~lA\t",
+            "~sin\t\t~simme\t\t",
+            "\t",
+            "\t",
+        )),
+    },
     // indicative_pres_aff_1sg like asioida: 63 words.
     EndingTable {
         name: Cow::Borrowed("asioida"),
@@ -334,14 +360,14 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "\t",
         )),
     },
-    // indicative_pres_aff_1sg like dubata: 7 words.
+    // indicative_pres_aff_1sg like ojentaa: 25 words.
     EndingTable {
-        name: Cow::Borrowed("dubata"),
-        words: 7,
+        name: Cow::Borrowed("ojentaa"),
+        words: 25,
         slot: 0,
         table: Cow::Borrowed(concat!(
-            "~an\t\t~amme\t\t",
-            "\t\t\temme ~a\t\teivät ~a\t",
+            "~nAn\t\t~nAmme\t\t",
+            "\t\t\temme ~nA\t\teivät ~nA\t",
             "~sin\t\t~simme\t\t",
             "\t",
             "\t",
@@ -367,16 +393,16 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~Uˇ\t~vAtˇ\t",
-            "~mAssAˇ\t~mAsTAˇ\t~mAAnˇ\t~mAllAˇ\t~mAttAˇ\t~mAnˇ\t",
+            "~mAssAˇ\t~mAstAˇ\t~mAAnˇ\t~mAllAˇ\t~mAttAˇ\t~mAnˇ\t",
             "~minenˇ\t",
             "~mAisillAniˇ\t~mAisillAsiˇ\t~mAisillAmmeˇ\t~mAisillAnneˇ\t~mAisillAAnˇ|~mAisillAnsAˇ\t",
-            "~vAˇ\t~mAˇ\t~mATOnˇ\t",
+            "~vAˇ\t~mAˇ\t~mAtOnˇ\t",
         )),
     },
-    // indicative_pres_aff_3sg like olla: 1,376 words.
+    // indicative_pres_aff_3sg like olla: 1,291 words.
     EndingTable {
         name: Cow::Borrowed("olla"),
-        words: 1376,
+        words: 1291,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~V\t~vAt\t",
@@ -386,10 +412,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~vA\t~mA\t~mAtOn\t",
         )),
     },
-    // indicative_pres_aff_3sg like ohjata: 1,051 words.
+    // indicative_pres_aff_3sg like ohjata: 1,063 words.
     EndingTable {
         name: Cow::Borrowed("ohjata"),
-        words: 1051,
+        words: 1063,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~\t~vAt\t",
@@ -407,7 +433,7 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         table: Cow::Borrowed(concat!(
             "~\t~vAt\t",
             "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
-            "~mVnen\t",
+            "~mÄnen\t",
             "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
             "~vA\t~mA\t~mAtOn\t",
         )),
@@ -423,6 +449,19 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~Aminenˇ\t",
             "~AmAisillAniˇ\t~AmAisillAsiˇ\t~AmAisillAmmeˇ\t~AmAisillAnneˇ\t~AmAisillAAnˇ|~AmAisillAnsAˇ\t",
             "~AvAˇ\t~AmAˇ\t~AmAtOnˇ\t",
+        )),
+    },
+    // indicative_pres_aff_3sg like nostaa: 874 words.
+    EndingTable {
+        name: Cow::Borrowed("nostaa"),
+        words: 874,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~aa\t~AvAt\t",
+            "~AmAssA\t~AmAstA\t~AmAAn\t~AmAllA\t~AmAttA\t~AmAn\t",
+            "~Aminen\t",
+            "~AmAisillAni\t~AmAisillAsi\t~AmAisillAmme\t~AmAisillAnne\t~AmAisillAAn|~AmAisillAnsA\t",
+            "~AvA\t~AmA\t~AmAtOn\t",
         )),
     },
     // indicative_pres_aff_3sg like ajatella: 723 words.
@@ -445,19 +484,32 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~U\t~vAt\t",
-            "~mAssA\t~mAsTA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
+            "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
             "~minen\t",
             "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
-            "~vA\t~mA\t~mATOn\t",
+            "~vA\t~mA\t~mAtOn\t",
         )),
     },
-    // indicative_pres_aff_3sg like nostaa: 594 words.
+    // indicative_pres_aff_3sg like kuoria: 465 words.
     EndingTable {
-        name: Cow::Borrowed("nostaa"),
-        words: 594,
+        name: Cow::Borrowed("kuoria"),
+        words: 465,
         slot: 1,
         table: Cow::Borrowed(concat!(
-            "~aa\t~AvAt\t",
+            "~Ä\t~vAt\t",
+            "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
+            "~minen\t",
+            "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
+            "~vA\t~mA\t~mAtOn\t",
+        )),
+    },
+    // indicative_pres_aff_3sg like tiivistää: 404 words.
+    EndingTable {
+        name: Cow::Borrowed("tiivistää"),
+        words: 404,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ää\t~AvAt\t",
             "~AmAssA\t~AmAstA\t~AmAAn\t~AmAllA\t~AmAttA\t~AmAn\t",
             "~Aminen\t",
             "~AmAisillAni\t~AmAisillAsi\t~AmAisillAmme\t~AmAisillAnne\t~AmAisillAAn|~AmAisillAnsA\t",
@@ -477,36 +529,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~vAˇ\t~mAˇ\t~mAtOnˇ\t",
         )),
     },
-    // indicative_pres_aff_3sg like johtaa: 266 words.
-    EndingTable {
-        name: Cow::Borrowed("johtaa"),
-        words: 266,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~aa\t~AvAt\t",
-            "~AmAssA\t~AmAsTA\t~AmAAn\t~AmAllA\t~AmAttA\t~AmAn\t",
-            "~Aminen\t",
-            "~AmAisillAni\t~AmAisillAsi\t~AmAisillAmme\t~AmAisillAnne\t~AmAisillAAn|~AmAisillAnsA\t",
-            "~AvA\t~AmA\t~AmAtOn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like tiivistää: 237 words.
-    EndingTable {
-        name: Cow::Borrowed("tiivistää"),
-        words: 237,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ää\t~AvAt\t",
-            "~AmAssA\t~AmAstA\t~AmAAn\t~AmAllA\t~AmAttA\t~AmAn\t",
-            "~Aminen\t",
-            "~AmAisillAni\t~AmAisillAsi\t~AmAisillAmme\t~AmAisillAnne\t~AmAisillAAn|~AmAisillAnsA\t",
-            "~AvA\t~AmA\t~AmAtOn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like hajota: 197 words.
+    // indicative_pres_aff_3sg like hajota: 189 words.
     EndingTable {
         name: Cow::Borrowed("hajota"),
-        words: 197,
+        words: 189,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~A\t~vAt\t",
@@ -516,30 +542,30 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~vA\t~mA\t~mAtOn\t",
         )),
     },
-    // indicative_pres_aff_3sg like katsoa: 128 words.
-    EndingTable {
-        name: Cow::Borrowed("katsoa"),
-        words: 128,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~O\t~vAt\t",
-            "~mAssA\t~mAsTA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
-            "~minen\t",
-            "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
-            "~vA\t~mA\t~mATOn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like parata: 102 words.
+    // indicative_pres_aff_3sg like parata: 165 words.
     EndingTable {
         name: Cow::Borrowed("parata"),
-        words: 102,
+        words: 165,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~e\t~vAt\t",
             "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
             "~minen\t",
             "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
-            "~vA\t~mA\t~mATOn\t",
+            "~vA\t~mA\t~mAtOn\t",
+        )),
+    },
+    // indicative_pres_aff_3sg like katsoa: 152 words.
+    EndingTable {
+        name: Cow::Borrowed("katsoa"),
+        words: 152,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~O\t~vAt\t",
+            "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
+            "~minen\t",
+            "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
+            "~vA\t~mA\t~mAtOn\t",
         )),
     },
     // indicative_pres_aff_3sg like värähdellä: 74 words.
@@ -562,23 +588,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~|~tsee\t~vAt|~tsevAt\t",
-            "~tsemATOn\t\t~tsemAssA\t~mAsTA\t\t~tsemAAn\t",
+            "~tsemAtOn\t\t~tsemAssA\t~mAstA\t\t~tsemAAn\t",
             "~mAllA\t",
             "~tsemAllA\t~mAttA\t\t~tsemAttA\t~mAn\t",
             "~vA\t~tAessA\t~dessAAn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like tuomita: 48 words.
-    EndingTable {
-        name: Cow::Borrowed("tuomita"),
-        words: 48,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~e\t~vAt\t",
-            "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
-            "~minen\t",
-            "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
-            "~vA\t~mA\t~mAtOn\t",
         )),
     },
     // indicative_pres_aff_3sg like paeta: 44 words.
@@ -591,20 +604,7 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~mAssAˇ\t~mAstAˇ\t~mAAnˇ\t~mAllAˇ\t~mAttAˇ\t~mAnˇ\t",
             "~minenˇ\t",
             "~mAisillAniˇ\t~mAisillAsiˇ\t~mAisillAmmeˇ\t~mAisillAnneˇ\t~mAisillAAnˇ|~mAisillAnsAˇ\t",
-            "~vAˇ\t~mAˇ\t~mATOnˇ\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like lukea: 19 words.
-    EndingTable {
-        name: Cow::Borrowed("lukea"),
-        words: 19,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~e\t~vAt\t",
-            "~mAssA\t~mAsTA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
-            "~minen\t",
-            "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
-            "~vA\t~mA\t~mAtOn\t",
+            "~vAˇ\t~mAˇ\t~mAtOnˇ\t",
         )),
     },
     // indicative_pres_aff_3sg like merkitä: 15 words.
@@ -618,19 +618,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~minen\t",
             "~mäisillAni\t~mäisillAsi\t~mäisillAmme\t~mäisillAnne\t~mäisillAAn|~mäisillAnsA\t",
             "~vä\t~mä\t~mätOn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like kaataa: 14 words.
-    EndingTable {
-        name: Cow::Borrowed("kaataa"),
-        words: 14,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~taa\t~TAvAt\t",
-            "~TAmAssA\t~TAmAsTA\t~TAmAAn\t~TAmAllA\t~TAmAttA\t~TAmAn\t",
-            "~TAminen\t",
-            "~TAmAisillAni\t~TAmAisillAsi\t~TAmAisillAmme\t~TAmAisillAnne\t~TAmAisillAAn|~TAmAisillAnsA\t",
-            "~TAvA\t~TAmA\t~TAmAtOn\t",
         )),
     },
     // indicative_pres_aff_3sg like luoda: 11 words.
@@ -666,23 +653,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~a\t~vAt\t",
-            "~mAssA\t~mAsTA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
+            "~mAssA\t~mAstA\t~mAAn\t~mAllA\t~mAttA\t~mAn\t",
             "~minen\t",
             "~mAisillAni\t~mAisillAsi\t~mAisillAmme\t~mAisillAnne\t~mAisillAAn|~mAisillAnsA\t",
             "~vA\t~mA\t~mAtOn\t",
-        )),
-    },
-    // indicative_pres_aff_3sg like lotota: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("lotota"),
-        words: 3,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~a\t~vat\t",
-            "~massa\t~masta\t~maan\t~malla\t~matta\t~man\t",
-            "~minen\t",
-            "~maisillani\t~maisillasi\t~maisillamme\t~maisillanne\t~maisillaan|~maisillansa\t",
-            "~va\t~ma\t~maton\t",
         )),
     },
     // participle_past_pass like polttaa: 4,377 words.
@@ -747,6 +721,37 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~tAvA\t~tU\t",
         )),
     },
+    // participle_past_pass like ohjata: 1,168 words.
+    EndingTable {
+        name: Cow::Borrowed("ohjata"),
+        words: 1168,
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "\t",
+            "ei ~a\t",
+            "~tiin\t",
+            "ei ~tU\t",
+            "\t",
+            "ei ole ~tU\t",
+            "\t",
+            "ei ollut ~tU\t",
+            "~tAisiin\t",
+            "ei ~tAisi\t",
+            "olisi ~tU\t",
+            "\t",
+            "~tAkOOn\t",
+            "älköön ~tAkO\t",
+            "olkoon ~tU\t",
+            "älköön olko ~tU\t",
+            "~tAneen\t",
+            "ei ~tAne\t",
+            "lienee ~tU\t",
+            "ei liene ~tU\t",
+            "~tAessA\t",
+            "~tAmAn\t",
+            "~tAvA\t~tU\t",
+        )),
+    },
     // participle_past_pass like voida: 935 words.
     EndingTable {
         name: Cow::Borrowed("voida"),
@@ -776,37 +781,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~tAessA\t",
             "~tAmAn\t",
             "~tAvA\t~tU\t",
-        )),
-    },
-    // participle_past_pass like ohjata: 763 words.
-    EndingTable {
-        name: Cow::Borrowed("ohjata"),
-        words: 763,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "\t",
-            "ei ~ta\t",
-            "~ttiin\t",
-            "ei ~ttU\t",
-            "\t",
-            "ei ole ~ttU\t",
-            "\t",
-            "ei ollut ~ttU\t",
-            "~ttAisiin\t",
-            "ei ~ttAisi\t",
-            "olisi ~ttU\t",
-            "\t",
-            "~ttAkOOn\t",
-            "älköön ~ttAkO\t",
-            "olkoon ~ttU\t",
-            "älköön olko ~ttU\t",
-            "~ttAneen\t",
-            "ei ~ttAne\t",
-            "lienee ~ttU\t",
-            "ei liene ~ttU\t",
-            "~ttAessA\t",
-            "~ttAmAn\t",
-            "~tTAvA\t~TTU\t",
         )),
     },
     // participle_past_pass like olla: 667 words.
@@ -871,37 +845,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~tAvAˇ\t~tUˇ\t",
         )),
     },
-    // participle_past_pass like leikata: 408 words.
-    EndingTable {
-        name: Cow::Borrowed("leikata"),
-        words: 408,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "\t",
-            "ei ~a\t",
-            "~tiin\t",
-            "ei ~tU\t",
-            "\t",
-            "ei ole ~tU\t",
-            "\t",
-            "ei ollut ~tU\t",
-            "~tAisiin\t",
-            "ei ~tAisi\t",
-            "olisi ~tU\t",
-            "\t",
-            "~tAkOOn\t",
-            "älköön ~tAkO\t",
-            "olkoon ~tU\t",
-            "älköön olko ~tU\t",
-            "~tAneen\t",
-            "ei ~tAne\t",
-            "lienee ~tU\t",
-            "ei liene ~tU\t",
-            "~tAessA\t",
-            "~tAmAn\t",
-            "~tAvA\t~tU\t",
-        )),
-    },
     // participle_past_pass like epäillä: 352 words.
     EndingTable {
         name: Cow::Borrowed("epäillä"),
@@ -933,35 +876,35 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~tAvA\t~tU\t",
         )),
     },
-    // participle_past_pass like kipata: 200 words.
+    // participle_past_pass like kipata: 271 words.
     EndingTable {
         name: Cow::Borrowed("kipata"),
-        words: 200,
+        words: 271,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "\t",
-            "ei ~taˇ\t",
-            "~ttiinˇ\t",
-            "ei ~ttUˇ\t",
+            "ei ~aˇ\t",
+            "~tiinˇ\t",
+            "ei ~tUˇ\t",
             "\t",
-            "ei ole ~ttUˇ\t",
+            "ei ole ~tUˇ\t",
             "\t",
-            "ei ollut ~ttUˇ\t",
-            "~ttAisiinˇ\t",
-            "ei ~ttAisiˇ\t",
-            "olisi ~ttUˇ\t",
+            "ei ollut ~tUˇ\t",
+            "~tAisiinˇ\t",
+            "ei ~tAisiˇ\t",
+            "olisi ~tUˇ\t",
             "\t",
-            "~ttAkOOnˇ\t",
-            "älköön ~ttAkOˇ\t",
-            "olkoon ~ttUˇ\t",
-            "älköön olko ~ttUˇ\t",
-            "~ttAneenˇ\t",
-            "ei ~ttAneˇ\t",
-            "lienee ~ttUˇ\t",
-            "ei liene ~ttUˇ\t",
-            "~ttAessAˇ\t",
-            "~ttAmAnˇ\t",
-            "~tTAvAˇ\t~TTUˇ\t",
+            "~tAkOOnˇ\t",
+            "älköön ~tAkOˇ\t",
+            "olkoon ~tUˇ\t",
+            "älköön olko ~tUˇ\t",
+            "~tAneenˇ\t",
+            "ei ~tAneˇ\t",
+            "lienee ~tUˇ\t",
+            "ei liene ~tUˇ\t",
+            "~tAessAˇ\t",
+            "~tAmAnˇ\t",
+            "~tAvAˇ\t~tUˇ\t",
         )),
     },
     // participle_past_pass like rundaa: 18 words.
@@ -1119,10 +1062,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~UtAvA\t~UtU\t",
         )),
     },
-    // indicative_past_aff_3sg like voida: 3,527 words.
+    // indicative_past_aff_3sg like voida: 3,523 words.
     EndingTable {
         name: Cow::Borrowed("voida"),
-        words: 3527,
+        words: 3523,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~\t~vAt\t",
@@ -1152,10 +1095,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ~siˇ\tet ~siˇ\tei ~siˇ\temme ~siˇ\t\teivät ~siˇ\t",
         )),
     },
-    // indicative_past_aff_3sg like ohjata: 1,048 words.
+    // indicative_past_aff_3sg like ohjata: 1,060 words.
     EndingTable {
         name: Cow::Borrowed("ohjata"),
-        words: 1048,
+        words: 1060,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~si\t~sivAt\t",
@@ -1174,15 +1117,15 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ~Aisi\tet ~Aisi\tei ~Aisi\temme ~Aisi\t\teivät ~Aisi\t",
         )),
     },
-    // indicative_past_aff_3sg like kuoria: 293 words.
+    // indicative_past_aff_3sg like kuoria: 294 words.
     EndingTable {
         name: Cow::Borrowed("kuoria"),
-        words: 293,
+        words: 294,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~\t~vAt\t",
-            "~sin\t\t~sV\t~sVmme\t\t~sivAt\t",
-            "en ~sV\tet ~sV\tei ~sV\temme ~si\t\teivät ~si\t",
+            "~sin\t\t~sÄ\t~sÄmme\t\t~sivAt\t",
+            "en ~sÄ\tet ~sÄ\tei ~sÄ\temme ~si\t\teivät ~si\t",
         )),
     },
     // indicative_past_aff_3sg like kipata: 271 words.
@@ -1196,10 +1139,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ~isiˇ\tet ~isiˇ\tei ~isiˇ\temme ~isiˇ\t\teivät ~isiˇ\t",
         )),
     },
-    // indicative_past_aff_3sg like hajota: 145 words.
+    // indicative_past_aff_3sg like hajota: 137 words.
     EndingTable {
         name: Cow::Borrowed("hajota"),
-        words: 145,
+        words: 137,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~si\t~sivAt\t",
@@ -1207,15 +1150,15 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ~Aisi|en ~isi\tet ~Aisi|et ~isi\tei ~Aisi|ei ~isi\temme ~Aisi|emme ~isi\tette ~Aisi|ette ~isi\teivät ~Aisi|eivät ~isi\t",
         )),
     },
-    // indicative_past_aff_3sg like sykkiä: 87 words.
+    // indicative_past_aff_3sg like sykkiä: 86 words.
     EndingTable {
         name: Cow::Borrowed("sykkiä"),
-        words: 87,
+        words: 86,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~\t~vAt\t",
-            "~sin\t\t~sV\t~simme\t\t~sivAt\t",
-            "en ~sV\tet ~sV\tei ~sV\temme ~si\t\teivät ~si\t",
+            "~sin\t\t~sÄ\t~simme\t\t~sivAt\t",
+            "en ~sÄ\tet ~sÄ\tei ~sÄ\temme ~si\t\teivät ~si\t",
         )),
     },
     // indicative_past_aff_3sg like asioida: 63 words.
@@ -1258,8 +1201,8 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~ˇ\t~vAtˇ\t",
-            "~sinˇ\t\t~sVˇ\t~sVmmeˇ\t\t~sivAtˇ\t",
-            "en ~sVˇ\tet ~sVˇ\tei ~sVˇ\temme ~siˇ\t\teivät ~siˇ\t",
+            "~sinˇ\t\t~sÄˇ\t~sÄmmeˇ\t\t~sivAtˇ\t",
+            "en ~sÄˇ\tet ~sÄˇ\tei ~sÄˇ\temme ~siˇ\t\teivät ~siˇ\t",
         )),
     },
     // indicative_past_aff_3sg like rundaa: 18 words.
@@ -1269,7 +1212,7 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~s\t~s\t",
-            "~isin\t\t~is\t~TTAis|~ttas|~ttaisiin|~isimme\t\t~is\t",
+            "~isin\t\t~is\t~ttAis|~ttas|~ttaisiin|~isimme\t\t~is\t",
             "en ~is\tet ~is\tei ~is\tei ~ttais|ei ~ttas|emme ~is\tette ~is\tei ~is\t",
         )),
     },
@@ -1339,17 +1282,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ~isi\tet ~isi\tei ~isi\temme ~isi\t\teivät ~isi\t",
         )),
     },
-    // indicative_past_aff_3sg like lotota: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("lotota"),
-        words: 3,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~si\t~sivat\t",
-            "~aisin|~isin\t~aisit|~isit\t~aisi|~isi\t~aisimme|~isimme\t~aisitte|~isitte\t~aisivat|~isivat\t",
-            "en ~aisi|en ~isi\tet ~aisi|et ~isi\tei ~aisi|ei ~isi\temme ~aisi|emme ~isi\tette ~aisi|ette ~isi\teivät ~aisi|eivät ~isi\t",
-        )),
-    },
     // indicative_past_aff_3sg like tarvii: 1 words.
     EndingTable {
         name: Cow::Borrowed("tarvii"),
@@ -1357,8 +1289,8 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
         slot: 3,
         table: Cow::Borrowed(concat!(
             "\t\t",
-            "~sin|~isin\t~sit|~isit\t~sV|~isi\t~sVmme|~isimme\t~sitte|~isitte\t~sivAt|~isivat\t",
-            "en ~sV\tet ~sV\tei ~sV\temme ~si\t\teivät ~si\t",
+            "~sin|~isin\t~sit|~isit\t~sÄ|~isi\t~sÄmme|~isimme\t~sitte|~isitte\t~sivAt|~isivat\t",
+            "en ~sÄ\tet ~sÄ\tei ~sÄ\temme ~si\t\teivät ~si\t",
         )),
     },
     // lemma like polttaa: 1,745 words.
@@ -1417,6 +1349,35 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~essAniˇ\t~essAsiˇ\t~essAmmeˇ\t~essAnneˇ\t~essAAnˇ|~essAnsAˇ\t",
             "~enˇ\t",
             "~nUtˇ\t",
+        )),
+    },
+    // lemma like ohjata: 1,133 words.
+    EndingTable {
+        name: Cow::Borrowed("ohjata"),
+        words: 1133,
+        slot: 4,
+        table: Cow::Borrowed(concat!(
+            "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
+            "olen ~nnUt\tolet ~nnUt\t\t\tolette ~nneet\tovat ~nneet\t",
+            "en ole ~nnUt\t\t\temme ole ~nneet\t\teivät ole ~nneet\t",
+            "\t\t\t\t\tolivat ~nneet\t",
+            "en ollut ~nnUt\t\t\temme olleet ~nneet\t\teivät olleet ~nneet\t",
+            "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimme ~nneet\tolisitte ~nneet\tolisivat ~nneet\t",
+            "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
+            "~tkOOn\t~tkAAmme\t~tkAA\t\t",
+            "älköön ~tkO\tälkäämme ~tkO\tälkää ~tkO\tälkööt ~tkO\t",
+            "olkoon ~nnUt\tolkoot ~nneet\t",
+            "älköön olko ~nnUt\tälkööt olko ~nneet\t",
+            "~nnen\t\t\t\t\t~nnevAt\t",
+            "\t\t\t\t\t\t",
+            "lienen ~nnUt\tlienet ~nnUt\tlienee ~nnUt\tlienemme ~nneet\tlienette ~nneet\tlienevät ~nneet\t",
+            "en liene ~nnUt\t\t\temme liene ~nneet\t\teivät liene ~nneet\t",
+            "~ta\t",
+            "~takseni\t~taksesi\t~taksemme\t~taksenne\t~takseen|~taksensA\t",
+            "~tessA\t",
+            "~tessAni\t~tessAsi\t~tessAmme\t~tessAnne\t~tessAAn|~tessAnsA\t",
+            "~ten\t",
+            "~nnUt\t",
         )),
     },
     // lemma like voida: 935 words.
@@ -1506,35 +1467,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~AnUt\t",
         )),
     },
-    // lemma like ohjata: 763 words.
-    EndingTable {
-        name: Cow::Borrowed("ohjata"),
-        words: 763,
-        slot: 4,
-        table: Cow::Borrowed(concat!(
-            "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
-            "olen ~nnUt\tolet ~nnUt\t\t\tolette ~nneet\tovat ~nneet\t",
-            "en ole ~nnUt\t\t\temme ole ~nneet\t\teivät ole ~nneet\t",
-            "\t\t\t\t\tolivat ~nneet\t",
-            "en ollut ~nnUt\t\t\temme olleet ~nneet\t\teivät olleet ~nneet\t",
-            "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimme ~nneet\tolisitte ~nneet\tolisivat ~nneet\t",
-            "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
-            "~TkOOn\t~TkAAmme\t~TkAA\t\t",
-            "älköön ~TkO\tälkäämme ~TkO\tälkää ~TkO\tälkööt ~TkO\t",
-            "olkoon ~nnUt\tolkoot ~nneet\t",
-            "älköön olko ~nnUt\tälkööt olko ~nneet\t",
-            "~nnen\t\t\t\t\t~nnevAt\t",
-            "\t\t\t\t\t\t",
-            "lienen ~nnUt\tlienet ~nnUt\tlienee ~nnUt\tlienemme ~nneet\tlienette ~nneet\tlienevät ~nneet\t",
-            "en liene ~nnUt\t\t\temme liene ~nneet\t\teivät liene ~nneet\t",
-            "~ta\t",
-            "~takseni\t~taksesi\t~taksemme\t~taksenne\t~takseen|~taksensA\t",
-            "~TessA\t",
-            "~TessAni\t~TessAsi\t~TessAmme\t~TessAnne\t~TessAAn|~TessAnsA\t",
-            "~Ten\t",
-            "~nnUt\t",
-        )),
-    },
     // lemma like olla: 667 words.
     EndingTable {
         name: Cow::Borrowed("olla"),
@@ -1591,6 +1523,35 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~lessAniˇ\t~lessAsiˇ\t~lessAmmeˇ\t~lessAnneˇ\t~lessAAnˇ|~lessAnsAˇ\t",
             "~lenˇ\t",
             "~lUtˇ\t",
+        )),
+    },
+    // lemma like tiivistää: 404 words.
+    EndingTable {
+        name: Cow::Borrowed("tiivistää"),
+        words: 404,
+        slot: 4,
+        table: Cow::Borrowed(concat!(
+            "en ~AnUt\t\t\temme ~Aneet\t\teivät ~Aneet\t",
+            "olen ~änUt\tolet ~änUt\t\t\tolette ~äneet\tovat ~äneet\t",
+            "en ole ~änUt\t\t\temme ole ~äneet\t\teivät ole ~äneet\t",
+            "\t\t\t\t\tolivat ~äneet\t",
+            "en ollut ~änUt\t\t\temme olleet ~äneet\t\teivät olleet ~äneet\t",
+            "olisin ~änUt\tolisit ~änUt\tolisi ~änUt\tolisimme ~äneet\tolisitte ~äneet\tolisivat ~äneet\t",
+            "\t\t\temme olisi ~äneet\t\teivät olisi ~äneet\t",
+            "~AkOOn\t~AkAAmme\t~AkAA\t\t",
+            "älköön ~AkO\tälkäämme ~AkO\tälkää ~AkO\tälkööt ~AkO\t",
+            "olkoon ~änUt\tolkoot ~äneet\t",
+            "älköön olko ~änUt\tälkööt olko ~äneet\t",
+            "~Anen\t\t\t\t\t~AnevAt\t",
+            "\t\t\t\t\t\t",
+            "lienen ~AnUt\tlienet ~AnUt\tlienee ~AnUt\tlienemme ~Aneet\tlienette ~Aneet\tlienevät ~Aneet\t",
+            "en liene ~AnUt\t\t\temme liene ~Aneet\t\teivät liene ~Aneet\t",
+            "~ää\t",
+            "~ääkseni\t~ääksesi\t~ääksemme\t~ääksenne\t~ääkseen|~ääksensA\t",
+            "~AessA\t",
+            "~AessAni\t~AessAsi\t~AessAmme\t~AessAnne\t~AessAAn|~AessAnsA\t",
+            "~Aen\t",
+            "~AnUt\t",
         )),
     },
     // lemma like kypsyä: 400 words.
@@ -1651,39 +1612,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~lUt\t",
         )),
     },
-    // lemma like hajota: 233 words.
-    EndingTable {
-        name: Cow::Borrowed("hajota"),
-        words: 233,
-        slot: 4,
-        table: Cow::Borrowed(concat!(
-            "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
-            "olen ~nnUt\tolet ~nnUt\t\t\tolette ~nneet\tovat ~nneet\t",
-            "en ole ~nnUt\t\t\temme ole ~nneet\t\teivät ole ~nneet\t",
-            "\t\t\t\t\tolivat ~nneet\t",
-            "en ollut ~nnUt\t\t\temme olleet ~nneet\t\teivät olleet ~nneet\t",
-            "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimme ~nneet\tolisitte ~nneet\tolisivat ~nneet\t",
-            "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
-            "~tkOOn\t~tkAAmme\t~tkAA\t\t",
-            "älköön ~tkO\tälkäämme ~tkO\tälkää ~tkO\tälkööt ~tkO\t",
-            "olkoon ~nnUt\tolkoot ~nneet\t",
-            "älköön olko ~nnUt\tälkööt olko ~nneet\t",
-            "~nnen\t\t\t\t\t~nnevAt\t",
-            "\t\t\t\t\t\t",
-            "lienen ~nnUt\tlienet ~nnUt\tlienee ~nnUt\tlienemme ~nneet\tlienette ~nneet\tlienevät ~nneet\t",
-            "en liene ~nnUt\t\t\temme liene ~nneet\t\teivät liene ~nneet\t",
-            "~ta\t",
-            "~takseni\t~taksesi\t~taksemme\t~taksenne\t~takseen|~taksensA\t",
-            "~tessA\t",
-            "~tessAni\t~tessAsi\t~tessAmme\t~tessAnne\t~tessAAn|~tessAnsA\t",
-            "~ten\t",
-            "~nnUt\t",
-        )),
-    },
-    // lemma like kipata: 200 words.
+    // lemma like kipata: 271 words.
     EndingTable {
         name: Cow::Borrowed("kipata"),
-        words: 200,
+        words: 271,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "en ~nnUtˇ\t\t\temme ~nneetˇ\t\teivät ~nneetˇ\t",
@@ -1693,8 +1625,8 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en ollut ~nnUtˇ\t\t\temme olleet ~nneetˇ\t\teivät olleet ~nneetˇ\t",
             "olisin ~nnUtˇ\tolisit ~nnUtˇ\tolisi ~nnUtˇ\tolisimme ~nneetˇ\tolisitte ~nneetˇ\tolisivat ~nneetˇ\t",
             "\t\t\temme olisi ~nneetˇ\t\teivät olisi ~nneetˇ\t",
-            "~TkOOnˇ\t~TkAAmmeˇ\t~TkAAˇ\t\t",
-            "älköön ~TkOˇ\tälkäämme ~TkOˇ\tälkää ~TkOˇ\tälkööt ~TkOˇ\t",
+            "~tkOOnˇ\t~tkAAmmeˇ\t~tkAAˇ\t\t",
+            "älköön ~tkOˇ\tälkäämme ~tkOˇ\tälkää ~tkOˇ\tälkööt ~tkOˇ\t",
             "olkoon ~nnUtˇ\tolkoot ~nneetˇ\t",
             "älköön olko ~nnUtˇ\tälkööt olko ~nneetˇ\t",
             "~nnenˇ\t\t\t\t\t~nnevAtˇ\t",
@@ -1703,68 +1635,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "en liene ~nnUtˇ\t\t\temme liene ~nneetˇ\t\teivät liene ~nneetˇ\t",
             "~taˇ\t",
             "~takseniˇ\t~taksesiˇ\t~taksemmeˇ\t~taksenneˇ\t~takseenˇ|~taksensAˇ\t",
-            "~TessAˇ\t",
-            "~TessAniˇ\t~TessAsiˇ\t~TessAmmeˇ\t~TessAnneˇ\t~TessAAnˇ|~TessAnsAˇ\t",
-            "~Tenˇ\t",
+            "~tessAˇ\t",
+            "~tessAniˇ\t~tessAsiˇ\t~tessAmmeˇ\t~tessAnneˇ\t~tessAAnˇ|~tessAnsAˇ\t",
+            "~tenˇ\t",
             "~nnUtˇ\t",
-        )),
-    },
-    // lemma like leikata: 137 words.
-    EndingTable {
-        name: Cow::Borrowed("leikata"),
-        words: 137,
-        slot: 4,
-        table: Cow::Borrowed(concat!(
-            "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
-            "olen ~nnUt\tolet ~nnUt\t\t\tolette ~nneet\tovat ~nneet\t",
-            "en ole ~nnUt\t\t\temme ole ~nneet\t\teivät ole ~nneet\t",
-            "\t\t\t\t\tolivat ~nneet\t",
-            "en ollut ~nnUt\t\t\temme olleet ~nneet\t\teivät olleet ~nneet\t",
-            "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimme ~nneet\tolisitte ~nneet\tolisivat ~nneet\t",
-            "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
-            "~tkOOn\t~tkAAmme\t~tkAA\t\t",
-            "älköön ~tkO\tälkäämme ~tkO\tälkää ~tkO\tälkööt ~tkO\t",
-            "olkoon ~nnUt\tolkoot ~nneet\t",
-            "älköön olko ~nnUt\tälkööt olko ~nneet\t",
-            "~nnen\t\t\t\t\t~nnevAt\t",
-            "\t\t\t\t\t\t",
-            "lienen ~nnUt\tlienet ~nnUt\tlienee ~nnUt\tlienemme ~nneet\tlienette ~nneet\tlienevät ~nneet\t",
-            "en liene ~nnUt\t\t\temme liene ~nneet\t\teivät liene ~nneet\t",
-            "~ta\t",
-            "~takseni\t~taksesi\t~taksemme\t~taksenne\t~takseen|~taksensA\t",
-            "~TessA\t",
-            "~TessAni\t~TessAsi\t~TessAmme\t~TessAnne\t~TessAAn|~TessAnsA\t",
-            "~Ten\t",
-            "~nnUt\t",
-        )),
-    },
-    // lemma like yletä: 87 words.
-    EndingTable {
-        name: Cow::Borrowed("yletä"),
-        words: 87,
-        slot: 4,
-        table: Cow::Borrowed(concat!(
-            "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
-            "olen ~nnUt\tolet ~nnUt\t\t\tolette ~nneet\tovat ~nneet\t",
-            "en ole ~nnUt\t\t\temme ole ~nneet\t\teivät ole ~nneet\t",
-            "\t\t\t\t\tolivat ~nneet\t",
-            "en ollut ~nnUt\t\t\temme olleet ~nneet\t\teivät olleet ~nneet\t",
-            "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimme ~nneet\tolisitte ~nneet\tolisivat ~nneet\t",
-            "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
-            "~tkOOn\t~tkAAmme\t~tkAA\t\t",
-            "älköön ~tkO\tälkäämme ~tkO\tälkää ~tkO\tälkööt ~tkO\t",
-            "olkoon ~nnUt\tolkoot ~nneet\t",
-            "älköön olko ~nnUt\tälkööt olko ~nneet\t",
-            "~nnen\t\t\t\t\t~nnevAt\t",
-            "\t\t\t\t\t\t",
-            "lienen ~nnUt\tlienet ~nnUt\tlienee ~nnUt\tlienemme ~nneet\tlienette ~nneet\tlienevät ~nneet\t",
-            "en liene ~nnUt\t\t\temme liene ~nneet\t\teivät liene ~nneet\t",
-            "~tä\t",
-            "~täkseni\t~täksesi\t~täksemme\t~täksenne\t~täkseen|~täksensA\t",
-            "~tessA\t",
-            "~tessAni\t~tessAsi\t~tessAmme\t~tessAnne\t~tessAAn|~tessAnsA\t",
-            "~ten\t",
-            "~nnUt\t",
         )),
     },
     // lemma like viedä: 84 words.
@@ -1796,10 +1670,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~nUt\t",
         )),
     },
-    // lemma like sotia: 67 words.
+    // lemma like sotia: 63 words.
     EndingTable {
         name: Cow::Borrowed("sotia"),
-        words: 67,
+        words: 63,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "en ~nUt\t\t\temme ~neet\t\teivät ~neet\t",
@@ -1825,10 +1699,10 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~nUt\t",
         )),
     },
-    // lemma like laueta: 31 words.
+    // lemma like laueta: 32 words.
     EndingTable {
         name: Cow::Borrowed("laueta"),
-        words: 31,
+        words: 32,
         slot: 4,
         table: Cow::Borrowed(concat!(
             "en ~nnUt\t\t\temme ~nneet\t\teivät ~nneet\t",
@@ -1878,9 +1752,38 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~a\t",
             "~ttava\t~nnu\t\t~ttu\t~tes|~tessa\t",
             "~ama\t",
-            "~amATOn\t~an\t~a\t~amas\t~amAssA\t",
+            "~amAtOn\t~an\t~a\t~amas\t~amAssA\t",
             "~amasta\t",
             "~ttaes\t",
+        )),
+    },
+    // lemma like kaataa: 17 words.
+    EndingTable {
+        name: Cow::Borrowed("kaataa"),
+        words: 17,
+        slot: 4,
+        table: Cow::Borrowed(concat!(
+            "en ~AnUt\t\t\temme ~Aneet\t\teivät ~Aneet\t",
+            "olen ~AnUt\tolet ~AnUt\t\t\tolette ~Aneet\tovat ~Aneet\t",
+            "en ole ~AnUt\t\t\temme ole ~Aneet\t\teivät ole ~Aneet\t",
+            "\t\t\t\t\tolivat ~Aneet\t",
+            "en ollut ~AnUt\t\t\temme olleet ~Aneet\t\teivät olleet ~Aneet\t",
+            "olisin ~AnUt\tolisit ~AnUt\tolisi ~AnUt\tolisimm% ~aneet\tolisitte ~Aneet\tolisiva% ~Aneet\t",
+            "\t\t\temme olisi ~Aneet\t\teivät olisi ~Aneet\t",
+            "~AkOOn\t~AkAAmme\t~AkAA\t\t",
+            "älköön ~AkO\tälkäämme ~AkO\tälkää ~AkO\tälkööt ~AkO\t",
+            "olkoon ~AnUt\tolkoot ~Aneet\t",
+            "älköön olko ~AnUt\tälkööt olko ~Aneet\t",
+            "~Anen\t\t\t\t\t~AnevAt\t",
+            "\t\t\t\t\t\t",
+            "lienen ~AnUt\tlienet ~AnUt\tlienee ~AnUt\tlienemme ~Aneet\tlienette ~Aneet\tlienevät ~Aneet\t",
+            "en liene ~AnUt\t\t\temme liene ~Aneet\t\teivät liene ~Aneet\t",
+            "~aa\t",
+            "~aakseni\t~aaksesi\t~aaksemme\t~aaksenne\t~aakseen|~aaksensA\t",
+            "~AessA\t",
+            "~AessAni\t~AessAsi\t~AessAmme\t~AessAnne\t~AessAAn|~AessAnsA\t",
+            "~Aen\t",
+            "~AnUt\t",
         )),
     },
     // lemma like merkitä: 15 words.
@@ -2057,6 +1960,35 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~nyt\t",
         )),
     },
+    // lemma like purkaa: 4 words.
+    EndingTable {
+        name: Cow::Borrowed("purkaa"),
+        words: 4,
+        slot: 4,
+        table: Cow::Borrowed(concat!(
+            "en ~anUt\t\t\temme ~aneet\t\teivät ~aneet\t",
+            "olen ~AnUt\tolet ~AnUt\t\t\tolette ~Aneet\tovat ~Aneet\t",
+            "en ole ~AnUt\t\t\temme ole ~Aneet\t\teivät ole ~Aneet\t",
+            "\t\t\t\t\tolivat ~Aneet\t",
+            "en ollut ~AnUt\t\t\temme olleet ~Aneet\t\teivät olleet ~Aneet\t",
+            "olisin ~AnUt\tolisit ~AnUt\tolisi ~AnUt\tolisimm% ~aneet\tolisitte ~Aneet\tolisiva% ~aneet\t",
+            "\t\t\temme olisi ~Aneet\t\teivät olisi ~Aneet\t",
+            "~akOOn\t~akAAmme\t~akAA\t\t",
+            "älköön ~akO\tälkäämme ~akO\tälkää ~akO\tälkööt ~akO\t",
+            "olkoon ~AnUt\tolkoot ~Aneet\t",
+            "älköön olko ~AnUt\tälkööt olko ~Aneet\t",
+            "~anen\t\t\t\t\t~anevAt\t",
+            "\t\t\t\t\t\t",
+            "lienen ~anUt\tlienet ~anUt\tlienee ~anUt\tlienemme ~aneet\tlienette ~aneet\tlienevät ~aneet\t",
+            "en liene ~anUt\t\t\temme liene ~aneet\t\teivät liene ~aneet\t",
+            "~aa\t",
+            "~aakseni\t~aaksesi\t~aaksemme\t~aaksenne\t~aakseen|~aaksensA\t",
+            "~aessA\t",
+            "~aessAni\t~aessAsi\t~aessAmme\t~aessAnne\t~aessAAn|~aessAnsA\t",
+            "~aen\t",
+            "~anUt\t",
+        )),
+    },
     // lemma like heläjää: 4 words.
     EndingTable {
         name: Cow::Borrowed("heläjää"),
@@ -2070,8 +2002,8 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "\t\t\t\t\t\t",
             "olisin ~nnUt\tolisit ~nnUt\tolisi ~nnUt\tolisimm% ~nneet\tolisitte ~nneet\tolisiva% ~nneet\t",
             "\t\t\temme olisi ~nneet\t\teivät olisi ~nneet\t",
-            "~TkOOn\t~TkAAmme\t~TkAA\t\t",
-            "älköön ~TkO\tälkäämme ~TkO\tälkää ~TkO\tälkööt ~TkO\t",
+            "~tkOOn\t~tkAAmme\t~tkAA\t\t",
+            "älköön ~tkO\tälkäämme ~tkO\tälkää ~tkO\tälkööt ~tkO\t",
             "olkoon ~nnUt\tolkoot ~nneet\t",
             "älköön olko ~nnUt\tälkööt olko ~nneet\t",
             "~nnen\t\t\t\t\t~nnevAt\t",
@@ -2113,35 +2045,6 @@ pub(super) static TABLES: [EndingTable<'static>; 100] = [
             "~UdessAni\t~UdessAsi\t~UdessAmme\t~UdessAnne\t~UdessAAn|~UdessAnsA\t",
             "~Uden\t",
             "~UnUt\t",
-        )),
-    },
-    // lemma like lappaa: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("lappaa"),
-        words: 3,
-        slot: 4,
-        table: Cow::Borrowed(concat!(
-            "en ~AnUt\t\t\temme ~Aneet\t\teivät ~Aneet\t",
-            "olen ~AnUt\tolet ~AnUt\t\t\tolette ~Aneet\tovat ~Aneet\t",
-            "en ole ~AnUt\t\t\temme ole ~Aneet\t\teivät ole ~Aneet\t",
-            "\t\t\t\t\tolivat ~Aneet\t",
-            "en ollut ~AnUt\t\t\temme olleet ~Aneet\t\teivät olleet ~Aneet\t",
-            "olisin ~AnUt\tolisit ~AnUt\tolisi ~AnUt\tolisimm% ~aneet\tolisitte ~Aneet\tolisiva% ~Aneet\t",
-            "\t\t\temme olisi ~Aneet\t\teivät olisi ~Aneet\t",
-            "~AkOOn\t~AkAAmme\t~AkAA\t\t",
-            "älköön ~AkO\tälkäämme ~AkO\tälkää ~AkO\tälkööt ~AkO\t",
-            "olkoon ~AnUt\tolkoot ~Aneet\t",
-            "älköön olko ~AnUt\tälkööt olko ~Aneet\t",
-            "~Anen\t\t\t\t\t~AnevAt\t",
-            "\t\t\t\t\t\t",
-            "lienen ~AnUt\tlienet ~AnUt\tlienee ~AnUt\tlienemme ~Aneet\tlienette ~Aneet\tlienevät ~Aneet\t",
-            "en liene ~AnUt\t\t\temme liene ~Aneet\t\teivät liene ~Aneet\t",
-            "~aa\t",
-            "~aakseni\t~aaksesi\t~aaksemme\t~aaksenne\t~aakseen|~aaksensA\t",
-            "~AessA\t",
-            "~AessAni\t~AessAsi\t~AessAmme\t~AessAnne\t~AessAAn|~AessAnsA\t",
-            "~Aen\t",
-            "~AnUt\t",
         )),
     },
 ];

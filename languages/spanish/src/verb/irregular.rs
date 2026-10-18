@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 250 stems, 382 forms.
+/// 243 stems, 381 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abeldar	verb_pres_1_sg	abield- like echar
@@ -71,7 +71,6 @@ compungirse	30	compunja	31	compunjamos	33	compunjáis	57	compúngete	58	compúnj
 concertar	verb_pres_1_sg	conciert- like echar
 condolerse	verb_pres_1_sg	conduel- like curtir	57	conduélete	58	conduélase	61	conduélanse
 confesar	verb_pres_1_sg	confies- like echar
-contender	verb_pres_1_sg	contiend- like curtir
 contradecirse	participle	contradicho- like echar	verb_pres_1_sg	contrad- like seguirse	verb_pret_1_sg	contradij- like reducir	verb_subj_1_pl	contradig- like autoabastecerse	2	contradices	57	contradícete
 contrahacer	12	contrahíce	16	contrahízo
 contrahacerse	12	contrahíce	16	contrahízo
@@ -88,12 +87,10 @@ dehender	verb_pres_1_sg	dehiend- like curtir
 demonstrar	verb_pres_1_sg	demuestr- like echar
 denegar	verb_pres_1_sg	denieg- like echar
 dentar	verb_pres_1_sg	dient- like echar
-derrenegar	verb_pres_1_sg	derrenieg- like echar
 desacertar	verb_pres_1_sg	desaciert- like echar
 desandar	verb_pret_1_sg	desanduv- like poner
 desasentar	verb_pres_1_sg	desasient- like echar
 desasir	verb	desasir- like echar	57	desase
-desatender	verb_pres_1_sg	desatiend- like curtir
 desatentar	verb_pres_1_sg	desatient- like echar
 desaterrar	verb_pres_1_sg	desatierr- like echar
 descender	verb_pres_1_sg	desciend- like curtir
@@ -108,7 +105,6 @@ deslendrar	verb_pres_1_sg	desliendr- like echar
 deslenguarse	30	deslengüe	31	deslengüemos	58	desléngüese	61	desléngüense
 desmelar	verb_pres_1_sg	desmiel- like echar
 desmembrar	verb_pres_1_sg	desmiembr- like echar
-desnegar	verb_pres_1_sg	desnieg- like echar
 desnevar	verb_pres_1_sg	desniev- like echar
 desosar	verb_pres_1_sg	deshues- like echar
 despedrar	verb_pres_1_sg	despiedr- like echar
@@ -117,7 +113,6 @@ despertar	verb_pres_1_sg	despiert- like echar
 desplegar	verb_pres_1_sg	desplieg- like echar
 despoder	gerund	despudiendo- like echar	verb	despodr- like echar	verb_pres_1_sg	despued- like curtir	verb_pret_1_sg	despud- like poner
 desproveer	69	desprovisto
-destender	verb_pres_1_sg	destiend- like curtir
 destentar	verb_pres_1_sg	destient- like echar
 desterrar	verb_pres_1_sg	destierr- like echar
 desvaír	verb_pres_1_sg	desvay- like curtir	verb_subj_1_pl	desvay- like conocer	2	desvaes	57	desvae
@@ -125,7 +120,6 @@ desventar	verb_pres_1_sg	desvient- like echar
 desvergonzarse	verb_pres_1_sg	desvergüen- like realizar	57	desvergüénzate	58	desvergüéncese	61	desvergüéncense
 discerner	verb_pres_1_sg	disciern- like curtir
 dispertar	verb_pres_1_sg	dispiert- like echar
-distender	verb_pres_1_sg	distiend- like curtir
 distinguirse	30	distinga	31	distingamos	33	distingáis
 dolerse	30	duela	57	duélete
 emparanoiarse	56	emparanoiáte
@@ -199,7 +193,6 @@ jerver	verb_pres_1_sg	jierv- like curtir
 jier	participle	jiído- like echar	verb_subj_1_pl	jia- like guiar	3	jieis	13	jiímos	16	jio
 jugarse	verb_pres_1_sg	jueg- like echar	57	juégate	58	juéguese	61	juéguense
 kgar	3	kgais	12	kgue	16	kgo	33	kgueis
-llover	4	llueve
 maldecir	69	maldecido
 maloler	verb_pres_1_sg	malhuel- like curtir
 malpensar	verb_pres_1_sg	malpiens- like echar
@@ -300,7 +293,6 @@ servirse	56	servite	57	sírvete	58	sírvase	61	sírvanse
 sorregar	verb_pres_1_sg	sorrieg- like echar
 sosegar	verb_pres_1_sg	sosieg- like echar
 soterrar	verb_pres_1_sg	sotierr- like echar
-subtender	verb_pres_1_sg	subtiend- like curtir
 sumergirse	30	sumerja	31	sumerjamos	33	sumerjáis	57	sumérgete	58	sumérjase	61	sumérjanse
 tar	lemma	t- like guiar	verb_pret_1_sg	tuv- like poner	verb_subj_1_pl	te- like guiar	2	tas	4	ta	5	tan	30	té	61	ten
 temblar	verb_pres_1_sg	tiembl- like echar

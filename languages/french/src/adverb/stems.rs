@@ -13,7 +13,7 @@ use std::borrow::Cow;
 /// The slots, in the order of their first cells.
 pub(super) static SLOTS: [Slot<'static>; 1] = [Slot {
     name: Cow::Borrowed("lemma"),
-    cells: Cow::Borrowed(&[ADVERB_POS, ADVERB_COMP]),
+    cells: Cow::Borrowed(&[ADVERB_POS, ADVERB_COMP, ADVERB_SUP]),
 }];
 
 /// The ending tables, by slot, most words first.

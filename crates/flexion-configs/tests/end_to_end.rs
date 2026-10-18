@@ -57,7 +57,7 @@ fn grammars<'s>(lang: &Language, script: &'s Script, data: &[PosData]) -> Vec<Le
         .zip(data)
         .map(|(part, d)| {
             let mut shape = flexion_train::shape(lang, part).expect("shape");
-            shape.marks = marks.clone();
+            shape.marks = marks.as_ref().map(|m| m.of(part.name));
             learn::learn(
                 script.orthography(),
                 &shape,
@@ -101,6 +101,23 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     full: true,
                     ..Known::default()
                 };
+                // A word the grammar lists gives each cell as the dictionary
+                // spells it, its other spellings too, in a closed class (the Italian
+                // article, `il|lo|l'`).
+                let listed = part.closed() && g.irregular.has(&l.key);
+                let table = g.table(&l.full, &Known::default());
+                // A form compatible with the length its table states is the
+                // dictionary's (Greek bare dichrona; see `TableLength`).
+                let unstated = flexion_train::eval::TableLength::of(
+                    &g.orthography,
+                    lang.spelling.stated_length,
+                    l.cells.iter().flatten().map(String::as_str),
+                );
+                let same = |got: &str, want: &str| {
+                    let (a, b) = (g.orthography.read(got), g.orthography.read(want));
+                    same_form(&g.orthography, got, want)
+                        || (a.stress == b.stress && unstated.compatible(&b.letters, &a.letters))
+                };
                 for (cell, forms) in l.cells.iter().enumerate() {
                     let Some(want) = forms.first() else { continue };
                     for (known, how) in [
@@ -109,8 +126,28 @@ fn every_language_gives_its_dictionary_forms_with_its_principal_parts_given_or_n
                     ] {
                         let got = g.best(&l.full, cell, &known);
                         assert!(
-                            same_form(&g.orthography, &got, want),
+                            same(&got, want),
                             "{} {}: {} cell {cell} is {want}, the grammar says {got}{how}",
+                            lang.name,
+                            part.name,
+                            l.full
+                        );
+                    }
+                    let top = table.get(cell).and_then(|c| c.first());
+                    if listed
+                        && forms.len() > 1
+                        && let Some(top) = top
+                    {
+                        let also: Vec<&str> = top.also.iter().map(String::as_str).collect();
+                        let others: Vec<&str> = forms.iter().skip(1).map(String::as_str).collect();
+                        assert!(
+                            also.len() == others.len()
+                                && also.iter().zip(&others).all(|(a, o)| same_form(
+                                    &g.orthography,
+                                    a,
+                                    o
+                                )),
+                            "{} {}: {} cell {cell} is also {others:?}, the grammar says {also:?}",
                             lang.name,
                             part.name,
                             l.full
@@ -253,7 +290,14 @@ fn harmony_is_one_law_and_endings_name_its_class_letters() {
         .iter()
         .map(|p| p.table.as_ref())
         .collect();
-    assert!(tables.iter().any(|t| t.contains("~lAr")), "{tables:?}");
+    // The plural ending written once, its vowel a class letter (named after
+    // the class's commonest letter).
+    assert!(
+        tables
+            .iter()
+            .any(|t| t.contains("~lAr") || t.contains("~lEr")),
+        "{tables:?}"
+    );
     // Words the dictionary lacks: locative plural with `our` (cell 57).
     let g = &noun.grammar;
     assert_eq!(g.best("gölüm", 57, &Known::default()), "gölümlerimizde");
@@ -392,6 +436,32 @@ fn print_and_compare(lang: Language) {
              assert_eq!(c.iter().map(|c| c.probability).collect::<Vec<f32>>(), *probabilities, \"{{word}} {{cell}}\");\n    }}",
             part.name
         );
+        // Each typed cell's place, as the grammar numbers its cells: every
+        // group's values in order, the last fastest.
+        let cells = flexion_train::cells::Cells::new(&lang, part).expect("cells");
+        for g in &cells.groups {
+            let cell = format!(
+                "{crate_name}::{}::Cell::{}",
+                part.name,
+                flexion_train::print::cell_variant(part.name, g.name)
+            );
+            let vars: Vec<String> = (0..g.features.len()).map(|i| format!("v{i}")).collect();
+            if vars.is_empty() {
+                let _ = writeln!(checks, "    assert_eq!({cell}.index(), {});", g.offset);
+                continue;
+            }
+            let _ = writeln!(checks, "    let mut place = {};", g.offset);
+            for (f, v) in g.features.iter().zip(&vars) {
+                let _ = writeln!(checks, "    for {v} in {crate_name}::{}::ALL {{", f.name);
+            }
+            let _ = writeln!(
+                checks,
+                "    assert_eq!({cell}({}).index(), place);\n    place += 1;\n    {}",
+                vars.join(", "),
+                "}".repeat(vars.len())
+            );
+            let _ = writeln!(checks, "    assert_eq!(place, {});", g.offset + g.len());
+        }
     }
     let _ = write!(test, "#[test]\nfn answers() {{\n{checks}}}\n");
     std::fs::create_dir_all(dir.join("tests")).expect("tests dir");
@@ -561,5 +631,166 @@ fn the_perfect_passive_is_the_participle_and_sum() {
         if let Some(want) = fs.first().filter(|f| f.contains(' ')) {
             assert_eq!(&g.best(&l.full, cell, &Known::default()), want);
         }
+    }
+}
+
+/// The crate's files printed from `learned` and `measured`, with their
+/// report.
+fn printed(
+    lang: &Language,
+    script: &Script,
+    learned: &[Learned<'_>],
+    measured: &[flexion_train::pipeline::Measured],
+) -> Vec<(String, String)> {
+    let report = flexion_train::report::report(lang, learned, measured);
+    let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
+        .parts
+        .iter()
+        .zip(learned)
+        .map(|(spec, learned)| flexion_train::print::Part { spec, learned })
+        .collect();
+    flexion_train::print::files(lang, script, &parts, &report).expect("printed")
+}
+
+#[test]
+fn a_saved_build_prints_the_crate_its_learning_printed_and_rewrites_nothing() {
+    let dir = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join("saved");
+    let _ = std::fs::remove_dir_all(&dir);
+    std::fs::create_dir_all(&dir).expect("dir");
+    // Other data, a letter apart, is another key.
+    let english = flexion_configs::english::language();
+    let key = |path: &Path| {
+        flexion_train::saved::key(&english, Settings::default(), &[path]).expect("key")
+    };
+    let text = std::fs::read_to_string(fixture("english")).expect("fixture");
+    let other = dir.join("english.jsonl");
+    let changed = text.replacen("walk", "wolk", 1);
+    assert_ne!(changed, text, "the fixture has `walk`");
+    std::fs::write(&other, changed).expect("written");
+    assert_ne!(key(&fixture("english")), key(&other));
+    for lang in flexion_configs::all() {
+        let script = Script::new(&lang.spelling);
+        let data = data(&lang, &script);
+        // Turkish, whose harmony laws no other fixture has, learns slowly:
+        // its shipped grammars alone.
+        let (learned, measured) = if lang.name == "turkish" {
+            (grammars(&lang, &script, &data), Vec::new())
+        } else {
+            flexion_train::pipeline::build(&lang, &script, &data, Settings::default())
+                .expect("built")
+        };
+        saved_and_printed(&lang, &script, &learned, &measured, &dir);
+    }
+}
+
+/// Save `learned` and `measured`, load them, and check that they print the
+/// same crate; that writing it again over the first touches no file; and
+/// that a file it no longer has goes.
+fn saved_and_printed(
+    lang: &Language,
+    script: &Script,
+    learned: &[Learned<'_>],
+    measured: &[flexion_train::pipeline::Measured],
+    dir: &Path,
+) {
+    use flexion_train::saved;
+    let key = saved::key(lang, Settings::default(), &[&fixture(lang.name)]).expect("key");
+    saved::save(dir, lang.name, key, script, learned, measured).expect("saved");
+    let (kept, kept_measured) = saved::load(dir, lang.name, key, script)
+        .expect("readable")
+        .expect("kept");
+    let fresh = printed(lang, script, learned, measured);
+    let again = printed(lang, script, &kept, &kept_measured);
+    assert_eq!(fresh.len(), again.len(), "{}: the files", lang.name);
+    for ((path, a), (_, b)) in fresh.iter().zip(&again) {
+        assert!(
+            a == b,
+            "{}: {path} differs printed from the saved build",
+            lang.name
+        );
+    }
+    let crate_dir = dir.join(lang.name);
+    flexion_train::print::write(&crate_dir, &fresh).expect("written");
+    let stale = crate_dir.join("src/stale.rs");
+    std::fs::write(&stale, "").expect("stale file");
+    let then = std::time::SystemTime::UNIX_EPOCH + std::time::Duration::from_secs(86_400);
+    for (path, _) in &fresh {
+        let file = std::fs::File::options()
+            .write(true)
+            .open(crate_dir.join(path))
+            .expect("printed file");
+        file.set_modified(then).expect("set its time");
+    }
+    let written = flexion_train::print::write(&crate_dir, &again).expect("written again");
+    assert_eq!(written, 0, "{}: files written again", lang.name);
+    for (path, _) in &fresh {
+        let modified = std::fs::metadata(crate_dir.join(path))
+            .and_then(|m| m.modified())
+            .expect("its time");
+        assert_eq!(modified, then, "{}: {path} touched", lang.name);
+    }
+    assert!(!stale.exists(), "{}: a stale file kept", lang.name);
+}
+
+#[test]
+fn the_augment_is_one_law_whatever_vowel_it_meets() {
+    // Of the verbs, five begin with a vowel their class's augment lengthens
+    // (ἀκούω, αἰτέω, οἰκέω, ὀνομάζω, αὐλέω): no vowel has the five words a
+    // law needs, the five together do, and the augment is one law (Smyth
+    // §§ 428–438). It lengthens a vowel no verb begins with too: αἰνέω, and
+    // through `α` the `αὐ` of αὐδάω.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let grammars = grammars(&lang, &script, &data);
+    let (at, _) = lang
+        .parts
+        .iter()
+        .enumerate()
+        .find(|(_, p)| p.name == "verb")
+        .expect("verbs");
+    let verb = &grammars[at];
+    let augments: Vec<&flexion_train::laws::Law> = verb
+        .laws
+        .iter()
+        .filter(|l| {
+            matches!(&l.change, flexion_train::laws::Change::Front { literal, .. } if literal == "ἐ")
+        })
+        .collect();
+    assert_eq!(augments.len(), 1, "{:?}", verb.laws);
+    let flexion_train::laws::Change::Front { map, .. } = &augments[0].change else {
+        unreachable!()
+    };
+    assert!(map.len() >= 4, "{map:?}");
+    // The imperfect active, 1st singular.
+    let g = &verb.grammar;
+    assert_eq!(g.best("αἰνέω", 99, &Known::default()), "ᾔνουν");
+    assert_eq!(g.best("αὐδάω", 99, &Known::default()), "ηὔδαον");
+}
+
+#[test]
+fn a_word_typed_with_its_accent_before_its_head_keeps_it() {
+    // A word ending in a listed word others inflect as (its head) takes the
+    // head's forms, but not its accent where it is typed with its own
+    // before the head: `Τιμόθεος` isn't accented as `θεός`.
+    let lang = flexion_configs::ancient_greek::language();
+    let script = Script::new(&lang.spelling);
+    let data = data(&lang, &script);
+    let mut grammars = grammars(&lang, &script, &data);
+    let at = lang
+        .parts
+        .iter()
+        .position(|p| p.name == "noun")
+        .expect("nouns");
+    let g = &mut grammars[at].grammar;
+    let o = script.orthography();
+    let head = o.key(&o.read("θεός").letters);
+    assert!(g.lists(&head));
+    g.heads.words = std::borrow::Cow::Owned(vec![head.into()]);
+    for (typed, as_head) in [("τιμόθεος", false), ("τιμοθεός", true)] {
+        let lemma = g.candidates(typed, 0, &Known::default());
+        let first = lemma.first().expect("an answer");
+        assert_eq!(o.read(&first.form).stress, o.read(typed).stress, "{typed}");
+        assert_eq!(first.status == Status::Listed, as_head, "{typed}");
     }
 }

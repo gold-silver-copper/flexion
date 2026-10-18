@@ -135,6 +135,32 @@ pub struct PosData {
     pub audit: Audit,
 }
 
+/// The lexemes an extraction wrote to `cache`, with the editors' analyses,
+/// where the cache lacks them, from its `sidecar` if there is one: per part
+/// of speech, `(source, order, editors)` of each lexeme, matched to the
+/// cache's by source and order. What a build learns from (see
+/// [`crate::saved::key`], which hashes the two files).
+pub fn load(cache: &Path, sidecar: &Path) -> Result<Vec<PosData>, String> {
+    let bytes = std::fs::read(cache).map_err(|e| format!("{}: {e}", cache.display()))?;
+    let mut data: Vec<PosData> = serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
+    if let Ok(bytes) = std::fs::read(sidecar) {
+        let sidecar: Vec<Vec<(u8, usize, Editors)>> =
+            serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
+        for (d, side) in data.iter_mut().zip(sidecar) {
+            let mut by: std::collections::HashMap<(u8, usize), Editors> = side
+                .into_iter()
+                .map(|(source, order, e)| ((source, order), e))
+                .collect();
+            for l in d.lexemes.iter_mut().filter(|l| l.editors.is_empty()) {
+                if let Some(e) = by.remove(&(l.source, l.order)) {
+                    l.editors = e;
+                }
+            }
+        }
+    }
+    Ok(data)
+}
+
 /// The data gate on a part's repaired tables: forms that map to no cell
 /// (their tags, how often, a word), and cells one table gives two forms
 /// (how many, a few `word cell: a, b`). Printed after every extraction.

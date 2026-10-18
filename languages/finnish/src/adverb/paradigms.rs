@@ -73,9 +73,9 @@ pub enum Declension {
     Karkeasti,
     /// Like `kiihkeästi`: 279 words.
     Kiihkeästi,
-    /// Like `paksusti`: 77 words.
+    /// Like `paksusti`: 76 words.
     Paksusti,
-    /// Like `iisisti`: 55 words.
+    /// Like `iisisti`: 56 words.
     Iisisti,
     /// Like `kovasti`: 53 words.
     Kovasti,
@@ -144,12 +144,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 14] = [
     declension!("kiihkeästi", 279, "~äst~";
     adverb: "~äst~", "~ämm~n", "~~mmin";
     ),
-    // Paksusti: 77 words (oudosti, huonosti, rajusti, epäreilusti, helposti, kömpelösti).
-    declension!("paksusti", 77, "~st~";
+    // Paksusti: 76 words (oudosti, huonosti, rajusti, epäreilusti, helposti, kömpelösti).
+    declension!("paksusti", 76, "~st~";
     adverb: "~st~", "~mm~n", "~~mmin";
     ),
-    // Iisisti: 55 words (epäsiististi, modernisti, iisisti, epänormaalisti, abstraktisti, banaalisti).
-    declension!("iisisti", 55, "~~st~";
+    // Iisisti: 56 words (epäsiististi, modernisti, iisisti, epänormaalisti, abstraktisti, banaalisti).
+    declension!("iisisti", 56, "~~st~";
     adverb: "~~st~", "~~mm~n", "~e~mm~n";
     ),
     // Kovasti: 53 words (julmasti, tuhmasti, kivasti, laajasti, rumasti, hurjasti). Like Kevyesti, except in 1 cell: adverb pos.

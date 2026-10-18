@@ -82,11 +82,11 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 5] = [
-    // lemma like wolny: 9,731 words.
+pub(super) static TABLES: [EndingTable<'static>; 4] = [
+    // lemma like wolny: 9,849 words.
     EndingTable {
         name: Cow::Borrowed("wolny"),
-        words: 9731,
+        words: 9849,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "\t~y\t",
@@ -157,25 +157,18 @@ pub(super) static TABLES: [EndingTable<'static>; 5] = [
             "~ich\t~ich\t",
         )),
     },
-    // adjective_nom_vir_anim like wolny: 8,436 words.
+    // adjective_nom_vir_anim like wolny: 8,272 words.
     EndingTable {
         name: Cow::Borrowed("wolny"),
-        words: 8436,
+        words: 8272,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t~\t", "~ejszy\t", "\t",)),
     },
-    // adjective_nom_vir_anim like słaby: 1,431 words.
+    // adjective_nom_vir_anim like słaby: 1,696 words.
     EndingTable {
         name: Cow::Borrowed("słaby"),
-        words: 1431,
+        words: 1696,
         slot: 1,
         table: Cow::Borrowed(concat!("~i\t~i\t", "~szy\t", "\t",)),
-    },
-    // adjective_nom_vir_anim like mały: 36 words.
-    EndingTable {
-        name: Cow::Borrowed("mały"),
-        words: 36,
-        slot: 1,
-        table: Cow::Borrowed(concat!("~i\t~i\t", "~ejszy\t", "\t",)),
     },
 ];

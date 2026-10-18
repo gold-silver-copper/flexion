@@ -207,9 +207,9 @@ pub enum Conjugation {
     Kassieren,
     /// Like `nudeln`: 828 words.
     Nudeln,
-    /// Like `richten`: 238 words.
+    /// Like `richten`: 240 words.
     Richten,
-    /// Like `öffnen`: 31 words.
+    /// Like `öffnen`: 29 words.
     Öffnen,
     /// Like `langmachen`: 27 words.
     Langmachen,
@@ -287,14 +287,14 @@ pub enum Conjugation {
     Brennen,
     /// Like `reiten`: 4 words.
     Reiten,
-    /// Like `notlanden`: 4 words.
-    Notlanden,
+    /// Like `stoßlüften`: 4 words.
+    Stoßlüften,
     /// Like `achtgeben`: 4 words.
     Achtgeben,
     /// Like `gegenüberstehen`: 4 words.
     Gegenüberstehen,
-    /// Like `einleuchten`: 4 words.
-    Einleuchten,
+    /// Like `maßschneidern`: 4 words.
+    Maßschneidern,
     /// Like `entflechten`: 4 words.
     Entflechten,
     /// Like `umhinkönnen`: 4 words.
@@ -385,10 +385,10 @@ impl Conjugation {
         Conjugation::Nesen,
         Conjugation::Brennen,
         Conjugation::Reiten,
-        Conjugation::Notlanden,
+        Conjugation::Stoßlüften,
         Conjugation::Achtgeben,
         Conjugation::Gegenüberstehen,
-        Conjugation::Einleuchten,
+        Conjugation::Maßschneidern,
         Conjugation::Entflechten,
         Conjugation::Umhinkönnen,
         Conjugation::Behalten,
@@ -471,8 +471,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 68] = [
     infinitive: "~e~n";
     participle: "~e~nd", _;
     ),
-    // Richten: 238 words (listen, bitten, rotten, arbeiten, kitten, hasten). Like Machen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
-    conjugation!("richten", 238, "~en", [auxiliary: Haben], like Machen;
+    // Richten: 240 words (listen, bitten, rotten, arbeiten, kitten, hasten). Like Machen, except in 8 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
+    conjugation!("richten", 240, "~en", [auxiliary: Haben], like Machen;
     stem verb: "~ete- like machen";
     stem participle_past: "~et- like machen";
     pres_2: "~est", "~et";
@@ -483,8 +483,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 68] = [
     subj2_3: _, derived;
     subordinate_pres_3: "~et", _;
     ),
-    // Öffnen: 31 words (regnen, sein, öffnen, atmen, rechnen, leugnen). Like Machen, except in 6 cells: pres_1 sg, pres_1 pl, subj1_2 pl, subj1_3 sg, infinitive, participle pres.
-    conjugation!("öffnen", 31, "~n", like Machen;
+    // Öffnen: 29 words (regnen, sein, öffnen, atmen, rechnen, leugnen). Like Machen, except in 6 cells: pres_1 sg, pres_1 pl, subj1_2 pl, subj1_3 sg, infinitive, participle pres.
+    conjugation!("öffnen", 29, "~n", like Machen;
     stem sg: "~- like sein";
     stem zu_infinitive: "~n- like machen";
     pres_1: "~", "~n";
@@ -1087,8 +1087,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 68] = [
     subj2_3: _, derived;
     subordinate_pres_3: "~e~et", _;
     ),
-    // Notlanden: 4 words (notlanden, bauchreden, stoßlüften, stosslüften). Like Einstellen, except in 9 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
-    conjugation!("notlanden", 4, "~~en", [auxiliary: Haben], like Einstellen;
+    // Stoßlüften: 4 words (notlanden, bauchreden, stoßlüften, stosslüften). Like Einstellen, except in 9 cells: pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, subj2_1 sg, subj2_2 pl, ….
+    conjugation!("stoßlüften", 4, "~~en", [auxiliary: Haben], like Einstellen;
     stem verb: "~~ete- like machen";
     pres_2: "~~est", "~~et";
     pret_1: "~~ete", _;
@@ -1144,8 +1144,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 68] = [
     zu_infinitive: "~zustehen";
     participle: _, "~gestanden";
     ),
-    // Einleuchten: 4 words (endlagern, einleuchten, maßschneidern, massschneidern). Like Schreiben, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, ….
-    conjugation!("einleuchten", 4, "~~e~n", [auxiliary: Haben], like Schreiben;
+    // Maßschneidern: 4 words (endlagern, einleuchten, maßschneidern, massschneidern). Like Schreiben, except in 18 cells: pres_1 sg, pres_1 pl, pres_2 sg, pres_2 pl, pret_1 sg, pret_3 pl, ….
+    conjugation!("maßschneidern", 4, "~~e~n", [auxiliary: Haben], like Schreiben;
     stem verb: "~~e~te- like machen";
     pres_1: "~~~e|~~e~e|~~e~", "~~e~n";
     pres_2: "~~e~st", "~~e~t";

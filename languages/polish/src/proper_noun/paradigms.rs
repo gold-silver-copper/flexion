@@ -122,11 +122,11 @@ const ACC_AS_GEN: [u16; 14] = [0, 1, 2, 3, 4, 5, 2, 3, 8, 9, 10, 11, 12, 13];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `zachariasz`: 6,621 words.
+    /// Like `zachariasz`: 6,620 words.
     Zachariasz,
-    /// Like `dąbrowa`: 1,657 words.
+    /// Like `dąbrowa`: 1,589 words.
     Dąbrowa,
-    /// Like `zełenski`: 1,210 words.
+    /// Like `zełenski`: 1,212 words.
     Zełenski,
     /// Like `melchizedek`: 508 words.
     Melchizedek,
@@ -138,28 +138,28 @@ pub enum Declension {
     Goń,
     /// Like `wituś`: 339 words.
     Wituś,
-    /// Like `filadelfia`: 321 words.
+    /// Like `filadelfia`: 314 words.
     Filadelfia,
     /// Like `żubr`: 296 words.
     Żubr,
-    /// Like `birmingham`: 295 words.
+    /// Like `birmingham`: 294 words.
     Birmingham,
     /// Like `wit`: 290 words.
     Wit,
+    /// Like `polana`: 245 words.
+    Polana,
     /// Like `lipowiec`: 203 words.
     Lipowiec,
-    /// Like `polana`: 183 words.
-    Polana,
     /// Like `boniec`: 153 words.
     Boniec,
-    /// Like `juda`: 136 words.
+    /// Like `juda`: 139 words.
     Juda,
     /// Like `grodzisk`: 124 words.
     Grodzisk,
-    /// Like `góra`: 120 words.
-    Góra,
     /// Like `aleksandrów`: 120 words.
     Aleksandrów,
+    /// Like `góra`: 118 words.
+    Góra,
     /// Like `natolin`: 92 words.
     Natolin,
     /// Like `bać`: 86 words.
@@ -172,12 +172,12 @@ pub enum Declension {
     Lipiny,
     /// Like `racławice`: 60 words.
     Racławice,
+    /// Like `jabłonka`: 60 words.
+    Jabłonka,
     /// Like `buk`: 55 words.
     Buk,
     /// Like `liverpool`: 52 words.
     Liverpool,
-    /// Like `jabłonka`: 51 words.
-    Jabłonka,
     /// Like `horacy`: 44 words.
     Horacy,
     /// Like `idec`: 41 words.
@@ -200,7 +200,7 @@ pub enum Declension {
     Tatary,
     /// Like `oleśnica`: 32 words.
     Oleśnica,
-    /// Like `dąbie`: 30 words.
+    /// Like `dąbie`: 31 words.
     Dąbie,
     /// Like `kamień`: 30 words.
     Kamień,
@@ -210,43 +210,43 @@ pub enum Declension {
     Kryszna,
     /// Like `drost`: 26 words.
     Drost,
-    /// Like `magda`: 26 words.
-    Magda,
+    /// Like `leja`: 25 words.
+    Leja,
     /// Like `kościuszko`: 23 words.
     Kościuszko,
     /// Like `bolko`: 23 words.
     Bolko,
-    /// Like `biskaja`: 22 words.
-    Biskaja,
     /// Like `tosia`: 22 words.
     Tosia,
+    /// Like `biskaja`: 21 words.
+    Biskaja,
     /// Like `grodzisko`: 19 words.
     Grodzisko,
-    /// Like `leja`: 19 words.
-    Leja,
     /// Like `stoczek`: 19 words.
     Stoczek,
     /// Like `annopol`: 18 words.
     Annopol,
     /// Like `świętokrzyskie`: 18 words.
     Świętokrzyskie,
+    /// Like `anula`: 18 words.
+    Anula,
     /// Like `wąż`: 17 words.
     Wąż,
+    /// Like `wola`: 17 words.
+    Wola,
     /// Like `pcim`: 16 words.
     Pcim,
-    /// Like `anula`: 15 words.
-    Anula,
     /// Like `wsół`: 15 words.
     Wsół,
     /// Like `wesoła`: 15 words.
     Wesoła,
     /// Like `malec`: 15 words.
     Malec,
-    /// Like `wola`: 14 words.
-    Wola,
+    /// Like `magda`: 14 words.
+    Magda,
     /// Like `ostrowiec`: 14 words.
     Ostrowiec,
-    /// Like `naaman`: 13 words.
+    /// Like `naaman`: 14 words.
     Naaman,
     /// Like `obed`: 11 words.
     Obed,
@@ -266,12 +266,12 @@ pub enum Declension {
     Knefel,
     /// Like `piaseczno`: 10 words.
     Piaseczno,
-    /// Like `lewi`: 10 words.
-    Lewi,
     /// Like `liberec`: 9 words.
     Liberec,
     /// Like `ania`: 9 words.
     Ania,
+    /// Like `lewi`: 8 words.
+    Lewi,
     /// Like `bugiel`: 8 words.
     Bugiel,
     /// Like `pompeje`: 7 words.
@@ -328,6 +328,8 @@ pub enum Declension {
     Kokot,
     /// Like `gąsiorów`: 5 words.
     Gąsiorów,
+    /// Like `lipnica`: 5 words.
+    Lipnica,
     /// Like `fiszer`: 4 words.
     Fiszer,
     /// Like `prypeć`: 4 words.
@@ -350,9 +352,9 @@ pub enum Declension {
     Borek,
     /// Like `becia`: 4 words.
     Becia,
-    /// Like `estera`: 3 words.
+    /// Like `estera`: 4 words.
     Estera,
-    /// Like `maryja`: 3 words.
+    /// Like `maryja`: 4 words.
     Maryja,
     /// Like `landau`: 3 words.
     Landau,
@@ -370,8 +372,6 @@ pub enum Declension {
     Bysiec,
     /// Like `jawor`: 3 words.
     Jawor,
-    /// Like `lipnica`: 3 words.
-    Lipnica,
     /// Like `azor`: 3 words.
     Azor,
     /// Like `wlazło`: 3 words.
@@ -413,22 +413,22 @@ impl Declension {
         Declension::Żubr,
         Declension::Birmingham,
         Declension::Wit,
-        Declension::Lipowiec,
         Declension::Polana,
+        Declension::Lipowiec,
         Declension::Boniec,
         Declension::Juda,
         Declension::Grodzisk,
-        Declension::Góra,
         Declension::Aleksandrów,
+        Declension::Góra,
         Declension::Natolin,
         Declension::Bać,
         Declension::Bagno,
         Declension::Rak,
         Declension::Lipiny,
         Declension::Racławice,
+        Declension::Jabłonka,
         Declension::Buk,
         Declension::Liverpool,
-        Declension::Jabłonka,
         Declension::Horacy,
         Declension::Idec,
         Declension::Głów,
@@ -445,23 +445,23 @@ impl Declension {
         Declension::Piór,
         Declension::Kryszna,
         Declension::Drost,
-        Declension::Magda,
+        Declension::Leja,
         Declension::Kościuszko,
         Declension::Bolko,
-        Declension::Biskaja,
         Declension::Tosia,
+        Declension::Biskaja,
         Declension::Grodzisko,
-        Declension::Leja,
         Declension::Stoczek,
         Declension::Annopol,
         Declension::Świętokrzyskie,
-        Declension::Wąż,
-        Declension::Pcim,
         Declension::Anula,
+        Declension::Wąż,
+        Declension::Wola,
+        Declension::Pcim,
         Declension::Wsół,
         Declension::Wesoła,
         Declension::Malec,
-        Declension::Wola,
+        Declension::Magda,
         Declension::Ostrowiec,
         Declension::Naaman,
         Declension::Obed,
@@ -473,9 +473,9 @@ impl Declension {
         Declension::Tola,
         Declension::Knefel,
         Declension::Piaseczno,
-        Declension::Lewi,
         Declension::Liberec,
         Declension::Ania,
+        Declension::Lewi,
         Declension::Bugiel,
         Declension::Pompeje,
         Declension::Stasiek,
@@ -504,6 +504,7 @@ impl Declension {
         Declension::Jacuś,
         Declension::Kokot,
         Declension::Gąsiorów,
+        Declension::Lipnica,
         Declension::Fiszer,
         Declension::Prypeć,
         Declension::Józia,
@@ -525,7 +526,6 @@ impl Declension {
         Declension::Puchacze,
         Declension::Bysiec,
         Declension::Jawor,
-        Declension::Lipnica,
         Declension::Azor,
         Declension::Wlazło,
         Declension::Jagiełło,
@@ -556,19 +556,19 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
-    // Zachariasz: 6,621 words (achilles, czech, daniel, allah, zeus, adonis).
-    declension!("zachariasz", 6621, "~", [gender: MasculinePersonal];
+    // Zachariasz: 6,620 words (achilles, czech, daniel, allah, zeus, adonis).
+    declension!("zachariasz", 6620, "~", [gender: MasculinePersonal];
     stem lemma: "~- like zachariasz";
     stem gen_sg: "~- like zachariasz";
     nom: _, "~owie";
     ),
-    // Dąbrowa: 1,657 words (angola, botswana, ghana, malta, panama, rwanda). Like Zachariasz.
-    declension!("dąbrowa", 1657, "~a", like Zachariasz;
+    // Dąbrowa: 1,589 words (angola, malta, panama, uganda, abdera, manitoba). Like Zachariasz.
+    declension!("dąbrowa", 1589, "~a", like Zachariasz;
     stem lemma: "~- like dąbrowa";
     stem gen_sg: "~- like dąbrowa";
     ),
-    // Zełenski: 1,210 words (wierzbowski, kowalski, zamojski, owczarkowski, wiśniewski, dąbrowski).
-    declension!("zełenski", 1210, "~ki", [gender: MasculinePersonal];
+    // Zełenski: 1,212 words (wierzbowski, loki, kowalski, zamojski, owczarkowski, wiśniewski).
+    declension!("zełenski", 1212, "~ki", [gender: MasculinePersonal];
     stem gen_sg: "~ki- like zełenski";
     nom: "~ki", "~cy";
     acc: "~kiego", _;
@@ -602,8 +602,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     nom: "~ś", "~siowie";
     acc: "~sia", _;
     ),
-    // Filadelfia: 321 words (estonia, austria, albania, armenia, gambia, liberia). Like Dąbrowa, except in 6 cells: nom pl, gen_ sg, gen_ pl, dat sg, acc pl, loc sg.
-    declension!("filadelfia", 321, "~a", [gender: Feminine], like Dąbrowa;
+    // Filadelfia: 314 words (estonia, austria, albania, armenia, gambia, liberia). Like Dąbrowa, except in 6 cells: nom pl, gen_ sg, gen_ pl, dat sg, acc pl, loc sg.
+    declension!("filadelfia", 314, "~a", [gender: Feminine], like Dąbrowa;
     nom: _, "~e";
     gen_: "~i", "~i";
     dat: "~i", _;
@@ -615,8 +615,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     loc: "~ze", _;
     voc: "~ze", _;
     ),
-    // Birmingham: 295 words (bhutan, gabon, honduras, iran, laos, liechtenstein). Like Pegaz, except in 2 cells: nom pl, acc sg.
-    declension!("birmingham", 295, "~", [gender: MasculineInanimate], like Pegaz;
+    // Birmingham: 294 words (bhutan, gabon, honduras, iran, laos, liechtenstein). Like Pegaz, except in 2 cells: nom pl, acc sg.
+    declension!("birmingham", 294, "~", [gender: MasculineInanimate], like Pegaz;
     stem gen_sg: "~- like birmingham";
     nom: _, "~y";
     acc: "~", _;
@@ -627,17 +627,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     stem gen_sg: "~- like wit";
     nom: _, "~towie";
     ),
+    // Polana: 245 words (botswana, ghana, rwanda, grenada, alberta, laura). Like Dąbrowa, except in 3 cells: nom pl, gen_ pl, acc pl.
+    declension!("polana", 245, "~a", [gender: Feminine], like Dąbrowa;
+    nom: _, "~y";
+    gen_: _, "~";
+    acc: _, "~y";
+    ),
     // Lipowiec: 203 words (niemiec, krawiec, kupiec, samiec, mrowiec, borowiec).
     declension!("lipowiec", 203, "~iec", [gender: MasculinePersonal];
     stem lemma: "~- like lipowiec";
     stem gen_sg: "~c- like lipowiec";
     nom: _, "~cowie";
-    ),
-    // Polana: 183 words (grenada, alberta, laura, valletta, teresa, liliana). Like Dąbrowa, except in 3 cells: nom pl, gen_ pl, acc pl.
-    declension!("polana", 183, "~a", [gender: Feminine], like Dąbrowa;
-    nom: _, "~y";
-    gen_: _, "~";
-    acc: _, "~y";
     ),
     // Boniec: 153 words (chowaniec, marciniec, szymaniec, wawrzyniec, szafraniec, boniec).
     declension!("boniec", 153, "~niec", [gender: MasculinePersonal];
@@ -645,8 +645,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     nom: "~niec", "~ńcowie";
     acc: "~ńca", _;
     ),
-    // Juda: 136 words (lusaka, polska, alaska, nebraska, dhaka, osaka). Like Dąbrowa, except in 2 cells: dat sg, loc sg.
-    declension!("juda", 136, "~a", like Dąbrowa;
+    // Juda: 139 words (lusaka, polska, alaska, nebraska, dhaka, osaka). Like Dąbrowa, except in 2 cells: dat sg, loc sg.
+    declension!("juda", 139, "~a", like Dąbrowa;
     dat: "~zie", _;
     loc: "~zie", _;
     ),
@@ -656,16 +656,16 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     acc: "~", "~i";
     ins: "~iem", _;
     ),
-    // Góra: 120 words (spica, podgorica, kambodża, legnica, wołga, norymberga). Like Dąbrowa, except in 2 cells: dat sg, loc sg.
-    declension!("góra", 120, "~a", like Dąbrowa;
-    dat: "~ze", _;
-    loc: "~ze", _;
-    ),
     // Aleksandrów: 120 words (kraków, kijów, kościół, rzeszów, tarnów, chorzów).
     declension!("aleksandrów", 120, "~ó~", [gender: MasculineInanimate];
     stem lemma: "~ó~- like birmingham";
     stem gen_sg: "~o~- like aleksandrów";
     nom: _, "~o~y";
+    ),
+    // Góra: 118 words (spica, podgorica, kambodża, legnica, wołga, norymberga). Like Dąbrowa, except in 2 cells: dat sg, loc sg.
+    declension!("góra", 118, "~a", like Dąbrowa;
+    dat: "~ze", _;
+    loc: "~ze", _;
     ),
     // Natolin: 92 words (berlin, dublin, tallinn, ursus, będzin, szczecin). Like Birmingham.
     declension!("natolin", 92, "~", [gender: MasculineInanimate], like Birmingham;
@@ -702,6 +702,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     nom: "~e", "~e";
     acc: _, "~e";
     ),
+    // Jabłonka: 60 words (blanka, danka, bianka, anka, agnieszka, franciszka).
+    declension!("jabłonka", 60, "~ka", [gender: Feminine];
+    stem lemma: "~k- like dąbrowa";
+    nom: _, "~ki";
+    gen_: "~ki", "~ek";
+    dat: "~ce", "~kom";
+    acc: _, "~ki";
+    ins: "~ką", "~kami";
+    loc: "~ce", "~kach";
+    voc: "~ko", _;
+    ),
     // Buk: 55 words (quebec, bangkok, salzburg, reykjavik, reykjavík, irak). Like Grodzisk, except in 6 cells: nom pl, gen_ pl, dat pl, acc pl, ins pl, loc pl.
     declension!("buk", 55, "~", [gender: MasculineInanimate], like Grodzisk;
     stem gen_sg: "~- like buk";
@@ -717,17 +728,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     nom: _, "~e";
     gen_: "~u", "~i";
     acc: "~", "~e";
-    ),
-    // Jabłonka: 51 words (blanka, danka, bianka, anka, agnieszka, franciszka).
-    declension!("jabłonka", 51, "~ka", [gender: Feminine];
-    stem lemma: "~k- like dąbrowa";
-    nom: _, "~ki";
-    gen_: "~ki", "~ek";
-    dat: "~ce", "~kom";
-    acc: _, "~ki";
-    ins: "~ką", "~kami";
-    loc: "~ce", "~kach";
-    voc: "~ko", _;
     ),
     // Horacy: 44 words (hilary, merkury, jerzy, grozny, ksawery, maurycy).
     declension!("horacy", 44, "~y", [gender: MasculinePersonal];
@@ -786,8 +786,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     dat: "~y", _;
     loc: "~y", _;
     ),
-    // Dąbie: 30 words (słońce, naddniestrze, zabrze, opole, skopie, mazowsze). Like Annopol with `` after each pattern (`e` after ~), except in 2 cells: dat sg, voc sg.
-    declension!("dąbie", 30, "~e", [gender: Neuter], like Annopol with "", "e" after "~";
+    // Dąbie: 31 words (słońce, google, naddniestrze, zabrze, opole, skopie). Like Annopol with `` after each pattern (`e` after ~), except in 2 cells: dat sg, voc sg.
+    declension!("dąbie", 31, "~e", [gender: Neuter], like Annopol with "", "e" after "~";
     dat: "~u", _;
     voc: "~e", _;
     ),
@@ -819,10 +819,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     loc: "~ście", "~stach";
     voc: "~ście", _;
     ),
-    // Magda: 26 words (rebeka, monika, marika, amazonka, angelika, dominika). Like Polana, except in 2 cells: dat sg, loc sg.
-    declension!("magda", 26, "~a", [gender: Feminine], like Polana;
-    dat: "~zie", _;
-    loc: "~zie", _;
+    // Leja: 25 words (freja, adygeja, leja, deja, śmieja, smieja). Like Września with `ˇ` after each pattern (`iˇ` after ~).
+    declension!("leja", 25, "~aˇ", like Września with "ˇ", "iˇ" after "~";
     ),
     // Kościuszko: 23 words (legutko, adaśko, szyszko, żelazko, kołodko, pietraszko). Like Jabłonka, except in 3 cells: nom pl, gen_ pl, acc pl.
     declension!("kościuszko", 23, "~ko", [gender: MasculinePersonal], like Jabłonka;
@@ -833,17 +831,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     ),
     // Bolko: 23 words (romeo, apollo, janko, mieszko, łemko, stanko). Like Zachariasz with `` after each pattern (`o` after ~).
     declension!("bolko", 23, "~o", [gender: MasculinePersonal], like Zachariasz with "", "o" after "~";
-    ),
-    // Biskaja: 22 words (soja, troja, gaja, czaja, żmija, ziaja).
-    declension!("biskaja", 22, "~ja";
-    stem lemma: "~j- like dąbrowa";
-    nom: _, "~jowie";
-    gen_: "~i", "~jów";
-    dat: "~i", "~jom";
-    acc: _, "~jów";
-    ins: "~ją", "~jami";
-    loc: "~i", "~jach";
-    voc: "~jo", _;
     ),
     // Tosia: 22 words (asia, basia, agusia, gosia, małgosia, joasia).
     declension!("tosia", 22, "~sia", [gender: Feminine];
@@ -856,14 +843,22 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     loc: "~si", "~siach";
     voc: "~siu", _;
     ),
+    // Biskaja: 21 words (soja, troja, gaja, czaja, żmija, ziaja).
+    declension!("biskaja", 21, "~ja";
+    stem lemma: "~j- like dąbrowa";
+    nom: _, "~jowie";
+    gen_: "~i", "~jów";
+    dat: "~i", "~jom";
+    acc: _, "~jów";
+    ins: "~ją", "~jami";
+    loc: "~i", "~jach";
+    voc: "~jo", _;
+    ),
     // Grodzisko: 19 words (kongo, maroko, portoryko, lipsko, bielsko, giżycko). Like Buk with `` after each pattern (`o` after ~), except in 3 cells: gen_ sg, dat sg, voc sg.
     declension!("grodzisko", 19, "~o", [gender: Neuter], like Buk with "", "o" after "~";
     gen_: "~a", _;
     dat: "~u", _;
     voc: "~o", _;
-    ),
-    // Leja: 19 words (leja, deja, śmieja, smieja, bareja, zachwieja). Like Września with `ˇ` after each pattern (`iˇ` after ~).
-    declension!("leja", 19, "~aˇ", [gender: MasculinePersonal], like Września with "ˇ", "iˇ" after "~";
     ),
     // Stoczek: 19 words (turek, włocławek, targówek, zbyszek, lądek, ozimek). Like Grodzisk with `ˇ` after each pattern.
     declension!("stoczek", 19, "~ˇ", like Grodzisk with "ˇ";
@@ -876,18 +871,24 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     declension!("świętokrzyskie", 18, "~", like Buk;
     stem gen_sg: "~- like świętokrzyskie";
     ),
+    // Anula: 18 words (manila, daniela, pamela, gabriela, nikola, kamila). Like Filadelfia, except in 1 cell: gen_ pl.
+    declension!("anula", 18, "~a", [gender: Feminine], like Filadelfia;
+    gen_: _, "~";
+    ),
     // Wąż: 17 words (gabriel, anatol, wikłacz, babicz, motyl, wąż). Like Zachariasz, except in 2 cells: gen_ pl, acc pl.
     declension!("wąż", 17, "~", [gender: MasculinePersonal], like Zachariasz;
     gen_: _, "~y";
     acc: _, "~y";
     ),
+    // Wola: 17 words (toskania, zorza, bitynia, kania, głowania, matynia). Like Dąbrowa, except in 3 cells: gen_ sg, dat sg, loc sg.
+    declension!("wola", 17, "~a", like Dąbrowa;
+    gen_: "~i", _;
+    dat: "~i", _;
+    loc: "~i", _;
+    ),
     // Pcim: 16 words (wrocław, zagrzeb, radom, bytom, oświęcim, jarząb). Like Buk.
     declension!("pcim", 16, "~", like Buk;
     stem gen_sg: "~i- like kamień";
-    ),
-    // Anula: 15 words (daniela, pamela, gabriela, nikola, kamila, stela). Like Filadelfia, except in 1 cell: gen_ pl.
-    declension!("anula", 15, "~a", [gender: Feminine], like Filadelfia;
-    gen_: _, "~";
     ),
     // Wsół: 15 words (sokół, popiół, bawół, suchodół, sudół, gocół).
     declension!("wsół", 15, "~ół";
@@ -905,11 +906,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     declension!("malec", 15, "~e~", like Idec;
     stem gen_sg: "~~- like lipowiec";
     ),
-    // Wola: 14 words (zorza, kania, głowania, matynia, powierza, golenia). Like Dąbrowa, except in 3 cells: gen_ sg, dat sg, loc sg.
-    declension!("wola", 14, "~a", like Dąbrowa;
-    gen_: "~i", _;
-    dat: "~i", _;
-    loc: "~i", _;
+    // Magda: 14 words (rebeka, monika, marika, angelika, dominika, ameryka). Like Polana, except in 2 cells: dat sg, loc sg.
+    declension!("magda", 14, "~a", [gender: Feminine], like Polana;
+    dat: "~zie", _;
+    loc: "~zie", _;
     ),
     // Ostrowiec: 14 words (sosnowiec, królewiec, żywiec, śmigiel, drzewiec, bolesławiec). Like Idec, except in 1 cell: nom pl.
     declension!("ostrowiec", 14, "~ie~", [gender: MasculineInanimate], like Idec;
@@ -917,8 +917,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     stem gen_sg: "~~- like ostrowiec";
     nom: _, "~~e";
     ),
-    // Naaman: 13 words (charon, alfred, bernard, enceladus, oberon, kain). Like Pegaz, except in 1 cell: nom pl.
-    declension!("naaman", 13, "~", [gender: MasculinePersonal], like Pegaz;
+    // Naaman: 14 words (charon, alfred, bernard, enceladus, oberon, kain). Like Pegaz, except in 1 cell: nom pl.
+    declension!("naaman", 14, "~", [gender: MasculinePersonal], like Pegaz;
     nom: _, "~i";
     ),
     // Obed: 11 words (freud, oswald, romuald, barud, marud, brud). Like Zachariasz, except in 2 cells: loc sg, voc sg.
@@ -977,12 +977,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     loc: "~ieˇ", _;
     voc: "~oˇ", _;
     ),
-    // Lewi: 10 words (loki, bliźnięta, lewi, vivaldi, dostatni, wyszkoni).
-    declension!("lewi", 10, "~";
-    stem gen_sg: "~- like zełenski";
-    nom: "~", "~|~owie";
-    acc: "~ego", _;
-    ),
     // Liberec: 9 words (liberec, dunajec, zgorzelec, mielec, popielec, grójec). Like Annopol with `ˇ` after each pattern.
     declension!("liberec", 9, "~ˇ", [gender: MasculineInanimate], like Annopol with "ˇ";
     ),
@@ -996,6 +990,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     ins: "~nią", "~niami";
     loc: "~ni", "~niach";
     voc: "~niu", _;
+    ),
+    // Lewi: 8 words (bliźnięta, lewi, vivaldi, dostatni, wyszkoni, nędzi).
+    declension!("lewi", 8, "~";
+    stem gen_sg: "~- like zełenski";
+    nom: "~", "~|~owie";
+    acc: "~ego", _;
     ),
     // Bugiel: 8 words (kukiel, bugiel, smykiel, pęgiel, pengiel, fogiel).
     declension!("bugiel", 8, "~iel", [gender: MasculinePersonal];
@@ -1159,6 +1159,12 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     loc: "~o~ie", _;
     voc: "~o~ie", _;
     ),
+    // Lipnica: 5 words (róża, olsza, stepnica, lipnica, stopnica). Like Oleśnica, except in 3 cells: nom pl, gen_ pl, acc pl.
+    declension!("lipnica", 5, "~a", like Oleśnica;
+    nom: _, "~e";
+    gen_: _, "~";
+    acc: _, "~e";
+    ),
     // Fiszer: 4 words (melchior, fiszer, krzysztofor, treder). Like Żubr, except in 1 cell: nom pl.
     declension!("fiszer", 4, "~", [gender: MasculinePersonal], like Żubr;
     nom: _, "~zy";
@@ -1222,13 +1228,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     dat: "~", _;
     loc: "~", _;
     ),
-    // Estera: 3 words (kinga, olga, helga). Like Polana, except in 2 cells: dat sg, loc sg.
-    declension!("estera", 3, "~a", [gender: Feminine], like Polana;
+    // Estera: 4 words (kinga, olga, helga, tybinga). Like Polana, except in 2 cells: dat sg, loc sg.
+    declension!("estera", 4, "~a", [gender: Feminine], like Polana;
     dat: "~ze", _;
     loc: "~ze", _;
     ),
-    // Maryja: 3 words (maja, kaja, maryja). Like Biskaja, except in 3 cells: nom pl, gen_ pl, acc pl.
-    declension!("maryja", 3, "~ja", [gender: Feminine], like Biskaja;
+    // Maryja: 4 words (maja, kaja, maryja, biskaja). Like Biskaja, except in 3 cells: nom pl, gen_ pl, acc pl.
+    declension!("maryja", 4, "~ja", [gender: Feminine], like Biskaja;
     nom: _, "~je";
     gen_: _, "~i";
     acc: _, "~je";
@@ -1275,12 +1281,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 137] = [
     declension!("jawor", 3, "~", like Annopol;
     loc: "~ze", _;
     voc: "~ze", _;
-    ),
-    // Lipnica: 3 words (róża, olsza, lipnica). Like Oleśnica, except in 3 cells: nom pl, gen_ pl, acc pl.
-    declension!("lipnica", 3, "~a", like Oleśnica;
-    nom: _, "~e";
-    gen_: _, "~";
-    acc: _, "~e";
     ),
     // Azor: 3 words (tytus, azor, justyn). Like Natolin.
     declension!("azor", 3, "~", like Natolin;

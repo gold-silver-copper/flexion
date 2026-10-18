@@ -104,7 +104,7 @@ pub static GRAMMAR: Grammar<'static, Declension> = Grammar {
     sharpness: 0.75,
     trust: flexion::Trust {
         regular: 1.0,
-        unsettled: 0.98917764,
+        unsettled: 0.9906828,
         unattested: 1.0,
     },
 };
@@ -119,66 +119,19 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Agreement::*;
-        use crate::Animacy::*;
-        use crate::Case::*;
-        let cell = match self {
-            Cell::Form(Nominative, Masculine, Animate) => cell::NOM_M_ANIM,
-            Cell::Form(Nominative, Masculine, Inanimate) => cell::NOM_M_INAN,
-            Cell::Form(Nominative, Feminine, Animate) => cell::NOM_F_ANIM,
-            Cell::Form(Nominative, Feminine, Inanimate) => cell::NOM_F_INAN,
-            Cell::Form(Nominative, Neuter, Animate) => cell::NOM_N_ANIM,
-            Cell::Form(Nominative, Neuter, Inanimate) => cell::NOM_N_INAN,
-            Cell::Form(Nominative, Plural, Animate) => cell::NOM_PL_ANIM,
-            Cell::Form(Nominative, Plural, Inanimate) => cell::NOM_PL_INAN,
-            Cell::Form(Genitive, Masculine, Animate) => cell::GEN_M_ANIM,
-            Cell::Form(Genitive, Masculine, Inanimate) => cell::GEN_M_INAN,
-            Cell::Form(Genitive, Feminine, Animate) => cell::GEN_F_ANIM,
-            Cell::Form(Genitive, Feminine, Inanimate) => cell::GEN_F_INAN,
-            Cell::Form(Genitive, Neuter, Animate) => cell::GEN_N_ANIM,
-            Cell::Form(Genitive, Neuter, Inanimate) => cell::GEN_N_INAN,
-            Cell::Form(Genitive, Plural, Animate) => cell::GEN_PL_ANIM,
-            Cell::Form(Genitive, Plural, Inanimate) => cell::GEN_PL_INAN,
-            Cell::Form(Dative, Masculine, Animate) => cell::DAT_M_ANIM,
-            Cell::Form(Dative, Masculine, Inanimate) => cell::DAT_M_INAN,
-            Cell::Form(Dative, Feminine, Animate) => cell::DAT_F_ANIM,
-            Cell::Form(Dative, Feminine, Inanimate) => cell::DAT_F_INAN,
-            Cell::Form(Dative, Neuter, Animate) => cell::DAT_N_ANIM,
-            Cell::Form(Dative, Neuter, Inanimate) => cell::DAT_N_INAN,
-            Cell::Form(Dative, Plural, Animate) => cell::DAT_PL_ANIM,
-            Cell::Form(Dative, Plural, Inanimate) => cell::DAT_PL_INAN,
-            Cell::Form(Accusative, Masculine, Animate) => cell::ACC_M_ANIM,
-            Cell::Form(Accusative, Masculine, Inanimate) => cell::ACC_M_INAN,
-            Cell::Form(Accusative, Feminine, Animate) => cell::ACC_F_ANIM,
-            Cell::Form(Accusative, Feminine, Inanimate) => cell::ACC_F_INAN,
-            Cell::Form(Accusative, Neuter, Animate) => cell::ACC_N_ANIM,
-            Cell::Form(Accusative, Neuter, Inanimate) => cell::ACC_N_INAN,
-            Cell::Form(Accusative, Plural, Animate) => cell::ACC_PL_ANIM,
-            Cell::Form(Accusative, Plural, Inanimate) => cell::ACC_PL_INAN,
-            Cell::Form(Instrumental, Masculine, Animate) => cell::INS_M_ANIM,
-            Cell::Form(Instrumental, Masculine, Inanimate) => cell::INS_M_INAN,
-            Cell::Form(Instrumental, Feminine, Animate) => cell::INS_F_ANIM,
-            Cell::Form(Instrumental, Feminine, Inanimate) => cell::INS_F_INAN,
-            Cell::Form(Instrumental, Neuter, Animate) => cell::INS_N_ANIM,
-            Cell::Form(Instrumental, Neuter, Inanimate) => cell::INS_N_INAN,
-            Cell::Form(Instrumental, Plural, Animate) => cell::INS_PL_ANIM,
-            Cell::Form(Instrumental, Plural, Inanimate) => cell::INS_PL_INAN,
-            Cell::Form(Prepositional, Masculine, Animate) => cell::PREP_M_ANIM,
-            Cell::Form(Prepositional, Masculine, Inanimate) => cell::PREP_M_INAN,
-            Cell::Form(Prepositional, Feminine, Animate) => cell::PREP_F_ANIM,
-            Cell::Form(Prepositional, Feminine, Inanimate) => cell::PREP_F_INAN,
-            Cell::Form(Prepositional, Neuter, Animate) => cell::PREP_N_ANIM,
-            Cell::Form(Prepositional, Neuter, Inanimate) => cell::PREP_N_INAN,
-            Cell::Form(Prepositional, Plural, Animate) => cell::PREP_PL_ANIM,
-            Cell::Form(Prepositional, Plural, Inanimate) => cell::PREP_PL_INAN,
-            Cell::ShortAdjective(Masculine) => cell::SHORT_ADJECTIVE_M,
-            Cell::ShortAdjective(Feminine) => cell::SHORT_ADJECTIVE_F,
-            Cell::ShortAdjective(Neuter) => cell::SHORT_ADJECTIVE_N,
-            Cell::ShortAdjective(Plural) => cell::SHORT_ADJECTIVE_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, agreement, animacy) => {
+                cell::NOM_M_ANIM as usize
+                    + (case as usize * 4 + agreement as usize) * 2
+                    + animacy as usize
+            }
+            Cell::ShortAdjective(agreement) => {
+                cell::SHORT_ADJECTIVE_M as usize + agreement as usize
+            }
+        }
     }
 }
 

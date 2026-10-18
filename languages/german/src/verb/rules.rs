@@ -7,11 +7,11 @@
 use super::paradigms::Conjugation::{self, *};
 use flexion::Choice;
 
-/// 250 rules and 731 listed words.
+/// 248 rules and 725 listed words.
 pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
     rules {
-        "" => [Machen 1995, Kassieren 966, Nudeln 828, Richten 238, Öffnen 31, Langmachen 27, Schwingen 24, Schreiben 22, Fahren 20, Dagegenhalten 19, Begeistern 18, Bereiten 14, Drangehen 12, Fliegen 11, Wahrnehmen 11, Ergeben 11, Greifen 10, Werfen 10, Sehen 10, Liegenlassen 9, Schmeißen 8, Giessen 8, Schießen 8, Wehtun 8, Halten 8, Schwimmen 7, Gegenüberstellen 7, Drankommen 7, Einstellen 7, Gaberln 7, Sprechen 7, Beissen 6, Bestehenbleiben 6, Achthaben 6, Melken 6, Ziehen 6, Bestehen 6, Weisen 5, Darüberliegen 5, Radfahren 5, Nesen 5, Brennen 4, Reiten 4, Notlanden 4, Achtgeben 4, Gegenüberstehen 4, Einleuchten 4, Entflechten 4, Umhinkönnen 4, Behalten 4, Verschwimmen 4, Begegnen 4, Gären 3, Glimmen 3, Speien 3, Schneiden 3, Scheren 3, Stossen 3, Messen 3, Schmelzen 3, Dürfen 3, Schwören 3, Salzen 3, Dreinreden 3, Bloßlegen 3, Vorfallen 3, Bekennen 3, Kiesen 2],
-        "en" => [Machen 1995, Kassieren 966, Richten 238, Öffnen 30, Langmachen 27, Schwingen 24, Schreiben 22, Fahren 20, Dagegenhalten 19, Bereiten 14, Drangehen 12, Fliegen 11, Wahrnehmen 11, Ergeben 11, Greifen 10, Werfen 10, Sehen 10, Liegenlassen 9, Schmeißen 8, Giessen 8, Schießen 8, Halten 8, Schwimmen 7, Gegenüberstellen 7, Drankommen 7, Einstellen 7, Sprechen 7, Beissen 6, Bestehenbleiben 6, Achthaben 6, Melken 6, Ziehen 6, Bestehen 6, Weisen 5, Darüberliegen 5, Radfahren 5, Nesen 5, Brennen 4, Reiten 4, Notlanden 4, Achtgeben 4, Gegenüberstehen 4, Entflechten 4, Umhinkönnen 4, Behalten 4, Verschwimmen 4, Begegnen 4, Gären 3, Glimmen 3, Speien 3, Schneiden 3, Scheren 3, Stossen 3, Messen 3, Schmelzen 3, Dürfen 3, Schwören 3, Salzen 3, Dreinreden 3, Bloßlegen 3, Vorfallen 3, Bekennen 3, Kiesen 2, Einleuchten 1],
+        "" => [Machen 1995, Kassieren 966, Nudeln 828, Richten 240, Öffnen 29, Langmachen 27, Schwingen 24, Schreiben 22, Fahren 20, Dagegenhalten 19, Begeistern 18, Bereiten 14, Drangehen 12, Fliegen 11, Wahrnehmen 11, Ergeben 11, Greifen 10, Werfen 10, Sehen 10, Liegenlassen 9, Schmeißen 8, Giessen 8, Schießen 8, Wehtun 8, Halten 8, Schwimmen 7, Gegenüberstellen 7, Drankommen 7, Einstellen 7, Gaberln 7, Sprechen 7, Beissen 6, Bestehenbleiben 6, Achthaben 6, Melken 6, Ziehen 6, Bestehen 6, Weisen 5, Darüberliegen 5, Radfahren 5, Nesen 5, Brennen 4, Reiten 4, Stoßlüften 4, Achtgeben 4, Gegenüberstehen 4, Maßschneidern 4, Entflechten 4, Umhinkönnen 4, Behalten 4, Verschwimmen 4, Begegnen 4, Gären 3, Glimmen 3, Speien 3, Schneiden 3, Scheren 3, Stossen 3, Messen 3, Schmelzen 3, Dürfen 3, Schwören 3, Salzen 3, Dreinreden 3, Bloßlegen 3, Vorfallen 3, Bekennen 3, Kiesen 2],
+        "en" => [Machen 1995, Kassieren 966, Richten 240, Öffnen 28, Langmachen 27, Schwingen 24, Schreiben 22, Fahren 20, Dagegenhalten 19, Bereiten 14, Drangehen 12, Fliegen 11, Wahrnehmen 11, Ergeben 11, Greifen 10, Werfen 10, Sehen 10, Liegenlassen 9, Schmeißen 8, Giessen 8, Schießen 8, Halten 8, Schwimmen 7, Gegenüberstellen 7, Drankommen 7, Einstellen 7, Sprechen 7, Beissen 6, Bestehenbleiben 6, Achthaben 6, Melken 6, Ziehen 6, Bestehen 6, Weisen 5, Darüberliegen 5, Radfahren 5, Nesen 5, Brennen 4, Reiten 4, Stoßlüften 4, Achtgeben 4, Gegenüberstehen 4, Entflechten 4, Umhinkönnen 4, Behalten 4, Verschwimmen 4, Begegnen 4, Gären 3, Glimmen 3, Speien 3, Schneiden 3, Scheren 3, Stossen 3, Messen 3, Schmelzen 3, Dürfen 3, Schwören 3, Salzen 3, Dreinreden 3, Bloßlegen 3, Vorfallen 3, Bekennen 3, Kiesen 2, Maßschneidern 1],
         "ben" => [Machen 61, Schreiben 12, Ergeben 6, Bestehenbleiben 6, Achthaben 6, Kassieren 5, Achtgeben 4, Werfen 3, Fliegen 2, Fahren 1, Scheren 1],
         "aben" => [Machen 7, Achthaben 6, Kassieren 1, Fahren 1] regular,
         "bben" => [Machen 7] regular,
@@ -27,13 +27,13 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "lben" => [Machen 4] regular,
         "rben" => [Machen 7, Werfen 3] regular,
         "uben" => [Machen 12] regular,
-        "den" => [Machen 85, Kassieren 7, Schwingen 6, Schneiden 3, Dreinreden 3, Schreiben 2, Werfen 2, Notlanden 2, Fahren 1],
-        "eden" => [Machen 5, Dreinreden 3, Kassieren 1, Notlanden 1] regular,
+        "den" => [Machen 85, Kassieren 7, Schwingen 6, Schneiden 3, Dreinreden 3, Schreiben 2, Werfen 2, Stoßlüften 2, Fahren 1],
+        "eden" => [Machen 5, Dreinreden 3, Kassieren 1, Stoßlüften 1] regular,
         "ieden" => [Machen 4] regular,
         "iden" => [Machen 6, Schneiden 3, Kassieren 2, Schreiben 2] regular,
         "hneiden" => [Schneiden 2] regular,
         "lden" => [Machen 9] regular,
-        "nden" => [Machen 36, Schwingen 6, Kassieren 1, Notlanden 1] regular,
+        "nden" => [Machen 36, Schwingen 6, Kassieren 1, Stoßlüften 1] regular,
         "inden" => [Schwingen 6, Machen 2] regular,
         "unden" => [Machen 8] regular,
         "rden" => [Machen 7, Werfen 2, Kassieren 1] regular,
@@ -207,12 +207,13 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "issen" => [Machen 7, Beissen 6, Salzen 1] regular,
         "ussen" => [Machen 5] regular,
         "usen" => [Machen 14] regular,
-        "ten" => [Richten 236, Dagegenhalten 19, Bereiten 14, Reiten 4, Entflechten 4, Behalten 4, Halten 3, Sprechen 3, Öffnen 2, Nesen 2, Notlanden 2, Sehen 1, Giessen 1, Einleuchten 1],
+        "ten" => [Richten 238, Dagegenhalten 19, Bereiten 14, Reiten 4, Entflechten 4, Behalten 4, Halten 3, Sprechen 3, Nesen 2, Stoßlüften 2, Sehen 1, Giessen 1, Maßschneidern 1],
         "aten" => [Richten 7, Halten 2, Behalten 1] regular,
         "reten" => [Nesen 2, Sehen 1] regular,
-        "ften" => [Richten 19, Notlanden 2] regular,
-        "üften" => [Richten 2, Notlanden 2] regular,
-        "hten" => [Richten 41, Entflechten 4, Öffnen 1, Einleuchten 1] regular,
+        "ften" => [Richten 19, Stoßlüften 2] regular,
+        "üften" => [Richten 2, Stoßlüften 2] regular,
+        "hten" => [Richten 42, Entflechten 4, Maßschneidern 1] regular,
+        "achten" => [Richten 11] regular,
         "echten" => [Richten 4, Entflechten 4] regular,
         "ichten" => [Richten 12] regular,
         "iten" => [Richten 7, Bereiten 4, Reiten 4] regular,
@@ -222,12 +223,9 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "rhalten" => [Dagegenhalten 10, Behalten 1] regular,
         "elten" => [Sprechen 2, Richten 1, Bereiten 1] regular,
         "rten" => [Richten 19, Bereiten 1] regular,
-        "isten" => [Richten 8] regular,
-        "osten" => [Richten 7],
+        "sten" => [Richten 43, Bereiten 1, Sprechen 1] regular,
         "tten" => [Richten 33, Bereiten 2] regular,
         "uten" => [Richten 11] regular,
-        "öten" => [Richten 5] regular,
-        "üten" => [Richten 5] regular,
         "uen" => [Machen 30, Kassieren 2] regular,
         "ven" => [Machen 8] regular,
         "xen" => [Machen 18] regular,
@@ -250,8 +248,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         "keln" => [Nudeln 43, Begeistern 3] regular,
         "rln" => [Gaberln 5] regular,
         "erln" => [Gaberln 5] regular,
-        "rn" => [Nudeln 362, Begeistern 12, Einleuchten 3] regular,
-        "idern" => [Nudeln 2, Einleuchten 2] regular,
+        "rn" => [Nudeln 362, Begeistern 12, Maßschneidern 3] regular,
+        "idern" => [Nudeln 2, Maßschneidern 2] regular,
         "endern" => [Nudeln 3, Begeistern 2] regular,
         "hern" => [Nudeln 23] regular,
         "kern" => [Nudeln 31] regular,
@@ -350,8 +348,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
             "#stummschalten", "#updaten", "#wüthen", "#zugrunderichten",
         ],
         Öffnen => [
-            "#atmen", "#cyclen", "#ebnen", "#googlen", "#jausnen", "#knien", "#lüsten", "#ordnen",
-            "#sein", "#spacen", "#wappnen", "#weihnachten", "#widmen", "#witwen",
+            "#atmen", "#cyclen", "#ebnen", "#googlen", "#jausnen", "#knien", "#ordnen", "#sein",
+            "#spacen", "#wappnen", "#widmen", "#witwen",
         ],
         Langmachen => [
             "#wiedergutmachen",
@@ -464,8 +462,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         Reiten => [
             "#gleiten", "#reiten", "#schreiten", "#streiten",
         ],
-        Notlanden => [
-            "#bauchreden", "#notlanden", "#stosslüften", "#stoßlüften",
+        Stoßlüften => [
+            "#bauchreden", "#notlanden",
         ],
         Achtgeben => [
             "#achtgeben", "#bekanntgeben", "#preisgeben", "#zufriedengeben",
@@ -473,8 +471,8 @@ pub(super) const CONJUGATION: Choice<'static, Conjugation> = flexion::choice! {
         Gegenüberstehen => [
             "#bevorstehen", "#gegenüberstehen", "#strammstehen", "#umeinanderstehen",
         ],
-        Einleuchten => [
-            "#einleuchten", "#endlagern", "#massschneidern", "#maßschneidern",
+        Maßschneidern => [
+            "#einleuchten", "#endlagern",
         ],
         Entflechten => [
             "#entflechten", "#fechten", "#verfechten", "#verflechten",

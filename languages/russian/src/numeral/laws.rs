@@ -15,14 +15,19 @@ use flexion::sound_law::Program;
 /// The laws, in order.
 pub(super) const LAWS: Program<'static> = flexion::laws! {
     classes {}
+    agreements {
+        law0 = [("Ы", "е") => "ы", ("Ы", "о") => "и", ("Ы", "") => "е"];
+    }
     rules {
+        // Ы → ы after е; и after о; е after none (the nearest of е, о before it, as written): 12 words (два, три, тысяча, двое), 0 forms wrong.
+        law0[iterative]: "{x:[Ы]}" => "{x|law0[t]}" / "{t:[е|о]?}{g:![е|о]*}" _ "";
         // ь+ом → ь+ю: 19 words (шесть, пять, семь, восемь), 0 forms wrong.
-        law0: "ь+ом" => "ь+ю";
+        law1: "ь+ом" => "ь+ю";
         // ь+а → +и: 18 words (шесть, пять, семь, девять), 0 forms wrong.
-        law1: "ь+а" => "+и";
+        law2: "ь+а" => "+и";
         // ь+е → +и: 18 words (шесть, пять, семь, девять), 0 forms wrong.
-        law2: "ь+е" => "+и";
+        law3: "ь+е" => "+и";
         // ь+у → +и: 18 words (шесть, пять, семь, девять), 0 forms wrong.
-        law3: "ь+у" => "+и";
+        law4: "ь+у" => "+и";
     }
 };

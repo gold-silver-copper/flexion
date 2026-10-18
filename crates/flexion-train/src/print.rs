@@ -53,16 +53,19 @@ pub fn files(
 }
 
 /// The language's marks model: one for every part of speech (see
-/// [`crate::learn::language_marks`]), or none.
+/// [`crate::marks`]), or none. A part of speech the roots mislead reads
+/// none of them.
 fn marks_of<'a, 's>(parts: &[Part<'a, 's>]) -> Result<Option<&'a flexion::Marks<'s>>, String> {
-    let mut all = parts
+    let all = parts
         .iter()
         .filter_map(|p| p.learned.grammar.marks.as_ref());
-    let Some(first) = all.next() else {
+    let Some(first) = all.clone().max_by_key(|m| m.roots.len()) else {
         return Ok(None);
     };
-    let same = |m: &flexion::Marks<'s>| m.rules == first.rules && m.roots == first.roots;
-    if !all.all(same) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
+    let same = |m: &flexion::Marks<'s>| {
+        m.rules == first.rules && (m.roots == first.roots || m.roots.is_empty())
+    };
+    if !all.clone().all(same) || parts.iter().any(|p| p.learned.grammar.marks.is_none()) {
         return Err("the parts of speech have different marks: learn them once for the language (`flexion_train::marks`)".into());
     }
     Ok(Some(first))
@@ -100,27 +103,67 @@ fn marks_file(marks: &flexion::Marks<'_>) -> String {
     let lines: String = (roots.iter())
         .map(|(r, v)| format!("    {} => {v:?},\n", Lit(r)))
         .collect();
+    // No roots, where no part of speech reads them.
+    let (roots_doc, cow, roots) = if roots.is_empty() {
+        (String::new(), "", String::new())
+    } else {
+        (
+            format!(
+                " A root comes first: the beginning of a word through a letter and two\n//! past it, where nine in ten of the dictionary's words with a form beginning\n//! so (two or more) write the letter one way the rules don't{root}."
+            ),
+            "\nuse std::borrow::Cow;",
+            format!(
+                "\n/// {} roots.\npub(crate) static ROOTS: &[(Cow<'static, str>, char)] = flexion::roots! {{\n{lines}}};\n",
+                thousands(roots.len())
+            ),
+        )
+    };
     format!(
-        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so. A root comes first: the beginning of a word through a letter and two\n//! past it, where the dictionary's words beginning so (two or more) all write\n//! the letter one way the rules don't{root}.\n\nuse flexion::Choice;\nuse std::borrow::Cow;\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n\n/// {} roots.\npub(crate) static ROOTS: &[(Cow<'static, str>, char)] = flexion::roots! {{\n{lines}}};\n",
+        "//! How a letter typed without its mark is written, for every part of speech.\n//! Each rule reads the letter before it, the letter, the letters after it and,\n//! after the word's end, the part of speech (`#` is the word's start or end):\n//! the longest one that matches decides{}, giving each way of writing the\n//! letter with how many of the dictionary's letters in that place are written\n//! so.{roots_doc}\n\nuse flexion::Choice;{cow}\n\n/// {} rules.\npub(crate) const MARKS: Choice<'static, char> = {}}};\n{roots}",
         examples,
         thousands(marks.rules.len()),
         choice_macro("starts", marks, |c| format!("{c:?}")),
-        thousands(roots.len()),
     )
 }
 
-/// Write the crate into `dir`, replacing its `src/`.
-pub fn write(dir: &Path, files: &[(String, String)]) -> Result<(), String> {
-    let src = dir.join("src");
-    if src.exists() {
-        std::fs::remove_dir_all(&src).map_err(|e| format!("{}: {e}", src.display()))?;
-    }
+/// Write the crate into `dir`: each file whose bytes differ from what is
+/// there (the rest are left as they are, their times too), and nothing else
+/// in its `src/`. Gives how many files it wrote.
+pub fn write(dir: &Path, files: &[(String, String)]) -> Result<usize, String> {
+    let mut written = 0;
     for (path, text) in files {
         let path = dir.join(path);
+        if std::fs::read(&path).is_ok_and(|old| old == text.as_bytes()) {
+            continue;
+        }
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
         }
         std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))?;
+        written += 1;
+    }
+    let keep: std::collections::HashSet<std::path::PathBuf> =
+        files.iter().map(|(path, _)| dir.join(path)).collect();
+    prune(&dir.join("src"), &keep)?;
+    Ok(written)
+}
+
+/// Remove what under `dir` isn't in `keep`, and the directories that leaves
+/// empty.
+fn prune(dir: &Path, keep: &std::collections::HashSet<std::path::PathBuf>) -> Result<(), String> {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return Ok(());
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.is_dir() {
+            prune(&path, keep)?;
+            if std::fs::read_dir(&path).is_ok_and(|mut d| d.next().is_none()) {
+                std::fs::remove_dir(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+            }
+        } else if !keep.contains(&path) {
+            std::fs::remove_file(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        }
     }
     Ok(())
 }
@@ -491,7 +534,8 @@ fn grammar_files(
         ),
         laws = some(g.laws.is_some(), "laws::LAWS"),
         marks = g.marks.as_ref().map_or("None".to_string(), |m| format!(
-            "Some(flexion::Marks {{ rules: crate::marks::MARKS, roots: Cow::Borrowed(crate::marks::ROOTS), part: Cow::Borrowed({:?}) }})",
+            "Some(flexion::Marks {{ rules: crate::marks::MARKS, roots: Cow::Borrowed({}), part: Cow::Borrowed({:?}) }})",
+            if m.roots.is_empty() { "&[]" } else { "crate::marks::ROOTS" },
             m.part
         )),
     );
@@ -889,7 +933,7 @@ fn grammar_files(
     // relations.rs
     if !g.relations.is_empty() {
         let mut r = format!(
-            "//! Where a cell's form comes from: another cell's form of the word, changed.\n//! A {one} that writes `derived` in a cell takes the form this way, and so\n//! does a word whose form of the other cell is listed but not this one's.\n//! Each relation lists its changes, as patterns around the letters they keep\n//! (`(\"~ī\", \"~istī\")`, numbered in order), and the rules on that form's\n//! ending choosing one.\n\nuse super::cell::*;\nuse flexion::Relation;\nuse std::borrow::Cow;\n\n/// Writes one relation: its cell, the cells it comes from (by the word's\n/// feature, in order, if several), its changes, then the rules choosing one\n/// and the words they get wrong (`none`: the form itself), whether it tells\n/// listed words' forms, and the pair of cells it is by analogy with.\nmacro_rules! relation {{\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: None,\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules {{ $($rules:tt)* }} listed {{ $($words:tt)* }}, $listed:literal, $analogy:expr) => {{\n        Relation {{\n            cell: $cell,\n            from: Cow::Borrowed(&[$($from),*]),\n            changes: flexion::changes![$(($old, $new)),*],\n            change: Some(flexion::choice! {{ rules {{ $($rules)* }} listed {{ $($words)* }} }}),\n            listed: $listed,\n            analogy: $analogy,\n        }}\n    }};\n}}\n\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
+            "//! Where a cell's form comes from: another cell's form of the word, changed.\n//! A {one} that writes `derived` in a cell takes the form this way, and so\n//! does a word whose form of the other cell is listed but not this one's.\n//! Each relation lists its changes, as patterns around the letters they keep\n//! (`(\"~ī\", \"~istī\")`, numbered in order; one writing `‹` meets the\n//! form's front through the sound laws, the augment's `(\"~ि\", \"अ‹~्\")`), and\n//! the rules on that form's ending choosing one.\n\nuse super::cell::*;\nuse flexion::{{Relation, relation}};\n\n// Each relation: its cell, the cells it comes from (by the word's feature,\n// in order, if several), its changes, then the rules choosing one and the\n// words they get wrong (`none`: the form itself), whether it tells listed\n// words' forms, and the pair of cells it is by analogy with.\npub(super) static RELATIONS: [Relation<'static>; {}] = [\n",
             g.relations.len()
         );
         for rel in g.relations.iter() {
@@ -984,8 +1028,8 @@ fn grammar_files(
         let mut r = format!(
             "//! Words a word ending in one inflects as, its front kept (German `Fahrschein`\n//! as `Schein`): {}.\n\nuse std::borrow::Cow;\n",
             g.heads.least.map_or(
-                "those whose own compounds in the dictionary do".to_string(),
-                |l| format!("every listed word of {l} letters or more, but those in `NOT`,\n//! whose own words in the dictionary don't; and the shorter ones in `HEADS`,\n//! whose own compounds do")
+                "those whose own compounds in the dictionary do, listed or not (one not\n//! listed inflects as a word of its own, its last member deciding its harmony)".to_string(),
+                |l| format!("every listed word of {l} letters or more, but those in `NOT`,\n//! whose own words in the dictionary don't; and those in `HEADS`, whose own\n//! compounds do, listed or not (one not listed inflects as a word of its own,\n//! its last member deciding its harmony)")
             ),
         );
         for (name, words) in [("NOT", &g.heads.not), ("HEADS", &g.heads.words)] {
@@ -1618,7 +1662,7 @@ fn tuple(items: &[String]) -> String {
 
 /// A cell group's variant of a part of speech's `Cell`: `noun_second_case`
 /// → `SecondCase`; the part's own group is `Form`.
-fn cell_variant(part: &str, group: &str) -> String {
+pub fn cell_variant(part: &str, group: &str) -> String {
     let name = group
         .strip_prefix(part)
         .map_or(group, |g| g.trim_start_matches('_'));
@@ -1654,60 +1698,38 @@ fn api_code(
         let v = call(&cell_variant(name, g.name), &paths(g));
         let _ = writeln!(s, "    /// {}\n    {v},", g.group.doc);
     }
-    // A feature's values are written bare where no other feature has a value
-    // of the same name.
-    let mut features: Vec<&Feature> = cells
-        .groups
-        .iter()
-        .flat_map(|g| g.features.iter().copied())
-        .collect();
-    features.sort_by_key(|f| f.name);
-    features.dedup_by_key(|f| f.name);
-    let bare: Vec<&str> = features
-        .iter()
-        .filter(|f| {
-            f.values.iter().all(|v| {
-                features
-                    .iter()
-                    .filter(|o| o.name != f.name)
-                    .all(|o| o.values.iter().all(|w| w.name != v.name))
-            })
-        })
-        .map(|f| f.name)
-        .collect();
-    let uses: String = bare
-        .iter()
-        .map(|f| format!("        use crate::{f}::*;\n"))
-        .collect();
-    let _ = write!(
-        s,
-        "}}\n\nimpl Cell {{\n    /// Its place in a paradigm.\n    pub const fn index(self) -> usize {{\n{uses}        let cell = match self {{\n"
+    // A cell's place: its group's first cell, then its values counted in
+    // order, the last fastest (as `cell` numbers them).
+    s.push_str(
+        "}\n\nimpl Cell {\n    /// Its place in a paradigm: its group's first cell, then its values\n    /// counted in order, the last fastest.\n    pub const fn index(self) -> usize {\n        match self {\n",
     );
     for g in &cells.groups {
-        let v = cell_variant(name, g.name);
-        for cell in g.offset..g.offset + g.len() {
-            let args: Vec<String> = g
-                .features
-                .iter()
-                .zip(g.values(cell))
-                .map(|(f, x)| {
-                    let value = f.values.get(x).map_or("", |v| v.name);
-                    if bare.contains(&f.name) {
-                        value.to_string()
-                    } else {
-                        format!("crate::{}::{value}", f.name)
-                    }
-                })
-                .collect();
-            let constant = layout.name(cell);
-            let _ = writeln!(
-                s,
-                "            Cell::{} => cell::{constant},",
-                call(&v, &args)
-            );
+        let vars: Vec<String> = g.features.iter().map(|f| snake(f.name)).collect();
+        let mut place = String::new();
+        for (f, var) in g.features.iter().zip(&vars) {
+            let value = format!("{var} as usize");
+            place = match (place.is_empty(), f.values.len()) {
+                (true, _) => value,
+                (false, 1) => format!("{place} + {value}"),
+                (false, n) if place.contains('+') => {
+                    format!("({place}) * {n} + {value}")
+                }
+                (false, n) => format!("{place} * {n} + {value}"),
+            };
         }
+        let first = format!("cell::{} as usize", layout.name(g.offset));
+        let index = if place.is_empty() {
+            first
+        } else {
+            format!("{first} + {place}")
+        };
+        let _ = writeln!(
+            s,
+            "            Cell::{} => {index},",
+            call(&cell_variant(name, g.name), &vars)
+        );
     }
-    s.push_str("        };\n        cell as usize\n    }\n}\n\n");
+    s.push_str("        }\n    }\n}\n\n");
     // Conversions from a group's values, where no other group has the same
     // features.
     for g in &cells.groups {

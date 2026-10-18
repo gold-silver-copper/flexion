@@ -182,11 +182,11 @@ pub(super) static SLOTS: [Slot<'static>; 4] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 70] = [
-    // lemma like agitō: 2,630 words.
+pub(super) static TABLES: [EndingTable<'static>; 71] = [
+    // lemma like agitō: 2,628 words.
     EndingTable {
         name: Cow::Borrowed("agitō"),
-        words: 2630,
+        words: 2628,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ō\t",
@@ -225,10 +225,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~andus\t",
         )),
     },
-    // lemma like compercō: 917 words.
+    // lemma like compercō: 959 words.
     EndingTable {
         name: Cow::Borrowed("compercō"),
-        words: 917,
+        words: 959,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ō\t",
@@ -267,10 +267,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus|~undus\t",
         )),
     },
-    // lemma like agō: 483 words.
+    // lemma like agō: 434 words.
     EndingTable {
         name: Cow::Borrowed("agō"),
-        words: 483,
+        words: 434,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ō\t",
@@ -309,10 +309,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus\t",
         )),
     },
-    // lemma like habeō: 344 words.
+    // lemma like habeō: 320 words.
     EndingTable {
         name: Cow::Borrowed("habeō"),
-        words: 344,
+        words: 320,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~eō\t",
@@ -351,10 +351,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus\t",
         )),
     },
-    // lemma like mūniō: 311 words.
+    // lemma like mūniō: 308 words.
     EndingTable {
         name: Cow::Borrowed("mūniō"),
-        words: 311,
+        words: 308,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~iō\t",
@@ -393,10 +393,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~iendus|~iundus\t",
         )),
     },
-    // lemma like impleō: 162 words.
+    // lemma like moveō: 177 words.
     EndingTable {
-        name: Cow::Borrowed("impleō"),
-        words: 162,
+        name: Cow::Borrowed("moveō"),
+        words: 177,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~eō\t",
@@ -435,10 +435,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus\t",
         )),
     },
-    // lemma like excipiō: 136 words.
+    // lemma like excipiō: 135 words.
     EndingTable {
         name: Cow::Borrowed("excipiō"),
-        words: 136,
+        words: 135,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~iō\t",
@@ -477,10 +477,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~iendus|~iundus\t",
         )),
     },
-    // lemma like minuō: 114 words.
+    // lemma like minuō: 103 words.
     EndingTable {
         name: Cow::Borrowed("minuō"),
-        words: 114,
+        words: 103,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ō\t",
@@ -687,10 +687,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus\t",
         )),
     },
-    // lemma like compungō: 36 words.
+    // lemma like compungō: 38 words.
     EndingTable {
         name: Cow::Borrowed("compungō"),
-        words: 36,
+        words: 38,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ōˇ\t",
@@ -727,6 +727,48 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~ereˇ\t",
             "~īˇ\t",
             "~endusˇ|~undusˇ\t",
+        )),
+    },
+    // lemma like nuō: 34 words.
+    EndingTable {
+        name: Cow::Borrowed("nuō"),
+        words: 34,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~ōˇ\t",
+            "~isˇ\t",
+            "~itˇ\t~untˇ\t",
+            "~entˇ\t",
+            "~orˇ\t~imurˇ\t",
+            "~erisˇ|~ereˇ\t~iminīˇ\t",
+            "~iturˇ\t~unturˇ\t",
+            "~ēbarˇ\t~ēbāmurˇ\t",
+            "~ēbārisˇ|~ēbāreˇ\t~ēbāminīˇ\t",
+            "~ēbāturˇ\t~ēbanturˇ\t",
+            "~arˇ\t~ēmurˇ\t",
+            "~ērisˇ|~ēreˇ\t~ēminīˇ\t",
+            "~ēturˇ\t~enturˇ\t",
+            "~amˇ\t~āmusˇ\t",
+            "~āsˇ\t~ātisˇ\t",
+            "~antˇ\t",
+            "~eremˇ\t~erēmusˇ\t",
+            "~erēsˇ\t~erētisˇ\t",
+            "~eretˇ\t~erentˇ\t",
+            "~arˇ\t~āmurˇ\t",
+            "~ārisˇ|~āreˇ\t~āminīˇ\t",
+            "~āturˇ\t~anturˇ\t",
+            "~ererˇ\t~erēmurˇ\t",
+            "~erērisˇ|~erēreˇ\t~erēminīˇ\t",
+            "~erēturˇ\t~erenturˇ\t",
+            "~eˇ\t",
+            "~ereˇ\t~iminīˇ\t",
+            "~itōteˇ\t",
+            "~untōˇ\t",
+            "~itorˇ\t",
+            "~itorˇ\t~untorˇ\t",
+            "~ereˇ\t",
+            "~īˇ\t",
+            "~endusˇ\t",
         )),
     },
     // lemma like ēgredior: 32 words.
@@ -813,46 +855,46 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~eundus\t",
         )),
     },
-    // lemma like nuō: 27 words.
+    // lemma like madeō: 25 words.
     EndingTable {
-        name: Cow::Borrowed("nuō"),
-        words: 27,
+        name: Cow::Borrowed("madeō"),
+        words: 25,
         slot: 0,
         table: Cow::Borrowed(concat!(
-            "~ōˇ\t",
-            "~isˇ\t",
-            "~itˇ\t~untˇ\t",
-            "~entˇ\t",
-            "~orˇ\t~imurˇ\t",
-            "~erisˇ|~ereˇ\t~iminīˇ\t",
-            "~iturˇ\t~unturˇ\t",
-            "~ēbarˇ\t~ēbāmurˇ\t",
-            "~ēbārisˇ|~ēbāreˇ\t~ēbāminīˇ\t",
-            "~ēbāturˇ\t~ēbanturˇ\t",
-            "~arˇ\t~ēmurˇ\t",
-            "~ērisˇ|~ēreˇ\t~ēminīˇ\t",
-            "~ēturˇ\t~enturˇ\t",
-            "~amˇ\t~āmusˇ\t",
-            "~āsˇ\t~ātisˇ\t",
-            "~antˇ\t",
-            "~eremˇ\t~erēmusˇ\t",
-            "~erēsˇ\t~erētisˇ\t",
-            "~eretˇ\t~erentˇ\t",
-            "~arˇ\t~āmurˇ\t",
-            "~ārisˇ|~āreˇ\t~āminīˇ\t",
-            "~āturˇ\t~anturˇ\t",
-            "~ererˇ\t~erēmurˇ\t",
-            "~erērisˇ|~erēreˇ\t~erēminīˇ\t",
-            "~erēturˇ\t~erenturˇ\t",
-            "~eˇ\t",
-            "~ereˇ\t~iminīˇ\t",
-            "~itōteˇ\t",
-            "~untōˇ\t",
-            "~itorˇ\t",
-            "~itorˇ\t~untorˇ\t",
-            "~ereˇ\t",
-            "~īˇ\t",
-            "~endusˇ\t",
+            "~eō\t",
+            "~ēs\t",
+            "~et\t~ent\t",
+            "~ēbunt\t",
+            "\t\t",
+            "\t\t",
+            "~ētur\t~entur\t",
+            "\t\t",
+            "\t\t",
+            "~ēbātur\t~ēbantur\t",
+            "\t\t",
+            "\t\t",
+            "~ēbitur\t~ēbuntur\t",
+            "~eam\t~eāmus\t",
+            "~eās\t~eātis\t",
+            "~eant\t",
+            "~ērem\t~ērēmus\t",
+            "~ērēs\t~ērētis\t",
+            "~ēret\t~ērent\t",
+            "\t\t",
+            "\t\t",
+            "~eātur\t~eantur\t",
+            "\t\t",
+            "\t\t",
+            "~ērētur\t~ērentur\t",
+            "~ē\t",
+            "\t\t",
+            "~ētōte\t",
+            "~entō\t",
+            "\t",
+            "~ētor\t~entor\t",
+            "~ēre\t",
+            "~ērī\t",
+            "~endum\t",
         )),
     },
     // lemma like referō: 21 words.
@@ -897,94 +939,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endus|~undus\t",
         )),
     },
-    // lemma like ēveniō: 17 words.
-    EndingTable {
-        name: Cow::Borrowed("ēveniō"),
-        words: 17,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "~iō\t",
-            "~īs\t",
-            "~it\t~iunt\t",
-            "~ient\t",
-            "\t\t",
-            "\t\t",
-            "~ītur\t~iuntur\t",
-            "\t\t",
-            "\t\t",
-            "~iēbātur\t~iēbantur\t",
-            "\t\t",
-            "\t\t",
-            "~iētur\t~ientur\t",
-            "~iam\t~iāmus\t",
-            "~iās\t~iātis\t",
-            "~iant\t",
-            "~īrem\t~īrēmus\t",
-            "~īrēs\t~īrētis\t",
-            "~īret\t~īrent\t",
-            "\t\t",
-            "\t\t",
-            "~iātur\t~iantur\t",
-            "\t\t",
-            "\t\t",
-            "~īrētur\t~īrentur\t",
-            "~ī\t",
-            "\t\t",
-            "~ītōte\t",
-            "~iuntō\t",
-            "\t",
-            "~ītor\t~iuntor\t",
-            "~īre\t",
-            "~īrī\t",
-            "~iendum|~iundum\t",
-        )),
-    },
-    // lemma like madeō: 16 words.
-    EndingTable {
-        name: Cow::Borrowed("madeō"),
-        words: 16,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "~eō\t",
-            "~ēs\t",
-            "~et\t~ent\t",
-            "~ēbunt\t",
-            "\t\t",
-            "\t\t",
-            "~ētur\t~entur\t",
-            "\t\t",
-            "\t\t",
-            "~ēbātur\t~ēbantur\t",
-            "\t\t",
-            "\t\t",
-            "~ēbitur\t~ēbuntur\t",
-            "~eam\t~eāmus\t",
-            "~eās\t~eātis\t",
-            "~eant\t",
-            "~ērem\t~ērēmus\t",
-            "~ērēs\t~ērētis\t",
-            "~ēret\t~ērent\t",
-            "\t\t",
-            "\t\t",
-            "~eātur\t~eantur\t",
-            "\t\t",
-            "\t\t",
-            "~ērētur\t~ērentur\t",
-            "~ē\t",
-            "\t\t",
-            "~ētōte\t",
-            "~entō\t",
-            "\t",
-            "~ētor\t~entor\t",
-            "~ēre\t",
-            "~ērī\t",
-            "~endum\t",
-        )),
-    },
-    // lemma like fugiō: 16 words.
+    // lemma like fugiō: 15 words.
     EndingTable {
         name: Cow::Borrowed("fugiō"),
-        words: 16,
+        words: 15,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~iō\t",
@@ -1021,6 +979,90 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~ere\t",
             "~ī\t",
             "~iendus\t",
+        )),
+    },
+    // lemma like ambigō: 15 words.
+    EndingTable {
+        name: Cow::Borrowed("ambigō"),
+        words: 15,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~ō\t",
+            "~is\t",
+            "~it\t~unt\t",
+            "~ent\t",
+            "\t\t",
+            "\t\t",
+            "~itur\t~untur\t",
+            "\t\t",
+            "\t\t",
+            "~ēbātur\t~ēbantur\t",
+            "\t\t",
+            "\t\t",
+            "~ētur\t~entur\t",
+            "~am\t~āmus\t",
+            "~ās\t~ātis\t",
+            "~ant\t",
+            "~erem\t~erēmus\t",
+            "~erēs\t~erētis\t",
+            "~eret\t~erent\t",
+            "\t\t",
+            "\t\t",
+            "~ātur\t~antur\t",
+            "\t\t",
+            "\t\t",
+            "~erētur\t~erentur\t",
+            "~e\t",
+            "\t\t",
+            "~itōte\t",
+            "~untō\t",
+            "\t",
+            "~itor\t~untor\t",
+            "~ere\t",
+            "~ī\t",
+            "~endum|~undum\t",
+        )),
+    },
+    // lemma like ēveniō: 14 words.
+    EndingTable {
+        name: Cow::Borrowed("ēveniō"),
+        words: 14,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~iō\t",
+            "~īs\t",
+            "~it\t~iunt\t",
+            "~ient\t",
+            "\t\t",
+            "\t\t",
+            "~ītur\t~iuntur\t",
+            "\t\t",
+            "\t\t",
+            "~iēbātur\t~iēbantur\t",
+            "\t\t",
+            "\t\t",
+            "~iētur\t~ientur\t",
+            "~iam\t~iāmus\t",
+            "~iās\t~iātis\t",
+            "~iant\t",
+            "~īrem\t~īrēmus\t",
+            "~īrēs\t~īrētis\t",
+            "~īret\t~īrent\t",
+            "\t\t",
+            "\t\t",
+            "~iātur\t~iantur\t",
+            "\t\t",
+            "\t\t",
+            "~īrētur\t~īrentur\t",
+            "~ī\t",
+            "\t\t",
+            "~ītōte\t",
+            "~iuntō\t",
+            "\t",
+            "~ītor\t~iuntor\t",
+            "~īre\t",
+            "~īrī\t",
+            "~iendum|~iundum\t",
         )),
     },
     // lemma like īnsistō: 13 words.
@@ -1063,6 +1105,48 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~ere\t",
             "~ī\t",
             "~endum|~undum\t",
+        )),
+    },
+    // lemma like adhērēscō: 11 words.
+    EndingTable {
+        name: Cow::Borrowed("adhērēscō"),
+        words: 11,
+        slot: 0,
+        table: Cow::Borrowed(concat!(
+            "~ō\t",
+            "~is\t",
+            "~it\t~unt\t",
+            "~ent\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "~am\t~āmus\t",
+            "~ās\t~ātis\t",
+            "~ant\t",
+            "~erem\t~erēmus\t",
+            "~erēs\t~erētis\t",
+            "~eret\t~erent\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "~e\t",
+            "\t\t",
+            "~itōte\t",
+            "~untō\t",
+            "\t",
+            "\t\t",
+            "~ere\t",
+            "\t",
+            "\t",
         )),
     },
     // lemma like gaudeō: 7 words.
@@ -1233,48 +1317,6 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endusˇ\t",
         )),
     },
-    // lemma like convalēscō: 6 words.
-    EndingTable {
-        name: Cow::Borrowed("convalēscō"),
-        words: 6,
-        slot: 0,
-        table: Cow::Borrowed(concat!(
-            "~ō\t",
-            "~is\t",
-            "~it\t~unt\t",
-            "~ent\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~am\t~āmus\t",
-            "~ās\t~ātis\t",
-            "~ant\t",
-            "~erem\t~erēmus\t",
-            "~erēs\t~erētis\t",
-            "~eret\t~erent\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~e\t",
-            "\t\t",
-            "~itōte\t",
-            "~untō\t",
-            "\t",
-            "\t\t",
-            "~ere\t",
-            "\t",
-            "\t",
-        )),
-    },
     // lemma like vēnumdō: 5 words.
     EndingTable {
         name: Cow::Borrowed("vēnumdō"),
@@ -1423,10 +1465,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~andī\t~andō\t~andum\t~andō\t",
         )),
     },
-    // indicative_act_pres_1_pl like agō: 1,604 words.
+    // indicative_act_pres_1_pl like agō: 1,595 words.
     EndingTable {
         name: Cow::Borrowed("agō"),
-        words: 1604,
+        words: 1595,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~imus\t",
@@ -1555,10 +1597,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endī\t~endō\t~endum\t~endō\t",
         )),
     },
-    // indicative_act_pres_1_pl like compungō: 70 words.
+    // indicative_act_pres_1_pl like nuō: 79 words.
     EndingTable {
-        name: Cow::Borrowed("compungō"),
-        words: 70,
+        name: Cow::Borrowed("nuō"),
+        words: 79,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~imusˇ\t",
@@ -1753,10 +1795,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~endī\t~endō\t~endum\t~endō\t",
         )),
     },
-    // indicative_act_perf_1_sg like agitō: 4,871 words.
+    // indicative_act_perf_1_sg like agitō: 4,941 words.
     EndingTable {
         name: Cow::Borrowed("agitō"),
-        words: 4871,
+        words: 4941,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ī\t~imus\t",
@@ -1801,10 +1843,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~um esse\t",
         )),
     },
-    // indicative_act_perf_1_sg like mūniō: 530 words.
+    // indicative_act_perf_1_sg like mūniō: 442 words.
     EndingTable {
         name: Cow::Borrowed("mūniō"),
-        words: 530,
+        words: 442,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~ī\t~imus\t",
@@ -1825,10 +1867,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~isse\t",
         )),
     },
-    // indicative_act_perf_1_sg like compungō: 63 words.
+    // indicative_act_perf_1_sg like nuō: 72 words.
     EndingTable {
-        name: Cow::Borrowed("compungō"),
-        words: 63,
+        name: Cow::Borrowed("nuō"),
+        words: 72,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~īˇ\t~imusˇ\t",
@@ -1921,10 +1963,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~cūtum esse|~quūtum esse\t",
         )),
     },
-    // indicative_act_perf_1_sg like dēpudet: 11 words.
+    // indicative_act_perf_1_sg like dēpudet: 9 words.
     EndingTable {
         name: Cow::Borrowed("dēpudet"),
-        words: 11,
+        words: 9,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "\t\t",
@@ -1969,10 +2011,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~isseˇ\t",
         )),
     },
-    // indicative_act_perf_1_sg like caveō: 4 words.
+    // indicative_act_perf_1_sg like caveō: 5 words.
     EndingTable {
         name: Cow::Borrowed("caveō"),
-        words: 4,
+        words: 5,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~vī\t~vimus|~mus\t",
@@ -1991,6 +2033,30 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~vissēs|~ssēs\t~vissētis|~ssētis\t",
             "~visset|~sset\t~vissent|~ssent\t",
             "~visse|~sse\t",
+        )),
+    },
+    // indicative_act_perf_1_sg like effervēscō: 5 words.
+    EndingTable {
+        name: Cow::Borrowed("effervēscō"),
+        words: 5,
+        slot: 2,
+        table: Cow::Borrowed(concat!(
+            "~buī|~vī\t~buimus|~vimus\t",
+            "~buistī|~vistī\t~buistis|~vistis\t",
+            "~buit|~vit\t~buērunt|~buēre|~vērunt|~vēre\t",
+            "~bueram|~veram\t~buerāmus|~verāmus\t",
+            "~buerās|~verās\t~buerātis|~verātis\t",
+            "~buerat|~verat\t~buerant|~verant\t",
+            "~buerō|~verō\t~buerimus|~verimus\t",
+            "~bueris|~veris\t~bueritis|~veritis\t",
+            "~buerit|~verit\t~buerint|~verint\t",
+            "~buerim|~verim\t~buerīmus|~verīmus\t",
+            "~buerīs|~verīs\t~buerītis|~verītis\t",
+            "~buerit|~verit\t~buerint|~verint\t",
+            "~buissem|~vissem\t~buissēmus|~vissēmus\t",
+            "~buissēs|~vissēs\t~buissētis|~vissētis\t",
+            "~buisset|~visset\t~buissent|~vissent\t",
+            "~buisse|~visse\t",
         )),
     },
     // indicative_act_perf_1_sg like nītor: 4 words.
@@ -2065,34 +2131,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~psisse|~sisse\t",
         )),
     },
-    // indicative_act_perf_1_sg like effervēscō: 3 words.
-    EndingTable {
-        name: Cow::Borrowed("effervēscō"),
-        words: 3,
-        slot: 2,
-        table: Cow::Borrowed(concat!(
-            "~buī|~vī\t~buimus|~vimus\t",
-            "~buistī|~vistī\t~buistis|~vistis\t",
-            "~buit|~vit\t~buērunt|~buēre|~vērunt|~vēre\t",
-            "~bueram|~veram\t~buerāmus|~verāmus\t",
-            "~buerās|~verās\t~buerātis|~verātis\t",
-            "~buerat|~verat\t~buerant|~verant\t",
-            "~buerō|~verō\t~buerimus|~verimus\t",
-            "~bueris|~veris\t~bueritis|~veritis\t",
-            "~buerit|~verit\t~buerint|~verint\t",
-            "~buerim|~verim\t~buerīmus|~verīmus\t",
-            "~buerīs|~verīs\t~buerītis|~verītis\t",
-            "~buerit|~verit\t~buerint|~verint\t",
-            "~buissem|~vissem\t~buissēmus|~vissēmus\t",
-            "~buissēs|~vissēs\t~buissētis|~vissētis\t",
-            "~buisset|~visset\t~buissent|~vissent\t",
-            "~buisse|~visse\t",
-        )),
-    },
-    // supine_acc like agitō: 5,136 words.
+    // supine_acc like agitō: 5,051 words.
     EndingTable {
         name: Cow::Borrowed("agitō"),
-        words: 5136,
+        words: 5051,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~us sum\t\t",
@@ -2116,10 +2158,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "\t\t",
         )),
     },
-    // supine_acc like modulor: 559 words.
+    // supine_acc like modulor: 566 words.
     EndingTable {
         name: Cow::Borrowed("modulor"),
-        words: 559,
+        words: 566,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "\t\t",
@@ -2143,10 +2185,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~um\t~ū\t",
         )),
     },
-    // supine_acc like compungō: 70 words.
+    // supine_acc like nuō: 79 words.
     EndingTable {
-        name: Cow::Borrowed("compungō"),
-        words: 70,
+        name: Cow::Borrowed("nuō"),
+        words: 79,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "~us sumˇ\t\t",
@@ -2170,10 +2212,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "\t\t",
         )),
     },
-    // supine_acc like labōrō: 64 words.
+    // supine_acc like labōrō: 77 words.
     EndingTable {
         name: Cow::Borrowed("labōrō"),
-        words: 64,
+        words: 77,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "\t\t",
@@ -2197,37 +2239,10 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "\t\t",
         )),
     },
-    // supine_acc like ēveniō: 33 words.
+    // supine_acc like serviō: 36 words.
     EndingTable {
-        name: Cow::Borrowed("ēveniō"),
-        words: 33,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "\t\t",
-            "~ūrum esse\t",
-            "~um esse\t\t",
-            "~um\t\t",
-            "\t\t",
-        )),
-    },
-    // supine_acc like dēpudet: 30 words.
-    EndingTable {
-        name: Cow::Borrowed("dēpudet"),
-        words: 30,
+        name: Cow::Borrowed("serviō"),
+        words: 36,
         slot: 3,
         table: Cow::Borrowed(concat!(
             "\t\t",
@@ -2245,6 +2260,33 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "\t\t",
             "\t\t",
             "~um esset\t\t",
+            "~ūrum esse\t",
+            "~um esse\t\t",
+            "~um\t\t",
+            "\t\t",
+        )),
+    },
+    // supine_acc like īnsistō: 30 words.
+    EndingTable {
+        name: Cow::Borrowed("īnsistō"),
+        words: 30,
+        slot: 3,
+        table: Cow::Borrowed(concat!(
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
+            "\t\t",
             "~ūrum esse\t",
             "~um esse\t\t",
             "~um\t\t",
@@ -2276,33 +2318,6 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~um esse|~sum esse|~tum esse\t~um īrī|~sum īrī|~tum īrī\t",
             "~us|~sus|~tus\t~ūrus|~sūrus|~tūrus\t",
             "~um|~sum|~tum\t~ū|~sū|~tū\t",
-        )),
-    },
-    // supine_acc like occurrō: 5 words.
-    EndingTable {
-        name: Cow::Borrowed("occurrō"),
-        words: 5,
-        slot: 3,
-        table: Cow::Borrowed(concat!(
-            "~us sum\t~ī sumus\t",
-            "~us es\t~ī estis\t",
-            "~us est\t~ī sunt\t",
-            "~us eram\t~ī erāmus\t",
-            "~us erās\t~ī erātis\t",
-            "~us erat\t~ī erant\t",
-            "~us erō\t~ī erimus\t",
-            "~us eris\t~ī eritis\t",
-            "~us erit\t~ī erunt\t",
-            "~us sim\t~ī sīmus\t",
-            "~us sīs\t~ī sītis\t",
-            "~us sit\t~ī sint\t",
-            "~us essem\t~ī essēmus\t",
-            "~us essēs\t~ī essētis\t",
-            "~us esset\t~ī essent\t",
-            "~ūrum esse\t",
-            "~um esse\t~um īrī\t",
-            "~us\t~ūrus\t",
-            "~um\t~ū\t",
         )),
     },
     // supine_acc like fīō: 4 words.
@@ -2384,6 +2399,33 @@ pub(super) static TABLES: [EndingTable<'static>; 70] = [
             "~tum esse|~ātum esse\t~tum īrī|~ātum īrī\t",
             "~tus|~ātus\t~tūrus|~ātūrus\t",
             "~tum|~ātum\t~tū|~ātū\t",
+        )),
+    },
+    // supine_acc like occurrō: 1 words.
+    EndingTable {
+        name: Cow::Borrowed("occurrō"),
+        words: 1,
+        slot: 3,
+        table: Cow::Borrowed(concat!(
+            "~us sum\t~ī sumus\t",
+            "~us es\t~ī estis\t",
+            "~us est\t~ī sunt\t",
+            "~us eram\t~ī erāmus\t",
+            "~us erās\t~ī erātis\t",
+            "~us erat\t~ī erant\t",
+            "~us erō\t~ī erimus\t",
+            "~us eris\t~ī eritis\t",
+            "~us erit\t~ī erunt\t",
+            "~us sim\t~ī sīmus\t",
+            "~us sīs\t~ī sītis\t",
+            "~us sit\t~ī sint\t",
+            "~us essem\t~ī essēmus\t",
+            "~us essēs\t~ī essētis\t",
+            "~us esset\t~ī essent\t",
+            "~ūrum esse\t",
+            "~um esse\t~um īrī\t",
+            "~us\t~ūrus\t",
+            "~um\t~ū\t",
         )),
     },
 ];

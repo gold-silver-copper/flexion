@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 52 forms.
+/// 0 stems, 53 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"czyj	4	czyje	6	czyi	16	czyich
@@ -24,7 +24,7 @@ niejeden	6	niejedni	8	niejedne
 owy	4	owo	6	owi
 pewien	6	pewni	8	pewne
 takowy	6	takowi
-tamten	6	tamci	8	tamte	32	tamtę	42	tamtą	43	tamtą
+tamten	6	tamci	8	tamte	32	tamtę|tamtą	33	tamtę|tamtą	42	tamtą	43	tamtą
 wasz	4	wasze	6	wasi
 ów	6	owi	8	owe
 "#,

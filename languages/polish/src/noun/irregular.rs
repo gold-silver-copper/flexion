@@ -7,7 +7,7 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 108 stems, 882 forms.
+/// 108 stems, 880 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"abuna	4	abunowi
@@ -307,7 +307,6 @@ nikt	4	nikomu	6	nikogo	8	nikim	10	nikim
 ninja	1	ninjowie	3	ninjów	7	ninjów
 nić	9	nićmi
 nosacz	7	nosaczy
-nowobogacki	7	nowobogackich
 nowożeniec	7	nowożeńców
 nożownik	7	nożowników
 nurogęś	9	nurogęśmi
@@ -552,7 +551,6 @@ tkacz	7	tkaczy
 tocharski	6	tocharskiego	7	tocharskich
 toreador	7	toreadorów
 torreador	7	torreadorów
-totumfacki	7	totumfackich
 tracz	3	traczy	7	traczy
 trajluś	6	trajluś
 trampek	3	trampek

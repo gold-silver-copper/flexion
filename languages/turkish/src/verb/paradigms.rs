@@ -1,7 +1,7 @@
 //! The conjugations, commonest first, each named after a word that follows it.
 //!
-//! A pattern is the form with `~` where the stem goes (`~mek`, `vermek`: the stem and `mek`).
-//! Alternatives are separated by `|`, the usual one first. A capital (`E`, `I`)
+//! A pattern is the form with `~` where the stem goes (`~mak`, `ayırmak`: the stem and `mak`).
+//! Alternatives are separated by `|`, the usual one first. A capital (`E`, `I`, `A`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it.
 
@@ -11,8 +11,8 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the conjugation it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem converb_neg_plain_doubled: \"~meye ~meye- like vermek\"`: the slot's cells are `vermek`'s table's patterns
-/// with `~meye ~meye` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`stem converb_neg_plain_doubled: \"~maya ~maya- like ayırmak\"`: the slot's cells are `ayırmak`'s table's patterns
+/// with `~maya ~maya` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the conjugation's it is
 /// like, or, in a conjugation like no other, derived):
@@ -1305,60 +1305,62 @@ macro_rules! view {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `vermek`: 476 words.
+    /// Like `ayırmak`: 736 words.
+    Ayırmak,
+    /// Like `vermek`: 483 words.
     Vermek,
-    /// Like `nefes aldırmak`: 457 words.
-    Nefesaldırmak,
-    /// Like `var olmak`: 353 words.
-    Varolmak,
-    /// Like `patlamak`: 267 words.
+    /// Like `patlamak`: 266 words.
     Patlamak,
     /// Like `takip etmek`: 186 words.
     Takipetmek,
-    /// Like `beslemek`: 152 words.
+    /// Like `beslemek`: 149 words.
     Beslemek,
-    /// Like `açmak`: 123 words.
+    /// Like `açmak`: 124 words.
     Açmak,
-    /// Like `çekmek`: 104 words.
-    Çekmek,
+    /// Like `silmek`: 107 words.
+    Silmek,
     /// Like `gitmek`: 53 words.
     Gitmek,
     /// Like `ele vermek`: 33 words.
     Elevermek,
-    /// Like `silmek`: 15 words.
-    Silmek,
+    /// Like `var olmak`: 31 words.
+    Varolmak,
+    /// Like `taşımak`: 25 words.
+    Taşımak,
+    /// Like `film çekmek`: 17 words.
+    Filmçekmek,
+    /// Like `koynuna almak`: 16 words.
+    Koynunaalmak,
+    /// Like `yürümek`: 16 words.
+    Yürümek,
     /// Like `aşk yapmak`: 15 words.
     Aşkyapmak,
-    /// Like `yürümek`: 13 words.
-    Yürümek,
     /// Like `tekme atmak`: 12 words.
     Tekmeatmak,
     /// Like `imana gelmek`: 12 words.
     Imanagelmek,
     /// Like `cama çıkmak`: 12 words.
     Camaçıkmak,
-    /// Like `taşımak`: 11 words.
-    Taşımak,
     /// Like `ilişkiye girmek`: 10 words.
     Ilişkiyegirmek,
-    /// Like `ilerletmek`: 7 words.
-    Ilerletmek,
+    /// Like `baştan çıkarmak`: 7 words.
+    Baştançıkarmak,
+    /// Like `almak`: 7 words.
+    Almak,
     /// Like `yemek`: 6 words.
     Yemek,
-    /// Like `film çekmek`: 5 words.
-    Filmçekmek,
     /// Like `vurmak`: 5 words.
     Vurmak,
     /// Like `yol açmak`: 5 words.
     Yolaçmak,
-    /// Like `salmak`: 4 words.
-    Salmak,
     /// Like `maytap geçmek`: 4 words.
     Maytapgeçmek,
     /// Like `kafa tutmak`: 4 words.
     Kafatutmak,
-    /// Like `gömmek`: 3 words.
-    Gömmek,
+    /// Like `bükmek`: 3 words.
+    Bükmek,
+    /// Like `fındık kırmak`: 3 words.
+    Fındıkkırmak,
     /// Like `geç kalmak`: 3 words.
     Geçkalmak,
     /// Like `serbest bırakmak`: 3 words.
@@ -1377,34 +1379,35 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 34] = [
+    pub const ALL: [Conjugation; 35] = [
+        Conjugation::Ayırmak,
         Conjugation::Vermek,
-        Conjugation::Nefesaldırmak,
-        Conjugation::Varolmak,
         Conjugation::Patlamak,
         Conjugation::Takipetmek,
         Conjugation::Beslemek,
         Conjugation::Açmak,
-        Conjugation::Çekmek,
+        Conjugation::Silmek,
         Conjugation::Gitmek,
         Conjugation::Elevermek,
-        Conjugation::Silmek,
-        Conjugation::Aşkyapmak,
+        Conjugation::Varolmak,
+        Conjugation::Taşımak,
+        Conjugation::Filmçekmek,
+        Conjugation::Koynunaalmak,
         Conjugation::Yürümek,
+        Conjugation::Aşkyapmak,
         Conjugation::Tekmeatmak,
         Conjugation::Imanagelmek,
         Conjugation::Camaçıkmak,
-        Conjugation::Taşımak,
         Conjugation::Ilişkiyegirmek,
-        Conjugation::Ilerletmek,
+        Conjugation::Baştançıkarmak,
+        Conjugation::Almak,
         Conjugation::Yemek,
-        Conjugation::Filmçekmek,
         Conjugation::Vurmak,
         Conjugation::Yolaçmak,
-        Conjugation::Salmak,
         Conjugation::Maytapgeçmek,
         Conjugation::Kafatutmak,
-        Conjugation::Gömmek,
+        Conjugation::Bükmek,
+        Conjugation::Fındıkkırmak,
         Conjugation::Geçkalmak,
         Conjugation::Serbestbırakmak,
         Conjugation::Görmek,
@@ -1429,11 +1432,11 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
-    // Vermek: 476 words (çizmek, direnmek, tüketmek, bilmek, vermek, gelmek).
-    conjugation!("vermek", 476, "~mek";
-    stem converb_neg_plain_doubled: "~meye ~meye- like vermek";
-    stem converb_neg_abil_doubled: "~emeye ~emeye- like vermek";
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 35] = [
+    // Ayırmak: 736 words (kazanmak, cezalandırmak, yapışmak, azaltmak, bırakmak, boşalmak).
+    conjugation!("ayırmak", 736, "~mak";
+    stem converb_neg_plain_doubled: "~maya ~maya- like ayırmak";
+    stem converb_neg_abil_doubled: "~amaya ~amaya- like ayırmak";
     pos_plain_aor__: "~IrIm", "~IrsIn", "~Ir", _, "~IrsInIz", "~IrlEr";
     pos_plain_aor_evid: "~IrmIşIm", "~IrmIşsIn", "~IrmIş", "~IrmIşIz", "~IrmIşsInIz", "~IrlErmIş";
     pos_plain_aor_past: "~IrdIm", "~IrdIn", "~IrdI", "~IrdIk", "~IrdInIz", "~IrlErdI";
@@ -1447,14 +1450,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     pos_plain_fut_evid: "~EcEkmIşIm", "~EcEkmIşsIn", "~EcEkmIş", "~EcEkmIşIz", "~EcEkmIşsInIz", "~EcEklErmIş";
     pos_plain_fut_past: "~EcEktIm", "~EcEktIn", "~EcEktI", "~EcEktIk", "~EcEktInIz", "~EcEklErdI";
     pos_plain_fut_cond: "~EcEksEm", "~EcEksEn", "~EcEksE", "~EcEksEk", "~EcEksEnIz", "~EcEklErsE";
-    pos_plain_cont__: "~mektEyIm", "~mektEsIn", "~mektE", "~mektEyIz", "~mektEsInIz", "~mektElEr";
-    pos_plain_cont_evid: "~mektEymIşIm", "~mektEymIşsIn", "~mektEymIş", "~mektEymIşIz", "~mektEymIşsInIz", "~mektElErmIş";
-    pos_plain_cont_past: "~mektEydIm", "~mektEydIn", "~mektEydI", "~mektEydIk", "~mektEydInIz", "~mektElErdI";
-    pos_plain_cont_cond: "~mektEysEm", "~mektEysEn", "~mektEysE", "~mektEysEk", "~mektEysEnIz", "~mektElErsE";
-    pos_plain_necess__: _, _, _, _, _, "~mElIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~mElIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~mElIlErdI";
-    pos_plain_necess_cond: "~mElIysEm", "~mElIysEn", "~mElIysE", "~mElIysEk", "~mElIysEnIz", "~mElIlErsE";
     pos_abil_aor__: "~Ebilirim", "~Ebilirsin", "~Ebilir", "~Ebiliriz", "~Ebilirsiniz", "~Ebilirler";
     pos_abil_aor_evid: "~Ebilirmişim", "~Ebilirmişsin", "~Ebilirmiş", "~Ebilirmişiz", "~Ebilirmişsiniz", "~Ebilirlermiş";
     pos_abil_aor_past: "~Ebilirdim", "~Ebilirdin", "~Ebilirdi", "~Ebilirdik", "~Ebilirdiniz", "~Ebilirlerdi";
@@ -1479,30 +1474,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     pos_abil_necess_evid: "~Ebilmeliymişim", "~Ebilmeliymişsin", "~Ebilmeliymiş", "~Ebilmeliymişiz", "~Ebilmeliymişsiniz", "~Ebilmelilermiş";
     pos_abil_necess_past: "~Ebilmeliydim", "~Ebilmeliydin", "~Ebilmeliydi", "~Ebilmeliydik", "~Ebilmeliydiniz", "~Ebilmelilerdi";
     pos_abil_necess_cond: "~Ebilmeliysem", "~Ebilmeliysen", "~Ebilmeliyse", "~Ebilmeliysek", "~Ebilmeliyseniz", "~Ebilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~mEzlEr";
-    neg_plain_aor_evid: _, _, _, _, _, "~mEzlErmIş";
-    neg_plain_aor_past: _, _, _, _, _, "~mEzlErdI";
-    neg_plain_aor_cond: "~mEzsEm", "~mEzsEn", "~mEzsE", "~mEzsEk", "~mEzsEnIz", "~mEzlErsE";
     neg_plain_prog__: "~mIyorum", "~mIyorsun", "~mIyor", "~mIyoruz", "~mIyorsunuz", "~mIyorlar";
     neg_plain_prog_evid: "~mIyormuşum", "~mIyormuşsun", "~mIyormuş", "~mIyormuşuz", "~mIyormuşsunuz", "~mIyorlarmış";
     neg_plain_prog_past: "~mIyordum", "~mIyordun", "~mIyordu", "~mIyorduk", "~mIyordunuz", "~mIyorlardı";
     neg_plain_prog_cond: "~mIyorsam", "~mIyorsan", "~mIyorsa", "~mIyorsak", "~mIyorsanız", "~mIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~mEmIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~mEmIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~mEmIşlErdI";
-    neg_plain_evid_cond: "~mEmIşsEm", "~mEmIşsEn", "~mEmIşsE", "~mEmIşsEk", "~mEmIşsEnIz", "~mEmIşlErsE";
-    neg_plain_fut__: "~mEyEcEğIm", "~mEyEcEksIn", "~mEyEcEk", "~mEyEcEğIz", "~mEyEcEksInIz", "~mEyEcEklEr";
-    neg_plain_fut_evid: "~mEyEcEkmIşIm", "~mEyEcEkmIşsIn", "~mEyEcEkmIş", "~mEyEcEkmIşIz", "~mEyEcEkmIşsInIz", "~mEyEcEklErmIş";
-    neg_plain_fut_past: "~mEyEcEktIm", "~mEyEcEktIn", "~mEyEcEktI", "~mEyEcEktIk", "~mEyEcEktInIz", "~mEyEcEklErdI";
-    neg_plain_fut_cond: "~mEyEcEksEm", "~mEyEcEksEn", "~mEyEcEksE", "~mEyEcEksEk", "~mEyEcEksEnIz", "~mEyEcEklErsE";
-    neg_plain_cont__: "~mEmEktEyIm", "~mEmEktEsIn", "~mEmEktE", "~mEmEktEyIz", "~mEmEktEsInIz", "~mEmEktElEr";
-    neg_plain_cont_evid: "~mEmEktEymIşIm", "~mEmEktEymIşsIn", "~mEmEktEymIş", "~mEmEktEymIşIz", "~mEmEktEymIşsInIz", "~mEmEktElErmIş";
-    neg_plain_cont_past: "~mEmEktEydIm", "~mEmEktEydIn", "~mEmEktEydI", "~mEmEktEydIk", "~mEmEktEydInIz", "~mEmEktElErdI";
-    neg_plain_cont_cond: "~mEmEktEysEm", "~mEmEktEysEn", "~mEmEktEysE", "~mEmEktEysEk", "~mEmEktEysEnIz", "~mEmEktElErsE";
-    neg_plain_necess__: "~mEmElIyIm", "~mEmElIsIn", "~mEmElI", "~mEmElIyIz", "~mEmElIsInIz", "~mEmElIlEr";
-    neg_plain_necess_evid: "~mEmElIymIşIm", "~mEmElIymIşsIn", "~mEmElIymIş", "~mEmElIymIşIz", "~mEmElIymIşsInIz", "~mEmElIlErmIş";
-    neg_plain_necess_past: "~mEmElIydIm", "~mEmElIydIn", "~mEmElIydI", "~mEmElIydIk", "~mEmElIydInIz", "~mEmElIlErdI";
-    neg_plain_necess_cond: "~mEmElIysEm", "~mEmElIysEn", "~mEmElIysE", "~mEmElIysEk", "~mEmElIysEnIz", "~mEmElIlErsE";
     neg_abil_aor__: "~EmEm", "~EmEzsIn", "~EmEz", "~EmEyIz", "~EmEzsInIz", "~EmEzlEr";
     neg_abil_aor_evid: "~EmEzmIşIm", "~EmEzmIşsIn", "~EmEzmIş", "~EmEzmIşIz", "~EmEzmIşsInIz", "~EmEzlErmIş";
     neg_abil_aor_past: "~EmEzdIm", "~EmEzdIn", "~EmEzdI", "~EmEzdIk", "~EmEzdInIz", "~EmEzlErdI";
@@ -1531,9 +1506,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     past_pos_abil__: "~Ebildim", "~Ebildin", "~Ebildi", "~Ebildik", "~Ebildiniz", "~Ebildiler";
     past_pos_abil_past: "~Ebildiydim", "~Ebildiydin", "~Ebildiydi", "~Ebildiydik", "~Ebildiydiniz", "~Ebildilerdi";
     past_pos_abil_cond: "~Ebildiysem", "~Ebildiysen", "~Ebildiyse", "~Ebildiysek", "~Ebildiyseniz", "~Ebildilerse";
-    past_neg_plain__: _, _, _, _, _, "~mEdIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~mEdIlErdI";
-    past_neg_plain_cond: "~mEdIysEm", "~mEdIysEn", "~mEdIysE", "~mEdIysEk", "~mEdIysEnIz", "~mEdIlErsE";
     past_neg_abil__: "~EmEdIm", "~EmEdIn", "~EmEdI", "~EmEdIk", "~EmEdInIz", "~EmEdIlEr";
     past_neg_abil_past: "~EmEdIydIm", "~EmEdIydIn", "~EmEdIydI", "~EmEdIydIk", "~EmEdIydInIz", "~EmEdIlErdI";
     past_neg_abil_cond: "~EmEdIysEm", "~EmEdIysEn", "~EmEdIysE", "~EmEdIysEk", "~EmEdIysEnIz", "~EmEdIlErsE";
@@ -1543,9 +1515,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     conditional_pos_abil__: "~Ebilsem", "~Ebilsen", "~Ebilse", "~Ebilsek", "~Ebilseniz", "~Ebilseler";
     conditional_pos_abil_evid: "~Ebilseymişim", "~Ebilseymişsin", "~Ebilseymiş", "~Ebilseymişiz", "~Ebilseymişsiniz", "~Ebilselermiş";
     conditional_pos_abil_past: "~Ebilseydim", "~Ebilseydin", "~Ebilseydi", "~Ebilseydik", "~Ebilseydiniz", "~Ebilselerdi";
-    conditional_neg_plain__: "~mEsEm", "~mEsEn", "~mEsE", "~mEsEk", "~mEsEnIz", "~mEsElEr";
-    conditional_neg_plain_evid: "~mEsEymIşIm", "~mEsEymIşsIn", "~mEsEymIş", "~mEsEymIşIz", "~mEsEymIşsInIz", "~mEsElErmIş";
-    conditional_neg_plain_past: "~mEsEydIm", "~mEsEydIn", "~mEsEydI", "~mEsEydIk", "~mEsEydInIz", "~mEsElErdI";
     conditional_neg_abil__: "~EmEsEm", "~EmEsEn", "~EmEsE", "~EmEsEk", "~EmEsEnIz", "~EmEsElEr";
     conditional_neg_abil_evid: "~EmEsEymIşIm", "~EmEsEymIşsIn", "~EmEsEymIş", "~EmEsEymIşIz", "~EmEsEymIşsInIz", "~EmEsElErmIş";
     conditional_neg_abil_past: "~EmEsEydIm", "~EmEsEydIn", "~EmEsEydI", "~EmEsEydIk", "~EmEsEydInIz", "~EmEsElErdI";
@@ -1555,388 +1524,179 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     optative_pos_abil__: "~Ebileyim", "~Ebilesin", "~Ebile", "~Ebilelim", "~Ebilesiniz", "~Ebileler";
     optative_pos_abil_evid: "~Ebileymişim", "~Ebileymişsin", "~Ebileymiş", "~Ebileymişiz", "~Ebileymişsiniz", "~Ebilelermiş";
     optative_pos_abil_past: "~Ebileydim", "~Ebileydin", "~Ebileydi", "~Ebileydik", "~Ebileydiniz", "~Ebilelerdi";
-    optative_neg_plain__: "~mEyEyIm", "~mEyEsIn", "~mEyE", "~mEyElIm", "~mEyEsInIz", "~mEyElEr";
-    optative_neg_plain_evid: "~mEyEymIşIm", "~mEyEymIşsIn", "~mEyEymIş", "~mEyEymIşIz", "~mEyEymIşsInIz", "~mEyElErmIş";
-    optative_neg_plain_past: "~mEyEydIm", "~mEyEydIn", "~mEyEydI", "~mEyEydIk", "~mEyEydInIz", "~mEyElErdI";
     optative_neg_abil__: "~EmEyEyIm", "~EmEyEsIn", "~EmEyE", "~EmEyElIm", "~EmEyEsInIz", "~EmEyElEr";
     optative_neg_abil_evid: "~EmEyEymIşIm", "~EmEyEymIşsIn", "~EmEyEymIş", "~EmEyEymIşIz", "~EmEyEymIşsInIz", "~EmEyElErmIş";
     optative_neg_abil_past: "~EmEyEydIm", "~EmEyEydIn", "~EmEyEydI", "~EmEyEydIk", "~EmEyEydInIz", "~EmEyElErdI";
     imperative_pos_plain: "~", "~sIn", "~In", "~sInlEr", _, "~InIz", "~sEnE", "~sEnIzE";
     imperative_pos_abil: "~Ebil", "~Ebilsin", "~Ebilin", "~Ebilsinler", "~Ebiliniz", _, "~Ebilsene", "~Ebilsenize";
-    imperative_neg_plain: _, _, _, "~mEsInlEr", _, "~mEyInIz", "~mEsEnE", "~mEsEnIzE";
+    imperative_neg_plain: _, _, _, _, _, "~mEyInIz", _, _;
     imperative_neg_abil: "~EmE", "~EmEsIn", "~EmEyIn", "~EmEsInlEr", "~EmEyInIz", _, "~EmEsEnE", "~EmEsEnIzE";
-    infinitive_pos: "~mek", "~Ebilmek";
-    infinitive_neg: "~mEmEk", "~EmEmEk";
+    infinitive_pos: "~mak", "~Ebilmek";
+    infinitive_neg: _, "~EmEmEk";
     verbal_noun_pos: "~mE", "~Ebilme";
-    verbal_noun_neg: "~mEmE", "~EmEmE";
+    verbal_noun_neg: _, "~EmEmE";
     participle_pos_plain: "~En", _, _;
     participle_pos_abil: "~Ebilen", _, _;
-    participle_neg_plain: "~mEyEn", "~mEmIş", _;
+    participle_neg_plain: _, "~mEmIş", "~mEyEcEk";
     participle_neg_abil: "~EmEyEn", _, _;
     relative_pos_plain_acak: _, _, _, _, _, "~EcEklErI";
     relative_pos_abil_dik: "~Ebildiğim", "~Ebildiğin", "~Ebildiği", "~Ebildiğimiz", "~Ebildiğiniz", "~Ebildikleri";
     relative_pos_abil_acak: _, "~Ebileceğin", "~Ebileceği", "~Ebileceğimiz", "~Ebileceğiniz", "~Ebilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~mEdIklErI";
-    relative_neg_plain_acak: _, "~mEyEcEğIn", "~mEyEcEğI", "~mEyEcEğImIz", "~mEyEcEğInIz", "~mEyEcEklErI";
+    relative_neg_plain_acak: "~mEyEcEğIm", _, _, _, _, _;
     relative_neg_abil_dik: "~EmEdIğIm", "~EmEdIğIn", "~EmEdIğI", "~EmEdIğImIz", "~EmEdIğInIz", "~EmEdIklErI";
     relative_neg_abil_acak: _, "~EmEyEcEğIn", "~EmEyEcEğI", "~EmEyEcEğImIz", "~EmEyEcEğInIz", "~EmEyEcEklErI";
-    converb_pos_plain: "~Irken", _, _, "~ElI", "~EsIyE", _, "~ErEk", "~e ~e", "~IrcEsInE";
-    converb_pos_abil: "~EbilIrken", "~Ebilince", "~Ebilip", "~Ebileli", "~Ebilesiye", "~Ebildikçe", "~Ebilerek", "~ebile ~ebile", _;
-    converb_neg_plain: _, "~mEyIncE", _, "~mEyElI", "~mEyEsIyE", "~mEdIkçE", "~mEyErEk", _, "~mEzcEsInE";
+    converb_pos_plain: "~Irken", _, _, "~ElI", "~EsIyE", _, "~ErEk", "~a ~a", "~IrcEsInE";
+    converb_pos_abil: "~EbilIrken", "~Ebilince", "~Ebilip", "~Ebileli", "~Ebilesiye", "~Ebildikçe", "~Ebilerek", "~abile ~abile", _;
     converb_neg_abil: "~EmEzken", "~EmEyIncE", "~EmEyIp", "~EmEyElI", "~EmEyEsIyE", "~EmEdIkçE", "~EmEyErEk", _, "~EmEzcEsInE";
     ),
-    // Nefesaldırmak: 457 words (kazanmak, cezalandırmak, boşalmak, heyecanlandırmak, batırmak, kullanmak). Like Vermek, except in 27 cells: pos_plain_cont__ _1sg, pos_plain_cont__ _2sg, pos_plain_cont__ _3sg, pos_plain_cont__ _1pl, pos_plain_cont__ _2pl, pos_plain_cont__ _3pl, ….
-    conjugation!("nefes aldırmak", 457, "~mak", like Vermek;
-    stem converb_neg_plain_doubled: "~maya ~maya- like vermek";
-    stem converb_neg_abil_doubled: "~amaya ~amaya- like vermek";
-    pos_plain_cont__: "~maktEyIm", "~maktEsIn", "~maktE", "~maktEyIz", "~maktEsInIz", "~maktElEr";
-    pos_plain_cont_evid: "~maktEymIşIm", "~maktEymIşsIn", "~maktEymIş", "~maktEymIşIz", "~maktEymIşsInIz", "~maktElErmIş";
-    pos_plain_cont_past: "~maktEydIm", "~maktEydIn", "~maktEydI", "~maktEydIk", "~maktEydInIz", "~maktElErdI";
-    pos_plain_cont_cond: "~maktEysEm", "~maktEysEn", "~maktEysE", "~maktEysEk", "~maktEysEnIz", "~maktElErsE";
-    infinitive_pos: "~mak", _;
-    converb_pos_plain: _, _, _, _, _, _, _, "~a ~a", _;
-    converb_pos_abil: _, _, _, _, _, _, _, "~abile ~abile", _;
+    // Vermek: 483 words (çizmek, direnmek, tüketmek, bilmek, vermek, gelmek). Like Ayırmak, except in 3 cells: infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("vermek", 483, "~mek", like Ayırmak;
+    stem converb_neg_plain_doubled: "~meye ~meye- like ayırmak";
+    stem converb_neg_abil_doubled: "~emeye ~emeye- like ayırmak";
+    infinitive_pos: "~mek", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~e ~e", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~ebile ~ebile", _;
     ),
-    // Varolmak: 353 words (yapışmak, azaltmak, bırakmak, tartışmak, basmak, abartmak). Like Nefesaldırmak, except in 1 cell: past_pos_plain__ _1sg.
-    conjugation!("var olmak", 353, "~mak", like Nefesaldırmak;
-    past_pos_plain__: "~tIm", _, _, _, _, _;
-    ),
-    // Patlamak: 267 words (oynamak, ağlamak, zorlamak, sağlamak, atlamak, kapamak).
-    conjugation!("patlamak", 267, "~amak";
-    stem converb_neg_plain_doubled: "~amaya ~amaya- like vermek";
-    stem converb_neg_abil_doubled: "~ayamaya ~ayamaya- like vermek";
-    pos_plain_aor__: "~arIm", "~arsIn", "~ar", _, "~arsInIz", "~arlEr";
-    pos_plain_aor_evid: "~armIşIm", "~armIşsIn", "~armIş", "~armIşIz", "~armIşsInIz", "~arlErmIş";
-    pos_plain_aor_past: "~ardIm", "~ardIn", "~ardI", "~ardIk", "~ardInIz", "~arlErdI";
-    pos_plain_aor_cond: "~arsEm", "~arsEn", "~arsE", "~arsEk", "~arsEnIz", "~arlErsE";
+    // Patlamak: 266 words (oynamak, ağlamak, zorlamak, sağlamak, atlamak, kapamak).
+    conjugation!("patlamak", 266, "~amak";
+    stem converb_neg_plain_doubled: "~amaya ~amaya- like ayırmak";
+    stem converb_neg_abil_doubled: "~ayamaya ~ayamaya- like ayırmak";
+    pos_plain_aor__: "~ErIm", "~ErsIn", "~Er", _, "~ErsInIz", "~ErlEr";
+    pos_plain_aor_evid: "~ErmIşIm", "~ErmIşsIn", "~ErmIş", "~ErmIşIz", "~ErmIşsInIz", "~ErlErmIş";
+    pos_plain_aor_past: "~ErdIm", "~ErdIn", "~ErdI", "~ErdIk", "~ErdInIz", "~ErlErdI";
+    pos_plain_aor_cond: "~ErsEm", "~ErsEn", "~ErsE", "~ErsEk", "~ErsEnIz", "~ErlErsE";
     pos_plain_prog__: "~Iyorum", _, _, _, _, _;
-    pos_plain_evid__: _, "~amIşsIn", "~amIş", _, "~amIşsInIz", "~amIşlEr";
-    pos_plain_evid_evid: "~amIşmIşIm", "~amIşmIşsIn", "~amIşmIş", "~amIşmIşIz", "~amIşmIşsInIz", "~amIşlErmIş";
-    pos_plain_evid_past: "~amIştIm", "~amIştIn", "~amIştI", "~amIştIk", "~amIştInIz", "~amIşlErdI";
-    pos_plain_evid_cond: "~amIşsEm", "~amIşsEn", "~amIşsE", "~amIşsEk", "~amIşsEnIz", "~amIşlErsE";
-    pos_plain_fut__: "~ayEcEğIm", "~ayEcEksIn", "~ayEcEk", _, "~ayEcEksInIz", "~ayEcEklEr";
-    pos_plain_fut_evid: "~ayEcEkmIşIm", "~ayEcEkmIşsIn", "~ayEcEkmIş", "~ayEcEkmIşIz", "~ayEcEkmIşsInIz", "~ayEcEklErmIş";
-    pos_plain_fut_past: "~ayEcEktIm", "~ayEcEktIn", "~ayEcEktI", "~ayEcEktIk", "~ayEcEktInIz", "~ayEcEklErdI";
-    pos_plain_fut_cond: "~ayEcEksEm", "~ayEcEksEn", "~ayEcEksE", "~ayEcEksEk", "~ayEcEksEnIz", "~ayEcEklErsE";
-    pos_plain_cont__: "~amaktEyIm", "~amaktEsIn", "~amaktE", "~amaktEyIz", "~amaktEsInIz", "~amaktElEr";
-    pos_plain_cont_evid: "~amaktEymIşIm", "~amaktEymIşsIn", "~amaktEymIş", "~amaktEymIşIz", "~amaktEymIşsInIz", "~amaktElErmIş";
-    pos_plain_cont_past: "~amaktEydIm", "~amaktEydIn", "~amaktEydI", "~amaktEydIk", "~amaktEydInIz", "~amaktElErdI";
-    pos_plain_cont_cond: "~amaktEysEm", "~amaktEysEn", "~amaktEysE", "~amaktEysEk", "~amaktEysEnIz", "~amaktElErsE";
-    pos_plain_necess__: _, _, _, _, _, "~amElIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~amElIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~amElIlErdI";
-    pos_plain_necess_cond: "~amElIysEm", "~amElIysEn", "~amElIysE", "~amElIysEk", "~amElIysEnIz", "~amElIlErsE";
-    pos_abil_aor__: "~ayEbilirim", "~ayEbilirsin", "~ayEbilir", "~ayEbiliriz", "~ayEbilirsiniz", "~ayEbilirler";
-    pos_abil_aor_evid: "~ayEbilirmişim", "~ayEbilirmişsin", "~ayEbilirmiş", "~ayEbilirmişiz", "~ayEbilirmişsiniz", "~ayEbilirlermiş";
-    pos_abil_aor_past: "~ayEbilirdim", "~ayEbilirdin", "~ayEbilirdi", "~ayEbilirdik", "~ayEbilirdiniz", "~ayEbilirlerdi";
-    pos_abil_aor_cond: "~ayEbilirsem", "~ayEbilirsen", "~ayEbilirse", "~ayEbilirsek", "~ayEbilirseniz", "~ayEbilirlerse";
-    pos_abil_prog__: "~ayEbiliyorum", "~ayEbiliyorsun", "~ayEbiliyor", "~ayEbiliyoruz", "~ayEbiliyorsunuz", "~ayEbiliyorlar";
-    pos_abil_prog_evid: "~ayEbiliyormuşum", "~ayEbiliyormuşsun", "~ayEbiliyormuş", "~ayEbiliyormuşuz", "~ayEbiliyormuşsunuz", "~ayEbiliyorlarmış";
-    pos_abil_prog_past: "~ayEbiliyordum", "~ayEbiliyordun", "~ayEbiliyordu", "~ayEbiliyorduk", "~ayEbiliyordunuz", "~ayEbiliyorlardı";
-    pos_abil_prog_cond: "~ayEbiliyorsam", "~ayEbiliyorsan", "~ayEbiliyorsa", "~ayEbiliyorsak", "~ayEbiliyorsanız", "~ayEbiliyorlarsa";
-    pos_abil_evid__: "~ayEbilmişim", "~ayEbilmişsin", "~ayEbilmiş", "~ayEbilmişiz", "~ayEbilmişsiniz", "~ayEbilmişler";
-    pos_abil_evid_evid: "~ayEbilmişmişim", "~ayEbilmişmişsin", "~ayEbilmişmiş", "~ayEbilmişmişiz", "~ayEbilmişmişsiniz", "~ayEbilmişlermiş";
-    pos_abil_evid_past: "~ayEbilmiştim", "~ayEbilmiştin", "~ayEbilmişti", "~ayEbilmiştik", "~ayEbilmiştiniz", "~ayEbilmişlerdi";
-    pos_abil_evid_cond: "~ayEbilmişsem", "~ayEbilmişsen", "~ayEbilmişse", "~ayEbilmişsek", "~ayEbilmişseniz", "~ayEbilmişlerse";
-    pos_abil_fut__: "~ayEbileceğim", "~ayEbileceksin", "~ayEbilecek", "~ayEbileceğiz", "~ayEbileceksiniz", "~ayEbilecekler";
-    pos_abil_fut_evid: "~ayEbilecekmişim", "~ayEbilecekmişsin", "~ayEbilecekmiş", "~ayEbilecekmişiz", "~ayEbilecekmişsiniz", "~ayEbileceklermiş";
-    pos_abil_fut_past: "~ayEbilecektim", "~ayEbilecektin", "~ayEbilecekti", "~ayEbilecektik", "~ayEbilecektiniz", "~ayEbileceklerdi";
-    pos_abil_fut_cond: "~ayEbileceksem", "~ayEbileceksen", "~ayEbilecekse", "~ayEbileceksek", "~ayEbilecekseniz", "~ayEbileceklerse";
-    pos_abil_cont__: "~ayEbilmekteyim", "~ayEbilmektesin", "~ayEbilmekte", "~ayEbilmekteyiz", "~ayEbilmektesiniz", "~ayEbilmekteler";
-    pos_abil_cont_evid: "~ayEbilmekteymişim", "~ayEbilmekteymişsin", "~ayEbilmekteymiş", "~ayEbilmekteymişiz", "~ayEbilmekteymişsiniz", "~ayEbilmektelermiş";
-    pos_abil_cont_past: "~ayEbilmekteydim", "~ayEbilmekteydin", "~ayEbilmekteydi", "~ayEbilmekteydik", "~ayEbilmekteydiniz", "~ayEbilmektelerdi";
-    pos_abil_cont_cond: "~ayEbilmekteysem", "~ayEbilmekteysen", "~ayEbilmekteyse", "~ayEbilmekteysek", "~ayEbilmekteyseniz", "~ayEbilmektelerse";
-    pos_abil_necess__: "~ayEbilmeliyim", "~ayEbilmelisin", "~ayEbilmeli", "~ayEbilmeliyiz", "~ayEbilmelisiniz", "~ayEbilmeliler";
-    pos_abil_necess_evid: "~ayEbilmeliymişim", "~ayEbilmeliymişsin", "~ayEbilmeliymiş", "~ayEbilmeliymişiz", "~ayEbilmeliymişsiniz", "~ayEbilmelilermiş";
-    pos_abil_necess_past: "~ayEbilmeliydim", "~ayEbilmeliydin", "~ayEbilmeliydi", "~ayEbilmeliydik", "~ayEbilmeliydiniz", "~ayEbilmelilerdi";
-    pos_abil_necess_cond: "~ayEbilmeliysem", "~ayEbilmeliysen", "~ayEbilmeliyse", "~ayEbilmeliysek", "~ayEbilmeliyseniz", "~ayEbilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~amEzlEr";
-    neg_plain_aor_evid: _, _, _, _, _, "~amEzlErmIş";
-    neg_plain_aor_past: _, _, _, _, _, "~amEzlErdI";
-    neg_plain_aor_cond: "~amEzsEm", "~amEzsEn", "~amEzsE", "~amEzsEk", "~amEzsEnIz", "~amEzlErsE";
-    neg_plain_prog__: "~amIyorum", "~amIyorsun", "~amIyor", "~amIyoruz", "~amIyorsunuz", "~amIyorlar";
-    neg_plain_prog_evid: "~amIyormuşum", "~amIyormuşsun", "~amIyormuş", "~amIyormuşuz", "~amIyormuşsunuz", "~amIyorlarmış";
-    neg_plain_prog_past: "~amIyordum", "~amIyordun", "~amIyordu", "~amIyorduk", "~amIyordunuz", "~amIyorlardı";
-    neg_plain_prog_cond: "~amIyorsam", "~amIyorsan", "~amIyorsa", "~amIyorsak", "~amIyorsanız", "~amIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~amEmIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~amEmIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~amEmIşlErdI";
-    neg_plain_evid_cond: "~amEmIşsEm", "~amEmIşsEn", "~amEmIşsE", "~amEmIşsEk", "~amEmIşsEnIz", "~amEmIşlErsE";
-    neg_plain_fut__: "~amEyEcEğIm", "~amEyEcEksIn", "~amEyEcEk", "~amEyEcEğIz", "~amEyEcEksInIz", "~amEyEcEklEr";
-    neg_plain_fut_evid: "~amEyEcEkmIşIm", "~amEyEcEkmIşsIn", "~amEyEcEkmIş", "~amEyEcEkmIşIz", "~amEyEcEkmIşsInIz", "~amEyEcEklErmIş";
-    neg_plain_fut_past: "~amEyEcEktIm", "~amEyEcEktIn", "~amEyEcEktI", "~amEyEcEktIk", "~amEyEcEktInIz", "~amEyEcEklErdI";
-    neg_plain_fut_cond: "~amEyEcEksEm", "~amEyEcEksEn", "~amEyEcEksE", "~amEyEcEksEk", "~amEyEcEksEnIz", "~amEyEcEklErsE";
-    neg_plain_cont__: "~amEmEktEyIm", "~amEmEktEsIn", "~amEmEktE", "~amEmEktEyIz", "~amEmEktEsInIz", "~amEmEktElEr";
-    neg_plain_cont_evid: "~amEmEktEymIşIm", "~amEmEktEymIşsIn", "~amEmEktEymIş", "~amEmEktEymIşIz", "~amEmEktEymIşsInIz", "~amEmEktElErmIş";
-    neg_plain_cont_past: "~amEmEktEydIm", "~amEmEktEydIn", "~amEmEktEydI", "~amEmEktEydIk", "~amEmEktEydInIz", "~amEmEktElErdI";
-    neg_plain_cont_cond: "~amEmEktEysEm", "~amEmEktEysEn", "~amEmEktEysE", "~amEmEktEysEk", "~amEmEktEysEnIz", "~amEmEktElErsE";
-    neg_plain_necess__: "~amEmElIyIm", "~amEmElIsIn", "~amEmElI", "~amEmElIyIz", "~amEmElIsInIz", "~amEmElIlEr";
-    neg_plain_necess_evid: "~amEmElIymIşIm", "~amEmElIymIşsIn", "~amEmElIymIş", "~amEmElIymIşIz", "~amEmElIymIşsInIz", "~amEmElIlErmIş";
-    neg_plain_necess_past: "~amEmElIydIm", "~amEmElIydIn", "~amEmElIydI", "~amEmElIydIk", "~amEmElIydInIz", "~amEmElIlErdI";
-    neg_plain_necess_cond: "~amEmElIysEm", "~amEmElIysEn", "~amEmElIysE", "~amEmElIysEk", "~amEmElIysEnIz", "~amEmElIlErsE";
-    neg_abil_aor__: "~ayEmEm", "~ayEmEzsIn", "~ayEmEz", "~ayEmEyIz", "~ayEmEzsInIz", "~ayEmEzlEr";
-    neg_abil_aor_evid: "~ayEmEzmIşIm", "~ayEmEzmIşsIn", "~ayEmEzmIş", "~ayEmEzmIşIz", "~ayEmEzmIşsInIz", "~ayEmEzlErmIş";
-    neg_abil_aor_past: "~ayEmEzdIm", "~ayEmEzdIn", "~ayEmEzdI", "~ayEmEzdIk", "~ayEmEzdInIz", "~ayEmEzlErdI";
-    neg_abil_aor_cond: "~ayEmEzsEm", "~ayEmEzsEn", "~ayEmEzsE", "~ayEmEzsEk", "~ayEmEzsEnIz", "~ayEmEzlErsE";
-    neg_abil_prog__: "~ayEmIyorum", "~ayEmIyorsun", "~ayEmIyor", "~ayEmIyoruz", "~ayEmIyorsunuz", "~ayEmIyorlar";
-    neg_abil_prog_evid: "~ayEmIyormuşum", "~ayEmIyormuşsun", "~ayEmIyormuş", "~ayEmIyormuşuz", "~ayEmIyormuşsunuz", "~ayEmIyorlarmış";
-    neg_abil_prog_past: "~ayEmIyordum", "~ayEmIyordun", "~ayEmIyordu", "~ayEmIyorduk", "~ayEmIyordunuz", "~ayEmIyorlardı";
-    neg_abil_prog_cond: "~ayEmIyorsam", "~ayEmIyorsan", "~ayEmIyorsa", "~ayEmIyorsak", "~ayEmIyorsanız", "~ayEmIyorlarsa";
-    neg_abil_evid__: "~ayEmEmIşIm", "~ayEmEmIşsIn", "~ayEmEmIş", "~ayEmEmIşIz", "~ayEmEmIşsInIz", "~ayEmEmIşlEr";
-    neg_abil_evid_evid: "~ayEmEmIşmIşIm", "~ayEmEmIşmIşsIn", "~ayEmEmIşmIş", "~ayEmEmIşmIşIz", "~ayEmEmIşmIşsInIz", "~ayEmEmIşlErmIş";
-    neg_abil_evid_past: "~ayEmEmIştIm", "~ayEmEmIştIn", "~ayEmEmIştI", "~ayEmEmIştIk", "~ayEmEmIştInIz", "~ayEmEmIşlErdI";
-    neg_abil_evid_cond: "~ayEmEmIşsEm", "~ayEmEmIşsEn", "~ayEmEmIşsE", "~ayEmEmIşsEk", "~ayEmEmIşsEnIz", "~ayEmEmIşlErsE";
-    neg_abil_fut__: "~ayEmEyEcEğIm", "~ayEmEyEcEksIn", "~ayEmEyEcEk", "~ayEmEyEcEğIz", "~ayEmEyEcEksInIz", "~ayEmEyEcEklEr";
-    neg_abil_fut_evid: "~ayEmEyEcEkmIşIm", "~ayEmEyEcEkmIşsIn", "~ayEmEyEcEkmIş", "~ayEmEyEcEkmIşIz", "~ayEmEyEcEkmIşsInIz", "~ayEmEyEcEklErmIş";
-    neg_abil_fut_past: "~ayEmEyEcEktIm", "~ayEmEyEcEktIn", "~ayEmEyEcEktI", "~ayEmEyEcEktIk", "~ayEmEyEcEktInIz", "~ayEmEyEcEklErdI";
-    neg_abil_fut_cond: "~ayEmEyEcEksEm", "~ayEmEyEcEksEn", "~ayEmEyEcEksE", "~ayEmEyEcEksEk", "~ayEmEyEcEksEnIz", "~ayEmEyEcEklErsE";
-    neg_abil_cont__: "~ayEmEmEktEyIm", "~ayEmEmEktEsIn", "~ayEmEmEktE", "~ayEmEmEktEyIz", "~ayEmEmEktEsInIz", "~ayEmEmEktElEr";
-    neg_abil_cont_evid: "~ayEmEmEktEymIşIm", "~ayEmEmEktEymIşsIn", "~ayEmEmEktEymIş", "~ayEmEmEktEymIşIz", "~ayEmEmEktEymIşsInIz", "~ayEmEmEktElErmIş";
-    neg_abil_cont_past: "~ayEmEmEktEydIm", "~ayEmEmEktEydIn", "~ayEmEmEktEydI", "~ayEmEmEktEydIk", "~ayEmEmEktEydInIz", "~ayEmEmEktElErdI";
-    neg_abil_cont_cond: "~ayEmEmEktEysEm", "~ayEmEmEktEysEn", "~ayEmEmEktEysE", "~ayEmEmEktEysEk", "~ayEmEmEktEysEnIz", "~ayEmEmEktElErsE";
-    neg_abil_necess__: "~ayEmEmElIyIm", "~ayEmEmElIsIn", "~ayEmEmElI", "~ayEmEmElIyIz", "~ayEmEmElIsInIz", "~ayEmEmElIlEr";
-    neg_abil_necess_evid: "~ayEmEmElIymIşIm", "~ayEmEmElIymIşsIn", "~ayEmEmElIymIş", "~ayEmEmElIymIşIz", "~ayEmEmElIymIşsInIz", "~ayEmEmElIlErmIş";
-    neg_abil_necess_past: "~ayEmEmElIydIm", "~ayEmEmElIydIn", "~ayEmEmElIydI", "~ayEmEmElIydIk", "~ayEmEmElIydInIz", "~ayEmEmElIlErdI";
-    neg_abil_necess_cond: "~ayEmEmElIysEm", "~ayEmEmElIysEn", "~ayEmEmElIysE", "~ayEmEmElIysEk", "~ayEmEmElIysEnIz", "~ayEmEmElIlErsE";
-    past_pos_plain__: "~adIm", _, _, _, _, _;
-    past_pos_abil__: "~ayEbildim", "~ayEbildin", "~ayEbildi", "~ayEbildik", "~ayEbildiniz", "~ayEbildiler";
-    past_pos_abil_past: "~ayEbildiydim", "~ayEbildiydin", "~ayEbildiydi", "~ayEbildiydik", "~ayEbildiydiniz", "~ayEbildilerdi";
-    past_pos_abil_cond: "~ayEbildiysem", "~ayEbildiysen", "~ayEbildiyse", "~ayEbildiysek", "~ayEbildiyseniz", "~ayEbildilerse";
-    past_neg_plain__: _, _, _, _, _, "~amEdIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~amEdIlErdI";
-    past_neg_plain_cond: "~amEdIysEm", "~amEdIysEn", "~amEdIysE", "~amEdIysEk", "~amEdIysEnIz", "~amEdIlErsE";
-    past_neg_abil__: "~ayEmEdIm", "~ayEmEdIn", "~ayEmEdI", "~ayEmEdIk", "~ayEmEdInIz", "~ayEmEdIlEr";
-    past_neg_abil_past: "~ayEmEdIydIm", "~ayEmEdIydIn", "~ayEmEdIydI", "~ayEmEdIydIk", "~ayEmEdIydInIz", "~ayEmEdIlErdI";
-    past_neg_abil_cond: "~ayEmEdIysEm", "~ayEmEdIysEn", "~ayEmEdIysE", "~ayEmEdIysEk", "~ayEmEdIysEnIz", "~ayEmEdIlErsE";
-    conditional_pos_plain__: "~asEm", "~asEn", "~asE", "~asEk", "~asEnIz", "~asElEr";
-    conditional_pos_plain_evid: "~asEymIşIm", "~asEymIşsIn", "~asEymIş", "~asEymIşIz", "~asEymIşsInIz", "~asElErmIş";
-    conditional_pos_plain_past: "~asEydIm", "~asEydIn", "~asEydI", "~asEydIk", "~asEydInIz", "~asElErdI";
-    conditional_pos_abil__: "~ayEbilsem", "~ayEbilsen", "~ayEbilse", "~ayEbilsek", "~ayEbilseniz", "~ayEbilseler";
-    conditional_pos_abil_evid: "~ayEbilseymişim", "~ayEbilseymişsin", "~ayEbilseymiş", "~ayEbilseymişiz", "~ayEbilseymişsiniz", "~ayEbilselermiş";
-    conditional_pos_abil_past: "~ayEbilseydim", "~ayEbilseydin", "~ayEbilseydi", "~ayEbilseydik", "~ayEbilseydiniz", "~ayEbilselerdi";
-    conditional_neg_plain__: "~amEsEm", "~amEsEn", "~amEsE", "~amEsEk", "~amEsEnIz", "~amEsElEr";
-    conditional_neg_plain_evid: "~amEsEymIşIm", "~amEsEymIşsIn", "~amEsEymIş", "~amEsEymIşIz", "~amEsEymIşsInIz", "~amEsElErmIş";
-    conditional_neg_plain_past: "~amEsEydIm", "~amEsEydIn", "~amEsEydI", "~amEsEydIk", "~amEsEydInIz", "~amEsElErdI";
-    conditional_neg_abil__: "~ayEmEsEm", "~ayEmEsEn", "~ayEmEsE", "~ayEmEsEk", "~ayEmEsEnIz", "~ayEmEsElEr";
-    conditional_neg_abil_evid: "~ayEmEsEymIşIm", "~ayEmEsEymIşsIn", "~ayEmEsEymIş", "~ayEmEsEymIşIz", "~ayEmEsEymIşsInIz", "~ayEmEsElErmIş";
-    conditional_neg_abil_past: "~ayEmEsEydIm", "~ayEmEsEydIn", "~ayEmEsEydI", "~ayEmEsEydIk", "~ayEmEsEydInIz", "~ayEmEsElErdI";
-    optative_pos_plain__: "~ayEyIm", "~ayEsIn", "~ayE", "~ayElIm", "~ayEsInIz", "~ayElEr";
-    optative_pos_plain_evid: "~ayEymIşIm", "~ayEymIşsIn", "~ayEymIş", "~ayEymIşIz", "~ayEymIşsInIz", "~ayElErmIş";
-    optative_pos_plain_past: "~ayEydIm", "~ayEydIn", "~ayEydI", "~ayEydIk", "~ayEydInIz", "~ayElErdI";
-    optative_pos_abil__: "~ayEbileyim", "~ayEbilesin", "~ayEbile", "~ayEbilelim", "~ayEbilesiniz", "~ayEbileler";
-    optative_pos_abil_evid: "~ayEbileymişim", "~ayEbileymişsin", "~ayEbileymiş", "~ayEbileymişiz", "~ayEbileymişsiniz", "~ayEbilelermiş";
-    optative_pos_abil_past: "~ayEbileydim", "~ayEbileydin", "~ayEbileydi", "~ayEbileydik", "~ayEbileydiniz", "~ayEbilelerdi";
-    optative_neg_plain__: "~amEyEyIm", "~amEyEsIn", "~amEyE", "~amEyElIm", "~amEyEsInIz", "~amEyElEr";
-    optative_neg_plain_evid: "~amEyEymIşIm", "~amEyEymIşsIn", "~amEyEymIş", "~amEyEymIşIz", "~amEyEymIşsInIz", "~amEyElErmIş";
-    optative_neg_plain_past: "~amEyEydIm", "~amEyEydIn", "~amEyEydI", "~amEyEydIk", "~amEyEydInIz", "~amEyElErdI";
-    optative_neg_abil__: "~ayEmEyEyIm", "~ayEmEyEsIn", "~ayEmEyE", "~ayEmEyElIm", "~ayEmEyEsInIz", "~ayEmEyElEr";
-    optative_neg_abil_evid: "~ayEmEyEymIşIm", "~ayEmEyEymIşsIn", "~ayEmEyEymIş", "~ayEmEyEymIşIz", "~ayEmEyEymIşsInIz", "~ayEmEyElErmIş";
-    optative_neg_abil_past: "~ayEmEyEydIm", "~ayEmEyEydIn", "~ayEmEyEydI", "~ayEmEyEydIk", "~ayEmEyEydInIz", "~ayEmEyElErdI";
-    imperative_pos_plain: "~a", "~asIn", "~ayIn", "~asInlEr", _, "~ayInIz", "~asEnE", "~asEnIzE";
-    imperative_pos_abil: "~ayEbil", "~ayEbilsin", "~ayEbilin", "~ayEbilsinler", "~ayEbiliniz", _, "~ayEbilsene", "~ayEbilsenize";
-    imperative_neg_plain: _, _, _, "~amEsInlEr", _, "~amEyInIz", "~amEsEnE", "~amEsEnIzE";
-    imperative_neg_abil: "~ayEmE", "~ayEmEsIn", "~ayEmEyIn", "~ayEmEsInlEr", "~ayEmEyInIz", _, "~ayEmEsEnE", "~ayEmEsEnIzE";
-    infinitive_pos: "~amak", "~ayEbilmek";
-    infinitive_neg: "~amEmEk", "~ayEmEmEk";
-    verbal_noun_pos: "~amE", "~ayEbilme";
-    verbal_noun_neg: "~amEmE", "~ayEmEmE";
-    participle_pos_plain: "~ayEn", _, _;
-    participle_pos_abil: "~ayEbilen", _, _;
-    participle_neg_plain: "~amEyEn", "~amEmIş", _;
-    participle_neg_abil: "~ayEmEyEn", _, _;
-    relative_pos_plain_acak: _, _, _, _, _, "~ayEcEklErI";
-    relative_pos_abil_dik: "~ayEbildiğim", "~ayEbildiğin", "~ayEbildiği", "~ayEbildiğimiz", "~ayEbildiğiniz", "~ayEbildikleri";
-    relative_pos_abil_acak: _, "~ayEbileceğin", "~ayEbileceği", "~ayEbileceğimiz", "~ayEbileceğiniz", "~ayEbilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~amEdIklErI";
-    relative_neg_plain_acak: _, "~amEyEcEğIn", "~amEyEcEğI", "~amEyEcEğImIz", "~amEyEcEğInIz", "~amEyEcEklErI";
-    relative_neg_abil_dik: "~ayEmEdIğIm", "~ayEmEdIğIn", "~ayEmEdIğI", "~ayEmEdIğImIz", "~ayEmEdIğInIz", "~ayEmEdIklErI";
-    relative_neg_abil_acak: _, "~ayEmEyEcEğIn", "~ayEmEyEcEğI", "~ayEmEyEcEğImIz", "~ayEmEyEcEğInIz", "~ayEmEyEcEklErI";
-    converb_pos_plain: "~arken", _, _, "~ayElI", "~ayEsIyE", _, "~ayErEk", "~aya ~aya", "~arcEsInE";
-    converb_pos_abil: "~ayEbilIrken", "~ayEbilince", "~ayEbilip", "~ayEbileli", "~ayEbilesiye", "~ayEbildikçe", "~ayEbilerek", "~ayabile ~ayabile", _;
-    converb_neg_plain: _, "~amEyIncE", _, "~amEyElI", "~amEyEsIyE", "~amEdIkçE", "~amEyErEk", _, "~amEzcEsInE";
-    converb_neg_abil: "~ayEmEzken", "~ayEmEyIncE", "~ayEmEyIp", "~ayEmEyElI", "~ayEmEyEsIyE", "~ayEmEdIkçE", "~ayEmEyErEk", _, "~ayEmEzcEsInE";
+    pos_plain_evid__: _, "~EmIşsIn", "~EmIş", _, "~EmIşsInIz", "~EmIşlEr";
+    pos_plain_evid_evid: "~EmIşmIşIm", "~EmIşmIşsIn", "~EmIşmIş", "~EmIşmIşIz", "~EmIşmIşsInIz", "~EmIşlErmIş";
+    pos_plain_evid_past: "~EmIştIm", "~EmIştIn", "~EmIştI", "~EmIştIk", "~EmIştInIz", "~EmIşlErdI";
+    pos_plain_evid_cond: "~EmIşsEm", "~EmIşsEn", "~EmIşsE", "~EmIşsEk", "~EmIşsEnIz", "~EmIşlErsE";
+    pos_plain_fut__: "~EyEcEğIm", "~EyEcEksIn", "~EyEcEk", _, "~EyEcEksInIz", "~EyEcEklEr";
+    pos_plain_fut_evid: "~EyEcEkmIşIm", "~EyEcEkmIşsIn", "~EyEcEkmIş", "~EyEcEkmIşIz", "~EyEcEkmIşsInIz", "~EyEcEklErmIş";
+    pos_plain_fut_past: "~EyEcEktIm", "~EyEcEktIn", "~EyEcEktI", "~EyEcEktIk", "~EyEcEktInIz", "~EyEcEklErdI";
+    pos_plain_fut_cond: "~EyEcEksEm", "~EyEcEksEn", "~EyEcEksE", "~EyEcEksEk", "~EyEcEksEnIz", "~EyEcEklErsE";
+    pos_abil_aor__: "~EyEbilirim", "~EyEbilirsin", "~EyEbilir", "~EyEbiliriz", "~EyEbilirsiniz", "~EyEbilirler";
+    pos_abil_aor_evid: "~EyEbilirmişim", "~EyEbilirmişsin", "~EyEbilirmiş", "~EyEbilirmişiz", "~EyEbilirmişsiniz", "~EyEbilirlermiş";
+    pos_abil_aor_past: "~EyEbilirdim", "~EyEbilirdin", "~EyEbilirdi", "~EyEbilirdik", "~EyEbilirdiniz", "~EyEbilirlerdi";
+    pos_abil_aor_cond: "~EyEbilirsem", "~EyEbilirsen", "~EyEbilirse", "~EyEbilirsek", "~EyEbilirseniz", "~EyEbilirlerse";
+    pos_abil_prog__: "~EyEbiliyorum", "~EyEbiliyorsun", "~EyEbiliyor", "~EyEbiliyoruz", "~EyEbiliyorsunuz", "~EyEbiliyorlar";
+    pos_abil_prog_evid: "~EyEbiliyormuşum", "~EyEbiliyormuşsun", "~EyEbiliyormuş", "~EyEbiliyormuşuz", "~EyEbiliyormuşsunuz", "~EyEbiliyorlarmış";
+    pos_abil_prog_past: "~EyEbiliyordum", "~EyEbiliyordun", "~EyEbiliyordu", "~EyEbiliyorduk", "~EyEbiliyordunuz", "~EyEbiliyorlardı";
+    pos_abil_prog_cond: "~EyEbiliyorsam", "~EyEbiliyorsan", "~EyEbiliyorsa", "~EyEbiliyorsak", "~EyEbiliyorsanız", "~EyEbiliyorlarsa";
+    pos_abil_evid__: "~EyEbilmişim", "~EyEbilmişsin", "~EyEbilmiş", "~EyEbilmişiz", "~EyEbilmişsiniz", "~EyEbilmişler";
+    pos_abil_evid_evid: "~EyEbilmişmişim", "~EyEbilmişmişsin", "~EyEbilmişmiş", "~EyEbilmişmişiz", "~EyEbilmişmişsiniz", "~EyEbilmişlermiş";
+    pos_abil_evid_past: "~EyEbilmiştim", "~EyEbilmiştin", "~EyEbilmişti", "~EyEbilmiştik", "~EyEbilmiştiniz", "~EyEbilmişlerdi";
+    pos_abil_evid_cond: "~EyEbilmişsem", "~EyEbilmişsen", "~EyEbilmişse", "~EyEbilmişsek", "~EyEbilmişseniz", "~EyEbilmişlerse";
+    pos_abil_fut__: "~EyEbileceğim", "~EyEbileceksin", "~EyEbilecek", "~EyEbileceğiz", "~EyEbileceksiniz", "~EyEbilecekler";
+    pos_abil_fut_evid: "~EyEbilecekmişim", "~EyEbilecekmişsin", "~EyEbilecekmiş", "~EyEbilecekmişiz", "~EyEbilecekmişsiniz", "~EyEbileceklermiş";
+    pos_abil_fut_past: "~EyEbilecektim", "~EyEbilecektin", "~EyEbilecekti", "~EyEbilecektik", "~EyEbilecektiniz", "~EyEbileceklerdi";
+    pos_abil_fut_cond: "~EyEbileceksem", "~EyEbileceksen", "~EyEbilecekse", "~EyEbileceksek", "~EyEbilecekseniz", "~EyEbileceklerse";
+    pos_abil_cont__: "~EyEbilmekteyim", "~EyEbilmektesin", "~EyEbilmekte", "~EyEbilmekteyiz", "~EyEbilmektesiniz", "~EyEbilmekteler";
+    pos_abil_cont_evid: "~EyEbilmekteymişim", "~EyEbilmekteymişsin", "~EyEbilmekteymiş", "~EyEbilmekteymişiz", "~EyEbilmekteymişsiniz", "~EyEbilmektelermiş";
+    pos_abil_cont_past: "~EyEbilmekteydim", "~EyEbilmekteydin", "~EyEbilmekteydi", "~EyEbilmekteydik", "~EyEbilmekteydiniz", "~EyEbilmektelerdi";
+    pos_abil_cont_cond: "~EyEbilmekteysem", "~EyEbilmekteysen", "~EyEbilmekteyse", "~EyEbilmekteysek", "~EyEbilmekteyseniz", "~EyEbilmektelerse";
+    pos_abil_necess__: "~EyEbilmeliyim", "~EyEbilmelisin", "~EyEbilmeli", "~EyEbilmeliyiz", "~EyEbilmelisiniz", "~EyEbilmeliler";
+    pos_abil_necess_evid: "~EyEbilmeliymişim", "~EyEbilmeliymişsin", "~EyEbilmeliymiş", "~EyEbilmeliymişiz", "~EyEbilmeliymişsiniz", "~EyEbilmelilermiş";
+    pos_abil_necess_past: "~EyEbilmeliydim", "~EyEbilmeliydin", "~EyEbilmeliydi", "~EyEbilmeliydik", "~EyEbilmeliydiniz", "~EyEbilmelilerdi";
+    pos_abil_necess_cond: "~EyEbilmeliysem", "~EyEbilmeliysen", "~EyEbilmeliyse", "~EyEbilmeliysek", "~EyEbilmeliyseniz", "~EyEbilmelilerse";
+    neg_plain_prog__: "~EmIyorum", "~EmIyorsun", "~EmIyor", "~EmIyoruz", "~EmIyorsunuz", "~EmIyorlar";
+    neg_plain_prog_evid: "~EmIyormuşum", "~EmIyormuşsun", "~EmIyormuş", "~EmIyormuşuz", "~EmIyormuşsunuz", "~EmIyorlarmış";
+    neg_plain_prog_past: "~EmIyordum", "~EmIyordun", "~EmIyordu", "~EmIyorduk", "~EmIyordunuz", "~EmIyorlardı";
+    neg_plain_prog_cond: "~EmIyorsam", "~EmIyorsan", "~EmIyorsa", "~EmIyorsak", "~EmIyorsanız", "~EmIyorlarsa";
+    neg_abil_aor__: "~EyEmEm", "~EyEmEzsIn", "~EyEmEz", "~EyEmEyIz", "~EyEmEzsInIz", "~EyEmEzlEr";
+    neg_abil_aor_evid: "~EyEmEzmIşIm", "~EyEmEzmIşsIn", "~EyEmEzmIş", "~EyEmEzmIşIz", "~EyEmEzmIşsInIz", "~EyEmEzlErmIş";
+    neg_abil_aor_past: "~EyEmEzdIm", "~EyEmEzdIn", "~EyEmEzdI", "~EyEmEzdIk", "~EyEmEzdInIz", "~EyEmEzlErdI";
+    neg_abil_aor_cond: "~EyEmEzsEm", "~EyEmEzsEn", "~EyEmEzsE", "~EyEmEzsEk", "~EyEmEzsEnIz", "~EyEmEzlErsE";
+    neg_abil_prog__: "~EyEmIyorum", "~EyEmIyorsun", "~EyEmIyor", "~EyEmIyoruz", "~EyEmIyorsunuz", "~EyEmIyorlar";
+    neg_abil_prog_evid: "~EyEmIyormuşum", "~EyEmIyormuşsun", "~EyEmIyormuş", "~EyEmIyormuşuz", "~EyEmIyormuşsunuz", "~EyEmIyorlarmış";
+    neg_abil_prog_past: "~EyEmIyordum", "~EyEmIyordun", "~EyEmIyordu", "~EyEmIyorduk", "~EyEmIyordunuz", "~EyEmIyorlardı";
+    neg_abil_prog_cond: "~EyEmIyorsam", "~EyEmIyorsan", "~EyEmIyorsa", "~EyEmIyorsak", "~EyEmIyorsanız", "~EyEmIyorlarsa";
+    neg_abil_evid__: "~EyEmEmIşIm", "~EyEmEmIşsIn", "~EyEmEmIş", "~EyEmEmIşIz", "~EyEmEmIşsInIz", "~EyEmEmIşlEr";
+    neg_abil_evid_evid: "~EyEmEmIşmIşIm", "~EyEmEmIşmIşsIn", "~EyEmEmIşmIş", "~EyEmEmIşmIşIz", "~EyEmEmIşmIşsInIz", "~EyEmEmIşlErmIş";
+    neg_abil_evid_past: "~EyEmEmIştIm", "~EyEmEmIştIn", "~EyEmEmIştI", "~EyEmEmIştIk", "~EyEmEmIştInIz", "~EyEmEmIşlErdI";
+    neg_abil_evid_cond: "~EyEmEmIşsEm", "~EyEmEmIşsEn", "~EyEmEmIşsE", "~EyEmEmIşsEk", "~EyEmEmIşsEnIz", "~EyEmEmIşlErsE";
+    neg_abil_fut__: "~EyEmEyEcEğIm", "~EyEmEyEcEksIn", "~EyEmEyEcEk", "~EyEmEyEcEğIz", "~EyEmEyEcEksInIz", "~EyEmEyEcEklEr";
+    neg_abil_fut_evid: "~EyEmEyEcEkmIşIm", "~EyEmEyEcEkmIşsIn", "~EyEmEyEcEkmIş", "~EyEmEyEcEkmIşIz", "~EyEmEyEcEkmIşsInIz", "~EyEmEyEcEklErmIş";
+    neg_abil_fut_past: "~EyEmEyEcEktIm", "~EyEmEyEcEktIn", "~EyEmEyEcEktI", "~EyEmEyEcEktIk", "~EyEmEyEcEktInIz", "~EyEmEyEcEklErdI";
+    neg_abil_fut_cond: "~EyEmEyEcEksEm", "~EyEmEyEcEksEn", "~EyEmEyEcEksE", "~EyEmEyEcEksEk", "~EyEmEyEcEksEnIz", "~EyEmEyEcEklErsE";
+    neg_abil_cont__: "~EyEmEmEktEyIm", "~EyEmEmEktEsIn", "~EyEmEmEktE", "~EyEmEmEktEyIz", "~EyEmEmEktEsInIz", "~EyEmEmEktElEr";
+    neg_abil_cont_evid: "~EyEmEmEktEymIşIm", "~EyEmEmEktEymIşsIn", "~EyEmEmEktEymIş", "~EyEmEmEktEymIşIz", "~EyEmEmEktEymIşsInIz", "~EyEmEmEktElErmIş";
+    neg_abil_cont_past: "~EyEmEmEktEydIm", "~EyEmEmEktEydIn", "~EyEmEmEktEydI", "~EyEmEmEktEydIk", "~EyEmEmEktEydInIz", "~EyEmEmEktElErdI";
+    neg_abil_cont_cond: "~EyEmEmEktEysEm", "~EyEmEmEktEysEn", "~EyEmEmEktEysE", "~EyEmEmEktEysEk", "~EyEmEmEktEysEnIz", "~EyEmEmEktElErsE";
+    neg_abil_necess__: "~EyEmEmElIyIm", "~EyEmEmElIsIn", "~EyEmEmElI", "~EyEmEmElIyIz", "~EyEmEmElIsInIz", "~EyEmEmElIlEr";
+    neg_abil_necess_evid: "~EyEmEmElIymIşIm", "~EyEmEmElIymIşsIn", "~EyEmEmElIymIş", "~EyEmEmElIymIşIz", "~EyEmEmElIymIşsInIz", "~EyEmEmElIlErmIş";
+    neg_abil_necess_past: "~EyEmEmElIydIm", "~EyEmEmElIydIn", "~EyEmEmElIydI", "~EyEmEmElIydIk", "~EyEmEmElIydInIz", "~EyEmEmElIlErdI";
+    neg_abil_necess_cond: "~EyEmEmElIysEm", "~EyEmEmElIysEn", "~EyEmEmElIysE", "~EyEmEmElIysEk", "~EyEmEmElIysEnIz", "~EyEmEmElIlErsE";
+    past_pos_plain__: "~EdIm", _, _, _, _, _;
+    past_pos_abil__: "~EyEbildim", "~EyEbildin", "~EyEbildi", "~EyEbildik", "~EyEbildiniz", "~EyEbildiler";
+    past_pos_abil_past: "~EyEbildiydim", "~EyEbildiydin", "~EyEbildiydi", "~EyEbildiydik", "~EyEbildiydiniz", "~EyEbildilerdi";
+    past_pos_abil_cond: "~EyEbildiysem", "~EyEbildiysen", "~EyEbildiyse", "~EyEbildiysek", "~EyEbildiyseniz", "~EyEbildilerse";
+    past_neg_abil__: "~EyEmEdIm", "~EyEmEdIn", "~EyEmEdI", "~EyEmEdIk", "~EyEmEdInIz", "~EyEmEdIlEr";
+    past_neg_abil_past: "~EyEmEdIydIm", "~EyEmEdIydIn", "~EyEmEdIydI", "~EyEmEdIydIk", "~EyEmEdIydInIz", "~EyEmEdIlErdI";
+    past_neg_abil_cond: "~EyEmEdIysEm", "~EyEmEdIysEn", "~EyEmEdIysE", "~EyEmEdIysEk", "~EyEmEdIysEnIz", "~EyEmEdIlErsE";
+    conditional_pos_plain__: "~EsEm", "~EsEn", "~EsE", "~EsEk", "~EsEnIz", "~EsElEr";
+    conditional_pos_plain_evid: "~EsEymIşIm", "~EsEymIşsIn", "~EsEymIş", "~EsEymIşIz", "~EsEymIşsInIz", "~EsElErmIş";
+    conditional_pos_plain_past: "~EsEydIm", "~EsEydIn", "~EsEydI", "~EsEydIk", "~EsEydInIz", "~EsElErdI";
+    conditional_pos_abil__: "~EyEbilsem", "~EyEbilsen", "~EyEbilse", "~EyEbilsek", "~EyEbilseniz", "~EyEbilseler";
+    conditional_pos_abil_evid: "~EyEbilseymişim", "~EyEbilseymişsin", "~EyEbilseymiş", "~EyEbilseymişiz", "~EyEbilseymişsiniz", "~EyEbilselermiş";
+    conditional_pos_abil_past: "~EyEbilseydim", "~EyEbilseydin", "~EyEbilseydi", "~EyEbilseydik", "~EyEbilseydiniz", "~EyEbilselerdi";
+    conditional_neg_abil__: "~EyEmEsEm", "~EyEmEsEn", "~EyEmEsE", "~EyEmEsEk", "~EyEmEsEnIz", "~EyEmEsElEr";
+    conditional_neg_abil_evid: "~EyEmEsEymIşIm", "~EyEmEsEymIşsIn", "~EyEmEsEymIş", "~EyEmEsEymIşIz", "~EyEmEsEymIşsInIz", "~EyEmEsElErmIş";
+    conditional_neg_abil_past: "~EyEmEsEydIm", "~EyEmEsEydIn", "~EyEmEsEydI", "~EyEmEsEydIk", "~EyEmEsEydInIz", "~EyEmEsElErdI";
+    optative_pos_plain__: "~EyEyIm", "~EyEsIn", "~EyE", "~EyElIm", "~EyEsInIz", "~EyElEr";
+    optative_pos_plain_evid: "~EyEymIşIm", "~EyEymIşsIn", "~EyEymIş", "~EyEymIşIz", "~EyEymIşsInIz", "~EyElErmIş";
+    optative_pos_plain_past: "~EyEydIm", "~EyEydIn", "~EyEydI", "~EyEydIk", "~EyEydInIz", "~EyElErdI";
+    optative_pos_abil__: "~EyEbileyim", "~EyEbilesin", "~EyEbile", "~EyEbilelim", "~EyEbilesiniz", "~EyEbileler";
+    optative_pos_abil_evid: "~EyEbileymişim", "~EyEbileymişsin", "~EyEbileymiş", "~EyEbileymişiz", "~EyEbileymişsiniz", "~EyEbilelermiş";
+    optative_pos_abil_past: "~EyEbileydim", "~EyEbileydin", "~EyEbileydi", "~EyEbileydik", "~EyEbileydiniz", "~EyEbilelerdi";
+    optative_neg_abil__: "~EyEmEyEyIm", "~EyEmEyEsIn", "~EyEmEyE", "~EyEmEyElIm", "~EyEmEyEsInIz", "~EyEmEyElEr";
+    optative_neg_abil_evid: "~EyEmEyEymIşIm", "~EyEmEyEymIşsIn", "~EyEmEyEymIş", "~EyEmEyEymIşIz", "~EyEmEyEymIşsInIz", "~EyEmEyElErmIş";
+    optative_neg_abil_past: "~EyEmEyEydIm", "~EyEmEyEydIn", "~EyEmEyEydI", "~EyEmEyEydIk", "~EyEmEyEydInIz", "~EyEmEyElErdI";
+    imperative_pos_plain: "~E", "~EsIn", "~EyIn", "~EsInlEr", _, "~EyInIz", "~EsEnE", "~EsEnIzE";
+    imperative_pos_abil: "~EyEbil", "~EyEbilsin", "~EyEbilin", "~EyEbilsinler", "~EyEbiliniz", _, "~EyEbilsene", "~EyEbilsenize";
+    imperative_neg_plain: _, _, _, _, _, "~EmEyInIz", _, _;
+    imperative_neg_abil: "~EyEmE", "~EyEmEsIn", "~EyEmEyIn", "~EyEmEsInlEr", "~EyEmEyInIz", _, "~EyEmEsEnE", "~EyEmEsEnIzE";
+    infinitive_pos: "~amak", "~EyEbilmek";
+    infinitive_neg: _, "~EyEmEmEk";
+    verbal_noun_pos: "~EmE", "~EyEbilme";
+    verbal_noun_neg: _, "~EyEmEmE";
+    participle_pos_plain: "~EyEn", _, _;
+    participle_pos_abil: "~EyEbilen", _, _;
+    participle_neg_plain: _, "~EmEmIş", "~EmEyEcEk";
+    participle_neg_abil: "~EyEmEyEn", _, _;
+    relative_pos_plain_acak: _, _, _, _, _, "~EyEcEklErI";
+    relative_pos_abil_dik: "~EyEbildiğim", "~EyEbildiğin", "~EyEbildiği", "~EyEbildiğimiz", "~EyEbildiğiniz", "~EyEbildikleri";
+    relative_pos_abil_acak: _, "~EyEbileceğin", "~EyEbileceği", "~EyEbileceğimiz", "~EyEbileceğiniz", "~EyEbilecekleri";
+    relative_neg_plain_acak: "~EmEyEcEğIm", _, _, _, _, _;
+    relative_neg_abil_dik: "~EyEmEdIğIm", "~EyEmEdIğIn", "~EyEmEdIğI", "~EyEmEdIğImIz", "~EyEmEdIğInIz", "~EyEmEdIklErI";
+    relative_neg_abil_acak: _, "~EyEmEyEcEğIn", "~EyEmEyEcEğI", "~EyEmEyEcEğImIz", "~EyEmEyEcEğInIz", "~EyEmEyEcEklErI";
+    converb_pos_plain: "~Erken", _, _, "~EyElI", "~EyEsIyE", _, "~EyErEk", "~aya ~aya", "~ErcEsInE";
+    converb_pos_abil: "~EyEbilIrken", "~EyEbilince", "~EyEbilip", "~EyEbileli", "~EyEbilesiye", "~EyEbildikçe", "~EyEbilerek", "~ayabile ~ayabile", _;
+    converb_neg_abil: "~EyEmEzken", "~EyEmEyIncE", "~EyEmEyIp", "~EyEmEyElI", "~EyEmEyEsIyE", "~EyEmEdIkçE", "~EyEmEyErEk", _, "~EyEmEzcEsInE";
     ),
     // Takipetmek: 186 words (terk etmek, nefret etmek, kabul etmek, tahliye etmek, itiraf etmek, taklit etmek).
     conjugation!("takip etmek", 186, "~tmek";
     stem lemma: "~- like takip etmek";
-    stem converb_neg_plain_doubled: "~tmeye etmeye- like vermek";
-    stem converb_neg_abil_doubled: "~demeye edemeye- like vermek";
+    stem converb_neg_plain_doubled: "~tmeye Etmeye- like ayırmak";
+    stem converb_neg_abil_doubled: "~demeye edemeye- like ayırmak";
     imperative_pos_abil: _, _, _, _, _, derived, _, _;
     imperative_neg_abil: _, _, _, _, _, derived, _, _;
     participle_pos_plain: _, derived, derived;
     participle_pos_abil: _, derived, derived;
-    participle_neg_plain: _, _, derived;
     participle_neg_abil: _, derived, derived;
     relative_pos_plain_acak: derived, _, _, _, _, _;
     relative_pos_abil_acak: derived, _, _, _, _, _;
-    relative_neg_plain_acak: derived, _, _, _, _, _;
     relative_neg_abil_acak: derived, _, _, _, _, _;
     ),
-    // Beslemek: 152 words (ezberlemek, gülümsemek, titremek, ertelemek, istemek, bellemek).
-    conjugation!("beslemek", 152, "~emek";
-    stem converb_neg_plain_doubled: "~emeye ~emeye- like vermek";
-    stem converb_neg_abil_doubled: "~eyemeye ~eyemeye- like vermek";
-    pos_plain_aor__: "~erIm", "~ersIn", "~er", _, "~ersInIz", "~erler";
-    pos_plain_aor_evid: "~ermIşIm", "~ermIşsIn", "~ermIş", "~ermIşIz", "~ermIşsInIz", "~erlermIş";
-    pos_plain_aor_past: "~erdIm", "~erdIn", "~erdI", "~erdIk", "~erdInIz", "~erlerdI";
-    pos_plain_aor_cond: "~ersem", "~ersen", "~erse", "~ersek", "~ersenIz", "~erlerse";
-    pos_plain_prog__: "~Iyorum", _, _, _, _, _;
-    pos_plain_evid__: _, "~emIşsIn", "~emIş", _, "~emIşsInIz", "~emIşlEr";
-    pos_plain_evid_evid: "~emIşmIşIm", "~emIşmIşsIn", "~emIşmIş", "~emIşmIşIz", "~emIşmIşsInIz", "~emIşlErmIş";
-    pos_plain_evid_past: "~emIştIm", "~emIştIn", "~emIştI", "~emIştIk", "~emIştInIz", "~emIşlErdI";
-    pos_plain_evid_cond: "~emIşsEm", "~emIşsEn", "~emIşsE", "~emIşsEk", "~emIşsEnIz", "~emIşlErsE";
-    pos_plain_fut__: "~eyeceğIm", "~eyeceksIn", "~eyecek", _, "~eyeceksInIz", "~eyecekler";
-    pos_plain_fut_evid: "~eyecekmIşIm", "~eyecekmIşsIn", "~eyecekmIş", "~eyecekmIşIz", "~eyecekmIşsInIz", "~eyeceklermIş";
-    pos_plain_fut_past: "~eyecektIm", "~eyecektIn", "~eyecektI", "~eyecektIk", "~eyecektInIz", "~eyeceklerdI";
-    pos_plain_fut_cond: "~eyeceksem", "~eyeceksen", "~eyecekse", "~eyeceksek", "~eyeceksenIz", "~eyeceklerse";
-    pos_plain_cont__: "~emekteyIm", "~emektesIn", "~emekte", "~emekteyIz", "~emektesInIz", "~emekteler";
-    pos_plain_cont_evid: "~emekteymIşIm", "~emekteymIşsIn", "~emekteymIş", "~emekteymIşIz", "~emekteymIşsInIz", "~emektelermIş";
-    pos_plain_cont_past: "~emekteydIm", "~emekteydIn", "~emekteydI", "~emekteydIk", "~emekteydInIz", "~emektelerdI";
-    pos_plain_cont_cond: "~emekteysem", "~emekteysen", "~emekteyse", "~emekteysek", "~emekteysenIz", "~emektelerse";
-    pos_plain_necess__: _, _, _, _, _, "~emelIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~emelIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~emelIlErdI";
-    pos_plain_necess_cond: "~emelIysEm", "~emelIysEn", "~emelIysE", "~emelIysEk", "~emelIysEnIz", "~emelIlErsE";
-    pos_abil_aor__: "~eyebilirim", "~eyebilirsin", "~eyebilir", "~eyebiliriz", "~eyebilirsiniz", "~eyebilirler";
-    pos_abil_aor_evid: "~eyebilirmişim", "~eyebilirmişsin", "~eyebilirmiş", "~eyebilirmişiz", "~eyebilirmişsiniz", "~eyebilirlermiş";
-    pos_abil_aor_past: "~eyebilirdim", "~eyebilirdin", "~eyebilirdi", "~eyebilirdik", "~eyebilirdiniz", "~eyebilirlerdi";
-    pos_abil_aor_cond: "~eyebilirsem", "~eyebilirsen", "~eyebilirse", "~eyebilirsek", "~eyebilirseniz", "~eyebilirlerse";
-    pos_abil_prog__: "~eyebiliyorum", "~eyebiliyorsun", "~eyebiliyor", "~eyebiliyoruz", "~eyebiliyorsunuz", "~eyebiliyorlar";
-    pos_abil_prog_evid: "~eyebiliyormuşum", "~eyebiliyormuşsun", "~eyebiliyormuş", "~eyebiliyormuşuz", "~eyebiliyormuşsunuz", "~eyebiliyorlarmış";
-    pos_abil_prog_past: "~eyebiliyordum", "~eyebiliyordun", "~eyebiliyordu", "~eyebiliyorduk", "~eyebiliyordunuz", "~eyebiliyorlardı";
-    pos_abil_prog_cond: "~eyebiliyorsam", "~eyebiliyorsan", "~eyebiliyorsa", "~eyebiliyorsak", "~eyebiliyorsanız", "~eyebiliyorlarsa";
-    pos_abil_evid__: "~eyebilmişim", "~eyebilmişsin", "~eyebilmiş", "~eyebilmişiz", "~eyebilmişsiniz", "~eyebilmişler";
-    pos_abil_evid_evid: "~eyebilmişmişim", "~eyebilmişmişsin", "~eyebilmişmiş", "~eyebilmişmişiz", "~eyebilmişmişsiniz", "~eyebilmişlermiş";
-    pos_abil_evid_past: "~eyebilmiştim", "~eyebilmiştin", "~eyebilmişti", "~eyebilmiştik", "~eyebilmiştiniz", "~eyebilmişlerdi";
-    pos_abil_evid_cond: "~eyebilmişsem", "~eyebilmişsen", "~eyebilmişse", "~eyebilmişsek", "~eyebilmişseniz", "~eyebilmişlerse";
-    pos_abil_fut__: "~eyebileceğim", "~eyebileceksin", "~eyebilecek", "~eyebileceğiz", "~eyebileceksiniz", "~eyebilecekler";
-    pos_abil_fut_evid: "~eyebilecekmişim", "~eyebilecekmişsin", "~eyebilecekmiş", "~eyebilecekmişiz", "~eyebilecekmişsiniz", "~eyebileceklermiş";
-    pos_abil_fut_past: "~eyebilecektim", "~eyebilecektin", "~eyebilecekti", "~eyebilecektik", "~eyebilecektiniz", "~eyebileceklerdi";
-    pos_abil_fut_cond: "~eyebileceksem", "~eyebileceksen", "~eyebilecekse", "~eyebileceksek", "~eyebilecekseniz", "~eyebileceklerse";
-    pos_abil_cont__: "~eyebilmekteyim", "~eyebilmektesin", "~eyebilmekte", "~eyebilmekteyiz", "~eyebilmektesiniz", "~eyebilmekteler";
-    pos_abil_cont_evid: "~eyebilmekteymişim", "~eyebilmekteymişsin", "~eyebilmekteymiş", "~eyebilmekteymişiz", "~eyebilmekteymişsiniz", "~eyebilmektelermiş";
-    pos_abil_cont_past: "~eyebilmekteydim", "~eyebilmekteydin", "~eyebilmekteydi", "~eyebilmekteydik", "~eyebilmekteydiniz", "~eyebilmektelerdi";
-    pos_abil_cont_cond: "~eyebilmekteysem", "~eyebilmekteysen", "~eyebilmekteyse", "~eyebilmekteysek", "~eyebilmekteyseniz", "~eyebilmektelerse";
-    pos_abil_necess__: "~eyebilmeliyim", "~eyebilmelisin", "~eyebilmeli", "~eyebilmeliyiz", "~eyebilmelisiniz", "~eyebilmeliler";
-    pos_abil_necess_evid: "~eyebilmeliymişim", "~eyebilmeliymişsin", "~eyebilmeliymiş", "~eyebilmeliymişiz", "~eyebilmeliymişsiniz", "~eyebilmelilermiş";
-    pos_abil_necess_past: "~eyebilmeliydim", "~eyebilmeliydin", "~eyebilmeliydi", "~eyebilmeliydik", "~eyebilmeliydiniz", "~eyebilmelilerdi";
-    pos_abil_necess_cond: "~eyebilmeliysem", "~eyebilmeliysen", "~eyebilmeliyse", "~eyebilmeliysek", "~eyebilmeliyseniz", "~eyebilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~emezler";
-    neg_plain_aor_evid: _, _, _, _, _, "~emezlermIş";
-    neg_plain_aor_past: _, _, _, _, _, "~emezlerdI";
-    neg_plain_aor_cond: "~emezsem", "~emezsen", "~emezse", "~emezsek", "~emezsenIz", "~emezlerse";
-    neg_plain_prog__: "~emIyorum", "~emIyorsun", "~emIyor", "~emIyoruz", "~emIyorsunuz", "~emIyorlar";
-    neg_plain_prog_evid: "~emIyormuşum", "~emIyormuşsun", "~emIyormuş", "~emIyormuşuz", "~emIyormuşsunuz", "~emIyorlarmış";
-    neg_plain_prog_past: "~emIyordum", "~emIyordun", "~emIyordu", "~emIyorduk", "~emIyordunuz", "~emIyorlardı";
-    neg_plain_prog_cond: "~emIyorsam", "~emIyorsan", "~emIyorsa", "~emIyorsak", "~emIyorsanız", "~emIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~ememIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~ememIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~ememIşlErdI";
-    neg_plain_evid_cond: "~ememIşsEm", "~ememIşsEn", "~ememIşsE", "~ememIşsEk", "~ememIşsEnIz", "~ememIşlErsE";
-    neg_plain_fut__: "~emeyeceğIm", "~emeyeceksIn", "~emeyecek", "~emeyeceğIz", "~emeyeceksInIz", "~emeyecekler";
-    neg_plain_fut_evid: "~emeyecekmIşIm", "~emeyecekmIşsIn", "~emeyecekmIş", "~emeyecekmIşIz", "~emeyecekmIşsInIz", "~emeyeceklermIş";
-    neg_plain_fut_past: "~emeyecektIm", "~emeyecektIn", "~emeyecektI", "~emeyecektIk", "~emeyecektInIz", "~emeyeceklerdI";
-    neg_plain_fut_cond: "~emeyeceksem", "~emeyeceksen", "~emeyecekse", "~emeyeceksek", "~emeyeceksenIz", "~emeyeceklerse";
-    neg_plain_cont__: "~ememekteyIm", "~ememektesIn", "~ememekte", "~ememekteyIz", "~ememektesInIz", "~ememekteler";
-    neg_plain_cont_evid: "~ememekteymIşIm", "~ememekteymIşsIn", "~ememekteymIş", "~ememekteymIşIz", "~ememekteymIşsInIz", "~ememektelermIş";
-    neg_plain_cont_past: "~ememekteydIm", "~ememekteydIn", "~ememekteydI", "~ememekteydIk", "~ememekteydInIz", "~ememektelerdI";
-    neg_plain_cont_cond: "~ememekteysem", "~ememekteysen", "~ememekteyse", "~ememekteysek", "~ememekteysenIz", "~ememektelerse";
-    neg_plain_necess__: "~ememelIyIm", "~ememelIsIn", "~ememelI", "~ememelIyIz", "~ememelIsInIz", "~ememelIlEr";
-    neg_plain_necess_evid: "~ememelIymIşIm", "~ememelIymIşsIn", "~ememelIymIş", "~ememelIymIşIz", "~ememelIymIşsInIz", "~ememelIlErmIş";
-    neg_plain_necess_past: "~ememelIydIm", "~ememelIydIn", "~ememelIydI", "~ememelIydIk", "~ememelIydInIz", "~ememelIlErdI";
-    neg_plain_necess_cond: "~ememelIysEm", "~ememelIysEn", "~ememelIysE", "~ememelIysEk", "~ememelIysEnIz", "~ememelIlErsE";
-    neg_abil_aor__: "~eyemem", "~eyemezsIn", "~eyemez", "~eyemeyIz", "~eyemezsInIz", "~eyemezler";
-    neg_abil_aor_evid: "~eyemezmIşIm", "~eyemezmIşsIn", "~eyemezmIş", "~eyemezmIşIz", "~eyemezmIşsInIz", "~eyemezlermIş";
-    neg_abil_aor_past: "~eyemezdIm", "~eyemezdIn", "~eyemezdI", "~eyemezdIk", "~eyemezdInIz", "~eyemezlerdI";
-    neg_abil_aor_cond: "~eyemezsem", "~eyemezsen", "~eyemezse", "~eyemezsek", "~eyemezsenIz", "~eyemezlerse";
-    neg_abil_prog__: "~eyemIyorum", "~eyemIyorsun", "~eyemIyor", "~eyemIyoruz", "~eyemIyorsunuz", "~eyemIyorlar";
-    neg_abil_prog_evid: "~eyemIyormuşum", "~eyemIyormuşsun", "~eyemIyormuş", "~eyemIyormuşuz", "~eyemIyormuşsunuz", "~eyemIyorlarmış";
-    neg_abil_prog_past: "~eyemIyordum", "~eyemIyordun", "~eyemIyordu", "~eyemIyorduk", "~eyemIyordunuz", "~eyemIyorlardı";
-    neg_abil_prog_cond: "~eyemIyorsam", "~eyemIyorsan", "~eyemIyorsa", "~eyemIyorsak", "~eyemIyorsanız", "~eyemIyorlarsa";
-    neg_abil_evid__: "~eyememIşIm", "~eyememIşsIn", "~eyememIş", "~eyememIşIz", "~eyememIşsInIz", "~eyememIşlEr";
-    neg_abil_evid_evid: "~eyememIşmIşIm", "~eyememIşmIşsIn", "~eyememIşmIş", "~eyememIşmIşIz", "~eyememIşmIşsInIz", "~eyememIşlErmIş";
-    neg_abil_evid_past: "~eyememIştIm", "~eyememIştIn", "~eyememIştI", "~eyememIştIk", "~eyememIştInIz", "~eyememIşlErdI";
-    neg_abil_evid_cond: "~eyememIşsEm", "~eyememIşsEn", "~eyememIşsE", "~eyememIşsEk", "~eyememIşsEnIz", "~eyememIşlErsE";
-    neg_abil_fut__: "~eyemeyeceğIm", "~eyemeyeceksIn", "~eyemeyecek", "~eyemeyeceğIz", "~eyemeyeceksInIz", "~eyemeyecekler";
-    neg_abil_fut_evid: "~eyemeyecekmIşIm", "~eyemeyecekmIşsIn", "~eyemeyecekmIş", "~eyemeyecekmIşIz", "~eyemeyecekmIşsInIz", "~eyemeyeceklermIş";
-    neg_abil_fut_past: "~eyemeyecektIm", "~eyemeyecektIn", "~eyemeyecektI", "~eyemeyecektIk", "~eyemeyecektInIz", "~eyemeyeceklerdI";
-    neg_abil_fut_cond: "~eyemeyeceksem", "~eyemeyeceksen", "~eyemeyecekse", "~eyemeyeceksek", "~eyemeyeceksenIz", "~eyemeyeceklerse";
-    neg_abil_cont__: "~eyememekteyIm", "~eyememektesIn", "~eyememekte", "~eyememekteyIz", "~eyememektesInIz", "~eyememekteler";
-    neg_abil_cont_evid: "~eyememekteymIşIm", "~eyememekteymIşsIn", "~eyememekteymIş", "~eyememekteymIşIz", "~eyememekteymIşsInIz", "~eyememektelermIş";
-    neg_abil_cont_past: "~eyememekteydIm", "~eyememekteydIn", "~eyememekteydI", "~eyememekteydIk", "~eyememekteydInIz", "~eyememektelerdI";
-    neg_abil_cont_cond: "~eyememekteysem", "~eyememekteysen", "~eyememekteyse", "~eyememekteysek", "~eyememekteysenIz", "~eyememektelerse";
-    neg_abil_necess__: "~eyememelIyIm", "~eyememelIsIn", "~eyememelI", "~eyememelIyIz", "~eyememelIsInIz", "~eyememelIlEr";
-    neg_abil_necess_evid: "~eyememelIymIşIm", "~eyememelIymIşsIn", "~eyememelIymIş", "~eyememelIymIşIz", "~eyememelIymIşsInIz", "~eyememelIlErmIş";
-    neg_abil_necess_past: "~eyememelIydIm", "~eyememelIydIn", "~eyememelIydI", "~eyememelIydIk", "~eyememelIydInIz", "~eyememelIlErdI";
-    neg_abil_necess_cond: "~eyememelIysEm", "~eyememelIysEn", "~eyememelIysE", "~eyememelIysEk", "~eyememelIysEnIz", "~eyememelIlErsE";
-    past_pos_plain__: "~edIm", _, _, _, _, _;
-    past_pos_abil__: "~eyebildim", "~eyebildin", "~eyebildi", "~eyebildik", "~eyebildiniz", "~eyebildiler";
-    past_pos_abil_past: "~eyebildiydim", "~eyebildiydin", "~eyebildiydi", "~eyebildiydik", "~eyebildiydiniz", "~eyebildilerdi";
-    past_pos_abil_cond: "~eyebildiysem", "~eyebildiysen", "~eyebildiyse", "~eyebildiysek", "~eyebildiyseniz", "~eyebildilerse";
-    past_neg_plain__: _, _, _, _, _, "~emedIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~emedIlErdI";
-    past_neg_plain_cond: "~emedIysEm", "~emedIysEn", "~emedIysE", "~emedIysEk", "~emedIysEnIz", "~emedIlErsE";
-    past_neg_abil__: "~eyemedIm", "~eyemedIn", "~eyemedI", "~eyemedIk", "~eyemedInIz", "~eyemedIlEr";
-    past_neg_abil_past: "~eyemedIydIm", "~eyemedIydIn", "~eyemedIydI", "~eyemedIydIk", "~eyemedIydInIz", "~eyemedIlErdI";
-    past_neg_abil_cond: "~eyemedIysEm", "~eyemedIysEn", "~eyemedIysE", "~eyemedIysEk", "~eyemedIysEnIz", "~eyemedIlErsE";
-    conditional_pos_plain__: "~esem", "~esen", "~ese", "~esek", "~esenIz", "~eseler";
-    conditional_pos_plain_evid: "~eseymIşIm", "~eseymIşsIn", "~eseymIş", "~eseymIşIz", "~eseymIşsInIz", "~eselermIş";
-    conditional_pos_plain_past: "~eseydIm", "~eseydIn", "~eseydI", "~eseydIk", "~eseydInIz", "~eselerdI";
-    conditional_pos_abil__: "~eyebilsem", "~eyebilsen", "~eyebilse", "~eyebilsek", "~eyebilseniz", "~eyebilseler";
-    conditional_pos_abil_evid: "~eyebilseymişim", "~eyebilseymişsin", "~eyebilseymiş", "~eyebilseymişiz", "~eyebilseymişsiniz", "~eyebilselermiş";
-    conditional_pos_abil_past: "~eyebilseydim", "~eyebilseydin", "~eyebilseydi", "~eyebilseydik", "~eyebilseydiniz", "~eyebilselerdi";
-    conditional_neg_plain__: "~emesem", "~emesen", "~emese", "~emesek", "~emesenIz", "~emeseler";
-    conditional_neg_plain_evid: "~emeseymIşIm", "~emeseymIşsIn", "~emeseymIş", "~emeseymIşIz", "~emeseymIşsInIz", "~emeselermIş";
-    conditional_neg_plain_past: "~emeseydIm", "~emeseydIn", "~emeseydI", "~emeseydIk", "~emeseydInIz", "~emeselerdI";
-    conditional_neg_abil__: "~eyemesem", "~eyemesen", "~eyemese", "~eyemesek", "~eyemesenIz", "~eyemeseler";
-    conditional_neg_abil_evid: "~eyemeseymIşIm", "~eyemeseymIşsIn", "~eyemeseymIş", "~eyemeseymIşIz", "~eyemeseymIşsInIz", "~eyemeselermIş";
-    conditional_neg_abil_past: "~eyemeseydIm", "~eyemeseydIn", "~eyemeseydI", "~eyemeseydIk", "~eyemeseydInIz", "~eyemeselerdI";
-    optative_pos_plain__: "~eyeyIm", "~eyesIn", "~eye", "~eyelIm", "~eyesInIz", "~eyeler";
-    optative_pos_plain_evid: "~eyeymIşIm", "~eyeymIşsIn", "~eyeymIş", "~eyeymIşIz", "~eyeymIşsInIz", "~eyelermIş";
-    optative_pos_plain_past: "~eyeydIm", "~eyeydIn", "~eyeydI", "~eyeydIk", "~eyeydInIz", "~eyelerdI";
-    optative_pos_abil__: "~eyebileyim", "~eyebilesin", "~eyebile", "~eyebilelim", "~eyebilesiniz", "~eyebileler";
-    optative_pos_abil_evid: "~eyebileymişim", "~eyebileymişsin", "~eyebileymiş", "~eyebileymişiz", "~eyebileymişsiniz", "~eyebilelermiş";
-    optative_pos_abil_past: "~eyebileydim", "~eyebileydin", "~eyebileydi", "~eyebileydik", "~eyebileydiniz", "~eyebilelerdi";
-    optative_neg_plain__: "~emeyeyIm", "~emeyesIn", "~emeye", "~emeyelIm", "~emeyesInIz", "~emeyeler";
-    optative_neg_plain_evid: "~emeyeymIşIm", "~emeyeymIşsIn", "~emeyeymIş", "~emeyeymIşIz", "~emeyeymIşsInIz", "~emeyelermIş";
-    optative_neg_plain_past: "~emeyeydIm", "~emeyeydIn", "~emeyeydI", "~emeyeydIk", "~emeyeydInIz", "~emeyelerdI";
-    optative_neg_abil__: "~eyemeyeyIm", "~eyemeyesIn", "~eyemeye", "~eyemeyelIm", "~eyemeyesInIz", "~eyemeyeler";
-    optative_neg_abil_evid: "~eyemeyeymIşIm", "~eyemeyeymIşsIn", "~eyemeyeymIş", "~eyemeyeymIşIz", "~eyemeyeymIşsInIz", "~eyemeyelermIş";
-    optative_neg_abil_past: "~eyemeyeydIm", "~eyemeyeydIn", "~eyemeyeydI", "~eyemeyeydIk", "~eyemeyeydInIz", "~eyemeyelerdI";
-    imperative_pos_plain: "~e", "~esIn", "~eyIn", "~esInlEr", _, "~eyInIz", "~esene", "~esenIzE";
-    imperative_pos_abil: "~eyebil", "~eyebilsin", "~eyebilin", "~eyebilsinler", "~eyebiliniz", _, "~eyebilsene", "~eyebilsenize";
-    imperative_neg_plain: _, _, _, "~emesInlEr", _, "~emeyInIz", "~emesene", "~emesenIzE";
-    imperative_neg_abil: "~eyeme", "~eyemesIn", "~eyemeyIn", "~eyemesInlEr", "~eyemeyInIz", _, "~eyemesene", "~eyemesenIzE";
-    infinitive_pos: "~emek", "~eyebilmek";
-    infinitive_neg: "~ememek", "~eyememek";
-    verbal_noun_pos: "~eme", "~eyebilme";
-    verbal_noun_neg: "~ememe", "~eyememe";
-    participle_pos_plain: "~eyen", _, _;
-    participle_pos_abil: "~eyebilen", _, _;
-    participle_neg_plain: "~emeyen", "~ememIş", _;
-    participle_neg_abil: "~eyemeyen", _, _;
-    relative_pos_plain_acak: _, _, _, _, _, "~eyeceklerI";
-    relative_pos_abil_dik: "~eyebildiğim", "~eyebildiğin", "~eyebildiği", "~eyebildiğimiz", "~eyebildiğiniz", "~eyebildikleri";
-    relative_pos_abil_acak: _, "~eyebileceğin", "~eyebileceği", "~eyebileceğimiz", "~eyebileceğiniz", "~eyebilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~emedIklErI";
-    relative_neg_plain_acak: _, "~emeyeceğIn", "~emeyeceğI", "~emeyeceğImIz", "~emeyeceğInIz", "~emeyeceklerI";
-    relative_neg_abil_dik: "~eyemedIğIm", "~eyemedIğIn", "~eyemedIğI", "~eyemedIğImIz", "~eyemedIğInIz", "~eyemedIklErI";
-    relative_neg_abil_acak: _, "~eyemeyeceğIn", "~eyemeyeceğI", "~eyemeyeceğImIz", "~eyemeyeceğInIz", "~eyemeyeceklerI";
-    converb_pos_plain: "~erken", _, _, "~eyelI", "~eyesIyE", _, "~eyerek", "~eye ~eye", "~ercesInE";
-    converb_pos_abil: "~eyebilIrken", "~eyebilince", "~eyebilip", "~eyebileli", "~eyebilesiye", "~eyebildikçe", "~eyebilerek", "~eyebile ~eyebile", _;
-    converb_neg_plain: _, "~emeyIncE", _, "~emeyelI", "~emeyesIyE", "~emedIkçE", "~emeyerek", _, "~emezcesInE";
-    converb_neg_abil: "~eyemezken", "~eyemeyIncE", "~eyemeyIp", "~eyemeyelI", "~eyemeyesIyE", "~eyemedIkçE", "~eyemeyerek", _, "~eyemezcesInE";
+    // Beslemek: 149 words (ezberlemek, gülümsemek, titremek, ertelemek, istemek, bellemek). Like Patlamak, except in 3 cells: infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("beslemek", 149, "~emek", like Patlamak;
+    stem converb_neg_plain_doubled: "~emeye ~emeye- like ayırmak";
+    stem converb_neg_abil_doubled: "~eyemeye ~eyemeye- like ayırmak";
+    infinitive_pos: "~emek", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~eye ~eye", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~eyebile ~eyebile", _;
     ),
-    // Açmak: 123 words (batmak, koşmak, atmak, yazmak, kurmak, yakmak). Like Varolmak, except in 25 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
-    conjugation!("açmak", 123, "~mak", like Varolmak;
-    pos_plain_aor__: "~ErIm", "~ErsIn", "~Er", _, "~ErsInIz", "~ErlEr";
-    pos_plain_aor_evid: "~ErmIşIm", "~ErmIşsIn", "~ErmIş", "~ErmIşIz", "~ErmIşsInIz", "~ErlErmIş";
-    pos_plain_aor_past: "~ErdIm", "~ErdIn", "~ErdI", "~ErdIk", "~ErdInIz", "~ErlErdI";
-    pos_plain_aor_cond: "~ErsEm", "~ErsEn", "~ErsE", "~ErsEk", "~ErsEnIz", "~ErlErsE";
-    converb_pos_plain: "~Erken", _, _, _, _, _, _, _, "~ErcEsInE";
-    ),
-    // Çekmek: 104 words (ekmek, silmek, gülmek, bitmek, vazgeçmek, yenmek). Like Vermek, except in 26 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
-    conjugation!("çekmek", 104, "~mek", like Vermek;
+    // Açmak: 124 words (batmak, koşmak, atmak, yazmak, kurmak, yakmak). Like Ayırmak, except in 26 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
+    conjugation!("açmak", 124, "~mak", like Ayırmak;
     pos_plain_aor__: "~ErIm", "~ErsIn", "~Er", _, "~ErsInIz", "~ErlEr";
     pos_plain_aor_evid: "~ErmIşIm", "~ErmIşsIn", "~ErmIş", "~ErmIşIz", "~ErmIşsInIz", "~ErlErmIş";
     pos_plain_aor_past: "~ErdIm", "~ErdIn", "~ErdI", "~ErdIk", "~ErdInIz", "~ErlErdI";
@@ -1944,186 +1704,44 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     past_pos_plain__: "~tIm", _, _, _, _, _;
     converb_pos_plain: "~Erken", _, _, _, _, _, _, _, "~ErcEsInE";
     ),
+    // Silmek: 107 words (ekmek, silmek, gülmek, bitmek, vazgeçmek, yenmek). Like Açmak, except in 4 cells: past_pos_plain__ _1sg, infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("silmek", 107, "~mek", like Açmak;
+    stem converb_neg_plain_doubled: "~meye ~meye- like ayırmak";
+    stem converb_neg_abil_doubled: "~emeye ~emeye- like ayırmak";
+    past_pos_plain__: "~dIm", _, _, _, _, _;
+    infinitive_pos: "~mek", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~e ~e", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~ebile ~ebile", _;
+    ),
     // Gitmek: 53 words (reddetmek, gitmek, etmek, affetmek, seyretmek, keşfetmek). Like Takipetmek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("gitmek", 53, "~tmek", like Takipetmek;
-    stem converb_neg_plain_doubled: "~tmeye ~tmeye- like vermek";
-    stem converb_neg_abil_doubled: "~demeye ~demeye- like vermek";
+    stem converb_neg_plain_doubled: "~tmeye ~tmeye- like ayırmak";
+    stem converb_neg_abil_doubled: "~demeye ~demeye- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~de ~de", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~debile ~debile", _;
     ),
     // Elevermek: 33 words (söz vermek, ateşe vermek, yanıt vermek, cevap vermek, karar vermek, can vermek). Like Vermek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("ele vermek", 33, "~mek", like Vermek;
-    stem converb_neg_plain_doubled: "~mEyE vErmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE vErEmEyE- like vermek";
+    stem converb_neg_plain_doubled: "~mEyE vErmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE vErEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E vErE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile vErEbile", _;
     ),
-    // Silmek: 15 words (fotoğraf çekmek, zartayı çekmek, mortoyu çekmek, cızlamı çekmek, cartayı çekmek, cavlağı çekmek).
-    conjugation!("silmek", 15, "~mek";
-    stem converb_neg_plain_doubled: "~meye ~meye- like vermek";
-    stem converb_neg_abil_doubled: "~emeye ~emeye- like vermek";
-    pos_plain_aor__: "~erIm", "~ersIn", "~er", _, "~ersInIz", "~erler";
-    pos_plain_aor_evid: "~ermIşIm", "~ermIşsIn", "~ermIş", "~ermIşIz", "~ermIşsInIz", "~erlermIş";
-    pos_plain_aor_past: "~erdIm", "~erdIn", "~erdI", "~erdIk", "~erdInIz", "~erlerdI";
-    pos_plain_aor_cond: "~ersem", "~ersen", "~erse", "~ersek", "~ersenIz", "~erlerse";
-    pos_plain_prog__: "~Iyorum", _, _, _, _, _;
-    pos_plain_evid__: _, "~mIşsIn", "~mIş", _, "~mIşsInIz", "~mIşlEr";
-    pos_plain_evid_evid: "~mIşmIşIm", "~mIşmIşsIn", "~mIşmIş", "~mIşmIşIz", "~mIşmIşsInIz", "~mIşlErmIş";
-    pos_plain_evid_past: "~mIştIm", "~mIştIn", "~mIştI", "~mIştIk", "~mIştInIz", "~mIşlErdI";
-    pos_plain_evid_cond: "~mIşsEm", "~mIşsEn", "~mIşsE", "~mIşsEk", "~mIşsEnIz", "~mIşlErsE";
-    pos_plain_fut__: "~eceğIm", "~eceksIn", "~ecek", _, "~eceksInIz", "~ecekler";
-    pos_plain_fut_evid: "~ecekmIşIm", "~ecekmIşsIn", "~ecekmIş", "~ecekmIşIz", "~ecekmIşsInIz", "~eceklermIş";
-    pos_plain_fut_past: "~ecektIm", "~ecektIn", "~ecektI", "~ecektIk", "~ecektInIz", "~eceklerdI";
-    pos_plain_fut_cond: "~eceksem", "~eceksen", "~ecekse", "~eceksek", "~eceksenIz", "~eceklerse";
-    pos_plain_cont__: "~mekteyIm", "~mektesIn", "~mekte", "~mekteyIz", "~mektesInIz", "~mekteler";
-    pos_plain_cont_evid: "~mekteymIşIm", "~mekteymIşsIn", "~mekteymIş", "~mekteymIşIz", "~mekteymIşsInIz", "~mektelermIş";
-    pos_plain_cont_past: "~mekteydIm", "~mekteydIn", "~mekteydI", "~mekteydIk", "~mekteydInIz", "~mektelerdI";
-    pos_plain_cont_cond: "~mekteysem", "~mekteysen", "~mekteyse", "~mekteysek", "~mekteysenIz", "~mektelerse";
-    pos_plain_necess__: _, _, _, _, _, "~melIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~melIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~melIlErdI";
-    pos_plain_necess_cond: "~melIysEm", "~melIysEn", "~melIysE", "~melIysEk", "~melIysEnIz", "~melIlErsE";
-    pos_abil_aor__: "~ebilirim", "~ebilirsin", "~ebilir", "~ebiliriz", "~ebilirsiniz", "~ebilirler";
-    pos_abil_aor_evid: "~ebilirmişim", "~ebilirmişsin", "~ebilirmiş", "~ebilirmişiz", "~ebilirmişsiniz", "~ebilirlermiş";
-    pos_abil_aor_past: "~ebilirdim", "~ebilirdin", "~ebilirdi", "~ebilirdik", "~ebilirdiniz", "~ebilirlerdi";
-    pos_abil_aor_cond: "~ebilirsem", "~ebilirsen", "~ebilirse", "~ebilirsek", "~ebilirseniz", "~ebilirlerse";
-    pos_abil_prog__: "~ebiliyorum", "~ebiliyorsun", "~ebiliyor", "~ebiliyoruz", "~ebiliyorsunuz", "~ebiliyorlar";
-    pos_abil_prog_evid: "~ebiliyormuşum", "~ebiliyormuşsun", "~ebiliyormuş", "~ebiliyormuşuz", "~ebiliyormuşsunuz", "~ebiliyorlarmış";
-    pos_abil_prog_past: "~ebiliyordum", "~ebiliyordun", "~ebiliyordu", "~ebiliyorduk", "~ebiliyordunuz", "~ebiliyorlardı";
-    pos_abil_prog_cond: "~ebiliyorsam", "~ebiliyorsan", "~ebiliyorsa", "~ebiliyorsak", "~ebiliyorsanız", "~ebiliyorlarsa";
-    pos_abil_evid__: "~ebilmişim", "~ebilmişsin", "~ebilmiş", "~ebilmişiz", "~ebilmişsiniz", "~ebilmişler";
-    pos_abil_evid_evid: "~ebilmişmişim", "~ebilmişmişsin", "~ebilmişmiş", "~ebilmişmişiz", "~ebilmişmişsiniz", "~ebilmişlermiş";
-    pos_abil_evid_past: "~ebilmiştim", "~ebilmiştin", "~ebilmişti", "~ebilmiştik", "~ebilmiştiniz", "~ebilmişlerdi";
-    pos_abil_evid_cond: "~ebilmişsem", "~ebilmişsen", "~ebilmişse", "~ebilmişsek", "~ebilmişseniz", "~ebilmişlerse";
-    pos_abil_fut__: "~ebileceğim", "~ebileceksin", "~ebilecek", "~ebileceğiz", "~ebileceksiniz", "~ebilecekler";
-    pos_abil_fut_evid: "~ebilecekmişim", "~ebilecekmişsin", "~ebilecekmiş", "~ebilecekmişiz", "~ebilecekmişsiniz", "~ebileceklermiş";
-    pos_abil_fut_past: "~ebilecektim", "~ebilecektin", "~ebilecekti", "~ebilecektik", "~ebilecektiniz", "~ebileceklerdi";
-    pos_abil_fut_cond: "~ebileceksem", "~ebileceksen", "~ebilecekse", "~ebileceksek", "~ebilecekseniz", "~ebileceklerse";
-    pos_abil_cont__: "~ebilmekteyim", "~ebilmektesin", "~ebilmekte", "~ebilmekteyiz", "~ebilmektesiniz", "~ebilmekteler";
-    pos_abil_cont_evid: "~ebilmekteymişim", "~ebilmekteymişsin", "~ebilmekteymiş", "~ebilmekteymişiz", "~ebilmekteymişsiniz", "~ebilmektelermiş";
-    pos_abil_cont_past: "~ebilmekteydim", "~ebilmekteydin", "~ebilmekteydi", "~ebilmekteydik", "~ebilmekteydiniz", "~ebilmektelerdi";
-    pos_abil_cont_cond: "~ebilmekteysem", "~ebilmekteysen", "~ebilmekteyse", "~ebilmekteysek", "~ebilmekteyseniz", "~ebilmektelerse";
-    pos_abil_necess__: "~ebilmeliyim", "~ebilmelisin", "~ebilmeli", "~ebilmeliyiz", "~ebilmelisiniz", "~ebilmeliler";
-    pos_abil_necess_evid: "~ebilmeliymişim", "~ebilmeliymişsin", "~ebilmeliymiş", "~ebilmeliymişiz", "~ebilmeliymişsiniz", "~ebilmelilermiş";
-    pos_abil_necess_past: "~ebilmeliydim", "~ebilmeliydin", "~ebilmeliydi", "~ebilmeliydik", "~ebilmeliydiniz", "~ebilmelilerdi";
-    pos_abil_necess_cond: "~ebilmeliysem", "~ebilmeliysen", "~ebilmeliyse", "~ebilmeliysek", "~ebilmeliyseniz", "~ebilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~mezler";
-    neg_plain_aor_evid: _, _, _, _, _, "~mezlermIş";
-    neg_plain_aor_past: _, _, _, _, _, "~mezlerdI";
-    neg_plain_aor_cond: "~mezsem", "~mezsen", "~mezse", "~mezsek", "~mezsenIz", "~mezlerse";
-    neg_plain_prog__: "~mIyorum", "~mIyorsun", "~mIyor", "~mIyoruz", "~mIyorsunuz", "~mIyorlar";
-    neg_plain_prog_evid: "~mIyormuşum", "~mIyormuşsun", "~mIyormuş", "~mIyormuşuz", "~mIyormuşsunuz", "~mIyorlarmış";
-    neg_plain_prog_past: "~mIyordum", "~mIyordun", "~mIyordu", "~mIyorduk", "~mIyordunuz", "~mIyorlardı";
-    neg_plain_prog_cond: "~mIyorsam", "~mIyorsan", "~mIyorsa", "~mIyorsak", "~mIyorsanız", "~mIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~memIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~memIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~memIşlErdI";
-    neg_plain_evid_cond: "~memIşsEm", "~memIşsEn", "~memIşsE", "~memIşsEk", "~memIşsEnIz", "~memIşlErsE";
-    neg_plain_fut__: "~meyeceğIm", "~meyeceksIn", "~meyecek", "~meyeceğIz", "~meyeceksInIz", "~meyecekler";
-    neg_plain_fut_evid: "~meyecekmIşIm", "~meyecekmIşsIn", "~meyecekmIş", "~meyecekmIşIz", "~meyecekmIşsInIz", "~meyeceklermIş";
-    neg_plain_fut_past: "~meyecektIm", "~meyecektIn", "~meyecektI", "~meyecektIk", "~meyecektInIz", "~meyeceklerdI";
-    neg_plain_fut_cond: "~meyeceksem", "~meyeceksen", "~meyecekse", "~meyeceksek", "~meyeceksenIz", "~meyeceklerse";
-    neg_plain_cont__: "~memekteyIm", "~memektesIn", "~memekte", "~memekteyIz", "~memektesInIz", "~memekteler";
-    neg_plain_cont_evid: "~memekteymIşIm", "~memekteymIşsIn", "~memekteymIş", "~memekteymIşIz", "~memekteymIşsInIz", "~memektelermIş";
-    neg_plain_cont_past: "~memekteydIm", "~memekteydIn", "~memekteydI", "~memekteydIk", "~memekteydInIz", "~memektelerdI";
-    neg_plain_cont_cond: "~memekteysem", "~memekteysen", "~memekteyse", "~memekteysek", "~memekteysenIz", "~memektelerse";
-    neg_plain_necess__: "~memelIyIm", "~memelIsIn", "~memelI", "~memelIyIz", "~memelIsInIz", "~memelIlEr";
-    neg_plain_necess_evid: "~memelIymIşIm", "~memelIymIşsIn", "~memelIymIş", "~memelIymIşIz", "~memelIymIşsInIz", "~memelIlErmIş";
-    neg_plain_necess_past: "~memelIydIm", "~memelIydIn", "~memelIydI", "~memelIydIk", "~memelIydInIz", "~memelIlErdI";
-    neg_plain_necess_cond: "~memelIysEm", "~memelIysEn", "~memelIysE", "~memelIysEk", "~memelIysEnIz", "~memelIlErsE";
-    neg_abil_aor__: "~emem", "~emezsIn", "~emez", "~emeyIz", "~emezsInIz", "~emezler";
-    neg_abil_aor_evid: "~emezmIşIm", "~emezmIşsIn", "~emezmIş", "~emezmIşIz", "~emezmIşsInIz", "~emezlermIş";
-    neg_abil_aor_past: "~emezdIm", "~emezdIn", "~emezdI", "~emezdIk", "~emezdInIz", "~emezlerdI";
-    neg_abil_aor_cond: "~emezsem", "~emezsen", "~emezse", "~emezsek", "~emezsenIz", "~emezlerse";
-    neg_abil_prog__: "~emIyorum", "~emIyorsun", "~emIyor", "~emIyoruz", "~emIyorsunuz", "~emIyorlar";
-    neg_abil_prog_evid: "~emIyormuşum", "~emIyormuşsun", "~emIyormuş", "~emIyormuşuz", "~emIyormuşsunuz", "~emIyorlarmış";
-    neg_abil_prog_past: "~emIyordum", "~emIyordun", "~emIyordu", "~emIyorduk", "~emIyordunuz", "~emIyorlardı";
-    neg_abil_prog_cond: "~emIyorsam", "~emIyorsan", "~emIyorsa", "~emIyorsak", "~emIyorsanız", "~emIyorlarsa";
-    neg_abil_evid__: "~ememIşIm", "~ememIşsIn", "~ememIş", "~ememIşIz", "~ememIşsInIz", "~ememIşlEr";
-    neg_abil_evid_evid: "~ememIşmIşIm", "~ememIşmIşsIn", "~ememIşmIş", "~ememIşmIşIz", "~ememIşmIşsInIz", "~ememIşlErmIş";
-    neg_abil_evid_past: "~ememIştIm", "~ememIştIn", "~ememIştI", "~ememIştIk", "~ememIştInIz", "~ememIşlErdI";
-    neg_abil_evid_cond: "~ememIşsEm", "~ememIşsEn", "~ememIşsE", "~ememIşsEk", "~ememIşsEnIz", "~ememIşlErsE";
-    neg_abil_fut__: "~emeyeceğIm", "~emeyeceksIn", "~emeyecek", "~emeyeceğIz", "~emeyeceksInIz", "~emeyecekler";
-    neg_abil_fut_evid: "~emeyecekmIşIm", "~emeyecekmIşsIn", "~emeyecekmIş", "~emeyecekmIşIz", "~emeyecekmIşsInIz", "~emeyeceklermIş";
-    neg_abil_fut_past: "~emeyecektIm", "~emeyecektIn", "~emeyecektI", "~emeyecektIk", "~emeyecektInIz", "~emeyeceklerdI";
-    neg_abil_fut_cond: "~emeyeceksem", "~emeyeceksen", "~emeyecekse", "~emeyeceksek", "~emeyeceksenIz", "~emeyeceklerse";
-    neg_abil_cont__: "~ememekteyIm", "~ememektesIn", "~ememekte", "~ememekteyIz", "~ememektesInIz", "~ememekteler";
-    neg_abil_cont_evid: "~ememekteymIşIm", "~ememekteymIşsIn", "~ememekteymIş", "~ememekteymIşIz", "~ememekteymIşsInIz", "~ememektelermIş";
-    neg_abil_cont_past: "~ememekteydIm", "~ememekteydIn", "~ememekteydI", "~ememekteydIk", "~ememekteydInIz", "~ememektelerdI";
-    neg_abil_cont_cond: "~ememekteysem", "~ememekteysen", "~ememekteyse", "~ememekteysek", "~ememekteysenIz", "~ememektelerse";
-    neg_abil_necess__: "~ememelIyIm", "~ememelIsIn", "~ememelI", "~ememelIyIz", "~ememelIsInIz", "~ememelIlEr";
-    neg_abil_necess_evid: "~ememelIymIşIm", "~ememelIymIşsIn", "~ememelIymIş", "~ememelIymIşIz", "~ememelIymIşsInIz", "~ememelIlErmIş";
-    neg_abil_necess_past: "~ememelIydIm", "~ememelIydIn", "~ememelIydI", "~ememelIydIk", "~ememelIydInIz", "~ememelIlErdI";
-    neg_abil_necess_cond: "~ememelIysEm", "~ememelIysEn", "~ememelIysE", "~ememelIysEk", "~ememelIysEnIz", "~ememelIlErsE";
-    past_pos_plain__: "~dIm", _, _, _, _, _;
-    past_pos_abil__: "~ebildim", "~ebildin", "~ebildi", "~ebildik", "~ebildiniz", "~ebildiler";
-    past_pos_abil_past: "~ebildiydim", "~ebildiydin", "~ebildiydi", "~ebildiydik", "~ebildiydiniz", "~ebildilerdi";
-    past_pos_abil_cond: "~ebildiysem", "~ebildiysen", "~ebildiyse", "~ebildiysek", "~ebildiyseniz", "~ebildilerse";
-    past_neg_plain__: _, _, _, _, _, "~medIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~medIlErdI";
-    past_neg_plain_cond: "~medIysEm", "~medIysEn", "~medIysE", "~medIysEk", "~medIysEnIz", "~medIlErsE";
-    past_neg_abil__: "~emedIm", "~emedIn", "~emedI", "~emedIk", "~emedInIz", "~emedIlEr";
-    past_neg_abil_past: "~emedIydIm", "~emedIydIn", "~emedIydI", "~emedIydIk", "~emedIydInIz", "~emedIlErdI";
-    past_neg_abil_cond: "~emedIysEm", "~emedIysEn", "~emedIysE", "~emedIysEk", "~emedIysEnIz", "~emedIlErsE";
-    conditional_pos_plain__: "~sem", "~sen", "~se", "~sek", "~senIz", "~seler";
-    conditional_pos_plain_evid: "~seymIşIm", "~seymIşsIn", "~seymIş", "~seymIşIz", "~seymIşsInIz", "~selermIş";
-    conditional_pos_plain_past: "~seydIm", "~seydIn", "~seydI", "~seydIk", "~seydInIz", "~selerdI";
-    conditional_pos_abil__: "~ebilsem", "~ebilsen", "~ebilse", "~ebilsek", "~ebilseniz", "~ebilseler";
-    conditional_pos_abil_evid: "~ebilseymişim", "~ebilseymişsin", "~ebilseymiş", "~ebilseymişiz", "~ebilseymişsiniz", "~ebilselermiş";
-    conditional_pos_abil_past: "~ebilseydim", "~ebilseydin", "~ebilseydi", "~ebilseydik", "~ebilseydiniz", "~ebilselerdi";
-    conditional_neg_plain__: "~mesem", "~mesen", "~mese", "~mesek", "~mesenIz", "~meseler";
-    conditional_neg_plain_evid: "~meseymIşIm", "~meseymIşsIn", "~meseymIş", "~meseymIşIz", "~meseymIşsInIz", "~meselermIş";
-    conditional_neg_plain_past: "~meseydIm", "~meseydIn", "~meseydI", "~meseydIk", "~meseydInIz", "~meselerdI";
-    conditional_neg_abil__: "~emesem", "~emesen", "~emese", "~emesek", "~emesenIz", "~emeseler";
-    conditional_neg_abil_evid: "~emeseymIşIm", "~emeseymIşsIn", "~emeseymIş", "~emeseymIşIz", "~emeseymIşsInIz", "~emeselermIş";
-    conditional_neg_abil_past: "~emeseydIm", "~emeseydIn", "~emeseydI", "~emeseydIk", "~emeseydInIz", "~emeselerdI";
-    optative_pos_plain__: "~eyIm", "~esIn", "~e", "~elIm", "~esInIz", "~eler";
-    optative_pos_plain_evid: "~eymIşIm", "~eymIşsIn", "~eymIş", "~eymIşIz", "~eymIşsInIz", "~elermIş";
-    optative_pos_plain_past: "~eydIm", "~eydIn", "~eydI", "~eydIk", "~eydInIz", "~elerdI";
-    optative_pos_abil__: "~ebileyim", "~ebilesin", "~ebile", "~ebilelim", "~ebilesiniz", "~ebileler";
-    optative_pos_abil_evid: "~ebileymişim", "~ebileymişsin", "~ebileymiş", "~ebileymişiz", "~ebileymişsiniz", "~ebilelermiş";
-    optative_pos_abil_past: "~ebileydim", "~ebileydin", "~ebileydi", "~ebileydik", "~ebileydiniz", "~ebilelerdi";
-    optative_neg_plain__: "~meyeyIm", "~meyesIn", "~meye", "~meyelIm", "~meyesInIz", "~meyeler";
-    optative_neg_plain_evid: "~meyeymIşIm", "~meyeymIşsIn", "~meyeymIş", "~meyeymIşIz", "~meyeymIşsInIz", "~meyelermIş";
-    optative_neg_plain_past: "~meyeydIm", "~meyeydIn", "~meyeydI", "~meyeydIk", "~meyeydInIz", "~meyelerdI";
-    optative_neg_abil__: "~emeyeyIm", "~emeyesIn", "~emeye", "~emeyelIm", "~emeyesInIz", "~emeyeler";
-    optative_neg_abil_evid: "~emeyeymIşIm", "~emeyeymIşsIn", "~emeyeymIş", "~emeyeymIşIz", "~emeyeymIşsInIz", "~emeyelermIş";
-    optative_neg_abil_past: "~emeyeydIm", "~emeyeydIn", "~emeyeydI", "~emeyeydIk", "~emeyeydInIz", "~emeyelerdI";
-    imperative_pos_plain: "~", "~sIn", "~In", "~sInlEr", _, "~InIz", "~sene", "~senIzE";
-    imperative_pos_abil: "~ebil", "~ebilsin", "~ebilin", "~ebilsinler", "~ebiliniz", _, "~ebilsene", "~ebilsenize";
-    imperative_neg_plain: _, _, _, "~mesInlEr", _, "~meyInIz", "~mesene", "~mesenIzE";
-    imperative_neg_abil: "~eme", "~emesIn", "~emeyIn", "~emesInlEr", "~emeyInIz", _, "~emesene", "~emesenIzE";
-    infinitive_pos: "~mek", "~ebilmek";
-    infinitive_neg: "~memek", "~ememek";
-    verbal_noun_pos: "~me", "~ebilme";
-    verbal_noun_neg: "~meme", "~ememe";
-    participle_pos_plain: "~en", _, _;
-    participle_pos_abil: "~ebilen", _, _;
-    participle_neg_plain: "~meyen", "~memIş", _;
-    participle_neg_abil: "~emeyen", _, _;
-    relative_pos_plain_acak: _, _, _, _, _, "~eceklerI";
-    relative_pos_abil_dik: "~ebildiğim", "~ebildiğin", "~ebildiği", "~ebildiğimiz", "~ebildiğiniz", "~ebildikleri";
-    relative_pos_abil_acak: _, "~ebileceğin", "~ebileceği", "~ebileceğimiz", "~ebileceğiniz", "~ebilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~medIklErI";
-    relative_neg_plain_acak: _, "~meyeceğIn", "~meyeceğI", "~meyeceğImIz", "~meyeceğInIz", "~meyeceklerI";
-    relative_neg_abil_dik: "~emedIğIm", "~emedIğIn", "~emedIğI", "~emedIğImIz", "~emedIğInIz", "~emedIklErI";
-    relative_neg_abil_acak: _, "~emeyeceğIn", "~emeyeceğI", "~emeyeceğImIz", "~emeyeceğInIz", "~emeyeceklerI";
-    converb_pos_plain: "~erken", _, _, "~elI", "~esIyE", _, "~erek", "~e ~e", "~ercesInE";
-    converb_pos_abil: "~ebilIrken", "~ebilince", "~ebilip", "~ebileli", "~ebilesiye", "~ebildikçe", "~ebilerek", "~ebile ~ebile", _;
-    converb_neg_plain: _, "~meyIncE", _, "~meyelI", "~meyesIyE", "~medIkçE", "~meyerek", _, "~mezcesInE";
-    converb_neg_abil: "~emezken", "~emeyIncE", "~emeyIp", "~emeyelI", "~emeyesIyE", "~emedIkçE", "~emeyerek", _, "~emezcesInE";
+    // Varolmak: 31 words (pişman olmak, tıraş olmak, bir avuç toprak olmak, rahmetli olmak, helak olmak, toprak olmak). Like Ayırmak, except in 27 cells: pos_abil_aor__ _1sg, pos_abil_aor__ _2sg, pos_abil_aor__ _3sg, pos_abil_aor__ _1pl, pos_abil_aor__ _2pl, pos_abil_aor__ _3pl, ….
+    conjugation!("var olmak", 31, "~mak", like Ayırmak;
+    stem converb_neg_plain_doubled: "~mEyE AlmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE AlEmEyE- like ayırmak";
+    pos_abil_aor__: derived, derived, derived, derived, derived, derived;
+    pos_abil_aor_evid: derived, derived, derived, derived, derived, derived;
+    pos_abil_aor_past: derived, derived, derived, derived, derived, derived;
+    pos_abil_aor_cond: derived, derived, derived, derived, derived, derived;
+    converb_pos_plain: _, _, _, _, _, _, _, "~E AlE", _;
+    converb_pos_abil: "~Ebilurken", _, _, _, _, _, _, "~Ebile AlEbile", _;
     ),
-    // Aşkyapmak: 15 words (hata yapmak, makyaj yapmak, seks yapmak, dedikodu yapmak, ağda yapmak, sugeçirmez yapmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
-    conjugation!("aşk yapmak", 15, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE yEpmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE yEpEmEyE- like vermek";
-    converb_pos_plain: _, _, _, _, _, _, _, "~E yEpE", _;
-    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile yapEbile", _;
-    ),
-    // Yürümek: 13 words (yürümek, üşümek, ekşimek, büyümek, çürümek, eskimek).
-    conjugation!("yürümek", 13, "~mek";
-    stem converb_neg_plain_doubled: "~meye ~meye- like vermek";
-    stem converb_neg_abil_doubled: "~yemeye ~yemeye- like vermek";
+    // Taşımak: 25 words (acımak, ağrımak, solumak, tanımak, okumak, korumak).
+    conjugation!("taşımak", 25, "~mak";
+    stem converb_neg_plain_doubled: "~maya ~maya- like ayırmak";
+    stem converb_neg_abil_doubled: "~yamaya ~yamaya- like ayırmak";
     pos_plain_aor__: "~rIm", "~rsIn", "~r", _, "~rsInIz", "~rlEr";
     pos_plain_aor_evid: "~rmIşIm", "~rmIşsIn", "~rmIş", "~rmIşIz", "~rmIşsInIz", "~rlErmIş";
     pos_plain_aor_past: "~rdIm", "~rdIn", "~rdI", "~rdIk", "~rdInIz", "~rlErdI";
@@ -2137,14 +1755,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     pos_plain_fut_evid: "~yEcEkmIşIm", "~yEcEkmIşsIn", "~yEcEkmIş", "~yEcEkmIşIz", "~yEcEkmIşsInIz", "~yEcEklErmIş";
     pos_plain_fut_past: "~yEcEktIm", "~yEcEktIn", "~yEcEktI", "~yEcEktIk", "~yEcEktInIz", "~yEcEklErdI";
     pos_plain_fut_cond: "~yEcEksEm", "~yEcEksEn", "~yEcEksE", "~yEcEksEk", "~yEcEksEnIz", "~yEcEklErsE";
-    pos_plain_cont__: "~mektEyIm", "~mektEsIn", "~mektE", "~mektEyIz", "~mektEsInIz", "~mektElEr";
-    pos_plain_cont_evid: "~mektEymIşIm", "~mektEymIşsIn", "~mektEymIş", "~mektEymIşIz", "~mektEymIşsInIz", "~mektElErmIş";
-    pos_plain_cont_past: "~mektEydIm", "~mektEydIn", "~mektEydI", "~mektEydIk", "~mektEydInIz", "~mektElErdI";
-    pos_plain_cont_cond: "~mektEysEm", "~mektEysEn", "~mektEysE", "~mektEysEk", "~mektEysEnIz", "~mektElErsE";
-    pos_plain_necess__: _, _, _, _, _, "~mElIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~mElIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~mElIlErdI";
-    pos_plain_necess_cond: "~mElIysEm", "~mElIysEn", "~mElIysE", "~mElIysEk", "~mElIysEnIz", "~mElIlErsE";
     pos_abil_aor__: "~yEbilirim", "~yEbilirsin", "~yEbilir", "~yEbiliriz", "~yEbilirsiniz", "~yEbilirler";
     pos_abil_aor_evid: "~yEbilirmişim", "~yEbilirmişsin", "~yEbilirmiş", "~yEbilirmişiz", "~yEbilirmişsiniz", "~yEbilirlermiş";
     pos_abil_aor_past: "~yEbilirdim", "~yEbilirdin", "~yEbilirdi", "~yEbilirdik", "~yEbilirdiniz", "~yEbilirlerdi";
@@ -2169,30 +1779,10 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     pos_abil_necess_evid: "~yEbilmeliymişim", "~yEbilmeliymişsin", "~yEbilmeliymiş", "~yEbilmeliymişiz", "~yEbilmeliymişsiniz", "~yEbilmelilermiş";
     pos_abil_necess_past: "~yEbilmeliydim", "~yEbilmeliydin", "~yEbilmeliydi", "~yEbilmeliydik", "~yEbilmeliydiniz", "~yEbilmelilerdi";
     pos_abil_necess_cond: "~yEbilmeliysem", "~yEbilmeliysen", "~yEbilmeliyse", "~yEbilmeliysek", "~yEbilmeliyseniz", "~yEbilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~mEzlEr";
-    neg_plain_aor_evid: _, _, _, _, _, "~mEzlErmIş";
-    neg_plain_aor_past: _, _, _, _, _, "~mEzlErdI";
-    neg_plain_aor_cond: "~mEzsEm", "~mEzsEn", "~mEzsE", "~mEzsEk", "~mEzsEnIz", "~mEzlErsE";
     neg_plain_prog__: "~mIyorum", "~mIyorsun", "~mIyor", "~mIyoruz", "~mIyorsunuz", "~mIyorlar";
     neg_plain_prog_evid: "~mIyormuşum", "~mIyormuşsun", "~mIyormuş", "~mIyormuşuz", "~mIyormuşsunuz", "~mIyorlarmış";
     neg_plain_prog_past: "~mIyordum", "~mIyordun", "~mIyordu", "~mIyorduk", "~mIyordunuz", "~mIyorlardı";
     neg_plain_prog_cond: "~mIyorsam", "~mIyorsan", "~mIyorsa", "~mIyorsak", "~mIyorsanız", "~mIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~mEmIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~mEmIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~mEmIşlErdI";
-    neg_plain_evid_cond: "~mEmIşsEm", "~mEmIşsEn", "~mEmIşsE", "~mEmIşsEk", "~mEmIşsEnIz", "~mEmIşlErsE";
-    neg_plain_fut__: "~mEyEcEğIm", "~mEyEcEksIn", "~mEyEcEk", "~mEyEcEğIz", "~mEyEcEksInIz", "~mEyEcEklEr";
-    neg_plain_fut_evid: "~mEyEcEkmIşIm", "~mEyEcEkmIşsIn", "~mEyEcEkmIş", "~mEyEcEkmIşIz", "~mEyEcEkmIşsInIz", "~mEyEcEklErmIş";
-    neg_plain_fut_past: "~mEyEcEktIm", "~mEyEcEktIn", "~mEyEcEktI", "~mEyEcEktIk", "~mEyEcEktInIz", "~mEyEcEklErdI";
-    neg_plain_fut_cond: "~mEyEcEksEm", "~mEyEcEksEn", "~mEyEcEksE", "~mEyEcEksEk", "~mEyEcEksEnIz", "~mEyEcEklErsE";
-    neg_plain_cont__: "~mEmEktEyIm", "~mEmEktEsIn", "~mEmEktE", "~mEmEktEyIz", "~mEmEktEsInIz", "~mEmEktElEr";
-    neg_plain_cont_evid: "~mEmEktEymIşIm", "~mEmEktEymIşsIn", "~mEmEktEymIş", "~mEmEktEymIşIz", "~mEmEktEymIşsInIz", "~mEmEktElErmIş";
-    neg_plain_cont_past: "~mEmEktEydIm", "~mEmEktEydIn", "~mEmEktEydI", "~mEmEktEydIk", "~mEmEktEydInIz", "~mEmEktElErdI";
-    neg_plain_cont_cond: "~mEmEktEysEm", "~mEmEktEysEn", "~mEmEktEysE", "~mEmEktEysEk", "~mEmEktEysEnIz", "~mEmEktElErsE";
-    neg_plain_necess__: "~mEmElIyIm", "~mEmElIsIn", "~mEmElI", "~mEmElIyIz", "~mEmElIsInIz", "~mEmElIlEr";
-    neg_plain_necess_evid: "~mEmElIymIşIm", "~mEmElIymIşsIn", "~mEmElIymIş", "~mEmElIymIşIz", "~mEmElIymIşsInIz", "~mEmElIlErmIş";
-    neg_plain_necess_past: "~mEmElIydIm", "~mEmElIydIn", "~mEmElIydI", "~mEmElIydIk", "~mEmElIydInIz", "~mEmElIlErdI";
-    neg_plain_necess_cond: "~mEmElIysEm", "~mEmElIysEn", "~mEmElIysE", "~mEmElIysEk", "~mEmElIysEnIz", "~mEmElIlErsE";
     neg_abil_aor__: "~yEmEm", "~yEmEzsIn", "~yEmEz", "~yEmEyIz", "~yEmEzsInIz", "~yEmEzlEr";
     neg_abil_aor_evid: "~yEmEzmIşIm", "~yEmEzmIşsIn", "~yEmEzmIş", "~yEmEzmIşIz", "~yEmEzmIşsInIz", "~yEmEzlErmIş";
     neg_abil_aor_past: "~yEmEzdIm", "~yEmEzdIn", "~yEmEzdI", "~yEmEzdIk", "~yEmEzdInIz", "~yEmEzlErdI";
@@ -2221,9 +1811,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     past_pos_abil__: "~yEbildim", "~yEbildin", "~yEbildi", "~yEbildik", "~yEbildiniz", "~yEbildiler";
     past_pos_abil_past: "~yEbildiydim", "~yEbildiydin", "~yEbildiydi", "~yEbildiydik", "~yEbildiydiniz", "~yEbildilerdi";
     past_pos_abil_cond: "~yEbildiysem", "~yEbildiysen", "~yEbildiyse", "~yEbildiysek", "~yEbildiyseniz", "~yEbildilerse";
-    past_neg_plain__: _, _, _, _, _, "~mEdIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~mEdIlErdI";
-    past_neg_plain_cond: "~mEdIysEm", "~mEdIysEn", "~mEdIysE", "~mEdIysEk", "~mEdIysEnIz", "~mEdIlErsE";
     past_neg_abil__: "~yEmEdIm", "~yEmEdIn", "~yEmEdI", "~yEmEdIk", "~yEmEdInIz", "~yEmEdIlEr";
     past_neg_abil_past: "~yEmEdIydIm", "~yEmEdIydIn", "~yEmEdIydI", "~yEmEdIydIk", "~yEmEdIydInIz", "~yEmEdIlErdI";
     past_neg_abil_cond: "~yEmEdIysEm", "~yEmEdIysEn", "~yEmEdIysE", "~yEmEdIysEk", "~yEmEdIysEnIz", "~yEmEdIlErsE";
@@ -2233,9 +1820,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     conditional_pos_abil__: "~yEbilsem", "~yEbilsen", "~yEbilse", "~yEbilsek", "~yEbilseniz", "~yEbilseler";
     conditional_pos_abil_evid: "~yEbilseymişim", "~yEbilseymişsin", "~yEbilseymiş", "~yEbilseymişiz", "~yEbilseymişsiniz", "~yEbilselermiş";
     conditional_pos_abil_past: "~yEbilseydim", "~yEbilseydin", "~yEbilseydi", "~yEbilseydik", "~yEbilseydiniz", "~yEbilselerdi";
-    conditional_neg_plain__: "~mEsEm", "~mEsEn", "~mEsE", "~mEsEk", "~mEsEnIz", "~mEsElEr";
-    conditional_neg_plain_evid: "~mEsEymIşIm", "~mEsEymIşsIn", "~mEsEymIş", "~mEsEymIşIz", "~mEsEymIşsInIz", "~mEsElErmIş";
-    conditional_neg_plain_past: "~mEsEydIm", "~mEsEydIn", "~mEsEydI", "~mEsEydIk", "~mEsEydInIz", "~mEsElErdI";
     conditional_neg_abil__: "~yEmEsEm", "~yEmEsEn", "~yEmEsE", "~yEmEsEk", "~yEmEsEnIz", "~yEmEsElEr";
     conditional_neg_abil_evid: "~yEmEsEymIşIm", "~yEmEsEymIşsIn", "~yEmEsEymIş", "~yEmEsEymIşIz", "~yEmEsEymIşsInIz", "~yEmEsElErmIş";
     conditional_neg_abil_past: "~yEmEsEydIm", "~yEmEsEydIn", "~yEmEsEydI", "~yEmEsEydIk", "~yEmEsEydInIz", "~yEmEsElErdI";
@@ -2245,423 +1829,212 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 34] = [
     optative_pos_abil__: "~yEbileyim", "~yEbilesin", "~yEbile", "~yEbilelim", "~yEbilesiniz", "~yEbileler";
     optative_pos_abil_evid: "~yEbileymişim", "~yEbileymişsin", "~yEbileymiş", "~yEbileymişiz", "~yEbileymişsiniz", "~yEbilelermiş";
     optative_pos_abil_past: "~yEbileydim", "~yEbileydin", "~yEbileydi", "~yEbileydik", "~yEbileydiniz", "~yEbilelerdi";
-    optative_neg_plain__: "~mEyEyIm", "~mEyEsIn", "~mEyE", "~mEyElIm", "~mEyEsInIz", "~mEyElEr";
-    optative_neg_plain_evid: "~mEyEymIşIm", "~mEyEymIşsIn", "~mEyEymIş", "~mEyEymIşIz", "~mEyEymIşsInIz", "~mEyElErmIş";
-    optative_neg_plain_past: "~mEyEydIm", "~mEyEydIn", "~mEyEydI", "~mEyEydIk", "~mEyEydInIz", "~mEyElErdI";
     optative_neg_abil__: "~yEmEyEyIm", "~yEmEyEsIn", "~yEmEyE", "~yEmEyElIm", "~yEmEyEsInIz", "~yEmEyElEr";
     optative_neg_abil_evid: "~yEmEyEymIşIm", "~yEmEyEymIşsIn", "~yEmEyEymIş", "~yEmEyEymIşIz", "~yEmEyEymIşsInIz", "~yEmEyElErmIş";
     optative_neg_abil_past: "~yEmEyEydIm", "~yEmEyEydIn", "~yEmEyEydI", "~yEmEyEydIk", "~yEmEyEydInIz", "~yEmEyElErdI";
     imperative_pos_plain: "~", "~sIn", "~yIn", "~sInlEr", _, "~yInIz", "~sEnE", "~sEnIzE";
     imperative_pos_abil: "~yEbil", "~yEbilsin", "~yEbilin", "~yEbilsinler", "~yEbiliniz", _, "~yEbilsene", "~yEbilsenize";
-    imperative_neg_plain: _, _, _, "~mEsInlEr", _, "~mEyInIz", "~mEsEnE", "~mEsEnIzE";
+    imperative_neg_plain: _, _, _, _, _, "~mEyInIz", _, _;
     imperative_neg_abil: "~yEmE", "~yEmEsIn", "~yEmEyIn", "~yEmEsInlEr", "~yEmEyInIz", _, "~yEmEsEnE", "~yEmEsEnIzE";
-    infinitive_pos: "~mek", "~yEbilmek";
-    infinitive_neg: "~mEmEk", "~yEmEmEk";
+    infinitive_pos: "~mak", "~yEbilmek";
+    infinitive_neg: _, "~yEmEmEk";
     verbal_noun_pos: "~mE", "~yEbilme";
-    verbal_noun_neg: "~mEmE", "~yEmEmE";
+    verbal_noun_neg: _, "~yEmEmE";
     participle_pos_plain: "~yEn", _, _;
     participle_pos_abil: "~yEbilen", _, _;
-    participle_neg_plain: "~mEyEn", "~mEmIş", _;
+    participle_neg_plain: _, "~mEmIş", "~mEyEcEk";
     participle_neg_abil: "~yEmEyEn", _, _;
     relative_pos_plain_acak: _, _, _, _, _, "~yEcEklErI";
     relative_pos_abil_dik: "~yEbildiğim", "~yEbildiğin", "~yEbildiği", "~yEbildiğimiz", "~yEbildiğiniz", "~yEbildikleri";
     relative_pos_abil_acak: _, "~yEbileceğin", "~yEbileceği", "~yEbileceğimiz", "~yEbileceğiniz", "~yEbilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~mEdIklErI";
-    relative_neg_plain_acak: _, "~mEyEcEğIn", "~mEyEcEğI", "~mEyEcEğImIz", "~mEyEcEğInIz", "~mEyEcEklErI";
+    relative_neg_plain_acak: "~mEyEcEğIm", _, _, _, _, _;
     relative_neg_abil_dik: "~yEmEdIğIm", "~yEmEdIğIn", "~yEmEdIğI", "~yEmEdIğImIz", "~yEmEdIğInIz", "~yEmEdIklErI";
     relative_neg_abil_acak: _, "~yEmEyEcEğIn", "~yEmEyEcEğI", "~yEmEyEcEğImIz", "~yEmEyEcEğInIz", "~yEmEyEcEklErI";
-    converb_pos_plain: "~rken", _, _, "~yElI", "~yEsIyE", _, "~yErEk", "~ye ~ye", "~rcEsInE";
-    converb_pos_abil: "~yEbilirken", "~yEbilince", "~yEbilip", "~yEbileli", "~yEbilesiye", "~yEbildikçe", "~yEbilerek", "~yebile ~yebile", _;
-    converb_neg_plain: _, "~mEyIncE", _, "~mEyElI", "~mEyEsIyE", "~mEdIkçE", "~mEyErEk", _, "~mEzcEsInE";
+    converb_pos_plain: "~rken", _, _, "~yElI", "~yEsIyE", _, "~yErEk", "~ya ~ya", "~rcEsInE";
+    converb_pos_abil: "~yEbilirken", "~yEbilince", "~yEbilip", "~yEbileli", "~yEbilesiye", "~yEbildikçe", "~yEbilerek", "~yabile ~yabile", _;
     converb_neg_abil: "~yEmEzken", "~yEmEyIncE", "~yEmEyIp", "~yEmEyElI", "~yEmEyEsIyE", "~yEmEdIkçE", "~yEmEyErEk", _, "~yEmEzcEsInE";
+    ),
+    // Filmçekmek: 17 words (fotoğraf çekmek, otuz bir çekmek, zartayı çekmek, mortoyu çekmek, cızlamı çekmek, cartayı çekmek). Like Açmak, except in 3 cells: infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("film çekmek", 17, "~mek", like Açmak;
+    stem converb_neg_plain_doubled: "~mEyE çEkmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE çEkEmEyE- like ayırmak";
+    infinitive_pos: "~mek", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~E çEkE", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile çEkEbile", _;
+    ),
+    // Koynunaalmak: 16 words (almak, nefes almak, duş almak, satın almak, farkına varmak, koynuna almak). Like Varolmak, except in 3 cells: converb_pos_plain doubled, converb_pos_abil ken, converb_pos_abil doubled.
+    conjugation!("koynuna almak", 16, "~mak", like Varolmak;
+    stem converb_neg_plain_doubled: "~mEyE almEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE alEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E alE", _;
+    converb_pos_abil: "~Ebilırken", _, _, _, _, _, _, "~Ebile alEbile", _;
+    ),
+    // Yürümek: 16 words (yürümek, üşümek, ekşimek, büyümek, çürümek, eskimek). Like Taşımak, except in 3 cells: infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("yürümek", 16, "~mek", like Taşımak;
+    stem converb_neg_plain_doubled: "~meye ~meye- like ayırmak";
+    stem converb_neg_abil_doubled: "~yemeye ~yemeye- like ayırmak";
+    infinitive_pos: "~mek", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~ye ~ye", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~yebile ~yebile", _;
+    ),
+    // Aşkyapmak: 15 words (hata yapmak, makyaj yapmak, seks yapmak, dedikodu yapmak, ağda yapmak, sugeçirmez yapmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("aşk yapmak", 15, "~mak", like Açmak;
+    stem converb_neg_plain_doubled: "~mEyE yapmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE yapEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E yapE", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile yapEbile", _;
     ),
     // Tekmeatmak: 12 words (havlu atmak, hava atmak, aşık atmak, kazık atmak, göz atmak, tekme atmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("tekme atmak", 12, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE EtmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE EtEmEyE- like vermek";
-    converb_pos_plain: _, _, _, _, _, _, _, "~E EtE", _;
+    stem converb_neg_plain_doubled: "~mEyE atmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE atEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E atE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile atEbile", _;
     ),
     // Imanagelmek: 12 words (üstesinden gelmek, dize gelmek, manasına gelmek, anlamına gelmek, taklaya gelmek, kendine gelmek). Like Vermek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("imana gelmek", 12, "~mek", like Vermek;
-    stem converb_neg_plain_doubled: "~mEyE gElmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE gElEmEyE- like vermek";
+    stem converb_neg_plain_doubled: "~mEyE gElmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE gElEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E gElE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile gElEbile", _;
     ),
     // Camaçıkmak: 12 words (sahip çıkmak, kat çıkmak, karşı çıkmak, dağa çıkmak, eve çıkmak, cama çıkmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("cama çıkmak", 12, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE çıkmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE çıkEmEyE- like vermek";
+    stem converb_neg_plain_doubled: "~mEyE çıkmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE çıkEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E çıkE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile çıkEbile", _;
     ),
-    // Taşımak: 11 words (solumak, okumak, korumak, uyumak, meydan okumak, dokumak). Like Yürümek, except in 27 cells: pos_plain_cont__ _1sg, pos_plain_cont__ _2sg, pos_plain_cont__ _3sg, pos_plain_cont__ _1pl, pos_plain_cont__ _2pl, pos_plain_cont__ _3pl, ….
-    conjugation!("taşımak", 11, "~mak", like Yürümek;
-    stem converb_neg_plain_doubled: "~maya ~maya- like vermek";
-    stem converb_neg_abil_doubled: "~yamaya ~yamaya- like vermek";
-    pos_plain_cont__: "~maktEyIm", "~maktEsIn", "~maktE", "~maktEyIz", "~maktEsInIz", "~maktElEr";
-    pos_plain_cont_evid: "~maktEymIşIm", "~maktEymIşsIn", "~maktEymIş", "~maktEymIşIz", "~maktEymIşsInIz", "~maktElErmIş";
-    pos_plain_cont_past: "~maktEydIm", "~maktEydIn", "~maktEydI", "~maktEydIk", "~maktEydInIz", "~maktElErdI";
-    pos_plain_cont_cond: "~maktEysEm", "~maktEysEn", "~maktEysE", "~maktEysEk", "~maktEysEnIz", "~maktElErsE";
-    infinitive_pos: "~mak", _;
-    converb_pos_plain: _, _, _, _, _, _, _, "~ya ~ya", _;
-    converb_pos_abil: _, _, _, _, _, _, _, "~yabile ~yabile", _;
-    ),
-    // Ilişkiyegirmek: 10 words (bahse girmek, transa girmek, vizyona girmek, gösterime girmek, araya girmek, yürürlüğe girmek). Like Çekmek, except in 3 cells: past_pos_plain__ _1sg, converb_pos_plain doubled, converb_pos_abil doubled.
-    conjugation!("ilişkiye girmek", 10, "~mek", like Çekmek;
-    stem converb_neg_plain_doubled: "~mEyE gIrmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE gIrEmEyE- like vermek";
-    past_pos_plain__: "~dIm", _, _, _, _, _;
+    // Ilişkiyegirmek: 10 words (bahse girmek, transa girmek, vizyona girmek, gösterime girmek, araya girmek, yürürlüğe girmek). Like Silmek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("ilişkiye girmek", 10, "~mek", like Silmek;
+    stem converb_neg_plain_doubled: "~mEyE gIrmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE gIrEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E gIrE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile gIrEbile", _;
     ),
-    // Ilerletmek: 7 words (sahneletmek, normalleşmek, mahkemeleşmek, halleşmek, helalleşmek, kristalleşmek). Like Silmek, except in 26 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
-    conjugation!("ilerletmek", 7, "~mek", like Silmek;
-    pos_plain_aor__: "~IrIm", "~IrsIn", "~Ir", _, "~IrsInIz", "~IrlEr";
-    pos_plain_aor_evid: "~IrmIşIm", "~IrmIşsIn", "~IrmIş", "~IrmIşIz", "~IrmIşsInIz", "~IrlErmIş";
-    pos_plain_aor_past: "~IrdIm", "~IrdIn", "~IrdI", "~IrdIk", "~IrdInIz", "~IrlErdI";
-    pos_plain_aor_cond: "~IrsEm", "~IrsEn", "~IrsE", "~IrsEk", "~IrsEnIz", "~IrlErsE";
-    past_pos_plain__: "~tIm", _, _, _, _, _;
-    converb_pos_plain: "~Irken", _, _, _, _, _, _, _, "~IrcEsInE";
+    // Baştançıkarmak: 7 words (baştan çıkarmak, tepesine çıkarmak, foyasını ortaya çıkarmak, ortaya çıkarmak, göklere çıkarmak, tadını çıkarmak). Like Ayırmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("baştan çıkarmak", 7, "~mak", like Ayırmak;
+    stem converb_neg_plain_doubled: "~mEyE çıkErmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE çıkErEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E çıkErE", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile çıkErEbile", _;
+    ),
+    // Almak: 7 words (azmak, kalmak, varmak, sanmak, yammak, çırpmak). Like Koynunaalmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("almak", 7, "~mak", like Koynunaalmak;
+    stem converb_neg_plain_doubled: "~maya ~maya- like ayırmak";
+    stem converb_neg_abil_doubled: "~amaya ~amaya- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~a ~a", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~abile ~abile", _;
     ),
     // Yemek: 6 words (demek, yemek, dayak yemek, kazık yemek, rüşvet yemek, aklını peynir ekmekle yemek).
     conjugation!("yemek", 6, "~emek";
     stem lemma: "~- like yemek";
-    stem converb_neg_plain_doubled: "~emeye yemeye- like vermek";
-    stem converb_neg_abil_doubled: "~iyemeye yiyemeye- like vermek";
+    stem converb_neg_plain_doubled: "~Emeye yEmeye- like ayırmak";
+    stem converb_neg_abil_doubled: "~iyemeye yiyemeye- like ayırmak";
     imperative_pos_abil: _, _, _, _, _, derived, _, _;
     imperative_neg_abil: _, _, _, _, _, derived, _, _;
     participle_pos_plain: _, derived, derived;
     participle_pos_abil: _, derived, derived;
-    participle_neg_plain: _, _, derived;
     participle_neg_abil: _, derived, derived;
     relative_pos_plain_acak: derived, _, _, _, _, _;
     relative_pos_abil_acak: derived, _, _, _, _, _;
-    relative_neg_plain_acak: derived, _, _, _, _, _;
     relative_neg_abil_acak: derived, _, _, _, _, _;
     ),
-    // Filmçekmek: 5 words (otuz bir çekmek, iç çekmek, sineye çekmek, film çekmek, şınav çekmek). Like Silmek, except in 13 cells: imperative_pos_abil _2pl_formal, imperative_neg_abil _2pl_formal, participle_pos_plain miş, participle_pos_plain acak, participle_pos_abil miş, participle_pos_abil acak, ….
-    conjugation!("film çekmek", 5, "~mek", like Silmek;
-    stem lemma: "~- like film çekmek";
-    stem converb_neg_plain_doubled: "~meye çekmeye- like vermek";
-    stem converb_neg_abil_doubled: "~emeye çekemeye- like vermek";
-    imperative_pos_abil: _, _, _, _, _, derived, _, _;
-    imperative_neg_abil: _, _, _, _, _, derived, _, _;
-    participle_pos_plain: _, derived, derived;
-    participle_pos_abil: _, derived, derived;
-    participle_neg_plain: _, _, derived;
-    participle_neg_abil: _, derived, derived;
-    relative_pos_plain_acak: derived, _, _, _, _, _;
-    relative_pos_abil_acak: derived, _, _, _, _, _;
-    relative_neg_plain_acak: derived, _, _, _, _, _;
-    relative_neg_abil_acak: derived, _, _, _, _, _;
-    ),
-    // Vurmak: 5 words (olmak, vurmak, durmak, bulmak, bulundurmak). Like Nefesaldırmak, except in 25 cells: pos_abil_aor__ _1sg, pos_abil_aor__ _2sg, pos_abil_aor__ _3sg, pos_abil_aor__ _1pl, pos_abil_aor__ _2pl, pos_abil_aor__ _3pl, ….
-    conjugation!("vurmak", 5, "~mak", like Nefesaldırmak;
-    pos_abil_aor__: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_evid: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_past: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_cond: derived, derived, derived, derived, derived, derived;
+    // Vurmak: 5 words (olmak, vurmak, durmak, bulmak, bulundurmak). Like Almak, except in 1 cell: converb_pos_abil ken.
+    conjugation!("vurmak", 5, "~mak", like Almak;
     converb_pos_abil: "~Ebilurken", _, _, _, _, _, _, _, _;
     ),
     // Yolaçmak: 5 words (ateş açmak, yol açmak, iç açmak, kanat açmak, çiçek açmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("yol açmak", 5, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE EçmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE EçEmEyE- like vermek";
-    converb_pos_plain: _, _, _, _, _, _, _, "~E EçE", _;
+    stem converb_neg_plain_doubled: "~mEyE açmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE açEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E açE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile açEbile", _;
     ),
-    // Salmak: 4 words (kovmak, ovmak, savmak, başından savmak).
-    conjugation!("salmak", 4, "~mak";
-    stem converb_neg_plain_doubled: "~maya ~maya- like vermek";
-    stem converb_neg_abil_doubled: "~amaya ~amaya- like vermek";
-    pos_plain_aor__: "~arIm", "~arsIn", "~ar", _, "~arsInIz", "~arlEr";
-    pos_plain_aor_evid: "~armIşIm", "~armIşsIn", "~armIş", "~armIşIz", "~armIşsInIz", "~arlErmIş";
-    pos_plain_aor_past: "~ardIm", "~ardIn", "~ardI", "~ardIk", "~ardInIz", "~arlErdI";
-    pos_plain_aor_cond: "~arsEm", "~arsEn", "~arsE", "~arsEk", "~arsEnIz", "~arlErsE";
-    pos_plain_prog__: "~Iyorum", _, _, _, _, _;
-    pos_plain_evid__: _, "~mIşsIn", "~mIş", _, "~mIşsInIz", "~mIşlEr";
-    pos_plain_evid_evid: "~mIşmIşIm", "~mIşmIşsIn", "~mIşmIş", "~mIşmIşIz", "~mIşmIşsInIz", "~mIşlErmIş";
-    pos_plain_evid_past: "~mIştIm", "~mIştIn", "~mIştI", "~mIştIk", "~mIştInIz", "~mIşlErdI";
-    pos_plain_evid_cond: "~mIşsEm", "~mIşsEn", "~mIşsE", "~mIşsEk", "~mIşsEnIz", "~mIşlErsE";
-    pos_plain_fut__: "~acEğIm", "~acEksIn", "~acEk", _, "~acEksInIz", "~acEklEr";
-    pos_plain_fut_evid: "~acEkmIşIm", "~acEkmIşsIn", "~acEkmIş", "~acEkmIşIz", "~acEkmIşsInIz", "~acEklErmIş";
-    pos_plain_fut_past: "~acEktIm", "~acEktIn", "~acEktI", "~acEktIk", "~acEktInIz", "~acEklErdI";
-    pos_plain_fut_cond: "~acEksEm", "~acEksEn", "~acEksE", "~acEksEk", "~acEksEnIz", "~acEklErsE";
-    pos_plain_cont__: "~maktEyIm", "~maktEsIn", "~maktE", "~maktEyIz", "~maktEsInIz", "~maktElEr";
-    pos_plain_cont_evid: "~maktEymIşIm", "~maktEymIşsIn", "~maktEymIş", "~maktEymIşIz", "~maktEymIşsInIz", "~maktElErmIş";
-    pos_plain_cont_past: "~maktEydIm", "~maktEydIn", "~maktEydI", "~maktEydIk", "~maktEydInIz", "~maktElErdI";
-    pos_plain_cont_cond: "~maktEysEm", "~maktEysEn", "~maktEysE", "~maktEysEk", "~maktEysEnIz", "~maktElErsE";
-    pos_plain_necess__: _, _, _, _, _, "~malIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~malIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~malIlErdI";
-    pos_plain_necess_cond: "~malIysEm", "~malIysEn", "~malIysE", "~malIysEk", "~malIysEnIz", "~malIlErsE";
-    pos_abil_aor__: "~abilirim", "~abilirsin", "~abilir", "~abiliriz", "~abilirsiniz", "~abilirler";
-    pos_abil_aor_evid: "~abilirmişim", "~abilirmişsin", "~abilirmiş", "~abilirmişiz", "~abilirmişsiniz", "~abilirlermiş";
-    pos_abil_aor_past: "~abilirdim", "~abilirdin", "~abilirdi", "~abilirdik", "~abilirdiniz", "~abilirlerdi";
-    pos_abil_aor_cond: "~abilirsem", "~abilirsen", "~abilirse", "~abilirsek", "~abilirseniz", "~abilirlerse";
-    pos_abil_prog__: "~abiliyorum", "~abiliyorsun", "~abiliyor", "~abiliyoruz", "~abiliyorsunuz", "~abiliyorlar";
-    pos_abil_prog_evid: "~abiliyormuşum", "~abiliyormuşsun", "~abiliyormuş", "~abiliyormuşuz", "~abiliyormuşsunuz", "~abiliyorlarmış";
-    pos_abil_prog_past: "~abiliyordum", "~abiliyordun", "~abiliyordu", "~abiliyorduk", "~abiliyordunuz", "~abiliyorlardı";
-    pos_abil_prog_cond: "~abiliyorsam", "~abiliyorsan", "~abiliyorsa", "~abiliyorsak", "~abiliyorsanız", "~abiliyorlarsa";
-    pos_abil_evid__: "~abilmişim", "~abilmişsin", "~abilmiş", "~abilmişiz", "~abilmişsiniz", "~abilmişler";
-    pos_abil_evid_evid: "~abilmişmişim", "~abilmişmişsin", "~abilmişmiş", "~abilmişmişiz", "~abilmişmişsiniz", "~abilmişlermiş";
-    pos_abil_evid_past: "~abilmiştim", "~abilmiştin", "~abilmişti", "~abilmiştik", "~abilmiştiniz", "~abilmişlerdi";
-    pos_abil_evid_cond: "~abilmişsem", "~abilmişsen", "~abilmişse", "~abilmişsek", "~abilmişseniz", "~abilmişlerse";
-    pos_abil_fut__: "~abileceğim", "~abileceksin", "~abilecek", "~abileceğiz", "~abileceksiniz", "~abilecekler";
-    pos_abil_fut_evid: "~abilecekmişim", "~abilecekmişsin", "~abilecekmiş", "~abilecekmişiz", "~abilecekmişsiniz", "~abileceklermiş";
-    pos_abil_fut_past: "~abilecektim", "~abilecektin", "~abilecekti", "~abilecektik", "~abilecektiniz", "~abileceklerdi";
-    pos_abil_fut_cond: "~abileceksem", "~abileceksen", "~abilecekse", "~abileceksek", "~abilecekseniz", "~abileceklerse";
-    pos_abil_cont__: "~abilmekteyim", "~abilmektesin", "~abilmekte", "~abilmekteyiz", "~abilmektesiniz", "~abilmekteler";
-    pos_abil_cont_evid: "~abilmekteymişim", "~abilmekteymişsin", "~abilmekteymiş", "~abilmekteymişiz", "~abilmekteymişsiniz", "~abilmektelermiş";
-    pos_abil_cont_past: "~abilmekteydim", "~abilmekteydin", "~abilmekteydi", "~abilmekteydik", "~abilmekteydiniz", "~abilmektelerdi";
-    pos_abil_cont_cond: "~abilmekteysem", "~abilmekteysen", "~abilmekteyse", "~abilmekteysek", "~abilmekteyseniz", "~abilmektelerse";
-    pos_abil_necess__: "~abilmeliyim", "~abilmelisin", "~abilmeli", "~abilmeliyiz", "~abilmelisiniz", "~abilmeliler";
-    pos_abil_necess_evid: "~abilmeliymişim", "~abilmeliymişsin", "~abilmeliymiş", "~abilmeliymişiz", "~abilmeliymişsiniz", "~abilmelilermiş";
-    pos_abil_necess_past: "~abilmeliydim", "~abilmeliydin", "~abilmeliydi", "~abilmeliydik", "~abilmeliydiniz", "~abilmelilerdi";
-    pos_abil_necess_cond: "~abilmeliysem", "~abilmeliysen", "~abilmeliyse", "~abilmeliysek", "~abilmeliyseniz", "~abilmelilerse";
-    neg_plain_aor__: _, _, _, _, _, "~mazlEr";
-    neg_plain_aor_evid: _, _, _, _, _, "~mazlErmIş";
-    neg_plain_aor_past: _, _, _, _, _, "~mazlErdI";
-    neg_plain_aor_cond: "~mazsEm", "~mazsEn", "~mazsE", "~mazsEk", "~mazsEnIz", "~mazlErsE";
-    neg_plain_prog__: "~mIyorum", "~mIyorsun", "~mIyor", "~mIyoruz", "~mIyorsunuz", "~mIyorlar";
-    neg_plain_prog_evid: "~mIyormuşum", "~mIyormuşsun", "~mIyormuş", "~mIyormuşuz", "~mIyormuşsunuz", "~mIyorlarmış";
-    neg_plain_prog_past: "~mIyordum", "~mIyordun", "~mIyordu", "~mIyorduk", "~mIyordunuz", "~mIyorlardı";
-    neg_plain_prog_cond: "~mIyorsam", "~mIyorsan", "~mIyorsa", "~mIyorsak", "~mIyorsanız", "~mIyorlarsa";
-    neg_plain_evid__: _, _, _, _, _, "~mamIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~mamIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~mamIşlErdI";
-    neg_plain_evid_cond: "~mamIşsEm", "~mamIşsEn", "~mamIşsE", "~mamIşsEk", "~mamIşsEnIz", "~mamIşlErsE";
-    neg_plain_fut__: "~mayEcEğIm", "~mayEcEksIn", "~mayEcEk", "~mayEcEğIz", "~mayEcEksInIz", "~mayEcEklEr";
-    neg_plain_fut_evid: "~mayEcEkmIşIm", "~mayEcEkmIşsIn", "~mayEcEkmIş", "~mayEcEkmIşIz", "~mayEcEkmIşsInIz", "~mayEcEklErmIş";
-    neg_plain_fut_past: "~mayEcEktIm", "~mayEcEktIn", "~mayEcEktI", "~mayEcEktIk", "~mayEcEktInIz", "~mayEcEklErdI";
-    neg_plain_fut_cond: "~mayEcEksEm", "~mayEcEksEn", "~mayEcEksE", "~mayEcEksEk", "~mayEcEksEnIz", "~mayEcEklErsE";
-    neg_plain_cont__: "~mamEktEyIm", "~mamEktEsIn", "~mamEktE", "~mamEktEyIz", "~mamEktEsInIz", "~mamEktElEr";
-    neg_plain_cont_evid: "~mamEktEymIşIm", "~mamEktEymIşsIn", "~mamEktEymIş", "~mamEktEymIşIz", "~mamEktEymIşsInIz", "~mamEktElErmIş";
-    neg_plain_cont_past: "~mamEktEydIm", "~mamEktEydIn", "~mamEktEydI", "~mamEktEydIk", "~mamEktEydInIz", "~mamEktElErdI";
-    neg_plain_cont_cond: "~mamEktEysEm", "~mamEktEysEn", "~mamEktEysE", "~mamEktEysEk", "~mamEktEysEnIz", "~mamEktElErsE";
-    neg_plain_necess__: "~mamElIyIm", "~mamElIsIn", "~mamElI", "~mamElIyIz", "~mamElIsInIz", "~mamElIlEr";
-    neg_plain_necess_evid: "~mamElIymIşIm", "~mamElIymIşsIn", "~mamElIymIş", "~mamElIymIşIz", "~mamElIymIşsInIz", "~mamElIlErmIş";
-    neg_plain_necess_past: "~mamElIydIm", "~mamElIydIn", "~mamElIydI", "~mamElIydIk", "~mamElIydInIz", "~mamElIlErdI";
-    neg_plain_necess_cond: "~mamElIysEm", "~mamElIysEn", "~mamElIysE", "~mamElIysEk", "~mamElIysEnIz", "~mamElIlErsE";
-    neg_abil_aor__: "~amEm", "~amEzsIn", "~amEz", "~amEyIz", "~amEzsInIz", "~amEzlEr";
-    neg_abil_aor_evid: "~amEzmIşIm", "~amEzmIşsIn", "~amEzmIş", "~amEzmIşIz", "~amEzmIşsInIz", "~amEzlErmIş";
-    neg_abil_aor_past: "~amEzdIm", "~amEzdIn", "~amEzdI", "~amEzdIk", "~amEzdInIz", "~amEzlErdI";
-    neg_abil_aor_cond: "~amEzsEm", "~amEzsEn", "~amEzsE", "~amEzsEk", "~amEzsEnIz", "~amEzlErsE";
-    neg_abil_prog__: "~amIyorum", "~amIyorsun", "~amIyor", "~amIyoruz", "~amIyorsunuz", "~amIyorlar";
-    neg_abil_prog_evid: "~amIyormuşum", "~amIyormuşsun", "~amIyormuş", "~amIyormuşuz", "~amIyormuşsunuz", "~amIyorlarmış";
-    neg_abil_prog_past: "~amIyordum", "~amIyordun", "~amIyordu", "~amIyorduk", "~amIyordunuz", "~amIyorlardı";
-    neg_abil_prog_cond: "~amIyorsam", "~amIyorsan", "~amIyorsa", "~amIyorsak", "~amIyorsanız", "~amIyorlarsa";
-    neg_abil_evid__: "~amEmIşIm", "~amEmIşsIn", "~amEmIş", "~amEmIşIz", "~amEmIşsInIz", "~amEmIşlEr";
-    neg_abil_evid_evid: "~amEmIşmIşIm", "~amEmIşmIşsIn", "~amEmIşmIş", "~amEmIşmIşIz", "~amEmIşmIşsInIz", "~amEmIşlErmIş";
-    neg_abil_evid_past: "~amEmIştIm", "~amEmIştIn", "~amEmIştI", "~amEmIştIk", "~amEmIştInIz", "~amEmIşlErdI";
-    neg_abil_evid_cond: "~amEmIşsEm", "~amEmIşsEn", "~amEmIşsE", "~amEmIşsEk", "~amEmIşsEnIz", "~amEmIşlErsE";
-    neg_abil_fut__: "~amEyEcEğIm", "~amEyEcEksIn", "~amEyEcEk", "~amEyEcEğIz", "~amEyEcEksInIz", "~amEyEcEklEr";
-    neg_abil_fut_evid: "~amEyEcEkmIşIm", "~amEyEcEkmIşsIn", "~amEyEcEkmIş", "~amEyEcEkmIşIz", "~amEyEcEkmIşsInIz", "~amEyEcEklErmIş";
-    neg_abil_fut_past: "~amEyEcEktIm", "~amEyEcEktIn", "~amEyEcEktI", "~amEyEcEktIk", "~amEyEcEktInIz", "~amEyEcEklErdI";
-    neg_abil_fut_cond: "~amEyEcEksEm", "~amEyEcEksEn", "~amEyEcEksE", "~amEyEcEksEk", "~amEyEcEksEnIz", "~amEyEcEklErsE";
-    neg_abil_cont__: "~amEmEktEyIm", "~amEmEktEsIn", "~amEmEktE", "~amEmEktEyIz", "~amEmEktEsInIz", "~amEmEktElEr";
-    neg_abil_cont_evid: "~amEmEktEymIşIm", "~amEmEktEymIşsIn", "~amEmEktEymIş", "~amEmEktEymIşIz", "~amEmEktEymIşsInIz", "~amEmEktElErmIş";
-    neg_abil_cont_past: "~amEmEktEydIm", "~amEmEktEydIn", "~amEmEktEydI", "~amEmEktEydIk", "~amEmEktEydInIz", "~amEmEktElErdI";
-    neg_abil_cont_cond: "~amEmEktEysEm", "~amEmEktEysEn", "~amEmEktEysE", "~amEmEktEysEk", "~amEmEktEysEnIz", "~amEmEktElErsE";
-    neg_abil_necess__: "~amEmElIyIm", "~amEmElIsIn", "~amEmElI", "~amEmElIyIz", "~amEmElIsInIz", "~amEmElIlEr";
-    neg_abil_necess_evid: "~amEmElIymIşIm", "~amEmElIymIşsIn", "~amEmElIymIş", "~amEmElIymIşIz", "~amEmElIymIşsInIz", "~amEmElIlErmIş";
-    neg_abil_necess_past: "~amEmElIydIm", "~amEmElIydIn", "~amEmElIydI", "~amEmElIydIk", "~amEmElIydInIz", "~amEmElIlErdI";
-    neg_abil_necess_cond: "~amEmElIysEm", "~amEmElIysEn", "~amEmElIysE", "~amEmElIysEk", "~amEmElIysEnIz", "~amEmElIlErsE";
-    past_pos_plain__: "~dIm", _, _, _, _, _;
-    past_pos_abil__: "~abildim", "~abildin", "~abildi", "~abildik", "~abildiniz", "~abildiler";
-    past_pos_abil_past: "~abildiydim", "~abildiydin", "~abildiydi", "~abildiydik", "~abildiydiniz", "~abildilerdi";
-    past_pos_abil_cond: "~abildiysem", "~abildiysen", "~abildiyse", "~abildiysek", "~abildiyseniz", "~abildilerse";
-    past_neg_plain__: _, _, _, _, _, "~madIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~madIlErdI";
-    past_neg_plain_cond: "~madIysEm", "~madIysEn", "~madIysE", "~madIysEk", "~madIysEnIz", "~madIlErsE";
-    past_neg_abil__: "~amEdIm", "~amEdIn", "~amEdI", "~amEdIk", "~amEdInIz", "~amEdIlEr";
-    past_neg_abil_past: "~amEdIydIm", "~amEdIydIn", "~amEdIydI", "~amEdIydIk", "~amEdIydInIz", "~amEdIlErdI";
-    past_neg_abil_cond: "~amEdIysEm", "~amEdIysEn", "~amEdIysE", "~amEdIysEk", "~amEdIysEnIz", "~amEdIlErsE";
-    conditional_pos_plain__: "~sam", "~san", "~sa", "~sak", "~sanIz", "~salEr";
-    conditional_pos_plain_evid: "~saymIşIm", "~saymIşsIn", "~saymIş", "~saymIşIz", "~saymIşsInIz", "~salErmIş";
-    conditional_pos_plain_past: "~saydIm", "~saydIn", "~saydI", "~saydIk", "~saydInIz", "~salErdI";
-    conditional_pos_abil__: "~abilsem", "~abilsen", "~abilse", "~abilsek", "~abilseniz", "~abilseler";
-    conditional_pos_abil_evid: "~abilseymişim", "~abilseymişsin", "~abilseymiş", "~abilseymişiz", "~abilseymişsiniz", "~abilselermiş";
-    conditional_pos_abil_past: "~abilseydim", "~abilseydin", "~abilseydi", "~abilseydik", "~abilseydiniz", "~abilselerdi";
-    conditional_neg_plain__: "~masEm", "~masEn", "~masE", "~masEk", "~masEnIz", "~masElEr";
-    conditional_neg_plain_evid: "~masEymIşIm", "~masEymIşsIn", "~masEymIş", "~masEymIşIz", "~masEymIşsInIz", "~masElErmIş";
-    conditional_neg_plain_past: "~masEydIm", "~masEydIn", "~masEydI", "~masEydIk", "~masEydInIz", "~masElErdI";
-    conditional_neg_abil__: "~amEsEm", "~amEsEn", "~amEsE", "~amEsEk", "~amEsEnIz", "~amEsElEr";
-    conditional_neg_abil_evid: "~amEsEymIşIm", "~amEsEymIşsIn", "~amEsEymIş", "~amEsEymIşIz", "~amEsEymIşsInIz", "~amEsElErmIş";
-    conditional_neg_abil_past: "~amEsEydIm", "~amEsEydIn", "~amEsEydI", "~amEsEydIk", "~amEsEydInIz", "~amEsElErdI";
-    optative_pos_plain__: "~ayIm", "~asIn", "~a", "~alIm", "~asInIz", "~alEr";
-    optative_pos_plain_evid: "~aymIşIm", "~aymIşsIn", "~aymIş", "~aymIşIz", "~aymIşsInIz", "~alErmIş";
-    optative_pos_plain_past: "~aydIm", "~aydIn", "~aydI", "~aydIk", "~aydInIz", "~alErdI";
-    optative_pos_abil__: "~abileyim", "~abilesin", "~abile", "~abilelim", "~abilesiniz", "~abileler";
-    optative_pos_abil_evid: "~abileymişim", "~abileymişsin", "~abileymiş", "~abileymişiz", "~abileymişsiniz", "~abilelermiş";
-    optative_pos_abil_past: "~abileydim", "~abileydin", "~abileydi", "~abileydik", "~abileydiniz", "~abilelerdi";
-    optative_neg_plain__: "~mayEyIm", "~mayEsIn", "~mayE", "~mayElIm", "~mayEsInIz", "~mayElEr";
-    optative_neg_plain_evid: "~mayEymIşIm", "~mayEymIşsIn", "~mayEymIş", "~mayEymIşIz", "~mayEymIşsInIz", "~mayElErmIş";
-    optative_neg_plain_past: "~mayEydIm", "~mayEydIn", "~mayEydI", "~mayEydIk", "~mayEydInIz", "~mayElErdI";
-    optative_neg_abil__: "~amEyEyIm", "~amEyEsIn", "~amEyE", "~amEyElIm", "~amEyEsInIz", "~amEyElEr";
-    optative_neg_abil_evid: "~amEyEymIşIm", "~amEyEymIşsIn", "~amEyEymIş", "~amEyEymIşIz", "~amEyEymIşsInIz", "~amEyElErmIş";
-    optative_neg_abil_past: "~amEyEydIm", "~amEyEydIn", "~amEyEydI", "~amEyEydIk", "~amEyEydInIz", "~amEyElErdI";
-    imperative_pos_plain: "~", "~sIn", "~In", "~sInlEr", _, "~InIz", "~sanE", "~sanIzE";
-    imperative_pos_abil: "~abil", "~abilsin", "~abilin", "~abilsinler", "~abiliniz", _, "~abilsene", "~abilsenize";
-    imperative_neg_plain: _, _, _, "~masInlEr", _, "~mayInIz", "~masEnE", "~masEnIzE";
-    imperative_neg_abil: "~amE", "~amEsIn", "~amEyIn", "~amEsInlEr", "~amEyInIz", _, "~amEsEnE", "~amEsEnIzE";
-    infinitive_pos: "~mak", "~abilmek";
-    infinitive_neg: "~mamEk", "~amEmEk";
-    verbal_noun_pos: "~ma", "~abilme";
-    verbal_noun_neg: "~mamE", "~amEmE";
-    participle_pos_plain: "~an", _, _;
-    participle_pos_abil: "~abilen", _, _;
-    participle_neg_plain: "~mayEn", "~mamIş", _;
-    participle_neg_abil: "~amEyEn", _, _;
-    relative_pos_plain_acak: _, _, _, _, _, "~acEklErI";
-    relative_pos_abil_dik: "~abildiğim", "~abildiğin", "~abildiği", "~abildiğimiz", "~abildiğiniz", "~abildikleri";
-    relative_pos_abil_acak: _, "~abileceğin", "~abileceği", "~abileceğimiz", "~abileceğiniz", "~abilecekleri";
-    relative_neg_plain_dik: _, _, _, _, _, "~madIklErI";
-    relative_neg_plain_acak: _, "~mayEcEğIn", "~mayEcEğI", "~mayEcEğImIz", "~mayEcEğInIz", "~mayEcEklErI";
-    relative_neg_abil_dik: "~amEdIğIm", "~amEdIğIn", "~amEdIğI", "~amEdIğImIz", "~amEdIğInIz", "~amEdIklErI";
-    relative_neg_abil_acak: _, "~amEyEcEğIn", "~amEyEcEğI", "~amEyEcEğImIz", "~amEyEcEğInIz", "~amEyEcEklErI";
-    converb_pos_plain: "~arken", _, _, "~alI", "~asIyE", _, "~arEk", "~a ~a", "~arcEsInE";
-    converb_pos_abil: "~abilIrken", "~abilince", "~abilip", "~abileli", "~abilesiye", "~abildikçe", "~abilerek", "~abile ~abile", _;
-    converb_neg_plain: _, "~mayIncE", _, "~mayElI", "~mayEsIyE", "~madIkçE", "~mayErEk", _, "~mazcEsInE";
-    converb_neg_abil: "~amEzken", "~amEyIncE", "~amEyIp", "~amEyElI", "~amEyEsIyE", "~amEdIkçE", "~amEyErEk", _, "~amEzcEsInE";
-    ),
-    // Maytapgeçmek: 4 words (taşak geçmek, transa geçmek, maytap geçmek, tarihe geçmek). Like Çekmek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
-    conjugation!("maytap geçmek", 4, "~mek", like Çekmek;
-    stem converb_neg_plain_doubled: "~mEyE gEçmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE gEçEmEyE- like vermek";
+    // Maytapgeçmek: 4 words (taşak geçmek, transa geçmek, maytap geçmek, tarihe geçmek). Like Filmçekmek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("maytap geçmek", 4, "~mek", like Filmçekmek;
+    stem converb_neg_plain_doubled: "~mEyE gEçmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE gEçEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E gEçE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile gEçEbile", _;
     ),
     // Kafatutmak: 4 words (kafa tutmak, oruç tutmak, kulak tutmak, gözü tutmak). Like Açmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("kafa tutmak", 4, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE tutmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE tutEmEyE- like vermek";
+    stem converb_neg_plain_doubled: "~mEyE tutmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE tutEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E tutE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile tutEbile", _;
     ),
-    // Gömmek: 3 words (bükmek, ölçmek, gömmek). Like Çekmek, except in 25 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
-    conjugation!("gömmek", 3, "~mek", like Çekmek;
+    // Bükmek: 3 words (bükmek, ölçmek, gömmek). Like Vermek, except in 26 cells: pos_plain_aor__ _1sg, pos_plain_aor__ _2sg, pos_plain_aor__ _3sg, pos_plain_aor__ _2pl, pos_plain_aor__ _3pl, pos_plain_aor_evid _1sg, ….
+    conjugation!("bükmek", 3, "~mek", like Vermek;
     pos_plain_aor__: "~irIm", "~irsIn", "~ir", _, "~irsInIz", "~irlEr";
     pos_plain_aor_evid: "~irmIşIm", "~irmIşsIn", "~irmIş", "~irmIşIz", "~irmIşsInIz", "~irlErmIş";
     pos_plain_aor_past: "~irdIm", "~irdIn", "~irdI", "~irdIk", "~irdInIz", "~irlErdI";
     pos_plain_aor_cond: "~irsEm", "~irsEn", "~irsE", "~irsEk", "~irsEnIz", "~irlErsE";
+    past_pos_plain__: "~tIm", _, _, _, _, _;
     converb_pos_plain: "~irken", _, _, _, _, _, _, _, "~ircEsInE";
     ),
-    // Geçkalmak: 3 words (geç kalmak, mutabık kalmak, ramak kalmak). Like Vurmak, except in 3 cells: converb_pos_plain doubled, converb_pos_abil ken, converb_pos_abil doubled.
-    conjugation!("geç kalmak", 3, "~mak", like Vurmak;
-    stem converb_neg_plain_doubled: "~mEyE kElmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE kElEmEyE- like vermek";
-    converb_pos_plain: _, _, _, _, _, _, _, "~E kElE", _;
-    converb_pos_abil: "~Ebilırken", _, _, _, _, _, _, "~Ebile kalEbile", _;
+    // Fındıkkırmak: 3 words (fındık kırmak, iki lafın belini kırmak, pot kırmak). Like Açmak, except in 3 cells: past_pos_plain__ _1sg, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("fındık kırmak", 3, "~mak", like Açmak;
+    stem converb_neg_plain_doubled: "~mEyE kırmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE kırEmEyE- like ayırmak";
+    past_pos_plain__: "~dIm", _, _, _, _, _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~E kırE", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile kırEbile", _;
     ),
-    // Serbestbırakmak: 3 words (silah bırakmak, tadında bırakmak, serbest bırakmak). Like Varolmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
-    conjugation!("serbest bırakmak", 3, "~mak", like Varolmak;
-    stem converb_neg_plain_doubled: "~mEyE bırEkmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE bırEkEmEyE- like vermek";
+    // Geçkalmak: 3 words (geç kalmak, mutabık kalmak, ramak kalmak). Like Koynunaalmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("geç kalmak", 3, "~mak", like Koynunaalmak;
+    stem converb_neg_plain_doubled: "~mEyE kAlmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE kAlEmEyE- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~E kAlE", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~Ebile kAlEbile", _;
+    ),
+    // Serbestbırakmak: 3 words (silah bırakmak, tadında bırakmak, serbest bırakmak). Like Ayırmak, except in 3 cells: past_pos_plain__ _1sg, converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("serbest bırakmak", 3, "~mak", like Ayırmak;
+    stem converb_neg_plain_doubled: "~mEyE bırEkmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE bırEkEmEyE- like ayırmak";
+    past_pos_plain__: "~tIm", _, _, _, _, _;
     converb_pos_plain: _, _, _, _, _, _, _, "~E bırEkE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile bırEkEbile", _;
     ),
-    // Görmek: 3 words (görmek, mazur görmek, görüm görmek). Like Vermek, except in 27 cells: pos_abil_aor__ _1sg, pos_abil_aor__ _2sg, pos_abil_aor__ _3sg, pos_abil_aor__ _1pl, pos_abil_aor__ _2pl, pos_abil_aor__ _3pl, ….
-    conjugation!("görmek", 3, "~mek", like Vermek;
-    stem converb_neg_plain_doubled: "~mEyE görmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE görEmEyE- like vermek";
-    pos_abil_aor__: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_evid: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_past: derived, derived, derived, derived, derived, derived;
-    pos_abil_aor_cond: derived, derived, derived, derived, derived, derived;
+    // Görmek: 3 words (görmek, mazur görmek, görüm görmek). Like Varolmak, except in 4 cells: infinitive_pos plain, converb_pos_plain doubled, converb_pos_abil ken, converb_pos_abil doubled.
+    conjugation!("görmek", 3, "~mek", like Varolmak;
+    stem converb_neg_plain_doubled: "~mEyE görmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE görEmEyE- like ayırmak";
+    infinitive_pos: "~mek", _;
     converb_pos_plain: _, _, _, _, _, _, _, "~E görE", _;
     converb_pos_abil: "~Ebilürken", _, _, _, _, _, _, "~Ebile görEbile", _;
     ),
-    // Götügitmek: 3 words (götü gitmek, hoşuna gitmek, geberip gitmek). Like Takipetmek, except in 210 cells: pos_plain_cont__ _1sg, pos_plain_cont__ _2sg, pos_plain_cont__ _3sg, pos_plain_cont__ _1pl, pos_plain_cont__ _2pl, pos_plain_cont__ _3pl, ….
+    // Götügitmek: 3 words (götü gitmek, hoşuna gitmek, geberip gitmek). Like Takipetmek, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
     conjugation!("götü gitmek", 3, "~tmek", like Takipetmek;
-    stem converb_neg_plain_doubled: "~tmeye gitmeye- like vermek";
-    stem converb_neg_abil_doubled: "~demeye gidemeye- like vermek";
-    pos_plain_cont__: "~tmektEyIm", "~tmektEsIn", "~tmektE", "~tmektEyIz", "~tmektEsInIz", "~tmektElEr";
-    pos_plain_cont_evid: "~tmektEymIşIm", "~tmektEymIşsIn", "~tmektEymIş", "~tmektEymIşIz", "~tmektEymIşsInIz", "~tmektElErmIş";
-    pos_plain_cont_past: "~tmektEydIm", "~tmektEydIn", "~tmektEydI", "~tmektEydIk", "~tmektEydInIz", "~tmektElErdI";
-    pos_plain_cont_cond: "~tmektEysEm", "~tmektEysEn", "~tmektEysE", "~tmektEysEk", "~tmektEysEnIz", "~tmektElErsE";
-    pos_plain_necess__: _, _, _, _, _, "~tmElIlEr";
-    pos_plain_necess_evid: _, _, _, _, _, "~tmElIlErmIş";
-    pos_plain_necess_past: _, _, _, _, _, "~tmElIlErdI";
-    pos_plain_necess_cond: "~tmElIysEm", "~tmElIysEn", "~tmElIysE", "~tmElIysEk", "~tmElIysEnIz", "~tmElIlErsE";
-    neg_plain_aor__: _, _, _, _, _, "~tmEzlEr";
-    neg_plain_aor_evid: _, _, _, _, _, "~tmEzlErmIş";
-    neg_plain_aor_past: _, _, _, _, _, "~tmEzlErdI";
-    neg_plain_aor_cond: "~tmEzsEm", "~tmEzsEn", "~tmEzsE", "~tmEzsEk", "~tmEzsEnIz", "~tmEzlErsE";
-    neg_plain_evid__: _, _, _, _, _, "~tmEmIşlEr";
-    neg_plain_evid_evid: _, _, _, _, _, "~tmEmIşlErmIş";
-    neg_plain_evid_past: _, _, _, _, _, "~tmEmIşlErdI";
-    neg_plain_evid_cond: "~tmEmIşsEm", "~tmEmIşsEn", "~tmEmIşsE", "~tmEmIşsEk", "~tmEmIşsEnIz", "~tmEmIşlErsE";
-    neg_plain_fut__: "~tmEyEcEğIm", "~tmEyEcEksIn", "~tmEyEcEk", "~tmEyEcEğIz", "~tmEyEcEksInIz", "~tmEyEcEklEr";
-    neg_plain_fut_evid: "~tmEyEcEkmIşIm", "~tmEyEcEkmIşsIn", "~tmEyEcEkmIş", "~tmEyEcEkmIşIz", "~tmEyEcEkmIşsInIz", "~tmEyEcEklErmIş";
-    neg_plain_fut_past: "~tmEyEcEktIm", "~tmEyEcEktIn", "~tmEyEcEktI", "~tmEyEcEktIk", "~tmEyEcEktInIz", "~tmEyEcEklErdI";
-    neg_plain_fut_cond: "~tmEyEcEksEm", "~tmEyEcEksEn", "~tmEyEcEksE", "~tmEyEcEksEk", "~tmEyEcEksEnIz", "~tmEyEcEklErsE";
-    neg_plain_cont__: "~tmEmEktEyIm", "~tmEmEktEsIn", "~tmEmEktE", "~tmEmEktEyIz", "~tmEmEktEsInIz", "~tmEmEktElEr";
-    neg_plain_cont_evid: "~tmEmEktEymIşIm", "~tmEmEktEymIşsIn", "~tmEmEktEymIş", "~tmEmEktEymIşIz", "~tmEmEktEymIşsInIz", "~tmEmEktElErmIş";
-    neg_plain_cont_past: "~tmEmEktEydIm", "~tmEmEktEydIn", "~tmEmEktEydI", "~tmEmEktEydIk", "~tmEmEktEydInIz", "~tmEmEktElErdI";
-    neg_plain_cont_cond: "~tmEmEktEysEm", "~tmEmEktEysEn", "~tmEmEktEysE", "~tmEmEktEysEk", "~tmEmEktEysEnIz", "~tmEmEktElErsE";
-    neg_plain_necess__: "~tmEmElIyIm", "~tmEmElIsIn", "~tmEmElI", "~tmEmElIyIz", "~tmEmElIsInIz", "~tmEmElIlEr";
-    neg_plain_necess_evid: "~tmEmElIymIşIm", "~tmEmElIymIşsIn", "~tmEmElIymIş", "~tmEmElIymIşIz", "~tmEmElIymIşsInIz", "~tmEmElIlErmIş";
-    neg_plain_necess_past: "~tmEmElIydIm", "~tmEmElIydIn", "~tmEmElIydI", "~tmEmElIydIk", "~tmEmElIydInIz", "~tmEmElIlErdI";
-    neg_plain_necess_cond: "~tmEmElIysEm", "~tmEmElIysEn", "~tmEmElIysE", "~tmEmElIysEk", "~tmEmElIysEnIz", "~tmEmElIlErsE";
-    past_neg_plain__: _, _, _, _, _, "~tmEdIlEr";
-    past_neg_plain_past: _, _, _, _, _, "~tmEdIlErdI";
-    past_neg_plain_cond: "~tmEdIysEm", "~tmEdIysEn", "~tmEdIysE", "~tmEdIysEk", "~tmEdIysEnIz", "~tmEdIlErsE";
-    conditional_pos_plain__: "~tsEm", "~tsEn", "~tsE", "~tsEk", "~tsEnIz", "~tsElEr";
-    conditional_pos_plain_evid: "~tsEymIşIm", "~tsEymIşsIn", "~tsEymIş", "~tsEymIşIz", "~tsEymIşsInIz", "~tsElErmIş";
-    conditional_pos_plain_past: "~tsEydIm", "~tsEydIn", "~tsEydI", "~tsEydIk", "~tsEydInIz", "~tsElErdI";
-    conditional_neg_plain__: "~tmEsEm", "~tmEsEn", "~tmEsE", "~tmEsEk", "~tmEsEnIz", "~tmEsElEr";
-    conditional_neg_plain_evid: "~tmEsEymIşIm", "~tmEsEymIşsIn", "~tmEsEymIş", "~tmEsEymIşIz", "~tmEsEymIşsInIz", "~tmEsElErmIş";
-    conditional_neg_plain_past: "~tmEsEydIm", "~tmEsEydIn", "~tmEsEydI", "~tmEsEydIk", "~tmEsEydInIz", "~tmEsElErdI";
-    optative_neg_plain__: "~tmEyEyIm", "~tmEyEsIn", "~tmEyE", "~tmEyElIm", "~tmEyEsInIz", "~tmEyElEr";
-    optative_neg_plain_evid: "~tmEyEymIşIm", "~tmEyEymIşsIn", "~tmEyEymIş", "~tmEyEymIşIz", "~tmEyEymIşsInIz", "~tmEyElErmIş";
-    optative_neg_plain_past: "~tmEyEydIm", "~tmEyEydIn", "~tmEyEydI", "~tmEyEydIk", "~tmEyEydInIz", "~tmEyElErdI";
-    imperative_pos_plain: _, _, _, _, _, _, "~tsEnE", "~tsEnIzE";
-    imperative_neg_plain: _, _, _, "~tmEsInlEr", _, "~tmEyInIz", "~tmEsEnE", "~tmEsEnIzE";
-    infinitive_neg: "~tmEmEk", _;
-    verbal_noun_pos: "~tmE", _;
-    verbal_noun_neg: "~tmEmE", _;
-    participle_neg_plain: "~tmEyEn", "~tmEmIş", _;
-    relative_neg_plain_dik: _, _, _, _, _, "~tmEdIklErI";
-    relative_neg_plain_acak: _, "~tmEyEcEğIn", "~tmEyEcEğI", "~tmEyEcEğImIz", "~tmEyEcEğInIz", "~tmEyEcEklErI";
+    stem converb_neg_plain_doubled: "~tmeye gitmeye- like ayırmak";
+    stem converb_neg_abil_doubled: "~demeye gidemeye- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~de gide", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~debile gidebile", _;
-    converb_neg_plain: _, "~tmEyIncE", _, "~tmEyElI", "~tmEyEsIyE", "~tmEdIkçE", "~tmEyErEk", _, "~tmEzcEsInE";
     ),
-    // Büyükoynamak: 3 words (büyük oynamak, bahis oynamak, kumar oynamak).
-    conjugation!("büyük oynamak", 3, "~amak";
-    stem lemma: "~- like büyük oynamak";
-    stem converb_neg_plain_doubled: "~amaya oynamaya- like vermek";
-    stem converb_neg_abil_doubled: "~ayamaya oynayamaya- like vermek";
-    imperative_pos_abil: _, _, _, _, _, derived, _, _;
-    imperative_neg_abil: _, _, _, _, _, derived, _, _;
-    participle_pos_plain: _, derived, derived;
-    participle_pos_abil: _, derived, derived;
-    participle_neg_plain: _, _, derived;
-    participle_neg_abil: _, derived, derived;
-    relative_pos_plain_acak: derived, _, _, _, _, _;
-    relative_pos_abil_acak: derived, _, _, _, _, _;
-    relative_neg_plain_acak: derived, _, _, _, _, _;
-    relative_neg_abil_acak: derived, _, _, _, _, _;
+    // Büyükoynamak: 3 words (büyük oynamak, bahis oynamak, kumar oynamak). Like Patlamak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("büyük oynamak", 3, "~amak", like Patlamak;
+    stem converb_neg_plain_doubled: "~amaya Aynamaya- like ayırmak";
+    stem converb_neg_abil_doubled: "~ayamaya Aynayamaya- like ayırmak";
+    converb_pos_plain: _, _, _, _, _, _, _, "~aya Aynaya", _;
+    converb_pos_abil: _, _, _, _, _, _, _, "~ayabile Aynayabile", _;
     ),
-    // Layığınıbulmak: 3 words (teselli bulmak, bokunda boncuk bulmak, layığını bulmak). Like Vurmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
-    conjugation!("layığını bulmak", 3, "~mak", like Vurmak;
-    stem converb_neg_plain_doubled: "~mEyE bulmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE bulEmEyE- like vermek";
+    // Layığınıbulmak: 3 words (teselli bulmak, bokunda boncuk bulmak, layığını bulmak). Like Varolmak, except in 2 cells: converb_pos_plain doubled, converb_pos_abil doubled.
+    conjugation!("layığını bulmak", 3, "~mak", like Varolmak;
+    stem converb_neg_plain_doubled: "~mEyE bulmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE bulEmEyE- like ayırmak";
     converb_pos_plain: _, _, _, _, _, _, _, "~E bulE", _;
     converb_pos_abil: _, _, _, _, _, _, _, "~Ebile bulEbile", _;
     ),
     // Seskasmak: 3 words (ses kasmak, amuda kalkmak, duyar kasmak). Like Açmak, except in 27 cells: pos_abil_aor__ _1sg, pos_abil_aor__ _2sg, pos_abil_aor__ _3sg, pos_abil_aor__ _1pl, pos_abil_aor__ _2pl, pos_abil_aor__ _3pl, ….
     conjugation!("ses kasmak", 3, "~mak", like Açmak;
-    stem converb_neg_plain_doubled: "~mEyE kEsmEyE- like vermek";
-    stem converb_neg_abil_doubled: "~EmEyE kEsEmEyE- like vermek";
+    stem converb_neg_plain_doubled: "~mEyE kAsmEyE- like ayırmak";
+    stem converb_neg_abil_doubled: "~EmEyE kAsEmEyE- like ayırmak";
     pos_abil_aor__: derived, derived, derived, derived, derived, derived;
     pos_abil_aor_evid: derived, derived, derived, derived, derived, derived;
     pos_abil_aor_past: derived, derived, derived, derived, derived, derived;
     pos_abil_aor_cond: derived, derived, derived, derived, derived, derived;
-    converb_pos_plain: _, _, _, _, _, _, _, "~E kEsE", _;
-    converb_pos_abil: "~Ebilarken", _, _, _, _, _, _, "~Ebile kasEbile", _;
+    converb_pos_plain: _, _, _, _, _, _, _, "~E kAsE", _;
+    converb_pos_abil: "~EbilArken", _, _, _, _, _, _, "~Ebile kAsEbile", _;
     ),
 ];

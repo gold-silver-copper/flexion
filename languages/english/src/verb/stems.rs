@@ -28,10 +28,10 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 7] = [
-    // lemma like settle: 18,061 words.
+    // lemma like settle: 18,063 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 18061,
+        words: 18063,
         slot: 0,
         table: Cow::Borrowed("~\t~s\t"),
     },
@@ -42,10 +42,10 @@ pub(super) static TABLES: [EndingTable<'static>; 7] = [
         slot: 0,
         table: Cow::Borrowed("~\t~es\t"),
     },
-    // past like settle: 37,493 words.
+    // past like settle: 37,551 words.
     EndingTable {
         name: Cow::Borrowed("settle"),
-        words: 37493,
+        words: 37551,
         slot: 1,
         table: Cow::Borrowed("~\t~\t"),
     },

@@ -187,7 +187,8 @@ pub fn fill(pattern: &str, stems: &[&str]) -> String {
 }
 
 /// [`fill`], with [`COPIED`] before each copied letter and [`FRONT`] after
-/// a first literal if `marked`.
+/// a first literal if `marked` (a pattern may write it: a relation's change
+/// said through the laws where a literal meets the stem).
 fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     let mut out = String::with_capacity(pattern.len().saturating_add(16));
     let piece = |i: usize| {
@@ -197,7 +198,7 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
     };
     for (i, lit) in pattern.split('~').enumerate() {
         if let Some(s) = i.checked_sub(1).and_then(piece) {
-            if marked && i == 1 && !out.is_empty() {
+            if marked && i == 1 && !out.is_empty() && !out.ends_with(FRONT) {
                 out.push(FRONT);
             }
             out.push_str(s);
@@ -212,7 +213,7 @@ fn build(pattern: &str, stems: &[&str], marked: bool) -> String {
                     out.push(n);
                 }
                 (COPY, None) => {}
-                (ALTERNATES, _) if !marked => {}
+                (ALTERNATES | FRONT, _) if !marked => {}
                 _ => out.push(c),
             }
         }

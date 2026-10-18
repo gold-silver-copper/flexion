@@ -30,7 +30,7 @@ assistersi	55	assistitosi
 assonare	verb_pres_1_sg	assuon- like girare
 assorbere	verb_impf_1_sg	assorb- like incattivire	verb_past_1_sg	assorb- like incattivire	verb_pres_1_pl	assorbi- like incattivire	3	assorbite	42	assorbi
 assumersi	verb_past_1_sg	assun- like tingersi
-astraere	lemma	astrar- like vivere	verb_past_1_sg	astra- like reggere	verb_pres_1_pl	astra- like traggere	verb_pres_1_sg	astragg- like incattivire	3	astraete	33	astraggiate	47	astraere	52	astraere
+astraere	lemma	astrar- like vivere	verb_past_1_sg	astra- like scrivere	verb_pres_1_pl	astra- like traggere	verb_pres_1_sg	astragg- like incattivire	3	astraete	33	astraggiate	47	astraere	52	astraere
 astrignere	55	astretto
 audire	verb_pres_1_sg	od- like incattivire
 autoadempiersi	3	autoadempite	45	autoadempitevi
@@ -58,7 +58,7 @@ cucirsi	0	cucio	5	cuciono	30	cucia
 dare	0	do	12	diedi
 darsi	0	do
 decernere	55	decreto
-delinquere	verb_past_1_sg	deli- like reggere
+delinquere	verb_past_1_sg	deli- like scrivere
 desiare	2	desii	30	desii
 deviare	2	devii	30	devii
 devolvere	55	devoluto
@@ -97,7 +97,7 @@ havere	1	habbiamo	4	ha	12	hebbi	30	habbia	31	habbiamo	33	habbiate	42	habbi	44	ha
 iacere	1	iacemo	5	iaccio	13	iacestimo	15	iacestivo	18	iacerraio	22	iacerrao	23	iacerraco	24	iaceria	25	iaceriamo	27	iaceriavo	29	iaceriano	41	iacessino
 imbeversi	12	imbevvi	18	imberrò	22	imberrà	23	imberranno	26	imberresti
 impeciare	lemma	impece- like vivere	3	impeciate	47	impeciare	52	impeciare
-indirigere	verb_past_1_sg	indiri- like reggere
+indirigere	verb_past_1_sg	indiri- like scrivere
 infocare	4	infuoca	30	infuochi	42	infuoca
 infocarsi	4	infuoca	30	infuochi
 inmiarsi	2	inmii	30	inmii
@@ -153,7 +153,7 @@ recere	55	reciuto
 redimere	verb_past_1_sg	reden- like volgere
 redimersi	verb_past_1_sg	reden- like tingersi
 redire	verb_pres_1_sg	ried- like incattivire
-relinquere	verb_past_1_sg	reli- like reggere
+relinquere	verb_past_1_sg	reli- like scrivere
 riammollire	54	riammollente
 riandare	0	rivado	4	rivà
 riavere	0	rio	2	riai	4	ria	5	rianno	42	riabbi

@@ -185,9 +185,9 @@ macro_rules! affix {
 /// Every conjugation learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Conjugation {
-    /// Like `passer`: 5,867 words.
+    /// Like `passer`: 5,866 words.
     Passer,
-    /// Like `badger`: 491 words.
+    /// Like `badger`: 492 words.
     Badger,
     /// Like `établir`: 326 words.
     Établir,
@@ -376,8 +376,8 @@ impl flexion::Label for Conjugation {
 }
 
 pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
-    // Passer: 5,867 words (abhorrer, abjurer, absconder, absenter, absorber, abuser).
-    conjugation!("passer", 5867, "~er";
+    // Passer: 5,866 words (abhorrer, abjurer, absconder, absenter, absorber, abuser).
+    conjugation!("passer", 5866, "~er";
     stem verb_pres_1_sg: "~e- like passer";
     stem verb_pres_1_pl: "~- like passer";
     stem verb_: "~e- like passer";
@@ -389,8 +389,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 56] = [
     imperative: derived, derived, derived;
     infinitive: "~er";
     ),
-    // Badger: 491 words (badger, voyager, lever, pécher, accélérer, manager). Like Passer with `ˇ` after each pattern.
-    conjugation!("badger", 491, "~erˇ", like Passer with "ˇ";
+    // Badger: 492 words (badger, voyager, lever, pécher, accélérer, manager). Like Passer with `ˇ` after each pattern.
+    conjugation!("badger", 492, "~erˇ", like Passer with "ˇ";
     ),
     // Établir: 326 words (pleuvoir, avoir, polir, abolir, tapir, approfondir).
     conjugation!("établir", 326, "~ir";

@@ -90,41 +90,12 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Case::*;
-        use crate::Number::*;
-        let cell = match self {
-            Cell::Form(Nominative, Singular) => cell::NOM_SG,
-            Cell::Form(Nominative, Plural) => cell::NOM_PL,
-            Cell::Form(Genitive, Singular) => cell::GEN_SG,
-            Cell::Form(Genitive, Plural) => cell::GEN_PL,
-            Cell::Form(Partitive, Singular) => cell::PAR_SG,
-            Cell::Form(Partitive, Plural) => cell::PAR_PL,
-            Cell::Form(Inessive, Singular) => cell::INE_SG,
-            Cell::Form(Inessive, Plural) => cell::INE_PL,
-            Cell::Form(Elative, Singular) => cell::ELA_SG,
-            Cell::Form(Elative, Plural) => cell::ELA_PL,
-            Cell::Form(Illative, Singular) => cell::ILL_SG,
-            Cell::Form(Illative, Plural) => cell::ILL_PL,
-            Cell::Form(Adessive, Singular) => cell::ADE_SG,
-            Cell::Form(Adessive, Plural) => cell::ADE_PL,
-            Cell::Form(Ablative, Singular) => cell::ABL_SG,
-            Cell::Form(Ablative, Plural) => cell::ABL_PL,
-            Cell::Form(Allative, Singular) => cell::ALL_SG,
-            Cell::Form(Allative, Plural) => cell::ALL_PL,
-            Cell::Form(Essive, Singular) => cell::ESS_SG,
-            Cell::Form(Essive, Plural) => cell::ESS_PL,
-            Cell::Form(Translative, Singular) => cell::TRA_SG,
-            Cell::Form(Translative, Plural) => cell::TRA_PL,
-            Cell::Form(Abessive, Singular) => cell::ABE_SG,
-            Cell::Form(Abessive, Plural) => cell::ABE_PL,
-            Cell::Form(Instructive, Singular) => cell::INS_SG,
-            Cell::Form(Instructive, Plural) => cell::INS_PL,
-            Cell::Form(Comitative, Singular) => cell::COM_SG,
-            Cell::Form(Comitative, Plural) => cell::COM_PL,
-        };
-        cell as usize
+        match self {
+            Cell::Form(case, number) => cell::NOM_SG as usize + case as usize * 2 + number as usize,
+        }
     }
 }
 

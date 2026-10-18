@@ -1,7 +1,7 @@
 //! What no conjugation gives a word, as the dictionary writes it: a line per word,
 //! sorted, the word, then each stem it lists, by its slot (see `stems.rs`):
 //! the slot's name and the stem with the ending table its slot's cells are
-//! built with (`lemma`, `ablūd- like īnsistō`), then each listed form, by its cell's number (see
+//! built with (`lemma`, `ablūd- like ambigō`), then each listed form, by its cell's number (see
 //! `super::cell`), all tab-separated. They are the answer for that word.
 
 use flexion::Irregular;
@@ -10,7 +10,7 @@ use std::borrow::Cow;
 /// 280 stems, 495 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
-        r#"abludo	lemma	ablūd- like īnsistō	supine_acc	ablūs- like labōrō
+        r#"abludo	lemma	ablūd- like ambigō	supine_acc	ablūs- like labōrō
 aboleo	indicative_act_perf_1_sg	abolēv- like agitō
 absilio	141	absiliendum
 absorbeo	134	absorbitūrum esse
@@ -63,7 +63,7 @@ compatesco	indicative_act_perf_1_sg	compass- like modulor	supine_acc	compas- lik
 complecto	indicative_act_perf_1_sg	complect- like agitō	134	complexūrum esse	136	complexum esse	137	complexum īrī	139	complexus	140	complexūrus	151	complexum	152	complexū
 compluit	indicative_act_perf_1_sg	complūv- like agitō
 concubo	58	concubitum est	64	concubitum erat	70	concubitum erit	112	concubitum sit	118	concubitum esset	139	concubitum	141	concubandum
-concumbo	lemma	concumb- like īnsistō	supine_acc	concubit- like labōrō
+concumbo	lemma	concumb- like ambigō	supine_acc	concubit- like labōrō
 confero	indicative_act_perf_1_sg	contul- like agitō	supine_acc	collāt- like occurrō
 confit	indicative_act_perf_1_sg	cōnfact- like modulor	indicative_act_pres_1_pl	cōnfī- like faciō	lemma	cōnf- like fīō	supine_acc	cōnfact- like fīō	35	cōnfactī erint
 confiteor	indicative_act_perf_1_sg	cōnfess- like modulor	supine_acc	cōnfes- like nītor
@@ -77,7 +77,7 @@ consisto	supine_acc	cōnstit- like labōrō
 convivo	supine_acc	convīct- like labōrō
 cunctor	141	cūnctandum
 decoco	3	dēcocitis	40	dēcocitur
-decumbo	lemma	dēcumb- like īnsistō
+decumbo	lemma	dēcumb- like ambigō
 defetiscor	indicative_act_perf_1_sg	dēfess- like modulor	supine_acc	dēfes- like nītor
 delino	18	dēlīvī	20	dēlīvistī	22	dēlīvit
 deliquesco	indicative_act_perf_1_sg	dēlicu- like agitō
@@ -121,7 +121,7 @@ fallo	indicative_act_perf_1_sg	fefell- like agitō	134	falsūrum esse	136	falsum
 fateor	indicative_act_perf_1_sg	fass- like modulor	supine_acc	fas- like nītor
 faveo	lemma	fav- like madeō	supine_acc	faut- like labōrō
 fero	3	fertis	18	tulī	20	tulistī	22	tulit	40	fertur	54	lātus sum	134	lātūrum esse	135	ferrī
-fervo	lemma	ferv- like īnsistō	supine_acc	fervit- like labōrō
+fervo	lemma	ferv- like ambigō	supine_acc	fervit- like labōrō
 figo	134	fīxūrum esse
 fivo	139	fīctus	141	fīvendus
 fraudor	indicative_act_perf_1_sg	fraus- like modulor	supine_acc	frau- like nītor
@@ -149,7 +149,7 @@ inquam	5	inquiunt	14	inquiēs	16	inquiet	17	inquient	18	inquiī	20	inquistī	22	
 inretio	4	inrētit
 instinguo	indicative_act_perf_1_sg	īnstinx- like agitō	134	īnstīnctūrum esse	136	īnstīnctum esse	137	īnstīnctum īrī	139	īnstīnctus	140	īnstīnctūrus	151	īnstīnctum	152	īnstīnctū
 insto	supine_acc	īnstāt- like occurrō
-instruo	lemma	īnstru- like īnsistō	supine_acc	īnstrūct- like labōrō
+instruo	lemma	īnstru- like ambigō	supine_acc	īnstrūct- like labōrō
 insum	1	īnsumus	3	inestis	6	ineram	12	inerō
 interemo	indicative_act_perf_1_sg	interēm- like agitō	supine_acc	interēmpt- like occurrō
 interneco	54	internectus sum
@@ -177,7 +177,7 @@ morior	1	morīmur	3	morīminī	132	morī
 nanciscor	indicative_act_perf_1_sg	nānct- like modulor	supine_acc	nac- like fricō	133	nactum esse
 nascor	18	gnātus sum	20	gnātus es	22	gnātus est	133	nātum esse	134	nāscitūrum esse	151	nātum	152	nātū
 ningit	indicative_act_perf_1_sg	nīnx- like agitō
-ningo	lemma	ning- like īnsistō
+ningo	lemma	ning- like ambigō
 ninguit	indicative_act_perf_1_sg	nīnx- like agitō
 ninguo	indicative_act_perf_1_sg	ninx- like agitō
 nivit	22	nīvit	28	nīverat	34	nīverit	94	nīvisset	133	nīvisse
@@ -225,7 +225,7 @@ profiteor	indicative_act_perf_1_sg	profess- like modulor	supine_acc	profes- like
 progredio	indicative_act_perf_1_sg	progress- like modulor	supine_acc	progres- like nītor
 propendeo	supine_acc	prōpēn- like nītor
 prosum	1	prōsumus	3	prōdestis	6	prōderam	12	prōderō
-psallo	lemma	psall- like īnsistō
+psallo	lemma	psall- like ambigō
 pungo	indicative_act_perf_1_sg	pupug- like agitō	134	pūnctūrum esse	136	pūnctum esse	137	pūnctum īrī	139	pūnctus	140	pūnctūrus	151	pūnctum	152	pūnctū
 quaeso	1	quaesumus
 queror	indicative_act_perf_1_sg	quest- like modulor	supine_acc	ques- like fricō
@@ -257,7 +257,7 @@ sario	indicative_act_perf_1_sg	saru- like agitō
 sarrio	indicative_act_perf_1_sg	sarru- like agitō
 scabo	indicative_act_perf_1_sg	scāb- like agitō
 scio	120	scītō	121	scītōte
-sculpo	lemma	sculp- like īnsistō	supine_acc	sculpt- like labōrō
+sculpo	lemma	sculp- like ambigō	supine_acc	sculpt- like labōrō
 seco	supine_acc	sect- like occurrō
 sedeo	lemma	sed- like madeō	supine_acc	sess- like labōrō
 sepelio	supine_acc	sepult- like occurrō

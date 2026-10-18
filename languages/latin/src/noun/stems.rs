@@ -74,10 +74,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~ī\t\t",
         )),
     },
-    // gen_sg like cōs: 863 words.
+    // gen_sg like cōs: 862 words.
     EndingTable {
         name: Cow::Borrowed("cōs"),
-        words: 863,
+        words: 862,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēsˇ\t",
@@ -119,10 +119,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // gen_sg like mōlēs: 116 words.
+    // gen_sg like mōlēs: 117 words.
     EndingTable {
         name: Cow::Borrowed("mōlēs"),
-        words: 116,
+        words: 117,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
@@ -188,10 +188,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "\t\t",
         )),
     },
-    // gen_sg like ōs: 32 words.
+    // gen_sg like ōs: 31 words.
     EndingTable {
         name: Cow::Borrowed("ōs"),
-        words: 32,
+        words: 31,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~raˇ\t",

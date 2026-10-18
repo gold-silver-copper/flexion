@@ -117,60 +117,64 @@ macro_rules! feature {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `fūsus`: 2,534 words.
+    /// Like `fūsus`: 2,532 words.
     Fūsus,
-    /// Like `flāndria`: 2,199 words.
+    /// Like `flāndria`: 2,037 words.
     Flāndria,
     /// Like `limburgum`: 757 words.
     Limburgum,
-    /// Like `lūcifer`: 598 words.
+    /// Like `lūcifer`: 476 words.
     Lūcifer,
-    /// Like `hērōdēs`: 350 words.
+    /// Like `hērōdēs`: 345 words.
     Hērōdēs,
     /// Like `sīnae`: 345 words.
     Sīnae,
-    /// Like `alcō`: 299 words.
-    Alcō,
-    /// Like `arsinoē`: 265 words.
+    /// Like `arsinoē`: 262 words.
     Arsinoē,
-    /// Like `hylās`: 149 words.
-    Hylās,
-    /// Like `bacēnis`: 119 words.
-    Bacēnis,
-    /// Like `hippō`: 106 words.
+    /// Like `petra`: 234 words.
+    Petra,
+    /// Like `hippō`: 212 words.
     Hippō,
+    /// Like `celticī`: 186 words.
+    Celticī,
+    /// Like `alcō`: 183 words.
+    Alcō,
+    /// Like `hylās`: 137 words.
+    Hylās,
+    /// Like `dūbris`: 130 words.
+    Dūbris,
     /// Like `petropolis`: 100 words.
     Petropolis,
-    /// Like `petra`: 72 words.
-    Petra,
-    /// Like `dūbris`: 72 words.
-    Dūbris,
     /// Like `acoetēs`: 71 words.
     Acoetēs,
-    /// Like `maeandros`: 69 words.
-    Maeandros,
-    /// Like `moeris`: 67 words.
-    Moeris,
-    /// Like `celticī`: 64 words.
-    Celticī,
+    /// Like `būtos`: 66 words.
+    Būtos,
+    /// Like `bacēnis`: 61 words.
+    Bacēnis,
     /// Like `asa`: 57 words.
     Asa,
-    /// Like `būtos`: 34 words.
-    Būtos,
+    /// Like `moeris`: 53 words.
+    Moeris,
+    /// Like `ptolemāis`: 40 words.
+    Ptolemāis,
+    /// Like `ōxos`: 37 words.
+    Ōxos,
     /// Like `alpēs`: 33 words.
     Alpēs,
-    /// Like `ptolemāis`: 26 words.
-    Ptolemāis,
     /// Like `maeander`: 22 words.
     Maeander,
-    /// Like `phoenīx`: 22 words.
-    Phoenīx,
     /// Like `mārs`: 21 words.
     Mārs,
     /// Like `anthemūs`: 17 words.
     Anthemūs,
+    /// Like `phintiās`: 16 words.
+    Phintiās,
     /// Like `iāpyx`: 15 words.
     Iāpyx,
+    /// Like `ānser`: 15 words.
+    Ānser,
+    /// Like `phoenīx`: 14 words.
+    Phoenīx,
     /// Like `memor`: 14 words.
     Memor,
     /// Like `agōnālia`: 13 words.
@@ -179,6 +183,8 @@ pub enum Declension {
     Condāte,
     /// Like `eurymedōn`: 12 words.
     Eurymedōn,
+    /// Like `atrax`: 12 words.
+    Atrax,
     /// Like `clīō`: 11 words.
     Clīō,
     /// Like `tȳdeus`: 11 words.
@@ -189,8 +195,6 @@ pub enum Declension {
     Nephelēis,
     /// Like `aethiops`: 10 words.
     Aethiops,
-    /// Like `iāsōn`: 9 words.
-    Iāsōn,
     /// Like `pān`: 8 words.
     Pān,
     /// Like `leptis`: 8 words.
@@ -201,34 +205,38 @@ pub enum Declension {
     Virgō,
     /// Like `dryās`: 8 words.
     Dryās,
+    /// Like `cambȳsēs`: 8 words.
+    Cambȳsēs,
+    /// Like `iāsōn`: 7 words.
+    Iāsōn,
     /// Like `denter`: 7 words.
     Denter,
     /// Like `andrēās`: 7 words.
     Andrēās,
     /// Like `iosūe`: 7 words.
     Iosūe,
+    /// Like `clītōr`: 7 words.
+    Clītōr,
+    /// Like `rhypēs`: 7 words.
+    Rhypēs,
     /// Like `crētes`: 6 words.
     Crētes,
     /// Like `leōn`: 6 words.
     Leōn,
     /// Like `ācis`: 6 words.
     Ācis,
-    /// Like `ānser`: 5 words.
-    Ānser,
+    /// Like `casius`: 6 words.
+    Casius,
+    /// Like `callirrhoē`: 6 words.
+    Callirrhoē,
     /// Like `arīōn`: 5 words.
     Arīōn,
-    /// Like `clītōr`: 5 words.
-    Clītōr,
     /// Like `suēl`: 5 words.
     Suēl,
-    /// Like `rhypēs`: 5 words.
-    Rhypēs,
     /// Like `āsōpis`: 5 words.
     Āsōpis,
     /// Like `valēns`: 5 words.
     Valēns,
-    /// Like `cambȳsēs`: 5 words.
-    Cambȳsēs,
     /// Like `mōsēs`: 4 words.
     Mōsēs,
     /// Like `perseus`: 4 words.
@@ -237,16 +245,8 @@ pub enum Declension {
     Abas,
     /// Like `capys`: 4 words.
     Capys,
-    /// Like `phintiās`: 4 words.
-    Phintiās,
     /// Like `caudex`: 4 words.
     Caudex,
-    /// Like `atrax`: 4 words.
-    Atrax,
-    /// Like `casius`: 4 words.
-    Casius,
-    /// Like `callirrhoē`: 3 words.
-    Callirrhoē,
     /// Like `octōber`: 3 words.
     Octōber,
     /// Like `sōcratēs`: 3 words.
@@ -294,65 +294,65 @@ impl Declension {
         Declension::Lūcifer,
         Declension::Hērōdēs,
         Declension::Sīnae,
-        Declension::Alcō,
         Declension::Arsinoē,
-        Declension::Hylās,
-        Declension::Bacēnis,
-        Declension::Hippō,
-        Declension::Petropolis,
         Declension::Petra,
-        Declension::Dūbris,
-        Declension::Acoetēs,
-        Declension::Maeandros,
-        Declension::Moeris,
+        Declension::Hippō,
         Declension::Celticī,
-        Declension::Asa,
+        Declension::Alcō,
+        Declension::Hylās,
+        Declension::Dūbris,
+        Declension::Petropolis,
+        Declension::Acoetēs,
         Declension::Būtos,
-        Declension::Alpēs,
+        Declension::Bacēnis,
+        Declension::Asa,
+        Declension::Moeris,
         Declension::Ptolemāis,
+        Declension::Ōxos,
+        Declension::Alpēs,
         Declension::Maeander,
-        Declension::Phoenīx,
         Declension::Mārs,
         Declension::Anthemūs,
+        Declension::Phintiās,
         Declension::Iāpyx,
+        Declension::Ānser,
+        Declension::Phoenīx,
         Declension::Memor,
         Declension::Agōnālia,
         Declension::Condāte,
         Declension::Eurymedōn,
+        Declension::Atrax,
         Declension::Clīō,
         Declension::Tȳdeus,
         Declension::Rēgion,
         Declension::Nephelēis,
         Declension::Aethiops,
-        Declension::Iāsōn,
         Declension::Pān,
         Declension::Leptis,
         Declension::Phȳcūs,
         Declension::Virgō,
         Declension::Dryās,
+        Declension::Cambȳsēs,
+        Declension::Iāsōn,
         Declension::Denter,
         Declension::Andrēās,
         Declension::Iosūe,
+        Declension::Clītōr,
+        Declension::Rhypēs,
         Declension::Crētes,
         Declension::Leōn,
         Declension::Ācis,
-        Declension::Ānser,
+        Declension::Casius,
+        Declension::Callirrhoē,
         Declension::Arīōn,
-        Declension::Clītōr,
         Declension::Suēl,
-        Declension::Rhypēs,
         Declension::Āsōpis,
         Declension::Valēns,
-        Declension::Cambȳsēs,
         Declension::Mōsēs,
         Declension::Perseus,
         Declension::Abas,
         Declension::Capys,
-        Declension::Phintiās,
         Declension::Caudex,
-        Declension::Atrax,
-        Declension::Casius,
-        Declension::Callirrhoē,
         Declension::Octōber,
         Declension::Sōcratēs,
         Declension::Erindēs,
@@ -389,8 +389,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
-    // Fūsus: 2,534 words (cyprus, ēpīrus, chrīstus, servius, mārcus, capricornus).
-    declension!("fūsus", 2534, "~us";
+    // Fūsus: 2,532 words (cyprus, ēpīrus, chrīstus, servius, mārcus, capricornus).
+    declension!("fūsus", 2532, "~us";
     nom: "~us", "~ī";
     gen_: "~ī", "~ōrum";
     dat: "~ō", "~īs";
@@ -399,8 +399,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     voc: "~e", _;
     proper_noun_locative: "~ī", _;
     ),
-    // Flāndria: 2,199 words (estonia, libya, austria, andorra, albānia, armenia).
-    declension!("flāndria", 2199, "~a";
+    // Flāndria: 2,037 words (estonia, libya, austria, andorra, albānia, armenia).
+    declension!("flāndria", 2037, "~a";
     stem lemma: "~a- like flāndria";
     nom: _, "~ae";
     gen_: "~ae", "~ārum";
@@ -415,13 +415,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     acc: _, "~a";
     proper_noun_locative: "~ī", _;
     ),
-    // Lūcifer: 598 words (venus, beelzebul, padī, lūcifer, oedipūs, tēthȳs). Like Fūsus, except in 1 cell: proper_noun_locative sg.
-    declension!("lūcifer", 598, "~", [gender: Masculine], like Fūsus;
+    // Lūcifer: 476 words (venus, beelzebul, lūcifer, oedipūs, tēthȳs, darī). Like Fūsus, except in 1 cell: proper_noun_locative sg.
+    declension!("lūcifer", 476, "~", [gender: Masculine], like Fūsus;
     stem lemma: "~- like flāndria";
     proper_noun_locative: derived, _;
     ),
-    // Hērōdēs: 350 words (achillēs, euphrātēs, ulixēs, druidēs, arēs, hippocratēs).
-    declension!("hērōdēs", 350, "~ēs", [gender: Masculine];
+    // Hērōdēs: 345 words (achillēs, euphrātēs, druidēs, arēs, hippocratēs, diogenēs).
+    declension!("hērōdēs", 345, "~ēs", [gender: Masculine];
     stem lemma: "~ēs- like flāndria";
     stem gen_sg: "~- like hērōdēs";
     abl: _, derived;
@@ -437,15 +437,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     voc: derived, _;
     proper_noun_locative: derived, _;
     ),
-    // Alcō: 299 words (jūpiter, zeus, kaesō, pharaō, scorpiō, plūtō).
-    declension!("alcō", 299, "~";
-    stem lemma: "~- like flāndria";
-    stem gen_sg: "~n- like hērōdēs";
-    abl: _, derived;
-    voc: _, derived;
-    ),
-    // Arsinoē: 265 words (eurōpē, crētē, mytilēnē, nīnevē, xanthippē, phoenīcē).
-    declension!("arsinoē", 265, "~ē", [gender: Feminine];
+    // Arsinoē: 262 words (eurōpē, crētē, mytilēnē, nīnevē, xanthippē, phoenīcē).
+    declension!("arsinoē", 262, "~ē", [gender: Feminine];
     stem lemma: "~ē- like flāndria";
     gen_: "~ēs", _;
     dat: "~ae", _;
@@ -453,43 +446,51 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     abl: "~ē", _;
     proper_noun_locative: "~ēs", _;
     ),
-    // Hylās: 149 words (thōmās, aenēās, mattathiās, esdrās, anās, jūdās). Like Flāndria, except in 2 cells: acc sg, proper_noun_locative sg.
-    declension!("hylās", 149, "~ās", [gender: Masculine], like Flāndria;
+    // Petra: 234 words (uganda, sōmālia, abdēra, lemūria, ruanda, biblia). Like Flāndria, except in 3 cells: nom pl, gen_ pl, acc pl.
+    declension!("petra", 234, "~a", like Flāndria;
+    nom: _, "~a";
+    gen_: _, "~ōrum";
+    acc: _, "~a";
+    ),
+    // Hippō: 212 words (saskatchewan, ontariō, charōn, simōn, dēō, dracō). Like Arsinoē.
+    declension!("hippō", 212, "~", like Arsinoē;
+    stem lemma: "~- like flāndria";
+    stem gen_sg: "~n- like hippō";
+    ),
+    // Celticī: 186 words (delphī, padī, pompeiī, quādī, rēmī, geōrgī). Like Sīnae, except in 4 cells: nom sg, nom pl, gen_ pl, acc pl.
+    declension!("celticī", 186, "~ī", [gender: Masculine], like Sīnae;
+    nom: "~ī", "~ī";
+    gen_: _, "~ōrum";
+    acc: _, "~ōs";
+    ),
+    // Alcō: 183 words (jūpiter, zeus, kaesō, pharaō, scorpiō, plūtō). Like Hippō, except in 3 cells: abl pl, voc pl, proper_noun_locative sg.
+    declension!("alcō", 183, "~", like Hippō;
+    stem gen_sg: "~n- like hērōdēs";
+    abl: _, derived;
+    voc: _, derived;
+    proper_noun_locative: derived, _;
+    ),
+    // Hylās: 137 words (thōmās, aenēās, mattathiās, esdrās, anās, jūdās). Like Flāndria, except in 2 cells: acc sg, proper_noun_locative sg.
+    declension!("hylās", 137, "~ās", [gender: Masculine], like Flāndria;
     stem lemma: "~ā- like hylās";
     acc: "~ān", _;
     proper_noun_locative: derived, _;
     ),
-    // Bacēnis: 119 words (fēlis, canis, genesis, īris, piscis, polāris). Like Ānser with `` after each pattern (`is` after ~).
-    declension!("bacēnis", 119, "~is", like Ānser with "", "is" after "~";
-    ),
-    // Hippō: 106 words (saskatchewan, ontariō, marathōn, sīdōn, crotōn, savō). Like Alcō, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
-    declension!("hippō", 106, "~", like Alcō;
-    stem gen_sg: "~n- like hippō";
+    // Dūbris: 130 words (fēlis, canis, piscis, polāris, adalheidis, vectis). Like Hērōdēs, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
+    declension!("dūbris", 130, "~is", like Hērōdēs;
+    stem lemma: "~is- like flāndria";
+    stem gen_sg: "~- like hippō";
     nom: _, derived;
     gen_: _, derived;
     dat: _, derived;
     acc: _, derived;
     ),
-    // Petropolis: 100 words (charybdis, nemesis, osīris, alexis, hēliopolis, decapolis). Like Arsinoē, except in 7 cells: nom sg, gen_ sg, dat sg, acc sg, abl sg, voc sg, ….
-    declension!("petropolis", 100, "~is", like Arsinoē;
-    nom: "~is", _;
-    gen_: "~is", _;
-    dat: "~ī", _;
+    // Petropolis: 100 words (charybdis, nemesis, osīris, alexis, hēliopolis, decapolis). Like Dūbris, except in 4 cells: acc sg, abl sg, voc sg, proper_noun_locative sg.
+    declension!("petropolis", 100, "~is", like Dūbris;
     acc: "~im|~in", _;
     abl: "~ī", _;
     voc: "~is|~ī", _;
     proper_noun_locative: "~ī", _;
-    ),
-    // Petra: 72 words (abdēra, lemūria, biblia, megara, ecbatana, sūsa). Like Flāndria, except in 3 cells: nom pl, gen_ pl, acc pl.
-    declension!("petra", 72, "~a", [gender: Neuter], like Flāndria;
-    nom: _, "~a";
-    gen_: _, "~ōrum";
-    acc: _, "~a";
-    ),
-    // Dūbris: 72 words (vectis, hispalis, apis, stadisis, tamesis, thamesis). Like Petropolis, except in 1 cell: voc sg.
-    declension!("dūbris", 72, "~is", like Petropolis;
-    stem gen_sg: "~- like hippō";
-    voc: "~is", _;
     ),
     // Acoetēs: 71 words (hermēs, alcīdēs, manassēs, lēvītēs, maimōnidēs, boōtēs). Like Hylās, except in 2 cells: acc sg, abl sg.
     declension!("acoetēs", 71, "~ēs", [gender: Masculine], like Hylās;
@@ -497,24 +498,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     acc: "~ēn", _;
     abl: "~ē", _;
     ),
-    // Maeandros: 69 words (andros, chaos, abatos, naxos, amorgos, ios). Like Fūsus, except in 3 cells: nom sg, acc sg, proper_noun_locative sg.
-    declension!("maeandros", 69, "~os", like Fūsus;
-    nom: "~os", _;
-    acc: "~on", _;
-    proper_noun_locative: derived, _;
+    // Būtos: 66 words (lesbos, andros, dēlos, chios, samos, lēmnos). Like Fūsus, except in 6 cells: nom sg, nom pl, gen_ pl, dat pl, acc sg, acc pl.
+    declension!("būtos", 66, "~os", like Fūsus;
+    nom: "~os", derived;
+    gen_: _, derived;
+    dat: _, derived;
+    acc: "~on", derived;
     ),
-    // Moeris: 67 words (paris, hellas, phōcis, ātlantis, argolis, adōnis).
-    declension!("moeris", 67, "~s";
-    stem lemma: "~s- like flāndria";
-    stem gen_sg: "~d- like hērōdēs";
-    abl: _, derived;
-    voc: _, derived;
-    ),
-    // Celticī: 64 words (delphī, pompeiī, philippī, fundī, solī, aequī). Like Sīnae, except in 4 cells: nom sg, nom pl, gen_ pl, acc pl.
-    declension!("celticī", 64, "~ī", [gender: Masculine], like Sīnae;
-    nom: "~ī", "~ī";
-    gen_: _, "~ōrum";
-    acc: _, "~ōs";
+    // Bacēnis: 61 words (genesis, īris, quīntīlis, aprīlis, sardīs, jovis). Like Ānser with `` after each pattern (`is` after ~).
+    declension!("bacēnis", 61, "~is", like Ānser with "", "is" after "~";
     ),
     // Asa: 57 words (isrāēl, michāēl, dāniēl, aarōn, ādām, dāvīd). Like Hippō, except in 5 cells: gen_ sg, dat sg, acc sg, abl sg, proper_noun_locative sg.
     declension!("asa", 57, "~", like Hippō;
@@ -524,13 +516,26 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     abl: "~", _;
     proper_noun_locative: "~", _;
     ),
-    // Būtos: 34 words (lesbos, dēlos, chios, samos, lēmnos, tyros). Like Maeandros, except in 5 cells: nom pl, gen_ pl, dat pl, acc pl, proper_noun_locative sg.
-    declension!("būtos", 34, "~os", like Maeandros;
+    // Moeris: 53 words (paris, hellas, phōcis, ātlantis, argolis, adōnis).
+    declension!("moeris", 53, "~s";
+    stem lemma: "~s- like flāndria";
+    stem gen_sg: "~d- like hērōdēs";
+    abl: _, derived;
+    voc: _, derived;
+    ),
+    // Ptolemāis: 40 words (artemis, laus, tiberias, aulis, ēlis, ptolemāis). Like Moeris, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
+    declension!("ptolemāis", 40, "~s", like Moeris;
+    stem gen_sg: "~d- like hippō";
     nom: _, derived;
     gen_: _, derived;
     dat: _, derived;
     acc: _, derived;
-    proper_noun_locative: "~ī", _;
+    ),
+    // Ōxos: 37 words (chaos, abatos, naxos, amorgos, ios, thasos). Like Fūsus, except in 3 cells: nom sg, acc sg, proper_noun_locative sg.
+    declension!("ōxos", 37, "~os", like Fūsus;
+    nom: "~os", _;
+    acc: "~on", _;
+    proper_noun_locative: derived, _;
     ),
     // Alpēs: 33 words (alpēs, piscēs, andēs, quirītēs, larēs, sardēs). Like Sīnae, except in 5 cells: nom sg, nom pl, gen_ pl, dat pl, acc pl.
     declension!("alpēs", 33, "~ēs", like Sīnae;
@@ -538,14 +543,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     gen_: _, "~ium";
     dat: _, "~ibus";
     acc: _, "~ēs|~īs";
-    ),
-    // Ptolemāis: 26 words (laus, tiberias, aulis, ptolemāis, jūlias, trōas). Like Moeris, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
-    declension!("ptolemāis", 26, "~s", [gender: Feminine], like Moeris;
-    stem gen_sg: "~d- like hippō";
-    nom: _, derived;
-    gen_: _, derived;
-    dat: _, derived;
-    acc: _, derived;
     ),
     // Maeander: 22 words (niger, alexander, āfer, cancer, leander, alander).
     declension!("maeander", 22, "~e~", [gender: Masculine];
@@ -555,13 +552,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     dat: "~~ō", "~~īs";
     acc: "~~um", "~~ōs";
     abl: "~~ō", _;
-    ),
-    // Phoenīx: 22 words (ajāx, phoenīx, pollūx, fēlīx, bellātrīx, beātrīx).
-    declension!("phoenīx", 22, "~x";
-    stem lemma: "~x- like flāndria";
-    stem gen_sg: "~c- like hērōdēs";
-    abl: _, derived;
-    voc: _, derived;
     ),
     // Mārs: 21 words (chrīstiānitās, dīs, mārs, agnes, tagēs, māvors).
     declension!("mārs", 21, "~s";
@@ -574,10 +564,29 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     declension!("anthemūs", 17, "~s", like Ptolemāis;
     stem gen_sg: "~nt- like hippō";
     ),
+    // Phintiās: 16 words (sīlās, canās, phintiās, critiās, selās, melās). Like Hylās, except in 5 cells: nom pl, gen_ pl, dat pl, acc pl, proper_noun_locative sg.
+    declension!("phintiās", 16, "~ās", [gender: Masculine], like Hylās;
+    nom: _, derived;
+    gen_: _, derived;
+    dat: _, derived;
+    acc: _, derived;
+    proper_noun_locative: "~ae", _;
+    ),
     // Iāpyx: 15 words (styx, albiorīx, orgetorīx, sȳrinx, tancorīx, mēninx).
     declension!("iāpyx", 15, "~x";
     stem lemma: "~x- like flāndria";
     stem gen_sg: "~g- like hērōdēs";
+    abl: _, derived;
+    voc: _, derived;
+    ),
+    // Ānser: 15 words (babylōn, piōn, solōn, caesar, diōn, zabūlōn). Like Hērōdēs.
+    declension!("ānser", 15, "~", like Hērōdēs;
+    stem lemma: "~- like flāndria";
+    ),
+    // Phoenīx: 14 words (ajāx, phoenīx, pollūx, fēlīx, bellātrīx, beātrīx).
+    declension!("phoenīx", 14, "~x";
+    stem lemma: "~x- like flāndria";
+    stem gen_sg: "~c- like hērōdēs";
     abl: _, derived;
     voc: _, derived;
     ),
@@ -602,6 +611,14 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     declension!("eurymedōn", 12, "~ō~";
     stem lemma: "~ō~- like flāndria";
     stem gen_sg: "~o~t- like eurymedōn";
+    ),
+    // Atrax: 12 words (harpax, sparax, atax, eryx, atrax, zarax). Like Phoenīx, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
+    declension!("atrax", 12, "~x", like Phoenīx;
+    stem gen_sg: "~c- like hippō";
+    nom: _, derived;
+    gen_: _, derived;
+    dat: _, derived;
+    acc: _, derived;
     ),
     // Clīō: 11 words (sapphō, argō, calypsō, callistō, themistō, dīdō). Like Būtos, except in 3 cells: gen_ sg, acc sg, proper_noun_locative sg.
     declension!("clīō", 11, "~ō", [gender: Feminine], like Būtos;
@@ -631,16 +648,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     // Aethiops: 10 words (ops, aegilōps, aethiops, mīnōs, cheops, cotys). Like Ānser with `` after each pattern (`s` after ~).
     declension!("aethiops", 10, "~s", [gender: Masculine], like Ānser with "", "s" after "~";
     ),
-    // Iāsōn: 9 words (stentōr, philēmōn, iāsōn, lycāōn, thestōr, agēnōr).
-    declension!("iāsōn", 9, "~ō~", [gender: Masculine];
-    stem lemma: "~ō~- like flāndria";
-    stem gen_sg: "~o~- like hērōdēs";
-    abl: _, derived;
-    voc: _, derived;
-    ),
-    // Pān: 8 words (pān, tītān, platōn, amphitryōn, haganōn, phaedōn). Like Hērōdēs, except in 2 cells: abl pl, voc pl.
-    declension!("pān", 8, "~", [gender: Masculine], like Hērōdēs;
-    stem lemma: "~- like flāndria";
+    // Pān: 8 words (pān, tītān, platōn, amphitryōn, haganōn, phaedōn). Like Ānser, except in 2 cells: abl pl, voc pl.
+    declension!("pān", 8, "~", [gender: Masculine], like Ānser;
     stem gen_sg: "~- like nephelēis";
     abl: _, derived;
     voc: _, derived;
@@ -659,10 +668,21 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     abl: _, derived;
     voc: _, derived;
     ),
-    // Dryās: 8 words (ātlās, dryās, aphās, dipsās, glīsās, prās). Like Arsinoē.
-    declension!("dryās", 8, "~ās", like Arsinoē;
-    stem lemma: "~ās- like flāndria";
+    // Dryās: 8 words (ātlās, dryās, aphās, dipsās, glīsās, prās). Like Phintiās, except in 1 cell: voc sg.
+    declension!("dryās", 8, "~ās", like Phintiās;
     stem gen_sg: "~ant- like eurymedōn";
+    voc: "~ās", _;
+    ),
+    // Cambȳsēs: 8 words (ulixēs, cambȳsēs, araxēs, artaxerxēs, vesperiēs, oaxēs). Like Suēl with `` after each pattern (`ēs` after ~), except in 1 cell: acc sg.
+    declension!("cambȳsēs", 8, "~ēs", like Suēl with "", "ēs" after "~";
+    acc: "~em", _;
+    ),
+    // Iāsōn: 7 words (stentōr, iāsōn, thestōr, agēnōr, paeōn, aristogītōn).
+    declension!("iāsōn", 7, "~ō~", [gender: Masculine];
+    stem lemma: "~ō~- like flāndria";
+    stem gen_sg: "~o~- like hērōdēs";
+    abl: _, derived;
+    voc: _, derived;
     ),
     // Denter: 7 words (september, sōsipater, denter, falacer, ōdoacer, diēspiter).
     declension!("denter", 7, "~e~", [gender: Masculine];
@@ -682,10 +702,18 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     abl: _, derived;
     voc: _, derived;
     ),
-    // Crētes: 6 words (cyclades, orcades, crētes, cēphēnes, minyēides, telchīnes). Like Alpēs, except in 4 cells: nom sg, nom pl, gen_ pl, acc pl.
-    declension!("crētes", 6, "~es", like Alpēs;
-    nom: "~es", "~es";
+    // Clītōr: 7 words (philēmōn, lacedaemōn, lycāōn, anthēdōn, asplēdōn, clītōr). Like Eurymedōn.
+    declension!("clītōr", 7, "~ō~", like Eurymedōn;
+    stem gen_sg: "~o~- like hippō";
+    ),
+    // Rhypēs: 7 words (steresēs, ilergāonēs, chāonēs, thubēs, rhypēs, solanadēs). Like Alpēs, except in 2 cells: gen_ pl, acc pl.
+    declension!("rhypēs", 7, "~ēs", like Alpēs;
     gen_: _, "~um";
+    acc: _, "~ēs";
+    ),
+    // Crētes: 6 words (cyclades, orcades, crētes, cēphēnes, minyēides, telchīnes). Like Rhypēs, except in 3 cells: nom sg, nom pl, acc pl.
+    declension!("crētes", 6, "~es", like Rhypēs;
+    nom: "~es", "~es";
     acc: _, "~as";
     ),
     // Leōn: 6 words (leōn, xenophōn, ctēsiphōn, zeugma, cleophōn, clysma). Like Hippō.
@@ -698,31 +726,30 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     voc: "~", _;
     proper_noun_locative: derived, _;
     ),
-    // Ānser: 5 words (babylōn, caesar, zabūlōn, deucaliōn, spinthēr). Like Hērōdēs.
-    declension!("ānser", 5, "~", like Hērōdēs;
-    stem lemma: "~- like flāndria";
+    // Casius: 6 words (masius, vitrasius, casius, orībasius, penius, erpenius). Like Arsinoē, except in 7 cells: nom sg, gen_ sg, dat sg, acc sg, abl sg, voc sg, ….
+    declension!("casius", 6, "~ius", [gender: Masculine], like Arsinoē;
+    nom: "~ius", _;
+    gen_: "~iī|~ī", _;
+    dat: "~iō", _;
+    acc: "~ium", _;
+    abl: "~iō", _;
+    voc: "~ī", _;
+    proper_noun_locative: "~iī", _;
     ),
-    // Arīōn: 5 words (agamemnōn, sargōn, arīōn, alāzōn, actaeōn). Like Eurymedōn, except in 5 cells: gen_ sg, dat sg, acc sg, abl sg, proper_noun_locative sg.
-    declension!("arīōn", 5, "~ō~", [gender: Masculine], like Eurymedōn;
-    gen_: "~o~is", _;
-    dat: "~o~ī", _;
+    // Callirrhoē: 6 words (daphnē, arachnē, helenē, danaē, caenē, aulōcrenē). Like Acoetēs, except in 2 cells: nom sg, gen_ sg.
+    declension!("callirrhoē", 6, "~ē", [gender: Feminine], like Acoetēs;
+    nom: "~ē", _;
+    gen_: "~ēs", _;
+    ),
+    // Arīōn: 5 words (agamemnōn, sargōn, arīōn, alāzōn, actaeōn). Like Clītōr, except in 2 cells: acc sg, proper_noun_locative sg.
+    declension!("arīōn", 5, "~ō~", [gender: Masculine], like Clītōr;
     acc: "~o~a", _;
-    abl: "~o~e", _;
     proper_noun_locative: derived, _;
-    ),
-    // Clītōr: 5 words (lacedaemōn, anthēdōn, asplēdōn, clītōr, pharcadōn). Like Arīōn.
-    declension!("clītōr", 5, "~ō~", like Arīōn;
-    stem gen_sg: "~o~- like hippō";
     ),
     // Suēl: 5 words (suēl, tībur, elaver, succhabar, anxur). Like Dūbris, except in 1 cell: acc sg.
     declension!("suēl", 5, "~", [gender: Neuter], like Dūbris;
     stem lemma: "~- like flāndria";
     acc: "~", _;
-    ),
-    // Rhypēs: 5 words (steresēs, ilergāonēs, thubēs, rhypēs, echīnadēs). Like Alpēs, except in 2 cells: gen_ pl, acc pl.
-    declension!("rhypēs", 5, "~ēs", like Alpēs;
-    gen_: _, "~um";
-    acc: _, "~ēs";
     ),
     // Āsōpis: 5 words (thȳnias, daulis, achāis, āsōpis, bīsaltis). Like Ptolemāis, except in 2 cells: acc sg, proper_noun_locative sg.
     declension!("āsōpis", 5, "~s", [gender: Feminine], like Ptolemāis;
@@ -732,10 +759,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     ),
     // Valēns: 5 words (clēmēns, valēns, ūfēns, arcēns, quercēns). Like Mārs with `ˇ` after each pattern.
     declension!("valēns", 5, "~sˇ", [gender: Masculine], like Mārs with "ˇ";
-    ),
-    // Cambȳsēs: 5 words (cambȳsēs, araxēs, vesperiēs, perdicēs, rages). Like Suēl with `` after each pattern (`ēs` after ~), except in 1 cell: acc sg.
-    declension!("cambȳsēs", 5, "~ēs", like Suēl with "", "ēs" after "~";
-    acc: "~em", _;
     ),
     // Mōsēs: 4 words (mōsēs, mōȳsēs, mōīsēs, moesēs). Like Cambȳsēs, except in 4 cells: gen_ sg, acc sg, abl sg, proper_noun_locative sg.
     declension!("mōsēs", 4, "~ēs", [gender: Masculine], like Cambȳsēs;
@@ -765,41 +788,10 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 83] = [
     dat: "~ī", _;
     abl: "~e", _;
     ),
-    // Phintiās: 4 words (canās, phintiās, amelās, thymniās). Like Hylās, except in 5 cells: nom pl, gen_ pl, dat pl, acc pl, proper_noun_locative sg.
-    declension!("phintiās", 4, "~ās", [gender: Masculine], like Hylās;
-    nom: _, derived;
-    gen_: _, derived;
-    dat: _, derived;
-    acc: _, derived;
-    proper_noun_locative: "~ae", _;
-    ),
     // Caudex: 4 words (belex, idex, vindex, caudex). Like Tȳdeus.
     declension!("caudex", 4, "~ex", [gender: Masculine], like Tȳdeus;
     stem lemma: "~ex- like flāndria";
     stem gen_sg: "~ic- like caudex";
-    ),
-    // Atrax: 4 words (eryx, atrax, zarax, nāryx). Like Phoenīx, except in 4 cells: nom pl, gen_ pl, dat pl, acc pl.
-    declension!("atrax", 4, "~x", like Phoenīx;
-    stem gen_sg: "~c- like hippō";
-    nom: _, derived;
-    gen_: _, derived;
-    dat: _, derived;
-    acc: _, derived;
-    ),
-    // Casius: 4 words (casius, cius, tius, penius). Like Arsinoē, except in 7 cells: nom sg, gen_ sg, dat sg, acc sg, abl sg, voc sg, ….
-    declension!("casius", 4, "~ius", [gender: Masculine], like Arsinoē;
-    nom: "~ius", _;
-    gen_: "~iī|~ī", _;
-    dat: "~iō", _;
-    acc: "~ium", _;
-    abl: "~iō", _;
-    voc: "~ī", _;
-    proper_noun_locative: "~iī", _;
-    ),
-    // Callirrhoē: 3 words (arachnē, helenē, danaē). Like Acoetēs, except in 2 cells: nom sg, gen_ sg.
-    declension!("callirrhoē", 3, "~ē", [gender: Feminine], like Acoetēs;
-    nom: "~ē", _;
-    gen_: "~ēs", _;
     ),
     // Octōber: 3 words (december, octōber, november). Like Denter, except in 5 cells: nom pl, gen_ pl, dat pl, acc pl, abl sg.
     declension!("octōber", 3, "~e~", [gender: Masculine], like Denter;

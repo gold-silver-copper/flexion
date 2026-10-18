@@ -7,10 +7,10 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 496 rules and 1,300 listed words.
+/// 497 rules and 1,300 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Lingua 3396, Iugum 2610, Ratiō 2318, Bannus 2207, Amor 903, Cōs 619, Manus 510, Lūx 347, Fīnis 228, Servitūdō 223, Lapis 204, Metōpion 176, Carmen 160, Lēmma 148, Logos 146, Arma 116, Commūne 111, Arrhenocoetēs 104, Dēliciae 88, Aloē 87, Aciēs 82, Synthesis 74, Apex 72, Puer 68, Mōlēs 66, Ambāgēs 46, Ager 46, Hospitālia 45, Marmor 41, Trēsvirī 39, Tribūnal 34, Ōs 32, Boreās 31, Līmes 31, Lēx 24, Lēns 24, Corpus 22, Auctōritās 21, Elephāns 21, Pars 20, Genius 19, Canōn 19, Ops 16, Familiāris 16, Pecten 16, Aegis 15, Māter 15, Tripūs 13, Arx 12, Pēs 12, Mōs 9, Manna 9, Cornū 8, Cacoēthes 8, Tenōn 8, Prīnceps 7, Onyx 7, Imāgō 6, Frōns 6, Adamās 6, Specus 6, Vulgus 6, Basis 5, Sāl 5, Ellīpsis 5, Venter 5, Plērumque 5, Līchēn 5, Cachrys 5, Aes 4, Canis 4, Fāta 4, Fel 4, Cucumis 4, Caput 4, Sȳringes 4, Sphalma 4, Bes 3, Magnēs 3, Glīs 3, Cherūb 3, Acoetis 3, Ariēs 3, Aethēr 3, Rēte 3, Pepō 3, Iambus 2, Onomatopoeia 1, Coefficiens 1, Coercitio 1, Tetraedrum 1, Coniurati 1, Ianthis 1, Proneptis 1, Deipara 1],
+        "" => [Lingua 3396, Iugum 2610, Ratiō 2318, Bannus 2207, Amor 903, Cōs 618, Manus 510, Lūx 347, Fīnis 228, Servitūdō 223, Lapis 204, Metōpion 176, Carmen 160, Lēmma 148, Logos 146, Arma 116, Commūne 111, Arrhenocoetēs 104, Dēliciae 88, Aloē 87, Aciēs 82, Synthesis 74, Apex 72, Puer 68, Mōlēs 66, Ambāgēs 46, Ager 46, Hospitālia 45, Marmor 41, Trēsvirī 39, Tribūnal 34, Ōs 31, Boreās 31, Līmes 31, Lēx 24, Lēns 24, Corpus 22, Auctōritās 21, Elephāns 21, Pars 21, Genius 19, Canōn 19, Ops 16, Familiāris 16, Pecten 16, Aegis 15, Māter 15, Tripūs 13, Arx 12, Pēs 12, Mōs 9, Manna 9, Cornū 8, Cacoēthes 8, Tenōn 8, Prīnceps 7, Onyx 7, Imāgō 6, Frōns 6, Adamās 6, Specus 6, Vulgus 6, Basis 5, Sāl 5, Ellīpsis 5, Venter 5, Plērumque 5, Līchēn 5, Cachrys 5, Aes 5, Canis 4, Fāta 4, Fel 4, Cucumis 4, Caput 4, Sȳringes 4, Sphalma 4, Bes 3, Magnēs 3, Glīs 3, Cherūb 3, Acoetis 3, Ariēs 3, Aethēr 3, Rēte 3, Pepō 3, Iambus 2, Onomatopoeia 1, Coefficiens 1, Coercitio 1, Tetraedrum 1, Coniurati 1, Ianthis 1, Proneptis 1, Deipara 1],
         "a" => [Lingua 3396, Lēmma 130, Arma 116, Hospitālia 45, Fāta 4, Sphalma 3, Manna 1, Onomatopoeia 1, Deipara 1] regular,
         "ba" => [Lingua 41] regular,
         "ca" => [Lingua 183, Arma 6] regular,
@@ -223,8 +223,8 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "tur" => [Ratiō 4, Marmor 1],
         "yr" => [Ratiō 4, Marmor 1],
         "tyr" => [Ratiō 3],
-        "s" => [Bannus 2207, Cōs 617, Manus 510, Fīnis 228, Lapis 204, Logos 146, Arrhenocoetēs 104, Aciēs 82, Synthesis 74, Mōlēs 66, Ambāgēs 46, Ōs 31, Boreās 31, Līmes 31, Lēns 24, Ratiō 22, Corpus 22, Auctōritās 21, Elephāns 21, Pars 20, Genius 19, Ops 16, Familiāris 16, Aegis 15, Tripūs 13, Pēs 12, Mōs 9, Cacoēthes 8, Prīnceps 7, Frōns 6, Adamās 6, Specus 6, Vulgus 6, Lēmma 5, Basis 5, Ellīpsis 5, Cachrys 5, Aes 4, Canis 4, Cucumis 4, Sȳringes 4, Bes 3, Magnēs 3, Glīs 3, Acoetis 3, Ariēs 3, Marmor 2, Iambus 2, Servitūdō 1, Carmen 1, Canōn 1, Manna 1, Plērumque 1, Sphalma 1, Coefficiens 1, Ianthis 1, Proneptis 1],
-        "as" => [Cōs 576, Lapis 36, Boreās 31, Adamās 6, Ratiō 3, Pars 3, Aegis 3, Marmor 2, Aes 2, Servitūdō 1, Lēmma 1, Auctōritās 1, Sphalma 1, Bes 1] regular,
+        "s" => [Bannus 2207, Cōs 616, Manus 510, Fīnis 228, Lapis 204, Logos 146, Arrhenocoetēs 104, Aciēs 82, Synthesis 74, Mōlēs 66, Ambāgēs 46, Boreās 31, Līmes 31, Ōs 30, Lēns 24, Ratiō 22, Corpus 22, Auctōritās 21, Elephāns 21, Pars 21, Genius 19, Ops 16, Familiāris 16, Aegis 15, Tripūs 13, Pēs 12, Mōs 9, Cacoēthes 8, Prīnceps 7, Frōns 6, Adamās 6, Specus 6, Vulgus 6, Lēmma 5, Basis 5, Ellīpsis 5, Cachrys 5, Aes 5, Canis 4, Cucumis 4, Sȳringes 4, Bes 3, Magnēs 3, Glīs 3, Acoetis 3, Ariēs 3, Marmor 2, Iambus 2, Servitūdō 1, Carmen 1, Canōn 1, Manna 1, Plērumque 1, Sphalma 1, Coefficiens 1, Ianthis 1, Proneptis 1],
+        "as" => [Cōs 575, Lapis 36, Boreās 31, Adamās 6, Pars 4, Ratiō 3, Aegis 3, Marmor 2, Aes 2, Servitūdō 1, Lēmma 1, Auctōritās 1, Sphalma 1, Bes 1] regular,
         "cas" => [Lapis 7] regular,
         "eas" => [Lapis 2, Boreās 2, Lēmma 1, Aegis 1] regular,
         "fas" => [Aes 2] regular,
@@ -235,6 +235,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "amas" => [Adamās 2, Boreās 1] regular,
         "imas" => [Pars 2, Ratiō 1] regular,
         "omas" => [Lapis 4] regular,
+        "nas" => [Cōs 3, Lapis 3, Pars 2, Ratiō 1, Boreās 1] regular,
         "onas" => [Lapis 2] regular,
         "ras" => [Boreās 2, Lapis 1] regular,
         "tas" => [Cōs 567, Auctōritās 1] regular,
@@ -362,7 +363,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "eps" => [Prīnceps 7, Ratiō 1, Carmen 1, Auctōritās 1] regular,
         "ops" => [Auctōritās 10, Canōn 1] regular,
         "rs" => [Pars 8, Cōs 2] regular,
-        "us" => [Bannus 2207, Manus 510, Ōs 29, Corpus 22, Genius 19, Tripūs 13, Cōs 6, Lapis 6, Specus 6, Vulgus 6, Ratiō 3, Iambus 2, Mōs 1, Manna 1, Aes 1, Glīs 1],
+        "us" => [Bannus 2207, Manus 510, Ōs 28, Corpus 22, Genius 19, Tripūs 13, Cōs 6, Lapis 6, Specus 6, Vulgus 6, Ratiō 3, Aes 2, Iambus 2, Mōs 1, Manna 1, Glīs 1],
         "aus" => [Lapis 2] regular,
         "bus" => [Bannus 52, Specus 1, Iambus 1] regular,
         "cus" => [Bannus 181, Corpus 5, Manus 4, Specus 4, Lapis 2, Ōs 2, Iambus 1] regular,
@@ -384,7 +385,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "ngus" => [Bannus 18] regular,
         "ogus" => [Bannus 22] regular,
         "hus" => [Bannus 88, Ratiō 1, Ōs 1] regular,
-        "ius" => [Bannus 403, Genius 19, Ōs 1] regular,
+        "ius" => [Bannus 403, Genius 19, Aes 1] regular,
         "lius" => [Bannus 5, Genius 3] regular,
         "nius" => [Bannus 6, Genius 5] regular,
         "rius" => [Bannus 316, Genius 7] regular,
@@ -605,11 +606,11 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#colocyntis", "#coronis", "#crocallis", "#cuppes", "#custos", "#cybindis", "#cyclas",
             "#deplois", "#dionysias", "#dipsas", "#docis", "#doris", "#dryopteris", "#echeneis",
             "#endromis", "#enneas", "#ephelis", "#ephemeris", "#epidermis", "#epididymis",
-            "#exomis", "#fraus", "#gonas", "#gongylis", "#gymnas", "#hexas", "#hippophobas",
-            "#iberis", "#ibis", "#incus", "#ischias", "#iuglans", "#iulis", "#lampyris", "#laus",
-            "#lychnis", "#maccis", "#maripalus", "#meleagris", "#melotris", "#merces", "#monas",
-            "#myrias", "#nabis", "#nereis", "#nestis", "#oceanis", "#ononis", "#orchas", "#palus",
-            "#parapsis", "#paropsis", "#peloris", "#periscelis", "#picris", "#praes", "#promulsis",
+            "#exomis", "#fraus", "#gongylis", "#gymnas", "#hexas", "#hippophobas", "#iberis",
+            "#ibis", "#incus", "#ischias", "#iuglans", "#iulis", "#lampyris", "#laus", "#lychnis",
+            "#maccis", "#maripalus", "#meleagris", "#melotris", "#merces", "#myrias", "#nabis",
+            "#nereis", "#nestis", "#oceanis", "#ononis", "#orchas", "#palus", "#parapsis",
+            "#paropsis", "#peloris", "#periscelis", "#picris", "#praes", "#proboscis", "#promulsis",
             "#pyralis", "#pyromis", "#pyxis", "#rhoeas", "#seris", "#stoechas", "#subcustos",
             "#subscus", "#symplegas", "#syphilis", "#trias", "#tribas", "#tyrannis",
         ],
@@ -711,9 +712,9 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         ],
         Ōs => [
             "#aes", "#crus", "#far", "#foedus", "#funus", "#gallicrus", "#genus", "#glomus",
-            "#holus", "#ius", "#latus", "#munus", "#olus", "#onus", "#opus", "#os", "#pondus",
-            "#pus", "#quadrilatus", "#raudus", "#rudus", "#scelus", "#sidus", "#subgenus", "#thus",
-            "#tus", "#ulcus", "#vellus", "#venus", "#viscus", "#volnus", "#vulnus",
+            "#holus", "#latus", "#munus", "#olus", "#onus", "#opus", "#os", "#pondus", "#pus",
+            "#quadrilatus", "#raudus", "#rudus", "#scelus", "#sidus", "#subgenus", "#thus", "#tus",
+            "#ulcus", "#vellus", "#venus", "#viscus", "#volnus", "#vulnus",
         ],
         Boreās => [
             "#amas", "#ananas", "#boreas", "#borras", "#cataphagas", "#catoblepas", "#mandragoras",
@@ -749,8 +750,8 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#serviens",
         ],
         Pars => [
-            "#grips", "#gryps", "#lis", "#penas", "#plebs", "#puls", "#stirps", "#stlis", "#sufes",
-            "#urbs",
+            "#grips", "#gryps", "#laenas", "#lis", "#penas", "#plebs", "#puls", "#stirps", "#stlis",
+            "#sufes", "#urbs",
         ],
         Genius => [
             "#andalusius", "#assyrius", "#carcerarius", "#corinthius", "#cyllenius", "#filius",
@@ -847,7 +848,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#chelys", "#chrysophrys", "#halos", "#tribrachys",
         ],
         Aes => [
-            "#epos", "#fas", "#nefas", "#rus",
+            "#epos", "#fas", "#ius", "#nefas", "#rus",
         ],
         Canis => [
             "#apis", "#canis", "#chanis", "#iuvenis",

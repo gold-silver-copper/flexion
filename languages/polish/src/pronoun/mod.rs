@@ -122,74 +122,16 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::AdjectiveCase::*;
-        use crate::Agreement::*;
-        use crate::Animacy::*;
-        let cell = match self {
-            Cell::Form(Nominative, Masculine, Animate) => cell::NOM_M_ANIM,
-            Cell::Form(Nominative, Masculine, Inanimate) => cell::NOM_M_INAN,
-            Cell::Form(Nominative, Feminine, Animate) => cell::NOM_F_ANIM,
-            Cell::Form(Nominative, Feminine, Inanimate) => cell::NOM_F_INAN,
-            Cell::Form(Nominative, Neuter, Animate) => cell::NOM_N_ANIM,
-            Cell::Form(Nominative, Neuter, Inanimate) => cell::NOM_N_INAN,
-            Cell::Form(Nominative, Virile, Animate) => cell::NOM_VIR_ANIM,
-            Cell::Form(Nominative, Virile, Inanimate) => cell::NOM_VIR_INAN,
-            Cell::Form(Nominative, Nonvirile, Animate) => cell::NOM_NVIR_ANIM,
-            Cell::Form(Nominative, Nonvirile, Inanimate) => cell::NOM_NVIR_INAN,
-            Cell::Form(Genitive, Masculine, Animate) => cell::GEN_M_ANIM,
-            Cell::Form(Genitive, Masculine, Inanimate) => cell::GEN_M_INAN,
-            Cell::Form(Genitive, Feminine, Animate) => cell::GEN_F_ANIM,
-            Cell::Form(Genitive, Feminine, Inanimate) => cell::GEN_F_INAN,
-            Cell::Form(Genitive, Neuter, Animate) => cell::GEN_N_ANIM,
-            Cell::Form(Genitive, Neuter, Inanimate) => cell::GEN_N_INAN,
-            Cell::Form(Genitive, Virile, Animate) => cell::GEN_VIR_ANIM,
-            Cell::Form(Genitive, Virile, Inanimate) => cell::GEN_VIR_INAN,
-            Cell::Form(Genitive, Nonvirile, Animate) => cell::GEN_NVIR_ANIM,
-            Cell::Form(Genitive, Nonvirile, Inanimate) => cell::GEN_NVIR_INAN,
-            Cell::Form(Dative, Masculine, Animate) => cell::DAT_M_ANIM,
-            Cell::Form(Dative, Masculine, Inanimate) => cell::DAT_M_INAN,
-            Cell::Form(Dative, Feminine, Animate) => cell::DAT_F_ANIM,
-            Cell::Form(Dative, Feminine, Inanimate) => cell::DAT_F_INAN,
-            Cell::Form(Dative, Neuter, Animate) => cell::DAT_N_ANIM,
-            Cell::Form(Dative, Neuter, Inanimate) => cell::DAT_N_INAN,
-            Cell::Form(Dative, Virile, Animate) => cell::DAT_VIR_ANIM,
-            Cell::Form(Dative, Virile, Inanimate) => cell::DAT_VIR_INAN,
-            Cell::Form(Dative, Nonvirile, Animate) => cell::DAT_NVIR_ANIM,
-            Cell::Form(Dative, Nonvirile, Inanimate) => cell::DAT_NVIR_INAN,
-            Cell::Form(Accusative, Masculine, Animate) => cell::ACC_M_ANIM,
-            Cell::Form(Accusative, Masculine, Inanimate) => cell::ACC_M_INAN,
-            Cell::Form(Accusative, Feminine, Animate) => cell::ACC_F_ANIM,
-            Cell::Form(Accusative, Feminine, Inanimate) => cell::ACC_F_INAN,
-            Cell::Form(Accusative, Neuter, Animate) => cell::ACC_N_ANIM,
-            Cell::Form(Accusative, Neuter, Inanimate) => cell::ACC_N_INAN,
-            Cell::Form(Accusative, Virile, Animate) => cell::ACC_VIR_ANIM,
-            Cell::Form(Accusative, Virile, Inanimate) => cell::ACC_VIR_INAN,
-            Cell::Form(Accusative, Nonvirile, Animate) => cell::ACC_NVIR_ANIM,
-            Cell::Form(Accusative, Nonvirile, Inanimate) => cell::ACC_NVIR_INAN,
-            Cell::Form(Instrumental, Masculine, Animate) => cell::INS_M_ANIM,
-            Cell::Form(Instrumental, Masculine, Inanimate) => cell::INS_M_INAN,
-            Cell::Form(Instrumental, Feminine, Animate) => cell::INS_F_ANIM,
-            Cell::Form(Instrumental, Feminine, Inanimate) => cell::INS_F_INAN,
-            Cell::Form(Instrumental, Neuter, Animate) => cell::INS_N_ANIM,
-            Cell::Form(Instrumental, Neuter, Inanimate) => cell::INS_N_INAN,
-            Cell::Form(Instrumental, Virile, Animate) => cell::INS_VIR_ANIM,
-            Cell::Form(Instrumental, Virile, Inanimate) => cell::INS_VIR_INAN,
-            Cell::Form(Instrumental, Nonvirile, Animate) => cell::INS_NVIR_ANIM,
-            Cell::Form(Instrumental, Nonvirile, Inanimate) => cell::INS_NVIR_INAN,
-            Cell::Form(Locative, Masculine, Animate) => cell::LOC_M_ANIM,
-            Cell::Form(Locative, Masculine, Inanimate) => cell::LOC_M_INAN,
-            Cell::Form(Locative, Feminine, Animate) => cell::LOC_F_ANIM,
-            Cell::Form(Locative, Feminine, Inanimate) => cell::LOC_F_INAN,
-            Cell::Form(Locative, Neuter, Animate) => cell::LOC_N_ANIM,
-            Cell::Form(Locative, Neuter, Inanimate) => cell::LOC_N_INAN,
-            Cell::Form(Locative, Virile, Animate) => cell::LOC_VIR_ANIM,
-            Cell::Form(Locative, Virile, Inanimate) => cell::LOC_VIR_INAN,
-            Cell::Form(Locative, Nonvirile, Animate) => cell::LOC_NVIR_ANIM,
-            Cell::Form(Locative, Nonvirile, Inanimate) => cell::LOC_NVIR_INAN,
-        };
-        cell as usize
+        match self {
+            Cell::Form(adjective_case, agreement, animacy) => {
+                cell::NOM_M_ANIM as usize
+                    + (adjective_case as usize * 5 + agreement as usize) * 2
+                    + animacy as usize
+            }
+        }
     }
 }
 

@@ -147,10 +147,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~ia\t",
         )),
     },
-    // adjective like sōns: 376 words.
+    // adjective like sōns: 374 words.
     EndingTable {
         name: Cow::Borrowed("sōns"),
-        words: 376,
+        words: 374,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēsˇ\t",
@@ -173,10 +173,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "~iaˇ\t",
         )),
     },
-    // adjective like iners: 166 words.
+    // adjective like iners: 168 words.
     EndingTable {
         name: Cow::Borrowed("iners"),
-        words: 166,
+        words: 168,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ēs\t",
@@ -251,17 +251,17 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
             "ï~a\t",
         )),
     },
-    // comparative like iacitūrus: 25,017 words.
+    // comparative like iacitūrus: 24,979 words.
     EndingTable {
         name: Cow::Borrowed("iacitūrus"),
-        words: 25017,
+        words: 24979,
         slot: 2,
         table: Cow::Borrowed(concat!("~or\t", "~ssimus\t",)),
     },
-    // comparative like sōns: 376 words.
+    // comparative like sōns: 374 words.
     EndingTable {
         name: Cow::Borrowed("sōns"),
-        words: 376,
+        words: 374,
         slot: 2,
         table: Cow::Borrowed(concat!("~orˇ\t", "~ssimusˇ\t",)),
     },
@@ -272,10 +272,10 @@ pub(super) static TABLES: [EndingTable<'static>; 15] = [
         slot: 2,
         table: Cow::Borrowed(concat!("~ior\t", "~rimus\t",)),
     },
-    // comparative like dexter: 3 words.
+    // comparative like dexter: 4 words.
     EndingTable {
         name: Cow::Borrowed("dexter"),
-        words: 3,
+        words: 4,
         slot: 2,
         table: Cow::Borrowed(concat!("~erior\t", "~imus\t",)),
     },

@@ -7,11 +7,11 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 0 stems, 7 forms.
+/// 0 stems, 8 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"entrambi	2	entrambe
-il	1	i	2	la
+il	0	il|lo|l'	1	i|gli	2	la|l'
 mio	1	miei
 parecchio	1	parecchi
 poco	3	poche

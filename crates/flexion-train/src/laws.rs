@@ -70,10 +70,13 @@ pub enum Change {
     },
     /// Harmony: each class letter an ending writes (`A` of `-lAr`) is,
     /// after the nearest of `tier` before it as written (or none), what
-    /// `map` says: `(class letter, tier letter, value)`.
+    /// `map` says: `(class letter, tier letter, value)`. An `adjacent` law
+    /// reads only the letter just before it (a copy of consonants: `S` of
+    /// English `quizzes`, never the `x` of `foxproof`).
     Harmony {
         tier: Vec<char>,
         map: Vec<(char, Option<char>, char)>,
+        adjacent: bool,
     },
     /// A copy of `letter` (see [`pattern::COPY`]) is `to`.
     Copy { letter: char, to: char },
@@ -88,15 +91,17 @@ pub enum Change {
         after: Vec<Vec<Vec<char>>>,
     },
     /// Where the literal a form begins with meets the stem (see [`FRONT`]):
-    /// the literal (as built, a copy marked) and the stem's first letters
-    /// `stem` become `to`: `ἐ‹ἀ → ἠ`. A one-letter stem written without
-    /// its marks (inside a compound, `συν|αρχω`) changes as well, into
-    /// `plain`'s letters (`α → η`).
+    /// the literal (as built, a copy marked) and the stem's first letters,
+    /// the longest of `map`'s, become what `map` says: the Greek augment,
+    /// `ἐ‹ἀ → ἠ, ὀ → ὠ, οἰ → ᾠ`. One law per literal (Smyth §§ 428–438: one
+    /// augment, whatever vowel it meets), each of its letters learned from
+    /// the words whose stems begin so, however few. First letters written
+    /// without some of their marks (inside a compound, `συν|αρχω`) change
+    /// as well, into `plain`'s (`α → η`).
     Front {
         literal: String,
-        stem: String,
-        to: String,
-        plain: Vec<(char, String)>,
+        map: Vec<(String, String)>,
+        plain: Vec<(String, String)>,
     },
 }
 
@@ -174,7 +179,11 @@ impl std::fmt::Display for Law {
                 Ok(())
             }
             // `A → a after a, ı, o, u; e after e, i, ö, ü, none`.
-            Change::Harmony { tier, map } => {
+            Change::Harmony {
+                tier,
+                map,
+                adjacent,
+            } => {
                 let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
                 classes.dedup();
                 for (k, class) in classes.iter().enumerate() {
@@ -203,7 +212,11 @@ impl std::fmt::Display for Law {
                         .collect();
                     write!(f, "{sep}{class} → {}", values.join("; "))?;
                 }
-                write!(f, " (the nearest of {} before it, as written)", list(tier))
+                if *adjacent {
+                    write!(f, " (the letter just before it, if one of {})", list(tier))
+                } else {
+                    write!(f, " (the nearest of {} before it, as written)", list(tier))
+                }
             }
             Change::Copy { letter, to } => write!(f, "copy of {letter} → {to}"),
             // `t → d after [a|o|u|h], before [o|u]+n$, [o|u]+ss`.
@@ -242,11 +255,10 @@ impl std::fmt::Display for Law {
                 }
                 Ok(())
             }
-            // A copy as the pattern writes it: `%ε‹ἀ → ἠ`.
+            // A copy as the pattern writes it: `%ε‹ἀ → ἠ, ὀ → ὠ`.
             Change::Front {
                 literal,
-                stem,
-                to,
+                map,
                 plain,
             } => {
                 let mut copy = false;
@@ -260,10 +272,13 @@ impl std::fmt::Display for Law {
                         _ => write!(f, "{c}")?,
                     }
                 }
-                write!(f, "{FRONT}{stem} → {to}")?;
-                let more: Vec<String> = plain.iter().map(|(c, p)| format!("{c} → {p}")).collect();
-                if !more.is_empty() {
-                    write!(f, " ({})", more.join(", "))?;
+                let said = |m: &[(String, String)]| -> String {
+                    let each: Vec<String> = m.iter().map(|(a, b)| format!("{a} → {b}")).collect();
+                    each.join(", ")
+                };
+                write!(f, "{FRONT}{}", said(map))?;
+                if !plain.is_empty() {
+                    write!(f, " ({})", said(plain))?;
                 }
                 Ok(())
             }
@@ -305,9 +320,16 @@ impl Change {
                             .any(|(_, from, _)| stem.contains(from.as_str()))
                     })
             }
-            Change::Front { literal, stem, .. } => {
-                built.starts_with(&format!("{literal}{FRONT}{stem}"))
-            }
+            Change::Front {
+                literal,
+                map,
+                plain,
+            } => built
+                .strip_prefix(literal.as_str())
+                .and_then(|b| b.strip_prefix(FRONT))
+                .is_some_and(|stem| {
+                    (map.iter().chain(plain)).any(|(s, _)| stem.starts_with(s.as_str()))
+                }),
         }
     }
 
@@ -373,14 +395,26 @@ impl Change {
             }
             // The class letter, the nearest tier letter before it as
             // written (or none), and the gap between: read on the output.
-            Change::Harmony { tier, map } => {
+            Change::Harmony {
+                tier,
+                map,
+                adjacent,
+            } => {
                 let mut classes: Vec<char> = map.iter().map(|e| e.0).collect();
                 classes.dedup();
                 let t = list(tier);
                 return Stated {
                     target: format!("{{x:[{}]}}", list(&classes)),
                     to: format!("{{x|{name}[t]}}"),
-                    before: format!("{{t:[{t}]?}}{{g:![{t}]*}}"),
+                    before: if *adjacent {
+                        // The letter just before, the build's marks aside
+                        // (`unpin+Ting`: the `n`, not the `+`).
+                        format!(
+                            "{{t:[{t}]?}}{{g:[{BOUNDARY}|{ALTERNATES}|{CHANGED}|{COPIED}|{FRONT}]*}}"
+                        )
+                    } else {
+                        format!("{{t:[{t}]?}}{{g:![{t}]*}}")
+                    },
                     agree: map
                         .iter()
                         .map(|(x, t, v)| {
@@ -486,13 +520,10 @@ impl Change {
             // A capture, whose letters become those the law says.
             Change::Front {
                 literal,
-                stem,
-                to,
+                map,
                 plain,
             } => {
-                let map: Vec<(String, String)> = std::iter::once((stem.clone(), to.clone()))
-                    .chain(plain.iter().map(|(c, p)| (c.to_string(), p.clone())))
-                    .collect();
+                let map: Vec<(String, String)> = map.iter().chain(plain).cloned().collect();
                 let letters: Vec<&str> = map.iter().map(|(c, _)| c.as_str()).collect();
                 return Stated {
                     target: format!("^{literal}{FRONT}{{x:[{}]}}", letters.join("|")),
@@ -821,7 +852,10 @@ pub fn learn<'s>(
             *support.entry(edit).or_default() += 1;
         }
     }
+    // Where a literal meets the stem: one law per literal.
+    let fronts = pooled(&mut support);
     let mut candidates: Vec<(Change, u32)> = classes(&support);
+    candidates.extend(fronts);
     // A change inside a stem after several letters is tried after them all
     // only.
     let grouped = lefts(&support);
@@ -1042,8 +1076,7 @@ pub fn learn<'s>(
     }
     // Laws that are one law, stated once: those that differ only in the
     // stem letters they follow (Russian `ы → и` after `к`, `г`, `х`, `ш`,
-    // `ч`, `ж`, `щ`), or the letter a front literal meets (the Greek
-    // augment, one lengthening).
+    // `ч`, `ж`, `щ`).
     let merged = merge(&laws);
     let (laws, program) = if merged.len() < laws.len() {
         let changes: Vec<Change> = merged.iter().map(|l| l.change.clone()).collect();
@@ -1057,9 +1090,8 @@ pub fn learn<'s>(
 
 /// `laws` with those that are one law stated once (see [`learn`]): an edge
 /// law takes in a later one with every field but its stem letters the same,
-/// and a front law a later one with the same literal and one letter, where
-/// every law between them is an edge law that neither reads nor writes
-/// what they do. Laws apart from those don't meet the same letters, so the
+/// where every law between them is one that neither reads nor writes what
+/// they do (a front law is one law per literal already). Laws apart from those don't meet the same letters, so the
 /// laws give what they gave.
 fn merge(laws: &[Law]) -> Vec<Law> {
     let mut out: Vec<Law> = Vec::with_capacity(laws.len());
@@ -1100,9 +1132,8 @@ fn merge(laws: &[Law]) -> Vec<Law> {
     out
 }
 
-/// `a` and `b` as one law, if they are one but for their stem letters (an
-/// edge) or their one letter (a front), and every law in `between` is apart
-/// from them.
+/// `a` and `b` as one law, if they are edge laws that are one but for their
+/// stem letters, and every law in `between` is apart from them.
 fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
     if !between.iter().all(|l| apart(a, &l.change)) {
         return None;
@@ -1144,41 +1175,6 @@ fn joined(a: &Change, b: &Change, between: &[Law]) -> Option<Change> {
                 earlier: earlier.clone(),
                 left: left.clone(),
                 right: right.clone(),
-            })
-        }
-        (
-            Change::Front {
-                literal,
-                stem,
-                to,
-                plain,
-            },
-            Change::Front {
-                literal: l2,
-                stem: s2,
-                to: t2,
-                plain: p2,
-            },
-        ) if literal == l2 => {
-            let mut letters = s2.chars();
-            let (Some(letter), None) = (letters.next(), letters.next()) else {
-                return None;
-            };
-            let theirs: Vec<(char, String)> = std::iter::once((letter, t2.clone()))
-                .chain(p2.iter().cloned())
-                .collect();
-            let mine =
-                |c: char| stem.chars().eq(std::iter::once(c)) || plain.iter().any(|(p, _)| *p == c);
-            if theirs.iter().any(|(c, _)| mine(*c)) {
-                return None;
-            }
-            let mut plain = plain.clone();
-            plain.extend(theirs);
-            Some(Change::Front {
-                literal: literal.clone(),
-                stem: stem.clone(),
-                to: to.clone(),
-                plain,
             })
         }
         _ => None,
@@ -1348,75 +1344,81 @@ fn twins<'s>(
     (paradigms, out)
 }
 
-/// The letters each law where a literal meets a one-letter stem (see
-/// [`Change::Front`]) on a vowel also takes: its letter written with fewer
-/// of its marks (`α`, `ᾰ` for `ἀ`: inside a compound), no other such law's,
-/// and with no mark another law's letter has that it hasn't. What one becomes
-/// lacks the marks it lacks (`ἐ‹ἀ → ἠ`, so `α → η`).
+/// The letters each law where a literal meets the stem (see
+/// [`Change::Front`]) also takes, of those it maps that begin with a vowel:
+/// them written with fewer of their marks (`α`, `ᾰ` for `ἀ`, `οι` for `οἰ`:
+/// inside a compound), with no mark a law's letters have or one written on
+/// a word's first letters (a breathing: `ἁ` isn't `ἀ`) that they haven't,
+/// and not letters it maps already. What one becomes lacks the marks it
+/// lacks (`ἐ‹ἀ → ἠ`, so `α → η`; `οἰ → ᾠ`, so `οι → ῳ`).
 fn plain(orthography: &Orthography<'_>, laws: &mut [Law]) {
     use unicode_normalization::UnicodeNormalization;
     let marks = |c: char| -> Vec<char> { c.to_string().nfd().skip(1).collect() };
-    let fronts: Vec<(String, String)> = laws
+    // The marks some law's letters have: those the laws tell apart.
+    let telling: Vec<char> = laws
         .iter()
         .filter_map(|l| match &l.change {
-            Change::Front { literal, stem, .. } => Some((literal.clone(), stem.clone())),
+            Change::Front { map, .. } => Some(map),
             _ => None,
         })
+        .flatten()
+        .flat_map(|(from, _)| from.chars().flat_map(marks))
         .collect();
-    // The marks some law's letter has: those the laws tell apart.
-    let telling: Vec<char> = fronts
-        .iter()
-        .flat_map(|(_, stem)| stem.chars().flat_map(marks))
-        .collect();
-    for law in laws.iter_mut() {
-        let Change::Front {
-            literal,
-            stem,
-            to,
-            plain,
-        } = &mut law.change
-        else {
-            continue;
-        };
-        let mut letters = stem.chars();
-        let (Some(s), None) = (letters.next(), letters.next()) else {
-            continue;
-        };
+    // A letter itself, and written with fewer of its marks: each with the
+    // marks it lacks.
+    let fewer = |s: char| -> Vec<(char, Vec<char>)> {
         let mine = marks(s);
         let base = orthography.fold(s);
-        if !orthography.is_vowel(base) {
-            continue;
-        }
-        let others = orthography
-            .folded
-            .iter()
+        let others = (orthography.folded.iter())
             .filter(|(_, f)| *f == base)
             .map(|(c, _)| *c)
-            .chain(std::iter::once(base));
-        for c in others {
-            let theirs = marks(c);
-            let claimed = fronts
-                .iter()
-                .any(|(l, st)| l == literal && st.starts_with(c));
-            let fewer = theirs
-                .iter()
-                .all(|m| mine.contains(m) || !telling.contains(m))
-                && mine.iter().any(|m| !theirs.contains(m));
-            if claimed || !fewer || plain.iter().any(|(p, _)| *p == c) {
+            .chain(std::iter::once(base))
+            .filter(|&c| c != s)
+            .filter_map(|c| {
+                let theirs = marks(c);
+                let fewer = theirs.iter().all(|m| {
+                    mine.contains(m) || !(telling.contains(m) || orthography.initial.contains(*m))
+                }) && mine.iter().any(|m| !theirs.contains(m));
+                let lacks = mine.iter().filter(|m| !theirs.contains(m)).copied();
+                fewer.then(|| (c, lacks.collect()))
+            });
+        std::iter::once((s, Vec::new())).chain(others).collect()
+    };
+    for law in laws.iter_mut() {
+        let Change::Front { map, plain, .. } = &mut law.change else {
+            continue;
+        };
+        for (from, to) in map.iter() {
+            let first = from.chars().next().map(|c| orthography.fold(c));
+            if !first.is_some_and(|c| orthography.is_vowel(c)) {
                 continue;
             }
-            let lacks: Vec<char> = mine
-                .iter()
-                .filter(|m| !theirs.contains(m))
-                .copied()
-                .collect();
-            let becomes: String = to
-                .nfd()
-                .filter(|m| !lacks.contains(m))
-                .collect::<String>()
-                .nfc()
-                .collect();
-            plain.push((c, becomes));
+            // Every way to write its letters, but as they are.
+            let mut ways: Vec<(String, Vec<char>)> = vec![(String::new(), Vec::new())];
+            for s in from.chars() {
+                let each = fewer(s);
+                ways = ways
+                    .iter()
+                    .flat_map(|(w, l)| {
+                        each.iter().map(move |(c, lacks)| {
+                            (format!("{w}{c}"), [l.as_slice(), lacks].concat())
+                        })
+                    })
+                    .collect();
+            }
+            for (letters, lacks) in ways.into_iter().filter(|w| !w.1.is_empty()) {
+                let taken = |m: &[(String, String)]| m.iter().any(|(f, _)| *f == letters);
+                if taken(map) || taken(plain) {
+                    continue;
+                }
+                let becomes: String = to
+                    .nfd()
+                    .filter(|m| !lacks.contains(m))
+                    .collect::<String>()
+                    .nfc()
+                    .collect();
+                plain.push((letters, becomes));
+            }
         }
         plain.sort();
     }
@@ -1570,6 +1572,14 @@ fn greedy(
                     }
                 }
             }
+            // A literal's law keeps the letters it does well on, each on
+            // its own (see [`sifted`]).
+            if matches!(change, Change::Front { .. }) {
+                change = match sifted(change, &found, &readings, forms, &assignment, held) {
+                    Some(c) => c,
+                    None => continue,
+                };
+            }
             for _ in 0..=if growing { GROWN } else { 0 } {
                 if into.is_some() {
                     break;
@@ -1679,6 +1689,73 @@ fn greedy(
         }
     }
     (credited, [plain, assignment])
+}
+
+/// A law where a literal meets the stem (see [`Change::Front`]) with only
+/// the letters it gives forms of and breaks few of, each on its own: as
+/// few as a law must (see [`pays`]), on the words held out too (see
+/// [`Tried::kept`]). A letter that breaks many goes (`ε`, which the augment
+/// makes `η` and as often `ει`), and the rest stay one law. `None` when
+/// none stays.
+fn sifted(
+    change: Change,
+    found: &Found<'_>,
+    readings: &[Vec<Reading>],
+    forms: &[Vec<&str>],
+    assignment: &[u16],
+    held: &[bool],
+) -> Option<Change> {
+    let (literal, mut map, plain) = match change {
+        Change::Front {
+            literal,
+            map,
+            plain,
+        } => (literal, map, plain),
+        other => return Some(other),
+    };
+    for _ in 0..=map.len() {
+        let change = Change::Front {
+            literal: literal.clone(),
+            map: map.clone(),
+            plain: plain.clone(),
+        };
+        let tried = try_law(&change, found, readings, forms, assignment)?;
+        // Per letter, the forms it gives and breaks, of all words and of
+        // those held out: by the longest letters a build's stem begins with.
+        let mut tally = vec![[[0u32; 2]; 2]; map.len()];
+        let entry = |&(w, r, k): &At| -> Option<usize> {
+            let built = readings.get(w)?.get(r)?.builds.get(k)?;
+            let stem = built.strip_prefix(literal.as_str())?.strip_prefix(FRONT)?;
+            (map.iter().enumerate())
+                .filter(|(_, (from, _))| stem.starts_with(from.as_str()))
+                .max_by_key(|(_, (from, _))| from.len())
+                .map(|(i, _)| i)
+        };
+        for (list, gives) in [(&tried.fixed, true), (&tried.broken, false)] {
+            for a in list {
+                if let Some([fixed, broken]) = entry(a).and_then(|i| tally.get_mut(i)) {
+                    let [all, out] = if gives { fixed } else { broken };
+                    *all += 1;
+                    *out += u32::from(held.get(a.0) == Some(&true));
+                }
+            }
+        }
+        let keeps = |&[[fixed, held_fixed], [broken, held_broken]]: &[[u32; 2]; 2]| {
+            fixed > 0
+                && f64::from(broken) <= BREAKS * f64::from(fixed)
+                && harmony::tolerated(held_fixed + held_broken, held_broken)
+        };
+        let before = map.len();
+        let mut tallies = tally.iter();
+        map.retain(|_| tallies.next().is_some_and(keeps));
+        if map.is_empty() {
+            return None;
+        }
+        if map.len() == before {
+            return Some(change);
+        }
+    }
+    None
 }
 
 /// What a law did for the words that moved, once its pass is over: the
@@ -2608,13 +2685,72 @@ fn fronts(built: &str, want: &str) -> Vec<Change> {
         if to != was {
             out.push(Change::Front {
                 literal: literal.to_string(),
-                stem: first.iter().collect(),
-                to,
+                map: vec![(first.iter().collect(), to)],
                 plain: Vec::new(),
             });
         }
     }
     out
+}
+
+/// The changes where a literal meets the stem (see [`Change::Front`]),
+/// taken out of `support`, as one law per literal: its letters, each
+/// becoming what most of the words whose stems begin with them have,
+/// however few, with the words of all. Letters whose change is that of
+/// letters they begin with, the rest as it is (`ἀγ → ἠγ` beside `ἀ → ἠ`),
+/// are left to those.
+fn pooled(support: &mut HashMap<Change, u32>) -> Vec<(Change, u32)> {
+    type Tos = BTreeMap<String, u32>;
+    use std::collections::BTreeMap;
+    let mut by: BTreeMap<String, BTreeMap<String, Tos>> = BTreeMap::new();
+    support.retain(|change, &mut n| {
+        let Change::Front { literal, map, .. } = change else {
+            return true;
+        };
+        for (from, to) in map {
+            let tos = by.entry(literal.clone()).or_default();
+            *tos.entry(from.clone())
+                .or_default()
+                .entry(to.clone())
+                .or_default() += n;
+        }
+        false
+    });
+    by.into_iter()
+        .map(|(literal, froms)| {
+            // Of equally many words, the first in order.
+            let best: BTreeMap<String, (String, u32)> = froms
+                .into_iter()
+                .filter_map(|(from, tos)| {
+                    let best = tos
+                        .into_iter()
+                        .max_by(|a, b| a.1.cmp(&b.1).then(b.0.cmp(&a.0)));
+                    Some((from, best?))
+                })
+                .collect();
+            let implied = |from: &str, to: &str| {
+                best.iter().any(|(f, (t, _))| {
+                    f.len() < from.len()
+                        && from.strip_prefix(f.as_str()).is_some_and(|rest| {
+                            to.strip_suffix(rest).is_some_and(|head| head == t.as_str())
+                        })
+                })
+            };
+            let kept: Vec<(&String, &(String, u32))> =
+                best.iter().filter(|(f, (t, _))| !implied(f, t)).collect();
+            let words = kept.iter().map(|e| e.1.1).sum();
+            let map = kept
+                .into_iter()
+                .map(|(f, (t, _))| (f.clone(), t.clone()))
+                .collect();
+            let change = Change::Front {
+                literal,
+                map,
+                plain: Vec::new(),
+            };
+            (change, words)
+        })
+        .collect()
 }
 
 /// The same change inside alternating stems after one letter or another
@@ -2939,6 +3075,26 @@ mod tests {
     use super::*;
 
     #[test]
+    fn a_copy_read_just_before_reads_past_the_build_s_marks() {
+        // English `T` (`unpinning`): the stem's last letter is copied, though
+        // the build writes the stem's end between them (`unpin+Ting`).
+        let tier = vec!['d', 'g', 'm', 'n', 't'];
+        let map = tier
+            .iter()
+            .map(|&c| ('T', Some(c), c))
+            .chain([('T', None, 't')])
+            .collect();
+        let copy = Change::Harmony {
+            tier,
+            map,
+            adjacent: true,
+        };
+        let program = compile(&[copy]).expect("a program");
+        assert_eq!(program.apply("unpin+Ting"), "unpin+ning");
+        assert_eq!(program.apply("foxproof+Ted"), "foxproof+ted");
+    }
+
+    #[test]
     fn finds_the_change_at_the_stem_edge() {
         let edge = |stem: &str, ending: &str, to: &str| Change::Edge {
             stem: vec![stem.to_string()],
@@ -2967,8 +3123,7 @@ mod tests {
         // The augment of a vowel-initial stem: ἐ + ἀγ is ἠγ.
         let front = |literal: &str, stem: &str, to: &str| Change::Front {
             literal: literal.to_string(),
-            stem: stem.to_string(),
-            to: to.to_string(),
+            map: vec![(stem.to_string(), to.to_string())],
             plain: Vec::new(),
         };
         let augment = front("ἐ", "ἀ", "ἠ");
@@ -2977,9 +3132,8 @@ mod tests {
         assert!(fronts("°ἀε‹ἀρ+χα", "ἠρχα").contains(&perfect));
         let unbreathed = Change::Front {
             literal: "ἐ".into(),
-            stem: "ἀ".into(),
-            to: "ἠ".into(),
-            plain: vec![('α', "η".into()), ('ᾰ', "η".into())],
+            map: vec![("ἀ".into(), "ἠ".into())],
+            plain: vec![("α".into(), "η".into()), ("ᾰ".into(), "η".into())],
         };
         let law = Law {
             change: perfect.clone(),

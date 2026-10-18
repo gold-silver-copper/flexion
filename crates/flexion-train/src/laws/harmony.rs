@@ -56,6 +56,9 @@ type Example = (usize, usize);
 /// ending's letters.
 type Split = (String, Vec<char>);
 
+/// A tier, and whether it is read only just before (see [`reads`]).
+type Reading<'t> = (&'t BTreeSet<char>, bool);
+
 /// A form up to a place, the letter there, and the word.
 type Seen<'w> = (&'w str, char, usize);
 
@@ -65,11 +68,11 @@ type Seen<'w> = (&'w str, char, usize);
 /// `saatlerde`).
 type Units = BTreeMap<Option<char>, BTreeMap<char, u32>>;
 
-/// What `seen` shows on `tier` (see [`Units`]).
-fn units(seen: &[Seen<'_>], tier: &BTreeSet<char>) -> Units {
+/// What `seen` shows on `tier` (see [`Units`]), read as [`reads`] says.
+fn units(seen: &[Seen<'_>], tier: &BTreeSet<char>, adjacent: bool) -> Units {
     let mut distinct: Vec<(Option<char>, char, usize)> = seen
         .iter()
-        .map(|(before, at, w)| (nearest(before, tier), *at, *w))
+        .map(|(before, at, w)| (reads(before, tier, adjacent), *at, *w))
         .collect();
     distinct.sort_unstable();
     distinct.dedup();
@@ -115,11 +118,12 @@ fn judged(by: &Units, map: &BTreeMap<Option<char>, char>) -> (u32, u32) {
     (n, wrong)
 }
 
-/// A learned class: its letters, its tier, and its value after each tier
-/// letter and after none.
+/// A learned class: its letters, its tier (read just before it where
+/// `adjacent`), and its value after each tier letter and after none.
 struct Class {
     letters: Vec<char>,
     tier: BTreeSet<char>,
+    adjacent: bool,
     map: BTreeMap<Option<char>, char>,
     /// Its letters, commonest first.
     common: Vec<char>,
@@ -130,10 +134,20 @@ fn nearest(before: &str, tier: &BTreeSet<char>) -> Option<char> {
     before.chars().rev().find(|c| tier.contains(c))
 }
 
+/// The tier letter a class reads before the end of `before`: the nearest,
+/// or where `adjacent` the letter just before if it is of the tier.
+fn reads(before: &str, tier: &BTreeSet<char>, adjacent: bool) -> Option<char> {
+    if adjacent {
+        before.chars().next_back().filter(|c| tier.contains(c))
+    } else {
+        nearest(before, tier)
+    }
+}
+
 impl Class {
     /// Its value after `before`.
     fn value(&self, before: &str) -> Option<char> {
-        let trigger = nearest(before, &self.tier);
+        let trigger = reads(before, &self.tier, self.adjacent);
         self.map
             .get(&trigger)
             .or_else(|| self.map.get(&None))
@@ -265,6 +279,7 @@ pub(super) fn learn<'s>(
     paradigms: Vec<Paradigm<'s>>,
     assignment: Vec<u16>,
 ) -> (Vec<Law>, Vec<Paradigm<'s>>, Vec<u16>) {
+    let vowel = &|c: char| orthography.is_vowel(c);
     let cells = paradigms
         .first()
         .map_or(0, |p| p.table.split('\t').count().saturating_sub(1));
@@ -405,7 +420,14 @@ pub(super) fn learn<'s>(
     // Whether each is a copy: a law of its own.
     let mut copying: Vec<bool> = Vec::new();
     let mut claimed: BTreeSet<Spot> = BTreeSet::new();
+    // A class is of one kind, vowels or not: an alternation of both is a copy
+    // (Finnish `Ä` of `a`, `t`, `ä`) or the class of its vowels (Turkish
+    // verbs' `a`, `e`, `t`, where some paradigms write a `t`: read as one of
+    // every letter, it took `b`, `d`, `g`, `v` for triggers).
+    let one_kind =
+        |letters: &[char]| letters.iter().all(|&c| vowel(c)) || letters.iter().all(|&c| !vowel(c));
     for (letters, _) in candidates.into_iter().take(CANDIDATES) {
+        let mixed = !one_kind(letters);
         // The places writing these letters or fewer; failing that, those
         // writing just these (a copy of every vowel, `-Vn`, is no law of the
         // places writing `a` or `ä` after any, `-ssA`).
@@ -452,7 +474,19 @@ pub(super) fn learn<'s>(
                 }
             }
             // Just these letters: only as a copy.
-            let copy = fit(&[&candidate]).map(|tier| copies(&candidate, &tier));
+            let mut copy = fit(&[&candidate], vowel)
+                .map(|(tier, adjacent)| copies(&candidate, &tier, adjacent));
+            // Of vowels and consonants and no copy: the class of its vowels,
+            // on the places they are written.
+            if mixed && copy != Some(true) {
+                candidate.letters.retain(|&c| vowel(c));
+                candidate.learned.retain(|x| vowel(x.1));
+                candidate.held.retain(|x| vowel(x.1));
+                copy = (candidate.letters.len() > 1)
+                    .then(|| fit(&[&candidate], vowel))
+                    .flatten()
+                    .map(|(tier, adjacent)| copies(&candidate, &tier, adjacent));
+            }
             if copy.is_some_and(|copy| !exact || copy) {
                 claimed.extend(pool.into_iter().copied());
                 pools.push(candidate);
@@ -463,11 +497,19 @@ pub(super) fn learn<'s>(
     }
     // Classes one tier decides are one law, written in one pass: what one
     // writes the next reads (`-lArI`: `I` reads the `a` or `e` just written).
+    // Of one kind only: a class of vowels reads vowels, so it is no law
+    // with a class that writes a consonant too (Turkish verbs' `T`, `t` after
+    // a space), whose tier starts from every letter.
     let mut laws_of: Vec<Vec<usize>> = Vec::new();
     let copy = |k: &usize| copying.get(*k).copied().unwrap_or(false);
+    let of_vowels = |k: &usize| {
+        pools
+            .get(*k)
+            .is_some_and(|p| p.letters.iter().all(|&c| vowel(c)))
+    };
     for k in 0..pools.len() {
         let joins = laws_of.iter().position(|ks| {
-            if copy(&k) || ks.iter().any(copy) {
+            if copy(&k) || ks.iter().any(copy) || ks.iter().any(|j| of_vowels(j) != of_vowels(&k)) {
                 return false;
             }
             let together: Vec<&Pool<'_>> = ks
@@ -475,7 +517,15 @@ pub(super) fn learn<'s>(
                 .chain([&k])
                 .filter_map(|&i| pools.get(i))
                 .collect();
-            fit(&together).is_some()
+            // One tier decides them: the one each learns alone (a class
+            // whose tier the other's words would move is a law of its own:
+            // Finnish names' `A` loses `y` beside `I`).
+            let alone = |ks: &[usize]| {
+                let pools: Vec<&Pool<'_>> = ks.iter().filter_map(|&i| pools.get(i)).collect();
+                fit(&pools, vowel)
+            };
+            let both = fit(&together, vowel);
+            both.is_some() && both == alone(&[k]) && both == alone(ks)
         });
         match joins.and_then(|j| laws_of.get_mut(j)) {
             Some(ks) => ks.push(k),
@@ -492,19 +542,19 @@ pub(super) fn learn<'s>(
     let mut classes: Vec<Class> = Vec::new();
     for ks in &laws_of {
         let together: Vec<&Pool<'_>> = ks.iter().filter_map(|&i| pools.get(i)).collect();
-        let Some(tier) = fit(&together) else {
+        let Some((tier, adjacent)) = fit(&together, vowel) else {
             continue;
         };
         for pool in together {
             // Its values from all its words, on the tier learned.
             let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
-            let by = units(&all, &tier);
+            let by = units(&all, &tier, adjacent);
             let Some(mut map) = values(&by) else { continue };
             // A copy of vowels copies every vowel, those no ending shows it
             // after too.
             let mut tier = tier.clone();
             let mut letters = pool.letters.clone();
-            if copies(pool, &tier) {
+            if copies(pool, &tier, adjacent) {
                 if letters.iter().all(|&c| orthography.is_vowel(c)) {
                     tier.extend(&vowels);
                     let more: Vec<char> = vowels
@@ -535,6 +585,7 @@ pub(super) fn learn<'s>(
                 let none = !(copied(&c.map) && copied(&map));
                 let triggers = tier.iter().map(|&t| Some(t)).chain(none.then_some(None));
                 c.tier == tier
+                    && c.adjacent == adjacent
                     && triggers
                         .into_iter()
                         .all(|t| value(&c.map, t) == value(&map, t))
@@ -550,6 +601,7 @@ pub(super) fn learn<'s>(
             classes.push(Class {
                 letters,
                 tier,
+                adjacent,
                 map,
                 common: common.into_iter().map(|(_, c)| c).collect(),
             });
@@ -740,16 +792,17 @@ pub(super) fn learn<'s>(
         .collect();
     let (paradigms, assignment) = super::drop_empty(paradigms, assignment);
     // One law per tier: its classes, with their evidence.
-    let mut tiers: Vec<(&BTreeSet<char>, Vec<usize>)> = Vec::new();
+    let mut tiers: Vec<(Reading<'_>, Vec<usize>)> = Vec::new();
     for (k, class) in classes.iter().enumerate() {
-        match tiers.iter_mut().find(|(t, _)| *t == &class.tier) {
+        let tier = (&class.tier, class.adjacent);
+        match tiers.iter_mut().find(|(t, _)| *t == tier) {
             Some((_, ks)) => ks.push(k),
-            None => tiers.push((&class.tier, vec![k])),
+            None => tiers.push((tier, vec![k])),
         }
     }
     let mut laws: Vec<Law> = tiers
         .into_iter()
-        .filter_map(|(tier, ks)| {
+        .filter_map(|((tier, adjacent), ks)| {
             let mine: Vec<(&Spot, &(usize, u32))> =
                 chosen.iter().filter(|(_, (k, _))| ks.contains(k)).collect();
             if mine.is_empty() {
@@ -776,6 +829,7 @@ pub(super) fn learn<'s>(
                 change: Change::Harmony {
                     tier: tier.iter().copied().collect(),
                     map,
+                    adjacent,
                 },
                 words: u32::try_from(users.len()).unwrap_or(u32::MAX),
                 examples: users
@@ -816,26 +870,78 @@ pub(super) fn tolerated(n: u32, exceptions: u32) -> bool {
     }
 }
 
-/// Whether `pool`'s class is, on `tier`, the nearest tier letter itself
+/// Whether `pool`'s class is, on `tier`, the tier letter it reads itself
 /// (of two tier letters at least).
-fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>) -> bool {
-    values(&units(&pool.learned, tier)).is_some_and(|map| {
+fn copies(pool: &Pool<'_>, tier: &BTreeSet<char>, adjacent: bool) -> bool {
+    values(&units(&pool.learned, tier, adjacent)).is_some_and(|map| {
         let mut tiered = map.iter().filter_map(|(t, v)| Some(((*t)?, *v)));
         tiered.clone().count() > 1 && tiered.all(|(t, v)| t == v)
     })
 }
 
-/// The tier one law decides `pools`' classes on, learned on their words not
-/// held out: `None` unless it decides every class within the tolerance on
-/// the words learned from and on those held out, writes at least two of
-/// each class's letters, and is not local (see the module documentation).
-fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
-    let mut tier: BTreeSet<char> = pools
+/// The tier one law decides `pools`' classes on, and whether it reads only
+/// the letter just before them, learned on their words not held out:
+/// `None` unless it decides every class within the tolerance on the words
+/// learned from and on those held out, writes at least two of each class's
+/// letters, and is not local (see the module documentation).
+///
+/// A class of vowels (`vowel` says which letters are) reads vowels: its
+/// tier starts from the vowels and the marks between words (a space, a
+/// hyphen) its words show, not from every letter, since on enough words a
+/// consonant passes for a trigger by chance (Turkish verbs' `b`, `d`, `g`,
+/// `v`, which took the place of `e` and `ö`). A consonant comes back only as
+/// a blocker its words show deciding: on enough words, within the
+/// tolerance, and with fewer wrong than without it on the words learned
+/// from and no more on those held out. A copy of consonants (English `S`,
+/// `quizzes`) reads only the letter just before it: what it copies is the
+/// stem's last letter, never one further back (`foxproofs`). (Tried first
+/// as such a copy, a class of consonants made new laws of Finnish verbs'
+/// consonant doubling, `tulla`, and cost them a point: a copy is found as
+/// before and only read so.)
+fn fit(pools: &[&Pool<'_>], vowel: &dyn Fn(char) -> bool) -> Option<(BTreeSet<char>, bool)> {
+    let vowels = pools.iter().all(|p| p.letters.iter().all(|&c| vowel(c)));
+    // Whether one law on `tier` (read just before where `adjacent`) decides
+    // every class within the tolerance, learned and held out, writing at
+    // least two of each one's letters: after two tier letters, or after one
+    // and after none where enough words have none before them (Finnish
+    // `-ssA`: `a` after a back vowel, `ä` after none; not German verbs' `E`,
+    // `e` after any vowel and `ä` only in `tun`).
+    let decides = |tier: &BTreeSet<char>, adjacent: bool| {
+        pools.iter().all(|pool| {
+            let by = units(&pool.learned, tier, adjacent);
+            let Some(map) = values(&by) else {
+                return false;
+            };
+            let none: u32 = by.get(&None).map_or(0, |v| v.values().sum());
+            let outputs: BTreeSet<&char> = map
+                .iter()
+                .filter_map(|(t, v)| (t.is_some() || none as usize >= MIN_WORDS).then_some(v))
+                .collect();
+            let fits = |seen: &[Seen<'_>]| {
+                let (n, wrong) = judged(&units(seen, tier, adjacent), &map);
+                n > 0 && tolerated(n, wrong)
+            };
+            outputs.len() > 1
+                && outputs.iter().all(|c| pool.letters.contains(c))
+                && fits(&pool.learned)
+                && fits(&pool.held)
+        })
+    };
+    let consonants = pools.iter().all(|p| p.letters.iter().all(|&c| !vowel(c)));
+    let seen: BTreeSet<char> = pools
         .iter()
         .flat_map(|p| p.learned.iter().flat_map(|s| s.0.chars()))
         .collect();
+    let mut tier: BTreeSet<char> = seen
+        .iter()
+        .copied()
+        .filter(|&c| !vowels || vowel(c) || !c.is_alphabetic())
+        .collect();
     let after = |tier: &BTreeSet<char>| -> Vec<Units> {
-        pools.iter().map(|p| units(&p.learned, tier)).collect()
+        pools
+            .iter()
+            .map(|p| units(&p.learned, tier, false))
+            .collect()
     };
     // The letter whose value after it is least decided: of those not
     // tolerated, for any class, the one with the most exceptions (Belth's
@@ -862,11 +968,14 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
     // illative `-Vn`, `taloon`, `kylään`, `maahan`) is a law however near
     // that letter is (no law at the stem's edge states it once), and copies
     // each of its letters, those few words show too.
-    let copy = pools.iter().all(|p| copies(p, &tier));
+    let copy = pools.iter().all(|p| copies(p, &tier, false));
     // A copy is a law of its own: no other class's letters are its tier.
     if copy && pools.len() > 1 {
         return None;
     }
+    // A copy of consonants copies the letter just before it, never one
+    // further back.
+    let adjacent = copy && consonants;
     if copy {
         tier = pools
             .iter()
@@ -917,9 +1026,55 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
             (tier, errors, none) = (fewer, e, now);
         }
     }
+    // The blockers: consonants back on a tier of vowels where their words
+    // show them deciding (the commonest first).
+    if vowels && !copy {
+        let held = |tier: &BTreeSet<char>| -> u32 {
+            pools
+                .iter()
+                .filter_map(|p| {
+                    let map = values(&units(&p.learned, tier, false))?;
+                    Some(judged(&units(&p.held, tier, false), &map).1)
+                })
+                .sum()
+        };
+        let mut blockers: Vec<(u32, char)> = seen
+            .iter()
+            .filter(|&&c| !tier.contains(&c))
+            .map(|&c| {
+                let mut more = tier.clone();
+                more.insert(c);
+                let n = after(&more)
+                    .iter()
+                    .filter_map(|by| by.get(&Some(c)))
+                    .flat_map(|v| v.values())
+                    .sum::<u32>();
+                (n, c)
+            })
+            .collect();
+        blockers.sort_by(|a, b| b.0.cmp(&a.0).then(a.1.cmp(&b.1)));
+        let mut missed = held(&tier);
+        for (_, c) in blockers {
+            let mut more = tier.clone();
+            more.insert(c);
+            let bys = after(&more);
+            let mine: Vec<&BTreeMap<char, u32>> =
+                bys.iter().filter_map(|by| by.get(&Some(c))).collect();
+            let n: u32 = mine.iter().flat_map(|v| v.values()).sum();
+            let decides = mine.iter().all(|v| {
+                let n: u32 = v.values().sum();
+                tolerated(n, n - v.values().max().copied().unwrap_or(0))
+            });
+            let (e, m) = (wrong(&bys), held(&more));
+            if decides && n as usize >= MIN_WORDS && e < errors && m <= missed {
+                (tier, errors, missed) = (more, e, m);
+            }
+        }
+    }
     // A law is along a tier where a letter further back than the one just
     // before decides most places; else it is local: one at the stem's edge
-    // (Belth 2024 p. 8), or none at all.
+    // (Belth 2024 p. 8), or none at all. (A tier of vowels decides at once
+    // where its consonants never started on it: only the places tell.)
     let all = pools.iter().flat_map(|p| &p.learned);
     let (far, n) = all.fold((0usize, 0usize), |(far, n), (before, _, _)| {
         let just = before
@@ -929,25 +1084,10 @@ fn fit(pools: &[&Pool<'_>]) -> Option<BTreeSet<char>> {
         let back = !just && nearest(before, &tier).is_some();
         (far + usize::from(back), n + 1)
     });
-    if tier.is_empty() || (!copy && (local || 2 * far <= n)) {
+    if tier.is_empty() || (!copy && ((local && !vowels) || 2 * far <= n)) {
         return None;
     }
-    let maps: Vec<BTreeMap<Option<char>, char>> = after(&tier)
-        .iter()
-        .map(values)
-        .collect::<Option<Vec<_>>>()?;
-    let decides = pools.iter().zip(&maps).all(|(pool, map)| {
-        let outputs: BTreeSet<&char> = map.values().collect();
-        let fits = |seen: &[Seen<'_>]| {
-            let (n, wrong) = judged(&units(seen, &tier), map);
-            n > 0 && tolerated(n, wrong)
-        };
-        outputs.len() > 1
-            && outputs.iter().all(|c| pool.letters.contains(c))
-            && fits(&pool.learned)
-            && fits(&pool.held)
-    });
-    decides.then_some(tier)
+    decides(&tier, adjacent).then_some((tier, adjacent))
 }
 
 #[cfg(test)]
@@ -1004,7 +1144,8 @@ mod tests {
                 pool.learned.push(seen);
             }
         }
-        let tier = fit(&[&pool]).expect("a law on a tier");
+        let vowel = |c: char| "aeiouyäö".contains(c);
+        let (tier, _) = fit(&[&pool], &vowel).expect("a law on a tier");
         for c in ['a', 'o', 'u', 'ä', 'ö', 'y'] {
             assert!(tier.contains(&c), "{c} decides: {tier:?}");
         }
@@ -1012,7 +1153,7 @@ mod tests {
             assert!(!tier.contains(&c), "{c} decides nothing: {tier:?}");
         }
         let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
-        let map = values(&units(&all, &tier)).expect("values");
+        let map = values(&units(&all, &tier, false)).expect("values");
         assert_eq!(map.get(&None), Some(&'ä'), "{map:?}");
     }
 
@@ -1083,6 +1224,58 @@ mod tests {
     }
 
     #[test]
+    fn a_letter_written_only_after_no_vowel_on_few_words_is_no_harmony() {
+        // German verbs: `e` after any vowel (`regnete`), `ä` only in `tun`'s
+        // `täte`, whose stem has none: no law of a tier.
+        let mut forms: Vec<(String, char)> = Vec::new();
+        for v in ['a', 'e', 'i', 'o', 'u'] {
+            for b in ["b", "d", "k", "m", "p", "t", "l", "r"] {
+                forms.push((format!("{b}{v}{b}t"), 'e'));
+            }
+        }
+        for w in ["t", "tt"] {
+            forms.push((w.to_string(), 'ä'));
+        }
+        let mut pool = Pool {
+            letters: vec!['e', 'ä'],
+            learned: Vec::new(),
+            held: Vec::new(),
+        };
+        for (i, (form, value)) in forms.iter().enumerate() {
+            let seen = (form.as_str(), *value, i);
+            if i % 3 == 1 {
+                pool.held.push(seen);
+            } else {
+                pool.learned.push(seen);
+            }
+        }
+        let vowel = |c: char| "aeiouä".contains(c);
+        assert_eq!(fit(&[&pool], &vowel), None);
+    }
+
+    #[test]
+    fn a_copy_of_consonants_reads_the_letter_just_before() {
+        // English `S` (`quizzes`): a stem's last `s`, `x` or `z` is copied;
+        // a word ending in another letter takes `s` however near an `x` is
+        // before it (`foxproofs`, not `*foxproofx`).
+        let letters: BTreeSet<char> = ['s', 'x', 'z'].into_iter().collect();
+        let mut map: BTreeMap<Option<char>, char> = letters.iter().map(|&c| (Some(c), c)).collect();
+        map.insert(None, 's');
+        let class = |adjacent| Class {
+            letters: letters.iter().copied().collect(),
+            tier: letters.clone(),
+            adjacent,
+            map: map.clone(),
+            common: Vec::new(),
+        };
+        assert_eq!(class(true).value("foxproof"), Some('s'));
+        assert_eq!(class(true).value("wizen"), Some('s'));
+        assert_eq!(class(true).value("quiz"), Some('z'));
+        // Read as the nearest, it copied the `x`.
+        assert_eq!(class(false).value("foxproof"), Some('x'));
+    }
+
+    #[test]
     fn a_copy_of_the_vowel_before_is_a_law_however_near() {
         // The Finnish illative `-Vn`: `taloon`, `kylään`, `katuun`; the
         // vowel copied is just before the class letter, as a law at the
@@ -1110,9 +1303,11 @@ mod tests {
                 pool.learned.push(seen);
             }
         }
-        let tier = fit(&[&pool]).expect("a copy");
+        let vowel = |c: char| vowels.contains(&c);
+        let (tier, adjacent) = fit(&[&pool], &vowel).expect("a copy");
+        assert!(!adjacent, "a copy of vowels reads the nearest");
         let all: Vec<Seen<'_>> = pool.learned.iter().chain(&pool.held).copied().collect();
-        let map = values(&units(&all, &tier)).expect("values");
+        let map = values(&units(&all, &tier, adjacent)).expect("values");
         for v in vowels {
             assert_eq!(map.get(&Some(v)), Some(&v), "{map:?}");
         }

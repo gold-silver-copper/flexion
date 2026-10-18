@@ -2,40 +2,17 @@
 //! A conjugation that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 169] = [
     // IND_ACT_1_SG, from IND_ACT_2_SG.
     relation!(IND_ACT_1_SG, [IND_ACT_2_SG], [("~ंसि", "~A्मि"), ("~क्षि", "~B्मि"), ("~क्षि", "~च्मि"), ("~क्षि", "~ज्मि"), ("~क्षि", "~श्मि"), ("~क्षि", "~ह्मि"), ("~त्सि", "~द्मि"), ("~षि", "~मि"), ("~सि", "~मि"), ("~सि", "~ामि"), ("~ि", "~्मि"), ("ध~क्षि", "द~ह्मि")], rules {
@@ -737,23 +714,17 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "्त" => [1 520],
     } listed {}, true, None),
     // IMPERFECT_MID_1_DU, from IND_MID_1_DU.
-    relation!(IMPERFECT_MID_1_DU, [IND_MID_1_DU], [("~े", "~ि"), ("~े", "अ~ि"), ("~े", "अच्~ि"), ("अ~े", "आ~ि"), ("इ~े", "ऐ~ि"), ("ई~े", "ऐ~ि"), ("उ~े", "औ~ि"), ("उत्~े", "उद~ि"), ("उल्~े", "उद~ि"), ("ऊ~े", "औ~ि"), ("ऋ~े", "आर्~ि"), ("सम्~े", "सम~ि")], rules {
-        "" => [1 537, 0 12, 3 12, 6 9, 4 6, 5 6, 2 3, 9 3, 10 3, 7 2, 8 2, 11 2],
-        "्द्वहे" => [2 2, 1 1, 6 1],
+    relation!(IMPERFECT_MID_1_DU, [IND_MID_1_DU], [("~े", "~ि"), ("~े", "अच्~ि"), ("~े", "अ‹~ि"), ("ई~े", "ऐ~ि"), ("उ~े", "औ~ि"), ("उत्~े", "उद~ि"), ("उल्~े", "उद~ि"), ("सम्~े", "सम~ि")], rules {
+        "" => [2 571, 0 12, 3 6, 1 3, 4 2, 5 2, 6 2, 7 2],
+        "द्वहे" => [2 5, 1 2],
     } listed {
         0 => [
             "आस्वहे",
         ],
-        2 => [
+        1 => [
             "छृन्द्वहे",
         ],
         3 => [
-            "अद्वहे",
-        ],
-        4 => [
-            "इन्ध्वहे",
-        ],
-        5 => [
             "ईड्वहे", "ईर्वहे", "ईश्वहे",
         ],
     }, true, None),
@@ -787,42 +758,30 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         ],
     }, true, None),
     // IMPERFECT_MID_2_DU, from IMP_MID_2_DU.
-    relation!(IMPERFECT_MID_2_DU, [IMP_MID_2_DU], [("~", "~"), ("~", "अ~"), ("~", "अच्~"), ("~ण्वाथाम्", "अ~न्वाथाम्"), ("अ~", "आ~"), ("इ~", "ऐ~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("ऊ~", "औ~"), ("ऋ~", "आर्~"), ("सम्~", "सम~")], rules {
-        "" => [1 536, 0 12, 4 12, 7 9, 5 6, 6 6, 2 3, 10 3, 11 3, 3 2, 8 2, 9 2, 12 2],
+    relation!(IMPERFECT_MID_2_DU, [IMP_MID_2_DU], [("~", "~"), ("~", "अच्~"), ("~", "अ‹~"), ("~ण्वाथाम्", "अ~न्वाथाम्"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("सम्~", "सम~")], rules {
+        "" => [2 570, 0 12, 4 6, 1 3, 3 2, 5 2, 6 2, 7 2, 8 2],
     } listed {
         0 => [
             "आसाथाम्",
         ],
-        2 => [
+        1 => [
             "छृन्दाथाम्",
         ],
         4 => [
-            "अदाथाम्",
-        ],
-        5 => [
-            "इन्धाथाम्",
-        ],
-        6 => [
             "ईडाथाम्", "ईराथाम्", "ईशाथाम्",
         ],
     }, true, None),
     // IMPERFECT_MID_2_PL, from IMP_MID_2_PL.
-    relation!(IMPERFECT_MID_2_PL, [IMP_MID_2_PL], [("~", "~"), ("~", "अ~"), ("~", "अच्~"), ("अ~", "आ~"), ("इ~", "ऐ~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("ऊ~", "औ~"), ("ऋ~", "आर्~"), ("सम्~", "सम~")], rules {
-        "" => [1 537, 0 12, 3 12, 6 9, 4 6, 5 6, 10 4, 2 3, 9 3, 7 2, 8 2, 11 2],
+    relation!(IMPERFECT_MID_2_PL, [IMP_MID_2_PL], [("~", "~"), ("~", "अच्~"), ("~", "अ‹~"), ("ई~", "ऐ~"), ("उ~", "औ~"), ("उत्~", "उद~"), ("उल्~", "उद~"), ("सम्~", "सम~")], rules {
+        "" => [2 572, 0 12, 3 6, 1 3, 4 2, 5 2, 6 2, 7 2],
     } listed {
         0 => [
             "आद्ध्वम्",
         ],
-        2 => [
+        1 => [
             "छृन्द्ध्वम्",
         ],
         3 => [
-            "अद्ध्वम्",
-        ],
-        4 => [
-            "इन्द्ध्वम्",
-        ],
-        5 => [
             "ईड्ढ्वम्", "ईर्ध्वम्",
         ],
     }, true, None),
@@ -840,24 +799,18 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "" => [0 620],
     } listed {}, true, None),
     // IMPERFECT_MID_3_PL, from IND_MID_3_PL.
-    relation!(IMPERFECT_MID_3_PL, [IND_MID_3_PL], [("~ण्वते", "अ~न्वत"), ("~े", "~"), ("~े", "अ~"), ("~े", "अच्~"), ("अ~े", "आ~"), ("इ~े", "ऐ~"), ("ई~े", "ऐ~"), ("उ~े", "औ~"), ("उत्~े", "उद~"), ("उल्~े", "उद~"), ("ऊ~े", "औ~"), ("ऋ~े", "आर्~"), ("सम्~े", "सम~")], rules {
-        "" => [2 536, 1 12, 4 12, 7 9, 5 6, 6 6, 3 3, 10 3, 11 3, 0 2, 8 2, 9 2, 12 2],
-        "्दते" => [3 2, 2 1, 7 1],
-        "्वते" => [2 10, 0 2],
+    relation!(IMPERFECT_MID_3_PL, [IND_MID_3_PL], [("~ण्वते", "अ~न्वत"), ("~े", "~"), ("~े", "अच्~"), ("~े", "अ‹~"), ("ई~े", "ऐ~"), ("उ~े", "औ~"), ("उत्~े", "उद~"), ("उल्~े", "उद~"), ("सम्~े", "सम~")], rules {
+        "" => [3 570, 1 12, 4 6, 2 3, 0 2, 5 2, 6 2, 7 2, 8 2],
+        "दते" => [3 6, 2 2],
+        "्वते" => [3 10, 0 2],
     } listed {
         1 => [
             "आसते",
         ],
-        3 => [
+        2 => [
             "छृन्दते",
         ],
         4 => [
-            "अदते",
-        ],
-        5 => [
-            "इन्धते",
-        ],
-        6 => [
             "ईडते", "ईरते", "ईशते",
         ],
     }, true, None),
@@ -971,8 +924,8 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "" => [0 168],
     } listed {}, true, None),
     // CONDITIONAL_MID_1_SG, from FUTURE_MID_1_SG.
-    relation!(CONDITIONAL_MID_1_SG, [FUTURE_MID_1_SG], [("~", "अ~"), ("अ~", "आ~")], rules {
-        "" => [0 160, 1 3],
+    relation!(CONDITIONAL_MID_1_SG, [FUTURE_MID_1_SG], [("~", "अ‹~")], rules {
+        "" => [0 166],
     } listed {}, true, None),
     // CONDITIONAL_MID_1_DU, from CONDITIONAL_MID_1_SG.
     relation!(CONDITIONAL_MID_1_DU, [CONDITIONAL_MID_1_SG], [("~े", "~ावहि")], rules {
@@ -1018,7 +971,7 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         "यति" => [1 112],
     } listed {
         0 => [
-            "अधिगच्छति",
+            "अधिगच्छति", "अवगच्छति",
         ],
     }, true, None),
     // PERFECT_ACT_1_DU, from PERFECT_ACT_2_PL.
@@ -1400,9 +1353,6 @@ pub(super) static RELATIONS: [Relation<'static>; 169] = [
         ],
         4 => [
             "आनज", "युयुज",
-        ],
-        5 => [
-            "अवजग्म",
         ],
     }, true, None),
     // PARTICIPLE_PERF_MID, from PERFECT_MID_1_SG.

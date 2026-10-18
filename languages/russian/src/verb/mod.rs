@@ -68,10 +68,10 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     tables: Cow::Borrowed(&stems::TABLES),
     irregular: irregular::IRREGULAR,
     smoothing: 2.0,
-    sharpness: 1.25,
+    sharpness: 1.0,
     trust: flexion::Trust {
-        regular: 0.9964744,
-        unsettled: 0.9889323,
+        regular: 1.0,
+        unsettled: 0.99767524,
         unattested: 1.0,
     },
 };
@@ -94,33 +94,21 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Participle::*;
-        use crate::Person::*;
-        use crate::Tense::*;
-        let cell = match self {
-            Cell::Infinitive => cell::INFINITIVE,
-            Cell::NonPast(First, crate::Number::Singular) => cell::NON_PAST_1_SG,
-            Cell::NonPast(First, crate::Number::Plural) => cell::NON_PAST_1_PL,
-            Cell::NonPast(Second, crate::Number::Singular) => cell::NON_PAST_2_SG,
-            Cell::NonPast(Second, crate::Number::Plural) => cell::NON_PAST_2_PL,
-            Cell::NonPast(Third, crate::Number::Singular) => cell::NON_PAST_3_SG,
-            Cell::NonPast(Third, crate::Number::Plural) => cell::NON_PAST_3_PL,
-            Cell::Past(crate::Agreement::Masculine) => cell::PAST_M,
-            Cell::Past(crate::Agreement::Feminine) => cell::PAST_F,
-            Cell::Past(crate::Agreement::Neuter) => cell::PAST_N,
-            Cell::Past(crate::Agreement::Plural) => cell::PAST_PL,
-            Cell::Imperative(crate::Number::Singular) => cell::IMPERATIVE_SG,
-            Cell::Imperative(crate::Number::Plural) => cell::IMPERATIVE_PL,
-            Cell::Participle(PresentActive) => cell::PARTICIPLE_PRES_ACT,
-            Cell::Participle(PastActive) => cell::PARTICIPLE_PAST_ACT,
-            Cell::Participle(PresentPassive) => cell::PARTICIPLE_PRES_PASS,
-            Cell::Participle(PastPassive) => cell::PARTICIPLE_PAST_PASS,
-            Cell::Gerund(Present) => cell::GERUND_PRES,
-            Cell::Gerund(Past) => cell::GERUND_PAST,
-        };
-        cell as usize
+        match self {
+            Cell::Infinitive => cell::INFINITIVE as usize,
+            Cell::NonPast(person, number) => {
+                cell::NON_PAST_1_SG as usize + person as usize * 2 + number as usize
+            }
+            Cell::Past(agreement) => cell::PAST_M as usize + agreement as usize,
+            Cell::Imperative(number) => cell::IMPERATIVE_SG as usize + number as usize,
+            Cell::Participle(participle) => {
+                cell::PARTICIPLE_PRES_ACT as usize + participle as usize
+            }
+            Cell::Gerund(tense) => cell::GERUND_PRES as usize + tense as usize,
+        }
     }
 }
 

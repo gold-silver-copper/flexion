@@ -2,40 +2,17 @@
 //! A declension that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 14] = [
     // NOM_DU, from ACC_SG.
     relation!(NOM_DU, [ACC_SG], [("~", "~"), ("~", "~ε"), ("~", "~κτε"), ("~", "~τε"), ("~εᾱ", "~η"), ("~η", "~ει"), ("~ην", "~ᾱ"), ("~ν", "~"), ("~ν", "~δε"), ("~ν", "~ε"), ("~ν", "~θε"), ("~ον", "~ω"), ("~ος", "~εε"), ("~ος", "~ει"), ("~ουν", "~ω"), ("~ρ", "~τε"), ("~ς", "~ε"), ("~ς", "~ι"), ("~ς", "~τε"), ("~υν", "~ε"), ("~ωρ", "~ᾰτε"), ("~ᾰ", "~ε"), ("~ᾰν", "~ᾱ"), ("~ᾰς", "~ᾱ"), ("~ῐ", "~ει"), ("~ῐν", "~ει"), ("~ῠ", "~ει"), ("~ῠ", "~ᾰτε"), ("~ῠν", "~ει"), ("~ῡν", "~ῠε")], rules {
@@ -310,7 +287,7 @@ pub(super) static RELATIONS: [Relation<'static>; 14] = [
             "κᾰλλῐκρεαι", "σελαι",
         ],
         3 => [
-            "υἱει", "ἠρι",
+            "υἱει",
         ],
         17 => [
             "νεῳ",
@@ -668,11 +645,11 @@ pub(super) static RELATIONS: [Relation<'static>; 14] = [
     // ACC_DU, from NOM_DU.
     relation!(ACC_DU, [NOM_DU], [], none, true, None),
     // ACC_PL, from NOM_PL.
-    relation!(ACC_PL, [NOM_PL], [("~", "~"), ("~", "~ς"), ("~αι", "~ᾰς"), ("~αι", "~ᾱς"), ("~ες", "~ς"), ("~ες", "~υς"), ("~ες", "~ᾰς"), ("~ης", "~εᾱς"), ("~ι", "~υς"), ("~οι", "~ως"), ("~ῐες", "~ῑς"), ("~ῠες", "~ῡς"), ("~ῳ", "~ως")], rules {
-        "" => [0 2392, 3 2358, 8 1859, 6 1169, 7 85, 11 49, 10 21, 12 10, 2 7, 9 3, 1 2, 4 2, 5 2],
+    relation!(ACC_PL, [NOM_PL], [("~", "~"), ("~", "~ς"), ("~αι", "~ᾱς"), ("~αι", "~Ᾰς"), ("~ες", "~ς"), ("~ες", "~υς"), ("~ες", "~ᾰς"), ("~ης", "~εᾱς"), ("~ι", "~υς"), ("~οι", "~ως"), ("~ῐες", "~ῑς"), ("~ῠες", "~ῡς"), ("~ῳ", "~ως")], rules {
+        "" => [0 2392, 2 2358, 8 1859, 6 1169, 7 85, 11 49, 10 21, 12 10, 3 6, 9 3, 1 2, 4 2, 5 2],
         "η" => [0 136],
-        "ι" => [3 2358, 8 1859, 2 7, 9 3, 1 2],
-        "αι" => [3 2358, 2 7],
+        "ι" => [2 2358, 8 1859, 3 6, 9 3, 1 2],
+        "αι" => [2 2358, 3 6],
         "οι" => [8 1859, 9 3, 1 2],
         "ς" => [6 1169, 0 485, 7 85, 11 49, 10 21, 4 2, 5 2],
         "ες" => [6 1169, 11 49, 10 21, 4 2, 5 2],
@@ -690,7 +667,14 @@ pub(super) static RELATIONS: [Relation<'static>; 14] = [
         "ᾰ" => [0 1763],
         "ᾱ" => [0 6],
         "ῳ" => [12 10],
-    } listed {}, true, None),
+    } listed {
+        2 => [
+            "γᾰλᾰται",
+        ],
+        3 => [
+            "γᾰλᾰται",
+        ],
+    }, true, None),
     // VOC_SG, from NOM_SG.
     relation!(VOC_SG, [NOM_SG], [("~", "~"), ("~ηρ", "~ερ"), ("~ης", "~ες"), ("~ης", "~ᾰ"), ("~ος", "~ε"), ("~ς", "~"), ("~ς", "~ν"), ("~υς", "~ν"), ("~ω", "~οι"), ("~ων", "~ον"), ("~ωρ", "~ορ"), ("~ᾱς", "~ᾰ"), ("~ᾱς", "~ᾰν")], rules {
         "" => [0 4572, 4 1788, 5 1062, 3 323, 9 61, 10 32, 1 10, 8 10, 12 9, 6 6, 11 6, 2 3, 7 3],

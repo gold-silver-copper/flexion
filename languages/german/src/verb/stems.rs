@@ -327,17 +327,17 @@ pub(super) static TABLES: [EndingTable<'static>; 40] = [
             "~äßen\t",
         )),
     },
-    // sg like machen: 3,408 words.
+    // sg like machen: 3,410 words.
     EndingTable {
         name: Cow::Borrowed("machen"),
-        words: 3408,
+        words: 3410,
         slot: 6,
         table: Cow::Borrowed(concat!("~e\t", "~est\t", "~e\t", "~|~e\t",)),
     },
-    // sg like sein: 35 words.
+    // sg like sein: 33 words.
     EndingTable {
         name: Cow::Borrowed("sein"),
-        words: 35,
+        words: 33,
         slot: 6,
         table: Cow::Borrowed(concat!("~\t", "~st\t", "~\t", "~\t",)),
     },

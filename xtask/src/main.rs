@@ -2,7 +2,17 @@
 //!
 //! - `extract`: read the language's Kaikki dumps into a lexeme cache
 //!   (`--to <file>`: elsewhere);
-//! - `build`: learn the language's grammar, measure it, and write its crate;
+//! - `build`: learn the language's grammar, measure it, and write its crate,
+//!   only the files whose bytes changed. What it learned and measured is
+//!   saved in `target/build-cache/`, under a key of everything it was
+//!   computed from but the printer (see `flexion_train::saved`): a build
+//!   whose key is saved only reprints (`--relearn`: learn afresh all the
+//!   same). `build all` or `build a,b`: those languages, each in a process
+//!   of its own, its output in `target/build-cache/logs/`
+//!   (`--lanes N`: N at once, longest first, never two that need much
+//!   memory, Finnish and Turkish; `--wrap "<command>"`: each run behind
+//!   that command, split at spaces, as `systemd-run --user --scope -q -p
+//!   MemoryMax=16G -p MemorySwapMax=0`);
 //! - `readme`: rewrite a built crate's README, keeping its report;
 //! - `try`: learn on nine tenths of the words and score the held-out tenth,
 //!   the development tenth (`--final`: the tenth the READMEs report; it
@@ -22,10 +32,12 @@
 //!   and by word group (`--apart <text>`: the cells whose name has it
 //!   apart from the rest) (or two sweeps: every language's, with their time
 //!   and memory);
-//! - `sweep <dir>`: `try --quick` for every language, one after another,
-//!   each saved in `<dir>` with its time and peak memory (`--only
-//!   a,b`: those languages; `--final`: the READMEs' tenth; `--pool`: small
-//!   parts of speech on four tenths, as `try --pool`);
+//! - `sweep <dir>`: `try --quick` for every language, each in a process of
+//!   its own, its outcomes saved in `<dir>` with its output (`<language>.log`),
+//!   its time and peak memory in `<dir>/summary.tsv` (`--only a,b`: those
+//!   languages; `--final`: the READMEs' tenth; `--pool`: small parts of
+//!   speech on four tenths, as `try --pool`; `--lanes N` and `--wrap`: as
+//!   `build`'s);
 //! - `audit`: a sample of wrong answers with their kind (`--cells
 //!   weak|<cells>`, `--n 200`);
 //! - `sigmorphon <file>`: score on a SIGMORPHON 2023 file;
@@ -38,6 +50,7 @@
 mod audit;
 mod bench;
 mod editors;
+mod lanes;
 mod outcomes;
 mod yardsticks;
 
@@ -47,7 +60,7 @@ use flexion_train::{choose, eval, learn, measure, script};
 use std::path::PathBuf;
 use std::time::Instant;
 
-const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
+const USAGE: &str = "usage: cargo xtask <extract|build|readme|try|audit|sigmorphon|nonce|bench|inspect> <language> [--relearn] [--lanes N] [--wrap <command>] [--pos <part of speech>] [--errors N] [--quick] [--fold N] [--final] [--given] [--save <file>] [--hold-cells auto|<cells>] [--train-share N] [--drop-cells N] [--pool] [--diagnose] [--without-editions] [--word <a,b>] [--parts] [--cells weak|<cells>] [--n N] [--dump <file>] [<file>]; cargo xtask compare <a> <b> [--apart <text>]";
 
 fn main() {
     if let Err(e) = run() {
@@ -77,16 +90,41 @@ fn run() -> Result<(), String> {
     if matches!(command.as_str(), "try" | "sweep") && !args.iter().any(|a| a == "--final") {
         flexion_train::stage::keep_in(workspace().join("target").join("stage-cache"));
     }
+    let lanes = flag("--lanes").map_or(Ok(1), |n| {
+        n.parse::<usize>()
+            .ok()
+            .filter(|&n| n > 0)
+            .ok_or("bad --lanes")
+    })?;
+    let wrap = flag("--wrap");
     if command == "sweep" {
+        let run = Sweep {
+            dir: name.into(),
+            last: args.iter().any(|a| a == "--final"),
+            diagnose: args.iter().any(|a| a == "--diagnose"),
+            pool: args.iter().any(|a| a == "--pool"),
+        };
+        if let Some(one) = flag("--one") {
+            let lang = flexion_configs::by_name(&one).ok_or(format!("no language {one}"))?;
+            return sweep_one(&run, &lang);
+        }
         let only = flag("--only");
         let only: Option<Vec<&str>> = only.as_deref().map(|o| o.split(',').collect());
-        return sweep(
-            name.as_ref(),
-            only.as_deref(),
-            args.iter().any(|a| a == "--final"),
-            args.iter().any(|a| a == "--diagnose"),
-            args.iter().any(|a| a == "--pool"),
-        );
+        return sweep(&run, only.as_deref(), lanes, wrap.as_deref());
+    }
+    if command == "build" {
+        let relearn = args.iter().any(|a| a == "--relearn");
+        let langs: Vec<Language> = if name == "all" {
+            flexion_configs::all()
+        } else {
+            name.split(',')
+                .map(|n| flexion_configs::by_name(n).ok_or(format!("no language {n}")))
+                .collect::<Result<_, _>>()?
+        };
+        return match langs.as_slice() {
+            [lang] if flag("--lanes").is_none() && wrap.is_none() => build(lang, relearn),
+            _ => build_all(&langs, relearn, lanes, wrap.as_deref()),
+        };
     }
     let lang = flexion_configs::by_name(name).ok_or(format!("no language {name}"))?;
     let percent = |f: &str, default: u8| {
@@ -110,7 +148,6 @@ fn run() -> Result<(), String> {
             flag("--to").map(PathBuf::from),
             args.iter().any(|a| a == "--editors"),
         ),
-        "build" => build(&lang),
         "readme" => readme(&lang),
         "try" => {
             let mut settings = choose::Settings::default();
@@ -140,6 +177,7 @@ fn run() -> Result<(), String> {
                 diagnose: args.iter().any(|a| a == "--diagnose"),
                 pool: args.iter().any(|a| a == "--pool"),
                 main_only: args.iter().any(|a| a == "--without-editions"),
+                again: false,
             };
             try_language(&lang, flag("--pos").as_deref(), &options)
         }
@@ -270,31 +308,14 @@ fn extract_dumps(lang: &Language, to: Option<PathBuf>, editors: bool) -> Result<
 
 fn load(lang: &Language) -> Result<Vec<PosData>, String> {
     let path = cache(lang);
-    let bytes = std::fs::read(&path).map_err(|e| {
-        format!(
-            "{}: {e} (run `cargo xtask extract {}` first)",
+    if !path.exists() {
+        return Err(format!(
+            "{}: no extracted data (run `cargo xtask extract {}` first)",
             path.display(),
             lang.name
-        )
-    })?;
-    let mut data: Vec<PosData> = serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
-    // The editors' analyses, where the cache lacks them, from its sidecar.
-    if let Ok(bytes) = std::fs::read(editors_file(lang)) {
-        let sidecar: Vec<Vec<(u8, usize, extract::Editors)>> =
-            serde_json::from_slice(&bytes).map_err(|e| e.to_string())?;
-        for (d, side) in data.iter_mut().zip(sidecar) {
-            let mut by: std::collections::HashMap<(u8, usize), extract::Editors> = side
-                .into_iter()
-                .map(|(source, order, e)| ((source, order), e))
-                .collect();
-            for l in d.lexemes.iter_mut().filter(|l| l.editors.is_empty()) {
-                if let Some(e) = by.remove(&(l.source, l.order)) {
-                    l.editors = e;
-                }
-            }
-        }
+        ));
     }
-    Ok(data)
+    extract::load(&path, &editors_file(lang))
 }
 
 /// The cache's sidecar of the editors' analyses
@@ -333,6 +354,10 @@ struct TryOptions {
     pool: bool,
     /// Learn from the main dump's words only, not other editions'.
     main_only: bool,
+    /// Another tenth of a pooled run (see [`try_language`]): what doesn't
+    /// depend on the tenth (a small part's words left out in turn) isn't
+    /// measured again.
+    again: bool,
 }
 
 /// A part of speech with fewer words is scored on several development
@@ -466,6 +491,7 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
                 let tenth = TryOptions {
                     fold,
                     save: None,
+                    again: true,
                     ..o.clone()
                 };
                 try_tenth(lang, &data, Some(part.name), &tenth, &mut saved, &mut marks)?;
@@ -485,8 +511,8 @@ fn try_language(lang: &Language, only: Option<&str>, o: &TryOptions) -> Result<(
 type Marks = std::collections::BTreeMap<
     u64,
     (
-        Option<flexion::Marks<'static>>,
-        Option<flexion::Marks<'static>>,
+        Option<flexion_train::marks::LanguageMarks>,
+        Option<flexion_train::marks::LanguageMarks>,
     ),
 >;
 
@@ -503,6 +529,7 @@ fn try_tenth(
     let settings = o.settings;
     let dev = eval::dev_of(fold);
     let script = script::Script::new(&lang.spelling);
+    let stated = script.stated_length.as_str();
     // The language's marks model, from every part of speech's training
     // words (and those less the dev tenth, for the sharpness).
     let trained = |l: &Lexeme| {
@@ -518,10 +545,20 @@ fn try_tenth(
         None => {
             let train_marks = marks(&trained)?;
             if let Some(m) = &train_marks {
+                let checked: Vec<String> = (m.checked.iter())
+                    .map(|(part, fixed, broken)| format!("{part} +{fixed} −{broken}"))
+                    .collect();
+                let rootless: Vec<&str> = m.rootless().collect();
                 println!(
-                    "  marks: {} rules, {} roots",
-                    m.rules.rules.len(),
-                    m.roots.len()
+                    "  marks: {} rules, {} roots; lemmas the roots spell right and wrong on half the words: {}; no roots for: {}",
+                    m.marks.rules.rules.len(),
+                    m.marks.roots.len(),
+                    checked.join(", "),
+                    if rootless.is_empty() {
+                        "none".to_string()
+                    } else {
+                        rootless.join(", ")
+                    }
                 );
             }
             let fit_marks = if o.quick {
@@ -541,7 +578,7 @@ fn try_tenth(
             only,
             &trained,
             fold,
-            &train_marks,
+            &train_marks.as_ref().map(|m| m.marks.clone()),
             settings,
         );
     }
@@ -610,7 +647,7 @@ fn try_tenth(
                 .filter(|l| eval::bucket(&l.key) == dev && l.source == 0)
                 .collect();
             let shape = learn::Shape {
-                marks: fit_marks.clone(),
+                marks: fit_marks.as_ref().map(|m| m.of(part.name)),
                 ..shape.clone()
             };
             let g = learn::learn(script.orthography(), &shape, &fit, settings).grammar;
@@ -622,7 +659,7 @@ fn try_tenth(
             .filter(|l| eval::bucket(&l.key) == fold && l.source == 0)
             .collect();
         let t = Instant::now();
-        shape.marks = train_marks.clone();
+        shape.marks = train_marks.as_ref().map(|m| m.of(part.name));
         let mut learned = learn::learn(script.orthography(), &shape, &train, settings);
         learned.grammar.sharpness = sharpness;
         learned.grammar.trust = trust;
@@ -814,12 +851,15 @@ fn try_tenth(
                 a.class.exceptions.len(),
             );
         }
-        {
+        if test.is_empty() {
+            println!("  no held-out words: no score (–)");
+        } else {
             // The floor learns from the same words as the grammar, every edition's.
             let main: Vec<&Lexeme> = train.iter().collect();
             let out = eval::outcomes(
                 g,
                 &g.orthography,
+                stated,
                 &test,
                 eval::Input::Headword,
                 &learned.seen,
@@ -827,7 +867,7 @@ fn try_tenth(
             );
             let s = eval::Score::of(&out);
             let pct = |(f, r): (usize, usize)| 100.0 * r as f64 / f.max(1) as f64;
-            let floored = eval::floor(&g.orthography, &main, &test, g.lemma_cell);
+            let floored = eval::floor(&g.orthography, stated, &main, &test, g.lemma_cell);
             let (floor, floor_unseen) = eval::floor_shares(&out, &floored);
             println!(
                 "  floor {:.2}% (unseen cells {:.2}%); seen cells {:.2}% ({}), unseen cells {:.2}% ({})",
@@ -838,7 +878,7 @@ fn try_tenth(
                 pct(s.unseen),
                 s.unseen.0
             );
-            let c = measure::compare(&eval::against_floor(&out, &floored, |_| true));
+            let c = measure::compare(&eval::against_floor(&out, &floored, |_| true, false));
             println!(
                 "  against the floor (letters, same forms): {:+.2} ({:+.2} … {:+.2}), {} words better, {} worse, sign p {:.2e}",
                 100.0 * (c.b - c.a),
@@ -848,6 +888,23 @@ fn try_tenth(
                 c.worse,
                 c.p
             );
+            if !stated.is_empty() {
+                // A second score, never more right forms: see `eval::TableLength`.
+                let c = measure::compare(&eval::against_floor(&out, &floored, |_| true, true));
+                println!(
+                    "  compatible with stated length (a second score; top-1 stays the score): top-1 {:.2}% (strictly {:.2}%), floor {:.2}% (strictly {:.2}%); against the floor {:+.2} ({:+.2} … {:+.2}), {} words better, {} worse, sign p {:.2e}",
+                    100.0 * s.compatible_accuracy(),
+                    100.0 * s.accuracy(),
+                    100.0 * eval::floor_compatible(&floored),
+                    100.0 * floor,
+                    100.0 * (c.b - c.a),
+                    100.0 * c.low,
+                    100.0 * c.high,
+                    c.better,
+                    c.worse,
+                    c.p
+                );
+            }
             // The same apart for the words built on a training word, and the
             // rest.
             let keys: flexion_train::HashSet<&str> = train.iter().map(|l| l.key.as_str()).collect();
@@ -865,7 +922,7 @@ fn try_tenth(
                     })
                     .cloned()
                     .collect();
-                let c = measure::compare(&eval::against_floor(&mine, &floored, |_| true));
+                let c = measure::compare(&eval::against_floor(&mine, &floored, |_| true, false));
                 println!(
                     "    {label}: grammar {:.2}%, floor {:.2}%, {:+.2} ({:+.2} … {:+.2})",
                     100.0 * c.b,
@@ -930,9 +987,15 @@ fn try_tenth(
             cells: &names,
         };
         for input in inputs {
-            let out = eval::outcomes(g, &g.orthography, &test, input, &learned.seen, |c| {
-                !is_held(c)
-            });
+            let out = eval::outcomes(
+                g,
+                &g.orthography,
+                stated,
+                &test,
+                input,
+                &learned.seen,
+                |c| !is_held(c),
+            );
             let s = eval::Score::of(&out);
             if s.words == 0 {
                 continue;
@@ -941,20 +1004,25 @@ fn try_tenth(
                 "{}",
                 score_line(&format!("held-out {input:?}"), s.words, &s)
             );
+            if !stated.is_empty() {
+                println!(
+                    "    compatible with stated length: {:.2}%",
+                    100.0 * s.compatible_accuracy()
+                );
+            }
             println!("    errors: {}", s.census());
             if blocks.len() > 1 {
                 let (mean, scores) = eval::by_block(&out, &blocks);
-                let each: Vec<String> = cells
+                let named: Vec<(String, eval::Score)> = cells
                     .groups
                     .iter()
-                    .zip(&scores)
-                    .filter(|(_, s)| s.forms > 0)
-                    .map(|(g, s)| format!("{} {:.2}% ({})", g.name, 100.0 * s.accuracy(), s.forms))
+                    .map(|g| g.name.to_string())
+                    .zip(scores)
                     .collect();
                 println!(
-                    "    by block: mean {:.2}%; {}",
-                    100.0 * mean,
-                    each.join(", ")
+                    "    by block: mean {}; {}",
+                    mean.map_or("–".to_string(), |m| format!("{:.2}%", 100.0 * m)),
+                    flexion_train::report::blocks(&named)
                 );
             }
             let bins: Vec<String> = s
@@ -970,6 +1038,7 @@ fn try_tenth(
             let out = eval::outcomes(
                 g,
                 &g.orthography,
+                stated,
                 &test,
                 eval::Input::Headword,
                 &learned.seen,
@@ -981,6 +1050,67 @@ fn try_tenth(
                 score_line("held-out cells, from the headword", s.words, &s)
             );
             saved.add(part.name, "held-cells", &saving, &out);
+        }
+        if !o.again && flexion_train::pipeline::small(part, test.len()) {
+            // A small part of speech is judged on its own words, learned from
+            // every word, with a new word's score beside: each left out in turn.
+            let kept = |l: &Lexeme| !o.main_only || l.source == 0;
+            let mut every: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
+            every.extend(
+                flexion_train::teachers(lang, part, data, kept)
+                    .into_iter()
+                    .cloned(),
+            );
+            let mut seen = std::collections::HashSet::new();
+            let own: Vec<&Lexeme> = d
+                .lexemes
+                .iter()
+                .filter(|l| l.source == 0 && seen.insert(l.key.as_str()))
+                .collect();
+            let all = learn::learn(script.orthography(), &shape, &every, settings);
+            let reproduced = eval::score(
+                &all.grammar,
+                &all.grammar.orthography,
+                stated,
+                &own,
+                eval::Input::Headword,
+                &all.seen,
+            );
+            let (left, by_tenth) = flexion_train::pipeline::left_out(
+                script.orthography(),
+                stated,
+                &shape,
+                &every,
+                &own,
+                settings,
+            );
+            let new = eval::Score::of(&left);
+            println!(
+                "  {}: reproduced {} of {} forms of its {} words; a new word, each {} left out in turn: top-1 {:.2}% of {} forms ({} words)",
+                if part.closed() {
+                    "a closed class".to_string()
+                } else {
+                    format!(
+                        "fewer than {} held-out words",
+                        flexion_train::pipeline::SMALL
+                    )
+                },
+                reproduced.right,
+                reproduced.forms,
+                own.len(),
+                if by_tenth { "tenth" } else { "word" },
+                100.0 * new.accuracy(),
+                new.forms,
+                new.words
+            );
+            let ids = outcomes::word_ids(&own);
+            let groups = vec!["left-out".to_string(); own.len()];
+            let words = outcomes::Words {
+                ids: &ids,
+                groups: &groups,
+                cells: &names,
+            };
+            saved.add(part.name, "left-out", &words, &left);
         }
         editors::report(lang, part, &learned, &train, &test);
         if o.diagnose {
@@ -1030,6 +1160,7 @@ fn try_tenth(
         let s = eval::score(
             g,
             &g.orthography,
+            stated,
             &train_refs,
             eval::Input::Headword,
             &learned.seen,
@@ -1122,72 +1253,108 @@ fn floor_cells(out: &[eval::Outcome], floored: &[eval::FloorOutcome], names: &[S
     }
 }
 
-/// How long a quick `try` of each language took, in minutes, when last
-/// measured (PR #16): for the estimate a sweep prints before it starts.
-const MINUTES: &[(&str, f64)] = &[
-    ("finnish", 15.0),
-    ("german", 13.0),
-    ("russian", 10.0),
-    ("polish", 6.0),
-    ("ancient-greek", 6.0),
-    ("latin", 4.0),
-    ("turkish", 2.0),
-    ("spanish", 2.0),
-    ("italian", 2.0),
-    ("english", 1.5),
-    ("french", 0.5),
-    ("sanskrit", 0.5),
-];
-
-/// `cargo xtask sweep <dir>`: a quick `try` of every language (or those
-/// `only` names), one after another, each run's outcomes saved in `dir` as
-/// `<language>.tsv` and its seconds and peak memory in `dir/summary.tsv`;
-/// on the READMEs' tenth when `last`.
-fn sweep(
-    dir: &std::path::Path,
-    only: Option<&[&str]>,
+/// What a sweep runs: a quick `try` of each language, saved in `dir`.
+struct Sweep {
+    dir: PathBuf,
+    /// On the READMEs' tenth.
     last: bool,
     diagnose: bool,
     pool: bool,
+}
+
+/// `cargo xtask sweep <dir>`: a quick `try` of every language (or those
+/// `only` names), `lanes` at once (see [`lanes::run`]), each run's outcomes
+/// saved in `dir` as `<language>.tsv`, its output as `<language>.log`, and
+/// its seconds and peak memory in `dir/summary.tsv`.
+fn sweep(
+    run: &Sweep,
+    only: Option<&[&str]>,
+    lanes: usize,
+    wrap: Option<&str>,
 ) -> Result<(), String> {
-    let langs: Vec<Language> = flexion_configs::all()
+    let dir = &run.dir;
+    let langs: Vec<&'static str> = flexion_configs::all()
         .into_iter()
-        .filter(|l| only.is_none_or(|o| o.contains(&l.name)))
+        .map(|l| l.name)
+        .filter(|l| only.is_none_or(|o| o.contains(l)))
         .collect();
     let minutes: f64 = langs
         .iter()
-        .map(|l| MINUTES.iter().find(|m| m.0 == l.name).map_or(5.0, |m| m.1))
+        .map(|l| lanes::cost(l, lanes::Kind::Try).0)
         .sum();
     eprintln!(
-        "sweeping {} languages, about {minutes:.0} minutes",
+        "sweeping {} languages, about {minutes:.0} minutes of runs on {lanes} lanes",
         langs.len()
     );
     std::fs::create_dir_all(dir).map_err(|e| format!("{}: {e}", dir.display()))?;
-    let mut summary = String::from(
-        "language	seconds	peak MB
-",
-    );
-    for lang in &langs {
-        let options = TryOptions {
-            quick: true,
-            fold: if last { eval::TEST } else { eval::DEVELOP },
-            save: Some(dir.join(format!("{}.tsv", lang.name))),
-            share: 100,
-            diagnose,
-            pool,
-            ..TryOptions::default()
+    let flags = [
+        ("--final", run.last),
+        ("--diagnose", run.diagnose),
+        ("--pool", run.pool),
+    ];
+    let jobs = langs
+        .iter()
+        .map(|&lang| lanes::Job {
+            lang,
+            args: ["sweep", &dir.to_string_lossy(), "--one", lang]
+                .into_iter()
+                .chain(flags.iter().filter(|f| f.1).map(|f| f.0))
+                .map(str::to_string)
+                .collect(),
+            log: dir.join(format!("{lang}.log")),
+        })
+        .collect();
+    // Each language's row, in the languages' order whatever order they end in.
+    let mut rows: Vec<(usize, String)> = Vec::new();
+    let failed = lanes::run(jobs, lanes::Kind::Try, lanes, wrap, |lang, ok| {
+        if !ok {
+            return;
+        }
+        let path = dir.join(format!("{lang}.row"));
+        let row = match std::fs::read_to_string(&path) {
+            Ok(row) => row,
+            Err(e) => return eprintln!("{}: {e}", path.display()),
         };
-        flexion_train::trace::reset_peak();
-        let t = Instant::now();
-        try_language(lang, None, &options)?;
-        let secs = t.elapsed().as_secs_f64();
-        let peak = flexion_train::trace::peak_mb().unwrap_or(0);
-        eprintln!("{}: {secs:.0}s, peak {peak} MB", lang.name);
-        summary.push_str(&format!("{}\t{secs:.0}\t{peak}\n", lang.name));
+        let _ = std::fs::remove_file(&path);
+        rows.push((langs.iter().position(|l| *l == lang).unwrap_or(0), row));
+        rows.sort();
+        let summary: String = std::iter::once("language\tseconds\tpeak MB\n")
+            .chain(rows.iter().map(|r| r.1.as_str()))
+            .collect();
         let path = dir.join("summary.tsv");
-        std::fs::write(&path, &summary).map_err(|e| format!("{}: {e}", path.display()))?;
+        if let Err(e) = std::fs::write(&path, summary) {
+            eprintln!("{}: {e}", path.display());
+        }
+    })?;
+    if failed.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("failed: {}", failed.join(", ")))
     }
-    Ok(())
+}
+
+/// One language of a sweep, in the process the sweep started for it (`sweep
+/// <dir> --one <language>`): its outcomes in `dir/<language>.tsv`, its
+/// seconds and peak memory in `dir/<language>.row` for the sweep's summary.
+fn sweep_one(run: &Sweep, lang: &Language) -> Result<(), String> {
+    let options = TryOptions {
+        quick: true,
+        fold: if run.last { eval::TEST } else { eval::DEVELOP },
+        save: Some(run.dir.join(format!("{}.tsv", lang.name))),
+        share: 100,
+        diagnose: run.diagnose,
+        pool: run.pool,
+        ..TryOptions::default()
+    };
+    flexion_train::trace::reset_peak();
+    let t = Instant::now();
+    try_language(lang, None, &options)?;
+    let secs = t.elapsed().as_secs_f64();
+    let peak = flexion_train::trace::peak_mb().unwrap_or(0);
+    eprintln!("{}: {secs:.0}s, peak {peak} MB", lang.name);
+    let path = run.dir.join(format!("{}.row", lang.name));
+    std::fs::write(&path, format!("{}\t{secs:.0}\t{peak}\n", lang.name))
+        .map_err(|e| format!("{}: {e}", path.display()))
 }
 
 /// How well the paradigms build words apart from how well the grammar
@@ -1612,7 +1779,8 @@ fn inspect(
     let mut shape = flexion_train::shape(lang, part)?;
     let kept = |l: &Lexeme| holdout.is_none_or(|fold| eval::bucket(&l.key) != fold);
     let settings = choose::Settings::default();
-    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?;
+    shape.marks = flexion_train::marks(lang, &script.orthography(), &data, kept, settings)?
+        .map(|m| m.of(part.name));
     let lexemes: Vec<Lexeme> = d.lexemes.iter().filter(|l| kept(l)).cloned().collect();
     let learned = learn::learn(
         script.orthography(),
@@ -1850,13 +2018,50 @@ fn readme(lang: &Language) -> Result<(), String> {
     std::fs::write(&path, text).map_err(|e| format!("{}: {e}", path.display()))
 }
 
-fn build(lang: &Language) -> Result<(), String> {
+/// Where builds keep what they learned (see `flexion_train::saved`), and
+/// their logs and formatting.
+fn build_cache() -> PathBuf {
+    workspace().join("target").join("build-cache")
+}
+
+/// `cargo xtask build <language>`: learn the language's grammar and measure
+/// it, unless that is saved under its key, and write its crate: only the
+/// files whose bytes changed.
+fn build(lang: &Language, relearn: bool) -> Result<(), String> {
     let t = Instant::now();
-    let data = load(lang)?;
     let script = script::Script::new(&lang.spelling);
-    let (grammars, measured) =
-        flexion_train::pipeline::build(lang, &script, &data, choose::Settings::default())?;
-    let report = flexion_train::pipeline::report(lang, &grammars, &measured);
+    let settings = choose::Settings::default();
+    let saved = build_cache();
+    let key = flexion_train::saved::key(lang, settings, &[&cache(lang), &editors_file(lang)])?;
+    let kept = if relearn {
+        None
+    } else {
+        flexion_train::saved::load(&saved, lang.name, key, &script).unwrap_or_else(|e| {
+            eprintln!("{e}: learning afresh");
+            None
+        })
+    };
+    let (grammars, measured) = match kept {
+        Some(kept) => {
+            eprintln!(
+                "{}: learned and measured before (key {key:016x})",
+                lang.name
+            );
+            kept
+        }
+        None => {
+            let data = load(lang)?;
+            let (grammars, measured) =
+                flexion_train::pipeline::build(lang, &script, &data, settings)?;
+            match flexion_train::saved::save(&saved, lang.name, key, &script, &grammars, &measured)
+            {
+                Ok(()) => eprintln!("{}: saved (key {key:016x})", lang.name),
+                Err(e) => eprintln!("{}: not saved: {e}", lang.name),
+            }
+            (grammars, measured)
+        }
+    };
+    let report = flexion_train::report::report(lang, &grammars, &measured);
     let parts: Vec<flexion_train::print::Part<'_, '_>> = lang
         .parts
         .iter()
@@ -1877,22 +2082,65 @@ fn build(lang: &Language) -> Result<(), String> {
     let report = format!("{}{sizes}", report.trim_end());
     let files =
         flexion_train::print::files(lang, &script, &parts, &format!("{}\n", report.trim_end()))?;
-    let dir = workspace().join("languages").join(lang.name);
-    flexion_train::print::write(&dir, &files)?;
+    // Formatted apart, then written into the crate where its bytes differ.
+    let stage = saved.join("stage").join(lang.name);
+    flexion_train::print::write(&stage, &files)?;
     let status = std::process::Command::new("rustfmt")
         .args(["--edition", "2024"])
-        .arg(dir.join("src/lib.rs"))
+        .arg(stage.join("src/lib.rs"))
         .status()
         .map_err(|e| format!("rustfmt: {e}"))?;
     if !status.success() {
         return Err("rustfmt failed on the written crate".into());
     }
+    let formatted = files
+        .iter()
+        .map(|(path, _)| {
+            let at = stage.join(path);
+            let text =
+                std::fs::read_to_string(&at).map_err(|e| format!("{}: {e}", at.display()))?;
+            Ok((path.clone(), text))
+        })
+        .collect::<Result<Vec<_>, String>>()?;
+    let dir = workspace().join("languages").join(lang.name);
+    let written = flexion_train::print::write(&dir, &formatted)?;
     eprintln!(
-        "wrote {} in {:.0}s",
+        "wrote {} ({written} of {} files changed) in {:.0}s",
         dir.display(),
+        formatted.len(),
         t.elapsed().as_secs_f64()
     );
     Ok(())
+}
+
+/// `cargo xtask build all` (or `build a,b`): each language built in a
+/// process of its own, `lanes` at once (see [`lanes::run`]), its output in
+/// `target/build-cache/logs/<language>.log`.
+fn build_all(
+    langs: &[Language],
+    relearn: bool,
+    lanes: usize,
+    wrap: Option<&str>,
+) -> Result<(), String> {
+    let logs = build_cache().join("logs");
+    let jobs = langs
+        .iter()
+        .map(|l| lanes::Job {
+            lang: l.name,
+            args: ["build", l.name]
+                .into_iter()
+                .chain(relearn.then_some("--relearn"))
+                .map(str::to_string)
+                .collect(),
+            log: logs.join(format!("{}.log", l.name)),
+        })
+        .collect();
+    let failed = lanes::run(jobs, lanes::Kind::Build, lanes, wrap, |_, _| {})?;
+    if failed.is_empty() {
+        Ok(())
+    } else {
+        Err(format!("failed: {}", failed.join(", ")))
+    }
 }
 
 /// One letter per accent place, for patterns printed in a row.

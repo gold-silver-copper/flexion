@@ -237,27 +237,27 @@ pub enum Conjugation {
     Echar,
     /// Like `realizar`: 1,200 words.
     Realizar,
-    /// Like `incautarse`: 724 words.
+    /// Like `incautarse`: 723 words.
     Incautarse,
-    /// Like `acomodarse`: 591 words.
+    /// Like `acomodarse`: 589 words.
     Acomodarse,
-    /// Like `quejarse`: 564 words.
+    /// Like `quejarse`: 565 words.
     Quejarse,
     /// Like `rilarse`: 548 words.
     Rilarse,
     /// Like `atipujarse`: 398 words.
     Atipujarse,
-    /// Like `regodearse`: 358 words.
+    /// Like `regodearse`: 360 words.
     Regodearse,
     /// Like `conocer`: 330 words.
     Conocer,
     /// Like `curtir`: 328 words.
     Curtir,
-    /// Like `sacar`: 249 words.
+    /// Like `sacar`: 251 words.
     Sacar,
     /// Like `fosilizarse`: 249 words.
     Fosilizarse,
-    /// Like `autoabastecerse`: 176 words.
+    /// Like `autoabastecerse`: 175 words.
     Autoabastecerse,
     /// Like `meter`: 145 words.
     Meter,
@@ -271,7 +271,7 @@ pub enum Conjugation {
     Desviar,
     /// Like `instruir`: 105 words.
     Instruir,
-    /// Like `sonar`: 80 words.
+    /// Like `sonar`: 78 words.
     Sonar,
     /// Like `atravesarse`: 70 words.
     Atravesarse,
@@ -309,7 +309,7 @@ pub enum Conjugation {
     Trasegar,
     /// Like `convenir`: 24 words.
     Convenir,
-    /// Like `reducir`: 24 words.
+    /// Like `reducir`: 23 words.
     Reducir,
     /// Like `escribir`: 23 words.
     Escribir,
@@ -371,18 +371,18 @@ pub enum Conjugation {
     Armarse,
     /// Like `hacer`: 12 words.
     Hacer,
-    /// Like `moler`: 12 words.
+    /// Like `moler`: 11 words.
     Moler,
     /// Like `escabullirse`: 11 words.
     Escabullirse,
     /// Like `apanucarse`: 11 words.
     Apanucarse,
+    /// Like `lucir`: 11 words.
+    Lucir,
     /// Like `suscribirse`: 10 words.
     Suscribirse,
     /// Like `retraerse`: 10 words.
     Retraerse,
-    /// Like `lucir`: 10 words.
-    Lucir,
     /// Like `enamoriscarse`: 9 words.
     Enamoriscarse,
     /// Like `apuñuscarse`: 9 words.
@@ -407,6 +407,8 @@ pub enum Conjugation {
     Desmedirse,
     /// Like `creerse`: 8 words.
     Creerse,
+    /// Like `deshacerse`: 8 words.
+    Deshacerse,
     /// Like `empezar`: 7 words.
     Empezar,
     /// Like `regir`: 7 words.
@@ -423,11 +425,9 @@ pub enum Conjugation {
     Aterirse,
     /// Like `jetiarse`: 7 words.
     Jetiarse,
-    /// Like `deshacerse`: 7 words.
-    Deshacerse,
     /// Like `relamerse`: 7 words.
     Relamerse,
-    /// Like `mover`: 6 words.
+    /// Like `mover`: 7 words.
     Mover,
     /// Like `seguir`: 6 words.
     Seguir,
@@ -628,9 +628,9 @@ impl Conjugation {
         Conjugation::Moler,
         Conjugation::Escabullirse,
         Conjugation::Apanucarse,
+        Conjugation::Lucir,
         Conjugation::Suscribirse,
         Conjugation::Retraerse,
-        Conjugation::Lucir,
         Conjugation::Enamoriscarse,
         Conjugation::Apuñuscarse,
         Conjugation::Abrir,
@@ -643,6 +643,7 @@ impl Conjugation {
         Conjugation::Reducirse,
         Conjugation::Desmedirse,
         Conjugation::Creerse,
+        Conjugation::Deshacerse,
         Conjugation::Empezar,
         Conjugation::Regir,
         Conjugation::Prever,
@@ -651,7 +652,6 @@ impl Conjugation {
         Conjugation::Venirse,
         Conjugation::Aterirse,
         Conjugation::Jetiarse,
-        Conjugation::Deshacerse,
         Conjugation::Relamerse,
         Conjugation::Mover,
         Conjugation::Seguir,
@@ -759,8 +759,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~zando";
     participle_m: "~zado", _;
     ),
-    // Incautarse: 724 words (llamarse, jambarse, amoratarse, infartarse, autoengañarse, ahorcajarse).
-    conjugation!("incautarse", 724, "~a~arse";
+    // Incautarse: 723 words (llamarse, jambarse, amoratarse, infartarse, autoengañarse, ahorcajarse).
+    conjugation!("incautarse", 723, "~a~arse";
     stem lemma: "~a~- like incautarse";
     stem verb_pret_1_sg: "~a~- like echar";
     stem verb: "~a~ar- like echar";
@@ -776,8 +776,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~a~ándose";
     participle_m: "~a~ado", _;
     ),
-    // Acomodarse: 591 words (acodarse, acomodarse, endrogarse, personarse, autocontrolarse, amonarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
-    conjugation!("acomodarse", 591, "~o~arse", like Incautarse;
+    // Acomodarse: 589 words (acodarse, acomodarse, endrogarse, personarse, autocontrolarse, amonarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
+    conjugation!("acomodarse", 589, "~o~arse", like Incautarse;
     stem lemma: "~o~- like incautarse";
     stem verb_pret_1_sg: "~o~- like echar";
     stem verb: "~o~ar- like echar";
@@ -793,8 +793,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~o~ándose";
     participle_m: "~o~ado", _;
     ),
-    // Quejarse: 564 words (quejarse, querellarse, despertarse, pegarse, autocremarse, afiebrarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
-    conjugation!("quejarse", 564, "~e~arse", like Incautarse;
+    // Quejarse: 565 words (quejarse, querellarse, despertarse, pegarse, autocremarse, afiebrarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
+    conjugation!("quejarse", 565, "~e~arse", like Incautarse;
     stem lemma: "~e~- like incautarse";
     stem verb_pret_1_sg: "~e~- like echar";
     stem verb: "~e~ar- like echar";
@@ -844,8 +844,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~u~ándose";
     participle_m: "~u~ado", _;
     ),
-    // Regodearse: 358 words (carcajearse, petatearse, autobombearse, regodearse, mamonearse, cachiporrearse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
-    conjugation!("regodearse", 358, "~~arse", like Incautarse;
+    // Regodearse: 360 words (carcajearse, petatearse, autobombearse, regodearse, mamonearse, cachiporrearse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
+    conjugation!("regodearse", 360, "~~arse", like Incautarse;
     stem lemma: "~~- like incautarse";
     stem verb_pret_1_sg: "~~- like echar";
     stem verb: "~~ar- like echar";
@@ -891,8 +891,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~iendo";
     participle_m: "~ido", _;
     ),
-    // Sacar: 249 words (buscar, sacar, rascar, pecar, tocar, atacar). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
-    conjugation!("sacar", 249, "~car", like Echar;
+    // Sacar: 251 words (buscar, sacar, rascar, pecar, tocar, atacar). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
+    conjugation!("sacar", 251, "~car", like Echar;
     stem verb_pres_1_sg: "~- like sacar";
     stem lemma: "~c- like echar";
     stem verb_pret_1_sg: "~- like sacar";
@@ -921,8 +921,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~izándose";
     participle_m: "~izado", _;
     ),
-    // Autoabastecerse: 176 words (autoabastecerse, entrometerse, entremeterse, autoprotegerse, entigrecerse, ensilvecerse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
-    conjugation!("autoabastecerse", 176, "~e~erse", like Incautarse;
+    // Autoabastecerse: 175 words (autoabastecerse, entrometerse, entremeterse, autoprotegerse, entigrecerse, ensilvecerse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
+    conjugation!("autoabastecerse", 175, "~e~erse", like Incautarse;
     stem lemma: "~e~- like autoabastecerse";
     stem verb_pret_1_sg: "~e~- like conocer";
     stem verb: "~e~er- like echar";
@@ -1004,8 +1004,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     negative_imperative: derived, derived, derived, derived, derived;
     gerund: "~yendo";
     ),
-    // Sonar: 80 words (sonar, volar, solar, acostar, acordar, probar). Like Echar with `ˇ` after each pattern.
-    conjugation!("sonar", 80, "~arˇ", like Echar with "ˇ";
+    // Sonar: 78 words (sonar, volar, solar, acostar, acordar, probar). Like Echar with `ˇ` after each pattern.
+    conjugation!("sonar", 78, "~arˇ", like Echar with "ˇ";
     ),
     // Atravesarse: 70 words (autogobernarse, quebrarse, abnegarse, sentarse, regarse, atravesarse). Like Quejarse, except in 8 cells: pres_1 sg, pres_2 sg, subj_1 sg, subj_2 sg, subj_3 pl, imperative tu, ….
     conjugation!("atravesarse", 70, "~e~arse", like Quejarse;
@@ -1233,8 +1233,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     imperative: "~é~", "~e~ga", _, _, "~e~gan";
     negative_imperative: _, _, derived, derived, _;
     ),
-    // Reducir: 24 words (traducir, producir, reducir, conducir, introducir, inducir). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
-    conjugation!("reducir", 24, "~cir", like Echar;
+    // Reducir: 23 words (traducir, producir, reducir, conducir, introducir, inducir). Like Echar, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
+    conjugation!("reducir", 23, "~cir", like Echar;
     stem lemma: "~c- like curtir";
     stem verb_pret_1_sg: "~j- like reducir";
     stem verb: "~cir- like echar";
@@ -1638,8 +1638,8 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~aciendo";
     participle_m: "~echo", _;
     ),
-    // Moler: 12 words (llover, doler, poder, morder, soler, moler). Like Meter with `ˇ` after each pattern.
-    conjugation!("moler", 12, "~erˇ", like Meter with "ˇ";
+    // Moler: 11 words (doler, poder, morder, soler, moler, demoler). Like Meter with `ˇ` after each pattern.
+    conjugation!("moler", 11, "~erˇ", like Meter with "ˇ";
     ),
     // Escabullirse: 11 words (escabullirse, zambullirse, rebullirse, tullirse, escullirse, descabullirse). Like Musirse, except in 1 cell: gerund.
     conjugation!("escabullirse", 11, "~u~irse", like Musirse;
@@ -1662,6 +1662,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     negative_imperative: _, _, derived, derived, _;
     gerund: "~ucándose";
     participle_m: "~ucado", _;
+    ),
+    // Lucir: 11 words (lucir, relucir, balbucir, deslucir, enlucir, hendir). Like Conocer, except in 1 cell: impf_3 sg.
+    conjugation!("lucir", 11, "~~ir", like Conocer;
+    stem lemma: "~~- like curtir";
+    stem verb: "~~ir- like echar";
+    impf_3: derived, _;
     ),
     // Suscribirse: 10 words (autodescribirse, escribirse, adscribirse, inscribirse, subscribirse, suscribirse). Like Echar, except in 12 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("suscribirse", 10, "~ibirse", like Echar;
@@ -1696,12 +1702,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     negative_imperative: _, _, derived, derived, _;
     gerund: "~ayéndose";
     participle_m: "~aído", _;
-    ),
-    // Lucir: 10 words (lucir, relucir, deslucir, enlucir, hendir, traslucir). Like Conocer, except in 1 cell: impf_3 sg.
-    conjugation!("lucir", 10, "~~ir", like Conocer;
-    stem lemma: "~~- like curtir";
-    stem verb: "~~ir- like echar";
-    impf_3: derived, _;
     ),
     // Enamoriscarse: 9 words (enamoriscarse, ciscarse, ariscarse, enriscarse, apriscarse, arriscarse). Like Incautarse, except in 13 cells: pres_1 sg, pres_2 sg, impf_3 sg, subj_1 sg, subj_2 sg, subj_3 pl, ….
     conjugation!("enamoriscarse", 9, "~i~carse", like Incautarse;
@@ -1856,6 +1856,12 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     gerund: "~~yéndose";
     participle_m: "~~ído", _;
     ),
+    // Deshacerse: 8 words (autosatisfacerse, hacerse, rehacerse, desfacerse, deshacerse, contrahacerse). Like Hacer with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
+    conjugation!("deshacerse", 8, "~acerse", like Hacer with "", "se" after "r";
+    vos: _, _, "~acete";
+    imperative: "~azte", "~ágase", "~agámonos", "~aceos", "~áganse";
+    gerund: "~aciéndose";
+    ),
     // Empezar: 7 words (empezar, tropezar, despezar, entropezar, trompezar, desentropezar). Like Enderezarse, except in 8 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
     conjugation!("empezar", 7, "~~zar", like Enderezarse;
     stem verb_pres_1_sg: "~i~- like realizar";
@@ -1932,20 +1938,14 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 159] = [
     imperative: "~éate", "~éese", "~iémonos", "~iaos", "~éense";
     gerund: "~iándose";
     ),
-    // Deshacerse: 7 words (autosatisfacerse, hacerse, rehacerse, desfacerse, deshacerse, contrahacerse). Like Hacer with `` after each pattern (`se` after r), except in 7 cells: vos imp, imperative tu, imperative usted, imperative nosotros, imperative vosotros, imperative ustedes, ….
-    conjugation!("deshacerse", 7, "~acerse", like Hacer with "", "se" after "r";
-    vos: _, _, "~acete";
-    imperative: "~azte", "~ágase", "~agámonos", "~aceos", "~áganse";
-    gerund: "~aciéndose";
-    ),
     // Relamerse: 7 words (valerse, prevalerse, relamerse, lamerse, precaverse, barrerse). Like Abatirse, except in 1 cell: impf_3 sg.
     conjugation!("relamerse", 7, "~a~erse", like Abatirse;
     stem lemma: "~a~- like autoabastecerse";
     stem verb: "~a~er- like echar";
     impf_3: derived, _;
     ),
-    // Mover: 6 words (promover, mover, remover, conmover, amover, commover). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
-    conjugation!("mover", 6, "~over", like Echar;
+    // Mover: 7 words (llover, promover, mover, remover, conmover, amover). Like Echar, except in 9 cells: impf_3 sg, subj_3 sg, negative_imperative tu, negative_imperative usted, negative_imperative nosotros, negative_imperative vosotros, ….
+    conjugation!("mover", 7, "~over", like Echar;
     stem verb_pres_1_sg: "~uev- like curtir";
     stem lemma: "~ov- like conocer";
     stem verb_pret_1_sg: "~ov- like conocer";

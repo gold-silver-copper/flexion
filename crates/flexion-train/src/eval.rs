@@ -46,7 +46,7 @@ pub enum Input<'p> {
 }
 
 /// Scores for one input mode.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct Score {
     /// Forms scored.
     pub forms: usize,
@@ -85,6 +85,9 @@ pub struct Score {
     /// form right.
     pub words: usize,
     pub whole: usize,
+    /// Top candidate compatible with the length the dictionary states (see
+    /// [`Outcome::compatible`]): a second score, never more right forms.
+    pub compatible: usize,
 }
 
 /// What became of one scored form.
@@ -119,6 +122,13 @@ pub struct Outcome {
     /// The first candidate, a word, has no stress mark where the right
     /// answer has one.
     pub accentless: bool,
+    /// The first candidate is right, or is the right answer but for length
+    /// marks on vowels it writes bare, each compatible with the length the
+    /// word's table states of that vowel (see [`TableLength`]).
+    pub compatible: bool,
+    /// The same of its letters alone (stress aside), as the floor is
+    /// scored.
+    pub compatible_letters: bool,
 }
 
 impl Outcome {
@@ -143,6 +153,12 @@ pub fn listing_bits(form: &str) -> f64 {
 impl Score {
     pub fn accuracy(&self) -> f64 {
         ratio(self.right, self.forms)
+    }
+
+    /// The share of forms whose top candidate is compatible with the length
+    /// the dictionary states (see [`Outcome::compatible`]).
+    pub fn compatible_accuracy(&self) -> f64 {
+        ratio(self.compatible, self.forms)
     }
 
     pub fn top3_accuracy(&self) -> f64 {
@@ -197,6 +213,7 @@ impl Score {
             }
             s.any += usize::from(o.any);
             s.accentless += usize::from(o.accentless);
+            s.compatible += usize::from(o.compatible);
             if let Some(slot) = o
                 .error
                 .and_then(|e| Kind::ALL.iter().position(|&k| k == e))
@@ -302,6 +319,115 @@ pub fn same_form(orthography: &flexion::Orthography<'_>, a: &str, b: &str) -> bo
     x.letters == y.letters && x.stress == y.stress
 }
 
+/// The length one word's table states of each of its vowels, for a
+/// spelling that marks length both ways (`stated`: Greek macron and breve;
+/// see [`crate::spec::Spelling::stated_length`]): the length marks it
+/// writes on the vowel in any of its forms (a circumflex reads as long),
+/// none where it leaves the vowel bare in every cell. A vowel is told by
+/// its letter and the two before it, marks aside, so that a stem's vowel is
+/// the same vowel in every cell (`βαλ` of `προβάλλω`, `προβάλοισθε`).
+///
+/// An answer that writes a length mark on a vowel the dictionary's form
+/// leaves bare is compatible with the length the dictionary states where
+/// the table never states that vowel otherwise: it leaves it bare in every
+/// cell (the length unstated: a table typed with a bare stem), or marks it
+/// so elsewhere (the pluperfect's bare `ἠγαπήμεθᾰ` of `ἀγαπάω`, whose
+/// imperfect writes `ἠγᾰ́πων`). One the table marks the other way anywhere
+/// is not: the length is stated, and the answer contradicts it.
+#[derive(Debug, Clone)]
+pub struct TableLength<'a> {
+    stated: &'a str,
+    /// Per vowel, the marks of `stated` the table writes on it, a bit each.
+    vowels: crate::HashMap<[char; 3], u8>,
+}
+
+/// A form's letters (as read), each its base letter and its marks.
+fn marked_letters(letters: &str) -> Vec<(char, String)> {
+    use unicode_normalization::UnicodeNormalization;
+    let mut out: Vec<(char, String)> = Vec::new();
+    for c in letters.nfd() {
+        match out.last_mut() {
+            Some((_, marks)) if unicode_normalization::char::is_combining_mark(c) => marks.push(c),
+            _ => out.push((c, String::new())),
+        }
+    }
+    out
+}
+
+/// Each letter's key, as [`TableLength`] tells a vowel: the two letters
+/// before it and its own, marks aside (`^` before the word).
+fn letter_keys(letters: &[(char, String)]) -> impl Iterator<Item = [char; 3]> + '_ {
+    let base = |i: Option<usize>| i.and_then(|i| letters.get(i)).map_or('^', |l| l.0);
+    (0..letters.len()).map(move |i| {
+        [
+            base(i.checked_sub(2)),
+            base(i.checked_sub(1)),
+            base(Some(i)),
+        ]
+    })
+}
+
+impl<'a> TableLength<'a> {
+    /// The length marks `forms` (a word's table) write on each vowel; none
+    /// where `stated` is empty.
+    pub fn of<'f>(
+        orthography: &flexion::Orthography<'_>,
+        stated: &'a str,
+        forms: impl IntoIterator<Item = &'f str>,
+    ) -> TableLength<'a> {
+        let mut table = TableLength {
+            stated,
+            vowels: crate::HashMap::default(),
+        };
+        if stated.is_empty() {
+            return table;
+        }
+        for form in forms {
+            let letters = marked_letters(&orthography.read(form).letters);
+            for (key, (base, marks)) in letter_keys(&letters).zip(&letters) {
+                if orthography.is_vowel(*base) {
+                    let bits = table.bits(marks);
+                    *table.vowels.entry(key).or_default() |= bits;
+                }
+            }
+        }
+        table
+    }
+
+    /// The marks of `stated` among `marks`, a bit each.
+    fn bits(&self, marks: &str) -> u8 {
+        self.stated
+            .chars()
+            .zip(0u32..8)
+            .filter(|&(m, _)| marks.contains(m))
+            .fold(0, |bits, (_, i)| bits | 1u8.checked_shl(i).unwrap_or(0))
+    }
+
+    /// Whether `answer` is `want` (both letters, as read) but for length
+    /// marks on vowels `want` writes bare, each compatible with the length
+    /// the table states of that vowel (see [`TableLength`]).
+    pub fn compatible(&self, want: &str, answer: &str) -> bool {
+        if self.vowels.is_empty() {
+            return false;
+        }
+        let (w, a) = (marked_letters(want), marked_letters(answer));
+        let stated = |m: char| self.stated.contains(m);
+        w.len() == a.len()
+            && letter_keys(&w)
+                .zip(w.iter().zip(&a))
+                .all(|(key, ((wb, wm), (ab, am)))| {
+                    wb == ab
+                        && (wm == am
+                            || (!wm.chars().any(stated)
+                                && am.chars().filter(|&m| !stated(m)).eq(wm.chars())
+                                && self
+                                    .vowels
+                                    .get(&key)
+                                    .is_some_and(|&table| table & !self.bits(am) == 0)))
+                })
+    }
+}
+
 /// What a table's first answer `top` is against the dictionary's forms of
 /// the cell (`listed`, the first the one scored), compared as
 /// [`same_form`] compares them, as `try` scores it.
@@ -334,10 +460,12 @@ pub fn verdict(
 
 /// Score `grammar` on `lexemes` (held out), every cell the dictionary lists,
 /// against its first form, typed as `input`. `seen`: per paradigm, the
-/// cells its training words have forms in.
+/// cells its training words have forms in; `stated`, the marks that state
+/// length both ways (see [`TableLength`]).
 pub fn score<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
+    stated: &str,
     lexemes: &[&Lexeme],
     input: Input<'_>,
     seen: &[Vec<bool>],
@@ -345,6 +473,7 @@ pub fn score<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     Score::of(&outcomes(
         grammar,
         orthography,
+        stated,
         lexemes,
         input,
         seen,
@@ -394,14 +523,22 @@ pub fn typed_back(
     lemma_cell == Some(cell) && orthography.read(want).letters == orthography.read(typed).letters
 }
 
+/// Every form of a word's table.
+fn word_forms(l: &Lexeme) -> impl Iterator<Item = &str> {
+    l.cells.iter().flatten().map(String::as_str)
+}
+
 /// Every scored form of `lexemes` (held out) in the cells `scored` accepts,
 /// against the dictionary's first form, typed as `input`, word by word; the
 /// lemma's cell only where its form isn't what was typed (see
 /// [`typed_back`]). `seen`: per paradigm, the cells its training words have
-/// forms in (empty: every cell counts as seen).
+/// forms in (empty: every cell counts as seen). `stated`: the marks that
+/// state length both ways, for [`Outcome::compatible`] (empty: none).
+#[allow(clippy::too_many_arguments)]
 pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     grammar: &flexion::Grammar<'_, P, A, F>,
     orthography: &flexion::Orthography<'_>,
+    stated: &str,
     lexemes: &[&Lexeme],
     input: Input<'_>,
     seen: &[Vec<bool>],
@@ -417,6 +554,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
         let mut out = Vec::new();
         let firsts: Vec<String> = l.cells.iter().filter_map(|f| f.first().cloned()).collect();
         let stem = measure::word_stem(&l.full, &firsts);
+        let unstated = TableLength::of(orthography, stated, word_forms(l));
         let typed = match input {
             Input::Full | Input::Citation(_) | Input::Given(_) => l.full.clone(),
             Input::Headword | Input::Features => l.lemma.clone(),
@@ -460,7 +598,6 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
             };
             let candidates = table.get(cell).map_or(&[][..], Vec::as_slice);
             let same = |form: &str| same_form(orthography, form, want);
-            let letters = |form: &str| orthography.read(form).letters;
             let probability: f32 = candidates
                 .iter()
                 .filter(|c| same(&c.form))
@@ -474,6 +611,12 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
             };
             let first = candidates.first();
             let rank = candidates.iter().position(|c| same(&c.form));
+            let wanted = orthography.read(want);
+            let answer = first.map(|c| orthography.read(&c.form));
+            let letters = answer.as_ref().is_some_and(|a| a.letters == wanted.letters);
+            let compatible_letters = answer.as_ref().is_some_and(|a| {
+                a.letters == wanted.letters || unstated.compatible(&wanted.letters, &a.letters)
+            });
             let any =
                 first.is_some_and(|c| forms.iter().any(|f| same_form(orthography, &c.form, f)));
             let error = match first {
@@ -494,9 +637,9 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                     Some(Kind::Homograph)
                 }
                 Some(c) => Some(measure::kind(
+                    orthography,
                     want,
                     &c.form,
-                    letters(&c.form) == letters(want),
                     rank.is_some(),
                     stem,
                 )),
@@ -507,7 +650,7 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 rank,
                 top: first.map_or(0.0, |c| c.probability),
                 probability,
-                letters: first.is_some_and(|c| letters(&c.form) == letters(want)),
+                letters,
                 seen: has.is_none_or(|h| h.get(cell).copied().unwrap_or(false)),
                 lemma: grammar.lemma_cell == Some(cell),
                 any,
@@ -515,10 +658,11 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
                 error,
                 // A phrase's words carry their own (`μεμιασμένος ὦ`).
                 accentless: first.is_some_and(|c| {
-                    !c.form.contains(' ')
-                        && orthography.read(&c.form).stress.is_none()
-                        && orthography.read(want).stress.is_some()
-                }),
+                    !c.form.contains(' ') && answer.as_ref().is_some_and(|a| a.stress.is_none())
+                }) && wanted.stress.is_some(),
+                compatible: compatible_letters
+                    && answer.as_ref().is_some_and(|a| a.stress == wanted.stress),
+                compatible_letters,
             });
         }
         out
@@ -526,11 +670,19 @@ pub fn outcomes<P: Label + Sync, A: Label + Sync, F: Label + Sync>(
     each.into_iter().flatten().collect()
 }
 
+/// The fewest forms a block of cells is scored with to count in
+/// [`by_block`]'s mean: fewer is a handful of words, named apart.
+pub const BLOCK_FORMS: usize = 30;
+
 /// Top-1 by block of cells (`blocks`, the part's groups of cells: a
 /// Turkish verb's negative abilitative forms, its participles): each
-/// block's score, and their mean over the blocks with forms, so that a
-/// block of many cells can't outweigh the rest.
-pub fn by_block(outcomes: &[Outcome], blocks: &[std::ops::Range<usize>]) -> (f64, Vec<Score>) {
+/// block's score, and their mean over the blocks with at least
+/// [`BLOCK_FORMS`] forms (none: no such block), so that a block of many
+/// cells can't outweigh the rest.
+pub fn by_block(
+    outcomes: &[Outcome],
+    blocks: &[std::ops::Range<usize>],
+) -> (Option<f64>, Vec<Score>) {
     let scores: Vec<Score> = blocks
         .iter()
         .map(|b| {
@@ -544,11 +696,11 @@ pub fn by_block(outcomes: &[Outcome], blocks: &[std::ops::Range<usize>]) -> (f64
         .collect();
     let scored: Vec<f64> = scores
         .iter()
-        .filter(|s| s.forms > 0)
+        .filter(|s| s.forms >= BLOCK_FORMS)
         .map(Score::accuracy)
         .collect();
     #[allow(clippy::cast_precision_loss)]
-    let mean = scored.iter().sum::<f64>() / scored.len().max(1) as f64;
+    let mean = (!scored.is_empty()).then(|| scored.iter().sum::<f64>() / scored.len() as f64);
     (mean, scores)
 }
 
@@ -576,21 +728,25 @@ pub fn completion<P: Label, A: Label, F: Label>(
 }
 
 /// One held-out form the floor was asked for: the word (its place among
-/// those scored), the cell, and whether the floor wrote its letters.
+/// those scored), the cell, whether the floor wrote its letters, and
+/// whether they are compatible with the length the dictionary states (see
+/// [`TableLength`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct FloorOutcome {
     pub word: usize,
     pub cell: usize,
     pub right: bool,
+    pub compatible: bool,
 }
 
 /// Each form of `test` (typed as their headwords) the shared task's
 /// non-neural baseline (see [`crate::baseline`]) is asked for, learned from
 /// `train`'s headwords and forms, and whether it is right: the cells
 /// [`outcomes`] scores from the headword. Letters only: stress and accents
-/// aside.
+/// aside. `stated`: as [`outcomes`] takes it.
 pub fn floor(
     orthography: &flexion::Orthography<'_>,
+    stated: &str,
     train: &[&Lexeme],
     test: &[&Lexeme],
     lemma_cell: Option<usize>,
@@ -598,6 +754,10 @@ pub fn floor(
     let letters = |s: &str| orthography.read(s).letters;
     let lemmas: Vec<String> = train.iter().map(|l| letters(&l.lemma)).collect();
     let tests: Vec<String> = test.iter().map(|l| letters(&l.lemma)).collect();
+    let unstated: Vec<TableLength<'_>> = test
+        .iter()
+        .map(|l| TableLength::of(orthography, stated, word_forms(l)))
+        .collect();
     let cells = train.iter().chain(test).map(|l| l.cells.len()).max();
     let mut out = Vec::new();
     // A cell at a time: its rules alone are small.
@@ -609,22 +769,26 @@ pub fn floor(
             .collect();
         let baseline =
             crate::baseline::Baseline::learn(forms.iter().map(|(l, f)| (*l, f.as_str())));
-        let asked: Vec<(usize, &&Lexeme, &String)> = test
+        let asked: Vec<(usize, &&Lexeme, &String, &TableLength<'_>)> = test
             .iter()
             .zip(&tests)
+            .zip(&unstated)
             .enumerate()
-            .map(|(word, (l, lemma))| (word, l, lemma))
+            .map(|(word, ((l, lemma), unstated))| (word, l, lemma, unstated))
             .collect();
-        let found = crate::par::map(&asked, |&(word, l, lemma)| {
+        let found = crate::par::map(&asked, |&(word, l, lemma, unstated)| {
             let want = l
                 .cells
                 .get(cell)
                 .and_then(|forms| forms.first())
                 .filter(|want| !typed_back(orthography, lemma_cell, cell, want, &l.lemma))?;
+            let (wrote, want) = (baseline.inflect(lemma), letters(want));
+            let right = wrote == want;
             Some(FloorOutcome {
                 word,
                 cell,
-                right: baseline.inflect(lemma) == letters(want),
+                right,
+                compatible: right || unstated.compatible(&want, &wrote),
             })
         });
         out.extend(found.into_iter().flatten());
@@ -635,14 +799,24 @@ pub fn floor(
 
 /// The grammar (its top candidate's letters, as the floor is scored) and
 /// the floor paired word by word on the forms both were asked for, of the
-/// cells `cell` accepts: `a` the floor's right forms, `b` the grammar's.
+/// cells `cell` accepts: `a` the floor's right forms, `b` the grammar's;
+/// with `compatible`, those compatible with the length the dictionary
+/// states, for both.
 pub fn against_floor(
     outcomes: &[Outcome],
     floor: &[FloorOutcome],
     cell: impl Fn(usize) -> bool,
+    compatible: bool,
 ) -> Vec<crate::measure::Paired> {
-    let floor: crate::HashMap<(usize, usize), bool> =
-        floor.iter().map(|f| ((f.word, f.cell), f.right)).collect();
+    let floor: crate::HashMap<(usize, usize), bool> = floor
+        .iter()
+        .map(|f| {
+            (
+                (f.word, f.cell),
+                if compatible { f.compatible } else { f.right },
+            )
+        })
+        .collect();
     let mut words: Vec<crate::measure::Paired> = Vec::new();
     let mut last = None;
     for o in outcomes.iter().filter(|o| cell(o.cell)) {
@@ -656,7 +830,11 @@ pub fn against_floor(
         if let Some(w) = words.last_mut() {
             w.forms += 1;
             w.a += usize::from(right);
-            w.b += usize::from(o.letters);
+            w.b += usize::from(if compatible {
+                o.compatible_letters
+            } else {
+                o.letters
+            });
         }
     }
     words
@@ -678,6 +856,12 @@ pub fn floor_shares(outcomes: &[Outcome], floor: &[FloorOutcome]) -> (f64, f64) 
         }
     }
     (ratio(all.1, all.0), ratio(off.1, off.0))
+}
+
+/// The share of the floor's forms compatible with the length the
+/// dictionary states (see [`FloorOutcome::compatible`]).
+pub fn floor_compatible(floor: &[FloorOutcome]) -> f64 {
+    ratio(floor.iter().filter(|f| f.compatible).count(), floor.len())
 }
 
 /// The share of `outcomes`' forms any grammar could get right: words typed
@@ -995,5 +1179,36 @@ mod tests {
             Verdict::Listed
         );
         assert_eq!(verdict(&russian, None, &listed(&["конь"])), Verdict::Gap);
+    }
+
+    #[test]
+    fn a_length_mark_is_compatible_where_the_table_never_states_otherwise() {
+        let greek = flexion::Orthography {
+            lowercase: true,
+            vowels: "αεηιουω",
+            stress_marks: "",
+            stressed: &[],
+            implicit: "",
+            dropped: "",
+            mark_monosyllables: false,
+            folded: &[],
+            prosody: None,
+            initial: "",
+        };
+        let stated = "\u{304}\u{306}";
+        // A table typed with a bare stem: `βαλ`'s α is unstated.
+        let bare = TableLength::of(&greek, stated, ["προβαλλω", "προβαλλομεν", "προβαλλειν"]);
+        assert!(bare.compatible("προβαλοισθε", "προβᾰλοισθε"));
+        assert!(bare.compatible("προβαλοισθε", "προβᾱλοισθε"));
+        // Other letters must still be right.
+        assert!(!bare.compatible("προβαλοισθε", "προβᾰλοισθα"));
+        // The table writes `γᾰπ` short elsewhere, after the augment too: the
+        // pluperfect's bare one is short, and long contradicts it.
+        let marked = TableLength::of(&greek, stated, ["ἀγᾰπαω", "ἠγᾰπων", "ἠγαπημεθᾰ"]);
+        assert!(marked.compatible("ἠγαπημεθᾰ", "ἠγᾰπημεθᾰ"));
+        assert!(!marked.compatible("ἠγαπημεθᾰ", "ἠγᾱπημεθᾰ"));
+        // A spelling that doesn't mark length both ways states it bare.
+        let latin = TableLength::of(&greek, "", ["rosa", "rosam"]);
+        assert!(!latin.compatible("rosa", "rōsa"));
     }
 }

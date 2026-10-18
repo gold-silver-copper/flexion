@@ -37,10 +37,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~a\t",)),
     },
-    // lemma like dąbrowa: 2,683 words.
+    // lemma like dąbrowa: 2,677 words.
     EndingTable {
         name: Cow::Borrowed("dąbrowa"),
-        words: 2683,
+        words: 2677,
         slot: 0,
         table: Cow::Borrowed(concat!("~a\t", "~ę\t",)),
     },
@@ -72,17 +72,17 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
         slot: 0,
         table: Cow::Borrowed(concat!("~\t", "~go\t",)),
     },
-    // pl like zachariasz: 15,480 words.
+    // pl like zachariasz: 15,481 words.
     EndingTable {
         name: Cow::Borrowed("zachariasz"),
-        words: 15480,
+        words: 15481,
         slot: 1,
         table: Cow::Borrowed(concat!("~\t", "~\t",)),
     },
-    // gen_sg like zachariasz: 7,635 words.
+    // gen_sg like zachariasz: 7,634 words.
     EndingTable {
         name: Cow::Borrowed("zachariasz"),
-        words: 7635,
+        words: 7634,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~a\t~ów\t",
@@ -93,10 +93,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "~u\t",
         )),
     },
-    // gen_sg like dąbrowa: 1,695 words.
+    // gen_sg like dąbrowa: 1,627 words.
     EndingTable {
         name: Cow::Borrowed("dąbrowa"),
-        words: 1695,
+        words: 1627,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~y\t~ów\t",
@@ -121,10 +121,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "~\t",
         )),
     },
-    // gen_sg like pegaz: 520 words.
+    // gen_sg like pegaz: 521 words.
     EndingTable {
         name: Cow::Borrowed("pegaz"),
-        words: 520,
+        words: 521,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~a\t~ów\t",
@@ -149,10 +149,10 @@ pub(super) static TABLES: [EndingTable<'static>; 24] = [
             "~ze\t",
         )),
     },
-    // gen_sg like birmingham: 302 words.
+    // gen_sg like birmingham: 301 words.
     EndingTable {
         name: Cow::Borrowed("birmingham"),
-        words: 302,
+        words: 301,
         slot: 2,
         table: Cow::Borrowed(concat!(
             "~u\t~ów\t",

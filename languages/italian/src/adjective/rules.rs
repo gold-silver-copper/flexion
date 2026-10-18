@@ -7,10 +7,10 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 322 rules and 484 listed words.
+/// 322 rules and 483 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Gagliardo 11179, Maggiore 7512, Lubrico 5291, Rossoblu 732, Centrista 504, Carico 441, Riparatore 392, Acconcio 132, Versipelle 48, Birbone 28, Acre 13, Ampio 13],
+        "" => [Gagliardo 11178, Maggiore 7512, Lubrico 5291, Rossoblu 730, Centrista 504, Carico 441, Riparatore 392, Acconcio 133, Versipelle 50, Birbone 28, Acre 13, Ampio 13],
         "a" => [Centrista 504, Rossoblu 176],
         "ba" => [Rossoblu 3, Centrista 1],
         "ca" => [Rossoblu 15],
@@ -47,7 +47,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "nza" => [Rossoblu 6],
         "c" => [Rossoblu 5],
         "d" => [Rossoblu 4],
-        "e" => [Maggiore 7512, Riparatore 392, Rossoblu 96, Versipelle 48, Birbone 28, Acre 13] regular,
+        "e" => [Maggiore 7512, Riparatore 392, Rossoblu 94, Versipelle 50, Birbone 28, Acre 13] regular,
         "ce" => [Maggiore 79, Rossoblu 6] regular,
         "de" => [Maggiore 144, Rossoblu 6] regular,
         "ide" => [Maggiore 113] regular,
@@ -143,7 +143,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "l" => [Rossoblu 4],
         "m" => [Rossoblu 2],
         "n" => [Rossoblu 10],
-        "o" => [Gagliardo 11179, Lubrico 5291, Carico 441, Rossoblu 224, Acconcio 132, Ampio 13] regular,
+        "o" => [Gagliardo 11178, Lubrico 5291, Carico 441, Rossoblu 224, Acconcio 133, Ampio 13] regular,
         "bo" => [Gagliardo 62, Rossoblu 3] regular,
         "abo" => [Gagliardo 20] regular,
         "obo" => [Gagliardo 20] regular,
@@ -214,10 +214,10 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "ingo" => [Carico 7] regular,
         "ogo" => [Carico 16, Lubrico 1] regular,
         "ugo" => [Carico 13] regular,
-        "io" => [Gagliardo 933, Acconcio 132, Rossoblu 40, Ampio 13],
+        "io" => [Gagliardo 932, Acconcio 133, Rossoblu 40, Ampio 13],
         "aio" => [Gagliardo 36],
         "obio" => [Gagliardo 12],
-        "cio" => [Acconcio 122, Gagliardo 14, Rossoblu 4] regular,
+        "cio" => [Acconcio 123, Gagliardo 13, Rossoblu 4] regular,
         "acio" => [Gagliardo 4] regular,
         "ccio" => [Acconcio 86, Rossoblu 2] regular,
         "iccio" => [Acconcio 59] regular,
@@ -337,12 +337,12 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         Gagliardo => [
             "#adonio", "#antinvecchiamento", "#aonio", "#aratorio", "#aristofanio", "#attorio",
             "#avocatorio", "#bacio", "#capinero", "#conscio", "#dentifricio", "#dio", "#eolio",
-            "#epinicio", "#falecio", "#fenicio", "#frocio", "#giudio", "#integro",
-            "#legittimatorio", "#locatorio", "#luccichio", "#luciferiano", "#megalogràfico",
-            "#meonio", "#minchionatorio", "#misero", "#nescio", "#parnasio", "#parrasio",
-            "#pedidio", "#piccolo", "#pio", "#pontificio", "#pratio", "#preconscio",
-            "#raccomandatorio", "#restio", "#rio", "#roggio", "#seduttorio", "#sgomento",
-            "#solatio", "#stantio", "#tracio", "#trucio", "#usurpatorio",
+            "#epinicio", "#fenicio", "#frocio", "#giudio", "#integro", "#legittimatorio",
+            "#locatorio", "#luccichio", "#luciferiano", "#megalogràfico", "#meonio",
+            "#minchionatorio", "#misero", "#nescio", "#parnasio", "#parrasio", "#pedidio",
+            "#piccolo", "#pio", "#pontificio", "#pratio", "#preconscio", "#raccomandatorio",
+            "#restio", "#rio", "#roggio", "#seduttorio", "#sgomento", "#solatio", "#stantio",
+            "#tracio", "#trucio", "#usurpatorio",
         ],
         Maggiore => [
             "#ammennicolone", "#anticivilizzazione", "#anticontraffazione", "#antiperforazione",
@@ -394,7 +394,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#multischermo", "#multisensore", "#multistrato", "#multitocco", "#multiuso", "#mélo",
             "#nature", "#neodada", "#neroargento", "#nerofumo", "#noce", "#normopeso",
             "#oltreconfine", "#online", "#onne", "#oro", "#paranavetta", "#pastello", "#periidro",
-            "#picco", "#pilota", "#pirata", "#pirato", "#pisciasotto", "#piùe", "#pluripiano",
+            "#picco", "#pilota", "#pirata", "#pirato", "#pisciasotto", "#pluripiano",
             "#plurireddito", "#pluriuso", "#porno", "#portacasco", "#portafango", "#postlaurea",
             "#postvendita", "#preimpianto", "#presso", "#pretermine", "#prodigio", "#prude",
             "#quadriposto", "#qualsia", "#qualsisia", "#qualuno", "#qualunque", "#quasimodo",
@@ -404,7 +404,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#sottovetro", "#sottovuoto", "#sovrappeso", "#stampa", "#stereo", "#strappalacrime",
             "#tagliapasta", "#terracotta", "#tipo", "#tiziano", "#trabocchetto", "#tralice",
             "#triposto", "#tuttoterreno", "#uniproprietario", "#vedda", "#verdeoro", "#vivavoce",
-            "#voodoo", "#yankee", "#zafferano", "#zaffiro",
+            "#voodoo", "#zafferano", "#zaffiro",
         ],
         Centrista => [
             "#autolatra", "#belga", "#bilama", "#cabila", "#clarissa", "#consorella", "#focaia",
@@ -426,10 +426,10 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
             "#antideflagrante", "#antidiabete", "#antincidente", "#antiproiettile", "#antisole",
             "#antisommergibile", "#bluette", "#coprispalle", "#cringe", "#davante", "#difronte",
             "#doposole", "#fai-da-te", "#mangiapatate", "#monodose", "#montabile",
-            "#multicomponente", "#multimateriale", "#plurifase", "#polifase", "#ponte",
+            "#multicomponente", "#multimateriale", "#piùe", "#plurifase", "#polifase", "#ponte",
             "#porporate", "#portacorrente", "#primavera-estate", "#quattroporte", "#quattrovalvole",
             "#rimontabile", "#single", "#sottorete", "#tagliaspese", "#tetrafase", "#torneante",
-            "#tse-tse", "#unidose", "#votaborse",
+            "#tse-tse", "#unidose", "#votaborse", "#yankee",
         ],
         Birbone => [
             "#birbone", "#caciarone", "#chiacchierone", "#leggere", "#minchione", "#pannone",

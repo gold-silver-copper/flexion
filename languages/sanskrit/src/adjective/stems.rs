@@ -59,11 +59,11 @@ pub(super) static SLOTS: [Slot<'static>; 3] = [
 ];
 
 /// The ending tables, by slot, most words first.
-pub(super) static TABLES: [EndingTable<'static>; 14] = [
-    // adjective like धृत: 1,286 words.
+pub(super) static TABLES: [EndingTable<'static>; 13] = [
+    // adjective like धृत: 1,603 words.
     EndingTable {
         name: Cow::Borrowed("ध\u{943}त"),
-        words: 1286,
+        words: 1603,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~ः\t~ौ\t~ाः\t",
@@ -104,10 +104,10 @@ pub(super) static TABLES: [EndingTable<'static>; 14] = [
             "~\t~ानि\t",
         )),
     },
-    // adjective_f like धृत: 1,109 words.
+    // adjective_f like धृत: 1,366 words.
     EndingTable {
         name: Cow::Borrowed("ध\u{943}त"),
-        words: 1109,
+        words: 1366,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ा\t~\u{947}\t~ाः\t",
@@ -120,26 +120,10 @@ pub(super) static TABLES: [EndingTable<'static>; 14] = [
             "~\u{947}\t~\u{947}\t~ाः\t",
         )),
     },
-    // adjective_f like अवर: 277 words.
-    EndingTable {
-        name: Cow::Borrowed("अवर"),
-        words: 277,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ा\t~\u{947}\t~ाः\t",
-            "~ाम\u{94d}\t~\u{947}\t~ाः\t",
-            "~या\t\t~ाभिः\t",
-            "~ाय\u{948}\t~ाभ\u{94d}याम\u{94d}\t\t",
-            "~ायाः\t~ाभ\u{94d}याम\u{94d}\t~ाभ\u{94d}यः\t",
-            "~ायाः\t\t~ाणाम\u{94d}\t",
-            "~ायाम\u{94d}\t~योः\t~ास\u{941}\t",
-            "~\u{947}\t~\u{947}\t~ाः\t",
-        )),
-    },
-    // adjective_f like मूढ: 235 words.
+    // adjective_f like मूढ: 314 words.
     EndingTable {
         name: Cow::Borrowed("म\u{942}ढ"),
-        words: 235,
+        words: 314,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ी\t~\u{94d}यौ\t~\u{94d}यः\t",
@@ -149,29 +133,13 @@ pub(super) static TABLES: [EndingTable<'static>; 14] = [
             "~\u{94d}याः\t~ीभ\u{94d}याम\u{94d}\t~ीभ\u{94d}यः\t",
             "~\u{94d}याः\t\t~ीAाम\u{94d}\t",
             "~\u{94d}याम\u{94d}\t~\u{94d}योः\t~ीष\u{941}\t",
-            "~C\t~\u{94d}यौ\t~\u{94d}यः\t",
+            "~D\t~\u{94d}यौ\t~\u{94d}यः\t",
         )),
     },
-    // adjective_f like ज्यायस्: 19 words.
-    EndingTable {
-        name: Cow::Borrowed("ज\u{94d}यायस\u{94d}"),
-        words: 19,
-        slot: 1,
-        table: Cow::Borrowed(concat!(
-            "~ी\t~\u{94d}यौ\t~\u{94d}यः\t",
-            "~ीम\u{94d}\t~\u{94d}यौ\t~ीः\t",
-            "~\u{94d}या\t\t~ीभिः\t",
-            "~\u{94d}य\u{948}\t~ीभ\u{94d}याम\u{94d}\t\t",
-            "~\u{94d}याः\t~ीभ\u{94d}याम\u{94d}\t~ीभ\u{94d}यः\t",
-            "~\u{94d}याः\t\t~ीनाम\u{94d}\t",
-            "~\u{94d}याम\u{94d}\t~\u{94d}योः\t~ीष\u{941}\t",
-            "~C\t~\u{94d}यौ\t~\u{94d}यः\t",
-        )),
-    },
-    // adjective_f like लघु: 19 words.
+    // adjective_f like लघु: 22 words.
     EndingTable {
         name: Cow::Borrowed("लघ\u{941}"),
-        words: 19,
+        words: 22,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ी\t~\u{94d}यौ\t~\u{94d}यः\t",
@@ -182,6 +150,22 @@ pub(super) static TABLES: [EndingTable<'static>; 14] = [
             "~\u{94d}याः\t\t~ीAाम\u{94d}\t",
             "~\u{94d}याम\u{94d}\t~\u{94d}योः\t~ीष\u{941}\t",
             "~ि\t~\u{94d}यौ\t~\u{94d}यः\t",
+        )),
+    },
+    // adjective_f like हितकर: 20 words.
+    EndingTable {
+        name: Cow::Borrowed("हितकर"),
+        words: 20,
+        slot: 1,
+        table: Cow::Borrowed(concat!(
+            "~ा\t~\u{947}\t~ाः\t",
+            "~ाम\u{94d}\t~\u{947}\t~ाः\t",
+            "~या\t\t~ाभिः\t",
+            "~ाय\u{948}\t~ाभ\u{94d}याम\u{94d}\t\t",
+            "~ायाः\t~ाभ\u{94d}याम\u{94d}\t~ाभ\u{94d}यः\t",
+            "~ायाः\t\t~ाणाम\u{94d}\t",
+            "~ायाम\u{94d}\t~योः\t~ास\u{941}\t",
+            "~\u{947}\t~\u{947}\t~ाः\t",
         )),
     },
     // adjective_f like हरि: 6 words.
@@ -265,7 +249,7 @@ pub(super) static TABLES: [EndingTable<'static>; 14] = [
             "~ः\t",
             "~ः\t~ोः\t~ाम\u{94d}\t",
             "~ः\t~ोः\t~ाम\u{94d}\t",
-            "~C\t~ोः\t",
+            "~D\t~ोः\t",
             "~ि\t~ोः\t",
             "~ी\t",
             "\t",

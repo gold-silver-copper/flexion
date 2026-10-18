@@ -2,7 +2,9 @@
 //!
 //! A pattern is the form with `~` where the stem goes (`~z`, `matriz`: the stem and `z`). A stem in two pieces (`~ó~`, `lastón`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first.
+//! Alternatives are separated by `|`, the usual one first. A capital (`E`)
+//! is a class letter: a harmony law in `laws.rs` writes it, by the
+//! letter before it.
 
 use flexion::Paradigm;
 
@@ -199,7 +201,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 21] = [
     ),
     // Comodín: 337 words (zepelín, jardín, jazmín, querubín, pudín, delfín).
     declension!("comodín", 337, "~í~", [noun_gender: Masculine];
-    noun: "~í~", "~i~es";
+    noun: "~í~", "~i~Es";
     ),
     // Matriz: 288 words (pez, voz, juez, luz, diez, vez).
     declension!("matriz", 288, "~z";

@@ -33,6 +33,7 @@ pub const FRONT_LETTERS: usize = 3;
 
 /// How a word written in parts (`диван-кровать`) inflects.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Compound {
     /// Only its last part, like a word of its own: `интернет-магазин`,
     /// `интернет-магазина`.
@@ -61,6 +62,7 @@ impl Label for Compound {
 /// inseparable one stays in front, and takes off the rest's form what the
 /// cell says (`verhindert`, not `vergehindert`).
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Prefixes<'a> {
     /// Sorted by their letters.
     pub prefixes: Cow<'a, [Prefix<'a>]>,
@@ -85,6 +87,7 @@ type Junction<'a> = (Cow<'a, str>, Cow<'a, str>, Cow<'a, str>);
 /// A prefix, and of the dictionary's words that begin with it, how many
 /// separate it, how many keep it in front, of how many.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Prefix<'a> {
     pub letters: Cow<'a, str>,
     pub separable: u32,
@@ -94,6 +97,7 @@ pub struct Prefix<'a> {
 
 /// What a word does with the prefix it begins with.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Separation {
     /// Separates it (`räuchre aus`).
     Separable,
@@ -105,6 +109,7 @@ pub enum Separation {
 
 /// Where a separable prefix goes in a cell.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Placement {
     /// Before the rest, written together: `ausgeräuchert`.
     Before,
@@ -183,6 +188,7 @@ impl Prefixes<'_> {
 /// [`crate::LIKE`]), then each listed cell's number and form, all
 /// tab-separated, slots and cells in order.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Irregular<'a> {
     pub table: Cow<'a, str>,
 }
@@ -307,6 +313,12 @@ fn stem_in<'l>(line: &'l str, slot: &str) -> Option<(&'l str, &'l str)> {
 
 /// The form of `cell` in a word's line of the irregular table, if listed.
 fn listed_in(line: &str, cell: u16) -> Option<&str> {
+    spellings_in(line, cell).and_then(|f| pattern::variants(f).next())
+}
+
+/// The forms `line` lists of `cell`, as the dictionary spells them: the
+/// usual one first, others after `|` (Italian `i|gli`).
+fn spellings_in(line: &str, cell: u16) -> Option<&str> {
     let mut parts = line.split('\t').skip(1);
     while let (Some(c), Some(f)) = (parts.next(), parts.next()) {
         if c.parse::<u16>().ok() == Some(cell) {
@@ -332,12 +344,15 @@ pub struct Known<'q> {
     pub full: bool,
 }
 
-/// Which listed words a word ending in one inflects as (compounds, Finnish
-/// `aavameri` as `meri`): every one of at least `least` letters, where the
-/// language's compounds do, but those `not`, whose own words don't (Latin
-/// `capitālis`, `digitālis` don't inflect as `Ītalis`); and those `words`,
-/// whose own compounds do.
+/// Which words a word ending in one inflects as (compounds, Finnish
+/// `aavameri` as `meri`): every listed one of at least `least` letters,
+/// where the language's compounds do, but those `not`, whose own words
+/// don't (Latin `capitālis`, `digitālis` don't inflect as `Ītalis`); and
+/// those `words`, whose own compounds do, listed or not (one not listed
+/// inflects as a word of its own: Finnish `arvomerkintä` as `merkintä`,
+/// `arvomerkinnät`, its last member deciding its harmony).
 #[derive(Debug, Clone, Default, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Heads<'a> {
     pub least: Option<u8>,
     /// Sorted.
@@ -354,11 +369,21 @@ impl Heads<'_> {
 
     /// Whether a word ending in `head` (a listed word) inflects as it.
     pub fn inflects(&self, head: &str) -> bool {
-        let has = |words: &[Cow<'_, str>]| words.binary_search_by(|w| w.as_ref().cmp(head)).is_ok();
-        self.least
-            .is_some_and(|least| head.chars().count() >= usize::from(least) && !has(&self.not))
-            || has(&self.words)
+        self.least.is_some_and(|least| {
+            head.chars().count() >= usize::from(least) && !has(&self.not, head)
+        }) || self.names(head)
     }
+
+    /// Whether `head` is one of `words`: a word ending in it inflects as
+    /// it, listed or not.
+    pub fn names(&self, head: &str) -> bool {
+        has(&self.words, head)
+    }
+}
+
+/// Whether the sorted `words` have `word`.
+fn has(words: &[Cow<'_, str>], word: &str) -> bool {
+    words.binary_search_by(|w| w.as_ref().cmp(word)).is_ok()
 }
 
 /// How a letter typed without its mark is written: rules on the letter
@@ -370,12 +395,14 @@ impl Heads<'_> {
 /// part of speech, each read with its `part`. A root the rules don't tell
 /// comes first (see [`Marks::roots`]).
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Marks<'a> {
     pub rules: Choice<'a, char>,
-    /// Word beginnings whose letter third from their end the dictionary's
-    /// words beginning so all write one way (two or more) the rules don't:
-    /// `("iudi", 'ū')`, a word typed `iudicium` writes `ū`, as `iūdicō` and
-    /// `iūdicātiō` do. Sorted.
+    /// Word beginnings whose letter third from their end nine in ten of the
+    /// dictionary's words with a form beginning so (two or more) write one
+    /// way the rules don't: `("iudi", 'ū')`, a word typed `iudicium` writes
+    /// `ū`, as `iūdicō` and `iūdicātiō` do. Sorted. A part of speech they
+    /// would mislead reads none.
     pub roots: Cow<'a, [(Cow<'a, str>, char)]>,
     pub part: Cow<'a, str>,
 }
@@ -408,7 +435,11 @@ impl Marks<'_> {
 
 /// The inflection of one part of speech, as learned from the dictionary.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
+    /// Not serialized: it borrows the language's script, so whoever loads a
+    /// grammar sets it again (it loads as [`Orthography::default`]).
+    #[cfg_attr(feature = "serde", serde(skip))]
     pub orthography: Orthography<'a>,
     /// How many cells a word has.
     pub cells: usize,
@@ -473,11 +504,12 @@ pub struct Grammar<'a, P: Label, A: Label = u8, F: Label = u8> {
 /// A cell's forms, the usual first, each with where its ending starts.
 type Forms = Vec<(String, usize)>;
 
-/// A reading's forms of the cells built so far: per cell, its forms with
-/// where their endings start, by how likely; and the stems the forms the
-/// caller gives fix, per slot: `(slot, ending table, stem)`.
-#[derive(Default)]
-struct Built {
+/// A reading's paradigm and its forms of the cells built so far: its line's
+/// tables, each read once; per cell, its forms with where their endings
+/// start, by how likely; and the stems the forms the caller gives fix, per
+/// slot: `(slot, ending table, stem)`.
+struct Built<'g, 'a> {
+    tables: crate::paradigm::Tables<'g, 'a>,
     cells: std::collections::HashMap<usize, Vec<(Forms, f32)>>,
     fixed: Vec<(usize, String, String)>,
 }
@@ -592,8 +624,21 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             word.casing
         };
         // A word ending in a listed one (its head, `meri` of Finnish
-        // `aavameri`): the head's forms, behind the letters before it.
-        if let Some((front, head)) = self.head(&key, &word.letters) {
+        // `aavameri`): the head's forms, behind the letters before it. Not
+        // where the word is typed with an accent its head's lemma doesn't
+        // have there (`κατάβασις`, `βάσις`; `συναγωγή`, `γῆ`): its own
+        // reading.
+        let headed = self.head(&key, &word.letters).and_then(|(front, head)| {
+            let Some(stress) = word.stress else {
+                return Some((front, head.to_string(), None));
+            };
+            let before = u8::try_from(self.orthography.vowel_count(front)).ok()?;
+            let vowel = stress.vowel.checked_sub(before)?;
+            let stress = crate::Stress { vowel, ..stress };
+            let typed = self.orthography.write(head, Some(stress), Casing::Lower);
+            Some((front, typed, Some(stress)))
+        });
+        if let Some((front, head, typed)) = headed {
             let given: Vec<(usize, String)> = known
                 .forms
                 .iter()
@@ -607,21 +652,37 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 forms: &given,
                 ..*known
             };
-            let joined =
-                |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
-            return self
-                .unsharpened(head, cells, &base)
-                .into_iter()
-                .map(|list| {
-                    list.into_iter()
-                        .map(|c| Candidate {
-                            form: joined(&c.form),
-                            also: c.also.iter().map(|a| joined(a)).collect(),
-                            ..c
-                        })
-                        .collect()
-                })
-                .collect();
+            let lists = self.unsharpened(&head, cells, &base);
+            let stress = |lists: &[Vec<Candidate<'_>>], at: usize| {
+                let first = lists.get(at)?.first()?;
+                Some(self.orthography.read(&first.form).stress)
+            };
+            let keeps = match (typed, self.lemma_cell) {
+                (Some(typed), Some(lemma)) => {
+                    let first = match cells.iter().position(|&c| c == lemma) {
+                        Some(at) => stress(&lists, at),
+                        None => stress(&self.unsharpened(&head, &[lemma], &base), 0),
+                    };
+                    first == Some(Some(typed))
+                }
+                _ => true,
+            };
+            if keeps {
+                let joined =
+                    |form: &str| crate::recase(&format!("{front}{}", form.to_lowercase()), casing);
+                return lists
+                    .into_iter()
+                    .map(|list| {
+                        list.into_iter()
+                            .map(|c| Candidate {
+                                form: joined(&c.form),
+                                also: c.also.iter().map(|a| joined(a)).collect(),
+                                ..c
+                            })
+                            .collect()
+                    })
+                    .collect();
+            }
         }
         // The forms the caller gives, as letters.
         let given: Vec<(usize, String)> = known
@@ -666,10 +727,8 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             .take(READINGS)
             .map(|inf| {
                 let classes = self.accent_classes(&word, &inf, cells);
-                let built = Built {
-                    fixed: self.fixed(inf.paradigm, &inf.stems, &given, &word.letters),
-                    ..Built::default()
-                };
+                let mut built = self.built(inf.paradigm);
+                built.fixed = self.fixed(inf.paradigm, &inf.stems, &given, &word.letters);
                 (inf, classes, built)
             })
             .collect();
@@ -770,11 +829,16 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             None => vec![(None, 1.0)],
         };
         for (i, &cell) in cells.iter().enumerate() {
-            let listed_form = line
+            let listed_forms = line
                 .zip(u16::try_from(cell).ok())
-                .and_then(|(l, c)| listed_in(l, c));
-            if let Some(form) = listed_form {
-                lists.push(vec![listed(crate::recase(form, casing), 1.0)]);
+                .and_then(|(l, c)| spellings_in(l, c));
+            if let Some(forms) = listed_forms {
+                let mut spellings = pattern::variants(forms).map(|f| crate::recase(f, casing));
+                let form = spellings.next().unwrap_or_default();
+                lists.push(vec![Candidate {
+                    also: spellings.collect(),
+                    ..listed(form, 1.0)
+                }]);
                 continue;
             }
             // A cell of a slot whose stem the word lists: built on it, with
@@ -890,7 +954,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                     count: r.count(inf.reading.value),
                     total: r.total(),
                 });
-                let forms = self.build(inf.paradigm, &inf.stems, &key, known.inherent, cell, built);
+                let forms = self.build(&inf.stems, &key, known.inherent, cell, built);
                 for (forms, p_cell) in forms {
                     let Some(((first, ending), also)) = forms.split_first() else {
                         continue;
@@ -1097,6 +1161,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         }
     }
 
+    /// A reading of `paradigm`, nothing built yet.
+    fn built<'g>(&'g self, paradigm: &'g Paradigm<'a>) -> Built<'g, 'a> {
+        Built {
+            tables: crate::paradigm::Tables::new(paradigm, &self.paradigms, self.space()),
+            cells: std::collections::HashMap::new(),
+            fixed: Vec::new(),
+        }
+    }
+
     /// The slot `cell` is in, and its place among the slot's cells.
     fn slot_of(&self, cell: usize) -> Option<(usize, usize)> {
         self.slots
@@ -1232,12 +1305,11 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
     /// feature, given or chosen), changed. `built`: the cells built so far.
     fn build(
         &self,
-        paradigm: &Paradigm<'a>,
         stems: &[&str],
         key: &str,
         inherent: &[(u8, u8)],
         cell: usize,
-        built: &mut Built,
+        built: &mut Built<'_, 'a>,
     ) -> Vec<(Vec<(String, usize)>, f32)> {
         if let Some(forms) = built.cells.get(&cell) {
             return forms.clone();
@@ -1248,20 +1320,15 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         let mut out = Vec::new();
         // A cell of a slot a given form fixes the stem of: built on that
         // stem; else as the paradigm builds it.
-        let on_given = self.slot_of(cell).and_then(|(s, position)| {
-            let (_, table, stem) = built.fixed.iter().find(|f| f.0 == s)?;
-            let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
-            Some(crate::stems::build(p, stem, self.laws.as_ref()))
-        });
-        let forms = on_given.unwrap_or_else(|| {
-            paradigm.built_in(
-                &self.paradigms,
-                self.space(),
-                self.laws.as_ref(),
-                cell,
-                stems,
-            )
-        });
+        let on_given = (!built.fixed.is_empty())
+            .then(|| built.tables.slot(cell))
+            .flatten()
+            .and_then(|(s, position)| {
+                let (_, table, stem) = built.fixed.iter().find(|f| f.0 == s)?;
+                let p = table.split('\t').nth(position).filter(|p| !p.is_empty())?;
+                Some(crate::stems::build(p, stem, self.laws.as_ref()))
+            });
+        let forms = on_given.unwrap_or_else(|| built.tables.built(self.laws.as_ref(), cell, stems));
         if !forms.is_empty() {
             out.push((forms, 1.0));
         } else if let Some(relation) = self.relation(cell) {
@@ -1295,7 +1362,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             let relation = self.changing(relation);
             for (from, p) in sources {
                 let from = usize::from(from);
-                for (forms, q) in self.build(paradigm, stems, key, inherent, from, built) {
+                for (forms, q) in self.build(stems, key, inherent, from, built) {
                     if relation.change.is_none() {
                         out.push((forms, p * q));
                         continue;
@@ -1333,10 +1400,10 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
         else {
             return vec![Vec::new(); self.cells];
         };
-        let mut built = Built::default();
+        let mut built = self.built(p);
         (0..self.cells)
             .map(|cell| {
-                let forms = self.build(p, &stems, &key, &[], cell, &mut built);
+                let forms = self.build(&stems, &key, &[], cell, &mut built);
                 forms
                     .first()
                     .map(|(forms, _)| forms.iter().map(|(f, _)| f.clone()).collect())
@@ -1393,8 +1460,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
                 .is_some()
     }
 
-    /// The listed word a word the grammar doesn't list ends in (its head;
-    /// one whose compounds inflect as it, see [`Heads`]), the longest,
+    /// The word a word the grammar doesn't list ends in (its head: a listed
+    /// one whose compounds inflect as it, or one named, see [`Heads`]), the
+    /// longest,
     /// behind at least [`FRONT_LETTERS`] letters: the letters before it and
     /// its letters (`letters` the word's, `key` how it is looked up). None
     /// for a word a prefix splits (see [`Prefixes`]): the prefix decides
@@ -1423,7 +1491,9 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             key.char_indices()
                 .nth(i)
                 .and_then(|(b, _)| key.get(b..))
-                .is_some_and(|head| self.heads.inflects(head) && self.lists(head))
+                .is_some_and(|head| {
+                    self.heads.names(head) || (self.heads.inflects(head) && self.lists(head))
+                })
         })?;
         let (b, _) = letters.char_indices().nth(at)?;
         Some(letters.split_at(b))
@@ -1479,7 +1549,7 @@ impl<'a, P: Label, A: Label, F: Label> Grammar<'a, P, A, F> {
             given.iter().all(|(cell, form)| {
                 lines(*cell, form)
                     || self
-                        .build(p, &stems, key, inherent, *cell, &mut Built::default())
+                        .build(&stems, key, inherent, *cell, &mut self.built(p))
                         .iter()
                         .any(|(forms, _)| forms.iter().any(|(built, _)| built == form))
             })
@@ -1773,6 +1843,7 @@ fn top(mut lists: Vec<Vec<Candidate<'_>>>) -> Vec<Vec<Candidate<'_>>> {
 /// less than one, where answers of that kind are often wrong). A listed form
 /// keeps all of it.
 #[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Trust {
     pub regular: f32,
     pub unsettled: f32,

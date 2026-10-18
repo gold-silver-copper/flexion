@@ -258,7 +258,7 @@ pub struct Paired {
 }
 
 /// A paired comparison of two runs on the same words.
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Comparison {
     pub words: usize,
     pub forms: usize,
@@ -453,9 +453,11 @@ pub enum Kind {
     Homograph,
     /// The right letters, the stress or accent elsewhere.
     Accent,
-    /// The same letters once marks are taken off: vowel length (or another
-    /// mark: a breathing, a diaeresis).
-    Length,
+    /// The same letters but for a mark the language's spelling folds or
+    /// drops (see [`unmarked`]): vowel length, a breathing. Not a letter of
+    /// its own that happens to be written with a combining mark (a
+    /// Devanagari vowel sign, Russian `й`, Finnish `ä`).
+    Marks,
     /// The right form is among the candidates, from another paradigm or
     /// reading: the grammar chose wrong.
     Paradigm,
@@ -472,7 +474,7 @@ impl std::fmt::Display for Kind {
             Kind::Variant => "variant",
             Kind::Homograph => "homograph",
             Kind::Accent => "accent",
-            Kind::Length => "length",
+            Kind::Marks => "marks",
             Kind::Paradigm => "paradigm",
             Kind::Stem => "stem",
             Kind::Ending => "ending",
@@ -487,26 +489,68 @@ impl Kind {
         Kind::Variant,
         Kind::Homograph,
         Kind::Accent,
-        Kind::Length,
+        Kind::Marks,
         Kind::Paradigm,
         Kind::Stem,
         Kind::Ending,
     ];
 }
 
-/// The kind of a wrong `answer` for `gold`: `same_letters` says whether the
-/// orthography reads the same letters in both (stress aside); `among`
-/// whether `gold` is among the candidates; `stem` is the word's stem length
-/// (see [`word_stem`]).
-pub fn kind(gold: &str, answer: &str, same_letters: bool, among: bool, stem: usize) -> Kind {
-    let (g, a) = (plain(gold), plain(answer));
-    if same_letters {
+/// `letters` (as [`flexion::Orthography::read`] reads them) without the
+/// marks the spelling folds or drops: each letter a lookup reads as the
+/// same letter with fewer marks (Latin `ā` as `a`, Greek `ἀ` and `ᾰ` as
+/// `α`) written as that letter, and a mark reading drops taken off a letter
+/// it is composed into (Latin `ĭ`). Letters folded into another letter
+/// (Greek `ς` as `σ`, Latin `j` as `i`) and letters the spelling doesn't
+/// fold (Russian `й`, Finnish `ä`, a Devanagari vowel sign) stay.
+pub fn unmarked(orthography: &flexion::Orthography<'_>, letters: &str) -> String {
+    let undropped: String = letters
+        .nfd()
+        .filter(|&m| !(is_combining_mark(m) && orthography.dropped.contains(m)))
+        .nfc()
+        .collect();
+    undropped
+        .chars()
+        .map(|c| {
+            let folded = orthography.fold(c);
+            let marks_only = folded != c && {
+                let (full, bare): (Vec<char>, Vec<char>) = (
+                    std::iter::once(c).nfd().collect(),
+                    std::iter::once(folded).nfd().collect(),
+                );
+                full.strip_prefix(bare.as_slice())
+                    .is_some_and(|rest| rest.iter().all(|&m| is_combining_mark(m)))
+            };
+            if marks_only { folded } else { c }
+        })
+        .collect()
+}
+
+fn is_combining_mark(c: char) -> bool {
+    unicode_normalization::char::is_combining_mark(c)
+}
+
+/// The kind of a wrong `answer` for `gold`, both read as `orthography`
+/// reads them: `among` says whether `gold` is among the candidates; `stem`
+/// is the word's stem length (see [`word_stem`]).
+pub fn kind(
+    orthography: &flexion::Orthography<'_>,
+    gold: &str,
+    answer: &str,
+    among: bool,
+    stem: usize,
+) -> Kind {
+    let (g, a) = (
+        orthography.read(gold).letters,
+        orthography.read(answer).letters,
+    );
+    if g == a {
         Kind::Accent
-    } else if g == a {
-        Kind::Length
+    } else if unmarked(orthography, &g) == unmarked(orthography, &a) {
+        Kind::Marks
     } else if among {
         Kind::Paradigm
-    } else if common_start(&g, &a) < stem {
+    } else if common_start(&plain(gold), &plain(answer)) < stem {
         Kind::Stem
     } else {
         Kind::Ending
@@ -525,9 +569,64 @@ mod tests {
             "regis", "regit", "regēbam", "rēxī", "rēxit", "rēctum", "regere",
         ]);
         assert_eq!(word_stem("regō", &rego), 3);
-        assert_eq!(kind("rēxī", "regī", false, false, 3), Kind::Stem);
-        assert_eq!(kind("книги", "книгы", false, false, 4), Kind::Ending);
-        assert_eq!(kind("rēxī", "rexī", false, false, 3), Kind::Length);
+        assert_eq!(kind(&LATIN, "rēxī", "regī", false, 3), Kind::Stem);
+        assert_eq!(kind(&RUSSIAN, "книги", "книгы", false, 4), Kind::Ending);
+    }
+
+    const LATIN: flexion::Orthography<'static> = flexion::Orthography {
+        lowercase: true,
+        vowels: "aeiouyāēīōūȳ",
+        stress_marks: "",
+        stressed: &[],
+        implicit: "",
+        dropped: "\u{306}\u{304}",
+        mark_monosyllables: false,
+        // Sorted, as a lookup reads it.
+        folded: &[
+            ('j', 'i'),
+            ('ā', 'a'),
+            ('ē', 'e'),
+            ('ī', 'i'),
+            ('ō', 'o'),
+            ('ū', 'u'),
+        ],
+        prosody: None,
+        initial: "",
+    };
+
+    const RUSSIAN: flexion::Orthography<'static> = flexion::Orthography {
+        lowercase: true,
+        vowels: "аеёиоуыэюя",
+        stress_marks: "",
+        stressed: &[],
+        implicit: "",
+        dropped: "\u{301}\u{300}",
+        mark_monosyllables: false,
+        folded: &[],
+        prosody: None,
+        initial: "",
+    };
+
+    #[test]
+    fn a_mark_is_one_the_spelling_folds_not_any_combining_character() {
+        // Latin: a macron the lookup folds is a mark, and so is a breve
+        // reading drops, composed (`ĭ`); `j` for `i` is a letter.
+        assert_eq!(kind(&LATIN, "rēxī", "rexī", false, 3), Kind::Marks);
+        assert_eq!(kind(&LATIN, "dĭcāx", "dicāx", false, 3), Kind::Marks);
+        assert_eq!(kind(&LATIN, "iam", "jam", false, 2), Kind::Stem);
+        // Russian: `й` is a letter of its own, though it decomposes into
+        // `и` and a breve.
+        assert_eq!(kind(&RUSSIAN, "клавдий", "клавдии", false, 5), Kind::Ending);
+        // Devanagari: a vowel sign (`ी` against `ा`) is a letter, though
+        // Unicode calls it a combining mark: a feminine in -ī for one in -ā.
+        let sanskrit = flexion::Orthography {
+            lowercase: false,
+            vowels: "अआइईउऊऋॠऌॡएऐओऔ",
+            folded: &[],
+            dropped: "\u{951}\u{952}",
+            ..LATIN
+        };
+        assert_eq!(kind(&sanskrit, "भारती", "भारता", false, 3), Kind::Ending);
     }
 
     #[test]

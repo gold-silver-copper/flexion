@@ -13,7 +13,7 @@ use flexion::{
     StressClass, Written,
 };
 use std::borrow::Cow;
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeMap;
 
 /// What the learner needs to know about a part of speech.
 #[derive(Debug, Clone)]
@@ -33,7 +33,7 @@ pub struct Shape {
     /// Per cell, its name (`gen_pl`), as the crate's constants are named.
     pub names: Vec<String>,
     /// How a letter typed without its mark is written, learned once for the
-    /// language from every part of speech's words (see [`language_marks`]);
+    /// language from every part of speech's words (see [`crate::marks`]);
     /// none: learned from this part's alone. Its `part` is this part's.
     pub marks: Option<flexion::Marks<'static>>,
     /// The part of speech's name, as the marks read it (see
@@ -41,10 +41,18 @@ pub struct Shape {
     pub part: String,
     /// The dictionary's principal parts: the cells it gives a word by.
     pub parts: Vec<usize>,
+    /// A closed class (pronouns, articles, numerals): its listed words give
+    /// each cell's other spellings too (see `spell_out`).
+    pub closed: bool,
+    /// The marks of a vowel's length the dictionary may leave off (see
+    /// [`crate::spec::Spelling::stated_length`]): a training word's form the
+    /// grammar gives but for such a mark, compatible with the length its
+    /// table states, isn't listed (see [`crate::eval::TableLength`]).
+    pub stated_length: &'static str,
 }
 
 /// A learned part of speech, ready to be printed.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Learned<'s> {
     pub grammar: Grammar<'s, u16, u16, u8>,
     /// The inherent feature (its place among the part of speech's) the
@@ -64,7 +72,8 @@ pub struct Learned<'s> {
     pub stability: f64,
     /// The views paradigms may read their parents through (see [`View`]).
     pub views: Vec<View>,
-    /// Each stage's time and peak memory.
+    /// Each stage's time and peak memory (not kept: see [`crate::saved`]).
+    #[serde(skip)]
     pub trace: crate::trace::Trace,
     /// The relations before what the runtime can't read of them went (see
     /// [`Read`]): for checking that nothing it reads changed.
@@ -72,7 +81,7 @@ pub struct Learned<'s> {
 }
 
 /// Counts for the report.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, serde::Serialize, serde::Deserialize)]
 pub struct Stats {
     /// Words the relations list (their exceptions), over every relation.
     pub relation_listed: usize,
@@ -305,6 +314,21 @@ pub fn learn<'s>(
         }
     };
     trace.mark("rehome and inherent");
+    // A word several paradigms fit votes by what the words ending as it
+    // does have (see [`Evidence::vote`]).
+    let evidence = Evidence::new(&words, &assignment);
+    let (mut paradigms, assignment) = {
+        let now: Vec<((&Word, &crate::laws::Word<'_>), u16)> = words
+            .iter()
+            .zip(&law_words)
+            .zip(assignment.iter().copied())
+            .collect();
+        let voted = crate::par::map(&now, |&(w, p)| {
+            evidence.vote(&orthography, &paradigms, program.as_ref(), w, p)
+        });
+        crate::laws::drop_empty(paradigms, voted)
+    };
+    inherent(&words, &assignment, &mut paradigms);
     // Each cell's relation to the cell its form is best told from, said
     // through the laws; the referrals (by the word's feature) take their
     // cells' place.
@@ -345,7 +369,13 @@ pub fn learn<'s>(
     // The words the structure wasn't learned from: each takes the paradigm
     // that builds the most of its forms (none, written in parts that each
     // inflect).
-    let rest_assignment = fit(&orthography, &paradigms, program.as_ref(), rest_words);
+    let rest_assignment = fit(
+        &orthography,
+        &paradigms,
+        program.as_ref(),
+        rest_words,
+        &evidence,
+    );
     trace.mark("fit");
     let assigned: Vec<(&Word, u16)> = words
         .iter()
@@ -425,10 +455,23 @@ pub fn learn<'s>(
     let marks: Option<flexion::Marks<'static>> = match &shape.marks {
         Some(marks) => Some(marks.clone()),
         None => {
-            let spelled = words
-                .iter()
-                .map(|w| (w.key.as_str(), w.letters.as_str(), shape.part.as_str()));
-            marks(&orthography, spelled, settings)
+            let part = shape.part.as_str();
+            let spelled: Vec<(&str, &str, &str)> = (words.iter())
+                .map(|w| (w.key.as_str(), w.letters.as_str(), part))
+                .collect();
+            let voters: Vec<crate::marks::Voter<'_>> = (words.iter().enumerate())
+                .map(|(owner, w)| crate::marks::Voter {
+                    owner,
+                    part,
+                    key: w.key.clone(),
+                    lemma: w.letters.clone(),
+                    spellings: std::iter::once(&w.letters)
+                        .chain(w.cells.iter().flatten().map(|f| &f.letters))
+                        .cloned()
+                        .collect(),
+                })
+                .collect();
+            crate::marks::learn(&orthography, &spelled, &voters, settings).map(|m| m.of(part))
         }
     };
     // Owned again: a choice's lifetime can't shorten.
@@ -529,10 +572,11 @@ pub fn learn<'s>(
     // one the rules build wrong (those whose listing a compound would
     // take); a longer one listed for its paradigm only is none where its
     // own words say so.
-    let ruled_wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |_| true)
-        .into_iter()
-        .map(|(k, _, _)| k)
-        .collect();
+    let ruled_wrong: crate::HashSet<String> =
+        irregular(&grammar, &every, &everyone, |_| true, shape.stated_length)
+            .into_iter()
+            .map(|(k, _, _)| k)
+            .collect();
     let wrong = |key: &str| ruled_wrong.contains(key);
     let listed = |key: &str| wrong(key) || grammar.lists(key);
     let split = |key: &str| {
@@ -542,7 +586,19 @@ pub fn learn<'s>(
             .and_then(|p| p.split(key))
             .is_some_and(|(_, separable, inseparable)| separable + inseparable > 0.0)
     };
-    grammar.heads = heads(&everyone, shape.cells, &wrong, &listed, &split);
+    // The words made of two, validated on the words alone.
+    let lasts = last_members(&everyone, shape.cells, &split);
+    let missed = missed(&grammar, &everyone, &lasts);
+    let missed = |head: &str| missed.contains(head);
+    grammar.heads = heads(
+        &everyone,
+        shape.cells,
+        &wrong,
+        &listed,
+        &split,
+        &lasts,
+        &missed,
+    );
     // Compounds: words ending in another (`aavameri` in `meri`), where
     // words inflect their last part.
     let keys: crate::HashSet<&str> = everyone.iter().map(|w| w.key.as_str()).collect();
@@ -581,9 +637,13 @@ pub fn learn<'s>(
     // its stress pattern and stem vowel; a word made of others, or a
     // compound, once those are. Forms still wrong are irregular.
     for words_made in [false, true] {
-        let wrong: crate::HashSet<String> = irregular(&grammar, &every, &everyone, |w| {
-            (made(w) || compound(w)) == words_made
-        })
+        let wrong: crate::HashSet<String> = irregular(
+            &grammar,
+            &every,
+            &everyone,
+            |w| (made(w) || compound(w)) == words_made,
+            shape.stated_length,
+        )
         .into_iter()
         .map(|(k, _, _)| k)
         .collect();
@@ -606,7 +666,13 @@ pub fn learn<'s>(
         }
     }
     trace.mark("heads and exceptions");
-    let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
+    let checked = misbuilt(
+        &grammar,
+        &every,
+        &everyone,
+        |w| !made(w),
+        shape.stated_length,
+    );
     // The stem slots: learned from the words' own analyses, and the forms
     // the grammar builds with the wrong letters.
     let keys: Vec<&str> = words.iter().map(|w| w.key.as_str()).collect();
@@ -653,7 +719,13 @@ pub fn learn<'s>(
             paradigm.table = Cow::Owned(table);
         }
     }
-    let checked = misbuilt(&grammar, &every, &everyone, |w| !made(w));
+    let checked = misbuilt(
+        &grammar,
+        &every,
+        &everyone,
+        |w| !made(w),
+        shape.stated_length,
+    );
     let wrong: Vec<(String, usize, String)> = checked
         .iter()
         .map(|(k, c, f, _)| (k.clone(), *c, f.clone()))
@@ -706,7 +778,16 @@ pub fn learn<'s>(
         }
     }
     let words_of = (every.as_slice(), everyone.as_slice());
-    let forms_only = listing(&mut grammar, &[], &wrong, words_of, &made, &mut unsure);
+    let stated = shape.stated_length;
+    let forms_only = listing(
+        &mut grammar,
+        &[],
+        &wrong,
+        words_of,
+        &made,
+        &mut unsure,
+        stated,
+    );
     let on_stems = listing(
         &mut grammar,
         &candidates,
@@ -714,6 +795,7 @@ pub fn learn<'s>(
         words_of,
         &made,
         &mut unsure,
+        stated,
     );
     let prefixes = grammar.prefixes.clone();
     let base_of = |key: &str| -> String {
@@ -732,9 +814,27 @@ pub fn learn<'s>(
         &prices,
         &base_of,
     );
-    let irregular = listing(&mut grammar, &stems, &wrong, words_of, &made, &mut unsure);
-    let (irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound);
+    let irregular = listing(
+        &mut grammar,
+        &stems,
+        &wrong,
+        words_of,
+        &made,
+        &mut unsure,
+        stated,
+    );
+    let (mut irregular, stems) = prune(&mut grammar, irregular, stems, words_of, &compound, stated);
     untie(&mut grammar, &everyone);
+    if shape.closed {
+        spell_out(
+            &mut grammar,
+            &mut irregular,
+            &stems,
+            &every,
+            &everyone,
+            stated,
+        );
+    }
     trace.mark("listing");
     // The ending tables listed stems are built with; paradigms stated
     // through stem slots where that pays; the tables either uses are the
@@ -861,31 +961,6 @@ pub fn spelled(orthography: &Orthography<'_>, lemma_cell: Option<usize>, l: &Lex
         .map(|f| orthography.read(f).letters)
         .filter(|t| orthography.key(t) == orthography.key(&headword))
         .unwrap_or(headword)
-}
-
-/// How a letter typed without its mark is written (vowel length), learned
-/// once for a language from every part of speech's words (each part's
-/// lexemes with its lemma cell): a root's length shown in one part of
-/// speech's word (`iūdicō`) tells it in another's (`iūdex`). None where
-/// no word writes a mark its key doesn't.
-pub fn language_marks<'l>(
-    orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (Option<usize>, &'l str, &'l Lexeme)>,
-    settings: Settings,
-) -> Option<flexion::Marks<'static>> {
-    let mut seen = crate::HashSet::default();
-    let words: Vec<(String, String, &str)> = words
-        .map(|(lemma_cell, part, l)| {
-            let letters = spelled(orthography, lemma_cell, l);
-            (orthography.key(&letters), letters, part)
-        })
-        .filter(|w| seen.insert(w.clone()))
-        .collect();
-    marks(
-        orthography,
-        words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
-        settings,
-    )
 }
 
 /// The words the paradigm choice lists though the paradigm its rules alone
@@ -1803,108 +1878,6 @@ fn split(w: &Word, n: usize) -> Option<(&str, &str, &str)> {
         .then_some((p, pk, rest_key))
 }
 
-/// How a letter typed without its mark is written (see
-/// [`flexion::Grammar::marks`]): learned from every letter of the words that
-/// a mark could stand on, by the letter before it and the letters from it
-/// on. `None` where no word writes such a mark.
-fn marks<'w>(
-    orthography: &Orthography<'_>,
-    words: impl Iterator<Item = (&'w str, &'w str, &'w str)>,
-    settings: Settings,
-) -> Option<flexion::Marks<'static>> {
-    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
-    let words: Vec<(&str, &str, &str)> = words.collect();
-    let mut examples: Vec<(String, char)> = Vec::new();
-    let mut marked = false;
-    for &(key, letters, part) in &words {
-        let mut before = flexion::WORD_END;
-        for ((i, k), l) in key.char_indices().zip(letters.chars()) {
-            if markable(k)
-                && let Some(rest) = key.get(i..)
-            {
-                marked |= l != k;
-                examples.push((format!("{before}{rest}{}{part}", flexion::WORD_END), l));
-            }
-            before = k;
-        }
-    }
-    if !marked {
-        return None;
-    }
-    // What the rules get wrong is a word's own spelling, listed with it.
-    let rules = choose::learn_starts(&examples, settings);
-    let roots = mark_roots(orthography, &words, &rules, settings.smoothing);
-    Some(flexion::Marks {
-        rules,
-        roots: Cow::Owned(roots),
-        part: Cow::Borrowed(""),
-    })
-}
-
-/// The fewest words whose letter a root (see [`flexion::Marks::roots`])
-/// writes one way for it to be listed.
-const ROOT_WORDS: u32 = 2;
-
-/// The roots the marks `rules` don't tell (see [`flexion::Marks::roots`]):
-/// of `words` (key, letters, part of speech), the beginnings through a
-/// letter that may take a mark and two letters past it whose words (each
-/// spelling once, at least [`ROOT_WORDS`]) all write that letter one way,
-/// where the rules write it otherwise in one of them. Sorted.
-pub fn mark_roots(
-    orthography: &Orthography<'_>,
-    words: &[(&str, &str, &str)],
-    rules: &flexion::Choice<'_, char>,
-    smoothing: f32,
-) -> Vec<(Cow<'static, str>, char)> {
-    let markable = |c: char| orthography.folded.iter().any(|e| e.1 == c);
-    // Each letter's root, and how the word writes the letter.
-    let places = |key: &str, letters: &str| -> Vec<(usize, String, char)> {
-        let key: Vec<char> = key.chars().collect();
-        let letters: Vec<char> = letters.chars().collect();
-        (0..key.len())
-            .filter(|&n| n + 3 >= flexion::ROOT_LETTERS && key.get(n).is_some_and(|&c| markable(c)))
-            .filter_map(|n| Some((n, key.get(..n + 3)?.iter().collect(), *letters.get(n)?)))
-            .collect()
-    };
-    let spellings: BTreeSet<(&str, &str)> = words.iter().map(|&(k, l, _)| (k, l)).collect();
-    let mut seen: BTreeMap<String, BTreeMap<char, u32>> = BTreeMap::new();
-    for &(key, letters) in &spellings {
-        for (_, root, v) in places(key, letters) {
-            *seen.entry(root).or_default().entry(v).or_default() += 1;
-        }
-    }
-    let one_way = |root: &str| match seen.get(root).map(|v| v.iter().collect::<Vec<_>>()) {
-        Some(v) => match v.as_slice() {
-            &[(&v, &n)] if n >= ROOT_WORDS => Some(v),
-            _ => None,
-        },
-        None => None,
-    };
-    let ruled = |&(key, _, part): &(&str, &str, &str)| {
-        let marks = flexion::Marks {
-            rules: flexion::Choice {
-                side: rules.side,
-                rules: Cow::Borrowed(rules.rules.as_ref()),
-                exceptions: Cow::Borrowed(rules.exceptions.as_ref()),
-            },
-            roots: Cow::Borrowed(&[]),
-            part: Cow::Borrowed(part),
-        };
-        flexion::restore(orthography, &marks, smoothing, key, key).0
-    };
-    let told: Vec<String> = crate::par::map(words, ruled);
-    let mut out: BTreeSet<(String, char)> = BTreeSet::new();
-    for (&(key, letters, _), told) in words.iter().zip(&told) {
-        let told: Vec<char> = told.chars().collect();
-        for (n, root, v) in places(key, letters) {
-            if one_way(&root) == Some(v) && told.get(n) != Some(&v) {
-                out.insert((root, v));
-            }
-        }
-    }
-    out.into_iter().map(|(r, v)| (Cow::Owned(r), v)).collect()
-}
-
 /// Of the words with each value of a feature, the share whose form of a
 /// cell must be one other cell's form for the cell to be a referral.
 const REFERRAL_SHARE: f64 = 0.5;
@@ -2029,6 +2002,100 @@ fn analyze(w: &Word) -> Analyzed {
         lemma: a.lemma,
         cells,
         stems: a.stems,
+    }
+}
+
+/// A listed word's line gives its cells as the dictionary spells them, the
+/// other spellings too where the grammar doesn't give them in order (the
+/// Italian article: `il|lo|l'`, `i|gli`): a word already listed lists
+/// those cells whole. Only of a closed class, whose spellings are few and its
+/// own: an open class's (Greek verbs' contracted and open forms,
+/// `ἀᾰ́ομαι|ἀῶμαι`) are many, cost 2 MB and change no answer. A cell newly listed may change what other cells of the
+/// word are told from (a listed word's cells come from its listed ones,
+/// English `sing`'s past participle from its past): those words are checked
+/// again, every cell, until none changes.
+fn spell_out(
+    grammar: &mut Grammar<'_, u16, u16, u8>,
+    irregular: &mut Vec<(String, usize, String)>,
+    stems: &[(String, String, String, String)],
+    lexemes: &[Lexeme],
+    words: &[Word],
+    stated: &str,
+) {
+    let listed: crate::HashSet<&str> = irregular
+        .iter()
+        .map(|(k, _, _)| k.as_str())
+        .chain(stems.iter().map(|(k, _, _, _)| k.as_str()))
+        .collect();
+    let mut mine: Vec<(&Lexeme, &Word)> = lexemes
+        .iter()
+        .zip(words)
+        .filter(|(l, w)| listed.contains(w.key.as_str()) && l.cells.iter().any(|f| f.len() > 1))
+        .collect();
+    // At most a few rounds: each lists more of the same words' cells.
+    for _ in 0..4 {
+        let orthography = &grammar.orthography;
+        let written = |f: &str| {
+            let read = orthography.read(f);
+            orthography.write(&read.letters, read.stress, flexion::Casing::Lower)
+        };
+        let spelled: Vec<(String, usize, String)> = crate::par::map(&mine, |&(l, w)| {
+            let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
+            let tables = [(l.full.as_str(), true), (plain.as_str(), false)].map(|(input, full)| {
+                let known = flexion::Known {
+                    full,
+                    ..flexion::Known::default()
+                };
+                grammar.table(input, &known)
+            });
+            let unstated = crate::eval::TableLength::of(
+                orthography,
+                stated,
+                l.cells.iter().flatten().map(String::as_str),
+            );
+            let same = |a: &str, b: &str| {
+                let (got, want) = (orthography.read(a), orthography.read(b));
+                crate::eval::same_form(orthography, a, b)
+                    || (got.stress == want.stress
+                        && unstated.compatible(&want.letters, &got.letters))
+            };
+            // Right: the first form, and where the dictionary has more, all
+            // of them in order.
+            let right = |cell: usize, forms: &[String]| {
+                tables.iter().all(|t| {
+                    t.get(cell).and_then(|c| c.first()).is_some_and(|top| {
+                        let given = std::iter::once(&top.form).chain(&top.also);
+                        let first = forms.first().is_some_and(|f| same(&top.form, f));
+                        first
+                            && (forms.len() < 2
+                                || (given.clone().count() == forms.len()
+                                    && given.zip(forms).all(|(g, f)| same(g, f))))
+                    })
+                })
+            };
+            l.cells
+                .iter()
+                .enumerate()
+                .filter(|(cell, forms)| !forms.is_empty() && !right(*cell, forms))
+                .map(|(cell, forms)| {
+                    let whole: Vec<String> = forms.iter().map(|f| written(f)).collect();
+                    (w.key.clone(), cell, whole.join("|"))
+                })
+                .collect::<Vec<_>>()
+        })
+        .into_iter()
+        .flatten()
+        .filter(|e| !irregular.contains(e))
+        .collect();
+        if spelled.is_empty() {
+            return;
+        }
+        let touched: crate::HashSet<&str> = spelled.iter().map(|(k, _, _)| k.as_str()).collect();
+        mine.retain(|(_, w)| touched.contains(w.key.as_str()));
+        irregular.retain(|(k, c, _)| !spelled.iter().any(|(sk, sc, _)| sk == k && sc == c));
+        irregular.extend(spelled);
+        irregular.sort();
+        grammar.irregular = flexion::Irregular::new(irregular, stems);
     }
 }
 
@@ -2501,16 +2568,33 @@ fn listing(
     (lexemes, words): (&[Lexeme], &[Word]),
     made: &dyn Fn(&Word) -> bool,
     unsure: &mut crate::HashSet<String>,
+    stated: &str,
 ) -> Vec<(String, usize, String)> {
     grammar.irregular = flexion::Irregular::new(&[], stems);
     let wrong = rebuilt(grammar, words, stems, wrong.to_vec());
     unsure.extend(wrong.iter().map(|(k, _, _)| k.clone()));
     let mut irregular = roots(grammar, &wrong);
-    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
-    let made_wrong = self::irregular(grammar, lexemes, words, made);
+    settle(
+        grammar,
+        &mut irregular,
+        stems,
+        lexemes,
+        words,
+        unsure,
+        stated,
+    );
+    let made_wrong = self::irregular(grammar, lexemes, words, made, stated);
     unsure.extend(made_wrong.iter().map(|(k, _, _)| k.clone()));
     irregular.extend(made_wrong);
-    settle(grammar, &mut irregular, stems, lexemes, words, unsure);
+    settle(
+        grammar,
+        &mut irregular,
+        stems,
+        lexemes,
+        words,
+        unsure,
+        stated,
+    );
     irregular
 }
 
@@ -2523,6 +2607,7 @@ fn prune(
     stems: Vec<flexion::ListedStem>,
     (lexemes, words): (&[Lexeme], &[Word]),
     compound: &dyn Fn(&Word) -> bool,
+    stated: &str,
 ) -> (Vec<(String, usize, String)>, Vec<flexion::ListedStem>) {
     let anchored = |key: &str| format!("{}{key}", flexion::WORD_END);
     let listed: crate::HashSet<&str> = irregular
@@ -2555,7 +2640,7 @@ fn prune(
     grammar.irregular = flexion::Irregular::new(&kept, &kept_stems);
     // Those its last part builds wrong keep their listing.
     let wrong: crate::HashSet<String> =
-        self::irregular(grammar, lexemes, words, |w| tried.contains(&w.key))
+        self::irregular(grammar, lexemes, words, |w| tried.contains(&w.key), stated)
             .into_iter()
             .map(|(k, _, _)| k)
             .collect();
@@ -2709,11 +2794,12 @@ fn settle(
     lexemes: &[Lexeme],
     words: &[Word],
     keys: &crate::HashSet<String>,
+    stated: &str,
 ) {
     for _ in 0..ROUNDS {
         irregular.sort();
         grammar.irregular = flexion::Irregular::new(irregular, stems);
-        let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key));
+        let more = self::irregular(grammar, lexemes, words, |w| keys.contains(&w.key), stated);
         if more.is_empty() {
             return;
         }
@@ -2963,12 +3049,20 @@ const HEAD_OWN: usize = 2;
 /// shorter ones (or all, where no length does), each word that
 /// [`HEAD_SHARE`] of the words ending in it, at least [`HEAD_OWN`], inflect
 /// as (German `Schein`: `Fahrschein`, `Führerschein`).
+///
+/// Of the other last members (see [`last_members`]), those `missed` (the rules
+/// would build a new compound of one wrong as a word of its own, see
+/// [`missed`]) are `words` too: a word ending in one inflects as it,
+/// listed or not (Finnish `arvomerkintä` as `merkintä`, its last member
+/// deciding its harmony).
 fn heads<'a>(
     words: &[Word],
     cells: usize,
     irregular: &dyn Fn(&str) -> bool,
     listed: &dyn Fn(&str) -> bool,
     split: &dyn Fn(&str) -> bool,
+    members: &Members<'_>,
+    missed: &dyn Fn(&str) -> bool,
 ) -> flexion::Heads<'a> {
     let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
     // Per word ending in a listed one: the longest such, its letters,
@@ -3046,11 +3140,178 @@ fn heads<'a>(
             list.push(Cow::Owned(head.to_string()));
         }
     }
-    flexion::Heads {
+    let mut heads = flexion::Heads {
         least,
         not: Cow::Owned(not),
         words: Cow::Owned(words),
+    };
+    // The last members missed, that aren't heads already.
+    // A last member is named only where it fixes more of the words ending
+    // in it (those the rules build wrong, it right) than it breaks (those
+    // the rules build right, it wrong).
+    let helps = |head: &str| {
+        members.ends.get(head).is_some_and(|ws| {
+            let fixed = ws.iter().filter(|&&(w, same)| same && irregular(w)).count();
+            let broken = ws
+                .iter()
+                .filter(|&&(w, same)| !same && !irregular(w))
+                .count();
+            fixed > broken
+        })
+    };
+    let mut more: Vec<Cow<'a, str>> = (members.of.values())
+        .filter(|(head, _)| {
+            missed(head)
+                && helps(head)
+                && !(heads.inflects(head) && listed(head))
+                && !heads.names(head)
+        })
+        .map(|(head, _)| Cow::Owned(head.to_string()))
+        .collect();
+    if !more.is_empty() {
+        more.extend(heads.words.iter().cloned());
+        more.sort();
+        more.dedup();
+        heads.words = Cow::Owned(more);
     }
+    heads
+}
+
+/// The last members of the words made of two (compounds, Finnish
+/// `arvomerkintä` of `arvo` and `merkintä`), validated on the words alone:
+/// a word that words end in behind at least [`flexion::FRONT_LETTERS`]
+/// letters, at least [`HEAD_OWN`] of them, [`HEAD_SHARE`] of which have
+/// its forms, their front kept, in every cell both have. Not a word that
+/// words only happen to end in (`isin` of superlatives, `punaisin`: theirs
+/// aren't its forms).
+#[derive(Debug, Default)]
+pub(crate) struct Members<'w> {
+    /// Per word made of one (it has its forms), by key: its last member's
+    /// key (the longest), and the bytes of its front, which every form of
+    /// it begins with.
+    pub of: BTreeMap<&'w str, (&'w str, usize)>,
+    /// The fronts most of them have (at most [`FRONTS`], the commonest
+    /// first): what a new compound may begin with.
+    pub fronts: Vec<&'w str>,
+    /// Per validated last member, the words ending in it and whether each
+    /// has its forms, its front kept.
+    pub ends: BTreeMap<&'w str, Vec<(&'w str, bool)>>,
+}
+
+/// The most fronts a last member is tried behind (see [`missed`]).
+const FRONTS: usize = 8;
+
+/// The words' last members (see [`Members`]); words a prefix splits
+/// (`split`) or written in parts aren't made of them.
+fn last_members<'w>(
+    words: &'w [Word],
+    cells: usize,
+    split: &(dyn Fn(&str) -> bool + Sync),
+) -> Members<'w> {
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    // Per word, each word it ends in: its key, the letters before it, and
+    // whether the word has its forms, its front kept.
+    let ends: Vec<Vec<(&str, usize, bool)>> = crate::par::map(words, |w| {
+        if w.key.contains(['-', ' ']) || split(&w.key) {
+            return Vec::new();
+        }
+        let n = w.key.chars().count();
+        (flexion::FRONT_LETTERS..n)
+            .filter_map(|at| {
+                let (b, _) = w.key.char_indices().nth(at)?;
+                let head = *by_key.get(w.key.get(b..)?)?;
+                let front: String = w.letters.chars().take(at).collect();
+                let pairs: Vec<(&str, &str)> = (0..cells)
+                    .filter_map(|c| Some((first_form(w, c)?, first_form(head, c)?)))
+                    .collect();
+                let same = !pairs.is_empty()
+                    && pairs
+                        .iter()
+                        .all(|(mine, theirs)| mine.strip_prefix(front.as_str()) == Some(*theirs));
+                Some((head.key.as_str(), at, same))
+            })
+            .collect()
+    });
+    let mut counts: BTreeMap<&str, (usize, usize)> = BTreeMap::new();
+    for &(head, _, same) in ends.iter().flatten() {
+        let slot = counts.entry(head).or_default();
+        *slot = (slot.0 + 1, slot.1 + usize::from(same));
+    }
+    // Counts of words; exact as floats.
+    #[allow(clippy::cast_precision_loss)]
+    let validated = |head: &str| {
+        counts
+            .get(head)
+            .is_some_and(|&(n, same)| n >= HEAD_OWN && same as f64 >= HEAD_SHARE * n as f64)
+    };
+    let of: BTreeMap<&str, (&str, usize)> = words
+        .iter()
+        .zip(&ends)
+        .filter_map(|(w, ends)| {
+            let &(head, at, _) = ends.iter().find(|e| e.2 && validated(e.0))?;
+            let front = w.letters.char_indices().nth(at)?.0;
+            Some((w.key.as_str(), (head, front)))
+        })
+        .collect();
+    let mut by_head: BTreeMap<&str, Vec<(&str, bool)>> = BTreeMap::new();
+    for (w, ends) in words.iter().zip(&ends) {
+        for &(head, _, same) in ends.iter().filter(|e| validated(e.0)) {
+            by_head
+                .entry(head)
+                .or_default()
+                .push((w.key.as_str(), same));
+        }
+    }
+    let mut fronts: BTreeMap<&str, usize> = BTreeMap::new();
+    for (w, &(_, front)) in &of {
+        if let Some(f) = by_key.get(w).and_then(|w| w.letters.get(..front)) {
+            *fronts.entry(f).or_default() += 1;
+        }
+    }
+    let mut fronts: Vec<(&str, usize)> = fronts.into_iter().collect();
+    fronts.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+    Members {
+        of,
+        fronts: fronts.into_iter().take(FRONTS).map(|(f, _)| f).collect(),
+        ends: by_head,
+    }
+}
+
+/// The last members (see [`Members`]) whose new compounds the grammar
+/// builds wrong as words of their own: behind one of the commonest fronts,
+/// a form that isn't the front before the member's own. (The compounds the
+/// grammar has seen tell little: its rules may name their very endings.)
+fn missed<'w>(
+    grammar: &Grammar<'_, u16, u16, u8>,
+    words: &'w [Word],
+    members: &Members<'w>,
+) -> crate::HashSet<&'w str> {
+    let by_key: HashMap<&str, &Word> = words.iter().map(|w| (w.key.as_str(), w)).collect();
+    let heads: std::collections::BTreeSet<&str> =
+        members.of.values().map(|(head, _)| *head).collect();
+    let heads: Vec<&str> = heads.into_iter().collect();
+    let o = &grammar.orthography;
+    let wrong = crate::par::map(&heads, |head| {
+        let Some(w) = by_key.get(head) else {
+            return false;
+        };
+        members.fronts.iter().any(|front| {
+            let word = format!("{front}{}", w.letters);
+            let table = grammar.table(&word, &flexion::Known::default());
+            (0..w.cells.len()).any(|c| {
+                let top = table.get(c).and_then(|c| c.first());
+                first_form(w, c).is_some_and(|form| {
+                    let want = format!("{front}{form}");
+                    !top.is_some_and(|t| crate::eval::same_form(o, &t.form, &want))
+                })
+            })
+        })
+    });
+    heads
+        .into_iter()
+        .zip(wrong)
+        .filter_map(|(head, wrong)| wrong.then_some(head))
+        .collect()
 }
 
 /// How many of `w`'s forms `par` builds right.
@@ -3074,18 +3335,119 @@ fn builds(
         .count()
 }
 
+/// The training words by paradigm and by each of their endings (their last
+/// letter, two, and so on to all of them), with the cells each has.
+struct Evidence {
+    words: HashMap<String, BTreeMap<u16, Vec<usize>>>,
+    has: Vec<Vec<bool>>,
+    keys: Vec<String>,
+}
+
+impl Evidence {
+    fn new(words: &[Word], assignment: &[u16]) -> Self {
+        let mut by: HashMap<String, BTreeMap<u16, Vec<usize>>> = HashMap::default();
+        for (i, (w, &p)) in words.iter().zip(assignment).enumerate() {
+            for n in 1..=w.letters.chars().count() {
+                let mine = by.entry(last(&w.letters, n)).or_default();
+                mine.entry(p).or_default().push(i);
+            }
+        }
+        let has = words
+            .iter()
+            .map(|w| {
+                (0..w.cells.len())
+                    .map(|c| first_form(w, c).is_some())
+                    .collect()
+            })
+            .collect();
+        let keys = words.iter().map(|w| w.key.clone()).collect();
+        Self {
+            words: by,
+            has,
+            keys,
+        }
+    }
+
+    /// The paradigm a word (`w`, its forms as `forms`) of paradigm `now`
+    /// votes for. A word the dictionary gives some cells of fits every
+    /// paradigm that builds those (German `Monotheismus`, singular only,
+    /// fits `Minderung`'s and `Chauvinismus`'s): it goes to the one whose
+    /// words ending as it does (the most letters any such word shares)
+    /// most often have the cells it lacks, as `Chauvinismus`'s have their
+    /// plural (`Chauvinismen`); with no such words, it stays.
+    fn vote(
+        &self,
+        orthography: &Orthography<'_>,
+        paradigms: &[Paradigm<'_>],
+        laws: Option<&sound_law::Program<'_>>,
+        (w, forms): (&Word, &crate::laws::Word<'_>),
+        now: u16,
+    ) -> u16 {
+        let lacks: Vec<usize> = (0..w.cells.len())
+            .filter(|&c| first_form(w, c).is_none())
+            .collect();
+        let has = forms.forms.iter().flatten().count();
+        let builds_all = |p: u16| {
+            paradigms
+                .get(usize::from(p))
+                .is_some_and(|par| builds(orthography, paradigms, laws, par, forms) == has)
+        };
+        if lacks.is_empty() || has == 0 || !builds_all(now) {
+            return now;
+        }
+        // How many of the cells the word lacks words `of` have.
+        let cells = |of: &[usize]| -> usize {
+            of.iter()
+                .filter_map(|&v| self.has.get(v))
+                .map(|has| lacks.iter().filter(|&&c| has.get(c) == Some(&true)).count())
+                .sum()
+        };
+        for n in (1..=w.letters.chars().count()).rev() {
+            let Some(of) = self.words.get(&last(&w.letters, n)) else {
+                continue;
+            };
+            let mut by: Vec<(usize, u16)> = of
+                .iter()
+                .map(|(&p, words)| (cells(words), p))
+                .filter(|&(n, _)| n > 0)
+                .collect();
+            by.sort_by_key(|&(n, p)| (std::cmp::Reverse(n), p));
+            let mine = by.iter().find(|e| e.1 == now).map_or(0, |e| e.0);
+            if let Some(&(_, p)) = by
+                .iter()
+                .take_while(|e| e.0 > mine)
+                .find(|e| builds_all(e.1))
+            {
+                return p;
+            }
+            // Only the words ending as it does the most letters vote: a
+            // shorter ending is another word's, not its.
+            let others = of
+                .values()
+                .flatten()
+                .any(|&v| self.keys.get(v).is_some_and(|k| *k != w.key));
+            if mine > 0 || others {
+                return now;
+            }
+        }
+        now
+    }
+}
+
 /// Per word, the paradigm that builds the most of its forms (the first of
-/// those that build as many), if any builds one.
+/// those that build as many, or the one its `evidence` votes for), if any
+/// builds one.
 fn fit(
     orthography: &Orthography<'_>,
     paradigms: &[Paradigm<'_>],
     laws: Option<&sound_law::Program<'_>>,
     words: &[Word],
+    evidence: &Evidence,
 ) -> Vec<Option<u16>> {
-    let best = |w: &Word| {
-        let forms: Vec<Option<&str>> = (0..w.cells.len()).map(|c| first_form(w, c)).collect();
+    let best = |word: &Word| {
+        let forms: Vec<Option<&str>> = (0..word.cells.len()).map(|c| first_form(word, c)).collect();
         let w = crate::laws::Word {
-            letters: &w.letters,
+            letters: &word.letters,
             forms,
         };
         paradigms
@@ -3100,6 +3462,7 @@ fn fit(
             .max()
             .filter(|&(n, _)| n > 0)
             .and_then(|(_, std::cmp::Reverse(p))| u16::try_from(p).ok())
+            .map(|p| evidence.vote(orthography, paradigms, laws, (word, &w), p))
     };
     crate::par::map(words, best)
 }
@@ -3490,8 +3853,9 @@ fn irregular(
     lexemes: &[Lexeme],
     words: &[Word],
     only: impl Fn(&Word) -> bool,
+    stated: &str,
 ) -> Vec<(String, usize, String)> {
-    misbuilt(grammar, lexemes, words, only)
+    misbuilt(grammar, lexemes, words, only, stated)
         .into_iter()
         .map(|(k, c, f, _)| (k, c, f))
         .collect()
@@ -3605,9 +3969,15 @@ fn misbuilt(
     lexemes: &[Lexeme],
     words: &[Word],
     only: impl Fn(&Word) -> bool,
+    stated: &str,
 ) -> Vec<(String, usize, String, bool)> {
     let orthography = &grammar.orthography;
     let wrong = |l: &Lexeme, w: &Word| {
+        let unstated = crate::eval::TableLength::of(
+            orthography,
+            stated,
+            l.cells.iter().flatten().map(String::as_str),
+        );
         let plain = orthography.write(&w.key, None, flexion::Casing::Lower);
         let tables = [(l.full.as_str(), true), (plain.as_str(), false)].map(|(input, full)| {
             let known = flexion::Known {
@@ -3626,7 +3996,12 @@ fn misbuilt(
             let mut letters = false;
             let read = orthography.read(want);
             for top in tops {
-                right &= top.is_some_and(|t| crate::eval::same_form(orthography, t, want));
+                right &= top.is_some_and(|t| {
+                    let got = orthography.read(t);
+                    crate::eval::same_form(orthography, t, want)
+                        || (got.stress == read.stress
+                            && unstated.compatible(&read.letters, &got.letters))
+                });
                 letters |= top.is_none_or(|t| orthography.read(t).letters != read.letters);
             }
             if !right {
@@ -3775,7 +4150,15 @@ mod tests {
         for key in ["pohjoiskala", "sisäkala"] {
             words.push(word(key, &[key, &format!("{key}in"), &format!("{key}ta")]));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
+        let found = heads(
+            &words,
+            3,
+            &|_| true,
+            &|_| true,
+            &|_| false,
+            &last_members(&words, 3, &|_| false),
+            &|_| true,
+        );
         assert_eq!(
             (found.least, found.not.to_vec()),
             (Some(1), vec![Cow::from("kala")])
@@ -3793,7 +4176,18 @@ mod tests {
                 ));
             }
         }
-        assert!(heads(&words, 3, &|_| true, &|_| true, &|_| false).is_empty());
+        assert!(
+            heads(
+                &words,
+                3,
+                &|_| true,
+                &|_| true,
+                &|_| false,
+                &last_members(&words, 3, &|_| false),
+                &|_| true,
+            )
+            .is_empty()
+        );
         // Among them, a word whose own compounds inflect as it (Italian
         // `fare`): it alone is a head.
         words.push(word("fare", &["fare", "faccio", "fatto"]));
@@ -3801,11 +4195,74 @@ mod tests {
             let forms = ["fare", "faccio", "fatto"].map(|f| format!("{front}{f}"));
             words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
         }
-        let found = heads(&words, 3, &|_| true, &|_| true, &|_| false);
+        let found = heads(
+            &words,
+            3,
+            &|_| true,
+            &|_| true,
+            &|_| false,
+            &last_members(&words, 3, &|_| false),
+            &|_| true,
+        );
         assert_eq!(
             (found.least, found.words.to_vec()),
             (None, vec![Cow::from("fare")])
         );
+    }
+
+    #[test]
+    fn a_last_member_its_compounds_bear_out_is_a_head_where_the_rules_miss_them() {
+        // Finnish `arvomerkintä`, `laatumerkintä`, `lokimerkintä` have
+        // `merkintä`'s forms behind their first member: it is their last
+        // member, and a head, not listed, where the
+        // rules would build a new one wrong as a word of its own.
+        // Superlatives only happen to end in `isin`: theirs aren't its
+        // forms.
+        let merkinta = ["merkintä", "merkinnät", "merkintää"];
+        let mut words = vec![word("merkintä", &merkinta)];
+        for front in ["arvo", "laatu", "loki"] {
+            let forms = merkinta.map(|f| format!("{front}{f}"));
+            words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
+        }
+        words.push(word("isin", &["isin", "isit", "isiä"]));
+        for front in ["puna", "kuulu", "kaune"] {
+            let forms = ["in", "immat", "inta"].map(|f| format!("{front}is{f}"));
+            words.push(word(&forms[0], &forms.each_ref().map(String::as_str)));
+        }
+        let members = last_members(&words, 3, &|_| false);
+        let of: Vec<(&str, &str, usize)> = (members.of.iter())
+            .map(|(w, (head, front))| (*w, *head, *front))
+            .collect();
+        assert_eq!(
+            of,
+            [
+                ("arvomerkintä", "merkintä", 4),
+                ("laatumerkintä", "merkintä", 5),
+                ("lokimerkintä", "merkintä", 4)
+            ]
+        );
+        assert_eq!(members.fronts, ["arvo", "laatu", "loki"]);
+        // The rules build the compounds wrong; reading them through their
+        // last member builds them right.
+        let wrong = |w: &str| w != "merkintä" && w.ends_with("merkintä");
+        let named = |missed: &str, irregular: &dyn Fn(&str) -> bool| {
+            let missed = |head: &str| head == missed;
+            let found = heads(
+                &words,
+                3,
+                irregular,
+                &|_| false,
+                &|_| false,
+                &members,
+                &missed,
+            );
+            found.words.to_vec()
+        };
+        assert_eq!(named("merkintä", &wrong), [Cow::from("merkintä")]);
+        assert!(named("isin", &wrong).is_empty());
+        // Where the rules build its words right already, a last member is
+        // no head: it would only fix nothing (English `-se`, `japane+se`).
+        assert!(named("merkintä", &|_| false).is_empty());
     }
 
     #[test]
@@ -3897,6 +4354,8 @@ mod tests {
             names: vec![String::new(); 3],
             marks: None,
             part: "verb".to_string(),
+            stated_length: "",
+            closed: false,
         };
         assert!(referrals(&words, &shape).is_none());
     }
@@ -3985,48 +4444,60 @@ mod tests {
     }
 
     #[test]
-    fn a_mark_the_letters_leave_open_is_told_by_the_part_of_speech() {
-        // Latin adjectives in `-genus` ("born") have a short `e`, the
-        // distributive numerals in `-gēnus` a long one: the same letters,
-        // told apart by the part of speech alone.
+    fn a_word_without_some_cells_votes_for_the_paradigm_its_likes_have_them_in() {
+        // German `Monotheismus` has no plural in the dictionary: both
+        // paradigms build its singular, but the words in `-mus` that have a
+        // plural are `Kapitalismus`'s (`Kapitalismen`), not `Minderung`'s.
+        // A word no word ends like (`Zebra`) stays where it is.
+        let paradigm = |name: &str, lemma: &str, cells: &[&str]| Paradigm {
+            name: Cow::Owned(name.to_string()),
+            words: 3,
+            lemma: Cow::Owned(lemma.to_string()),
+            parent: None,
+            inherent: Cow::Borrowed(&[]),
+            table: Cow::Owned(cells.iter().map(|c| format!("{c}\t")).collect()),
+            stems: Cow::Borrowed(""),
+            reads: None,
+            affix: None,
+        };
+        let paradigms = [
+            paradigm("minderung", "~", &["~", "~en"]),
+            paradigm("kapitalismus", "~us", &["~us", "~en"]),
+        ];
         let orthography = Orthography {
             lowercase: true,
-            vowels: "aeiouē",
+            vowels: "aeiou",
             stress_marks: "",
             stressed: &[],
             implicit: "",
             dropped: "",
             mark_monosyllables: false,
-            folded: &[('ē', 'e')],
+            folded: &[],
             prosody: None,
             initial: "",
         };
-        let mut words: Vec<(String, String, &str)> = Vec::new();
-        for front in [
-            "indi", "terri", "capri", "nubi", "ali", "primi", "uni", "multi",
-        ] {
-            let key = format!("{front}genus");
-            words.push((key.clone(), key, "adjective"));
-        }
-        for front in [
-            "quin", "septin", "non", "octin", "quadrin", "tre", "du", "ses",
-        ] {
-            words.push((format!("{front}genus"), format!("{front}gēnus"), "numeral"));
-        }
-        let rules = marks(
-            &orthography,
-            words.iter().map(|(k, l, p)| (k.as_str(), l.as_str(), *p)),
-            Settings::default(),
-        )
-        .expect("marks");
-        let spell = |word: &str, part: &str| {
-            let marks = flexion::Marks {
-                part: Cow::Owned(part.to_string()),
-                ..rules.clone()
-            };
-            flexion::restore(&orthography, &marks, 1.0, word, word).0
+        let singular = |key: &str| {
+            let mut w = word(key, &[key]);
+            w.cells.push(Vec::new());
+            w
         };
-        assert_eq!(spell("sescentigenus", "numeral"), "sescentigēnus");
-        assert_eq!(spell("sescentigenus", "adjective"), "sescentigenus");
+        let words = [
+            word("minderung", &["minderung", "minderungen"]),
+            word("wohnung", &["wohnung", "wohnungen"]),
+            word("kapitalismus", &["kapitalismus", "kapitalismen"]),
+            word("rassismus", &["rassismus", "rassismen"]),
+            singular("monotheismus"),
+            singular("zebra"),
+        ];
+        let evidence = Evidence::new(&words, &[0, 0, 1, 1, 0, 0]);
+        let vote = |w: &Word| {
+            let forms = crate::laws::Word {
+                letters: &w.letters,
+                forms: vec![first_form(w, 0), None],
+            };
+            evidence.vote(&orthography, &paradigms, None, (w, &forms), 0)
+        };
+        assert_eq!(vote(&singular("monotheismus")), 1);
+        assert_eq!(vote(&singular("zebra")), 0);
     }
 }

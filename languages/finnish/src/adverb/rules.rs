@@ -7,14 +7,14 @@
 use super::paradigms::Declension::{self, *};
 use flexion::Choice;
 
-/// 65 rules and 104 listed words.
+/// 65 rules and 103 listed words.
 pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
     rules {
-        "" => [Kevyesti 1094, Karkeasti 509, Kiihkeästi 279, Paksusti 77, Iisisti 55, Kovasti 53, Suoraan 33, Herkästi 29, Tiiviisti 6, Oikein 4, Edellä 4, Kaukaa 3, Etäälle 3, Lujaa 3],
+        "" => [Kevyesti 1094, Karkeasti 509, Kiihkeästi 279, Paksusti 76, Iisisti 56, Kovasti 53, Suoraan 33, Herkästi 29, Tiiviisti 6, Oikein 4, Edellä 4, Kaukaa 3, Etäälle 3, Lujaa 3],
         "a" => [Suoraan 4, Kaukaa 3, Lujaa 2],
         "ana" => [Kaukaa 2] regular,
         "e" => [Suoraan 4, Edellä 1, Etäälle 1] regular,
-        "i" => [Kevyesti 1094, Karkeasti 509, Kiihkeästi 279, Paksusti 77, Iisisti 55, Kovasti 53, Herkästi 29, Tiiviisti 6, Suoraan 1],
+        "i" => [Kevyesti 1094, Karkeasti 509, Kiihkeästi 279, Paksusti 76, Iisisti 56, Kovasti 53, Herkästi 29, Tiiviisti 6, Suoraan 1],
         "asti" => [Karkeasti 509, Kovasti 53] regular,
         "aasti" => [Karkeasti 118] regular,
         "easti" => [Karkeasti 56] regular,
@@ -45,7 +45,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         "esti" => [Kevyesti 1094, Paksusti 3] regular,
         "aisesti" => [Kevyesti 212] regular,
         "eisesti" => [Kevyesti 40, Paksusti 2] regular,
-        "isti" => [Iisisti 55, Tiiviisti 6, Paksusti 1] regular,
+        "isti" => [Iisisti 56, Tiiviisti 6] regular,
         "iisti" => [Tiiviisti 6] regular,
         "listi" => [Iisisti 20] regular,
         "tisti" => [Iisisti 12] regular,
@@ -88,7 +88,7 @@ pub(super) const DECLENSION: Choice<'static, Declension> = flexion::choice! {
         ],
         Paksusti => [
             "#häikäisevästi", "#mieluusti", "#pysyväisluonteisesti", "#suorapuheisesti",
-            "#tavoitteellisesti", "#äkisti",
+            "#tavoitteellisesti",
         ],
         Kovasti => [
             "#arasti", "#epäsuorasti", "#halvasti", "#harvasti", "#hyvänsuovasti", "#julmasti",

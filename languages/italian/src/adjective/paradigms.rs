@@ -81,13 +81,13 @@ const PL_AS_SG: [u16; 5] = [0, 0, 2, 2, 4];
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `gagliardo`: 11,179 words.
+    /// Like `gagliardo`: 11,178 words.
     Gagliardo,
     /// Like `maggiore`: 7,512 words.
     Maggiore,
     /// Like `lubrico`: 5,291 words.
     Lubrico,
-    /// Like `rossoblu`: 732 words.
+    /// Like `rossoblu`: 730 words.
     Rossoblu,
     /// Like `centrista`: 504 words.
     Centrista,
@@ -95,9 +95,9 @@ pub enum Declension {
     Carico,
     /// Like `riparatore`: 392 words.
     Riparatore,
-    /// Like `acconcio`: 132 words.
+    /// Like `acconcio`: 133 words.
     Acconcio,
-    /// Like `versipelle`: 48 words.
+    /// Like `versipelle`: 50 words.
     Versipelle,
     /// Like `birbone`: 28 words.
     Birbone,
@@ -140,8 +140,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
-    // Gagliardo: 11,179 words (peso, libero, monetario, fero, bancario, secondo).
-    declension!("gagliardo", 11179, "~o";
+    // Gagliardo: 11,178 words (peso, libero, monetario, fero, bancario, secondo).
+    declension!("gagliardo", 11178, "~o";
     m: "~o", "~i";
     f: "~a", "~e";
     superlative: "~issimo";
@@ -155,8 +155,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     declension!("lubrico", 5291, "~o", like Gagliardo;
     stem adjective_f: "~- like lubrico";
     ),
-    // Rossoblu: 732 words (gratis, wireless, standard, bio, baby, banana).
-    declension!("rossoblu", 732, "~";
+    // Rossoblu: 730 words (gratis, wireless, standard, bio, baby, banana).
+    declension!("rossoblu", 730, "~";
     m: "~", "~";
     f: "~", "~";
     ),
@@ -175,13 +175,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 12] = [
     stem adjective_f: "~~ic- like maggiore";
     m: "~o~e", "~o~i";
     ),
-    // Acconcio: 132 words (ghiaccio, sudicio, bigio, accio, riccio, liscio).
-    declension!("acconcio", 132, "~io";
+    // Acconcio: 133 words (ghiaccio, sudicio, bigio, accio, riccio, liscio).
+    declension!("acconcio", 133, "~io";
     m: "~io", "~i";
     f: "~ia", "~e";
     ),
-    // Versipelle: 48 words (single, ponte, satellite, cringe, esentasse, antiproiettile). Like Maggiore.
-    declension!("versipelle", 48, "~e", like Maggiore as PL_AS_SG;
+    // Versipelle: 50 words (single, yankee, ponte, satellite, cringe, esentasse). Like Maggiore.
+    declension!("versipelle", 50, "~e", like Maggiore as PL_AS_SG;
     ),
     // Birbone: 28 words (leggere, signore, poltrone, zuccone, chiacchierone, credulone). Like Gagliardo, except in 2 cells: m sg, superlative.
     declension!("birbone", 28, "~e", like Gagliardo;

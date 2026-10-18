@@ -2,40 +2,17 @@
 //! A declension that writes `derived` in a cell takes the form this way, and so
 //! does a word whose form of the other cell is listed but not this one's.
 //! Each relation lists its changes, as patterns around the letters they keep
-//! (`("~ī", "~istī")`, numbered in order), and the rules on that form's
-//! ending choosing one.
+//! (`("~ī", "~istī")`, numbered in order; one writing `‹` meets the
+//! form's front through the sound laws, the augment's `("~ि", "अ‹~्")`), and
+//! the rules on that form's ending choosing one.
 
 use super::cell::*;
-use flexion::Relation;
-use std::borrow::Cow;
+use flexion::{Relation, relation};
 
-/// Writes one relation: its cell, the cells it comes from (by the word's
-/// feature, in order, if several), its changes, then the rules choosing one
-/// and the words they get wrong (`none`: the form itself), whether it tells
-/// listed words' forms, and the pair of cells it is by analogy with.
-macro_rules! relation {
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], none, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: None,
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-    ($cell:ident, [$($from:ident),*], [$(($old:literal, $new:literal)),*], rules { $($rules:tt)* } listed { $($words:tt)* }, $listed:literal, $analogy:expr) => {
-        Relation {
-            cell: $cell,
-            from: Cow::Borrowed(&[$($from),*]),
-            changes: flexion::changes![$(($old, $new)),*],
-            change: Some(flexion::choice! { rules { $($rules)* } listed { $($words)* } }),
-            listed: $listed,
-            analogy: $analogy,
-        }
-    };
-}
-
+// Each relation: its cell, the cells it comes from (by the word's feature,
+// in order, if several), its changes, then the rules choosing one and the
+// words they get wrong (`none`: the form itself), whether it tells listed
+// words' forms, and the pair of cells it is by analogy with.
 pub(super) static RELATIONS: [Relation<'static>; 13] = [
     // NOM_PL, from VOC_SG.
     relation!(NOM_PL, [VOC_SG], [("~", "~"), ("~", "~a"), ("~", "~e"), ("~", "~es"), ("~", "~la"), ("~", "~nēs"), ("~", "~sēs"), ("~", "~ta"), ("~", "~tēs"), ("~", "~ēs"), ("~", "~ī"), ("~", "~īm"), ("~al", "~ālia"), ("~ar", "~āria"), ("~e", "~a"), ("~e", "~ia"), ("~e", "~ī"), ("~en", "~ina"), ("~en", "~inēs"), ("~eps", "~ipēs"), ("~er", "~rēs"), ("~er", "~rī"), ("~es", "~a"), ("~es", "~idēs"), ("~es", "~itēs"), ("~ex", "~ica"), ("~ex", "~icēs"), ("~ex", "~ēs"), ("~ex", "~īcēs"), ("~is", "~erēs"), ("~is", "~ēs"), ("~is", "~īdēs"), ("~le", "~ia"), ("~om", "~a"), ("~on", "~a"), ("~on", "~ōnēs"), ("~or", "~ōrēs"), ("~r", "~ta"), ("~s", "~des"), ("~s", "~dēs"), ("~s", "~es"), ("~s", "~nēs"), ("~s", "~ra"), ("~s", "~rēs"), ("~s", "~ta"), ("~s", "~tēs"), ("~s", "~ēs"), ("~um", "~a"), ("~um", "~ae"), ("~um", "~ī"), ("~umque", "~aque"), ("~ur", "~ora"), ("~us", "~a"), ("~us", "~era"), ("~us", "~ora"), ("~us", "~orēs"), ("~us", "~ē"), ("~us", "~ūs"), ("~ut", "~ita"), ("~x", "~ces"), ("~x", "~chēs"), ("~x", "~cēs"), ("~x", "~gēs"), ("~ā", "~ae"), ("~āns", "~antēs"), ("~ār", "~arēs"), ("~ās", "~antēs"), ("~ās", "~arēs"), ("~ē", "~ae"), ("~ēns", "~entēs"), ("~ēr", "~erēs"), ("~ēs", "~edēs"), ("~ēs", "~etēs"), ("~ī", "~iī"), ("~ō", "~inēs"), ("~ō", "~onēs"), ("~ōn", "~ontēs"), ("~ōn", "~onēs"), ("~ōns", "~ontēs"), ("~ū", "~ua"), ("~ūs", "~odēs"), ("~ūs", "~uēs")], rules {

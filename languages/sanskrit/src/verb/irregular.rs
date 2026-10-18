@@ -7,48 +7,48 @@
 use flexion::Irregular;
 use std::borrow::Cow;
 
-/// 122 stems, 1,273 forms.
+/// 117 stems, 1,254 forms.
 pub(super) const IRREGULAR: Irregular<'static> = Irregular {
     table: Cow::Borrowed(
         r#"अकर्	147	अकः
 अकाङ्क्षीत्	148	अकाङ्क्तम्
-अकार्षीत्	future_act_3_sg	अकृष- like अग्रहीत्	imperfect_act_1_sg	कृढ्वम्- like अकर्
+अकार्षीत्	future_act_3_sg	अकृष- like अग्रहीत्	present_ind_mid_1_sg	कृढ्वम्- like अकर्
 अक्रन्	perfect_act_3_sg	क्रदन्- like अकर्
 अगन्	perfect_act_3_sg	ग्मन्- like अकर्	144	अगमम्	153	अग्मि
 अघस्	145	अघस्व	147	अघः	152	अक्षन्	153	अक्षि	154	अक्ष्वहि	156	अग्धाः	158	अग्ध्वम्	159	अग्ध
-अचैषीत्	future_act_3_sg	अचे- like अजनिष्ट	imperfect_act_1_sg	चेढ्वम्- like अकर्
+अचैषीत्	future_act_3_sg	अचे- like अजनिष्ट	present_ind_mid_1_sg	चेढ्वम्- like अकर्
 अच्छेत्	145	अच्छेद्व	152	अच्छिदन्
-अतांसीत्	future_act_3_sg	अतंस- like आर्त	imperfect_act_1_sg	तन्ध्वम्- like अकर्
+अतांसीत्	future_act_3_sg	अतंस- like आर्त	present_ind_mid_1_sg	तन्ध्वम्- like अकर्
 अताप्सीत्	148	अताप्तम्
 अत्ति	9	अदे	15	अत्ते	17	अदते	36	अद्याम्	37	अद्याव	50	अदीध्वम्	75	आदः	84	आत्थाः	165	अदान
-अद्राक्षीत्	future_act_3_sg	अदृक्- like अमौक्	imperfect_act_1_sg	दृड्ढ्वम्- like अकर्	148	अद्राष्टम्	156	अदृष्ठाः	159	अदृष्ट
+अद्राक्षीत्	future_act_3_sg	अदृक्- like अमौक्	present_ind_mid_1_sg	दृड्ढ्वम्- like अकर्	148	अद्राष्टम्	156	अदृष्ठाः	159	अदृष्ट
 अधाक्षीत्	148	अधाक्तम्
 अधात्	154	अधीवहि
-अधिगच्छति	future_act_3_sg	अध्यगंस- like आर्त	imperfect	ध्यगच्छ- like वहति	imperfect_act_1_sg	ध्यगच्छ- like वहति	lemma	अध्यगम- like आपत्	perfect_act_3_sg	ध्यगमन्- like अकर्	present_ind_act_2_pl	अधिजग्म- like आनाश	6	अधिगच्छति	90	अधिगंस्यामि	117	अध्यगंस्ये	158	अध्यगन्ध्वम्	162	अधिगन्तुम्	163	अधिगत्वा	168	अधिजगन्वांस्
-अधितिष्ठति	imperfect	ध्यतिष्ठ- like वहति	imperfect_act_1_sg	ध्यतिष्ठ- like वहति
-अनैषीत्	future_act_3_sg	अने- like अजनिष्ट	imperfect_act_1_sg	नेढ्वम्- like अकर्
-अनौत्सीत्	future_act_3_sg	अनुत्स- like अग्रहीत्	imperfect_act_1_sg	नुद्ध्वम्- like अकर्	148	अनौत्तम्	156	अनुत्थाः	159	अनुत्त
-अपोहति	imperfect	पौह- like वहति	imperfect_act_1_sg	पौह- like वहति
-अप्राक्षीत्	future_act_3_sg	अप्रक्- like अमौक्	imperfect_act_1_sg	प्रड्ढ्वम्- like अकर्	148	अप्राष्टम्	156	अप्रष्ठाः	159	अप्रष्ट
-अबुद्ध	future_act_3_sg	अभुत्स- like अग्रहीत्	imperfect_act_1_sg	भुद्ध्वम्- like अकर्	156	अबुद्धाः	159	अबुद्ध
-अभाक्षीत्	future_act_3_sg	अभक्- like अमौक्	imperfect_act_1_sg	भग्ध्वम्- like अकर्	148	अभाक्तम्
+अधिगच्छति	future_act_3_sg	अध्यगंस- like आर्त	imperfect	ध्यगच्छ- like वहति	imperfect_	ध्यगच्छ- like वहति	lemma	अध्यगम- like आपत्	perfect_act_3_sg	ध्यगमन्- like अकर्	present_ind_act_2_pl	अधिजग्म- like आनाश	present_ind_mid_1_sg	ध्यगन्ध्वम्- like अकर्	6	अधिगच्छति	90	अधिगंस्यामि	117	अध्यगंस्ये	162	अधिगन्तुम्	163	अधिगत्वा	168	अधिजगन्वांस्
+अधितिष्ठति	imperfect	ध्यतिष्ठ- like वहति	imperfect_	ध्यतिष्ठ- like वहति
+अनैषीत्	future_act_3_sg	अने- like अजनिष्ट	present_ind_mid_1_sg	नेढ्वम्- like अकर्
+अनौत्सीत्	future_act_3_sg	अनुत्स- like अग्रहीत्	present_ind_mid_1_sg	नुद्ध्वम्- like अकर्	148	अनौत्तम्	156	अनुत्थाः	159	अनुत्त
+अपोहति	imperfect	पौह- like वहति	imperfect_	पौह- like वहति
+अप्राक्षीत्	future_act_3_sg	अप्रक्- like अमौक्	present_ind_mid_1_sg	प्रड्ढ्वम्- like अकर्	148	अप्राष्टम्	156	अप्रष्ठाः	159	अप्रष्ट
+अबुद्ध	future_act_3_sg	अभुत्स- like अग्रहीत्	present_ind_mid_1_sg	भुद्ध्वम्- like अकर्	156	अबुद्धाः	159	अबुद्ध
+अभाक्षीत्	future_act_3_sg	अभक्- like अमौक्	present_ind_mid_1_sg	भग्ध्वम्- like अकर्	148	अभाक्तम्
 अभूत्	perfect_act_3_sg	भूवन्- like अकर्	144	अभूवम्
 अभेत्	145	अभेद्व	152	अभिदन्
-अयाक्षीत्	future_act_3_sg	अयक्- like अमौक्	imperfect_act_1_sg	यड्ढ्वम्- like अकर्	148	अयाष्टम्	156	अयष्ठाः	159	अयष्ट
+अयाक्षीत्	future_act_3_sg	अयक्- like अमौक्	present_ind_mid_1_sg	यड्ढ्वम्- like अकर्	148	अयाष्टम्	156	अयष्ठाः	159	अयष्ट
 अरोत्	145	अरोध्व	152	अरुधन्
-अरौत्सीत्	future_act_3_sg	अरुत्स- like अग्रहीत्	imperfect_act_1_sg	रुद्ध्वम्- like अकर्	147	अरौत्सीः	148	अरौद्धम्	150	अरौत्सीत्	156	अरुद्धाः	159	अरुद्ध
+अरौत्सीत्	future_act_3_sg	अरुत्स- like अग्रहीत्	present_ind_mid_1_sg	रुद्ध्वम्- like अकर्	147	अरौत्सीः	148	अरौद्धम्	150	अरौत्सीत्	156	अरुद्धाः	159	अरुद्ध
 अर्हति	126	आनर्ह	131	आनर्ह
-अवगच्छति	75	अवागच्छः	82	अवागच्छावहि	85	अवागच्छेथाम्	86	अवागच्छध्वम्	89	अवागच्छन्त	90	अवगमिष्यामि	117	अवागमिष्ये	126	अवजगम	131	अवजग्म	145	अवागमाव	152	अवागमन्	154	अवागमिष्वहि	156	अवागमिष्ठाः	158	अवागमिड्ढ्वम्	159	अवागमिष्ट	162	अवगन्तुम्	163	अवगत्वा
+अवगच्छति	future_act_3_sg	अवागमि- like अजनिष्ट	imperfect	वागच्छ- like वहति	imperfect_	वागच्छ- like वहति	lemma	अवागम- like आपत्	perfect_act_3_sg	वागमन्- like अकर्	present_ind_act_2_pl	अवजग्म- like आनाश	present_ind_mid_1_sg	वागमिड्ढ्वम्- like अकर्	6	अवगच्छति	90	अवगमिष्यामि	117	अवागमिष्ये	162	अवगन्तुम्	163	अवगत्वा	168	अवजगन्वांस्
 अवर्त्	145	अवर्त्व	152	अवृतन्
 अवाक्षीत्	147	अवाक्षीः	148	अवाढम्	150	अवाक्षीत्
 अवात्सीत्	147	अवात्सीः	148	अवास्तम्	150	अवात्सीत्
-अवार्क्षीत्	future_act_3_sg	अवृक्- like अमौक्	imperfect_act_1_sg	वृग्ध्वम्- like अकर्	148	अवार्क्तम्
+अवार्क्षीत्	future_act_3_sg	अवृक्- like अमौक्	present_ind_mid_1_sg	वृग्ध्वम्- like अकर्	148	अवार्क्तम्
 अश्रेत्	perfect_act_3_sg	श्रियन्- like अकर्
 अश्रोत्	perfect_act_3_sg	श्रुवन्- like अकर्	144	अश्रवम्
 अस्ति	3	असि	9	हे	14	ध्वे	15	स्ते	17	सते	21	एधि	36	स्याम्	37	स्याव	50	सीध्वम्	68	असध्वे	75	आसीः	82	आस्वहि	85	आसाथाम्	86	आद्ध्वम्	89	आसत	165	सान
 अस्थात्	161	अस्थिरन्
-अस्राक्षीत्	future_act_3_sg	असृक्- like अमौक्	imperfect_act_1_sg	सृड्ढ्वम्- like अकर्	148	अस्राष्टम्	156	असृष्ठाः	159	असृष्ट
-अहार्षीत्	future_act_3_sg	अहृष- like अग्रहीत्	imperfect_act_1_sg	हृढ्वम्- like अकर्
+अस्राक्षीत्	future_act_3_sg	असृक्- like अमौक्	present_ind_mid_1_sg	सृड्ढ्वम्- like अकर्	148	अस्राष्टम्	156	असृष्ठाः	159	असृष्ट
+अहार्षीत्	future_act_3_sg	अहृष- like अग्रहीत्	present_ind_mid_1_sg	हृढ्वम्- like अकर्
 आक्षेति	3	आक्षेषि	9	आक्षिये	15	आक्षिते	17	आक्षियते	19	आक्षयाव	36	आक्षियाम्	37	आक्षियाव	50	आक्षियीध्वम्	66	आक्षयसे	68	आक्षयध्वे	165	आक्षियाण
 आनंश	131	आनश
 आनञ्ज	131	आनज
@@ -66,38 +66,33 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 इयाज	129	इयष्ठ	131	ईज
 इयाय	131	ईय
 इयेष	131	ईष
-ईक्षते	imperfect	ऐक्ष- like आनयति	imperfect_act_1_sg	ऐक्ष- like आनयति
+ईक्षते	imperfect	ऐक्ष- like आनयति	imperfect_	ऐक्ष- like आनयति
 ईट्टे	present	ईड- like ईष्टे	present_ind_mid_1_sg	ईड- like तक्ति	14	ईड्ढ्वे	84	ऐट्ठाः
-ईर्ष्यति	imperfect	ऐर्ष्य- like आनयति	imperfect_act_1_sg	ऐर्ष्य- like आनयति
-ईष्टे	imperfect_act_1_sg	ऐशि- like आनयति	present	ईश- like ईष्टे	present_ind_mid_1_sg	ईश- like तक्ति	14	ईशिध्वे	84	ऐष्ठाः	87	ऐष्ट
-ईहति	imperfect	ऐह- like आनयति	imperfect_act_1_sg	ऐह- like आनयति
+ईर्ष्यति	imperfect	ऐर्ष्य- like आनयति	imperfect_	ऐर्ष्य- like आनयति
+ईष्टे	imperfect_	ऐशि- like आनयति	present	ईश- like ईष्टे	present_ind_mid_1_sg	ईश- like तक्ति	14	ईशिध्वे	84	ऐष्ठाः	87	ऐष्ट
+ईहति	imperfect	ऐह- like आनयति	imperfect_	ऐह- like आनयति
 उच्छ्वसिति	19	उच्छ्वस्याव	36	उच्छ्वसियाम्	37	उच्छ्वसियाव	66	उच्छ्वस्यसे	68	उच्छ्वस्यध्वे	165	उच्छ्वसमान
-उत्तिष्ठति	imperfect	उदतिष्ठ- like आनयति	imperfect_act_1_sg	उदतिष्ठ- like आनयति
+उत्तिष्ठति	imperfect	उदतिष्ठ- like आनयति	imperfect_	उदतिष्ठ- like आनयति
 उत्थाति	9	उत्थै	36	उत्थैयम्	37	उत्थैव	50	उत्थैध्वम्	63	उत्थै
-उत्पद्यते	imperfect	उदपद्य- like आनयति	imperfect_act_1_sg	उदपद्य- like आनयति
-उदच्यते	imperfect	उदाच्य- like आनयति	imperfect_act_1_sg	उदाच्य- like आनयति
-उद्विजते	imperfect	उदविज- like आनयति	imperfect_act_1_sg	उदविज- like आनयति
-उपनह्यति	imperfect	उपानह्य- like आनयति	imperfect_act_1_sg	उपानह्य- like आनयति	163	उपनद्ध्वा
-उपन्यस्यति	imperfect	उपन्यास्य- like आनयति	imperfect_act_1_sg	उपन्यास्य- like आनयति
-उल्लसति	imperfect	उदलस- like आनयति	imperfect_act_1_sg	उदलस- like आनयति
-उल्लिखति	imperfect	उदलिख- like आनयति	imperfect_act_1_sg	उदलिख- like आनयति
+उत्पद्यते	imperfect	उदपद्य- like आनयति	imperfect_	उदपद्य- like आनयति
+उद्यते	imperfect	औद्य- like आनयति	imperfect_	औद्य- like आनयति
+उद्विजते	imperfect	उदविज- like आनयति	imperfect_	उदविज- like आनयति
+उपनह्यति	163	उपनद्ध्वा
+उपन्यस्यति	imperfect	उपन्यास्य- like आनयति	imperfect_	उपन्यास्य- like आनयति
+उपविशति	imperfect	औपविश- like आनयति	imperfect_	औपविश- like आनयति
+उल्लसति	imperfect	उदलस- like आनयति	imperfect_	उदलस- like आनयति
+उल्लिखति	imperfect	उदलिख- like आनयति	imperfect_	उदलिख- like आनयति
 उवाच	129	उवक्थ
 उवाद	129	उवत्थ
 उवास	131	ऊष
 उवाह	129	उवोढ
 उवोच	131	ऊच
-ऊर्दते	future_act_3_sg	और्दि- like अजनिष्ट	imperfect	और्द- like आनयति	imperfect_act_1_sg	और्द- like आनयति	117	और्दिष्ये	158	और्दिढ्वम्
-ऊहति	imperfect	औह- like आनयति	imperfect_act_1_sg	औह- like आनयति
-ऊह्यते	imperfect	औह्य- like आनयति	imperfect_act_1_sg	औह्य- like आनयति
 ऋघायति	18	ऋघायाणि	165	ऋघायमाण
-ऋच्यते	imperfect	र्च्य- like वहति	imperfect_act_1_sg	र्च्य- like वहति
-ऋणोति	75	आर्णोः	82	आर्णुवहि	85	आर्णुवाथाम्	86	आर्णुध्वम्	89	आर्णुवत
-ऋध्नोति	73	आर्ध्नुव	75	आर्ध्नोः	76	आर्ध्नुतम्
-एकीभवति	imperfect	एक्यभव- like आनयति	imperfect_act_1_sg	एक्यभव- like आनयति
+ऋणोति	82	आर्णुवहि	85	आर्णुवाथाम्	89	आर्णुवत
+एकीभवति	imperfect	एक्यभव- like आनयति	imperfect_	एक्यभव- like आनयति
 एति	1	इवः	3	एषि	7	इतः	19	अयाव	36	इयाम्	37	इयाव	57	अयः	72	आयम्	73	ऐव	75	ऐः	76	ऐतम्	80	आयन्	164	यत्
-एधते	imperfect	ऐध- like आनयति	imperfect_act_1_sg	ऐध- like आनयति
+एधते	imperfect	ऐध- like आनयति	imperfect_	ऐध- like आनयति
 एष्यति	117	ऐष्ये
-ओषति	imperfect	औष- like आनयति	imperfect_act_1_sg	औष- like आनयति
 करोति	9	कुर्वे	15	कुरुते	17	कुर्वते	36	कुर्याम्	37	कुर्याव	50	कुर्वीध्वम्	165	कुर्वाण
 कर्तति	126	चकर्त	131	चकृत	162	कर्त्तुम्	163	कृत्त्वा
 कर्ति	8	क्रन्ति	80	अक्रन्
@@ -107,7 +102,7 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 क्रीडति	18	क्रीडानि	165	क्रीडमान
 क्रीणाति	45	क्रीणीय
 क्रीळति	18	क्रीळानि	165	क्रीळमान
-क्षमते	future_act_3_sg	अक्षंस- like आर्त	imperfect_act_1_sg	क्षन्ध्वम्- like अकर्	present_ind_act_2_pl	चक्षम- like आनाश	99	क्षंस्ये	162	क्षन्तुम्
+क्षमते	future_act_3_sg	अक्षंस- like आर्त	present_ind_act_2_pl	चक्षम- like आनाश	present_ind_mid_1_sg	क्षन्ध्वम्- like अकर्	99	क्षंस्ये	162	क्षन्तुम्
 क्षालयति	18	क्षालयानि	165	क्षालयमान
 क्षेति	3	क्षेषि	9	क्षिये	15	क्षिते	17	क्षियते	19	क्षयाव	36	क्षियाम्	37	क्षियाव	50	क्षियीध्वम्	66	क्षयसे	68	क्षयध्वे	72	अक्षयम्	80	अक्षियन्	165	क्षियाण
 खादति	126	चखाद	131	चखाद	163	खदित्वा
@@ -118,7 +113,7 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 चकल्प	131	चाकॢप
 चचार	131	चेर
 चिकेति	3	चिकेषि	9	चिक्ये	10	चिकिवहे	12	चिकिषे	15	चिकिते	17	चिक्यते	19	चिकयाव	36	चिकियाम्	37	चिकियाव	50	चिक्यीध्वम्	66	चिकयसे	68	चिकयध्वे	72	अचिकयम्	80	अचिकयुः	165	चिक्यान
-छिक्कति	imperfect	च्छिक्क- like वहति	imperfect_act_1_sg	च्छिक्क- like वहति
+छिक्कति	imperfect	च्छिक्क- like वहति	imperfect_	च्छिक्क- like वहति
 छिनत्ति	75	अच्छिनत्	82	अच्छिन्द्वहि	85	अच्छिन्दाथाम्	86	अच्छिन्द्ध्वम्	89	अच्छिन्दत
 छृणत्ति	9	छृन्दे	15	छृन्त्ते	17	छृन्दते	36	छृन्द्याम्	37	छृन्द्याव	50	छृन्दीध्वम्	75	अच्छृणत्	165	छृन्दान
 जगाम	129	जगन्थ
@@ -143,7 +138,7 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 तनक्ति	0	तनच्मि	1	तञ्च्वः	36	तञ्च्याम्	37	तञ्च्याव	57	तनचः	72	अतनचम्	73	अतञ्च्व	164	तञ्चत्
 ताष्टि	1	तक्ष्वः	7	तष्टः	19	तक्षाव	21	ताढि	36	तक्ष्याम्	37	तक्ष्याव	57	तक्षः	72	अताक्षम्	73	अतक्ष्व	75	अताट्	76	अतष्टम्	164	तक्षत्
 तृणेढि	1	तृंह्वः	7	तृण्ढः	36	तृंह्याम्	37	तृंह्याव	57	तृणेहः	73	अतृंह्व	75	अतृणेट्	76	अतृण्ढम्	164	तृंहत्
-तृष्यति	imperfect	तृस्य- like वहति	imperfect_act_1_sg	तृस्य- like वहति
+तृष्यति	imperfect	तृस्य- like वहति	imperfect_	तृस्य- like वहति
 ददाति	8	ददति	10	दद्वहे	12	दत्से	14	दद्ध्वे	15	दत्ते	36	दद्याम्	37	दद्याव
 ददाह	129	ददग्ध	131	देह
 दधाति	8	दधति	10	दध्वहे	12	धत्से	15	धत्ते	36	दध्याम्	37	दध्याव	84	अधत्थाः
@@ -157,19 +152,19 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 धृष्णोति	75	अधृष्नोः
 ननाम	129	ननन्थ	131	नेम
 ननाश	129	ननष्ठ	131	नेश
-निर्वाहयति	imperfect	निरवाहय- like आनयति	imperfect_act_1_sg	निरवाहय- like आनयति
+निर्वाहयति	imperfect	निरवाहय- like आनयति	imperfect_	निरवाहय- like आनयति
 नुनोद	131	नुनुद
 नेनेक्ति	0	नेनेज्मि	9	नेनिजे	15	नेनिक्ते	17	नेनिजते	36	नेनिज्याम्	37	नेनिज्याव	50	नेनिजीध्वम्	66	नेनेजसे	68	नेनेजध्वे	72	अनेनेजम्	165	नेनिजान
 पतति	126	पपत	131	पेच	145	अपप्ताव	152	अपप्तन्
 पपर्च	168	पपृक्वांस्
 पपात	131	पेत
 पपाद	129	पपत्थ	131	पेद
-परिवर्तते	imperfect	पर्यवर्त- like आनयति	imperfect_act_1_sg	पर्यवर्त- like आनयति
-परिहरति	imperfect	पर्यहर- like आनयति	imperfect_act_1_sg	पर्यहर- like आनयति
-परीक्षते	imperfect	पर्यैक्ष- like आनयति	imperfect_act_1_sg	पर्यैक्ष- like आनयति
-पर्दते	imperfect	पर्द- like आनयति	imperfect_act_1_sg	पर्द- like आनयति
+परिवर्तते	imperfect	पर्यवर्त- like आनयति	imperfect_	पर्यवर्त- like आनयति
+परिहरति	imperfect	पर्यहर- like आनयति	imperfect_	पर्यहर- like आनयति
+परीक्षते	imperfect	पर्यैक्ष- like आनयति	imperfect_	पर्यैक्ष- like आनयति
+पर्दते	imperfect	पर्द- like आनयति	imperfect_	पर्द- like आनयति
 पापतीति	0	पापतीमि	1	पापत्वः	3	पापतीषि	7	पापत्तः	36	पापत्याम्	37	पापत्याव	57	पापतः	72	अपापतम्	73	अपापत्व	76	अपापत्तम्	164	पापतत्
-पिङ्क्ते	imperfect	पिन्ज- like ईष्टे	imperfect_act_1_sg	पिन्- like तक्ति	present_	पिङ्- like तक्ति	present_ind_mid_1_sg	पिञ्ज- like तक्ति
+पिङ्क्ते	imperfect	पिन्ज- like ईष्टे	imperfect_	पिन्- like तक्ति	present_	पिङ्- like तक्ति	present_ind_mid_1_sg	पिञ्ज- like तक्ति
 पिनष्टि	4	पिंष्ठः
 पिबति	90	पास्यामि
 पुनाति	45	पुनीय
@@ -201,7 +196,7 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 मृडति	18	मृडानि	165	मृडमान
 ययाम	129	ययन्थ	131	येम
 युयोज	131	युयुज
-रंहति	imperfect	रम्ह- like वहति	imperfect_act_1_sg	रम्ह- like वहति
+रंहति	imperfect	रम्ह- like वहति	imperfect_	रम्ह- like वहति
 रिणक्ति	0	रिणच्मि	9	रिञ्चे	15	रिङ्क्ते	17	रिञ्चते	36	रिञ्च्याम्	37	रिञ्च्याव	50	रिञ्चीध्वम्	66	रिणचसे	68	रिणचध्वे	72	अरिणचम्	165	रिञ्चान
 रिणाति	45	रिणीय
 रिरेच	131	रिरिच
@@ -237,10 +232,9 @@ pub(super) const IRREGULAR: Irregular<'static> = Irregular {
 शेते	9	शये	10	शेवहे	11	शेमहे	12	शेषे	17	शेरते	27	शयै	50	शयीध्वम्	66	शयसे	68	शयध्वे	81	अशयि	82	अशेवहि	83	अशेमहि	165	शयान
 श्रद्दधाति	8	श्रद्दधति	10	श्रद्दध्वहे	12	श्रद्धत्से	15	श्रद्धत्ते	36	श्रद्दध्याम्	37	श्रद्दध्याव
 श्रीणाति	45	श्रीणीय
-समर्पयति	imperfect	समार्पय- like आनयति	imperfect_act_1_sg	समार्पय- like आनयति
 सम्प्रददाति	8	सम्प्रददति	10	सम्प्रदद्वहे	12	सम्प्रदत्से	15	सम्प्रदत्ते	36	सम्प्रदद्याम्	37	सम्प्रदद्याव	75	सम्प्राददाः	82	सम्प्रादद्वहि	85	सम्प्राददाथाम्	86	सम्प्रादद्ध्वम्	89	सम्प्राददत
-सम्बुध्यते	imperfect	समबुध्य- like आनयति	imperfect_act_1_sg	समबुध्य- like आनयति
-सम्मीलति	imperfect	सममील- like आनयति	imperfect_act_1_sg	सममील- like आनयति
+सम्बुध्यते	imperfect	समबुध्य- like आनयति	imperfect_	समबुध्य- like आनयति
+सम्मीलति	imperfect	सममील- like आनयति	imperfect_	सममील- like आनयति
 ससाद	129	ससत्थ	131	सेद
 ससान	129	ससनिथ	131	ससन
 सस्ति	7	सस्तः	21	सद्धि	57	ससः	73	असस्व

@@ -220,8 +220,8 @@ pub static GRAMMAR: Grammar<'static, Conjugation> = Grammar {
     smoothing: 2.0,
     sharpness: 0.5,
     trust: flexion::Trust {
-        regular: 0.97255325,
-        unsettled: 0.9727664,
+        regular: 0.9740558,
+        unsettled: 0.99168,
         unattested: 1.0,
     },
 };
@@ -250,186 +250,46 @@ pub enum Cell {
 }
 
 impl Cell {
-    /// Its place in a paradigm.
+    /// Its place in a paradigm: its group's first cell, then its values
+    /// counted in order, the last fastest.
     pub const fn index(self) -> usize {
-        use crate::Mood::*;
-        use crate::Number::*;
-        use crate::Person::*;
-        use crate::Tense::*;
-        use crate::Voice::*;
-        let cell = match self {
-            Cell::Present(Indicative, Active, First, Singular) => cell::IND_ACT_1_SG,
-            Cell::Present(Indicative, Active, First, Dual) => cell::IND_ACT_1_DU,
-            Cell::Present(Indicative, Active, First, Plural) => cell::IND_ACT_1_PL,
-            Cell::Present(Indicative, Active, Second, Singular) => cell::IND_ACT_2_SG,
-            Cell::Present(Indicative, Active, Second, Dual) => cell::IND_ACT_2_DU,
-            Cell::Present(Indicative, Active, Second, Plural) => cell::IND_ACT_2_PL,
-            Cell::Present(Indicative, Active, Third, Singular) => cell::IND_ACT_3_SG,
-            Cell::Present(Indicative, Active, Third, Dual) => cell::IND_ACT_3_DU,
-            Cell::Present(Indicative, Active, Third, Plural) => cell::IND_ACT_3_PL,
-            Cell::Present(Indicative, Middle, First, Singular) => cell::IND_MID_1_SG,
-            Cell::Present(Indicative, Middle, First, Dual) => cell::IND_MID_1_DU,
-            Cell::Present(Indicative, Middle, First, Plural) => cell::IND_MID_1_PL,
-            Cell::Present(Indicative, Middle, Second, Singular) => cell::IND_MID_2_SG,
-            Cell::Present(Indicative, Middle, Second, Dual) => cell::IND_MID_2_DU,
-            Cell::Present(Indicative, Middle, Second, Plural) => cell::IND_MID_2_PL,
-            Cell::Present(Indicative, Middle, Third, Singular) => cell::IND_MID_3_SG,
-            Cell::Present(Indicative, Middle, Third, Dual) => cell::IND_MID_3_DU,
-            Cell::Present(Indicative, Middle, Third, Plural) => cell::IND_MID_3_PL,
-            Cell::Present(Imperative, Active, First, Singular) => cell::IMP_ACT_1_SG,
-            Cell::Present(Imperative, Active, First, Dual) => cell::IMP_ACT_1_DU,
-            Cell::Present(Imperative, Active, First, Plural) => cell::IMP_ACT_1_PL,
-            Cell::Present(Imperative, Active, Second, Singular) => cell::IMP_ACT_2_SG,
-            Cell::Present(Imperative, Active, Second, Dual) => cell::IMP_ACT_2_DU,
-            Cell::Present(Imperative, Active, Second, Plural) => cell::IMP_ACT_2_PL,
-            Cell::Present(Imperative, Active, Third, Singular) => cell::IMP_ACT_3_SG,
-            Cell::Present(Imperative, Active, Third, Dual) => cell::IMP_ACT_3_DU,
-            Cell::Present(Imperative, Active, Third, Plural) => cell::IMP_ACT_3_PL,
-            Cell::Present(Imperative, Middle, First, Singular) => cell::IMP_MID_1_SG,
-            Cell::Present(Imperative, Middle, First, Dual) => cell::IMP_MID_1_DU,
-            Cell::Present(Imperative, Middle, First, Plural) => cell::IMP_MID_1_PL,
-            Cell::Present(Imperative, Middle, Second, Singular) => cell::IMP_MID_2_SG,
-            Cell::Present(Imperative, Middle, Second, Dual) => cell::IMP_MID_2_DU,
-            Cell::Present(Imperative, Middle, Second, Plural) => cell::IMP_MID_2_PL,
-            Cell::Present(Imperative, Middle, Third, Singular) => cell::IMP_MID_3_SG,
-            Cell::Present(Imperative, Middle, Third, Dual) => cell::IMP_MID_3_DU,
-            Cell::Present(Imperative, Middle, Third, Plural) => cell::IMP_MID_3_PL,
-            Cell::Present(Optative, Active, First, Singular) => cell::OPT_ACT_1_SG,
-            Cell::Present(Optative, Active, First, Dual) => cell::OPT_ACT_1_DU,
-            Cell::Present(Optative, Active, First, Plural) => cell::OPT_ACT_1_PL,
-            Cell::Present(Optative, Active, Second, Singular) => cell::OPT_ACT_2_SG,
-            Cell::Present(Optative, Active, Second, Dual) => cell::OPT_ACT_2_DU,
-            Cell::Present(Optative, Active, Second, Plural) => cell::OPT_ACT_2_PL,
-            Cell::Present(Optative, Active, Third, Singular) => cell::OPT_ACT_3_SG,
-            Cell::Present(Optative, Active, Third, Dual) => cell::OPT_ACT_3_DU,
-            Cell::Present(Optative, Active, Third, Plural) => cell::OPT_ACT_3_PL,
-            Cell::Present(Optative, Middle, First, Singular) => cell::OPT_MID_1_SG,
-            Cell::Present(Optative, Middle, First, Dual) => cell::OPT_MID_1_DU,
-            Cell::Present(Optative, Middle, First, Plural) => cell::OPT_MID_1_PL,
-            Cell::Present(Optative, Middle, Second, Singular) => cell::OPT_MID_2_SG,
-            Cell::Present(Optative, Middle, Second, Dual) => cell::OPT_MID_2_DU,
-            Cell::Present(Optative, Middle, Second, Plural) => cell::OPT_MID_2_PL,
-            Cell::Present(Optative, Middle, Third, Singular) => cell::OPT_MID_3_SG,
-            Cell::Present(Optative, Middle, Third, Dual) => cell::OPT_MID_3_DU,
-            Cell::Present(Optative, Middle, Third, Plural) => cell::OPT_MID_3_PL,
-            Cell::Present(Subjunctive, Active, First, Singular) => cell::SUBJ_ACT_1_SG,
-            Cell::Present(Subjunctive, Active, First, Dual) => cell::SUBJ_ACT_1_DU,
-            Cell::Present(Subjunctive, Active, First, Plural) => cell::SUBJ_ACT_1_PL,
-            Cell::Present(Subjunctive, Active, Second, Singular) => cell::SUBJ_ACT_2_SG,
-            Cell::Present(Subjunctive, Active, Second, Dual) => cell::SUBJ_ACT_2_DU,
-            Cell::Present(Subjunctive, Active, Second, Plural) => cell::SUBJ_ACT_2_PL,
-            Cell::Present(Subjunctive, Active, Third, Singular) => cell::SUBJ_ACT_3_SG,
-            Cell::Present(Subjunctive, Active, Third, Dual) => cell::SUBJ_ACT_3_DU,
-            Cell::Present(Subjunctive, Active, Third, Plural) => cell::SUBJ_ACT_3_PL,
-            Cell::Present(Subjunctive, Middle, First, Singular) => cell::SUBJ_MID_1_SG,
-            Cell::Present(Subjunctive, Middle, First, Dual) => cell::SUBJ_MID_1_DU,
-            Cell::Present(Subjunctive, Middle, First, Plural) => cell::SUBJ_MID_1_PL,
-            Cell::Present(Subjunctive, Middle, Second, Singular) => cell::SUBJ_MID_2_SG,
-            Cell::Present(Subjunctive, Middle, Second, Dual) => cell::SUBJ_MID_2_DU,
-            Cell::Present(Subjunctive, Middle, Second, Plural) => cell::SUBJ_MID_2_PL,
-            Cell::Present(Subjunctive, Middle, Third, Singular) => cell::SUBJ_MID_3_SG,
-            Cell::Present(Subjunctive, Middle, Third, Dual) => cell::SUBJ_MID_3_DU,
-            Cell::Present(Subjunctive, Middle, Third, Plural) => cell::SUBJ_MID_3_PL,
-            Cell::Imperfect(Active, First, Singular) => cell::IMPERFECT_ACT_1_SG,
-            Cell::Imperfect(Active, First, Dual) => cell::IMPERFECT_ACT_1_DU,
-            Cell::Imperfect(Active, First, Plural) => cell::IMPERFECT_ACT_1_PL,
-            Cell::Imperfect(Active, Second, Singular) => cell::IMPERFECT_ACT_2_SG,
-            Cell::Imperfect(Active, Second, Dual) => cell::IMPERFECT_ACT_2_DU,
-            Cell::Imperfect(Active, Second, Plural) => cell::IMPERFECT_ACT_2_PL,
-            Cell::Imperfect(Active, Third, Singular) => cell::IMPERFECT_ACT_3_SG,
-            Cell::Imperfect(Active, Third, Dual) => cell::IMPERFECT_ACT_3_DU,
-            Cell::Imperfect(Active, Third, Plural) => cell::IMPERFECT_ACT_3_PL,
-            Cell::Imperfect(Middle, First, Singular) => cell::IMPERFECT_MID_1_SG,
-            Cell::Imperfect(Middle, First, Dual) => cell::IMPERFECT_MID_1_DU,
-            Cell::Imperfect(Middle, First, Plural) => cell::IMPERFECT_MID_1_PL,
-            Cell::Imperfect(Middle, Second, Singular) => cell::IMPERFECT_MID_2_SG,
-            Cell::Imperfect(Middle, Second, Dual) => cell::IMPERFECT_MID_2_DU,
-            Cell::Imperfect(Middle, Second, Plural) => cell::IMPERFECT_MID_2_PL,
-            Cell::Imperfect(Middle, Third, Singular) => cell::IMPERFECT_MID_3_SG,
-            Cell::Imperfect(Middle, Third, Dual) => cell::IMPERFECT_MID_3_DU,
-            Cell::Imperfect(Middle, Third, Plural) => cell::IMPERFECT_MID_3_PL,
-            Cell::Future(Active, First, Singular) => cell::FUTURE_ACT_1_SG,
-            Cell::Future(Active, First, Dual) => cell::FUTURE_ACT_1_DU,
-            Cell::Future(Active, First, Plural) => cell::FUTURE_ACT_1_PL,
-            Cell::Future(Active, Second, Singular) => cell::FUTURE_ACT_2_SG,
-            Cell::Future(Active, Second, Dual) => cell::FUTURE_ACT_2_DU,
-            Cell::Future(Active, Second, Plural) => cell::FUTURE_ACT_2_PL,
-            Cell::Future(Active, Third, Singular) => cell::FUTURE_ACT_3_SG,
-            Cell::Future(Active, Third, Dual) => cell::FUTURE_ACT_3_DU,
-            Cell::Future(Active, Third, Plural) => cell::FUTURE_ACT_3_PL,
-            Cell::Future(Middle, First, Singular) => cell::FUTURE_MID_1_SG,
-            Cell::Future(Middle, First, Dual) => cell::FUTURE_MID_1_DU,
-            Cell::Future(Middle, First, Plural) => cell::FUTURE_MID_1_PL,
-            Cell::Future(Middle, Second, Singular) => cell::FUTURE_MID_2_SG,
-            Cell::Future(Middle, Second, Dual) => cell::FUTURE_MID_2_DU,
-            Cell::Future(Middle, Second, Plural) => cell::FUTURE_MID_2_PL,
-            Cell::Future(Middle, Third, Singular) => cell::FUTURE_MID_3_SG,
-            Cell::Future(Middle, Third, Dual) => cell::FUTURE_MID_3_DU,
-            Cell::Future(Middle, Third, Plural) => cell::FUTURE_MID_3_PL,
-            Cell::Conditional(Active, First, Singular) => cell::CONDITIONAL_ACT_1_SG,
-            Cell::Conditional(Active, First, Dual) => cell::CONDITIONAL_ACT_1_DU,
-            Cell::Conditional(Active, First, Plural) => cell::CONDITIONAL_ACT_1_PL,
-            Cell::Conditional(Active, Second, Singular) => cell::CONDITIONAL_ACT_2_SG,
-            Cell::Conditional(Active, Second, Dual) => cell::CONDITIONAL_ACT_2_DU,
-            Cell::Conditional(Active, Second, Plural) => cell::CONDITIONAL_ACT_2_PL,
-            Cell::Conditional(Active, Third, Singular) => cell::CONDITIONAL_ACT_3_SG,
-            Cell::Conditional(Active, Third, Dual) => cell::CONDITIONAL_ACT_3_DU,
-            Cell::Conditional(Active, Third, Plural) => cell::CONDITIONAL_ACT_3_PL,
-            Cell::Conditional(Middle, First, Singular) => cell::CONDITIONAL_MID_1_SG,
-            Cell::Conditional(Middle, First, Dual) => cell::CONDITIONAL_MID_1_DU,
-            Cell::Conditional(Middle, First, Plural) => cell::CONDITIONAL_MID_1_PL,
-            Cell::Conditional(Middle, Second, Singular) => cell::CONDITIONAL_MID_2_SG,
-            Cell::Conditional(Middle, Second, Dual) => cell::CONDITIONAL_MID_2_DU,
-            Cell::Conditional(Middle, Second, Plural) => cell::CONDITIONAL_MID_2_PL,
-            Cell::Conditional(Middle, Third, Singular) => cell::CONDITIONAL_MID_3_SG,
-            Cell::Conditional(Middle, Third, Dual) => cell::CONDITIONAL_MID_3_DU,
-            Cell::Conditional(Middle, Third, Plural) => cell::CONDITIONAL_MID_3_PL,
-            Cell::Perfect(Active, First, Singular) => cell::PERFECT_ACT_1_SG,
-            Cell::Perfect(Active, First, Dual) => cell::PERFECT_ACT_1_DU,
-            Cell::Perfect(Active, First, Plural) => cell::PERFECT_ACT_1_PL,
-            Cell::Perfect(Active, Second, Singular) => cell::PERFECT_ACT_2_SG,
-            Cell::Perfect(Active, Second, Dual) => cell::PERFECT_ACT_2_DU,
-            Cell::Perfect(Active, Second, Plural) => cell::PERFECT_ACT_2_PL,
-            Cell::Perfect(Active, Third, Singular) => cell::PERFECT_ACT_3_SG,
-            Cell::Perfect(Active, Third, Dual) => cell::PERFECT_ACT_3_DU,
-            Cell::Perfect(Active, Third, Plural) => cell::PERFECT_ACT_3_PL,
-            Cell::Perfect(Middle, First, Singular) => cell::PERFECT_MID_1_SG,
-            Cell::Perfect(Middle, First, Dual) => cell::PERFECT_MID_1_DU,
-            Cell::Perfect(Middle, First, Plural) => cell::PERFECT_MID_1_PL,
-            Cell::Perfect(Middle, Second, Singular) => cell::PERFECT_MID_2_SG,
-            Cell::Perfect(Middle, Second, Dual) => cell::PERFECT_MID_2_DU,
-            Cell::Perfect(Middle, Second, Plural) => cell::PERFECT_MID_2_PL,
-            Cell::Perfect(Middle, Third, Singular) => cell::PERFECT_MID_3_SG,
-            Cell::Perfect(Middle, Third, Dual) => cell::PERFECT_MID_3_DU,
-            Cell::Perfect(Middle, Third, Plural) => cell::PERFECT_MID_3_PL,
-            Cell::Aorist(Active, First, Singular) => cell::AORIST_ACT_1_SG,
-            Cell::Aorist(Active, First, Dual) => cell::AORIST_ACT_1_DU,
-            Cell::Aorist(Active, First, Plural) => cell::AORIST_ACT_1_PL,
-            Cell::Aorist(Active, Second, Singular) => cell::AORIST_ACT_2_SG,
-            Cell::Aorist(Active, Second, Dual) => cell::AORIST_ACT_2_DU,
-            Cell::Aorist(Active, Second, Plural) => cell::AORIST_ACT_2_PL,
-            Cell::Aorist(Active, Third, Singular) => cell::AORIST_ACT_3_SG,
-            Cell::Aorist(Active, Third, Dual) => cell::AORIST_ACT_3_DU,
-            Cell::Aorist(Active, Third, Plural) => cell::AORIST_ACT_3_PL,
-            Cell::Aorist(Middle, First, Singular) => cell::AORIST_MID_1_SG,
-            Cell::Aorist(Middle, First, Dual) => cell::AORIST_MID_1_DU,
-            Cell::Aorist(Middle, First, Plural) => cell::AORIST_MID_1_PL,
-            Cell::Aorist(Middle, Second, Singular) => cell::AORIST_MID_2_SG,
-            Cell::Aorist(Middle, Second, Dual) => cell::AORIST_MID_2_DU,
-            Cell::Aorist(Middle, Second, Plural) => cell::AORIST_MID_2_PL,
-            Cell::Aorist(Middle, Third, Singular) => cell::AORIST_MID_3_SG,
-            Cell::Aorist(Middle, Third, Dual) => cell::AORIST_MID_3_DU,
-            Cell::Aorist(Middle, Third, Plural) => cell::AORIST_MID_3_PL,
-            Cell::Infinitive => cell::INFINITIVE,
-            Cell::Gerund => cell::GERUND,
-            Cell::Participle(Present, Active) => cell::PARTICIPLE_PRES_ACT,
-            Cell::Participle(Present, Middle) => cell::PARTICIPLE_PRES_MID,
-            Cell::Participle(Future, Active) => cell::PARTICIPLE_FUT_ACT,
-            Cell::Participle(Future, Middle) => cell::PARTICIPLE_FUT_MID,
-            Cell::Participle(Perfect, Active) => cell::PARTICIPLE_PERF_ACT,
-            Cell::Participle(Perfect, Middle) => cell::PARTICIPLE_PERF_MID,
-        };
-        cell as usize
+        match self {
+            Cell::Present(mood, voice, person, number) => {
+                cell::IND_ACT_1_SG as usize
+                    + ((mood as usize * 2 + voice as usize) * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Imperfect(voice, person, number) => {
+                cell::IMPERFECT_ACT_1_SG as usize
+                    + (voice as usize * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Future(voice, person, number) => {
+                cell::FUTURE_ACT_1_SG as usize
+                    + (voice as usize * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Conditional(voice, person, number) => {
+                cell::CONDITIONAL_ACT_1_SG as usize
+                    + (voice as usize * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Perfect(voice, person, number) => {
+                cell::PERFECT_ACT_1_SG as usize
+                    + (voice as usize * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Aorist(voice, person, number) => {
+                cell::AORIST_ACT_1_SG as usize
+                    + (voice as usize * 3 + person as usize) * 3
+                    + number as usize
+            }
+            Cell::Infinitive => cell::INFINITIVE as usize,
+            Cell::Gerund => cell::GERUND as usize,
+            Cell::Participle(tense, voice) => {
+                cell::PARTICIPLE_PRES_ACT as usize + tense as usize * 2 + voice as usize
+            }
+        }
     }
 }
 

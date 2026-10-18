@@ -101,30 +101,30 @@ pub enum Conjugation {
     Burn,
     /// Like `pass`: 2,045 words.
     Pass,
-    /// Like `spot`: 1,522 words.
-    Spot,
     /// Like `carry`: 1,477 words.
     Carry,
-    /// Like `drop`: 446 words.
+    /// Like `spot`: 1,469 words.
+    Spot,
+    /// Like `drop`: 589 words.
     Drop,
-    /// Like `hear`: 398 words.
+    /// Like `hear`: 397 words.
     Hear,
     /// Like `set`: 152 words.
     Set,
-    /// Like `shred`: 114 words.
-    Shred,
-    /// Like `stir`: 100 words.
+    /// Like `stir`: 130 words.
     Stir,
     /// Like `write`: 85 words.
     Write,
+    /// Like `bleed`: 84 words.
+    Bleed,
     /// Like `die`: 62 words.
     Die,
-    /// Like `bleed`: 61 words.
-    Bleed,
     /// Like `bind`: 60 words.
     Bind,
     /// Like `keep`: 56 words.
     Keep,
+    /// Like `lay`: 46 words.
+    Lay,
     /// Like `throw`: 46 words.
     Throw,
     /// Like `spring`: 46 words.
@@ -139,8 +139,6 @@ pub enum Conjugation {
     Show,
     /// Like `wring`: 39 words.
     Wring,
-    /// Like `lay`: 37 words.
-    Lay,
     /// Like `wear`: 28 words.
     Wear,
     /// Like `sit`: 28 words.
@@ -153,8 +151,6 @@ pub enum Conjugation {
     Stand,
     /// Like `draw`: 23 words.
     Draw,
-    /// Like `tell`: 23 words.
-    Tell,
     /// Like `backbite`: 21 words.
     Backbite,
     /// Like `spin`: 21 words.
@@ -189,6 +185,8 @@ pub enum Conjugation {
     Undo,
     /// Like `slide`: 13 words.
     Slide,
+    /// Like `deal`: 12 words.
+    Deal,
     /// Like `weave`: 12 words.
     Weave,
     /// Like `swim`: 12 words.
@@ -203,8 +201,6 @@ pub enum Conjugation {
     Rec,
     /// Like `beteach`: 11 words.
     Beteach,
-    /// Like `outleap`: 10 words.
-    Outleap,
     /// Like `catch`: 10 words.
     Catch,
     /// Like `freeze`: 10 words.
@@ -225,14 +221,10 @@ pub enum Conjugation {
     Overeat,
     /// Like `tread`: 8 words.
     Tread,
-    /// Like `distil`: 7 words.
-    Distil,
     /// Like `gas`: 7 words.
     Gas,
     /// Like `light`: 7 words.
     Light,
-    /// Like `panic`: 6 words.
-    Panic,
     /// Like `win`: 6 words.
     Win,
     /// Like `wake`: 6 words.
@@ -243,16 +235,14 @@ pub enum Conjugation {
     Fly,
     /// Like `larn`: 6 words.
     Larn,
-    /// Like `lose`: 5 words.
+    /// Like `lose`: 6 words.
     Lose,
-    /// Like `flee`: 5 words.
-    Flee,
     /// Like `get`: 5 words.
     Get,
+    /// Like `flee`: 4 words.
+    Flee,
     /// Like `might`: 4 words.
     Might,
-    /// Like `chef`: 3 words.
-    Chef,
     /// Like `slay`: 3 words.
     Slay,
     /// Like `swell`: 3 words.
@@ -265,22 +255,22 @@ pub enum Conjugation {
 
 impl Conjugation {
     /// Every conjugation, in order.
-    pub const ALL: [Conjugation; 83] = [
+    pub const ALL: [Conjugation; 78] = [
         Conjugation::Settle,
         Conjugation::Burn,
         Conjugation::Pass,
-        Conjugation::Spot,
         Conjugation::Carry,
+        Conjugation::Spot,
         Conjugation::Drop,
         Conjugation::Hear,
         Conjugation::Set,
-        Conjugation::Shred,
         Conjugation::Stir,
         Conjugation::Write,
-        Conjugation::Die,
         Conjugation::Bleed,
+        Conjugation::Die,
         Conjugation::Bind,
         Conjugation::Keep,
+        Conjugation::Lay,
         Conjugation::Throw,
         Conjugation::Spring,
         Conjugation::Break,
@@ -288,14 +278,12 @@ impl Conjugation {
         Conjugation::Cast,
         Conjugation::Show,
         Conjugation::Wring,
-        Conjugation::Lay,
         Conjugation::Wear,
         Conjugation::Sit,
         Conjugation::Hold,
         Conjugation::Quiz,
         Conjugation::Stand,
         Conjugation::Draw,
-        Conjugation::Tell,
         Conjugation::Backbite,
         Conjugation::Spin,
         Conjugation::Make,
@@ -313,6 +301,7 @@ impl Conjugation {
         Conjugation::Fall,
         Conjugation::Undo,
         Conjugation::Slide,
+        Conjugation::Deal,
         Conjugation::Weave,
         Conjugation::Swim,
         Conjugation::Abide,
@@ -320,7 +309,6 @@ impl Conjugation {
         Conjugation::Bring,
         Conjugation::Rec,
         Conjugation::Beteach,
-        Conjugation::Outleap,
         Conjugation::Catch,
         Conjugation::Freeze,
         Conjugation::Hang,
@@ -331,20 +319,17 @@ impl Conjugation {
         Conjugation::Leave,
         Conjugation::Overeat,
         Conjugation::Tread,
-        Conjugation::Distil,
         Conjugation::Gas,
         Conjugation::Light,
-        Conjugation::Panic,
         Conjugation::Win,
         Conjugation::Wake,
         Conjugation::Choose,
         Conjugation::Fly,
         Conjugation::Larn,
         Conjugation::Lose,
-        Conjugation::Flee,
         Conjugation::Get,
+        Conjugation::Flee,
         Conjugation::Might,
-        Conjugation::Chef,
         Conjugation::Slay,
         Conjugation::Swell,
         Conjugation::Braai,
@@ -366,7 +351,7 @@ impl flexion::Label for Conjugation {
     }
 }
 
-pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
+pub(super) static CONJUGATIONS: [Paradigm<'static>; 78] = [
     // Settle: 16,918 words (nonsense, minute, trade, adjective, substantive, patronage).
     conjugation!("settle", 16918, "~e";
     stem lemma: "~e- like settle";
@@ -380,32 +365,28 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("pass", 2045, "~", like Settle;
     verb: "~", _, _, _, _;
     ),
-    // Spot: 1,522 words (cat, ab, abet, abut, het, van). Like Burn, except in 2 cells: verb past, verb prp.
-    conjugation!("spot", 1522, "~", like Burn;
-    verb: _, _, "~Ted", "~Ting", _;
-    ),
     // Carry: 1,477 words (dictionary, sky, vivify, nullify, treaty, policy).
     conjugation!("carry", 1477, "~y";
     verb: "~y", "~ies", "~ied", "~ying", _;
     ),
-    // Drop: 446 words (swap, swop, crap, pip, dub, bap). Like Burn, except in 2 cells: verb past, verb prp.
-    conjugation!("drop", 446, "~", like Burn;
+    // Spot: 1,469 words (cat, ab, abet, abut, het, van). Like Burn, except in 2 cells: verb past, verb prp.
+    conjugation!("spot", 1469, "~", like Burn;
+    verb: _, _, "~Ted", "~Ting", _;
+    ),
+    // Drop: 589 words (swap, swop, crap, map, pip, bap). Like Burn, except in 2 cells: verb past, verb prp.
+    conjugation!("drop", 589, "~", like Burn;
     verb: _, _, "~ped", "~ping", _;
     ),
-    // Hear: 398 words (free, pie, deal, send, forecast, blue). Like Burn, except in 1 cell: verb past.
-    conjugation!("hear", 398, "~", like Burn;
+    // Hear: 397 words (free, pie, send, forecast, blue, cast). Like Burn, except in 1 cell: verb past.
+    conjugation!("hear", 397, "~", like Burn;
     verb: _, _, "~d", _, _;
     ),
     // Set: 152 words (offset, yet, bet, bid, cut, hit). Like Spot, except in 1 cell: verb past.
     conjugation!("set", 152, "~", like Spot;
     verb: _, _, "~", _, _;
     ),
-    // Shred: 114 words (cod, red, squid, god, bad, bed). Like Spot, except in 1 cell: verb pp.
-    conjugation!("shred", 114, "~", like Spot;
-    verb: _, _, _, _, "~TeT";
-    ),
-    // Stir: 100 words (abhor, star, war, defer, upbar, er). Like Burn, except in 2 cells: verb past, verb prp.
-    conjugation!("stir", 100, "~", like Burn;
+    // Stir: 130 words (abhor, star, war, defer, upbar, er). Like Burn, except in 2 cells: verb past, verb prp.
+    conjugation!("stir", 130, "~", like Burn;
     verb: _, _, "~red", "~ring", _;
     ),
     // Write: 85 words (write, arise, drive, override, rewrite, ride).
@@ -413,24 +394,29 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     stem lemma: "~i~e- like settle";
     verb: _, _, "~o~e", "~i~ing", "~i~Ten";
     ),
+    // Bleed: 84 words (upbreed, bleed, breed, feed, foretell, interbreed).
+    conjugation!("bleed", 84, "~e~";
+    stem lemma: "~e~- like settle";
+    verb: _, _, "~~", "~e~ing", _;
+    ),
     // Die: 62 words (die, noogie, tie, sie, auntie, vie).
     conjugation!("die", 62, "~~e";
     stem lemma: "~~e- like settle";
     verb: _, _, "~~ed", "~y~ng", _;
-    ),
-    // Bleed: 61 words (upbreed, bleed, breed, feed, interbreed, meet).
-    conjugation!("bleed", 61, "~e~";
-    stem lemma: "~e~- like settle";
-    verb: _, _, "~~", "~e~ing", _;
     ),
     // Bind: 60 words (upbind, bind, fight, find, grind, rebind).
     conjugation!("bind", 60, "~i~";
     stem lemma: "~i~- like settle";
     verb: _, _, "~ou~", "~i~ing", _;
     ),
-    // Keep: 56 words (creep, feel, keep, kneel, oversleep, sleep). Like Bleed, except in 1 cell: verb past.
+    // Keep: 56 words (creep, feel, keep, kneel, oversleep, sleep). Like Bleed, except in 2 cells: verb past, verb pp.
     conjugation!("keep", 56, "~e~", like Bleed;
-    verb: _, _, "~~t", _, _;
+    verb: _, _, "~~T", _, "~~t";
+    ),
+    // Lay: 46 words (say, lay, mislay, overlay, overpay, pay). Like Carry, except in 1 cell: verb past.
+    conjugation!("lay", 46, "~y", like Carry;
+    stem lemma: "~y- like settle";
+    verb: _, _, "~id", _, _;
     ),
     // Throw: 46 words (know, upblow, blow, grow, outgrow, overthrow).
     conjugation!("throw", 46, "~o~";
@@ -464,11 +450,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("wring", 39, "~i~", like Bind;
     verb: _, _, "~u~", _, _;
     ),
-    // Lay: 37 words (say, lay, mislay, overlay, overpay, pay). Like Carry, except in 1 cell: verb past.
-    conjugation!("lay", 37, "~y", like Carry;
-    stem lemma: "~y- like settle";
-    verb: _, _, "~id", _, _;
-    ),
     // Wear: 28 words (abear, tear, swear, wear, forswear, foreswear). Like Break.
     conjugation!("wear", 28, "~ea~", like Break;
     stem past: "~o~- like wear";
@@ -494,11 +475,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("draw", 23, "~a~";
     stem lemma: "~a~- like settle";
     verb: _, _, "~e~", "~a~ing", "~a~n";
-    ),
-    // Tell: 23 words (foretell, outsell, oversell, resell, sell, tell).
-    conjugation!("tell", 23, "~e~l";
-    stem lemma: "~e~l- like settle";
-    verb: _, _, "~o~d", "~e~ling", _;
     ),
     // Backbite: 21 words (bite, hide, frostbite, backbite, backslide, overbite). Like Settle, except in 2 cells: verb past, verb pp.
     conjugation!("backbite", 21, "~e", like Settle;
@@ -570,11 +546,15 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     // Undo: 13 words (do, go, outdo, overdo, redo, undo).
     conjugation!("undo", 13, "~o";
     stem lemma: "~o- like pass";
-    verb: _, _, "~iT", "~oing", "~one";
+    verb: _, _, "~id", "~oing", "~one";
     ),
     // Slide: 13 words (slide, chide, landslide, rede, betide, slite). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
     conjugation!("slide", 13, "~e", like Pass with "", "e" after "~";
     verb: _, _, "~", _, _;
+    ),
+    // Deal: 12 words (deal, gar, fix, misdeal, daydream, wis). Like Burn, except in 1 cell: verb past.
+    conjugation!("deal", 12, "~", like Burn;
+    verb: _, _, "~t", _, _;
     ),
     // Weave: 12 words (weave, interweave, reweave, forcleave, unweave, tocleave).
     conjugation!("weave", 12, "~~ave";
@@ -608,10 +588,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("beteach", 11, "~e~c~";
     stem lemma: "~e~c~- like pass";
     verb: _, _, "~~ug~t", "~e~c~ing", _;
-    ),
-    // Outleap: 10 words (gar, fix, daydream, wis, lowp, outleap). Like Burn, except in 1 cell: verb past.
-    conjugation!("outleap", 10, "~", like Burn;
-    verb: _, _, "~t", _, _;
     ),
     // Catch: 10 words (catch, bycatch, recatch, overcatch, becatch, outcatch).
     conjugation!("catch", 10, "~tc~";
@@ -661,11 +637,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("tread", 8, "~ea~", like Break;
     verb: _, _, "~o~", _, "~o~den";
     ),
-    // Distil: 7 words (expel, extol, excel, partial, reexpel, superexcel).
-    conjugation!("distil", 7, "~";
-    stem lemma: "~- like settle";
-    verb: _, _, "~led", "~ling", _;
-    ),
     // Gas: 7 words (gas, yes, teargas, outgas, degas, regas). Like Quiz, except in 1 cell: verb _3sg.
     conjugation!("gas", 7, "~", like Quiz;
     verb: _, "~es|~ses", _, _, _;
@@ -674,10 +645,6 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("light", 7, "~gh~";
     stem lemma: "~gh~- like settle";
     verb: _, _, "~~|~gh~ed", "~gh~ing", _;
-    ),
-    // Panic: 6 words (hydraulic, bivouac, dak, wuk, dekek, hydrofrac). Like Burn, except in 2 cells: verb past, verb prp.
-    conjugation!("panic", 6, "~", like Burn;
-    verb: _, _, "~ked", "~king", _;
     ),
     // Win: 6 words (win, overwin, rewin, outwin, bewin, electrowin). Like Sit, except in 1 cell: verb past.
     conjugation!("win", 6, "~i~", like Sit;
@@ -699,25 +666,21 @@ pub(super) static CONJUGATIONS: [Paradigm<'static>; 83] = [
     conjugation!("larn", 6, "~", like Burn;
     verb: _, _, _, "~in", _;
     ),
-    // Lose: 5 words (lose, kape, beclepe, unlose, relose). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
-    conjugation!("lose", 5, "~e", like Pass with "", "e" after "~";
-    verb: _, _, "~t", _, _;
-    ),
-    // Flee: 5 words (flee, shoe, beflee, outflee, arede). Like Settle, except in 2 cells: verb past, verb prp.
-    conjugation!("flee", 5, "~e", like Settle;
-    verb: _, _, "~d", "~eing", _;
+    // Lose: 6 words (lose, kape, beclepe, unlose, arede, relose). Like Pass with `` after each pattern (`e` after ~), except in 1 cell: verb past.
+    conjugation!("lose", 6, "~e", like Pass with "", "e" after "~";
+    verb: _, _, "~T", _, _;
     ),
     // Get: 5 words (get, reget, unget, overget, underget). Like Forget, except in 1 cell: verb pp.
     conjugation!("get", 5, "~e~", like Forget;
     verb: _, _, _, _, "~o~|~o~ten";
     ),
+    // Flee: 4 words (flee, shoe, beflee, outflee). Like Settle, except in 2 cells: verb past, verb prp.
+    conjugation!("flee", 4, "~e", like Settle;
+    verb: _, _, "~d", "~eing", _;
+    ),
     // Might: 4 words (might, must, gaf, wfh). Like Set, except in 2 cells: verb _3sg, verb prp.
     conjugation!("might", 4, "~", like Set;
     verb: _, "~", _, "~", _;
-    ),
-    // Chef: 3 words (indef, uncoif, smof). Like Burn, except in 2 cells: verb past, verb prp.
-    conjugation!("chef", 3, "~", like Burn;
-    verb: _, _, "~fed", "~fing", _;
     ),
     // Slay: 3 words (slay, foreslay, reslay).
     conjugation!("slay", 3, "~ay";

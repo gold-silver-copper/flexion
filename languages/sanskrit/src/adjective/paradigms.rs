@@ -2,7 +2,7 @@
 //!
 //! A pattern is the form with `~` where the stem goes (`~ु`, `मनु`: the stem and `ु`). A stem in two pieces (`~~`, `घटक`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first. A capital (`A`, `B`, `C`)
+//! Alternatives are separated by `|`, the usual one first. A capital (`A`, `D`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it.
 
@@ -192,17 +192,17 @@ macro_rules! view {
 /// Every declension learned.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Declension {
-    /// Like `धृत`: 1,057 words.
+    /// Like `धृत`: 1,196 words.
     धृत,
-    /// Like `अवर`: 254 words.
-    अवर,
     /// Like `मूढ`: 183 words.
     मूढ,
+    /// Like `वामन`: 110 words.
+    वामन,
     /// Like `भाविन्`: 61 words.
     भाविन,
     /// Like `हार`: 60 words.
     हार,
-    /// Like `मनु`: 34 words.
+    /// Like `मनु`: 33 words.
     मनु,
     /// Like `शुचि`: 32 words.
     शुचि,
@@ -210,7 +210,7 @@ pub enum Declension {
     रसवत,
     /// Like `घटक`: 30 words.
     घटक,
-    /// Like `हितकर`: 23 words.
+    /// Like `हितकर`: 20 words.
     हितकर,
     /// Like `धायस्`: 19 words.
     धायस,
@@ -220,12 +220,14 @@ pub enum Declension {
     जयायस,
     /// Like `ऋतावन्`: 15 words.
     ऋतावन,
-    /// Like `धृषु`: 13 words.
+    /// Like `धृषु`: 14 words.
     धृषु,
     /// Like `चिर`: 13 words.
     चिर,
     /// Like `लघु`: 11 words.
     लघु,
+    /// Like `लीन`: 11 words.
+    लीन,
     /// Like `छिद्`: 9 words.
     छिद,
     /// Like `तरुतृ`: 8 words.
@@ -250,8 +252,6 @@ pub enum Declension {
     अमनस,
     /// Like `प्राञ्च्`: 4 words.
     पराञच,
-    /// Like `वामन`: 3 words.
-    वामन,
     /// Like `एकैक`: 3 words.
     एकैक,
     /// Like `बहुव्रीहि`: 3 words.
@@ -280,8 +280,8 @@ impl Declension {
     /// Every declension, in order.
     pub const ALL: [Declension; 41] = [
         Declension::धृत,
-        Declension::अवर,
         Declension::मूढ,
+        Declension::वामन,
         Declension::भाविन,
         Declension::हार,
         Declension::मनु,
@@ -296,6 +296,7 @@ impl Declension {
         Declension::धृषु,
         Declension::चिर,
         Declension::लघु,
+        Declension::लीन,
         Declension::छिद,
         Declension::तरुतृ,
         Declension::सरवजित,
@@ -308,7 +309,6 @@ impl Declension {
         Declension::वी,
         Declension::अमनस,
         Declension::पराञच,
-        Declension::वामन,
         Declension::एकैक,
         Declension::बहुवरीहि,
         Declension::रघु,
@@ -338,8 +338,8 @@ impl flexion::Label for Declension {
 }
 
 pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
-    // धृत: 1,057 words (ज, द, कमल, बुद्ध, सह, आद).
-    declension!("धृत", 1057, "~";
+    // धृत: 1,196 words (ज, द, कमल, बुद्ध, सह, मूर्ख).
+    declension!("धृत", 1196, "~";
     stem adjective: "~- like धृत";
     stem adjective_f: "~- like धृत";
     nom_n: _, "~े", _;
@@ -363,16 +363,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     comparative: "~तर";
     superlative: "~तम";
     ),
-    // अवर: 254 words (मूर्ख, मधुर, ताम्र, प्रिय, सूर्य, कार्य). Like धृत, except in 7 cells: nom_n pl, acc_f du, ins_m sg, gen_m pl, gen_f sg, voc_f du, ….
-    declension!("अवर", 254, "~", like धृत;
-    stem adjective_f: "~- like अवर";
-    nom_n: _, _, "~ाणि";
-    acc_f: _, derived, _;
-    ins_m: "~ेण", _, _;
-    gen_m: _, _, "~ाणाम्";
-    gen_f: derived, _, _;
-    voc_f: _, derived, derived;
-    ),
     // मूढ: 183 words (भारत, देव, गणित, विशेषण, लेखन, दैव). Like धृत, except in 5 cells: acc_f du, gen_f sg, voc_f du, voc_f pl, comparative.
     declension!("मूढ", 183, "~", like धृत;
     stem adjective_f: "~- like मूढ";
@@ -381,40 +371,41 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     voc_f: _, derived, derived;
     comparative: derived;
     ),
+    // वामन: 110 words (जन, दूरदर्शन, दिन, कठिन, बुध्न, अर्जुन). Like धृत, except in 2 cells: comparative, superlative.
+    declension!("वामन", 110, "~", like धृत;
+    comparative: "~ीयस्";
+    superlative: "~िष्ठ";
+    ),
     // भाविन: 61 words (हस्तिन्, मायिन्, केशिन्, एकाकिन्, ज्ञानिन्, घातिन्).
     declension!("भाविन्", 61, "~िन्";
-    stem adjective_nom_n_du: "~CA- like भाविन्";
-    nom_m: "~ी", "~CAौ", "~CAः";
+    stem adjective_nom_n_du: "~DA- like भाविन्";
+    nom_m: "~ी", "~DAौ", "~DAः";
     nom_f: "~िAी", "~िन्यौ", "~िन्यः";
-    nom_n: "~C", _, "~ीAि";
-    acc_m: "~CAम्", _, _;
+    nom_n: "~D", _, "~ीAि";
+    acc_m: "~DAम्", _, _;
     acc_f: "~िAीम्", _, "~िAीः";
     acc_n: _, derived, _;
-    ins_m: _, "~Cभ्याम्", "~Cभिः";
-    ins_f: "~िन्या", _, "~CAीभिः";
+    ins_m: _, "~Dभ्याम्", "~Dभिः";
+    ins_f: "~िन्या", _, "~DAीभिः";
     ins_n: derived, _, _;
-    dat_m: _, _, "~Cभ्यः";
-    dat_f: "~िन्यै", "~CAीभ्याम्", _;
-    abl_f: "~िन्याः", "~CAीभ्याम्", "~CAीभ्यः";
+    dat_m: _, _, "~Dभ्यः";
+    dat_f: "~िन्यै", "~DAीभ्याम्", _;
+    abl_f: "~िन्याः", "~DAीभ्याम्", "~DAीभ्यः";
     gen_f: _, _, "~िAीनाम्";
     gen_n: _, _, derived;
-    loc_m: _, derived, "~Cषु";
+    loc_m: _, derived, "~Dषु";
     loc_f: "~िन्याम्", "~िन्योः", "~िAीषु";
     loc_n: _, derived, _;
     voc_m: "~िन्", _, _;
     voc_f: "~िAि", _, _;
     voc_n: "~ि|~िन्", derived, _;
     ),
-    // हार: 60 words (सर्प, कार, क्षौर, गौर, अक्ष, ऋक्ष). Like मूढ, except in 5 cells: nom_n pl, ins_m sg, gen_m pl, gen_f pl, superlative.
+    // हार: 60 words (सर्प, कार, क्षौर, गौर, अक्ष, ऋक्ष). Like मूढ, except in 1 cell: superlative.
     declension!("हार", 60, "~", like मूढ;
-    nom_n: _, _, "~ाणि";
-    ins_m: "~ेण", _, _;
-    gen_m: _, _, "~ाणाम्";
-    gen_f: _, _, "~ीणाम्";
     superlative: derived;
     ),
-    // मनु: 34 words (वायु, पृदाकुसानु, मनु, स्थाणु, पाण्डु, सेतु).
-    declension!("मनु", 34, "~ु";
+    // मनु: 33 words (वायु, पृदाकुसानु, मनु, स्थाणु, पाण्डु, सेतु).
+    declension!("मनु", 33, "~ु";
     nom_m: "~ुः", "~ू", "~वः";
     nom_f: "~ुः", "~ू", "~वः";
     nom_n: "~ु", "~ुAी", "~ूAि";
@@ -506,9 +497,9 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     voc_f: _, derived, derived;
     voc_n: _, _, derived;
     ),
-    // हितकर: 23 words (अरित्र, अग्निहोत्र, चित्र, सिंहदंष्ट्र, दरिद्र, विचित्र).
-    declension!("हितकर", 23, "~ि~~र";
-    stem adjective_f: "~ि~~र- like अवर";
+    // हितकर: 20 words (अरित्र, अग्निहोत्र, चित्र, सिंहदंष्ट्र, दरिद्र, विचित्र).
+    declension!("हितकर", 20, "~ि~~र";
+    stem adjective_f: "~ि~~र- like हितकर";
     nom_m: "~ि~~रः", "~ि~~रौ", "~ि~~राः";
     nom_n: "~ि~~रम्", "~ि~~रे", "~ि~~राणि";
     acc_m: "~ि~~रम्", _, "~ि~~रान्";
@@ -536,7 +527,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     nom_n: "~ः", "~सी", "~ांसि";
     acc_m: "~सम्", _, "~सः";
     acc_f: "~सम्", _, "~सः";
-    ins_m: "~सा", "~ोभ्याम्", "~ोभCः";
+    ins_m: "~सा", "~ोभ्याम्", "~ोभDः";
     ins_f: "~सा", _, "~ोभिः";
     dat_m: "~से", _, "~ोभ्यः";
     dat_f: "~से", "~ोभ्याम्", _;
@@ -547,8 +538,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_m: "~सः", "~सोः", "~साम्";
     gen_f: _, _, "~साम्";
     gen_n: "~सः", "~सोः", _;
-    loc_m: "~सC", _, "~ःसु|~स्सु";
-    loc_f: "~सC", "~सोः", "~ःसु|~स्सु";
+    loc_m: "~सD", _, "~ःसु|~स्सु";
+    loc_f: "~सD", "~सोः", "~ःसु|~स्सु";
     loc_n: "~सि", _, _;
     voc_m: "~ः", _, _;
     voc_f: "~ः", _, _;
@@ -556,30 +547,17 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     comparative: "~ीयस्";
     superlative: "~स्तम";
     ),
-    // भारिन: 16 words (मन्त्रिन्, अवत्रापिन्, अहंकारिन्, रङ्गिन्, फिरङ्गिन्, करिन्). Like भाविन, except in 27 cells: nom_m du, nom_m pl, nom_f sg, nom_f du, nom_f pl, nom_n pl, ….
+    // भारिन: 16 words (मन्त्रिन्, अवत्रापिन्, अहंकारिन्, रङ्गिन्, फिरङ्गिन्, करिन्). Like भाविन, except in 7 cells: nom_f du, nom_f pl, ins_f sg, dat_f sg, abl_f sg, loc_f sg, ….
     declension!("भारिन्", 16, "~िन्", like भाविन;
-    stem adjective_nom_n_du: "~Cण- like भाविन्";
-    nom_m: _, "~Cणौ", "~Cणः";
-    nom_f: "~िणी", "~िण्यौ", "~िण्यः";
-    nom_n: _, _, "~ीणि";
-    acc_m: "~Cणम्", _, _;
-    acc_f: "~िणीम्", _, "~िणीः";
-    acc_n: _, derived, _;
-    ins_f: "~िण्या", _, "~Cणीभिः";
-    ins_n: derived, _, _;
-    dat_f: "~िण्यै", "~Cणीभ्याम्", _;
-    abl_f: "~िण्याः", "~Cणीभ्याम्", "~Cणीभ्यः";
-    gen_f: _, _, "~िणीनाम्";
-    gen_n: _, _, derived;
-    loc_m: _, derived, _;
-    loc_f: "~िण्याम्", "~िण्योः", "~िणीषु";
-    loc_n: _, derived, _;
-    voc_f: "~िणि", _, _;
-    voc_n: _, derived, _;
+    nom_f: _, "~िण्यौ", "~िण्यः";
+    ins_f: "~िण्या", _, _;
+    dat_f: "~िण्यै", _, _;
+    abl_f: "~िण्याः", _, _;
+    loc_f: "~िण्याम्", "~िण्योः", _;
     ),
     // जयायस: 15 words (श्रेयस्, वस्यस्, मलीयस्, ज्यायस्, ओजीयस्, कनीयस्). Like धायस, except in 11 cells: nom_m sg, nom_m du, nom_m pl, acc_m sg, acc_f du, gen_f sg, ….
     declension!("ज्यायस्", 15, "~स्", like धायस;
-    stem adjective_f: "~स- like ज्यायस्";
+    stem adjective_f: "~स- like मूढ";
     nom_m: "~ान्", "~ांसौ", "~ांसः";
     acc_m: "~ांसम्", _, _;
     acc_f: _, derived, _;
@@ -604,21 +582,15 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_m: "~्Aः", "~्Aोः", "~्Aाम्";
     gen_f: derived, _, _;
     gen_n: "~्Aः", "~्Aोः", _;
-    loc_m: "~्AC|~Aि", _, "~सु";
-    loc_n: "~्AC|~Aि", _, _;
+    loc_m: "~्AD|~Aि", _, "~सु";
+    loc_n: "~्AD|~Aि", _, _;
     voc_m: "~न्", _, _;
     voc_f: _, derived, derived;
     voc_n: "~न्|~", _, _;
     ),
-    // धृषु: 13 words (दारु, तरु, पुरु, दीर्घायु, धृषु, रिपु). Like मनु, except in 8 cells: nom_n du, acc_m pl, ins_m sg, dat_n sg, abl_n sg, gen_n sg, ….
-    declension!("धृषु", 13, "~ु", like मनु;
-    nom_n: _, "~ुणी", _;
+    // धृषु: 14 words (दारु, तरु, पुरु, दीर्घायु, धृषु, रिपु). Like मनु, except in 1 cell: acc_m pl.
+    declension!("धृषु", 14, "~ु", like मनु;
     acc_m: _, _, "~ून्";
-    ins_m: "~ुणा", _, _;
-    dat_n: "~ुणे|~वे", _, _;
-    abl_n: "~ुणः|~ोः", _, _;
-    gen_n: "~ुणः|~ोः", "~ुणोः|~्वोः", _;
-    loc_n: "~ुणि|~ौ", _, _;
     ),
     // चिर: 13 words (शिशिर, अजिर, रुधिर, स्थिर, बधिर, मेधिर).
     declension!("चिर", 13, "~िर";
@@ -652,7 +624,32 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: derived, _, _;
     voc_f: _, derived, derived;
     comparative: "~ीयस्";
-    superlative: "~Cष्ठ";
+    superlative: "~Dष्ठ";
+    ),
+    // लीन: 11 words (दीन, कनीन, प्राचीन, हीन, कालीन, कुलीन).
+    declension!("लीन", 11, "~ीन";
+    stem adjective: "~ीन- like धृत";
+    stem adjective_f: "~ीन- like धृत";
+    nom_n: _, "~ीने", _;
+    acc_m: _, derived, "~ीनान्";
+    acc_f: _, derived, _;
+    acc_n: derived, _, derived;
+    ins_m: "~ीनेA", _, _;
+    ins_n: _, derived, derived;
+    dat_m: "~ीनाय", derived, _;
+    dat_n: "~ीनाय", derived, derived;
+    abl_m: "~ीनात्", derived, derived;
+    abl_n: "~ीनात्", derived, derived;
+    gen_m: "~ीनस्य", "~ीनयोः", "~ीनाAाम्";
+    gen_f: derived, _, _;
+    gen_n: "~ीनस्य", "~ीनयोः", _;
+    loc_m: "~ीने", _, _;
+    loc_n: "~ीने", _, derived;
+    voc_m: _, derived, derived;
+    voc_f: _, derived, derived;
+    voc_n: _, _, derived;
+    comparative: "~ीयस्";
+    superlative: "~Dष्ठ";
     ),
     // छिद: 9 words (उपस्थसद्, पुरुषाद्, सद्, विद्, छिद्, भिद्).
     declension!("छिद्", 9, "~द्";
@@ -672,8 +669,8 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_m: "~दः", "~दोः", "~दाम्";
     gen_f: _, _, "~दाम्";
     gen_n: "~दः", "~दोः", _;
-    loc_m: "~दC", _, "~त्सु";
-    loc_f: "~दC", "~दोः", "~त्सु";
+    loc_m: "~दD", _, "~त्सु";
+    loc_f: "~दD", "~दोः", "~त्सु";
     loc_n: "~दि", _, _;
     voc_m: "~त्", _, _;
     voc_f: "~त्", _, _;
@@ -713,7 +710,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     dat_f: "~ते", "~द्भ्याम्", _;
     abl_f: "~तः", "~द्भ्याम्", "~द्भ्यः";
     gen_f: _, _, "~ताम्";
-    loc_f: "~तC", "~तोः", "~त्सु";
+    loc_f: "~तD", "~तोः", "~त्सु";
     voc_m: "~त्", _, _;
     voc_f: "~त्", _, _;
     ),
@@ -739,7 +736,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~जाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, "~क्षु";
-    loc_f: "~जC", "~जोः", "~क्षु";
+    loc_f: "~जD", "~जोः", "~क्षु";
     loc_n: _, derived, _;
     voc_m: "~क्", _, _;
     voc_f: "~क्", _, _;
@@ -756,7 +753,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     abl_m: "~ः", _, _;
     abl_n: _, _, "~ेभ्यः";
     gen_m: "~ः", "~ोः", _;
-    loc_m: "~C", _, "~ासु";
+    loc_m: "~D", _, "~ासु";
     loc_n: _, _, "~ेषु";
     voc_m: "~ाः", _, _;
     comparative: derived;
@@ -798,7 +795,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~Aाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, _;
-    loc_f: "~AC", "~Aोः", "~सु";
+    loc_f: "~AD", "~Aोः", "~सु";
     loc_n: _, derived, _;
     voc_f: "~न्", _, _;
     voc_n: _, derived, _;
@@ -819,35 +816,35 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~शाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, _;
-    loc_f: "~शC", "~शोः", _;
+    loc_f: "~शD", "~शोः", _;
     loc_n: _, derived, _;
     voc_n: _, derived, _;
     ),
     // वी: 5 words (श्री, प्री, वी, शी, दुर्धी).
     declension!("वी", 5, "~ी";
-    nom_m: "~ीः", "~Cयौ", "~Cयः";
-    nom_f: "~ीः", "~Cयौ", "~Cयः";
-    nom_n: "~C", "~CAी", "~ीAि";
-    acc_m: "~Cयम्", _, "~Cयः";
-    acc_f: "~Cयम्", _, "~Cयः";
-    ins_m: "~Cया", "~ीभ्याम्", "~ीभिः";
-    ins_f: "~Cया", _, "~ीभिः";
-    ins_n: "~CAा", "~Cभ्याम्", "~Cभिः";
-    dat_m: "~Cये", _, "~ीभ्यः";
-    dat_f: "~Cये", "~ीभ्याम्", _;
-    dat_n: "~CAे|~ये", "~Cभ्याम्", "~Cभ्यः";
-    abl_m: "~Cयः", _, _;
-    abl_f: "~Cयः", "~ीभ्याम्", "~ीभ्यः";
-    abl_n: "~CAः|~ेः", "~Cभ्याम्", "~Cभ्यः";
-    gen_m: "~Cयः", "~Cयोः", "~Cयाम्|~ीनाम्";
-    gen_f: _, _, "~Cयाम्|~ीनाम्";
-    gen_n: "~CAः|~ेः", "~CAोः|~्योः", "~ीAाम्";
-    loc_m: "~Cयि", _, "~ीषु";
-    loc_f: "~Cयि", "~Cयोः", "~ीषु";
-    loc_n: "~CAि|~ौ", _, "~Cषु";
+    nom_m: "~ीः", "~Dयौ", "~Dयः";
+    nom_f: "~ीः", "~Dयौ", "~Dयः";
+    nom_n: "~D", "~DAी", "~ीAि";
+    acc_m: "~Dयम्", _, "~Dयः";
+    acc_f: "~Dयम्", _, "~Dयः";
+    ins_m: "~Dया", "~ीभ्याम्", "~ीभिः";
+    ins_f: "~Dया", _, "~ीभिः";
+    ins_n: "~DAा", "~Dभ्याम्", "~Dभिः";
+    dat_m: "~Dये", _, "~ीभ्यः";
+    dat_f: "~Dये", "~ीभ्याम्", _;
+    dat_n: "~DAे|~ये", "~Dभ्याम्", "~Dभ्यः";
+    abl_m: "~Dयः", _, _;
+    abl_f: "~Dयः", "~ीभ्याम्", "~ीभ्यः";
+    abl_n: "~DAः|~ेः", "~Dभ्याम्", "~Dभ्यः";
+    gen_m: "~Dयः", "~Dयोः", "~Dयाम्|~ीनाम्";
+    gen_f: _, _, "~Dयाम्|~ीनाम्";
+    gen_n: "~DAः|~ेः", "~DAोः|~्योः", "~ीAाम्";
+    loc_m: "~Dयि", _, "~ीषु";
+    loc_f: "~Dयि", "~Dयोः", "~ीषु";
+    loc_n: "~DAि|~ौ", _, "~Dषु";
     voc_m: "~ीः", _, _;
     voc_f: "~ीः", _, _;
-    voc_n: "~C|~े", _, _;
+    voc_n: "~D|~े", _, _;
     ),
     // अमनस: 4 words (अमनस्, क्लान्तमनस्, रंहस्, तरस्). Like जयायस, except in 5 cells: nom_m sg, nom_m du, nom_m pl, acc_m sg, voc_m sg.
     declension!("अमनस्", 4, "~स्", like जयायस;
@@ -873,11 +870,6 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     voc_f: _, derived, derived;
     voc_n: _, derived, _;
     ),
-    // वामन: 3 words (नव, घन, पक्व). Like धृत, except in 2 cells: comparative, superlative.
-    declension!("वामन", 3, "~", like धृत;
-    comparative: "~ीयस्";
-    superlative: "~िष्ठ";
-    ),
     // एकैक: 3 words (विश्व, इतर, एकैक). Like धृत, except in 14 cells: nom_m pl, dat_m sg, dat_f sg, dat_n sg, abl_m sg, abl_f sg, ….
     declension!("एकैक", 3, "~", like धृत;
     nom_m: _, _, "~े";
@@ -895,28 +887,13 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     comparative: derived;
     superlative: derived;
     ),
-    // बहुवरीहि: 3 words (ब्राह्मि, बहुव्रीहि, द्रापि). Like शुचि, except in 11 cells: nom_n du, nom_n pl, acc_m pl, ins_m sg, dat_n sg, abl_n sg, ….
+    // बहुवरीहि: 3 words (ब्राह्मि, बहुव्रीहि, द्रापि). Like शुचि, except in 1 cell: acc_m pl.
     declension!("बहुव्रीहि", 3, "~ि", like शुचि;
-    nom_n: _, "~िणी", "~ीणि";
     acc_m: _, _, "~ीन्";
-    ins_m: "~िणा", _, _;
-    dat_n: "~िणे|~ये", _, _;
-    abl_n: "~िणः|~ेः", _, _;
-    gen_m: _, _, "~ीणाम्";
-    gen_f: _, _, "~ीणाम्";
-    gen_n: "~िणः|~ेः", "~िणोः|~्योः", _;
-    loc_n: "~िणि|~ौ", _, _;
     ),
-    // रघु: 3 words (अगुरु, प्रभु, रघु). Like लघु, except in 9 cells: nom_n du, acc_m pl, ins_m sg, dat_n sg, abl_n sg, gen_f pl, ….
+    // रघु: 3 words (अगुरु, प्रभु, रघु). Like लघु, except in 1 cell: acc_m pl.
     declension!("रघु", 3, "~ु", like लघु;
-    nom_n: _, "~ुणी", _;
     acc_m: _, _, "~ून्";
-    ins_m: "~ुणा", _, _;
-    dat_n: "~ुणे|~वे", _, _;
-    abl_n: "~ुणः|~ोः", _, _;
-    gen_f: _, _, "~्वीणाम्";
-    gen_n: "~ुणः|~ोः", "~ुणोः|~्वोः", _;
-    loc_n: "~ुणि|~ौ", _, _;
     ),
     // लिह: 3 words (स्निह्, दुह्, लिह्).
     declension!("लिह्", 3, "~ह्";
@@ -936,7 +913,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~हाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, "~ट्सु";
-    loc_f: "~हC", "~होः", "~ट्सु";
+    loc_f: "~हD", "~होः", "~ट्सु";
     loc_n: _, derived, _;
     voc_m: "~ट्", _, _;
     voc_f: "~ट्", _, _;
@@ -974,7 +951,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~चाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, _;
-    loc_f: "~चC", "~चोः", "~क्षु";
+    loc_f: "~चD", "~चोः", "~क्षु";
     loc_n: _, derived, _;
     voc_m: "~क्", _, _;
     voc_f: "~क्", _, _;
@@ -1041,7 +1018,7 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 41] = [
     gen_f: _, _, "~षाम्";
     gen_n: _, _, derived;
     loc_m: _, derived, _;
-    loc_f: "~षC", "~षोः", _;
+    loc_f: "~षD", "~षोः", _;
     loc_n: _, derived, _;
     voc_n: _, derived, _;
     ),

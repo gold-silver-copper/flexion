@@ -110,10 +110,10 @@ pub(super) static SLOTS: [Slot<'static>; 2] = [
 
 /// The ending tables, by slot, most words first.
 pub(super) static TABLES: [EndingTable<'static>; 13] = [
-    // lemma like makas: 816 words.
+    // lemma like makas: 819 words.
     EndingTable {
         name: Cow::Borrowed("makas"),
-        words: 816,
+        words: 819,
         slot: 0,
         table: Cow::Borrowed(concat!(
             "~\t~lAr\t",
@@ -231,10 +231,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t~nIn\t\t\t~nIzIn\t",
         )),
     },
-    // acc_sg like sav: 3,778 words.
+    // acc_sg like sav: 3,781 words.
     EndingTable {
         name: Cow::Borrowed("sav"),
-        words: 3778,
+        words: 3781,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~I\t",
@@ -248,10 +248,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t~InIn\t\t\t~InIzIn\t",
         )),
     },
-    // acc_sg like ant: 1,741 words.
+    // acc_sg like ant: 1,740 words.
     EndingTable {
         name: Cow::Borrowed("ant"),
-        words: 1741,
+        words: 1740,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~Iˇ\t",
@@ -265,10 +265,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t~InInˇ\t\t\t~InIzInˇ\t",
         )),
     },
-    // acc_sg like kiriş: 686 words.
+    // acc_sg like kiriş: 684 words.
     EndingTable {
         name: Cow::Borrowed("kiriş"),
-        words: 686,
+        words: 684,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~I\t",
@@ -282,10 +282,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t~inIn\t\t\t~inIzIn\t",
         )),
     },
-    // acc_sg like yer: 168 words.
+    // acc_sg like yer: 160 words.
     EndingTable {
         name: Cow::Borrowed("yer"),
-        words: 168,
+        words: 160,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~i\t",
@@ -299,10 +299,10 @@ pub(super) static TABLES: [EndingTable<'static>; 13] = [
             "\t~inIn\t\t\t~inIzIn\t",
         )),
     },
-    // acc_sg like göz: 37 words.
+    // acc_sg like göz: 45 words.
     EndingTable {
         name: Cow::Borrowed("göz"),
-        words: 37,
+        words: 45,
         slot: 1,
         table: Cow::Borrowed(concat!(
             "~ü\t",

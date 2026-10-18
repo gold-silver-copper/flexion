@@ -2,7 +2,7 @@
 //!
 //! A pattern is the form with `~` where the stem goes (`~nen`, `toinen`: the stem and `nen`). A stem in two pieces (`~k~`, `mikään`) has
 //! letters between them that other forms may drop or change.
-//! Alternatives are separated by `|`, the usual one first. A capital (`A`)
+//! Alternatives are separated by `|`, the usual one first. A capital (`A`, `V`)
 //! is a class letter: a harmony law in `laws.rs` writes it, by the
 //! letter before it.
 
@@ -12,8 +12,8 @@ use flexion::Paradigm;
 /// the lemma's pattern, its words' inherent features (if they share them),
 /// the declension it is like (if any), the stem slots it states with a stem and an
 /// ending table
-/// (`stem gen_pl: \"~- like kuka\"`: the slot's cells are `kuka`'s table's patterns
-/// with `~` for their `~`) (see `stems.rs`), then a row of patterns per line
+/// (`stem nom_pl: \"~se- like toinen\"`: the slot's cells are `toinen`'s table's patterns
+/// with `~se` for their `~`) (see `stems.rs`), then a row of patterns per line
 /// (`derived`: the form comes from another cell's, see `relations.rs`; `_`,
 /// or a row left out: the form is its stem slot's, or the declension's it is
 /// like, or, in a declension like no other, derived):
@@ -130,8 +130,8 @@ pub enum Declension {
     Mikään,
     /// Like `toinen`: 7 words.
     Toinen,
-    /// Like `meitsi`: 6 words.
-    Meitsi,
+    /// Like `meikä`: 7 words.
+    Meikä,
     /// Like `he`: 5 words.
     He,
     /// Like `itseni`: 5 words.
@@ -140,7 +140,7 @@ pub enum Declension {
     Meikämanne,
     /// Like `mä`: 4 words.
     Mä,
-    /// Like `sama`: 4 words.
+    /// Like `sama`: 3 words.
     Sama,
     /// Like `jompi`: 3 words.
     Jompi,
@@ -154,7 +154,7 @@ impl Declension {
         Declension::Mi,
         Declension::Mikään,
         Declension::Toinen,
-        Declension::Meitsi,
+        Declension::Meikä,
         Declension::He,
         Declension::Itseni,
         Declension::Meikämanne,
@@ -182,14 +182,17 @@ impl flexion::Label for Declension {
 pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     // Mi: 27 words (mi, hän, yksi, tämä, joku, kuka).
     declension!("mi", 27, "~";
-    stem gen_pl: "~- like kuka";
-    stem par_sg: "~- like kuka";
     nom: "~", "~t";
-    gen_: "~n", _;
-    ine: "~ssä", _;
-    ela: "~stä", _;
-    ade: "~llä", _;
-    abl: "~ltä", _;
+    gen_: "~n", "~n";
+    par: "~tä", "~tA";
+    ine: "~ssA", "~ssä";
+    ela: "~stA", "~stä";
+    ill: "~hin", "~hin";
+    ade: "~llA", "~llä";
+    abl: "~ltA", "~ltä";
+    all: "~lle", "~lle";
+    ess: "~nA", "~nä";
+    tra: "~ksi", "~ksi";
     ),
     // Mikään: 8 words (joka, mikä, jokin, kukin, mikään, mikin).
     declension!("mikään", 8, "~k~";
@@ -213,35 +216,35 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     stem par_sg: "~s- like toinen";
     nom: "~nen", _;
     ),
-    // Meitsi: 6 words (se, meitsi, meikä, teitsi, meikätyttö, meikäreikä).
-    declension!("meitsi", 6, "~";
-    nom: "~", _;
-    gen_: "~n", _;
-    par: "~A", _;
-    ine: "~ssA", _;
-    ela: "~stA", _;
-    ill: "~in", _;
-    ade: "~llA", _;
-    abl: "~ltA", _;
-    all: "~lle", _;
-    ess: "~nA", _;
-    tra: "~ksi", _;
+    // Meikä: 7 words (se, meitsi, meikä, meikäpoika, teitsi, meikätyttö). Like Mi, except in 14 cells: nom pl, gen_ pl, par sg, par pl, ine pl, ela pl, ….
+    declension!("meikä", 7, "~", like Mi;
+    nom: _, derived;
+    gen_: _, derived;
+    par: "~A", derived;
+    ine: _, derived;
+    ela: _, derived;
+    ill: "~Vn", derived;
+    ade: _, derived;
+    abl: _, derived;
+    all: _, derived;
+    ess: _, derived;
+    tra: _, derived;
     abe: "~ttA", _;
     ),
     // He: 5 words (te, he, me, toisemme, toisenne).
     declension!("he", 5, "~e";
     nom: "~än", "~e";
-    gen_: "~änen", "~eidAn";
+    gen_: "~Anen", "~eidAn";
     par: "~äntä", "~eitA";
-    ine: "~änessA", "~eissA";
-    ela: "~änestA", "~eistA";
-    ill: "~äneen", "~eihin";
-    ade: "~änellA", "~eillA";
-    abl: "~äneltA", "~eiltA";
-    all: "~änelle", "~eille";
-    ess: "~änenA", "~einA";
-    tra: "~äneksi", "~eiksi";
-    abe: "~änettA", "~eittA";
+    ine: "~AnessA", "~eissA";
+    ela: "~AnestA", "~eistA";
+    ill: "~Aneen", "~eihin";
+    ade: "~AnellA", "~eillA";
+    abl: "~AneltA", "~eiltA";
+    all: "~Anelle", "~eille";
+    ess: "~AnenA", "~einA";
+    tra: "~Aneksi", "~eiksi";
+    abe: "~AnettA", "~eittA";
     ),
     // Itseni: 5 words (itseni, itsesi, itsensä, itsemme, itsenne).
     declension!("itseni", 5, "~~~";
@@ -260,24 +263,23 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     ),
     // Meikämanne: 5 words (tuo, muu, yks, meikämanne, meikäukko).
     declension!("meikämanne", 5, "~";
-    stem nom_pl: "~- like toinen";
-    nom: "~", _;
-    gen_: _, "~jen";
+    nom: "~", "~t";
+    gen_: "~n", "~jen";
     par: "~a", "~ja";
-    ine: _, "~issa";
-    ela: _, "~ista";
-    ill: "~en", "~ihin";
-    ade: _, "~illa";
-    abl: _, "~ilta";
+    ine: "~ssa", "~issa";
+    ela: "~sta", "~ista";
+    ill: "~Vn", "~ihin";
+    ade: "~lla", "~illa";
+    abl: "~lta", "~ilta";
     all: "~lle", "~ille";
     ess: "~na", "~ina";
     tra: "~ksi", "~iksi";
-    abe: _, "~itta";
+    abe: "~tta", "~itta";
     ins: _, "~in";
     com: _, "~ine";
     ),
-    // Mä: 4 words (minä, sinä, sä, mä). Like Meitsi, except in 12 cells: nom sg, gen_ sg, par sg, ine sg, ela sg, ill sg, ….
-    declension!("mä", 4, "~ä", like Meitsi;
+    // Mä: 4 words (minä, sinä, sä, mä). Like Meikä, except in 12 cells: nom sg, gen_ sg, par sg, ine sg, ela sg, ill sg, ….
+    declension!("mä", 4, "~ä", like Meikä;
     nom: "~ä", _;
     gen_: "~un", _;
     par: "~uA", _;
@@ -291,19 +293,19 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     tra: "~uksi", _;
     abe: derived, _;
     ),
-    // Sama: 4 words (sama, muutama, aniharva, meikäpoika).
-    declension!("sama", 4, "~a";
+    // Sama: 3 words (sama, muutama, aniharva).
+    declension!("sama", 3, "~a";
     stem nom_pl: "~a- like sama";
     nom: "~a", _;
     gen_: _, "~ojen";
-    par: "~aA", "~ojA";
+    par: "~aV", "~ojA";
     ine: _, "~oissA";
     ela: _, "~oistA";
-    ill: "~aAn", "~oihin";
+    ill: "~aVn", "~oihin";
     ade: _, "~oillA";
     abl: _, "~oiltA";
     all: "~alle", "~oille";
-    ess: "~anA", "~oinA";
+    ess: "~anV", "~oinA";
     tra: "~aksi", "~oiksi";
     abe: _, "~oittA";
     ins: _, "~oin";
@@ -311,35 +313,37 @@ pub(super) static DECLENSIONS: [Paradigm<'static>; 11] = [
     ),
     // Jompi: 3 words (kumpi, molempi, jompi).
     declension!("jompi", 3, "~pi";
-    stem nom_pl: "~ma- like toinen";
+    stem nom_pl: "~m- like jompi";
     nom: "~pi", _;
     gen_: _, "~pien";
-    par: "~pAA", "~piA";
+    par: "~pAV", "~piA";
     ine: _, "~missa";
     ela: _, "~mista";
-    ill: "~pAAn", "~piin";
+    ill: "~pAVn", "~piin";
     ade: _, "~milla";
     abl: _, "~milta";
     all: "~malle", "~mille";
-    ess: "~pAnA", "~pinA";
+    ess: "~pAnV", "~pinA";
     tra: "~maksi", "~miksi";
     abe: _, "~mitta";
     ins: _, "~min";
     com: _, "~pine";
     ),
-    // Molemmat: 1 words (molemmat). Like Jompi, except in 14 cells: nom sg, gen_ sg, par sg, par pl, ine sg, ela sg, ….
-    declension!("molemmat", 1, "~mat", like Jompi;
-    nom: "~mat", _;
-    gen_: derived, _;
-    par: derived, "~pia";
-    ine: derived, _;
-    ela: derived, _;
-    ill: derived, _;
-    ade: derived, _;
-    abl: derived, _;
-    all: derived, _;
-    ess: derived, "~pina";
-    tra: derived, _;
-    abe: derived, _;
+    // Molemmat: 1 words (molemmat).
+    declension!("molemmat", 1, "~mat";
+    nom: "~mat", "~mat";
+    gen_: _, "~pien";
+    par: _, "~pia";
+    ine: _, "~missa";
+    ela: _, "~mista";
+    ill: _, "~piin";
+    ade: _, "~milla";
+    abl: _, "~milta";
+    all: _, "~mille";
+    ess: _, "~pina";
+    tra: _, "~miksi";
+    abe: _, "~mitta";
+    ins: _, "~min";
+    com: _, "~pine";
     ),
 ];
