@@ -764,16 +764,20 @@ pub fn learn<'s>(
     // `crate::bits`).
     // Which relations tell listed words' forms: judged on the forms wrong
     // with every candidate stem listed, the same for both listings.
+    // A relation whose changes no derived cell reads tells listed words
+    // only where the forms it saves listing pay for printing it.
     grammar.irregular = flexion::Irregular::new(&[], &candidates);
     let judged = rebuilt(&grammar, &everyone, &candidates, wrong.clone());
+    let derived = unread(&grammar, &assigned, &crate::HashSet::default());
     if let Cow::Owned(relations) = &mut grammar.relations {
         for r in relations.iter_mut() {
+            let price = (!derived.read.contains_key(&r.cell)).then(|| relation_bits(r, &prices));
             r.listed = tells_listed(
                 r,
                 &judged,
                 &everyone,
-                grammar.smoothing,
-                grammar.laws.as_ref(),
+                (grammar.smoothing, grammar.laws.as_ref()),
+                (&prices, price.unwrap_or(0.0)),
             );
         }
     }
@@ -2810,13 +2814,16 @@ fn settle(
 }
 
 /// Whether relation `r` tells the forms of the words whose form of the cell
-/// it comes from is `wrong` (sorted) right as often as their paradigm does.
+/// it comes from is `wrong` (sorted) right as often as their paradigm does,
+/// and the forms it tells right that the paradigm doesn't, less those the
+/// other way, are worth at least `price` bits listed (what printing it
+/// costs, where nothing else reads it).
 fn tells_listed(
     r: &Relation<'_>,
     wrong: &[(String, usize, String)],
     words: &[Word],
-    smoothing: f32,
-    laws: Option<&sound_law::Program<'_>>,
+    (smoothing, laws): (f32, Option<&sound_law::Program<'_>>),
+    (prices, price): (&crate::bits::Prices, f64),
 ) -> bool {
     let (Some(from), cell) = (r.source(), usize::from(r.cell)) else {
         return false;
@@ -2826,15 +2833,48 @@ fn tells_listed(
             .binary_search_by(|(k, x, _)| (k.as_str(), *x).cmp(&(key, c)))
             .is_ok()
     };
-    let (mut told, mut built) = (0usize, 0usize);
+    let (mut told, mut built, mut saved) = (0usize, 0usize, 0.0);
     for w in words.iter().filter(|w| is_wrong(&w.key, from)) {
         let (Some(source), Some(want)) = (first_form(w, from), first_form(w, cell)) else {
             continue;
         };
-        told += usize::from(r.told(source, smoothing, laws).is_some_and(|t| t.0 == want));
-        built += usize::from(!is_wrong(&w.key, cell));
+        let right = r.told(source, smoothing, laws).is_some_and(|t| t.0 == want);
+        let made = !is_wrong(&w.key, cell);
+        told += usize::from(right);
+        built += usize::from(made);
+        match (right, made) {
+            (true, false) => saved += prices.listed(want),
+            (false, true) => saved -= prices.listed(want),
+            _ => {}
+        }
     }
-    told >= built
+    told >= built && saved >= price
+}
+
+/// What printing relation `r`'s changes and rules costs, in bits: each
+/// change's patterns, and each rule's ending with its counts (a change and
+/// a number each).
+fn relation_bits(r: &Relation<'_>, prices: &crate::bits::Prices) -> f64 {
+    let changes: f64 = r
+        .changes
+        .iter()
+        .map(|(old, new)| prices.text(old) + prices.text(new))
+        .sum();
+    let which = crate::bits::log2(r.changes.len());
+    let rules: f64 = r
+        .change
+        .iter()
+        .flat_map(|c| c.rules.iter())
+        .map(|rule| {
+            let counts: f64 = rule
+                .counts
+                .iter()
+                .map(|&(_, n)| which + crate::bits::log2(usize::try_from(n).unwrap_or(usize::MAX)))
+                .sum();
+            prices.text(&rule.ending) + counts
+        })
+        .sum();
+    crate::bits::ITEM + changes + rules
 }
 
 /// Of `listed` forms (`(word, cell, form)`, sorted), those no relation
